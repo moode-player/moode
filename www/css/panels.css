@@ -304,8 +304,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #lib-album-filter {width:11.5rem;}
 /*#playqueue-search {top:50%; transform:translate(0, -50%);width:11rem;}*/
 #playqueue-search {left:1rem}
-#save-queue-to-playlist-modal .modal-body, #set-favorites-playlist-modal .modal-body {padding:1em .25em 0 .25em;}
-#save-queue-to-playlist-form {display:block;float:left;margin-right:0;margin-left:0;z-index:1001;width:100%;text-align:center;}
+/*DELETE#save-queue-to-playlist-modal .modal-body, #set-favorites-playlist-modal .modal-body {padding:1em .25em 0 .25em;}
+#save-queue-to-playlist-form {display:block;float:left;margin-right:0;margin-left:0;z-index:1001;width:100%;text-align:center;}*/
 #playqueue-search input, #ra-search input, #pl-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;height:2.75rem;font-size:1em;padding:0;}
 #ra-search input, #pl-search input, #dbfs {margin-left:.5em;padding:0;height:2.5rem;border:none;font-size:inherit;width:40vw;}
 #searchResetPlayqueue {font-size:1rem;top:0;margin-top:.5em;float:left;padding-left:0;}
@@ -384,7 +384,7 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 .bgimglabel {margin-top:5px;} /* gross but what r u gonna do */
 .modal label, .modal .controls {font-size:1em;}
 .control-label {margin-bottom:0px;font-size:inherit;}
-.modal .controls input {padding:0px 0px 0px 10px;}
+.modal .controls input {padding:0px 0px 0 10px;}
 .btn-group>.btn, .btn-group>.dropdown-menu {font-size:1rem;}
 hr {border-color:#333;border-width:1px 0 0;}
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {background:inherit;border:1px solid rgba(128,128,128,0.75);color:inherit;padding-top:2px;padding-bottom:2px;margin-bottom:5px;border-radius:4px;-webkit-appearance:none;-moz-appearance:none;font-size:1rem;}
@@ -739,7 +739,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #ss-hd-badge {vertical-align:text-top;line-height:1.8em;}
 .playback-hd-badge {vertical-align:text-bottom;line-height:1.5em;margin-top:1.85rem;bottom:0.25rem;}
 /* Radio manager */
-.modal-button-style {display:inline-block;/*margin-bottom:.5em;margin-top:-1px*/}
+.modal-button-style {display:inline-block;margin-bottom:10px;/*margin-top:-1px*/}
 /* Radio view, Playlist view */
 .radioview-metadata-text, .playlistview-metadata-text {color:var(--textvariant);font-weight:500}
 /* First use help */

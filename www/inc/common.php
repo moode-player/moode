@@ -456,6 +456,8 @@ function storeBackLink($section, $tpl) {
 
 // Used for 2 levels back: cdsp-configeditor -> cdsp-config -> /index.php
 function setAltBackLink() {
+	phpSession('open');
+
 	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 
 	// NOTE: $_SESSION['alt_back_link'] is reset to '' in /index.php
@@ -466,4 +468,6 @@ function setAltBackLink() {
 			$_SESSION['alt_back_link'] = '/snd-config.php#equalizers';
 		}
 	}
+
+	phpSession('close');
 }

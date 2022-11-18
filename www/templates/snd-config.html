@@ -252,10 +252,8 @@
 			<label class="control-label">Display dB volume</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-volume_db_display-2">ON</label>
-					$_select[volume_db_display_on]
-					<label class="toggle-radio" for="toggle-volume_db_display-1">OFF</label>
-					$_select[volume_db_display_off]
+					<label class="toggle-radio" for="toggle-volume-db-display-2">ON </label>$_select[volume_db_display_on]
+					<label class="toggle-radio" for="toggle-volume-db-display-1">OFF</label>$_select[volume_db_display_off]
 				</div>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_db_display" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_volume_db_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -267,10 +265,8 @@
 			<label class="control-label">USB volume knob</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-usb_volknob-2">ON</label>
-					$_select[usb_volknob_on]
-					<label class="toggle-radio" for="toggle-usb_volknob-1">OFF</label>
-					$_select[usb_volknob_off]
+					<label class="toggle-radio" for="toggle-usb-volknob-2">ON </label>$_select[usb_volknob_on]
+					<label class="toggle-radio" for="toggle-usb-volknob-1">OFF</label>$_select[usb_volknob_off]
 				</div>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_usb_volknob" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_usb_volknob" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -283,10 +279,8 @@
 			<label class="control-label">Rotary encoder</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-rotaryenc-2">ON</label>
-					$_select[rotaryenc_on]
-					<label class="toggle-radio" for="toggle-rotaryenc-1">OFF</label>
-					$_select[rotaryenc_off]
+					<label class="toggle-radio" for="toggle-rotaryenc-2">ON </label>$_select[rotaryenc_on]
+					<label class="toggle-radio" for="toggle-rotaryenc-1">OFF</label>$_select[rotaryenc_off]
 				</div>
 				<input class="input-large config-input-large" type="text" id="rotenc_params" name="rotenc_params" value="$_select[rotenc_params]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rotenc" value="novalue">Set</button>
@@ -338,10 +332,8 @@
 			<label class="control-label">Polarity inversion</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-invert_polarity-2">ON</label>
-					$_select[invert_polarity_on]
-					<label class="toggle-radio" for="toggle-invert_polarity-1">OFF</label>
-					$_select[invert_polarity_off]
+					<label class="toggle-radio" for="toggle-invert-polarity-2">ON </label>$_select[invert_polarity_on]
+					<label class="toggle-radio" for="toggle-invert-polarity-1">OFF</label>$_select[invert_polarity_off]
 				</div>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_invert_polarity" value="novalue" $_invpolarity_set_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_invert_polarity" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -356,10 +348,8 @@
 			<label class="control-label">Streaming server</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-mpd-httpd-2">ON</label>
-					$_select[mpd_httpd_on]
-					<label class="toggle-radio" for="toggle-mpd-httpd-1">OFF</label>
-					$_select[mpd_httpd_off]
+					<label class="toggle-radio" for="toggle-mpd-httpd-2">ON </label>$_select[mpd_httpd_on]
+					<label class="toggle-radio" for="toggle-mpd-httpd-1">OFF</label>$_select[mpd_httpd_off]
 				</div>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpd_httpd" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mpd-httpd" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -406,7 +396,7 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_camilladsp" value="novalue" $_camilladsp_set_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camilladsp" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="info-camilladsp" class="config-help-info">
-					CamillaDSP is a general purpose tool for routing and filtering sound. It can be used for example for building crossovers for active speakers, or for performing room correction. CamillaDSP was written by Henrik Enquist and integrated into moOde by @bitlab.<br>
+					CamillaDSP is a general purpose signal processing tool for routing and filtering sound. It can be used for example for building crossovers for active speakers, or for performing room correction. CamillaDSP is maintained by Henrik Enquist. Integration into moOde was done by @bitlab.<br>
 					Feature summary:<br>
 					- IIR filters (BiQuad)<br>
 					- FIR filters (Convolution via FFT)<br>
@@ -416,9 +406,8 @@
 					- Simple YAML configuration<br>
 					- All calculations done with 64-bit floats<br>
 					- ARM Neon 64-bit instruction set is used<br>
-					- Pipeline editor with expert mode
-					<br>
-					Configurations can be managed at the CamillaDSP settings page.<br>
+					- Pipeline editor with expert mode<br>
+					Configurations can be managed at the CamillaDSP settings page.
                 </div>
 				<div>
 					$_camilladsp_config_check
@@ -472,8 +461,10 @@
 
 <form class="form-horizontal" method="post">
 	<div id="mpd-restart" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="mpd-restart-label" aria-hidden="true">
-		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div>
-		<div class="modal-body"><h6>Restart MPD service?</h6></div>
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Restart MPD service?</h3>
+		</div>
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="mpdrestart" value="1">Yes</button>

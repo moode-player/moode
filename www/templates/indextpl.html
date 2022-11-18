@@ -314,10 +314,9 @@
 	</div>
 </div>
 
-<!-- LIBRARY FILTERS -->
+<!-- LIBRARY FILTERS (TBD)-->
 <div id="filters-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="filters-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="filters-modal-label">Library Filters</h3>
 	</div>
 	<div class="modal-body">
@@ -331,105 +330,100 @@
 
 <!-- ADVANCED SEARCH -->
 <div id="dbsearch-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3>Advanced search</h3>
 	</div>
 	<div class="modal-body" id="container-dbsearch">
-		<form class="form-horizontal" action="" method="">
-	    	<fieldset>
-				<span class="h5"><a aria-label="Reset" href="#notarget" id="db-search-reset">CLEAR</a>&nbsp;search fields</span>
-				<br>
-				<span class="h5">Search all tags</span>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-alltags">Search string</label>
-	                <div class="controls">
-	                    <input id="dbsearch-alltags" class="input-large" type="text" autofocus>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-alltags" class="help-block hide">
-	                    	All tags are searched using an OR relationship.
-	                    </span>
-	                </div>
-	            </div>
-				<span class="h5">Search specific tags</span>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-genre">Genre</label>
-	                <div class="controls">
-	                    <input id="dbsearch-genre" class="input-large" type="text" name="dbsearch_genre" value="">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-specifictags" class="help-block hide">
-		                	Non-empty tags are searched using an AND relationship.
-		                </span>
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-artist">Artist</label>
-	                <div class="controls">
-	                    <input id="dbsearch-artist" class="input-large" type="text" name="dbsearch_artist" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-album">Album</label>
-	                <div class="controls">
-	                    <input id="dbsearch-album" class="input-large" type="text" name="dbsearch_album" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-title">Title</label>
-	                <div class="controls">
-	                    <input id="dbsearch-title" class="input-large" type="text" name="dbsearch_title" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-albumartist">Album artist</label>
-	                <div class="controls">
-	                    <input id="dbsearch-albumartist" class="input-large" type="text" name="dbsearch_albumartist" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-date">Release date</label>
-	                <div class="controls">
-	                    <input id="dbsearch-date" class="input-large" type="text" name="dbsearch_date" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-composer">Composer</label>
-	                <div class="controls">
-	                    <input id="dbsearch-composer" class="input-large" type="text" name="dbsearch_composer" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-composer">Conductor</label>
-	                <div class="controls">
-	                    <input id="dbsearch-conductor" class="input-large" type="text" name="dbsearch_conductor" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-performer">Performer</label>
-	                <div class="controls">
-	                    <input id="dbsearch-performer" class="input-large" type="text" name="dbsearch_performer" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-performer">Work</label>
-	                <div class="controls">
-	                    <input id="dbsearch-work" class="input-large" type="text" name="dbsearch_work" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-comment">Comment</label>
-	                <div class="controls">
-	                    <input id="dbsearch-comment" class="input-large" type="text" name="dbsearch_comment" value="">
-	                </div>
-	            </div>
-				<div class="control-group">
-	                <label class="control-label" for="dbsearch-file">Folder</label>
-	                <div class="controls">
-	                    <input id="dbsearch-file" class="input-large" type="text" name="dbsearch_file" value="">
-	                </div>
-	            </div>
-	    	</fieldset>
-		</form>
+		<span class="h5"><a aria-label="Reset" href="#notarget" id="db-search-reset">CLEAR</a>&nbsp;search fields</span>
+		<br>
+		<span class="h5">Search all tags</span>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-alltags">Search string</label>
+            <div class="controls">
+                <input id="dbsearch-alltags" class="input-large" type="text" autofocus>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-alltags" class="help-block hide">
+                	All tags are searched using an OR relationship.
+                </span>
+            </div>
+        </div>
+		<span class="h5">Search specific tags</span>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-genre">Genre</label>
+            <div class="controls">
+                <input id="dbsearch-genre" class="input-large" type="text" name="dbsearch_genre" value="">
+				<a aria-label="Help" class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-specifictags" class="help-block hide">
+                	Non-empty tags are searched using an AND relationship.
+                </span>
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-artist">Artist</label>
+            <div class="controls">
+                <input id="dbsearch-artist" class="input-large" type="text" name="dbsearch_artist" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-album">Album</label>
+            <div class="controls">
+                <input id="dbsearch-album" class="input-large" type="text" name="dbsearch_album" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-title">Title</label>
+            <div class="controls">
+                <input id="dbsearch-title" class="input-large" type="text" name="dbsearch_title" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-albumartist">Album artist</label>
+            <div class="controls">
+                <input id="dbsearch-albumartist" class="input-large" type="text" name="dbsearch_albumartist" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-date">Release date</label>
+            <div class="controls">
+                <input id="dbsearch-date" class="input-large" type="text" name="dbsearch_date" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-composer">Composer</label>
+            <div class="controls">
+                <input id="dbsearch-composer" class="input-large" type="text" name="dbsearch_composer" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-composer">Conductor</label>
+            <div class="controls">
+                <input id="dbsearch-conductor" class="input-large" type="text" name="dbsearch_conductor" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-performer">Performer</label>
+            <div class="controls">
+                <input id="dbsearch-performer" class="input-large" type="text" name="dbsearch_performer" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-performer">Work</label>
+            <div class="controls">
+                <input id="dbsearch-work" class="input-large" type="text" name="dbsearch_work" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-comment">Comment</label>
+            <div class="controls">
+                <input id="dbsearch-comment" class="input-large" type="text" name="dbsearch_comment" value="">
+            </div>
+        </div>
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-file">Folder</label>
+            <div class="controls">
+                <input id="dbsearch-file" class="input-large" type="text" name="dbsearch_file" value="">
+            </div>
+        </div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -439,27 +433,22 @@
 
 <!-- QUEUE ITEM DELETE/MOVE -->
 <div id="delete-playqueue-item-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-playqueue-item-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="delete-playqueue-item-modal-label">Delete Queue items?</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-	    	<fieldset>
-				<div class="control-group">
-	                <label class="control-label" for="delete-playqueue-item-begpos">Beginning item</label>
-	                <div class="controls">
-	                    <input id="delete-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-						<button aria-label="Delete" id="btn-delete-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-	                </div>
-	                <label class="control-label" for="delete-playqueue-item-endpos">Ending item</label>
-	                <div class="controls">
-	                    <input id="delete-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-						<button aria-label="Delete" id="btn-delete-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
-	                </div>
-	            </div>
-	    	</fieldset>
-		</form>
+		<div class="control-group">
+            <label class="control-label" for="delete-playqueue-item-begpos">Beginning item</label>
+            <div class="controls">
+                <input id="delete-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
+				<button aria-label="Delete" id="btn-delete-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+            </div>
+            <label class="control-label" for="delete-playqueue-item-endpos">Ending item</label>
+            <div class="controls">
+                <input id="delete-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
+				<button aria-label="Delete" id="btn-delete-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+            </div>
+        </div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -468,33 +457,28 @@
 </div>
 
 <div id="move-playqueue-item-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="move-playqueue-item-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="move-playqueue-item-modal-label">Move Queue items?</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-	    	<fieldset>
-				<div class="control-group">
-	                <label class="control-label" for="move-playqueue-item-begpos">Beginning item</label>
-	                <div class="controls">
-	                    <input id="move-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-						<button aria-label="To The Top" id="btn-move-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-	                </div>
-	                <label class="control-label" for="move-playqueue-item-endpos">Ending item</label>
-	                <div class="controls">
-	                    <input id="move-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-						<button aria-label="To The Bottom" id="btn-move-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
-	                </div>
-	                <label class="control-label" for="move-playqueue-item-newpos">New position</label>
-	                <div class="controls">
-	                    <input id="move-playqueue-item-newpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-						<button aria-label="Up" id="btn-move-setnewpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-						<button aria-label="Down" id="btn-move-setnewpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
-	                </div>
-	            </div>
-	    	</fieldset>
-		</form>
+		<div class="control-group">
+            <label class="control-label" for="move-playqueue-item-begpos">Beginning item</label>
+            <div class="controls">
+                <input id="move-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
+				<button aria-label="To The Top" id="btn-move-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+            </div>
+            <label class="control-label" for="move-playqueue-item-endpos">Ending item</label>
+            <div class="controls">
+                <input id="move-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
+				<button aria-label="To The Bottom" id="btn-move-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+            </div>
+            <label class="control-label" for="move-playqueue-item-newpos">New position</label>
+            <div class="controls">
+                <input id="move-playqueue-item-newpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
+				<button aria-label="Up" id="btn-move-setnewpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+				<button aria-label="Down" id="btn-move-setnewpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+            </div>
+        </div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -503,20 +487,22 @@
 </div>
 
 <!-- SAVE QUEUE TO PLAYLIST -->
-<div id="save-queue-to-playlist-modal" class="modal modal-xs hide" tabindex="-1" role="dialog" aria-labelledby="save-queue-to-playlist-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="save-queue-to-playlist-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="save-queue-to-playlist-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="save-queue-to-playlist-modal-label">Save Queue to playlist</h3>
-		<br>
-		<p>CAUTION: This will overwrite an existing playlist of the same name. Saved playlists are maintained in Playlist view.</p>
 	</div>
 	<div class="modal-body">
+		<p>
+			This will overwrite an existing playlist of the same name!
+			Saved playlists are maintained in Playlist view.
+		</p>
 		<form id="save-queue-to-playlist-form" method="post" onsubmit="return false;">
-	    	<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="playlist-save-name">Playlist name</label>
 				<div class="controls">
-					<input id="playlist-save-name" type="text" placeholder="Playlist name" value="" autofocus>
-	            </div>
-	    	</fieldset>
+					<input id="playlist-save-name" type="text" value="" autofocus>
+		        </div>
+			</div>
 		</form>
 	</div>
 	<div class="modal-footer">
@@ -526,20 +512,22 @@
 </div>
 
 <!-- SET FAVORITES PLAYLIST -->
-<div id="set-favorites-playlist-modal" class="modal modal-xs hide" tabindex="-1" role="dialog" aria-labelledby="newpl-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="set-favorites-playlist-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="newpl-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="set-favorites-playlist-modal-label">Set Favorites Playlist Name</h3>
-		<br>
-		<p>Sets the playlist containing items favorited by clicking the Heart <i class="fal fa-heart"></i> button. If the playlist does not already exist it will be created. Playlists are maintained in Playist view.</p>
 	</div>
 	<div class="modal-body">
+		<p>
+			Sets the playlist containing items favorited by clicking the Heart <i class="fal fa-heart"></i> button.
+			If the playlist does not already exist it will be created. Playlists are maintained in Playist view.
+		</p>
 		<form id="set-favorites-playlist-form" method="post" onsubmit="return false;">
-	    	<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="playlist-favorites-name">Favorites playlist name</label>
 				<div class="controls">
 					<input id="playlist-favorites-name" type="text" value="" autofocus>
-	            </div>
-	    	</fieldset>
+		        </div>
+			</div>
 		</form>
 	</div>
 	<div class="modal-footer">
@@ -550,8 +538,7 @@
 
 <!-- MULTIROOM RECEIVERS -->
 <div id="multiroom-rx-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="multiroom-rx-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="multiroom-rx-modal-label">Receivers</h3>
 	</div>
 	<div class="modal-body">
@@ -568,19 +555,17 @@
 
 <!-- PREFERENCES -->
 <div id="preferences-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="preferences-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="preferences-modal-label">Preferences</h3>
 	</div>
 	<div class="modal-body" id="container-preferences">
-		<form class="form-horizontal" action="" method="">
-			<!-- APPEARANCE -->
-			<div class="accordian"><span class="h5">Appearance</span>
-				<div class="kontrol">
-					<div class="control-group">
-   	                <label class="control-label" for="theme-name">Theme</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+		<!-- APPEARANCE -->
+		<div class="accordian"><span class="h5">Appearance</span>
+			<div class="kontrol">
+				<div class="control-group">
+	               <label class="control-label" for="theme-name">Theme</label>
+		            <div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="theme-name" class="filter-option pull-left">
 									<span></span>
@@ -593,13 +578,13 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-themecolor" class="help-block hide">
-	                    	Sets the text and background color.
-	                    </span>
-	                </div>
+		                	Sets the text and background color.
+		                </span>
+		            </div>
 
-   	                <label class="control-label" for="accent-color">Accent color</label>
+	                <label class="control-label" for="accent-color">Accent color</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+							<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="accent-color" class="filter-option pull-left">
 									<span></span>
@@ -634,9 +619,9 @@
 	                    </span>
 	                </div>
 
-   	                <label class="control-label" for="alpha-blend">Alpha blend</label>
+	                <label class="control-label" for="alpha-blend">Alpha blend</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<div class="btn-group bootstrap-select bootstrap-select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="alpha-blend" class="filter-option pull-left">
 									<span></span>
@@ -764,9 +749,9 @@
 		                </div>
 					</div>
 
-   	                <label class="control-label" for="adaptive-enabled">Adaptive coloring</label>
+	                <label class="control-label" for="adaptive-enabled">Adaptive coloring</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<div class="btn-group bootstrap-select bootstrap-select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="adaptive-enabled" class="filter-option pull-left">
 									<span></span>
@@ -857,13 +842,13 @@
 						</span>
 					</div>
 				</div>
-				</div>
 			</div>
+		</div>
 
-			<!-- PLAYBACK -->
-			<div class="accordian"><span class="h5">Playback</span>
-				<div class="kontrol">
-					<div class="control-group">
+		<!-- PLAYBACK -->
+		<div class="accordian"><span class="h5">Playback</span>
+			<div class="kontrol">
+				<div class="control-group">
 					<label class="control-label" for="playqueue-art-enabled">Show Queue thumbs</label>
 					<div class="controls">
 						<div class="btn-group bootstrap-select bootstrap-select-mini">
@@ -943,7 +928,7 @@
 	                </div>
 
 					<label class="control-label" for="search_site">Search site</label>
- 	                <div class="controls">
+	                <div class="controls">
 						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="search_site" class="filter-option pull-left">
@@ -965,17 +950,17 @@
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Yahoo</span></a></li>
 								</ul>
 							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-search_site" class="help-block hide">
-							By clicking the current track title in Playback view an internet search is launched with the selected site.<br>
-							A combination of artist and album is searched. Wikipedia search is restricted to artist only.
- 	                    </span>
- 	                </div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-search_site" class="help-block hide">
+						By clicking the current track title in Playback view an internet search is launched with the selected site.<br>
+						A combination of artist and album is searched. Wikipedia search is restricted to artist only.
+		                </span>
+                	</div>
 
-   	                <label class="control-label" for="play-history-enabled">Playback history log</label>
+	                <label class="control-label" for="play-history-enabled">Playback history log</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="play-history-enabled" class="filter-option pull-left">
 									<span></span>
@@ -994,19 +979,17 @@
 	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
 	                    </span>
 					</div>
-
-				</div>
 				</div>
 			</div>
+		</div>
 
-			<!-- LIBRARY (STANDARD SETTINGS)-->
-			<div class="accordian"><span class="h5">Library</span>
-				<div class="kontrol">
-					<div class="control-group">
-
+		<!-- LIBRARY (STANDARD SETTINGS)-->
+		<div class="accordian"><span class="h5">Library</span>
+			<div class="kontrol">
+				<div class="control-group">
 					<label class="control-label" for="onetouch_album">One touch album</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="onetouch_album" class="filter-option pull-left">
 									<span></span>
@@ -1033,7 +1016,7 @@
 
 					<label class="control-label" for="onetouch_radio">One touch radio</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="onetouch_radio" class="filter-option pull-left">
 									<span></span>
@@ -1059,7 +1042,7 @@
 
 					<label class="control-label" for="onetouch-pl">One touch playlist</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="onetouch-pl" class="filter-option pull-left">
 									<span></span>
@@ -1085,7 +1068,7 @@
 
 					<label class="control-label" for="albumview-sort-order">Albumview sort order</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="albumview-sort-order" class="filter-option pull-left">
 									<span></span>
@@ -1113,7 +1096,7 @@
 
 					<label class="control-label" for="tagview-sort-order">Tagview sort order</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="tagview-sort-order" class="filter-option pull-left">
 									<span></span>
@@ -1143,7 +1126,7 @@
 
 					<label class="control-label" for="track-play">Track play</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="track-play" class="filter-option pull-left">
 									<span></span>
@@ -1166,346 +1149,345 @@
 					</div>
 
 					<label class="control-label" for="recently-added">Recently added filter</label>
- 	                <div class="controls">
-    						<div class="btn-group bootstrap-select select-medium">
- 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
- 								<div id="recently-added" class="filter-option pull-left">
- 									<span></span>
- 								</div>&nbsp;
- 								<div class="caret"></div>
- 							</button>
- 							<div class="dropdown-menu open">
- 								<ul class="dropdown-menu custom-select inner" role="menu">
- 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Week</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Month</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">3 Months</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">6 Months</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Year</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">No limit</span></a></li>
- 								</ul>
- 							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-recently-added" class="help-block hide">
- 		                	Time period used to filter the Library for recently added albums. The default is 1 month.<br>
-							NOTE: The "No limit" option provides a way to achieve a "date added" sort of the Library.
- 	                    </span>
- 	                </div>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="recently-added" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Week</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Month</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">3 Months</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">6 Months</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Year</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">No limit</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-recently-added" class="help-block hide">
+		                	Time period used to filter the Library for recently added albums. The default is 1 month.<br>
+						NOTE: The "No limit" option provides a way to achieve a "date added" sort of the Library.
+	                    </span>
+	                </div>
 
 					<label class="control-label" for="show-encoded-at">Show sample rate</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-medium">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="show-encoded-at" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No (searchable)</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Text</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Badge</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">HD only</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-show-encoded-at" class="help-block hide">
-	                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when the bit depth for Song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for Radio stations the bit rate is &gt; 128 kbps.
- 	                    </span>
- 	                </div>
+	                <div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="show-encoded-at" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No (searchable)</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Text</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Badge</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">HD only</span></a></li>
+							</ul>
+						</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-show-encoded-at" class="help-block hide">
+                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when the bit depth for Song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for Radio stations the bit rate is &gt; 128 kbps.
+	                    </span>
+	                </div>
 
 					<label class="control-label" for="cover-search-priority">Cover search priority</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-medium">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="cover-search-priority" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Embedded</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Cover file</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-cover-search-priority" class="help-block hide">
-							This option determines whether the Cover Art extractor and Thumbnail generator look first for Embedded covers or Cover image files.
- 	                    </span>
- 	                </div>
+	                <div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="cover-search-priority" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Embedded</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Cover file</span></a></li>
+							</ul>
+						</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-cover-search-priority" class="help-block hide">
+						This option determines whether the Cover Art extractor and Thumbnail generator look first for Embedded covers or Cover image files.
+	                    </span>
+	                </div>
 
 					<label class="control-label" for="hires-thumbnails">Thumbnail resolution</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-medium">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="hires-thumbnails" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-hires-thumbnails" class="help-block hide">
-							This option sets the resolution of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
-							NOTE: Auto uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time). This can result in lower resolution images.
- 	                    </span>
- 	                </div>
+	                <div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="hires-thumbnails" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px</span></a></li>
+							</ul>
+						</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-hires-thumbnails" class="help-block hide">
+						This option sets the resolution of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
+						NOTE: Auto uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time). This can result in lower resolution images.
+	                    </span>
+	                </div>
 
 					<label class="control-label" for="thumbnail-columns">Thumbnail columns</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-medium">
+	                <div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="thumbnail-columns" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">6/2 (Default)</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">7/3</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">8/4</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">10/4</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">12/4</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">16/4</span></a></li>
+							</ul>
+						</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbnail-columns" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-thumbnail-columns" class="help-block hide">
+		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for Desktop or Tablet and the second is for Mobile.
+	                    </span>
+	                </div>
+				</div>
+			</div>
+		</div>
+
+		<!-- LIBRARY (ADVANCED)-->
+		<div class="accordian"><span class="h5">Library (Advanced)</span>
+			<div class="kontrol">
+				<div class="control-group">
+					<label class="control-label" for="tag-view-genre">Tag view genre</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium2">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="thumbnail-columns" class="filter-option pull-left">
+								<div id="tag-view-genre" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">6/2 (Default)</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">7/3</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">8/4</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">10/4</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">12/4</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbnail-columns-sel"><span class="text">16/4</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Genres</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Composers</span></a></li>
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbnail-columns" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-thumbnail-columns" class="help-block hide">
- 		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for Desktop or Tablet and the second is for Mobile.
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-tag-view-genre" class="help-block hide">
+							Select whether to populate the first column in Tag view with Genres (default) or with Composers.
+						</span>
+	                </div>
+
+					<label class="control-label" for="tag-view-artist">Tag view artist</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium2">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tag-view-artist" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist +</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-tag-view-artist" class="help-block hide">
+							Select how to populate the Artist list in Tag view.<br>
+							<b>Artist:</b>&nbsp;List all Artists, Album Artists, Performers and Conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
+							<b>Artist (Strict):</b>&nbsp;List only Artists. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
+							<b>Album Artist:</b>&nbsp;List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
+							<b>Album Artist +:</b>&nbsp;Same as Album Artists except compilation albums listed for a selected Album Artist will show only the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected Album Artist.<br>
+						</span>
+	                </div>
+
+					<label class="control-label" for="library-album-key">Album key</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium2">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-album-key" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist (Default)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist@AlbumID</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath@AlbumID</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
+ 		                    Determine how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
  	                    </span>
  	                </div>
 
-				</div>
-				</div>
-			</div>
-
-			<!-- LIBRARY (ADVANCED)-->
-			<div class="accordian"><span class="h5">Library (Advanced)</span>
-				<div class="kontrol">
-					<div class="control-group">
-						<label class="control-label" for="tag-view-genre">Tag view genre</label>
-		                <div class="controls">
-							<div class="btn-group bootstrap-select select-medium2">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="tag-view-genre" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Genres</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Composers</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-tag-view-genre" class="help-block hide">
-								Select whether to populate the first column in Tag view with Genres (default) or with Composers.
-							</span>
-		                </div>
-
-						<label class="control-label" for="tag-view-artist">Tag view artist</label>
-		                <div class="controls">
-							<div class="btn-group bootstrap-select select-medium2">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="tag-view-artist" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist +</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-tag-view-artist" class="help-block hide">
-								Select how to populate the Artist list in Tag view.<br>
-								<b>Artist:</b>&nbsp;List all Artists, Album Artists, Performers and Conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-								<b>Artist (Strict):</b>&nbsp;List only Artists. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-								<b>Album Artist:</b>&nbsp;List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
-								<b>Album Artist +:</b>&nbsp;Same as Album Artists except compilation albums listed for a selected Album Artist will show only the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected Album Artist.<br>
-							</span>
-		                </div>
-
-						<label class="control-label" for="library-album-key">Album key</label>
-	 	                <div class="controls">
-							<div class="btn-group bootstrap-select select-medium2">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="library-album-key" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist (Default)</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist@AlbumID</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath@AlbumID</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-	 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
-	 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
-	 		                    Determine how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
-	 	                    </span>
-	 	                </div>
-
-						<label class="control-label" for="library-inc-comment-tag">Include comment tag</label>
-	 	                <div class="controls">
-							<div class="btn-group bootstrap-select select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="library-inc-comment-tag" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-	 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<!--span id="info-library-inc-comment-tag" class="help-block hide">
-								The text is displayed in Tag/Album views as an album heading in the track list if the Album key is set to include @AlbumID.
-	 	                    </span-->
-	 						<span id="info-library-inc-comment-tag" class="help-block hide">
-								The text is displayed in Tag/Album views.<br>
-								(1) After the Year in the Album title.<br>
-								(2) As an album heading in the track list if the Album key is set to include @AlbumID.
-	 	                    </span>
-	 	                </div>
-
-						<label class="control-label" for="ignore-articles">Ignore articles</label>
-		                <div class="controls">
-		                    <input id="ignore-articles" class="input-medium" type="text">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-ignore-articles" class="help-block hide">
-								Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
-							</span>
-		                </div>
-
-						<label class="control-label" for="show-genres-column">Show genres column</label>
-		                <div class="controls">
-	   						<div class="btn-group bootstrap-select bootstrap-select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="show-genres-column" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
+					<label class="control-label" for="library-inc-comment-tag">Include comment tag</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-inc-comment-tag" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">No</span></a></li>
+								</ul>
 							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-show-genres-column" class="help-block hide">
-		                    	Show the Genres column in Tag view.
-		                    </span>
-		                </div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<!--span id="info-library-inc-comment-tag" class="help-block hide">
+							The text is displayed in Tag/Album views as an album heading in the track list if the Album key is set to include @AlbumID.
+ 	                    </span-->
+ 						<span id="info-library-inc-comment-tag" class="help-block hide">
+							The text is displayed in Tag/Album views.<br>
+							(1) After the Year in the Album title.<br>
+							(2) As an album heading in the track list if the Album key is set to include @AlbumID.
+ 	                    </span>
+ 	                </div>
 
-						<label class="control-label" for="show-tagview-covers">Show tagview covers</label>
-	 	                <div class="controls">
-							<div class="btn-group bootstrap-select bootstrap-select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="show-tagview-covers" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-	 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
-	 						<span id="info-show-tagview-covers" class="help-block hide">
-	 		                    Show covers in the Album column of Tag view.
-	 	                    </span>
-	 	                </div>
+					<label class="control-label" for="ignore-articles">Ignore articles</label>
+	                <div class="controls">
+	                    <input id="ignore-articles" class="input-medium" type="text">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-ignore-articles" class="help-block hide">
+							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
+						</span>
+	                </div>
 
-						<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
-	 	                <div class="controls">
-							<div class="btn-group bootstrap-select bootstrap-select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="ellipsis-limited-text" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-	 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fas fa-info-circle"></i></a>
-	 						<span id="info-ellipsis-limited-text" class="help-block hide">
-	 		                    Display ellipsis limited text underneath the cover in Album view for a more compact look.
-	 	                    </span>
-	 	                </div>
+					<label class="control-label" for="show-genres-column">Show genres column</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-genres-column" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-show-genres-column" class="help-block hide">
+	                    	Show the Genres column in Tag view.
+	                    </span>
+	                </div>
 
-						<label class="control-label" for="utf8-char-filter">UTF8 character filter</label>
-	 	                <div class="controls">
-							<div class="btn-group bootstrap-select bootstrap-select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="utf8-char-filter" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-	 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
-	 						<span id="info-utf8-char-filter" class="help-block hide">
-								Replace non-UTF8 characters with UTF8 compliant characters which may be present in song files. Setting this to Yes may impact the performance of the Library.
-	 	                    </span>
-	 	                </div>
-					</div>
+					<label class="control-label" for="show-tagview-covers">Show tagview covers</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-tagview-covers" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-show-tagview-covers" class="help-block hide">
+ 		                    Show covers in the Album column of Tag view.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="ellipsis-limited-text" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-ellipsis-limited-text" class="help-block hide">
+ 		                    Display ellipsis limited text underneath the cover in Album view for a more compact look.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="utf8-char-filter">UTF8 character filter</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="utf8-char-filter" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-utf8-char-filter" class="help-block hide">
+							Replace non-UTF8 characters with UTF8 compliant characters which may be present in song files. Setting this to Yes may impact the performance of the Library.
+ 	                    </span>
+ 	                </div>
 				</div>
 			</div>
+		</div>
 
-			<!-- COVERVIEW -->
-			<div class="accordian"><span class="h5">CoverView</span>
-				<div class="kontrol">
-					<div class="control-group">
-   	                <label class="control-label" for="scnsaver-timeout">Timed display</label>
+		<!-- COVERVIEW -->
+		<div class="accordian"><span class="h5">CoverView</span>
+			<div class="kontrol">
+				<div class="control-group">
+	                <label class="control-label" for="scnsaver-timeout">Timed display</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-timeout" class="filter-option pull-left">
 									<span></span>
@@ -1533,7 +1515,7 @@
 
 					<label class="control-label" for="auto-coverview">Automatic display</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="auto-coverview" class="filter-option pull-left">
 									<span></span>
@@ -1553,9 +1535,9 @@
 	                    </span>
 	                </div>
 
-   	                <label class="control-label" for="scnsaver-timeout">Backdrop style</label>
+	                <label class="control-label" for="scnsaver-timeout">Backdrop style</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-style" class="filter-option pull-left">
 									<span></span>
@@ -1585,7 +1567,7 @@
 
 					<label class="control-label" for="scnsaver-mode">Display mode</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-mode" class="filter-option pull-left">
 									<span></span>
@@ -1609,7 +1591,7 @@
 
 					<label class="control-label" for="scnsaver-layout">Layout</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
+						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-layout" class="filter-option pull-left">
 									<span></span>
@@ -1632,7 +1614,7 @@
 
 					<label class="control-label" for="scnsaver-xmeta">Extra metadata</label>
 	                <div class="controls" style="margin-bottom:5em;">
-   						<div class="btn-group bootstrap-select select-medium">
+							<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-xmeta" class="filter-option pull-left">
 									<span></span>
@@ -1652,9 +1634,8 @@
 	                    </span>
 	                </div>
 				</div>
-				</div>
 			</div>
-		</form>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -1664,149 +1645,145 @@
 
 <!-- CLOCK RADIO -->
 <div id="clockradio-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="clockradio-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="clockradio-modal-label">Clock radio settings</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-			<div class="control-group">
-                <label class="control-label" for="clockradio-mode">Clock mode</label>
+		<div class="control-group">
+            <label class="control-label" for="clockradio-mode">Clock mode</label>
+            <div class="controls">
+				<div class="btn-group bootstrap-select" style="width: 120px;">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="clockradio-mode" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Disabled</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Clock Radio</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Sleep Timer</span></a></li>
+						</ul>
+					</div>
+				</div>
+            </div>
+
+			<div id="clockradio-ctl-grp1">
+                <label class="control-label" for="clockradio-playname">Item to play</label>
                 <div class="controls">
-					<div class="btn-group bootstrap-select" style="width: 120px;">
+                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
+					<span id="info-playname" class="help-block" style="margin-top:0;">
+	                    Use 'Set for clock radio' on the Queue item menu to populate this read-only field.
+                    </span>
+                </div>
+
+                <label class="control-label" for="clockradio-starttime-hh">Start time</label>
+                <div class="controls">
+                    <input id="clockradio-starttime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
+                    <span>:</span>
+                    <input id="clockradio-starttime-mm" class="input-mini input-height-x" style="margin-right:.5em;" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
+
+					<div class="btn-group bootstrap-select bootstrap-select-mini">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="clockradio-mode" class="filter-option pull-left">
+							<div id="clockradio-starttime-ampm" class="filter-option pull-left">
 								<span></span>
 							</div>&nbsp;
 							<div class="caret"></div>
 						</button>
 						<div class="dropdown-menu open">
 							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Disabled</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Clock Radio</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Sleep Timer</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm-sel"><span class="text">AM</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm-sel"><span class="text">PM</span></a></li>
 							</ul>
 						</div>
 					</div>
                 </div>
 
-				<div id="clockradio-ctl-grp1">
-	                <label class="control-label" for="clockradio-playname">Item to play</label>
-	                <div class="controls">
-	                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
-						<span id="info-playname" class="help-block" style="margin-top:0;">
-		                    Use 'Set for clock radio' on the Queue item menu to populate this read-only field.
-	                    </span>
-	                </div>
+                <label class="control-label" for="clockradio-start-mon"></label>
+                <div class="controls">
+					<div class="checkbox-grp">
+						<input id="clockradio-start-mon" class="checkbox-ctl" type="checkbox" name="clockradio-start-mon">Mon
+						<input id="clockradio-start-tue" class="checkbox-ctl" type="checkbox" name="clockradio-start-tue">Tue
+						<input id="clockradio-start-wed" class="checkbox-ctl" type="checkbox" name="clockradio-start-wed">Wed
+						<input id="clockradio-start-thu" class="checkbox-ctl" type="checkbox" name="clockradio-start-thu">Thu
+						<input id="clockradio-start-fri" class="checkbox-ctl" type="checkbox" name="clockradio-start-fri">Fri
+						<br>
+						<input id="clockradio-start-sat" class="checkbox-ctl" type="checkbox" name="clockradio-start-sat">Sat
+						<input id="clockradio-start-sun" class="checkbox-ctl" type="checkbox" name="clockradio-start-sun">Sun
+					</div>
+                </div>
+			</div>
 
-	                <label class="control-label" for="clockradio-starttime-hh">Start time</label>
-	                <div class="controls">
-	                    <input id="clockradio-starttime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
-	                    <span>:</span>
-	                    <input id="clockradio-starttime-mm" class="input-mini input-height-x" style="margin-right:.5em;" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
+			<div id="clockradio-ctl-grp2">
+                <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
+                <div class="controls">
+                    <input id="clockradio-stoptime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
+                    <span>:</span>
+                    <input id="clockradio-stoptime-mm" class="input-mini input-height-x" style="margin-right:.5em;" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
 
-						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="clockradio-starttime-ampm" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm-sel"><span class="text">AM</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm-sel"><span class="text">PM</span></a></li>
-								</ul>
-							</div>
+					<div class="btn-group bootstrap-select bootstrap-select-mini">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="clockradio-stoptime-ampm" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm-sel"><span class="text">AM</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm-sel"><span class="text">PM</span></a></li>
+							</ul>
 						</div>
-	                </div>
+					</div>
+                </div>
 
-	                <label class="control-label" for="clockradio-start-mon"></label>
-	                <div class="controls">
-						<div class="checkbox-grp">
-							<input id="clockradio-start-mon" class="checkbox-ctl" type="checkbox" name="clockradio-start-mon">Mon
-							<input id="clockradio-start-tue" class="checkbox-ctl" type="checkbox" name="clockradio-start-tue">Tue
-							<input id="clockradio-start-wed" class="checkbox-ctl" type="checkbox" name="clockradio-start-wed">Wed
-							<input id="clockradio-start-thu" class="checkbox-ctl" type="checkbox" name="clockradio-start-thu">Thu
-							<input id="clockradio-start-fri" class="checkbox-ctl" type="checkbox" name="clockradio-start-fri">Fri
-							<br>
-							<input id="clockradio-start-sat" class="checkbox-ctl" type="checkbox" name="clockradio-start-sat">Sat
-							<input id="clockradio-start-sun" class="checkbox-ctl" type="checkbox" name="clockradio-start-sun">Sun
+                <label class="control-label" for="clockradio-stop-mon"></label>
+                <div class="controls">
+					<div class="checkbox-grp">
+						<input id="clockradio-stop-mon" class="checkbox-ctl" type="checkbox" name="clockradio-stop-mon">Mon
+						<input id="clockradio-stop-tue" class="checkbox-ctl" type="checkbox" name="clockradio-stop-tue">Tue
+						<input id="clockradio-stop-wed" class="checkbox-ctl" type="checkbox" name="clockradio-stop-wed">Wed
+						<input id="clockradio-stop-thu" class="checkbox-ctl" type="checkbox" name="clockradio-stop-thu">Thu
+						<input id="clockradio-stop-fri" class="checkbox-ctl" type="checkbox" name="clockradio-stop-fri">Fri
+						<br>
+						<input id="clockradio-stop-sat" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sat">Sat
+						<input id="clockradio-stop-sun" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sun">Sun
+					</div>
+                </div>
+
+                <label class="control-label" for="clockradio-action">Action after stop</label>
+                <div class="controls">
+						<div class="btn-group bootstrap-select" style="width: 120px;">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="clockradio-action" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">None</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Restart</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Shutdown</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Update Library</span></a></li>
+							</ul>
 						</div>
-	                </div>
-				</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-action" class="help-block hide">
+						NOTE: The Restart action is initiated 45 seconds after the specified stop time.
+					</span>
+                </div>
+			</div>
 
-				<div id="clockradio-ctl-grp2">
-	                <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
-	                <div class="controls">
-	                    <input id="clockradio-stoptime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
-	                    <span>:</span>
-	                    <input id="clockradio-stoptime-mm" class="input-mini input-height-x" style="margin-right:.5em;" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
-
-						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="clockradio-stoptime-ampm" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm-sel"><span class="text">AM</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm-sel"><span class="text">PM</span></a></li>
-								</ul>
-							</div>
-						</div>
-	                </div>
-
-	                <label class="control-label" for="clockradio-stop-mon"></label>
-	                <div class="controls">
-						<div class="checkbox-grp">
-							<input id="clockradio-stop-mon" class="checkbox-ctl" type="checkbox" name="clockradio-stop-mon">Mon
-							<input id="clockradio-stop-tue" class="checkbox-ctl" type="checkbox" name="clockradio-stop-tue">Tue
-							<input id="clockradio-stop-wed" class="checkbox-ctl" type="checkbox" name="clockradio-stop-wed">Wed
-							<input id="clockradio-stop-thu" class="checkbox-ctl" type="checkbox" name="clockradio-stop-thu">Thu
-							<input id="clockradio-stop-fri" class="checkbox-ctl" type="checkbox" name="clockradio-stop-fri">Fri
-							<br>
-							<input id="clockradio-stop-sat" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sat">Sat
-							<input id="clockradio-stop-sun" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sun">Sun
-						</div>
-	                </div>
-
-	                <label class="control-label" for="clockradio-action">Action after stop</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select" style="width: 120px;">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="clockradio-action" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">None</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Restart</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Shutdown</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Update Library</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-action" class="help-block hide">
-							NOTE: The Restart action is initiated 45 seconds after the specified stop time.
-						</span>
-	                </div>
-				</div>
-
-				<div id="clockradio-ctl-grp3">
-	                <label class="control-label" for="clockradio-volume">Volume</label>
-	                <div class="controls">
-	                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
-	                </div>
-				</div>
-
-            </div>
-		</form>
+			<div id="clockradio-ctl-grp3">
+                <label class="control-label" for="clockradio-volume">Volume</label>
+                <div class="controls">
+                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
+                </div>
+			</div>
+        </div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -1816,134 +1793,129 @@
 
 <!-- RADIO STATION NEW/EDIT/DELETE -->
 <div id="new-station-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-station-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="new-station-modal-label">New station</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-	    	<fieldset>
-				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="new-station-name">Station name</label>
-	                <div class="controls">
-	                    <input id="new-station-name" class="input-large" type="text" name="new_station_name" maxlength="200" value="" autofocus>
-	                </div>
-	                <label class="control-label" for="new-station-url">Playable URL</label>
-	                <div class="controls">
-	                    <input id="new-station-url" class="input-large" type="text" name="new_station_url" maxlength="200" value="">
-						<span id="info-new-station-url" class="help-block" style="margin-top:0">
-							Enter the URL to the actual stream and not to a playlist of stream links.
-						</span>
-	                </div>
+		<div class="control-group">
+            <label class="control-label" for="new-station-name">Station name</label>
+            <div class="controls">
+                <input id="new-station-name" class="input-large" type="text" name="new_station_name" maxlength="200" value="" autofocus>
+            </div>
+            <label class="control-label" for="new-station-url">Playable URL</label>
+            <div class="controls">
+                <input id="new-station-url" class="input-large" type="text" name="new_station_url" maxlength="200" value="">
+				<span id="info-new-station-url" class="help-block" style="margin-top:0">
+					Enter the URL to the actual stream and not to a playlist of stream links.
+				</span>
+            </div>
 
-					<label class="control-label" for="new-radiologo">Logo image</label>
-					<div class="controls">
-						<div style="display:inline-block;">
-							<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
-							<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'radio')">
-						</div>
-						<div id="preview-new-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
-						<a aria-label="Help" class="info-toggle" id="info-toggle-new-logoimage" data-cmd="info-new-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<div id="error-new-logoimage"></div>
-						<div id="info-new-logoimage" class="help-block hide">
-							Add a JPEG logo image for the station. Max image size is 1MB.
-						</div>
-					</div>
+			<label class="control-label" for="new-radiologo">Logo image</label>
+			<div class="controls">
+				<div style="display:inline-block;">
+					<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
+					<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'radio')">
+				</div>
+				<div id="preview-new-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-new-logoimage" data-cmd="info-new-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<div id="error-new-logoimage"></div>
+				<div id="info-new-logoimage" class="help-block hide">
+					Add a JPEG logo image for the station. Max image size is 1MB.
+				</div>
+			</div>
 
-					<div id="new-station-tags">
-						<label class="control-label" for="new-station-type">Type</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="new-station-type" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Regular</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Favorite</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Hidden</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-new-station-type" class="help-block hide">
-								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
-							</span>
+			<div id="new-station-tags">
+				<label class="control-label" for="new-station-type">Type</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="new-station-type" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Regular</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Favorite</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Hidden</span></a></li>
+							</ul>
 						</div>
-						<label class="control-label" for="new-station-genre">Genre</label>
-						<div class="controls">
-							<input id="new-station-genre" class="input-large" type="text" name="new_station_genre" maxlength="200" value="">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-new-station-genre" class="help-block hide">
-								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
-							</span>
 						</div>
-						<label class="control-label" for="new-station-broadcaster">Broadcaster</label>
-						<div class="controls">
-		                    <input id="new-station-broadcaster" class="input-large" type="text" name="new_station_broadcaster" maxlength="200" value="">
-		                </div>
-						<label class="control-label" for="new-station-home-page">Home page</label>
-						<div class="controls">
-		                    <input id="new-station-home-page" class="input-large" type="text" name="new_station_home_page" maxlength="200" value="">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-new-station-home-page" class="help-block hide">
-								URL for the station's home page. This link is used when clicking on "Streaming source" in Playback.
-							</span>
-		                </div>
-						<label class="control-label" for="new-station-language">Language</label>
-						<div class="controls">
-		                    <input id="new-station-language" class="input-large" type="text" name="new_station_language" maxlength="32" value="">
-		                </div>
-						<label class="control-label" for="new-station-country">Country</label>
-						<div class="controls">
-		                    <input id="new-station-country" class="input-large" type="text" name="new_station_country" maxlength="200" value="">
-		                </div>
-						<label class="control-label" for="new-station-region">Region</label>
-						<div class="controls">
-		                    <input id="new-station-region" class="input-large" type="text" name="new_station_region" maxlength="200" value="">
-		                </div>
-						<label class="control-label" for="new-station-bitrate">Bit rate (kbps)</label>
-						<div class="controls">
-		                    <input id="new-station-bitrate" class="input-large" type="text" maxlength="4" name="new_station_bitrate" value="">
-		                </div>
-						<label class="control-label" for="new-station-format">Audio format</label>
-						<div class="controls">
-		                    <input id="new-station-format" class="input-large" type="text" name="new_station_format" maxlength="10" value="">
-		                </div>
-						<label class="control-label" for="new-station-geo-fenced">Geo-fenced</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="new-station-geo-fenced" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-new-station-geo-fenced" class="help-block hide">
-								Specifies whether the station stream is only avalable in a certain country or region.
-							</span>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-new-station-type" class="help-block hide">
+						This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+					</span>
+				</div>
+				<label class="control-label" for="new-station-genre">Genre</label>
+				<div class="controls">
+					<input id="new-station-genre" class="input-large" type="text" name="new_station_genre" maxlength="200" value="">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-new-station-genre" class="help-block hide">
+						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+					</span>
+				</div>
+				<label class="control-label" for="new-station-broadcaster">Broadcaster</label>
+				<div class="controls">
+                    <input id="new-station-broadcaster" class="input-large" type="text" name="new_station_broadcaster" maxlength="200" value="">
+                </div>
+				<label class="control-label" for="new-station-home-page">Home page</label>
+				<div class="controls">
+                    <input id="new-station-home-page" class="input-large" type="text" name="new_station_home_page" maxlength="200" value="">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-new-station-home-page" class="help-block hide">
+						URL for the station's home page. This link is used when clicking on "Streaming source" in Playback.
+					</span>
+                </div>
+				<label class="control-label" for="new-station-language">Language</label>
+				<div class="controls">
+                    <input id="new-station-language" class="input-large" type="text" name="new_station_language" maxlength="32" value="">
+                </div>
+				<label class="control-label" for="new-station-country">Country</label>
+				<div class="controls">
+                    <input id="new-station-country" class="input-large" type="text" name="new_station_country" maxlength="200" value="">
+                </div>
+				<label class="control-label" for="new-station-region">Region</label>
+				<div class="controls">
+                    <input id="new-station-region" class="input-large" type="text" name="new_station_region" maxlength="200" value="">
+                </div>
+				<label class="control-label" for="new-station-bitrate">Bit rate (kbps)</label>
+				<div class="controls">
+                    <input id="new-station-bitrate" class="input-large" type="text" maxlength="4" name="new_station_bitrate" value="">
+                </div>
+				<label class="control-label" for="new-station-format">Audio format</label>
+				<div class="controls">
+                    <input id="new-station-format" class="input-large" type="text" name="new_station_format" maxlength="10" value="">
+                </div>
+				<label class="control-label" for="new-station-geo-fenced">Geo-fenced</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="new-station-geo-fenced" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">No</span></a></li>
+							</ul>
 						</div>
-						<!--
-						<label class="control-label" for="new-station-reserved2">Reserved2</label>
-						<div class="controls">
-		                    <input id="new-station-reserved2" class="input-large" type="text" name="new_station_reserved2" maxlength="10" value="">
-		                </div>
-						-->
-					</div>
-	            </div>
-	    	</fieldset>
-		</form>
+						</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-new-station-geo-fenced" class="help-block hide">
+						Specifies whether the station stream is only avalable in a certain country or region.
+					</span>
+				</div>
+				<!--
+				<label class="control-label" for="new-station-reserved2">Reserved2</label>
+				<div class="controls">
+                    <input id="new-station-reserved2" class="input-large" type="text" name="new_station_reserved2" maxlength="10" value="">
+                </div>
+				-->
+			</div>
+        </div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -1951,137 +1923,135 @@
 	</div>
 </div>
 
+<!-- USE THIS AS A MODEL WHEN REFACTORING -->
 <div id="edit-station-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="edit-station-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="edit-station-modal-label">Edit station</h3>
-		<br>
-		<p>NOTE: After updating a station logo it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image sooner but if not then try clearing the Browser cache.</p>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-	    	<fieldset>
-				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="edit-station-name">Station name</label>
-	                <div class="controls">
-	                    <input id="edit-station-name" class="input-large" type="text" name="edit_station_name" maxlength="200" value="" readonly>
-	                </div>
-	                <label class="control-label" for="edit-station-url">Playable URL</label>
-	                <div class="controls">
-	                    <input id="edit-station-url" class="input-large" type="text" name="edit_station_url" maxlength="200" value="">
-						<span id="info-edit-station-url" class="help-block" style="margin-top:0">
-							Enter the URL to the actual stream and not to a playlist of stream links.
-						</span>
-	                </div>
+		<p>
+			After updating a station logo it may take a while before the Browser expires the old image from it's cache.
+			Refreshing the Browser may help expire the old image sooner but if not then try clearing the Browser cache.
+		</p>
+		<div class="control-group">
+            <label class="control-label" for="edit-station-name">Station name</label>
+            <div class="controls">
+                <input id="edit-station-name" class="input-large" type="text" name="edit_station_name" maxlength="200" value="" readonly>
+            </div>
+            <label class="control-label" for="edit-station-url">Playable URL</label>
+            <div class="controls">
+                <input id="edit-station-url" class="input-large" type="text" name="edit_station_url" maxlength="200" value="">
+				<span id="info-edit-station-url" class="help-block" style="margin-top:0">
+					Enter the URL to the actual stream and not to a playlist of stream links.
+				</span>
+            </div>
 
-					<label class="control-label" for="edit-radiologo">Logo image</label>
-					<div class="controls">
-						<div style="display:inline-block;">
-							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
-							<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'radio')">
-						</div>
-						<div id="preview-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
-						<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<div id="error-edit-logoimage"></div>
-						<div id="info-edit-logoimage" class="help-block hide">
-							Add a JPEG logo image for the station. Max image size is 1MB.
-						</div>
-					</div>
+			<label class="control-label" for="edit-radiologo">Logo image</label>
+			<div class="controls">
+				<div style="display:inline-block;">
+					<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
+					<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'radio')">
+				</div>
+				<div id="preview-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<div id="error-edit-logoimage"></div>
+				<div id="info-edit-logoimage" class="help-block hide">
+					Add a JPEG logo image for the station. Max image size is 1MB.
+				</div>
+			</div>
 
-					<div id="edit-station-tags">
-						<label class="control-label" for="edit-station-type">Type</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="edit-station-type" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Regular</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Favorite</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Hidden</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-edit-station-type" class="help-block hide">
-								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
-							</span>
+			<div id="edit-station-tags">
+				<label class="control-label" for="edit-station-type">Type</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="edit-station-type" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Regular</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Favorite</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Hidden</span></a></li>
+							</ul>
 						</div>
-						<label class="control-label" for="edit-station-genre">Genre</label>
-						<div class="controls">
-							<input id="edit-station-genre" class="input-large" type="text" name="edit_station_genre" maxlength="200" value="">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-edit-station-genre" class="help-block hide">
-								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
-							</span>
 						</div>
-						<label class="control-label" for="edit-station-broadcaster">Broadcaster</label>
-						<div class="controls">
-		                    <input id="edit-station-broadcaster" class="input-large" type="text" name="edit_station_broadcaster" maxlength="200" value="">
-		                </div>
-						<label class="control-label" for="new-station-home-page">Home page</label>
-						<div class="controls">
-		                    <input id="edit-station-home-page" class="input-large" type="text" name="edit_station_home_page" maxlength="200" value="">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-edit-station-home-page" class="help-block hide">
-								URL for the station's home page. This link is used when clicking on "Streaming source" in Playback.
-							</span>
-		                </div>
-						<label class="control-label" for="edit-station-language">Language</label>
-						<div class="controls">
-		                    <input id="edit-station-language" class="input-large" type="text" name="edit_station_language" maxlength="32" value="">
-		                </div>
-						<label class="control-label" for="edit-station-country">Country</label>
-						<div class="controls">
-		                    <input id="edit-station-country" class="input-large" type="text" name="edit_station_country" maxlength="200" value="">
-		                </div>
-						<label class="control-label" for="edit-station-region">Region</label>
-						<div class="controls">
-		                    <input id="edit-station-region" class="input-large" type="text" name="edit_station_region" maxlength="200" value="">
-		                </div>
-						<label class="control-label" for="edit-station-bitrate">Bit rate (kbps)</label>
-						<div class="controls">
-		                    <input id="edit-station-bitrate" class="input-large" type="text" maxlength="4" name="edit_station_bitrate" value="">
-		                </div>
-						<label class="control-label" for="edit-station-format">Audio format</label>
-						<div class="controls">
-		                    <input id="edit-station-format" class="input-large" type="text" name="edit_station_format" maxlength="10" value="">
-		                </div>
-						<label class="control-label" for="edit-station-geo-fenced">Geo-fenced</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="edit-station-geo-fenced" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-edit-station-geo-fenced" class="help-block hide">
-								Specifies whether the station stream is only avalable in a certain country or region.
-							</span>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-edit-station-type" class="help-block hide">
+						This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+					</span>
+				</div>
+				<label class="control-label" for="edit-station-genre">Genre</label>
+				<div class="controls">
+					<input id="edit-station-genre" class="input-large" type="text" name="edit_station_genre" maxlength="200" value="">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-edit-station-genre" class="help-block hide">
+						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+					</span>
+				</div>
+				<label class="control-label" for="edit-station-broadcaster">Broadcaster</label>
+				<div class="controls">
+                    <input id="edit-station-broadcaster" class="input-large" type="text" name="edit_station_broadcaster" maxlength="200" value="">
+                </div>
+				<label class="control-label" for="new-station-home-page">Home page</label>
+				<div class="controls">
+                    <input id="edit-station-home-page" class="input-large" type="text" name="edit_station_home_page" maxlength="200" value="">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-edit-station-home-page" class="help-block hide">
+						URL for the station's home page. This link is used when clicking on "Streaming source" in Playback.
+					</span>
+                </div>
+				<label class="control-label" for="edit-station-language">Language</label>
+				<div class="controls">
+                    <input id="edit-station-language" class="input-large" type="text" name="edit_station_language" maxlength="32" value="">
+                </div>
+				<label class="control-label" for="edit-station-country">Country</label>
+				<div class="controls">
+                    <input id="edit-station-country" class="input-large" type="text" name="edit_station_country" maxlength="200" value="">
+                </div>
+				<label class="control-label" for="edit-station-region">Region</label>
+				<div class="controls">
+                    <input id="edit-station-region" class="input-large" type="text" name="edit_station_region" maxlength="200" value="">
+                </div>
+				<label class="control-label" for="edit-station-bitrate">Bit rate (kbps)</label>
+				<div class="controls">
+                    <input id="edit-station-bitrate" class="input-large" type="text" maxlength="4" name="edit_station_bitrate" value="">
+                </div>
+				<label class="control-label" for="edit-station-format">Audio format</label>
+				<div class="controls">
+                    <input id="edit-station-format" class="input-large" type="text" name="edit_station_format" maxlength="10" value="">
+                </div>
+				<label class="control-label" for="edit-station-geo-fenced">Geo-fenced</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="edit-station-geo-fenced" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">No</span></a></li>
+							</ul>
 						</div>
-						<!--
-						<label class="control-label" for="new-station-reserved2">Reserved2</label>
-						<div class="controls">
-		                    <input id="edit-station-reserved2" class="input-large" type="text" name="edit_station_reserved2" maxlength="10" value="">
-		                </div>
-						-->
-					</div>
-	            </div>
-	    	</fieldset>
-		</form>
+						</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-edit-station-geo-fenced" class="help-block hide">
+						Specifies whether the station stream is only avalable in a certain country or region.
+					</span>
+				</div>
+				<!--
+				<label class="control-label" for="new-station-reserved2">Reserved2</label>
+				<div class="controls">
+                    <input id="edit-station-reserved2" class="input-large" type="text" name="edit_station_reserved2" maxlength="10" value="">
+                </div>
+				-->
+			</div>
+        </div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -2090,8 +2060,7 @@
 </div>
 
 <div id="delete-station-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-station-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="delete-station-modal-label">Delete station?</h3>
 	</div>
 	<div class="modal-body">
@@ -2105,245 +2074,242 @@
 
 <!-- RADIO MANAGER -->
 <div id="radio-manager-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="radio-manager-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="radio-manager-modal-label">Radio Manager</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-			<!-- SORT/GROUP OPTIONS -->
-			<span class="h5">Sorting and Grouping</span>
-			<div class="control-group">
-				<label class="control-label" for="radioview-sort-tag">Sort tag</label>
-				<div class="controls">
-					<div class="btn-group bootstrap-select select-medium">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="radioview-sort-tag" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Name</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Genre</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Broadcaster</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Language</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Country</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Region</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Bitrate</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Format</span></a></li>
-							</ul>
-						</div>
+		<!-- SORT/GROUP OPTIONS -->
+		<span class="h5">Sorting and Grouping</span>
+		<div class="control-group">
+			<label class="control-label" for="radioview-sort-tag">Sort tag</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-medium">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-sort-tag" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Name</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Genre</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Broadcaster</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Language</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Country</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Region</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Bitrate</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Format</span></a></li>
+						</ul>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-radioview-sort-tag" class="help-block hide">
-						Specify which tag is used to sort the station list.
-					</span>
 				</div>
-				<label class="control-label" for="radioview-group-method">Group method</label>
-				<div class="controls">
-					<div class="btn-group bootstrap-select select-medium">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="radioview-group-method" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Favorites first</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Sort tag</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">No grouping</span></a></li>
-							</ul>
-						</div>
-					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-radioview-group-method" class="help-block hide">
-						Specify how to break the list into groups separated by a named header. The "Favorites first" selection places favorite stations at the top of the list sorted by Name followed by the rest of the stations grouped by Sort tag.
-					</span>
-				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-radioview-sort-tag" class="help-block hide">
+					Specify which tag is used to sort the station list.
+				</span>
 			</div>
-			<!-- SHOW/HIDE STATIONS -->
-			<span class="h5">Show/Hide Stations</span>
+			<label class="control-label" for="radioview-group-method">Group method</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-medium">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-group-method" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Favorites first</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Sort tag</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">No grouping</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-radioview-group-method" class="help-block hide">
+					Specify how to break the list into groups separated by a named header. The "Favorites first" selection places favorite stations at the top of the list sorted by Name followed by the rest of the stations grouped by Sort tag.
+				</span>
+			</div>
+		</div>
+		<!-- SHOW/HIDE STATIONS -->
+		<span class="h5">Show/Hide Stations</span>
+		<div class="control-group">
+			<label class="control-label" for="radioview-show-hide-moode">moOde stations</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-medium">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-show-hide-moode" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">No action</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Show hidden</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide all</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide all</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide geo-fenced</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide geo-fenced</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-radioview-show-hide-moode" class="help-block hide">
+					<b>Show hidden:&nbsp;</b> Display hidden moOde stations for review but leave their type set to Hidden.<br>
+					<b>Hide all:&nbsp;</b> Set all moOde stations to type Hidden except for Favorites.<br>
+					<b>Un-hide all:&nbsp;</b> Set all moOde stations to type Regular except for Favorites.<br>
+					<b>Hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Hidden except for Favorites.<br>
+					<b>Un-hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Regular except for Favorites.<br>
+					NOTE: moOde stations are a custom curated set of stations shipped in the release.
+				</span>
+			</div>
+			<label class="control-label" for="radioview-show-hide-other">Other stations</label>
+			<div class="controls" style="margin-bottom:5em;">
+				<div class="btn-group bootstrap-select select-medium">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-show-hide-other" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">No action</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Show hidden</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Hide all</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Un-hide all</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-radioview-show-hide-other" class="help-block hide">
+					<b>Show hidden:&nbsp;</b> Display other (non-moOde) hidden stations for review but leave their type set to Hidden.<br>
+					<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden except for Favorites.<br>
+					<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular except for Favorites.<br>
+					NOTE: Other stations are those that have been user added.
+				</span>
+			</div>
+		</div>
+		<!-- STREAM RECORDER -->
+		<div id="radio-manager-stream-recorder" class="hide">
+			<span class="h5">Stream Recorder</span>
 			<div class="control-group">
-				<label class="control-label" for="radioview-show-hide-moode">moOde stations</label>
+				<label class="control-label" for="recorder-status">Status</label>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-medium">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="radioview-show-hide-moode" class="filter-option pull-left">
+							<div id="recorder-status" class="filter-option pull-left">
 								<span></span>
 							</div>&nbsp;
 							<div class="caret"></div>
 						</button>
 						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">No action</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Show hidden</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide all</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide all</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide geo-fenced</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide geo-fenced</span></a></li>
+							<ul id="recorder-status-list" class="dropdown-menu custom-select inner" role="menu">
 							</ul>
 						</div>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-radioview-show-hide-moode" class="help-block hide">
-						<b>Show hidden:&nbsp;</b> Display hidden moOde stations for review but leave their type set to Hidden.<br>
-						<b>Hide all:&nbsp;</b> Set all moOde stations to type Hidden except for Favorites.<br>
-						<b>Un-hide all:&nbsp;</b> Set all moOde stations to type Regular except for Favorites.<br>
-						<b>Hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Hidden except for Favorites.<br>
-						<b>Un-hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Regular except for Favorites.<br>
-						NOTE: moOde stations are a custom curated set of stations shipped in the release.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-enabled" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-recorder-enabled" class="help-block hide">
+						Turn the Stream recorder On/Off.
 					</span>
 				</div>
-				<label class="control-label" for="radioview-show-hide-other">Other stations</label>
-				<div class="controls" style="margin-bottom:5em;">
-					<div class="btn-group bootstrap-select select-medium">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="radioview-show-hide-other" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">No action</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Show hidden</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Hide all</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Un-hide all</span></a></li>
-							</ul>
-						</div>
-					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-radioview-show-hide-other" class="help-block hide">
-						<b>Show hidden:&nbsp;</b> Display other (non-moOde) hidden stations for review but leave their type set to Hidden.<br>
-						<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden except for Favorites.<br>
-						<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular except for Favorites.<br>
-						NOTE: Other stations are those that have been user added.
-					</span>
-				</div>
-			</div>
-			<!-- STREAM RECORDER -->
-			<div id="radio-manager-stream-recorder" class="hide">
-				<span class="h5">Stream Recorder</span>
-				<div class="control-group">
-					<label class="control-label" for="recorder-status">Status</label>
+
+				<div id="stream-recorder-options" class="hide">
+					<label class="control-label" for="recorder-storage">Recorder storage</label>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="recorder-status" class="filter-option pull-left">
+								<div id="recorder-storage" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
-								<ul id="recorder-status-list" class="dropdown-menu custom-select inner" role="menu">
+								<ul id="recorder-storage-list" class="dropdown-menu custom-select inner" role="menu">
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-enabled" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-recorder-enabled" class="help-block hide">
-							Turn the Stream recorder On/Off.
+						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-recorder-storage" class="help-block hide">
+							Specify the path where the "Recordings" folder is located. The folder will automatically be created if it doesn't already exist at the path.<br>
+							NOTE: Only ext4 format is allowed for the partition containing the Recordings folder.
 						</span>
 					</div>
 
-					<div id="stream-recorder-options" class="hide">
-						<label class="control-label" for="recorder-storage">Recorder storage</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="recorder-storage" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul id="recorder-storage-list" class="dropdown-menu custom-select inner" role="menu">
-									</ul>
-								</div>
+					<label class="control-label" for="tag-recordings">Tag <span id="untagged-file-count"></span> recordings</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tag-recordings" class="filter-option pull-left">
+									<span>No</span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">Yes</span></a></li>
+								</ul>
 							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-recorder-storage" class="help-block hide">
-								Specify the path where the "Recordings" folder is located. The folder will automatically be created if it doesn't already exist at the path.<br>
-								NOTE: Only ext4 format is allowed for the partition containing the Recordings folder.
-							</span>
 						</div>
-
-						<label class="control-label" for="tag-recordings">Tag <span id="untagged-file-count"></span> recordings</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="tag-recordings" class="filter-option pull-left">
-										<span>No</span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">No</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">Yes</span></a></li>
-									</ul>
-								</div>
-							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-tag-recordings" class="help-block hide">
-								Tag all new files in the "Recordings" folder. Files that have already been tagged are skipped. The tags that are writtem are listed below.<br>
-								- <b>Genre:</b> Recordings<br>
-								- <b>Artist:</b> Artist<br>
-								- <b>AlbumArtist:</b> Recorded Radio<br>
-								- <b>Album:</b> Station name or Recorded [date]<br>
-								- <b>Title:</b> Title
-							</span>
-						</div>
-
-						<label class="control-label" for="recorder-album-tag">Album tag</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="recorder-album-tag" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul id="recorder-album-tag-list" class="dropdown-menu custom-select inner" role="menu">
-									</ul>
-								</div>
-							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-recorder-album-tag" class="help-block hide">
-								Select the name to be used to populate the Album tag.
-							</span>
-							<span id="selected-album-tag" class="help-block"></span>
-						</div>
-
-						<label class="control-label" for="delete-recordings">Delete recordings?</label>
-						<div class="controls" style="margin-bottom:5em;">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="delete-recordings" class="filter-option pull-left">
-										<span>No</span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="delete-recordings-sel"><span class="text">No</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="delete-recordings-sel"><span class="text">Yes</span></a></li>
-									</ul>
-								</div>
-							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-delete-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-delete-recordings" class="help-block hide">
-								Delete all files in the "Recordings" folder.
-							</span>
-						</div>
-
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-tag-recordings" class="help-block hide">
+							Tag all new files in the "Recordings" folder. Files that have already been tagged are skipped. The tags that are writtem are listed below.<br>
+							- <b>Genre:</b> Recordings<br>
+							- <b>Artist:</b> Artist<br>
+							- <b>AlbumArtist:</b> Recorded Radio<br>
+							- <b>Album:</b> Station name or Recorded [date]<br>
+							- <b>Title:</b> Title
+						</span>
 					</div>
+
+					<label class="control-label" for="recorder-album-tag">Album tag</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="recorder-album-tag" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul id="recorder-album-tag-list" class="dropdown-menu custom-select inner" role="menu">
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-recorder-album-tag" class="help-block hide">
+							Select the name to be used to populate the Album tag.
+						</span>
+						<span id="selected-album-tag" class="help-block"></span>
+					</div>
+
+					<label class="control-label" for="delete-recordings">Delete recordings?</label>
+					<div class="controls" style="margin-bottom:5em;">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="delete-recordings" class="filter-option pull-left">
+									<span>No</span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="delete-recordings-sel"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="delete-recordings-sel"><span class="text">Yes</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-delete-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-delete-recordings" class="help-block hide">
+							Delete all files in the "Recordings" folder.
+						</span>
+					</div>
+
 				</div>
 			</div>
-		</form>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -2353,46 +2319,41 @@
 
 <!-- PLAYLIST NEW/EDIT/DELETE -->
 <div id="new-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-playlist-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="new-playlist-modal-label">New playlist</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-	    	<fieldset>
-				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="new-playlist-name">Playlist name</label>
-	                <div class="controls">
-	                    <input id="new-playlist-name" class="input-large" type="text" name="new_playlist_name" maxlength="200" value="" autofocus>
-	                </div>
+		<div class="control-group">
+            <label class="control-label" for="new-playlist-name">Playlist name</label>
+            <div class="controls">
+                <input id="new-playlist-name" class="input-large" type="text" name="new_playlist_name" maxlength="200" value="" autofocus>
+            </div>
 
-					<label class="control-label" for="new-playlistcover">Cover image</label>
-					<div class="controls">
-						<div style="display:inline-block;">
-							<label id="new-playlistcover" for="new-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
-							<input type="file" id="new-plcoverimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'playlist')">
-						</div>
-						<div id="preview-new-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
-						<a aria-label="Help" class="info-toggle" id="info-toggle-new-plcoverimage" data-cmd="info-new-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<div id="error-new-plcoverimage"></div>
-						<div id="info-new-plcoverimage" class="help-block hide">
-							Add a JPEG cover image for the playlist. Max image size is 1MB.
-						</div>
-					</div>
+			<label class="control-label" for="new-playlistcover">Cover image</label>
+			<div class="controls">
+				<div style="display:inline-block;">
+					<label id="new-playlistcover" for="new-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
+					<input type="file" id="new-plcoverimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'playlist')">
+				</div>
+				<div id="preview-new-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-new-plcoverimage" data-cmd="info-new-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<div id="error-new-plcoverimage"></div>
+				<div id="info-new-plcoverimage" class="help-block hide">
+					Add a JPEG cover image for the playlist. Max image size is 1MB.
+				</div>
+			</div>
 
-					<div id="new-playlist-tags">
-						<label class="control-label" for="new-playlist-genre">Genre</label>
-						<div class="controls">
-							<input id="new-playlist-genre" class="input-large" type="text" name="new_playlist_genre" maxlength="200" value="">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-new-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-new-playlist-genre" class="help-block hide">
-								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
-							</span>
-						</div>
-					</div>
-	            </div>
-	    	</fieldset>
-		</form>
+			<div id="new-playlist-tags">
+				<label class="control-label" for="new-playlist-genre">Genre</label>
+				<div class="controls">
+					<input id="new-playlist-genre" class="input-large" type="text" name="new_playlist_genre" maxlength="200" value="">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-new-playlist-genre" class="help-block hide">
+						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+					</span>
+				</div>
+			</div>
+        </div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -2401,65 +2362,61 @@
 </div>
 
 <div id="edit-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="edit-playlist-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="edit-playlist-modal-label">Edit playlist</h3>
-		<br>
-		<p>NOTE: After updating a playlist cover it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image sooner but if not then try clearing the Browser cache.</p>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="" onSubmit="return false;">
-	    	<fieldset>
-				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="edit-playlist-name">Playlist name</label>
-	                <div class="controls">
-	                    <input id="edit-playlist-name" class="input-large" type="text" name="edit_playlist_name" maxlength="200" value="" readonly>
-	                </div>
+		<p>
+			After updating a playlist cover it may take a while before the Browser expires the old image from it's cache.
+			Refreshing the Browser may help expire the old image sooner but if not then try clearing the Browser cache.
+		</p>
+		<div class="control-group">
+            <label class="control-label" for="edit-playlist-name">Playlist name</label>
+            <div class="controls">
+                <input id="edit-playlist-name" class="input-large" type="text" name="edit_playlist_name" maxlength="200" value="" readonly>
+            </div>
 
-					<label class="control-label" for="edit-playlistcover">Cover image</label>
-					<div class="controls">
-						<div style="display:inline-block;">
-							<label id="edit-playlistcover" for="edit-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
-							<input type="file" id="edit-plcoverimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'playlist')">
-						</div>
-						<div id="preview-edit-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
-						<a aria-label="Help" class="info-toggle" id="info-toggle-edit-plcoverimage" data-cmd="info-edit-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<div id="error-edit-plcoverimage"></div>
-						<div id="info-edit-plcoverimage" class="help-block hide">
-							Add a JPEG logo image for the playlist. Max image size is 1MB.
-						</div>
-					</div>
-
-					<div id="edit-playlist-tags">
-						<label class="control-label" for="edit-playlist-genre">Genre</label>
-						<div class="controls">
-							<input id="edit-playlist-genre" class="input-large" type="text" name="edit_playlist_genre" maxlength="200" value="">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-edit-playlist-genre" class="help-block hide">
-								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
-							</span>
-						</div>
-					</div>
-	            </div>
-	    	</fieldset>
-
-			<div id="playlist-items-container">
-				<div id="delete-playlist-item" class="pl-item hide">
-					<button id="btn-delete-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Delete</button>&nbsp;
-					<input id="delete-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
-					<input id="delete-playlist-item-endpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+			<label class="control-label" for="edit-playlistcover">Cover image</label>
+			<div class="controls">
+				<div style="display:inline-block;">
+					<label id="edit-playlistcover" for="edit-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
+					<input type="file" id="edit-plcoverimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'playlist')">
 				</div>
-				<div id="move-playlist-item" class="pl-item hide">
-					<button id="btn-move-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Move</button>&nbsp;
-					<input id="move-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
-					<input id="move-playlist-item-endpos" class="pl-item input-mini" type="number" min="1" max="" value="">
-					To&nbsp;
-					<input id="move-playlist-item-newpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+				<div id="preview-edit-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-plcoverimage" data-cmd="info-edit-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<div id="error-edit-plcoverimage"></div>
+				<div id="info-edit-plcoverimage" class="help-block hide">
+					Add a JPEG logo image for the playlist. Max image size is 1MB.
 				</div>
-
-				<ul id="playlist-items"></ul>
 			</div>
-		</form>
+
+			<div id="edit-playlist-tags">
+				<label class="control-label" for="edit-playlist-genre">Genre</label>
+				<div class="controls">
+					<input id="edit-playlist-genre" class="input-large" type="text" name="edit_playlist_genre" maxlength="200" value="">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-edit-playlist-genre" class="help-block hide">
+						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+					</span>
+				</div>
+			</div>
+        </div>
+
+		<div id="playlist-items-container">
+			<div id="delete-playlist-item" class="pl-item hide">
+				<button id="btn-delete-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Delete</button>&nbsp;
+				<input id="delete-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+				<input id="delete-playlist-item-endpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+			</div>
+			<div id="move-playlist-item" class="pl-item hide">
+				<button id="btn-move-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Move</button>&nbsp;
+				<input id="move-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+				<input id="move-playlist-item-endpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+				To&nbsp;
+				<input id="move-playlist-item-newpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+			</div>
+			<ul id="playlist-items"></ul>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -2468,8 +2425,7 @@
 </div>
 
 <div id="delete-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-playlist-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="delete-playlist-modal-label">Delete playlist?</h3>
 	</div>
 	<div class="modal-body">
@@ -2483,59 +2439,56 @@
 
 <!-- PLAYLIST MANAGER -->
 <div id="playlist-manager-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="playlist-manager-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="playlist-manager-modal-label">Playlist Manager</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-			<!-- SORT/GROUP OPTIONS -->
-			<span class="h5">Sorting and Grouping</span>
-			<div class="control-group" style="margin-bottom:5em;">
-				<label class="control-label" for="plview-sort-tag">Sort tag</label>
-				<div class="controls">
-					<div class="btn-group bootstrap-select select-medium">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="plview-sort-tag" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-sort-tag-sel"><span class="text">Name</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-sort-tag-sel"><span class="text">Genre</span></a></li>
-							</ul>
-						</div>
+		<!-- SORT/GROUP OPTIONS -->
+		<span class="h5">Sorting and Grouping</span>
+		<div class="control-group">
+			<label class="control-label" for="plview-sort-tag">Sort tag</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-medium">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="plview-sort-tag" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-sort-tag-sel"><span class="text">Name</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-sort-tag-sel"><span class="text">Genre</span></a></li>
+						</ul>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-plview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-plview-sort-tag" class="help-block hide">
-						Specify which tag is used to sort the playlist list.
-					</span>
 				</div>
-				<label class="control-label" for="plview-group-method">Group method</label>
-				<div class="controls">
-					<div class="btn-group bootstrap-select select-medium">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="plview-group-method" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-group-method-sel"><span class="text">Sort tag</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-group-method-sel"><span class="text">No grouping</span></a></li>
-							</ul>
-						</div>
-					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-plview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-plview-group-method" class="help-block hide">
-						Specify how to break the list into groups separated by a named header.
-					</span>
-				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-plview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-plview-sort-tag" class="help-block hide">
+					Specify which tag is used to sort the playlist list.
+				</span>
 			</div>
-		</form>
+			<label class="control-label" for="plview-group-method">Group method</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-medium">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="plview-group-method" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-group-method-sel"><span class="text">Sort tag</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-group-method-sel"><span class="text">No grouping</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-plview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-plview-group-method" class="help-block hide">
+					Specify how to break the list into groups separated by a named header.
+				</span>
+			</div>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -2545,24 +2498,22 @@
 
 <!-- ADD TO PLAYLIST -->
 <div id="add-to-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="add-to-playlist-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="add-to-playlist-modal-label">Add to playlist</h3>
-		<br>
-		<p>The item below will be added to the end of the selected playlist or new playlist. Switch to Playlist view to edit playlist metadata, cover art or items.</p>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
-			<h4 id="item-to-add" class="txtmid"></h4>
-			<p style="margin-top:1em;text-align:center;" >Enter a new playlist name or select an existing playlist</p>
-			<div id="playlist-names-container">
-				<div id="addto-playlist-name" class="pl-name">
-					<input id="addto-playlist-name-new" class="input-large" type="text" maxlength="200" value="" autofocus>
-				</div>
-
-				<ul id="playlist-names"></ul>
+		<p>
+			The item below will be added to the end of the selected playlist or new playlist.
+			Switch to Playlist view to edit playlist metadata, cover art or items.
+		</p>
+		<h4 id="item-to-add" class="txtmid"></h4>
+		<p style="margin-top:1em;text-align:center;" >Enter a new playlist name or select an existing playlist</p>
+		<div id="playlist-names-container">
+			<div id="addto-playlist-name" class="pl-name">
+				<input id="addto-playlist-name-new" class="input-large" type="text" maxlength="200" value="" autofocus>
 			</div>
-		</form>
+			<ul id="playlist-names"></ul>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -2572,20 +2523,17 @@
 
 <!-- PLAYBACK HISTORY LOG -->
 <div id="playhistory-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="playhistory-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="playhistory-modal-label">Playback history</h3>
 	</div>
 	<div class="playhistory-search">
-		<form id="ph-search" method="post" onSubmit="return false;">
-			<div class="input-append" style="margin-bottom: 0;">
-				<input id="ph-filter" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
-				<button aria-label="Reset" id="searchResetPh" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
-				<span id="ph-filter-results"></span>
-				<button aria-label="First Page" class="btn ph-firstPage"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-				<button aria-label="Last Page" class="btn ph-lastPage"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
-			</div>
-		</form>
+		<div class="input-append" style="margin-bottom: 0;">
+			<input id="ph-filter" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
+			<button aria-label="Reset" id="searchResetPh" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+			<span id="ph-filter-results"></span>
+			<button aria-label="First Page" class="btn ph-firstPage"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+			<button aria-label="Last Page" class="btn ph-lastPage"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+		</div>
 	</div>
 	<div class="modal-body" id="container-playhistory">
 		<div id="playhistory">
