@@ -55,6 +55,7 @@ input[type=number],
 input[type=password]
  {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 .config-input-large {width:210px;}
+.config-input-mini {width:60px;}
 .config-select-large {width:222px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
 .config-select-xxlarge {width:90%!important;max-width:750px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
 .config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
@@ -62,6 +63,7 @@ input[type=password]
 .config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}
 .config-btn-after {display:inline-block;vertical-align:middle;margin-bottom:var(--config-ctl-margin-bottom);color:var(--config-text-color);}
 .config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
+.config-input-after {display:inline-block;vertical-align:top;color: var(--config-text-color);margin-top:5px;margin-right:var(--config-ctl-margin-right);}
 
 /* Help text */
 a.config-info-toggle {vertical-align:top;}

@@ -74,7 +74,7 @@
 
 			<label class="control-label" for="session-timeout">Session timeout</label>
 			<div class="controls">
-				<input class="input-large config-input-large" type="number" id="session-timeout" name="config[session_timeout]" value="$_select[session_timeout]">
+				<input class="config-input-large" type="number" id="session-timeout" name="config[session_timeout]" value="$_select[session_timeout]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-session-timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-session-timeout" class="config-help-info">
 					Wait for this number of seconds after a source disappears before terminating the session and becoming available again. Default is 120.
@@ -83,7 +83,7 @@
 
 			<label class="control-label" for="audio-backend-latency-offset-in-seconds">Latency offset</label>
 			<div class="controls">
-				<input class="input-large config-input-large" type="text" id="audio-backend-latency-offset-in-seconds" name="config[audio_backend_latency_offset_in_seconds]" value="$_select[audio_backend_latency_offset_in_seconds]">
+				<input class="config-input-large" type="text" id="audio-backend-latency-offset-in-seconds" name="config[audio_backend_latency_offset_in_seconds]" value="$_select[audio_backend_latency_offset_in_seconds]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-latency-offset-in-seconds" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-audio-backend-latency-offset-in-seconds" class="config-help-info">
 					Set this offset to compensate for a fixed delay in the audio back end e.g. if the output device delays by 100 ms, set this to -0.1.
@@ -92,7 +92,7 @@
 
 			<label class="control-label" for="audio-backend-buffer-desired-length-in-seconds">Buffer length</label>
 			<div class="controls">
-				<input class="input-large config-input-large" type="text" id="audio-backend-buffer-desired-length-in-seconds" name="config[audio_backend_buffer_desired_length_in_seconds]" value="$_select[audio_backend_buffer_desired_length_in_seconds]">
+				<input class="config-input-large" type="text" id="audio-backend-buffer-desired-length-in-seconds" name="config[audio_backend_buffer_desired_length_in_seconds]" value="$_select[audio_backend_buffer_desired_length_in_seconds]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-buffer-desired-length-in-seconds" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-audio-backend-buffer-desired-length-in-seconds" class="config-help-info">
 					If set too small, buffer underflow occurs on low-powered machines. If set too long the response times with software mixer become annoying. Default is 0.15.
