@@ -38,42 +38,42 @@ foreach ($result as $row) {
 	$cfgGPIO[$row['id']] = array('enabled' => $row['enabled'], 'pin' => $row['pin'], 'command' => $row['command'], 'param' => $row['param'], 'value' => $row['value']);
 }
 
-// sw_1
+// Switch 1
 $_select['sw_1_onoff_on']  .= "<input type=\"radio\" name=\"config[1][enabled]\" id=\"toggle-sw-1-onoff-1\" value=\"1\" " . (($cfgGPIO['1']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_1_onoff_off'] .= "<input type=\"radio\" name=\"config[1][enabled]\" id=\"toggle-sw-1-onoff-2\" value=\"0\" " . (($cfgGPIO['1']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_1_pin'] = $cfgGPIO['1']['pin'];
 $_select['sw_1_cmd'] = $cfgGPIO['1']['command'];
-// sw_2
+// Switch 2
 $_select['sw_2_onoff_on']  .= "<input type=\"radio\" name=\"config[2][enabled]\" id=\"toggle-sw-2-onoff-1\" value=\"1\" " . (($cfgGPIO['2']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_2_onoff_off'] .= "<input type=\"radio\" name=\"config[2][enabled]\" id=\"toggle-sw-2-onoff-2\" value=\"0\" " . (($cfgGPIO['2']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_2_pin'] = $cfgGPIO['2']['pin'];
 $_select['sw_2_cmd'] = $cfgGPIO['2']['command'];
-// sw_3
+// Switch 3
 $_select['sw_3_onoff_on']  .= "<input type=\"radio\" name=\"config[3][enabled]\" id=\"toggle-sw-3-onoff-1\" value=\"1\" " . (($cfgGPIO['3']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_3_onoff_off'] .= "<input type=\"radio\" name=\"config[3][enabled]\" id=\"toggle-sw-3-onoff-2\" value=\"0\" " . (($cfgGPIO['3']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_3_pin'] = $cfgGPIO['3']['pin'];
 $_select['sw_3_cmd'] = $cfgGPIO['3']['command'];
-// sw_4
+// Switch 4
 $_select['sw_4_onoff_on']  .= "<input type=\"radio\" name=\"config[4][enabled]\" id=\"toggle-sw-4-onoff-1\" value=\"1\" " . (($cfgGPIO['4']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_4_onoff_off'] .= "<input type=\"radio\" name=\"config[4][enabled]\" id=\"toggle-sw-4-onoff-2\" value=\"0\" " . (($cfgGPIO['4']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_4_pin'] = $cfgGPIO['4']['pin'];
 $_select['sw_4_cmd'] = $cfgGPIO['4']['command'];
-// sw_5
+// Switch 5
 $_select['sw_5_onoff_on']  .= "<input type=\"radio\" name=\"config[5][enabled]\" id=\"toggle-sw-5-onoff-1\" value=\"1\" " . (($cfgGPIO['5']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_5_onoff_off'] .= "<input type=\"radio\" name=\"config[5][enabled]\" id=\"toggle-sw-5-onoff-2\" value=\"0\" " . (($cfgGPIO['5']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_5_pin'] = $cfgGPIO['5']['pin'];
 $_select['sw_5_cmd'] = $cfgGPIO['5']['command'];
-// sw_6
+// Switch 6
 $_select['sw_6_onoff_on']  .= "<input type=\"radio\" name=\"config[6][enabled]\" id=\"toggle-sw-6-onoff-1\" value=\"1\" " . (($cfgGPIO['6']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_6_onoff_off'] .= "<input type=\"radio\" name=\"config[6][enabled]\" id=\"toggle-sw-6-onoff-2\" value=\"0\" " . (($cfgGPIO['6']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_6_pin'] = $cfgGPIO['6']['pin'];
 $_select['sw_6_cmd'] = $cfgGPIO['6']['command'];
-// sw_7
+// Switch 7
 $_select['sw_7_onoff_on']  .= "<input type=\"radio\" name=\"config[7][enabled]\" id=\"toggle-sw-7-onoff-1\" value=\"1\" " . (($cfgGPIO['7']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_7_onoff_off'] .= "<input type=\"radio\" name=\"config[7][enabled]\" id=\"toggle-sw-7-onoff-2\" value=\"0\" " . (($cfgGPIO['7']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_7_pin'] = $cfgGPIO['7']['pin'];
 $_select['sw_7_cmd'] = $cfgGPIO['7']['command'];
-// sw_8
+// Switch 8
 $_select['sw_8_onoff_on']  .= "<input type=\"radio\" name=\"config[8][enabled]\" id=\"toggle-sw-8-onoff-1\" value=\"1\" " . (($cfgGPIO['8']['enabled'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_8_onoff_off'] .= "<input type=\"radio\" name=\"config[8][enabled]\" id=\"toggle-sw-8-onoff-2\" value=\"0\" " . (($cfgGPIO['8']['enabled'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['sw_8_pin'] = $cfgGPIO['8']['pin'];
