@@ -74,7 +74,7 @@
 					<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fas fa-alarm-clock"></i><br>Clock radio</a></li>
 				<?php } ?>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) { ?>
-					<li><a href="inp-config.php" class="btn btn-large"><i class="far fa-scrubber"></i><br>Input source</a></li>
+					<li><a href="inp-config.php" class="btn btn-large"><i class="far fa-scrubber"></i><br>Input select</a></li>
 				<?php } ?>
 			</ul>
 		</div>

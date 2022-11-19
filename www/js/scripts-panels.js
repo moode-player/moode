@@ -26,7 +26,7 @@ jQuery(document).ready(function($) { 'use strict';
 	}
 
     GLOBAL.scriptSection = 'panels';
-    
+
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
 	$('#panel-footer').css('display', 'flex');
@@ -395,7 +395,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         // On-screen keyboard
-        if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'Disable') {
+        if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'On') {
             initializeOSK();
         }
     });

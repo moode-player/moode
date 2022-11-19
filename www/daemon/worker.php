@@ -690,23 +690,22 @@ workerLog('worker: -- Feature availability');
 workerLog('worker: --');
 //
 
-// Configure audio source
+// Configure input select
 if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
-	workerLog('worker: Source select (available)');
-	$audioSource = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
-	workerLog('worker: Source select (source: ' . $audioSource . ')');
-	$audio_output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$_SESSION['cardnum']] :
+	workerLog('worker: Input select (available)');
+	$input = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
+	workerLog('worker: Input (' . $input . ')');
+	$output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$_SESSION['cardnum']] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
-	workerLog('worker: Source select (output: ' . $audio_output . ')');
+	workerLog('worker: Output (' . $output . ')');
 
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
 		setAudioIn($_SESSION['audioin']);
 	} else {
-		// Reset saved MPD volume
-		phpSession('write', 'volknob_mpd', '0');
+		phpSession('write', 'volknob_mpd', '0'); // Reset saved MPD volume
 	}
 } else {
-	workerLog('worker: Source select (n/a)');
+	workerLog('worker: Input select (n/a)');
 }
 
 // Start bluetooth controller and pairing agent
@@ -947,8 +946,8 @@ if ($_SESSION['autoplay'] == '1') {
 // Start LocalUI
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
-	workerLog('worker: LocalUI started');
 }
+workerLog('worker: LocalUI (' . ($_SESSION['localui'] == '1' ? 'On' : 'Off') . ')');
 workerLog('worker: CoverView toggle (' . $_SESSION['toggle_coverview'] . ')');
 // On-screen keyboard
 if (!isset($_SESSION['on_screen_kbd'])) {
@@ -1208,7 +1207,7 @@ function chkMaintenance() {
 function chkBtActive() {
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='inpactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
-		return; // Bail if input source is active
+		return; // Bail if Input is active
 	}
 
 	$result = sysCmd('pgrep -l bluealsa-aplay');

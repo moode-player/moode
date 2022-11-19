@@ -100,8 +100,7 @@ jQuery(document).ready(function($){ 'use strict';
         }
 
         // On-screen keyboard
-        $('#btn-on-screen-kbd').text(SESSION.json['on_screen_kbd']);
-        if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'Disable') {
+        if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'On') {
              initializeOSK();
         }
 });
@@ -324,20 +323,6 @@ jQuery(document).ready(function($){ 'use strict';
     // NOTE: This global is tested and reset to false in playerlib.js function renderReconnect()
     $('#backup-create').click(function(e) {
         GLOBAL.backupCreate = true;
-    });
-
-    // On-screen keyboard
-    $('#btn-on-screen-kbd').click(function(e) {
-        e.preventDefault();
-
-        var btnLabel = $('#btn-on-screen-kbd').text() == 'Enable' ? 'Disable' : 'Enable';
-        $.post('command/cfg-table.php?cmd=upd_cfg_system', {'on_screen_kbd': btnLabel}, function(data) {
-            $('#btn-on-screen-kbd').text(btnLabel);
-
-            setTimeout(function() {
-                location.reload();
-            }, DEFAULT_TIMEOUT);
-        }, 'json');
     });
 
     // Info button (i) show/hide toggle

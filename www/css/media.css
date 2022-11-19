@@ -110,8 +110,8 @@
 	/*#extra-tags-display {display:none;}*/
 	#db-path {display:none;}
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
-	.config-input-large,
-	.config-select-large {width: 165px!important;}
+	.config-input-large {width:153px!important;}
+	.config-select-large {width:165px!important;}
 	.config-info-toggle,
 	.config-help-static {display:none;}
 }
@@ -202,8 +202,8 @@
 	.modal {min-width:100vw;}
 	.btn-group.bootstrap-select.bootstrap-select-mini {width:6.5rem;}
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
-	.config-input-large,
-	.config-select-large {width: 165px!important;}
+	.config-input-large {width:153px!important;}
+	.config-select-large {width:165px!important;}
 	.config-info-toggle,
 	.config-help-static {display:none;}
 }

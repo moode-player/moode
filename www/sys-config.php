@@ -227,6 +227,12 @@ if (isset($_POST['update_scnrotate'])) {
     }
 }
 
+if (isset($_POST['update_on_screen_kbd'])) {
+    if (isset($_POST['on_screen_kbd']) && $_POST['on_screen_kbd'] != $_SESSION['on_screen_kbd']) {
+		phpSession('write', 'on_screen_kbd', $_POST['on_screen_kbd']);
+    }
+}
+
 // FILE SHARING
 
 if (isset($_POST['update_fs_smb'])) {
@@ -425,6 +431,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
 	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
+
+	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 } else {
 	$_feat_localui = 'hide';
 }

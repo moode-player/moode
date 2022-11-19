@@ -28,11 +28,12 @@
 
 	<form class="form-horizontal" action="" method="post" id="backup" enctype="multipart/form-data" $_backup_hidden>
 		<legend>Backup options</legend>
-		<p>
+
+		<p class="sub-legend">
 			Specify which parts of the system will be included in the backup zip file. A script file may optionally be added that performs custom actions during the restore process. It is run during moOde startup as part of restoring the Configuration settings.
 			Note that WiFi and AP mode passwords will be included in the Configuration settings part of the backup.
 		</p>
-		<br>
+
 		<div class="control-group">
 			<label class="control-label">Add script</label>
 			<div class="controls">
@@ -48,7 +49,7 @@
 				</span>
 			</div>
 
-			<label class="control-label">Configuration settings</label>
+			<label class="control-label">Config/Prefs</label>
 			<div class="controls">
 				$_togglebtn_backup_system
 				<span id="info-backup-system" class="config-help-info">
@@ -113,13 +114,14 @@
 
 	<form class="form-horizontal" action="" method="post" id="restore"  enctype="multipart/form-data" $_restore_hidden>
 		<legend>Restore options</legend>
-		<p>
+
+		<p class="sub-legend">
 			Specify which parts of the system will be restored.
 			The Yes/No option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration settings.
 		</p>
-		<br>
+
 		<div class="control-group">
-			<label class="control-label">Configuration settings</label>
+			<label class="control-label">Config/Prefs</label>
 			<div class="controls">
 				$_togglebtn_restore_system
 				<span id="info-restore-system" class="config-help-info">
