@@ -61,9 +61,10 @@ input[type=password]
 .config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
 .btn-group.bootstrap-select .btn {padding:3px 0;}
 .config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}
-.config-btn-after {display:inline-block;vertical-align:middle;margin-bottom:var(--config-ctl-margin-bottom);color:var(--config-text-color);}
+.config-btn-after {display:inline-block;vertical-align:middle;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;color:var(--config-text-color);}
 .config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
-.config-input-after {display:inline-block;vertical-align:top;color: var(--config-text-color);margin-top:5px;margin-right:var(--config-ctl-margin-right);}
+.config-input-after,
+.config-toggle-after {display:inline-block;vertical-align:top;color: var(--config-text-color);margin-top:5px;margin-right:var(--config-ctl-margin-right);} 
 
 /* Help text */
 a.config-info-toggle {vertical-align:top;}
@@ -81,6 +82,8 @@ a.config-info-toggle {vertical-align:top;}
 .show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin-bottom);}
 /* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
+/* lib-config */
+.config-btn-music-source {font-size:var(--pbfont);width:80%;background-color:#333;text-align:left;}
 
 /* Miscellaneous */
 .config-horiz-rule {border-bottom:1px solid #333;margin:4px 0 calc(4px + var(--config-ctl-margin-bottom)) 0;font-size:1.15em;font-style:italic;color:var(--config-help-color);}

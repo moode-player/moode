@@ -1823,6 +1823,12 @@ function runQueuedJob() {
 			clearLibCacheAll();
 			sourceCfg($_SESSION['w_queueargs']);
 			break;
+		case 'fs_mountmon':
+			sysCmd('killall -s 9 mountmon.php');
+			if ($_SESSION['w_queueargs'] == 'On') {
+				sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
+			}
+			break;
 		case 'regen_library':
 			clearLibCacheAll();
 			$sock = openMpdSock('localhost', 6600);
@@ -2372,7 +2378,6 @@ function runQueuedJob() {
 				sysCmd('systemctl daemon-reload');
 				stopLocalUI();
 				startLocalUI();
-
 			}
 			break;
 		case 'scnblank':
@@ -2443,12 +2448,14 @@ function runQueuedJob() {
 				sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-server');
 			}
 			break;
+		/* Moved to lib-config section
 		case 'fs_mountmon':
 			sysCmd('killall -s 9 mountmon.php');
 			if ($_SESSION['w_queueargs'] == 'On') {
 				sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 			}
 			break;
+		*/
 		case 'keyboard':
 			sysCmd('/var/www/util/sysutil.sh set-keyboard ' . $_SESSION['w_queueargs']);
 			break;
