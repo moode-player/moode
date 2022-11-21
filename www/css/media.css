@@ -101,7 +101,7 @@
 	.form-horizontal .controls {margin-left:32.5%;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
-	.bootstrap-select:not([class*="span"]) {width:140px;}
+	.bootstrap-select:not([class*="span"]) {width:135px!important;}
 	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
 	#playbar-hd-badge {/*margin-top:.6em;*/display:none!important;}
 	#playbar-currentalbum {display:block;} /* so ellipsis works */

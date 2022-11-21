@@ -77,6 +77,7 @@
 				<label class="control-label" for="nas-pasw">Password</label>
 				<div class="controls">
 					<input  id="nas-pasw" class="config-input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fal fa-eye"></i></a>
 					<span id="info-nas-uidpwd" class="config-help-info">
 						Try userid Guest and a blank password unless your NAS device requires a specific userid/password.
@@ -106,7 +107,7 @@
 			<div class="control-group">
 				<label class="control-label" for="nas-charset">Character encoding</label>
 				<div class="controls">
-					<select id="nas-charset" name="mount[charset]" class="config-se;lect-large">
+					<select id="nas-charset" name="mount[charset]" class="config-select-large">
 						<option value="utf8" $_charset>UTF-8 (Default)</option>
 						<option value="iso8859-1" $_charset>ISO-8859-1</option>
 					</select>

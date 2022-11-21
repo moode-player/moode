@@ -1560,6 +1560,10 @@ $('#playlist-names').on('click', '.pl-name', function(e) {
     $('#pl-name-' + (UI.dbEntry[0] + 1).toString()).addClass('active');
     //console.log(UI.dbEntry[0]);
 });
+// New playlist input
+$('#addto-playlist-name-new').click(function(e){
+    $('#pl-name-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
+});
 // Add to playlist
 $('#btn-add-to-playlist').click(function(e){
     var newPlaylist = $('#addto-playlist-name-new').val().trim();

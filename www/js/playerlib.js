@@ -2364,7 +2364,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-logoimage').val('');
                 $('#info-toggle-edit-logoimage').css('margin-left','60px');
                 $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + data['name'] + '.jpg">');
-                $('#edit-station-tags').css('margin-top', '30px');
+                $('#edit-station-tags').css('margin-top', '20px');
                 $('#edit-station-type span').text(getParamOrValue('param', data['type']));
                 $('#edit-station-genre').val(data['genre']);
                 $('#edit-station-broadcaster').val(data['broadcaster']);
@@ -2394,7 +2394,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-plcoverimage').val('');
                 $('#info-toggle-edit-plcoverimage').css('margin-left','60px');
                 $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + path + '.jpg">');
-                $('#edit-playlist-tags').css('margin-top', '2.5em');
+                $('#edit-playlist-tags').css('margin-top', '20px');
                 $('#edit-playlist-genre').val(data['genre']);
 
             	// Playlist items
@@ -2426,6 +2426,7 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'delete_pl_item':
             $('#move-playlist-item').hide();
+            $('#playlist-items-container').css('padding-top', '0');
             $('#playlist-items').css('margin-top', '3.5em');
     		$('#delete-playlist-item-begpos').attr('max', UI.dbEntry[4]); // Max value (num playlist items in list)
     		$('#delete-playlist-item-endpos').attr('max', UI.dbEntry[4]);
@@ -2436,6 +2437,7 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'move_pl_item':
             $('#delete-playlist-item').hide();
+            $('#playlist-items-container').css('padding-top', '0');
             $('#playlist-items').css('margin-top', '3.5em');
     		$('#move-playlist-item-begpos').attr('max', UI.dbEntry[4]);
     		$('#move-playlist-item-endpos').attr('max', UI.dbEntry[4]);
@@ -3210,7 +3212,7 @@ function newCoverImage(files, view) {
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
 	$(preview_selector).html("<img src='" + imgUrl + "' />");
 	$(info_selector).css('margin-left','60px');
-    $(tags_selector).css('margin-top', '30px');
+    $(tags_selector).css('margin-top', '20px');
 	var name = $(name_selector).val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();
