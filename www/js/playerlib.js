@@ -2690,7 +2690,7 @@ $(document).on('click', '.context-menu a', function(e) {
         				$('#remove-bgimage').hide();
         				$('#choose-bgimage').show();
         				$('#current-bgimage').html('');
-        				$('#info-toggle-bgimage').css('margin-left','5px');
+        				$('#info-toggle-bgimage').css('margin-left','0');
         		    }
         		});
         		$('#cover-backdrop-enabled span').text(SESSION.json['cover_backdrop']);
@@ -3138,38 +3138,38 @@ $('#remove-bgimage').click(function(e) {
 		$('#remove-bgimage').hide();
 		$('#current-bgimage').html('');
 		$('#cover-backdrop').css('background-image','');
-		$('#info-toggle-bgimage').css('margin-left','5px');
+		$('#info-toggle-bgimage').css('margin-left','0');
         $.post('command/playback.php?cmd=remove_bg_image');
 		UI.bgImgChange = true;
 	}
     // So modal stays open
 	return false;
 });
-// Import bg image to server
+// Import background image to server
 function importBgImage(files) {
-	//console.log('files[0].size=(' + files[0].size + ')');
 	if (files[0].size > 1000000) {
 		$('#error-bgimage').text('Image must be less than 1MB in size');
 		return;
-	}
-	else if (files[0].type != 'image/jpeg') {
+	} else if (files[0].type != 'image/jpeg') {
 		$('#error-bgimage').text('Image format must be JPEG');
 		return;
-	}
-	else {
+	} else {
 		$('#error-bgimage').text('');
 	}
 
 	UI.bgImgChange = true;
-	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$('#current-bgimage').html("<img src='" + imgUrl + "' />");
+	imageURL = (URL || webkitURL).createObjectURL(files[0]);
+	$('#current-bgimage').html("<img src='" + imageURL + "' />");
 	$('#info-toggle-bgimage').css('margin-left','60px');
-	URL.revokeObjectURL(imgUrl);
+
+    /*setTimeout(function() {
+        (URL || webkitURL).revokeObjectURL(imageURL);
+    }, DEFAULT_TIMEOUT);*/
+
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
-		var data = dataURL.match(/,(.*)$/)[1];
+		var data = dataURL.match(/,(.*)$/)[1]; // Strip the header: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         $.post('command/playback.php?cmd=set_bg_image', {'blob': data});
 
 	}
@@ -3179,47 +3179,47 @@ function importBgImage(files) {
 // Import cover image to server
 function newCoverImage(files, view) {
     if (view == 'radio') {
-        var error_selector = '#error-new-logoimage';
-        var preview_selector = '#preview-new-logoimage';
-        var info_selector = '#info-toggle-new-logoimage';
-        var tags_selector = '#new-station-tags';
-        var name_selector = '#new-station-name';
+        var errorSelector = '#error-new-logoimage';
+        var previewSelector = '#preview-new-logoimage';
+        var infoSelector = '#info-toggle-new-logoimage';
+        var tagsSelector = '#new-station-tags';
+        var nameSelector = '#new-station-name';
         var cmd = 'set_ralogo_image';
         var script = 'radio.php';
-    }
-    else { // playlist
-        var error_selector = '#error-new-plcoverimage';
-        var preview_selector = '#preview-new-plcoverimage';
-        var info_selector = '#info-toggle-new-plcoverimage';
-        var tags_selector = '#new-playlist-tags';
-        var name_selector = '#new-playlist-name';
+    } else { // playlist
+        var errorSelector = '#error-new-plcoverimage';
+        var previewSelector = '#preview-new-plcoverimage';
+        var infoSelector = '#info-toggle-new-plcoverimage';
+        var tagsSelector = '#new-playlist-tags';
+        var nameSelector = '#new-playlist-name';
         var cmd = 'set_plcover_image';
         var script = 'playlist.php';
     }
 
 	if (files[0].size > 1000000) {
-		$(error_selector).text('Image must be less than 1MB in size');
+		$(errorSelector).text('Image must be less than 1MB in size');
 		return;
-	}
-	else if (files[0].type != 'image/jpeg') {
-		$(error_selector).text('Image format must be JPEG');
+	} else if (files[0].type != 'image/jpeg') {
+		$(errorSelector).text('Image format must be JPEG');
 		return;
-	}
-	else {
-		$(error_selector).text('');
+	} else {
+		$(errorSelector).text('');
 	}
 
-	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$(preview_selector).html("<img src='" + imgUrl + "' />");
-	$(info_selector).css('margin-left','60px');
-    $(tags_selector).css('margin-top', '20px');
-	var name = $(name_selector).val();
-	URL.revokeObjectURL(imgUrl);
+	imageURL = (URL || webkitURL).createObjectURL(files[0]);
+	$(previewSelector).html("<img src='" + imageURL + "' />");
+	$(infoSelector).css('margin-left','60px');
+    $(tagsSelector).css('margin-top', '20px');
+	var name = $(nameSelector).val();
+
+    setTimeout(function() {
+        (URL || webkitURL).revokeObjectURL(imageURL);
+    }, DEFAULT_TIMEOUT);
+
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
-		var data = dataURL.match(/,(.*)$/)[1];
+		var data = dataURL.match(/,(.*)$/)[1]; // Strip the header: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         $.post('command/' + script + '?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
@@ -3227,46 +3227,46 @@ function newCoverImage(files, view) {
 // Edit (replace/remove) existing cover image
 function editCoverImage(files, view) {
     if (view == 'radio') {
-        var error_selector = '#error-edit-logoimage';
-        var preview_selector = '#preview-edit-logoimage';
-        var info_selector = '#info-toggle-edit-logoimage';
-        var tags_selector = '#edit-station-tags';
-        var name_selector = '#edit-station-name';
+        var errorSelector = '#error-edit-logoimage';
+        var previewSelector = '#preview-edit-logoimage';
+        var infoSelector = '#info-toggle-edit-logoimage';
+        var tagsSelector = '#edit-station-tags';
+        var nameSelector = '#edit-station-name';
         var cmd = 'set_ralogo_image';
         var script = 'radio.php';
-    }
-    else { // playlist
-        var error_selector = '#error-edit-plcoverimage';
-        var preview_selector = '#preview-edit-plcoverimage';
-        var info_selector = '#info-toggle-edit-plcoverimage';
-        var tags_selector = '#edit-playlist-tags';
-        var name_selector = '#edit-playlist-name';
+    } else { // playlist
+        var errorSelector = '#error-edit-plcoverimage';
+        var previewSelector = '#preview-edit-plcoverimage';
+        var infoSelector = '#info-toggle-edit-plcoverimage';
+        var tagsSelector = '#edit-playlist-tags';
+        var nameSelector = '#edit-playlist-name';
         var cmd = 'set_plcover_image';
         var script = 'playlist.php';
     }
 
 	if (files[0].size > 1000000) {
-		$(error_selector).text('Image must be less than 1MB in size');
+		$(errorSelector).text('Image must be less than 1MB in size');
 		return;
-	}
-	else if (files[0].type != 'image/jpeg') {
-		$(error_selector).text('Image format must be JPEG');
+	} else if (files[0].type != 'image/jpeg') {
+		$(errorSelector).text('Image format must be JPEG');
 		return;
-	}
-	else {
-		$(error_selector).text('');
+	} else {
+		$(errorSelector).text('');
 	}
 
-	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$(preview_selector).html("<img src='" + imgUrl + "' />");
-	$(info_selector).css('margin-left','60px');
-	var name = $(name_selector).val();
-	URL.revokeObjectURL(imgUrl);
+	imageURL = (URL || webkitURL).createObjectURL(files[0]);
+	$(previewSelector).html("<img src='" + imageURL + "' />");
+	$(infoSelector).css('margin-left','60px');
+	var name = $(nameSelector).val();
+
+    /*setTimeout(function() {
+        (URL || webkitURL).revokeObjectURL(imageURL);
+    }, DEFAULT_TIMEOUT);*/
+
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
-		var data = dataURL.match(/,(.*)$/)[1];
+		var data = dataURL.match(/,(.*)$/)[1]; // Strip the header: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         $.post('command/' + script + '?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
