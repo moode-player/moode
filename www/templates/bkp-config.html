@@ -24,7 +24,7 @@
 <div class="container">
 	<h1>Backup/Restore</h1>
 
-	<!-- BACKUP OPTIONS -->
+	<!-- BACKUP -->
 
 	<form class="form-horizontal" action="" method="post" id="backup" enctype="multipart/form-data" $_backup_hidden>
 		<legend>Backup options</legend>
@@ -110,7 +110,7 @@
 		</div>
 	</form>
 
-	<!-- RESTORE OPTIONS -->
+	<!-- RESTORE -->
 
 	<form class="form-horizontal" action="" method="post" id="restore"  enctype="multipart/form-data" $_restore_hidden>
 		<legend>Restore options</legend>
@@ -121,7 +121,7 @@
 		</p>
 
 		<div class="control-group">
-			<label class="control-label">Config/Prefs</label>
+			<label class="control-label">Config and Prefs</label>
 			<div class="controls">
 				$_togglebtn_restore_system
 				<span id="info-restore-system" class="config-help-info">
@@ -170,7 +170,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-backupfile" class="config-help-info config-help-no-margin">
 					Select: Choose and upload a backup zip file that will be used for the restore process.<br>
-					Reset: Clear uploaded files from the temp directory and reset the option buttons to No.
+					Reset: Clear the uploaded file from the temp directory and reset the option buttons to No.
 				</span>
 				<div class="config-help-static">
 					$_imported_backupfile

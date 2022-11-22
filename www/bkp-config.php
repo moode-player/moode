@@ -130,12 +130,12 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		$_SESSION['notify']['duration'] = 3;
 	}
 } else if (isset($_POST['import_backupfile'])) {
-	$_imported_backupfile = 'Uploaded: <i>' . $_FILES['restore_backupfile']['name'] . '</i>';
+	$_imported_backupfile = 'Uploaded: <b>' . $_FILES['restore_backupfile']['name'] . '</b>';
 	rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
 	//workerLog('Imported backup: ' . print_r($_FILES['restore_backupfile'], true));
 } else if (isset($_POST['import_scriptfile'])) {
-	$_imported_scriptfile = 'Uploaded: <i>' . $_FILES['backup_scriptfile']['name'] . '</i>';
+	$_imported_scriptfile = 'Uploaded: <b>' . $_FILES['backup_scriptfile']['name'] . '</b>';
 	rename($_FILES['backup_scriptfile']['tmp_name'], TMP_SCRIPT_FILE);
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
 	//workerLog('Imported script: ' . print_r($_FILES['backup_scriptfile'], true));
