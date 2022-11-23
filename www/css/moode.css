@@ -54,7 +54,6 @@ a:focus {color:var(--accentxts);} /* fixes blue outline on control after closing
 .modal-cover-div {display:inline-block;}
 .modal-cover-choose {margin:0 10px 10px 0;}
 .modal-cover-preview {width:50px;display:inline-block;position:absolute;margin:0;}
-.input-xlarge {width:75%;} /* same as medium */
 form {margin:0;}
 h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: center;}
 
@@ -141,9 +140,10 @@ li.modal-dropdown-text:focus {color:#eee;}
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
 #info-toggle-bgimage {margin-left:0;margin-top:2px;}
 /* clock radio */
-.checkbox-grp {margin:.35em 0 .85em 0;}
-.checkbox-ctl {margin:.25em 0 .5em .25em !important;}
-.input-height-x {height:1.65em !important;}
+.checkbox-grp {margin:0 7px 10px 0;}
+.checkbox-ctl {margin:.25em .25em .5em 0!important;}
+.time-seperator {margin:0 7px 10px 0;font-size:1.25em;}
+#info-clockradio-playname {font-weight:500;}
 /* forms */
 .modal-body .controls {margin-left:52%;margin-bottom:0;}
 .modal-body .control-label {width:48%;text-align:right;margin-top:0;}

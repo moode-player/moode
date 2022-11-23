@@ -45,7 +45,6 @@
 	#top-columns {left:-50%;}
 	#lib-genre-header, #lib-genre {left:0%;width:50%;}
 	.lib-entry {padding: 0 .25em;}
-	/*.lib-entry-song {font-size:1em;}*/
 	#lib-file {left:0%;width:100%;padding-left:0px;}
 
 	#tagview-text-cover {font-size:1rem;width:75px;height:75px;padding:0;margin:.25em;}
@@ -67,7 +66,7 @@
 	#mt1, #mt2, #mt3 {font-size:inherit;}
 	#mt1 {margin:4rem 1.5rem 0rem 1.5rem;}
 	#mt3 {margin-right:5px;float:right;margin-top:25vh;}
-	#mt1 .btn, #mt3 .btn {font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;/*color:var(--textvariant);*/}
+	#mt1 .btn, #mt3 .btn {font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;}
 	#mt1 .btn i {min-width:1.25rem;}
 	#mt2 {display:block;}
 	#mt3 .btn-primary, #mt1 .btn-primary {color:var(--accentxts);}
@@ -77,16 +76,15 @@
 	#madd-item-to-favorites i {font-size:1.1em;}
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
 	#playqueue-search, #lib-album-search, #save-queue-to-playlist-form, #ra-search, #pl-search {margin-left: 0px;}
-	/*.database li {margin-left:2px;margin-right:5px;}*/
-	/* display:flex & playback stuff */
+
 	.no-fluid {flex-direction:column-reverse;}
 	.covers {padding:0;margin:0;}
 	#playbtns {margin:0;}
 	#togglebtns {padding:0;}
 	#togglebtns .btn-group {display:inline-flex;}
-	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;/*color:var(--textvariant);*/}
+	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;}
 	#togglebtns .btn-group .btn i {min-width:1.25rem;}
-	#playbtns, #togglebtns/*, .volume-popup-btn-*/ {display:block;}
+	#playbtns, #togglebtns {display:block;}
 	.coverview {display:none;}
 	#currentsong {font-size:1.5em;font-weight:bold;}
 	#currentalbum {font-size:1.35em;}
@@ -103,12 +101,12 @@
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:135px!important;}
 	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
-	#playbar-hd-badge {/*margin-top:.6em;*/display:none!important;}
+	#playbar-hd-badge {display:none!important;}
 	#playbar-currentalbum {display:block;} /* so ellipsis works */
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}
-	/*#extra-tags-display {display:none;}*/
 	#db-path {display:none;}
+
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
 	.config-input-large {width:153px!important;}
 	.config-select-large {width:165px!important;}
@@ -121,7 +119,6 @@
 	#content.fancy #container-playqueue {-webkit-mask-image:unset;}
 	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
 	.database .db-action {font-size:1.3em;}
-	/*.dropdown-menu {min-width:180px;}*/
 	#panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:16rem;} /* Make this one a bit wider */
 	#context-menu-playback .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
 	#lib-album-search input, #lib-album-search input, #current-tab, #library-header {font-size:1.11rem;}
@@ -132,7 +129,6 @@
 	.modal .h5 {width:42%;}
 	.modal-body .form-horizontal .control-label {width:42%;}
 	.modal-body .form-horizontal .controls {margin-left:45%;}
-	.input-xlarge {width:150px;} /* same as medium */
 	#timezone, #volzone {display:none;}
 	#playback-cover {position:relative;}
 	#playback-queue {z-index:unset;}
@@ -159,18 +155,14 @@
 	#lib-albumcover {left:0;}
 	#lib-meta-summary {line-height:1.75rem;font-size:1em;margin:.25em 0 0 0;float:right;}
 	.lib-numtracks-meta {margin-top:0;}
-	/* ellipsis madness */
+
 	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
-	/* stuff */
+
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#ss-coverart-url img {width:65vh;}
 	#volpad {width:100%;}
 	#volume-popup .modal-footer button {width:40%;/*margin:0;*/}
-	/*DELETE.modal-xs {min-width:70%;}*?
-	#lib-coverart-meta-area {position:unset;}
-	.btn-save-queue-to-playlist {margin:1em 1em 4em 1em;}
-	/*.alphabits {right:0%!important;top:0%!important;}*/
 	#index-genres {right:calc(50% + var(--sbw));}
 	#index-artists {right:calc(0% + var(--sbw));}
 	#index-albums {right:calc(-50% + var(--sbw));}
@@ -180,7 +172,7 @@
 	#volume-pad {height:85vw;width:85vw;}
 	#volpad .volume-display-db {left:65%;font-size:1.5em;}
 	#panel-header .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
-	/* playbar */
+
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}
 	#playbar-title {text-align:left;top:0;margin-left:1em;width:67vw;height:auto;position:relative;transform:none;font-size:1.5em;line-height:2.2em;left:0;padding:0 0 .75em 0;text-shadow:0 0 1px var(--btnbarback);}
@@ -192,8 +184,9 @@
 	#playbar-timeline {display:none;}
 	#playbar-toggles .coverview {display:none;}
 	#playbar-toggles .ralbum {display:inline-block;}
-	#playbar-toggles .ralbum svg {height:12px;width:12px;margin-top:2px;} /* only valid fancy */
+	#playbar-toggles .ralbum svg {height:12px;width:12px;margin-top:2px;}
 	#playbar-div {display:block;}
+
 	/* This undoes the normal nogenres setting cos on mobile we already only show two cols in Tag view */
 	#top-columns.nogenre #lib-genre-header, #top-columns.nogenre #index-genres, #top-columns.nogenre #lib-genre {display:block;}
 	#top-columns.nogenre #lib-artist-header, #top-columns.nogenre #lib-artist {left:50%;width:50%;}
@@ -201,6 +194,12 @@
 	#top-columns.nogenre #lib-album-header, #top-columns.nogenre #lib-album {left:100%;width:50%;}
 	.modal {min-width:100vw;}
 	.btn-group.bootstrap-select.bootstrap-select-mini {width:6.5rem;}
+
+	/*DELETE.modal-xs {min-width:70%;}*?
+	#lib-coverart-meta-area {position:unset;}
+	.btn-save-queue-to-playlist {margin:1em 1em 4em 1em;}
+	/*.alphabits {right:0%!important;top:0%!important;}*/
+
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
 	.config-input-large {width:153px!important;}
 	.config-select-large {width:165px!important;}
@@ -220,17 +219,14 @@
 	#mobile-toolbar {bottom:3.5vh;}
 	#currentsong, #currentalbum {padding-top:.75em;font-size:1.1em;}
 }
-
 @media (max-height:640px) and (orientation:portrait)  {
 	img.coverart {width:45vh;}
 	#playback-firstuse-help {height:45vh;width:45vh;}
 }
-
 @media (max-width:360px) {
 	.modal-body .form-horizontal .control-label {width:38%;}
 	.modal-body .form-horizontal .controls {margin-left:40%;}
 }
-
 /* iPhone5 portrait */
 @media (max-height:568px) and (max-width:320px) {
 	.playqueue {font-size:1.2em;}
@@ -268,7 +264,6 @@
 	.volume-display, .volume-display-db {margin-top:.3em;}
 	#songsand {font-size:1.25em;}
 }
-
 /* 443 = Square pixel AR, 479 = Default pixel AR */
 @media (min-height:443px) and (width:799px) {
 	.playqueue .pll1 {font-size:1rem;}
@@ -283,9 +278,7 @@
 	#songsand {font-size:1.25em;}
 }
 
-/*
-// Ultra-wide screen 480 & 550 x 1920
-*/
+/* Ultra-wide screen 480 & 550 x 1920 */
 @media (max-height:549px) and (width:1919px) {
 	/* Hide the volume knob */
 	#volzone {display:none;}
@@ -461,9 +454,4 @@
 	   scrollbar-width: thin;
 	   scrollbar-color: auto;
    }
-}
-
-/* Existing input width selectors don't work because override by bootstrap-select. Add !important to prevent that */
-@media (min-width:650px) {
-	.input-xlarge{width:270px !important;}
 }

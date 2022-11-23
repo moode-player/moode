@@ -2480,10 +2480,11 @@ $(document).on('click', '.context-menu a', function(e) {
 
     		if ($(this).data('cmd') == 'setforclockradio-m') {
     			$('#clockradio-playname').val(SESSION.json['clkradio_name']);
+                $('#info-clockradio-playname').text(SESSION.json['clkradio_name']);
     			UI.dbEntry[0] = '-1'; // For update
-    		}
-    		else {
+    		} else {
     			$('#clockradio-playname').val(UI.dbEntry[5]); // Called from context menu
+                $('#info-clockradio-playname').text(UI.dbEntry[5]);
     		}
 
     		// Parse start and end values
@@ -3274,19 +3275,19 @@ function editCoverImage(files, view) {
 
 function setClkRadioCtls(ctlValue) {
 	if (ctlValue == 'Disabled') {
-		$('#clockradio-ctl-grp1 *').prop('disabled', true);
-		$('#clockradio-ctl-grp2 *').prop('disabled', true);
-		$('#clockradio-ctl-grp3 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-1 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-2 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-3 *').prop('disabled', true);
 	}
 	else if (ctlValue == 'Sleep Timer') {
-		$('#clockradio-ctl-grp1 *').prop('disabled', true);
-		$('#clockradio-ctl-grp2 *').prop('disabled', false);
-		$('#clockradio-ctl-grp3 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-1 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-2 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-3 *').prop('disabled', true);
 	}
 	else {
-		$('#clockradio-ctl-grp1 *').prop('disabled', false);
-		$('#clockradio-ctl-grp2 *').prop('disabled', false);
-		$('#clockradio-ctl-grp3 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-1 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-2 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-3 *').prop('disabled', false);
 	}
 }
 

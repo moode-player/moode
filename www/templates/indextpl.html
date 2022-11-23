@@ -1587,7 +1587,7 @@
 		<div class="control-group">
             <label class="control-label" for="clockradio-mode">Clock mode</label>
             <div class="controls">
-				<div class="btn-group bootstrap-select" style="width: 120px;">
+				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 						<div id="clockradio-mode" class="filter-option pull-left">
 							<span></span>
@@ -1603,19 +1603,23 @@
 					</div>
 				</div>
             </div>
-			<div id="clockradio-ctl-grp1">
+			<div id="clockradio-ctl-grp-1">
                 <label class="control-label" for="clockradio-playname">Item to play</label>
                 <div class="controls">
-                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
-					<span id="info-playname" class="help-block" style="margin-top:0;">
-	                    Use 'Set for clock radio' on the Queue item menu to populate this read-only field.
+                    <input id="clockradio-playname" class="input-large" type="text" name="clockradio_playname" value="" readonly>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-clockradio-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-clockradio-playname" class="help-block hide">
+
+					</span>
+					<span id="info-playname" class="help-block">
+	                    Use "Set for clock radio" on the Queue item menu to populate this read-only field.
                     </span>
                 </div>
                 <label class="control-label" for="clockradio-starttime-hh">Start time</label>
                 <div class="controls">
-                    <input id="clockradio-starttime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
-                    <span>:</span>
-            		<input id="clockradio-starttime-mm" class="input-mini input-height-x" style="margin-right:.5em;" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
+                    <input id="clockradio-starttime-hh" class="input-mini" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
+                    <span class="time-seperator">:</span>
+            		<input id="clockradio-starttime-mm" class="input-mini" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 							<div id="clockradio-starttime-ampm" class="filter-option pull-left">
@@ -1645,12 +1649,12 @@
 					</div>
                 </div>
 			</div>
-			<div id="clockradio-ctl-grp2">
+			<div id="clockradio-ctl-grp-2">
                 <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
                 <div class="controls">
-                    <input id="clockradio-stoptime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
-                    <span>:</span>
-                    <input id="clockradio-stoptime-mm" class="input-mini input-height-x" style="margin-right:.5em;" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
+                    <input id="clockradio-stoptime-hh" class="input-mini" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
+                    <span class="time-seperator">:</span>
+                    <input id="clockradio-stoptime-mm" class="input-mini" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 							<div id="clockradio-stoptime-ampm" class="filter-option pull-left">
@@ -1681,7 +1685,7 @@
                 </div>
                 <label class="control-label" for="clockradio-action">Action after stop</label>
                 <div class="controls">
-						<div class="btn-group bootstrap-select" style="width: 120px;">
+						<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 							<div id="clockradio-action" class="filter-option pull-left">
 								<span></span>
@@ -1699,14 +1703,14 @@
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-action" class="help-block hide">
-						NOTE: The Restart action is initiated 45 seconds after the specified stop time.
+						The Restart action is initiated 45 seconds after the specified stop time.
 					</span>
                 </div>
 			</div>
-			<div id="clockradio-ctl-grp3">
+			<div id="clockradio-ctl-grp-3">
                 <label class="control-label" for="clockradio-volume">Volume</label>
                 <div class="controls">
-                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
+                    <input id="clockradio-volume" class="input-large" type="number" min="1" max="100" name="clockradio_volume" value="">
                 </div>
 			</div>
         </div>
