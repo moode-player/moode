@@ -58,22 +58,26 @@ form {margin:0;}
 h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: center;}
 
 /* custom sized select controls */
-.bootstrap-select.select-mini:not([class*="span"]) {width:71.5px;}
+/*Used anymore ? .bootstrap-select.select-mini:not([class*="span"]) {width:71.5px;}*/
+
 /*DELETE.bootstrap-select.select-mini2:not([class*="span"]) {width:78px;margin-right:14px;}*/
-.bootstrap-select {margin-right:10px;}
-.bootstrap-select.select-medium:not([class*="span"]) {width:150px;}
+
+/*.bootstrap-select {margin-right:10px;}*/
+/*Used anymore ? .bootstrap-select.select-large:not([class*="span"]) {width:22vw;}*/ /* Was 220px */
+
+/* Are these used anymore ? */
+/*.bootstrap-select.select-medium:not([class*="span"]) {width:150px;}
 .bootstrap-select.select-medium2:not([class*="span"]) {width:180px;}
-.bootstrap-select.select-large:not([class*="span"]) {width:220px;}
 .bootstrap-select.select-large2:not([class*="span"]) {width:282px;}
-.bootstrap-select.select-large3:not([class*="span"]) {width:350px;}
+.bootstrap-select.select-large3:not([class*="span"]) {width:350px;}*/
 
 /* stuff */
 #playback-queue {width:38%;}
 #playback-cover {padding:0;width:38%;}
 #playback-controls {width:24%;margin-left:0px;}
-#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {position:relative;width:44%;left:-10000px;;margin:0 auto;}
-#playback-panel.newui #playback-cover, #playback-panel.cv #playback-cover {padding:0;width:33vw;position:absolute;left:50%;transform:translate(-50%);}
-#playback-panel.newui #playback-controls, #playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
+#playback-panel.cv #playback-queue {position:relative;width:44%;left:-10000px;;margin:0 auto;}
+#playback-panel.cv #playback-cover {padding:0;width:33vw;position:absolute;left:50%;transform:translate(-50%);}
+#playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
 /*DELETE.btn-group.bootstrap-select .btn {padding:2px 12px;}*/
 #players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
 #players .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
@@ -88,7 +92,7 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 .modal-header, .modal-footer {background-color: transparent;}
 /*DELETE.modal-xs{min-width:230px;text-align:center;}*/
 .form-horizontal .control-group {margin-bottom:15px;}
-#playback-panel.newui #togglebtns, #playback-panel.cv #togglebtns {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 2vh);left:50%;transform:translate(-50%);}
+#playback-panel.cv #togglebtns {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 2vh);left:50%;transform:translate(-50%);}
 .modal-dropdown-text {color:#333;}
 li.modal-dropdown-text:hover,
 li.modal-dropdown-text:focus {color:#eee;}
@@ -135,6 +139,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
 .modal.fade {top:0;top:env(safe-area-inset-top);transition:none;}
 .modal.fade.in {transition:none;}
+
+.modal .select-large {width:22vw;max-width:220px;margin:0 10px 10px 0;}
+.modal .input-large {width:21vw;max-width:210px;}
 
 /* stuff */
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
@@ -218,6 +225,7 @@ ol.playhistory {margin-left:55px;}
 
 /* SECTION MOVED TO MEDIA.CSS */
 
+/* Used anymore ? */
 .input-xxlarge {
 	width:90% !important;
 	max-width: 750px !important;

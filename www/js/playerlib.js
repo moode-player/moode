@@ -3512,7 +3512,7 @@ function hexToRgb(hex) {
 
 }
 
-// Always use rgba now newui2
+// Always use rgba now
 function str2rgba(tempcolor) {
 	var temp = 'rgba(' + tempcolor + ')';
 	return temp;

@@ -319,7 +319,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 /*.db-browse-icon {float:left;}*/
 /*#playqueue-controls {float:left;margin:6px 0 0 10px;}*/
 #folder-panel .btn.disabled, #folder-panel .btn[disabled] {background-color:#34495E;color:white;}
-#folder-panel, #radio-panel {width:100%;height:100vh;position:fixed;top:0;overflow:hidden;}
+#folder-panel, #radio-panel, #playlist-panel {width:100%;height:100vh;position:fixed;top:0;overflow:hidden;}
 #library-panel {height:100vh;}
 .btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {margin:0;line-height:normal;height:2.5rem;width:2.5rem;font-size:1.1rem;border-radius:0;float:left;display:inline-block;padding:.25rem .5rem;border-right: 1px solid var(--btnshade);}
 #db-back {font-size:1.5rem;}
@@ -669,28 +669,16 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .pulse {display: inline-block;	color: var(--accentxts);animation: pulse 1s;}
 /* spin animation for fancy ralbum */
 .ralbum svg {fill:var(--adapttext);	height:.9rem;width:.9rem;margin-top:5px;}
-/* newui */
-#playback-panel.newui #songsand, #playback-panel.cv #songsang {position:absolute;width:100vw;left:50%;transform:translate(-50%);}
-#playback-panel.newui #container-playqueue, #playback-panel.cv #container-playqueue {/*width:44%;*/height:75%;margin:-.5rem 0 0 3%;} /* transform instead of margin-top for ios */
-#playback-panel.newui #timezone {position:absolute;width:30%;height:34vw;left:0;}
-#playback-panel.newui #volzone {position:absolute;width:30%;height:34vw;right:0;}
-#playback-panel.newui #volbtns button {margin:.4em 0;font-size:1.75rem;}
-#playback-panel.newui #volknob, #playback-panel.cv #volknob {position:relative;top:50%;right:-50%;transform:translate(-50%, -50%);padding:0;margin:0;}
-#playback-panel.newui #volumedn {float:left;}
-#playback-panel.newui #volumeup {float:right;}
-#playback-panel.newui #currentsong {font-size:1.5em;}
-#playback-panel.newui #volcontrol, #playback-panel.newui #countdown {height:16rem;width:16rem;}
-#playback-panel.newui .playqueue, #playback-panel.cv .playqueue {padding-right:2em;}
-#playback-panel.newui #timeknob, #playback-panel.cv #timeknob {position:relative;top:50%;left:50%;transform:translate(-50%, -50%);padding:0;margin:0;}
-#playback-panel.newui #playbtns, #playback-panel.cv #playbtns {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 5vh);left:50%;transform:translate(-50%);}
-#playback-panel.newui .covers, #playback-panel.cv .covers {width:100%;margin:0;padding:0;}
-#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:34vw;max-height:34vw;margin:0 auto;}
-#playback-panel.newui #togglebtns .btn {margin:0 .6em;}
-#playback-panel.newui #playbtns .add-item-to-favorites, #playback-panel.newui #playbtns {display:inline-block;font-size:1.1em;margin:0 1em;}
-#playback-panel.newui #togglebtns .add-item-to-favorites {display:none;}
-#content.fancy #playback-panel.newui #container-playqueue {-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 1%, rgba(0,0,0,1) 99%, rgba(0,0,0,0) 100%);}
-#playback-panel.newui .playqueue, #playback-panel.cv .playqueue {padding-bottom:0;}
-#playback-panel.newui #volcontrol, #playback-panel.cv #volcontrol, #playback-panel.newui #countdown, #playback-panel.cv #countdown {height:20vw;width:20vw;}
+/* was new ui */
+#playback-panel.cv #songsang {position:absolute;width:100vw;left:50%;transform:translate(-50%);}
+#playback-panel.cv #container-playqueue {height:75%;margin:-.5rem 0 0 3%;}
+#playback-panel.cv #volknob {position:relative;top:50%;right:-50%;transform:translate(-50%, -50%);padding:0;margin:0;}
+#playback-panel.cv .playqueue {padding-right:2em;}
+#playback-panel.cv #timeknob {position:relative;top:50%;left:50%;transform:translate(-50%, -50%);padding:0;margin:0;}
+#playback-panel.cv #playbtns {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 5vh);left:50%;transform:translate(-50%);}
+#playback-panel.cv .covers {width:100%;margin:0;padding:0;}
+#playback-panel.cv .playqueue {padding-bottom:0;}
+#playback-panel.cv #volcontrol, #playback-panel.cv #countdown {height:20vw;width:20vw;}
 #playback-queue {z-index:2;}
 /* cv */
 #playback-panel.cv #playqueue-filter, #playback-panel.cv .btnlist-top-playqueue {display:none;}

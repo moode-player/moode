@@ -22,14 +22,14 @@
 */
 
 body {
-	--config-text-color:#ddd;
-	--config-bg-color:#151515;
-	--config-menu-bg-color:rgba(50,50,50,0.95);
-	--config-toggleoff-bg-color:rgba(128,128,128,0.2);
-	--config-help-color:#888;
-	--config-ctl-margin-right:12px;
-	--config-ctl-margin-bottom:16px;
-	--config-ctl-margin-bottom-toggle:12px;
+	--config-text-color: #ddd;
+	--config-bg-color: #151515;
+	--config-menu-bg-color: rgba(50,50,50,0.95);
+	--config-toggleoff-bg-color: rgba(128,128,128,0.2);
+	--config-help-color: #888;
+	--config-ctl-margin-right: 12px;
+	--config-ctl-margin-bottom: 16px;
+	--config-ctl-margin-bottom-toggle: 12px;
 	background-color:var(--config-bg-color)!important;
 }
 
@@ -39,38 +39,52 @@ body {
 .container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;}
 
 /* Title and legend */
-h1 {font-size:2.5em;font-weight:200;margin:0 0 .5em 0;}
-legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
+h1 {font-size:2.5rem;font-weight:200;margin:0 0 .5em 0;}
+legend {font-size:1.5rem;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
 .legend-config {margin:0 0 .25em .5em;}
-.legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
-.sub-legend {margin: -1em 0 1.5em 0;color:var(--config-help-color);}
+.legend-info-help {line-height:16px;padding-bottom:10px;font-size:12px;font-weight:normal;}
+.sub-legend {margin:-1em 0 1.5em 0;color:var(--config-help-color);font-size:12px;}
 
 /* Form controls */
+.control-label {font-size:12px;}
 .toggle {margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom-toggle) 0;}
+
 .toggle,
 .toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
 .config-toggle-yn {width:80px;}
+
 input[type=text],
 input[type=number],
-input[type=password]
- {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
+input[type=password] {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
+
+.config-input-large {width:20.75vw;max-width:210px;}
+.config-input-mini {width:6vw;max-width:60px;}
+.config-select-large:not([class*=span]) {width:22vw;max-width:220px;margin:0 var(--config-ctl-margin-right) 0 0;}
+.config-select-xxlarge:not([class*=span]) {width:90%;max-width:750px;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
+.config-select-yn:not([class*=span]) {width:8vw;max-width:80px;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
+.config-select-large .dropdown-toggle,
+.config-select-xxlarge .dropdown-toggle,
+.config-select-yn .dropdown-toggle {margin-bottom:var(--config-ctl-margin-bottom);}
+
+/* ORIGINAL
 .config-input-large {width:210px;}
 .config-input-mini {width:60px;}
 .config-select-large {width:222px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
 .config-select-xxlarge {width:90%!important;max-width:750px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
 .config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
+*/
 .btn-group.bootstrap-select .btn {padding:3px 0;}
 .config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}
 .config-btn-after {display:inline-block;vertical-align:middle;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;color:var(--config-text-color);}
 .config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 .config-input-after,
-.config-toggle-after {display:inline-block;vertical-align:top;color: var(--config-text-color);margin-top:5px;margin-right:var(--config-ctl-margin-right);} 
+.config-toggle-after {display:inline-block;vertical-align:top;color: var(--config-text-color);margin-top:5px;margin-right:var(--config-ctl-margin-right);}
 
 /* Help text */
 a.config-info-toggle {vertical-align:top;}
 .config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}
 .config-help-info,
-.config-help-static {display:block;font-size:var(--pbfont);color:var(--config-help-color);margin-bottom:var(--config-ctl-margin-bottom);}
+.config-help-static {display:block;font-size:12px;color:var(--config-help-color);margin-bottom:var(--config-ctl-margin-bottom);}
 .config-help-info {display:none;}
 .config-help-no-margin {margin-bottom:0;}
 

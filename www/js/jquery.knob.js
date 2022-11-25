@@ -195,7 +195,7 @@
 
             // wraps all elements in a div
             this.$div = $('<div style="'
-                        + (this.o.inline ? 'display:inline-block;' : '') // newui
+                        + (this.o.inline ? 'display:inline-block;' : '')
                         + '"></div>');
 
             this.$.wrap(this.$div).before(this.$c);

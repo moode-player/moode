@@ -243,7 +243,7 @@
 			</div>
             <div id="playbar-title">
 				<div id="playbar-currentsong"></div>
-                <div>
+                <div id="playbar-title-line-2">
                     <span id="playbar-currentalbum"></span>
                     <span id="playbar-hd-badge"></span>
                 </div>
