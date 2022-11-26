@@ -176,7 +176,7 @@ body {
 	#index-albums {right:calc(-50% + var(--sbw));}
 	#volcontrol-2 {height:65vw;width:65vw;}
 	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;font-size:8.5vw;}
-	#volume-popup .volume-display {font-size:9.5vw}
+	#volume-popup .volume-display {font-size:10vw}
 	#volume-pad {height:85vw;width:85vw;}
 	#volpad .volume-display-db {left:65%;font-size:1.5em;}
 	#panel-header .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
@@ -244,13 +244,14 @@ body {
 	#lib-content li {line-height:1.35em;}
 	/* Metadata under the cover art in Playback view */
 	#extra-tags-display {display:none;}
+	#songsand {margin-top:1.5em;}
 	#currentsong {font-size:1.5rem;}
 	#currentsong,
 	#currentartist {padding-top:.75rem;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
-	#currentalbum,
-	#currentartist {font-size:1.5em;}
-	#currentalbum-div .playback-hd-badge {height:1.5em!important;}
-	#currentartist-div .playback-hd-badge {height:1.5em!important;margin-top: 1rem;}
+	#currentalbum {font-size:1.5em;padding-top:0;},
+	#currentartist {font-size:1.5em;padding-top:.75rem;}
+	#currentalbum-div .playback-hd-badge {height:1.5em!important;margin-top:.2rem;}
+	#currentartist-div .playback-hd-badge {height:1.5em!important;margin-top:1rem;}
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.5em;margin-top:10px;}
 	.playqueue .playqueue-thumb {width:4em;height:4em;}
