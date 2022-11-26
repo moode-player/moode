@@ -231,15 +231,12 @@ body {
 	#volcontrol-2 {height:22vw;width:22vw;padding:2em;}
 	#volumedn-2,
 	#volumeup-2 {font-size:2.5vw;}
-	#volume-popup .volume-display {font-size:2.75vw;}
-	/* CoverView screen saver */
-	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
-	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
+	#volume-popup .volume-display {font-size:3.75vw;}
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	img.coverart {width:65vh;}
-	.cover-menu {background-size:2.5rem 2.5rem;background-position: 0.75rem 2rem;}
+	.cover-menu {background-size:2rem 2rem;background-position: 0.5rem 2.5rem;}
 	.album-name,
 	.artyear,
 	.station-name,
@@ -247,23 +244,33 @@ body {
 	#lib-content li {line-height:1.35em;}
 	/* Metadata under the cover art in Playback view */
 	#extra-tags-display {display:none;}
-	#currentsong {font-size:1.25rem;}
-	#currentsong
-	#currentartist {padding-top:.75rem;text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
-	#currentalbum {padding-top:.75rem;}
-	.playback-hd-badge {margin-top:0;bottom:0;height:1.25em!important;top:.85rem!important;padding-top:0.15em;}
+	#currentsong {font-size:1.5rem;}
+	#currentsong,
+	#currentartist {padding-top:.75rem;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#currentalbum,
+	#currentartist {font-size:1.5em;}
+	#currentalbum-div .playback-hd-badge {height:1.5em!important;}
+	#currentartist-div .playback-hd-badge {height:1.5em!important;margin-top: 1rem;}
 	/* Playback view Queue  */
-	.playqueue li:before {font-size:1.75em;margin-top:10px;}
-	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
+	.playqueue li:before {font-size:1.5em;margin-top:10px;}
+	.playqueue .playqueue-thumb {width:4em;height:4em;}
 	.playqueue .pll1 {font-size:1rem;}
     .playqueue .pll2 {font-size:.9rem;line-height:inherit;margin-left:calc(3.5em + 1vmin)!important}
 	.playqueue-action {font-size:1rem!important;}
+	/* CoverView screen saver */
+	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
+	#ss-metadata {top:10vh!important;text-align:center!important;}
+	#ss-hd-badge {font-size:.6em;}
 	/* CoverView Queue */
 	#cv-playqueue {width:75vmin;}
 	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
 	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
 	.cv-playqueue .pll1 {font-size:1.25rem;}
 	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
+	/* Coverview metadata */
+	body.cv #ss-currentsong,
+	body.cv #ss-currentalbum {font-size:1.5em;}
+	body.cv #ss-extrametadata {font-size:.75em;}
 	/* Time knob */
 	#countdown {height:17vw;width:17vw;}
     #countdown div {margin:0 auto;} /* Needed to center the knob */
@@ -277,11 +284,10 @@ body {
 	#togglebtns .volume-popup-btn {display:inline-block;}
 	#togglebtns {padding-top:.5rem;}
 	/* Playbar */
-	#playbar-title {font-size: 1.2em;padding-bottom:1.15rem!important;}
+	#playbar-title {font-size: 1.25em;padding-bottom:1.15rem!important;}
 	#playbar-title-line-2 {margin-top:0;}
 	#playbar-timeline {display:none!important;}
 	#playbar-volume-level {margin-left:0.15em;vertical-align:middle;font-size:.75em;}
-
 	/* Library */
 	.viewswitch {left:calc(env(safe-area-inset-left) + 1rem);}
 	#current-tab,
@@ -311,14 +317,12 @@ body {
 	#container-browse,
 	#container-radio,
 	#container-playlist {left:env(safe-area-inset-left);width:calc(100% - env(safe-area-inset-left) - 1rem);};
-
 	/* Dropdown and context menus */
 	.dropdown-menu>li>a,
 	.viewswitch .btn {line-height:2.25rem;font-size:1.15em;}
 	.adv.search-btn {display:none;}
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:2.85em;}
-
 	/* For the configs */
 	#panel-header,
 	.container {left:calc(env(safe-area-inset-left) + 1rem);}
@@ -328,6 +332,7 @@ body {
 	.config-input-after,
 	.config-toggle-after {font-size:12px;}
 	.config-horiz-rule {font-size:12px;}
+	.config-btn-music-source {font-size:1.5em;}
 	/* Modals */
 	.modal-body {max-height:calc(62vh - env(safe-area-inset-bottom) + 1rem);}
 }
