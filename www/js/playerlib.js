@@ -924,18 +924,23 @@ function renderUI() {
     	}
 
     	// Extra metadata displayed under the cover
+        // NOTE: #countdown-sample-rate is displayed in the countdown knob on Ultrawide 1920 x 540/480 displays
     	if (MPD.json['state'] === 'stop') {
     		$('#extra-tags-display, #ss-extra-metadata').html('Not playing');
+            $('#countdown-sample-rate').text('')
     	} else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
             $('#extra-tags-display, #ss-extra-metadata').html('');
+            $('#countdown-sample-rate').text('')
         } else if (MPD.json['artist'] == 'Radio station') {
     		$('#extra-tags-display, #ss-extra-metadata').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
+            $('#countdown-sample-rate').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bps'));
     	} else {
             var extraTagsDisplay = '';
             extraTagsDisplay = formatExtraTagsString();
             extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) :
                 $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
             $('#ss-extra-metadata').html(MPD.json['encoded']);
+            $('#countdown-sample-rate').text(MPD.json['encoded']);
     	}
 
         // HD badge text
