@@ -164,7 +164,7 @@ function reduceGenres(acc, track) {
 // Album Artist:
 // List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists"
 // or any other string that was used to identify compilation albums. This is the old 671 behavior.
-// Album Artist +
+// Album Artist+:
 // List all Album Artists. Compilation albums listed for a selected Album Artist will show only
 // the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all
 // the album's tracks and just those for the selected Album Artist.
@@ -176,7 +176,7 @@ function reduceArtists(acc, track) {
 			acc[album_artist].artist = track.album_artist;
 		}
 		acc[album_artist].push(track);
-		if (SESSION.json['library_tagview_artist'].includes('Album Artist')) { // Album Artist or Album Artist +
+		if (SESSION.json['library_tagview_artist'].includes('Album Artist')) { // Album Artist or Album Artist+
 			return acc;
 		}
 	}
@@ -422,23 +422,23 @@ function filterAlbums() {
 	// Filter by artist
 	if (LIB.filters.artists.length) {
 		// @scripple:
-/*		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
+        /*if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
 			filteredAlbums = filteredAlbums.filter(filterByArtist);
 			filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
 		}
-      // Artist or Album Artist +
+        // Artist or Album Artist+
 		// @Atair: deactivated condition, because
 		//         when Folderpath album key is set and
 		//         an album contains tracks with different album_artists (which all appear in the artists column),
 		//         the album would not be displayed for either album_artist when being clicked.
-         	//         The else case might be more expensive, but does  basically the same job as the if clause,
-         	//         but for all artists
-		else { */
+        //         The else case might be more expensive, but does  basically the same job as the if clause,
+        //         but for all artists
+		else {*/
 			var artistSongs = allSongs.filter(filterByArtist);
 			var songKeys = artistSongs.map(function(a) {return a.key;});
 			filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
 			filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
-//		}
+        //}
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {
