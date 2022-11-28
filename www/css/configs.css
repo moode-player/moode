@@ -66,13 +66,6 @@ input[type=password] {display:inline-block;height:22px;vertical-align:top;margin
 .config-select-xxlarge .dropdown-toggle,
 .config-select-yn .dropdown-toggle {margin-bottom:var(--config-ctl-margin-bottom);}
 
-/* ORIGINAL
-.config-input-large {width:210px;}
-.config-input-mini {width:60px;}
-.config-select-large {width:222px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
-.config-select-xxlarge {width:90%!important;max-width:750px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
-.config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
-*/
 .btn-group.bootstrap-select .btn {padding:3px 0;}
 .config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}
 .config-btn-after {display:inline-block;vertical-align:middle;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;color:var(--config-text-color);}
@@ -107,7 +100,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs .btn {padding:.35rem .6rem;border-right:1px solid rgba(128,128,128,.35);}
 #config-tabs .btn:last-child, #config-tabs .btn.active {border:none;}
 .viewswitch-cfgs {position:absolute;top:0;top:env(safe-area-inset-top);left:50%;box-sizing:border-box;background-color:transparent;color:inherit;display:none;z-index:1001;line-height:normal;font-size:inherit;transform:translate(-50%, 0%);height:2.75em;align-items:center;}
-.viewswitch-cfgs .btn {position:relative;align-items:center;border-radius:0px;width:50%;/*height:65%;*/line-height:normal;font-size:1rem;padding:.35rem 1rem;color:inherit;border:none;background: var(--btnshade3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.viewswitch-cfgs .btn {position:relative;align-items:center;border-radius:0px;width:50%;line-height:normal;font-size:1rem;padding:.35rem 1rem;color:inherit;border:none;background: var(--btnshade3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
 .viewswitch-cfgs .btn:first-child {border-top-left-radius:.25em;border-bottom-left-radius:.25em;}
 .viewswitch-cfgs .btn:last-child {border-top-right-radius:.25em;border-bottom-right-radius:.25em;}
 .viewswitch-cfgs .btn.active {background:rgba(128,128,128,.35);color:inherit;}
