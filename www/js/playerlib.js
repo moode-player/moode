@@ -4251,7 +4251,7 @@ function submitLibraryUpdate (path = '') {
 
 function getThumbHW() {
     var colArray = SESSION.json['library_thumbnail_columns'].split('/');
-    var cols = UI.mobile ? colArray[1] : colArray[0];
+    var cols = UI.mobile ? colArray[1].slice(0,1) : colArray[0]; // Need slice to handle "6/2 (Default)"
 	var divM = Math.round(2 * convertRem(1.5)); // 1.5rem l/r margin for div
 	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
 	UI.thumbHW = columnW - (divM / 2);
