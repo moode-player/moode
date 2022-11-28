@@ -229,11 +229,11 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nTimed display\t= $scnsaver_timeout\c"
+	echo -e "\nTimed display\t\t= $scnsaver_timeout\c"
 	echo -e "\nAutomatic display\t= $toggle_coverview\c"
 	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
-	echo -e "\nLayout\t\t= $scnsaver_layout\c"
+	echo -e "\nLayout\t\t\t= $scnsaver_layout\c"
 	echo -e "\nExtra metadata\t\t= $scnsaver_xmeta\n"
 }
 
