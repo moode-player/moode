@@ -83,8 +83,6 @@ a.config-info-toggle {vertical-align:top;}
 
 /* blu-config: */
 #blu-config-cmd-output {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
-/* sys-config: updater contents of VIEW modal */
-.updater-relnotes {list-style-type:none;margin-left:0;}
 /* net-config, src-config: Show/hide password plaintext */
 .show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin-bottom);}
 /* cdsp-configurator: Pipeline editor */

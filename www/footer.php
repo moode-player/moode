@@ -25,9 +25,14 @@
 <div id="about-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
 	<div class="modal-body">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<p style="text-align:center;font-size:40px;font-weight:500;letter-spacing:-2px;margin-top:2px">m<span style="color:#d35400;line-height:12px">oO</span>de<span style="font-size:12px;position:relative;top:-15px;left:-3px;">™</span></p>
-			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
-			<h4>Release Information</h4>
+
+		<p id="moode-logo-text">m<span id="moode-logo-text-oo">oO</span>de<span id="moode-logo-text-tm">™</span></p>
+		
+		<p>
+			Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.
+		</p>
+		<p>
+			<h5>Release Information</h5>
 			<ul>
 				<li>Release: 8.2.3 2022-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
 				<li>Maintainer: Tim Curtis &copy; 2014</li>
@@ -36,7 +41,7 @@
 				<li>License: <a class="moode-about-link" href="./COPYING.html" target="_blank">View GPLv3</a></li>
 			</ul>
 		<p>
-			<h4>Platform Information</h4>
+			<h5>Platform Information</h5>
 			<ul>
 				<li>RaspiOS: <span id="sys-raspbian-ver"></span></li>
 				<li>Linux kernel: <span id="sys-kernel-ver"></span></li>

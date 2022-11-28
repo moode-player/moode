@@ -35,7 +35,7 @@ a:focus {color:var(--accentxts);} /* Fixes blue outline on control after closing
 .modal-header .close {margin:0px 0px 0px 0px;color:inherit;position:absolute;right:5px;top:3px;padding:5px;opacity:0.05;}
 .modal-header h3 {margin:1em 0 1em 0;line-height:normal;color:inherit;font-size:1.4rem;text-transform:capitalize;text-align:center;}
 .modal-body h4 {font-size:1.25em;line-height:inherit;text-align:center;}
-.modal-body p {margin:0 auto;width:80%;text-align:center;}
+/*DELETE.modal-body p {margin:0 auto;width:80%;text-align:center;}*/
 .modal-body {position:relative;overflow-y:auto;overflow-x:hidden;max-height:75vh;padding:0 1.5rem;color:inherit;-webkit-user-select:auto;}
 .modal-sm2 {width:30%;min-width:560px;} /* For the confirmation modals */
 .modal-sm2 .modal-body {padding:0 1em;}
@@ -120,10 +120,15 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
 .modal.fade {top:0;top:env(safe-area-inset-top);transition:none;}
 .modal.fade.in {transition:none;}
-
+/* Input controls */
 .modal .select-large {width:22vw;max-width:220px;margin:0 10px 10px 0;}
 .modal .input-large {width:21vw;max-width:210px;}
-
+/* VIEW modal in System config */
+.updater-relnotes {list-style-type:none;margin-left:0;}
+/* About modal */
+#moode-logo-text {text-align:center;font-size:40px;font-weight:500;letter-spacing:-2px;margin-top:2px;}
+#moode-logo-text-oo {color:#d35400;line-height:12px;}
+#moode-logo-text-tm {font-size:12px;position:relative;top:-15px;left:-3px;}
 /* stuff */
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
 #info-toggle-bgimage {margin-left:0;margin-top:2px;}
@@ -182,9 +187,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 a.info-toggle {vertical-align:top;}
 .info-toggle i {vertical-align:top;margin-top:6px;font-size:1.1em;}
 
-#quickhelp-icon-lists ul {list-style:none;margin-left:0;}
-#quickhelp-icon-lists p {margin-left:1.5em;}
-#quickhelp-icon-lists span, #quickhelp-bullet-list span {margin-left:0;font-size:1em;font-weight:500;}
+#quickhelp-icon-list ul {list-style:none;margin-left:0;}
+#quickhelp-icon-list p {margin-left:1.5em;}
+#quickhelp-icon-list span, #quickhelp-bullet-list span {margin-left:0;font-size:1em;font-weight:500;}
 /* playback history log */
 #container-playhistory {padding-top:5px;padding-left: 5px;}
 ol.playhistory {margin-left:55px;}
