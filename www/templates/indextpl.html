@@ -133,11 +133,12 @@
 								<span id="currentalbum"></span>
 								<span class="playback-hd-badge"></span>
 							</div>
-							<span id="currentsong"></span>
+							<div id="currentsong"></div>
 							<div id="currentartist-div">
 								<span id="currentartist"></span>
 								<span class="playback-hd-badge"></span>
 							</div>
+							<div id="songsand-sample-rate" class="hide"></div>
 							<div id="debug-text"></div>
 						</div>
 					</div>
@@ -323,7 +324,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-update-filter btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" class="btn btn-update-filter btn-primary" data-dismiss="modal">Save</button>
 	</div>
 </div>
 
@@ -508,7 +509,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Set" id="btn-set-favorites-name" class="btn btn-primary" data-dismiss="modal">Set</button>
+		<button aria-label="Set" id="btn-set-favorites-name" class="btn btn-primary" data-dismiss="modal">Save</button>
 	</div>
 </div>
 
@@ -554,7 +555,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-themecolor" class="help-block hide">
-		                	Sets the text and background color.
+		                	Sets the background and text color.
 		                </span>
 		            </div>
 	                <label class="control-label" for="accent-color">Accent color</label>
@@ -666,7 +667,7 @@
 							</div>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-cover-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-cover-backdrop" class="help-block hide">
-		                    	Sets the backdrop to the currently displayed album cover.
+		                    	Sets the backdrop to the currently displayed cover art.
 		                    </span>
 		                </div>
 	   	                <label class="control-label" for="cover-blur">Cover blur</label>
@@ -737,7 +738,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-adaptive" class="help-block hide">
-	                    	Sets the Playback panel color scheme based on the dominant color in the album artwork.
+	                    	Sets the color scheme for Playback view based on the dominant color in the cover art.
 	                    </span>
 	                </div>
 					<label class="control-label" for="renderer-backdrop">Renderer backdrop</label>
@@ -758,7 +759,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-renderer-backdrop" class="help-block hide">
-							Display the Image or Cover backdrop instead of the semi-transparent dark overlay when a renderer is playing.
+							Display the image or cover backdrop instead of the semi-transparent dark overlay when a renderer is playing.
 						</span>
 					</div>
 					<label class="control-label" for="font-size">Font size</label>
@@ -783,7 +784,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-font-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-font-size" class="help-block hide">
-							Set the size of the font used.
+							Increase or decrease the size of text.
 						</span>
 					</div>
 					<label class="control-label" for="native-lazyload">Native lazyload</label>
@@ -834,8 +835,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-playqueue-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-playqueue-art" class="help-block hide">
-							Shows thumbnail images for songs and radio stations in the Queue.<br>
-							NOTE: Showing thumbnails may impact performance.
+							Shows thumbnail images for songs and radio stations in the Queue.
+							Note that showing thumbnails may impact performance.
 						</span>
 					</div>
 					<label class="control-label" for="show-npicon">Show Now-playing icon</label>
@@ -856,8 +857,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-npicon" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-show-npicon" class="help-block hide">
-							Shows the EQ bars animation icon next to the currently playing item in the Queue.<br>
-							NOTE: Showing the Now-playing icon may impact performance when using an attached local display.
+							Shows the EQ bars animation icon next to the currently playing item in the Queue.
+							Note that showing the icon may impact performance when using an attached local display.
 						</span>
 					</div>
 					<label class="control-label" for="show-cvpb">Show CoverView playbar</label>
@@ -878,7 +879,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-cvpb" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-show-cvpb" class="help-block hide">
-							Shows the Playbar when in CoverView.<br>
+							Show or hide the Playbar when in CoverView.
 						</span>
 					</div>
 					<label class="control-label" for="extra-tags">Show extra metadata</label>
@@ -887,7 +888,7 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-extra-tags" class="help-block hide">
 		                    Display under the cover art any combination of the tags listed below. If no tags are to be displayed enter None or leave the field blank.<br>
-							<b>Tags:&nbsp;</b>album, genre, track, disc, date, composer, conductor, performer, encoded
+							<b>Tags: </b>album, genre, track, disc, date, composer, conductor, performer, encoded
 	                    </span>
 	                </div>
 					<label class="control-label" for="search_site">Search site</label>
@@ -916,8 +917,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-search_site" class="help-block hide">
-						By clicking the current track title in Playback view an internet search is launched with the selected site.<br>
-						A combination of artist and album is searched. Wikipedia search is restricted to artist only.
+							By clicking the current track title in Playback view an internet search is launched with the selected site.
+							A combination of artist and album is searched. Wikipedia search is restricted to artist only.
 		                </span>
                 	</div>
 	                <label class="control-label" for="play-history-enabled">Playback history log</label>
@@ -938,7 +939,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-play-history" class="help-block hide">
-	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
+	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared in System config.
 	                    </span>
 					</div>
 				</div>
@@ -971,7 +972,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_album" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_onetouch_album" class="help-block hide">
-	                    	Specify an action to be performed when tapping a cover in Album view.
+	                    	Specify an action to be performed when clicking a cover in Album view.
 	                    </span>
 	                </div>
 					<label class="control-label" for="onetouch_radio">One touch radio</label>
@@ -996,7 +997,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_radio" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_onetouch_radio" class="help-block hide">
-	                    	Specify an action to be performed when tapping a cover in Radio view.
+	                    	Specify an action to be performed when clicking a cover in Radio view.
 	                    </span>
 	                </div>
 					<label class="control-label" for="onetouch-pl">One touch playlist</label>
@@ -1021,7 +1022,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-onetouch-pl" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-onetouch-pl" class="help-block hide">
-	                    	Specify an action to be performed when tapping a playlist in Playlist view.
+	                    	Specify an action to be performed when clicking a playlist in Playlist view.
 	                    </span>
 	                </div>
 					<label class="control-label" for="albumview-sort-order">Albumview sort order</label>
@@ -1044,11 +1045,11 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-albumview-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-albumview-sort-order" class="help-block hide">
-							<b>by Album:</b> Albums are sorted alphabetically.<br>
-	                        <b>by Artist:</b> Albums for each artist are sorted alphabetically.<br>
-	                        <b>by Artist/Year:</b> Albums for each artist are sorted chronologically.<br>
-	                        <b>by Year:</b> Albums are sorted chronologically.<br>
-	                        NOTE: When sorted by Year if not all tracks in the album have the same Year then the latest year will be used. If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
+							<b>by Album: </b>Albums are sorted alphabetically.<br>
+	                        <b>by Artist: </b>Albums for each artist are sorted alphabetically.<br>
+	                        <b>by Artist/Year: </b>Albums for each artist are sorted chronologically.<br>
+	                        <b>by Year: </b>Albums are sorted chronologically.<br>
+	                        Note that when sorted by year if not all tracks in the album have the same year then the latest year will be used. If no year tag exists or if the year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
 					<label class="control-label" for="tagview-sort-order">Tagview sort order</label>
@@ -1072,12 +1073,12 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-tagview-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-tagview-sort-order" class="help-block hide">
-							<b>by Album:</b> Albums are sorted alphabetically.<br>
-							<b>by Album/Year:</b> Albums are sorted alphabetically in the full list. When an Artist is clicked albums for the artist are sorted chronologically<br>
-	                        <b>by Artist:</b> Albums for each artist are sorted alphabetically.<br>
+							<b>by Album: </b>Albums are sorted alphabetically.<br>
+							<b>by Album/Year: </b>Albums are sorted alphabetically in the full list. When an Artist is clicked albums for the artist are sorted chronologically<br>
+	                        <b>by Artist: </b>Albums for each artist are sorted alphabetically.<br>
 							<b>by Artist/Year:</b> Albums for each artist are sorted chronologically.<br>
-	                        <b>by Year:</b> Albums are sorted chronologically.<br>
-	                        NOTE: When sorted by Year if not all tracks in the album have the same Year then the latest year will be used. If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
+	                        <b>by Year: </b>Albums are sorted chronologically.<br>
+	                        Note that when sorted by year if not all tracks in the album have the same year then the latest year will be used. If no year tag exists or if the year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
 					<label class="control-label" for="track-play">Track play</label>
@@ -1099,8 +1100,8 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-track-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-track-play" class="help-block hide">
 							For the track list in Tag/Album views this option controls whether the Play and Clear/Play actions add only the selected track to the Queue or the selected track and all following tracks.<br>
-	                    	<b>Track:</b> Play selected track only.<br>
-							<b>Track+:</b> Play selected track and all following tracks.
+	                    	<b>Track: </b>Play selected track only.<br>
+							<b>Track+: </b>Play selected track and all following tracks.
 	                    </span>
 					</div>
 					<label class="control-label" for="recently-added">Recently added filter</label>
@@ -1125,8 +1126,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-recently-added" class="help-block hide">
-		                	Time period used to filter the Library for recently added albums. The default is 1 month.<br>
-						NOTE: The "No limit" option provides a way to achieve a "date added" sort of the Library.
+		                	Time period used to filter the Library for recently added albums. The default is 1 month.
+							Note that the "No limit" option provides a way to achieve a "date added" sort of the Library.
 	                    </span>
 	                </div>
 					<label class="control-label" for="show-encoded-at">Show sample rate</label>
@@ -1150,7 +1151,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-show-encoded-at" class="help-block hide">
-                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when the bit depth for Song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for Radio stations the bit rate is &gt; 128 kbps.
+                    		The bit depth and sample rate can be displayed in one of several formats on or below the cover art.
+							The "HD only" option displays an HD badge when the bit depth for song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for radio stations the bit rate is &gt; 128 kbps.
 	                    </span>
 	                </div>
 					<label class="control-label" for="cover-search-priority">Cover search priority</label>
@@ -1171,7 +1173,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-cover-search-priority" class="help-block hide">
-						This option determines whether the Cover Art extractor and Thumbnail generator look first for Embedded covers or Cover image files.
+							This option determines whether the cover art extractor and thumbnail generator look first for embedded covers or cover image files.
 	                    </span>
 	                </div>
 					<label class="control-label" for="hires-thumbnails">Thumbnail resolution</label>
@@ -1194,8 +1196,9 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-hires-thumbnails" class="help-block hide">
-						This option sets the resolution of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
-						NOTE: Auto uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time). This can result in lower resolution images.
+						This option sets the resolution of the JPEG images output by the thumbnail generator. Regenerate the thumbnail images after changing this setting.
+						Note that "Auto" uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).
+						This can result in lower resolution images.
 	                    </span>
 	                </div>
 					<label class="control-label" for="thumbnail-columns">Thumbnail columns</label>
@@ -1220,7 +1223,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbnail-columns" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-thumbnail-columns" class="help-block hide">
-		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for Desktop or Tablet and the second is for Mobile.
+		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for desktop/tablet and the second is for mobile.
 	                    </span>
 	                </div>
 				</div>
@@ -1248,7 +1251,7 @@
  						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-tag-view-genre" class="help-block hide">
-							Select whether to populate the first column in Tag view with Genres (default) or with Composers.
+							Select whether to populate the first column in Tag view with genres (default) or with composers.
 						</span>
 	                </div>
 					<label class="control-label" for="tag-view-artist">Tag view artist</label>
@@ -1265,17 +1268,17 @@
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist +</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist+</span></a></li>
 								</ul>
 							</div>
  						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-tag-view-artist" class="help-block hide">
 							Select how to populate the Artist list in Tag view.<br>
-							<b>Artist:</b>&nbsp;List all Artists, Album Artists, Performers and Conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-							<b>Artist (Strict):</b>&nbsp;List only Artists. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-							<b>Album Artist:</b>&nbsp;List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
-							<b>Album Artist +:</b>&nbsp;Same as Album Artists except compilation albums listed for a selected Album Artist will show only the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected Album Artist.<br>
+							<b>Artist: </b>List all artists, album artists, performers and conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
+							<b>Artist (Strict): </b>List only artists. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
+							<b>Album Artist: </b>List all album artists. Compilation albums are listed under the album artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
+							<b>Album Artist+: </b>Same as "Album Artist" except compilation albums listed for a selected album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected album artist.
 						</span>
 	                </div>
 					<label class="control-label" for="library-album-key">Album key</label>
@@ -1318,13 +1321,9 @@
 							</div>
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<!--span id="info-library-inc-comment-tag" class="help-block hide">
-							The text is displayed in Tag/Album views as an album heading in the track list if the Album key is set to include @AlbumID.
- 	                    </span-->
  						<span id="info-library-inc-comment-tag" class="help-block hide">
-							The text is displayed in Tag/Album views.<br>
-							(1) After the Year in the Album title.<br>
-							(2) As an album heading in the track list if the Album key is set to include @AlbumID.
+							The comment text is displayed in Tag/Album views after the year in the album title
+							or as an album heading in the track list if "Album key" is set to include @AlbumID.
  	                    </span>
  	                </div>
 					<label class="control-label" for="ignore-articles">Ignore articles</label>
@@ -1353,7 +1352,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-show-genres-column" class="help-block hide">
-	                    	Show the Genres column in Tag view.
+	                    	Show the genres column in Tag view.
 	                    </span>
 	                </div>
 					<label class="control-label" for="show-tagview-covers">Show tagview covers</label>
@@ -1374,7 +1373,7 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-show-tagview-covers" class="help-block hide">
- 		                    Show covers in the Album column of Tag view.
+ 		                    Show cover art in the album column in Tag view.
  	                    </span>
  	                </div>
 					<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
@@ -1395,7 +1394,7 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-ellipsis-limited-text" class="help-block hide">
- 		                    Display ellipsis limited text underneath the cover in Album view for a more compact look.
+ 		                    Display ellipsis limited text underneath the cover art in Album view for a more compact look.
  	                    </span>
  	                </div>
 					<label class="control-label" for="utf8-char-filter">UTF8 character filter</label>
@@ -1471,7 +1470,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-auto-coverview" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-auto-coverview" class="help-block hide">
-	                    	Automatically show CoverView on locally attached display. Connected clients are not affected.
+	                    	Automatically show CoverView on a locally attached display. Connected clients are not affected.
 	                    </span>
 	                </div>
 	                <label class="control-label" for="scnsaver-timeout">Backdrop style</label>
@@ -1496,11 +1495,11 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-style" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-style" class="help-block hide">
 	                    	Set the effect used for the backdrop.<br>
-							<b>Animated:</b> Color change overlay.<br>
-							<b>Theme:</b> Theme color overlay.<br>
-							<b>Gradient (Linear):</b> Gradient overlay, top to bottom.<br>
-							<b>Gradient (Radial):</b> Gradient overlay, center to edge.<br>
-							<b>Pure Black:</b> Solid black overlay.
+							<b>Animated: </b>Color change overlay.<br>
+							<b>Theme: </b>Theme color overlay.<br>
+							<b>Gradient (Linear): </b>Gradient overlay top to bottom.<br>
+							<b>Gradient (Radial): </b>Gradient overlay center to edge.<br>
+							<b>Pure Black: </b>Solid black overlay.
 	                    </span>
 	                </div>
 					<label class="control-label" for="scnsaver-mode">Display mode</label>
@@ -1523,7 +1522,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-mode" class="help-block hide">
-	                    	Display Cover art, a Digital clock or an Analog clock with or without a sweep second hand.
+	                    	Display cover art, a digital clock or an analog clock with an optional sweep second hand.
 	                    </span>
 	                </div>
 					<label class="control-label" for="scnsaver-layout">Layout</label>
@@ -1544,8 +1543,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-layout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-layout" class="help-block hide">
-	                    	<b>Default:</b> Cover art centered and metadata underneath.<br>
-							<b>Wide:</b> Cover art on the left and metadata on the right.
+	                    	<b>Default: </b>Cover art centered and metadata underneath.<br>
+							<b>Wide: </b>Cover art on the left and metadata on the right.
 	                    </span>
 	                </div>
 					<label class="control-label" for="scnsaver-xmeta">Extra metadata</label>
@@ -1566,7 +1565,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-xmeta" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-xmeta" class="help-block hide">
-							Display sample rate and audio format underneath the metadata in Wide layout.
+							Display sample rate and audio format underneath the metadata in wide layout.
 	                    </span>
 	                </div>
 				</div>
@@ -1575,7 +1574,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-preferences-update" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-preferences-update" class="btn btn-primary" data-dismiss="modal">Save</button>
 	</div>
 </div>
 
@@ -1714,7 +1713,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-clockradio-update" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-clockradio-update" class="btn btn-primary" data-dismiss="modal">Save</button>
 	</div>
 </div>
 
@@ -1769,7 +1768,7 @@
 						</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-new-station-type" class="help-block hide">
-						This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+						This setting controls the visibility of the station and whether it's considered a favorite. Stations marked as hidden can be un-hidden via the Radio Manager.
 					</span>
 				</div>
 				<label class="control-label" for="new-station-genre">Genre</label>
@@ -1777,7 +1776,7 @@
 					<input id="new-station-genre" class="input-large" type="text" name="new_station_genre" maxlength="200" value="">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-new-station-genre" class="help-block hide">
-						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma plus space).
 					</span>
 				</div>
 				<label class="control-label" for="new-station-broadcaster">Broadcaster</label>
@@ -1789,7 +1788,7 @@
                     <input id="new-station-home-page" class="input-large" type="text" name="new_station_home_page" maxlength="200" value="">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-new-station-home-page" class="help-block hide">
-						URL for the station's home page. This link is used when clicking on "Streaming source" in Playback.
+						URL for the station's home page. This link is used when clicking on "Streaming source" in Playback view.
 					</span>
                 </div>
 				<label class="control-label" for="new-station-language">Language</label>
@@ -1876,8 +1875,8 @@
 				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="error-edit-logoimage"></div>
 				<div id="info-edit-logoimage" class="help-block hide">
-					Add a JPEG logo image for the station. Max size is 1MB.
-					After updating a logo refresh the Browser to help expire the old image.
+					Add a JPEG image for the station. Max size is 1MB.
+					After updating an image refresh the Browser to help expire the old image.
 				</div>
 			</div>
 			<div id="edit-station-tags">
@@ -1900,7 +1899,7 @@
 						</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-edit-station-type" class="help-block hide">
-						This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+						This setting controls the visibility of the station and whether it's considered a favorite. Stations marked as hidden can be un-hidden via the Radio Manager.
 					</span>
 				</div>
 				<label class="control-label" for="edit-station-genre">Genre</label>
@@ -1920,7 +1919,7 @@
                     <input id="edit-station-home-page" class="input-large" type="text" name="edit_station_home_page" maxlength="200" value="">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-edit-station-home-page" class="help-block hide">
-						URL for the station's home page. This link is used when clicking on "Streaming source" in Playback.
+						URL for the station's home page. This link is used when clicking on "Streaming source" in Playback view.
 					</span>
                 </div>
 				<label class="control-label" for="edit-station-language">Language</label>
@@ -1975,7 +1974,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-update-station" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-update-station" class="btn btn-primary" data-dismiss="modal">Save</button>
 	</div>
 </div>
 
@@ -2047,7 +2046,7 @@
 				</div>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-radioview-group-method" class="help-block hide">
-					Specify how to break the list into groups separated by a named header. The "Favorites first" selection places favorite stations at the top of the list sorted by Name followed by the rest of the stations grouped by Sort tag.
+					Specify how to break the list into groups separated by a named header. The "Favorites first" selection places favorite stations at the top of the list sorted by Name followed by the rest of the stations grouped by sort tag.
 				</span>
 			</div>
 		</div>
@@ -2076,12 +2075,12 @@
 				</div>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-radioview-show-hide-moode" class="help-block hide">
-					<b>Show hidden:&nbsp;</b> Display hidden moOde stations for review but leave their type set to Hidden.<br>
-					<b>Hide all:&nbsp;</b> Set all moOde stations to type Hidden except for Favorites.<br>
-					<b>Un-hide all:&nbsp;</b> Set all moOde stations to type Regular except for Favorites.<br>
-					<b>Hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Hidden except for Favorites.<br>
-					<b>Un-hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Regular except for Favorites.<br>
-					NOTE: moOde stations are a custom curated set of stations shipped in the release.
+					<b>Show hidden: </b>Display hidden moOde stations for review but leave their type set to "hidden".<br>
+					<b>Hide all: </b>Set all moOde stations to type "hidden" except for favorites.<br>
+					<b>Un-hide all: </b>Set all moOde stations to type "regular" except for favorites.<br>
+					<b>Hide geo-fenced: </b>Set geo-fenced moOde stations to type "hidden" except for favorites.<br>
+					<b>Un-hide geo-fenced: </b>Set geo-fenced moOde stations to type "regular" except for favorites.<br>
+					Note that moOde stations are a custom curated set of stations shipped in the release.
 				</span>
 			</div>
 			<label class="control-label" for="radioview-show-hide-other">Other stations</label>
@@ -2104,10 +2103,10 @@
 				</div>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-radioview-show-hide-other" class="help-block hide">
-					<b>Show hidden:&nbsp;</b> Display other (non-moOde) hidden stations for review but leave their type set to Hidden.<br>
-					<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden except for Favorites.<br>
-					<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular except for Favorites.<br>
-					NOTE: Other stations are those that have been user added.
+					<b>Show hidden: </b> Display other (non-moOde) hidden stations for review but leave their type set to "hidden".<br>
+					<b>Hide all: </b> Set all other (non-moOde) stations to type "hidden" except for favorites.<br>
+					<b>Un-hide all: </b> Set all other (non-moOde) stations to type "regular" except for favorites.<br>
+					Note that other stations are those that have been user added.
 				</span>
 			</div>
 		</div>
@@ -2131,7 +2130,7 @@
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-enabled" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-recorder-enabled" class="help-block hide">
-						Turn the Stream recorder On/Off.
+						Turn the stream recorder on/off.
 					</span>
 				</div>
 				<div id="stream-recorder-options" class="hide">
@@ -2151,8 +2150,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-recorder-storage" class="help-block hide">
-							Specify the path where the "Recordings" folder is located. The folder will automatically be created if it doesn't already exist at the path.<br>
-							NOTE: Only ext4 format is allowed for the partition containing the Recordings folder.
+							Specify the path where the "recordings" folder is located. The folder will automatically be created if it doesn't already exist at the path.<br>
+							Note that only ext4 format is allowed for the partition containing the recordings folder.
 						</span>
 					</div>
 					<label class="control-label" for="tag-recordings">Tag <span id="untagged-file-count"></span> recordings</label>
@@ -2173,12 +2172,12 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-tag-recordings" class="help-block hide">
-							Tag all new files in the "Recordings" folder. Files that have already been tagged are skipped. The tags that are writtem are listed below.<br>
-							- <b>Genre:</b> Recordings<br>
-							- <b>Artist:</b> Artist<br>
-							- <b>AlbumArtist:</b> Recorded Radio<br>
-							- <b>Album:</b> Station name or Recorded [date]<br>
-							- <b>Title:</b> Title
+							Tag all new (un-tagged) files in the recordings folder using the following tags.<br>
+							<b>Genre: </b>Recordings<br>
+							<b>Artist: </b>Artist<br>
+							<b>AlbumArtist: </b>Recorded Radio<br>
+							<b>Album: </b>Station name or Recorded [date]<br>
+							<b>Title: </b>Title
 						</span>
 					</div>
 					<label class="control-label" for="recorder-album-tag">Album tag</label>
@@ -2197,7 +2196,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-recorder-album-tag" class="help-block hide">
-							Select the name to be used to populate the Album tag.
+							Select the name to be used to populate the album tag.
 						</span>
 						<span id="selected-album-tag" class="help-block"></span>
 					</div>
@@ -2219,7 +2218,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-delete-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-delete-recordings" class="help-block hide">
-							Delete all files in the "Recordings" folder.
+							Delete all files in the recordings folder.
 						</span>
 					</div>
 				</div>
@@ -2228,7 +2227,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-upd-radio-manager" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-upd-radio-manager" class="btn btn-primary" data-dismiss="modal">Save</button>
 	</div>
 </div>
 
@@ -2253,7 +2252,7 @@
 				<a aria-label="Help" class="info-toggle" id="info-toggle-new-plcoverimage" data-cmd="info-new-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="error-new-plcoverimage"></div>
 				<div id="info-new-plcoverimage" class="help-block hide">
-					Add a JPEG cover image for the playlist. Max image size is 1MB.
+					Add a JPEG image for the playlist. Max image size is 1MB.
 				</div>
 			</div>
 			<div id="new-playlist-tags">
@@ -2262,7 +2261,7 @@
 					<input id="new-playlist-genre" class="input-large" type="text" name="new_playlist_genre" maxlength="200" value="">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-new-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-new-playlist-genre" class="help-block hide">
-						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma plus space).
 					</span>
 				</div>
 			</div>
@@ -2294,8 +2293,8 @@
 				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-plcoverimage" data-cmd="info-edit-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="error-edit-plcoverimage"></div>
 				<div id="info-edit-plcoverimage" class="help-block hide">
-					Add a JPEG cover image for the playlist. Max size is 1MB.
-					After updating a cover refresh the Browser to help expire the old image.
+					Add a JPEG image for the playlist. Max size is 1MB.
+					After updating an image refresh the Browser to help expire the old image.
 				</div>
 			</div>
 			<div id="edit-playlist-tags">
@@ -2304,7 +2303,7 @@
 					<input id="edit-playlist-genre" class="input-large" type="text" name="edit_playlist_genre" maxlength="200" value="">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-edit-playlist-genre" class="help-block hide">
-						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma plus space).
 					</span>
 				</div>
 			</div>
@@ -2371,7 +2370,7 @@
 				</div>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-plview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-plview-sort-tag" class="help-block hide">
-					Specify which tag is used to sort the playlist list.
+					Specify which tag is used to sort the playlists.
 				</span>
 			</div>
 			<label class="control-label" for="plview-group-method">Group method</label>
@@ -2399,7 +2398,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-upd-playlist-manager" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-upd-playlist-manager" class="btn btn-primary" data-dismiss="modal">Save</button>
 	</div>
 </div>
 
