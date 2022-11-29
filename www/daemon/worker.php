@@ -1712,7 +1712,10 @@ function updaterAutoCheck($validIPAddress) {
 			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
-			if ($available['Date'] == $thisReleaseDate) {
+			if (false === ($availableDate = strtotime($available['Date'])) ||
+				false === ($thisReleaseDate = strtotime($thisReleaseDate))) {
+				$msg = 'Date error comparing This: ' . $thisReleaseDate . ' and Available: ' . $available['Date'];
+			} else if ($availableDate <= $thisReleaseDate) {
 				$msg = 'Software is up to date';
 			} else {
 				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
