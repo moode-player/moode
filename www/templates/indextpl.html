@@ -153,7 +153,7 @@
 			<a aria-label="Library menu" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
 			<ul class="dropdown-menu context-menu" role="menu">
 				<button aria-label="Quisk search" id="viewswitch-search" class="viewswearch btn menu-separator">
-					<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
+					<form id="lib-album-search" method="post" onSubmit="return false;">
 						<input id="lib-album-filter" type="text" value="" placeholder="search">
 					</form>
 					<span aria-label="Reset" id="searchResetLib" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
@@ -334,8 +334,15 @@
 		<h3>Advanced search</h3>
 	</div>
 	<div class="modal-body" id="container-dbsearch">
-		<span class="h5"><a aria-label="Reset" href="#notarget" id="db-search-reset">CLEAR</a>&nbsp;search fields</span>
-		<br>
+		<div class="control-group">
+			<label class="control-label">
+				<button id="db-search-reset" class="btn btn-small btn-primary modal-button-style">Clear</button>
+			</label>
+            <div class="controls">
+				<span class="modal-btn-after">Search fields</span>
+            </div>
+        </div>
+
 		<span class="h5">Search all tags</span>
 		<div class="control-group">
             <label class="control-label" for="dbsearch-alltags">Search string</label>
@@ -347,6 +354,7 @@
                 </span>
             </div>
         </div>
+
 		<span class="h5">Search specific tags</span>
 		<div class="control-group">
             <label class="control-label" for="dbsearch-genre">Genre</label>
@@ -418,13 +426,13 @@
 		<div class="control-group">
             <label class="control-label" for="delete-playqueue-item-begpos">Beginning item</label>
             <div class="controls">
-                <input id="delete-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-				<button aria-label="Delete" id="btn-delete-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+                <input id="delete-playqueue-item-begpos" class="input-mini" type="number" min="1" max="" value="">
+				<button aria-label="Delete" id="btn-delete-setpos-top" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
             </div>
             <label class="control-label" for="delete-playqueue-item-endpos">Ending item</label>
             <div class="controls">
-                <input id="delete-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-				<button aria-label="Delete" id="btn-delete-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+                <input id="delete-playqueue-item-endpos" class="input-mini" type="number" min="1" max="" value="">
+				<button aria-label="Delete" id="btn-delete-setpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
             </div>
         </div>
 	</div>
@@ -442,19 +450,19 @@
 		<div class="control-group">
             <label class="control-label" for="move-playqueue-item-begpos">Beginning item</label>
             <div class="controls">
-                <input id="move-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-				<button aria-label="To The Top" id="btn-move-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+                <input id="move-playqueue-item-begpos" class="input-mini" type="number" min="1" max="" value="">
+				<button aria-label="To The Top" id="btn-move-setpos-top" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
             </div>
             <label class="control-label" for="move-playqueue-item-endpos">Ending item</label>
             <div class="controls">
-                <input id="move-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-				<button aria-label="To The Bottom" id="btn-move-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+                <input id="move-playqueue-item-endpos" class="input-mini" type="number" min="1" max="" value="">
+				<button aria-label="To The Bottom" id="btn-move-setpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
             </div>
             <label class="control-label" for="move-playqueue-item-newpos">New position</label>
             <div class="controls">
-                <input id="move-playqueue-item-newpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
-				<button aria-label="Up" id="btn-move-setnewpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-				<button aria-label="Down" id="btn-move-setnewpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+                <input id="move-playqueue-item-newpos" class="input-mini" type="number" min="1" max="" value="">
+				<button aria-label="Up" id="btn-move-setnewpos-top" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+				<button aria-label="Down" id="btn-move-setnewpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
             </div>
         </div>
 	</div>
@@ -638,9 +646,9 @@
 						<label class="control-label bgimglabel">Image backdrop</label>
 						<div class="controls">
 							<div class="modal-cover-div">
-								<label for="import-bgimage" id="choose-bgimage" class="btn btn-primary btn-small modal-button-style modal-cover-choose">Choose</label>
+								<label for="import-bgimage" id="choose-bgimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 								<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
-								<button id="remove-bgimage" class="btn btn-primary btn-small modal-button-style modal-cover-choose hide">Remove</button>
+								<button id="remove-bgimage" class="btn btn-primary btn-small modal-button-style hide">Remove</button>
 							</div>
 							<div id="current-bgimage"></div>
 							<a aria-label="Help" class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -1230,7 +1238,7 @@
 			</div>
 		</div>
 		<!-- LIBRARY (ADVANCED)-->
-		<div class="accordian"><span class="h5">Library (Advanced)</span>
+		<div class="accordian"><span class="h5">Advanced</span>
 			<div class="kontrol">
 				<div class="control-group">
 					<label class="control-label" for="tag-view-genre">Tag view genre</label>
@@ -1731,14 +1739,14 @@
             <label class="control-label" for="new-station-url">Playable URL</label>
             <div class="controls">
                 <input id="new-station-url" class="input-large" type="text" name="new_station_url" maxlength="200" value="">
-				<span id="info-new-station-url" class="help-block" style="margin-top:0">
+				<span id="info-new-station-url" class="help-block">
 					Enter the URL to the actual stream and not to a playlist of stream links.
 				</span>
             </div>
 			<label class="control-label" for="new-radiologo">Logo image</label>
 			<div class="controls">
 				<div class="modal-cover-div">
-					<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style modal-cover-choose">Choose</label>
+					<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 					<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'radio')">
 				</div>
 				<div id="preview-new-logoimage" class="modal-cover-preview"></div>
@@ -1861,14 +1869,14 @@
             <label class="control-label" for="edit-station-url">Playable URL</label>
             <div class="controls">
                 <input id="edit-station-url" class="input-large" type="text" name="edit_station_url" maxlength="200" value="">
-				<span id="info-edit-station-url" class="help-block" style="margin-top:0">
+				<span id="info-edit-station-url" class="help-block">
 					Enter the URL to the actual stream and not to a playlist of stream links.
 				</span>
             </div>
 			<label class="control-label" for="edit-radiologo">Logo image</label>
 			<div class="controls">
 				<div class="modal-cover-div">
-					<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style modal-cover-choose">Choose</label>
+					<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 					<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'radio')">
 				</div>
 				<div id="preview-edit-logoimage" class="modal-cover-preview"></div>
@@ -2245,7 +2253,7 @@
 			<label class="control-label" for="new-playlistcover">Cover image</label>
 			<div class="controls">
 				<div class="modal-cover-div">
-					<label id="new-playlistcover" for="new-plcoverimage" class="btn btn-primary btn-small modal-button-style modal-cover-choose">Choose</label>
+					<label id="new-playlistcover" for="new-plcoverimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 					<input type="file" id="new-plcoverimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'playlist')">
 				</div>
 				<div id="preview-new-plcoverimage" class="modal-cover-preview"></div>
@@ -2286,7 +2294,7 @@
 			<label class="control-label" for="edit-playlistcover">Cover image</label>
 			<div class="controls">
 				<div class="modal-cover-div">
-					<label id="edit-playlistcover" for="edit-plcoverimage" class="btn btn-primary btn-small modal-button-style modal-cover-choose">Choose</label>
+					<label id="edit-playlistcover" for="edit-plcoverimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 					<input type="file" id="edit-plcoverimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'playlist')">
 				</div>
 				<div id="preview-edit-plcoverimage" class="modal-cover-preview"></div>
@@ -2427,13 +2435,13 @@
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="playhistory-modal-label">Playback history</h3>
 	</div>
-	<div class="playhistory-search">
-		<div class="input-append" style="margin-bottom: 0;">
-			<input id="ph-filter" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
-			<button aria-label="Reset" id="searchResetPh" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
-			<span id="ph-filter-results"></span>
-			<button aria-label="First Page" class="btn ph-firstPage"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-			<button aria-label="Last Page" class="btn ph-lastPage"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+	<div id="playhistory-search">
+		<div class="input-append">
+			<input id="ph-filter" class="input-large" type="text" value="" placeholder="search">
+			<button aria-label="Reset" id="search-reset-ph" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+			<span id="ph-filter-results" class="hide"></span>
+			<button aria-label="First Page" id="ph-first-page" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+			<button aria-label="Last Page" id="ph-last-page" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 		</div>
 	</div>
 	<div class="modal-body" id="container-playhistory">

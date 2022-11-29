@@ -181,7 +181,8 @@ html {background-color:inherit;}
 #togglebtns .btn-primary {color:var(--accentxts);border-radius:.25em;}
 #panel-header, #panel-footer {position:fixed;left:0;right:0;color:inherit;}
 .btnlist.btnlist-top.btnlist-top-playqueue {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;display:none;}
-.btn.btn-primary.btn-small, .btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);padding:4px 10px;}
+.btn.btn-primary.btn-small,
+.btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);padding:3px 10px;}
 #panel-header {line-height:2.75rem;padding-top:0;padding-top:env(safe-area-inset-top);height:0;z-index:1002;display:flex;}
 #panel-header .dropdown {top:0;top:calc(env(safe-area-inset-top) + 0);right:0;position:absolute;}
 #panel-header .dropdown-menu {right:.75rem;}
@@ -296,7 +297,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #db-browse .dropdown-menu > li > a:hover, #db-browse .dropdown-menu > li > a:focus, #db-browse .dropdown-menu > li.active > a {background-color:var(--accentxta);}
 .btnlist a {font-size:1em;text-decoration:none;color:inherit;}
 #playqueue-search, #lib-album-search, #ra-search, #pl-search {display:block;float:left;margin:0;z-index:1001;position:relative;}
-#lib-album-search {top:50%; transform:translate(0, -50%);width:8rem;}
+#lib-album-search {display:flex;top:50%; transform:translate(0, -50%);width:8rem;}
 #lib-album-filter {width:11.5rem;}
 #playqueue-search {left:1rem}
 #playqueue-search input, #ra-search input, #pl-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;height:2.75rem;font-size:1em;padding:0;}
@@ -474,6 +475,7 @@ body.cvwide-xmeta #ss-extra-metadata {display:block;color:var(--textvariant);fon
 body:not(.cvpb) #ss-coverart-url img {margin-top: 1.5em;}
 /* misc */
 #btn-ra-search-reset, #btn-pl-search-reset {display:none;}
+#db-search-reset {margin-right:0;}
 #splash {height:100vh;width:100vw;z-index:11111;position:fixed;background:rgba(32,32,32,0.95);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;}
 #splash div {position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);font-size:10vw;font-weight:200;letter-spacing:-.06em;opacity:0;transition:1s;}
 .cover-menu {position:absolute;float:right;height:5rem;width:5rem;background-size:2rem 2rem;background-repeat:no-repeat;background-position:.75rem 2.4rem;transform:translate(.75rem, -5.5rem);background-image:url('../images/dots.png')}
@@ -691,7 +693,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #ss-hd-badge {vertical-align:text-top;line-height:1.8em;}
 .playback-hd-badge {vertical-align:text-bottom;line-height:1.5em;margin-top:1.85rem;bottom:0.25rem;}
 /* Radio manager */
-.modal-button-style {display:inline-block;margin-bottom:10px;}
+.modal-button-style {display:inline-block;margin:0 10px 10px 0;color:inherit!important;}
 /* Radio view, Playlist view */
 .radioview-metadata-text, .playlistview-metadata-text {color:var(--textvariant);font-weight:500}
 /* First use help */

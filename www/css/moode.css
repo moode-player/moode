@@ -35,7 +35,7 @@ a:focus {color:var(--accentxts);} /* Fixes blue outline on control after closing
 .modal-header .close {margin:0px 0px 0px 0px;color:inherit;position:absolute;right:5px;top:3px;padding:5px;opacity:0.05;}
 .modal-header h3 {margin:1em 0 1em 0;line-height:normal;color:inherit;font-size:1.4rem;text-transform:capitalize;text-align:center;}
 .modal-body h4 {font-size:1.25em;line-height:inherit;text-align:center;}
-/*DELETE.modal-body p {margin:0 auto;width:80%;text-align:center;}*/
+
 .modal-body {position:relative;overflow-y:auto;overflow-x:hidden;max-height:75vh;padding:0 1.5rem;color:inherit;-webkit-user-select:auto;}
 .modal-sm2 {width:30%;min-width:560px;} /* For the confirmation modals */
 .modal-sm2 .modal-body {padding:0 1em;}
@@ -50,7 +50,6 @@ a:focus {color:var(--accentxts);} /* Fixes blue outline on control after closing
 .modal-footer .btn-primary {border-left:1px solid rgba(128,128,128,0.3);text-transform:capitalize;border-radius:0px;}
 .modal-footer .singleton {width:100%;}
 .modal-cover-div {display:inline-block;}
-.modal-cover-choose {margin:0 10px 10px 0;}
 .modal-cover-preview {width:50px;display:inline-block;position:absolute;margin:0;}
 form {margin:0;}
 h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: center;}
@@ -103,23 +102,13 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .modal-dropdown-text {color:inherit;}
 .modal-horiz-rule {width: 74%;border-bottom:1px solid var(--btnshade4);margin:4px auto 16px auto;padding:0 .85em;font-size:1.15em;font-style:italic;}
 .modal .bootstrap-select .btn,
-#preferences-modal input,
-#clockradio-modal input,
-#radio-manager-modal input,
-#edit-station-modal input,
-#new-station-modal input,
-#playlist-manager-modal input,
-#edit-playlist-modal input,
-#new-playlist-modal input,
-#add-to-playlist-modal input,
-#save-queue-to-playlist-modal input,
-#set-favorites-playlist-modal input,
-#dbsearch-modal input
-{border:none;background-color:var(--btnshade2);}
+.modal input {border:none;background-color:var(--btnshade2);}
 .modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1vw;width:10em;color:inherit;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
 .modal.fade {top:0;top:env(safe-area-inset-top);transition:none;}
 .modal.fade.in {transition:none;}
+/* Button after text */
+.modal-btn-after {display:inline-block;vertical-align:middle;margin:4px 10px 10px 0;color:inherit;}
 /* Input controls */
 .modal .select-large {width:22vw;max-width:220px;margin:0 10px 10px 0;}
 .modal .input-large {width:21vw;max-width:210px;}
@@ -129,6 +118,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 #moode-logo-text {text-align:center;font-size:40px;font-weight:500;letter-spacing:-2px;margin-top:2px;}
 #moode-logo-text-oo {color:#d35400;line-height:12px;}
 #moode-logo-text-tm {font-size:12px;position:relative;top:-15px;left:-3px;}
+
 /* stuff */
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
 #info-toggle-bgimage {margin-left:0;margin-top:2px;}
@@ -190,14 +180,13 @@ a.info-toggle {vertical-align:top;}
 #quickhelp-icon-list ul {list-style:none;margin-left:0;}
 #quickhelp-icon-list p {margin-left:1.5em;}
 #quickhelp-icon-list span, #quickhelp-bullet-list span {margin-left:0;font-size:1em;font-weight:500;}
-/* playback history log */
-#container-playhistory {padding-top:5px;padding-left: 5px;}
-ol.playhistory {margin-left:55px;}
+/* Playback history log */
+#container-playhistory {background-color:var(--btnshade2);padding:1em;width:80%;margin:0 auto;}
+ol.playhistory {margin-left:3em;}
 .playhistory-item {border-bottom:none;}
 .playhistory-item div {font-size:14px;font-weight:600;}
 .playhistory-item span {font-size:12px;}
 .playhistory-link {text-decoration:none;margin-left:5px;margin-right:5px;}
-.playhistory-search {margin: 5px 0 0 20px;}
-#ph-filter-results {line-height:28px;font-size:14px;font-style:italic;}
-#ph-search {margin-bottom:8px;}
-#ph-search input {width:145px;margin:0;padding: 2px 0 2px 10px;border-top-right-radius:0px;border-bottom-right-radius:0px;}
+#playhistory-search {width:84%;margin:auto;}
+#ph-filter-results {line-height:28px;font-size:14px;font-style:italic;margin-right:10px;}
+#search-reset-ph {padding:3px 10px;}

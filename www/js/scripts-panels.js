@@ -1372,7 +1372,7 @@ jQuery(document).ready(function($) { 'use strict';
 	// Playback history search
 	$('#ph-filter').keyup(function(e){
 		if (!showSearchResetPh) {
-			$('#searchResetPh').show();
+			$('#search-reset-ph').show();
 			showSearchResetPh = true;
 		}
 
@@ -1386,8 +1386,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('.playhistory li').each(function(){
 				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
 					$(this).hide();
-				}
-				else {
+				} else {
 					$(this).show();
 					count++;
 				}
@@ -1395,18 +1394,19 @@ jQuery(document).ready(function($) { 'use strict';
 			var s = (count == 1) ? '' : 's';
 			if (filter != '') {
 				$('#ph-filter-results').html((+count) + '&nbsp;item' + s);
-			}
-			else {
-				$('#ph-filter-results').html('');
+                $('#ph-filter-results').show();
+			} else {
+				$('#ph-filter-results').hide();
 			}
 			$('#container-playhistory').scrollTo(0, 200);
 		}, SEARCH_TIMEOUT);
 	});
-	$('#searchResetPh').click(function(e) {
-		$("#searchResetPh").hide();
+	$('#search-reset-ph').click(function(e) {
+		$("#search-reset-ph").hide();
 		showSearchResetPh = false;
 		$('.playhistory li').css('display', 'list-item');
-		$('#ph-filter-results').html('');
+		$('#ph-filter-results').hide();
+        $('#ph-filter').val('');
 	});
 
 	// Buttons on modals
@@ -1468,10 +1468,10 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// Speed buttons on plaback history log
-	$('.ph-firstPage').click(function(e){
+	$('#ph-first-page').click(function(e){
 		$('#container-playhistory').scrollTo(0 , 200);
 	});
-	$('.ph-lastPage').click(function(e){
+	$('#ph-last-page').click(function(e){
 		$('#container-playhistory').scrollTo('100%', 200);
 	});
 

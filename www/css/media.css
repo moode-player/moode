@@ -196,7 +196,6 @@ body {
 	.modal-sm {min-width:80%;max-width:80%;}
 	.modal-sm2 {min-width:80%;}
 	.modal-body {padding:0 .75rem;max-height:74vh;}
-	.modal .h5 {width:42%;}
 	.modal-body .form-horizontal .control-label {width:42%;}
 	.modal-body .form-horizontal .controls {margin-left:45%;}
 	.modal .select-large {width:36vw;}
