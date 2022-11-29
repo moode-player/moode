@@ -1713,9 +1713,9 @@ function updaterAutoCheck($validIPAddress) {
 			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
 			if (false === ($availableDate = strtotime($available['Date'])) ||
-				false === ($thisReleaseDate = strtotime($thisReleaseDate))) {
+				false === ($thisDate = strtotime($thisReleaseDate))) {
 				$msg = 'Date error comparing This: ' . $thisReleaseDate . ' and Available: ' . $available['Date'];
-			} else if ($availableDate <= $thisReleaseDate) {
+			} else if ($availableDate <= $thisDate) {
 				$msg = 'Software is up to date';
 			} else {
 				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
