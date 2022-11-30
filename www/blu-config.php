@@ -142,7 +142,7 @@ $result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
 
 // Format output for HTML
 if ($cmd == '-H') {
-	$_cmd_output = 'Open Renderers and turn on Bluetooth then select a command to submit to the controller<br>';
+	$_cmd_output = 'Turn Bluetooth on in Renderers then select a command to submit to the controller<br>';
 } else {
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {
