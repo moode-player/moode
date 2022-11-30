@@ -465,42 +465,53 @@ function engineCmd() {
                 case 'inpactive1':
                 case 'inpactive0':
                     // NOTE: cmd[1] is the input source name
-                    inpSrcIndicator(cmd[0], cmd[1] +
+                    inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">' + cmd[1] +
                         ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
-                        '<br><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
+                        '</span><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
                     );
                     break;
                 case 'btactive1':
                 case 'btactive0':
                     // NOTE: cmd[1] is the input source name
-                    inpSrcIndicator(cmd[0], 'Bluetooth Active' + cmd[1] + '<br><a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
+                    inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Bluetooth Active' + cmd[1] + '</span>' +
+                        '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    				inpSrcIndicator(cmd[0], 'AirPlay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">AirPlay Active</span>' +
+                        '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
+                        receiversBtn);
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Spotify Active</span>' +
+                        '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
+                        receiversBtn);
                     break;
                 case 'slactive1':
                 case 'slactive0':
-    				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><button class="btn turnoff-renderer" data-job="slsvc">turn off</button>');
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Squeezelite Active</span>' +
+                        '<button class="btn turnoff-renderer" data-job="slsvc">Turn off</button>');
                     break;
                 case 'rbactive1':
                 case 'rbactive0':
-    				inpSrcIndicator(cmd[0], 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">RoonBridge Active</span>' +
+                        '<button class="btn disconnect-renderer" data-job="rbrestart">Disconnect</button>');
                     break;
                 case 'rxactive1':
                 case 'rxactive0':
                     inpSrcIndicator(cmd[0],
-                        //'Multiroom Receiver Active: ' +
-                        //'<button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span><br>' +
-                        'Multiroom Receiver Active<br>' +
-                        '<button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br>' +
-                        '<a class="btn configure-renderer" href="trx-config.php">configure</a>'
+                        '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
+                        '<button class="btn turnoff-renderer" data-job="multiroom_rx">Turn off</button>' +
+                        '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>'
                     );
                     break;
                 case 'scnactive1':
@@ -1077,40 +1088,52 @@ function renderUI() {
     	// Ensure renderer overlays get applied in case MPD UI updates get there first after browser refresh
         // Input source
     	if (SESSION.json['inpactive'] == '1') {
-    		inpSrcIndicator('inpactive1', SESSION.json['audioin'] + ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
-                '<br><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
+    		inpSrcIndicator('inpactive1',
+                '<span id="inpsrc-msg-text">' + SESSION.json['audioin'] +
+                ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
+                '</span><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
             );
     	}
     	// Bluetooth renderer
     	if (SESSION.json['btactive'] == '1') {
-    		inpSrcIndicator('btactive1', 'Bluetooth Active' + '<br><a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
+    		inpSrcIndicator('btactive1',
+            '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
+            '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
      	}
     	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    		inpSrcIndicator('aplactive1', 'AirPlay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+    		inpSrcIndicator('aplactive1',
+            '<span id="inpsrc-msg-text">AirPlay Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
+            receiversBtn);
     	}
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-            inpSrcIndicator('spotactive1', 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+            inpSrcIndicator('spotactive1',
+            '<span id="inpsrc-msg-text">Spotify Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
+            receiversBtn);
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
-    		inpSrcIndicator('slactive1', 'Squeezelite Active' + '<br><button class="btn disconnect-renderer" data-job="slsvc">turn off</button>');
+    		inpSrcIndicator('slactive1',
+            '<span id="inpsrc-msg-text">Squeezelite Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="slsvc">Turn off</button>');
     	}
         // RoonBridge renderer
     	if (SESSION.json['rbactive'] == '1') {
-    		inpSrcIndicator('rbactive1', 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
+    		inpSrcIndicator('rbactive1',
+            '<span id="inpsrc-msg-text">RoonBridge Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="rbrestart">Disconnect</button>');
     	}
         // Multiroom receiver
     	if (SESSION.json['rxactive'] == '1') {
             inpSrcIndicator('rxactive1',
-                //'Multiroom Receiver Active: ' +
-                //'<button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span><br>' +
-                'Multiroom Receiver Active<br>' +
-                '<button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br>' +
-                '<a class="btn configure-renderer" href="trx-config.php">configure</a>'
+                '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
+                '<button class="btn turnoff-renderer" data-job="multiroom_rx">Turn off</button>' +
+                '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>'
             )
     	}
 

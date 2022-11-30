@@ -100,20 +100,25 @@ html {background-color:inherit;}
 .ab-dark {color:#333;}
 .ab-light {color:#ddd;}
 
-/* full screen impsrc indicator */
+/* Input source overlay */
+/* Displayed when a renderer connects or multiroom receiver is active */
 .inpsrc {position:fixed;z-index:9999;backdrop-filter: blur(5px);-webkit-backdrop-filter:blur(5px);overflow:hidden;color:var(--adapttext);background-color:var(--modalbkdr);display:none;}
 #inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;text-align:center;}
-#inpsrc-indicator span {font-size:1.25em;}
+/* Input source name */
 #inpsrc-msg {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
 #inpsrc-msg a {color:#eee;}
 #inpsrc-msg i {font-size:1.5em;}
+#inpsrc-msg-text {display:block;font-size:1.25em;margin-bottom:0.5em;}
+/* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
+/* Buttons */
 .configure-renderer,
 .disconnect-renderer,
 .turnoff-renderer {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.75rem 0;font-size:.75em;width:10em;color:inherit;}
+ /* Mask hover effect */
 .configure-renderer:hover,
 .disconnect-renderer:hover,
-.turnoff-renderer:hover {background-color:var(--btnshade4);} /* Mask hover effect */
+.turnoff-renderer:hover {background-color:var(--btnshade4);}
 
 /* main ui */
 #currentsong, #currentalbum, #currentartist, #format-bitrate, #elapsed, #countdown-display {display:block;}
