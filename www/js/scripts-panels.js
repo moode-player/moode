@@ -253,12 +253,17 @@ jQuery(document).ready(function($) { 'use strict';
     		$('.volume-display div').text(SESSION.json['volknob']);
     	}
 
-        // Show or hide Play history item on system menu
+        // Show/hide Play history on main menu
         if (SESSION.json['playhist'] == 'Yes') {
             $('#playhistory-hide').css('display', 'block');
-        }
-        else {
+        } else {
             $('#playhistory-hide').css('display', 'none');
+        }
+        // Show/hide Bluetoioth on main menu
+        if (SESSION.json['btsvc'] == '1') {
+            $('#bluetooth-hide').css('display', 'block');
+        } else {
+            $('#bluetooth-hide').css('display', 'none');
         }
 
         // Tag view header text
