@@ -27,6 +27,7 @@ Updates
 - UPD: Use thin style for CoverView clocks
 - UPD: Use the correct name for AirPlay
 - UPD: Default to Playback view after startup
+- UPD: Only list Bluetooth on main menu if its on
 - UPD: Refactor CSS and config templates
 
 Bug fixes
