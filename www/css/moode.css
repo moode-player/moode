@@ -37,8 +37,6 @@ a:focus {color:var(--accentxts);} /* Fixes blue outline on control after closing
 .modal-body h4 {font-size:1.25em;line-height:inherit;text-align:center;}
 
 .modal-body {position:relative;overflow-y:auto;overflow-x:hidden;max-height:75vh;padding:0 1.5rem;color:inherit;-webkit-user-select:auto;}
-.modal-sm2 {width:30%;min-width:560px;} /* For the confirmation modals */
-.modal-sm2 .modal-body {padding:0 1em;}
 .modal-form {margin-bottom:0;}
 .modal-footer {padding:1rem 0;text-align:center;background-color:transparent;box-shadow:none;border:none;}
 .modal-footer:before,.modal-footer:after {display:table;content:"";line-height:0;}

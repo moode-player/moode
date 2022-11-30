@@ -18,7 +18,7 @@
  */
 
 /*
- * MEDIA QUERIES
+// MEDIA QUERIES
 */
 
 body {
@@ -26,8 +26,8 @@ body {
 }
 
 /*
- * Portrait
- */
+// Portrait
+*/
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-coverart-url img {width:80vw;}
@@ -36,8 +36,8 @@ body {
 }
 
 /*
- * Mobile Portrait
- */
+// Mobile Portrait
+*/
 @media (max-width:479px) and (orientation:portrait) {
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
@@ -193,8 +193,6 @@ body {
 
 	/* Modals */
 	.modal {min-width:100vw;}
-	.modal-sm {min-width:80%;max-width:80%;}
-	.modal-sm2 {min-width:80%;}
 	.modal-body {padding:0 .75rem;max-height:74vh;}
 	.modal-body .form-horizontal .control-label {width:42%;}
 	.modal-body .form-horizontal .controls {margin-left:45%;}
@@ -220,8 +218,8 @@ body {
 }
 
 /*
- * Mobile Landscape
- */
+// Mobile Landscape
+*/
 @media (max-height:479px) and (orientation:landscape) {
 	/* Hide the volume knob */
 	#volzone {display:none;}
@@ -360,24 +358,13 @@ body {
 	.modal-body {max-height:calc(62vh - env(safe-area-inset-bottom) + 1rem);}
 }
 
-/* Large screens */
-@media (min-height:900px) and (min-width:1920px) {
-	#ss-backdrop {filter: blur(40px);}
-	#ss-currentsong {font-size:1.5em;}
-	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
-	#lib-coverart-meta-area {width:18vw;}
-	img.lib-artistart {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
-	#tagview-text-cover {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
-	#trackscontainer {width:calc(82vw - var(--sbw));}
-	#volcontrol, #countdown {height:15vw;width:15vw;}
-}
-
-/* In-browser view for mobile screens */
+/*
+// In-browser view for mobile screens
+*/
 @media (max-width:479px) and (max-height:622px) and (orientation:portrait) {
 	#coverart-url img {width:45vh;min-height:45vh;}
 }
-
-/* In-browser view for smaller mobile screens */
+/* For smaller mobile screens */
 @media (max-width:479px) and (max-height:460px) and (orientation:portrait) {
 	#coverart-url img {width:45vh;min-height:45vh;}
 	#mt1 {margin:2.25em 0 0 0;}
@@ -393,7 +380,9 @@ body {
 	.modal-body .form-horizontal .controls {margin-left:40%;}
 }
 
-/* iPhone5 portrait */
+/*
+// iPhone5 portrait
+*/
 @media (max-height:568px) and (max-width:320px) {
 	.playqueue {font-size:1.2em;}
 	.playqueue li:before {width:1.75em;}
@@ -401,7 +390,9 @@ body {
 	.bootstrap-select.select-medium:not([class*="span"]) {width:140px;}
 }
 
-/* Pi 7" Touch */
+/*
+// Pi 7" Touch
+*/
 /* 553 = Square pixel AR, 598 = Default pixel AR */
 @media (min-height:553px) and (width:998px) {
 	.playqueue .pll1 {font-size:1rem;}
@@ -415,7 +406,6 @@ body {
 	.volume-display, .volume-display-db {margin-top:.3em;}
 	#songsand {font-size:1.25em;}
 }
-
 /* 443 = Square pixel AR, 479 = Default pixel AR */
 @media (min-height:443px) and (width:799px) {
 	.playqueue .pll1 {font-size:1rem;}
@@ -430,7 +420,23 @@ body {
 	#songsand {font-size:1.25em;}
 }
 
-/* Ultra-wide screen 480 & 550 x 1920 */
+/*
+// Large displays
+*/
+@media (min-height:900px) and (min-width:1920px) {
+	#ss-backdrop {filter: blur(40px);}
+	#ss-currentsong {font-size:1.5em!important;}
+	#ss-currentalbum, #ss-currentartist {font-size:1.25em!important;}
+	#lib-coverart-meta-area {width:18vw;}
+	img.lib-artistart {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
+	#tagview-text-cover {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
+	#trackscontainer {width:calc(82vw - var(--sbw));}
+	#volcontrol, #countdown {height:15vw;width:15vw;}
+}
+
+/*
+// Ultra-wide screens 480 & 550 x 1920
+*/
 @media (max-height:549px) and (width:1919px) {
 	/* Hide the volume knob */
 	#volzone {display:none;}
@@ -576,19 +582,6 @@ body {
 	#countdown-sample-rate {font-size:.85vw;}
 	#countdown-display {font-size:1.85vw;top:48%;}
 	#total {font-size:1vw!important;}
-}
-
-/* iPhone Max sizes */
-@media (width:414px) and (height:896px) {
-	.ui-pnotify {left:50%;top:25%;transform:translate(-50%, -50%);}
-	#playbar-toggles {right:calc(env(safe-area-inset-right) + 1rem);}
-	#mt1 {margin:6rem 1.5rem 0rem 1.5rem;}
-	.timeline-bg {margin-top:1px;}
-	.busy-spinner {top:calc(env(safe-area-inset-top) + .3rem);}
-	.db-spinsync {top:calc(env(safe-area-inset-top) + -.2rem);}
-	.config-exit {top:calc(env(safe-area-inset-top) - .5rem);}
-	#radio-panel .viewswitch, #playlist-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
-	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
 }
 
 /* Use custom scroll bars for devices with an attached pointing device (mouse, trackpad, etc) */
