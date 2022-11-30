@@ -18,7 +18,7 @@
  */
 
 /*
- * Style for the Config screens
+// Style for the Config screens
 */
 
 body {
@@ -77,18 +77,20 @@ input[type=password] {display:inline-block;height:22px;vertical-align:top;margin
 a.config-info-toggle {vertical-align:top;}
 .config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}
 .config-help-info,
-.config-help-static {display:block;font-size:12px;color:var(--config-help-color);margin-bottom:var(--config-ctl-margin-bottom);}
+.config-help-static,
+.config-msg-static {display:block;font-size:12px;color:var(--config-help-color);margin-bottom:var(--config-ctl-margin-bottom);}
 .config-help-info {display:none;}
 .config-help-no-margin {margin-bottom:0;}
 
 /* blu-config: */
 #blu-config-cmd-output {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
 /* net-config, src-config: Show/hide password plaintext */
+a.show-hide-password {vertical-align:top;}
 .show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin-bottom);}
 /* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
 /* lib-config */
-.config-btn-music-source {font-size:var(--pbfont);width:80%;background-color:#333;text-align:left;}
+.config-btn-music-source {font-size:1.15em;width:80%;background-color:#333;text-align:left;}
 
 /* Miscellaneous */
 .config-horiz-rule {border-bottom:1px solid #333;margin:4px 0 calc(4px + var(--config-ctl-margin-bottom)) 0;font-size:1.15em;font-style:italic;color:var(--config-help-color);}

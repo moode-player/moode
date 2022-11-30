@@ -62,7 +62,7 @@ if (isset($_POST['checkfor_update'])) {
 		$_pkg_relnotes = $available['Relnotes'];
 	}
 
-	$_available_upd = '<span class="config-help-static">' . $_available_upd . '</span>';
+	$_available_upd = '<span class="config-msg-static">' . $_available_upd . '</span>';
 }
 
 // Install software update
