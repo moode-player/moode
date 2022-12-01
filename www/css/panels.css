@@ -108,13 +108,13 @@ html {background-color:inherit;}
 #inpsrc-msg {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
 #inpsrc-msg a {color:#eee;}
 #inpsrc-msg i {font-size:1.5em;}
-#inpsrc-msg-text {display:block;font-size:1.25em;margin-bottom:0.5em;}
+#inpsrc-msg-text {display:block;font-size:1em;margin-bottom:0.5em;}
 /* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 /* Buttons */
 .configure-renderer,
 .disconnect-renderer,
-.turnoff-renderer {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.75rem 0;font-size:.75em;width:10em;color:inherit;}
+.turnoff-renderer {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
  /* Mask hover effect */
 .configure-renderer:hover,
 .disconnect-renderer:hover,
