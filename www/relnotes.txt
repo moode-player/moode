@@ -30,6 +30,10 @@ Updates
 - UPD: Only list Bluetooth on main menu if its on
 - UPD: Refactor CSS and config templates
 
+Radio stations
+
+- UPD: BBC Worldwide stations to HLS streams
+
 Bug fixes
 
 - Fix: SMB server ON/OFF setting not working
