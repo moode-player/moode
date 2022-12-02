@@ -17,7 +17,8 @@
 
 Updates
 
-- UPD: Bump to CamillaDSP 1.0.2
+- UPD: Bump to CamillaDSP 1.0.3
+- UPD: Bump to CamillaGUI 1.0.1
 - UPD: Add UI layout for Smartphone landscape
 - UPD: Add UI layout for Ultra-wide screens
 - UPD: Add Analog clock option for CoverView
