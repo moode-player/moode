@@ -88,7 +88,7 @@ a.config-info-toggle {vertical-align:top;}
 a.show-hide-password {vertical-align:top;}
 .show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin-bottom);}
 /* cdsp-configurator: Pipeline editor */
-.cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
+.cdsp-pipeline-editor {width:100%;height:200vh;border:none;}
 /* lib-config */
 .config-btn-music-source {font-size:1.15em;width:80%;background-color:#333;text-align:left;}
 
