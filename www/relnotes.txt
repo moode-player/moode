@@ -17,6 +17,7 @@
 
 Updates
 
+- UPD: Bump to Linux kernel 5.15.76 #1597 (new image only)
 - UPD: Bump to CamillaDSP 1.0.3
 - UPD: Bump to CamillaGUI 1.0.1
 - UPD: Add UI layout for Smartphone landscape
