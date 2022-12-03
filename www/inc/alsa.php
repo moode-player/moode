@@ -79,13 +79,13 @@ function getAlsaDeviceNames() {
 	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		// Pi HDMI 1, HDMI 2 or Headphone jack, or a USB audio device
 		for ($i = 0; $i < 4; $i++) {
-			$alsaId = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+			$alsaID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 
-			if (empty($alsaId)) {
+			if (empty($alsaID)) {
 				$devices[$i] = $i == $_SESSION['cardnum'] ? $_SESSION['adevname'] : '';
-			} else if ($alsaId != 'Loopback' && $alsaId != 'Dummy') {
+			} else if ($alsaID != 'Loopback' && $alsaID != 'Dummy') {
 				$aplayDeviceName = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
-				$result = sqlRead('cfg_audiodev', sqlConnect(), $alsaId);
+				$result = sqlRead('cfg_audiodev', sqlConnect(), $alsaID);
 				if ($result === true) { // Not in table
 					$devices[$i] = $aplayDeviceName;
 				} else {
@@ -151,8 +151,8 @@ function getAlsaCards() {
 	$cards = array();
 	$maxCards = 4;
 	for ($i = 0; $i < $maxCards; $i++) {
-		$cardId = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-		$cards[$i] = empty($cardId) ? 'empty' : $cardId;
+		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+		$cards[$i] = empty($cardID) ? 'empty' : $cardID;
 	}
 	return $cards;
 }
