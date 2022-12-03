@@ -205,7 +205,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		}
 	}
 } else {
-	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1') {
+	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1' && !empty($_POST['wlan0otherssid'])) {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
 	} else if ($cfgNetwork[1]['wlanssid'] == 'None (activates AP mode)') {

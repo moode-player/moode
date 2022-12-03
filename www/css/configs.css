@@ -57,14 +57,16 @@ input[type=text],
 input[type=number],
 input[type=password] {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 
-.config-input-large {width:20.75vw;max-width:210px;}
 .config-input-mini {width:6vw;max-width:60px;}
+.config-input-large {width:20.75vw;max-width:210px;}
+.config-input-xlarge {width:28.75vw;max-width:310px;}
 .config-select-large:not([class*=span]) {width:22vw;max-width:220px;margin:0 var(--config-ctl-margin-right) 0 0;}
 .config-select-xxlarge:not([class*=span]) {width:90%;max-width:750px;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 .config-select-yn:not([class*=span]) {width:8vw;max-width:80px;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 .config-select-large .dropdown-toggle,
 .config-select-xxlarge .dropdown-toggle,
 .config-select-yn .dropdown-toggle {margin-bottom:var(--config-ctl-margin-bottom);}
+.config-modal-input {background-color:rgba(128,128,128,0.35)!important;border:1px solid rgba(128,128,128,0.75)!important}
 
 .btn-group.bootstrap-select .btn {padding:3px 0;}
 .config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}
