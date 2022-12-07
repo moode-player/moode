@@ -347,7 +347,7 @@ body {
 
 	/* For the configs */
 	#panel-header,
-	.container {left:calc(env(safe-area-inset-left) + 1rem);}
+	.container {margin-left:calc(env(safe-area-inset-left) + 1rem);}
 	.container p {font-size:12px;}
 	.config-info-toggle i,
 	.show-hide-password i {margin-top:7px;font-size:1.75em;}
