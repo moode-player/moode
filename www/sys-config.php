@@ -136,6 +136,10 @@ if (isset($_POST['update_usb_auto_mounter'])) {
 	phpSession('write', 'usb_auto_mounter', $_POST['usb_auto_mounter']);
 }
 
+if (isset($_POST['update_usbboot'])) {
+	submitJob('usbboot', '', 'Settings updated', 'Restart required');
+}
+
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
 	submitJob('p3wifi', $_POST['p3wifi'], 'Settings updated', 'Restart required');
 	phpSession('write', 'p3wifi', $_POST['p3wifi']);
@@ -171,8 +175,10 @@ if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
-if (isset($_POST['update_usbboot'])) {
-	submitJob('usbboot', '', 'Settings updated', 'Restart required', 30);
+// TEST
+if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_SESSION['nginx_https_only']) {
+	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
+	submitJob('nginx_https_only', $_POST['nginx_https_only'], 'Settings updated', 'Restart required');
 }
 
 // LOCAL DISPLAY
@@ -368,6 +374,15 @@ $_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_tim
 
 $_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+
+// TEST
+if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
+	$_feat_https = '';
+	$_select['nginx_https_only_on']  .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-1\" value=\"1\" " . (($_SESSION['nginx_https_only'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['nginx_https_only_off'] .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-2\" value=\"0\" " . (($_SESSION['nginx_https_only'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+} else {
+	$_feat_https = 'hide';
+}
 
 $model = substr($_SESSION['hdwrrev'], 3, 1);
 if ($model == '3') { // Pi-3B, B+, A+

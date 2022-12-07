@@ -32,6 +32,7 @@ $(document).on('click', 'a', function(event) {
 			this.id == 'coverart-link' ||
 			this.id == 'dlnasvc-link' ||
 			this.id == 'sshsvc-link' ||
+			this.id == 'https-only-link' || // TEST
 			this.className == 'moode-about-link' ||
 			this.className == 'playhistory-link' ||
 			this.className == 'multiroom-setup-link' ||

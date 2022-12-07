@@ -304,7 +304,7 @@ $eth0 = sysCmd('ip addr list | grep eth0');
 if (!empty($eth0)) {
 	workerLog('worker: eth0 adapter exists');
 	// Check for IP address if indicated
-	workerLog('worker: eth0 check for address (' . ($_SESSION['eth0chk'] == '1' ? 'Yes' : 'No') . ')');
+	workerLog('worker: eth0 check for address (' . ($_SESSION['eth0chk'] == '1' ? 'On' : 'Off') . ')');
 	if ($_SESSION['eth0chk'] == '1') {
 		workerLog('worker: eth0 address check (' . $_SESSION['ipaddr_timeout'] . ' secs)');
 		$eth0Ip = checkForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
@@ -861,6 +861,24 @@ if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] 
 	workerLog('worker: Stream recorder (available' . $started . ')');
 } else {
 	workerLog('worker: Stream recorder (n/a)');
+}
+
+// TEST
+// HTTPS-Only mode
+if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
+	if (!isset($_SESSION['nginx_https_only'])) {
+		$_SESSION['nginx_https_only'] = '0'; // Initially Off
+	}
+
+	if ($_SESSION['nginx_https_only'] == '1') {
+		// Create/overwrite /etc/ssl/certs/nginx-selfsigned.crt
+		sysCmd('/var/www/util/gen-cert.sh');
+	}
+
+	$msg = $_SESSION['nginx_https_only'] == '0' ? 'Off' : 'On';
+	workerLog('worker: HTTPS-Only mode (available: ' . $msg . ')');
+} else {
+	workerLog('worker: HTTPS-Only mode (n/a)');
 }
 
 //
@@ -2336,6 +2354,10 @@ function runQueuedJob() {
 				sysCmd('systemctl enable udisks2');
 			}
 			break;
+		case 'usbboot':
+			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // Remove first to prevent duplicate adds
+			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
+			break;
 		case 'p3wifi':
 			ctlWifi($_SESSION['w_queueargs']);
 			break;
@@ -2359,9 +2381,13 @@ function runQueuedJob() {
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
 			break;
-		case 'usbboot':
-			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // Remove first to prevent duplicate adds
-			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
+		// TEST
+		case 'nginx_https_only':
+			if ($_SESSION['w_queueargs'] == '0') {
+				sysCmd("sed -i 's/return 301/#return 301/' /etc/nginx/nginx.conf");
+			} else {
+				sysCmd("sed -i 's/#return 301/return 301/' /etc/nginx/nginx.conf");
+			}
 			break;
 		case 'localui':
 			if ($_SESSION['w_queueargs'] == '1') {

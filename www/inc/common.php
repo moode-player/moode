@@ -66,8 +66,8 @@ const THM_SM_Q = 75;
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
-const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
+// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97206' WHERE param='feat_bitmask'"
+const FEAT_HTTPS		= 1;		//   HTTPS-Only mode
 const FEAT_AIRPLAY		= 2;		// y AirPlay renderer
 const FEAT_MINIDLNA 	= 4;		// y DLNA server
 const FEAT_RECORDER		= 8; 		//   Stream recorder
@@ -85,7 +85,7 @@ const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
-//						  97207
+//						  97206
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate

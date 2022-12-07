@@ -210,9 +210,9 @@
 
 			<label class="control-label">Wait for Ethernet</label>
 			<div class="controls">
-				<div class="toggle config-toggle-yn">
-					<label class="toggle-radio" for="toggle-eth0chk-2">YES</label>$_select[eth0chk_on]
-					<label class="toggle-radio" for="toggle-eth0chk-1">NO </label>$_select[eth0chk_off]
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle-eth0chk-2">ON </label>$_select[eth0chk_on]
+					<label class="toggle-radio" for="toggle-eth0chk-1">OFF</label>$_select[eth0chk_off]
 				</div>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -220,6 +220,25 @@
 					Wait for up to "Address timeout" seconds for an address to be assigned to the Ethernet adapter.
 					If set to NO the address check will be skipped and startup time will be reduced.
 				</span>
+			</div>
+
+			<!-- TEST -->
+			<div class="$_feat_https">
+				<div class="config-horiz-rule"></div>
+				<label class="control-label">HTTPS-Only Mode</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-nginx-https-only-2">ON </label>$_select[nginx_https_only_on]
+						<label class="toggle-radio" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
+					</div>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
+					<span class="config-help-static">
+						Secure the communication channel between your Web Browser and moOde using the HTTPS protocol and a self-signed security certificate.
+						Since a self-signed certificate is being used your Browser will display a warning that the site could not be verified as a trusted website.
+						These easy to follow <a id="https-only-link" href="https://it.nmu.edu/docs/adding-security-exception-your-browser" target="_blank">instructions</a>
+						explain how to suppress the warning for Chrome, Edge, Firefox and Safari Browsers.
+					</span>
+				</div>
 			</div>
 		</div>
 
