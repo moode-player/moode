@@ -253,6 +253,8 @@ body {
 	#currentartist-div {width:inherit;}
 	#currentalbum-div .playback-hd-badge {height:1.5em!important;margin-top:.2rem;}
 	#currentartist-div .playback-hd-badge {height:1.5em!important;margin-top:1rem;}
+	#currentalbum-ellipsis,
+	#currentartist-ellipsis {display:inline-flex;margin:0 auto;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.5em;margin-top:10px;}
