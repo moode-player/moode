@@ -167,7 +167,7 @@ function echoTemplate($template) {
 function sendEngCmd ($cmd) {
 	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
 		// This case is ok and occurs if UI has never been started
-		workerLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
+		debugLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
 	} else {
 		// Retry until UI connects or retry limit reached
 		$retry_limit = 4;
