@@ -42,6 +42,7 @@ Bug fixes
 - FIX: Top border of Playbar is visible
 - FIX: Startup hangs if Bluetooth on but no adapter is present
 - FIX: Space bar not working in On-Screen Keyboard
+- FIX: Unmount by id in sourceMount() not working
 
 ################################################################################
 #
