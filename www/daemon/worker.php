@@ -871,8 +871,12 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	}
 
 	if ($_SESSION['nginx_https_only'] == '1') {
-		// Create/overwrite /etc/ssl/certs/nginx-selfsigned.crt
-		sysCmd('/var/www/util/gen-cert.sh');
+		$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
+		$CN = trim(sysCmd($cmd)[0]);
+		if ($CN != $_SESSION['hostname'] . '.local') {
+			sysCmd('/var/www/util/gen-cert.sh');
+			workerLog('worker: New cert created for ' . $_SESSION['hostname']);
+		}
 	}
 
 	$msg = $_SESSION['nginx_https_only'] == '0' ? 'Off' : 'On';
