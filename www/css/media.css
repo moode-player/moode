@@ -323,6 +323,8 @@ body {
 	#lib-coverart-meta-area {width:14vw;position:relative;}
 	#songsList {padding-bottom:10rem;}
 	#tagview-text-cover {font-size:1.35rem;height:calc(14vw - 1rem);width:calc(14vw - 1rem);}
+	img.lib-artistart {width:inherit;height:inherit;}
+	.lib-numtracks-meta {margin-top:1.5em;}
 
 	/* Album, Folder, Radio and Playlist views */
 	#lib-albumcover,
@@ -405,6 +407,7 @@ body {
 	#playbar-title {font-size:1rem;}
 	img.coverart {width:55vh;}
 	#playback-firstuse-help {height:55vh;width:55vh;}
+	#volzone {display:block;}
 	#countdown-display {margin-top:0;}
 	.volume-display, .volume-display-db {margin-top:.3em;}
 	#songsand {font-size:1.25em;}
@@ -417,6 +420,7 @@ body {
 	#playbtns {margin:.25em 0;}
 	#playbar-title {font-size:1rem;}
 	img.coverart {width:55vh;}
+	#volzone {display:block;}
 	#playback-firstuse-help {height:55vh;width:55vh;}
 	#countdown-display {margin-top:0;}
 	.volume-display, .volume-display-db {margin-top:.3em;}
