@@ -41,6 +41,7 @@ Bug fixes
 - Fix: SMB server ON/OFF setting not working
 - FIX: Top border of Playbar is visible
 - FIX: Startup hangs if Bluetooth on but no adapter is present
+- FIX: Space bar not working in On-Screen Keyboard
 
 ################################################################################
 #
