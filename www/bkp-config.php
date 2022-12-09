@@ -49,35 +49,39 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		$backupOptions .= $backupOptions ? ' playlists' : 'playlists';
 	}
 
-	if ($backupOptions) {
+	if (empty($backupOptions)) {
+		$_SESSION['notify']['title'] = 'Specify at lease one item to backup';
+	} else {
 		$backupOptions = '--what ' . $backupOptions . ' ';
+
+		/*if(isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']) {
+			$backupOptions .= '--wlanpwd ' . $_POST['backup_wlan0pwd'] . ' ';
+		}*/
+
+		if (file_exists(TMP_SCRIPT_FILE)) {
+			$backupOptions .= '--script ' . TMP_SCRIPT_FILE . ' ';
+			sysCmd('chown pi:pi ' . TMP_SCRIPT_FILE);
+		}
+
+		// Generate backup zip
+		sysCmd('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
+		//workerLog('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
+
+		// Create name for backup file in browser
+		$dt = new DateTime('NOW');
+		$backupFileName = BACKUP_FILE_PREFIX . $_SESSION['hostname'].'_'. $dt->format('ymd_Hi').'.zip';
+
+		header("Content-Description: File Transfer");
+		header("Content-type: application/octet-stream");
+		header("Content-Transfer-Encoding: binary");
+		header("Content-Disposition: attachment; filename=" . $backupFileName);
+		header("Content-length: " . filesize(TMP_BACKUP_ZIP));
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		readfile (TMP_BACKUP_ZIP);
+		sysCmd('rm ' . TMP_BACKUP_ZIP);
+		exit();
 	}
-	/*if(isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']) {
-		$backupOptions .= '--wlanpwd ' . $_POST['backup_wlan0pwd'] . ' ';
-	}*/
-	if (file_exists(TMP_SCRIPT_FILE)) {
-		$backupOptions .= '--script ' . TMP_SCRIPT_FILE . ' ';
-		sysCmd('chown pi:pi ' . TMP_SCRIPT_FILE);
-	}
-
-	// Generate backup zip
-	sysCmd('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
-	//workerLog('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
-
-	// Create name for backup file in browser
-	$dt = new DateTime('NOW');
-	$backupFileName = BACKUP_FILE_PREFIX . $_SESSION['hostname'].'_'. $dt->format('ymd_Hi').'.zip';
-
-	header("Content-Description: File Transfer");
-	header("Content-type: application/octet-stream");
-	header("Content-Transfer-Encoding: binary");
-	header("Content-Disposition: attachment; filename=" . $backupFileName);
-	header("Content-length: " . filesize(TMP_BACKUP_ZIP));
-	header("Pragma: no-cache");
-	header("Expires: 0");
-	readfile (TMP_BACKUP_ZIP);
-	sysCmd('rm ' . TMP_BACKUP_ZIP);
-	exit();
 } else if (isset($_POST['restore_start']) && $_POST['restore_start'] == '1') {
 	if (file_exists(TMP_RESTORE_ZIP)) {
 		$restoreOptions = '';
@@ -98,32 +102,34 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' playlists' : 'playlists';
 		}
 
-		if ($restoreOptions) {
-			$restoreOptions = '--what ' . $restoreOptions . ' ';
-		}
-
-		// TODO: Maybe reset file rights after backup_manager.py ?
-		sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
-		sysCmd('rm ' . TMP_RESTORE_ZIP);
-
-		// Request reboot if system settings are part of restore
-		$title = 'Restore complete';
-		if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
-			$msg = 'Reboot required';
-			$duration = 60;
-			//submitJob('reboot', '', 'Restore complete', 'System rebooting...');
+		if (empty($restoreOptions)) {
+			$_SESSION['notify']['title'] = 'Specify at lease one item to restore';
 		} else {
-			$msg = '';
-			$duration = 5;
-		}
-		$_SESSION['notify']['title'] = $title;
-		$_SESSION['notify']['msg'] = $msg;
-		$_SESSION['notify']['duration'] = $duration;
+			$restoreOptions = '--what ' . $restoreOptions . ' ';
 
-		// DEBUG:
-		//$_SESSION['notify']['title'] = 'DEBUG';
-		//$_SESSION['notify']['msg'] = $restoreOptions;
-		//$_SESSION['notify']['duration'] = 10;
+			// TODO: Maybe reset file rights after backup_manager.py ?
+			sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
+			sysCmd('rm ' . TMP_RESTORE_ZIP);
+
+			// Request reboot if system settings are part of restore
+			$title = 'Restore complete';
+			if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
+				$msg = 'Reboot required';
+				$duration = 60;
+				//submitJob('reboot', '', 'Restore complete', 'System rebooting...');
+			} else {
+				$msg = '';
+				$duration = 5;
+			}
+			$_SESSION['notify']['title'] = $title;
+			$_SESSION['notify']['msg'] = $msg;
+			$_SESSION['notify']['duration'] = $duration;
+
+			// DEBUG:
+			//$_SESSION['notify']['title'] = 'DEBUG';
+			//$_SESSION['notify']['msg'] = $restoreOptions;
+			//$_SESSION['notify']['duration'] = 10;
+		}
 	} else {
 		$_imported_backupfile = 'No file selected';
 		$_SESSION['notify']['title'] = 'Select a backup file';
