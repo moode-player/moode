@@ -398,33 +398,41 @@ body {
 /*
 // Pi 7" Touch
 */
-/* 553 = Square pixel AR, 598 = Default pixel AR */
-@media (min-height:553px) and (width:998px) {
+/* 553 = Square pixel, 598 = Default pixel */
+/* 443 = Square pixel, 479 = Default pixel */
+@media (min-height:553px) and (width:998px),
+	   (min-height:443px) and (width:799px) {
+	/* Search input */
+	#lib-album-filter,
+	.input-append {font-size:1.25em;}
+
+	/* Queue */
+	#cv-playqueue {width:60vmin;}
 	.playqueue .pll1 {font-size:1rem;}
 	.playqueue .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
 	.playqueue .playqueue-action {padding:1rem 0;}
-	#playbtns {margin:.25em 0;}
-	#playbar-title {font-size:1rem;}
-	img.coverart {width:55vh;}
-	#playback-firstuse-help {height:55vh;width:55vh;}
-	#volzone {display:block;}
+
+	/* Knobs and buttons */
+	#timeknob {margin:0;}
 	#countdown-display {margin-top:0;}
-	.volume-display, .volume-display-db {margin-top:.3em;}
-	#songsand {font-size:1.25em;}
-}
-/* 443 = Square pixel AR, 479 = Default pixel AR */
-@media (min-height:443px) and (width:799px) {
-	.playqueue .pll1 {font-size:1rem;}
-	.playqueue .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
-	.playqueue .playqueue-action {padding:1rem 0;}
 	#playbtns {margin:.25em 0;}
-	#playbar-title {font-size:1rem;}
-	img.coverart {width:55vh;}
+	#playbtns .btn {padding:1.5rem 1rem;}
 	#volzone {display:block;}
-	#playback-firstuse-help {height:55vh;width:55vh;}
-	#countdown-display {margin-top:0;}
-	.volume-display, .volume-display-db {margin-top:.3em;}
+	.volume-display,
+	.volume-display-db {margin-top:0;}
+	#togglebtns {padding-top:1.5rem;}
+	.volume-popup-btn {display:none!important;}
+	.ralbum {display:inline-block!important;}
+
+	/* Cover art amd metadata */
+	body.cvwide #ss-coverart-url img {width:80vh;height:100%}
+	body:not(.cvpb) #ss-coverart-url img {width:75vh;height:100%}
+
 	#songsand {font-size:1.25em;}
+	#playback-firstuse-help {height:55vh;width:55vh;}
+
+	/* Playbar */
+	#playbar-title {font-size:1rem;}
 }
 
 /*
