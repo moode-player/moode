@@ -233,6 +233,10 @@ body {
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
 
+	/* Multiroom and Updater header icons */
+	#multiroom-sender {left:47%!important;}
+	#updater-notification {left:50%!important;}
+
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	img.coverart {width:65vh;}
 	.cover-menu {background-size:2rem 2rem;background-position: 0.5rem 2.5rem;}
@@ -330,13 +334,13 @@ body {
 	#lib-albumcover,
 	#container-browse,
 	#container-radio,
-	#container-playlist {left:env(safe-area-inset-left);width:calc(100% - env(safe-area-inset-left) - 1rem);};
+	#container-playlist {left:env(safe-area-inset-left);width:calc(100% - env(safe-area-inset-left) - 1rem);}
 
 	/* Search input and Menu "m" button */
 	#lib-album-search input,
 	#pl-search input,
 	#playqueue-search input,
-	#ra-search input {font-size:1.25em;}
+	#ra-search input {font-size:1.25em!important;}
 	#menu-settings {font-size:1.9rem;}
 
 	/* Dropdown and context menus */
@@ -413,7 +417,7 @@ body {
 	.playqueue .playqueue-action {padding:1rem 0;}
 
 	/* Knobs and buttons */
-	#timeknob {margin:0;}
+	#timeknob {margin:.5em;}
 	#countdown-display {margin-top:0;}
 	#playbtns {margin:.25em 0;}
 	#playbtns .btn {padding:1.5rem 1rem;}
