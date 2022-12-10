@@ -47,7 +47,7 @@ if (isset($_POST['checkfor_update'])) {
 
 	if (false === ($availableDate = strtotime($available['Date'])) ||
 		false === ($thisDate = strtotime($thisReleaseDate))) {
-		$_available_upd = 'Date error comparing This: ' . $thisReleaseDate . ' and Available: ' . $available['Date'];
+		$_available_upd = 'Date error comparing This: ' . $thisReleaseDate . ' to Available: ' . $available['Date'];
 	} else if ($availableDate <= $thisDate) {
 		$_available_upd = 'Software is up to date';
 	} else if ($available['ImageOnly'] == 'Yes') {
