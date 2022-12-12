@@ -402,10 +402,9 @@ body {
 /*
 // Pi 7" Touch
 */
-/* 553 = Square pixel, 598 = Default pixel */
 /* 443 = Square pixel, 479 = Default pixel */
-@media (min-height:553px) and (width:998px),
-	   (min-height:443px) and (width:799px) {
+@media (height:443px) and (width:799px),
+	   (height:479px) and (width:799px) {
 	/* Search input */
 	#lib-album-filter,
 	.input-append {font-size:1.25em;}
