@@ -249,16 +249,16 @@ body {
 	/* Metadata under the cover art in Playback view */
 	#extra-tags-display {display:none;}
 	#songsand {margin-top:1.5em;}
-	#currentsong {font-size:1.5rem;}
+	#currentartist-div,
+	#currentalbum-div {width:inherit;}
+	#currentalbum,
 	#currentsong,
-	#currentartist {padding-top:.75rem;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
-	#currentalbum {font-size:1.5em;padding-top:0;},
-	#currentartist {font-size:1.5em;padding-top:.75rem;}
-	#currentartist-div {width:inherit;}
-	#currentalbum-div .playback-hd-badge {height:1.5em!important;margin-top:.2rem;}
-	#currentartist-div .playback-hd-badge {height:1.5em!important;margin-top:1rem;}
-	#currentalbum-ellipsis,
-	#currentartist-ellipsis {display:inline-flex;margin:0 auto;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#currentartist {font-size:1.5em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#currentalbum {padding-top:0;}
+	#currentsong,
+	#currentartist {padding-top:.75rem;}
+	#currentalbum-div .playback-hd-badge {height:1.5em!important;margin-top:.25rem;}
+	#currentartist-div .playback-hd-badge {height:1.5em!important;margin-top:1.05rem;}
 
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.5em;margin-top:10px;}

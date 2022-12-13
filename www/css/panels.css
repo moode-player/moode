@@ -126,9 +126,7 @@ html {background-color:inherit;}
 #currentsong {font-size:1.35em;padding-top:1.65rem;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
 #currentalbum, #currentartist {font-size:1.25em;padding-top:1.65rem;cursor:pointer;font-weight:500;}
 #currentalbum-div,
-#currentartist-div,
-#currentalbum-ellipsis,
-#currentartist-ellipsis {display:inline-flex;}
+#currentartist-div {display:inline-flex;justify-content: center;}
 #playqueue-position, #format-bitrate {color:inherit;opacity:.55;}
 .container-playback {padding:0px;color:inherit;margin-top:env(safe-area-inset-top);}
 .no-fluid {display:flex;flex-direction:row;}
@@ -699,7 +697,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #ss-hd-badge,
 .playback-hd-badge {filter:brightness(90%);display:none;position:relative;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;margin-left:1em;padding:.1em .2em 0 .3em;}
 #ss-hd-badge {vertical-align:text-top;line-height:1.8em;}
-.playback-hd-badge {vertical-align:text-bottom;line-height:1.5em;margin-top:1.85rem;bottom:0.25rem;}
+.playback-hd-badge {vertical-align:text-bottom;line-height:1.5em;margin-top:1.85rem;bottom:0.25rem;max-height:1rem;}
 /* Radio manager */
 .modal-button-style {display:inline-block;margin:0 10px 10px 0;color:inherit!important;}
 /* Radio view, Playlist view */
