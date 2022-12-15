@@ -50,7 +50,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	}
 
 	if (empty($backupOptions)) {
-		$_SESSION['notify']['title'] = 'Specify at lease one item to backup';
+		$_SESSION['notify']['title'] = 'Specify at least one item to backup';
 	} else {
 		$backupOptions = '--what ' . $backupOptions . ' ';
 
@@ -103,7 +103,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		}
 
 		if (empty($restoreOptions)) {
-			$_SESSION['notify']['title'] = 'Specify at lease one item to restore';
+			$_SESSION['notify']['title'] = 'Specify at least one item to restore';
 		} else {
 			$restoreOptions = '--what ' . $restoreOptions . ' ';
 
