@@ -28,10 +28,11 @@ Updates
 - UPD: Improve CUE handling and presentation
 - UPD: Improve restart/shutdown notifications
 - UPD: Improve Quick help
+- UPD: Remove Bluetooth speaker sharing option (obsolete)
 - UPD: Use thin style for CoverView clocks
 - UPD: Use the correct name for AirPlay
 - UPD: Default to Playback view after startup
-- UPD: Only list Bluetooth on main menu if its on
+- UPD: Only list Bluetooth on main menu if its On
 - UPD: Refactor CSS and config templates
 
 Radio stations
@@ -40,7 +41,7 @@ Radio stations
 
 Bug fixes
 
-- Fix: SMB server ON/OFF setting not working
+- FIX: SMB server ON/OFF setting not working
 - FIX: Top border of Playbar is visible
 - FIX: Startup hangs if Bluetooth on but no adapter is present
 - FIX: Space bar not working in On-Screen Keyboard
