@@ -53,10 +53,6 @@ if (isset($_POST['update_pairing_agent'])) {
 if (isset($_POST['parestart']) && $_POST['parestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('pairing_agent', '', 'Pairing agent restarted', '');
 }
-if (isset($_POST['update_bt_multi'])) {
-	phpSession('write', 'btmulti', $_POST['btmulti']);
-	submitJob('btmulti', '', 'Settings updated', '');
-}
 if (isset($_POST['update_rsmafterbt'])) {
 	phpSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
 	$_SESSION['notify']['title'] = 'Settings updated';
@@ -212,8 +208,6 @@ $_select['btsvc_off'] .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc
 $_select['btname'] = $_SESSION['btname'];
 $_select['pairing_agent_on']  .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent-1\" value=\"1\" " . (($_SESSION['pairing_agent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['pairing_agent_off'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent-2\" value=\"0\" " . (($_SESSION['pairing_agent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['btmulti_on']  .= "<input type=\"radio\" name=\"btmulti\" id=\"toggle-btmulti-1\" value=\"1\" " . (($_SESSION['btmulti'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-$_select['btmulti_off'] .= "<input type=\"radio\" name=\"btmulti\" id=\"toggle-btmulti-2\" value=\"0\" " . (($_SESSION['btmulti'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 $_select['rsmafterbt_yes'] .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-1\" value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 $_select['rsmafterbt_no']  .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-2\" value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 

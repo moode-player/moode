@@ -298,7 +298,6 @@ RENDERER_SETTINGS() {
 		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
 		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER\c"
 		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
-		echo -e "\nSpeaker sharing\t\t= $btmulti\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
 		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\n"
 	fi
@@ -711,7 +710,7 @@ fi
 cardnum=${arr[76]}
 [[ "${arr[77]}" = "1" ]] && btsvc="On" || btsvc="Off"
 btname=${arr[78]}
-[[ "${arr[79]}" = "1" ]] && btmulti="Yes" || btmulti="No"
+RESERVED_80=${arr[79]}
 feat_bitmask=${arr[80]}
 if [[ "${arr[81]}" = "604800000" ]]; then
 	library_recently_added="1 Week"

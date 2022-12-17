@@ -140,6 +140,7 @@ sysCmd('moodeutl -D card_error');
 sysCmd('moodeutl -D cdsp_from_link');
 sysCmd('moodeutl -D saved_upnp_path');
 sysCmd('moodeutl -D upnp_browser');
+sysCmd('moodeutl -D btmulti');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session
@@ -2127,13 +2128,6 @@ function runQueuedJob() {
 			sysCmd('killall -s 9 blu_agent.py');
 			if ($_SESSION['pairing_agent'] == '1') {
 				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
-			}
-			break;
-		case 'btmulti':
-			if ($_SESSION['btmulti'] == 1) {
-				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=btaplay_dmix' /etc/bluealsaaplay.conf");
-			} else {
-				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_SESSION['alsa_output_mode'] . ":" . $_SESSION['cardnum'] . ",0' /etc/bluealsaaplay.conf");
 			}
 			break;
 		case 'airplaysvc':
