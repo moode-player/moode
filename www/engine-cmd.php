@@ -68,9 +68,10 @@ if ($cmd == 'btactive1') {
 	$cmd .= ',';
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {
-			$cmd .= ': ' . substr($result[$i], 21);
+			$cmd .= substr($result[$i], 21) . ';';
 		}
 	}
+	$cmd = rtrim($cmd, ';');
 }
 elseif ($cmd == 'inpactive1') {
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioin'", sqlConnect());

@@ -465,17 +465,19 @@ function engineCmd() {
                 case 'inpactive1':
                 case 'inpactive0':
                     // NOTE: cmd[1] is the input source name
+                    var inputSourceName = typeof(cmd[1]) == 'undefined' ? 'Undefined' : cmd[1];
                     inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">' + cmd[1] +
+                        '<span id="inpsrc-msg-text">' + inputSourceName +
                         ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
                         '</span><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
                     );
                     break;
                 case 'btactive1':
                 case 'btactive0':
-                    // NOTE: cmd[1] is the input source name
+                    // NOTE: cmd[1] contains the list of connected clients
+                    var connectedClients = typeof(cmd[1]) == 'undefined' ? 'Undefined' : cmd[1].replace(/;/g, ', ');
                     inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">Bluetooth Active' + cmd[1] + '</span>' +
+                        '<span id="inpsrc-msg-text">Bluetooth Active: ' + connectedClients + '</span>' +
                         '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
                     break;
                 case 'aplactive1':
