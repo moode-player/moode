@@ -32,7 +32,7 @@
 		</p>
 		<h5>Release Information</h5>
 		<ul>
-			<li>Release: 8.2.3 2022-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
+			<li>Release: 8.2.3 2022-12-18</li> <!-- NOTE: getMoodeRel() parses this  -->
 			<li>Maintainer: Tim Curtis &copy; 2014</li>
 			<li>Documentation: <a class="moode-about-link" href="./relnotes.txt" target="_blank">View release notes,</a>&nbsp<a class="moode-about-link" href="./setup.txt" target="_blank">View setup guide</a></li>
 			<li>Contributors: <a class="moode-about-link" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
