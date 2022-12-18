@@ -960,9 +960,6 @@ function renderUI() {
         var hdBadgeText = MPD.json['artist'] == 'Radio station' ? RADIO_HD_BADGE_TEXT : ALBUM_HD_BADGE_TEXT;
         $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(hdBadgeText);
 
-        // Multiple artists indicator
-        var moreArtistsEllipsis = parseInt(MPD.json['artist_count']) > 1 ? '...' : '';
-
         // Default metadata
         if (MPD.json['artist'] == 'Radio station') {
             // For radio stations
@@ -986,12 +983,9 @@ function renderUI() {
             $('#currentalbum-div').show();
             $('#currentalbum').html(MPD.json['album']);
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
-            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtistsEllipsis);
+            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']));
             // Playbar
             var textArtistTitle = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
- 			if ('' != textArtistTitle) {
- 				textArtistTitle += moreArtistsEllipsis + ' - ' + MPD.json['title'];
- 			}
  			$('#playbar-currentsong, #ss-currentsong').html(textArtistTitle);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
