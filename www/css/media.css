@@ -405,6 +405,10 @@ body {
 /* 443 = Square pixel, 479 = Default pixel */
 @media (height:443px) and (width:799px),
 	   (height:479px) and (width:799px) {
+	/* Panel header */
+	#multiroom-sender {left:50%!important;}
+	#updater-notification {left:54%!important;}
+	
 	/* Search input */
 	#lib-album-filter,
 	.input-append {font-size:1.25em;}
@@ -430,13 +434,20 @@ body {
 	/* Cover art amd metadata */
 	body.cvwide #ss-coverart-url img {width:80vh;height:100%}
 	body:not(.cvpb) #ss-coverart-url img {width:75vh;height:100%}
-
+	#currentalbum,
+	#currentartist,
+	#currentsong {font-size:1.25em;}
+	#ss-currentalbum-div,
+	#ss-currentsong,
+	#ss-extra-metadata {margin-top: 0.75em;}
+	body.cv #ss-currentalbum,
+	body.cv #ss-currentsong {font-size:1.4em;}
 	#songsand {font-size:1.25em;}
 	#playback-firstuse-help {height:55vh;width:55vh;}
 
 	/* Playbar */
 	#playbar-title {font-size:1rem;}
-}
+	#playbar-timeline {display:block!important;}}
 
 /*
 // Large displays

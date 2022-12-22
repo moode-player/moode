@@ -984,9 +984,9 @@ function renderUI() {
             $('#currentalbum').html(MPD.json['album']);
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']));
-            // Playbar
+            // Playbar and screen saver
             var textArtistTitle = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
- 			$('#playbar-currentsong, #ss-currentsong').html(textArtistTitle);
+ 			$('#playbar-currentsong, #ss-currentsong').html(textArtistTitle + ' - ' + MPD.json['title']);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
 
@@ -998,7 +998,6 @@ function renderUI() {
                 $('#currentartist-div span.playback-hd-badge').hide();
                 $('#currentalbum-div span.playback-hd-badge').show();
             }
-
             $('#playbar-hd-badge, #ss-hd-badge').show();
         } else {
             $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
