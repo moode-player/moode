@@ -270,7 +270,7 @@ function getHostIp() {
 		$wlan0ip = sysCmd("ip addr list wlan0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 	}
 
-	// TODO: Prefer 172.24.1.1 AP mode address (use host.local for ssh term server?)
+	// TODO: IF AP mode active set $hostip = 172.24.1.1
 	// Use Ethernet address if present
 	if (!empty($eth0ip[0])) {
 		$hostIp = $eth0ip[0];
