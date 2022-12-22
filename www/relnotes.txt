@@ -17,7 +17,9 @@
 
 Bug fixes
 
-- FIX: RoonBridge Resume MPD setting
+- FIX: Airplay crash due to syntax error in conf on new image
+- FIX: RoonBridge Resume MPD setting not functioning
+- FIX: Media query rule set for Pi 7" Touch
 
 ################################################################################
 #
