@@ -33,7 +33,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$gain = $_POST['cdsp_qc_gain'];
 		$convL = $_POST['cdsp_qc_ir_left'];
 		$convR = $_POST['cdsp_qc_ir_right'];
-		$convT = $_POST['cdsp_basicconv_type'];
+		$convT = $_POST['cdsp_qc_ir_type'];
 		$cfg = $gain . ';' . $convL . ';' . $convR . ';' . $convT;
 		$cdsp->setQuickConvolutionConfig($cdsp->stringToQuickConvolutionConfig($cfg));
 		phpSession('write', 'camilladsp_quickconv', $cfg);
@@ -196,9 +196,9 @@ foreach ($configs as $configFile => $configName) {
 	$selected = ($selectedConfig == $configFile || ($selectedConfig == null && $_selected_config == null)) ? 'selected' : '';
 	$_select['cdsp_config'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, $configName);
 	if ($selected == 'selected') {
-		$_selected_config = $configFile;
-		//$_selected_config = $selected;
-		//$selectedConfig = $configFile;
+		//$_selected_config = $configFile;
+		$_selected_config = $selected;
+		$selectedConfig = $configFile;
 	}
 }
 
@@ -271,7 +271,7 @@ function checkResultToHtml($checkResult) {
 	$message = '';
 	$checkMsgRaw = implode('<br>', $checkResult['msg']);
 	if ($checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
-		$message = "<span style='color: red'>&#10007;</span> ".$checkMsgRaw;
+		$message = "<span style='color: red'>&#10007;</span> ". $checkMsgRaw;
 	} else if ($checkResult['valid'] == CDSP_CHECK_VALID) {
 		$message = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
 	} else {
@@ -282,14 +282,17 @@ function checkResultToHtml($checkResult) {
 
 $_check_msg_config = '';
 $_check_msg_quick_convolution = '';
-if ($_selected_config) {
+if ($selectedConfig) {
 	if (!isset($checkResult)) {
-		$checkResult = $cdsp->checkConfigFile($_selected_config);
+		$checkResult = $cdsp->checkConfigFile($selectedConfig);
 	}
 	$_check_msg_config = checkResultToHtml($checkResult);
 }
 if ($cdsp->isQuickConvolutionActive()) {
-	$_check_msg_quick_convolution = '<span class="config-help-static">' . checkResultToHtml($cdsp->checkConfigFile($cdsp->getConfig())) . '</span>';
+	$_check_msg_quick_convolution =
+		'<span class="config-help-static">' .
+			checkResultToHtml($cdsp->checkConfigFile($cdsp->getConfig())) .
+		'</span>';
 }
 
 $camillaGuiStatus = $cdsp->getCamillaGuiStatus();
