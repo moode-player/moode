@@ -18,8 +18,12 @@
 Bug fixes
 
 - FIX: Airplay crash due to syntax error in conf on new image
+- FIX: CamillaDSP quick convolution yaml check fails
 - FIX: RoonBridge Resume MPD setting not functioning
 - FIX: Media query rule set for Pi 7" Touch
+- FIX: Media query rule set for mobile portrait
+- FIX: Song title dash visible when end of queue
+
 
 ################################################################################
 #
