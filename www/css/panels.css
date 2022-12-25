@@ -478,7 +478,9 @@ body.cvwide #ss-coverart-url img {float:left;margin-left:5em;width:80vh;}
 body.cvwide #ss-metadata {float:left;top:15vh;left:100vh;text-align:left;font-size:2em;position:absolute;right:10vh;}
 body.cvwide #ss-currentalbum {margin:0!important;}
 body.cvwide-xmeta #ss-extra-metadata {display:block;color:var(--textvariant);font-size:.85em;margin-top:1.5em;}
-body:not(.cvpb) #ss-coverart-url img {margin-top: 1.5em;}
+body:not(.cvpb) #ss-coverart-url img {margin-top:1.5em;}
+body:not(.cvwide) #ss-metadata {width:98%;margin:0 auto;}
+
 /* misc */
 #btn-ra-search-reset, #btn-pl-search-reset {display:none;}
 #db-search-reset {margin-right:0;}
