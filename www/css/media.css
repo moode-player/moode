@@ -70,13 +70,13 @@ body {
 	#timeline {display:block;width:74vw;}
 	#mobile-time {display:block;}
 	#extra-tags-display {display:none;}
-	#currentsong {font-size:1.4em;}
+	#currentsong {/*font-size:1.4em;*/font-size:1.25em;}
 	#currentsong, #currentartist {padding-top:1rem;}
-	#currentartist {font-size:1.35em;}
-	#currentalbum {font-size:1.35em;padding-top:1.25rem;}
+	#currentartist {/*font-size:1.35em;*/font-size:1.25em;}
+	#currentalbum {/*font-size:1.35em;*/font-size:1.25em;padding-top:1.25rem;}
 	#songsand-sample-rate {display:block;font-size:1.5rem;padding:1.25rem 0;color:var(--textvariant);}
-	#currentalbum-div .playback-hd-badge {height:1.25rem;margin-top:1.75em;}
-	#currentartist-div .playback-hd-badge {height:1.25rem;margin-top:1.6em;}
+	#currentalbum-div .playback-hd-badge {height:1.25rem;margin-top:1.7em;max-height:1.25rem;}
+	#currentartist-div .playback-hd-badge {height:1.25rem;margin-top:1.4em;max-height:1.25rem;}
 
 	/* Playback view Queue */
 	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
@@ -408,7 +408,7 @@ body {
 	/* Panel header */
 	#multiroom-sender {left:50%!important;}
 	#updater-notification {left:54%!important;}
-	
+
 	/* Search input */
 	#lib-album-filter,
 	.input-append {font-size:1.25em;}
