@@ -986,7 +986,7 @@ function renderUI() {
             $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']));
             // Playbar and screen saver
             var artist = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
-            var dash = (typeof(artist) == 'undefined' || artist == '') ? '' : ' _ ';
+            var dash = (typeof(artist) == 'undefined' || artist == '') ? '' : ' - ';
  			$('#playbar-currentsong, #ss-currentsong').html(artist + dash + MPD.json['title']);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
