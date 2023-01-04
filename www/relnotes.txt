@@ -11,6 +11,21 @@
 
 ################################################################################
 #
+# 2023-MM-DD TC moOde 8.3.0
+#
+################################################################################
+
+Updates
+
+- UPD: Add transition animation for panels and modals
+- UPD: Mask hover color on modal footer buttons
+
+Bug fixes
+
+- FIX: Metadata clipped in CoverView default when no Playbar and mobile landscape
+
+################################################################################
+#
 # 2022-12-27 TC moOde 8.2.4
 #
 ################################################################################
