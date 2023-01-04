@@ -61,6 +61,7 @@ body {
 	--coverback: '';
 	--config_modal_btn_bg: rgba(64,64,64,0.08);
 	--npicon: url('../images/4band-npicon/audiow.svg');
+	--fadein-rate: .5s;
 }
 
 .btn,
@@ -116,6 +117,8 @@ html {background-color:inherit;}
 .disconnect-renderer,
 .turnoff-renderer {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
  /* Mask hover effect */
+.btn.btn-primary:hover,
+.btn.btn-primary:focus {color:inherit;}
 .configure-renderer:hover,
 .disconnect-renderer:hover,
 .turnoff-renderer:hover {background-color:var(--btnshade4);}
@@ -312,8 +315,12 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #db-browse {margin:0;width:200px;}
 #db-path {position:fixed;bottom:0;margin-bottom:5.5rem;float:left;margin-left:1em;color:var(--textvariant);}
 #folder-panel .btn.disabled, #folder-panel .btn[disabled] {background-color:#34495E;color:white;}
-#folder-panel, #radio-panel, #playlist-panel {width:100%;height:100vh;position:fixed;top:0;overflow:hidden;}
-#library-panel {height:100vh;}
+
+#folder-panel,
+#radio-panel,
+#playlist-panel {animation: fadeIn var(--fadein-rate);width:100%;height:100vh;position:fixed;top:0;overflow:hidden;}
+#library-panel {animation: fadeIn var(--fadein-rate);height:100vh;}
+
 .btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {margin:0;line-height:normal;height:2.5rem;width:2.5rem;font-size:1.1rem;border-radius:0;float:left;display:inline-block;padding:.25rem .5rem;border-right: 1px solid var(--btnshade);}
 #db-back {font-size:1.5rem;}
 #reconnect, #restart, #shutdown {position:fixed;top:0;left:0;margin:0;padding:0;text-align:center;width:100%;height:100%;z-index:9999;}
@@ -365,7 +372,7 @@ i.dx {width:1em;margin-left:.25em;}
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {cursor:not-allowed;background-color:#f5f5f5;border:2px solid #DCE4EC;color:#34495E;}
 .form-horizontal .dk_container {margin-bottom:0;}
 input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 0 9px 10px;}
-.modal {background-color:rgba(240,240,240,0.9);color:#333;}
+.modal {animation: fadeIn var(--fadein-rate);background-color:rgba(240,240,240,0.9);color:#333;}
 .modal-header, .modal-footer {background-color:transparent;}
 .modal .h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:1em;font-weight:600;position:relative;text-align:right;display:inline-block;width:48%;}
 .dtclose, .dtopen {font-weight:600;font-size:1.2em;}
@@ -450,7 +457,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #radio-covers, #playlist-covers, #albumcovers {width:100%;margin-left:0;}
 #lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1.17rem));margin:.25em 0;}
 /* coverview screen saver */
-#screen-saver {color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
+#screen-saver {animation: fadeIn var(--fadein-rate);color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
 #ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #ss-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:none;transform:translateZ(0);}
 #ss-clock, #ss-extra-metadata {display:none;}
@@ -535,7 +542,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #library-header {position:absolute;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1.1rem;overflow:hidden;max-width:50%;text-overflow:ellipsis;white-space:nowrap;color:var(--adapttext);cursor:pointer;}
 #library-header span {text-transform:capitalize;}
 #playback-panel #playback-controls {display:none;}
-#playback-panel.active #playback-controls, #playback-panel.active #playbtns, #playback-panel.active #togglebtns {display:block;}
+#playback-panel.active #playback-controls, #playback-panel.active #playbtns, #playback-panel.active #togglebtns {animation: fadeIn var(--fadein-rate);display:block;}
 #playback-panel.active .btnlist.btnlist-top.btnlist-top-playqueue {display:inline-flex;}
 #library-panel {display:none;}
 #library-panel.active {height:100vh;display:block;}
