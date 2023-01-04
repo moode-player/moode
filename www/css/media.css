@@ -268,7 +268,7 @@ body {
 	.playqueue-action {font-size:1rem!important;}
 
 	/* CoverView screen saver */
-	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
+	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 10em);height:calc(100vh - 10em);margin-top:1em;}
 	#ss-metadata {top:10vh!important;text-align:center!important;}
 	#ss-hd-badge {font-size:.6em;}
 
