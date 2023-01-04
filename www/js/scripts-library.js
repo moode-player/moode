@@ -164,7 +164,7 @@ function reduceGenres(acc, track) {
 // Album Artist:
 // List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists"
 // or any other string that was used to identify compilation albums. This is the old 671 behavior.
-// Album Artist +
+// Album Artist+:
 // List all Album Artists. Compilation albums listed for a selected Album Artist will show only
 // the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all
 // the album's tracks and just those for the selected Album Artist.
@@ -176,7 +176,7 @@ function reduceArtists(acc, track) {
 			acc[album_artist].artist = track.album_artist;
 		}
 		acc[album_artist].push(track);
-		if (SESSION.json['library_tagview_artist'].includes('Album Artist')) { // Album Artist or Album Artist +
+		if (SESSION.json['library_tagview_artist'].includes('Album Artist')) { // Album Artist or Album Artist+
 			return acc;
 		}
 	}
@@ -422,23 +422,23 @@ function filterAlbums() {
 	// Filter by artist
 	if (LIB.filters.artists.length) {
 		// @scripple:
-/*		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
+        /*if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
 			filteredAlbums = filteredAlbums.filter(filterByArtist);
 			filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
 		}
-      // Artist or Album Artist +
+        // Artist or Album Artist+
 		// @Atair: deactivated condition, because
 		//         when Folderpath album key is set and
 		//         an album contains tracks with different album_artists (which all appear in the artists column),
 		//         the album would not be displayed for either album_artist when being clicked.
-         	//         The else case might be more expensive, but does  basically the same job as the if clause,
-         	//         but for all artists
-		else { */
+        //         The else case might be more expensive, but does  basically the same job as the if clause,
+        //         but for all artists
+		else {*/
 			var artistSongs = allSongs.filter(filterByArtist);
 			var songKeys = artistSongs.map(function(a) {return a.key;});
 			filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
 			filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
-//		}
+        //}
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {
@@ -770,15 +770,6 @@ var renderSongs = function(albumPos) {
         // Render the song list
         lastAlbum = '';
         lastDisc = '';
-
-        // For cue format omit the audio file which otherwise will show up as a bogus album header.
-        // Typically the audio file in cue format will not have a track number since it's considered to be the whole album.
-        var cueFormats = ['flac', 'wav', 'aiff'];
-        var file0Ext = filteredSongs[0].file.substring(filteredSongs[0].file.lastIndexOf('.') + 1, filteredSongs[0].file.length);
-        if ($.inArray(file0Ext, cueFormats) != -1 && filteredSongs[0].tracknum == '') {
-            filteredSongs.shift();
-        }
-
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
 
@@ -795,7 +786,12 @@ var renderSongs = function(albumPos) {
             var album = filteredSongs[i].album + comment;
 
             if (album != lastAlbum) {
-                albumDiv = '<div class="lib-album-heading"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-album-heading">' + album + '</a></div>';
+                albumDiv = '<div id=lib-album-' + (i + 1).toString() +
+                    ' class="lib-album-heading"' +
+                    ' heading-album="' + filteredSongs[i].album + '"' +
+                    ' heading-comment="' + filteredSongs[i].comment + '"' +
+                    ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
+                    '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-album-heading">' + album + '</a></div>';
                 lastAlbum = album;
             }
             else {
@@ -804,7 +800,13 @@ var renderSongs = function(albumPos) {
 
             if (multiDisc.indexOf(filteredSongs[i].album) != -1) {
                 if (filteredSongs[i].disc != lastDisc) {
-    				discDiv = '<div id="lib-disc-' + filteredSongs[i].disc + '" class="lib-disc"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + filteredSongs[i].disc + '</a></div>'
+    				discDiv = '<div id="lib-disc-' + filteredSongs[i].disc +
+                        '" class="lib-disc"' +
+                        ' heading-album="' + filteredSongs[i].album + '"' +
+                        ' heading-disc="' + filteredSongs[i].disc + '"' +
+                        ' heading-comment="' + filteredSongs[i].comment + '"' +
+                        ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
+                        '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + filteredSongs[i].disc + '</a></div>'
     				lastDisc = filteredSongs[i].disc;
     			}
     			else {
@@ -1476,12 +1478,24 @@ $('#lib-coverart-img').click(function(e) {
 // Click Disc
 $('#songsList').on('click', '.lib-disc', function(e) {
 	$('img.lib-coverart, #songsList li, #songsList .lib-disc a').removeClass('active'); // Remove highlight
-	var discNum = $(this).text().substr(5);
-	$('#lib-disc-' + discNum + ' a').addClass('active');
+	var discNum = $(this).text().split(' '); // DISC 1
+	$('#lib-disc-' + discNum[1] + ' a').addClass('active');
+
+    var headingAlbum = $(this).attr('heading-album');
+    var headingDisc = $(this).attr('heading-disc');
+    var headingComment = $(this).attr('heading-comment');
+    var headingKey = $(this).attr('heading-key');
 
 	filteredSongsDisc.length = 0;
 	for (var i in filteredSongs) {
-		if (filteredSongs[i].disc == discNum) {
+        var matchAlbumDisc = filteredSongs[i].album == headingAlbum && filteredSongs[i].disc == headingDisc;
+        if (miscLibOptions[0] == 'Yes') { // Comment tag included
+            matchAlbumDisc &= headingComment == '' || filteredSongs[i].comment == headingComment;
+        }
+        else if (miscLibOptions[1] == 'Yes') { // MBRZ albumid tag included
+            matchAlbumDisc &= headingKey == '0' || filteredSongs[i].mb_albumid == headingKey;
+        }
+		if (matchAlbumDisc) {
 			filteredSongsDisc.push(filteredSongs[i]);
 		}
 	}
@@ -1491,12 +1505,26 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 // Click Album heading
 $('#songsList').on('click', '.lib-album-heading', function(e) {
 	$('img.lib-coverart, #songsList li, #songsList .lib-disc a').removeClass('active'); // Remove highlight
+    var albumNum = $(this).attr('id').split('-'); // lib-album-1
+	$('#lib-album-' + albumNum[2] + ' a').addClass('active');
+
 	var albumName = $(this).text();
+
+    var headingAlbum = $(this).attr('heading-album');
+    var headingComment = $(this).attr('heading-comment');
+    var headingKey = $(this).attr('heading-mb-album-id');
 
 	filteredSongsAlbum.length = 0;
 	for (var i in filteredSongs) {
-		if (filteredSongs[i].album == albumName) {
-			filteredSongsAlbum.push(filteredSongs[i]);
+        var matchAlbum = filteredSongs[i].album == headingAlbum;
+        if (miscLibOptions[0] == 'Yes') { // Comment tag included
+            matchAlbum &= headingComment == '' || filteredSongs[i].comment == headingComment;
+        }
+        else if (miscLibOptions[1] == 'Yes') { // MBRZ albumid tag included
+            matchAlbum &= headingKey == '0' || filteredSongs[i].mb_albumid == headingKey;
+        }
+        if (matchAlbum) {
+            filteredSongsAlbum.push(filteredSongs[i]);
 		}
 	}
 	//console.log('filteredSongsAlbum= ' + JSON.stringify(filteredSongsAlbum));
@@ -1531,6 +1559,10 @@ $('#playlist-names').on('click', '.pl-name', function(e) {
 	$('#playlist-names li').removeClass('active');
     $('#pl-name-' + (UI.dbEntry[0] + 1).toString()).addClass('active');
     //console.log(UI.dbEntry[0]);
+});
+// New playlist input
+$('#addto-playlist-name-new').click(function(e){
+    $('#pl-name-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 });
 // Add to playlist
 $('#btn-add-to-playlist').click(function(e){
@@ -1762,6 +1794,8 @@ $('#context-menu-lib-disc a').click(function(e) {
 
 // Click Album heading context menu item
 $('#context-menu-lib-album-heading a').click(function(e) {
+    $('#songsList .lib-album-heading a').removeClass('active');
+
 	var files = [];
 	for (var i in filteredSongsAlbum) {
 		files.push(filteredSongsAlbum[i].file);

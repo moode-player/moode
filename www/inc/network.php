@@ -138,6 +138,7 @@ function cfgNetIfaces() {
 	// Set regulatory domain
 	sysCmd('iw reg set "' . $cfgNetwork[1]['wlan_country'] . '" >/dev/null 2>&1');
 
+	// TODO: Enhance rule set to enable general purpose hotspot.
 	// Write /etc/nftables.conf
 	$fp = fopen('/etc/nftables.conf', 'w');
 	$data  = "#########################################\n";
@@ -269,6 +270,7 @@ function getHostIp() {
 		$wlan0ip = sysCmd("ip addr list wlan0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 	}
 
+	// TODO: IF AP mode active set $hostip = 172.24.1.1
 	// Use Ethernet address if present
 	if (!empty($eth0ip[0])) {
 		$hostIp = $eth0ip[0];

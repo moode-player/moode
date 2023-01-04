@@ -140,6 +140,7 @@ sysCmd('moodeutl -D card_error');
 sysCmd('moodeutl -D cdsp_from_link');
 sysCmd('moodeutl -D saved_upnp_path');
 sysCmd('moodeutl -D upnp_browser');
+sysCmd('moodeutl -D btmulti');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session
@@ -304,7 +305,7 @@ $eth0 = sysCmd('ip addr list | grep eth0');
 if (!empty($eth0)) {
 	workerLog('worker: eth0 adapter exists');
 	// Check for IP address if indicated
-	workerLog('worker: eth0 check for address (' . ($_SESSION['eth0chk'] == '1' ? 'Yes' : 'No') . ')');
+	workerLog('worker: eth0 check for address (' . ($_SESSION['eth0chk'] == '1' ? 'On' : 'Off') . ')');
 	if ($_SESSION['eth0chk'] == '1') {
 		workerLog('worker: eth0 address check (' . $_SESSION['ipaddr_timeout'] . ' secs)');
 		$eth0Ip = checkForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
@@ -690,23 +691,22 @@ workerLog('worker: -- Feature availability');
 workerLog('worker: --');
 //
 
-// Configure audio source
+// Configure input select
 if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
-	workerLog('worker: Source select (available)');
-	$audioSource = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
-	workerLog('worker: Source select (source: ' . $audioSource . ')');
-	$audio_output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$_SESSION['cardnum']] :
+	workerLog('worker: Input select (available)');
+	$input = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
+	workerLog('worker: Input (' . $input . ')');
+	$output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$_SESSION['cardnum']] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
-	workerLog('worker: Source select (output: ' . $audio_output . ')');
+	workerLog('worker: Output (' . $output . ')');
 
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
 		setAudioIn($_SESSION['audioin']);
 	} else {
-		// Reset saved MPD volume
-		phpSession('write', 'volknob_mpd', '0');
+		phpSession('write', 'volknob_mpd', '0'); // Reset saved MPD volume
 	}
 } else {
-	workerLog('worker: Source select (n/a)');
+	workerLog('worker: Input select (n/a)');
 }
 
 // Start bluetooth controller and pairing agent
@@ -864,6 +864,28 @@ if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] 
 	workerLog('worker: Stream recorder (n/a)');
 }
 
+// TEST
+// HTTPS-Only mode
+if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
+	if (!isset($_SESSION['nginx_https_only'])) {
+		$_SESSION['nginx_https_only'] = '0'; // Initially Off
+	}
+
+	if ($_SESSION['nginx_https_only'] == '1') {
+		$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
+		$CN = trim(sysCmd($cmd)[0]);
+		if ($CN != $_SESSION['hostname'] . '.local') {
+			sysCmd('/var/www/util/gen-cert.sh');
+			workerLog('worker: New cert created for ' . $_SESSION['hostname']);
+		}
+	}
+
+	$msg = $_SESSION['nginx_https_only'] == '0' ? 'Off' : 'On';
+	workerLog('worker: HTTPS-Only mode (available: ' . $msg . ')');
+} else {
+	workerLog('worker: HTTPS-Only mode (n/a)');
+}
+
 //
 workerLog('worker: --');
 workerLog('worker: -- Other');
@@ -947,9 +969,9 @@ if ($_SESSION['autoplay'] == '1') {
 // Start LocalUI
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
-	workerLog('worker: LocalUI started');
 }
-workerLog('worker: CoverView toggle (' . $_SESSION['toggle_coverview'] . ')');
+workerLog('worker: LocalUI (' . ($_SESSION['localui'] == '1' ? 'On' : 'Off') . ')');
+workerLog('worker: CoverView toggle (' . ($_SESSION['toggle_coverview'] == '-on' ? 'On' : 'Off') . ')');
 // On-screen keyboard
 if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';
@@ -957,14 +979,20 @@ if (!isset($_SESSION['on_screen_kbd'])) {
 workerLog('worker: On-screen keyboard (' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'Off' : 'On') . ')');
 
 // TRX Config advanced options toggle
-$_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';
-$_SESSION['rx_adv_toggle'] = 'Advanced (&plus;)';
+$_SESSION['tx_adv_toggle'] = 'Show';
+$_SESSION['rx_adv_toggle'] = 'Show';
 
 // Library scope
 if (!isset($_SESSION['lib_scope'])) {
 	$_SESSION['lib_scope'] = 'all';
 }
 workerLog('worker: Library scope (' . $_SESSION['lib_scope'] . ')');
+
+// Reset view to Playback
+workerLog('worker: View reset to playback');
+$view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' . $_SESSION['current_view'] : $_SESSION['current_view'];
+phpSession('write', 'current_view', $view);
+sendEngCmd('refresh_screen');
 
 //
 // Globals section
@@ -1202,7 +1230,7 @@ function chkMaintenance() {
 function chkBtActive() {
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='inpactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
-		return; // Bail if input source is active
+		return; // Bail if Input is active
 	}
 
 	$result = sysCmd('pgrep -l bluealsa-aplay');
@@ -1707,7 +1735,10 @@ function updaterAutoCheck($validIPAddress) {
 			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
-			if ($available['Date'] == $thisReleaseDate) {
+			if (false === ($availableDate = strtotime($available['Date'])) ||
+				false === ($thisDate = strtotime($thisReleaseDate))) {
+				$msg = 'Date error comparing This: ' . $thisReleaseDate . ' and Available: ' . $available['Date'];
+			} else if ($availableDate <= $thisDate) {
 				$msg = 'Software is up to date';
 			} else {
 				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
@@ -1818,6 +1849,12 @@ function runQueuedJob() {
 			clearLibCacheAll();
 			sourceCfg($_SESSION['w_queueargs']);
 			break;
+		case 'fs_mountmon':
+			sysCmd('killall -s 9 mountmon.php');
+			if ($_SESSION['w_queueargs'] == 'On') {
+				sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
+			}
+			break;
 		case 'regen_library':
 			clearLibCacheAll();
 			$sock = openMpdSock('localhost', 6600);
@@ -1837,7 +1874,12 @@ function runQueuedJob() {
 			sysCmd('mkdir ' . THMCACHE_DIR);
 			sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 			break;
-
+		case 'cuefiles_ignore':
+			setCuefilesIgnore($_SESSION['w_queueargs']);
+			clearLibCacheAll();
+			sysCmd('mpc stop');
+			sysCmd('systemctl restart mpd');
+			break;
 		// mpd-config jobs
 		case 'mpdrestart':
 			sysCmd('mpc stop');
@@ -2088,13 +2130,6 @@ function runQueuedJob() {
 				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 			}
 			break;
-		case 'btmulti':
-			if ($_SESSION['btmulti'] == 1) {
-				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=btaplay_dmix' /etc/bluealsaaplay.conf");
-			} else {
-				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_SESSION['alsa_output_mode'] . ":" . $_SESSION['cardnum'] . ",0' /etc/bluealsaaplay.conf");
-			}
-			break;
 		case 'airplaysvc':
 			stopAirPlay();
 			if ($_SESSION['airplaysvc'] == 1) {
@@ -2317,6 +2352,10 @@ function runQueuedJob() {
 				sysCmd('systemctl enable udisks2');
 			}
 			break;
+		case 'usbboot':
+			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // Remove first to prevent duplicate adds
+			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
+			break;
 		case 'p3wifi':
 			ctlWifi($_SESSION['w_queueargs']);
 			break;
@@ -2340,9 +2379,13 @@ function runQueuedJob() {
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
 			break;
-		case 'usbboot':
-			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // Remove first to prevent duplicate adds
-			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
+		// TEST
+		case 'nginx_https_only':
+			if ($_SESSION['w_queueargs'] == '0') {
+				sysCmd("sed -i 's/return 301/#return 301/' /etc/nginx/nginx.conf");
+			} else {
+				sysCmd("sed -i 's/#return 301/return 301/' /etc/nginx/nginx.conf");
+			}
 			break;
 		case 'localui':
 			if ($_SESSION['w_queueargs'] == '1') {
@@ -2362,7 +2405,6 @@ function runQueuedJob() {
 				sysCmd('systemctl daemon-reload');
 				stopLocalUI();
 				startLocalUI();
-
 			}
 			break;
 		case 'scnblank':
@@ -2433,12 +2475,14 @@ function runQueuedJob() {
 				sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-server');
 			}
 			break;
+		/* Moved to lib-config section
 		case 'fs_mountmon':
 			sysCmd('killall -s 9 mountmon.php');
 			if ($_SESSION['w_queueargs'] == 'On') {
 				sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 			}
 			break;
+		*/
 		case 'keyboard':
 			sysCmd('/var/www/util/sysutil.sh set-keyboard ' . $_SESSION['w_queueargs']);
 			break;

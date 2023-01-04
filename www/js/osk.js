@@ -272,7 +272,7 @@ function keyPress(aEvent) {
             break;
 
         default:
-            var thisText = OSK.LAYOUTS[OSK.layoutNdx][OSK.shiftMode][1 * this.getAttribute('oskrow')][1 * this.getAttribute('oskcol')];
+            var thisText = OSK.keySpace == this ? ' ' : OSK.LAYOUTS[OSK.layoutNdx][OSK.shiftMode][1 * this.getAttribute('oskrow')][1 * this.getAttribute('oskcol')];
             if (isNumeric) {
                 numVal = 1 * ("" + OSK.linkedInput.value + thisText);
                 if (numVal > maxVal) { numVal = maxVal; }
@@ -317,8 +317,9 @@ function addKey(aIdR, aIdC, classes, text) {
 
 function acquireContainerToShrink() {
     if (!OSK.containerToShrink) {
-        for (var aContainer of document.querySelectorAll(".modal-body, .container2")) {
-            if (aContainer.classList.contains("container2")) {
+        // TODO: Test .container shrink. It may not be needed or it may need to be #container
+        for (var aContainer of document.querySelectorAll(".modal-body, .container")) {
+            if (aContainer.classList.contains("container")) {
                 OSK.containerToShrink = { type: "lonely", tag: aContainer, originalHeight: "", shrunk: false };
                 break;
             }

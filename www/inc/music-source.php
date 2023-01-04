@@ -159,11 +159,11 @@ function sourceMount($action, $id = '', $log = '') {
 			break;
 		case 'unmount':
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
-			if (mountExists($mp['name'])) {
-				if ($mp['type'] == 'cifs') {
-					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // -l (lazy) -f (force)
+			if (mountExists($mp[0]['name'])) {
+				if ($mp[0]['type'] == 'cifs') {
+					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // -l (lazy) -f (force)
 				} else {
-					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
+					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"');
 				}
 			}
 			$return = true;

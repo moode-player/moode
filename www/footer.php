@@ -22,29 +22,30 @@
  */
 -->
 <!-- ABOUT -->
-<div id="about-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
+<div id="about-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<p id="moode-logo-text">m<span id="moode-logo-text-oo">oO</span>de<span id="moode-logo-text-tm">™</span></p>
+	</div>
 	<div class="modal-body">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<p style="text-align:center;font-size:40px;font-weight:500;letter-spacing:-2px;margin-top:2px">m<span style="color:#d35400;line-height:12px">oO</span>de<span style="font-size:12px;position:relative;top:-15px;left:-3px;">™</span></p>
-			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
-			<h4>Release Information</h4>
-			<ul>
-				<li>Release: 8.2.3 2022-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
-				<li>Maintainer: Tim Curtis &copy; 2014</li>
-				<li>Documentation: <a class="moode-about-link" href="./relnotes.txt" target="_blank">View release notes,</a>&nbsp<a class="moode-about-link" href="./setup.txt" target="_blank">View setup guide</a></li>
-				<li>Contributors: <a class="moode-about-link" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
-				<li>License: <a class="moode-about-link" href="./COPYING.html" target="_blank">View GPLv3</a></li>
-			</ul>
 		<p>
-			<h4>Platform Information</h4>
-			<ul>
-				<li>RaspiOS: <span id="sys-raspbian-ver"></span></li>
-				<li>Linux kernel: <span id="sys-kernel-ver"></span></li>
-				<li>Platform: <span id="sys-hardware-rev"></span></li>
-				<li>Architecture: <span id="sys-processor-arch"></span></li>
-				<li>MPD version: <span id="sys-mpd-ver"></span></li>
-			</ul>
+			Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.
 		</p>
+		<h5>Release Information</h5>
+		<ul>
+			<li>Release: 8.2.4 2022-12-27</li> <!-- NOTE: getMoodeRel() parses this  -->
+			<li>Maintainer: Tim Curtis &copy; 2014</li>
+			<li>Documentation: <a class="moode-about-link" href="./relnotes.txt" target="_blank">View release notes,</a>&nbsp<a class="moode-about-link" href="./setup.txt" target="_blank">View setup guide</a></li>
+			<li>Contributors: <a class="moode-about-link" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
+			<li>License: <a class="moode-about-link" href="./COPYING.html" target="_blank">View GPLv3</a></li>
+		</ul>
+		<h5>Platform Information</h5>
+		<ul>
+			<li>RaspiOS: <span id="sys-raspbian-ver"></span></li>
+			<li>Linux kernel: <span id="sys-kernel-ver"></span></li>
+			<li>Platform: <span id="sys-hardware-rev"></span></li>
+			<li>Architecture: <span id="sys-processor-arch"></span></li>
+			<li>MPD version: <span id="sys-mpd-ver"></span></li>
+		</ul>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -52,9 +53,8 @@
 </div>
 
 <!-- CONFIGURE -->
-<div id="configure-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="configure-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="configure-modal-label">Configuration settings</h3>
 	</div>
 	<div class="modal-body">
@@ -74,21 +74,19 @@
 					<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fas fa-alarm-clock"></i><br>Clock radio</a></li>
 				<?php } ?>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) { ?>
-					<li><a href="inp-config.php" class="btn btn-large"><i class="far fa-scrubber"></i><br>Input source</a></li>
+					<li><a href="inp-config.php" class="btn btn-large"><i class="far fa-scrubber"></i><br>Input select</a></li>
 				<?php } ?>
 			</ul>
 		</div>
 	</div>
-
 	<div class="modal-footer">
 		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- PLAYERS -->
-<div id="players-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="players-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="players-modal-label">Players</h3>
 	</div>
 	<div class="modal-body">
@@ -99,9 +97,8 @@
 </div>
 
 <!-- AUDIO INFO -->
-<div id="audioinfo-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="audioinfo-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="audioinfo-modal-label">Audio information</h3>
 	</div>
 	<div class="modal-body">
@@ -112,9 +109,8 @@
 </div>
 
 <!-- SYSTEM INFO -->
-<div id="sysinfo-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="sysinfo-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="sysinfo-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="sysinfo-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="sysinfo-modal-label">System information</h3>
 	</div>
 	<div class="modal-body">
@@ -125,9 +121,8 @@
 </div>
 
 <!-- QUICK HELP -->
-<div id="quickhelp-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="help-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="quickhelp-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="help-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="help-modal-label">Quick Help</h3>
 	</div>
 	<div class="modal-body">
@@ -139,9 +134,8 @@
 </div>
 
 <!-- POWER -->
-<div id="power-modal" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="power-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="power-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="power-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="power-modal-label">Power Options</h3>
 	</div>
 	<div class="modal-body">

@@ -64,13 +64,16 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nThrottled text\t\t= $THROTTLED_TEXT\c"
 	echo -e "\n\c"
 	echo -e "\nCPU governor\t\t= $GOV\c"
+	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
 	echo -e "\nOnboard WiFi\t\t= $piwifi\c"
 	echo -e "\nOnboard BT\t\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
 	echo -e "\nLED state\t\t= $led_state\c"
 	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
 	echo -e "\nEthernet check\t\t= $eth0chk\c"
-	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
+	if [ $(($feat_bitmask & $FEAT_HTTPS)) -ne 0 ]; then
+		echo -e "\nHTTPS-Only mode\t\t= $HTTPS_ONLY\c"
+	fi
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
 	echo -e "\n\c"
 	echo -e "\nSMB file sharing\t= $fs_smb\c"
@@ -229,11 +232,11 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nTimed display\t= $scnsaver_timeout\c"
+	echo -e "\nTimed display\t\t= $scnsaver_timeout\c"
 	echo -e "\nAutomatic display\t= $toggle_coverview\c"
 	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
-	echo -e "\nLayout\t\t= $scnsaver_layout\c"
+	echo -e "\nLayout\t\t\t= $scnsaver_layout\c"
 	echo -e "\nExtra metadata\t\t= $scnsaver_xmeta\n"
 }
 
@@ -295,7 +298,6 @@ RENDERER_SETTINGS() {
 		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
 		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER\c"
 		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
-		echo -e "\nSpeaker sharing\t\t= $btmulti\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
 		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\n"
 	fi
@@ -388,6 +390,7 @@ MOODE_LOG() {
 #
 
 # Features availability bitmask
+FEAT_HTTPS=1
 FEAT_AIRPLAY=2
 FEAT_MINIDLNA=4
 FEAT_RECORDER=8
@@ -450,6 +453,10 @@ fi
 if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
+
+TMP=$(moodeutl -d | grep nginx_https_only | cut -d"|" -f2)
+[[ "$TMP" = "1" ]] && HTTPS_ONLY="On" || HTTPS_ONLY="Off"
+
 TMP="$(lsblk -o size -nb /dev/disk/by-label/rootfs)"
 if [[ $TMP -gt $DEV_ROOTFS_SIZE ]]; then
 	FSEXPAND="expanded"
@@ -703,7 +710,7 @@ fi
 cardnum=${arr[76]}
 [[ "${arr[77]}" = "1" ]] && btsvc="On" || btsvc="Off"
 btname=${arr[78]}
-[[ "${arr[79]}" = "1" ]] && btmulti="Yes" || btmulti="No"
+RESERVED_80=${arr[79]}
 feat_bitmask=${arr[80]}
 if [[ "${arr[81]}" = "604800000" ]]; then
 	library_recently_added="1 Week"

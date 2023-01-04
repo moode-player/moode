@@ -28,7 +28,7 @@ require_once __DIR__ . '/inc/cdsp.php';
 
 phpSession('open');
 
-// Submitted actions
+// Controller commands
 if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
 	$cmd = $_POST['btcmd'];
 	sleep(1);
@@ -37,18 +37,15 @@ if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
 		$result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
 		sleep(1);
 		$cmd = '-p';
-	}
-	elseif ($cmd == '-D') {
+	} else if ($cmd == '-D') {
 		$result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
 		sleep(1);
 		$cmd = '-c';
 	}
-}
-else {
+} else {
 	if ($_SESSION['btsvc'] == '1') {
 		$cmd = ($_SESSION['btactive'] == '1' || $_SESSION['audioout'] == 'Bluetooth') ? '-c' : '-p';
-	}
-	else {
+	} else {
 		$cmd = '-H';
 	}
 }
@@ -69,35 +66,28 @@ if (isset($_POST['rm_paired_device']) && $_POST['rm_paired_device'] == '1') {
 
 // Connect to device
 if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
-	// Update MAC address
-	if ($_POST['audioout'] == 'Bluetooth') {
+	if ($_POST['audioout'] == 'Bluetooth') { // Update MAC address
 		sysCmd("sed -i '/device/c\device \"" . $_POST['paired_device'] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 	}
-	// Update MPD output
 	phpSession('write', 'audioout', $_POST['audioout']);
-	// Connect device
 	sysCmd('/var/www/util/blu-control.sh -C ' . '"' . $_POST['paired_device'] . '"');
 	$cmd = '-c';
 	sleep(1);
 	setAudioOut($_POST['audioout']);
 }
 
-// Change MPD audio output
+// Change audio destination
 if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
-	// Change to Bluetooth out, update MAC address
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
+		// Change to Bluetooth out, update MAC address
 		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
 		sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
-		// Update MPD output
 		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
-	}
-	// Change to local out, disconnect device
-	else {
-		// Update MPD output
+	} else {
+		// Change to local out, disconnect device
 		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
-		// Disconnect
 		sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
 		$cmd = '-p';
 		sleep(1);
@@ -106,11 +96,9 @@ if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']
 
 // Disconnect device
 if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
-	// Update MPD output
 	$audioout = $_SESSION['audioout'] == 'Bluetooth' ? 'Local' : $_SESSION['audioout'];
 	phpSession('write', 'audioout', $audioout);
 	setAudioOut($audioout);
-	// Disconnect
 	sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
 	$cmd = '-p';
 	sleep(1);
@@ -126,46 +114,41 @@ if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 phpSession('close');
 
 // Command list
-$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Default)</option>\n";
-$_cmd['btcmd'] .= "<option value=\"-S\" " . (($cmd == '-S') ? "selected" : "") . ">SCAN (Include LE devices)</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Standard)</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-S\" " . (($cmd == '-S') ? "selected" : "") . ">SCAN (Plus LE devices)</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-p\" " . (($cmd == '-p') ? "selected" : "") . ">LIST paired</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-c\" " . (($cmd == '-c') ? "selected" : "") . ">LIST connected</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-l\" " . (($cmd == '-l') ? "selected" : "") . ">LIST trusted</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-D\" " . (($cmd == '-D') ? "selected" : "") . ">DISCONNECT all</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-R\" " . (($cmd == '-R') ? "selected" : "") . ">REMOVE all devices</option>\n";
-//$_cmd['btcmd'] .= "<option value=\"-i\" " . (($cmd == '-i') ? "selected" : "") . ">INITIALIZE controller</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-H\" " . (($cmd == '-H') ? "selected" : "") . ">HELP</option>\n";
 
 // Initial control states
 $_hide_ctl['paired_device'] = 'hide';
 $_hide_ctl['connected_device'] = 'hide';
 $_hide_ctl['scanned_device'] = 'hide';
-//$_hide_ctl['chg_audioout'] = $cmd == '-c' ? '' : 'hide';
 $_bt_disabled = $_SESSION['btsvc'] == '1' ? '' : 'disabled';
-$_bt_msg_hide = $_SESSION['btsvc'] == '1' ? 'hide' : '';
-$_ao_msg_hide = ($cmd == '-p' || $cmd == '-c') ? '' : 'hide';
+
+if ($cmd == '-p' || $cmd == '-c') {
+	$_ao_msg_hide = '';
+	$_ao_msg_margin = 'config-help-no-margin';
+} else {
+	$_ao_msg_hide = 'hide';
+	$_ao_msg_margin = '';
+}
 
 // Run the cmd
 $result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
-if ($cmd == '-i') {
-	// Remove ansi color codes and fix formatting in the output of -i
-	$result = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $result);
-	$result = str_replace('Waiting to connect to bluetoothd...', 'Waiting to connect to bluetoothd...<br>', $result);
-}
 
 // Format output for HTML
-if ($cmd == '-H' || $cmd == '-i') {
-	for ($i = 0; $i < count($result); $i++) {
-		$_cmd_output .= $result[$i] . "<br>";
-	}
-}
-else {
+if ($cmd == '-H') {
+	$_cmd_output = 'Turn Bluetooth on in Renderers then select a command to submit to the controller<br>';
+} else {
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {
 			if (stripos($result[$i], 'Trust expires') !== false) {
 				$_cmd_output .= $result[$i] . '<br>**<br>';
-			}
-			else {
+			} else {
 				$_cmd_output .= '** ' . substr($result[$i], 21) . '<br>';
 			}
 		}
@@ -174,8 +157,8 @@ else {
 $_cmd_output = empty($_cmd_output) ? 'No devices' : $_cmd_output;
 
 // Audio output
-$_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">MPD Audio output -> Local</option>\n";
-$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">MPD Audio output -> Bluetooth</option>\n";
+$_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local audio</option>\n";
+$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth speaker</option>\n";
 
 // Provide a select for removing, disconnecting, pairing or connecting a device
 $cmd_array = array('-p', '-c', '-l', '-s', '-S');

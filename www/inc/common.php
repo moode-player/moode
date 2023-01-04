@@ -66,8 +66,8 @@ const THM_SM_Q = 75;
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
-const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
+// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97206' WHERE param='feat_bitmask'"
+const FEAT_HTTPS		= 1;		//   HTTPS-Only mode
 const FEAT_AIRPLAY		= 2;		// y AirPlay renderer
 const FEAT_MINIDLNA 	= 4;		// y DLNA server
 const FEAT_RECORDER		= 8; 		//   Stream recorder
@@ -85,7 +85,7 @@ const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
-//						  97207
+//						  97206
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate
@@ -167,7 +167,7 @@ function echoTemplate($template) {
 function sendEngCmd ($cmd) {
 	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
 		// This case is ok and occurs if UI has never been started
-		workerLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
+		debugLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
 	} else {
 		// Retry until UI connects or retry limit reached
 		$retry_limit = 4;
@@ -418,17 +418,17 @@ function storeBackLink($section, $tpl) {
 
 	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config', 'ren-config');
 	$tplConfigs = array(
-		'apl-config.html'	=> '/ren-config.php#airplay',
-		'bkp-config.html'	=> '/sys-config.php#system-maint',
-		'cdsp-config.html' 	=> '/snd-config.php#equalizers',
+		'apl-config.html'	=> '/ren-config.php',
+		'bkp-config.html'	=> '/sys-config.php',
+		'cdsp-config.html' 	=> '/snd-config.php',
 		'cdsp-configeditor.html' => '/cdsp-config.php',
-		'eqg-config.html'	=> '/snd-config.php#equalizers',
-		'eqp-config.html'	=> '/snd-config.php#equalizers',
-		'gpio-config.html'	=> '/sys-config.php#local-services',
-		'spo-config.html' 	=> '/ren-config.php#spotify',
-		'sqe-config.html'	=> '/ren-config.php#squeezelite',
+		'eqg-config.html'	=> '/snd-config.php',
+		'eqp-config.html'	=> '/snd-config.php',
+		'gpio-config.html'	=> '/sys-config.php',
+		'spo-config.html' 	=> '/ren-config.php',
+		'sqe-config.html'	=> '/ren-config.php',
 		'src-config.html'	=> '/lib-config.php',
-		'upp-config.html' 	=> '/ren-config.php#upnp-dlna'
+		'upp-config.html' 	=> '/ren-config.php'
 	);
 
 	phpSession('open');
@@ -456,6 +456,8 @@ function storeBackLink($section, $tpl) {
 
 // Used for 2 levels back: cdsp-configeditor -> cdsp-config -> /index.php
 function setAltBackLink() {
+	phpSession('open');
+
 	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 
 	// NOTE: $_SESSION['alt_back_link'] is reset to '' in /index.php
@@ -466,4 +468,6 @@ function setAltBackLink() {
 			$_SESSION['alt_back_link'] = '/snd-config.php#equalizers';
 		}
 	}
+
+	phpSession('close');
 }

@@ -104,7 +104,6 @@
 		<!--removeIf(NOCONFIGSECTION)-->
 		<!-- build:js js/config.min.js defer -->
 		<!-- CONFIGBLOCKSECTION_BEGIN -->
-        <script src="js/custom_checkbox_and_radio.js" defer></script>
         <script src="js/custom_radio.js" defer></script>
         <script src="js/jquery.tagsinput.js" defer></script>
         <script src="js/jquery.placeholder.js" defer></script>
@@ -146,7 +145,6 @@
 	<!-- ALBUM COVER BACKDROP -->
 	<div aria-label="Album Cover Backdrop" id="cover-backdrop"></div>
 	<div id="context-backdrop"></div>
-    <div id="landscape-backdrop"><div>Landscape mode not supported</div></div>
 	<div id="splash"><div>moOde</div></div>
 
     <!-- INPUT SOURCE INDICATOR -->
@@ -160,7 +158,7 @@
 		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
 
 		<div id="config-back">
-			<a aria-label="Back" href="<?php echo $_SESSION['config_back_link'] ?>"><i class="far fa-arrow-left"></i></a>
+			<a aria-label="Back" href="<?php echo $_SESSION['config_back_link'] ?>"><i class="far fa-angle-left"></i></a>
 		</div>
 
 		<div id="config-tabs" class="viewswitch-cfgs hide">
@@ -208,7 +206,7 @@
 					<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fas fa-edit sx"></i> Preferences</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fas fa-sync sx"></i> Update library</a></li>
-					<li><a href="blu-config.php"><i class="fas fa-wifi sx"></i> Bluetooth</a></li>
+					<li id="bluetooth-hide"><a href="blu-config.php"><i class="fas fa-wifi sx"></i> Bluetooth</a></li>
 					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fas fa-forward sx"></i> Players</a></li>
                     <li><a href="javascript:audioPlayback()"><i class="fas fa-music sx"></i> Audio info</a></li>
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fas fa-book sx"></i> Play history</a></li>
@@ -244,7 +242,7 @@
 			</div>
             <div id="playbar-title">
 				<div id="playbar-currentsong"></div>
-                <div>
+                <div id="playbar-title-line-2">
                     <span id="playbar-currentalbum"></span>
                     <span id="playbar-hd-badge"></span>
                 </div>

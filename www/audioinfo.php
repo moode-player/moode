@@ -35,7 +35,7 @@ $cardNum = $_SESSION['multiroom_tx'] == 'On' ? array_search('Dummy', getAlsaCard
 $hwParams = getAlsaHwParams($cardNum);
 
 // Cfg_mpd settings
-$cfgMpd = getCfgMpd($dbh);
+$cfgMPD = getCfgMpd($dbh);
 
 // Bluetooth active
 $result = sysCmd('pgrep -l bluealsa-aplay');
@@ -87,7 +87,7 @@ if ($_SESSION['aplactive'] == '1') {
 		// DSD: Native bitstream, DoP or DSD to PMC on-the-fly conversion
 		if ($mpdStatus['audio_sample_depth'] == 'dsd64') {
 			$_encoded_at = 'DSD64, 1 bit, 2.822 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
+			if ($cfgMPD['dop'] == 'yes') {
 				$_decoded_to = 'DoP 24 bit 176.4 kHz, Stereo';
 				$_decode_rate = '8.467 Mbps';
 			} else if ($hwParams['format'] == 'DSD bitstream') {
@@ -99,7 +99,7 @@ if ($_SESSION['aplactive'] == '1') {
 			}
 		} else if ($mpdStatus['audio_sample_depth'] == 'dsd128') {
 			$_encoded_at = 'DSD128, 1 bit, 5.644 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
+			if ($cfgMPD['dop'] == 'yes') {
 				$_decoded_to = 'DoP 24 bit 352.8 kHz, Stereo';
 				$_decode_rate = '16.934 Mbps';
 			} else if ($hwParams['format'] == 'DSD bitstream') {
@@ -111,7 +111,7 @@ if ($_SESSION['aplactive'] == '1') {
 			}
 		} else if ($mpdStatus['audio_sample_depth'] == 'dsd256') {
 			$_encoded_at = 'DSD256, 1 bit, 11.288 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
+			if ($cfgMPD['dop'] == 'yes') {
 				$_decoded_to = 'DoP 24 bit 705.6 kHz, Stereo';
 				$_decode_rate = '33.868 Mbps';
 			} else if ($hwParams['format'] == 'DSD bitstream') {
@@ -123,7 +123,7 @@ if ($_SESSION['aplactive'] == '1') {
 			}
 		} else if ($mpdStatus['audio_sample_depth'] == 'dsd512') {
 			$_encoded_at = 'DSD512, 1 bit, 22.576 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
+			if ($cfgMPD['dop'] == 'yes') {
 				$_decoded_to = 'DoP 24 bit 1.411 MHz, Stereo';
 				$_decode_rate = '67.736 Mbps';
 			} else if ($hwParams['format'] == 'DSD bitstream') {
@@ -136,7 +136,7 @@ if ($_SESSION['aplactive'] == '1') {
 		}
 		else if ($mpdStatus['audio_sample_depth'] == 'dsd1024') {
 			$_encoded_at = 'DSD1024, 1 bit, 45.152 Mbps Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
+			if ($cfgMPD['dop'] == 'yes') {
 				$_decoded_to = 'DoP 24 bit 2.822 MHz, Stereo';
 				$_decode_rate = '135.472 Mbps';
 			}
@@ -275,30 +275,30 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 } else {
 	// MPD
 	// Resampling
-	if ($cfgMpd['audio_output_format'] == 'disabled') {
+	if ($cfgMPD['audio_output_format'] == 'disabled') {
 		$_resample_rate = 'Off';
 		$_selective_resample = 'Off';
 		$_resample_quality = 'Off';
 	} else {
-		$_resample_rate = $cfgMpd['audio_output_depth'] . ' bit, ' . $cfgMpd['audio_output_rate'] . ' kHz, ' . $cfgMpd['audio_output_chan'];
+		$_resample_rate = $cfgMPD['audio_output_depth'] . ' bit, ' . $cfgMPD['audio_output_rate'] . ' kHz, ' . $cfgMPD['audio_output_chan'];
 		$resample_modes = array('0' => 'disabled',
-			SOX_UPSAMPLE_ALL => 'source < target rate',
-			SOX_UPSAMPLE_ONLY_41K => 'only 44.1K source rate',
-			SOX_UPSAMPLE_ONLY_4148K => 'only 44.1K and 48K source rates',
-			SOX_ADHERE_BASE_FREQ => 'resample (adhere to base freq)',
-			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'source < target rate (adhere to base freq)'
+			SOX_UPSAMPLE_ALL => 'Source < target rate',
+			SOX_UPSAMPLE_ONLY_41K => 'Only 44.1K source rate',
+			SOX_UPSAMPLE_ONLY_4148K => 'Only 44.1K and 48K source rates',
+			SOX_ADHERE_BASE_FREQ => 'Resample (adhere to base freq)',
+			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'Source < target rate (adhere to base freq)'
 		);
-		$_selective_resampling_hide = '';
-		$_selective_resample = $resample_modes[$cfgMpd['selective_resample_mode']];
-		$_resample_quality = $cfgMpd['sox_quality'];
-		if ($cfgMpd['sox_quality'] == 'custom') {
+		$_selective_resampling_hide = ''; // <!-- This is ment to control visibility of the feature in case MPD no longer supports the patch -->
+		$_selective_resample = $resample_modes[$cfgMPD['selective_resample_mode']];
+		$_resample_quality = $cfgMPD['sox_quality'];
+		if ($cfgMPD['sox_quality'] == 'custom') {
 			$_resample_quality .= ' [' .
-			'p=' . $cfgMpd['sox_precision'] .
-			' | r=' . $cfgMpd['sox_phase_response'] .
-			' | e=' . $cfgMpd['sox_passband_end'] .
-			' | b=' . $cfgMpd['sox_stopband_begin'] .
-			' | a=' . $cfgMpd['sox_attenuation'] .
-			' | f=' . $cfgMpd['sox_flags'] . ']';
+			'p=' . $cfgMPD['sox_precision'] .
+			' | r=' . $cfgMPD['sox_phase_response'] .
+			' | e=' . $cfgMPD['sox_passband_end'] .
+			' | b=' . $cfgMPD['sox_stopband_begin'] .
+			' | a=' . $cfgMPD['sox_attenuation'] .
+			' | f=' . $cfgMPD['sox_flags'] . ']';
 		}
 	}
 	// Polarity inversion
@@ -318,8 +318,8 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 	$_geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
     $_camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);
 	// Replaygain and volume normalization
-	$_replaygain = $cfgMpd['replaygain'];
-	$_vol_normalize = $cfgMpd['volume_normalization'] == 'no' ? 'off' : $cfgMpd['volume_normalization'];
+	$_replaygain = $cfgMPD['replaygain'];
+	$_vol_normalize = $cfgMPD['volume_normalization'] == 'no' ? 'off' : $cfgMPD['volume_normalization'];
 }
 // Chip options
 $result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
@@ -415,8 +415,7 @@ function getCfgMpd($dbh) {
 	 	$array['audio_output_rate'] = '';
 	 	$array['audio_output_depth'] = '';
 	 	$array['audio_output_chan'] = '';
-	}
-	else {
+	} else {
 	 	$format = explode(":", $array['audio_output_format']);
 	 	$array['audio_output_rate'] = formatRate($format[0]);
 	 	$array['audio_output_depth'] = $format[1];

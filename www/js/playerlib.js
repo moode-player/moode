@@ -21,7 +21,7 @@
  */
 
 // Features availability bitmask
-const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
+const FEAT_HTTPS        = 1;        //   HTTPS-Only mode
 const FEAT_AIRPLAY      = 2;        // y AirPlay renderer
 const FEAT_MINIDLNA     = 4;        // y DLNA server
 const FEAT_RECORDER     = 8;        //   Stream recorder
@@ -39,7 +39,7 @@ const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
-//						  97207
+//						  97206
 
 // For setTimout() in milliseconds
 const DEFAULT_TIMEOUT   = 250;
@@ -144,7 +144,8 @@ var GLOBAL = {
     busySpinnerSVG: "<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg>",
     thisClientIP: '',
     chromium: false,
-    ssClockIntervalID: ''
+    ssClockIntervalID: '',
+    reconnecting: false
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
 
@@ -306,8 +307,14 @@ function engineMpd() {
 				// JSON parse errors @ohinckel https: //github.com/moode-player/moode/pull/14/files
 				if (typeof(MPD.json['error']) == 'object') {
                     var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
-                    // This particular EOF error occurs when client is simply trying to reconnect
-                    if (MPD.json['error']['message'] != 'JSON Parse error: Unexpected EOF') {
+                    // These particular errors occur when front-end is simply trying to reconnect
+                    if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
+                        MPD.json['error']['message'] == 'Unexpected end of JSON input') {
+                        if (!GLOBAL.reconnecting) {
+                            notify('reconnect', '', 'infinite');
+                            GLOBAL.reconnecting = true;
+                        }
+                    } else {
                         notify('mpderror', MPD.json['error']['message'] + errorCode);
                     }
 				}
@@ -343,8 +350,10 @@ function engineMpd() {
                 if (data['statusText'] == 'error' && data['readyState'] == 0) {
 			        renderReconnect();
 				}
+
 				MPD.json['state'] = 'reconnect';
-				engineMpd();
+
+                engineMpd();
 			}, ENGINE_TIMEOUT);
 		}
     });
@@ -359,7 +368,7 @@ function engineMpdLite() {
 		async: true,
 		cache: false,
 		success: function(data) {
-			//debugLog('engineMpdLite(): success branch: data=(' + data + ')');
+			debugLog('engineMpdLite(): success branch: data=(' + data + ')');
 
 			// Always have valid json
 			try {
@@ -398,7 +407,22 @@ function engineMpdLite() {
         			        renderReconnect();
         				}
                     }
+
     				MPD.json['state'] = 'reconnect';
+
+                    if (typeof(MPD.json['error']) == 'object') {
+                        var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
+                        // These particular errors occur when front-end is simply trying to reconnect
+                        if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
+                            MPD.json['error']['message'] == 'Unexpected end of JSON input') {
+                            if (!GLOBAL.reconnecting) {
+                                notify('reconnect', '', 'infinite');
+                                GLOBAL.reconnecting = true;
+                            }
+                        } else {
+                            notify('mpderror', MPD.json['error']['message'] + errorCode);
+                        }
+    				}
 
 					engineMpdLite();
 				}, ENGINE_TIMEOUT);
@@ -415,8 +439,10 @@ function engineMpdLite() {
     			        renderReconnect();
     				}
                 }
+
 				MPD.json['state'] = 'reconnect';
-				engineMpdLite();
+
+                engineMpdLite();
 			}, ENGINE_TIMEOUT);
 		}
     });
@@ -439,42 +465,55 @@ function engineCmd() {
                 case 'inpactive1':
                 case 'inpactive0':
                     // NOTE: cmd[1] is the input source name
-                    inpSrcIndicator(cmd[0], cmd[1] +
+                    var inputSourceName = typeof(cmd[1]) == 'undefined' ? 'Undefined' : cmd[1];
+                    inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">' + inputSourceName +
                         ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
-                        '<br><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
+                        '</span><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
                     );
                     break;
                 case 'btactive1':
                 case 'btactive0':
-                    // NOTE: cmd[1] is the input source name
-                    inpSrcIndicator(cmd[0], 'Bluetooth Active' + cmd[1] + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
+                    // NOTE: cmd[1] contains the list of connected clients
+                    var connectedClients = typeof(cmd[1]) == 'undefined' ? 'Undefined' : cmd[1].replace(/;/g, ', ');
+                    inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Bluetooth Active: ' + connectedClients + '</span>' +
+                        '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    				inpSrcIndicator(cmd[0], 'AirPlay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">AirPlay Active</span>' +
+                        '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
+                        receiversBtn);
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Spotify Active</span>' +
+                        '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
+                        receiversBtn);
                     break;
                 case 'slactive1':
                 case 'slactive0':
-    				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><button class="btn turnoff-renderer" data-job="slsvc">turn off</button>');
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Squeezelite Active</span>' +
+                        '<button class="btn turnoff-renderer" data-job="slsvc">Turn off</button>');
                     break;
                 case 'rbactive1':
                 case 'rbactive0':
-    				inpSrcIndicator(cmd[0], 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">RoonBridge Active</span>' +
+                        '<button class="btn disconnect-renderer" data-job="rbrestart">Disconnect</button>');
                     break;
                 case 'rxactive1':
                 case 'rxactive0':
                     inpSrcIndicator(cmd[0],
-                        //'Multiroom Receiver Active: ' +
-                        //'<button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span><br>' +
-                        'Multiroom Receiver Active<br>' +
-                        '<button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br>' +
-                        '<a class="btn configure-renderer" href="trx-config.php">configure</a>'
+                        '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
+                        '<button class="btn turnoff-renderer" data-job="multiroom_rx">Turn off</button>' +
+                        '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>'
                     );
                     break;
                 case 'scnactive1':
@@ -502,7 +541,7 @@ function engineCmd() {
                     console.log(cmd[0]);
                     break;
                 default:
-                    console.log(cmd[0]);
+                    console.log('engineCmd(): ' + cmd[0]);
                     break;
             }
 
@@ -541,8 +580,13 @@ function engineCmdLite() {
                     // causing engine-cmd.php to start releasing idle connections
                     console.log(cmd[0]);
                     break;
+                case 'refresh_screen':
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, DEFAULT_TIMEOUT);
+                    break;
                 default:
-                    console.log(cmd[0]);
+                    console.log('engineCmdLite(): ' + cmd[0]);
                     break;
             }
 
@@ -696,7 +740,9 @@ function renderReconnect() {
 		$('#reconnect').show();
 	}
 
-	$('#countdown-display').countdown('pause');
+    if (GLOBAL.scriptSection == 'panels') {
+        $('#countdown-display').countdown('pause');
+    }
 
 	window.clearInterval(UI.knob);
 	UI.hideReconnect = true;
@@ -891,26 +937,28 @@ function renderUI() {
     	}
 
     	// Extra metadata displayed under the cover
+        // NOTE: #countdown-sample-rate is displayed in the countdown knob on Ultrawide 1920 x 540/480 displays
     	if (MPD.json['state'] === 'stop') {
     		$('#extra-tags-display, #ss-extra-metadata').html('Not playing');
+            $('#countdown-sample-rate, #songsand-sample-rate').text('')
     	} else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
             $('#extra-tags-display, #ss-extra-metadata').html('');
+            $('#countdown-sample-rate').text('')
         } else if (MPD.json['artist'] == 'Radio station') {
     		$('#extra-tags-display, #ss-extra-metadata').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
+            $('#countdown-sample-rate, #songsand-sample-rate').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bps'));
     	} else {
             var extraTagsDisplay = '';
             extraTagsDisplay = formatExtraTagsString();
             extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) :
                 $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
             $('#ss-extra-metadata').html(MPD.json['encoded']);
+            $('#countdown-sample-rate, #songsand-sample-rate').text(MPD.json['encoded']);
     	}
 
         // HD badge text
         var hdBadgeText = MPD.json['artist'] == 'Radio station' ? RADIO_HD_BADGE_TEXT : ALBUM_HD_BADGE_TEXT;
         $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(hdBadgeText);
-
-        // Multiple artists indicator
-        var moreArtistsEllipsis = parseInt(MPD.json['artist_count']) > 1 ? '...' : '';
 
         // Default metadata
         if (MPD.json['artist'] == 'Radio station') {
@@ -935,13 +983,11 @@ function renderUI() {
             $('#currentalbum-div').show();
             $('#currentalbum').html(MPD.json['album']);
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
-            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtistsEllipsis);
-            // Playbar
-            var textArtistTitle = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
- 			if ('' != textArtistTitle) {
- 				textArtistTitle += moreArtistsEllipsis + ' - ' + MPD.json['title'];
- 			}
- 			$('#playbar-currentsong, #ss-currentsong').html(textArtistTitle);
+            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']));
+            // Playbar and screen saver
+            var artist = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
+            var dash = (typeof(artist) == 'undefined' || artist == '') ? '' : ' - ';
+ 			$('#playbar-currentsong, #ss-currentsong').html(artist + dash + MPD.json['title']);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
 
@@ -953,7 +999,6 @@ function renderUI() {
                 $('#currentartist-div span.playback-hd-badge').hide();
                 $('#currentalbum-div span.playback-hd-badge').show();
             }
-
             $('#playbar-hd-badge, #ss-hd-badge').show();
         } else {
             $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
@@ -1039,40 +1084,52 @@ function renderUI() {
     	// Ensure renderer overlays get applied in case MPD UI updates get there first after browser refresh
         // Input source
     	if (SESSION.json['inpactive'] == '1') {
-    		inpSrcIndicator('inpactive1', SESSION.json['audioin'] + ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
-                '<br><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
+    		inpSrcIndicator('inpactive1',
+                '<span id="inpsrc-msg-text">' + SESSION.json['audioin'] +
+                ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
+                '</span><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
             );
     	}
     	// Bluetooth renderer
     	if (SESSION.json['btactive'] == '1') {
-    		inpSrcIndicator('btactive1', 'Bluetooth Active' + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
+    		inpSrcIndicator('btactive1',
+            '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
+            '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
      	}
     	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    		inpSrcIndicator('aplactive1', 'AirPlay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+    		inpSrcIndicator('aplactive1',
+            '<span id="inpsrc-msg-text">AirPlay Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
+            receiversBtn);
     	}
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-            inpSrcIndicator('spotactive1', 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
+            inpSrcIndicator('spotactive1',
+            '<span id="inpsrc-msg-text">Spotify Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
+            receiversBtn);
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
-    		inpSrcIndicator('slactive1', 'Squeezelite Active' + '<br><button class="btn disconnect-renderer" data-job="slsvc">turn off</button>');
+    		inpSrcIndicator('slactive1',
+            '<span id="inpsrc-msg-text">Squeezelite Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="slsvc">Turn off</button>');
     	}
         // RoonBridge renderer
     	if (SESSION.json['rbactive'] == '1') {
-    		inpSrcIndicator('rbactive1', 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
+    		inpSrcIndicator('rbactive1',
+            '<span id="inpsrc-msg-text">RoonBridge Active</span>' +
+            '<button class="btn disconnect-renderer" data-job="rbrestart">Disconnect</button>');
     	}
         // Multiroom receiver
     	if (SESSION.json['rxactive'] == '1') {
             inpSrcIndicator('rxactive1',
-                //'Multiroom Receiver Active: ' +
-                //'<button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span><br>' +
-                'Multiroom Receiver Active<br>' +
-                '<button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br>' +
-                '<a class="btn configure-renderer" href="trx-config.php">configure</a>'
+                '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
+                '<button class="btn turnoff-renderer" data-job="multiroom_rx">Turn off</button>' +
+                '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>'
             )
     	}
 
@@ -1428,6 +1485,10 @@ function renderFolderView(data, path, searchstr) {
 	element.innerHTML = '';
 
 	for (i = 0; i < data.length; i++) {
+		// chosing to have MPD ignore CUE parsing means that the folder contents will include them, so here we must ignore them too.
+		if (SESSION.json['cuefiles_ignore'] == '1' && data[i].file && data[i].file.endsWith('.cue')) {
+			continue;
+		}
     	if (data[i].directory) {
             var cueVirtualDir = false;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
@@ -1477,7 +1538,7 @@ function renderFolderView(data, path, searchstr) {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">';
     			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
-                output += data[i].Track + '</a></div>';
+                output += (data[i].Track ? data[i].Track : "•") + '</a></div>';
     			output += '<div class="db-entry db-song" data-toggle="context" data-target="#context-menu-folder-item"><div>';
                 output += data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span></div>';
     		}
@@ -2327,7 +2388,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-logoimage').val('');
                 $('#info-toggle-edit-logoimage').css('margin-left','60px');
                 $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + data['name'] + '.jpg">');
-                $('#edit-station-tags').css('margin-top', '30px');
+                $('#edit-station-tags').css('margin-top', '20px');
                 $('#edit-station-type span').text(getParamOrValue('param', data['type']));
                 $('#edit-station-genre').val(data['genre']);
                 $('#edit-station-broadcaster').val(data['broadcaster']);
@@ -2357,7 +2418,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-plcoverimage').val('');
                 $('#info-toggle-edit-plcoverimage').css('margin-left','60px');
                 $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + path + '.jpg">');
-                $('#edit-playlist-tags').css('margin-top', '2.5em');
+                $('#edit-playlist-tags').css('margin-top', '20px');
                 $('#edit-playlist-genre').val(data['genre']);
 
             	// Playlist items
@@ -2389,6 +2450,7 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'delete_pl_item':
             $('#move-playlist-item').hide();
+            $('#playlist-items-container').css('padding-top', '0');
             $('#playlist-items').css('margin-top', '3.5em');
     		$('#delete-playlist-item-begpos').attr('max', UI.dbEntry[4]); // Max value (num playlist items in list)
     		$('#delete-playlist-item-endpos').attr('max', UI.dbEntry[4]);
@@ -2399,6 +2461,7 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'move_pl_item':
             $('#delete-playlist-item').hide();
+            $('#playlist-items-container').css('padding-top', '0');
             $('#playlist-items').css('margin-top', '3.5em');
     		$('#move-playlist-item-begpos').attr('max', UI.dbEntry[4]);
     		$('#move-playlist-item-endpos').attr('max', UI.dbEntry[4]);
@@ -2441,10 +2504,11 @@ $(document).on('click', '.context-menu a', function(e) {
 
     		if ($(this).data('cmd') == 'setforclockradio-m') {
     			$('#clockradio-playname').val(SESSION.json['clkradio_name']);
+                $('#info-clockradio-playname').text(SESSION.json['clkradio_name']);
     			UI.dbEntry[0] = '-1'; // For update
-    		}
-    		else {
+    		} else {
     			$('#clockradio-playname').val(UI.dbEntry[5]); // Called from context menu
+                $('#info-clockradio-playname').text(UI.dbEntry[5]);
     		}
 
     		// Parse start and end values
@@ -2651,7 +2715,7 @@ $(document).on('click', '.context-menu a', function(e) {
         				$('#remove-bgimage').hide();
         				$('#choose-bgimage').show();
         				$('#current-bgimage').html('');
-        				$('#info-toggle-bgimage').css('margin-left','5px');
+        				$('#info-toggle-bgimage').css('margin-left','0');
         		    }
         		});
         		$('#cover-backdrop-enabled span').text(SESSION.json['cover_backdrop']);
@@ -3099,38 +3163,38 @@ $('#remove-bgimage').click(function(e) {
 		$('#remove-bgimage').hide();
 		$('#current-bgimage').html('');
 		$('#cover-backdrop').css('background-image','');
-		$('#info-toggle-bgimage').css('margin-left','5px');
+		$('#info-toggle-bgimage').css('margin-left','0');
         $.post('command/playback.php?cmd=remove_bg_image');
 		UI.bgImgChange = true;
 	}
     // So modal stays open
 	return false;
 });
-// Import bg image to server
+// Import background image to server
 function importBgImage(files) {
-	//console.log('files[0].size=(' + files[0].size + ')');
 	if (files[0].size > 1000000) {
 		$('#error-bgimage').text('Image must be less than 1MB in size');
 		return;
-	}
-	else if (files[0].type != 'image/jpeg') {
+	} else if (files[0].type != 'image/jpeg') {
 		$('#error-bgimage').text('Image format must be JPEG');
 		return;
-	}
-	else {
+	} else {
 		$('#error-bgimage').text('');
 	}
 
 	UI.bgImgChange = true;
-	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$('#current-bgimage').html("<img src='" + imgUrl + "' />");
+	imageURL = (URL || webkitURL).createObjectURL(files[0]);
+	$('#current-bgimage').html("<img src='" + imageURL + "' />");
 	$('#info-toggle-bgimage').css('margin-left','60px');
-	URL.revokeObjectURL(imgUrl);
+
+    /*setTimeout(function() {
+        (URL || webkitURL).revokeObjectURL(imageURL);
+    }, DEFAULT_TIMEOUT);*/
+
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
-		var data = dataURL.match(/,(.*)$/)[1];
+		var data = dataURL.match(/,(.*)$/)[1]; // Strip the header: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         $.post('command/playback.php?cmd=set_bg_image', {'blob': data});
 
 	}
@@ -3140,47 +3204,47 @@ function importBgImage(files) {
 // Import cover image to server
 function newCoverImage(files, view) {
     if (view == 'radio') {
-        var error_selector = '#error-new-logoimage';
-        var preview_selector = '#preview-new-logoimage';
-        var info_selector = '#info-toggle-new-logoimage';
-        var tags_selector = '#new-station-tags';
-        var name_selector = '#new-station-name';
+        var errorSelector = '#error-new-logoimage';
+        var previewSelector = '#preview-new-logoimage';
+        var infoSelector = '#info-toggle-new-logoimage';
+        var tagsSelector = '#new-station-tags';
+        var nameSelector = '#new-station-name';
         var cmd = 'set_ralogo_image';
         var script = 'radio.php';
-    }
-    else { // playlist
-        var error_selector = '#error-new-plcoverimage';
-        var preview_selector = '#preview-new-plcoverimage';
-        var info_selector = '#info-toggle-new-plcoverimage';
-        var tags_selector = '#new-playlist-tags';
-        var name_selector = '#new-playlist-name';
+    } else { // playlist
+        var errorSelector = '#error-new-plcoverimage';
+        var previewSelector = '#preview-new-plcoverimage';
+        var infoSelector = '#info-toggle-new-plcoverimage';
+        var tagsSelector = '#new-playlist-tags';
+        var nameSelector = '#new-playlist-name';
         var cmd = 'set_plcover_image';
         var script = 'playlist.php';
     }
 
 	if (files[0].size > 1000000) {
-		$(error_selector).text('Image must be less than 1MB in size');
+		$(errorSelector).text('Image must be less than 1MB in size');
 		return;
-	}
-	else if (files[0].type != 'image/jpeg') {
-		$(error_selector).text('Image format must be JPEG');
+	} else if (files[0].type != 'image/jpeg') {
+		$(errorSelector).text('Image format must be JPEG');
 		return;
-	}
-	else {
-		$(error_selector).text('');
+	} else {
+		$(errorSelector).text('');
 	}
 
-	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$(preview_selector).html("<img src='" + imgUrl + "' />");
-	$(info_selector).css('margin-left','60px');
-    $(tags_selector).css('margin-top', '30px');
-	var name = $(name_selector).val();
-	URL.revokeObjectURL(imgUrl);
+	imageURL = (URL || webkitURL).createObjectURL(files[0]);
+	$(previewSelector).html("<img src='" + imageURL + "' />");
+	$(infoSelector).css('margin-left','60px');
+    $(tagsSelector).css('margin-top', '20px');
+	var name = $(nameSelector).val();
+
+    setTimeout(function() {
+        (URL || webkitURL).revokeObjectURL(imageURL);
+    }, DEFAULT_TIMEOUT);
+
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
-		var data = dataURL.match(/,(.*)$/)[1];
+		var data = dataURL.match(/,(.*)$/)[1]; // Strip the header: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         $.post('command/' + script + '?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
@@ -3188,46 +3252,46 @@ function newCoverImage(files, view) {
 // Edit (replace/remove) existing cover image
 function editCoverImage(files, view) {
     if (view == 'radio') {
-        var error_selector = '#error-edit-logoimage';
-        var preview_selector = '#preview-edit-logoimage';
-        var info_selector = '#info-toggle-edit-logoimage';
-        var tags_selector = '#edit-station-tags';
-        var name_selector = '#edit-station-name';
+        var errorSelector = '#error-edit-logoimage';
+        var previewSelector = '#preview-edit-logoimage';
+        var infoSelector = '#info-toggle-edit-logoimage';
+        var tagsSelector = '#edit-station-tags';
+        var nameSelector = '#edit-station-name';
         var cmd = 'set_ralogo_image';
         var script = 'radio.php';
-    }
-    else { // playlist
-        var error_selector = '#error-edit-plcoverimage';
-        var preview_selector = '#preview-edit-plcoverimage';
-        var info_selector = '#info-toggle-edit-plcoverimage';
-        var tags_selector = '#edit-playlist-tags';
-        var name_selector = '#edit-playlist-name';
+    } else { // playlist
+        var errorSelector = '#error-edit-plcoverimage';
+        var previewSelector = '#preview-edit-plcoverimage';
+        var infoSelector = '#info-toggle-edit-plcoverimage';
+        var tagsSelector = '#edit-playlist-tags';
+        var nameSelector = '#edit-playlist-name';
         var cmd = 'set_plcover_image';
         var script = 'playlist.php';
     }
 
 	if (files[0].size > 1000000) {
-		$(error_selector).text('Image must be less than 1MB in size');
+		$(errorSelector).text('Image must be less than 1MB in size');
 		return;
-	}
-	else if (files[0].type != 'image/jpeg') {
-		$(error_selector).text('Image format must be JPEG');
+	} else if (files[0].type != 'image/jpeg') {
+		$(errorSelector).text('Image format must be JPEG');
 		return;
-	}
-	else {
-		$(error_selector).text('');
+	} else {
+		$(errorSelector).text('');
 	}
 
-	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$(preview_selector).html("<img src='" + imgUrl + "' />");
-	$(info_selector).css('margin-left','60px');
-	var name = $(name_selector).val();
-	URL.revokeObjectURL(imgUrl);
+	imageURL = (URL || webkitURL).createObjectURL(files[0]);
+	$(previewSelector).html("<img src='" + imageURL + "' />");
+	$(infoSelector).css('margin-left','60px');
+	var name = $(nameSelector).val();
+
+    /*setTimeout(function() {
+        (URL || webkitURL).revokeObjectURL(imageURL);
+    }, DEFAULT_TIMEOUT);*/
+
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
-		var data = dataURL.match(/,(.*)$/)[1];
+		var data = dataURL.match(/,(.*)$/)[1]; // Strip the header: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         $.post('command/' + script + '?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
@@ -3235,19 +3299,19 @@ function editCoverImage(files, view) {
 
 function setClkRadioCtls(ctlValue) {
 	if (ctlValue == 'Disabled') {
-		$('#clockradio-ctl-grp1 *').prop('disabled', true);
-		$('#clockradio-ctl-grp2 *').prop('disabled', true);
-		$('#clockradio-ctl-grp3 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-1 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-2 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-3 *').prop('disabled', true);
 	}
 	else if (ctlValue == 'Sleep Timer') {
-		$('#clockradio-ctl-grp1 *').prop('disabled', true);
-		$('#clockradio-ctl-grp2 *').prop('disabled', false);
-		$('#clockradio-ctl-grp3 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-1 *').prop('disabled', true);
+		$('#clockradio-ctl-grp-2 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-3 *').prop('disabled', true);
 	}
 	else {
-		$('#clockradio-ctl-grp1 *').prop('disabled', false);
-		$('#clockradio-ctl-grp2 *').prop('disabled', false);
-		$('#clockradio-ctl-grp3 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-1 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-2 *').prop('disabled', false);
+		$('#clockradio-ctl-grp-3 *').prop('disabled', false);
 	}
 }
 
@@ -3472,7 +3536,7 @@ function hexToRgb(hex) {
 
 }
 
-// Always use rgba now newui2
+// Always use rgba now
 function str2rgba(tempcolor) {
 	var temp = 'rgba(' + tempcolor + ')';
 	return temp;
@@ -3902,9 +3966,11 @@ $('#context-backdrop').click(function(e){
     else if (currentView == 'tag') {
         $('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
         $('img.lib-coverart').removeClass('active');
+        $('#songsList .lib-disc a, #songsList .lib-album-heading a').removeClass('active');
     }
     else if (currentView == 'album') {
         $('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
+        $('#songsList .lib-disc a, #songsList .lib-album-heading a').removeClass('active');
     }
 });
 
@@ -4204,7 +4270,7 @@ function submitLibraryUpdate (path = '') {
 
 function getThumbHW() {
     var colArray = SESSION.json['library_thumbnail_columns'].split('/');
-    var cols = UI.mobile ? colArray[1] : colArray[0];
+    var cols = UI.mobile ? colArray[1].slice(0,1) : colArray[0]; // Need slice to handle "6/2 (Default)"
 	var divM = Math.round(2 * convertRem(1.5)); // 1.5rem l/r margin for div
 	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
 	UI.thumbHW = columnW - (divM / 2);

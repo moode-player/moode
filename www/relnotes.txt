@@ -11,23 +11,57 @@
 
 ################################################################################
 #
-# 2022-MM-DD TC moOde 8.2.3
+# 2022-12-27 TC moOde 8.2.4
+#
+################################################################################
+
+Bug fixes
+
+- FIX: Airplay crash due to syntax error in conf on new image
+- FIX: CamillaDSP quick convolution yaml check fails
+- FIX: RoonBridge Resume MPD setting not functioning
+- FIX: Media query rule set for Pi 7" Touch
+- FIX: Media query rule set for mobile portrait
+- FIX: Song title dash visible when end of queue
+
+################################################################################
+#
+# 2022-12-18 TC moOde 8.2.3
 #
 ################################################################################
 
 Updates
 
+- UPD: Bump to Linux kernel 5.15.76 #1597 (new image only)
+- UPD: Bump to MPD 0.23.11
+- UPD: Bump to shairport-sync 4.1.1
+- UPD: Bump to CamillaDSP 1.0.3
+- UPD: Bump to CamillaGUI 1.0.1
+- UPD: Add UI layout for Smartphone landscape
 - UPD: Add UI layout for Ultra-wide screens
 - UPD: Add Analog clock option for CoverView
-- UPD: Use thin style for CoverView clocks
+- UPD: Improve CUE handling and presentation
+- UPD: Improve restart/shutdown notifications
 - UPD: Improve Quick help
+- UPD: Remove Bluetooth speaker sharing option (obsolete)
+- UPD: Use thin style for CoverView clocks
 - UPD: Use the correct name for AirPlay
+- UPD: Default to Playback view after startup
+- UPD: Only list Bluetooth on main menu if its On
 - UPD: Refactor CSS and config templates
+
+Radio stations
+
+- UPD: BBC Worldwide stations to HLS streams
 
 Bug fixes
 
+- FIX: SMB server ON/OFF setting not working
 - FIX: Top border of Playbar is visible
 - FIX: Startup hangs if Bluetooth on but no adapter is present
+- FIX: Space bar not working in On-Screen Keyboard
+- FIX: Unmount by id in sourceMount() not working
+- FIX: Mount monitor unmount fail due to sourceMount() bug
 
 ################################################################################
 #
