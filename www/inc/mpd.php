@@ -487,8 +487,7 @@ function updMpdConf($i2sDevice) {
 		fwrite($fh, $data);
 		fclose($fh);
 		sysCmd("/var/www/util/mpdconf_merge.py /etc/mpd.moode.conf /etc/mpd.custom.conf");
-	}
-	else {
+	} else {
 		$fh = fopen('/etc/mpd.conf', 'w');
 		fwrite($fh, $data);
 		fclose($fh);
