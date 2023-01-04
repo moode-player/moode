@@ -174,7 +174,7 @@ def get_cmdline_arguments():
 
 if __name__ == "__main__":
     args = get_cmdline_arguments()
-    file1_name = args.nameconf1 #'/etc/mpd.conf'
+    file1_name = args.nameconf1 #'/etc/mpd.moode.conf'
     file2_name = args.nameconf2 #'/etc/mpd.custom.conf'
     output_file = args.destination #'/etc/mpd.conf'
     confa = read_mpd_conf(file1_name)
