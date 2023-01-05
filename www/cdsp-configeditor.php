@@ -24,7 +24,7 @@ require_once __DIR__ . '/inc/cdsp.php';
 
 phpSession('open_ro');
 
-$_camillagui_url = 'http://'. $_SERVER['HTTP_HOST'] . ':15000';
+$_camillagui_url = '/camilladsp/gui/index.html';
 
 waitWorker(1, 'cdsp-configeditor');
 
