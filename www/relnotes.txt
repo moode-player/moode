@@ -23,6 +23,7 @@ Updates
 Bug fixes
 
 - FIX: Metadata clipped in CoverView default when no Playbar and mobile landscape
+- FIX: Tag view track list album headings not HTML escaped for compare
 
 ################################################################################
 #
