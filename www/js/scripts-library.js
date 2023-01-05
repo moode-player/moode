@@ -49,6 +49,17 @@ var filteredAlbumCovers = [];
 
 var miscLibOptions = [];
 
+var htmlEntityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;',
+  '`': '&#x60;',
+  '=': '&#x3D;'
+};
+
 // Shim for older Browsers that don't support Object.values
 if (!Object.values) {
     Object.defineProperty(Object, 'values', {
@@ -1508,9 +1519,7 @@ $('#songsList').on('click', '.lib-album-heading', function(e) {
     var albumNum = $(this).attr('id').split('-'); // lib-album-1
 	$('#lib-album-' + albumNum[2] + ' a').addClass('active');
 
-	var albumName = $(this).text();
-
-    var headingAlbum = $(this).attr('heading-album');
+    var headingAlbum = encodeHTMLEntities($(this).attr('heading-album'));
     var headingComment = $(this).attr('heading-comment');
     var headingKey = $(this).attr('heading-mb-album-id');
 
@@ -1881,4 +1890,10 @@ function showHideTracks(posChange) {
     }
 
     customScroll('albumcovers', UI.libPos[1], 200);
+}
+
+function encodeHTMLEntities (str) {
+    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
+        return htmlEntityMap[s];
+    });
 }
