@@ -117,8 +117,6 @@ html {background-color:inherit;}
 .disconnect-renderer,
 .turnoff-renderer {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
  /* Mask hover effect */
-.btn.btn-primary:hover,
-.btn.btn-primary:focus {color:inherit;}
 .configure-renderer:hover,
 .disconnect-renderer:hover,
 .turnoff-renderer:hover {background-color:var(--btnshade4);}
