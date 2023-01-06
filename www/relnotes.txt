@@ -19,7 +19,7 @@ Updates
 
 - UPD: Add transition animation for panels and modals
 - UPD: Mask hover color on modal footer buttons
-- Restructured NGINX configuration including proxy for CamillaGUI
+- UPD: Restructured NGINX configuration including proxy for CamillaGUI
 
 Bug fixes
 
