@@ -207,7 +207,7 @@
 	            <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,32}" id="apdssid" name="wlan0apdssid" value="$_wlan0apdssid" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-apdssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-apdssid" class="config-help-info">
-					Length 3-32 chars, A-Z, a-z, 0-9, and hyphen (-) are allowed.
+					Length 3-32 chars, A-Z, a-z, 0-9, and hyphen are allowed.
 				</span>
 	        </div>
 
@@ -257,10 +257,10 @@
 			<div class="control-group">
 				<label class="control-label" for="wlan0otherssid">SSID</label>
 				<div class="controls">
-					<input class="config-input-large config-modal-input" type="text" pattern="[A-Za-z0-9\- ]{3,32}" id="wlan0otherssid" name="wlan0otherssid" value="" autofocus>
+					<input class="config-input-large config-modal-input" type="text" pattern="[A-Za-z0-9\- .]{3,32}" id="wlan0otherssid" name="wlan0otherssid" value="" autofocus>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-manualssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-manualssid" class="config-help-info">
-                    	Length 2-32 chars.
+                    	Length 3-32 chars, A-Z, a-z, 0-9, space, period and hyphen are allowed.
                     </span>
 				</div>
 			</div>
