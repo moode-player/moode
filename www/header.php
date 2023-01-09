@@ -264,13 +264,13 @@
 				</div>
 			</div>
 			<div id="playbar-toggles">
-				<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
-				<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
-                <button aria-label="Queue" class="btn btn-cmd btn-toggle hide" id="cv-playqueue-btn"><i class="fal fa-list"></i></button>
-				<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
-                <button aria-label="Volume" id="playbar-volume-popup-btn" class="btn volume-popup-btn" data-toggle="modal"><i class="fas fa-volume-off"></i><span id="playbar-volume-level"></span></button>
-                <button aria-label="Random Album" id="random-album" class="btn btn-cmd hide"><i class="fal fa-dot-circle"></i></button>
-				<button aria-label="Add To Favorites" class="btn btn-cmd add-item-to-favorites hide"><i class="fal fa-heart"></i></button>
+				<button class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd" aria-label="Context Menu"><i class="far fa-ellipsis-h"></i></button>
+				<button class="btn btn-cmd btn-toggle random" data-cmd="random" aria-label="Random"><i class="fal fa-random"></i></button>
+                <button class="btn btn-cmd btn-toggle hide" id="cv-playqueue-btn" aria-label="Queue"><i class="fal fa-list"></i></button>
+				<button class="btn btn-cmd coverview" aria-label="Cover View"><i class="fal fa-tv"></i></button>
+                <button class="btn volume-popup-btn" id="playbar-volume-popup-btn" data-toggle="modal" aria-label="Volume"><i class="fas fa-volume-off"></i><span id="playbar-volume-level"></span></button>
+                <button class="btn btn-cmd hide" id="random-album" aria-label="Random Album"><i class="fal fa-dot-circle"></i></button>
+				<button class="btn btn-cmd add-item-to-favorites hide" aria-label="Add To Favorites"><i class="fal fa-heart"></i></button>
 			</div>
 		</div>
 	</div>
