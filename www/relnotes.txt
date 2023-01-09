@@ -20,9 +20,11 @@ Updates
 - UPD: Add transition animation for panels and modals
 - UPD: Mask hover color on modal footer buttons
 - UPD: Restructured NGINX configuration including proxy for CamillaGUI
+- UPD: Eliminate logspam in /var/log/auth.log
 
 Bug fixes
 
+- FIX: Input select Analog/SPDIF setting change not working
 - FIX: Metadata clipped in CoverView default when no Playbar and mobile landscape
 - FIX: Tag view track list album headings not HTML escaped for compare
 
