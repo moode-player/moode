@@ -217,14 +217,6 @@ jQuery(document).ready(function($) { 'use strict';
             }
     	}
 
-        // Screen saver layout
-        if (SESSION.json['scnsaver_layout'] == 'Wide') {
-            $('body').addClass('cvwide');
-            if (SESSION.json['scnsaver_xmeta'] == 'Yes') {
-                $('body').addClass('cvwide-xmeta');
-            }
-        }
-
         // Reset screen saver timeout global
         if (SESSION.json['scnsaver_timeout'] != 'Never') {
             $.post('command/playback.php?cmd=reset_screen_saver');
@@ -1557,6 +1549,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         if (coverView) {
 			$('body').removeClass('cv');
+            $('body').removeClass('cvwide');
             if (SESSION.json['show_cvpb'] == 'Yes') {
                 $('body').removeClass('cvpb');
             }
