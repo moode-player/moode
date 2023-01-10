@@ -21,6 +21,7 @@ Updates
 - UPD: Mask hover color on modal footer buttons
 - UPD: Restructured NGINX configuration including proxy for CamillaGUI
 - UPD: Eliminate logspam in /var/log/auth.log
+- UPD: Improve efficiency of Boss 2 Digital (DoP) volume sync
 
 Bug fixes
 
