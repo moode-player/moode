@@ -88,7 +88,7 @@ body {
 	.playqueue .db-action a {padding:.4em 1.25em 1em 0;margin-left:1.25em!important;}
 
 	/* Play and toggle buttons */
-	#playback-controls {display:flex!important;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
+	#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
 	#playbtns,
 	#togglebtns {display:block;}
 	#playbtns {margin:0;}
@@ -291,7 +291,6 @@ body {
 	.total-radio {font-size:1.65vw!important;}
 
 	/* Play and toggle buttons under the time knob */
-	#playback-controls {display:block!important}
 	#playbtns .btn {font-size:3vw;padding:1.5rem 1.75rem;}
 	#togglebtns .btn-group .btn {font-size:1.25em;}
 	#togglebtns .ralbum {display:none;}
