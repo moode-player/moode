@@ -1383,7 +1383,12 @@ function chkInpActive() {
 
 function updBoss2DopVolume () {
 	$masterVol = sysCmd('/var/www/util/sysutil.sh get-alsavol Master')[0];
-	sysCmd('amixer -c 0 sset Digital ' . $masterVol);
+	$digitalVol = sysCmd('/var/www/util/sysutil.sh get-alsavol Digital')[0];
+
+	if ($digitalVol != $masterVol) {
+		sysCmd('amixer -c 0 sset Digital ' . $masterVol);
+		//workerLog('Boss 2 Digital volume sync');
+	}
 }
 
 function updExtMetaFile() {
