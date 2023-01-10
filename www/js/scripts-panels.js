@@ -550,7 +550,7 @@ jQuery(document).ready(function($) { 'use strict';
 		SESSION.json['volmute'] == '1' ? volMuteSwitch() : '';
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol > 0 ? curVol - 1 : 0;
-		setVolume(newVol, 'volune_down');
+		setVolume(newVol, 'volume_down');
 		return false
 	});
 	$('.btn-toggle').click(function(e) {
