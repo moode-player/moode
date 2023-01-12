@@ -508,8 +508,14 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('.next').click(function(e) {
-		var cmd = $(".playqueue li").length == (parseInt(MPD.json['song']) + 1).toString() ? 'play 0' : 'next';
-		sendMpdCmd(cmd);
+        if (MPD.json['random'] == '1' && SESSION.json['ashuffle'] == '0') {
+            // Don't wrap last track to first track when MPD random play is on
+            sendMpdCmd('next');
+        } else {
+            // Custom wrap last track to first track
+    		var cmd = $(".playqueue li").length == (parseInt(MPD.json['song']) + 1).toString() ? 'play 0' : 'next';
+    		sendMpdCmd(cmd);
+        }
 		return false;
 	});
 	$('.prev').click(function(e) {
