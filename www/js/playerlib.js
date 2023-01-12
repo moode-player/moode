@@ -1269,7 +1269,7 @@ function updateActivePlayqueueItem() {
     }
 }
 
-// Render the Playlist
+// Render the Queue
 function renderPlayqueue(state) {
 	//console.log('renderPlayqueue()');
     $.getJSON('command/queue.php?cmd=get_playqueue', function(data) {
@@ -1970,17 +1970,16 @@ function renderPlaylistNames (path) {
 
 // Return formatted total time and show/hide certain elements
 function formatKnobTotal(mpdTime) {
-	if (MPD.json['artist'] == 'Radio station' && typeof(MPD.json['duration']) === 'undefined') {
+	if (MPD.json['artist'] == 'Radio station') {
 		var formattedTotalTime = '';
 		$('#total').html('').addClass('total-radio'); // Radio badge
-		$('#playbar-mtime').css('display', 'block');
-		$('#playbar-mtotal').hide();
-	}
-	else {
-		var formattedTotalTime = formatSongTime(mpdTime);
+		$('#playbar-mtime').css('display', 'flex');
+		$('#playbar-mtotal').css('display', 'none');
+	} else { // Song file
+		var formattedTotalTime = formatSongTime(mpdTime); // This will be blank at queue end or cleared queue
 		$('#total').removeClass('total-radio');
-		$('#playbar-mtime').css('display', '');
-		$('#playbar-mtotal').show();
+		$('#playbar-mtime').css('display', (MPD.json['file'] === null ? '' : 'flex'));
+		$('#playbar-mtotal').css('display', (UI.mobile === true ? 'block' : 'none'));
 	}
     return formattedTotalTime;
 }

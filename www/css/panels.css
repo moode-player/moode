@@ -607,7 +607,8 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-time {width:100%;z-index:100;font-size:.8rem;margin-top:-15px;line-height:15px;}
 #playbar-countdown, #m-countdown {position:relative;float:left;left:-3rem;}
 #playbar-total, #m-total {position:relative;float:right;left:3rem;}
-#playbar-mtime {display:none;}
+#playbar-mtime,
+#playbar-mtotal {display:none;}
 #playbar-countdown.radio {float:right;left:3em;}
 #mobile-time {margin-top:-13px;}
 #m-countdown, #m-total {font-weight:500;letter-spacing:-.2px;}
