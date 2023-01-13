@@ -914,7 +914,7 @@ var renderSongs = function(albumPos) {
             else {
                 var libFilter = '';
             }
-            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
+            $('#lib-coverart-img').html('<img class="lib-artistart" src="imagesw/notfound.jpg"/><button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 'Music Collection' + libFilter + '</button>');
         }
 		$('#lib-albumname').html(album);

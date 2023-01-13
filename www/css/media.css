@@ -334,7 +334,7 @@ body {
 	#trackscontainer span {font-size:1.1rem;}
 	#lib-coverart-meta-area {width:14vw;position:relative;}
 	#songsList {padding-bottom:10rem;}
-	#tagview-text-cover {font-size:1.35rem;height:calc(14vw - 1rem);width:calc(14vw - 1rem);}
+	#tagview-text-cover {font-size:1.35rem;height:calc(15vw - 1em);width:calc(15vw - 1em);}
 	img.lib-artistart {width:inherit;height:inherit;}
 	.lib-numtracks-meta {margin-top:1.5em;}
 
