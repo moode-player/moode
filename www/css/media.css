@@ -436,8 +436,8 @@ body {
 	.volume-display,
 	.volume-display-db {margin-top:0;}
 	#togglebtns {padding-top:1.5rem;}
-	.volume-popup-btn {display:none!important;}
-	.ralbum {display:inline-block!important;}
+	#togglebtns .volume-popup-btn {display:none;}
+	#togglebtns .ralbum {display:inline-block;}
 
 	/* Cover art amd metadata */
 	body.cvwide #ss-coverart-url img {width:80vh;height:100%}
