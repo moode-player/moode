@@ -30,6 +30,8 @@ Bug fixes
 - FIX: Metadata clipped in CoverView default when no Playbar and mobile landscape
 - FIX: Playbar timeline visible on some screen sizes when Queue empty
 - FIX: Tag view track list album headings not HTML escaped for compare
+- FIX: Volume and ralbum buttons missing from Pi Touch
+- FIX: Audio shows Loopback setting even when its off
 
 ################################################################################
 #
