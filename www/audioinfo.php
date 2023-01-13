@@ -228,7 +228,8 @@ if ($_SESSION['audioout'] == 'Bluetooth') {
 
 // ALSA Output mode and Loopback
 $_alsa_output_mode = $_SESSION['multiroom_tx'] == 'On' ? 'Loopback (hw)' : ($_SESSION['alsa_output_mode'] == 'plughw' ? 'Default (plughw)' : 'Direct (hw)');
-$_alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback']; // NOTE: 'off' is a class that hides the element
+$_alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback'];
+$_alsa_loopback_class = $_alsa_loopback; // NOTE: 'off' is a class that hides the element
 
 //
 // DSP
