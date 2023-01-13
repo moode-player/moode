@@ -32,6 +32,7 @@ Bug fixes
 - FIX: Tag view track list album headings not HTML escaped for compare
 - FIX: Volume and ralbum buttons missing from Pi Touch
 - FIX: Audio shows Loopback setting even when its off
+- FIX: Tag view size of lib-artistart in mobile landscape
 
 ################################################################################
 #
