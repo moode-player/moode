@@ -33,6 +33,7 @@ Bug fixes
 - FIX: Volume and ralbum buttons missing from Pi Touch
 - FIX: Audio shows Loopback setting even when its off
 - FIX: Tag view size of lib-artistart in mobile landscape
+- FIX: Position of CoverView wide mode controls on notch phones
 
 ################################################################################
 #
