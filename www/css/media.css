@@ -273,7 +273,7 @@ body {
 	#ss-hd-badge {font-size:.6em;}
 
 	/* CoverView Queue */
-	#cv-playqueue {width:75vmin;}
+	#cv-playqueue {width:75vmin;padding-bottom:1em;}
 	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
 	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
 	.cv-playqueue .pll1 {font-size:1.25rem;}
@@ -285,7 +285,8 @@ body {
 	body.cvpb #ss-currentalbum-div,
 	body.cvpb #ss-currentsong,
 	body.cvpb #ss-extra-metadata {margin-top:.65em;}
-	body.cvpb:not(.cvwide) #playbar-timeline {top:75%}
+	body.cvpb:not(.cvwide) #playbar-timeline {top:75%;}
+	body.cvpb:not(.cvwide) #playbar {padding-bottom:calc(env(safe-area-inset-bottom) * 1.75);}
 
 	/* Time knob */
 	#countdown {height:17vw;width:17vw;}
@@ -303,7 +304,7 @@ body {
 
 	/* Playbar */
 	#panel-footer {padding-bottom:env(safe-area-inset-bottom);}
-	#playbar {padding-bottom:calc(env(safe-area-inset-bottom) * 1.75);}
+	/*#playbar {padding-bottom:calc(env(safe-area-inset-bottom) * 1.75);}*/
 	#playbar-cover {top:env(safe-area-inset-bottom);}
 	#playbar-title {font-size: 1.25em;padding-bottom:1.15rem!important;}
 	#playbar-title-line-2 {margin-top:0;}
