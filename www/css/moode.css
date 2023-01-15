@@ -127,7 +127,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 #info-clockradio-playname {font-weight:500;}
 /* forms */
 .modal-body .controls {margin-left:52%;margin-bottom:0;}
-.modal-body .control-label {width:48%;text-align:right;margin-top:0;}
+.modal-body .control-label {width:48%;text-align:right;margin-top:.2em;}
 /* Multiroom modal */
 .modal .multiroom-modal-host {font-size:1.25em;font-weight:normal;text-transform:uppercase;margin-top:.1em!important;}
 .modal .multiroom-modal-onoff {margin-right:1em!important;}
