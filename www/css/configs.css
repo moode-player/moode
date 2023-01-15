@@ -46,7 +46,7 @@ legend {font-size:1.5rem;font-weight:200;border-bottom:1px solid #888;margin-bot
 .sub-legend {margin:-1em 0 1.5em 0;color:var(--config-help-color);font-size:12px;}
 
 /* Form controls */
-.control-label {font-size:12px;}
+.control-label {font-size:12px;padding-top:.2em;}
 .toggle {margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom-toggle) 0;}
 
 .toggle,
