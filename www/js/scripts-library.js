@@ -1619,21 +1619,18 @@ $('#context-menu-playback a').click(function(e) {
             sendMpdCmd('playid ' + toggleSongId);
             break;
         case 'consume':
-    		$('#menu-check-consume').toggle();
-    		var toggle = $('.consume').hasClass('btn-primary') ? '0' : '1';
-    		$('.consume').toggleClass('btn-primary');
-    		sendMpdCmd('consume ' + toggle);
+            $('#menu-check-consume').toggle();
+            var toggle = $('#menu-check-consume').is(":visible") ? '1' : '0';
+            sendMpdCmd('consume ' + toggle);
             break;
         case 'repeat':
             $('#menu-check-repeat').toggle();
-    		var toggle = $('.repeat').hasClass('btn-primary') ? '0' : '1';
-    		$('.repeat').toggleClass('btn-primary');
+            var toggle = $('#menu-check-repeat').is(":visible") ? '1' : '0';
     		sendMpdCmd('repeat ' + toggle);
             break;
         case 'single':
             $('#menu-check-single').toggle();
-    		var toggle = $('.single').hasClass('btn-primary') ? '0' : '1';
-    		$('.single').toggleClass('btn-primary');
+            var toggle = $('#menu-check-single').is(":visible") ? '1' : '0';
     		sendMpdCmd('single ' + toggle);
             break;
         case 'clear':
