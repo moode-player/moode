@@ -193,11 +193,11 @@ foreach ($configs as $configFile => $configName) {
 $configs = $cdsp->getAvailableConfigsRaw();
 $_selected_config = null;
 foreach ($configs as $configFile => $configName) {
-	$selected = ($selectedConfig == $configFile || ($selectedConfig == null && $_selected_config == null)) ? 'selected' : '';
+	$selected = (($selectedConfig == $configFile || ($selectedConfig == null) && $_selected_config == null)) ? 'selected' : '';
 	$_select['cdsp_config'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, $configName);
 	if ($selected == 'selected') {
-		//$_selected_config = $configFile;
-		$_selected_config = $selected;
+		$_selected_config = $configFile;
+		//$_selected_config = $selected;
 		$selectedConfig = $configFile;
 	}
 }
