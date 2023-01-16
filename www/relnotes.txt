@@ -32,7 +32,7 @@ Bug fixes
 - FIX: Playbar timeline visible on some screen sizes when Queue empty
 - FIX: Tag view track list album headings not HTML escaped for compare
 - FIX: Volume and ralbum buttons missing from Pi Touch
-- FIX: Audio shows Loopback setting even when its off
+- FIX: Audio info shows Loopback setting even when its off
 - FIX: Tag view size of lib-artistart in mobile landscape
 - FIX: Position of CoverView wide mode controls on notch phones
 
