@@ -23,6 +23,7 @@ Updates
 - UPD: Prevent log spam in /var/log/auth.log
 - UPD: Prevent 'next' wrapping last to first track when MPD random is on
 - UPD: Mask hover color on modal footer buttons
+- UPD: Bump default TRX jitter and ALSA buffer from 32/64 to 64/128
 
 Bug fixes
 
