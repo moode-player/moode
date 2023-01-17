@@ -24,9 +24,9 @@ Updates
 - UPD: Prevent 'next' wrapping last to first track when MPD random is on
 - UPD: Mask hover color on modal footer buttons
 - UPD: Bump default TRX jitter and ALSA buffer from 32/64 to 64/128
+- UPD: Add button to Local Display section for turning CoverView On/Off
 
 Bug fixes
-
 - FIX: Input select Analog/SPDIF setting change not working
 - FIX: Metadata clipped in CoverView default when no Playbar and mobile landscape
 - FIX: Playbar timeline visible on some screen sizes when Queue empty
