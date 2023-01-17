@@ -242,6 +242,13 @@ if (isset($_POST['update_on_screen_kbd'])) {
     }
 }
 
+if (isset($_POST['update_toggle_coverview'])) {
+	$toggleCoverView = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
+	$result = sysCmd('/var/www/util/coverview.php ' . $toggleCoverView . ' 2>&1');
+	phpSession('write', 'toggle_coverview', $toggleCoverView);
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
+
 // FILE SHARING
 
 if (isset($_POST['update_fs_smb'])) {
