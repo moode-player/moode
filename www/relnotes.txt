@@ -27,6 +27,7 @@ Updates
 - UPD: Add button to Local Display section for turning CoverView On/Off
 
 Bug fixes
+
 - FIX: Input select Analog/SPDIF setting change not working
 - FIX: Metadata clipped in CoverView default when no Playbar and mobile landscape
 - FIX: Playbar timeline visible on some screen sizes when Queue empty
