@@ -2759,7 +2759,7 @@ $(document).on('click', '.context-menu a', function(e) {
 
         		// CoverView
                 $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
-                $('#auto-coverview span').text(SESSION.json['toggle_coverview'] == '-on' ? 'Yes' : 'No');
+                $('#auto-coverview span').text(SESSION.json['auto_coverview'] == '-on' ? 'Yes' : 'No');
         		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
                 $('#scnsaver-mode span').text(SESSION.json['scnsaver_mode']);
                 $('#scnsaver-layout span').text(SESSION.json['scnsaver_layout']);
@@ -2970,7 +2970,7 @@ $('#btn-preferences-update').click(function(e){
 
     // CoverView
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
-    if (SESSION.json['toggle_coverview'] != ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off')) {autoCoverViewChange = true;}
+    if (SESSION.json['auto_coverview'] != ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off')) {autoCoverViewChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
     if (SESSION.json['scnsaver_mode'] != $('#scnsaver-mode span').text()) {scnSaverModeChange = true;}
     if (SESSION.json['scnsaver_layout'] != $('#scnsaver-layout span').text()) {scnSaverLayoutChange = true;}
@@ -3021,7 +3021,7 @@ $('#btn-preferences-update').click(function(e){
 
     // CoverView
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
-    SESSION.json['toggle_coverview'] = ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off');
+    SESSION.json['auto_coverview'] = ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off');
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
     SESSION.json['scnsaver_mode'] = $('#scnsaver-mode span').text();
     SESSION.json['scnsaver_layout'] = $('#scnsaver-layout span').text();
@@ -3125,7 +3125,7 @@ $('#btn-preferences-update').click(function(e){
 
             // CoverView
             'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-            'toggle_coverview': SESSION.json['toggle_coverview'],
+            'auto_coverview': SESSION.json['auto_coverview'],
             'scnsaver_style': SESSION.json['scnsaver_style'],
             'scnsaver_mode': SESSION.json['scnsaver_mode'],
             'scnsaver_layout': SESSION.json['scnsaver_layout'],

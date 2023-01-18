@@ -96,7 +96,7 @@ $_mpd_select['sox_sample_rate'] .= "<option value=\"44100\" " . (($cfgMPD['audio
 $_mpd_select['sox_sample_rate'] .= "<option value=\"48000\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '48000') ? "selected" : "") . " >48</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"88200\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '88200') ? "selected" : "") . " >88.2</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"96000\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '96000') ? "selected" : "") . " >96</option>\n";
-$_mpd_select['sox_sample_rate'] .= "<option value=\"176400\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '176400') ? "selected" : "") . " >176.41</option>\n";
+$_mpd_select['sox_sample_rate'] .= "<option value=\"176400\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '176400') ? "selected" : "") . " >176.4</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"192000\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '192000') ? "selected" : "") . " >192</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"352800\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '352800') ? "selected" : "") . " >352.8</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"384000\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '384000') ? "selected" : "") . " >384</option>\n";

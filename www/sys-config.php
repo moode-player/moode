@@ -243,10 +243,8 @@ if (isset($_POST['update_on_screen_kbd'])) {
 }
 
 if (isset($_POST['update_toggle_coverview'])) {
-	$toggleCoverView = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
-	$result = sysCmd('/var/www/util/coverview.php ' . $toggleCoverView . ' 2>&1');
-	phpSession('write', 'toggle_coverview', $toggleCoverView);
-	$_SESSION['notify']['title'] = 'Settings updated';
+	$_SESSION['toggle_coverview'] = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
+	$result = sysCmd('/var/www/util/coverview.php ' . $_SESSION['toggle_coverview']);
 }
 
 // FILE SHARING
@@ -452,6 +450,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 
 	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+
+	$_coverview_onoff = $_SESSION['toggle_coverview'] == '-off' ? 'Off' : 'On';
 } else {
 	$_feat_localui = 'hide';
 }

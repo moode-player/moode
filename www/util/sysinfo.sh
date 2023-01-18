@@ -233,7 +233,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nTimed display\t\t= $scnsaver_timeout\c"
-	echo -e "\nAutomatic display\t= $toggle_coverview\c"
+	echo -e "\nAutomatic display\t= $auto_coverview\c"
 	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
 	echo -e "\nLayout\t\t\t= $scnsaver_layout\c"
@@ -819,7 +819,7 @@ multiroom_rx=${arr[158]}
 rxactive=${arr[159]}
 library_onetouch_radio=${arr[160]}
 library_tagview_genres=${arr[161]}
-toggle_coverview=${arr[162]}
+auto_coverview=${arr[162]}
 maint_interval=${arr[163]}
 library_track_play=${arr[164]}
 playlist_pos==${arr[165]}

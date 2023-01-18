@@ -136,5 +136,6 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['updater_auto_check'] = $_SESSION['updater_auto_check'];
 	$cfgSystem['updater_available_update'] = $_SESSION['updater_available_update'];
 	$cfgSystem['lib_scope'] = $_SESSION['lib_scope'];
+	$cfgSystem['auto_coverview'] = $_SESSION['auto_coverview'];
 	$cfgSystem['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
 }
