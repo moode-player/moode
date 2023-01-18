@@ -475,6 +475,7 @@ function updMpdConf($i2sDevice) {
 	$data .= $_SESSION['mpd_httpd_encoder'] == 'flac' ? "compression \"0\"\n" : "bitrate \"320\"\n";
 	$data .= "tags \"yes\"\n";
 	$data .= "always_on \"yes\"\n";
+	$data .= $_SESSION['mpd_httpd_encoder'] == 'lame' ? "format \"44100:16:2\"\n" : '';
 	$data .= "}\n\n";
 
 	// Stream recorder
