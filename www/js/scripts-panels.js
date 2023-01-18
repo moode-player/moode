@@ -385,7 +385,7 @@ jQuery(document).ready(function($) { 'use strict';
     	}
 
         // CoverView auto-display
-        if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['toggle_coverview'] == '-on') {
+        if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['auto_coverview'] == '-on') {
             setTimeout(function() {
                 screenSaver('scnactive1');
             }, 8000);

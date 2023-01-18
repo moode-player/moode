@@ -25,6 +25,7 @@ Updates
 - UPD: Mask hover color on modal footer buttons
 - UPD: Bump default TRX jitter and ALSA buffer from 32/64 to 64/128
 - UPD: Add button to Local Display section for turning CoverView On/Off
+- UPD: Add format 44100:16:2 to HTTP server lame encoding
 
 Bug fixes
 
@@ -36,6 +37,7 @@ Bug fixes
 - FIX: Audio info shows Loopback setting even when its off
 - FIX: Tag view size of lib-artistart in mobile landscape
 - FIX: Position of CoverView wide mode controls on notch phones
+- FIX: Display of 176.4 sample rate in MPD config
 
 ################################################################################
 #

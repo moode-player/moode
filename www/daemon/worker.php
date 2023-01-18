@@ -971,7 +971,12 @@ if ($_SESSION['localui'] == '1') {
 	startLocalUI();
 }
 workerLog('worker: LocalUI (' . ($_SESSION['localui'] == '1' ? 'On' : 'Off') . ')');
-workerLog('worker: CoverView toggle (' . ($_SESSION['toggle_coverview'] == '-on' ? 'On' : 'Off') . ')');
+// Toggle CoverView (System Config)
+if (!isset($_SESSION['toggle_coverview'])) {
+	$_SESSION['toggle_coverview'] = '-off';
+}
+// Automatic CoverView (Preferences)
+workerLog('worker: Automatic CoverView (' . ($_SESSION['auto_coverview'] == '-on' ? 'On' : 'Off') . ')');
 // On-screen keyboard
 if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';

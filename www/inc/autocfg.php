@@ -476,7 +476,7 @@ function autoConfigSettings() {
 
 		'CoverView',
 		['requires' => ['scnsaver_timeout'], 'handler' => setphpSession], // Timed display
-		['requires' => ['toggle_coverview'], 'handler' => setphpSession], // Automatic display
+		['requires' => ['auto_coverview'], 'handler' => setphpSession], // Automatic display
 		['requires' => ['scnsaver_style'], 'handler' => setphpSession],
 		['requires' => ['scnsaver_mode'], 'handler' => setphpSession],
 		['requires' => ['scnsaver_layout'], 'handler' => setphpSession],
