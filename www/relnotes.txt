@@ -17,6 +17,7 @@
 
 Updates
 
+- UPD: Bump to Linux kernel 5.15.84 build #1613
 - UPD: Add transition animation for panels and modals
 - UPD: Improve efficiency of Boss 2 Digital (DoP) volume sync
 - UPD: Improve NGINX configuration including proxy for CamillaGUI
