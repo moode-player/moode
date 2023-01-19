@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Jan 18 10:03:05 2023
+-- File generated with SQLiteStudio v3.1.0 on Thu Jan 19 18:01:21 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -625,7 +625,7 @@ INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Defa
 
 -- Table: cfg_multiroom
 CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '64');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '128');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (2, 'tx_host', '239.0.0.1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (3, 'tx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (4, 'tx_sample_rate', '48000');
@@ -638,12 +638,12 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'RESERVED_12', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'tx_query_timeout', '1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '64');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '128');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_host', '239.0.0.1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_sample_rate', '48000');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_channels', '2');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'rx_jitter_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'rx_jitter_bfr', '64');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (20, 'rx_frame_size', '1920');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'rx_rtprio', '45');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'RESERVED_22', '');
