@@ -141,6 +141,8 @@ sysCmd('moodeutl -D cdsp_from_link');
 sysCmd('moodeutl -D saved_upnp_path');
 sysCmd('moodeutl -D upnp_browser');
 sysCmd('moodeutl -D btmulti');
+sysCmd('moodeutl -D upd_rx_adv_toggle');
+sysCmd('moodeutl -D upd_tx_adv_toggle');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session
@@ -984,8 +986,8 @@ if (!isset($_SESSION['on_screen_kbd'])) {
 workerLog('worker: On-screen keyboard (' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'Off' : 'On') . ')');
 
 // TRX Config advanced options toggle
-$_SESSION['tx_adv_toggle'] = 'Show';
 $_SESSION['rx_adv_toggle'] = 'Show';
+$_SESSION['tx_adv_toggle'] = 'Show';
 
 // Library scope
 if (!isset($_SESSION['lib_scope'])) {

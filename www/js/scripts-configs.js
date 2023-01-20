@@ -309,13 +309,13 @@ jQuery(document).ready(function($){ 'use strict';
         $('#multiroom-tx-adv-options').toggleClass('hide');
         var labelText = $('#multiroom-tx-adv-options-label').html() == 'Show' ? 'Hide' : 'Show'
         $('#multiroom-tx-adv-options-label').html(labelText);
-        $.post('command/multiroom.php?cmd=upd_tx_adv_toggle', {'adv_toggle': labelText});
+        $.post('command/multiroom.php?cmd=tx_adv_toggle', {'adv_toggle': labelText});
     });
     $('#multiroom-rx-adv-options-label').click(function(e) {
         $('#multiroom-rx-adv-options').toggleClass('hide');
         var labelText = $('#multiroom-rx-adv-options-label').html() == 'Show' ? 'Hide' : 'Show'
         $('#multiroom-rx-adv-options-label').html(labelText);
-        $.post('command/multiroom.php?cmd=upd_rx_adv_toggle', {'adv_toggle': labelText});
+        $.post('command/multiroom.php?cmd=rx_adv_toggle', {'adv_toggle': labelText});
     });
 
     // Button "Create Backup"

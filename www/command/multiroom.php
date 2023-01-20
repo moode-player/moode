@@ -83,8 +83,8 @@ switch ($_GET['cmd']) {
 
     	echo json_encode('OK');
         break;
-    case 'upd_tx_adv_toggle':
-	case 'upd_rx_adv_toggle':
+    case 'tx_adv_toggle':
+	case 'rx_adv_toggle':
 		phpSession('open');
 		$_SESSION[$_GET['cmd']] = $_POST['adv_toggle'];
         phpSession('close');
