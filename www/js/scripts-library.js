@@ -264,25 +264,18 @@ function groupLib(fullLib) {
 
 	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
-		//ORIG var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var md5 = typeof(file) == 'undefined' ? 0 : $.md5(getParentDirectory(file));
-		// var artist = findAlbumProp(albumTracks, 'artist');
-		// var albumArtist = findAlbumProp(albumTracks, 'album_artist');
 		var year = getYear(albumTracks);
 		return {
 			key: findAlbumProp(albumTracks, 'key'),
 			last_modified: getLastModified(albumTracks),
 			year: year,
 			album: findAlbumProp(albumTracks, 'album'),
-            // mb_albumid if not present is set to '0' in genLibrary()
-			mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'),
+			mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'), // NOTE: mb_albumid if not present is set to '0' in genLibrary()
 			genre: findAlbumProp(albumTracks, 'genre'),
-			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
-			// @Atair: albumArtist is always defined due to provisions in inc/music-library php
-			// so it is not necessary to evaluate artist
+			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})), // NOTE: @Atair: albumArtist is always defined due to provisions in inc/music-library php so it is not necessary to evaluate artist
 			album_artist: getAlbumArtist(albumTracks),
-            //album_artist: findAlbumProp(albumTracks, 'album_artist'),
-			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
+			imgurl: md5 != 0 ? '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg' : '/images/notfound.jpg',
 			encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
 			comment: findAlbumProp(albumTracks, 'comment')
 		};
@@ -880,7 +873,7 @@ var renderSongs = function(albumPos) {
 			artist = filteredSongs[0].album_artist; // @Atair: album_artist !
 		}
         if (filteredSongs[0].album == 'Nothing found') {
-            $('#lib-artistname, #lib-albumyear, #lib-numtracks, #lib-encoded-at').html('');
+            $('#lib-artistname, #artistsList, #lib-albumyear, #lib-numtracks, #lib-encoded-at').html('');
             $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
         }
         else {
