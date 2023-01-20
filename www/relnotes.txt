@@ -39,6 +39,7 @@ Bug fixes
 - FIX: Tag view size of lib-artistart in mobile landscape
 - FIX: Position of CoverView wide mode controls on notch phones
 - FIX: Display of 176.4 sample rate in MPD config
+- FIX: Multiroom Show/Hide advanced not persisting
 
 ################################################################################
 #
