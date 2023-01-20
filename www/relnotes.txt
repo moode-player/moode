@@ -27,6 +27,7 @@ Updates
 - UPD: Bump default TRX jitter and ALSA buffer from 32/64 to 64/128
 - UPD: Add button to Local Display section for turning CoverView On/Off
 - UPD: Add format 44100:16:2 to HTTP server lame encoding
+- UPD: Add --kiosk to chromium-browser start to hide the URL status bar
 
 Bug fixes
 
