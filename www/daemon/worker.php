@@ -537,7 +537,13 @@ if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 // Store alsa mixer name for use by sysutil.sh get/set-alsavol and vol.sh
 //phpSession('write', 'amixname', getAlsaMixerName($_SESSION['i2sdevice']));
 workerLog('worker: ALSA mixer name (' . $_SESSION['amixname'] . ')');
-workerLog('worker: MPD mixer type (' . ($_SESSION['mpdmixer'] == 'none' ? 'fixed 0dB' : $_SESSION['mpdmixer']) . ')');
+$mixer_name = $_SESSION['mpdmixer'];
+$mixer_name = isMpd2CamillaDspVolSyncModeEnabled() ? 'CamillaDSP' : $mixer_name;
+$mixer_name = $mixer_name == 'none' ? 'fixed 0dB' : $mixer_name;
+workerLog('worker: MPD mixer type (' . ($mixer_name) . ')');
+
+$service_cmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
+sysCmd('systemctl ' . $service_cmd .' mpd2cdspvolume');
 
 // Check for presence of hardware volume controller
 $result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
@@ -606,6 +612,7 @@ if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 }
 unset($cdsp);
 workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
+workerLog('worker: CamillaDSP volume sync (' . $_SESSION['camilladsp_volume_sync'] . ')');
 
 //
 workerLog('worker: --');
@@ -1918,6 +1925,9 @@ function runQueuedJob() {
 			$queue_args = explode(',', $_SESSION['w_queueargs']);
 			$device_chg = $queue_args[0];
 			$mixer_chg = $queue_args[1];
+
+			$service_cmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
+			sysCmd('systemctl ' . $service_cmd .' mpd2cdspvolume');
 
 			// Restart MPD
 			sysCmd('systemctl restart mpd');

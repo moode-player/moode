@@ -42,19 +42,27 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 }
 // Volume type
 if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mpdmixer']) {
-	if ($_POST['mixer_type'] == 'none') {
+	$mixer_type_selected = $_POST['mixer_type'];
+	$camilladsp_volume_sync = 'off';
+
+	if ($mixer_type_selected == 'none') {
 		// Changing to Fixed (0dB)
 		$mixerChange = 'fixed';
+	}
+	else if ($mixer_type_selected == 'camilladsp') {
+	    $mixer_type_selected = 'null';
+		$camilladsp_volume_sync = 'on';
 	} else if ($_SESSION['mpdmixer'] == 'none') {
 		// Changing from Fixed (0dB)
-		$mixerChange = $_POST['mixer_type'];
+		$mixerChange = $mixer_type_selected;
 	} else {
 		// Changing between hardware, software or null mixer
 		$mixerChange = 0;
 	}
 
+	phpSession('write', 'camilladsp_volume_sync', $camilladsp_volume_sync);
 	$deviceChange = 0;
-	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $_POST['mixer_type']);
+	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $mixer_type_selected);
 	$queueArgs = $deviceChange . ',' . $mixerChange;
 	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
@@ -325,7 +333,10 @@ if ($_SESSION['alsavolume'] != 'none' || $cfgMPD['mixer_type'] == 'hardware') {
 }
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($cfgMPD['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($cfgMPD['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($cfgMPD['mixer_type'] == 'null') ? "selected" : "") . ">Null (External control)</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp'] == 'off') ? "selected" : "") . ">Null (External control)</option>\n";
+if ($_SESSION['camilladsp'] != 'off') {
+	$_mpd_select['mixer_type'] .= "<option value=\"camilladsp\" " . (($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] != 'off') ? "selected" : "") . ">CamillaDSP</option>\n";
+}
 // Named I2S devices
 $result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
 $array = array();

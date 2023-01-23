@@ -221,6 +221,7 @@ function autoConfigSettings() {
 		['requires' => ['camilladsp_quickconv'], 'handler' => setphpSession],
 		['requires' => ['cdsp_fix_playback'], 'handler' => setphpSession],
 		['requires' => ['camilladsp'], 'handler' => setphpSession],
+		['requires' => ['camilladsp_volume_sync'], 'handler' => setphpSession],
 
 		'Parametric EQ',
 		['requires' => [ 'eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {

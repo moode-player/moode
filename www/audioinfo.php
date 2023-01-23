@@ -245,6 +245,9 @@ elseif ($_SESSION['mpdmixer'] == 'software') {
 elseif ($_SESSION['mpdmixer'] == 'none') {
 	$_volume_mixer = 'Fixed (0dB output)';
 }
+elseif ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp_volume_sync'] != 'off') {
+	$_volume_mixer = 'CamillaDSP';
+}
 elseif ($_SESSION['mpdmixer'] == 'null') {
 	$_volume_mixer = 'Null (External control)';
 }
