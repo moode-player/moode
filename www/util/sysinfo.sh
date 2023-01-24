@@ -819,7 +819,7 @@ multiroom_rx=${arr[158]}
 rxactive=${arr[159]}
 library_onetouch_radio=${arr[160]}
 library_tagview_genres=${arr[161]}
-auto_coverview=${arr[162]}
+[[ "${arr[162]}" = "-on" ]] && auto_coverview="On" || auto_coverview="Off"
 maint_interval=${arr[163]}
 library_track_play=${arr[164]}
 playlist_pos==${arr[165]}
