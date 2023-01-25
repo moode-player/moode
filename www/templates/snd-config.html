@@ -47,9 +47,11 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_type" value="novalue" $_volume_type_btn_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-mixer-type" class="config-help-info">
-					<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
-                    <b>- Software:&nbsp;</b>Use MPD software volume routine (32 bit float with dither).<br>
-					<b>- Fixed (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
+					<b>- MPD Hardware: </b>Use audio device on-chip volume controller.<br>
+					<b>- MPD Software: </b>Use MPD software volume (32 bit float with dither).<br>
+					<b>- MPD Fixed (0dB): </b>Output 100% volume. Assumes a downstream volume control is used.<br>
+					<b>- MPD Null: </b>Fake volume. Assumes an alternate method is used to set volume.<br>
+					<b>- CamillaDSP </b>Use CamillaDSP software volume (64 bit float with dither).
 				</span>
 				<span class="config-help-static">
 					<b>CAUTION:</b> Set volume to a low level before changing this option.<br>
