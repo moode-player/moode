@@ -976,6 +976,8 @@ workerLog('worker: LocalUI (' . ($_SESSION['localui'] == '1' ? 'On' : 'Off') . '
 // Toggle CoverView (System Config)
 if (!isset($_SESSION['toggle_coverview'])) {
 	$_SESSION['toggle_coverview'] = '-off';
+} else {
+	$_SESSION['toggle_coverview'] = $_SESSION['auto_coverview'];
 }
 // Automatic CoverView (Preferences)
 workerLog('worker: Automatic CoverView (' . ($_SESSION['auto_coverview'] == '-on' ? 'On' : 'Off') . ')');
