@@ -458,6 +458,15 @@ body {
 	/* Playbar */
 	#playbar-title {font-size:1rem;}
 	#playbar-timeline {display:block;}
+
+	/* Library */
+	#index-genres,
+	#index-artists,
+	#index-albums,
+	#index-albumcovers,
+	#index-browse,
+	#index-radio,
+	#index-playlist {display:block!important;}
 }
 
 /*
