@@ -39,7 +39,7 @@
 				<span><em>&nbsp;$_device_error</em></span>
 			</div>
 
-			<label class="control-label" for="mixer_type">Volume type</label>
+			<label class="control-label" for="mixer_type">MPD Volume type</label>
             <div class="controls">
                 <select id="mixer_type" name="mixer_type" class="config-select-large">
 					$_mpd_select[mixer_type]
@@ -47,10 +47,10 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_type" value="novalue" $_volume_type_btn_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-mixer-type" class="config-help-info">
-					<b>- MPD Hardware: </b>Use audio device on-chip volume controller.<br>
-					<b>- MPD Software: </b>Use MPD software volume (32 bit float with dither).<br>
-					<b>- MPD Fixed (0dB): </b>Output 100% volume. Assumes a downstream volume control is used.<br>
-					<b>- MPD Null: </b>Fake volume. Assumes an alternate method is used to set volume.<br>
+					<b>- Hardware: </b>Use audio device on-chip volume controller.<br>
+					<b>- Software: </b>Use MPD software volume (32 bit float with dither).<br>
+					<b>- Fixed (0dB): </b>Output 100% volume. Assumes a downstream volume control is used.<br>
+					<b>- Null: </b>Fake volume. Assumes an alternate method is used to set volume.<br>
 				</span>
 				<span class="config-help-static">
 					<b>CAUTION:</b> Set volume to a low level before changing this option.<br>
