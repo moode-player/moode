@@ -19,9 +19,14 @@ New Features
 
 Updates
 
+- UPD: Bump to MPD 0.23.12
+- UPD: Sync auto and toggle CoverView during startup
 - UPD: Format of auto_coverview value in System info
+- UPD: Add quick jump indexes back to Pi Touch
 
 Bug fixes
+
+- FIX: Session ID missing in moodeutl -i (autocfg-import.php)
 
 
 ################################################################################
