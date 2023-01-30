@@ -1,3 +1,4 @@
+---
 devices:
   samplerate: 44100
   chunksize: 1024
@@ -56,3 +57,5 @@ pipeline:
   names:
   - loudness
   - Volume
+  type: Filter
+... 
