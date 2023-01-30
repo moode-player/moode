@@ -389,9 +389,11 @@ class CamillaDsp {
 
     function changeCamillaStatus($enable) {
         if($enable) {
+            sysCmd("sudo systemctl enable camillagui");
             sysCmd("sudo systemctl start camillagui");
         }else {
             sysCmd("sudo systemctl stop camillagui");
+            sysCmd("sudo systemctl disable camillagui");
         }
     }
 
