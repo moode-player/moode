@@ -895,3 +895,7 @@ function parseDir($path) {
 
 	return $result;
 }
+
+function isMpd2CamillaDspVolSyncModeEnabled() {
+	return ($_SESSION['mpdmixer'] == 'none' && $_SESSION['camilladdsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
+}

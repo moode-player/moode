@@ -141,7 +141,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (76, 'p3bt', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
-INSERT INTO cfg_system (id, param, value) VALUES (80, 'RESERVED_80', '');
+INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
 INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '97206');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
@@ -237,6 +237,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'N
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'No');
+
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
