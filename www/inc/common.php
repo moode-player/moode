@@ -40,6 +40,7 @@ const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 const MOODE_LOG = '/var/log/moode.log';
 const AUTOCFG_LOG = '/home/pi/autocfg.log';
+const UPDATER_LOG = '/var/local/www/update-moode.log';
 const MPD_LOG = '/var/log/mpd/log';
 const PLAY_HISTORY_LOG = '/var/local/www/playhistory.log';
 const MOUNTMON_LOG = '/var/log/mountmon.log';
@@ -428,6 +429,7 @@ function storeBackLink($section, $tpl) {
 		'spo-config.html' 	=> '/ren-config.php',
 		'sqe-config.html'	=> '/ren-config.php',
 		'src-config.html'	=> '/lib-config.php',
+		'sys-status.html'	=> '/sys-config.php',
 		'upp-config.html' 	=> '/ren-config.php'
 	);
 

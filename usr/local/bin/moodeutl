@@ -37,6 +37,7 @@ const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 const MOODE_LOG = '/var/log/moode.log';
 const AUTOCFG_LOG = '/home/pi/autocfg.log';
+const UPDATER_LOG = '/var/local/www/update-moode.log';
 const MPD_LOG = '/var/log/mpd/log';
 const PORT_FILE = '/tmp/portfile';
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
@@ -51,7 +52,6 @@ const DEF_COVER = 'images/default-cover-v6.svg';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
-const UPD_LOG = '/var/local/www/update-moode.log';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
@@ -541,8 +541,8 @@ function printMPDLog() {
 }
 
 function printUpdateLog() {
-	if (file_exists(UPD_LOG)) {
-		echo shell_exec('cat ' . UPD_LOG);
+	if (file_exists(UPDATER_LOG)) {
+		echo shell_exec('cat ' . UPDATER_LOG);
 	} else {
 		echo 'The update log was not found' . "\n";
 	}

@@ -476,12 +476,12 @@ if (!file_exists('/etc/mpd.conf')) {
 			$mpdConfUpdMsg = 'MPD conf update skipped (Tx On)';
 			break;
 		case PlaybackDestinationType.USB:
-			if( $_SESSION['inplace_upd_applied'] != '1' ) {
-				// Skip update otherwise USB mixer name is not preserved if device unplugged or turned off
-				$mpdConfUpdMsg = 'MPD conf update skipped (USB device)';
-			} else {
+			if( $_SESSION['inplace_upd_applied'] == '1' ) {
 				$mpdConfUpdMsg = 'MPD conf updated (USB device + In-place update)';
 				$updateMpdConf = true;
+			} else {
+				// Skip update otherwise USB mixer name is not preserved if device unplugged or turned off
+				$mpdConfUpdMsg = 'MPD conf update skipped (USB device)';
 			}
 			break;
 		case PlaybackDestinationType.LOCAL:
@@ -2334,10 +2334,7 @@ function runQueuedJob() {
 
 		// sys-config jobs
 		case 'install_update':
-			$result = sysCmd('/var/www/util/system-updater.sh ' . getPkgId());
-			$last_message = explode(', ', end($result));
-			$_SESSION['notify']['title'] = $last_message[0];
-			$_SESSION['notify']['msg'] = ucfirst($last_message[1]);
+			$result = sysCmd('/var/www/util/system-updater.sh ' . getPkgId() . ' > /dev/null 2>&1 &');
 			break;
 		case 'timezone':
 			sysCmd('/var/www/util/sysutil.sh set-timezone ' . $_SESSION['w_queueargs']);

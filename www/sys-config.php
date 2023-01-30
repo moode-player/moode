@@ -56,8 +56,7 @@ if (isset($_POST['checkfor_update'])) {
 		$_available_upd = $available['Date'] == 'None' ? 'None available' :
 			'<button class="btn btn-primary btn-small config-btn set-button btn-submit" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
 			'<button class="btn btn-primary btn-small config-btn set-button" data-toggle="modal" href="#view-pkgcontent">View</button>' .
-			'<span class="config-btn-after">Release ' . $available['Release'] . ', ' . $available['Date'] . '</span>' .
-			'<span class="config-help-static">Monitor progress with the command <i>moodeutl -t</i></span>';
+			'<span class="config-btn-after">Release ' . $available['Release'] . ', ' . $available['Date'] . '</span>';
 		$_pkg_description = $available['Description'];
 		$_pkg_relnotes = $available['Relnotes'];
 	}
@@ -84,7 +83,8 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['msg'] = "Update cannot proceed without at least 500M space";
 			$_SESSION['notify']['duration'] = 20;
 		} else {
-			submitJob('install_update', '', '', '', 60000);
+			submitJob('install_update', '', '', '');
+			header('location: sys-status.php');
 		}
 	}
 }
