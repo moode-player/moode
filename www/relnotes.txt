@@ -17,6 +17,9 @@
 
 New Features
 
+- NEW: Option to use CamillaDSP software volume (64-bit with dither)
+- NEW: Monitor in-place update via WebUI Status screen
+
 Updates
 
 - UPD: Bump to MPD 0.23.12
