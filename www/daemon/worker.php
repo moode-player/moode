@@ -1916,9 +1916,20 @@ function runQueuedJob() {
 			// Store audio formats
 			$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 
-			// Reset hardware volume to 0dB (100) if indicated
-			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+			// Set hardware volume to 0dB (100) if indicated
+			if ($_SESSION['alsavolume'] != 'none') {
+				$cmd ='/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max'];
+				switch ($_SESSION['mpdmixer']) {
+					case 'software':
+					case 'none': // Fixed (0dB)
+						sysCmd($cmd);
+						break;
+					case 'null':
+						if (isMpd2CamillaDspVolSyncModeEnabled()) {
+							sysCmd($cmd);
+						}
+						break;
+				}
 			}
 
 			// Parse quereargs: [0] = device number changed 1/0, [1] = mixer change 'fixed', 'hardware', 'software', 0
