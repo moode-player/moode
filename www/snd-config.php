@@ -42,27 +42,27 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 }
 // Volume type
 if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mpdmixer']) {
-	$mixer_type_selected = $_POST['mixer_type'];
-	$camilladsp_volume_sync = 'off';
+	$mixerTypeSelected = $_POST['mixer_type'];
+	$camillaDspVolumeSync = 'off';
 
-	if ($mixer_type_selected == 'none') {
+	if ($mixerTypeSelected == 'none') {
 		// Changing to Fixed (0dB)
 		$mixerChange = 'fixed';
 	}
-	else if ($mixer_type_selected == 'camilladsp') {
-	    $mixer_type_selected = 'null';
-		$camilladsp_volume_sync = 'on';
+	else if ($mixerTypeSelected == 'camilladsp') {
+	    $mixerTypeSelected = 'null';
+		$camillaDspVolumeSync = 'on';
 	} else if ($_SESSION['mpdmixer'] == 'none') {
 		// Changing from Fixed (0dB)
-		$mixerChange = $mixer_type_selected;
+		$mixerChange = $mixerTypeSelected;
 	} else {
 		// Changing between hardware, software or null mixer
 		$mixerChange = 0;
 	}
 
-	phpSession('write', 'camilladsp_volume_sync', $camilladsp_volume_sync);
+	phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
 	$deviceChange = 0;
-	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $mixer_type_selected);
+	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $mixerTypeSelected);
 	$queueArgs = $deviceChange . ',' . $mixerChange;
 	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
@@ -327,7 +327,7 @@ if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD
 $cards = getAlsaCards();
 $_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$cfgMPD['device']] == 'empty') ? 'Device turned off or disconnected' : '';
 // Volume type
-// Hardware, Software, Fixed (0dB), Null (External control)
+// Hardware, Software, Fixed (0dB), Null (External control), CamillaDSP
 if ($_SESSION['alsavolume'] != 'none' || $cfgMPD['mixer_type'] == 'hardware') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($cfgMPD['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
 }
