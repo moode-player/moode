@@ -1925,7 +1925,7 @@ function runQueuedJob() {
 						sysCmd($cmd);
 						break;
 					case 'null':
-						if (isMpd2CamillaDspVolSyncModeEnabled()) {
+						if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
 							sysCmd($cmd);
 						}
 						break;

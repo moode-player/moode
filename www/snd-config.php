@@ -50,8 +50,12 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 		$mixerChange = 'fixed';
 	}
 	else if ($mixerTypeSelected == 'camilladsp') {
-	    $mixerTypeSelected = 'null';
-		$camillaDspVolumeSync = 'on';
+		if (doesCamillaCfgHaveVolumeFilter()) {
+			$mixerTypeSelected = 'null';
+			$camillaDspVolumeSync = 'on';
+		} else {
+			$mixerTypeSelected = 'no_volume_filter';
+		}
 	} else if ($_SESSION['mpdmixer'] == 'none') {
 		// Changing from Fixed (0dB)
 		$mixerChange = $mixerTypeSelected;
@@ -60,11 +64,16 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 		$mixerChange = 0;
 	}
 
-	phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
-	$deviceChange = 0;
-	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $mixerTypeSelected);
-	$queueArgs = $deviceChange . ',' . $mixerChange;
-	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+	if ($mixerTypeSelected == 'no_volume_filter') {
+		$_SESSION['notify']['title'] = 'Invalid volume type';
+		$_SESSION['notify']['msg'] = 'Current CamillaDSP config does not contain a Volume filter';
+	} else {
+		phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
+		$deviceChange = 0;
+		sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $mixerTypeSelected);
+		$queueArgs = $deviceChange . ',' . $mixerChange;
+		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+	}
 }
 
 // I2S AUDIO DEVICE

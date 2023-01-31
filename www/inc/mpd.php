@@ -896,6 +896,11 @@ function parseDir($path) {
 	return $result;
 }
 
+// CamillaDSP volume routines
 function isMpd2CamillaDspVolSyncModeEnabled() {
 	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladdsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
+}
+function doesCamillaCfgHaveVolumeFilter() {
+	$result = sysCmd('fgrep "type: Volume" /usr/share/camilladsp/working_config.yml');
+	return !empty($result);
 }
