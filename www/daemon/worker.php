@@ -537,13 +537,13 @@ if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 // Store alsa mixer name for use by sysutil.sh get/set-alsavol and vol.sh
 //phpSession('write', 'amixname', getAlsaMixerName($_SESSION['i2sdevice']));
 workerLog('worker: ALSA mixer name (' . $_SESSION['amixname'] . ')');
-$mixer_name = $_SESSION['mpdmixer'];
-$mixer_name = isMpd2CamillaDspVolSyncModeEnabled() ? 'CamillaDSP' : $mixer_name;
-$mixer_name = $mixer_name == 'none' ? 'fixed 0dB' : $mixer_name;
-workerLog('worker: MPD mixer type (' . ($mixer_name) . ')');
+$mixerName = $_SESSION['mpdmixer'];
+$mixerName = isMpd2CamillaDspVolSyncModeEnabled() ? 'CamillaDSP' : $mixerName;
+$mixerName = $mixerName == 'none' ? 'fixed 0dB' : $mixerName;
+workerLog('worker: MPD mixer type (' . ($mixerName) . ')');
 
-$service_cmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
-sysCmd('systemctl ' . $service_cmd .' mpd2cdspvolume');
+$serviceCmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
+sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
 // Check for presence of hardware volume controller
 $result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
@@ -1922,38 +1922,38 @@ function runQueuedJob() {
 			}
 
 			// Parse quereargs: [0] = device number changed 1/0, [1] = mixer change 'fixed', 'hardware', 'software', 0
-			$queue_args = explode(',', $_SESSION['w_queueargs']);
-			$device_chg = $queue_args[0];
-			$mixer_chg = $queue_args[1];
+			$queueArgs = explode(',', $_SESSION['w_queueargs']);
+			$deviceChange = $queueArgs[0];
+			$mixerChange = $queueArgs[1];
 
-			$service_cmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
-			sysCmd('systemctl ' . $service_cmd .' mpd2cdspvolume');
+			$serviceCmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
+			sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
 			// Restart MPD
 			sysCmd('systemctl restart mpd');
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
 
-			if ($mixer_chg == 'fixed') {
+			if ($mixerChange == 'fixed') {
 				// Mixer changed to Fixed (0dB)
 				sysCmd('/var/www/vol.sh 0');
 				sendEngCmd('refresh_screen');
-			} else if ($mixer_chg == 'software' || $mixer_chg == 'hardware' || $mixer_chg == 'null') {
+			} else if ($mixerChange == 'software' || $mixerChange == 'hardware' || $mixerChange == 'null') {
 				// Mixer changed from Fixed (0dB)
 				sysCmd('/var/www/vol.sh restore');
 				sendEngCmd('refresh_screen');
-			} else {
-				// $mixer_chg == 0 (No change or change between hardware and software)
+			} else { // $mixerChange == 0
+				// No change or change between hardware and software
 				sysCmd('/var/www/vol.sh restore');
 			}
 
 			// Was playing and mixer type not changed to Fixed (0dB) start play
-			if (!empty($playing) && $mixer_chg != 'fixed') {
+			if (!empty($playing) && $mixerChange != 'fixed') {
 				sysCmd('mpc play');
 			}
 
 			// Restart renderers if device (cardnum) changed
-			if ($device_chg == true) {
+			if ($deviceChange == true) {
 				if ($_SESSION['airplaysvc'] == 1) {
 					sysCmd('killall shairport-sync');
 					startAirPlay();
@@ -1965,9 +1965,9 @@ function runQueuedJob() {
 			}
 
 			// DEBUG:
-			$alsa_vol = $_SESSION['alsavolume'] == 'none' ? 'none' : sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
+			$alsaVolume = $_SESSION['alsavolume'] == 'none' ? 'none' : sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
 			$playing = !empty(sysCmd('mpc status | grep "\[playing\]"')) ? 'playing' : 'paused';
-			workerLog('worker: Job mpdcfg: devchg|mixchg (' . $device_chg . '|' . $mixer_chg . '), alsavol (' . $alsa_vol . '), playstate (' . $playing . ')');
+			workerLog('worker: Job mpdcfg: devchg|mixchg (' . $deviceChange . '|' . $mixerChange . '), alsavol (' . $alsaVolume . '), playstate (' . $playing . ')');
 			break;
 
 		// snd-config jobs
