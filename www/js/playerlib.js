@@ -1511,7 +1511,7 @@ function renderFolderView(data, path, searchstr) {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
     			output += '<div class="db-icon db-action">';
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-root">';
-    			output += '<i class="fas fa-list-ul icon-root"></i></a></div>';
+    			output += '<i class="fas fa-list-alt icon-root"></i></a></div>';
     			output += '<div class="db-entry db-savedplaylist db-browse"><div>' + data[i].playlist; + '</div></div>';
     			output += '</li>';
     		}
@@ -1549,7 +1549,7 @@ function renderFolderView(data, path, searchstr) {
                     var itemType = 'CUE sheet';
     				output += '<div class="db-icon db-song db-browse db-action">';
                     output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item">';
-                    output += '<i class="fas fa-list-ul icon-root db-browse-icon"></i></a></div>';
+                    output += '<i class="fas fa-list-alt icon-root db-browse-icon"></i></a></div>';
                     output += '<div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
     			}
     			else {
