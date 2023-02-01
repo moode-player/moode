@@ -2087,6 +2087,9 @@ function runQueuedJob() {
 				// Reconfigure MPD mixer if needed
 				if ($_SESSION['w_queueargs'] == 'off') {
 					if ($_SESSION['camilladsp_volume_sync'] == 'on') { // Was on
+						sysCmd('systemctl stop mpd2cdspvolume');
+						phpSession('write', 'camilladsp_volume_sync', 'off');
+
 						$mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
 						reconfMpdVolume($mixerType);
 
@@ -2097,9 +2100,6 @@ function runQueuedJob() {
 						sysCmd('/var/www/vol.sh -restore');
 					}
 				}
-				// Turn off camilla volume sync
-				sysCmd('systemctl stop mpd2cdspvolume');
-				phpSession('write', 'camilladsp_volume_sync', 'off');
 			} else if ($_SESSION['w_queue'] == 'crossfeed') {
 				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
