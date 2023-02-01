@@ -65,8 +65,8 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 	}
 
 	if ($mixerTypeSelected == 'no_volume_filter') {
-		$_SESSION['notify']['title'] = 'Invalid volume type';
-		$_SESSION['notify']['msg'] = 'Current CamillaDSP config does not contain a Volume filter';
+		$_SESSION['notify']['title'] = 'Cannot set to CamillaDSP';
+		$_SESSION['notify']['msg'] = 'Current CamillaDSP configuration does not contain a Volume filter';
 	} else {
 		phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
 		$deviceChange = 0;
@@ -292,7 +292,7 @@ if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST[
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
-    if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+    if ( $_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
 		submitJob('camilladsp', $_POST['camilladsp'], 'Settings updated', '');
 	} else {
 		$cdsp->reloadConfig();
@@ -337,14 +337,18 @@ $cards = getAlsaCards();
 $_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$cfgMPD['device']] == 'empty') ? 'Device turned off or disconnected' : '';
 // Volume type
 // Hardware, Software, Fixed (0dB), Null (External control), CamillaDSP
-if ($_SESSION['alsavolume'] != 'none' || $cfgMPD['mixer_type'] == 'hardware') {
+if ($_SESSION['alsavolume'] != 'none') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($cfgMPD['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
 }
-$_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($cfgMPD['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($cfgMPD['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp'] == 'off') ? "selected" : "") . ">Null (External control)</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"software\" " .
+	($cfgMPD['mixer_type'] == 'software' ? "selected" : "") . ">Software</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"none\" " .
+	($cfgMPD['mixer_type'] == 'none' ? "selected" : "") . ">Fixed (0dB output)</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"null\" " .
+	($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'off' ? "selected" : "") . ">Null (External control)</option>\n";
 if ($_SESSION['camilladsp'] != 'off') {
-	$_mpd_select['mixer_type'] .= "<option value=\"camilladsp\" " . (($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] != 'off') ? "selected" : "") . ">CamillaDSP</option>\n";
+	$_mpd_select['mixer_type'] .= "<option value=\"camilladsp\" " .
+		(($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? "selected" : "") . ">CamillaDSP</option>\n";
 }
 // Named I2S devices
 $result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
@@ -503,7 +507,7 @@ $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_ht
 $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
-	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
+	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, ucfirst($config_name));
 }
 //Check, if the config file is valid
 if ($_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {

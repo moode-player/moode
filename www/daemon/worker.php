@@ -934,11 +934,15 @@ if (!in_array($_SESSION['i2sdevice'], $inputSwitchDevices)) {
 workerLog('worker: Saved MPD vol level (' . $_SESSION['volknob_mpd'] . ')');
 workerLog('worker: Preamp volume level (' . $_SESSION['volknob_preamp'] . ')');
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
+// Set hardware volume to 0dB (100%) depending on mixer type
 if ($_SESSION['alsavolume'] != 'none') {
+	setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
+}
+/*DELETEif ($_SESSION['alsavolume'] != 'none') {
 	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') {
 		$result = sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
-}
+}*/
 $volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 sysCmd('/var/www/vol.sh ' . $volume);
 workerLog('worker: MPD volume level (' . $volume . ') restored');
@@ -1916,20 +1920,9 @@ function runQueuedJob() {
 			// Store audio formats
 			$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 
-			// Set hardware volume to 0dB (100) if indicated
+			// Set hardware volume to 0dB (100%) depending on mixer type
 			if ($_SESSION['alsavolume'] != 'none') {
-				$cmd ='/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max'];
-				switch ($_SESSION['mpdmixer']) {
-					case 'software':
-					case 'none': // Fixed (0dB)
-						sysCmd($cmd);
-						break;
-					case 'null':
-						if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
-							sysCmd($cmd);
-						}
-						break;
-				}
+				setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
 			}
 
 			// Parse quereargs: [0] = device number changed 1/0, [1] = mixer change 'fixed', 'hardware', 'software', 0
@@ -1988,9 +1981,12 @@ function runQueuedJob() {
 			cfgI2sOverlay($_SESSION['w_queueargs']);
 			break;
 		case 'alsavolume_max':
-			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
+			if ($_SESSION['alsavolume'] != 'none') {
+				setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['w_queueargs']);
 			}
+			/*DELETEif (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
+				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
+			}*/
 			break;
 		case 'alsa_output_mode':
 		case 'alsa_loopback':
@@ -2087,6 +2083,23 @@ function runQueuedJob() {
 				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
+
+				// Reconfigure MPD mixer if needed
+				if ($_SESSION['w_queueargs'] == 'off') {
+					if ($_SESSION['camilladsp_volume_sync'] == 'on') { // Was on
+						$mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
+						reconfMpdVolume($mixerType);
+
+						sysCmd('systemctl restart mpd');
+						$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
+						closeMpdSock($sock);
+
+						sysCmd('/var/www/vol.sh -restore');
+					}
+				}
+				// Turn off camilla volume sync
+				sysCmd('systemctl stop mpd2cdspvolume');
+				phpSession('write', 'camilladsp_volume_sync', 'off');
 			} else if ($_SESSION['w_queue'] == 'crossfeed') {
 				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');

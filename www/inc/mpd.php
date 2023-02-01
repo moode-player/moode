@@ -896,11 +896,27 @@ function parseDir($path) {
 	return $result;
 }
 
-// CamillaDSP volume routines
+// Volume support routines for MPD and CamillaDSP
+function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
+	$cmd = '/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName  . '" ' . $alsaVolumeMax;
+	switch ($mpdMixer) {
+		case 'hardware':
+			break;
+		case 'software':
+		case 'none': // Fixed (0dB)
+			sysCmd($cmd);
+			break;
+		case 'null':
+			if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
+				sysCmd($cmd);
+			}
+			break;
+	}
+}
 function isMpd2CamillaDspVolSyncModeEnabled() {
-	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladdsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
+	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
 }
 function doesCamillaCfgHaveVolumeFilter() {
 	$result = sysCmd('fgrep "type: Volume" /usr/share/camilladsp/working_config.yml');
-	return !empty($result);
+	return (!empty($result) && $_SESSION['camilladsp'] !='off');
 }
