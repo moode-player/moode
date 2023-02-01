@@ -356,7 +356,9 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 
 		return true;
 	} else {
-		echo json_encode('worker busy');
+		//echo json_encode('worker busy');
+		$_SESSION['notify']['title'] = 'System is busy';
+		$_SESSION['notify']['msg'] = 'Try again';
 		return false;
 	}
 }
