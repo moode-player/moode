@@ -143,6 +143,7 @@ sysCmd('moodeutl -D upnp_browser');
 sysCmd('moodeutl -D btmulti');
 sysCmd('moodeutl -D upd_rx_adv_toggle');
 sysCmd('moodeutl -D upd_tx_adv_toggle');
+sysCmd('moodeutl -D piano_dualmode');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session
@@ -579,17 +580,11 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	} else {
 		$outputMode = $subMode[0];
 	}
-	// Used in mpdcfg job and index.php
-	$_SESSION['piano_dualmode'] = $dualMode[0];
 	workerLog('worker: Piano 2.1 output mode (' . $outputMode . ')');
 
-	// Workaround: bump one of the channels to initialize volume
-	sysCmd('amixer -c0 sset "Digital" 0');
+	// Workaround: Send brief inaudible PCM to one of the channels to initialize volume
+	sysCmd('amixer -M -c 0 sset "Master" 0');
 	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
-	// Reset Main vol back to 100% (0dB) if indicated
-	if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['piano_dualmode'] != 'None') {
-		sysCmd('amixer -c0 sset "Digital" 100%');
-	}
 	workerLog('worker: Piano 2.1 initialized');
 }
 
@@ -934,16 +929,12 @@ if (!in_array($_SESSION['i2sdevice'], $inputSwitchDevices)) {
 workerLog('worker: Saved MPD vol level (' . $_SESSION['volknob_mpd'] . ')');
 workerLog('worker: Preamp volume level (' . $_SESSION['volknob_preamp'] . ')');
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
-// Set hardware volume to 0dB (100%) depending on mixer type
+// Set ALSA volume to 0dB (100%) depending on mixer type
 if ($_SESSION['alsavolume'] != 'none') {
 	setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
 }
-/*DELETEif ($_SESSION['alsavolume'] != 'none') {
-	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') {
-		$result = sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
-	}
-}*/
 $volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+// Restore MPD volume
 sysCmd('/var/www/vol.sh ' . $volume);
 workerLog('worker: MPD volume level (' . $volume . ') restored');
 if ($_SESSION['alsavolume'] != 'none') {
@@ -1920,7 +1911,7 @@ function runQueuedJob() {
 			// Store audio formats
 			$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 
-			// Set hardware volume to 0dB (100%) depending on mixer type
+			// Set ALSA volume to 0dB (100%) depending on mixer type
 			if ($_SESSION['alsavolume'] != 'none') {
 				setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
 			}

@@ -43,8 +43,10 @@ function getAlsaMixerName($i2sDevice) {
 			$mixerName = 'DSPVolume';
 		} else if ($_SESSION['i2soverlay'] == 'hifiberry-dacplushd') {
 			$mixerName = 'DAC';
-		} else if ($i2sDevice == 'Allo Katana DAC' || $i2sDevice == 'Allo Boss 2 DAC' ||
-			($i2sDevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
+		} else if (
+			$i2sDevice == 'Allo Katana DAC' ||
+			$i2sDevice == 'Allo Boss 2 DAC' ||
+			$i2sDevice == 'Allo Piano 2.1 Hi-Fi DAC') {
 			$mixerName = 'Master';
 		} else {
 			// No mixer defined or use default mixer name "Digital"
