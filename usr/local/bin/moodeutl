@@ -168,6 +168,9 @@ switch ($option) {
 	case '-U':
 		checkStationUrls($argv);
 		break;
+	case '--hwparams':
+		printHWParams();
+		break;
 	case '--btreset':
 		bluetoothReset();
 		break;
@@ -218,6 +221,7 @@ With no OPTION print the help text and exit.
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
+ --hwparams\tPrint ALSA hardware params
  --btreset\tReset Bluetooth to off
  --mpdlog\tPrint MPD log
  --updlog\tPrint in-place update log
@@ -534,6 +538,11 @@ function bluetoothReset() {
 	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='btsvc'\"");
 	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='pairing_agent'\"");
 	echo 'Bluetooth reset to off, reboot required' . "\n";
+}
+
+function printHWParams() {
+	$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));
+	echo shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
 }
 
 function printMPDLog() {
