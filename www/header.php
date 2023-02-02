@@ -188,7 +188,7 @@
 				foreach ($cdsp_configs as $config_file=>$config_name) {
                     $fa_selected = $_SESSION['camilladsp'] == $config_file ? '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>' : '';
 					echo '<li class="context-menu dropdown-cdsp-line"><a href="#notarget" data-cmd="camilladsp_config" data-cdspconfig="' .
-                        $config_file . '" data-cdsplabel="' . $config_name . '">' . $config_name . $fa_selected . '</a></li>';
+                        $config_file . '" data-cdsplabel="' . $config_name . '">' . ucfirst($config_name) . $fa_selected . '</a></li>';
 				}
 				?>
 			</ul>
