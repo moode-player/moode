@@ -66,7 +66,7 @@ switch ($option) {
 	case '-set-alsavol':
 		if (isset($argv[2])) {
 			if ($_SESSION['multiroom_rx'] == 'On') {
-				setAlsavol($argv[2]);
+				sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $argv[2]);
 			}
 			$status = '';
 		} else {
@@ -113,8 +113,4 @@ function txStatus() {
 
 function allStatus() {
 	return rxStatus() . ',' . txStatus();
-}
-
-function setAlsavol($vol) {
-	sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $vol);
 }
