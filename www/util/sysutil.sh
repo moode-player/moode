@@ -74,7 +74,7 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "$2")
 		exit
 	else
-		# Set-alsavol
+		# Set-alsavol (Note: % is appended to LEVEL)
 		AMIXNAME=$(sqlite3 $SQLDB "select value from cfg_system where param='amixname'")
 		MIXER_TYPE=$(sqlite3 $SQLDB "select value from cfg_mpd where param='mixer_type'")
 		if [[ $3 = "100" && $AMIXNAME = "HDMI" && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "none" ) ]]; then
@@ -82,8 +82,8 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 		else
 			LEVEL="$3%"
 		fi
-		amixer -c $CARD_NUM sset "$2" $LEVEL >/dev/null
-
+		# Use mapped volume option
+		amixer -M -c $CARD_NUM sset "$2" $LEVEL >/dev/null
 		exit
 	fi
 fi
