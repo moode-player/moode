@@ -34,7 +34,9 @@ phpSession('open');
 
 // Output device
 if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSION['cardnum']) {
-	$deviceChange = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0; // AirPlay & Spotify restarted if device (cardnum) changed
+	 // AirPlay & Spotify restarted if device (cardnum) changed
+	$deviceChange = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0;
+	// 0 = Special mixer change action not required
 	$mixerChange = 0;
 	sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
 	$queueArgs = $deviceChange . ',' . $mixerChange;
@@ -45,22 +47,22 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 	$mixerTypeSelected = $_POST['mixer_type'];
 	$camillaDspVolumeSync = 'off';
 
-	if ($mixerTypeSelected == 'none') {
-		// Changing to Fixed (0dB)
-		$mixerChange = 'fixed';
-	}
-	else if ($mixerTypeSelected == 'camilladsp') {
+	if ($mixerTypeSelected == 'none' || $mixerTypeSelected == 'null') {
+		// Changing to Fixed (0dB) or Null
+		$mixerChange = 'fixed_or_null';
+	} else if ($mixerTypeSelected == 'camilladsp') {
 		if (doesCamillaCfgHaveVolumeFilter()) {
 			$mixerTypeSelected = 'null';
+			$mixerChange = 'fixed_or_null';
 			$camillaDspVolumeSync = 'on';
 		} else {
 			$mixerTypeSelected = 'no_volume_filter';
 		}
-	} else if ($_SESSION['mpdmixer'] == 'none') {
-		// Changing from Fixed (0dB)
+	} else if ($_SESSION['mpdmixer'] == 'none' || $_SESSION['mpdmixer'] == 'null') {
+		// Changing from Fixed (0dB) or Null
 		$mixerChange = $mixerTypeSelected;
 	} else {
-		// Changing between hardware, software or null mixer
+		// 0 = Special mixer change action not required
 		$mixerChange = 0;
 	}
 

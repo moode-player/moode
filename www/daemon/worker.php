@@ -1916,7 +1916,9 @@ function runQueuedJob() {
 				setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
 			}
 
-			// Parse quereargs: [0] = device number changed 1/0, [1] = mixer change 'fixed', 'hardware', 'software', 0
+			// Parse quereargs:
+			// [0] = device (cardnum) change 1/0
+			// [1] = mixer change 'fixed_or_null', 'hardware', 'software', 0
 			$queueArgs = explode(',', $_SESSION['w_queueargs']);
 			$deviceChange = $queueArgs[0];
 			$mixerChange = $queueArgs[1];
@@ -1929,21 +1931,25 @@ function runQueuedJob() {
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
 
-			if ($mixerChange == 'fixed') {
-				// Mixer changed to Fixed (0dB)
-				sysCmd('/var/www/vol.sh 0');
+			if ($mixerChange == 'fixed_or_null') {
+				// Mixer changed to Fixed (0dB) or Null
+				if (isMpd2CamillaDspVolSyncModeEnabled()) {
+					sysCmd('/var/www/vol.sh restore');
+				} else {
+					sysCmd('/var/www/vol.sh 0');
+				}
 				sendEngCmd('refresh_screen');
-			} else if ($mixerChange == 'software' || $mixerChange == 'hardware' || $mixerChange == 'null') {
-				// Mixer changed from Fixed (0dB)
+			} else if ($mixerChange == 'software' || $mixerChange == 'hardware') {
+				// Mixer changed from Fixed (0dB) or Null
 				sysCmd('/var/www/vol.sh restore');
 				sendEngCmd('refresh_screen');
 			} else { // $mixerChange == 0
-				// No change or change between hardware and software
+				// Special mixer change action not required
 				sysCmd('/var/www/vol.sh restore');
 			}
 
-			// Was playing and mixer type not changed to Fixed (0dB) start play
-			if (!empty($playing) && $mixerChange != 'fixed') {
+			// Start play if was playing and mixer type not changed to Fixed (0dB) or Null
+			if (!empty($playing) && $mixerChange != 'fixed_or_null') {
 				sysCmd('mpc play');
 			}
 

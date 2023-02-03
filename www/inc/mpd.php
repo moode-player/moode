@@ -729,9 +729,11 @@ function getMappedDbVol() {
 	$mixerName = '"' . $_SESSION['amixname'] . '"';
 	$mpdMixerType = $_SESSION['mpdmixer'];
 
-	$result = sysCmd('amixer -c ' . $cardNum . ' sget ' . $mixerName . ' | ' . "awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
+	$result = sysCmd('amixer -c ' . $cardNum . ' sget ' . $mixerName . ' | ' .
+		"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
 	$mappedDbVol = explode('.', $result[0])[0];
-	return (empty($result[0]) || $mpdMixerType == 'software') ? '' : ($mappedDbVol < -127 ? -127 : $mappedDbVol) . 'dB';
+	return (empty($result[0]) || $mpdMixerType == 'software' || $mpdMixerType == 'null') ?
+		'' : ($mappedDbVol < -127 ? -127 : $mappedDbVol) . 'dB';
 }
 
 function getCoverHash($file) {
@@ -898,17 +900,19 @@ function parseDir($path) {
 
 // Volume support routines for MPD and CamillaDSP
 function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
-	$cmd = '/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName  . '" ' . $alsaVolumeMax;
+	$cmd = '/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName  . '" ';
 	switch ($mpdMixer) {
 		case 'hardware':
 			break;
 		case 'software':
 		case 'none': // Fixed (0dB)
-			sysCmd($cmd);
+			sysCmd($cmd . $alsaVolumeMax);
 			break;
 		case 'null':
 			if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
-				sysCmd($cmd);
+				sysCmd($cmd . $alsaVolumeMax);
+			} else {
+				sysCmd($cmd . '0');
 			}
 			break;
 	}
