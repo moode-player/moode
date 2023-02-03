@@ -800,6 +800,10 @@ function renderUIVol() {
     	}
     	// Software or hardware volume
     	else {
+
+            // NOTE: The TEST using ALSA to set hardware volume breaks this
+            // because MPD.json['volume'] may be accurate
+
     		// Sync moOde's displayed volume to that on a UPnP control point app
             // NOTE: This hack is necessary because upmpdcli set's MPD volume directly and does not use vol.sh
     		if (SESSION.json['feat_bitmask'] & FEAT_UPNPSYNC) {
@@ -2151,7 +2155,14 @@ function setVolume(level, event) {
     } else {
         // Muted
 		if (level == 0 && event == 'mute')	{
-			sendMpdCmd('setvol 0');
+
+            // TEST using ALSA instead of MPD to set hardware volume
+            if (SESSION.json['mpdmixer'] == 'hardware') {
+                sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, true); // Async
+            } else {
+                sendMpdCmd('setvol 0');
+            }
+
 			//console.log('setvol 0 | mute');
             if (SESSION.json['multiroom_tx'] == 'On') {
                 sendVolCmd('POST', 'mute_rx_vol', '', true); // Async

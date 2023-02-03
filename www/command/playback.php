@@ -29,16 +29,28 @@ $dbh = sqlConnect();
 $sock = getMpdSock();
 
 switch ($_GET['cmd']) {
+	 // Called from function setVolume() in playelib.js
 	case 'upd_volume':
-		// Local MPD volume
-		phpSession('open');
-		$currentVol = $_SESSION['volknob'];
-		phpSession('write', 'volknob', $_POST['volknob']);
-		phpSession('close');
-		sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
-		$resp = readMpdResp($sock);
 
-		// Receiver(s) MPD volume
+		// TEST Using ALSA instead of MPD to set Hardware volume and handle mute
+
+		// Local volume
+		phpSession('open');
+		$currentVol = $_SESSION['volknob']; // Save for Receiver
+
+		if ($_POST['event'] != 'mute') {
+			phpSession('write', 'volknob', $_POST['volknob']);
+		}
+		phpSession('close');
+
+		if ($_SESSION['mpdmixer'] == 'hardware') {
+			sysCmd('amixer -M -c ' . $_SESSION['cardnum'] . ' sset "' . $_SESSION['amixname'] . '" ' . $_POST['volknob'] . '%' );
+		} else {
+			sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
+			$resp = readMpdResp($sock);
+		}
+
+		// Receiver(s) volume
 		if ($_SESSION['multiroom_tx'] == 'On') {
 			$volDiff = $currentVol - $_POST['volknob'];
 			if ($_POST['event'] == 'unmute') {
