@@ -725,6 +725,13 @@ function getUpnpCoverUrl() {
 
 function getMappedDbVol() {
 	phpSession('open_ro');
+	$mappedDbVol = NULL;
+	if( isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter() )
+	{
+		$mappedDbVol = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+		$mappedDbVol = ($mappedDbVol != 0 ) ? round(20 * log10( $mappedDbVol/100.0),1) : '';
+		return (empty($mappedDbVol) )? '' : ($mappedDbVol < -127 ? -127 : $mappedDbVol) . 'dB';
+	}
 	$cardNum = $_SESSION['cardnum'];
 	$mixerName = '"' . $_SESSION['amixname'] . '"';
 	$mpdMixerType = $_SESSION['mpdmixer'];
