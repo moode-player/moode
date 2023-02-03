@@ -41,26 +41,32 @@ $cfgMPD = getCfgMpd($dbh);
 $result = sysCmd('pgrep -l bluealsa-aplay');
 $btActive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 
+// Other renderer active
+$aplActive = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $dbh)[0]['value'];
+$spotActive = sqlQuery("SELECT value FROM cfg_system WHERE param='spotactive'", $dbh)[0]['value'];
+$slActive = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $dbh)[0]['value'];
+$rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh)[0]['value'];
+
 //
 // INPUT
 //
 
-if ($_SESSION['aplactive'] == '1') {
+if ($aplActive == '1') {
 	$_file = 'AirPlay stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = '16 bit, 44.1 kHz, Stereo, ';
 	$_decode_rate = 'VBR';
-} else if ($_SESSION['spotactive'] == '1') {
+} else if ($spotActive == '1') {
 	$_file = 'Spotify stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = '16 bit, 44.1 kHz, Stereo, ';
 	$_decode_rate = 'VBR';
-} else if ($_SESSION['slactive'] == '1') {
+} else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = 'Unknown, ';
 	$_decode_rate = 'VBR';
-} else if ($_SESSION['rbactive'] == '1') {
+} else if ($rbActive == '1') {
 	$_file = 'RoonBridge stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = 'Unknown, ';
@@ -178,14 +184,14 @@ if ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play') {
 }
 // Output chain
 // Renderer
-if ($_SESSION['slactive'] == '1') {
-	$renderer = 'Squeezelite';
-} else if ($_SESSION['rbactive'] == '1') {
-	$renderer = 'Roonbridge';
-} else if ($_SESSION['aplactive'] == '1') {
+if ($aplActive == '1') {
 	$renderer = 'AirPlay';
-} else if ($_SESSION['spotactive'] == '1') {
+} else if ($spotActive == '1') {
 	$renderer = 'Spotify';
+} else if ($slActive == '1') {
+	$renderer = 'Squeezelite';
+} else if ($rbActive == '1') {
+	$renderer = 'Roonbridge';
 } else if ($btActive === true) {
 	$renderer = 'Bluetooth';
 } else {
@@ -255,8 +261,8 @@ else {
 	$_volume_mixer = 'ERROR: Unknow MPD volume type';
 }
 
-if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' ||
-	$_SESSION['inpactive'] == '1' || $_SESSION['rbactive'] == '1' || $btActive === true || $_SESSION['audioout'] == 'Bluetooth') {
+if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == '1' ||
+	$btActive === true || $_SESSION['audioout'] == 'Bluetooth' || $_SESSION['inpactive'] == '1') {
 	// Renderer active
 	// NOTE: Class 'off' hides the item
 	$_resample_rate = '';
@@ -267,7 +273,7 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 	$_replaygain = 'off';
 	$_vol_normalize = 'off';
 
-	if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1') {
+	if ($aplActive == '1' || $spotActive == '1') {
 		$_peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$_geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
         $_camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);
