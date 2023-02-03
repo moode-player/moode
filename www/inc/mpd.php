@@ -725,22 +725,24 @@ function getUpnpCoverUrl() {
 
 function getMappedDbVol() {
 	phpSession('open_ro');
-	$mappedDbVol = NULL;
-	if( isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter() )
-	{
-		$mappedDbVol = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-		$mappedDbVol = ($mappedDbVol != 0 ) ? round(20 * log10( $mappedDbVol/100.0),1) : '';
-		return (empty($mappedDbVol) )? '' : ($mappedDbVol < -127 ? -127 : $mappedDbVol) . 'dB';
-	}
-	$cardNum = $_SESSION['cardnum'];
-	$mixerName = '"' . $_SESSION['amixname'] . '"';
-	$mpdMixerType = $_SESSION['mpdmixer'];
 
-	$result = sysCmd('amixer -c ' . $cardNum . ' sget ' . $mixerName . ' | ' .
-		"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
-	$mappedDbVol = explode('.', $result[0])[0];
-	return (empty($result[0]) || $mpdMixerType == 'software' || $mpdMixerType == 'null') ?
-		'' : ($mappedDbVol < -127 ? -127 : $mappedDbVol) . 'dB';
+	if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
+		// For CamillaDSP volume: NOTE: Is 0 level equal to -96dB ?
+		$mappedDbVol = ($_SESSION['volknob'] != '0' ?
+			round(20 * log10($_SESSION['volknob'] / 100.0), 0) : '-96') . 'dB';
+	} else {
+		// For MPD volume
+		$result = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .
+			"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
+		if (empty($result[0]) || $_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'null') {
+			$mappedDbVol = '';
+		} else {
+			$result = explode('.', $result[0])[0];
+			$mappedDbVol = ($result < -127 ? '-127' : $result) . 'dB';
+		}
+	}
+
+	return $mappedDbVol;
 }
 
 function getCoverHash($file) {
