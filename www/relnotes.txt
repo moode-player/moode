@@ -28,6 +28,7 @@ Updates
 - UPD: Sync auto and toggle CoverView during startup
 - UPD: Format of auto_coverview value in System info
 - UPD: Add quick jump indexes back to Pi Touch
+- UPD: Add AlbumArtist to ashuffle mode to handle same name albums
 - UPD: Add moodeutl option to print ALSA hwparams
 
 Bug fixes
