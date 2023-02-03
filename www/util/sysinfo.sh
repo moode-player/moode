@@ -175,6 +175,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nParametric EQ\t\t= $eqfa12p\c"
 	echo -e "\nGraphic EQ\t\t= $alsaequal\c"
 	echo -e "\nCamillaDSP\t\t= $camilladsp\c"
+	echo -e "\nCamillaDSP volsync\t= $camilladsp_volume_sync\c"
 	echo -e "\nMPD httpd\t\t= $mpd_httpd\c"
 	echo -e "\nIgnore CUE files\t= $cuefiles_ignore\n"
 }
@@ -710,7 +711,7 @@ fi
 cardnum=${arr[76]}
 [[ "${arr[77]}" = "1" ]] && btsvc="On" || btsvc="Off"
 btname=${arr[78]}
-RESERVED_80=${arr[79]}
+[[ "${arr[79]}" = "on" ]] && camilladsp_volume_sync='On' || camilladsp_volume_sync='Off'
 feat_bitmask=${arr[80]}
 if [[ "${arr[81]}" = "604800000" ]]; then
 	library_recently_added="1 Week"
