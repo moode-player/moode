@@ -274,7 +274,8 @@ jQuery(document).ready(function($) { 'use strict';
         $('#artistheader > div').html(artistsHeader);
         // Hide alphabits index if indicated
         if (SESSION.json['library_albumview_sort'] == 'Year') {
-            $('#index-albums, #index-albumcovers').hide();
+            $('#index-albums').hide();
+            $('#index-albumcovers').attr('style', 'display:none!important');
         }
 
         // Stream Recorder

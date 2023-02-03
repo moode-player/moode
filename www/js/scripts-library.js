@@ -1861,7 +1861,7 @@ function showHideTracks(posChange) {
         $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
         $('#bottom-row').css('display', 'flex')
         $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
-        $('#index-albumcovers').hide();
+        $('#index-albumcovers').attr('style', 'display:none!important');
         customScroll('tracks', 0, 200);
     }
     // Toggle
@@ -1869,7 +1869,7 @@ function showHideTracks(posChange) {
         $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
         $('#bottom-row').css('display', 'flex')
         $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
-        $('#index-albumcovers').hide();
+        $('#index-albumcovers').attr('style', 'display:none!important');
         customScroll('tracks', 0, 200);
     }
     else {
