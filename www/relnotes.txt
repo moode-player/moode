@@ -18,6 +18,8 @@
 New Features
 
 - NEW: Option to use CamillaDSP software volume (64-bit with dither)
+- NEW: CamillaDSP Loudness and Volume control configurations
+- NEW: TEST use ALSA instead of MPD to update Hardware volume
 - NEW: Monitor in-place update via WebUI Status screen
 
 Updates
@@ -26,11 +28,14 @@ Updates
 - UPD: Sync auto and toggle CoverView during startup
 - UPD: Format of auto_coverview value in System info
 - UPD: Add quick jump indexes back to Pi Touch
+- UPD: Add moodeutl option to print ALSA hwparams
 
 Bug fixes
 
 - FIX: Session ID missing in moodeutl -i (autocfg-import.php)
-
+- FIX: Mapped ALSA volume not being used to set ALSA volume max
+- FIX: Allo Piano 2.1 mixer name "Digital" no longer used by driver
+- FIX: Audioinfo does not report renderer info
 
 ################################################################################
 #
