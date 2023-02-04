@@ -729,7 +729,7 @@ function getMappedDbVol() {
 	if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
 		// For CamillaDSP volume: NOTE: Is 0 level equal to -96dB ?
 		$mappedDbVol = ($_SESSION['volknob'] != '0' ?
-			round(20 * log10($_SESSION['volknob'] / 100.0), 0) : '-96') . 'dB';
+			round(20 * log10($_SESSION['volknob'] / 100.0), 0) : '-51') . 'dB';
 	} else {
 		// For MPD volume
 		$result = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .
