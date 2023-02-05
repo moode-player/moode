@@ -729,7 +729,7 @@ function getMappedDbVol() {
 	if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
 		// Use SQL value instead of session
 		$result = sqlRead('cfg_system', sqlConnect(), 'volknob');
-		// For CamillaDSP volume: NOTE: Is 0 level equal to -96dB ?
+		// For CamillaDSP volume: NOTE: -51dB is 0 level for Camilla source volume
 		$mappedDbVol = ($result[0]['value'] != '0' ?
 			round(20 * log10($result[0]['value'] / 100.0), 0) : '-51') . 'dB';
 	} else {
