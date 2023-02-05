@@ -785,29 +785,23 @@ function resetPlayCtls() {
 
 function renderUIVol() {
 	//console.log('renderUIVol()');
+
 	// Load session vars (required for multi-client)
     $.getJSON('command/cfg-table.php?cmd=get_cfg_system', function(data) {
     	if (data === false) {
             console.log('renderUIVol(): No data returned from get_cfg_system');
-    	}
-        else {
+    	} else {
             SESSION.json = data;
         }
 
-    	// Fixed volume (0dB output)
+        // Volume type
     	if (SESSION.json['mpdmixer'] == 'none') {
+            // Fixed (0dB)
     		disableVolKnob();
-    	}
-    	// Software or hardware volume
-    	else {
-
-            // NOTE: The TEST using ALSA to set hardware volume breaks this
-            // because MPD.json['volume'] may be accurate
-
-    		// Sync moOde's displayed volume to that on a UPnP control point app
-            // NOTE: This hack is necessary because upmpdcli set's MPD volume directly and does not use vol.sh
+    	} else {
+            // Software, hardware or null/CamillaDSP
+            // If sync is enabled update knob volume for apps that set volume via MPD instead of vol.sh
     		if (SESSION.json['feat_bitmask'] & FEAT_UPNPSYNC) {
-    			// No renderers active
     			if (SESSION.json['btactive'] == '0' && SESSION.json['aplactive'] == '0' && SESSION.json['spotactive'] == '0'
                     && SESSION.json['slsvc'] == '0' && SESSION.json['rbsvc'] == '0') {
     				if ((SESSION.json['volknob'] != MPD.json['volume']) && SESSION.json['volmute'] == '0') {
@@ -816,6 +810,12 @@ function renderUIVol() {
     				}
     			}
     		}
+
+            // Hardware
+            // Update MPD var for debug if needed
+            if (SESSION.json['mpdmixer'] == 'hardware') {
+                MPD.json['volume'] = SESSION.json['volknob'];
+            }
 
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
@@ -828,8 +828,7 @@ function renderUIVol() {
     		if (SESSION.json['volmute'] == '1') {
     			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('mute');
                 $('#playbar-volume-level').text('x');
-    		}
-    		else {
+    		} else {
     			$('.volume-display div, #playbar-volume-level').text(SESSION.json['volknob']);
     		}
     	}
@@ -848,13 +847,19 @@ function renderUI() {
             SESSION.json = data;
         }
 
+        // Volume type
     	if (SESSION.json['mpdmixer'] == 'none') {
-            // Fixed volume (0dB output)
+            // Fixed (0dB)
     		disableVolKnob();
     	} else {
-            // Software or hardware volume
+            // Software, hardware, null/CamillaDSP
             if (UI.mobile) {
                 $('.volume-popup-btn').show();
+            }
+
+            // Update MPD var for debug if needed
+            if (SESSION.json['mpdmixer'] == 'hardware') {
+                MPD.json['volume'] = SESSION.json['volknob'];
             }
 
     		// Update volume knobs
@@ -2146,7 +2151,7 @@ function setVolume(level, event) {
     level = parseInt(level);
 	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
 	level = level < 0 ? 0 : level;
-    //console.log(level, event);
+    //console.log(level, event, SESSION.json['volmute']);
 
 	// Unmuted, set volume (incl 0 vol)
 	if (SESSION.json['volmute'] == '0') {
@@ -2164,9 +2169,10 @@ function setVolume(level, event) {
             }
 
 			//console.log('setvol 0 | mute');
+            /* NOTE: not needed since mute is handled above in sendVolCmd()
             if (SESSION.json['multiroom_tx'] == 'On') {
                 sendVolCmd('POST', 'mute_rx_vol', '', true); // Async
-            }
+            }*/
 		} else {
 			// Vol up/dn btns pressed, just store the volume for display
 			SESSION.json['volknob'] = level.toString();

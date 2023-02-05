@@ -53,14 +53,16 @@ switch ($_GET['cmd']) {
 		// Receiver(s) volume
 		if ($_SESSION['multiroom_tx'] == 'On') {
 			$volDiff = $currentVol - $_POST['volknob'];
-			if ($_POST['event'] == 'unmute') {
-				$rxVolCmd = '-mute'; // Toggle mute off
+
+			if ($_POST['event'] == 'mute' || $_POST['event'] == 'unmute') {
+				$rxVolCmd = '-mute'; // Toggle mute on/off
 			} else if ($volDiff == 0) {
 				$rxVolCmd = $_POST['volknob'];
 			} else {
 				$rxVolCmd = $volDiff < 0 ? '-up ' . abs($volDiff) : '-dn ' . $volDiff;
 			}
-			updReceiverVol($rxVolCmd, true); // Master volume change
+
+			updReceiverVol($rxVolCmd, true); // True = Master volume change
 		}
 
 		echo json_encode('OK');

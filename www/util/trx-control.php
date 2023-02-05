@@ -84,6 +84,8 @@ if (phpSession('get_status') == PHP_SESSION_ACTIVE) {
 
 if ($status != '') {
 	echo $status;
+	//workerLog('Args: ' . $argv[1] . ' | ' . $argv[2]);
+	//workerLog('Stat: ' . $status);
 }
 exit(0);
 
@@ -95,14 +97,16 @@ function rxOnOff($onoff) {
 }
 
 function rxStatus() {
-	$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", sqlConnect());
+	$dbh = sqlConnect();
+	$mvOptIn = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", $dbh);
+	$volMute = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volmute'", $dbh);
 	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : ($_SESSION['mpdmixer'] == 'software' ? '?' : $_SESSION['volknob']);
 	return
 		'rx' . ',' . 						// Receiver
 		$_SESSION['multiroom_rx'] . ',' . 	// Status: On/Off/Disabled/Unknown
 		$volume . ',' .						// Volume
-		$_SESSION['volmute'] . ',' . 		// Mute state: 1/0
-		$result[0]['value'] . ',' . 		// Master volume opt-in: 1/0
+		$volMute[0]['value'] . ',' . 		// Mute state: 1/0
+		$mvOptIn[0]['value'] . ',' . 		// Master volume opt-in: 1/0
 		$_SESSION['hostname'];				// Hostname from System Config entry
 }
 
