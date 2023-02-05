@@ -1923,22 +1923,24 @@ function runQueuedJob() {
 			$deviceChange = $queueArgs[0];
 			$mixerChange = $queueArgs[1];
 
-			$serviceCmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
-			sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
-
 			// Restart MPD
 			sysCmd('systemctl restart mpd');
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
 
+			// Start Camilla volume sync if indicated
+			$serviceCmd = isMpd2CamillaDspVolSyncModeEnabled() ? 'start' : 'stop';
+			sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
+
 			if ($mixerChange == 'fixed_or_null') {
 				// Mixer changed to Fixed (0dB) or Null
-				if (isMpd2CamillaDspVolSyncModeEnabled()) {
-					sysCmd('/var/www/vol.sh restore');
+				if ($_SESSION['mpdmixer'] == 'null' && isMpd2CamillaDspVolSyncModeEnabled()) {
+					sysCmd('/var/www/vol.sh 1'); // Bump up down to establish sync
+					sysCmd('/var/www/vol.sh 0');
 				} else {
 					sysCmd('/var/www/vol.sh 0');
 				}
-				sendEngCmd('refresh_screen');
+				sendEngCmd('refresh_screen'); // For Playback view when using CamillaDSP quick config
 			} else if ($mixerChange == 'software' || $mixerChange == 'hardware') {
 				// Mixer changed from Fixed (0dB) or Null
 				sysCmd('/var/www/vol.sh restore');
