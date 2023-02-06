@@ -1604,7 +1604,7 @@ jQuery(document).ready(function($) { 'use strict';
         var item = $(this).data('item');
         var volume = $('#multiroom-rx-' + item + '-vol').text();
         $.post('command/multiroom.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(data) {}, 'json');
-        $('#multiroom-rx-' + item + '-vol').html("<div class='busy-spinner-btn'>" + GLOBAL.busySpinnerSVG + "</div>");
+        $('#multiroom-rx-' + item + '-vol').html("<div class='busy-spinner-btn-rx'>" + GLOBAL.busySpinnerSVG + "</div>");
         setTimeout(function() {
             $('#multiroom-rx-' + item + '-vol').text(volume);
         }, 1000);
