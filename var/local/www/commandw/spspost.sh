@@ -21,15 +21,17 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 
 $(sqlite3 $SQLDB "update cfg_system set value='0' where param='aplactive'")
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterapl' or param='inpactive' or param='multiroom_tx'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterapl' or param='camilladsp_volume_sync' or param='inpactive' or param='volknob_mpd' or param='multiroom_tx'")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
 ALSAVOLUME=${arr[1]}
 AMIXNAME=${arr[2]}
 MPDMIXER=${arr[3]}
 RSMAFTERAPL=${arr[4]}
-INPACTIVE=${arr[5]}
-MULTIROOM_TX=${arr[6]}
+CDSP_VOLSYNC=${arr[5]}
+INPACTIVE=${arr[6]}
+VOLKNOB_MPD=${arr[7]}
+MULTIROOM_TX=${arr[8]}
 RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
 
 if [[ $INPACTIVE == '1' ]]; then
@@ -37,13 +39,24 @@ if [[ $INPACTIVE == '1' ]]; then
 fi
 
 # Local
-# Restore 0dB hardware volume when MPD configured as below
-if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
+if [[ $CDSP_VOLSYNC == "on" ]]; then
+	# Restore saved MPD volume
+	$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB_MPD' where param='volknob'")
+elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 	if [[ $ALSAVOLUME != "none" ]]; then
 		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 fi
+# Restore knob volume
 /var/www/vol.sh -restore
+
+if [[ $CDSP_VOLSYNC == "on" ]]; then
+	# Reset volknob_mpd to 0
+	$(sqlite3 $SQLDB "update cfg_system set value='0' where param='volknob_mpd'")
+	# Bump volume to ensure sync with CamillaDSP
+	/var/www/vol.sh -dn 1
+	/var/www/vol.sh -up 1
+fi
 
 # Multiroom receivers
 if [[ $MULTIROOM_TX == "On" ]]; then

@@ -19,13 +19,15 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='inpactive' or param='multiroom_tx'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='volknob' or param='alsavolume_max' or param='alsavolume' or param='amixname' or param='camilladsp_volume_sync' or param='inpactive' or param='multiroom_tx'")
 readarray -t arr <<<"$RESULT"
-ALSAVOLUME_MAX=${arr[0]}
-ALSAVOLUME=${arr[1]}
-AMIXNAME=${arr[2]}
-INPACTIVE=${arr[3]}
-MULTIROOM_TX=${arr[4]}
+VOLKNOB=${arr[0]}
+ALSAVOLUME_MAX=${arr[1]}
+ALSAVOLUME=${arr[2]}
+AMIXNAME=${arr[3]}
+CDSP_VOLSYNC=${arr[4]}
+INPACTIVE=${arr[5]}
+MULTIROOM_TX=${arr[6]}
 RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
 
 if [[ $INPACTIVE == '1' ]]; then
@@ -40,7 +42,11 @@ sleep 1
 $(sqlite3 $SQLDB "update cfg_system set value='1' where param='aplactive'")
 
 # Local
-if [[ $ALSAVOLUME != "none" ]]; then
+if [[ $CDSP_VOLSYNC == "on" ]]; then
+	# Set camilladsp volume to 100%
+	$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB' where param='volknob_mpd'")
+	/var/www/vol.sh 100
+elif [[ $ALSAVOLUME != "none" ]]; then
 	/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 fi
 
