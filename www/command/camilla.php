@@ -21,6 +21,7 @@
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/cdsp.php';
+require_once __DIR__ . '/../inc/mpd.php';
 
 switch ($_GET['cmd']) {
 	case 'camilladsp_setconfig':
@@ -37,7 +38,12 @@ switch ($_GET['cmd']) {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			}
 
-			if ($_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+			// Switching between configs
+			// with -> w/o volume filter	Reconfigure volume type to Hardware/Software, turn off mpd2 service
+			// w/o -> with volume filter	Reconfigure volume type to CamillaDSP, turn on mpd2 service
+			// Between with volume filter	$cdsp->reloadConfig()
+			// Between w/o volume filter	$cdsp->reloadConfig()
+			if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
 				submitJob('camilladsp', $newMode);
 			} else {
 				$cdsp->reloadConfig();
