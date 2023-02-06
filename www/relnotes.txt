@@ -19,17 +19,18 @@ New Features
 
 - NEW: Option to use CamillaDSP software volume (64-bit with dither)
 - NEW: CamillaDSP Loudness and Volume control configurations
-- NEW: TEST use ALSA instead of MPD to update Hardware volume
+- NEW: Use ALSA instead of MPD to update Hardware volume
 - NEW: Monitor in-place update via WebUI Status screen
 
 Updates
 
 - UPD: Bump to MPD 0.23.12
-- UPD: Sync auto and toggle CoverView during startup
+- UPD: Sync CoverView auto and toggle during startup
 - UPD: Format of auto_coverview value in System info
 - UPD: Add quick jump indexes back to Pi Touch
 - UPD: Add AlbumArtist to ashuffle mode to handle same name albums
 - UPD: Add moodeutl option to print ALSA hwparams
+- UPD: Improve readability of Receivers modal
 
 Bug fixes
 
