@@ -932,7 +932,7 @@ function isMpd2CamillaDspVolSyncModeEnabled() {
 	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
 }
 function doesCamillaCfgHaveVolumeFilter($configFile = null) {
-	empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : $configFile;
+	$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
 	$result = sysCmd('fgrep "type: Volume" ' . $configFile);
 	return (!empty($result) && $_SESSION['camilladsp'] !='off');
 }
