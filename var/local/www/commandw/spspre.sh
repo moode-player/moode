@@ -35,7 +35,6 @@ if [[ $INPACTIVE == '1' ]]; then
 fi
 
 /usr/bin/mpc stop > /dev/null
-
 # Allow time for ui update
 sleep 1
 
@@ -43,7 +42,7 @@ $(sqlite3 $SQLDB "update cfg_system set value='1' where param='aplactive'")
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
-	# Set camilladsp volume to 100%
+	# Save knob level then set camilladsp volume to 100% (0dB)
 	$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB' where param='volknob_mpd'")
 	/var/www/vol.sh 100
 elif [[ $ALSAVOLUME != "none" ]]; then

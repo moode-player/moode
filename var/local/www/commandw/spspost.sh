@@ -40,23 +40,19 @@ fi
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
-	# Restore saved MPD volume
+	# Restore knob level to saved MPD level and reset saved MPD level to 0
 	$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB_MPD' where param='volknob'")
+	$(sqlite3 $SQLDB "update cfg_system set value='0' where param='volknob_mpd'")
 elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 	if [[ $ALSAVOLUME != "none" ]]; then
 		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 fi
+
+# Allow time for ui update
+sleep 1
 # Restore knob volume
 /var/www/vol.sh -restore
-
-if [[ $CDSP_VOLSYNC == "on" ]]; then
-	# Reset volknob_mpd to 0
-	$(sqlite3 $SQLDB "update cfg_system set value='0' where param='volknob_mpd'")
-	# Bump volume to ensure sync with CamillaDSP
-	/var/www/vol.sh -dn 1
-	/var/www/vol.sh -up 1
-fi
 
 # Multiroom receivers
 if [[ $MULTIROOM_TX == "On" ]]; then
