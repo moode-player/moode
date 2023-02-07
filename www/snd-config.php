@@ -38,6 +38,7 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 	$deviceChange = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0;
 	// 0 = Special mixer change action not required
 	$mixerChange = 0;
+
 	sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
 	$queueArgs = $deviceChange . ',' . $mixerChange;
 	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
@@ -294,8 +295,15 @@ if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST[
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
-    if ( $_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-		submitJob('camilladsp', $_POST['camilladsp'], 'Settings updated', '');
+    if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+		if (doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp'])) {
+			$title = 'Volume filter exists';
+			$msg = 'MPD volume type CamillaDSP can be selected';
+		} else {
+			$title = 'Settings updated';
+			$msg = '';
+		}
+		submitJob('camilladsp', $_POST['camilladsp'], $title, $msg);
 	} else {
 		$cdsp->reloadConfig();
 	}
