@@ -70,6 +70,7 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 	if ($mixerTypeSelected == 'no_volume_filter') {
 		$_SESSION['notify']['title'] = 'Cannot set to CamillaDSP';
 		$_SESSION['notify']['msg'] = 'Current CamillaDSP configuration does not contain a Volume filter';
+		$_SESSION['notify']['duration'] = 5;
 	} else {
 		phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
 		$deviceChange = 0;
