@@ -1511,12 +1511,12 @@ jQuery(document).ready(function($) { 'use strict';
 	// Disconnect active renderer
     $(document).on('click', '.disconnect-renderer', function(e) {
 		notify('renderer_disconnect', '', '3_seconds');
-        $.post('command/renderer.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
+        $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
     // Turn off active renderer
     $(document).on('click', '.turnoff-renderer', function(e) {
 		notify('renderer_turnoff', '', '3_seconds');
-        $.post('command/renderer.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
+        $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
 
     // First use help
