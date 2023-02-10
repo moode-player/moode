@@ -23,15 +23,16 @@ fi
 #echo "Event: "$PLAYER_EVENT >> /home/pi/spotevent.log
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterspot' or param='inpactive' or param='multiroom_tx'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='camilladsp_volume_sync' or param='rsmafterspot' or param='inpactive' or param='multiroom_tx'")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
 ALSAVOLUME=${arr[1]}
 AMIXNAME=${arr[2]}
 MPDMIXER=${arr[3]}
-RSMAFTERSPOT=${arr[4]}
-INPACTIVE=${arr[5]}
-MULTIROOM_TX=${arr[6]}
+CDSP_VOLSYNC=${arr[4]}
+RSMAFTERSPOT=${arr[5]}
+INPACTIVE=${arr[6]}
+MULTIROOM_TX=${arr[7]}
 RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
 
 if [[ $INPACTIVE == '1' ]]; then
@@ -40,14 +41,17 @@ fi
 
 if [[ $PLAYER_EVENT == "started" ]]; then
 	/usr/bin/mpc stop > /dev/null
-
-	# Allow time for ui update
+	# Allow time for UI update
 	sleep 1
 
 	$(sqlite3 $SQLDB "update cfg_system set value='1' where param='spotactive'")
 
 	# Local
-	if [[ $ALSAVOLUME != "none" ]]; then
+	if [[ $CDSP_VOLSYNC == "on" ]]; then
+		# Save knob level then set camilladsp volume to 100% (0dB)
+		$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB' where param='volknob_mpd'")
+		/var/www/vol.sh 100
+	elif [[ $ALSAVOLUME != "none" ]]; then
 		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 
@@ -70,11 +74,19 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 
 	# Local
 	# Restore 0dB hardware volume when mpd configured as below
-	if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
+	if [[ $CDSP_VOLSYNC == "on" ]]; then
+		# Restore knob level to saved MPD level and reset saved MPD level to 0
+		$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB_MPD' where param='volknob'")
+		$(sqlite3 $SQLDB "update cfg_system set value='0' where param='volknob_mpd'")
+		# NOTE: Without the sleep sometimes CamillaDSP volume is left at 100%
+		sleep 2
+	elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 		if [[ $ALSAVOLUME != "none" ]]; then
 			/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi
 	fi
+
+	# Restore knob volume
 	/var/www/vol.sh -restore
 
 	# Multiroom receivers

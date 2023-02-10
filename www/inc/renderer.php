@@ -81,6 +81,12 @@ function stopAirPlay() {
 	}
 
 	// Local
+	if (isMpd2CamillaDspVolSyncModeEnabled()) {
+		$dbh = sqlConnect();
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $dbh);
+		sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $dbh);
+		sqlQuery("UPDATE cfg_system SET value='0' WHERE param='volknob_mpd'", $dbh);
+	}
 	sysCmd('/var/www/vol.sh -restore');
 
 	// Multiroom receivers
@@ -154,6 +160,12 @@ function stopSpotify() {
 	sysCmd('killall librespot');
 
 	// Local
+	if (isMpd2CamillaDspVolSyncModeEnabled()) {
+		$dbh = sqlConnect();
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $dbh);
+		sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $dbh);
+		sqlQuery("UPDATE cfg_system SET value='0' WHERE param='volknob_mpd'", $dbh);
+	}
 	sysCmd('/var/www/vol.sh -restore');
 
 	// Multiroom receivers

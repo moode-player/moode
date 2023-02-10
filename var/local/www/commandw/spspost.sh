@@ -43,14 +43,14 @@ if [[ $CDSP_VOLSYNC == "on" ]]; then
 	# Restore knob level to saved MPD level and reset saved MPD level to 0
 	$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB_MPD' where param='volknob'")
 	$(sqlite3 $SQLDB "update cfg_system set value='0' where param='volknob_mpd'")
+	# NOTE: Without the sleep sometimes CamillaDSP volume is left at 100%
+	sleep 2
 elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 	if [[ $ALSAVOLUME != "none" ]]; then
 		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 fi
 
-# Allow time for ui update
-sleep 1
 # Restore knob volume
 /var/www/vol.sh -restore
 
