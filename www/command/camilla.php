@@ -38,7 +38,7 @@ switch ($_GET['cmd']) {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			}
 
-			// Switching between configs
+			// TODO: Switching between configs
 			// with -> w/o volume filter	Reconfigure volume type to Hardware/Software, turn off mpd2 service
 			// w/o -> with volume filter	Reconfigure volume type to CamillaDSP, turn on mpd2 service
 			// Between with volume filter	$cdsp->reloadConfig()
