@@ -2187,27 +2187,52 @@ function runQueuedJob() {
 			}
 			break;
 		case 'airplay_protocol':
-			if ($_SESSION['w_queueargs'] != getAirPlayProtocolVer()) { // Compare submitted to current
+			$previousProtocol = getAirPlayProtocolVer();
+			if ($_SESSION['w_queueargs'] != $previousProtocol) { // Compare requested to previous
+				workerLog('worker: Requested AirPlay ' . $_SESSION['w_queueargs']);
 				workerLog('worker: Updating package list...');
 				sysCmd('apt update > /dev/null 2>&1');
+
+				// Set package version
 				if ($_SESSION['w_queueargs'] == '1') {
+					// Final Airplay 1 package
 					$package = 'shairport-sync=3.3.8-1moode1';
 					$options = '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --allow-downgrades';
 				} else {
-					$package = 'shairport-sync=4.1.0~git20221009.e7c6c4b-1moode1';
+					// Latest Airplay 2 package
+					$latestVersion = sysCmd("apt search shairport-sync | awk 'NR==3 {print $2}'")[0];
+					$package = 'shairport-sync=' . $latestVersion;
 				    $options = '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"';
 				}
-				// Install package
-				workerLog('worker: Selected AirPlay ' . $_SESSION['w_queueargs'] . ' protocol');
-				workerLog('worker: Installing ' . $package);
-				sysCmd('moode-apt-mark unhold > /dev/null');
-				sysCmd('apt -y ' . $options . ' install ' . $package);
-				sysCmd('moode-apt-mark hold > /dev/null');
-				workerLog('worker: Installation complete');
-				// Restart AirPlay if indicated
-				stopAirPlay();
-				if ($_SESSION['airplaysvc'] == 1) {
-					startAirPlay();
+
+				// Validate / install
+				if (false !== strpos($package, 'moode')) {
+					// Install package
+					workerLog('worker: Installing ' . $package);
+					sysCmd('moode-apt-mark unhold > /dev/null');
+					sysCmd('apt -y ' . $options . ' install ' . $package);
+					sysCmd('moode-apt-mark hold > /dev/null');
+					// Check installation
+					if ($_SESSION['w_queueargs'] == getAirPlayProtocolVer()) {
+						$msg = 'Installation complete';
+						// Restart AirPlay if indicated
+						stopAirPlay();
+						if ($_SESSION['airplaysvc'] == 1) {
+							startAirPlay();
+						}
+					} else {
+						$msg = 'Error: Installation did not complete successfully';
+					}
+				} else {
+					$msg = 'Error: Unable to get latest Airplay 2 package version';
+				}
+
+				// Finish up
+				workerLog('worker: ' . $msg);
+				if ($msg != 'Installation complete') {
+					// Revert to previous protocol version
+					phpSession('write', 'airplay_protocol', $previousProtocol);
+					sendEngCmd('refresh_screen');
 				}
 			}
 			break;

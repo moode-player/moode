@@ -73,7 +73,7 @@ if (isset($_POST['update_airplay_settings'])) {
 	}
 }
 if (isset($_POST['update_airplay_protocol'])) {
-	$_SESSION['airplay_protocol'] = substr($_POST['airplay_protocol'], -1);
+	$_SESSION['airplay_protocol'] = $_POST['airplay_protocol']; // Not also maintained in cfg_system
 	submitJob('airplay_protocol', $_POST['airplay_protocol'], 'Settings updated', '');
 }
 if (isset($_POST['update_rsmafterapl'])) {
