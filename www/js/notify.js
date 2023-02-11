@@ -81,17 +81,18 @@ function notify(title, msg, duration = '2_seconds') {
         // Network config
 		needssid: 'Static IP requres an SSID',
 		needdhcp: 'Blank SSID requires DHCP',
-        // Miscellaneous
-        upd_clock_radio: 'Clock radio updated',
-		settings_updated: 'Settings updated',
-		gathering_info: 'Gathering info...',
-        discovering_players: 'Discovering players...',
+        // System
         restart: 'Restarting...',
 		shutdown: 'Shutting down...',
         reconnect: 'Reconnecting...',
         mpderror: 'MPD error',
         viewport: 'Viewport',
         updater: 'An update is available',
+        // Miscellaneous
+        upd_clock_radio: 'Clock radio updated',
+		settings_updated: 'Settings updated',
+		gathering_info: 'Gathering info...',
+        discovering_players: 'Discovering players...',
         // Recorder
         recorder_installed: 'Recorder installed',
         recorder_uninstalled: 'Recorder uninstalled',
