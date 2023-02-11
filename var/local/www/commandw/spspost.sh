@@ -19,9 +19,9 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-$(sqlite3 $SQLDB "update cfg_system set value='0' where param='aplactive'")
+$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='aplactive'")
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterapl' or param='camilladsp_volume_sync' or param='inpactive' or param='volknob_mpd' or param='multiroom_tx'")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','mpdmixer','rsmafterapl','camilladsp_volume_sync','inpactive','volknob_mpd','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
 ALSAVOLUME=${arr[1]}
@@ -41,8 +41,8 @@ fi
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
 	# Restore knob level to saved MPD level and reset saved MPD level to 0
-	$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB_MPD' where param='volknob'")
-	$(sqlite3 $SQLDB "update cfg_system set value='0' where param='volknob_mpd'")
+	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB_MPD' WHERE param='volknob'")
+	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='volknob_mpd'")
 	# NOTE: Without the sleep sometimes CamillaDSP volume is left at 100%
 	sleep 2
 elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then

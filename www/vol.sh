@@ -49,7 +49,7 @@ if [[ $1 = "--version" ]]; then
 fi
 
 # Get config settings
-RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob', 'volmute', 'amixname', 'mpdmixer', 'cardnum', 'volume_mpd_max')")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','volmute','amixname','mpdmixer','cardnum','volume_mpd_max')")
 
 # Check for empty result due to "Database locked" error
 if [[ $RESULT = "" ]]; then

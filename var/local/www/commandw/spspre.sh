@@ -19,7 +19,7 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='volknob' or param='alsavolume_max' or param='alsavolume' or param='amixname' or param='camilladsp_volume_sync' or param='inpactive' or param='multiroom_tx'")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','camilladsp_volume_sync','inpactive','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
 ALSAVOLUME_MAX=${arr[1]}
@@ -38,12 +38,12 @@ fi
 # Allow time for UI update
 sleep 1
 
-$(sqlite3 $SQLDB "update cfg_system set value='1' where param='aplactive'")
+$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='aplactive'")
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
 	# Save knob level then set camilladsp volume to 100% (0dB)
-	$(sqlite3 $SQLDB "update cfg_system set value='$VOLKNOB' where param='volknob_mpd'")
+	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB' WHERE param='volknob_mpd'")
 	/var/www/vol.sh 100
 elif [[ $ALSAVOLUME != "none" ]]; then
 	/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
