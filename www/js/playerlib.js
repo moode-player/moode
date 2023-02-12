@@ -1363,8 +1363,9 @@ function renderPlayqueue(state) {
 				}
 				// Song file or upnp url
 				else {
-					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' +
-                        encodeURIComponent(data[i].cover_hash) + '_sm.jpg';
+					var thumb = (data[i].file.indexOf('/tidal/') != -1 || data[i].file.substring(0, 4) == 'http') ?
+                        'images/default-cover-v6.png' :
+                        'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg';
 					output += showPlayqueueThumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
