@@ -93,6 +93,18 @@ pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
+// Boot file recovery (rare)
+if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
+	// Backup
+	sysCmd('cp ' . BOOT_CONFIG_TXT . ' ' . BOOT_CONFIG_BKP);
+	workerLog('worker: Boot config backed up');
+} else {
+	// Restore
+	sysCmd('cp ' . BOOT_CONFIG_BKP . ' ' . BOOT_CONFIG_TXT);
+	workerLog('worker: WARNING: Boot config missing or corrupt');
+	workerLog('worker: WARNING: Restart required');
+}
+
 // Ensure package holds are in effect
 sysCmd('moode-apt-mark hold > /dev/null 2>&1');
 
@@ -1191,14 +1203,14 @@ function chkMaintenance() {
 		// Clear logs
 		$result = sysCmd('/var/www/util/sysutil.sh "clear-syslogs"');
 		if (!empty($result)) {
-			workerLog('worker: Maintenance: Warning: Problem clearing system logs');
+			workerLog('worker: Maintenance: WARNING: Problem clearing system logs');
 			workerLog('worker: Maintenance: ' . $result[0]);
 		}
 
 		// Compact SQLite database
 		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
 		if (!empty($result)) {
-			workerLog('worker: Maintenance: Warning: Problem compacting SQLite database');
+			workerLog('worker: Maintenance: WARNING: Problem compacting SQLite database');
 			workerLog('worker: Maintenance: ' . $result[0]);
 		}
 
