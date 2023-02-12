@@ -41,6 +41,7 @@ Bug fixes
 - FIX: Mapped ALSA volume not being used to set ALSA volume max
 - FIX: Allo Piano 2.1 mixer name "Digital" no longer used by driver
 - FIX: Audioinfo does not report renderer info
+- FIX: Default moOde thumb not showing in Queue for UPnP files
 
 ################################################################################
 #
