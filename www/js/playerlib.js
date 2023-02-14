@@ -1363,8 +1363,8 @@ function renderPlayqueue(state) {
 				}
 				// Song file or upnp url
 				else {
-					var thumb = (data[i].file.indexOf('/tidal/') != -1 || data[i].file.substring(0, 4) == 'http') ?
-                        'images/default-cover-v6.png' :
+					var thumb = (data[i].file.substring(0, 4) == 'http') ?
+                        'images/default-cover-v6-upnp.png' :
                         'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg';
 					output += showPlayqueueThumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
 	                // Line 1 title
