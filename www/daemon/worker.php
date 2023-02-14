@@ -1946,11 +1946,7 @@ function runQueuedJob() {
 
 			if ($mixerChange == 'fixed_or_null') {
 				// Mixer changed to Fixed (0dB) or Null
-				if ($_SESSION['mpdmixer'] == 'null' && isMpd2CamillaDspVolSyncModeEnabled()) {
-					sysCmd('/var/www/vol.sh -restore');
-				} else {
-					sysCmd('/var/www/vol.sh 0');
-				}
+				sysCmd('/var/www/vol.sh 0');
 				sendEngCmd('refresh_screen'); // For Playback view when using CamillaDSP quick config
 			} else if ($mixerChange == 'software' || $mixerChange == 'hardware') {
 				// Mixer changed from Fixed (0dB) or Null
