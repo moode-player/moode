@@ -23,6 +23,7 @@
 
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/alsa.php';
+require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
@@ -912,33 +913,4 @@ function parseDir($path) {
 	}
 
 	return $result;
-}
-
-// TODO: Move to cdsp include
-// Volume support routines for MPD and CamillaDSP
-function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
-	$cmd = '/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName  . '" ';
-	switch ($mpdMixer) {
-		case 'hardware':
-			break;
-		case 'software':
-		case 'none': // Fixed (0dB)
-			sysCmd($cmd . $alsaVolumeMax);
-			break;
-		case 'null':
-			if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
-				sysCmd($cmd . $alsaVolumeMax);
-			} else {
-				sysCmd($cmd . '0');
-			}
-			break;
-	}
-}
-function isMpd2CamillaDspVolSyncModeEnabled() {
-	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
-}
-function doesCamillaCfgHaveVolumeFilter($configFile = null) {
-	$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
-	$result = sysCmd('fgrep "type: Volume" ' . $configFile);
-	return (!empty($result) && $_SESSION['camilladsp'] !='off');
 }

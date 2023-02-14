@@ -549,6 +549,16 @@ class CamillaDsp {
 
 }
 
+function isMpd2CamillaDspVolSyncModeEnabled() {
+	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
+}
+
+function doesCamillaCfgHaveVolumeFilter($configFile = null) {
+	$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
+	$result = sysCmd('fgrep "type: Volume" ' . $configFile);
+	return (!empty($result) && $_SESSION['camilladsp'] !='off');
+}
+
 function test_cdsp() {
     // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
     $cdsp = New CamillaDsp('flat.yml', "2", "-9;test2.txt;test3.txt;S24_3LE");
@@ -639,11 +649,8 @@ function test_cdsp() {
 
 }
 
-
-
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
     test_cdsp();
 }
-
 
 ?>

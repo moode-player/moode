@@ -19,6 +19,7 @@
  */
 
 require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/sql.php';
 
 function getAlsaMixerName($i2sDevice) {
@@ -157,4 +158,24 @@ function getAlsaCards() {
 		$cards[$i] = empty($cardID) ? 'empty' : $cardID;
 	}
 	return $cards;
+}
+
+// Volume support routines for MPD and CamillaDSP
+function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
+	$cmd = '/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName  . '" ';
+	switch ($mpdMixer) {
+		case 'hardware':
+			break;
+		case 'software':
+		case 'none': // Fixed (0dB)
+			sysCmd($cmd . $alsaVolumeMax);
+			break;
+		case 'null':
+			if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
+				sysCmd($cmd . $alsaVolumeMax);
+			} else {
+				sysCmd($cmd . '0');
+			}
+			break;
+	}
 }
