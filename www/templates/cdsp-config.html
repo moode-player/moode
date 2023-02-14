@@ -102,7 +102,7 @@
 				</span>
 			</div>
 
-			<label class="control-label" for="cdsp-qc-ir-right">IR Right</label>
+			<label class="control-label" for="cdsp-qc-ir-right">IR right</label>
 			<div class="controls">
 			    <select id="cdsp-qc-ir-right" class="config-select-xxlarge" name="cdsp_qc_ir_right">
 					$_select[cdsp_qc_ir_right]
@@ -168,7 +168,7 @@
 				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
 				<a data-toggle="modal" href="#copy-pipeline"><button class="btn btn-medium btn-primary config-btn">Copy</button></a>
 				<a data-toggle="modal" href="#create-new-pipeline"><button class="btn btn-medium btn-primary config-btn">New</button></a>
-				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="export" value="1">Download</button>
+				<button class="btn btn-medium btn-primary config-btn" type="submit" name="export" value="1">Download</button>
 
 				<label for="pipeline-config" id="choose-pipeline-cfg" class="btn btn-primary btn-medium config-btn">Upload</label>
 				<input type="file" id="pipeline-config" accept=".yml" name="pipeline_config" style="display:none" onchange="$('#btn-import-pipeline').click();" >
@@ -217,8 +217,8 @@
 			<!-- ids and names aren't correct: (copy of above now)-->
 			<div class="controls">
 				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
-				<button class="btn btn-medium btn-primary config-btn btn-submit config-btn" type="submit" name="export" value="1">Download</button>
-				<label for="coeffs_file" id="choose-coeff-cfg" class="btn btn-medium btn-primary config-btn">Upload new</label>
+				<button class="btn btn-medium btn-primary config-btn config-btn" type="submit" name="export" value="1">Download</button>
+				<label for="coeffs_file" id="choose-coeff-cfg" class="btn btn-medium btn-primary config-btn">Upload</label>
 				<input type="file" id="coeffs_file" accept=".wav,.txt,.raw,.csv" name="coeffs_file" style="display:none" onchange="$('#btn-import-coeff').click();">
 				<button id="btn-import-coeff" class="btn btn-medium btn-primary  config-btn btn-submit" type="submit" name="import" value="1"  style="display:none"</button>
 				<button id="btn-check-coeff" class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="info" value="1" style="display:none">Info</button>
@@ -296,7 +296,7 @@
 	<div id="remove-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
 		<input id="config_remove_id" type="hidden" name="cdsp_config" value="$_selected_config"/>
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove Pipeline?</h3>
+			<h3>Remove Config?</h3>
 		</div>
 		<div class="modal-body txtmid">
 			<h4>$_selected_config</h4>
@@ -335,7 +335,7 @@
 	<div id="copy-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="copy-pipeline-label" aria-hidden="true">
 		<input type="hidden" name="cdsp_config" value="$_selected_config"/>
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Copy pipeline</h3>
+			<h3>Copy pipeline?</h3>
 		</div>
 		<div class="modal-body">
 			<div class="control-group">
@@ -353,7 +353,7 @@
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="copy_pipeline" value="1">Copy</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="copy_pipeline" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -361,7 +361,7 @@
 <form class="form-horizontal" method="post">
 	<div id="create-new-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="new-pipeline-label" aria-hidden="true">
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Create new pipeline</h3>
+			<h3>Create new pipeline?</h3>
 		</div>
 		<div class="modal-body">
 			<div class="control-group">
@@ -373,7 +373,7 @@
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="create_new_pipeline" value="1">Create</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="create_new_pipeline" value="1">Yes</button>
 		</div>
 	</div>
 </form>
