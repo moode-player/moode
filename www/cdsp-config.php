@@ -53,9 +53,24 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes') {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
-
-	if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+	// Old
+	/*if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
 		submitJob('camilladsp', $_POST['cdsp_mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp_mode']), '');
+	} else {
+		$cdsp->reloadConfig();
+	}*/
+	// New
+	if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+		if (doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp'])) {
+			$title = 'Volume filter exists';
+			$msg = 'Volume type CamillaDSP is available in Audio Config';
+			$duration = '6';
+		} else {
+			$title = 'Settings updated';
+			$msg = '';
+			$duration = '';
+		}
+		submitJob('camilladsp',  $_POST['cdsp_mode'], $title, $msg, $duration);
 	} else {
 		$cdsp->reloadConfig();
 	}
@@ -67,12 +82,14 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 // Check
 else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
 	$checkResult = $cdsp->checkConfigFile($selectedConfig);
+	$selectedConfigLabel = str_replace('.yml', '', $cdsp->getConfigLabel($selectedConfig));
 
-	$selectedConfigLabel = $cdsp->getConfigLabel($selectedConfig);
-	if($checkResult['valid'] == True) {
-		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is valid');
+	if($checkResult['valid'] == true) {
+		$_SESSION['notify']['title'] = 'Config is valid';
+		$_SESSION['notify']['msg'] = $selectedConfigLabel;
 	} else {
-		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is not valid');
+		$_SESSION['notify']['title'] = 'Config is not valid';
+		$_SESSION['notify']['msg'] = $selectedConfigLabel;
 	}
 }
 // Import (Upload)
@@ -90,7 +107,8 @@ else if (isset($_FILES['pipeline_config']) && isset($_POST['import']) && $_POST[
 		$cdsp->patchRelConvPath($configFileBaseName);
 	}
 	$selectedConfig = $configFileBaseName;
-	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $configFileBaseName . '\" completed');
+	$_SESSION['notify']['title'] = 'Upload completed';
+	$_SESSION['notify']['msg'] = $configFileBaseName;
 }
 // Export (Download)
 else if ($selectedConfig && isset($_POST['export']) && $_POST['export'] == '1') {
@@ -108,29 +126,33 @@ else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') 
 	if ($_SESSION['camilladsp'] != $selectedConfig) { // Can't remove active config
 		$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig;
 		unlink($configFileName);
-		$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $selectedConfig . '\" completed');
+		$_SESSION['notify']['title'] = 'Config removed';
+		$_SESSION['notify']['msg'] = $selectedConfig;
 		$selectedConfig = null;
-	}
-	else {
-		$_SESSION['notify']['title'] = htmlentities('Cannot remove active configuration \"' . $selectedConfig . '\"');
+	} else {
+		$_SESSION['notify']['title'] = 'Cannot remove active config';
 	}
 }
 // New pipeline
 else if (isset($_POST['create_new_pipeline']) && $_POST['create_new_pipeline'] == '1') {
 	$cdsp->newConfig($_POST['new_pipeline_name'] . '.yml');
 	$selectedConfig = $_POST['new_pipeline_name'] . '.yml';
+	$_SESSION['notify']['title'] = 'Config created';
+	$_SESSION['notify']['msg'] = $_POST['new_pipeline_name'];
 }
 // Copy pipeline
 else if ($selectedConfig && isset($_POST['copy_pipeline']) && $_POST['copy_pipeline'] == '1') {
 	$cdsp->copyConfig($selectedConfig, $_POST['copyto_pipeline_name'] . '.yml');
 	$selectedConfig = $_POST['copyto_pipeline_name'] . '.yml';
+	$_SESSION['notify']['title'] = 'Config copied to';
+	$_SESSION['notify']['msg'] = $_POST['copyto_pipeline_name'];
 }
 // Coeffs import (Upload)
 else if (isset($_FILES['coeffs_file']) && isset($_POST['import']) && $_POST['import'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffs_file"]["name"];
 	move_uploaded_file($_FILES["coeffs_file"]["tmp_name"], $configFileName);
-	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["coeffs_file"]["name"] . '\" completed');
-
+	$_SESSION['notify']['title'] = 'Upload complete';
+	$_SESSION['notify']['msg'] = $_FILES["coeffs_file"]["name"];
 	$selectedCoeff = $_FILES["coeffs_file"]["name"];
 }
 // Coeffs export (Download)
@@ -148,7 +170,8 @@ else if ($selectedCoeff && isset($_POST['export']) && $_POST['export'] == '1') {
 else if ($selectedCoeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $selectedCoeff;
 	unlink($configFileName);
-	$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $selectedCoeff . '\" completed');
+	$_SESSION['notify']['title'] = 'Config removed';
+	$_SESSION['notify']['msg'] = $selectedCoeff;
 	$selectedCoeff = null;
 }
 else if ($selectedCoeff && isset($_POST['info']) && $_POST['info'] == '1') {

@@ -299,12 +299,14 @@ if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST[
     if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
 		if (doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp'])) {
 			$title = 'Volume filter exists';
-			$msg = 'MPD volume type CamillaDSP can be selected';
+			$msg = 'Volume type CamillaDSP is available in Audio Config';
+			$duration = '6';
 		} else {
 			$title = 'Settings updated';
 			$msg = '';
+			$duration = '';
 		}
-		submitJob('camilladsp', $_POST['camilladsp'], $title, $msg);
+		submitJob('camilladsp', $_POST['camilladsp'], $title, $msg, $duration);
 	} else {
 		$cdsp->reloadConfig();
 	}
