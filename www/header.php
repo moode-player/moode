@@ -215,7 +215,7 @@
 					<li><a href="#power-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Power</a></li>
 				<?php } else { ?>
 					<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
-                    <li class="context-menu menu-separator"><a href="/index.php" data-toggle="modal"><i class="fas fa-play sx"></i> Playback</a></li>
+                    <li class="context-menu menu-separator"><a href="/index.php" data-toggle="modal"><i class="fas fa-play sx"></i> Playback view</a></li>
                     <li><a href="javascript:audioPlayback()"><i class="fas fa-music sx"></i> Audio info</a></li>
 					<li id="sysinfo-menu-item"><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fas fa-file-alt sx"></i> System info</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fas fa-info sx"></i> Quick help</a></li>
