@@ -32,8 +32,10 @@ Updates
 - UPD: Add AlbumArtist to ashuffle mode to handle same name albums
 - UPD: Add moodeutl option to print ALSA hwparams
 - UPD: Improve readability of Receivers modal
+- UPD: Improve help text and labels in CamillaDSP Config
 - UPD: Improve Airplay protocol option
 - UPD: Add CamillaDSP volume support to Airplay and Spotify Connect
+- UPD: Add Playback item to main menu in Configs
 
 Bug fixes
 
