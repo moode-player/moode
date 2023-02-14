@@ -187,14 +187,14 @@ if ($_SESSION['invert_polarity'] != '0' ||
 $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $configFile => $configName) {
 	$selected = ($_SESSION['camilladsp'] == $configFile) ? 'selected' : '';
-	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, $configName);
+	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configName));
 }
 
 $configs = $cdsp->getAvailableConfigsRaw();
 $_selected_config = null;
 foreach ($configs as $configFile => $configName) {
 	$selected = (($selectedConfig == $configFile || ($selectedConfig == null) && $_selected_config == null)) ? 'selected' : '';
-	$_select['cdsp_config'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, $configName);
+	$_select['cdsp_config'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configName));
 	if ($selected == 'selected') {
 		$_selected_config = $configFile;
 		//$_selected_config = $selected;
@@ -206,7 +206,7 @@ $configs = $cdsp->getAvailableCoeffs();
 $_selected_coeff = null;
 foreach ($configs as $configFile => $configName) {
 	$selected = ($selectedCoeff == $configFile || ($selectedCoeff == null && $_selected_coeff == null)) ? 'selected' : '';
-	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, $configFile);
+	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configFile));
 	if ($selected == 'selected') {
 		$_selected_coeff = $configFile;
 	}
@@ -235,12 +235,12 @@ if ($_SESSION['camilladsp_quickconv']) {
 
 foreach ($configs as $configFile => $configName) {
 	$selected = ($quickConvIRL == $configFile) ? 'selected' : '';
-	$_select['cdsp_qc_ir_left'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, $configFile);
+	$_select['cdsp_qc_ir_left'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configFile));
 }
 
 foreach ($configs as $configFile => $configName) {
 	$selected = ($quickConvIRR == $configFile) ? 'selected' : '';
-	$_select['cdsp_qc_ir_right'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, $configFile);
+	$_select['cdsp_qc_ir_right'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configFile));
 }
 
 foreach ($cdsp->impulseResponseType() as $irType) {

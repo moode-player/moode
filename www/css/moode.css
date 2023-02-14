@@ -188,3 +188,6 @@ ol.playhistory {margin-left:3em;}
 #playhistory-search {width:84%;margin:auto;}
 #ph-filter-results {line-height:28px;font-size:14px;font-style:italic;margin-right:10px;}
 #search-reset-ph {padding:3px 10px;}
+/* CamillaDSP */
+#cdsp-default-configs-table tr {border:1px solid #333;}
+#cdsp-default-configs-table td {padding:.25em 0 .25em .25em;}

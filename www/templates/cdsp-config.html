@@ -24,8 +24,9 @@
 <div class="container">
 	<h1 class="cdsp-config">CamillaDSP</h1>
 	<p>
-		CamillaDSP is a general purpose signal processing tool for routing and filtering sound. It can be used for example for building crossovers for active speakers, or for performing room correction.
-		This version is: $_select[version]
+		CamillaDSP is a general purpose Digital Signal Processing engine for routing and filtering sound. It can be used for building crossovers for active speakers, performing room correction, equalization or volume control.
+		<br><br>
+		Version: $_select[version]
 	</p>
 
 	<form class="form-horizontal" action="" method="post" >
@@ -33,7 +34,7 @@
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
 		</legend>
 		<p class="sub-legend $_camilladsp_set_disabled_message">
-			To use CamillaDSP turn off DSP, EQ and Multiroom options in Audio and Multiroom configuration.
+			To use CamillaDSP turn off all other DSP, EQ and Multiroom options in Audio and Multiroom Config.
 		</p>
 
 		<div class="config-horiz-rule">General</div>
@@ -46,10 +47,10 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-cdsp-mode" class="config-help-info">
-					<b>Off: </b>No signal processing will occur.<br/>
-					<b>Custom: </b>Use a custom alsa_cdsp configuration.<br>
-					<b>Quick convolution filter: </b>Predefined filters that provide basic convolution with gain. No need to provide a configuration file.<br>
-					<b>Other: </b>Use one of the listed configuration files.
+					<b>Off:</b> No signal processing will occur.<br>
+					<b>Custom:</b> Use a custom configuration.<br>
+					<b>Quick convolution:</b> Predefined filters that provide basic convolution with gain. No need to provide a configuration file.<br>
+					<b>Other:</b> Use one of the listed configuration files.
 				</span>
 			</div>
 
@@ -61,8 +62,8 @@
 				</div>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-use-default-device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-cdsp-use-default-device" class="config-help-info">
-					<b>Yes: </b>Use the moOde defined audio device and format.<br>
-					<b>No: </b>Specify a different audio device and format for example if you want to create a multi-channel crossover.
+					<b>Yes:</b> Use the moOde defined audio device and format.<br>
+					<b>No:</b> Specify a different audio device and format for example if you want to create a multi-channel crossover.
 				</span>
 			</div>
 
@@ -138,6 +139,25 @@
 			    <select id="cdsp-config" class="config-select-xxlarge" name="cdsp_config" onchange="$('#btn-automatic-check').click();">
 					$_select[cdsp_config]
 				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-config" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-cdsp-config" class="config-help-info">
+					<p><b>Default Configurations</b></p>
+					<table id="cdsp-default-configs-table">
+						<tr><td>ASH-IR R02 Control Room</td><td>Binaural Room Impulse Response R02 Control Room from the ASH-IR dataset (without HpCF)</td></tr>
+						<tr><td>Crossfeed Bs2b</td><td>Bs2b from Wang-Yue which contains 5 setting sets. Refer to link for more information</td></tr>
+						<tr><td>Crossfeed Mikhail</td><td>Mikhail Naganov, customize with own IR correction</td></tr>
+						<tr><td>Crossfeed MPM</td><td>Mikhail Phonitor Mini (MPM). Mikhail Naganov reverse engineered SPL Phonitor Mini Crossfeed with DSP by Ebert-Hanke</td></tr>
+						<tr><td>Crossfeed Natural</td><td>Ebert-Hanke implementation of Natural roughly modeled after some publications by Jan Meier</td></tr>
+						<tr><td>Crossfeed Chu Moy</td><td>Ebert-Hanke implementation of Pow Chu Moy Crossfeed based on Linkwitz</td></tr>
+						<tr><td>Flat</td><td>Empty config (no DSP)</td></tr>
+						<tr><td>Loudness</td><td>Loudness volume curve with 3dB high boost, 6dB low boost and -3dB gain</td></tr>
+						<tr><td>MS-Matrix Narrow</td><td>M-S (Mid-Side) matrix with side signal reduced</td></tr>
+						<tr><td>MS-Matrix Wide</td><td>M-S (Mid-Side) matrix with side signal increased</td></tr>
+						<tr><td>PEQ 10-Band</td><td>Generic example of a 10 band parametric equalizer</td></tr>
+						<tr><td>Trifield 3-channel</td><td>Michael Gerzon derived Trifield decoder. Requires at least 3 channels available for output</td></tr>
+						<tr><td>Volume Control</td><td>CamillaDSP volume control</td></tr>
+					</table>
+				</span>
 				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="check_auto" value="1"  style="display:none" ></button>
 				<span class="config-help-static">
 					$_check_msg_config
@@ -156,46 +176,24 @@
 
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="check" value="1">Check</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-configuration-actions" class="config-help-info">
-					<b>Remove: </b>Delete the selected configuation file.<br/>
-					<b>Copy: </b>Provide new name and copy the selected configuation file.<br/>
-					<b>New: </b>Create empty new configuration (contains minimal required settings).<br/>
-					<b>Download: </b>Download the selected configuation file.<br/>
-					<b>Upload: </b>Upload a new configuration file. If file already exists it will be overwritten.<br/>
-					<b>Check: </b>Check if the selected configuration is a valid CamillaDSP configuration.<br/><br/>
-
-					Changes to the configuration are effective immediately after pausing/stopping playback.<br>
-					Information on how to create CamillaDSP configuration files can be found on the
-					<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
-					<br>
-					If CamillaDSP can't play audio, errors will be reported to the MPD log <code>/var/log/mpd/log</code><br>
-					In case this is due to channel counts or sampling rates which are not supported by your DAC,<br>
-					you can either handle this in CamillaDSP with mixers or resamplers<br>
-					or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
-					If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.<br>
-					<br>
-					To create new configurations you have three choices:<br>
-					The easy start by copying an existing configuration and start the camillagui (at the bottom of this page).<br>
-					Press the new button for minimal configuration and edit this on.
-					Or brew your own configuration file from scratch in text editor.	With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
-<code><span style="white-space: pre;">
-devices:
-  samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
-  chunksize: 4096 # increase, if buffer underruns occur when using higher samplerates (e.g. to 8192, 16384, 32768, 65536, ...)
-  queuelimit: 1  # increasing this introduces significant latency when stopping playback or changing songs
-                 # e.g.: samplerate=44100, chunksize=1024, queuelimit=44 => latency ~ 1s
-  capture:
-    type: Stdin
-    channels: 2  # irrelevant - will always be overridden (currently always 2)
-    format: S32LE  # irrelevant - will always be overridden with the incoming sample format
-  playback:
-    type: Alsa
-    channels: 2
-    device: "$sound_device_type:$current_sound_device_number"  # by default, this is automatically updated when configuration is choosen. (correct value is only shown, when playback is stopped.)																									  #
-    format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats (correct value is only shown, when playback is stopped)
-</span></code><br><br/>
-					Any reference to a convolution file should be relative like <code>../coeffs/yourfile.wav</code>
-				</div>
+				<span id="info-configuration-actions" class="config-help-info">
+					<b>Remove:</b> Delete the selected configuation file.<br>
+					<b>Copy:</b> Copy the selected configuation file to a new one.<br>
+					<b>New:</b> Create a new configuration with minimim required settings.<br>
+					<b>Download:</b> Download the selected configuation file.<br>
+					<b>Upload:</b> Upload a configuration file. If the file exists it will be overwritten.<br>
+					<b>Check:</b> Check if the selected configuration is valid.
+					<br><br>
+					<b>Usage notes:</b><br>
+					Changes to the configuration are effective immediately after pausing/stopping playback. If CamillaDSP can't
+					play audio, errors will be reported to the MPD log <code>/var/log/mpd/log</code> If this is due to channel
+					counts or sampling rates not supported by the audio device, adjust CamillaDSP mixers or	resamplers or change
+					the audio format passed to CamillaDSP in the ALSA configuration file <code>/etc/alsa/conf.d/camilladsp.conf</code>
+					Errors in this file are typically reported in <code>/var/log/moode.log</code> and <code>/var/log/syslog</code>
+				</span>
+				<span class="config-help-static">
+					Visit the <a class="camilladsp-home-link" href="https://github.com/HEnquist/camilladsp" target="_blank">CamillaDSP homepage</a> for Information on how to create CamillaDSP configuration files.
+				</span>
 			</div>
 		</div>
 	</form>
@@ -226,9 +224,9 @@ devices:
 				<button id="btn-check-coeff" class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="info" value="1" style="display:none">Info</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="info-convolution-actions" class="config-help-info">
-					<b>Remove: </b>Delete the selected convolution file.<br/>
-					<b>Download: </b>Download the selected convolution file.<br/>
-					<b>Upload: </b>Upload a convolution file, existing ones are overwritten.
+					<b>Remove:</b> Delete the selected convolution file.<br>
+					<b>Download:</b> Download the selected convolution file.<br>
+					<b>Upload:</b> Upload a convolution file, existing ones are overwritten.
  			    </div>
 			</div>
 		</div>
