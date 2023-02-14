@@ -53,13 +53,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes') {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
-	// Old
-	/*if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-		submitJob('camilladsp', $_POST['cdsp_mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp_mode']), '');
-	} else {
-		$cdsp->reloadConfig();
-	}*/
-	// New
+
 	if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
 		if (doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp'])) {
 			$title = 'Volume filter exists';
