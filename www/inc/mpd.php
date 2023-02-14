@@ -350,21 +350,25 @@ function updMpdConf($i2sDevice) {
 			case 'replay_gain_handler':
 				$replayGainHandler = $cfg['value'];
 				break;
-			case 'auto_resample':
-				$autoResample = $cfg['value'];
-				break;
-			case 'auto_channels':
-				$autoChannels = $cfg['value'];
-				break;
-			case 'auto_format':
-				$autoFormat = $cfg['value'];
-				break;
+			// ALSA: Only used if not default 500000 microseconds
 			case 'buffer_time':
+				$bufferTimeDefault = '500000';
 				$bufferTime = $cfg['value'];
 				break;
+			// Not used
 			case 'period_time':
 				$periodTime = $cfg['value'];
 				break;
+			case 'auto_resample': // Not used
+				$autoResample = $cfg['value'];
+				break;
+			case 'auto_channels': // Not used
+				$autoChannels = $cfg['value'];
+				break;
+			case 'auto_format': // Not used
+				$autoFormat = $cfg['value'];
+				break;
+			// SoX options
 			case 'sox_precision':
 				$soxPrecision = $cfg['value'];
 				break;
@@ -445,7 +449,7 @@ function updMpdConf($i2sDevice) {
 	$data .= "}\n\n";
 
 	// ALSA default
-	// NOTE: Chain is MPD -> [_audioout || MPD_DSP -> _audioout] -> [[plughw || hw]|| ALSA_DSP -> [plughw || hw]] -> audio device
+	// MPD -> {_audioout || DSP(MPD) -> _audioout} -> {{plughw || hw} || DSP(ALSA/Camilla) -> {plughw || hw}} -> audio device
 	$data .= "audio_output {\n";
 	$data .= "type \"alsa\"\n";
 	$data .= "name \"" . ALSA_DEFAULT . "\"\n";
@@ -455,6 +459,7 @@ function updMpdConf($i2sDevice) {
 	$data .= "dop \"" . $dop . "\"\n";
 	$data .= "stop_dsd_silence \"" . $stopDsdSilence . "\"\n";
 	$data .= "thesycon_dsd_workaround \"" . $thesyconDsdWorkaround . "\"\n";
+	$data .= $bufferTime == $bufferTimeDefault ? '' : "buffer_time \"" . $bufferTime . "\"\n";
 	$data .= "}\n\n";
 
 	// ALSA bluetooth

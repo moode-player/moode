@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Jan 19 18:01:21 2023
+-- File generated with SQLiteStudio v3.1.0 on Mon Feb 13 09:18:56 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -237,7 +237,6 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'N
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'No');
-
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
@@ -707,7 +706,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (34, 'auto_resample', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (35, 'auto_channels', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (36, 'auto_format', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (37, 'buffer_time', '500000');
-INSERT INTO cfg_mpd (id, param, value) VALUES (38, 'period_time', '256000000');
+INSERT INTO cfg_mpd (id, param, value) VALUES (38, 'period_time', '125000');
 INSERT INTO cfg_mpd (id, param, value) VALUES (39, 'selective_resample_mode', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (40, 'sox_precision', '20');
 INSERT INTO cfg_mpd (id, param, value) VALUES (41, 'sox_phase_response', '50');

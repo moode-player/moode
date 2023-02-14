@@ -174,37 +174,14 @@ $_mpd_select['input_cache'] .= "<option value=\"2 GB\" " . (($cfgMPD['input_cach
 $_mpd_select['log_level'] .= "<option value=\"default\" " . (($cfgMPD['log_level'] == 'default') ? "selected" : "") . " >Default</option>\n";
 $_mpd_select['log_level'] .= "<option value=\"verbose\" " . (($cfgMPD['log_level'] == 'verbose') ? "selected" : "") . " >Verbose</option>\n";
 
-/* DEPRECATE
-// hardware buffer time
-$_mpd_select['buffer_time'] .= "<option value=\"500000\" " . (($cfgMPD['buffer_time'] == '500000') ? "selected" : "") . " >0.5 secs (Default)</option>\n";
-$_mpd_select['buffer_time'] .= "<option value=\"750000\" " . (($cfgMPD['buffer_time'] == '750000') ? "selected" : "") . " >0.75 secs</option>\n";
-$_mpd_select['buffer_time'] .= "<option value=\"1000000\" " . (($cfgMPD['buffer_time'] == '1000000') ? "selected" : "") . " >1.0 secs</option>\n";
-$_mpd_select['buffer_time'] .= "<option value=\"1250000\" " . (($cfgMPD['buffer_time'] == '1250000') ? "selected" : "") . " >1.25 secs</option>\n";
-// hardware period time, r45b
-$_mpd_select['period_time'] .= "<option value=\"256000000\" " . (($cfgMPD['period_time'] == '256000000') ? "selected" : "") . " >Default</option>\n";
-$_mpd_select['period_time'] .= "<option value=\"1024000000\" " . (($cfgMPD['period_time'] == '1024000000') ? "selected" : "") . " >4X</option>\n";
-$_mpd_select['period_time'] .= "<option value=\"512000000\" " . (($cfgMPD['period_time'] == '512000000') ? "selected" : "") . " >2X</option>\n";
-$_mpd_select['period_time'] .= "<option value=\"64000000\" " . (($cfgMPD['period_time'] == '64000000') ? "selected" : "") . " >0.25X</option>\n";
-$_mpd_select['period_time'] .= "<option value=\"640000\" " . (($cfgMPD['period_time'] == '640000') ? "selected" : "") . " >0.0025X</option>\n";
-$_mpd_select['period_time'] .= "<option value=\"64000\" " . (($cfgMPD['period_time'] == '64000') ? "selected" : "") . " >0.00025X</option>\n";
-
-// ALSA auto-resample
-$_mpd_select['auto_resample'] .= "<option value=\"yes\" " . (($cfgMPD['auto_resample'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
-$_mpd_select['auto_resample'] .= "<option value=\"no\" " . (($cfgMPD['auto_resample'] == 'no') ? "selected" : "") . " >No</option>\n";
-// ALSA auto-channels, r45b
-$_mpd_select['auto_channels'] .= "<option value=\"yes\" " . (($cfgMPD['auto_channels'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
-$_mpd_select['auto_channels'] .= "<option value=\"no\" " . (($cfgMPD['auto_channels'] == 'no') ? "selected" : "") . " >No</option>\n";
-/// ALSA auto-format, r45b
-$_mpd_select['auto_format'] .= "<option value=\"yes\" " . (($cfgMPD['auto_format'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
-$_mpd_select['auto_format'] .= "<option value=\"no\" " . (($cfgMPD['auto_format'] == 'no') ? "selected" : "") . " >No</option>\n";
-*/
-
-/* DEPRECATE
-// Zeroconf
-$_mpd_select['zeroconf_enabled'] .= "<option value=\"yes\" " . (($cfgMPD['zeroconf_enabled'] == 'yes') ? "selected" : "") . ">Yes</option>\n";
-$_mpd_select['zeroconf_enabled'] .= "<option value=\"no\" " . (($cfgMPD['zeroconf_enabled'] == 'no') ? "selected" : "") . ">No</option>\n";
-$_mpd_select['zeroconf_name'] = $cfgMPD['zeroconf_name'];
-*/
+// TEST
+// Device buffer time in microseconds (label in milliseconds)
+$_mpd_select['buffer_time'] .= "<option value=\"500000\" " . (($cfgMPD['buffer_time'] == '500000') ? "selected" : "") . " >500 (Default)</option>\n";
+$_mpd_select['buffer_time'] .= "<option value=\"400000\" " . (($cfgMPD['buffer_time'] == '400000') ? "selected" : "") . " >400</option>\n";
+$_mpd_select['buffer_time'] .= "<option value=\"300000\" " . (($cfgMPD['buffer_time'] == '300000') ? "selected" : "") . " >300</option>\n";
+$_mpd_select['buffer_time'] .= "<option value=\"200000\" " . (($cfgMPD['buffer_time'] == '200000') ? "selected" : "") . " >200</option>\n";
+$_mpd_select['buffer_time'] .= "<option value=\"100000\" " . (($cfgMPD['buffer_time'] == '100000') ? "selected" : "") . " >100</option>\n";
+$_period_time = $cfgMPD['buffer_time'] / 4000; // miliseconds
 
 waitWorker(1, 'mpd-config');
 
