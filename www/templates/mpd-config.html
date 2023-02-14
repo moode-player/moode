@@ -300,65 +300,26 @@
                </span>
             </div>
 
-            <!-- DEPRECATE -->
-            <!--label class="control-label" for="buffer-time">Hardware buffer time</label>
+            <!-- TEST -->
+            <label class="control-label" for="buffer-time">Device buffer (ms)</label>
             <div class="controls">
 				<select id="buffer-time" name="conf[buffer_time]" class="config-select-large">
 					$_mpd_select[buffer_time]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-buffer-time" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-buffer-time" class="config-help-info">
-					This sets the length of the hardware sample buffer in microseconds.  Increasing	it may help to reduce or eliminate skipping on certain setups. Most users do not need to change this. The default is 500000 microseconds (0.5 seconds).
+					Device sample buffer length in milliseconds.
 				</span>
             </div>
 
-            <label class="control-label" for="period-time">Hardware period time</label>
-            <div class="controls">
-				<select id="period-time" name="conf[period_time]" class="config-select-large">
-					$_mpd_select[period_time]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-period-time" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-period-time" class="config-help-info">
-					This sets the time between hardware sample transfers in microseconds. Increasing this can reduce CPU usage while lowering it can reduce underrun errors on bandwidth-limited devices. Some users have reported good results with this set to 50000, but not all devices support values this high. Most users do not need to change this. The default is 256000000 / sample_rate(kHz), or 5804 microseconds for CD-quality audio.
-				</span>
-            </div>
-
-			<legend>ALSA auto-conversion</legend>
-            <label class="control-label" for="auto-resample">ALSA auto-resample</label>
-            <div class="controls">
-				<select id="auto-resample" name="conf[auto_resample]" class="config-select-large">
-					$_mpd_select[auto_resample]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-auto-resample" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-auto-resample" class="config-help-info">
-					Setting this to "No" disables ALSA's software resampling. NOTE: This lets MPD do the resampling if the hardware does not support the required sample rate. Default: "Yes".
-				</span>
-            </div>
-
-            <label class="control-label" for="auto-channels">ALSA auto-channels</label>
-            <div class="controls">
-				<select id="auto-channels" name="conf[auto_channels]" class="config-select-large">
-					$_mpd_select[auto_channels]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-auto-channels" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-auto-channels" class="config-help-info">
-					Setting this to "No disables ALSA's channel conversion. WARNING: If set to "No" and the hardware does not support the required number of channels MPD will fail to open the audio output. Default: "Yes".
-				</span>
-            </div>
-
-            <label class="control-label" for="auto-format">ALSA auto-format</label>
-            <div class="controls">
-				<select id="auto-format" name="conf[auto_format]" class="config-select-large">
-					$_mpd_select[auto_format]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-auto-format" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-auto-format" class="config-help-info">
-					Setting this to "No" disables ALSA's sample format conversion. WARNING: If set to "No" and the hardware does not support the required sample format MPD will fail to open the audio output. Default: "Yes".
-				</span>
-				<span class="help-block-configs help-block-margin">
-                    WARNING: Setting this to "No" is not compatible with Crossfeed, Parametric EQ or Graphic EQ.
-				</span>
-            </div-->
+            <label class="control-label" for="period-time">Device period (ms)</label>
+             <div class="controls">
+ 				<input class="config-input-large" type="number" id="period-time" name="conf[period_time]" value="$_period_time" readonly>
+ 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-period-time" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 				<span id="info-period-time" class="config-help-info">
+                    The time in milliseconds between sample transfers to the host (calculated as device_buffer_length / 4).
+ 				</span>
+             </div>
         </div>
     </form>
 </div>
