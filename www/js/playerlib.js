@@ -59,6 +59,9 @@ const RADIO_BITRATE_THRESHOLD       = 128;
 // For legacy Radio Manager station export
 const STATION_EXPORT_DIR = '/'; // var/www
 
+// For engineCmd() case 'cdsp_volfilter':
+const CDSP_VOLFILTER_MSG = 'Set Volume type to CamillaDSP';
+
 var UI = {
     knob: null,
     path: '',
@@ -534,6 +537,9 @@ function engineCmd() {
                     setTimeout(function() {
                         location.reload(true);
                     }, DEFAULT_TIMEOUT);
+                    break;
+                case 'cdsp_volfilter':
+                    notify('cdsp_volfilter', CDSP_VOLFILTER_MSG, 6);
                     break;
                 case 'reduce_fpm_pool':
                     // This functions as a dummy command which has the effect of
@@ -2658,9 +2664,10 @@ $(document).on('click', '.context-menu a', function(e) {
     		var selectedConfig = $(this).data('cdspconfig');
 
             if (selectedConfig != SESSION.json['camilladsp'] && (selectedConfig == 'off' || SESSION.json['camilladsp'] == 'off')) {
+                // Switching to/from Off
                 var notifyOK = true;
-                notify('update_cdsp', '', 'infinite');
             } else {
+                // Switching between configs
                 var notifyOK = false;
             }
 
@@ -2679,12 +2686,12 @@ $(document).on('click', '.context-menu a', function(e) {
                     // Allow time for worker job to complete
                     if (notifyOK) {
                         setTimeout(function() {
-                            notify('update_cdsp_ok');
-                        }, 3500);
+                            notify('cdsp_updated');
+                        }, 2000);
                     }
     			},
     			error: function() {
-                    notify('update_cdsp_err', selectedConfig, '5_seconds');
+                    notify('cdsp_update_err', selectedConfig, '5_seconds');
     			}
     		});
             break;

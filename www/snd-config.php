@@ -293,22 +293,39 @@ if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST[
 	$currentMode = $_SESSION['camilladsp'];
 	phpSession('write', 'camilladsp', $_POST['camilladsp']);
 	$cdsp->selectConfig($_POST['camilladsp']);
+
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
-    if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+
+	if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+		// Switching to/from Off
 		if (doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp'])) {
-			$title = 'Volume filter exists';
-			$msg = 'Volume type CamillaDSP is available in Audio Config';
-			$duration = '6';
+			submitJob('camilladsp', $_SESSION['camilladsp'], 'Volume filter exists', CDSP_VOLFILTER_MSG, '6');
 		} else {
-			$title = 'Settings updated';
-			$msg = '';
-			$duration = '';
+			submitJob('camilladsp', $_SESSION['camilladsp'], 'Settings updated');
 		}
-		submitJob('camilladsp', $_POST['camilladsp'], $title, $msg, $duration);
 	} else {
-		$cdsp->reloadConfig();
+		// Switching between configs
+		$newModeVolFilter = doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp']);
+		$currentModeVolFilter = doesCamillaCfgHaveVolumeFilter($currentMode);
+
+		if ($newModeVolFilter === true && $currentModeVolFilter === true) {
+			// Both have volume filter
+			$cdsp->reloadConfig();
+		} else if ($newModeVolFilter === false && $currentModeVolFilter === false) {
+			// Neither have volume filter
+			$cdsp->reloadConfig();
+		} else if ($newModeVolFilter === true) {
+			// Switch from one w/o volume filter to one with
+			$cdsp->reloadConfig();
+			$_SESSION['notify']['title'] = 'Volume filter exists';
+			$_SESSION['notify']['msg'] = CDSP_VOLFILTER_MSG;
+			$_SESSION['notify']['duration'] = 6;
+		} else if ($newModeVolFilter === false) {
+			// Switch from one with volume filter to one without
+			submitJob('camilladsp', $newMode . ',' . 'reconf_mixer', 'Settings updated');
+		}
 	}
 }
 // Parametric eq
@@ -522,7 +539,7 @@ foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
 	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, ucfirst($config_name));
 }
-//Check, if the config file is valid
+// Check if the config file is valid
 if ($_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {
 	$result = $cdsp->checkConfigFile($_SESSION['camilladsp']);
 	$output = implode('<br>', $result['msg']);

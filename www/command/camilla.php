@@ -38,18 +38,35 @@ switch ($_GET['cmd']) {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			}
 
-			// TODO: Switching between configs
-			// with -> w/o volume filter	Reconfigure volume type to Hardware/Software, turn off mpd2 service
-			// w/o -> with volume filter	Reconfigure volume type to CamillaDSP, turn on mpd2 service
-			// Between with volume filter	$cdsp->reloadConfig()
-			// Between w/o volume filter	$cdsp->reloadConfig()
-			if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+			if ($newMode != $currentMode && ($newMode == 'off' || $currentMode == 'off')) {
+				// Switching to/from Off
 				submitJob('camilladsp', $newMode);
+
+				if (doesCamillaCfgHaveVolumeFilter($newMode)) {
+					sendEngCmd('cdsp_volfilter');
+				}
 			} else {
-				$cdsp->reloadConfig();
+				// Switching between configs
+				$newModeVolFilter = doesCamillaCfgHaveVolumeFilter($newMode);
+				$currentModeVolFilter = doesCamillaCfgHaveVolumeFilter($currentMode);
+
+				if ($newModeVolFilter === true && $currentModeVolFilter === true) {
+					// Both have volume filter
+					$cdsp->reloadConfig();
+				} else if ($newModeVolFilter === false && $currentModeVolFilter === false) {
+					// Neither have volume filter
+					$cdsp->reloadConfig();
+				} else if ($newModeVolFilter === true) {
+					// Switch from one w/o volume filter to one with
+					$cdsp->reloadConfig();
+					sendEngCmd('cdsp_volfilter');
+				} else if ($newModeVolFilter === false) {
+					// Switch from one with volume filter to one without
+					submitJob('camilladsp', $newMode . ',' . 'reconf_mixer');
+				}
 			}
 		} else {
-			workerLog('camilla.php Error: missing camilladsp config name');
+			workerLog('camilla.php: Error: missing config name');
 		}
 		break;
 }

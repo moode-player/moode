@@ -72,9 +72,9 @@ function notify(title, msg, duration = '2_seconds') {
         no_receivers_found: 'No receivers found',
         run_receiver_discovery: 'Run receiver Discovery',
         // CamillaDSP
-        update_cdsp: 'Updating configuration...',
-        update_cdsp_ok: 'Configuration updated',
-        update_cdsp_err: 'Configuration update failed',
+        cdsp_updated: 'Settings updated',
+        cdsp_update_err: 'Config update failed',
+        cdsp_volfilter: 'Volume filter exists',
         // Renderers
         renderer_disconnect: 'Disconnecting...',
         renderer_turnoff: 'Turning off...',

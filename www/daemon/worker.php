@@ -2086,12 +2086,13 @@ function runQueuedJob() {
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 			} else if ($_SESSION['w_queue'] == 'camilladsp') {
-				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
+				$queueArgs = explode(',', $_SESSION['w_queueargs']);
+				$output = $queueArgs[0] != 'off' ? "\"camilladsp\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 
 				// Reconfigure MPD mixer if needed
-				if ($_SESSION['w_queueargs'] == 'off') {
+				if ($queueArgs[0] == 'off' || $queueArgs[1] == 'reconf_mixer') {
 					if ($_SESSION['camilladsp_volume_sync'] == 'on') { // Was on
 						sysCmd('systemctl stop mpd2cdspvolume');
 						phpSession('write', 'camilladsp_volume_sync', 'off');

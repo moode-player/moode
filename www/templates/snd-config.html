@@ -39,7 +39,7 @@
 				<span><em>&nbsp;$_device_error</em></span>
 			</div>
 
-			<label class="control-label" for="mixer_type">MPD Volume type</label>
+			<label class="control-label" for="mixer_type">Volume type</label>
             <div class="controls">
                 <select id="mixer_type" name="mixer_type" class="config-select-large">
 					$_mpd_select[mixer_type]
@@ -47,6 +47,7 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_type" value="novalue" $_volume_type_btn_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-mixer-type" class="config-help-info">
+					Volume type used by MPD.<br>
 					<b>- Hardware: </b>Use audio device on-chip volume controller.<br>
 					<b>- Software: </b>Use MPD software volume (32 bit float with dither).<br>
 					<b>- Fixed (0dB): </b>Output 100% volume. Assumes a downstream volume control is used.<br>
@@ -397,8 +398,8 @@
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_camilladsp" value="novalue" $_camilladsp_set_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camilladsp" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-camilladsp" class="config-help-info">
-					CamillaDSP is a general purpose signal processing tool for routing and filtering sound. It can be used for example for building crossovers for active speakers, or for performing room correction. CamillaDSP is maintained by Henrik Enquist. Integration into moOde was done by @bitlab.<br>
+				<span id="info-camilladsp" class="config-help-info">
+					CamillaDSP is a general purpose Digital Signal Processing engine for routing and filtering sound. It can be used for building crossovers for active speakers, performing room correction, equalization or volume control. CamillaDSP is maintained by Henrik Enquist. Integration into moOde was done by @bitlab.<br>
 					Feature summary:<br>
 					- IIR filters (BiQuad)<br>
 					- FIR filters (Convolution via FFT)<br>
@@ -410,7 +411,7 @@
 					- ARM Neon 64-bit instruction set is used<br>
 					- Pipeline editor with expert mode<br>
 					Configurations can be managed at the CamillaDSP settings page.
-                </div>
+                </span>
 				$_camilladsp_config_check
 			</div>
 

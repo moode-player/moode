@@ -33,6 +33,9 @@ const CGUI_CHECK_ACTIVE = 0;
 const CGUI_CHECK_INACTIVE = 3;
 const CGUI_CHECK_ERROR = -2;
 const CGUI_CHECK_NOTFOUND = -1;
+
+const CDSP_VOLFILTER_MSG = 'Set Volume type to CamillaDSP';
+
 class CamillaDsp {
 
     private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.conf';
@@ -555,8 +558,8 @@ function isMpd2CamillaDspVolSyncModeEnabled() {
 
 function doesCamillaCfgHaveVolumeFilter($configFile = null) {
 	$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
-	$result = sysCmd('fgrep "type: Volume" ' . $configFile);
-	return (!empty($result) && $_SESSION['camilladsp'] !='off');
+	$result = sysCmd('fgrep -o "type: Volume" ' . $configFile);
+	return ($result[0] == 'type: Volume' && $_SESSION['camilladsp'] !='off');
 }
 
 function test_cdsp() {
