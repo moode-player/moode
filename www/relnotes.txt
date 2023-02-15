@@ -27,7 +27,6 @@ Updates
 - UPD: Bump to MPD 0.23.12
 - UPD: Bump to bluez-alsa 4.0.0
 - UPD: Sync CoverView auto and toggle during startup
-- UPD: Format of auto_coverview value in System info
 - UPD: Add quick jump indexes back to Pi Touch
 - UPD: Add AlbumArtist to ashuffle mode to handle same name albums
 - UPD: Add moodeutl option to print ALSA hwparams
@@ -36,6 +35,7 @@ Updates
 - UPD: Improve Airplay protocol option
 - UPD: Add CamillaDSP volume support to Airplay and Spotify Connect
 - UPD: Add Playback item to main menu in Configs
+- UPD: Add ALSA buffer_time option to MPD COnfig
 
 Bug fixes
 
@@ -44,6 +44,7 @@ Bug fixes
 - FIX: Allo Piano 2.1 mixer name "Digital" no longer used by driver
 - FIX: Audioinfo does not report renderer info
 - FIX: Default thumb image not showing in Queue for UPnP files
+- FIX: Format of auto_coverview value in System info
 
 ################################################################################
 #
