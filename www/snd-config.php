@@ -381,7 +381,9 @@ if ($_SESSION['camilladsp'] != 'off') {
 		(($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? "selected" : "") . ">CamillaDSP</option>\n";
 }
 // Named I2S devices
+
 $result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
+sort($result);
 $array = array();
 $array[0]['name'] = 'None';
 $dacList = array_merge($array, $result);
