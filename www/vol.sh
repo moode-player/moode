@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-VER="7.4.0"
+VER="8.3.0"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
@@ -138,7 +138,7 @@ fi
 # Mute if indicated
 if [[ $VOLMUTE = "1" ]]; then
 	if [[ $MPDMIXER = "hardware" ]]; then
-		amixer -M -c $CARDNUM sset "$AMIXNAME" 0 >/dev/null
+		amixer -M -c $CARDNUM sset "$AMIXNAME" 0% >/dev/null
 	else
 		mpc volume 0 >/dev/null
 	fi
