@@ -22,6 +22,10 @@ New Features
 - NEW: Use ALSA instead of MPD to update Hardware volume
 - NEW: Monitor in-place update via WebUI Status screen
 
+Audio devices
+
+- NEW: ProtoDAC TDA1387 X8 (I2S)
+
 Updates
 
 - UPD: Bump to MPD 0.23.12
