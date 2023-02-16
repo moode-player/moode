@@ -246,13 +246,13 @@ if ($_SESSION['mpdmixer'] == 'hardware') {
 	$_volume_mixer = 'Hardware (On-chip)';
 }
 elseif ($_SESSION['mpdmixer'] == 'software') {
-	$_volume_mixer = 'Software (MPD)';
+	$_volume_mixer = 'MPD Software (24-bit)';
 }
 elseif ($_SESSION['mpdmixer'] == 'none') {
 	$_volume_mixer = 'Fixed (0dB output)';
 }
-elseif ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp_volume_sync'] != 'off') {
-	$_volume_mixer = 'CamillaDSP';
+elseif ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp_volume_sync'] == 'on') {
+	$_volume_mixer = 'CamillaDSP (64-bit)';
 }
 elseif ($_SESSION['mpdmixer'] == 'null') {
 	$_volume_mixer = 'Null (External control)';
