@@ -513,6 +513,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
         //.pipe($.size({showFiles: true, total: true}))
         .pipe($.if('*.html', $.replaceTask({ patterns: REPLACEMENT_PATTERNS})))
+        .pipe($.chmod(0o755))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
 }));
