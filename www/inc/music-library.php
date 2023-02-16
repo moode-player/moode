@@ -434,9 +434,10 @@ function genLibraryUTF8Rep($flat) {
 				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
 				'artist' => utf8repArray(($flatData['Artist'] ? $flatData['Artist'] : array())), //@Atair: array is expected in scripts-library.js even when empty
 				//@Atair:
-				// 1. album_artist shall never be empty, otherwise the sort routines in scripts-library.js complain,
+				// 1. artist can safely be empty, because it is no longed used as substitute for missing album_artist
+				// 2. album_artist shall never be empty, otherwise the sort routines in scripts-library.js complain,
 				//    because they expect artist as string and not as array in album_artist || artist constructs
-				// 2. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
+				// 3. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
 				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
 				'album_artist' => utf8rep(($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist'))),
 				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
