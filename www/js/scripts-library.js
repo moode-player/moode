@@ -1300,16 +1300,16 @@ $('#btn-ra-manager').click(function(e) {
         }
         $('#recorder-status-list').html(recorderStatusList);
         $('#recorder-status span').text(SESSION.json['recorder_status']);
-        $.getJSON('command/recorder_cmd.php?cmd=recorder_storage_paths', function(recorderStoragePaths) {
+        $.getJSON('command/recorder-cmd.php?cmd=recorder_storage_paths', function(recorderStoragePaths) {
             $('#recorder-storage-list').html(recorderStoragePaths);
             $('#recorder-storage span').text(SESSION.json['recorder_storage']);
         });
-        $.getJSON('command/recorder_cmd.php?cmd=recorder_album_tag_list', function(recorderAlbumTagList) {
+        $.getJSON('command/recorder-cmd.php?cmd=recorder_album_tag_list', function(recorderAlbumTagList) {
             $('#recorder-album-tag-list').html(recorderAlbumTagList);
             $('#recorder-album-tag span').text(SESSION.json['recorder_album_tag']);
             $('#selected-album-tag').text(SESSION.json['recorder_album_tag']);
         });
-        $.getJSON('command/recorder_cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
+        $.getJSON('command/recorder-cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
             $('#untagged-file-count').text(recorderUntaggedFileCount);
         });
         $('#radio-manager-modal').modal();
@@ -1343,7 +1343,7 @@ $('#btn-upd-radio-manager').click(function(e) {
             if (recorderStatus == 'Install recorder') {
                 $.ajax({
             		type: 'GET',
-            		url: 'command/recorder_cmd.php?cmd=recorder_install',
+            		url: 'command/recorder-cmd.php?cmd=recorder_install',
                     dataType: 'json',
             		async: true,
             		cache: false,
@@ -1358,7 +1358,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                         }
             		},
             		error: function() {
-                        // A 404 on recorder_cmd.php so we revert to 'not installed'
+                        // A 404 on recorder-cmd.php so we revert to 'not installed'
                         SESSION.json['recorder_status'] = 'Not installed';
                         $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_status': 'Not installed'});
                         notify('recorder_plugin_na');
@@ -1366,18 +1366,18 @@ $('#btn-upd-radio-manager').click(function(e) {
             	});
             }
             else if (recorderStatus == 'Uninstall recorder') {
-                $.post('command/recorder_cmd.php?cmd=recorder_uninstall');
+                $.post('command/recorder-cmd.php?cmd=recorder_uninstall');
                 $('#stream-recorder-options, #context-menu-stream-recorder').hide();
                 notify('recorder_uninstalled', '', '5_seconds');
             }
             else if (recorderStorageChange === true) {
-                $.post('command/recorder_cmd.php?cmd=recorder_storage_change');
+                $.post('command/recorder-cmd.php?cmd=recorder_storage_change');
                 $('.playback-context-menu i').removeClass('recorder-on');
                 $('#menu-check-recorder').css('display', 'none');
                 notify('settings_updated');
             }
             else if (recorderStatusChange && (recorderStatus == 'On' || recorderStatus == 'Off')) {
-                $.post('command/recorder_cmd.php?cmd=recorder_on_off');
+                $.post('command/recorder-cmd.php?cmd=recorder_on_off');
                 if (recorderStatus == 'On') {
                     $('.playback-context-menu i').addClass('recorder-on');
                     $('#menu-check-recorder').css('display', 'inline');
@@ -1391,14 +1391,14 @@ $('#btn-upd-radio-manager').click(function(e) {
             }
             else if ($('#delete-recordings span').text() == 'Yes') {
                 $('#delete-recordings span').text('No');
-                $.post('command/recorder_cmd.php?cmd=recorder_delete_files', function() {
+                $.post('command/recorder-cmd.php?cmd=recorder_delete_files', function() {
                     notify('recorder_deleted', 'Updating library...');
                 });
             }
             else if ($('#tag-recordings span').text() == 'Yes') {
                 notify('recorder_tagging', 'Wait until completion message appears', 'infinite');
                 $('#tag-recordings span').text('No');
-                $.post('command/recorder_cmd.php?cmd=recorder_tag_files', function () {
+                $.post('command/recorder-cmd.php?cmd=recorder_tag_files', function () {
                     notify('recorder_tagged', 'Updating library...', '5_seconds');
                 });
             }
@@ -1641,7 +1641,7 @@ $('#context-menu-playback a').click(function(e) {
                 $('.playback-context-menu i').removeClass('recorder-on');
             }
             $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_status': SESSION.json['recorder_status']}, function() {
-                $.post('command/recorder_cmd.php?cmd=recorder_on_off');
+                $.post('command/recorder-cmd.php?cmd=recorder_on_off');
             });
             break;
 	}

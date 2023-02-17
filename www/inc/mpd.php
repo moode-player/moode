@@ -408,7 +408,7 @@ function updMpdConf($i2sDevice) {
 		$mixerType = 'software';
 		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
-	// MPD mixer_type (Hardware, Software, Fixed (0dB, Null))
+	// MPD mixer_type (Hardware, Software, Fixed (0dB), Null)
 	phpSession('write', 'mpdmixer', $mixerType);
 	phpSession('write', 'mpdmixer_local', $mixerType);
 	// Audio device friendly name
@@ -486,7 +486,7 @@ function updMpdConf($i2sDevice) {
 
 	// Stream recorder
 	if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
-		include '/var/www/inc/recorder_mpd.php';
+		include '/var/www/inc/recorder-mpd.php';
 	}
 
 	if ($_SESSION['feat_bitmask'] & FEAT_DEVTWEAKS) {
