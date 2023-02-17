@@ -126,9 +126,10 @@ switch ($_GET['cmd']) {
 
 function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['debuglog'] = $_SESSION['debuglog'];
+	$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
 	$cfgSystem['kernelver'] = $_SESSION['kernelver'];
 	$cfgSystem['procarch'] = $_SESSION['procarch'];
-	$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
+	$cfgSystem['mpdver'] = $_SESSION['mpdver'];
 	$cfgSystem['ipaddress'] = $_SESSION['ipaddress'];
 	$cfgSystem['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
 	$cfgSystem['rx_hostnames'] = $_SESSION['rx_hostnames'];

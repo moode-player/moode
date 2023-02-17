@@ -2,10 +2,10 @@
 
 MOODE_RELEASE=$(moodeutl --mooderel | tr -d '\n')
 HDWR_REV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='hdwrrev'")
-KERNEL_ARCH=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='kernel_architecture'")
+[ $(uname -m) = "aarch64" ] && KERNEL_ARCH="64-bit" || KERNEL_ARCH="32-bit"
 AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='adevname'")
 
-echo Linux: $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\) \| "DebOS: "$(cat /etc/debian_version)
+echo Linux: $(uname -vr | awk '{print $1" "$2}') \| $(uname -m) \($KERNEL_ARCH\) \| "RaspiOS: "$(cat /etc/debian_version)
 echo Model: $HDWR_REV
 echo Audio: $AUDIO_DEV
 

@@ -30,7 +30,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
 	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
 	echo -e "\nPlatform\t\t= $hdwrrev\c"
-	echo -e "\nArchitecture\t\t= $ARCH ($kernel_architecture)\c"
+	echo -e "\nArchitecture\t\t= $ARCH\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
 	echo -e "\nTimezone\t\t= $timezone\c"
 	echo -e "\nCurrent time\t\t= $NOW\c"
@@ -264,7 +264,7 @@ PLAYLIST_MANAGER_SETTINGS() {
 
 MPD_SETTINGS() {
 	echo -e "M P D   S E T T I N G S"
-	echo -e "\nVersion\t\t\t= $mpdver\c"
+	echo -e "\nVersion\t\t\t= $(mpd -V | grep 'Music Player Daemon' | awk '{print $4}')\c"
 	echo -e "\nVolume type\t\t= $mixer_type\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
 	echo -e "\nSelective resampling\t= $selective_resample_mode\c"
@@ -285,12 +285,12 @@ MPD_SETTINGS() {
 	echo -e "\nAudio buffer\t\t= $audio_buffer_size (MB)\c"
 	echo -e "\nOutput buffer size\t= $max_output_buffer_size (MB)\c"
 	echo -e "\nMax playlist items\t= $max_playlist_length\c"
-	echo -e "\nInput cache\t\t= $input_cache\n"
+	echo -e "\nInput cache\t\t= $input_cache\c"
+	echo -e "\nDevice buffer\t\t= $(( $buffer_time / 1000 )) (ms)\c"
+	echo -e "\nDevice period\t\t= $(( $buffer_time / 4000 )) (ms)\n"
 	#echo -e "\nALSA auto-resample\t= $auto_resample\c"
 	#echo -e "\nALSA auto-channels\t= $auto_channels\c"
 	#echo -e "\nALSA auto-format\t= $auto_format\c"
-	#echo -e "\nHardware buffer time\t= $buffer_time\c"
-	#echo -e "\nHardware period time\t= $period_time\n"
 }
 RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
@@ -423,8 +423,7 @@ RASPIOS_VER=`cat /etc/debian_version`
 KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
-ARCH=`uname -m`
-
+[ $(uname -m) = "aarch64" ] && ARCH="aarch64 (64-bit)" || ARCH="armhf (32-bit)"
 # Similar to moodeutl
 MEM_TOTAL=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')             
@@ -641,7 +640,7 @@ if [[ -f "/opt/RoonBridge/start.sh" ]]; then
 else
 	rbsvc="Not installed"
 fi
-mpdver=${arr[15]}
+RESERVED_16=${arr[15]}
 rbactive=${arr[16]}
 adevname=${arr[17]}
 clkradio_mode=${arr[18]}
@@ -768,7 +767,7 @@ ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
 library_albumview_sort=${arr[125]}
-kernel_architecture=${arr[126]}
+RESERVED_127=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
 [[ "${arr[128]}" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
 led_state=${arr[129]}

@@ -237,20 +237,19 @@ workerLog('worker: --');
 
 // Store platform data
 phpSession('write', 'hdwrrev', getHdwrRev());
-phpSession('write', 'mpdver', explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),"\n"))[3]);
-phpSession('write', 'kernel_architecture', strtok(shell_exec('uname -m'),"\n") == 'aarch64' ? '64-bit' : '32-bit');
-$_SESSION['kernelver'] = strtok(shell_exec('uname -r'),"\n") . ' ' . strtok(shell_exec("uname -v | awk '{print $1}'"),"\n");
-$_SESSION['procarch'] = strtok(shell_exec('uname -m'),"\n");
-$_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
+$_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
+$_SESSION['kernelver'] = sysCmd("uname -vr | awk '{print $1\" \"$2}'")[0];
+$_SESSION['procarch'] = sysCmd('uname -m')[0];
+$_SESSION['mpdver'] = sysCmd("mpd -V | grep 'Music Player Daemon' | awk '{print $4}'")[0];
 
 // Log platform data
 workerLog('worker: Host      (' . $_SESSION['hostname'] . ')');
+workerLog('worker: Hardware  (' . $_SESSION['hdwrrev'] . ')');
 workerLog('worker: moOde     (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
 workerLog('worker: RaspiOS   (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kernel    (' . $_SESSION['kernelver'] . ')');
-workerLog('worker: Platform  (' . $_SESSION['hdwrrev'] . ')');
-workerLog('worker: ARM arch  (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] . ')');
+workerLog('worker: Procarch  (' . $_SESSION['procarch'] . ', ' . ($_SESSION['procarch'] == 'aarch64' ? '64-bit' : '32-bit') . ')');
 workerLog('worker: MPD ver   (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU gov   (' . $_SESSION['cpugov'] . ')');
 
