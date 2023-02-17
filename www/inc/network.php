@@ -106,8 +106,16 @@ function cfgNetIfaces() {
 		$data .= 'priority=100' . "\n";
 		$data .= "scan_ssid=1\n"; // Scan even if SSID is hidden
 		if ($cfgNetwork[1]['wlansec'] == 'wpa') {
-			// Secure
+			// WPA/WPA2 Personal
 			$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+		} else if ($cfgNetwork[1]['wlansec'] == 'wpa23') {
+			// WPA3 Personal Transition Mode
+			$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+			$data .= 'key_mgmt=WPA-PSK-SHA256' . "\n";
+			$data .= 'ieee80211w=2' . "\n";
+		} else if ($cfgNetwork[1]['wlansec'] == 'wpa3') {
+			// WPA3 Personal
+			// TBD
 		} else {
 			// No security
 			$data .= "key_mgmt=NONE\n";
@@ -122,8 +130,16 @@ function cfgNetIfaces() {
 			$data .= 'priority=10' . "\n";
 			$data .= "scan_ssid=1\n"; // Scan even if SSID is hidden
 			if ($row['sec'] == 'wpa') {
-				// Secure
-				$data .= 'psk=' . $row['psk'] . "\n";
+				// WPA/WPA2 Personal
+				$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+			} else if ($row['sec'] == 'wpa23') {
+				// WPA3 Personal Transition Mode
+				$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+				$data .= 'key_mgmt=WPA-PSK-SHA256' . "\n";
+				$data .= 'ieee80211w=2' . "\n";
+			} else if ($row['sec'] == 'wpa3') {
+				// WPA3 Personal
+				// TBD
 			} else {
 				// No security
 				$data .= "key_mgmt=NONE\n";

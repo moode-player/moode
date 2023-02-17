@@ -79,7 +79,7 @@
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 		</legend>
 		<p class="sub-legend">
-			Wireless networks on the WiFi 5Ghz band generally have less likelyhood of performance degradation due to interferrence and congestion that is often present on the 2.4GHz band.
+			Wireless networks on the 5Ghz band generally perform better than those on the 2.4GHz band due to less congestion and interferrence from other networks.
 		</p>
 
 		<div class="control-group" >
@@ -90,7 +90,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0method" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-wlan0method" class="config-help-info config-help-no-margin">
-                	IP address assignment method. Link quality and signal level.
+                	IP address assignment method, link quality and signal level.
                 </span>
 				<span class="config-help-static">
 					$_wlan0currentip
@@ -126,7 +126,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0sec" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-wlan0sec" class="config-help-info">
-                	Security protocol.
+                	Security protocol. WPA2 Personal is the default. WPA3 Personal Transition Mode supports WiFi Routers that are configured with both WPA2 and WPA3 on the same SSID.
                 </span>
 			</div>
 
@@ -227,9 +227,6 @@
 				<a class="show-hide-password" href="#notarget" data-id="apdpwd"><i class="fal fa-eye"></i></a>
 				<span id="info-apdpwd" class="config-help-info">
 					Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.<br>
-				</span>
-				<span class="config-help-static">
-					The default password is moodeaudio but should be changed to improve security.
 				</span>
             </div>
         </div>

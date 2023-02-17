@@ -215,9 +215,11 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', htmlentities($cfgNetwork[1]['wlanssid']));
 	}
 }
-$_wlan0sec .= "<option value=\"wpa\"" . ($cfgNetwork[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
+$_wlan0sec .= "<option value=\"wpa\"" . ($cfgNetwork[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA2-Personal</option>\n";
+$_wlan0sec .= "<option value=\"wpa23\"" . ($cfgNetwork[1]['wlansec'] == 'wpa23' ? 'selected' : '') . ">WPA3-Personal Transition Mode</option>\n";
+// TBD $_wlan0sec .= "<option value=\"wpa3\"" . ($cfgNetwork[1]['wlansec'] == 'wpa3' ? 'selected' : '') . ">WPA3 Personal</option>\n";
 $_wlan0sec .= "<option value=\"none\"" . ($cfgNetwork[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
-$_wlan0pwd = $cfgNetwork[1]['wlanpwd']; // old: htmlentities($cfgNetwork[1]['wlanpwd'])
+$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
 
 // WiFi country code
 $zoneList = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
