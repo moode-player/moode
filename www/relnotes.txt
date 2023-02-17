@@ -41,6 +41,7 @@ Updates
 - UPD: Add Playback item to main menu in Configs
 - UPD: Add ALSA buffer_time option to MPD Config
 - UPD: Add WPA3-Personal Transition Mode to Network Config
+- UPD: Move Metadata file option to MPD section of Audio Config
 
 Bug fixes
 

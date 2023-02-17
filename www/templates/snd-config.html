@@ -183,6 +183,19 @@
 					Start auto-shuffle random play if it was previously active or play last played item.
                 </span>
 			</div>
+
+			<label class="control-label">Metadata file</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle-extmeta-2">ON </label>$_select[extmeta_on]
+					<label class="toggle-radio" for="toggle-extmeta-1">OFF</label>$_select[extmeta_off]
+				</div>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_extmeta" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-extmeta" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-extmeta" class="config-help-info">
+					Maintain enhanced metadata for the currently playing song or station in the /var/local/www/currentsong.txt file. This file is updated within three seconds after any metadata updates on the UI.
+                </span>
+			</div>			
 		</div>
 
 		<div class="config-horiz-rule">Auto-shuffle</div>

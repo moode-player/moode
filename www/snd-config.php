@@ -171,6 +171,12 @@ if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 	phpSession('write', 'autoplay', $_POST['autoplay']);
 }
 
+// Metadata file
+if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
+	phpSession('write', 'extmeta', $_POST['extmeta']);
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
+
 // Auto-shuffle
 
 // Service
@@ -464,6 +470,9 @@ $_multiroom_feat_enable = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hid
 // Autoplay after start
 $_select['autoplay_on']  .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['autoplay_off'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+// Metadata file
+$_select['extmeta_on']  .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-1\" value=\"1\" " . (($_SESSION['extmeta'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['extmeta_off'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-2\" value=\"0\" " . (($_SESSION['extmeta'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 // Auto-shuffle
 $_select['ashufflesvc_on']  .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['ashufflesvc_off'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";

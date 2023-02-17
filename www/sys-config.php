@@ -277,11 +277,6 @@ if (isset($_POST['update_fs_nfs_options'])) {
 
 // LOCAL SERVICES
 
-if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
-	phpSession('write', 'extmeta', $_POST['extmeta']);
-	$_SESSION['notify']['title'] = 'Settings updated';
-}
-
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
 		submitJob('lcdup', $_POST['lcdup'], 'Settings updated', '');
@@ -469,9 +464,6 @@ $ipAddrParts = explode('.', $_SESSION['ipaddress']);
 $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
 
 // LOCAL SERVICES
-
-$_select['extmeta_on']  .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-1\" value=\"1\" " . (($_SESSION['extmeta'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['extmeta_off'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-2\" value=\"0\" " . (($_SESSION['extmeta'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
 $_select['lcdup_on']  .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['lcdup_off'] .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . ">\n";
