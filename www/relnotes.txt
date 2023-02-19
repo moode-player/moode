@@ -26,6 +26,11 @@ Audio devices
 
 - NEW: ProtoDAC TDA1387 X8 (I2S)
 
+Security (new image only)
+
+- UPD: Raspberry Pi Imager must be used to enable SSH and user Pi
+- UPD: Access Point default password removed
+
 Updates
 
 - UPD: Bump to MPD 0.23.12
