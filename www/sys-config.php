@@ -29,6 +29,7 @@ require_once __DIR__ . '/inc/sql.php';
 require_once __DIR__ . '/inc/timezone.php';
 
 phpSession('open');
+$dbh = sqlConnect();
 
 // SOFTWARE UPDATE
 
@@ -275,7 +276,7 @@ if (isset($_POST['update_fs_nfs_options'])) {
 	}
 }
 
-// LOCAL SERVICES
+// PERIPHERALS
 
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
@@ -290,7 +291,9 @@ if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_sv
 	submitJob('gpio_svc', $_POST['gpio_svc'], 'Settings updated', '');
 }
 
-if (isset($_POST['shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
+// SECURITY
+
+if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
 	phpSession('write', 'shellinabox', $_POST['shellinabox']);
 	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated', '');
 }
@@ -463,7 +466,7 @@ $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
 $ipAddrParts = explode('.', $_SESSION['ipaddress']);
 $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
 
-// LOCAL SERVICES
+// PERIPHERALS
 
 $_select['lcdup_on']  .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['lcdup_off'] .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -476,15 +479,17 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	$_feat_gpio = 'hide';
 }
 
+// SECURITY
+
 $_select['shellinabox_on']  .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['shellinabox_off'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['hostip'] = getHostIp();
 if ($_SESSION['shellinabox'] == '1') {
-	$_ssh_btn_disable = '';
-	$_ssh_link_disable = '';
+	$_webssh_open_disable = '';
+	$_webssh_link_disable = '';
 } else {
-	$_ssh_btn_disable = 'disabled';
-	$_ssh_link_disable = 'onclick="return false;"';
+	$_webssh_open_disable = 'disabled';
+	$_webssh_link_disable = 'onclick="return false;"';
 }
 
 // MAINTENANCE

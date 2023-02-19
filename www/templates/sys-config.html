@@ -73,7 +73,7 @@
                 <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue">Set</button>
 				<span class="config-help-info">
-					Length 3-63 chars, alphanumeric and hyphen allowed. This is the name that will appear on the network.
+					Length 3-63 characters, alphanumeric and hyphen allowed. This is the name that will appear on the network.
 				</span>
             </div>
 
@@ -414,7 +414,7 @@
 		</div>
 
 		<div class="control-group">
-			<legend>Local Services</legend>
+			<legend>Peripherals</legend>
 			<label class="control-label">LCD updater</label>
 			<div class="controls">
 				<div class="toggle">
@@ -448,24 +448,25 @@
 					<span class="config-btn-after">GPIO pin mappings</span>
 				</div>
 			</div>
+		</div>
 
-			<div class="config-horiz-rule"></div>
-
-			<label class="control-label">SSH server</label>
+		<div class="control-group">
+			<legend>Security</legend>
+			<label class="control-label">Web SSH</label>
 			<div class="controls">
 				<div class="toggle">
 					<label class="toggle-radio" for="toggle-shellinabox-2">ON </label>$_select[shellinabox_on]
 					<label class="toggle-radio" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-shellinabox" class="config-help-info">
-					Web based SSH terminal server using Shellinabox by Markus Gutschk and Luka Krajger.
+					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
                 </span>
 			</div>
 
 			<div class="controls">
-				<a id="sshsvc-link" href="http://$_select[hostip]:4200" target="_blank" $_ssh_link_disable class="btn btn-medium btn-primary config-btn" $_ssh_btn_disable>Open</a>
+				<a id="webssh-link" href="http://$_select[hostip]:4200" target="_blank" $_webssh_link_disable class="btn btn-medium btn-primary config-btn" $_webssh_open_disable>Open</a>
 				<span class="config-btn-after">SSH terminal</span>
 			</div>
 		</div>

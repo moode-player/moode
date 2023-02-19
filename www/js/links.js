@@ -31,7 +31,7 @@ $(document).on('click', 'a', function(event) {
 		if (this.id == 'menu-settings' ||
 			this.id == 'coverart-link' ||
 			this.id == 'dlnasvc-link' ||
-			this.id == 'sshsvc-link' ||
+			this.id == 'webssh-link' ||
 			this.id == 'https-only-link' || // TEST
 			this.className == 'moode-about-link' ||
 			this.className == 'playhistory-link' ||
