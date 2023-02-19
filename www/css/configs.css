@@ -72,6 +72,7 @@ input[type=password] {display:inline-block;height:22px;vertical-align:top;margin
 .config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}
 .config-btn-after {display:inline-block;vertical-align:middle;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;color:var(--config-text-color);}
 .config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
+.config-btn-block {display:block;}
 .config-input-after,
 .config-toggle-after {display:inline-block;vertical-align:top;color: var(--config-text-color);margin-top:5px;margin-right:var(--config-ctl-margin-right);}
 
@@ -90,6 +91,7 @@ a.config-info-toggle {vertical-align:top;}
 /* net-config, src-config: Show/hide password plaintext */
 a.show-hide-password {vertical-align:top;}
 .show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin-bottom);}
+.left-margin-0 i {margin-left:0;}
 /* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:200vh;border:none;}
 /* lib-config */
