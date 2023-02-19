@@ -215,7 +215,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', htmlentities($cfgNetwork[1]['wlanssid']));
 	}
 }
-$_wlan0sec .= "<option value=\"wpa\"" . ($cfgNetwork[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA2-Personal</option>\n";
+$_wlan0sec .= "<option value=\"wpa\"" . ($cfgNetwork[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2-Personal</option>\n";
 $_wlan0sec .= "<option value=\"wpa23\"" . ($cfgNetwork[1]['wlansec'] == 'wpa23' ? 'selected' : '') . ">WPA3-Personal Transition Mode</option>\n";
 // TBD $_wlan0sec .= "<option value=\"wpa3\"" . ($cfgNetwork[1]['wlansec'] == 'wpa3' ? 'selected' : '') . ">WPA3 Personal</option>\n";
 $_wlan0sec .= "<option value=\"none\"" . ($cfgNetwork[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
@@ -251,6 +251,13 @@ $_wlan0apdchan = $cfgNetwork[2]['wlan_channel'];
 $_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
 $_select['wlan0apd_router_on']  .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router-1\" value=\"On\" " . (($cfgNetwork[2]['wlan_router'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['wlan0apd_router_off'] .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router-2\" value=\"Off\" " . (($cfgNetwork[2]['wlan_router'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+if (empty($_wlan0apdpwd)) {
+	phpSession('open');
+	$_SESSION['notify']['title'] = 'Notice';
+	$_SESSION['notify']['msg'] = 'An Access Point password needs to be entered';
+	$_SESSION['notify']['duration'] = 10;
+	phpSession('close');
+}
 
 waitWorker(1, 'net-config');
 

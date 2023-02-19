@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Feb 17 10:32:58 2023
+-- File generated with SQLiteStudio v3.1.0 on Sat Feb 18 07:03:40 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -602,7 +602,7 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3), wlan_router CHAR (32));
 INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', '', '6', 'Off');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', '', '', '', '6', 'Off');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
