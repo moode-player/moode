@@ -320,9 +320,7 @@ function ctlWifi($ctl) {
 
 // pi3 bt adapter enable/disable
 function ctlBt($ctl) {
-	if ($ctl == '0') {
-		sysCmd('sed -i /disable-bt/c\dtoverlay=disable-bt ' . '/boot/config.txt');
-	} else {
-		sysCmd('sed -i /disable-bt/c\#dtoverlay=disable-bt ' . '/boot/config.txt');
-	}
+	$cmd = $ctl == '0' ? 'sed -i /disable-bt/c\dtoverlay=disable-bt ' . '/boot/config.txt' :
+		'sed -i /disable-bt/c\#dtoverlay=disable-bt ' . '/boot/config.txt';
+	sysCmd($cmd);
 }
