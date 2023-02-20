@@ -710,6 +710,9 @@ body {
 }
 
 /* Use custom scroll bars for devices with an attached pointing device (mouse, trackpad, etc) */
+
+/* TODO: Test w/o @media */
+
 @media (any-pointer: fine) {
 	.custom-scrollbars ::-webkit-scrollbar {
 		width: 11px;
