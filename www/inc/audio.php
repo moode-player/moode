@@ -105,9 +105,10 @@ function setAudioOut($output) {
 		sysCmd('mpc stop');
 		sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 	} else if ($output == 'Bluetooth') {
-		if ($_SESSION['mpdmixer'] == 'none') {
+		// Save if Fixed (0dB) or Hardware
+		if ($_SESSION['mpdmixer'] == 'none' || $_SESSION['mpdmixer'] == 'hardware') {
+			phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
 			reconfMpdVolume('software');
-			phpSession('write', 'mpdmixer_local', 'none');
 		}
 
 		phpSession('write', 'btactive', '0');

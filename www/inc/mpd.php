@@ -410,7 +410,6 @@ function updMpdConf($i2sDevice) {
 	}
 	// MPD mixer_type (Hardware, Software, Fixed (0dB), Null)
 	phpSession('write', 'mpdmixer', $mixerType);
-	phpSession('write', 'mpdmixer_local', $mixerType);
 	// Audio device friendly name
 	$adevName = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$cardNum] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
