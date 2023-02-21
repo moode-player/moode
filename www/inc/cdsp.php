@@ -558,7 +558,7 @@ function isMpd2CamillaDspVolSyncModeEnabled() {
 
 function doesCamillaCfgHaveVolumeFilter($configFile = null) {
 	$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
-	$result = sysCmd('fgrep -o "type: Volume" ' . $configFile);
+	$result = sysCmd('fgrep -o "type: Volume" "' . $configFile . '"');
 	return ($result[0] == 'type: Volume' && $_SESSION['camilladsp'] !='off');
 }
 
