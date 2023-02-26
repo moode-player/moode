@@ -111,6 +111,9 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .viewswitch-cfgs .btn.active {background:rgba(128,128,128,.35);color:inherit;}
 .viewswitch-cfgs a {color:var(--btnbarcolor);box-sizing:border-box;}
 .viewswitch-cfgs .active a {color:inherit;}
-#config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
-#config-back a {color:var(--config-text-color);}
+#config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;},
+#config-home {position:absolute;float:left;left:2.5em;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back i {font-size:2rem;position:relative;top:.25em;}
+#config-home i {font-size:1.5rem;position:relative;top:.2em;}
+#config-back a,
+#config-home a {color:var(--config-text-color);}

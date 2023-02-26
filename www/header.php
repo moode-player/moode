@@ -160,6 +160,9 @@
 		<div id="config-back">
 			<a aria-label="Back" href="<?php echo $_SESSION['config_back_link'] ?>"><i class="far fa-angle-left"></i></a>
 		</div>
+        <div id="config-home">
+			<a aria-label="Home" href="/index.php"><i class="fas fa-home"></i></a>
+		</div>
 
 		<div id="config-tabs" class="viewswitch-cfgs hide">
 			<a id="lib-config-btn" class="btn" href="lib-config.php">Library</a>
@@ -214,8 +217,7 @@
 					<li class="menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
 					<li><a href="#power-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Power</a></li>
 				<?php } else { ?>
-					<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
-                    <li class="context-menu menu-separator"><a href="/index.php" data-toggle="modal"><i class="fas fa-play sx"></i> Playback view</a></li>
+					<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
                     <li><a href="javascript:audioPlayback()"><i class="fas fa-music sx"></i> Audio info</a></li>
 					<li id="sysinfo-menu-item"><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fas fa-file-alt sx"></i> System info</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fas fa-info sx"></i> Quick help</a></li>

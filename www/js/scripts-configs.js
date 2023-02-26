@@ -48,7 +48,7 @@ jQuery(document).ready(function($){ 'use strict';
     	THEME.json = data['cfg_theme'];
         NETWORK.json = data['cfg_network'];
 
-        $('#config-back').show();
+        $('#config-back, #config-home').show();
     	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
     	setFontSize();
 
