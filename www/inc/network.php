@@ -311,14 +311,14 @@ function genWpaPSK($ssid, $passphrase) {
 	return $psk[1];
 }
 
-// Pi integrated wifi adapter enable/disable
+// Pi integrated WiFi adapter enable/disable
 function ctlWifi($ctl) {
 	$cmd = $ctl == '0' ? 'sed -i /disable-wifi/c\dtoverlay=disable-wifi ' . '/boot/config.txt' :
 		'sed -i /disable-wifi/c\#dtoverlay=disable-wifi ' . '/boot/config.txt';
 	sysCmd($cmd);
 }
 
-// pi3 bt adapter enable/disable
+// Pi integrated Bluetooth adapter enable/disable
 function ctlBt($ctl) {
 	$cmd = $ctl == '0' ? 'sed -i /disable-bt/c\dtoverlay=disable-bt ' . '/boot/config.txt' :
 		'sed -i /disable-bt/c\#dtoverlay=disable-bt ' . '/boot/config.txt';
