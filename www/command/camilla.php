@@ -25,7 +25,7 @@ require_once __DIR__ . '/../inc/mpd.php';
 
 switch ($_GET['cmd']) {
 	case 'camilladsp_setconfig':
-		if (isset($_POST['cdspconfig'])) {
+		if (isset($_POST['cdspconfig']) && !empty($_POST['cdspconfig'])) {
 			phpSession('open');
 			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 			$currentMode = $_SESSION['camilladsp'];
@@ -34,39 +34,15 @@ switch ($_GET['cmd']) {
 			phpSession('close');
 
 			$cdsp->selectConfig($newMode);
+
 			if ($_SESSION['cdsp_fix_playback'] == 'Yes') {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			}
 
-			if ($newMode != $currentMode && ($newMode == 'off' || $currentMode == 'off')) {
-				// Switching to/from Off
-				submitJob('camilladsp', $newMode);
-
-				if (doesCamillaCfgHaveVolumeFilter($newMode)) {
-					sendEngCmd('cdsp_volfilter');
-				}
-			} else {
-				// Switching between configs
-				$newModeVolFilter = doesCamillaCfgHaveVolumeFilter($newMode);
-				$currentModeVolFilter = doesCamillaCfgHaveVolumeFilter($currentMode);
-
-				if ($newModeVolFilter === true && $currentModeVolFilter === true) {
-					// Both have volume filter
-					$cdsp->reloadConfig();
-				} else if ($newModeVolFilter === false && $currentModeVolFilter === false) {
-					// Neither have volume filter
-					$cdsp->reloadConfig();
-				} else if ($newModeVolFilter === true) {
-					// Switch from one w/o volume filter to one with
-					$cdsp->reloadConfig();
-					sendEngCmd('cdsp_volfilter');
-				} else if ($newModeVolFilter === false) {
-					// Switch from one with volume filter to one without
-					submitJob('camilladsp', $newMode . ',' . 'reconf_mixer');
-				}
-			}
+			updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
 		} else {
-			workerLog('camilla.php: Error: missing config name');
+			sendEngCmd('cdsp_config_update_failed');
+			workerLog('camilla.php: Error: $_POST[cdspconfig] missing or empty');
 		}
 		break;
 }

@@ -538,12 +538,16 @@ function getMpdOutputs($sock) {
 }
 
 // Reconfigure MPD volume
-function reconfMpdVolume($mixerType) {
-	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
-	phpSession('write', 'mpdmixer', $mixerType);
-	// Reset hardware volume to 0dB if indicated
-	if (($mixerType == 'software' || $mixerType == 'none') && $_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+function changeMPDMixer($mixerType) {
+	$mixer = $mixerType == 'camilladsp' ? 'null' : $mixerType;
+	// Update params
+	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixer);
+	phpSession('write', 'mpdmixer', $mixer);
+	// Reset ALSA volume to 0dB if indicated
+	if ($_SESSION['alsavolume'] != 'none') {
+		if ($mixerType == 'software' || $mixerType == 'none' || $mixerType == 'camilladsp') {
+			sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		}
 	}
 	// Update /etc/mpd.conf
 	updMpdConf($_SESSION['i2sdevice']);
@@ -731,7 +735,7 @@ function getUpnpCoverUrl() {
 function getMappedDbVol() {
 	phpSession('open_ro');
 
-	if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
+	if (isMPD2CamillaDSPVolSyncEnabled() && doesCamillaDSPCfgHaveVolFilter()) {
 		// Use SQL value instead of session
 		$result = sqlRead('cfg_system', sqlConnect(), 'volknob');
 		// For CamillaDSP volume: NOTE: -51dB is 0 level for Camilla source volume

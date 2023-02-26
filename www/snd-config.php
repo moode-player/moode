@@ -52,7 +52,7 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 		// Changing to Fixed (0dB) or Null
 		$mixerChange = 'fixed_or_null';
 	} else if ($mixerTypeSelected == 'camilladsp') {
-		if (doesCamillaCfgHaveVolumeFilter()) {
+		if (doesCamillaDSPCfgHaveVolFilter()) {
 			$mixerTypeSelected = 'null';
 			$mixerChange = 'fixed_or_null';
 			$camillaDspVolumeSync = 'on';
@@ -297,6 +297,7 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 // CamillaDSP
 if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
 	$currentMode = $_SESSION['camilladsp'];
+	$newMode = $_POST['camilladsp'];
 	phpSession('write', 'camilladsp', $_POST['camilladsp']);
 	$cdsp->selectConfig($_POST['camilladsp']);
 
@@ -304,35 +305,7 @@ if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST[
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
-	if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-		// Switching to/from Off
-		if (doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp'])) {
-			submitJob('camilladsp', $_SESSION['camilladsp'], 'Volume filter exists', CDSP_VOLFILTER_MSG, '6');
-		} else {
-			submitJob('camilladsp', $_SESSION['camilladsp'], 'Settings updated');
-		}
-	} else {
-		// Switching between configs
-		$newModeVolFilter = doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp']);
-		$currentModeVolFilter = doesCamillaCfgHaveVolumeFilter($currentMode);
-
-		if ($newModeVolFilter === true && $currentModeVolFilter === true) {
-			// Both have volume filter
-			$cdsp->reloadConfig();
-		} else if ($newModeVolFilter === false && $currentModeVolFilter === false) {
-			// Neither have volume filter
-			$cdsp->reloadConfig();
-		} else if ($newModeVolFilter === true) {
-			// Switch from one w/o volume filter to one with
-			$cdsp->reloadConfig();
-			$_SESSION['notify']['title'] = 'Volume filter exists';
-			$_SESSION['notify']['msg'] = CDSP_VOLFILTER_MSG;
-			$_SESSION['notify']['duration'] = 6;
-		} else if ($newModeVolFilter === false) {
-			// Switch from one with volume filter to one without
-			submitJob('camilladsp', $newMode . ',' . 'reconf_mixer', 'Settings updated');
-		}
-	}
+	updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
 }
 // Parametric eq
 $eqfa12p = Eqp12($dbh);

@@ -46,6 +46,7 @@ if [[ $CDSP_VOLSYNC == "on" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB' WHERE param='volknob_mpd'")
 	/var/www/vol.sh 100
 elif [[ $ALSAVOLUME != "none" ]]; then
+	# Set 0dB ALSA volume
 	/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 fi
 

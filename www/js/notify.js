@@ -42,13 +42,13 @@ function notify(title, msg, duration = '2_seconds') {
         library_loading: 'Library loading...',
         regen_thumbs: 'Thumbnail resolution updated',
         // Playlist/Queue
-        saving_queue: 'Saving Queue...',
+        saving_queue: 'Saving Queue',
         queue_saved: 'Queue saved',
 		playlist_name_needed: 'Enter a name for the playlist',
 		playlist_name_error: 'NAS, RADIO and SDCARD cannot be used in the name',
-        setting_favorites_name: 'Setting Favorites name...',
+        setting_favorites_name: 'Setting Favorites name',
         favorites_name_set: 'Favorites name has been set',
-        adding_favorite: 'Adding favorite...',
+        adding_favorite: 'Adding favorite',
         favorite_added: 'Favorite added',
 		no_favorite_to_add: 'Nothing to add',
         // Playlist view
@@ -72,9 +72,9 @@ function notify(title, msg, duration = '2_seconds') {
         no_receivers_found: 'No receivers found',
         run_receiver_discovery: 'Run receiver Discovery',
         // CamillaDSP
-        cdsp_updated: 'Settings updated',
-        cdsp_update_err: 'Config update failed',
-        cdsp_volfilter: 'Volume filter exists',
+        cdsp_updating_config: 'Updating configuration...',
+        cdsp_config_updated: 'Configuration updated',
+        cdsp_config_update_failed: 'Configuraton update failed',
         // Renderers
         renderer_disconnect: 'Disconnecting...',
         renderer_turnoff: 'Turning off...',

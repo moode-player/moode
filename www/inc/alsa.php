@@ -171,7 +171,7 @@ function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
 			sysCmd($cmd . $alsaVolumeMax);
 			break;
 		case 'null':
-			if (isMpd2CamillaDspVolSyncModeEnabled() && doesCamillaCfgHaveVolumeFilter()) {
+			if (isMPD2CamillaDSPVolSyncEnabled() && doesCamillaDSPCfgHaveVolFilter()) {
 				sysCmd($cmd . $alsaVolumeMax);
 			} else {
 				sysCmd($cmd . '0');

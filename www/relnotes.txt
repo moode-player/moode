@@ -28,8 +28,8 @@ Audio devices
 
 Security (new image only)
 
-- UPD: Raspberry Pi Imager must be used to enable SSH and user Pi
-- UPD: Access Point default password removed
+- UPD: Raspberry Pi Imager must be used to enable SSH, user Pi and password
+- UPD: AP mode default password removed (Pi Imager WiFi password used instead)
 
 Updates
 

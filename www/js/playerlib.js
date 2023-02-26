@@ -59,9 +59,6 @@ const RADIO_BITRATE_THRESHOLD       = 128;
 // For legacy Radio Manager station export
 const STATION_EXPORT_DIR = '/'; // var/www
 
-// For engineCmd() case 'cdsp_volfilter':
-const CDSP_VOLFILTER_MSG = 'Set Volume type to CamillaDSP';
-
 var UI = {
     knob: null,
     path: '',
@@ -533,13 +530,21 @@ function engineCmd() {
                 case 'set_cover_image0':
     				$('.busy-spinner').hide();
                     break;
+                case 'cdsp_updating_config':
+                    var msg = cmd[1] == 'no_mixer_change' ? '' : cmd[1];
+                    notify('cdsp_updating_config', msg, 'infinite');
+                    break;
+                case 'cdsp_config_updated':
+                    notify('cdsp_config_updated');
+                    //$('.ui-pnotify-closer').click();
+                    break;
+                case 'cdsp_config_update_failed':
+                    notify('cdsp_config_update_failed', '', '10_seconds');
+                    break;
                 case 'refresh_screen':
                     setTimeout(function() {
                         location.reload(true);
                     }, DEFAULT_TIMEOUT);
-                    break;
-                case 'cdsp_volfilter':
-                    notify('cdsp_volfilter', CDSP_VOLFILTER_MSG, 6);
                     break;
                 case 'reduce_fpm_pool':
                     // This functions as a dummy command which has the effect of
@@ -581,15 +586,26 @@ function engineCmdLite() {
                     $('.busy-spinner').hide();
                     loadLibrary();
                     break;
-                case 'reduce_fpm_pool':
-                    // This functions as a dummy command which has the effect of
-                    // causing engine-cmd.php to start releasing idle connections
-                    console.log(cmd[0]);
+                case 'cdsp_updating_config':
+                    var msg = cmd[1] == 'no_mixer_change' ? '' : cmd[1];
+                    notify('cdsp_updating_config', msg, 'infinite');
+                    break;
+                case 'cdsp_config_updated':
+                    // Could also display "Update complete"
+                    $('.ui-pnotify-closer').click();
+                    break;
+                case 'cdsp_config_update_failed':
+                    notify('cdsp_config_update_failed', '', '10_seconds');
                     break;
                 case 'refresh_screen':
                     setTimeout(function() {
                         location.reload(true);
                     }, DEFAULT_TIMEOUT);
+                    break;
+                case 'reduce_fpm_pool':
+                    // This functions as a dummy command which has the effect of
+                    // causing engine-cmd.php to start releasing idle connections
+                    console.log(cmd[0]);
                     break;
                 default:
                     console.log('engineCmdLite(): ' + cmd[0]);
@@ -2663,14 +2679,6 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'camilladsp_config':
     		var selectedConfig = $(this).data('cdspconfig');
 
-            if (selectedConfig != SESSION.json['camilladsp'] && (selectedConfig == 'off' || SESSION.json['camilladsp'] == 'off')) {
-                // Switching to/from Off
-                var notifyOK = true;
-            } else {
-                // Switching between configs
-                var notifyOK = false;
-            }
-
     		$.ajax({
     			type: 'POST',
     			url: 'command/camilla.php?cmd=camilladsp_setconfig',
@@ -2682,16 +2690,9 @@ $(document).on('click', '.context-menu a', function(e) {
                     var selectedHTML = $('a[data-cdspconfig="' + selectedConfig + '"]').html();
                     $('a[data-cdspconfig="' + selectedConfig + '"]').html(selectedHTML +
                         '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
-
-                    // Allow time for worker job to complete
-                    if (notifyOK) {
-                        setTimeout(function() {
-                            notify('cdsp_updated');
-                        }, 2000);
-                    }
     			},
     			error: function() {
-                    notify('cdsp_update_err', selectedConfig, '5_seconds');
+                    notify('cdsp_config_update_failed', selectedConfig, '10_seconds');
     			}
     		});
             break;

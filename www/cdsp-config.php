@@ -38,14 +38,13 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$cdsp->setQuickConvolutionConfig($cdsp->stringToQuickConvolutionConfig($cfg));
 		phpSession('write', 'camilladsp_quickconv', $cfg);
 	}
-
 	if (isset($_POST['cdsp_use_default_device'])) {
 		$useDefaultDevice = $_POST['cdsp_use_default_device'];
 		phpSession('write', 'cdsp_fix_playback', $useDefaultDevice == "1" ? "Yes" : "No");
 	}
-
 	if (isset($_POST['cdsp_mode'])) {
 		$currentMode = $_SESSION['camilladsp'];
+		$newMode = $_POST['cdsp_mode'];
 		phpSession('write', 'camilladsp', $_POST['cdsp_mode']);
 		$cdsp->selectConfig($_POST['cdsp_mode']);
 	}
@@ -54,35 +53,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
-	if ($_SESSION['camilladsp'] != $currentMode && ($_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-		// Switching to/from Off
-		if (doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp'])) {
-			submitJob('camilladsp', $_SESSION['camilladsp'], 'Volume filter exists', CDSP_VOLFILTER_MSG, '6');
-		} else {
-			submitJob('camilladsp', $_SESSION['camilladsp'], 'Settings updated');
-		}
-	} else {
-		// Switching between configs
-		$newModeVolFilter = doesCamillaCfgHaveVolumeFilter($_SESSION['camilladsp']);
-		$currentModeVolFilter = doesCamillaCfgHaveVolumeFilter($currentMode);
-
-		if ($newModeVolFilter === true && $currentModeVolFilter === true) {
-			// Both have volume filter
-			$cdsp->reloadConfig();
-		} else if ($newModeVolFilter === false && $currentModeVolFilter === false) {
-			// Neither have volume filter
-			$cdsp->reloadConfig();
-		} else if ($newModeVolFilter === true) {
-			// Switch from one w/o volume filter to one with
-			$cdsp->reloadConfig();
-			$_SESSION['notify']['title'] = 'Volume filter exists';
-			$_SESSION['notify']['msg'] = CDSP_VOLFILTER_MSG;
-			$_SESSION['notify']['duration'] = 6;
-		} else if ($newModeVolFilter === false) {
-			// Switch from one with volume filter to one without
-			submitJob('camilladsp', $newMode . ',' . 'reconf_mixer', 'Settings updated');
-		}
-	}
+	updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
 
 	if ($_POST['log_level'] != $cdsp->getLogLevel()) {
 		$cdsp->setLogLevel($_POST['log_level']);

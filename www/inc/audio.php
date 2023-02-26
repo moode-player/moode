@@ -100,7 +100,7 @@ function setAudioIn($inputSource) {
 // Set MPD and renderer audio output
 function setAudioOut($output) {
 	if ($output == 'Local') {
-		reconfMpdVolume($_SESSION['mpdmixer_local']);
+		changeMPDMixer($_SESSION['mpdmixer_local']);
 		sysCmd('/var/www/vol.sh -restore');
 		sysCmd('mpc stop');
 		sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
@@ -108,7 +108,7 @@ function setAudioOut($output) {
 		// Save if Fixed (0dB) or Hardware
 		if ($_SESSION['mpdmixer'] == 'none' || $_SESSION['mpdmixer'] == 'hardware') {
 			phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
-			reconfMpdVolume('software');
+			changeMPDMixer('software');
 		}
 
 		phpSession('write', 'btactive', '0');
