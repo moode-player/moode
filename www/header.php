@@ -165,11 +165,11 @@
 		</div>
 
 		<div id="config-tabs" class="viewswitch-cfgs hide">
-			<a id="lib-config-btn" class="btn" href="lib-config.php">Library</a>
-			<a id="snd-config-btn" class="btn" href="snd-config.php">Audio</a>
-			<a id="net-config-btn" class="btn" href="net-config.php">Network</a>
-			<a id="sys-config-btn" class="btn" href="sys-config.php">System</a>
-            <a id="ren-config-btn" class="btn" href="ren-config.php">Renderers</a>
+			<a id="lib-config-btn" class="btn" href="lib-config.php"><span>Library</span><i class="fas fa-database"></i></a>
+			<a id="snd-config-btn" class="btn" href="snd-config.php"><span>Audio</span><i class="fas fa-volume-up"></i></a>
+			<a id="net-config-btn" class="btn" href="net-config.php"><span>Network</span><i class="fas fa-sitemap"></i></a>
+			<a id="sys-config-btn" class="btn" href="sys-config.php"><span>System</span><i class="fas fa-cogs"></i></a>
+            <a id="ren-config-btn" class="btn" href="ren-config.php"><span>Renderers</span><i class="fas fa-play-circle"></i></a>
 		</div>
 
 		<div id="library-header"></div>

@@ -210,6 +210,8 @@ body {
 	.config-input-large {width:34vw;}
 	.config-info-toggle,
 	.config-help-static {display:none;}
+	#config-tabs span {display:none!important;}
+	#config-tabs i {display:flex!important;}
 
 	/* CoverView */
 	#screen-saver {display:none;}
@@ -358,6 +360,8 @@ body {
 	/* Dropdown and context menus */
 	.dropdown-menu>li>a,
 	.viewswitch .btn {line-height:2.5rem;font-size:1.15em;}
+	#dropdown-cdsp-menu {height:80vh;}
+
 	.adv.search-btn {display:none;}
 
 	/* Renderer active overlays: Text and button */
@@ -374,6 +378,8 @@ body {
 	.config-toggle-after {font-size:12px;}
 	.config-horiz-rule {font-size:12px;}
 	.config-btn-music-source {font-size:1.5em;}
+	#config-tabs span {display:none!important;}
+	#config-tabs i {display:flex!important;}
 
 	/* Modals */
 	.modal-body {max-height:calc(62vh - env(safe-area-inset-bottom) + 1rem);}
