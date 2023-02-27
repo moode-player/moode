@@ -2096,9 +2096,9 @@ function runQueuedJob() {
 			// TODO: change to switch/case
 
 			if ($_SESSION['w_queue'] == 'alsaequal') {
-				$queueargs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
+				$queueArgs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
 				if ($_SESSION['alsaequal'] != 'Off') {
-					$result = sqlQuery("SELECT curve_values FROM cfg_eqalsa WHERE curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
+					$result = sqlQuery("SELECT curve_values FROM cfg_eqalsa WHERE curve_name='" . $queueArgs[1] . "'", $GLOBALS['dbh']);
 					$curve = explode(',', $result[0]['curve_values']);
 					foreach ($curve as $key => $value) {
 						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
@@ -2154,9 +2154,9 @@ function runQueuedJob() {
 					sysCmd('sed -i "/controls/c\controls [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 				}
 			} else if ($_SESSION['w_queue'] == 'eqfa12p') {
-				$queueargs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
+				$queueArgs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
 				if ($_SESSION['eqfa12p'] != 'Off') {
-					$curr = intval($queueargs[1]);
+					$curr = intval($queueArgs[1]);
 					$eqfa12p = Eqp12(sqlConnect());
 					$config = $eqfa12p->getpreset($curr);
 					$eqfa12p->applyConfig($config);
@@ -2656,9 +2656,9 @@ function runQueuedJob() {
 		case 'set_ralogo_image':
 		case 'set_plcover_image':
 			$job = $_SESSION['w_queue'];
-			$queueargs = explode(',', $_SESSION['w_queueargs'], 2);
-			$img_name = $queueargs[0];
-			$img_data = base64_decode($queueargs[1], true);
+			$queueArgs = explode(',', $_SESSION['w_queueargs'], 2);
+			$img_name = $queueArgs[0];
+			$img_data = base64_decode($queueArgs[1], true);
 
 			if ($job == 'set_ralogo_image') {
 				$img_dir = RADIO_LOGOS_ROOT;
