@@ -201,8 +201,8 @@ html {background-color:inherit;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
 #menu-cdsp {font-size:1.25rem;}
-#dropdown-cdsp-btn {right:4.65em !important;top:calc(env(safe-area-inset-top) + 0.1em);}
-#dropdown-cdsp-menu {height:62vh;overflow:scroll;min-width:20rem !important;;}
+#dropdown-cdsp-btn {right:4.65em !important;top:calc(env(safe-area-inset-top) + 0.2em);}
+#dropdown-cdsp-menu {height:calc(62vh + 1rem);overflow:scroll;min-width:20rem !important;;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
 .dropdown-cdsp-line {padding-left:1em;}
 #panel-footer {bottom:0;width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}

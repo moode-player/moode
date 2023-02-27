@@ -360,7 +360,7 @@ body {
 	/* Dropdown and context menus */
 	.dropdown-menu>li>a,
 	.viewswitch .btn {line-height:2.5rem;font-size:1.15em;}
-	#dropdown-cdsp-menu {height:80vh;}
+	#dropdown-cdsp-menu {height:calc(78vh + 1rem);}
 
 	.adv.search-btn {display:none;}
 
