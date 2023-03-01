@@ -898,7 +898,8 @@ if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] 
 	}
 	workerLog('worker: Stream recorder (available' . $started . ')');
 } else {
-	workerLog('worker: Stream recorder (n/a)');
+	$status = $_SESSION['recorder_status'] == 'Not installed' ? 'available: not installed' : 'n/a';
+	workerLog('worker: Stream recorder ('. $status .')');
 }
 
 // TEST

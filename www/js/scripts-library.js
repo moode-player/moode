@@ -1310,7 +1310,7 @@ $('#btn-ra-manager').click(function(e) {
             $('#selected-album-tag').text(SESSION.json['recorder_album_tag']);
         });
         $.getJSON('command/recorder-cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
-            $('#untagged-file-count').text(recorderUntaggedFileCount);
+            $('#untagged-file-count').text('(' + recorderUntaggedFileCount + ')');
         });
         $('#radio-manager-modal').modal();
     }
@@ -1341,20 +1341,20 @@ $('#btn-upd-radio-manager').click(function(e) {
         'recorder_album_tag': SESSION.json['recorder_album_tag']
          }, function() {
             if (recorderStatus == 'Install recorder') {
+                notify('installing_plugin', '', 'infinite');
                 $.ajax({
             		type: 'GET',
             		url: 'command/recorder-cmd.php?cmd=recorder_install',
                     dataType: 'json',
             		async: true,
             		cache: false,
-            		success: function(msg_key) {
-                        if (msg_key == 'recorder_installed') {
+            		success: function(msgKey) {
+                        if (msgKey == 'recorder_installed') {
                             $('#stream-recorder-options, #context-menu-stream-recorder').show();
                             $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
-                            notify(msg_key, '', '5_seconds');
-                        }
-                        else {
-                            notify(msg_key);
+                            notify(msgKey, '', '5_seconds');
+                        } else {
+                            notify(msgKey);
                         }
             		},
             		error: function() {
@@ -1364,45 +1364,38 @@ $('#btn-upd-radio-manager').click(function(e) {
                         notify('recorder_plugin_na');
             		}
             	});
-            }
-            else if (recorderStatus == 'Uninstall recorder') {
+            } else if (recorderStatus == 'Uninstall recorder') {
                 $.post('command/recorder-cmd.php?cmd=recorder_uninstall');
                 $('#stream-recorder-options, #context-menu-stream-recorder').hide();
                 notify('recorder_uninstalled', '', '5_seconds');
-            }
-            else if (recorderStorageChange === true) {
+            } else if (recorderStorageChange === true) {
                 $.post('command/recorder-cmd.php?cmd=recorder_storage_change');
                 $('.playback-context-menu i').removeClass('recorder-on');
                 $('#menu-check-recorder').css('display', 'none');
                 notify('settings_updated');
-            }
-            else if (recorderStatusChange && (recorderStatus == 'On' || recorderStatus == 'Off')) {
+            } else if (recorderStatusChange && (recorderStatus == 'On' || recorderStatus == 'Off')) {
                 $.post('command/recorder-cmd.php?cmd=recorder_on_off');
                 if (recorderStatus == 'On') {
                     $('.playback-context-menu i').addClass('recorder-on');
                     $('#menu-check-recorder').css('display', 'inline');
 
-                }
-                else {
+                } else {
                     $('.playback-context-menu i').removeClass('recorder-on');
                     $('#menu-check-recorder').css('display', 'none');
                 }
                 notify('settings_updated');
-            }
-            else if ($('#delete-recordings span').text() == 'Yes') {
+            } else if ($('#delete-recordings span').text() == 'Yes') {
                 $('#delete-recordings span').text('No');
                 $.post('command/recorder-cmd.php?cmd=recorder_delete_files', function() {
                     notify('recorder_deleted', 'Updating library...');
                 });
-            }
-            else if ($('#tag-recordings span').text() == 'Yes') {
+            } else if ($('#tag-recordings span').text() == 'Yes') {
                 notify('recorder_tagging', 'Wait until completion message appears', 'infinite');
                 $('#tag-recordings span').text('No');
                 $.post('command/recorder-cmd.php?cmd=recorder_tag_files', function () {
                     notify('recorder_tagged', 'Updating library...', '5_seconds');
                 });
-            }
-            else {
+            } else {
                 notify('settings_updated');
                 setTimeout(function() {
                     $('#btn-ra-refresh').click();

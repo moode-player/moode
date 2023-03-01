@@ -93,6 +93,7 @@ function notify(title, msg, duration = '2_seconds') {
 		settings_updated: 'Settings updated',
 		gathering_info: 'Gathering info...',
         discovering_players: 'Discovering players...',
+        installing_plugin: 'Installing plugin...',
         // Recorder
         recorder_installed: 'Recorder installed',
         recorder_uninstalled: 'Recorder uninstalled',

@@ -498,6 +498,7 @@ function updMpdConf($i2sDevice) {
 		fwrite($fh, $data);
 		fclose($fh);
 	}
+
 	// Update ALSA and BT confs
 	updAudioOutAndBtOutConfs($cardNum, $_SESSION['alsa_output_mode']);
 	updDspAndBtInConfs($cardNum, $_SESSION['alsa_output_mode']);
