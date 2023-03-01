@@ -42,6 +42,7 @@ body {
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
 	.no-fluid {flex-direction:column-reverse;}
+	#playback-panel {padding-top:3em;}
 	#playback-panel,
 	#content {position:relative;}
 	.tab-content {height:unset;}
@@ -210,6 +211,7 @@ body {
 	.config-input-large {width:34vw;}
 	.config-info-toggle,
 	.config-help-static {display:none;}
+	#config-home {left:4em;}
 	#config-tabs span {display:none!important;}
 	#config-tabs i {display:flex!important;}
 
@@ -224,6 +226,9 @@ body {
 // Mobile Landscape
 */
 @media (max-height:479px) and (orientation:landscape) {
+	/* Header bar height */
+	#playback-panel {padding-top:3em;}
+
 	/* Hide the volume knob */
 	#volzone {display:none;}
 	.ui-pnotify {font-size:1.25rem;}
@@ -360,8 +365,6 @@ body {
 	/* Dropdown and context menus */
 	.dropdown-menu>li>a,
 	.viewswitch .btn {line-height:2.5rem;font-size:1.15em;}
-	#dropdown-cdsp-menu {height:calc(78vh + 1rem);}
-
 	.adv.search-btn {display:none;}
 
 	/* Renderer active overlays: Text and button */
@@ -378,6 +381,7 @@ body {
 	.config-toggle-after {font-size:12px;}
 	.config-horiz-rule {font-size:12px;}
 	.config-btn-music-source {font-size:1.5em;}
+	#config-home {left:4em;}
 	#config-tabs span {display:none!important;}
 	#config-tabs i {display:flex!important;}
 
