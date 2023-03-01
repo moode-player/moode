@@ -28,8 +28,9 @@ Audio devices
 
 Security (new image only)
 
-- UPD: Userid Pi, SSH and WiFi Access Point password not included by default
-       They can easily be created using the official Raspberry Pi Imager
+- UPD: The userid pi, SSH service and WiFi Access Point password are not
+       included on the ISO image. They can be created using the official
+       Raspberry Pi Imager. Refer to the moOde Setup guide for more info.
 
 Updates
 
@@ -49,6 +50,7 @@ Updates
 - UPD: Improve Airplay protocol option
 - UPD: Sync CoverView auto and toggle during startup
 - UPD: Move Metadata file option to MPD section of Audio Config
+- UPD: Setup guide to reflect new security information
 
 Bug fixes
 
