@@ -300,6 +300,17 @@ if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['s
 
 // MAINTENANCE
 
+if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
+	$fileName = 'moode.log';
+	$fileLocation = '/var/log/';
+
+	header("Content-Description: File Transfer");
+	header("Content-Type: application/log");
+	header("Content-Disposition: attachment; filename=\"". $fileName ."\"");
+
+	readfile ($fileLocation . $fileName);
+ 	exit();
+}
 if (isset($_POST['update_clear_syslogs'])) {
 	submitJob('clearsyslogs', '', 'System logs cleared', '');
 }
