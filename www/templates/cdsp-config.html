@@ -255,7 +255,7 @@
 				</div>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-camillagui" class="config-help-info">
-					Show the current On/Off status of the Pipeline editor. To conserve system resources after a reboot the Pipeline editor is automatically turned off.
+					Show the current On/Off status of the Pipeline editor Web service.
 				</span>
 				<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui" value="1" style="display:none"/>
 			</div>
@@ -268,7 +268,7 @@
 				</div>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camillaguiexpert" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-camillaguiexpert" class="config-help-info">
-					Show settings like playback and capture device settings. Only required for custom configurations.
+					Show advanced options for example playback/capture device settings and resampling.
 				</span>
 				<button id="btn-updat-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui_expert" value="1" style="display:none"/>
 			</div>
@@ -276,9 +276,6 @@
 			<div class="controls">
 				<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary config-btn" $_open_camillagui_disabled>Open</button></a>
 				<span class="config-btn-after">Pipeline editor</span>
-				<span class="config-help-static">
-					This will open the Pipeline editor for creating custom configurations.
-				</span>
 			</div>
 		</div>
 	</form>
