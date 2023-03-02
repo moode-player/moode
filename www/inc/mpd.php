@@ -279,10 +279,10 @@ function formatMpdQueryResults($resp) {
 				$array[$idx]['fileext'] = getFileExt($value);
 			} else if ($element == 'directory') {
 				$idx++;
-				$diridx++; // Save directory index for further processing
+				$dirIdx++; // Save directory index for further processing
 				$array[$idx]['directory'] = $value;
-				$cover_hash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
-				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $cover_hash  . '_sm.jpg') ? $cover_hash : '';
+				$coverHash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
+				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $coverHash  . '_sm.jpg') ? $coverHash : '';
 			} else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
 					$idx++;
@@ -301,9 +301,9 @@ function formatMpdQueryResults($resp) {
 		}
 
 		// Put dirs on top
-		if (isset($diridx) && isset($array[0]['file']) ) {
-			$files = array_slice($array, 0, -$diridx);
-            $dirs = array_slice($array, -$diridx);
+		if (isset($dirIdx) && isset($array[0]['file']) ) {
+			$files = array_slice($array, 0, -$dirIdx);
+            $dirs = array_slice($array, -$dirIdx);
             $array = array_merge($dirs, $files);
 		}
 	}

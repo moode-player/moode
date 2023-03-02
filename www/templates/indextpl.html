@@ -311,7 +311,8 @@
 	</div>
 </div>
 
-<!-- LIBRARY FILTERS (TBD) -->
+<!-- LIBRARY FILTERS -->
+<!-- Note this feature has not been implemented yet -->
 <div id="filters-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="filters-modal-label" aria-hidden="true">
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="filters-modal-label">Library Filters</h3>
@@ -596,7 +597,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-accentcolor" class="help-block hide">
-	                    	Sets the color of the knobs and other active elements.
+	                    	Sets the color of the volume and time knobs and other active elements.
 	                    </span>
 	                </div>
 	                <label class="control-label" for="alpha-blend">Alpha blend</label>
@@ -841,7 +842,7 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-playqueue-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-playqueue-art" class="help-block hide">
 							Shows thumbnail images for songs and radio stations in the Queue.
-							Note that showing thumbnails may impact performance.
+							Note that showing thumbnails when there are a large number if items in the Queue may impact performance.
 						</span>
 					</div>
 					<label class="control-label" for="show-npicon">Now-playing icon</label>
@@ -862,7 +863,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-npicon" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-show-npicon" class="help-block hide">
-							Shows the EQ bars animation icon next to the currently playing item in the Queue.
+							Show the EQ bars animation icon next to the currently playing item in the Queue.
 							Note that showing the icon may impact performance when using an attached local display.
 						</span>
 					</div>
@@ -871,7 +872,7 @@
 						<input id="extra-tags" class="input-large" type="text">
 						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-extra-tags" class="help-block hide">
-		                    Display under the cover art any combination of the tags listed below. If no tags are to be displayed enter None or leave the field blank.<br>
+		                    Display under the cover art any combination of tags listed below. If no tags are to be displayed enter None or leave the field blank.<br>
 							<b>Tags: </b>album, genre, track, disc, date, composer, conductor, performer, encoded
 	                    </span>
 	                </div>
@@ -2135,7 +2136,7 @@
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-enabled" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-recorder-enabled" class="help-block hide">
-						Turn the stream recorder on/off.
+						Turn the stream recorder On/Off.
 					</span>
 				</div>
 				<div id="stream-recorder-options" class="hide">
@@ -2155,8 +2156,8 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-recorder-storage" class="help-block hide">
-							Specify the path where the "recordings" folder is located. The folder will automatically be created if it doesn't already exist at the path.<br>
-							Note that only ext4 format is allowed for the partition containing the recordings folder.
+							Specify the path where the folder named "Recordings" is located. The folder will automatically be created if it doesn't already exist.
+							Note only EXT4 format is allowed for the partition containing the recordings folder.
 						</span>
 					</div>
 					<label class="control-label" for="tag-recordings">Tag <span id="untagged-file-count"></span> recordings</label>
@@ -2177,7 +2178,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-tag-recordings" class="help-block hide">
-							Tag all new (un-tagged) files in the recordings folder using the following tags.<br>
+							Tag all new or un-tagged files in the recordings folder using the following tags.<br>
 							<b>Genre: </b>Recordings<br>
 							<b>Artist: </b>Artist<br>
 							<b>AlbumArtist: </b>Recorded Radio<br>
@@ -2201,11 +2202,11 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-recorder-album-tag" class="help-block hide">
-							Select the name to be used to populate the album tag.
+							Station name used for populating the Album tag.<br>
+							<span id="selected-album-tag"></span>
 						</span>
-						<span id="selected-album-tag" class="help-block"></span>
 					</div>
-					<label class="control-label" for="delete-recordings">Delete recordings?</label>
+					<label class="control-label" for="delete-recordings">Delete recordings</label>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2223,7 +2224,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-delete-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-delete-recordings" class="help-block hide">
-							Delete all files in the recordings folder.
+							Delete all files directly under the folder /Recordings. Files in subfolders are not deleted.
 						</span>
 					</div>
 				</div>

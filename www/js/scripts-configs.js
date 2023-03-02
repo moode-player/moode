@@ -216,7 +216,7 @@ jQuery(document).ready(function($){ 'use strict';
         }
 	});
 
-    // Show/hide password plaintext
+    // Show/hide password plaintext (the eye icon)
     $('.show-hide-password').click(function(e) {
         var password_field = document.getElementById($(this).data('id'));
         if ($('#' + $(this).data('id')).val() != '') {

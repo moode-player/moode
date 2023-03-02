@@ -1310,7 +1310,8 @@ $('#btn-ra-manager').click(function(e) {
             $('#selected-album-tag').text(SESSION.json['recorder_album_tag']);
         });
         $.getJSON('command/recorder-cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
-            $('#untagged-file-count').text('(' + recorderUntaggedFileCount + ')');
+            var count = recorderUntaggedFileCount == '' ? '(0)' : '(' + recorderUntaggedFileCount + ')';
+            $('#untagged-file-count').text(count);
         });
         $('#radio-manager-modal').modal();
     }
