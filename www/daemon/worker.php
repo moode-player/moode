@@ -1957,14 +1957,14 @@ function runQueuedJob() {
 			$deviceChange = $queueArgs[0];
 			$mixerChange = $queueArgs[1];
 
+			// Start Camilla volume sync if indicated
+			$serviceCmd = isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
+			sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
+
 			// Restart MPD
 			sysCmd('systemctl restart mpd');
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
-
-			// Start Camilla volume sync if indicated
-			$serviceCmd = isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
-			sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
 			if ($mixerChange == 'fixed_or_null') {
 				// Mixer changed to Fixed (0dB) or Null
@@ -2119,27 +2119,27 @@ function runQueuedJob() {
 					// Reconfigure MPD mixer
 					if ($queueArgs[1] == 'change_mixer_to_camilladsp') {
 						$volSync = 'on';
-						$svcCmd = 'start';
+						$serviceCmd = 'start';
 						$mixerType = 'camilladsp';
 						$volume = '-restore';
 						// Save knob level for later restore
 						phpSession('write', 'volknob_mpd', $_SESSION['volknob']);
 					} else if ($queueArgs[1] == 'change_mixer_to_default') {
 						$volSync = 'off';
-						$svcCmd = 'stop';
+						$serviceCmd = 'stop';
 						$mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
 						$volume = '-restore';
 					}
 					changeMPDMixer($mixerType);
 
+					// Start/stop MPD to CamillaDSP volume sync
+					phpSession('write', 'camilladsp_volume_sync', $volSync);
+					sysCmd('systemctl '. $serviceCmd .' mpd2cdspvolume');
+
 					// Restart MPD
 					sysCmd('systemctl restart mpd');
 					$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 					closeMpdSock($sock);
-
-					// Start/stop MPD to CamillaDSP volume sync
-					phpSession('write', 'camilladsp_volume_sync', $volSync);
-					sysCmd('systemctl '. $svcCmd .' mpd2cdspvolume');
 
 					// Set volume level
 					sysCmd('/var/www/vol.sh ' . $volume);
