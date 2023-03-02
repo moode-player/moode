@@ -148,7 +148,7 @@ html {background-color:inherit;}
 #volcontrol, #volcontrol-2 {margin:auto;height:17vw;width:17vw;}
 .volume-display {position:relative;font-size:2.5vw;color:var(--adapttext);font-weight:500;cursor:pointer;height:50%;}
 .volume-display div {position:relative;top:50%;transform:translate(0, -50%);min-height:33%;text-align:center;}
-.volume-display-db {position:absolute;top:50%;left:63%;z-index:0;font-size:.8em;transform:translate(0, -50%);}
+.volume-display-db {position:absolute;top:51%;left:64%;z-index:0;font-size:.8em;transform:translate(0, -50%);}
 #volpad .volume-display-db {left:68%;font-size:1.1em;}
 #volume, #volume-2 {display:none;} /* Using .volume-display to overlay this element so it can be used as a mute toggle */
 #volzone, #timezone, #volbtns-2 {font-family:'SF Mono', 'Roboto Mono', monospace;} /* 'Letter Gothic Std', */
@@ -747,7 +747,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #trackinfo li:nth-child(odd) {background-color:rgba(128,128,128,.05);}
 .controls-select {margin-bottom:5px;}
 .recorder-on {border-bottom: 2px solid var(--accentxts);}
-#selected-album-tag {margin-left:.25em;font-style:italic;}
+#selected-album-tag {font-style:italic;}
 #multiroom-sender {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;}
 #multiroom-sender a {font-size:1.25rem;color:var(--textvariant);}
 #menu-cdsp {color:var(--adapttext);}
