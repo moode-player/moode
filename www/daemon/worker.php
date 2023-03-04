@@ -156,6 +156,7 @@ sysCmd('moodeutl -D btmulti');
 sysCmd('moodeutl -D upd_rx_adv_toggle');
 sysCmd('moodeutl -D upd_tx_adv_toggle');
 sysCmd('moodeutl -D piano_dualmode');
+sysCmd('moodeutl -D wrkready');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session
