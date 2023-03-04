@@ -472,13 +472,13 @@
 		</div>
 
 		<div class="control-group">
-			<legend>System Maintenance</legend>
+			<legend>Backup/Restore</legend>
 			<label class="control-label">Backup system</label>
 			<div class="controls">
 				<a href="bkp-config.php?action=backup"><button class="btn btn-medium btn-primary config-btn">Backup</button></a>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-backup-system" class="config-help-info">
-					Backup settings, radio stations, playlists and CamillaDSP configs.
+					Backup configuration settings and preferences, radio stations, playlists and CamillaDSP configs.
                 </span>
 			</div>
 
@@ -487,27 +487,19 @@
 				<a href="bkp-config.php?action=restore"><button class="btn btn-medium btn-primary config-btn">Restore</button></a>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-restore-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-restore-system" class="config-help-info">
-					Restore settings, radio stations, playlists and CamillaDSP configs.
+					Restore configuration settings and preferences, radio stations, playlists and CamillaDSP configs.
                 </span>
 			</div>
+		</div>
 
-			<div class="config-horiz-rule"></div>
-
+		<div class="control-group">
+			<legend>Logs</legend>
 			<label class="control-label">Startup log</label>
 			<div class="controls">
 				<button class="btn btn-medium btn-primary config-btn" type="submit" name="download_logs" value="1">Download</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-download-logs" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-download-logs" class="config-help-info">
-					Download the moOde startup log /var/log/moode.log
-                </span>
-			</div>
-
-			<label class="control-label">Playback history</label>
-			<div class="controls">
-				<a href="#clear-playbackhist" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-playhistory" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-clear-playhistory" class="config-help-info">
-					Clear the playback history log. Perform this task periodically since the log grows over time.
+					Download the moOde startup log: /var/log/moode.log
                 </span>
 			</div>
 
@@ -516,9 +508,20 @@
 				<a href="#clear-syslogs" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-syslogs" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-clear-syslogs" class="config-help-info">
-					Clear various system log files. The logs are cleared periodically by the automatic Maintenance task.
+					Clear various system log files. Note the logs are cleared periodically by the Maintenance task.
                 </span>
 			</div>
+
+			<label class="control-label">Play history log</label>
+			<div class="controls">
+				<a href="#clear-playbackhist" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-playhistory" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-clear-playhistory" class="config-help-info">
+					Clear the playback history log. Perform this task periodically since the log grows over time.
+                </span>
+			</div>
+
+			<div class="config-horiz-rule"></div>
 
 			<label class="control-label">Debug logging</label>
 			<div class="controls">
