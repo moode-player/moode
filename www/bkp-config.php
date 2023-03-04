@@ -179,6 +179,7 @@ function genToggleButton($name, $value, $disabled) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'backup') {
+	$_heading = 'Backup';
 	$_restore_hidden = 'hidden';
 	$_togglebtn_backup_system = genToggleButton('backup_system', True, False);
 	$_togglebtn_backup_camilladsp = genToggleButton('backup_camilladsp', True, False);
@@ -186,6 +187,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, False);
 	$_togglebtn_backup_playlists = genToggleButton('backup_playlists', True, False);
 } else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
+	$_heading = 'Restore';
 	$_backup_hidden = 'hidden';
 	$backupOptions = array();
 	$backupOptions = file_exists(TMP_RESTORE_ZIP) ? sysCmd('/var/www/util/backup_manager.py --info ' . TMP_RESTORE_ZIP) : $backupOptions;
