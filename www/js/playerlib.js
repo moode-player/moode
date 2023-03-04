@@ -536,10 +536,15 @@ function engineCmd() {
                     break;
                 case 'cdsp_config_updated':
                     notify('cdsp_config_updated');
-                    //$('.ui-pnotify-closer').click();
                     break;
                 case 'cdsp_config_update_failed':
                     notify('cdsp_config_update_failed', '', '10_seconds');
+                    break;
+                case 'recorder_tagged':
+                    notify('recorder_tagged', cmd[1] + ' files tagged, updating library...', '10_seconds');
+                    break;
+                case 'recorder_nofiles':
+                    notify('recorder_nofiles', '', '5_seconds');
                     break;
                 case 'refresh_screen':
                     setTimeout(function() {
@@ -2178,6 +2183,7 @@ function setVolume(level, event) {
 
 	// Unmuted, set volume (incl 0 vol)
 	if (SESSION.json['volmute'] == '0') {
+        //console.log('unmute (setvol ' + SESSION.json['volknob'] + ')');
 		SESSION.json['volknob'] = level.toString();
 		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, true); // Async
     } else {
@@ -2188,6 +2194,7 @@ function setVolume(level, event) {
             if (SESSION.json['mpdmixer'] == 'hardware') {
                 sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, true); // Async
             } else {
+                //console.log('mute (setvol 0)');
                 sendMpdCmd('setvol 0');
             }
 

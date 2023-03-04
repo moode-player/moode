@@ -1309,10 +1309,25 @@ $('#btn-ra-manager').click(function(e) {
             $('#recorder-album-tag span').text(SESSION.json['recorder_album_tag']);
             $('#selected-album-tag').text(SESSION.json['recorder_album_tag']);
         });
-        $.getJSON('command/recorder-cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
-            var count = recorderUntaggedFileCount == '' ? '(0)' : '(' + recorderUntaggedFileCount + ')';
+        $.getJSON('command/recorder-cmd.php?cmd=recorder_untagged_file_list', function(recorderUntaggedFiles) {
+            var count = recorderUntaggedFiles['count'] == '' ? '(0)' : '(' + recorderUntaggedFiles['count'] + ')';
             $('#untagged-file-count').text(count);
+            var output = '<li class="modal-dropdown-text">' +
+                '<a href="#notarget" data-cmd="delete-recordings-sel">' +
+                '<span class="text">No</span></a></li>';
+            output += '<li class="modal-dropdown-text">' +
+                '<a href="#notarget" data-cmd="delete-recordings-sel">' +
+                '<span class="text">' + (count == '0' ? '' : 'All') + '</span></a></li>';
+            for (i = 0; i < recorderUntaggedFiles['files'].length; i++) {
+                output += '<li class="modal-dropdown-text">' +
+                    '<a href="#notarget" data-cmd="delete-recordings-sel">' +
+                    '<span class="text">' + recorderUntaggedFiles['files'][i] + '</span></a></li>';
+            }
+            $('#delete-recordings span').text('No');
+        	var element = document.getElementById('recorder-untagged-files');
+        	element.innerHTML = output;
         });
+
         $('#radio-manager-modal').modal();
     }
     else {
@@ -1353,7 +1368,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                         if (msgKey == 'recorder_installed') {
                             $('#stream-recorder-options, #context-menu-stream-recorder').show();
                             $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
-                            notify(msgKey, '', '5_seconds');
+                            notify(msgKey, 'Reboot required', '10_seconds');
                         } else {
                             notify(msgKey);
                         }
@@ -1385,17 +1400,17 @@ $('#btn-upd-radio-manager').click(function(e) {
                     $('#menu-check-recorder').css('display', 'none');
                 }
                 notify('settings_updated');
-            } else if ($('#delete-recordings span').text() == 'Yes') {
-                $('#delete-recordings span').text('No');
-                $.post('command/recorder-cmd.php?cmd=recorder_delete_files', function() {
-                    notify('recorder_deleted', 'Updating library...');
-                });
             } else if ($('#tag-recordings span').text() == 'Yes') {
+                // NOTE: Completion message sent from back-end via sendEngCmd()
                 notify('recorder_tagging', 'Wait until completion message appears', 'infinite');
                 $('#tag-recordings span').text('No');
-                $.post('command/recorder-cmd.php?cmd=recorder_tag_files', function () {
-                    notify('recorder_tagged', 'Updating library...', '5_seconds');
+                $.post('command/recorder-cmd.php?cmd=recorder_tag_files');
+            } else if ($('#delete-recordings span').text() != 'No') {
+                var fileName = $('#delete-recordings span').text();
+                $.post('command/recorder-cmd.php?cmd=recorder_delete_files', {'file_name': fileName}, function() {
+                    notify('recorder_deleted', 'Updating library...', '5_seconds');
                 });
+                $('#delete-recordings span').text('No'); // Reset
             } else {
                 notify('settings_updated');
                 setTimeout(function() {

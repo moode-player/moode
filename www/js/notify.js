@@ -94,13 +94,14 @@ function notify(title, msg, duration = '2_seconds') {
 		gathering_info: 'Gathering info...',
         discovering_players: 'Discovering players...',
         installing_plugin: 'Installing plugin...',
-        // Recorder
+        // Recorder plugin
         recorder_installed: 'Recorder installed',
         recorder_uninstalled: 'Recorder uninstalled',
         recorder_plugin_na: 'Recorder plugin not available',
-        recorder_deleted: 'Recordings deleted',
+        recorder_deleted: 'Raw recordings deleted',
         recorder_tagging: 'Recordings being tagged...',
-        recorder_tagged: 'Tagging complete'
+        recorder_tagged: 'Tagging complete',
+        recorder_nofiles: 'No files to tag'
     };
 
     if (typeof titles[title] === undefined) {

@@ -110,8 +110,10 @@ const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
-// Other constants
-const RECORDER_DEFAULT_ALBUM_TAG	= 'Recorded YYYY-MM-DD';
+// Recorder plugin (currently not available)
+const RECORDER_RECORDINGS_DIR = '/Recordings';
+const RECORDER_DEFAULT_COVER = 'Recorded Radio.jpg';
+const RECORDER_DEFAULT_ALBUM_TAG = 'Recorded YYYY-MM-DD';
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
