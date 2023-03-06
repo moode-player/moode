@@ -267,19 +267,22 @@ class CamillaDsp {
      * Returns list  available options for the camilladsp setting, including the Off and Custom
      */
     function getAvailableConfigs($extended = True) {
-        $configs = [];
+        $configsFirst = [];
+        $configsRest = [];
         // If extended moode is used, return also Off and custom as selectors
         if( $extended == True ) {
-            $configs['off'] = 'Off'; // don't use camilla
-            $configs['custom'] = 'Custom'; // custom configuration setup used
-            $configs['__quick_convolution__.yml'] = 'Quick convolution filter'; // custom configuration setup used
+            $configsFirst['off'] = 'Off'; // don't use camilla
+            $configsFirst['custom'] = 'Custom'; // custom configuration setup used
+            $configsFirst['__quick_convolution__.yml'] = 'Quick convolution filter'; // custom configuration setup used
         }
-        foreach (glob($this->CAMILLA_CONFIG_DIR . '/configs/*.yml') as $filename) {
-                $fileParts = pathinfo($filename);
-                if($fileParts['basename'] != "__quick_convolution__.yml") {
-                    $configs[$fileParts['basename']] = $fileParts['filename'];
-                }
+        foreach (glob($this->CAMILLA_CONFIG_DIR . '/configs/*.yml') as $fileName) {
+            $fileParts = pathinfo($fileName);
+            if($fileParts['basename'] != "__quick_convolution__.yml") {
+                $configsRest[$fileParts['basename']] = $fileParts['filename'];
+            }
         }
+        ksort($configsRest, SORT_NATURAL | SORT_FLAG_CASE);
+        $configs = array_merge($configsFirst, $configsRest);
         return $configs;
     }
 
