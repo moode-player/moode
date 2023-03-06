@@ -34,9 +34,9 @@ phpSession('open');
 // For save/remove actions
 $initiateLibraryUpd = false;
 
-// LIB CONFIG
+// LIBRARY CONFIG
 
-// Re-mount nas sources
+// Re-mount NAS sources
 if (isset($_POST['remount_sources'])) {
 	$result = sqlRead('cfg_source', $dbh);
 	if ($result === true) {
@@ -63,7 +63,7 @@ if (isset($_POST['clear_libcache'])) {
 	clearLibCacheAll();
 	$_SESSION['notify']['title'] = 'Library tag cache cleared';
 }
-// Auto-update MPD db on usb insert or remove
+// Auto-update MPD database on USB insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
 	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
 		$_SESSION['notify']['title'] = 'Settings updated';
@@ -89,7 +89,7 @@ if (isset($_POST['regen_thmcache'])) {
 	}
 }
 
-// SOURCE CONFIG
+// MUSIC SOURCE CONFIG
 
 // Remove source
 if (isset($_POST['delete']) && $_POST['delete'] == 1) {
@@ -213,7 +213,8 @@ if ($initiateLibraryUpd == true) {
 	unset($_GET['cmd']);
 }
 
-// LIBRARY FORM
+// LIBRARY CONFIG
+
 if (!isset($_GET['cmd'])) {
 	$tpl = "lib-config.html";
 
@@ -248,7 +249,8 @@ if (!isset($_GET['cmd'])) {
 	$_thmcache_status = $_SESSION['thmcache_status'];
 }
 
-// MUSIC SOURCE FORM
+// MUSIC SOURCE CONFIG
+
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	$tpl = 'src-config.html';
 
@@ -278,7 +280,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				if (empty($_error)) {
 					$_hide_error = 'hide';
 				} else {
-					$_moode_log = "\n" . file_get_contents(MOODE_LOG);
+					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
 				}
 			}
 		}

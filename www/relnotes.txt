@@ -61,6 +61,7 @@ Bug fixes
 - FIX: Audioinfo does not report renderer info
 - FIX: Default thumb image not showing in Queue for UPnP files
 - FIX: Format of auto_coverview value in System info
+- FIX: Error not logged when source mount fails
 
 ################################################################################
 #

@@ -140,10 +140,12 @@ function sourceMount($action, $id = '', $log = '') {
 					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
 				}
 				$mp[0]['error'] = 'Mount error';
-				if ($log == 'workerlog') {
+				if ($log == '') {
+					// Mounts performed by Library or Music Source Config
 					workerLog('worker: Try (' . $mountStr . ')');
 					workerLog('worker: Err (' . implode("\n", $result) . ')');
 				} else {
+					// Mounts performed by the monitor daemon ($log = 'mountmonlog')
 					mountmonLog('- Try (' . $mountStr . ')');
 					mountmonLog('- Err (' . implode("\n", $result) . ')');
 				}

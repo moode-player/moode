@@ -68,14 +68,14 @@ while (true) {
 						if (!empty($result)) {
 							mountmonLog('- Re-mounting ' . $mp['name'] . ' (stale file handle)');
 							sourceMount('unmount', $mp['id']);
-							sourceMount('mount', $mp['id']);
+							sourceMount('mount', $mp['id'], 'mountmonlog');
 						} else {
 							mountmonLog('- Mount appears to be OK');
 						}
 					}
 				} else {
 					mountmonLog('- Re-mounting ' . $mp['name'] . ' (mount dir did not exist)');
-					sourceMount('mount', $mp['id']);
+					sourceMount('mount', $mp['id'], 'mountmonlog');
 				}
 			} else {
 				mountmonLog('- WARNING: Remote host for ' . $mp['name'] . ' is unreachable');
