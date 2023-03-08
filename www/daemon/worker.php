@@ -324,156 +324,109 @@ if (file_exists('/etc/wpa_supplicant/wpa_supplicant.conf')) {
 		$ssid = sysCmd("cat /etc/wpa_supplicant/wpa_supplicant.conf 2>&1 | awk -F\"=\" '/ssid=\"/{print $2;exit;}'");
 		$psk = sysCmd("cat /etc/wpa_supplicant/wpa_supplicant.conf 2>&1 | awk -F\"=\" '/psk=/ {print $2;exit;}'");
 		if (!empty($ssid) && !empty($psk)) {
-			// Update cfg_network wlan0 and apd0 rows and generate conf files
+			// Update wlan0 SSID and PSK
 			sqlQuery("UPDATE cfg_network SET wlanssid=" . $ssid[0] . ", wlanpwd='" . $psk[0] . "', wlan_psk='" . $psk[0] . "' WHERE id='2'", $dbh);
-			sqlQuery("UPDATE cfg_network SET wlanssid='" . ucfirst($_SESSION['hostname']) . "', wlanpwd='" . $psk[0] . "', wlan_psk='" . $psk[0] . "' WHERE id='3'", $dbh);
+			// Update apd0 SSID
+			// NOTE: PSK set blank because plaintext WiFi password needed for generating a PSK is not available from Pi Imager
+			sqlQuery("UPDATE cfg_network SET wlanssid='" . ucfirst($_SESSION['hostname']) . "', wlanpwd='', wlan_psk='' WHERE id='3'", $dbh);
+			// Generate conf files
 			cfgNetIfaces();
 			resetApMode();
 			cfgHostApd();
-			workerLog('worker: SSID/PSK imported');
+			workerLog('worker: WiFi SSID/PSK imported');
 		} else {
-			workerLog('worker: WARNING: SSID/PSK import failed');
+			workerLog('worker: WARNING: WiFi SSID/PSK import failed');
 		}
 	}
 }
 
 // Check eth0
 $eth0 = sysCmd('ip addr list | grep eth0');
-if (!empty($eth0)) {
+if (empty($eth0)) {
+	workerLog('worker: eth0 adapter does not exist');
+	$eth0Ip = '';
+} else {
 	workerLog('worker: eth0 adapter exists');
-	// Check for IP address if indicated
-	workerLog('worker: eth0 check for address (' . ($_SESSION['eth0chk'] == '1' ? 'On' : 'Off') . ')');
+	workerLog('worker: eth0 address check (' . ($_SESSION['eth0chk'] == '1' ? 'On' : 'Off') . ')');
+
 	if ($_SESSION['eth0chk'] == '1') {
-		workerLog('worker: eth0 address check (' . $_SESSION['ipaddr_timeout'] . ' secs)');
+		workerLog('worker: eth0 address check (up to ' . $_SESSION['ipaddr_timeout'] . ' secs)');
 		$eth0Ip = checkForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
 	} else {
 		$eth0Ip = sysCmd("ip addr list eth0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 	}
-} else {
-	$eth0Ip = '';
-	workerLog('worker: eth0 adapter does not exist');
-}
 
-// Log network info
-!empty($eth0Ip) ? logNetworkInfo('eth0') : workerLog('worker: eth0 address not assigned');
+	if (empty($eth0Ip)) {
+		workerLog('worker: eth0 address not assigned');
+	} else {
+		logNetworkInfo('eth0');
+	}
+}
 
 // Check wlan0
-$wlan0Ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
-$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
-$cfgSSID = sqlQuery('SELECT COUNT(*) FROM cfg_ssid', $dbh);
-if (!empty($wlan0)) {
+if (empty($wlan0)) {
+	workerLog('worker: wlan0 adapter does not exist');
+} else {
+	$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
+	//$cfgSSID = sqlQuery("SELECT ssid FROM cfg_ssid where ssid not in ('" . $cfgNetwork[1]['wlanssid'] . "', 'None (activates AP mode)')", $dbh);
+	$cfgSSID = sysCmd("moodeutl -q \" SELECT ssid FROM cfg_ssid where ssid not in ('" . $cfgNetwork[1]['wlanssid'] . "', 'None (activates AP mode)')\"");
+	$altSSIDList = empty($cfgSSID) ? 'None' : implode(',', $cfgSSID);
 	workerLog('worker: wlan0 adapter exists');
 	workerLog('worker: wlan0 country (' . $cfgNetwork[1]['wlan_country'] . ')');
+	workerLog('worker: wlan0 configured SSID (' . $cfgNetwork[1]['wlanssid'] . ')');
+	workerLog('worker: wlan0 SSID alternates (' . $altSSIDList . ')');
+	workerLog('worker: wlan0 router mode (' . $cfgNetwork[2]['wlan_router'] . ')');
 
-	// Case: saved SSID(s)
-	if ($cfgSSID[0]['COUNT(*)'] > 1 && $cfgNetwork[1]['wlanssid'] != 'None (activates AP mode)') {
-		workerLog('worker: wlan0 trying saved SSID(s)');
+	// Check for wlan0 IP address
+	$wlan0Ip = '';
+	$_SESSION['apactivated'] = false;
+	if ($cfgNetwork[1]['wlanssid'] != 'None (activates AP mode)') {
+		workerLog('worker: wlan0 address check (up to ' . $_SESSION['ipaddr_timeout'] . ' secs)');
 		$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
 	}
 
-	if (!empty($wlan0Ip)) {
-		// Case: IP address already assigned (configured or saved SSID)
-		$ssidBlank = false;
-		$_SESSION['apactivated'] = false;
-	} else if ($cfgNetwork[1]['wlanssid'] == 'None (activates AP mode)') {
-		// Case: no configured SSID and saved SSID (if any) did not associate
-		$ssidBlank = true;
-		workerLog('worker: wlan0 SSID is "None (activates AP mode)"');
-		if (empty($eth0Ip)) {
-			// Case: no eth0 addr
-			workerLog('worker: wlan0 AP mode started');
-			$_SESSION['apactivated'] = true;
+	// AP mode activation
+	if (empty($wlan0Ip)) {
+		workerLog('worker: wlan0 address not assigned');
+		if (empty($eth0Ip) || $cfgNetwork[2]['wlan_router'] == 'On') {
+			workerLog('worker: wlan0 activating AP mode');
 			activateApMode();
-		} else {
-			// Case: eth0 addr exists
-			if ($cfgNetwork[2]['wlan_router'] == 'On') {
-				workerLog('worker: wlan0 AP mode started');
-				$_SESSION['apactivated'] = true;
-				activateApMode();
-			} else {
-				workerLog('worker: wlan0 AP mode not started (eth0 active but Router mode is Off)');
-				$_SESSION['apactivated'] = false;
-			}
-		}
-	} else {
-		// Case: configured SSID exists
-		workerLog('worker: wlan0 trying configured SSID (' . $cfgNetwork[1]['wlanssid'] . ')');
-		$ssidBlank = false;
-		$_SESSION['apactivated'] = false;
-	}
-
-	// Check for IP address
-	if ($_SESSION['apactivated'] == true || $ssidBlank == false) {
-		$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
-		// Case: SSID blank, AP mode activated
-		// Case: SSID exists, AP mode fall back if no ip address after trying SSID
-		if ($ssidBlank == false) {
+			workerLog('worker: wlan0 address check (up to ' . $_SESSION['ipaddr_timeout'] . ' secs)');
+			$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
 			if (empty($wlan0Ip)) {
-				workerLog('worker: wlan0 no IP addr for SSID (' . $cfgNetwork[1]['wlanssid'] . ')');
-				if (empty($eth0Ip)) {
-					workerLog('worker: wlan0 AP mode started');
-					$_SESSION['apactivated'] = true;
-					activateApMode();
-					$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
-				} else {
-					// Case: eth0 addr exists
-					if ($cfgNetwork[2]['wlan_router'] == 'On') {
-						workerLog('worker: wlan0 AP mode started');
-						$_SESSION['apactivated'] = true;
-						activateApMode();
-					} else {
-						workerLog('worker: wlan0 AP mode not started (eth0 active but Router mode is Off)');
-						$_SESSION['apactivated'] = false;
-					}
-				}
+				$_SESSION['apactivated'] = false;
+				workerLog('worker: wlan0 address not assigned');
 			} else {
-				$result = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
-				workerLog('worker: wlan0 connected SSID is (' . $result[0] . ')');
+				$_SESSION['apactivated'] = true;
+				workerLog('worker: wlan0 AP mode activated (SSID ' . $cfgNetwork[2]['wlanssid'] . ')');
 			}
-		}
-	}
-
-	// Log network info
-	if (!empty($wlan0Ip)) {
-		logNetworkInfo('wlan0');
-	} else {
-		if ($_SESSION['apactivated'] == true) {
-			workerLog('worker: wlan0 AP mode address not assigned');
-			$_SESSION['apactivated'] = false;
 		} else {
+			workerLog('worker: wlan0 AP mode not activated, eth0 active but Router mode is Off');
 			workerLog('worker: wlan0 address not assigned');
 		}
+	} else {
+		$result = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
+		workerLog('worker: wlan0 connected to SSID (' . $result[0] . ')');
 	}
 
-	// Reset dhcpcd.conf in case a hard reboot or poweroff occurs
+	// Reset dhcpcd.conf to non-AP mode addressing in case a hard reboot/poweroff occurs
+	// NOTE: This does not have any effect until system is restarted
 	resetApMode();
 
-	// Disable power save for integrated adapter
-	if ($piModelNum == '3' || $piModelNum == '4' || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-		sysCmd('/sbin/iwconfig wlan0 power off');
-		workerLog('worker: wlan0 power save disabled');
-	}
-} else {
-	workerLog('worker: wlan0 adapter does not exist' . ($_SESSION['wifibt'] == '0' ? ' (off)' : ''));
-	$_SESSION['apactivated'] = false;
-}
-
-// AP Router mode
-workerLog('worker: apd0 router mode (' . $cfgNetwork[2]['wlan_router'] . ')');
-if ($cfgNetwork[2]['wlan_router'] == 'On') {
-	if ($_SESSION['apactivated'] == true) {
+	// AP Router mode activation
+	if ($cfgNetwork[2]['wlan_router'] == 'On' && $_SESSION['apactivated'] == true) {
 		sysCmd('systemctl start nftables');
-		if (!empty($eth0Ip)) {
-			workerLog('worker: wlan0 Router mode started');
-		} else {
-			workerLog('worker: wlan0 Router mode started but no Ethernet address');
-		}
-	} else {
-		workerLog('worker: wlan0 unable to start Router mode');
+		workerLog('worker: wlan0 Router mode activated' . (empty($eth0Ip) ? ' but no Ethernet address' : ''));
 	}
-} else if (!empty($wlan0Ip) && !empty($eth0Ip)) {
-	workerLog('worker: wlan0 and eth0 active but Router mode is Off');
+
+	if (!empty($wlan0Ip)) {
+		if ($piModelNum == '3' || $piModelNum == '4' || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
+			sysCmd('/sbin/iwconfig wlan0 power off');
+			workerLog('worker: wlan0 power save (Disabled)');
+		}
+		logNetworkInfo('wlan0');
+	}
 }
 
 // Store IP address (prefer wlan0 address)
