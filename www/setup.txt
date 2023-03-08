@@ -6,7 +6,7 @@
 #  player. Additional configuration help is provided within the player via Menu,
 #  Quick help and the (i) information buttons.
 #
-#  Version: 1.3 2023-03-01
+#  Version: 1.3 2023-03-08
 #
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -26,14 +26,17 @@ located on the moOde menu.
 
 SECURITY
 
-The userid pi, SSH service and WiFi Access Point (AP) password are not included
-on the ISO image. They can be setup using the official Raspberry Pi imager to
-write the image. The password entered for WiFi SSID will also be used for the
-AP password.
+The ISO image does not contain the userid pi, SSH service, WiFi SSID or Access
+Point password.
 
-Refer to the document below for more information on operating system security
-and how to use the Raspberry Pi Imager.
-https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
+- The pi userid/password and WiFi SSID/password can can be created using the
+  official Raspberry Pi Imager. Refer to the link below for information on
+  operating system security and how to use the Raspberry Pi Imager.
+  https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
+
+- The Access Point password can be entered via the WebUI, Network Config screen
+  after the system starts or via an edited /boot/moodecfg.ini file. The file is
+  described in this document in the CUSTOM CONFIGURATION section.
 
 To access the operating system command console use Secure Shell (SSH). An easy
 to use WebSSH terminal is available in System Config.
