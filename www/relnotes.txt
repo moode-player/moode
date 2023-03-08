@@ -28,9 +28,9 @@ Audio devices
 
 Security (new image only)
 
-- UPD: The userid pi, SSH service and WiFi Access Point password are not
-       included on the ISO image. They can be created using the official
-       Raspberry Pi Imager. Refer to the moOde Setup guide for more info.
+- UPD: The ISO image does not contain the userid pi, SSH service, WiFi SSID or
+       Access Point password. Refer to the moOde Setup guide for details on
+       how to set these up.
 
 Updates
 
@@ -46,11 +46,13 @@ Updates
 - UPD: Add System Config option for downloading the Startup log
 - UPD: Improve readability of Receivers modal
 - UPD: Improve help text and labels in CamillaDSP Config
-- UPD: Improve viewswitch tabs in configs
+- UPD: Improve viewswitch tabs in configs (use icons for mobile)
 - UPD: Improve Airplay protocol option
+- UPD: Improve WiFi section in startup (faster AP mode activation)
 - UPD: Sync CoverView auto and toggle during startup
 - UPD: Move Metadata file option to MPD section of Audio Config
 - UPD: Update Chip Options help for Piano 2.1 DAC Stereo mode
+- UPD: Sort the output from the Wifi SCAN
 - UPD: Setup guide to reflect new security information
 
 Bug fixes
@@ -62,6 +64,7 @@ Bug fixes
 - FIX: Default thumb image not showing in Queue for UPnP files
 - FIX: Format of auto_coverview value in System info
 - FIX: Error not logged when source mount fails
+- FIX: Wrong PSK used in saved SSID's
 
 ################################################################################
 #
