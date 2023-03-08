@@ -104,7 +104,7 @@ function cfgNetIfaces() {
 		$data .= "network={\n";
 		$data .= 'ssid=' . '"' . $cfgNetwork[1]['wlanssid'] . '"' . "\n";
 		$data .= 'priority=100' . "\n";
-		$data .= "scan_ssid=1\n"; // Scan even if SSID is hidden
+		$data .= "scan_ssid=1\n"; // Probe for hidden SSID's
 		if ($cfgNetwork[1]['wlansec'] == 'wpa') {
 			// WPA/WPA2 Personal
 			$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
@@ -128,13 +128,13 @@ function cfgNetIfaces() {
 			$data .= "network={\n";
 			$data .= 'ssid=' . '"' . $row['ssid'] . '"' . "\n";
 			$data .= 'priority=10' . "\n";
-			$data .= "scan_ssid=1\n"; // Scan even if SSID is hidden
+			$data .= "scan_ssid=1\n"; // Probe for hidden SSID's
 			if ($row['sec'] == 'wpa') {
 				// WPA/WPA2 Personal
-				$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+				$data .= 'psk=' . $row['psk'] . "\n";
 			} else if ($row['sec'] == 'wpa23') {
 				// WPA3 Personal Transition Mode
-				$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+				$data .= 'psk=' . $row['psk'] . "\n";
 				$data .= 'key_mgmt=WPA-PSK-SHA256' . "\n";
 				$data .= 'ieee80211w=2' . "\n";
 			} else if ($row['sec'] == 'wpa3') {
@@ -264,7 +264,7 @@ function checkForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
 		if (!empty($ipAddr[0])) {
 			break;
 		} else {
-			workerLog('worker: ' . $iface .' check '. $i . ' for IP address');
+			workerLog('worker: ' . $iface .' check '. ($i + 1) . ' for IP address');
 			sleep($sleepTime);
 		}
 	}
