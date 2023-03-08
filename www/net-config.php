@@ -173,6 +173,7 @@ $ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1"
 
 // Get link quality and signal level
 if (!empty($ipAddr[0])) {
+	$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
 	$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 	$array = explode('=', $signal[0]);
 	$qual = explode('/', $array[1]);
@@ -180,18 +181,21 @@ if (!empty($ipAddr[0])) {
 	$lev = explode('/', $array[2]);
 	$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
 }
-
 // Determine message to display
 if ($_SESSION['apactivated'] == true) {
-	$_wlan0currentip = empty($ipAddr[0]) ? 'Unable to activate AP mode' : $ipAddr[0] . ' - AP mode active';
+	$_wlan0currentip = empty($ipAddr[0]) ? 'Unable to activate AP mode' : $ipAddr[0] . ' AP mode active';
 } else {
-	$_wlan0currentip = empty($ipAddr[0]) ? 'Not in use' : $ipAddr[0] . ' - quality ' . $quality . '%, level ' . $level;
+	$_wlan0currentip = empty($ipAddr[0]) ? 'Not in use' :
+	'Address: ' . $ipAddr[0] . '<br>' .
+	'Network: ' . $ssid[0] . '<br>' .
+	'Quality: ' . $quality . '% level ' . $level;
 }
 
 // SSID, scanner, security protocol, password
 if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'"); // Do twice to improve results
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'");
+	sort($result, SORT_NATURAL | SORT_FLAG_CASE);
 	$array = array();
 	$array[0] = 'None (activates AP mode)';
 	$ssidList = array_merge($array, $result);
