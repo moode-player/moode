@@ -218,7 +218,11 @@ $_select['multiroom_tx_off'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
 $_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
-$_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' . $_SESSION['rx_hostnames'] : $_SESSION['rx_hostnames'];
+if (!isset($_SESSION['rx_hostnames'])) {
+	$_rx_hostnames = 'Discover has not been run yet';
+} else {
+	$_rx_hostnames = $_SESSION['rx_hostnames'] == 'No receivers found' ? $_SESSION['rx_hostnames'] : 'Found: ' . $_SESSION['rx_hostnames'];
+}
 $_multiroom_initvol = $cfgMultiroom['initial_volume'];
 // Advanced options
 $_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($cfgMultiroom['tx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
