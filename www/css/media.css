@@ -724,7 +724,7 @@ body {
 	The query (any-Pointer: fine) is For devices that have a high accuracy mouse/trackpad attached
 	The default .custom-scrollbars is meant for Firefox ?
 */
-/*@media (any-pointer: fine) {
+/*@media (any-pointer: fine) {*/
 	.custom-scrollbars ::-webkit-scrollbar {
 		width: 11px;
    	}
@@ -746,4 +746,4 @@ body {
 		scrollbar-width: thin;
 		scrollbar-color: auto;
 	}
-}*/
+/*}*/
