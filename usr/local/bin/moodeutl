@@ -528,7 +528,7 @@ function listAudioOverlays() {
 
 	foreach ($files as $file) {
 		$contents = file_get_contents($dir . $file);
-		if (strpos($contents, 'sound-dai-cells') !== false || $file == 'rpi-cirrus-wm5102.dtbo') {
+		if (strpos($contents, 'sound-dai-cells') !== false || $file == 'cirrus-wm5102.dtbo') {
 			echo $file . "\n";
 		}
 	}
