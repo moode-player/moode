@@ -737,15 +737,16 @@ function getMappedDbVol() {
 	phpSession('open_ro');
 
 	if (isMPD2CamillaDSPVolSyncEnabled() && doesCamillaDSPCfgHaveVolFilter()) {
+		// implement the same curve as with mpd2camilladsp
+
 		// Use SQL value instead of session
 		$result = sqlRead('cfg_system', sqlConnect(), 'volknob');
-		// For CamillaDSP volume: NOTE: -51dB is 0 level for Camilla source volume
-		if ($result[0]['value'] != '0') {
-			$mappedDbVol = round(20 * log10($result[0]['value'] / 100.0), 1);
-			$mappedDbVol = ($mappedDbVol > -10 ? number_format($mappedDbVol, 1) : substr($mappedDbVol, 0, 3)) . 'dB';
-		} else {
-			$mappedDbVol = '-51dB';
-		}
+		//TODO: create setting for it
+		$dynamic_range = 60;
+
+		$mappedDbVol = CamillaDsp::getMappedDbVol($result[0]['value'], $dynamic_range) ;
+		$mappedDbVol = round($mappedDbVol, 1);
+		$mappedDbVol = ($mappedDbVol > -10 ? number_format($mappedDbVol, 1) : substr($mappedDbVol, 0, 3)) . 'dB';
 	} else {
 		// For MPD volume
 		$result = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .

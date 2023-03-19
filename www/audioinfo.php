@@ -246,7 +246,7 @@ if ($_SESSION['mpdmixer'] == 'hardware') {
 	$_volume_mixer = 'Hardware (On-chip)';
 }
 elseif ($_SESSION['mpdmixer'] == 'software') {
-	$_volume_mixer = 'MPD Software (24-bit)';
+	$_volume_mixer = 'MPD Software (24-bit)'; // 32-bit?
 }
 elseif ($_SESSION['mpdmixer'] == 'none') {
 	$_volume_mixer = 'Fixed (0dB output)';
@@ -393,7 +393,7 @@ if ($result === true) { // Not in table
 	$_iface = $result[0]['iface'];
 }
 $_devname = $_SESSION['adevname'];
-$_mixer_name = $_SESSION['amixname'];
+$_mixer_name = $_SESSION['amixname'] == 'none' ? 'N/A' : $_SESSION['amixname'];
 $_audio_formats = $_SESSION['audio_formats'];
 $_hdwr_rev = $_SESSION['hdwrrev'];
 
