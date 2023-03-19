@@ -11,6 +11,24 @@
 
 ################################################################################
 #
+# 2023-MM-DD TC moOde 8.3.1
+#
+################################################################################
+
+Audio devices
+
+- NEW: Raspberry Pi Codec (I2S)
+- NEW: Raspberry Pi DAC+ (I2S)
+- NEW: Raspberry Pi DAC Pro (I2S)
+- NEW: Raspberry Pi DigiAMP+ (I2S)
+
+Updates
+
+- UPD: Change overlay name rpi-dac to i2s-dac
+- UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
+
+################################################################################
+#
 # 2023-03-14 TC moOde 8.3.0
 #
 ################################################################################
