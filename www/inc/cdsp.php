@@ -553,6 +553,21 @@ class CamillaDsp {
     function restore($values) {
     }
 
+    static function getMappedDbVol($volume, $dynamic_range) {
+        $x = $volume/100.0;
+        $y = pow(10, $dynamic_range/20);
+        $a = 1/$y;
+        $b = log($y);
+        $y= $a*exp($b*($x));
+        if ($x < .1) {
+            $y = $x*10*$a*exp(0.1*$b);
+        }
+        if( $y == 0) {
+            $y = 0.0000001;
+        }
+        return 20* log10($y);
+    }
+
 }
 
 // TODO: Change these to cdsp-> member functions
