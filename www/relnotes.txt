@@ -24,6 +24,7 @@ Audio devices
 
 Updates
 
+- UPD: Add Volume range option to CamillaDSP Config
 - UPD: Change overlay name rpi-dac to i2s-dac
 - UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
 
