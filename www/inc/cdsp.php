@@ -563,7 +563,7 @@ class CamillaDsp {
             $y = $x*10*$a*exp(0.1*$b);
         }
         if( $y == 0) {
-            $y = 0.000001;
+            $y = 0.000001; // NOTE: Must be same value in /usr/local/bin/mpd2cdspvolume function lin_vol_curve()
         }
         return 20* log10($y);
     }
