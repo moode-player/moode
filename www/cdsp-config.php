@@ -35,12 +35,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		phpSession('write', 'camilladsp', $_POST['cdsp_mode']);
 		$cdsp->selectConfig($_POST['cdsp_mode']);
 	}
-	if (isset($_POST['camilladsp_volume_range'])) {
-		$_SESSION['camilladsp_volume_range'] = $_POST['camilladsp_volume_range'];
-		sysCmd("sed -i '/dynamic_range/c\dynamic_range = " . $_SESSION['camilladsp_volume_range'] . "' /etc/mpd2cdspvolume.config");
-		sysCmd('systemctl restart mpd2cdspvolume');
-		$_SESSION['notify']['title'] = 'Settings updated';
-	}
 	if (isset($_POST['cdsp_use_default_device'])) {
 		$useDefaultDevice = $_POST['cdsp_use_default_device'];
 		phpSession('write', 'cdsp_fix_playback', $useDefaultDevice == "1" ? "Yes" : "No");
@@ -228,10 +222,6 @@ if ($_selected_coeff) {
 	}
 	$_coeff_info_html = rtrim($_coeff_info_html, '<br/>');
 }
-
-$_select['camilladsp_volume_range'] .= "<option value=\"50\" " . (($_SESSION['camilladsp_volume_range'] == '50') ? "selected" : "") . ">50 dB</option>\n";
-$_select['camilladsp_volume_range'] .= "<option value=\"60\" " . (($_SESSION['camilladsp_volume_range'] == '60') ? "selected" : "") . ">60 dB</option>\n";
-$_select['camilladsp_volume_range'] .= "<option value=\"70\" " . (($_SESSION['camilladsp_volume_range'] == '70') ? "selected" : "") . ">70 dB</option>\n";
 
 $_select['cdsp_use_default_device_yes'] .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 $_select['cdsp_use_default_device_no']  .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";

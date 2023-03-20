@@ -79,6 +79,13 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 	}
 }
+// CamillaDSP volume range
+if (isset($_POST['update_camilladsp_volume_range']) && $_POST['camilladsp_volume_range'] != $_SESSION['camilladsp_volume_range']) {
+	$_SESSION['camilladsp_volume_range'] = $_POST['camilladsp_volume_range'];
+	sysCmd("sed -i '/dynamic_range/c\dynamic_range = " . $_SESSION['camilladsp_volume_range'] . "' /etc/mpd2cdspvolume.config");
+	sysCmd('systemctl restart mpd2cdspvolume');
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
 
 // I2S AUDIO DEVICE
 
@@ -358,9 +365,17 @@ $_mpd_select['mixer_type'] .= "<option value=\"null\" " .
 if ($_SESSION['camilladsp'] != 'off') {
 	$_mpd_select['mixer_type'] .= "<option value=\"camilladsp\" " .
 		(($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? "selected" : "") . ">CamillaDSP</option>\n";
+	$_camilladsp_volume_range_hide = $cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on' ? '' : 'hide';
+	$_select['camilladsp_volume_range'] .= "<option value=\"30\" " . (($_SESSION['camilladsp_volume_range'] == '30') ? "selected" : "") . ">30 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"40\" " . (($_SESSION['camilladsp_volume_range'] == '40') ? "selected" : "") . ">40 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"50\" " . (($_SESSION['camilladsp_volume_range'] == '50') ? "selected" : "") . ">50 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"60\" " . (($_SESSION['camilladsp_volume_range'] == '60') ? "selected" : "") . ">60 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"70\" " . (($_SESSION['camilladsp_volume_range'] == '70') ? "selected" : "") . ">70 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"80\" " . (($_SESSION['camilladsp_volume_range'] == '80') ? "selected" : "") . ">80 dB</option>\n";
+} else {
+	$_camilladsp_volume_range_hide = 'hide';
 }
 // Named I2S devices
-
 $result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
 sort($result);
 $array = array();
