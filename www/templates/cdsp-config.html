@@ -54,6 +54,18 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="camilladsp-volume-range">Volume range</label>
+			<div class="controls">
+				<select id="camilladsp-volume-range" class="config-select-xxlarge" name="camilladsp_volume_range">
+					$_select[camilladsp_volume_range]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camilladsp-volume-range" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-camilladsp-volume-range" class="config-help-info">
+					This value represents the dynamic range (i.e., the difference between the maximum loudness and background noise level) that is used to generate the volume curve.
+					The curve determines the loudness at each point on the CamillaDSP volume slider and moOde volume knob.
+				</span>
+			</div>
+
 			<label class="control-label">Default device</label>
 			<div class="controls">
 				<div class="toggle config-toggle-yn">

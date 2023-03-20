@@ -157,6 +157,7 @@ sysCmd('moodeutl -D upd_rx_adv_toggle');
 sysCmd('moodeutl -D upd_tx_adv_toggle');
 sysCmd('moodeutl -D piano_dualmode');
 sysCmd('moodeutl -D wrkready');
+//TODO sysCmd('moodeutl -D camilladsp_volume_sync');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session
@@ -587,14 +588,18 @@ $result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR pa
 	OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
 
 // CamillaDSP
+if (!isset($_SESSION['camilladsp_volume_range'])) {
+	$_SESSION['camilladsp_volume_range'] = '60';
+}
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $cdsp->selectConfig($_SESSION['camilladsp']);
 if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 }
 unset($cdsp);
-workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
-workerLog('worker: CamillaDSP volume sync (' . $_SESSION['camilladsp_volume_sync'] . ')');
+workerLog('worker: CamillaDSP configuration (' . $_SESSION['camilladsp'] . ')');
+workerLog('worker: CamillaDSP volume sync   (' . $_SESSION['camilladsp_volume_sync'] . ')');
+workerLog('worker: CamillaDSP volume range  (' . $_SESSION['camilladsp_volume_range'] . ')');
 
 //
 workerLog('worker: --');
