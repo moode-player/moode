@@ -29,6 +29,16 @@ $selectedConfig = isset($_POST['cdsp_config']) ? $_POST['cdsp_config'] : null;
 $selectedCoeff = isset($_POST['cdsp_coeffs']) ? $_POST['cdsp_coeffs'] : null;
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
+	if (isset($_POST['cdsp_mode'])) {
+		$currentMode = $_SESSION['camilladsp'];
+		$newMode = $_POST['cdsp_mode'];
+		phpSession('write', 'camilladsp', $_POST['cdsp_mode']);
+		$cdsp->selectConfig($_POST['cdsp_mode']);
+	}
+	if (isset($_POST['cdsp_use_default_device'])) {
+		$useDefaultDevice = $_POST['cdsp_use_default_device'];
+		phpSession('write', 'cdsp_fix_playback', $useDefaultDevice == "1" ? "Yes" : "No");
+	}
 	if (isset($_POST['cdsp_qc_gain']) && isset($_POST['cdsp_qc_ir_left']) && isset($_POST['cdsp_qc_ir_right'])) {
 		$gain = $_POST['cdsp_qc_gain'];
 		$convL = $_POST['cdsp_qc_ir_left'];
@@ -37,16 +47,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$cfg = $gain . ';' . $convL . ';' . $convR . ';' . $convT;
 		$cdsp->setQuickConvolutionConfig($cdsp->stringToQuickConvolutionConfig($cfg));
 		phpSession('write', 'camilladsp_quickconv', $cfg);
-	}
-	if (isset($_POST['cdsp_use_default_device'])) {
-		$useDefaultDevice = $_POST['cdsp_use_default_device'];
-		phpSession('write', 'cdsp_fix_playback', $useDefaultDevice == "1" ? "Yes" : "No");
-	}
-	if (isset($_POST['cdsp_mode'])) {
-		$currentMode = $_SESSION['camilladsp'];
-		$newMode = $_POST['cdsp_mode'];
-		phpSession('write', 'camilladsp', $_POST['cdsp_mode']);
-		$cdsp->selectConfig($_POST['cdsp_mode']);
 	}
 
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes') {

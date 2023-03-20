@@ -553,7 +553,7 @@ class CamillaDsp {
     function restore($values) {
     }
 
-    static function getMappedDbVol($volume, $dynamic_range) {
+    static function calcMappedDbVol($volume, $dynamic_range) {
         $x = $volume/100.0;
         $y = pow(10, $dynamic_range/20);
         $a = 1/$y;
@@ -563,11 +563,10 @@ class CamillaDsp {
             $y = $x*10*$a*exp(0.1*$b);
         }
         if( $y == 0) {
-            $y = 0.0000001;
+            $y = 0.000001; // NOTE: Must be same value in /usr/local/bin/mpd2cdspvolume function lin_vol_curve()
         }
         return 20* log10($y);
     }
-
 }
 
 // TODO: Change these to cdsp-> member functions

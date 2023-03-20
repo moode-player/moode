@@ -58,7 +58,24 @@
 					<b>CAUTION:</b> Set volume to a low level before changing this option.<br>
 					Fixed (0dB) will output 100% volume level. The actual fixed level can be set by adjusting Max ALSA volume.
 				</span>
-            </div>
+			</div>
+
+			<div class="$_camilladsp_volume_range_hide">
+				<label class="control-label" for="camilladsp-volume-range">Volume range</label>
+				<div class="controls">
+					<select id="camilladsp-volume-range" class="config-select-large" name="camilladsp_volume_range">
+						$_select[camilladsp_volume_range]
+					</select>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_camilladsp_volume_range" value="novalue">Set</button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-camilladsp-volume-range" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-camilladsp-volume-range" class="config-help-info">
+						This value represents the difference between the maximum loudness and background noise level.
+						It is used to generate the volume curve which determines the loudness at each point on the CamillaDSP volume slider and moOde volume knob.
+					</span>
+				</div>
+			</div>
+
+			<div class="config-horiz-rule"></div>
 
 			<label class="control-label" for="i2sdevice">Named I2S device</label>
 			<div class="controls">
@@ -195,7 +212,7 @@
 				<span id="info-extmeta" class="config-help-info">
 					Maintain enhanced metadata for the currently playing song or station in the /var/local/www/currentsong.txt file. This file is updated within three seconds after any metadata updates on the UI.
                 </span>
-			</div>			
+			</div>
 		</div>
 
 		<div class="config-horiz-rule">Auto-shuffle</div>
