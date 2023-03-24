@@ -2185,14 +2185,16 @@ function setVolume(level, event) {
 	if (SESSION.json['volmute'] == '0') {
         //console.log('unmute (setvol ' + SESSION.json['volknob'] + ')');
 		SESSION.json['volknob'] = level.toString();
-		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, false); // Sync
+        // TEST sync ajax
+		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, false);
     } else {
         // Muted
 		if (level == 0 && event == 'mute')	{
 
             // TEST using ALSA instead of MPD to set hardware volume
             if (SESSION.json['mpdmixer'] == 'hardware') {
-                sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, false); // Sync
+                // TEST sync ajax
+                sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, false);
             } else {
                 //console.log('mute (setvol 0)');
                 sendMpdCmd('setvol 0');
