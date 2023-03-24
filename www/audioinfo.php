@@ -241,18 +241,18 @@ $_alsa_loopback_class = $_alsa_loopback; // NOTE: 'off' is a class that hides th
 // DSP
 //
 
-// Volume type and range (range only applies to CamillaDSP volume)
-$_volume_range = 'off';
+// Volume type and range
+$_cdsp_volume_range = 'off'; // Range only applies to mixer CamillaDSP
 if ($_SESSION['mpdmixer'] == 'hardware') {
 	$_volume_mixer = 'Hardware (On-chip)';
 }
-elseif ($_SESSION['mpdmixer'] == 'software') {
+else if ($_SESSION['mpdmixer'] == 'software') {
 	$_volume_mixer = 'MPD Software (24-bit)'; // 32-bit?
 }
-elseif ($_SESSION['mpdmixer'] == 'none') {
+else if ($_SESSION['mpdmixer'] == 'none') {
 	$_volume_mixer = 'Fixed (0dB output)';
 }
-elseif ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp_volume_sync'] == 'on') {
+else if ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp_volume_sync'] == 'on') {
 	$_volume_mixer = 'CamillaDSP (64-bit)';
 	$_cdsp_volume_range = $_SESSION['camilladsp_volume_range'] . ' dB';
 }
