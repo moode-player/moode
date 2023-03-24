@@ -27,6 +27,7 @@ $(document).on('click', 'a', function(event) {
 		//debugLog('links.js: $(this).attr(tabindex)', $(this).attr('tabindex'));
 		//return;
 
+		// TODO: Try using a single classname 'target-blank-link'
 	    // Don't modify link if matches condition below
 		if (this.id == 'menu-settings' ||
 			this.id == 'coverart-link' ||
@@ -37,6 +38,7 @@ $(document).on('click', 'a', function(event) {
 			this.className == 'playhistory-link' ||
 			this.className == 'multiroom-setup-link' ||
 			this.className == 'camilladsp-home-link' ||
+			this.className == 'gpio-pinout-link' ||
 			// Input dropdowns on config pages
 			(this.className == 'active' && $(this).attr('tabindex') == 0)) {
 
