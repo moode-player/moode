@@ -1191,7 +1191,7 @@ function genSearchUrl (artist, title, album) {
     // Station does not transmit title
     else if (title == 'Streaming source') {
         if (RADIO.json[MPD.json['file']]['home_page'] != '') {
-            var returnStr =  '<a id="coverart-link" href=' + '"' + RADIO.json[MPD.json['file']]['home_page'] + '"' + ' target="_blank">'+ title + '</a>';
+            var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + RADIO.json[MPD.json['file']]['home_page'] + '"' + ' target="_blank">'+ title + '</a>';
         }
         else {
             returnStr = title;
@@ -1255,7 +1255,7 @@ function genSearchUrl (artist, title, album) {
     			break;
     	}
 
-        var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
+        var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
     }
 
     return returnStr;

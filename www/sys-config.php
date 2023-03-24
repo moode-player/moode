@@ -52,7 +52,7 @@ if (isset($_POST['checkfor_update'])) {
 	} else if ($availableDate <= $thisDate) {
 		$_available_upd = 'Software is up to date';
 	} else if ($available['ImageOnly'] == 'Yes') {
-		$_available_upd = 'A new image-only release of moOde is available. Visit <a href="http://moodeaudio.org" class="moode-about-link" target="_blank">moodeaudio.org</a> for more information.';
+		$_available_upd = 'A new image-only release of moOde is available. Visit <a href="http://moodeaudio.org" class="moode-about-link target-blank-link" target="_blank">moodeaudio.org</a> for more information.';
 	} else {
 		$_available_upd = $available['Date'] == 'None' ? 'None available' :
 			'<button class="btn btn-primary btn-small config-btn set-button btn-submit" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
