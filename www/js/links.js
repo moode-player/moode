@@ -21,25 +21,20 @@
  */
 
 $(document).on('click', 'a', function(event) {
-		//debugLog('links.js: this.id=', this.id);
-		//debugLog('links.js: this.className=', this.className);
-		//debugLog('links.js: this.attributes=', this.attributes);
-		//debugLog('links.js: $(this).attr(tabindex)', $(this).attr('tabindex'));
+		//debugLog('links.js: this.id: ' + this.id);
+		//debugLog('links.js: this.className(s): ' + this.className);
+		//debugLog('links.js:   includes target-blank-link: ' + this.className.includes('target-blank-link'));
+		//debugLog('links.js: this.attributes: ' + this.attributes);
+		//debugLog('links.js: $(this).attr(tabindex): ' + $(this).attr('tabindex'));
 		//return;
 
 	    // Don't modify link if matches condition below
-		if (this.id == 'menu-settings' ||
-			this.id == 'coverart-link' ||
-			this.id == 'dlnasvc-link' ||
-			this.id == 'webssh-link' ||
-			this.id == 'https-only-link' || // TEST
-			this.className == 'moode-about-link' ||
-			this.className == 'playhistory-link' ||
-			this.className == 'multiroom-setup-link' ||
-			this.className == 'camilladsp-home-link' ||
+		if (
+			// Specific links
+			this.className.includes('target-blank-link') ||
 			// Input dropdowns on config pages
-			(this.className == 'active' && $(this).attr('tabindex') == 0)) {
-
+			(this.className == 'active' && $(this).attr('tabindex') == 0)
+		) {
 			//debugLog('links.js: link not modified, match found in exclusion list');
 			return;
 		}

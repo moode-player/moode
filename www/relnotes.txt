@@ -24,9 +24,18 @@ Audio devices
 
 Updates
 
+- UPD: Bump to upmpdcli 1.7.6
+- UPD: Bump to libnpupnp 5.0.1
+- UPD: Bump to libupnpp 0.22.4
+- UPD: Bump to mpd2cdspvolume 0.3.0
 - UPD: Add Volume range option to CamillaDSP Config
+- UPD: Add pinout diagram link to GPIO Config help
 - UPD: Change overlay name rpi-dac to i2s-dac
 - UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
+
+Bug fixes
+
+- FIX: Volume restore when using CDSP volume and renderer
 
 ################################################################################
 #

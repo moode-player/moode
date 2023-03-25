@@ -1191,7 +1191,7 @@ function genSearchUrl (artist, title, album) {
     // Station does not transmit title
     else if (title == 'Streaming source') {
         if (RADIO.json[MPD.json['file']]['home_page'] != '') {
-            var returnStr =  '<a id="coverart-link" href=' + '"' + RADIO.json[MPD.json['file']]['home_page'] + '"' + ' target="_blank">'+ title + '</a>';
+            var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + RADIO.json[MPD.json['file']]['home_page'] + '"' + ' target="_blank">'+ title + '</a>';
         }
         else {
             returnStr = title;
@@ -1255,7 +1255,7 @@ function genSearchUrl (artist, title, album) {
     			break;
     	}
 
-        var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
+        var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
     }
 
     return returnStr;
@@ -2185,14 +2185,16 @@ function setVolume(level, event) {
 	if (SESSION.json['volmute'] == '0') {
         //console.log('unmute (setvol ' + SESSION.json['volknob'] + ')');
 		SESSION.json['volknob'] = level.toString();
-		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, true); // Async
+        // TEST sync ajax
+		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, false);
     } else {
         // Muted
 		if (level == 0 && event == 'mute')	{
 
             // TEST using ALSA instead of MPD to set hardware volume
             if (SESSION.json['mpdmixer'] == 'hardware') {
-                sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, true); // Async
+                // TEST sync ajax
+                sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, false);
             } else {
                 //console.log('mute (setvol 0)');
                 sendMpdCmd('setvol 0');
