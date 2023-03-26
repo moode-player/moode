@@ -29,9 +29,9 @@ SECURITY
 The ISO image does not contain the userid pi, SSH service, WiFi SSID or Access
 Point password.
 
-- The pi userid/password and WiFi SSID/password can can be created using the
-  official Raspberry Pi Imager. Refer to the link below for information on
-  operating system security and how to use the Raspberry Pi Imager.
+- Use the official Raspberry Pi Imager to enable SSH, create the pi userid
+  and password and optionally a WiFi SSID and password. Refer to the link below
+  for information on operating system security and how to use the Imager.
   https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
 
 - The Access Point password can be entered via the WebUI, Network Config screen
