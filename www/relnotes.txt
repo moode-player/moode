@@ -24,10 +24,6 @@ Audio devices
 
 Updates
 
-- UPD: Bump to Linux kernel 6.1.19 build #1637
-- UPD: Bump to upmpdcli 1.7.6
-- UPD: Bump to libnpupnp 5.0.1
-- UPD: Bump to libupnpp 0.22.4
 - UPD: Bump to mpd2cdspvolume 0.3.0
 - UPD: Add Volume range option to CamillaDSP Config
 - UPD: Add pinout diagram link to GPIO Config help

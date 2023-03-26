@@ -22,16 +22,23 @@ and other options are available via the "m" moOde menu.
 - http://IP_ADDRESS
 
 An explanation of how to operate moOde audio player is contained in Quick help
-located on the moOde menu.
+located on the moOde menu and also at the link below.
+https://github.com/moode-player/docs/blob/main/Quickhelp.pdf
 
-SECURITY
+OS IMAGE AND SECURITY
 
-The ISO image does not contain the userid pi, SSH service, WiFi SSID or Access
+The OS image does not contain the userid pi, SSH service, WiFi SSID or Access
 Point password.
 
-- The pi userid/password and WiFi SSID/password can can be created using the
-  official Raspberry Pi Imager. Refer to the link below for information on
-  operating system security and how to use the Raspberry Pi Imager.
+- Use the official Raspberry Pi Imager to choose a moOde OS image, enable SSH,
+  create the pi userid and password and optionally a WiFi SSID and password.
+  The moOde OS images are listed in the "Media Player OS" category or if they
+  were downloaded directly via the Download page at http://moodeaudio.org they
+  can be selected via the "Use custom" category.
+
+- Refer to the links below for more information on operating system security
+  and how to download and use the Raspberry Pi Imager.
+  https://www.raspberrypi.com/software/
   https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
 
 - The Access Point password can be entered via the WebUI, Network Config screen
