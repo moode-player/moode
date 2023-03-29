@@ -33,6 +33,8 @@ Updates
 - UPD: Add pinout diagram link to GPIO Config help
 - UPD: Change overlay name rpi-dac to i2s-dac
 - UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
+- UPD: Improve the help for the NFS server option
+- UPD: Improve the security section if the Setup guide
 
 Bug fixes
 
