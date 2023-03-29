@@ -75,10 +75,8 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 
 	# Local
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
-		# Restore knob level to saved MPD level and reset saved MPD level to 0
+		# Restore knob level to saved MPD level
 		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB_MPD' WHERE param='volknob'")
-		# NOTE: Without the sleep sometimes CamillaDSP volume is left at 100%
-		sleep 2
 	elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 		if [[ $ALSAVOLUME != "none" ]]; then
 			# Restore 0dB ALSA volume

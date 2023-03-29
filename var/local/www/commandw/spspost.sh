@@ -40,7 +40,7 @@ fi
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
-	# Restore knob level to saved MPD level and reset saved MPD level to 0
+	# Restore knob level to saved MPD level
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB_MPD' WHERE param='volknob'")
 elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 	if [[ $ALSAVOLUME != "none" ]]; then
