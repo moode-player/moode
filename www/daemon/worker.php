@@ -135,10 +135,10 @@ sysCmd('chmod 0777 ' . SQLDB_PATH);
 sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT);
 sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT . '*.*');
 sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-sysCmd('chmod 0777 /var/local/www/currentsong.txt');
 sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
-sysCmd('chmod 0777 /var/local/www/playhistory.log');
-sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
+sysCmd('chmod 0666 /var/log/moode_playhistory.log');
+sysCmd('chmod 0666 /var/local/www/currentsong.txt');
+sysCmd('chmod 0666 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 /var/log/shairport-sync.log');
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
@@ -244,6 +244,7 @@ $_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
 $_SESSION['kernelver'] = sysCmd("uname -vr | awk '{print $1\" \"$2}'")[0];
 $_SESSION['procarch'] = sysCmd('uname -m')[0];
 $_SESSION['mpdver'] = sysCmd("mpd -V | grep 'Music Player Daemon' | awk '{print $4}'")[0];
+$_SESSION['home_dir'] = getHomeDir();
 
 // Log platform data
 workerLog('worker: Host      (' . $_SESSION['hostname'] . ')');
@@ -254,7 +255,7 @@ workerLog('worker: Kernel    (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Procarch  (' . $_SESSION['procarch'] . ', ' . ($_SESSION['procarch'] == 'aarch64' ? '64-bit' : '32-bit') . ')');
 workerLog('worker: MPD ver   (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU gov   (' . $_SESSION['cpugov'] . ')');
-
+workerLog('worker: Home dir  (' . $_SESSION['home_dir'] . ')');
 // USB boot
 $piModelNum = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModelNum == '3') { // 3B, B+, A+
@@ -577,7 +578,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 }
 
 // Start Allo Boss2 OLED display
-if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists('/home/pi/boss2oled_no_load')) {
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
 	sysCmd('systemctl start boss2oled');
 	workerLog('worker: Boss 2 OLED started');
 }
@@ -1049,7 +1050,7 @@ phpSessionCheck();
 // Do it just before autocfg so an autocfg always overrules backup settings
 $restoreBackup = false;
 if (file_exists('/boot/moodebackup.zip')) {
-	$restoreLog = '/home/pi/backup_restore.log';
+	$restoreLog = '/var/log/moode_backup_restore.log';
 	sysCmd('/var/www/util/backup_manager.py --restore /boot/moodebackup.zip > ' . $restoreLog);
 	sysCmd('rm /boot/moodebackup.zip');
 	sysCmd('sync');
@@ -1213,8 +1214,8 @@ function chkMaintenance() {
 
 		// LocalUI display (chromium browser)
 		// NOTE: This is a workaround for a chromium-browser bug in < r810 that causes 100% memory utilization after ~3 hours
-		// Enable it by creating the /home/pi/localui_maint file
-		if ($_SESSION['localui'] == '1' && file_exists('/home/pi/localui_maint')) {
+		// Enable it by creating the localui_maint file
+		if ($_SESSION['localui'] == '1' && file_exists($_SESSION['home_dir'] . '/localui_maint')) {
 			if (file_exists('home/pi/localui_refresh')) {
 				debugLog('worker: Maintenance: LocalUI refresh screen');
 				sendEngCmd('refresh_screen');
@@ -1437,7 +1438,7 @@ function updExtMetaFile() {
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
-            chmod('/var/local/www/currentsong.txt', 0777);
+            chmod('/var/local/www/currentsong.txt', 0666);
 		}
 	} else {
 		//workerLog('worker: MPD active');
@@ -1473,7 +1474,7 @@ function updExtMetaFile() {
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
-            chmod('/var/local/www/currentsong.txt', 0777);
+            chmod('/var/local/www/currentsong.txt', 0666);
 		}
 	}
 }
@@ -2485,7 +2486,7 @@ function runQueuedJob() {
 			}
 			break;
 		case 'scnblank':
-			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" /home/pi/.xinitrc');
+			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
 			if ($_SESSION['localui'] == '1') {
 				stopLocalUI();
 				startLocalUI();

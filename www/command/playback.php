@@ -107,7 +107,7 @@ switch ($_GET['cmd']) {
 		echo json_encode('OK');
 		break;
 	case 'get_play_history':
-		echo json_encode(getPlayHistory(shell_exec('cat /var/local/www/playhistory.log')));
+		echo json_encode(getPlayHistory(shell_exec('cat /var/log/moode_playhistory.log')));
 		break;
 }
 

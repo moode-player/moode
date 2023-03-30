@@ -22,7 +22,7 @@ if [ "$AUDIO_DEVICE" = "Allo Katana DAC" ] && [ $PI_REVNUM_SEGMENT = "311" ]; th
 	rmmod snd_soc_audio_graph_card
 	modprobe snd_soc_audio_graph_card
 	modprobe snd_soc_allo_katana_codec
-    echo `date +'%Y%m%d %H%M%S'` "rc.local ran Katana|Pi-4B driver reload" > /home/pi/katana.log
+    echo `date +'%Y%m%d %H%M%S'` "rc.local ran Katana|Pi-4B driver reload" > /var/log/moode_katana.log
 fi
 
 # moOde startup and job processor daemon

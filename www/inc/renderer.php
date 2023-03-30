@@ -150,7 +150,7 @@ function startSpotify() {
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' .
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		' > /dev/null 2>&1 &';
-		//' -v > /home/pi/librespot.txt 2>&1 &'; // For debug
+		//' -v > /var/log/moode_librespot.log 2>&1 &'; // For debug
 
 	debugLog('startSpotify(): (' . $cmd . ')');
 	sysCmd($cmd);

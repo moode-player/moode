@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+HOME_DIR=$(ls /home/)
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 if [[ $1 = "set-timezone" ]]; then
@@ -150,7 +151,7 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/samba/log.nmbd --size 0
 	truncate /var/log/samba/log.smbd --size 0
 	truncate /var/log/shairport-sync.log --size 0
-	truncate /var/log/mountmon.log --size 0
+	truncate /var/log/moode_mountmon.log --size 0
 	truncate /var/log/syslog --size 0
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
@@ -171,12 +172,12 @@ fi
 if [[ $1 = "clear-playhistory" ]]; then
 	TIMESTAMP=$(date +'%Y%m%d %H%M%S')
 	LOGMSG=" Log initialized"
-	echo $TIMESTAMP$LOGMSG > /var/local/www/playhistory.log
+	echo $TIMESTAMP$LOGMSG > /var/log/moode_playhistory.log
 	exit
 fi
 
 if [[ $1 = "clear-history" ]]; then
-	truncate /home/pi/.bash_history --size 0
+	truncate "/home/$HOME_DIR/.bash_history" --size 0
 	exit
 fi
 
@@ -198,8 +199,8 @@ fi
 
 # Clear chrome browser cache
 if [[ $1 = "clearbrcache" ]]; then
-	rm -rf /home/pi/.cache/chromium
+	rm -rf "/home/$HOME_DIR/.cache/chromium"
 	# NOTE: This deletes any 3rd party extensions like xontab but it more effectively clears cache corruption
-	rm -rf /home/pi/.config/chromium/Default
+	rm -rf "/home/$HOME_DIR/.config/chromium/Default"
     exit
 fi

@@ -33,6 +33,8 @@ Updates
 - UPD: Add pinout diagram link to GPIO Config help
 - UPD: Change overlay name rpi-dac to i2s-dac
 - UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
+- UPD: Replace hard coded /home/pi references
+- UPD: Move all moode related log files to /var/log
 - UPD: Improve the help for the NFS server option
 - UPD: Improve the security section if the Setup guide
 
@@ -40,7 +42,7 @@ Bug fixes
 
 - FIX: CamillaDSP quick config menu height
 - FIX: CamillaDSP volume restore after renderer ends
-- FIX: CamillaDSP Loudness config
+- FIX: CamillaDSP Loudness config ???
 - FIX: Favorites playlist overwritten during in-place update
 
 ################################################################################

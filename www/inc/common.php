@@ -39,12 +39,12 @@ const TMP_IMAGE_PREFIX = '__tmp__';
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 const MOODE_LOG = '/var/log/moode.log';
-const AUTOCFG_LOG = '/home/pi/autocfg.log';
-const UPDATER_LOG = '/var/local/www/update-moode.log';
+const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
+const UPDATER_LOG = '/var/log/moode_update.log';
+const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
+const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
 const MPD_LOG = '/var/log/mpd/log';
-const PLAY_HISTORY_LOG = '/var/local/www/playhistory.log';
-const MOUNTMON_LOG = '/var/log/mountmon.log';
-const PORT_FILE = '/tmp/portfile';
+const PORT_FILE = '/tmp/moode_portfile';
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const LIBCACHE_BASE = '/var/local/www/libcache';
 const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
@@ -478,4 +478,9 @@ function setAltBackLink() {
 	}
 
 	phpSession('close');
+}
+
+function getHomeDir() {
+	$result = sysCmd('ls /home/');
+	return '/home/' . $result[0];
 }
