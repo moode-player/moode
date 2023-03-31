@@ -176,11 +176,6 @@ if (!isset($_SESSION['debuglog'])) {
 }
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
 
-// Mount monitor
-if (!isset($_SESSION['fs_mountmon'])) {
-	$_SESSION['fs_mountmon'] = 'Off';
-}
-
 // Reconfigure certain 3rd party installs
 // RoonBridge
 // NOTE: Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
@@ -1082,6 +1077,9 @@ if (file_exists('/boot/moodecfg.ini')) {
 }
 
 // Start mount monitor
+if (!isset($_SESSION['fs_mountmon'])) {
+	$_SESSION['fs_mountmon'] = 'Off';
+}
 sysCmd('killall -s 9 mountmon.php');
 if ($_SESSION['fs_mountmon'] == 'On') {
 	sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
