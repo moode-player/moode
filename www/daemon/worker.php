@@ -904,7 +904,7 @@ workerLog('worker: USB volume knob (' . ($_SESSION['usb_volknob'] == '1' ? 'On' 
 // Start LCD updater engine
 if (isset($_SESSION['lcdup']) && $_SESSION['lcdup'] == 1) {
 	startLcdUpdater();
-	workerLog('worker: LCD updater engine started');
+	workerLog('worker: LCD updater engine (started)');
 }
 
 // Start shellinabox
@@ -1076,6 +1076,12 @@ if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('reboot');
 }
 
+//
+workerLog('worker: --');
+workerLog('worker: -- System monitors');
+workerLog('worker: --');
+//
+
 // Start mount monitor
 if (!isset($_SESSION['fs_mountmon'])) {
 	$_SESSION['fs_mountmon'] = 'Off';
@@ -1084,13 +1090,13 @@ sysCmd('killall -s 9 mountmon.php');
 if ($_SESSION['fs_mountmon'] == 'On') {
 	sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 }
-workerLog('worker: Mount monitor ' . ($_SESSION['fs_mountmon'] == 'On' ? 'started' : '(Off)'));
+workerLog('worker: Mount monitor ' . ($_SESSION['fs_mountmon'] == 'On' ? '(started)' : '(off)'));
 
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
 sysCmd('/var/www/daemon/watchdog.sh > /dev/null 2>&1 &');
-workerLog('worker: Watchdog started');
+workerLog('worker: Watchdog monitor (started)');
 workerLog('worker: Ready');
 
 //
