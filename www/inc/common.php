@@ -58,7 +58,7 @@ const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
 const BOOT_CONFIG_TXT = '/boot/config.txt';
-const BOOT_CONFIG_BKP = '/var/local/www/bootcfg.bkp';
+const BOOT_CONFIG_BKP = '/boot/bootcfg.bkp';
 
 // Size and quality factor for small thumbs
 // Used in thumb-gen.php, worker.php
