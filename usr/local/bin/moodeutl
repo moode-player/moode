@@ -511,7 +511,7 @@ function checkStationUrls($argv) {
 }
 
 function exportAutoconfig($argv) {
-	$homeDir = getHomeDir();
+	$homeDir = '/home/' . getUserID();
 	$cfgFile = count($argv)==3 ? $argv[2] : sprintf($homeDir . "/moodecfg-%s.ini", date('ymd_His'));
 	echo "Current moOde settings exported to " . $cfgFile . "\n";
 	echo shell_exec('/var/www/util/autocfg-gen.php > ' . $cfgFile);
@@ -672,7 +672,7 @@ function setSessionId() {
 	session_id($sessionId);
 }
 
-function getHomeDir() {
+function getUserID() {
 	$result = sysCmd('ls /home/');
-	return '/home/' . $result[0];
+	return $result[0];
 }

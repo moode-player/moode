@@ -63,9 +63,9 @@ switch ($pid = pcntl_fork()) {
 		$logMsg = 'worker: Unable to fork';
 		workerLog($logMsg);
 		exit($logMsg . "\n");
-	case 0: // child process
+	case 0: // Child process
 		break;
-	default: // parent process
+	default: // Parent process
 		fseek($lock, 0);
 		ftruncate($lock, 0);
 		fwrite($lock, $pid);
@@ -83,15 +83,21 @@ fclose(STDIN);
 fclose(STDOUT);
 fclose(STDERR);
 
-$stdIn = fopen('/dev/null', 'r'); // set fd/0
-$stdOut = fopen('/dev/null', 'w'); // set fd/1
-$stdErr = fopen('php://stdout', 'w'); // a hack to duplicate fd/1 to 2
+$stdIn = fopen('/dev/null', 'r'); // Set fd/0
+$stdOut = fopen('/dev/null', 'w'); // Set fd/1
+$stdErr = fopen('php://stdout', 'w'); // A hack to duplicate fd/1 to 2
 
 pcntl_signal(SIGTSTP, SIG_IGN);
 pcntl_signal(SIGTTOU, SIG_IGN);
 pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
+
+// Check for login user ID
+if (empty(getUserID())) {
+	workerLog('worker: ERROR: Login User ID does not exist, unable to continue');
+	exit(1);
+}
 
 // Boot file recovery (rare)
 if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
@@ -157,10 +163,9 @@ sysCmd('moodeutl -D upd_rx_adv_toggle');
 sysCmd('moodeutl -D upd_tx_adv_toggle');
 sysCmd('moodeutl -D piano_dualmode');
 sysCmd('moodeutl -D wrkready');
-//TODO sysCmd('moodeutl -D camilladsp_volume_sync');
 workerLog('worker: Session vacuumed');
 
-// Load cfg_system and cfg_radio into session
+// Open session and load cfg_system and cfg_radio
 phpSession('load_system');
 phpSession('load_radio');
 workerLog('worker: Session loaded');
@@ -244,7 +249,8 @@ $_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
 $_SESSION['kernelver'] = sysCmd("uname -vr | awk '{print $1\" \"$2}'")[0];
 $_SESSION['procarch'] = sysCmd('uname -m')[0];
 $_SESSION['mpdver'] = sysCmd("mpd -V | grep 'Music Player Daemon' | awk '{print $4}'")[0];
-$_SESSION['home_dir'] = getHomeDir();
+$_SESSION['user_id'] = getUserID();
+$_SESSION['home_dir'] = '/home/' . $_SESSION['user_id'];
 
 // Log platform data
 workerLog('worker: Host      (' . $_SESSION['hostname'] . ')');
@@ -255,6 +261,7 @@ workerLog('worker: Kernel    (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Procarch  (' . $_SESSION['procarch'] . ', ' . ($_SESSION['procarch'] == 'aarch64' ? '64-bit' : '32-bit') . ')');
 workerLog('worker: MPD ver   (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU gov   (' . $_SESSION['cpugov'] . ')');
+workerLog('worker: User ID   (' . $_SESSION['user_id'] . ')');
 workerLog('worker: Home dir  (' . $_SESSION['home_dir'] . ')');
 // USB boot
 $piModelNum = substr($_SESSION['hdwrrev'], 3, 1);
@@ -965,6 +972,8 @@ if ($_SESSION['autoplay'] == '1') {
 }
 
 // Start LocalUI
+sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localui.service");
+sysCmd('systemctl daemon-reload');
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
 }

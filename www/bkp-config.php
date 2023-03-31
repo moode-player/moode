@@ -60,7 +60,8 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 
 		if (file_exists(TMP_SCRIPT_FILE)) {
 			$backupOptions .= '--script ' . TMP_SCRIPT_FILE . ' ';
-			sysCmd('chown pi:pi ' . TMP_SCRIPT_FILE);
+			$userID = getUserID();
+			sysCmd('chown ' . $userID . ':' . $userID . ' ' . TMP_SCRIPT_FILE);
 		}
 
 		// Generate backup zip

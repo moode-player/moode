@@ -480,7 +480,7 @@ function setAltBackLink() {
 	phpSession('close');
 }
 
-function getHomeDir() {
+function getUserID() {
 	$result = sysCmd('ls /home/');
-	return '/home/' . $result[0];
+	return $result[0];
 }
