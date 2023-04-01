@@ -35,6 +35,7 @@ Updates
 - UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
 - UPD: Replace hard coded /home/pi references
 - UPD: Move all moode related log files to /var/log
+- UPD: Remove playlist import from moodeutl (never implemented)
 - UPD: Improve the help for the NFS server option
 - UPD: Improve the security section if the Setup guide
 
