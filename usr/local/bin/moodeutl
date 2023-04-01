@@ -19,7 +19,7 @@
  *
  */
 
-const VERSION = '2.1.0';
+const VERSION = '2.1.1';
 
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
@@ -125,9 +125,6 @@ switch ($option) {
 	case '-i':
 		importAutoconfig();
 		break;
-	case '-p':
-		importPlaylists();
-		break;
 	case '-f':
 	case '-F':
 		audioFormats($option);
@@ -218,7 +215,6 @@ With no OPTION print the help text and exit.
  -N\t\tDetect NFS hosts
  -M\t\tDetect MPD hosts
  -o\t\tList audio overlays
- -p\t\tImport playlists
  -q\t\tQuery sql database
  -r\t\tRestart servers
  -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --squeezelite | --roonbridge]
@@ -519,11 +515,6 @@ function exportAutoconfig($argv) {
 
 function importAutoconfig() {
 	echo "Import moOde autoconfig settings\n";
-	echo shell_exec('sudo /var/www/util/autocfg-import.php');
-}
-
-function importPlaylists() {
-	echo "Import playlists\n";
 	echo shell_exec('sudo /var/www/util/autocfg-import.php');
 }
 
