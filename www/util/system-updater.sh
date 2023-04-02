@@ -22,7 +22,7 @@
 #
 
 MOODE_LOG="/var/log/moode.log"
-UPDATER_LOG="/var/local/www/update-moode.log"
+UPDATER_LOG="/var/log/moode_update.log"
 
 message_log () {
 	echo "$1"

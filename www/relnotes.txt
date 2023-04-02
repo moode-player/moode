@@ -35,12 +35,14 @@ Updates
 - UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
 - UPD: Improve the help for the NFS server option
 - UPD: Improve the security section if the Setup guide
+- UPD: Remove playlist import from moodeutl (never implemented)
+- UPD: Replace hard coded /home/pi references
+- UPD: Move all moOde related log files to /var/log
 
 Bug fixes
 
 - FIX: CamillaDSP quick config menu height
 - FIX: CamillaDSP volume restore after renderer ends
-- FIX: CamillaDSP Loudness config
 - FIX: Favorites playlist overwritten during in-place update
 
 ################################################################################

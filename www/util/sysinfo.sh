@@ -31,6 +31,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
 	echo -e "\nPlatform\t\t= $hdwrrev\c"
 	echo -e "\nArchitecture\t\t= $ARCH\c"
+	echo -e "\nHome directory\t\t= /home/$HOME_DIR\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
 	echo -e "\nTimezone\t\t= $timezone\c"
 	echo -e "\nCurrent time\t\t= $NOW\c"
@@ -424,6 +425,7 @@ KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
 [ $(uname -m) = "aarch64" ] && ARCH="aarch64 (64-bit)" || ARCH="armhf (32-bit)"
+HOME_DIR=$(ls /home/)
 # Similar to moodeutl
 MEM_TOTAL=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')             

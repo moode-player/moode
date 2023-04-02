@@ -16,11 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
 if [[ $PLAYER_EVENT != "started" ]] && [[ $PLAYER_EVENT != "stopped" ]]; then
-	#echo "Exit: "$PLAYER_EVENT >> /home/pi/spotevent.log
+	#echo "Exit: "$PLAYER_EVENT >> /var/log/moode_spotevent.log
 	exit 0
 fi
-#echo "Event: "$PLAYER_EVENT >> /home/pi/spotevent.log
+#echo "Event: "$PLAYER_EVENT >> /var/log/moode_spotevent.log
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','mpdmixer','camilladsp_volume_sync','rsmafterspot','inpactive','multiroom_tx')")
@@ -63,7 +64,7 @@ if [[ $PLAYER_EVENT == "started" ]]; then
 			if [[ $RESULT != "" ]]; then
 				RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 				if [[ $RESULT != "" ]]; then
-					echo $(date +%F" "%T)"spotevent.sh: trx-control.php -set-alsavol failed: $IP_ADDR" >> /home/pi/renderer_error.log
+					echo $(date +%F" "%T)"spotevent.sh: trx-control.php -set-alsavol failed: $IP_ADDR" >> /var/log/moode_renderer_error.log
 				fi
 			fi
 		done
@@ -94,7 +95,7 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 			if [[ $RESULT != "" ]]; then
 				RESULT=$(curl -G -S -s --data-urlencode "cmd=vol.sh -restore" http://$IP_ADDR/command/)
 				if [[ $RESULT != "" ]]; then
-					echo $(date +%F" "%T)" spotevent.sh vol.sh -restore failed: $IP_ADDR" >> /home/pi/renderer_error.log
+					echo $(date +%F" "%T)" spotevent.sh vol.sh -restore failed: $IP_ADDR" >> /var/log/moode_renderer_error.log
 				fi
 			fi
 		done

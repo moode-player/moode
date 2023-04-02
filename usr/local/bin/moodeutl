@@ -19,7 +19,7 @@
  *
  */
 
-const VERSION = '2.1.0';
+const VERSION = '2.1.1';
 
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
@@ -36,10 +36,12 @@ const TMP_IMAGE_PREFIX = '__tmp__';
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 const MOODE_LOG = '/var/log/moode.log';
-const AUTOCFG_LOG = '/home/pi/autocfg.log';
-const UPDATER_LOG = '/var/local/www/update-moode.log';
+const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
+const UPDATER_LOG = '/var/log/moode_update.log';
+const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
+const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
 const MPD_LOG = '/var/log/mpd/log';
-const PORT_FILE = '/tmp/portfile';
+const PORT_FILE = '/tmp/moode_portfile';
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const LIBCACHE_BASE = '/var/local/www/libcache';
 const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
@@ -52,6 +54,8 @@ const DEF_COVER = 'images/default-cover-v6.svg';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
+const BOOT_CONFIG_TXT = '/boot/config.txt';
+const BOOT_CONFIG_BKP = '/boot/bootcfg.bkp';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
@@ -120,9 +124,6 @@ switch ($option) {
 		break;
 	case '-i':
 		importAutoconfig();
-		break;
-	case '-p':
-		importPlaylists();
 		break;
 	case '-f':
 	case '-F':
@@ -214,7 +215,6 @@ With no OPTION print the help text and exit.
  -N\t\tDetect NFS hosts
  -M\t\tDetect MPD hosts
  -o\t\tList audio overlays
- -p\t\tImport playlists
  -q\t\tQuery sql database
  -r\t\tRestart servers
  -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --squeezelite | --roonbridge]
@@ -507,18 +507,14 @@ function checkStationUrls($argv) {
 }
 
 function exportAutoconfig($argv) {
-	$cfgFile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/moodecfg-%s.ini", date('ymd_His'));
+	$homeDir = '/home/' . getUserID();
+	$cfgFile = count($argv)==3 ? $argv[2] : sprintf($homeDir . "/moodecfg-%s.ini", date('ymd_His'));
 	echo "Current moOde settings exported to " . $cfgFile . "\n";
 	echo shell_exec('/var/www/util/autocfg-gen.php > ' . $cfgFile);
 }
 
 function importAutoconfig() {
 	echo "Import moOde autoconfig settings\n";
-	echo shell_exec('sudo /var/www/util/autocfg-import.php');
-}
-
-function importPlaylists() {
-	echo "Import playlists\n";
 	echo shell_exec('sudo /var/www/util/autocfg-import.php');
 }
 
@@ -665,4 +661,9 @@ function detectMPDHosts() {
 function setSessionId() {
 	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
 	session_id($sessionId);
+}
+
+function getUserID() {
+	$result = sysCmd('ls /home/');
+	return $result[0];
 }

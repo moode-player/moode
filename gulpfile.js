@@ -534,7 +534,7 @@ gulp.task('upload2remote', function (done) {
         host: pkg.remote.host,
         username: pkg.remote.user,
         password: pkg.remote.password,
-        dest: '/home/pi/www.deploy'}))
+        dest: '/tmp/www.deploy'}))
     .on('error', function(err) {
         console.log(err);
     })
@@ -549,7 +549,7 @@ gulp.task('deploy2remote', function (done) {
     return gulpSSH
         .exec(['sudo rm -rf /var/www.prev',
                'sudo mv /var/www/ /var/www.prev',
-               'sudo mv /home/pi/www.deploy /var/www',
+               'sudo mv /tmp/www.deploy /var/www',
                'sudo chmod -R +x /var/www/command/*',
                'sudo chmod -R +x /var/www/util/*',
                // required if uploaded from windows

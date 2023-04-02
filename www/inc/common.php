@@ -39,12 +39,12 @@ const TMP_IMAGE_PREFIX = '__tmp__';
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 const MOODE_LOG = '/var/log/moode.log';
-const AUTOCFG_LOG = '/home/pi/autocfg.log';
-const UPDATER_LOG = '/var/local/www/update-moode.log';
+const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
+const UPDATER_LOG = '/var/log/moode_update.log';
+const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
+const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
 const MPD_LOG = '/var/log/mpd/log';
-const PLAY_HISTORY_LOG = '/var/local/www/playhistory.log';
-const MOUNTMON_LOG = '/var/log/mountmon.log';
-const PORT_FILE = '/tmp/portfile';
+const PORT_FILE = '/tmp/moode_portfile';
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const LIBCACHE_BASE = '/var/local/www/libcache';
 const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
@@ -58,7 +58,7 @@ const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
 const BOOT_CONFIG_TXT = '/boot/config.txt';
-const BOOT_CONFIG_BKP = '/var/local/www/bootcfg.bkp';
+const BOOT_CONFIG_BKP = '/boot/bootcfg.bkp';
 
 // Size and quality factor for small thumbs
 // Used in thumb-gen.php, worker.php
@@ -478,4 +478,9 @@ function setAltBackLink() {
 	}
 
 	phpSession('close');
+}
+
+function getUserID() {
+	$result = sysCmd('ls /home/');
+	return $result[0];
 }

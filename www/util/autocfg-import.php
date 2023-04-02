@@ -35,10 +35,9 @@ if (file_exists('/boot/moodecfg.ini')) {
 	autoConfig('/boot/moodecfg.ini');
 	sysCmd('sync');
 	phpSession('close');
-}
-else {
-	autoCfgLog('autocfg: no file "/boot/moodecfg.ini" to import\n');
-	print("no file \"/boot/moodecfg.ini\" to import\n");
+} else {
+	autoCfgLog('autocfg-import: No settings file "/boot/moodecfg.ini" to import\n');
+	print("No settings file \"/boot/moodecfg.ini\" to import\n");
 }
 
 ?>

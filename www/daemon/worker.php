@@ -63,9 +63,9 @@ switch ($pid = pcntl_fork()) {
 		$logMsg = 'worker: Unable to fork';
 		workerLog($logMsg);
 		exit($logMsg . "\n");
-	case 0: // child process
+	case 0: // Child process
 		break;
-	default: // parent process
+	default: // Parent process
 		fseek($lock, 0);
 		ftruncate($lock, 0);
 		fwrite($lock, $pid);
@@ -83,15 +83,21 @@ fclose(STDIN);
 fclose(STDOUT);
 fclose(STDERR);
 
-$stdIn = fopen('/dev/null', 'r'); // set fd/0
-$stdOut = fopen('/dev/null', 'w'); // set fd/1
-$stdErr = fopen('php://stdout', 'w'); // a hack to duplicate fd/1 to 2
+$stdIn = fopen('/dev/null', 'r'); // Set fd/0
+$stdOut = fopen('/dev/null', 'w'); // Set fd/1
+$stdErr = fopen('php://stdout', 'w'); // A hack to duplicate fd/1 to 2
 
 pcntl_signal(SIGTSTP, SIG_IGN);
 pcntl_signal(SIGTTOU, SIG_IGN);
 pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
+
+// Check for login user ID
+if (empty(getUserID())) {
+	workerLog('worker: ERROR: Login User ID does not exist, unable to continue');
+	exit(1);
+}
 
 // Boot file recovery (rare)
 if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
@@ -135,10 +141,10 @@ sysCmd('chmod 0777 ' . SQLDB_PATH);
 sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT);
 sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT . '*.*');
 sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-sysCmd('chmod 0777 /var/local/www/currentsong.txt');
 sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
-sysCmd('chmod 0777 /var/local/www/playhistory.log');
-sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
+sysCmd('chmod 0666 /var/log/moode_playhistory.log');
+sysCmd('chmod 0666 /var/local/www/currentsong.txt');
+sysCmd('chmod 0666 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 /var/log/shairport-sync.log');
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
@@ -157,10 +163,9 @@ sysCmd('moodeutl -D upd_rx_adv_toggle');
 sysCmd('moodeutl -D upd_tx_adv_toggle');
 sysCmd('moodeutl -D piano_dualmode');
 sysCmd('moodeutl -D wrkready');
-//TODO sysCmd('moodeutl -D camilladsp_volume_sync');
 workerLog('worker: Session vacuumed');
 
-// Load cfg_system and cfg_radio into session
+// Open session and load cfg_system and cfg_radio
 phpSession('load_system');
 phpSession('load_radio');
 workerLog('worker: Session loaded');
@@ -170,11 +175,6 @@ if (!isset($_SESSION['debuglog'])) {
 	$_SESSION['debuglog'] = '0';
 }
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
-
-// Mount monitor
-if (!isset($_SESSION['fs_mountmon'])) {
-	$_SESSION['fs_mountmon'] = 'Off';
-}
 
 // Reconfigure certain 3rd party installs
 // RoonBridge
@@ -244,6 +244,8 @@ $_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
 $_SESSION['kernelver'] = sysCmd("uname -vr | awk '{print $1\" \"$2}'")[0];
 $_SESSION['procarch'] = sysCmd('uname -m')[0];
 $_SESSION['mpdver'] = sysCmd("mpd -V | grep 'Music Player Daemon' | awk '{print $4}'")[0];
+$_SESSION['user_id'] = getUserID();
+$_SESSION['home_dir'] = '/home/' . $_SESSION['user_id'];
 
 // Log platform data
 workerLog('worker: Host      (' . $_SESSION['hostname'] . ')');
@@ -254,7 +256,8 @@ workerLog('worker: Kernel    (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Procarch  (' . $_SESSION['procarch'] . ', ' . ($_SESSION['procarch'] == 'aarch64' ? '64-bit' : '32-bit') . ')');
 workerLog('worker: MPD ver   (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU gov   (' . $_SESSION['cpugov'] . ')');
-
+workerLog('worker: User ID   (' . $_SESSION['user_id'] . ')');
+workerLog('worker: Home dir  (' . $_SESSION['home_dir'] . ')');
 // USB boot
 $piModelNum = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModelNum == '3') { // 3B, B+, A+
@@ -577,7 +580,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 }
 
 // Start Allo Boss2 OLED display
-if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists('/home/pi/boss2oled_no_load')) {
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
 	sysCmd('systemctl start boss2oled');
 	workerLog('worker: Boss 2 OLED started');
 }
@@ -901,7 +904,7 @@ workerLog('worker: USB volume knob (' . ($_SESSION['usb_volknob'] == '1' ? 'On' 
 // Start LCD updater engine
 if (isset($_SESSION['lcdup']) && $_SESSION['lcdup'] == 1) {
 	startLcdUpdater();
-	workerLog('worker: LCD updater engine started');
+	workerLog('worker: LCD updater engine (started)');
 }
 
 // Start shellinabox
@@ -964,6 +967,8 @@ if ($_SESSION['autoplay'] == '1') {
 }
 
 // Start LocalUI
+sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localui.service");
+sysCmd('systemctl daemon-reload');
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
 }
@@ -1049,7 +1054,7 @@ phpSessionCheck();
 // Do it just before autocfg so an autocfg always overrules backup settings
 $restoreBackup = false;
 if (file_exists('/boot/moodebackup.zip')) {
-	$restoreLog = '/home/pi/backup_restore.log';
+	$restoreLog = '/var/log/moode_backup_restore.log';
 	sysCmd('/var/www/util/backup_manager.py --restore /boot/moodebackup.zip > ' . $restoreLog);
 	sysCmd('rm /boot/moodebackup.zip');
 	sysCmd('sync');
@@ -1071,18 +1076,27 @@ if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('reboot');
 }
 
+//
+workerLog('worker: --');
+workerLog('worker: -- System monitors');
+workerLog('worker: --');
+//
+
 // Start mount monitor
+if (!isset($_SESSION['fs_mountmon'])) {
+	$_SESSION['fs_mountmon'] = 'Off';
+}
 sysCmd('killall -s 9 mountmon.php');
 if ($_SESSION['fs_mountmon'] == 'On') {
 	sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 }
-workerLog('worker: Mount monitor ' . ($_SESSION['fs_mountmon'] == 'On' ? 'started' : '(Off)'));
+workerLog('worker: Mount monitor ' . ($_SESSION['fs_mountmon'] == 'On' ? '(started)' : '(off)'));
 
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
 sysCmd('/var/www/daemon/watchdog.sh > /dev/null 2>&1 &');
-workerLog('worker: Watchdog started');
+workerLog('worker: Watchdog monitor (started)');
 workerLog('worker: Ready');
 
 //
@@ -1213,8 +1227,8 @@ function chkMaintenance() {
 
 		// LocalUI display (chromium browser)
 		// NOTE: This is a workaround for a chromium-browser bug in < r810 that causes 100% memory utilization after ~3 hours
-		// Enable it by creating the /home/pi/localui_maint file
-		if ($_SESSION['localui'] == '1' && file_exists('/home/pi/localui_maint')) {
+		// Enable it by creating the localui_maint file
+		if ($_SESSION['localui'] == '1' && file_exists($_SESSION['home_dir'] . '/localui_maint')) {
 			if (file_exists('home/pi/localui_refresh')) {
 				debugLog('worker: Maintenance: LocalUI refresh screen');
 				sendEngCmd('refresh_screen');
@@ -1437,7 +1451,7 @@ function updExtMetaFile() {
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
-            chmod('/var/local/www/currentsong.txt', 0777);
+            chmod('/var/local/www/currentsong.txt', 0666);
 		}
 	} else {
 		//workerLog('worker: MPD active');
@@ -1473,7 +1487,7 @@ function updExtMetaFile() {
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
-            chmod('/var/local/www/currentsong.txt', 0777);
+            chmod('/var/local/www/currentsong.txt', 0666);
 		}
 	}
 }
@@ -2485,7 +2499,7 @@ function runQueuedJob() {
 			}
 			break;
 		case 'scnblank':
-			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" /home/pi/.xinitrc');
+			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
 			if ($_SESSION['localui'] == '1') {
 				stopLocalUI();
 				startLocalUI();
