@@ -1078,7 +1078,7 @@ if (file_exists('/boot/moodecfg.ini')) {
 
 //
 workerLog('worker: --');
-workerLog('worker: -- System monitors');
+workerLog('worker: -- Startup complete ');
 workerLog('worker: --');
 //
 
@@ -1097,6 +1097,8 @@ sysCmd('killall -s 9 watchdog.sh');
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
 sysCmd('/var/www/daemon/watchdog.sh > /dev/null 2>&1 &');
 workerLog('worker: Watchdog monitor (started)');
+
+// Worker ready
 workerLog('worker: Ready');
 
 //
