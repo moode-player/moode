@@ -428,7 +428,7 @@ CORES=`grep -c ^processor /proc/cpuinfo`
 HOME_DIR=$(ls /home/)
 # Similar to moodeutl
 MEM_TOTAL=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')             
+MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
 MEM_TOTAL=$(( $MEM_TOTAL / 1000 ))
 MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
@@ -859,7 +859,7 @@ if [ $MODEL = 3 ]; then
 elif [ $MODEL = 4 ]; then
 	BOOTLOADER_MIN_DATE=20200903
 	TMP=$(vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}')
-	BOOTLOADER_ACTUAL_DATE=$(date -d"$TMP" +%Y%m%d        )
+	BOOTLOADER_ACTUAL_DATE=$(date -d"$TMP" +%Y%m%d)
 	let DIFF=($(date +%s -d $BOOTLOADER_ACTUAL_DATE)-$(date +%s -d $BOOTLOADER_MIN_DATE))/86400
 	if (("$DIFF" >= "0")); then
 		USBBOOT="enabled"
