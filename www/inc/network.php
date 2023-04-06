@@ -264,7 +264,7 @@ function checkForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
 		if (!empty($ipAddr[0])) {
 			break;
 		} else {
-			workerLog('worker: ' . $iface .' check '. ($i + 1) . ' for IP address');
+			debugLog('worker: ' . $iface .' check '. ($i + 1) . ' for IP address');
 			sleep($sleepTime);
 		}
 	}

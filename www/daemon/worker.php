@@ -45,6 +45,7 @@ sysCmd('truncate ' . MOODE_LOG . ' --size 0');
 $dbh = sqlConnect();
 $result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", $dbh);
 $moodeSeries = substr(getMoodeRel(), 1, 1); // rNNN format
+
 //
 workerLog('worker: --');
 workerLog('worker: -- Start moOde ' . $moodeSeries .  ' series');
@@ -54,8 +55,9 @@ workerLog('worker: --');
 // Daemonize ourselves
 $lock = fopen('/run/worker.pid', 'c+');
 if (!flock($lock, LOCK_EX | LOCK_NB)) {
-	workerLog('worker: Already running');
-	exit("Already running\n");
+	$logMsg = 'worker: Already running';
+	workerLog($logMsg);
+	exit($logMsg . "\n");
 }
 
 switch ($pid = pcntl_fork()) {
@@ -95,8 +97,32 @@ workerLog('worker: Successfully daemonized');
 
 // Check for login user ID
 if (empty(getUserID())) {
-	workerLog('worker: ERROR: Login User ID does not exist, unable to continue');
-	exit(1);
+	$logMsg = 'worker: ERROR: Login User ID does not exist, unable to continue';
+	workerLog($logMsg);
+	exit($logMsg . "\n");
+}
+
+// Check for Linux startup complete
+workerLog('worker: Waiting for Linux startup...');
+$maxLoops = 30;
+$sleepTime = 6;
+$linuxStartupComplete = false;
+for ($i = 0; $i < $maxLoops; $i++) {
+	$result = sysCmd('systemctl is-system-running');
+	if ($result[0] == 'running') {
+		$linuxStartupComplete = true;
+		break;
+	} else {
+		debugLog('worker: Wait ' . ($i + 1) . ' for Linux startup');
+		sleep($sleepTime);
+	}
+}
+if ($linuxStartupComplete === true) {
+	workerLog('worker: Linux startup complete');
+} else {
+	$logMsg = 'worker: ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
+	workerLog($logMsg);
+	exit($logMsg . "\n");
 }
 
 // Boot file recovery (rare)

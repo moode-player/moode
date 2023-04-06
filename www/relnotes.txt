@@ -24,7 +24,7 @@ Audio devices
 
 Updates
 
-- UPD: Bump to Linux kernel 6.1.19 build #1637
+- UPD: Bump to Linux kernel 6.1.21 build #1642
 - UPD: Bump to upmpdcli 1.7.7
 - UPD: Bump to libnpupnp 5.0.1
 - UPD: Bump to libupnpp 0.22.4
@@ -43,6 +43,7 @@ Updates
 
 Bug fixes
 
+- FIX: Rpi Imager WiFi credential import fail due to race condition
 - FIX: CamillaDSP volume restore after renderer ends
 - FIX: CamillaDSP volume proxy high CPU utilization
 - FIX: CamillaDSP Loudness.yml config
