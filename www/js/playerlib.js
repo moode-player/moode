@@ -2607,11 +2607,9 @@ $(document).on('click', '.context-menu a', function(e) {
 
                     if (data == 'Discovery has not been run') {
                         notify('run_receiver_discovery');
-                    }
-                    else if (data == 'No receivers found') {
+                    } else if (data == 'No receivers found') {
                         notify('no_receivers_found');
-                    }
-                    else {
+                    } else {
                         var output = '';
                         var rxStatus = data.split(':');
                         var count = rxStatus.length;
@@ -2635,10 +2633,10 @@ $(document).on('click', '.context-menu a', function(e) {
                                 output += '<div style="font-style:italic;margin-top:.25em;">' + statusMsg + '</div>';
                                 output += '</div>';
                                 output += '</div>';
-                            }
-                            else {
+                            } else {
                                 var rxChecked = rxStatusParts[1] == 'On' ? 'checked' : ''; // Status
-                                var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
+                                //var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
+                                var rxCheckedDisable = ''; // Allow Software volume
                                 var rxMuteIcon = rxStatusParts[3] == '1' ? 'fa-volume-mute' : 'fa-volume-up'; // Mute
                                 var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fal fa-dot-circle"></i>'; // Master vol opt-in
 
@@ -2655,7 +2653,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                     var volDisabled = (rxStatusParts[2] == '0dB' || rxStatusParts[2] == '?') ? ' disabled' : '';
                                     output += '<div class="modal-button-style multiroom-modal-btn">';
                                     output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item +
-                                        '"' + volDisabled + '>' + rxStatusParts[2] + '</button>';
+                                        '"' + volDisabled + '>' + (rxStatusParts[2] == '?' ? 'n/a' : rxStatusParts[2]) + '</button>';
                                     output += '</div>';
                                     // Mute toggle
                                     output += '<div class="modal-button-style multiroom-modal-btn">';

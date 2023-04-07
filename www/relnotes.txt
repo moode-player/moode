@@ -40,6 +40,7 @@ Updates
 - UPD: Replace hard coded /home/pi references
 - UPD: Move all moOde related log files to /var/log
 - UPD: Replace unmaintained Allo ASIX driver with stock driver
+- UPD: Allow Multiroom Receiver w/o Hardware volume
 
 Bug fixes
 
