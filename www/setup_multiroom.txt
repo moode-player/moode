@@ -73,7 +73,9 @@ A) Audio Configuration (Menu, Configure, Audio)
 
 1. In the Audio Output section
    - Configure settings appropriate for the audio device being used
-   - Volume type must be set to "Hardware"
+   - Set Volume type to "Hardware".
+     CAUTION: If the audio device does not support "Hardware" volume it should
+     have a physical volume control otherwise volume output will be 0dB (100%).
 2. In the ALSA options section
    - Select an ALSA output mode being mindful of the Help text
    - Set ALSA Loopback to "OFF"

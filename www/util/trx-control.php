@@ -90,10 +90,11 @@ if ($status != '') {
 exit(0);
 
 function rxOnOff($onoff) {
-	if ($_SESSION['mpdmixer'] == 'hardware' || $_SESSION['mpdmixer'] == 'none') {
+	// Allow Software volume
+	//if ($_SESSION['mpdmixer'] == 'hardware' || $_SESSION['mpdmixer'] == 'none') {
 		phpSession('write', 'multiroom_rx', $onoff);
 		$onoff == 'On' ? startMultiroomReceiver() : stopMultiroomReceiver();
-	}
+	//}
 }
 
 function rxStatus() {
