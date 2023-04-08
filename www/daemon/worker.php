@@ -282,8 +282,8 @@ workerLog('worker: Kernel    (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Procarch  (' . $_SESSION['procarch'] . ', ' . ($_SESSION['procarch'] == 'aarch64' ? '64-bit' : '32-bit') . ')');
 workerLog('worker: MPD ver   (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU gov   (' . $_SESSION['cpugov'] . ')');
-workerLog('worker: User ID   (' . $_SESSION['user_id'] . ')');
-workerLog('worker: Home dir  (' . $_SESSION['home_dir'] . ')');
+workerLog('worker: Userid    (' . $_SESSION['user_id'] . ')');
+workerLog('worker: Homedir   (' . $_SESSION['home_dir'] . ')');
 // USB boot
 $piModelNum = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModelNum == '3') { // 3B, B+, A+
