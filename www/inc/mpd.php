@@ -42,7 +42,7 @@ function scanForMPDHosts() {
 // Return MPD socket or exit script
 function getMpdSock() {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('getMpdSock(): Connection to MPD failed');
+		debugLog('getMpdSock(): Connection to MPD failed');
 		exit(0);
 	} else {
 		return $sock;

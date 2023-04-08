@@ -47,7 +47,7 @@ Bug fixes
 - FIX: Rpi Imager WiFi credential import fail due to race condition
 - FIX: CamillaDSP volume restore after renderer ends
 - FIX: CamillaDSP volume proxy high CPU utilization
-- FIX: CamillaDSP Loudness.yml config
+- FIX: CamillaDSP Loudness.yml (New image only)
 - FIX: CamillaDSP quick config menu height
 - FIX: Favorites playlist overwritten during in-place update
 
@@ -60,7 +60,7 @@ Bug fixes
 New Features
 
 - NEW: Volume type "CamillaDSP" software volume (64-bit with dither)
-- NEW: CamillaDSP Loudness, Volume Control and Polarity Inversion configs
+- NEW: CamillaDSP Loudness, Volume Control and Polarity Inv (New image only)
 - NEW: Use ALSA instead of MPD to control Hardware volume
 - NEW: Monitor in-place update via WebUI Status screen instead of SSH
 
