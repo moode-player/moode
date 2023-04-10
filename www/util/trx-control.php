@@ -90,18 +90,24 @@ if ($status != '') {
 exit(0);
 
 function rxOnOff($onoff) {
-	// Allow Software volume
+	// Don't allow CamillDSP volume
 	//if ($_SESSION['mpdmixer'] == 'hardware' || $_SESSION['mpdmixer'] == 'none') {
+	if ($_SESSION['mpdmixer'] != 'null') {
 		phpSession('write', 'multiroom_rx', $onoff);
 		$onoff == 'On' ? startMultiroomReceiver() : stopMultiroomReceiver();
-	//}
+	}
 }
 
 function rxStatus() {
 	$dbh = sqlConnect();
 	$mvOptIn = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", $dbh);
 	$volMute = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volmute'", $dbh);
-	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : ($_SESSION['mpdmixer'] == 'software' ? '?' : $_SESSION['volknob']);
+	// hardware		$_SESSION['volknob']
+	// software		0dB
+	// none			0dB
+	// null			?
+	$volume = $_SESSION['mpdmixer'] == 'hardware' ? $_SESSION['volknob'] :
+		(($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') ? '0dB' : '?');
 	return
 		'rx' . ',' . 						// Receiver
 		$_SESSION['multiroom_rx'] . ',' . 	// Status: On/Off/Disabled/Unknown

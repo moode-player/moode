@@ -2635,8 +2635,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 output += '</div>';
                             } else {
                                 var rxChecked = rxStatusParts[1] == 'On' ? 'checked' : ''; // Status
-                                //var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
-                                var rxCheckedDisable = ''; // Allow Software volume
+                                var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
                                 var rxMuteIcon = rxStatusParts[3] == '1' ? 'fa-volume-mute' : 'fa-volume-up'; // Mute
                                 var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fal fa-dot-circle"></i>'; // Master vol opt-in
 
@@ -2668,7 +2667,8 @@ $(document).on('click', '.context-menu a', function(e) {
                                     // Volume slider
                                     output += '<div class="controls">';
                                     output += '<input id="multiroom-rx-' + item + '-vol-slider" class="hslide2" type="range" min="0" max="' + SESSION.json['volume_mpd_max'] +
-                                        '" step="1" name="multiroom-rx-' + item + '-vol-slider" value="' + rxStatusParts[2] +
+                                        '" step="1" name="multiroom-rx-' + item + '-vol-slider" value="' + (rxStatusParts[2] == '?' ? '0' :
+                                            (rxStatusParts[2] == '0dB' ? 100 : rxStatusParts[2])) +
                                         '" oninput="updateRxVolDisplay(this.id, this.value)"' + volDisabled + '>';
                                     output += '</div>';
                                 }
