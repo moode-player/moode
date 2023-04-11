@@ -1786,9 +1786,10 @@ function updaterAutoCheck($validIPAddress) {
 			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
-			if (false === ($availableDate = strtotime($available['Date'])) ||
-				false === ($thisDate = strtotime($thisReleaseDate))) {
-				$msg = 'Date error comparing This: ' . $thisReleaseDate . ' and Available: ' . $available['Date'];
+			if (false === ($availableDate = strtotime($available['Date']))) {
+				$msg = 'Check for update failed';
+			} else if (false === ($thisDate = strtotime($thisReleaseDate))) {
+				$msg = 'Invalid release date: ' . $thisReleaseDate;
 			} else if ($availableDate <= $thisDate) {
 				$msg = 'Software is up to date';
 			} else {

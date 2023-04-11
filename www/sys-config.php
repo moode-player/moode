@@ -46,9 +46,10 @@ if (isset($_POST['checkfor_update'])) {
 	$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 	$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
-	if (false === ($availableDate = strtotime($available['Date'])) ||
-		false === ($thisDate = strtotime($thisReleaseDate))) {
-		$_available_upd = 'Date error comparing This: ' . $thisReleaseDate . ' to Available: ' . $available['Date'];
+	if (false === ($availableDate = strtotime($available['Date']))) {
+		$_available_upd = 'Check for update failed';
+	} else if (false === ($thisDate = strtotime($thisReleaseDate))) {
+		$_available_upd = 'Invalid release date: ' . $thisReleaseDate;
 	} else if ($availableDate <= $thisDate) {
 		$_available_upd = 'Software is up to date';
 	} else if ($available['ImageOnly'] == 'Yes') {
