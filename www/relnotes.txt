@@ -50,6 +50,7 @@ Bug fixes
 - FIX: CamillaDSP Loudness.yml (New image only)
 - FIX: CamillaDSP quick config menu height
 - FIX: Favorites playlist overwritten during in-place update
+- FIX: Debug message being displayed in update check
 
 ################################################################################
 #
