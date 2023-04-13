@@ -22,6 +22,18 @@ Audio devices
 - NEW: Raspberry Pi DAC Pro (I2S)
 - NEW: Raspberry Pi DigiAMP+ (I2S)
 
+Radio Stations (New Image Only)
+
+- NEW: FluxFM - 2000's Naughty
+- NEW: FluxFM - Chillout Radio
+- NEW: FluxFM - Indie Disco
+- NEW: FluxFM - Melides Art Radio
+- NEW: FluxFM - Radio Alternative
+- NEW: FluxFM - Hamburg
+- UPD: FluxFM station group
+- UPD: 2BOB Radio 104.7 FM
+- UPD: Czech Radio Classic
+
 Updates
 
 - UPD: Bump to Linux kernel 6.1.21 build #1642
@@ -47,8 +59,8 @@ Bug fixes
 - FIX: Rpi Imager WiFi credential import fail due to race condition
 - FIX: CamillaDSP volume restore after renderer ends
 - FIX: CamillaDSP volume proxy high CPU utilization
-- FIX: CamillaDSP Loudness.yml (New image only)
 - FIX: CamillaDSP quick config menu height
+- FIX: CamillaDSP Loudness.yml
 - FIX: Favorites playlist overwritten during in-place update
 - FIX: Debug message being displayed in update check
 
