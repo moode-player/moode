@@ -26,10 +26,10 @@ Radio Stations (New Image Only)
 
 - NEW: FluxFM - 2000's Naughty
 - NEW: FluxFM - Chillout Radio
+- NEW: FluxFM - Hamburg
 - NEW: FluxFM - Indie Disco
 - NEW: FluxFM - Melides Art Radio
 - NEW: FluxFM - Radio Alternative
-- NEW: FluxFM - Hamburg
 - UPD: FluxFM station group
 - UPD: 2BOB Radio 104.7 FM
 - UPD: Czech Radio Classic
