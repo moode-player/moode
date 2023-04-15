@@ -53,6 +53,7 @@ Updates
 - UPD: Move all moOde related log files to /var/log
 - UPD: Replace unmaintained Allo ASIX driver with stock driver
 - UPD: Allow Multiroom Receiver w/o Hardware volume
+- UPD: Add CamillaDSP volume sync to watchdog monitor
 
 Bug fixes
 
@@ -860,7 +861,7 @@ Updates
 - UPD: Library Config option to ignore CUE files
 - UPD: Decode Pi revision from bitmask instead of from table
 - UPD: Allow negative pregain for Spotify renderer
-- UPD: Add option fo include Composers in Tag view Artist list
+- UPD: Add option to include Composers in Tag view Artist list
 
 Bug fixes
 
