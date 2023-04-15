@@ -395,7 +395,7 @@ if ($result === true) { // Not in table
 	$_iface = $result[0]['iface'];
 }
 $_devname = $_SESSION['adevname'];
-$_mixer_name = $_SESSION['amixname'] == 'none' ? 'N/A' : $_SESSION['amixname'];
+$_mixer_name = $_SESSION['amixname'] == 'none' ? 'n/a' : $_SESSION['amixname'];
 $_audio_formats = $_SESSION['audio_formats'];
 $_hdwr_rev = $_SESSION['hdwrrev'];
 
