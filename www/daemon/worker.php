@@ -191,6 +191,10 @@ sysCmd('moodeutl -D piano_dualmode');
 sysCmd('moodeutl -D wrkready');
 workerLog('worker: Session vacuumed');
 
+// Prune temporary symlink to old updater log file
+# NOTE Remove this for > 8.3.1
+sysCmd('rm /var/local/www/update-moode.log > /dev/null 2>&1');
+
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
 phpSession('load_radio');
