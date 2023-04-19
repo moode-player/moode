@@ -1617,6 +1617,14 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/multiroom.php?cmd=set_rx_status', {'mute': mute, 'item': item}, function(data) {}, 'json');
     });
 
+    // Prevent click on the menu checkmark from causing default moOde cover to be displayed
+    $(document).on('click',
+        '#menu-check-cdsp, #menu-check-consume, #menu-check-repeat, #menu-check-single, #menu-check-recorder',
+        function(e) {
+             e.stopImmediatePropagation();
+        }
+    );
+
 	// Info button (i) show/hide toggle
 	$('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');
