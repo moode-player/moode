@@ -109,7 +109,7 @@ $sleepTime = 6;
 $linuxStartupComplete = false;
 for ($i = 0; $i < $maxLoops; $i++) {
 	$result = sysCmd('systemctl is-system-running');
-	if ($result[0] == 'running') {
+	if ($result[0] == 'running' || $result[0] == 'degraded') {
 		$linuxStartupComplete = true;
 		break;
 	} else {
@@ -190,10 +190,6 @@ sysCmd('moodeutl -D upd_tx_adv_toggle');
 sysCmd('moodeutl -D piano_dualmode');
 sysCmd('moodeutl -D wrkready');
 workerLog('worker: Session vacuumed');
-
-// Prune temporary symlink to old updater log file
-# NOTE Remove this for > 8.3.1
-sysCmd('rm /var/local/www/update-moode.log > /dev/null 2>&1');
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
@@ -325,20 +321,20 @@ workerLog('worker: HDMI port (' . ($_SESSION['hdmiport'] == '1' ? 'On)' : 'Off)'
 
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : '/actpwr';
+	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0  (' . ($led0Trigger == 'none' ? 'Off' : 'On') . ')');
 	workerLog('worker: Sys LED1  (sysclass does not exist)');
 } else if ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : '/actpwr';
+	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0  (' . ($led0Trigger == 'none' ? 'Off' : 'On') . ')');
 	workerLog('worker: Sys LED1  (sysclass does not exist)');
 } else {
 	$led1Brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
-	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : '/actpwr';
+	sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
+	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0  (' . ($led0Trigger == 'none' ? 'Off' : 'On') . ')');
 	workerLog('worker: Sys LED1  (' . ($led1Brightness == '0' ? 'Off' : 'On') . ')');
 }
@@ -2492,16 +2488,16 @@ function runQueuedJob() {
 			break;
 		case 'actled': // LED0
 			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
-				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
+				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 			} else {
-				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
-				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
+				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 			}
 			break;
 		case 'pwrled': // LED1
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
-			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
+			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
 			break;
 		// TEST
 		case 'nginx_https_only':
