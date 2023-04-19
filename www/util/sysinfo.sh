@@ -476,13 +476,13 @@ UPTIME="$(uptime -p)"
 
 [[ $(cat /proc/cpuinfo | grep 'Revision' | cut -f 2 -d " ") == 2* ]] && WARRANTY=void || WARRANTY=OK
 
-grep -q mmc0 /sys/class/leds/led0/trigger && LED0="on" || LED0="off"
-
-if [ $(ls /sys/class/leds | grep led1) ]; then
-	grep -q mmc0 /sys/class/leds/led1/trigger && LED1="on" || LED1="off"
-else
-	LED1="not accessible"
-fi
+# Replaced by led_state from cfg_system
+#grep -q "[actpwr]" /sys/class/leds/ACT/trigger && LED0="on" || LED0="off"
+#if [ $(ls /sys/class/leds | grep PWR) ]; then
+#	grep -q "[actpwr]" /sys/class/leds/PWR/trigger && LED1="on" || LED1="off"
+#else
+#	LED1="not accessible"
+#fi
 
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
 THROTTLED_BITMASK=`vcgencmd get_throttled | cut -d"=" -f2`

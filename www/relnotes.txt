@@ -11,6 +11,27 @@
 
 ################################################################################
 #
+# 2023-MM-DD TC moOde 8.3.2
+#
+################################################################################
+
+Audio devices
+
+- NOTE: Allo Boss 2 I2S driver not working on new 6.1.y kernel branch
+
+Updates
+
+- UPD: Remove reference to pi userid from SSH header
+
+Bug fixes
+
+- FIX: Worker startup fails on Pi-Zero due to incomplete "is-system-running" test
+- FIX: Haveged daemon fails to start on Pi-Zero (arm6 platforms)
+- FIX: Power and activity LED id names causing LED ON/OFF options to fail
+- FIX: Clicking on context menu check mark icon displays default moOde cover
+
+################################################################################
+#
 # 2023-04-17 TC moOde 8.3.1
 #
 ################################################################################
@@ -42,7 +63,7 @@ Updates
 - UPD: Bump to libupnpp 0.22.4
 - UPD: Bump to libupnp-bindings 0.21.0
 - UPD: Bump to mpd2cdspvolume 0.3.1
-- UPD: Add Volume range option to CamillaDSP Config
+- UPD: Add Volume range option for CamillaDSP volume type
 - UPD: Add pinout diagram link to GPIO Config help
 - UPD: Change overlay name rpi-dac to i2s-dac
 - UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
