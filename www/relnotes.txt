@@ -27,7 +27,7 @@ Bug fixes
 
 - FIX: Worker startup fails on Pi-Zero due to incomplete "is-system-running" test
 - FIX: Haveged daemon fails to start on Pi-Zero (arm6 platforms)
-- FIX: Power and activity LED id names causing LED ON/OFF options to fail
+- FIX: Power and activity LED ON/OFF options not working
 - FIX: Clicking on context menu check mark icon displays default moOde cover
 
 ################################################################################
