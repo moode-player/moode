@@ -607,7 +607,7 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (304, 'Raspberry Pi DAC+', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-dacplus', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (305, 'Raspberry Pi DAC Pro', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-dacpro', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (306, 'Raspberry Pi DigiAMP+', '', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-digiampplus', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (207, 'wisdPi Hifi DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (307, 'wisdPi Hifi DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
 
 -- Table: cfg_network
 CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3), wlan_router CHAR (32));
