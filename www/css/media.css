@@ -125,9 +125,10 @@ body {
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
 	.coverview {display:none;}
 
-	/* Menu 'm' and CamillaDSP buttons */
+	/* Menu 'm', CamillaDSP and multiroom Sender icons/buttons */
 	#menu-settings {font-size:2rem;}
 	#menu-cdsp {font-size:1.5rem;}
+	#multiroom-sender a {font-size: 1.45rem;}
 	/* Library button and header text */
 	#current-tab {font-size:1.35rem;}
 	#library-header {font-size:1.11rem;}
@@ -251,6 +252,7 @@ body {
 	/* Multiroom and Updater header icons */
 	#multiroom-sender {left:47%!important;}
 	#updater-notification {left:50%!important;}
+	#multiroom-sender a {font-size: 1.45rem;}
 
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	img.coverart {width:65vh;}
