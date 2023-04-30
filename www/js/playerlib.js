@@ -2776,6 +2776,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
                 $('#show-encoded-at span').text(getParamOrValue('param', SESSION.json['library_encoded_at']));
                 $('#cover-search-priority span').text(getParamOrValue('param', SESSION.json['library_covsearchpri']));
+                $('#thumbgen-scan span').text(SESSION.json['library_thmgen_scan']);
                 $('#hires-thumbnails span').text(getParamOrValue('param', SESSION.json['library_hiresthm']));
                 $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
 
@@ -2980,6 +2981,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {reloadLibrary = true;}
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
+    if (SESSION.json['library_thmgen_scan'] != $('#thumbgen-scan span').text()) {/*NOP*/}
     if (SESSION.json['library_hiresthm'] != getParamOrValue('value', $('#hires-thumbnails span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {thumbSizeChange = true;}
 
@@ -3039,6 +3041,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_recently_added'] = getParamOrValue('value', $('#recently-added span').text());
     SESSION.json['library_encoded_at'] = getParamOrValue('value', $('#show-encoded-at span').text());
     SESSION.json['library_covsearchpri'] = getParamOrValue('value', $('#cover-search-priority span').text());
+    SESSION.json['library_thmgen_scan'] = $('#thumbgen-scan span').text();
     SESSION.json['library_hiresthm'] = getParamOrValue('value', $('#hires-thumbnails span').text());
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
 
@@ -3143,6 +3146,7 @@ $('#btn-preferences-update').click(function(e){
             'library_recently_added': SESSION.json['library_recently_added'],
             'library_encoded_at': SESSION.json['library_encoded_at'],
             'library_covsearchpri': SESSION.json['library_covsearchpri'],
+            'library_thmgen_scan': SESSION.json['library_thmgen_scan'],
             'library_hiresthm': SESSION.json['library_hiresthm'],
             'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
 

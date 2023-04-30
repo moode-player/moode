@@ -1161,6 +1161,31 @@
 							This option determines whether the cover art extractor and thumbnail generator look first for embedded covers or cover image files.
 	                    </span>
 	                </div>
+
+					<label class="control-label" for="thumbgen-scan">Thumbgen scan</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="thumbgen-scan" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">Default</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">All</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbgen-scan" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-thumbgen-scan" class="help-block hide">
+							Scan directories containing the audio formats listed below.<br>
+	                    	<b>Default: </b>aac, aiff, dff, dsf, flac, m4a, mp3, ogg and wav.<br>
+							<b>All: </b>All audio formats listed in the output of the MPD -V command.
+	                    </span>
+					</div>
+
 					<label class="control-label" for="hires-thumbnails">Thumbnail resolution</label>
 	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
