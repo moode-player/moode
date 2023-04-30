@@ -19,6 +19,7 @@
  */
 
 require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
@@ -47,7 +48,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 if (isset($_POST['play']) && $_POST['play'] == '1') {
 	// Update alsaequal, changes take efect in real-time, no need to restart MPD
-	for($i = 1; $i <= 10; $i++) {
+	for ($i = 1; $i <= 10; $i++) {
 		sysCmd('amixer -D alsaequal cset numid=' . $i . ' ' . $_POST['freq' . $i]);
 	}
 
