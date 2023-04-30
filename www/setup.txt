@@ -32,6 +32,9 @@ Point password.
 
 - Use the official Raspberry Pi Imager to choose a moOde OS image, enable SSH,
   create the pi userid and password and optionally a WiFi SSID and password.
+
+  NOTE: SSH and userid/password are required for correct operation of moOde.
+
   The moOde OS images are listed in the "Media Player OS" category or if they
   were downloaded directly via the Download page at http://moodeaudio.org they
   can be selected via the "Use custom" category.
