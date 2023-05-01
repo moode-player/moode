@@ -125,9 +125,14 @@ body {
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
 	.coverview {display:none;}
 
-	/* Library button and header */
-	#current-tab, #library-header {font-size:1.11rem;}
-	/* Search input and Menu "m" button */
+	/* Menu 'm', CamillaDSP and multiroom Sender icons/buttons */
+	#menu-settings {font-size:2rem;}
+	#menu-cdsp {font-size:1.5rem;}
+	#multiroom-sender a {font-size: 1.45rem;}
+	/* Library button and header text */
+	#current-tab {font-size:1.35rem;}
+	#library-header {font-size:1.11rem;}
+	/* Search input */
 	#lib-album-search input,
 	#pl-search input,
 	#playqueue-search input,
@@ -187,14 +192,15 @@ body {
 
 	/* Menus */
 	#panel-header .dropdown-menu,
-	.viewswitch .dropdown-menu {min-width:16rem;}
+	.viewswitch .dropdown-menu {min-width:16rem;font-size:1.3rem;line-height:3.75rem;}
 	#context-menu-playback .dropdown-menu {min-width:15rem;}
-	#menu-settings {font-size:1.9rem;}
-	.dropdown-menu>li>a {font-size:1.3em;}
+	.dropdown-menu>li>a {font-size:1.3rem;line-height:3.75rem;}
 	.viewswitch .btn {font-size:1em;}
+	#dropdown-cdsp-menu {max-height:calc(100vh - 20rem);}
 
 	/* Modals */
-	.modal {min-width:100vw;}
+	.modal {min-width:100vw;font-size:1.2rem;}
+	.modal-header h3 {font-size:1.75rem;}
 	.modal-body {padding:0 .75rem;max-height:74vh;}
 	.modal-body .form-horizontal .control-label {width:42%;}
 	.modal-body .form-horizontal .controls {margin-left:45%;}
@@ -202,6 +208,7 @@ body {
 	.modal .input-large {width:36vw;}
 	.info-toggle,
 	.help-block {display:none;}
+	#audioinfo-tabs .btn {font-size:1.2rem;}
 
 	/* For the configs */
 	.container {padding:1em 1em 0;}
@@ -245,6 +252,7 @@ body {
 	/* Multiroom and Updater header icons */
 	#multiroom-sender {left:47%!important;}
 	#updater-notification {left:50%!important;}
+	#multiroom-sender a {font-size: 1.45rem;}
 
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	img.coverart {width:65vh;}
@@ -321,9 +329,22 @@ body {
 	#playbar-volume-level {margin-left:0.15em;vertical-align:middle;font-size:.75em;}
 	#playbar-mtime {display:none;}
 
+	/* Menu 'm' and CamillaDSP buttons */
+	#menu-settings {font-size:2rem;margin-right:.5em;}
+	#menu-cdsp {font-size:1.5rem;}
+	#dropdown-cdsp-btn {right:calc(4.6rem + .5em)!important;}
+	.busy-spinner {right:calc(3.25rem + .85em)}
+	/* Library button and header text */
+	#current-tab {font-size:1.35rem;}
+	#library-header {font-size:1.11rem;}
+	/* Search input */
+	#lib-album-search input,
+	#pl-search input,
+	#playqueue-search input,
+	#ra-search input {font-size:1.25em!important;}
+
 	/* Library */
 	.viewswitch {left:calc(env(safe-area-inset-left) + 1rem);}
-	#current-tab,
 	#library-header {font-size:1.1rem;}
 	#index-genres,
 	#index-artists,
@@ -355,14 +376,7 @@ body {
 	#container-radio,
 	#container-playlist {left:env(safe-area-inset-left);width:calc(100% - env(safe-area-inset-left) - 1rem);}
 
-	/* Search input and Menu "m" button */
-	#lib-album-search input,
-	#pl-search input,
-	#playqueue-search input,
-	#ra-search input {font-size:1.25em!important;}
-	#menu-settings {font-size:1.9rem;}
-
-	/* Dropdown and context menus */
+	/* Menus */
 	.dropdown-menu>li>a,
 	.viewswitch .btn {line-height:2.5rem;font-size:1.15em;}
 	.adv.search-btn {display:none;}

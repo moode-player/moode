@@ -217,6 +217,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nShow sample rate\t= $library_encoded_at\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
 	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
+	echo -e "\nThumbgen scan fmts\t= $library_thmgen_scan\c"
 	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
 	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
 	echo -e "\n\nLibrary (Advanced)\c"
@@ -769,7 +770,7 @@ ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
 library_albumview_sort=${arr[125]}
-RESERVED_127=${arr[126]}
+library_thmgen_scan=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
 [[ "${arr[128]}" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
 led_state=${arr[129]}

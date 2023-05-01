@@ -11,6 +11,25 @@
 
 ################################################################################
 #
+# 2023-MM-DD TC moOde 8.3.3
+#
+################################################################################
+
+Updates
+
+- UPD: Improve menu, modal and selected icon size/text on mobile portrait
+- UPD: Add Prefs option to set audio formats scanned by thumbnail generator
+- UPD: Add note to Setup guide regarding requirement for SSH userid/password
+- UPD: Add note to Quickhelp regarding search field input constraints
+- UPD: Limit MPD log messages to only type ERROR for alsa_cdsp plugin (*** TBD ***)
+
+Bug fixes
+
+- FIX: Test button not working on Graphic Equalizer
+- FIX: Modal input field background not visible on GEQ/PEQ configs
+
+################################################################################
+#
 # 2023-04-21 TC moOde 8.3.2
 #
 ################################################################################
