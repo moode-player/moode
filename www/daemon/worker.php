@@ -627,8 +627,8 @@ if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 }
 unset($cdsp);
 workerLog('worker: CamillaDSP configuration (' . $_SESSION['camilladsp'] . ')');
-workerLog('worker: CamillaDSP volume sync   (' . $_SESSION['camilladsp_volume_sync'] . ')');
-workerLog('worker: CamillaDSP volume range  (' . $_SESSION['camilladsp_volume_range'] . ')');
+workerLog('worker: CamillaDSP volume sync   (' . ucfirst($_SESSION['camilladsp_volume_sync']) . ')');
+workerLog('worker: CamillaDSP volume range  (' . $_SESSION['camilladsp_volume_range'] . ' dB)');
 
 //
 workerLog('worker: --');
