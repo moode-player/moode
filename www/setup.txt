@@ -6,7 +6,7 @@
 #  player. Additional configuration help is provided within the player via Menu,
 #  Quick help and the (i) information buttons.
 #
-#  Updated: 2023-03-27
+#  Updated: 2023-05-09
 #
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
