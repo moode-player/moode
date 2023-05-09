@@ -6,7 +6,7 @@
 #  player. Additional configuration help is provided within the player via Menu,
 #  Quick help and the (i) information buttons.
 #
-#  Updated: 2023-03-27
+#  Updated: 2023-05-09
 #
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -25,23 +25,24 @@ An explanation of how to operate moOde audio player is contained in Quick help
 located on the moOde menu and also at the link below.
 https://github.com/moode-player/docs/blob/main/Quickhelp.pdf
 
-OS IMAGE AND SECURITY
+SECURITY AND OPERATING SYSTEM (OS) IMAGE
 
-The OS image does not contain the userid pi, SSH service, WiFi SSID or Access
-Point password.
+For improved security the OS image does not contain the userid pi, SSH service,
+WiFi SSID or Access Point password.
 
 - Use the official Raspberry Pi Imager to choose a moOde OS image, enable SSH,
   create a userid and password and optionally a WiFi SSID and password.
 
-  *** NOTES ***
-  1. SSH and userid/password are required for correct operation of moOde.
+  *** READ THIS ***
+  1. SSH and userid/password are REQUIRED for correct operation of moOde.
   2. Do not set the host name using the Imager. Refer to CUSTOM CONFIGURATIONS
      in this guide for information on changing the host name.
-  3. An Access Point password can be set using the Network Configuration screen
-     after accessing moOde WebUI, or before first boot via a moodecfg.ini file
-     as described in the CUSTOM CONFIGURATIONS section.
 
-  The moOde OS images are listed in the "Media Player OS" category of the Pi
+- An Access Point password can be set using the Network Configuration screen
+  after accessing the moOde WebUI, or before first boot via a moodecfg.ini
+  file as described in the CUSTOM CONFIGURATIONS section.
+
+- The moOde OS images are listed in the "Media Player OS" category of the Pi
   Imager, or if they were downloaded directly via the Download page at
   http://moodeaudio.org they can be selected via the "Use custom" category.
 
@@ -50,12 +51,8 @@ Point password.
   https://www.raspberrypi.com/software/
   https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
 
-- The Access Point password can be entered via the WebUI, Network Config screen
-  after the system starts or via an edited /boot/moodecfg.ini file. The file is
-  described in this document in the CUSTOM CONFIGURATION section.
-
-To access the operating system command console use Secure Shell (SSH). An easy
-to use WebSSH terminal is available in System Config.
+To access the OS command console use Secure Shell (SSH). An easy to use WebSSH
+terminal is available in the WebUI, System Config screen.
 
 ACCESS POINT (AP) MODE
 
