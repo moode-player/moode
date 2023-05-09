@@ -129,7 +129,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		if (empty(trim($_POST['mount']['wsize']))) {$_POST['mount']['wsize'] = 65536;}
 		if (empty(trim($_POST['mount']['options']))) {
 			if ($_POST['mount']['type'] == 'cifs') {
-				$_POST['mount']['options'] = "vers=1.0,ro,noserverino,dir_mode=0777,file_mode=0777";
+				$_POST['mount']['options'] = "vers=1.0,ro,noserverino,cache=none,dir_mode=0777,file_mode=0777";
 			} else if ($_POST['mount']['type'] == 'nfs') {
 				$_POST['mount']['options'] = "soft,timeo=10,retrans=1,ro,nolock";
 			}
@@ -308,7 +308,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_userid_pwd_hide = '';
 				$_advanced_options_hide = '';
 				$_rw_size_hide = '';
-				$_options = 'ro,noserverino,dir_mode=0777,file_mode=0777';
+				$_options = 'ro,noserverino,cache=none,dir_mode=0777,file_mode=0777';
 			} else if ($_POST['mounttype'] == 'nfs' || $_POST['mount']['type'] == 'nfs') {
 				$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\" selected>NFS</option>\n";
@@ -323,7 +323,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 			// CIFS (default))
 			$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
 			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
-			$_options = 'ro,noserverino,dir_mode=0777,file_mode=0777';
+			$_options = 'ro,noserverino,cache=none,dir_mode=0777,file_mode=0777';
 		}
 
 		$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : ' '; // Space for select

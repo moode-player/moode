@@ -462,6 +462,7 @@ function autoConfigSettings() {
 		['requires' => ['library_recently_added'], 'handler' => setphpSession],
 		['requires' => ['library_encoded_at'], 'handler' => setphpSession],
 		['requires' => ['library_covsearchpri'], 'handler' => setphpSession],
+		['requires' => ['library_thmgen_scan'], 'handler' => setphpSession],
 		['requires' => ['library_hiresthm'], 'handler' => setphpSession],
 		['requires' => ['library_thumbnail_columns'], 'handler' => setphpSession],
 

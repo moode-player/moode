@@ -15,13 +15,19 @@
 #
 ################################################################################
 
+Audio devices
+
+- NOTE: Allo Katana I2S driver load fail on Pi-4, Katana DAC and 6.1.y kernel
+
 Updates
 
 - UPD: Improve menu, modal and selected icon size/text on mobile portrait
+- UPD: Add capability for Folder images in Folder view
 - UPD: Add Prefs option to set audio formats scanned by thumbnail generator
+- UPD: Add cache=none to SMB default mount options to prevent log spam
 - UPD: Add note to Setup guide regarding requirement for SSH userid/password
 - UPD: Add note to Quickhelp regarding search field input constraints
-- UPD: Add capability for Folder images in Folder view
+- UPD: Import timezone and keyboard layout from Pi Imager
 
 Bug fixes
 
