@@ -34,7 +34,7 @@ WiFi SSID or Access Point password.
   create a userid and password and optionally a WiFi SSID and password.
 
   *** READ THIS ***
-  1. SSH and userid/password are required for correct operation of moOde.
+  1. SSH and userid/password are REQUIRED for correct operation of moOde.
   2. Do not set the host name using the Imager. Refer to CUSTOM CONFIGURATIONS
      in this guide for information on changing the host name.
 
