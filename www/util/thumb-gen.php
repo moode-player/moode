@@ -277,7 +277,7 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 // (C) 2015 Andreas Goetz
 function outImage($mime, $data) {
 	//workerLog('thumb-gen: outImage(): ' . $mime . ', ' . strlen($data) . ' bytes');
-	switch ($mime) {
+	switch (strtolower($mime)) {
 		case "image/gif":
 		case "image/jpg":
 		case "image/jpeg":

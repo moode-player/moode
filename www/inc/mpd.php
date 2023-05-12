@@ -813,7 +813,7 @@ function getCoverHash($file) {
 // Modified versions of coverart.php functions
 // (C) 2015 Andreas Goetz
 function rtnHash($mime, $hash) {
-	switch ($mime) {
+	switch (strtolower($mime)) {
 		case "image/gif":
 		case "image/jpg":
 		case "image/jpeg":
