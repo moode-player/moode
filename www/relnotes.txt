@@ -33,6 +33,7 @@ Bug fixes
 
 - FIX: Test button not working on Graphic Equalizer
 - FIX: Modal input field background not visible on GEQ/PEQ configs
+- FIX: Cover art extractor not handling uppercase mime type
 
 ################################################################################
 #
