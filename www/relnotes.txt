@@ -21,6 +21,8 @@ Audio devices
 
 Updates
 
+- UPD: Bump to shairport-sync 4.2
+- UPD: Bump to nqptp 1.2
 - UPD: Improve menu, modal and selected icon size/text on mobile portrait
 - UPD: Add capability for Folder images in Folder view
 - UPD: Add Prefs option to set audio formats scanned by thumbnail generator
