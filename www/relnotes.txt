@@ -23,7 +23,7 @@ Updates
 
 - UPD: Bump to shairport-sync 4.2
 - UPD: Bump to nqptp 1.2 (Precision Timing Protocol for AirPlay 2)
-- UPD: Bump to bluez-alsa 4.1.0 with aptX/aptX HD
+- UPD: Bump to bluez-alsa 4.1.0 with aptX/aptX-HD
 - UPD: Improve menu, modal and selected icon size/text on mobile portrait
 - UPD: Add capability for Folder images in Folder view
 - UPD: Add Prefs option to set audio formats scanned by thumbnail generator
@@ -38,6 +38,7 @@ Bug fixes
 - FIX: Test button not working on Graphic Equalizer
 - FIX: Modal input field background not visible on GEQ/PEQ configs
 - FIX: Cover art extractor not handling uppercase mime image type
+- FIX: Incorrect version of bluez-alsa on release 8.3.2 image
 
 ################################################################################
 #
