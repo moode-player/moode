@@ -21,8 +21,8 @@ Audio devices
 
 Updates
 
-- UPD: Bump to shairport-sync 4.2
-- UPD: Bump to nqptp 1.2 (Precision Timing Protocol for AirPlay 2)
+- UPD: Bump to shairport-sync 4.2.0
+- UPD: Bump to nqptp 1.2.1 (Precision Timing Protocol for AirPlay 2)
 - UPD: Bump to bluez-alsa 4.1.0 with aptX/aptX-HD
 - UPD: Improve menu, modal and selected icon size/text on mobile portrait
 - UPD: Add capability for Folder images in Folder view
@@ -30,8 +30,9 @@ Updates
 - UPD: Add "cache=none" to SMB default mount options to prevent log spam
 - UPD: Add note to Setup guide regarding requirement for SSH userid/password
 - UPD: Add note to Quickhelp regarding search field input constraints
-- UPD: Import timezone and keyboard layout from Pi Imager
+- UPD: Add 4 and 3 column selections for Prefs Thumbnail columns option
 - UPD: Support user defined level 1 dirs under /mnt/ for thumbnail generator
+- UPD: Import timezone and keyboard layout from Pi Imager
 
 Bug fixes
 
