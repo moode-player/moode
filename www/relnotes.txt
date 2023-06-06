@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2023-MM-DD TC moOde 8.3.3
+# 2023-06-05 TC moOde 8.3.3
 #
 ################################################################################
 
@@ -26,7 +26,7 @@ Updates
 - UPD: Bump to bluez-alsa 4.1.0 with aptX/aptX-HD
 - UPD: Improve menu, modal and selected icon size/text on mobile portrait
 - UPD: Add capability for Folder images in Folder view
-- UPD: Add Prefs option to set audio formats scanned by thumbnail generator
+- UPD: Add "Thumbnail scan" Prefs option to set audio formats to be scanned
 - UPD: Add "cache=none" to SMB default mount options to prevent log spam
 - UPD: Add note to Setup guide regarding requirement for SSH userid/password
 - UPD: Add note to Quickhelp regarding search field input constraints
@@ -40,6 +40,7 @@ Bug fixes
 - FIX: Modal input field background not visible on GEQ/PEQ configs
 - FIX: Cover art extractor not handling uppercase mime image type
 - FIX: Incorrect version of bluez-alsa on release 8.3.2 image
+- FIX: Playlist covers not restored
 
 ################################################################################
 #

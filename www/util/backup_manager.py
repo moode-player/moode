@@ -161,13 +161,14 @@ class BackupManager(StationManager):
 
             if BackupManager.OPT_PL in what:
                 #names = [ name  for name in backup.namelist() if 'playlists/' in name  and not 'Default Playlist.m3u' in name ]
-                names = [ name  for name in backup.namelist() if 'playlists/' in name ]
-                if len(names) >= 0:
+                plNames = [ name  for name in backup.namelist() if 'playlists/' in name ]
+                if len(plNames) >= 0:
                     print('Restore playlists')
-                    backup.extractall (BackupManager.PLAYLIST_PATH, names)
+                    backup.extractall (BackupManager.PLAYLIST_PATH, plNames)
+                plCoverNames = [ name  for name in backup.namelist() if 'playlist-covers/' in name ]
+                if len(plCoverNames) >= 0:
                     print('Restore playlist covers')
-                    backup.extractall (BackupManager.PLAYLIST_COVERS_PATH, names)
-
+                    backup.extractall (BackupManager.PLAYLIST_COVERS_PATH, plCoverNames)
 
     def do_info(self):
         configPresent = False
