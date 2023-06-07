@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2023-06-05 TC moOde 8.3.3
+# 2023-06-07 TC moOde 8.3.3
 #
 ################################################################################
 
@@ -41,7 +41,7 @@ Bug fixes
 - FIX: Cover art extractor not handling uppercase mime image type
 - FIX: Incorrect version of bluez-alsa on release 8.3.2 image
 - FIX: Playlist covers not restored as part of System Restore
-- FIX: Airplay/Spotify event script updates not installed (in-place update 830/831)
+- FIX: Airplay/Spotify event scripts not installed (in-place update 830/831)
 - FIX: GPIO pinout image update not installed (in-place update 831)
 
 ################################################################################
