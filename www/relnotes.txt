@@ -40,7 +40,9 @@ Bug fixes
 - FIX: Modal input field background not visible on GEQ/PEQ configs
 - FIX: Cover art extractor not handling uppercase mime image type
 - FIX: Incorrect version of bluez-alsa on release 8.3.2 image
-- FIX: Playlist covers not restored
+- FIX: Playlist covers not restored as part of System Restore
+- FIX: Airplay/Spotify event script updates not installed (in-place update 830/831)
+- FIX: GPIO pinout image update not installed (in-place update 831)
 
 ################################################################################
 #
