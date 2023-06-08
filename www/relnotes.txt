@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2023-06-05 TC moOde 8.3.3
+# 2023-06-08 TC moOde 8.3.3
 #
 ################################################################################
 
@@ -40,7 +40,7 @@ Bug fixes
 - FIX: Modal input field background not visible on GEQ/PEQ configs
 - FIX: Cover art extractor not handling uppercase mime image type
 - FIX: Incorrect version of bluez-alsa on release 8.3.2 image
-- FIX: Playlist covers not restored
+- FIX: Playlist covers not restored as part of System Restore
 
 ################################################################################
 #
