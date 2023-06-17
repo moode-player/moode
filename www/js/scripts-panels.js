@@ -75,9 +75,9 @@ jQuery(document).ready(function($) { 'use strict';
             GLOBAL.nativeLazyLoad = true;
         }
 
-        // Display viewport size for debugging by re-using the pkgid_suffix col. It's normaly used to test in-place update packages.
+        // DEBUG: Display viewport size and pixel ratio by re-using the pkgid_suffix param
         if (SESSION.json['pkgid_suffix'] == 'viewport') {
-            notify('viewport', window.innerWidth + 'x' + window.innerHeight, '10_seconds');
+            notify('viewport', window.innerWidth + 'x' + window.innerHeight + ', P/R=' + window.devicePixelRatio,'10_seconds');
         }
 
     	// Set currentView global
@@ -872,6 +872,8 @@ jQuery(document).ready(function($) { 'use strict';
 			renderFolderView(data, UI.path);
         });
 	});
+    // TODO: Enhance to allow searches to be saved as libcache_subset_NAME.json
+    // This is part of the TBD Library Subsets feature
 	$('#db-search-submit').click(function(e) {
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
