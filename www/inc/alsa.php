@@ -27,17 +27,15 @@ function getAlsaMixerName($i2sDevice) {
 		// USB devices, Pi HDMI-1/2 or Headphone jack
 		$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
 		if ($result[0] == '') {
-			// Mixer name not found => Use default mixer name "PCM"
-			$mixerName = 'PCM';
+			// Mixer name not found
+			$mixerName = 'none';
 		} else {
-			// Mixer name defined => Use actual mixer name
-			// Strip off delimiters added by sysutil.sh get-mixername
+			// Mixer name found, strip off delimiters added by sysutil.sh get-mixername
 			$mixerName = ltrim($result[0], '(');
 			$mixerName = rtrim($mixerName, ')');
 		}
 	} else {
 		// I2S devices
-		// Mixer name exceptions
 		if ($i2sDevice == 'HiFiBerry Amp(Amp+)') {
 			$mixerName = 'Channels';
 		} else if ($i2sDevice == 'HiFiBerry DAC+ DSP') {
@@ -50,13 +48,12 @@ function getAlsaMixerName($i2sDevice) {
 			$i2sDevice == 'Allo Piano 2.1 Hi-Fi DAC') {
 			$mixerName = 'Master';
 		} else {
-			// No mixer defined or use default mixer name "Digital"
 			$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
 			if ($result[0] == '') {
-				// Mixer name not defined => no actual mixer exists
+				// Mixer name not found
 				$mixerName = 'none';
 			} else {
-				// Mixer name defined => use default mixer name "Digital"
+				// Mixer name found => assume default mixer name "Digital"
 				$mixerName = 'Digital';
 			}
 		}

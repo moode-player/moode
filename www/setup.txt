@@ -274,7 +274,8 @@ data it is in JSON or plain text format following REST guidelines.
 4. Library update is via the command libupd-submit.php
 5. CoverView on/off is via the command coverview.php on/off
 6. Song info is via the command get_currentsong which returns the contents
-   of the file /var/local/www/currentsong.txt encoded as JSON
+   of the Metadata file /var/local/www/currentsong.txt encoded as JSON.
+   NOTE: Turn on the Metadata file via Audio Config in the MPD Options section.
 
 moOde utility command:
 

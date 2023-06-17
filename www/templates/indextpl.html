@@ -1175,6 +1175,8 @@
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">Default</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">All</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">Default+</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">All+</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -1182,7 +1184,10 @@
 						<span id="info-thumbgen-scan" class="help-block hide">
 							Specify which audio formats are scanned by the thumbnail generator. Selecting "Default" can result in a faster scan.<br>
 	                    	<b>Default: </b>aac, aiff, dff, dsf, flac, m4a, mp3, mp4, ogg and wav.<br>
-							<b>All: </b>All audio formats listed in the output of the MPD -V command.
+							<b>All: </b>All audio formats listed in the output of the MPD -V command.<br>
+							<b>Plus: </b>The + option adds image types jpg/jpeg, png, tif/tiff to the scan which enables thumbnails to be generated for images
+							in parent folders of the Album folder for example Artist or CD box set images. NOTE: Incorrect thumbnails may appear
+							in the Library if the Album folder also contains image files and "Cover search priority" is set to Embedded.
 	                    </span>
 					</div>
 

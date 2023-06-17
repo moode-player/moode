@@ -11,6 +11,22 @@
 
 ################################################################################
 #
+# 2023-MM-DD TC moOde 8.3.4
+#
+################################################################################
+
+Updates
+
+- UPD: Add plus (+) entries to Prefs "Thumbgen scan" to include image types
+- UPD: Add btrfs file system to udisks-glue auto-mount config (PR/631)
+- UPD: Add PixelRatio to the viewport debug popup
+
+Bug fixes
+
+- FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
+
+################################################################################
+#
 # 2023-06-08 TC moOde 8.3.3
 #
 ################################################################################
