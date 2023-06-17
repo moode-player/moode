@@ -18,6 +18,7 @@
 Updates
 
 - UPD: Add plus (+) entries to Prefs "Thumbgen scan" to include image types
+- UPD: Add btrfs file system to udisks-glue auto-mount config (PR/631)
 - UPD: Add PixelRatio to the viewport debug popup
 
 Bug fixes
