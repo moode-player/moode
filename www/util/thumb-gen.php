@@ -103,7 +103,7 @@ $dirs = str_replace('moode-player, ', '', $dirs); // This mount point is only pr
 workerLog('thumb-gen: Scanning: ' . $dirs);
 
 // Generate the file list
-$result = shell_exec('/var/www/util/list-songfiles.sh ' . $scanFormats . ' | sort');
+$result = shell_exec('/var/www/util/list-songfiles.sh "' . $scanFormats . '" | sort');
 if (is_null($result) || substr($result, 0, 2) == 'OK') {
 	workerLog('thumb-gen: Exit: no files found');
 	phpSession('open');
