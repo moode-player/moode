@@ -142,7 +142,7 @@
 					<b>Direct (hw)</b><br>
 					No format conversions are performed. The audio device must accept the format or playback will not occur.<br>
 					Supported by MPD, CamillaDSP, Bluetooth (inbound), AirPlay and Spotify renderers.<br>
-					NOTE: Loopback is not supported in Direct mode.
+					NOTE: Loopback is not supported in Direct (hw) mode.
 				</span>
 			</div>
 
@@ -154,8 +154,8 @@
 				</div>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 				<span class="config-help-static">
-					The Loopback device provides a copy of the PCM stream being output to the audio device. The copy can be accessed by reading "hw:Loopback,1,0".<br>
-					Note that for HDMI and Headphone out Loopback requres a sample rate > 44.1K. This can be configured in the SoX resampling section of MPD config. The requirement does not apply if Multiroom Sender is ON.
+					The Loopback device provides a copy of the PCM output stream. The copy can be accessed by reading "hw:Loopback,1,0".<br>
+					NOTE: For Pi HDMI/Headphone outputs, Loopback requres a sample rate greater than 44.1K. This can be configured in the SoX resampling section of MPD config. The requirement does not apply if Multiroom Sender is ON.
                 </span>
 			</div>
 
