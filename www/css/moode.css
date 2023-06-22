@@ -106,7 +106,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal.fade {top:0;top:env(safe-area-inset-top);transition:none;}
 .modal.fade.in {transition:none;}
 /* Button after text */
-.modal-btn-after {display:inline-block;vertical-align:middle;margin:4px 10px 10px 0;color:inherit;}
+.modal-btn-after {display:inline-block;vertical-align:middle;margin:6px 10px 8px 0;color:inherit;}
 /* Input controls */
 .modal .select-large {width:22vw;max-width:220px;margin:0 10px 10px 0;}
 .modal .input-large {width:21vw;max-width:210px;}

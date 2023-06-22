@@ -119,12 +119,12 @@
 					$_select[cdsp_qc_ir_type]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				$_check_msg_quick_convolution
 				<span id="info-cdsp-qc-type" class="config-help-info">
 					Set the type of the selected impulse response file. For wave files just select WAVE, there is no need to convert to RAW.
 					Details about a specific impulse response file is available in the Convolution file section.
 					See <a href="https://github.com/HEnquist/camilladsp#fir">CamillaDSP documentation</a> for more information.
 				</span>
-				$_check_msg_quick_convolution
 			</div>
 		</div>
 	</form>
@@ -140,6 +140,7 @@
 					$_select[cdsp_config]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-config" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span class="config-help-static">$_check_msg_config</span>
 				<span id="info-cdsp-config" class="config-help-info">
 					<p><b>Default Configurations</b></p>
 					<table id="cdsp-default-configs-table">
@@ -161,9 +162,6 @@
 					</table>
 				</span>
 				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="check_auto" value="1"  style="display:none" ></button>
-				<span class="config-help-static">
-					$_check_msg_config
-				</span>
 			</div>
 
 			<div class="controls">
@@ -178,6 +176,9 @@
 
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="check" value="1">Check</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span class="config-help-static">
+					Visit the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp" target="_blank">CamillaDSP homepage</a> for Information on how to create CamillaDSP configuration files.
+				</span>
 				<span id="info-configuration-actions" class="config-help-info">
 					<b>Remove:</b> Delete the selected configuation file.<br>
 					<b>Copy:</b> Copy the selected configuation file to a new one.<br>
@@ -192,9 +193,6 @@
 					counts or sampling rates not supported by the audio device, adjust CamillaDSP mixers or	resamplers or change
 					the audio format passed to CamillaDSP in the ALSA configuration file <code>/etc/alsa/conf.d/camilladsp.conf</code>
 					Errors in this file are typically reported in <code>/var/log/moode.log</code> and <code>/var/log/syslog</code>
-				</span>
-				<span class="config-help-static">
-					Visit the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp" target="_blank">CamillaDSP homepage</a> for Information on how to create CamillaDSP configuration files.
 				</span>
 			</div>
 		</div>

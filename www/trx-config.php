@@ -206,7 +206,7 @@ $_multiroom_tx_disable = ($_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == tru
 $_tx_restart_btn_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
 $_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Hide' ? '' : 'hide';
-$_multiroom_rx_disable = ($_SESSION['mpdmixer'] == 'null') ? 'disabled' : ''; // Don't allow CamillaDSP Volume 
+$_multiroom_rx_disable = ($_SESSION['mpdmixer'] == 'null') ? 'disabled' : ''; // Don't allow CamillaDSP Volume
 $_rx_restart_btn_disable = $_SESSION['multiroom_rx'] != 'On' ? 'disabled' : '';
 $_rx_restart_link_disable = $_SESSION['multiroom_rx'] != 'On' ? 'onclick="return false;"' : '';
 $_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
@@ -250,6 +250,13 @@ $_select['multiroom_rx_mastervol_opt_in_no'] .= "<input type=\"radio\" name=\"mu
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
 $_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0], '%');
+if (stripos($_multiroom_rx_alsavol, 'amixer:') === false) {
+	$_multiroom_rx_alsavol_msg = '';
+	$_multiroom_rx_alsavol_disable = '';
+} else {
+	$_multiroom_rx_alsavol_msg = '<b>Hardware volume controller not detected</b>';
+	$_multiroom_rx_alsavol_disable = 'disabled';
+}
 // Advanced options
 $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($cfgMultiroom['rx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($cfgMultiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";

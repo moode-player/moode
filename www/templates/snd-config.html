@@ -36,7 +36,7 @@
 					$_mpd_select[device]
                 </select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_output_device" value="novalue" $_output_device_btn_disabled>Set</button>
-				<span><em>&nbsp;$_device_error</em></span>
+				<span class="config-help-static"><b>$_device_error</b></span>
 			</div>
 
 			<label class="control-label" for="mixer_type">Volume type</label>
@@ -124,9 +124,10 @@
 			<label class="control-label" for="alsavolume_max">Max volume (%)</label>
 			<div class="controls">
 				<input class="config-input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>$_alsavolume_max_msg
+				<button class="btn btn-primary btn-small config-btn-set btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>
 				<span id="info-alsavolume_max" class="config-help-static">
-					Establish 0dB level when volume type is set to Software or Fixed, or when any Renderers are active.<br>
+					$_alsavolume_max_msg<br>
+					Establish 0dB level when volume type is set to Software or Fixed, or when any Renderers are active.
 				</span>
 			</div>
 
@@ -427,6 +428,7 @@
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_camilladsp" value="novalue" $_camilladsp_set_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camilladsp" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				$_camilladsp_config_check
 				<span id="info-camilladsp" class="config-help-info">
 					CamillaDSP is a general purpose Digital Signal Processing engine for routing and filtering sound. It can be used for building crossovers for active speakers, performing room correction, equalization or volume control. CamillaDSP is maintained by Henrik Enquist. Integration into moOde was done by @bitlab.<br>
 					Feature summary:<br>
@@ -441,7 +443,6 @@
 					- Pipeline editor with expert mode<br>
 					Configurations can be managed at the CamillaDSP settings page.
                 </span>
-				$_camilladsp_config_check
 			</div>
 
 			<div class="controls">

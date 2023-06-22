@@ -2630,7 +2630,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 // Status
                                 var statusMsg = rxStatusParts[1] == 'Unknown' ? 'Receiver offline' : 'Receiver disabled';
                                 output += '<div class="controls">';
-                                output += '<div style="font-style:italic;margin-top:.25em;">' + statusMsg + '</div>';
+                                output += '<div style="font-style:italic;margin-top:.5em;">' + statusMsg + '</div>';
                                 output += '</div>';
                                 output += '</div>';
                             } else {
