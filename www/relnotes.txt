@@ -23,6 +23,8 @@ Updates
 
 Bug fixes
 
+- FIX: Allo Katana DAC driver load fail on Pi-4B (pending kernel bump)
+- FIX: Allo Boss 2 driver no sound output on 6.1 kernel (pending kernel bump)
 - FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
 
 ################################################################################

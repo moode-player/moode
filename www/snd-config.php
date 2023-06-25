@@ -435,7 +435,8 @@ if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max = '';
 	$_alsavolume_max_readonly = 'readonly';
 	$_alsavolume_max_hide = 'hide'; // Hides the SET button
-	$_alsavolume_max_msg = "<em>&nbsp;Hardware volume controller not detected</em>";
+	$_alsavolume_max_msg = "<b>Hardware volume controller not detected</b>";
+	$_alsavolume_max_msg = "<b>Hardware volume controller not detected</b>";
 } else {
 	$_alsavolume_max = $_SESSION['alsavolume_max'];
 	$_alsavolume_max_readonly = '';
