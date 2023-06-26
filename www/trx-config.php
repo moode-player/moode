@@ -254,7 +254,7 @@ if (stripos($_multiroom_rx_alsavol, 'amixer:') === false) {
 	$_multiroom_rx_alsavol_msg = '';
 	$_multiroom_rx_alsavol_disable = '';
 } else {
-	$_multiroom_rx_alsavol_msg = '<b>Hardware volume controller not detected</b>';
+	$_multiroom_rx_alsavol_msg = '<i>Hardware volume controller not detected</i><br>';
 	$_multiroom_rx_alsavol_disable = 'disabled';
 }
 // Advanced options

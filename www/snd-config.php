@@ -434,13 +434,12 @@ if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' ||
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max = '';
 	$_alsavolume_max_readonly = 'readonly';
-	$_alsavolume_max_hide = 'hide'; // Hides the SET button
-	$_alsavolume_max_msg = "<b>Hardware volume controller not detected</b>";
-	$_alsavolume_max_msg = "<b>Hardware volume controller not detected</b>";
+	$_alsavolume_max_disable = 'disabled';
+	$_alsavolume_max_msg = "<i>Hardware volume controller not detected</i><br>";
 } else {
 	$_alsavolume_max = $_SESSION['alsavolume_max'];
 	$_alsavolume_max_readonly = '';
-	$_alsavolume_max_hide = '';
+	$_alsavolume_max_disable = '';
 	$_alsavolume_max_msg = '';
 }
 // Output mode
