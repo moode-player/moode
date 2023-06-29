@@ -31,8 +31,7 @@ $dbh = sqlConnect();
 phpSession('open_ro');
 
 // Hardware params
-$cardNum = $_SESSION['multiroom_tx'] == 'On' ? array_search('Dummy', getAlsaCards()) : $_SESSION['cardnum'];
-$hwParams = getAlsaHwParams($cardNum);
+$hwParams = getAlsaHwParams(getAlsaCardNum());
 
 // Cfg_mpd settings
 $cfgMPD = getCfgMpd($dbh);
