@@ -20,7 +20,6 @@
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','rsmaftersl','wrkready','inpactive')")
-# friendly names
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
 ALSAVOLUME=${arr[1]}
@@ -54,9 +53,9 @@ if [[ $WRKREADY == "1" ]]; then
 		fi
 	elif [[ $1 = "1" ]] ; then
 		echo Power on
+		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='slactive'")
 		/usr/bin/mpc stop > /dev/null
 		sleep 1
-		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='slactive'")
 		if [[ $ALSAVOLUME != "none" && $VOPT == "" ]]; then
 			/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi

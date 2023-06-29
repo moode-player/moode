@@ -51,6 +51,8 @@ fi
 
 # Restore knob volume
 /var/www/vol.sh -restore
+# Update mpd2cdspvolume state file
+/usr/local/bin/cdspstorevolume
 
 # Multiroom receivers
 if [[ $MULTIROOM_TX == "On" ]]; then
