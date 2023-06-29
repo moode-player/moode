@@ -299,8 +299,8 @@ if ($cdsp->isQuickConvolutionActive()) {
 }
 
 $camillaGuiStatus = $cdsp->getCamillaGuiStatus();
-$camillaGuiClickHandler = " onchange=\"$('#btn-updat-camilla-gui').click();\"";
-$camillaGuiExpertClickHandler = " onchange=\"$('#btn-updat-camilla-gui-expert').click();\"";
+$camillaGuiClickHandler = " onchange=\"$('#btn-update-camilla-gui').click();\"";
+$camillaGuiExpertClickHandler = " onchange=\"$('#btn-update-camilla-gui-expert').click();\"";
 $_select['camillagui1'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui1\" value=\"1\" " . (($camillaGuiStatus == CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
 $_select['camillagui0'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui2\" value=\"0\" " . (($camillaGuiStatus != CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
 $_select['camillaguiexpert1'] .= "<input type=\"radio\" name=\"camillaguiexpertstatus\" id=\"toggle-camillaguiexpert1\" value=\"1\" " . (($cdsp->getGuiExpertMode() == true) ? "checked=\"checked\"" : $camillaGuiExpertClickHandler) . " >\n";
@@ -345,7 +345,7 @@ $_cdsp_log_level .= "<option value=\"verbose\" " . (($cdsp_log_level == 'verbose
 
 setAltBackLink();
 
-waitWorker(1, 'cdsp-config');
+waitWorker('cdsp-config');
 
 $tpl = "cdsp-config.html";
 $section = basename(__FILE__, '.php');

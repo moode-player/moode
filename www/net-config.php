@@ -263,7 +263,7 @@ if (empty($_wlan0apdpwd)) {
 	phpSession('close');
 }
 
-waitWorker(1, 'net-config');
+waitWorker('net-config');
 
 $tpl = "net-config.html";
 $section = basename(__FILE__, '.php');

@@ -84,7 +84,7 @@ $_select['normalization_knee'] = $cfgSpotify['normalization_knee'];
 $_select['autoplay'] .= "<option value=\"Yes\" " . (($cfgSpotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['autoplay'] .= "<option value=\"No\" " . (($cfgSpotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";
 
-waitWorker(1, 'spo_config');
+waitWorker('spo_config');
 
 $tpl = "spo-config.html";
 $section = basename(__FILE__, '.php');

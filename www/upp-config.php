@@ -57,7 +57,7 @@ $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfgUPNP['checkcont
 $_select['svctype'] .= "<option value=\"upnpav\" " . (($cfgUPNP['upnpav'] == '1') ? "selected" : "") . ">UPnP-A/V</option>\n";
 $_select['svctype'] .= "<option value=\"openhome\" " . (($cfgUPNP['openhome'] == '1') ? "selected" : "") . ">OpenHome</option>\n";
 
-waitWorker(1, 'upp-config');
+waitWorker('upp-config');
 
 $tpl = "upp-config.html";
 $section = basename(__FILE__, '.php');

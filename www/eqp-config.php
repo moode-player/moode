@@ -145,7 +145,7 @@ foreach($curveConfig['bands'] as $bandKey => $bandConfig) {
 	$_select['band' . $i . '_gain'] = $bandConfig['gain'];
 }
 
-waitWorker(1, 'eqp-config');
+waitWorker('eqp-config');
 
 $tpl = "eqp-config.html";
 $section = basename(__FILE__, '.php');

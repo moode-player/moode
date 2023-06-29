@@ -201,7 +201,7 @@ if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 
 phpSession('close');
 
-waitWorker(1, 'lib-config');
+waitWorker('lib-config');
 
 // Update library if indicated after sourcecfg job completes
 if ($initiateLibraryUpd == true) {

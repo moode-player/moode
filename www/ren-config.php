@@ -274,7 +274,7 @@ $_select['dlnasvc_off'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-d
 $_select['dlnaname'] = $_SESSION['dlnaname'];
 $_select['hostip'] = getHostIp();
 
-waitWorker(1, 'ren-config');
+waitWorker('ren-config');
 
 $tpl = "ren-config.html";
 $section = basename(__FILE__, '.php');

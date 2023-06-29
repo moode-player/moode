@@ -55,7 +55,7 @@ $_sl_select['task_priority'] = $cfgSL['TASKPRIORITY'];
 $_sl_select['audio_codecs'] = $cfgSL['CODECS'];
 $_sl_select['other_options'] = htmlentities($cfgSL['OTHEROPTIONS']);
 
-waitWorker(1, 'sqe_config');
+waitWorker('sqe_config');
 
 $tpl = "sqe-config.html";
 $section = basename(__FILE__, '.php');
