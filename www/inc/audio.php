@@ -186,6 +186,5 @@ function updDspAndBtInConfs($cardNum, $newOutputMode, $oldOutputMode = '') {
 	}
 
 	// Bluetooth confs (incoming connections)
-	sysCmd("sed -i '/pcm \"" . $oldOutputMode . "/c\pcm \"" . $newOutputMode . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
-	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $newOutputMode . ':' . $cardNum . ",0' /etc/bluealsaaplay.conf");
+	// NOTE: Section removed, not needed anymore since bluealsaaplay.conf using AUDIODEV=_audioout instead of ALSA hw or plughw
 }
