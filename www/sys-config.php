@@ -509,7 +509,7 @@ if ($_SESSION['shellinabox'] == '1') {
 $_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['debuglog_off'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-2\" value=\"0\" " . (($_SESSION['debuglog'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-waitWorker(1, 'sys-config');
+waitWorker('sys-config');
 
 $tpl = "sys-config.html";
 $section = basename(__FILE__, '.php');

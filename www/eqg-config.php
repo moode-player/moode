@@ -105,7 +105,7 @@ for ($i = 0; $i < 10; $i++) {
 	$_select['freq' . ($i + 1)] = $values[$i];
 }
 
-waitWorker(1, 'eqg-config');
+waitWorker('eqg-config');
 
 $tpl = "eqg-config.html";
 $section = basename(__FILE__, '.php');

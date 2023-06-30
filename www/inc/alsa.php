@@ -157,6 +157,10 @@ function getAlsaCards() {
 	return $cards;
 }
 
+function getAlsaCardNum() {
+	return $_SESSION['multiroom_tx'] == 'On' ? array_search('Dummy', getAlsaCards()) : $_SESSION['cardnum'];
+}
+
 // Volume support routines for MPD and CamillaDSP
 function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
 	$cmd = '/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName  . '" ';

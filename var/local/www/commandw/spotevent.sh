@@ -41,11 +41,11 @@ if [[ $INPACTIVE == '1' ]]; then
 fi
 
 if [[ $PLAYER_EVENT == "started" ]]; then
+	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='spotactive'")
+
 	/usr/bin/mpc stop > /dev/null
 	# Allow time for UI update
 	sleep 1
-
-	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='spotactive'")
 
 	# Local
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
@@ -87,6 +87,8 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 
 	# Restore knob volume
 	/var/www/vol.sh -restore
+	# Update mpd2cdspvolume state file
+	/usr/local/bin/cdspstorevolume
 
 	# Multiroom receivers
 	if [[ $MULTIROOM_TX == "On" ]]; then

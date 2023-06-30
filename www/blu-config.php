@@ -195,7 +195,7 @@ $_select['pcm_buffer'] .= "<option value=\"60000\" "  . (($_SESSION['bluez_pcm_b
 $_select['pcm_buffer'] .= "<option value=\"40000\" "  . (($_SESSION['bluez_pcm_buffer'] == '40000') ? "selected" : "")  . "> 40 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"20000\" "  . (($_SESSION['bluez_pcm_buffer'] == '20000') ? "selected" : "")  . "> 20 ms</option>\n";
 
-waitWorker(1, 'blu-config');
+waitWorker('blu-config');
 
 $tpl = "blu-config.html";
 $section = basename(__FILE__, '.php');

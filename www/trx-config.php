@@ -254,7 +254,7 @@ if (stripos($_multiroom_rx_alsavol, 'amixer:') === false) {
 	$_multiroom_rx_alsavol_msg = '';
 	$_multiroom_rx_alsavol_disable = '';
 } else {
-	$_multiroom_rx_alsavol_msg = '<b>Hardware volume controller not detected</b>';
+	$_multiroom_rx_alsavol_msg = '<i>Hardware volume controller not detected</i><br>';
 	$_multiroom_rx_alsavol_disable = 'disabled';
 }
 // Advanced options
@@ -279,7 +279,7 @@ $_select['multiroom_rx_frame_size'] .= "<option value=\"1920\" " . (($cfgMultiro
 //$_select['multiroom_rx_frame_size'] .= "<option value=\"2880\" " . (($cfgMultiroom['rx_frame_size'] == '2880') ? "selected" : "") . ">60</option>\n";
 $_multiroom_rx_rtprio = $cfgMultiroom['rx_rtprio'];
 
-waitWorker(1, 'trx-config');
+waitWorker('trx-config');
 
 $tpl = "trx-config.html";
 $section = basename(__FILE__, '.php');

@@ -200,7 +200,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_restore_playlists = genToggleButton('restore_playlists', in_array('playlists', $backupOptions), !in_array('playlists', $backupOptions));
 }
 
-waitWorker(1, 'bkp-config');
+waitWorker('bkp-config');
 
 $tpl = "bkp-config.html";
 $section = basename(__FILE__, '.php');

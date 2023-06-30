@@ -569,6 +569,7 @@ $mixerName = isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerName;
 $mixerName = $mixerName == 'none' ? 'fixed 0dB' : $mixerName;
 workerLog('worker: MPD mixer type (' . ($mixerName) . ')');
 
+// TODO: Do this after MPD has started
 $serviceCmd = isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
 sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
@@ -621,7 +622,16 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_
 }
 
 // Reset renderer active flags
-workerLog('worker: Reset renderer active flags');
+workerLog('worker: Renderer active flags (reset)');
+// If any are still 1 then a reboot or power off occured while the renderer was active
+// which would leave ALSA or CamillaDSP volume at 100% so let's reset volume to 0.
+$result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'aplactive', 'spotactive',
+	'slactive', 'rbactive', 'inpactive')", $dbh);
+if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['value'] == '1' ||
+	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1') {
+	// Set Knob volume to 0 for vol.sh downstream in this startup section
+	phpSession('write', 'volknob', '0');
+}
 $result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
 	OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
 
@@ -635,7 +645,7 @@ if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 }
 unset($cdsp);
-workerLog('worker: CamillaDSP configuration (' . $_SESSION['camilladsp'] . ')');
+workerLog('worker: CamillaDSP configuration (' . rtrim($_SESSION['camilladsp'], '.yml') . ')');
 workerLog('worker: CamillaDSP volume sync   (' . ucfirst($_SESSION['camilladsp_volume_sync']) . ')');
 workerLog('worker: CamillaDSP volume range  (' . $_SESSION['camilladsp_volume_range'] . ' dB)');
 
@@ -1130,18 +1140,26 @@ workerLog('worker: Mount monitor ' . ($_SESSION['fs_mountmon'] == 'On' ? '(start
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
-sysCmd('/var/www/daemon/watchdog.sh > /dev/null 2>&1 &');
+sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_LOOP_INTERVAL . ' > /dev/null 2>&1 &');
 workerLog('worker: Watchdog monitor (started)');
 
 // Worker ready
 workerLog('worker: Ready');
 
 //
-// BEGIN WORKER JOB LOOP
+// BEGIN WORKER EVENT LOOP
 //
 
+$worker_loop_interval = WORKER_LOOP_INTERVAL;
 while (true) {
-	sleep(3);
+	// Reduce interval to 1 if not playing for more responsive event processing, also see waitWorker()
+	$newInterval = getWorkerLoopInterval();
+	if ($worker_loop_interval != $newInterval) {
+		$worker_loop_interval = $newInterval;
+		workerLog('worker: Loop interval ' . $newInterval);
+	}
+	//$worker_loop_interval = getAlsaHwParams(getAlsaCardNum())['status'] != 'active' ? 1 : WORKER_LOOP_INTERVAL;
+	sleep($worker_loop_interval);
 
 	phpSession('open');
 
@@ -1217,7 +1235,7 @@ function chkScnSaver() {
 		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0'
 		&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0' && $mpdState != 'play') {
 		if ($GLOBALS['scnactive'] == '0') {
-			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - 3;
+			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - $GLOBALS['worker_loop_interval'];
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
 				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 				$GLOBALS['scnactive'] = '1';
@@ -1229,7 +1247,7 @@ function chkScnSaver() {
 }
 
 function chkMaintenance() {
-	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - 3;
+	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - $GLOBALS['worker_loop_interval'];
 
 	if ($GLOBALS['maint_interval'] <= 0) {
 		// Clear logs
@@ -1295,7 +1313,12 @@ function chkBtActive() {
 			phpSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			sysCmd('mpc stop'); // For added robustness
-			if ($_SESSION['alsavolume'] != 'none') {
+
+			if ($_SESSION['camilladsp_volume_sync'] == 'on') {
+				// Save knob level and set MPD vol to 100
+				sqlQuery("UPDATE cfg_system SET value='" . $_SESSION['volknob'] . "' WHERE param='volknob_mpd'", $GLOBALS['dbh']);
+				sysCmd('/var/www/vol.sh 100');
+			} else if ($_SESSION['alsavolume'] != 'none') {
 				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
 		}
@@ -1306,7 +1329,14 @@ function chkBtActive() {
 		if ($_SESSION['btactive'] == '1') {
 			phpSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
+
+			if ($_SESSION['camilladsp_volume_sync'] == 'on') {
+				// Restore knob level to saved MPD level
+				$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $GLOBALS['dbh']);
+				sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $GLOBALS['dbh']);
+			}
 			sysCmd('/var/www/vol.sh -restore');
+			sysCmd('/usr/local/bin/cdspstorevolume');
 			if ($_SESSION['rsmafterbt'] == '1') {
 				sysCmd('mpc play');
 			}

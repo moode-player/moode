@@ -24,9 +24,10 @@
 set_include_path('/var/www/inc');
 error_reporting(E_ERROR);
 
-// Include PHP 8 equivalent funcrtions which are initially used in the CUE
-// support functions in this file.
+// PHP 8 equivalent funcrtions are used in the CUE support functions in this file
 require_once __DIR__ . '/php8-equiv.php';
+// Alsa functions getAlsaHwParams() and getAlsaCardNum() are by waitWorker() in this file
+require_once __DIR__ . '/alsa.php';
 
 // Common
 const MPD_RESPONSE_ERR = 'ACK';
@@ -111,9 +112,13 @@ const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
 // Recorder plugin (currently not available)
-const RECORDER_RECORDINGS_DIR = '/Recordings';
-const RECORDER_DEFAULT_COVER = 'Recorded Radio.jpg';
+const RECORDER_RECORDINGS_DIR 	 = '/Recordings';
+const RECORDER_DEFAULT_COVER	 = 'Recorded Radio.jpg';
 const RECORDER_DEFAULT_ALBUM_TAG = 'Recorded YYYY-MM-DD';
+
+// Worker and watchdog loop sleep (secs)
+const WORKER_LOOP_INTERVAL		= 3;
+const WATCHDOG_LOOP_INTERVAL	= 6;
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
@@ -367,15 +372,22 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 	}
 }
 
+// Get worker event loop interval
+function getWorkerLoopInterval() {
+	// TODO: Don't do this for Pi 1/2/Zero ??
+	return getAlsaHwParams(getAlsaCardNum())['status'] != 'active' ? 1 : WORKER_LOOP_INTERVAL;
+}
+
 // Wait for worker to process job
 // NOTE: Called from cfg scripts
-function waitWorker($sleepTime, $caller) {
+function waitWorker($caller) {
 	debugLog('waitWorker(): Start (' . $caller . ', w_active=' . $_SESSION['w_active'] . ')');
 	$loopCnt = 0;
+	$sleepTime = getWorkerLoopInterval() == 1 ? 500000 : 1000000; // Microseconds
 
 	if ($_SESSION['w_active'] == 1) {
 		do {
-			sleep($sleepTime);
+			usleep($sleepTime);
 			debugLog('waitWorker(): Wait  (' . ++$loopCnt . ')');
 
 			phpSession('open_ro');

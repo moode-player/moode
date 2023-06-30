@@ -26,7 +26,7 @@ phpSession('open_ro');
 
 $_camillagui_url = '/camilladsp/gui/index.html';
 
-waitWorker(1, 'cdsp-configeditor');
+waitWorker('cdsp-configeditor');
 
 $tpl = "cdsp-configeditor.html";
 $section = basename(__FILE__, '.php');

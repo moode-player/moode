@@ -434,13 +434,12 @@ if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' ||
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max = '';
 	$_alsavolume_max_readonly = 'readonly';
-	$_alsavolume_max_hide = 'hide'; // Hides the SET button
-	$_alsavolume_max_msg = "<b>Hardware volume controller not detected</b>";
-	$_alsavolume_max_msg = "<b>Hardware volume controller not detected</b>";
+	$_alsavolume_max_disable = 'disabled';
+	$_alsavolume_max_msg = "<i>Hardware volume controller not detected</i><br>";
 } else {
 	$_alsavolume_max = $_SESSION['alsavolume_max'];
 	$_alsavolume_max_readonly = '';
-	$_alsavolume_max_hide = '';
+	$_alsavolume_max_disable = '';
 	$_alsavolume_max_msg = '';
 }
 // Output mode
@@ -477,6 +476,10 @@ $_volume_mpd_max = $_SESSION['volume_mpd_max'];
 // Display dB volume
 $_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+/* TEST $autoClick = " onchange=\"$('#btn-update-volume-db-display').click();\"";
+$_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+*/
 // USB volume knob
 $_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -574,7 +577,7 @@ foreach ($curveList as $curve) {
 	$_select['alsaequal'] .= sprintf('<option value="%s" %s>%s</option>\n', $curve['curve_name'], $selected, $curveName);
 }
 
-waitWorker(1, 'snd-config');
+waitWorker('snd-config');
 
 $tpl = "snd-config.html";
 $section = basename(__FILE__, '.php');

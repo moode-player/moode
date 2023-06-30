@@ -81,7 +81,7 @@ $_select['sw_8_cmd'] = $cfgGPIO['8']['command'];
 // Debounce
 $_select['bounce_time'] = $cfgGPIO['99']['value'];
 
-waitWorker(1, 'gpio-config');
+waitWorker('gpio-config');
 
 $tpl = "gpio-config.html";
 $section = basename(__FILE__, '.php');

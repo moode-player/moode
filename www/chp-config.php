@@ -325,7 +325,7 @@ if ($_SESSION['i2sdevice'] == 'MERUS(tm) Amp piHAT ZW') {
 	$_merus_ma12070p = 'hide';
 }
 
-waitWorker(1, 'chp-config');
+waitWorker('chp-config');
 
 $tpl = "chp-config.html";
 $section = basename(__FILE__, '.php');

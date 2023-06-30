@@ -63,7 +63,7 @@ if ($_SESSION['btsvc'] == '1') {
 	$_select['audio_output'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth speaker</option>\n";
 }
 
-waitWorker(1, 'inp-config');
+waitWorker('inp-config');
 
 $tpl = "inp-config.html";
 $section = basename(__FILE__, '.php');

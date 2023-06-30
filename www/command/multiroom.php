@@ -47,10 +47,10 @@ switch ($_GET['cmd']) {
     				debugLog('multiroom.php: get_rx_status failed: ' . $rxHostNames[$i]);
     			} else {
     				// rx, On/Off/Disabled/Unknown, volume, mute_1/0, mastervol_opt_in_1/0, hostname
-    				$rxStatus .= $status . ',' . $rxHostNames[$i] . ':';
+					$rxStatus .= $status . ':';
     			}
     		}
-
+			
     		$rxStatus = empty($rxStatus) ? 'No receivers found' : rtrim($rxStatus, ':');
     	}
 

@@ -34,11 +34,11 @@ if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
+$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='aplactive'")
+
 /usr/bin/mpc stop > /dev/null
 # Allow time for UI update
 sleep 1
-
-$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='aplactive'")
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then

@@ -17,15 +17,20 @@
 
 Updates
 
+- UPD: Add CamillaDSP support for Bluetooth inbound connections
 - UPD: Add plus (+) entries to Prefs "Thumbgen scan" to include image types
 - UPD: Add btrfs file system to udisks-glue auto-mount config (PR/631)
 - UPD: Add PixelRatio to the viewport debug popup
+- UPD: Improve responsiveness of worker daemon when not playing
+- UPD: Improve renderer event handling when CamillaDSP volume is used
+- UPD: Improve various help text and labels
 
 Bug fixes
 
-- FIX: Allo Katana DAC driver load fail on Pi-4B (pending kernel bump)
-- FIX: Allo Boss 2 driver no sound output on 6.1 kernel (pending kernel bump)
+- FIX: Allo Katana DAC driver load fail on Pi-4B (** PENDING **)
+- FIX: Allo Boss 2 driver no sound output on 6.1 kernel (** PENDING **)
 - FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
+- FIX: Extraneous hostname added to string returned by get_rx_status
 
 ################################################################################
 #
