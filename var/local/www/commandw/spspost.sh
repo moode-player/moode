@@ -40,19 +40,21 @@ fi
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
-	# Restore knob level to saved MPD level
+	# Restore knob volume to saved MPD volume
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB_MPD' WHERE param='volknob'")
-elif [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
+	/var/www/vol.sh -restore
+	systemctl restart mpd2cdspvolume
+else
+	# Restore knob volume
+	/var/www/vol.sh -restore
+fi
+# TODO: Is this needed?
+if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 	if [[ $ALSAVOLUME != "none" ]]; then
 		# Restore 0dB ALSA volume
 		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 fi
-
-# Restore knob volume
-/var/www/vol.sh -restore
-# Update mpd2cdspvolume state file
-/usr/local/bin/cdspstorevolume
 
 # Multiroom receivers
 if [[ $MULTIROOM_TX == "On" ]]; then
