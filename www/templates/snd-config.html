@@ -289,6 +289,7 @@
 					<label class="toggle-radio" for="toggle-volume-db-display-1">OFF</label>$_select[volume_db_display_off]
 				</div>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_db_display" value="novalue">Set</button>
+				<!-- TEST button id="btn-update-volume-db-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_db_display" value="novalue">Set</button -->
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_volume_db_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_volume_db_display" class="config-help-info">
 					Display dB volume next to the 0-100 level in the volume knob.
@@ -416,7 +417,7 @@
 
 		<legend>Equalizers</legend>
 		<p class="sub-legend">
-			The Equalizers are supported by MPD, AirPlay and Spotify connect renderers. They are not available if MPD audio output is set to "Bluetooh speaker" or Multiroom Sender or Receiver are On.
+			The Equalizers are supported by MPD, AirPlay, Spotify and Bluetooth inbound renderers. They are not available if Bluetooth audio output is set to "Bluetooh speaker" or Multiroom Sender or Receiver are On.
 			Note that the Equalizers, Crossfeed, and Polarity inversion are mutually exclusive. Enabling one will disable the SET button on the others.
 		</p>
 
