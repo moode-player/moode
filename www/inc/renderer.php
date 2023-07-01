@@ -86,9 +86,11 @@ function stopAirPlay() {
 		$dbh = sqlConnect();
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $dbh);
 		sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $dbh);
+		sysCmd('/var/www/vol.sh -restore');
+		sysCmd('systemctl restart mpd2cdspvolume');
+	} else {
+		sysCmd('/var/www/vol.sh -restore');
 	}
-	sysCmd('/var/www/vol.sh -restore');
-	sysCmd('/usr/local/bin/cdspstorevolume');
 
 	// Multiroom receivers
 	if ($_SESSION['multiroom_tx'] == "On" ) {
@@ -165,9 +167,11 @@ function stopSpotify() {
 		$dbh = sqlConnect();
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $dbh);
 		sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $dbh);
+		sysCmd('/var/www/vol.sh -restore');
+		sysCmd('systemctl restart mpd2cdspvolume');
+	} else {
+		sysCmd('/var/www/vol.sh -restore');
 	}
-	sysCmd('/var/www/vol.sh -restore');
-	sysCmd('/usr/local/bin/cdspstorevolume');
 
 	// Multiroom receivers
 	if ($_SESSION['multiroom_tx'] == "On" ) {

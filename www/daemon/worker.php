@@ -569,10 +569,6 @@ $mixerName = isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerName;
 $mixerName = $mixerName == 'none' ? 'fixed 0dB' : $mixerName;
 workerLog('worker: MPD mixer type (' . ($mixerName) . ')');
 
-// TODO: Do this after MPD has started
-$serviceCmd = isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
-sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
-
 // Check for presence of hardware volume controller
 $result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
 if (substr($result[0], 0, 6 ) == 'amixer') {
@@ -646,8 +642,6 @@ if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 }
 unset($cdsp);
 workerLog('worker: CamillaDSP configuration (' . rtrim($_SESSION['camilladsp'], '.yml') . ')');
-workerLog('worker: CamillaDSP volume sync   (' . ucfirst($_SESSION['camilladsp_volume_sync']) . ')');
-workerLog('worker: CamillaDSP volume range  (' . $_SESSION['camilladsp_volume_range'] . ' dB)');
 
 //
 workerLog('worker: --');
@@ -702,6 +696,11 @@ if ($_SESSION['first_use_help'] == 'y,y') {
 	$resp = readMpdResp($sock);
 	workerLog('worker: Default playlist loaded for first boot');
 }
+// MPD/CamillaDSP volume sync
+workerLog('worker: MPD camilladsp volume sync (' . ucfirst($_SESSION['camilladsp_volume_sync']) . ')');
+workerLog('worker: MPD camilladsp volume range (' . $_SESSION['camilladsp_volume_range'] . ' dB)');
+$serviceCmd = isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
+sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
 //
 workerLog('worker: --');
@@ -1156,7 +1155,7 @@ while (true) {
 	$newInterval = getWorkerLoopInterval();
 	if ($worker_loop_interval != $newInterval) {
 		$worker_loop_interval = $newInterval;
-		workerLog('worker: Loop interval ' . $newInterval);
+		//workerLog('worker: Loop interval ' . $newInterval);
 	}
 	//$worker_loop_interval = getAlsaHwParams(getAlsaCardNum())['status'] != 'active' ? 1 : WORKER_LOOP_INTERVAL;
 	sleep($worker_loop_interval);
@@ -1314,8 +1313,8 @@ function chkBtActive() {
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			sysCmd('mpc stop'); // For added robustness
 
-			if ($_SESSION['camilladsp_volume_sync'] == 'on') {
-				// Save knob level and set MPD vol to 100
+			if (isMPD2CamillaDSPVolSyncEnabled()) {
+				// Save knob volume and set MPD volume to 100
 				sqlQuery("UPDATE cfg_system SET value='" . $_SESSION['volknob'] . "' WHERE param='volknob_mpd'", $GLOBALS['dbh']);
 				sysCmd('/var/www/vol.sh 100');
 			} else if ($_SESSION['alsavolume'] != 'none') {
@@ -1330,13 +1329,15 @@ function chkBtActive() {
 			phpSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
 
-			if ($_SESSION['camilladsp_volume_sync'] == 'on') {
+			if (isMPD2CamillaDSPVolSyncEnabled()) {
 				// Restore knob level to saved MPD level
 				$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $GLOBALS['dbh']);
 				sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $GLOBALS['dbh']);
+				sysCmd('/var/www/vol.sh -restore');
+				sysCmd('systemctl restart mpd2cdspvolume');
+			} else {
+				sysCmd('/var/www/vol.sh -restore');
 			}
-			sysCmd('/var/www/vol.sh -restore');
-			sysCmd('/usr/local/bin/cdspstorevolume');
 			if ($_SESSION['rsmafterbt'] == '1') {
 				sysCmd('mpc play');
 			}
@@ -2160,7 +2161,7 @@ function runQueuedJob() {
 							$serviceCmd = 'start';
 							$mixerType = 'camilladsp';
 							$volume = '-restore';
-							// Save knob level for later restore
+							// Save knob volume for later restore
 							phpSession('write', 'volknob_mpd', $_SESSION['volknob']);
 						} else if ($queueArgs[1] == 'change_mixer_to_default') {
 							$volSync = 'off';
