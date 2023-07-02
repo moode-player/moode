@@ -176,10 +176,14 @@
         <div id="multiroom-sender" class="context-menu"><a class="btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fas fa-rss"></i></a></div>
 
 		<?php
+
+            // TODO: Refactor var names
+
 			if ($section == 'index' && $_SESSION['camilladsp'] != "off") {
 				require_once __DIR__ . '/inc/cdsp.php';
 				$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 				$cdsp_configs = $cdsp->getAvailableConfigs();
+                // DELETE: Variable not used
 				$select_config_label = $cdsp_configs[$_SESSION['camilladsp']];
 		?>
 		<div class="dropdown" id="dropdown-cdsp-btn">
@@ -187,13 +191,14 @@
                 <i class="fas fa-sliders-v-square"></i>
 			</a>
 			<ul id="dropdown-cdsp-menu" class="dropdown-menu" role="menu" aria-labelledby="menu-settings_x">
-				<?php
+			<?php
 				foreach ($cdsp_configs as $config_file=>$config_name) {
+                    $menuSeparator = $config_name == 'Quick convolution filter' ? ' menu-separator' : '';
                     $fa_selected = $_SESSION['camilladsp'] == $config_file ? '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>' : '';
-					echo '<li class="context-menu dropdown-cdsp-line"><a href="#notarget" data-cmd="camilladsp_config" data-cdspconfig="' .
+					echo '<li class="context-menu dropdown-cdsp-line' . $menuSeparator . '"><a href="#notarget" data-cmd="camilladsp_config" data-cdspconfig="' .
                         $config_file . '" data-cdsplabel="' . $config_name . '">' . ucfirst($config_name) . $fa_selected . '</a></li>';
 				}
-				?>
+			?>
 			</ul>
 		</div>
 		<?php } ?>
