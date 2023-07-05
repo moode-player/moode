@@ -94,6 +94,19 @@
 
 		<div class="control-group">
 			<legend>Startup options</legend>
+			<label class="control-label" for="worker-responsiveness">Worker responsiveness</label>
+			<div class="controls">
+				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness">
+					$_select[worker_responsiveness]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-worker-responsiveness" class="config-help-info">
+					<b>Default:</b> Suitable for all Raspberry Pi models.<br>
+					<b>Boosted:</b> Best for multi-core Raspberry Pi's. This provides more responsiveness when using the Configuration screens or making other setting changes that require Worker.
+				</span>
+			</div>
+
 			<label class="control-label" for="cpugov">CPU governor</label>
 			<div class="controls">
 				<select id="cpugov" class="config-select-large" name="cpugov">

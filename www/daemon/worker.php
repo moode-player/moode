@@ -1139,8 +1139,22 @@ workerLog('worker: Mount monitor ' . ($_SESSION['fs_mountmon'] == 'On' ? '(start
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
-sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_LOOP_INTERVAL . ' > /dev/null 2>&1 &');
+sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
 workerLog('worker: Watchdog monitor (started)');
+
+// Worker wakeup interval
+if (!isset($_SESSION['worker_responsiveness'])) {
+	$_SESSION['worker_responsiveness'] = 'Default';
+}
+workerLog('worker: Responsiveness (' . $_SESSION['worker_responsiveness'] . ')');
+debugLog('worker: Sleep intervals (' .
+	'worker=' . WORKER_SLEEP / 1000000 . ', ' .
+	'waitworker=' . WAITWORKER_SLEEP / 1000000 . ', ' .
+	'watchdog=' . WATCHDOG_SLEEP . ', ' .
+	'mountmon=' . MOUNTMON_SLEEP . ', ' .
+	'gpiobuttons=' . GPIOBUTTONS_SLEEP .
+	')'
+);
 
 // Worker ready
 workerLog('worker: Ready');
@@ -1149,16 +1163,8 @@ workerLog('worker: Ready');
 // BEGIN WORKER EVENT LOOP
 //
 
-$worker_loop_interval = WORKER_LOOP_INTERVAL;
 while (true) {
-	// Reduce interval to 1 if not playing for more responsive event processing, also see waitWorker()
-	$newInterval = getWorkerLoopInterval();
-	if ($worker_loop_interval != $newInterval) {
-		$worker_loop_interval = $newInterval;
-		//workerLog('worker: Loop interval ' . $newInterval);
-	}
-	//$worker_loop_interval = getAlsaHwParams(getAlsaCardNum())['status'] != 'active' ? 1 : WORKER_LOOP_INTERVAL;
-	sleep($worker_loop_interval);
+	usleep(WORKER_SLEEP);
 
 	phpSession('open');
 
@@ -1234,7 +1240,7 @@ function chkScnSaver() {
 		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0'
 		&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0' && $mpdState != 'play') {
 		if ($GLOBALS['scnactive'] == '0') {
-			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - $GLOBALS['worker_loop_interval'];
+			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
 				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 				$GLOBALS['scnactive'] = '1';
@@ -1246,7 +1252,7 @@ function chkScnSaver() {
 }
 
 function chkMaintenance() {
-	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - $GLOBALS['worker_loop_interval'];
+	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - (WORKER_SLEEP / 1000000);
 
 	if ($GLOBALS['maint_interval'] <= 0) {
 		// Clear logs
@@ -1884,7 +1890,7 @@ function startLcdUpdater() {
 
 // GPIO button handler
 function startGpioBtnHandler() {
-	sysCmd('/var/www/daemon/gpio_buttons.py > /dev/null &');
+	sysCmd('/var/www/daemon/gpio_buttons.py ' . GPIOBUTTONS_SLEEP . ' > /dev/null &');
 }
 
 // LocalUI display
@@ -2495,6 +2501,17 @@ function runQueuedJob() {
 			$_SESSION['updater_auto_check'] = $_SESSION['w_queueargs'];
 			$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $GLOBALS['wlan0Ip'][0] != '172.24.1.1');
 			$_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
+			break;
+		case 'worker_responsiveness':
+			if ($_SESSION['w_queueargs'] == 'Default') {
+				$workerSleep = 3000000;
+				$waitworkerSleep = 1000000;
+			} else {
+				$workerSleep = 1500000;
+				$waitworkerSleep = 750000;
+			}
+			sysCmd('sed -i "/const WORKER_SLEEP/c\const WORKER_SLEEP = ' . $workerSleep . ';" /var/www/inc/sleep-interval.php');
+			sysCmd('sed -i "/const WAITWORKER_SLEEP/c\const WAITWORKER_SLEEP = ' . $waitworkerSleep . ';" /var/www/inc/sleep-interval.php');
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");

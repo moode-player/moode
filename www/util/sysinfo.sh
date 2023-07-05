@@ -64,6 +64,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nThrottled bitmask\t= $THROTTLED_BITMASK\c"
 	echo -e "\nThrottled text\t\t= $THROTTLED_TEXT\c"
 	echo -e "\n\c"
+	echo -e "\nWorker responsiveness\t= $WORKER_RESPONSIVENESS\c"
 	echo -e "\nCPU governor\t\t= $GOV\c"
 	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
 	echo -e "\nPi integrated WiFi\t= $piwifi\c"
@@ -433,6 +434,8 @@ MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
 MEM_TOTAL=$(( $MEM_TOTAL / 1000 ))
 MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
+
+WORKER_RESPONSIVENESS=$(moodeutl -d | grep worker_responsiveness | cut -d"|" -f2)
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
