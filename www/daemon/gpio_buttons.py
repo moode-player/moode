@@ -32,7 +32,7 @@ GPIO.setmode(GPIO.BCM)
 
 # Get sleep time arg
 if len(sys.argv) > 1:
-    sleep_time = sys.argv[1]
+    sleep_time = int(sys.argv[1])
 else:
     sleep_time = 1
 
@@ -183,4 +183,4 @@ for row in cursor:
 
 # Main
 while True:
-    time.sleep(sleepTime)
+    time.sleep(sleep_time)
