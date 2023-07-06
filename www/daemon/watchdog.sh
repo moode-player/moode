@@ -21,7 +21,7 @@
 #
 
 # $1: Loop sleep time (secs)
-if [ -z $1 ]; then WATCHDOG_LOOP_INTERVAL=6; else WATCHDOG_LOOP_INTERVAL=$1; fi
+if [ -z $1 ]; then WATCHDOG_SLEEP=6; else WATCHDOG_SLEEP=$1; fi
 
 # NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool
 FPM_MAX_LIMIT=64
@@ -101,7 +101,7 @@ while true; do
 	# DEBUG
 	#message_log "$MSG"
 
-	sleep $WATCHDOG_LOOP_INTERVAL
+	sleep $WATCHDOG_SLEEP
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 	MPD_RUNNING=$(pgrep -c -x mpd)
 

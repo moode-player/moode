@@ -30,7 +30,7 @@ while (true) {
 	session_id(phpSession('get_sessionid'));
 	phpSession('open_ro');
 
-	sleep(30);
+	sleep(MOUNTMON_SLEEP);
 	$mounts = sqlRead('cfg_source', $dbh);
 	if ($mounts !== true) {
 		mountmonLog('mountmon: Checking mount points');

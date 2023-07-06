@@ -128,6 +128,11 @@ if (isset($_POST['update_browser_title'])) {
 
 // STARTUP OPTIONS
 
+if (isset($_POST['update_worker_responsiveness']) && $_SESSION['worker_responsiveness'] != $_POST['worker_responsiveness']) {
+	$_SESSION['worker_responsiveness'] = $_POST['worker_responsiveness'];
+	submitJob('worker_responsiveness', $_POST['worker_responsiveness'], 'Settings updated', 'Restart required');
+}
+
 if (isset($_POST['update_cpugov'])) {
 	submitJob('cpugov', $_POST['cpugov'], 'Settings updated', '');
 	phpSession('write', 'cpugov', $_POST['cpugov']);
@@ -343,6 +348,9 @@ $_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
 $_select['browsertitle'] = $_SESSION['browsertitle'];
 
 // STARTUP OPTIONS
+
+$_select['worker_responsiveness'] .= "<option value=\"Default\" " . (($_SESSION['worker_responsiveness'] == 'Default') ? "selected" : "") . ">Default</option>\n";
+$_select['worker_responsiveness'] .= "<option value=\"Boosted\" " . (($_SESSION['worker_responsiveness'] == 'Boosted') ? "selected" : "") . ">Boosted</option>\n";
 
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";

@@ -17,13 +17,16 @@
 
 Updates
 
-- UPD: Add CamillaDSP support for Bluetooth inbound connections
+- UPD: Add support for LDAC encoder to Bluetooth
+- UPD: Add support for SBC XQ/XQ+ quality settings (default to XQ+)
+- UPD: Add CamillaDSP support for Bluetooth inbound connection
 - UPD: Add plus (+) entries to Prefs "Thumbgen scan" to include image types
 - UPD: Add btrfs file system to udisks-glue auto-mount config (PR/631)
 - UPD: Add PixelRatio to the viewport debug popup
-- UPD: Improve responsiveness of worker daemon when not playing
+- UPD: Add System config option to improve responsiveness of worker daemon
 - UPD: Improve renderer event handling when CamillaDSP volume is used
 - UPD: Improve various help text and labels
+- UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 
 Bug fixes
 

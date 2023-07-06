@@ -1627,6 +1627,30 @@ jQuery(document).ready(function($) { 'use strict';
         }
     );
 
+    // CamillaDSP config menu
+    $('#dropdown-cdsp-btn').click(function(e) {
+        var ul = $('#dropdown-cdsp-menu');
+
+        // First items
+        $('#dropdown-cdsp-menu li').each(function () {
+            if ($(this).text() == 'Off' ||
+                $(this).text() == 'Custom' ||
+                $(this).text() == 'Quick convolution filter' ||
+                $(this).html().includes('menu-check-cdsp')) {
+                ul.append($(this));
+            }
+        });
+        // Rest of items
+        $('#dropdown-cdsp-menu li').each(function () {
+            if ($(this).text() != 'Off' &&
+                $(this).text() != 'Custom' &&
+                $(this).text() != 'Quick convolution filter' &&
+                !$(this).html().includes('menu-check-cdsp')) {
+                ul.append($(this));
+            }
+        });
+    });
+
 	// Info button (i) show/hide toggle
 	$('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');
