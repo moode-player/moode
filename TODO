@@ -1,0 +1,16 @@
+These are pending tasks, but with a low priority:
+
+- Make a list of external dependencies in each repo.
+
+- Several JS/CSS libraries including Bootstrap, Font Awesome and jQuery are to be bumped.
+        Without automated tests, effort to test and debug these lib upgrades is substantial and thus its a low priority ("never touch a running system").
+
+- The backend was refactored a while back. Whats remaining is the JS.
+        Without automated tests, efforts to test and debug is substantial and thus its a low priority.
+
+- Add more user setup documentation
+
+- Add more developer documentation
+
+- Publish documentation to github pages
+

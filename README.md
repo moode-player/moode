@@ -16,6 +16,30 @@ Tim Curtis © 2014
 [Setup guide: ./www/setup.txt](./www/setup.txt)<br/>
 [Contributors: ./www/CONTRIBS.html](./www/CONTRIBS.html)<br/>
 
+### Solve problems
+
+Please check our [FAQ and guides](https://moodeaudio.org/forum/forumdisplay.php?fid=9) section of the forum,
+before filing an issue.<br/>
+
+Please check our [Support](https://moodeaudio.org/forum/forumdisplay.php?fid=7) section of the forum, if you need support.<br/>
+
+If you have found a bug, then please report it using [github issues](https://github.com/moode-player/docs/issues)<br/>
+
+### Contribute to the project
+
+Contributions are welcome.
+
+The [Master Development Guide](https://github.com/moode-player/docs/blob/main/master_development%20guide.md)
+contains information about how to setup/develop/test moode audio as well as an explanation of the architecture<br/>
+
+Please clone the repository, make a feature branch based on branch "development".<br/>
+Develop and test the feature<br/>
+Once your work is completed, please submit a [Pull Request](https://github.com/moode-player/moode/pulls)<br/>
+We will review the Pull Request and once merged, your work will be part of the next release.<br/>
+
+If you plan on doing a bigger development or change the internal architecture/function, please announce your feature
+in the (Forum Feature Request)[https://moodeaudio.org/forum/forumdisplay.php?fid=8] so that it can be discussed before
+you invest a lot of time.
 
 ### Additional Resources
 
