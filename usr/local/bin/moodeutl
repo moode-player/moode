@@ -19,68 +19,18 @@
  *
  */
 
-const VERSION = '2.1.1';
+const VERSION = '3.0.0';
+
+set_include_path('/var/www/inc');
 
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
 
-// ** From common.php
-// Common
-const MPD_RESPONSE_ERR = 'ACK';
-const MPD_RESPONSE_OK = 'OK';
-const MPD_MUSICROOT = '/var/lib/mpd/music/';
-const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
-const PLAYLIST_COVERS_ROOT = '/var/local/www/imagesw/playlist-covers/';
-const RADIO_LOGOS_ROOT = '/var/local/www/imagesw/radio-logos/';
-const TMP_IMAGE_PREFIX = '__tmp__';
-const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
-const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
-const MOODE_LOG = '/var/log/moode.log';
-const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
-const UPDATER_LOG = '/var/log/moode_update.log';
-const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
-const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
-const MPD_LOG = '/var/log/mpd/log';
-const PORT_FILE = '/tmp/moode_portfile';
-const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
-const LIBCACHE_BASE = '/var/local/www/libcache';
-const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
-const SESSION_SAVE_PATH = '/var/local/php';
-const STATION_EXPORT_DIR = '/var/local/www/imagesw';
-const MPD_VERSIONS_CONF = '/var/local/www/mpd_versions.conf';
-const LOGO_ROOT_DIR = 'imagesw/radio-logos/';
-const DEF_RADIO_COVER = 'images/default-cover-v6.svg';
-const DEF_COVER = 'images/default-cover-v6.svg';
-const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
-const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
-const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
-const BOOT_CONFIG_TXT = '/boot/config.txt';
-const BOOT_CONFIG_BKP = '/boot/bootcfg.bkp';
+// Constants
+require_once 'constants.php';
 
-// Features availability bitmask
-// NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
-// sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97206' WHERE param='feat_bitmask'"
-const FEAT_HTTPS		= 1;		//   HTTPS-Only mode
-const FEAT_AIRPLAY		= 2;		// y AirPlay renderer
-const FEAT_MINIDLNA 	= 4;		// y DLNA server
-const FEAT_RECORDER		= 8; 		//   Stream recorder
-const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
-const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
-const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
-const FEAT_ROONBRIDGE	= 128;		// y RoonBridge renderer
-const FEAT_LOCALUI		= 256;		// y Local display
-const FEAT_INPSOURCE	= 512;		// y Input source select
-const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
-const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
-const FEAT_GPIO 		= 4096;		// y GPIO button handler
-const FEAT_RESERVED		= 8192;		// y Reseved for future use
-const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
-const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
-const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
-//						-------
-//						  97206
-// ** End
+// Daemon loop sleep intervals
+require_once 'sleep-interval.php';
 
 $features = array(
 	FEAT_HTTPS => 'HTTPS-Only mode',
@@ -181,6 +131,15 @@ switch ($option) {
 	case '--updlog':
 		printUpdateLog();
 		break;
+	case '--mountmonlog':
+		printMountMonLog();
+		break;
+	case '--autocfglog':
+		printAutoCfgLog();
+		break;
+	case '--sleepint':
+		printSleepInt();
+		break;
 	case '--mooderel':
 		$file = file_get_contents('/var/www/footer.min.php');
 		echo substr($file, strpos($file, 'Release: ') + 9, 16) . "\n";
@@ -225,6 +184,9 @@ With no OPTION print the help text and exit.
  --btreset\tReset Bluetooth to off
  --mpdlog\tPrint MPD log
  --updlog\tPrint in-place update log
+ --mountmonlog\tPrint mount monitor log
+ --autocfglog\tPrint auto config update log
+ --sleepint\tPrint daemon sleep intervals
  --mooderel\tPrint moOde release
  --revision\tPrint hardware revision
  --version\tPrint program version
@@ -289,7 +251,7 @@ function updateFeatures($features, $featBitmask, $argv) {
 }
 
 function dumpSession() {
-	if (posix_getuid() != 0){
+	if (posix_getuid() != 0) {
 		echo "This option requires sudo\n";
 		return;
 	}
@@ -310,7 +272,7 @@ function dumpSession() {
 }
 
 function deleteSessionVar($argv) {
-	if (posix_getuid() != 0){
+	if (posix_getuid() != 0) {
 		echo "This option requires sudo\n";
 		return;
 	}
@@ -353,7 +315,7 @@ function audioFormats($option) {
 			}
 		}
 		else {
-			if (posix_getuid() != 0){
+			if (posix_getuid() != 0) {
 				echo "This option requires sudo if the device is in use\n";
 				return;
 			}
@@ -406,9 +368,10 @@ function systemMonitor() {
 		// PHP FPM pool count
 		$fpmPool = exec('pgrep -c -f "php-fpm: pool www"');
 
-		echo 'CPU: ' . $cpuFreq . ', LOAD: ' . $cpuLoad . '% ' . $cpuTemp . 'C | ' .
-			'MEM: ' . $memUtil . '% used | ' .
-			'DISK: ' . $diskUsed . ' used, ' .	$diskFree . ' free | ' .
+		echo 'CPU: ' . $cpuFreq . ' | ' .
+			'Load: ' . $cpuLoad . '% / ' . $cpuTemp . 'C | ' .
+			'Memory: ' . $memUtil . '% used | ' .
+			'Disk: ' . $diskUsed . ' used / ' .	$diskFree . ' free | ' .
 			'PHP: ' . $fpmPool . " workers\r";
 	}
 }
@@ -542,6 +505,13 @@ function printHWParams() {
 }
 
 function printMPDLog() {
+	clearstatcache();
+	if (filesize(MPD_LOG)) {
+		echo shell_exec('cat ' . MPD_LOG);}
+	else {
+		echo 'The MPD log is empty or was previously cleared' . "\n";
+	}
+
 	echo shell_exec('cat ' . MPD_LOG);
 }
 
@@ -551,6 +521,46 @@ function printUpdateLog() {
 	} else {
 		echo 'The update log was not found' . "\n";
 	}
+}
+
+function printMountMonLog() {
+	if (file_exists(MOUNTMON_LOG)) {
+		clearstatcache();
+		if (filesize(MOUNTMON_LOG)) {
+			echo shell_exec('cat ' . MOUNTMON_LOG);}
+		else {
+			echo 'The mount monitor log is empty or was previously cleared' . "\n";
+		}
+	} else {
+		echo 'The mount monitor log was not found' . "\n" .
+			'Turn debug logging on to generate this log' . "\n";
+	}
+}
+
+function printAutoCfgLog() {
+	if (file_exists(AUTOCFG_LOG)) {
+		echo shell_exec('cat ' . AUTOCFG_LOG);
+	} else {
+		echo 'The auto config log was not found' . "\n";
+	}
+}
+
+function printSleepInt() {
+	if (posix_getuid() != 0) {
+		echo "This option requires sudo\n";
+		return;
+	}
+
+	setSessionId();
+	session_start();
+	session_write_close();
+
+	echo $_SESSION['worker_responsiveness'] . ' | ' .
+		'worker=' . WORKER_SLEEP / 1000000 . ' | ' .
+		'waitworker=' . WAITWORKER_SLEEP / 1000000 . ' | ' .
+		'watchdog=' . WATCHDOG_SLEEP . ' | ' .
+		'mountmon=' . MOUNTMON_SLEEP . ' | ' .
+		'gpiobuttons=' . GPIOBUTTONS_SLEEP . "\n";
 }
 
 function detectCIFSHosts() {
