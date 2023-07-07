@@ -25,7 +25,7 @@ Updates
 - UPD: Add PixelRatio to the viewport debug popup
 - UPD: Add System config option to adjust responsiveness of worker daemon
 - UPD: Add option to moodeutl to print daemon sleep intervals (responsiveness)
-- UPD: Add options to moodeutl to print mount monotor and auto config logs
+- UPD: Add options to moodeutl to print mount monitor and auto config logs
 - UPD: Improve renderer event handling when CamillaDSP volume is used
 - UPD: Improve various help text and labels
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
