@@ -190,6 +190,10 @@ PLAYER SETUP AND CONFIGURATON
 
 At this point a FULLY OPERATIONAL PLAYER exists.
 
+FURTHER  HELP
+
+is available in our forum, espiecially [FAQ and Guides](https://moodeaudio.org/forum/forumdisplay.php?fid=9)
+
 CUSTOM CONFIGURATIONS
 
 Customize the player by using any of the following procedures.
@@ -263,6 +267,8 @@ Follow these instructions for making certain types of changes.
    e) Remove WiFi adapter
    f) Power on
 
+
+
 COMMAND AND REST API
 
 Commands can be submitted to moOde via HTTP or SSH. If an HTTP command returns
@@ -328,6 +334,9 @@ sudo /var/www/libupd-submit.php
 # CoverView on/off
 /var/www/util/coverview.php -on
 /var/www/util/coverview.php -off
+
+
+
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
