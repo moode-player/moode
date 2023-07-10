@@ -51,9 +51,10 @@ function autoCfgLog($msg, $mode = 'a') {
 function debugLog($msg, $mode = 'a') {
 	// Logging off
 	if (!isset($_SESSION['debuglog']) || $_SESSION['debuglog'] == '0') {
+		// NOTE: $_SESSION['debuglog'] = not set means the session is not active
 		return;
 	}
-
+	
 	$fh = fopen(MOODE_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
@@ -401,4 +402,11 @@ function setAltBackLink() {
 function getUserID() {
 	$result = sysCmd('ls /home/');
 	return $result[0];
+}
+
+// NOTE:
+// hostname -I = 192.168.1.121 fd87:f129:9943:4934:1192:907d:d9b6:e98d
+// hostname -I | cut -d " " -f 1 = 192.168.1.121
+function getThisIpAddr() {
+	return sysCmd('hostname -I | cut -d " " -f 1')[0];
 }

@@ -65,7 +65,7 @@ if (isset($_POST['multiroom_tx_restart'])) {
 if (isset($_POST['multiroom_tx_discover'])) {
 	// Scan the network for hosts with open port 6600 (MPD)
 	$port6600Hosts = scanForMPDHosts();
-	$thisIpAddr = sysCmd('hostname -I')[0];
+	$thisIpAddr = getThisIpAddr();
 
 	// Parse the results
 	$_SESSION['rx_hostnames'] = '';

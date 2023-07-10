@@ -23,9 +23,26 @@ require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/multiroom.php'; // For getStreamTimeout()
 require_once __DIR__ . '/inc/sql.php';
 
+if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
+	if (!isset($_POST['ipaddr'])) {
+		workerLog('players.php: No IP addresses for command ' . $_GET['cmd']);
+	} else {
+		$count = count($_POST['ipaddr']);
+		for ($i = 0; $i < $count; $i++) {
+			if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
+				'/command/system.php?cmd=' . $_GET['cmd']))) {
+				workerLog('players.php: ERROR: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' failed');
+			} else {
+				workerLog('players.php: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' result: ' . $result);
+			}
+		}
+	}
+	exit(0);
+}
+
 // Scan the network for hosts with open port 6600 (MPD)
 $port6600Hosts = scanForMPDHosts();
-$thisIpAddr = sysCmd('hostname -I')[0];
+$thisIpAddr = getThisIpAddr();
 
 // Parse the results
 $_players = '';
@@ -47,18 +64,21 @@ foreach ($port6600Hosts as $ipAddr) {
 			}
 
 			$_players .= sprintf('
-				<li><a href="http://%s" class="btn btn-large">
+				<li><a href="http://%s" class="btn btn-large target-blank-link" data-ipaddr="%s" target="_blank">
 				<i class="fas fa-sitemap"></i>
 				<br>%s%s
-				</a></li>', $ipAddr, $host, $rxIndicator);
+				</a></li>', $ipAddr, $ipAddr, $host, $rxIndicator);
 		}
 	}
 }
 
 // Check for no players found
 if (empty(trim($_players))) {
-	$_players = '<li style="font-size:large">No other players found</li>';
+	$_players = '<li id="players-no-players-found">No players found</li>';
 }
+
+// Close the "Discovering players..." notification
+sendEngCmd('close_notification');
 
 $tpl = 'players.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');

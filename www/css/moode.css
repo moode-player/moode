@@ -59,14 +59,6 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 #playback-panel.cv #playback-queue {position:relative;width:44%;left:-10000px;margin:0 auto;}
 #playback-panel.cv #playback-cover {padding:0;width:33vw;position:absolute;left:50%;transform:translate(-50%);}
 #playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
-#players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
-#players .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
-#players ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
-#players ul, #configure ul {margin:0;display:inline-table;}
-#players i, #configure i {font-size:2em;padding:.25em;}
-#players a {font-size:1em;height:4em;}
-.players-rx-indicator {font-size:.85em!important;margin-left:.25em;}
-#configure a {font-size:1em;width:6em;height:5em;}
 .btn.btn-large {padding-top:.75em;padding-bottom:.75em;}
 .modal {background-color: rgba(240,240,240,0.9);color: #333;}
 .modal-header, .modal-footer {background-color: transparent;}
@@ -77,6 +69,18 @@ li.modal-dropdown-text:hover,
 li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {color:inherit;}
 .help-block-modal {margin:0 !important;}
+/* Players and Configure modals */
+#players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
+#players .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
+#players ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
+#players ul, #configure ul {margin:0;display:inline-table;}
+#players i, #configure i {font-size:2em;padding:.25em;}
+.players-rx-indicator {font-size:.85em!important;margin-left:.25em;}
+#players a, #configure a {font-size:1em;width:6em;height:5em;text-transform:capitalize}
+#players-ul {margin:0;}
+#players-no-players-found {font-size:2em;font-style:italic;}
+#players-submit-confirm-msg {display:block;font-style:italic;}
+/*#players-modal-body {padding-bottom:5em;}*/
 /* dropdown menus */
 #panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
 #current-tab, #library-header {font-size:1em;}
