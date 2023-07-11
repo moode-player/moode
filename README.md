@@ -33,7 +33,7 @@ General troubleshooting and support for moOde audio player is provided in our [F
 
 #### Repository
 
-Please use this repository only for developer related activities for example Pull Requests, submitting issues to report bugs in specific lines in the codebase or to report issues with the repository itself. This helps make it easier for us to provide focussed support.
+Please use this repository only for developer related activities for example Pull Requests, submitting issues to report bugs in specific lines in the codebase, other technical information or to report issues with the repository itself. This helps make it easier for us to provide focussed support.
 
 ### Announcements
 
