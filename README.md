@@ -4,6 +4,10 @@ Moode Audio Player is a derivative of the wonderful WebUI audio player client fo
 
 moOde provides a beautifully designed and responsive user interface, an extensive set of Audiophile-grade features and an active Forum that provides top notch troubleshooting, interesting discussion on a variety of audio topics and an International user community of audio enthusiasts.
 
+[Release notes: ./www/relnotes.txt](./www/relnotes.txt)<br/>
+[Setup guide: ./www/setup.txt](./www/setup.txt)<br/>
+[Contributors: ./www/CONTRIBS.html](./www/CONTRIBS.html)<br/>
+
 ### Help support the project
 
 Take a moment to consider making a donation via PayPal. The financial support helps the project remain active providing great audio software to the Raspberry Pi audio community.
@@ -12,18 +16,7 @@ Take a moment to consider making a donation via PayPal. The financial support he
 
 Tim Curtis © 2014
 
-[Release notes: ./www/relnotes.txt](./www/relnotes.txt)<br/>
-[Setup guide: ./www/setup.txt](./www/setup.txt)<br/>
-[Contributors: ./www/CONTRIBS.html](./www/CONTRIBS.html)<br/>
-
-
-### Additional Resources
-
-#### Image and Package build repos
-
-Image builder: https://github.com/moode-player/imgbuild<br/>
-Package builder: https://github.com/moode-player/pkgbuild<br/>
-Package sources: https://github.com/moode-player/pkgsource<br/>
+### Open Source Hosting
 
 [![Hosted By: Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=for-the-badge)](https://cloudsmith.com)
 
@@ -32,14 +25,35 @@ Cloudsmith is the only fully hosted, cloud-native, universal package management 
 enables your organization to create, store and share packages in any format, to any place, with total
 confidence.
 
-#### moOde on the Web
+### Troubleshooting and support
+
+#### Discussion Forum
+
+General troubleshooting and support for moOde audio player is provided in our [Forum](https://moodeaudio.org/forum) so that everyone can benefit from the discussion. Visit the Support page at [moodeaudio.org](https://moodeaudio.org) for information on how to easily request a Forum account.
+
+#### Repository
+
+Please use this repository only for developer related activities for example Pull Requests, submitting issues to report bugs in specific lines in the codebase, other technical information or to report issues with the repository itself. This helps make it easier for us to provide focussed support.
+
+### Announcements
+
+Release and other announcements are made in the following sites.
+1. The [Announcements](https://moodeaudio.org/forum/forumdisplay.php?fid=17) section in our [Forum](https://moodeaudio.org/forum)
+2. Our [Mastodon](https://fosstodon.org/@moodeaudio) feed
+3. The [moOde thread](https://www.diyaudio.com/community/forums/pc-based.120/) in the diyAudio Forum
+
+### Developer Resources
+
+Documentation: https://github.com/moode-player/docs<br/>
+Image builder: https://github.com/moode-player/imgbuild<br/>
+Package builder: https://github.com/moode-player/pkgbuild<br/>
+Package sources: https://github.com/moode-player/pkgsource<br/>
+
+### Link summary
 
 Website: https://moodeaudio.org<br/>
-Mastodon: https://fosstodon.org/@moodeaudio</br>
 Forum: https://moodeaudio.org/forum<br>
-diyAudio: https://www.diyaudio.com/community/forums/pc-based.120/
-
-#### Raspberry Pi
-
+Mastodon: https://fosstodon.org/@moodeaudio</br>
+diyAudio: https://www.diyaudio.com/community/forums/pc-based.120/<br>
 Raspberry Pi: https://github.com/raspberrypi<br/>
 RaspiOS: https://www.raspbian.org/RaspbianRepository<br/>
