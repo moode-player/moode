@@ -1602,8 +1602,9 @@ jQuery(document).ready(function($) { 'use strict';
     $(document).on('click', '#btn-players-dropdown', function(e) {
         $('#players-modal-body').css('padding-bottom', '5em');
     });
+    // NOTE: This global click handler is apparantly the only way to detect if a bootstrap menu is closed
     $(document).on('click', function(e) {
-        if (!$('#players-dropdown').hasClass('open')) {
+        if ($('#players-modal').css('display') == 'block' && !$('#players-dropdown').hasClass('open')) {
             $('#players-modal-body').css('padding-bottom', '0px');
         }
     });
