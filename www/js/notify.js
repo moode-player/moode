@@ -88,11 +88,13 @@ function notify(title, msg, duration = '2_seconds') {
         mpderror: 'MPD error',
         viewport: 'Viewport',
         updater: 'An update is available',
+        // Players >>
+        discovering_players: 'Discovering players...',
+        players_action_submit: 'Action submitted',
         // Miscellaneous
         upd_clock_radio: 'Clock radio updated',
 		settings_updated: 'Settings updated',
 		gathering_info: 'Gathering info...',
-        discovering_players: 'Discovering players...',
         installing_plugin: 'Installing plugin...',
         // Recorder plugin
         recorder_installed: 'Recorder installed',
@@ -109,6 +111,9 @@ function notify(title, msg, duration = '2_seconds') {
     }
 
     switch (duration) {
+        case '2_seconds': // Default
+            duration = 2000;
+            break;
         case '3_seconds':
             duration = 3000;
             break;
@@ -120,9 +125,6 @@ function notify(title, msg, duration = '2_seconds') {
             break;
         case 'infinite':
             duration = 86400000; // 24 hours
-            break;
-        default:
-            duration = 2000;
             break;
     }
 

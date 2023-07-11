@@ -194,6 +194,7 @@ With no OPTION print the help text and exit.
 		break;
 }
 
+// NOTE: This is a copy of the function in /inc/common.php
 function sysCmd($cmd) {
 	exec('sudo ' . $cmd . " 2>&1", $output);
 	return $output;
@@ -638,7 +639,7 @@ function detectCIFSShares($argv) {
 function detectNFSHosts() {
 	echo 'Scanning network for NFSv4 hosts...' . "\n";
 
-	$thisIpAddr = sysCmd('hostname -I')[0];
+	$thisIpAddr = sysCmd('hostname -I | cut -d " " -f 1')[0];
 	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
 	$port = '2049'; // NFSv4
 
@@ -656,7 +657,7 @@ function detectNFSHosts() {
 function detectMPDHosts() {
 	echo 'Scanning network for MPD hosts...' . "\n";
 
-	$thisIpAddr = sysCmd('hostname -I')[0];
+	$thisIpAddr = sysCmd('hostname -I | cut -d " " -f 1')[0];
 	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
 	$port = '6600'; // MPD
 

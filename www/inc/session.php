@@ -100,8 +100,8 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 			}
 			break;
 		case 'get_status':
-			$status = session_status();
 			// NOTE: $param can be used to mark locations in the caller(s) for example phpSession('get_status', ' 1')
+			$status = session_status();
 			debugLog('phpSession(get_status)' . $param . ': status=' . ($status == 0 ? 'PHP_SESSION_DISABLED' : ($status == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
 			return $status;
 			break;

@@ -89,10 +89,12 @@
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="players-modal-label">Players</h3>
 	</div>
-	<div class="modal-body">
+	<div id="players-modal-body" class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Submit" class="btn btn-primary" id="btn-players-submit" aria-hidden="true">Submit</button>
+		<span id="players-submit-confirm-msg"></span>
 	</div>
 </div>
 

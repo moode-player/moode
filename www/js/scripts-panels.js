@@ -92,7 +92,7 @@ jQuery(document).ready(function($) { 'use strict';
         getThumbHW();
 
         // Initiate loads
-        loadLibrary(); // renderTagAlbum');
+        loadLibrary(); // Tag and Album views
         renderRadioView();
         renderPlaylistView();
         $.getJSON('command/music-library.php?cmd=lsinfo', {'path': ''}, function(data) {
@@ -1593,7 +1593,38 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Players >>
     $('#players-menu-item').click(function(e) {
-        notify('discovering_players', '', '5_seconds');
+        notify('discovering_players', 'Please wait', 'infinite');
+    });
+    $('#players-modal').on('shown.bs.modal', function() {
+		$('#players-submit-confirm-msg').text('');
+	});
+
+    $(document).on('click', '#btn-players-dropdown', function(e) {
+        $('#players-modal-body').css('padding-bottom', '5em');
+    });
+    // NOTE: This global click handler is apparantly the only way to detect if a bootstrap menu is closed
+    $(document).on('click', function(e) {
+        if ($('#players-modal').css('display') == 'block' && !$('#players-dropdown').hasClass('open')) {
+            $('#players-modal-body').css('padding-bottom', '0px');
+        }
+    });
+    $('#btn-players-submit').click(function(e) {
+        var action = $('#players-action span').text();
+        var cmd = getParamOrValue('value', action);
+        var ipaddr = [];
+        $('#players-ul a').each(function() {
+            ipaddr.push($(this).attr('data-ipaddr'));
+        });
+        //console.log(ipaddr);
+        if (ipaddr.length > 0 && action != 'No action') {
+            if ($('#players-submit-confirm-msg').text() == '') {
+                $('#players-submit-confirm-msg').text('Click again to confirm');
+            } else {
+                $('#players-modal').modal('toggle');
+                notify('players_action_submit', cmd, '5_seconds');
+                $.post('players.php?cmd=' + cmd, {'ipaddr': ipaddr});
+            }
+        }
     });
 
     // Multiroom Receiver control
@@ -1652,7 +1683,7 @@ jQuery(document).ready(function($) { 'use strict';
     });
 
 	// Info button (i) show/hide toggle
-	$('.info-toggle').click(function(e) {
+    $(document).on('click', '.info-toggle', function(e) {
 		var spanId = '#' + $(this).data('cmd');
 		if ($(spanId).hasClass('hide')) {
 			$(spanId).removeClass('hide');

@@ -551,6 +551,9 @@ function engineCmd() {
                         location.reload(true);
                     }, DEFAULT_TIMEOUT);
                     break;
+                case 'close_notification':
+                    $('.ui-pnotify-closer').click();
+                    break;
                 case 'reduce_fpm_pool':
                     // This functions as a dummy command which has the effect of
                     // causing engine-cmd.php to start releasing idle connections

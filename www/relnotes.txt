@@ -27,13 +27,15 @@ Updates
 - UPD: Add option to moodeutl to print daemon sleep intervals (responsiveness)
 - UPD: Add options to moodeutl to print mount monitor and auto config logs
 - UPD: Improve renderer event handling when CamillaDSP volume is used
-- UPD: Improve various help text and labels
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
+- UPD: Improve Players >> feature by adding capability to send commands
+- UPD: Improve various help text and labels
 
 Bug fixes
 
 - FIX: Allo Katana DAC driver load fail on Pi-4B (** PENDING KERNEL UPDATE **)
 - FIX: Allo Boss 2 driver no sound output on 6.1 kernel (** PENDING KERNEL UPDATE **)
+- FIX: HDMI volume incorrectly set to +4dB at 100% instead of 0dB (PR/636)
 - FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
 - FIX: Extraneous hostname added to string returned by get_rx_status
 

@@ -177,7 +177,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 
 	// NFS
 	if ($_POST['mount']['type'] == 'nfs') {
-		$thisIpAddr = sysCmd('hostname -I')[0];
+		$thisIpAddr = getThisIpAddr();
 		$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
 		$port = '2049'; // NFSv4
 

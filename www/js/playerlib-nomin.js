@@ -66,8 +66,10 @@ function getParamOrValue (type, key) {
         ['No (searchable)',0],['HD only',1],['Text',2],['Badge',3],['No',9],
         // Radioview station types
         ['Regular','r'],['Favorite','f'],['Hidden','h'],
-        // Thumbnail resolutiona
-        ['Auto','Auto'],['400px','400px,75'],['500px','500px,60'],['600px','600px,60']
+        // Thumbnail resolutions
+        ['Auto','Auto'],['400px','400px,75'],['500px','500px,60'],['600px','600px,60'],
+        // Player group actions
+        ['Shutdown','shutdown'],['Restart','restart'],['Update library','update_library']
     ]);
 
     if (type == 'value') {
