@@ -69,7 +69,7 @@ function getParamOrValue (type, key) {
         // Thumbnail resolutions
         ['Auto','Auto'],['400px','400px,75'],['500px','500px,60'],['600px','600px,60'],
         // Player group actions
-        ['Shutdown','shutdown'],['Restart','restart'],['Update library','update_library']
+        ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library']
     ]);
 
     if (type == 'value') {
