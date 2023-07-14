@@ -1006,9 +1006,13 @@ function renderUI() {
             $('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentartist').html('<span class="playback-hd-badge"></span>' + MPD.json['album']);
             // Playbar
-            $('#playbar-currentalbum, #ss-currentalbum').html('<span id="playbar-hd-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
+            $('#playbar-currentalbum').html('<span id="playbar-hd-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
                 RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
-            $('#playbar-currentsong, #ss-currentsong').html(MPD.json['title']);
+            $('#playbar-currentsong').html(MPD.json['title']);
+            // Screen saver
+            $('#ss-currentsong').html(MPD.json['title']);
+            $('#ss-currentalbum').html('<span id="ss-hd-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
+                RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
         } else {
             // For albums
             // - #currentalbum = MPD.json['album']
@@ -1022,8 +1026,12 @@ function renderUI() {
             // Playbar and screen saver
             var artist = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
             var dash = (typeof(artist) == 'undefined' || artist == '') ? '' : ' - ';
- 			$('#playbar-currentsong, #ss-currentsong').html(artist + dash + MPD.json['title']);
-            $('#playbar-currentalbum, #ss-currentalbum').html('<span id="playbar-hd-badge"></span>' + MPD.json['album']);
+            // Playbar
+ 			$('#playbar-currentsong').html(artist + dash + MPD.json['title']);
+            $('#playbar-currentalbum').html('<span id="playbar-hd-badge"></span>' + MPD.json['album']);
+            // Screen saver
+            $('#ss-currentsong').html(artist + dash + MPD.json['title']);
+            $('#ss-currentalbum').html('<span id="ss-hd-badge"></span>' + MPD.json['album']);
         }
 
         // Set HD badge text
@@ -1031,13 +1039,21 @@ function renderUI() {
 
         // Show/hide HD badge
         if (MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9') {
+            // Playback
             if (MPD.json['artist'] == 'Radio station') {
                 $('#currentartist-div span.playback-hd-badge').show();
             } else {
                 $('#currentartist-div span.playback-hd-badge').hide();
                 $('#currentalbum-div span.playback-hd-badge').show();
             }
-            $('#playbar-hd-badge, #ss-hd-badge').show();
+            // Playbar
+            $('#playbar-hd-badge').show();
+            // Screen saver
+            if (SESSION.json['scnsaver_xmeta'] == 'Yes') {
+                $('#ss-hd-badge').show();
+            } else {
+                $('#ss-hd-badge').hide();
+            }
         } else {
             $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
