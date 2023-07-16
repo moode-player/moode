@@ -29,7 +29,13 @@ Updates
 - UPD: Improve renderer event handling when CamillaDSP volume is used
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 - UPD: Improve Players >> feature by adding capability to send commands
+- UPD: Improve positioning and size if of [HD] and [HiRes] badges
+- UPD: Improve kbps bitrate reporting for FLAC stations (assume 900 kbps)
 - UPD: Improve various help text and labels
+
+Radio Stations (New Image Only)
+
+- UPD: Radio Paradise stations to FLAC with metadata
 
 Bug fixes
 
@@ -38,6 +44,7 @@ Bug fixes
 - FIX: HDMI volume incorrectly set to +4dB at 100% instead of 0dB (PR/636)
 - FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
 - FIX: Extraneous hostname added to string returned by get_rx_status
+- FIX: Triggerhappy default user permissions not sufficient to run ALSA commands
 
 ################################################################################
 #

@@ -668,10 +668,12 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					// URL logo image
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
-				# NOTE: Hardcode displayed bitrate for .m3u8 320K stations because MPD does not pick up the rate
+				// NOTE: Hardcode displayed bitrates for .m3u8 320K and FLAC stations because MPD returns bitrate 0
 				if (strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320 kbps';
-				}
+				} else if (strpos($_SESSION[$song['file']]['name'], 'FLAC') !== false) {
+                    $current['bitrate'] = '900 kbps';
+                }
 			} else {
 				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';

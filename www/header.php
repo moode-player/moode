@@ -249,7 +249,6 @@
 				<div id="playbar-currentsong"></div>
                 <div id="playbar-title-line-2">
                     <span id="playbar-currentalbum"></span>
-                    <span id="playbar-hd-badge"></span>
                 </div>
 				<div id="playbar-mtime">
 					<div id="playbar-mcount"></div>

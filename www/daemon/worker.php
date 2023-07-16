@@ -895,8 +895,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 }
 
 // Start stream recorder
-if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
-	if ($_SESSION['recorder_status'] == 'On') {
+if ($_SESSION['feat_bitmask'] & FEAT_RECORDER) {
+	if ($_SESSION['recorder_status'] == 'Not installed') {
+		$started = ': Not installed';
+	} else if ($_SESSION['recorder_status'] == 'On') {
 		$started = ': started';
 		sysCmd('mpc enable "' . STREAM_RECORDER . '"');
 	} else {
@@ -904,12 +906,10 @@ if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] 
 	}
 	workerLog('worker: Stream recorder (available' . $started . ')');
 } else {
-	$status = $_SESSION['recorder_status'] == 'Not installed' ? 'available: not installed' : 'n/a';
-	workerLog('worker: Stream recorder ('. $status .')');
+	workerLog('worker: Stream recorder (n/a)');
 }
 
-// TEST
-// HTTPS-Only mode
+// TEST: HTTPS-Only mode
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	if (!isset($_SESSION['nginx_https_only'])) {
 		$_SESSION['nginx_https_only'] = '0'; // Initially Off
