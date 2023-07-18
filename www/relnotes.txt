@@ -26,6 +26,7 @@ Updates
 - UPD: Add System config option to adjust responsiveness of worker daemon
 - UPD: Add option to moodeutl to print daemon sleep intervals (responsiveness)
 - UPD: Add options to moodeutl to print mount monitor and auto config logs
+- UPD: Add option for predefined filters to Library Advanced search
 - UPD: Improve renderer event handling when CamillaDSP volume is used
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 - UPD: Improve Players >> feature by adding capability to send commands
