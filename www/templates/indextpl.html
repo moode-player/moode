@@ -338,11 +338,29 @@
             </div>
         </div>
 
-		<span class="h5">Search all tags</span>
-		<div class="control-group">
-            <label class="control-label" for="dbsearch-alltags">Search string</label>
+		<div id="predefined-filters-div" class="control-group">
+            <label class="control-label" for="dbsearch-predefined-filters">Predefined filters</label>
             <div class="controls">
-                <input id="dbsearch-alltags" class="input-large" type="text" autofocus>
+                <input id="dbsearch-predefined-filters" class="input-large" type="text" autofocus>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-dbsearch-predefined-filters" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-dbsearch-predefined-filters" class="help-block hide">
+					The filters listed below will override "All tags" or "Specific tags" searches.<br>
+					<b>Encoded</b> [bits/rate]<br>
+					<b>Format</b> [.ext]<br>
+					<b>Folder</b> [path]<br>
+					<b>HDonly</b> Sample rate > 44.1 kHz or bit depth > 16<br>
+					<b>Lossless</b> Formats include AIF|AIFF|ALAC|FLAC|DFF|DSF|WAV<br>
+					<b>Lossy</b> Formats other than Lossless above<br>
+					<b>Year</b> [yyyy] or [yyyy-yyyy]<br>
+					Examples: encoded 24/96 | encoded 192 | format .dsf | folder u2/achtung baby | year 1962 | year 1994-1998
+                </span>
+            </div>
+        </div>
+
+		<div class="control-group">
+            <label class="control-label" for="dbsearch-alltags">Search all tags</label>
+            <div class="controls">
+                <input id="dbsearch-alltags" class="input-large" type="text">
 				<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-alltags" class="help-block hide">
                 	All tags are searched using an OR relationship.

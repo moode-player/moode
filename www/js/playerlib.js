@@ -3600,14 +3600,6 @@ function str2hex(tempcolor) {
 	return temp;
 }
 
-// Sekrit search function
-function dbFastSearch() {
-	$('#dbsearch-alltags').val($('#dbfs').val());
-	$('#db-search-submit').click();
-	$('#dbfs').blur();
-	return false;
-}
-
 // Generate a set of colors based on the background and text color for use in buttons, etc.
 // temp1 = theme/adaptBack(ground)
 // temp2 = theme/adaptColor
@@ -4046,12 +4038,19 @@ $('#preferences-modal .h5').click(function(e) {
 	$(this).parent('div.accordian').toggleClass('active');
 });
 
+// Folder view "search" input
 $('#dbfs').on('keyup', function(e) {
 	if (e.key == 'Enter') {
 		e.preventDefault();
  		dbFastSearch();
 	}
 });
+function dbFastSearch() {
+	$('#dbsearch-alltags').val($('#dbfs').val());
+	$('#db-search-submit').click();
+	$('#dbfs').blur();
+	return false;
+}
 
 // Synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly idle perf
 function syncTimers() {

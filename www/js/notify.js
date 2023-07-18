@@ -91,6 +91,9 @@ function notify(title, msg, duration = '2_seconds') {
         // Players >>
         discovering_players: 'Discovering players...',
         players_action_submit: 'Action submitted',
+        // Advanced search
+        search_fields_empty: 'Search fields are empty',
+        search_filter_invalid: 'Predefined filter invalid',
         // Miscellaneous
         upd_clock_radio: 'Clock radio updated',
 		settings_updated: 'Settings updated',

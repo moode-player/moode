@@ -872,57 +872,6 @@ jQuery(document).ready(function($) { 'use strict';
 			renderFolderView(data, UI.path);
         });
 	});
-    // TODO: Enhance to allow searches to be saved as libcache_subset_NAME.json
-    // This is part of the TBD Library Subsets feature
-	$('#db-search-submit').click(function(e) {
-		var searchStr = '';
-		if ($('#dbsearch-alltags').val() != '') {
-			searchStr = $('#dbsearch-alltags').val().trim();
-            if (currentView == 'folder') {
-                $.getJSON('command/music-library.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {
-                    renderFolderView(data, '', searchStr);
-                });
-            }
-            else if (currentView == 'tag' || currentView == 'album') {
-                searchStr = "(any contains '" + searchStr + "')";
-                applyLibFilter('tags', searchStr);
-            }
-		}
-		else {
-			searchStr += $('#dbsearch-genre').val() == '' ? '' : " AND (genre contains '" + $('#dbsearch-genre').val().trim() + "')";
-			searchStr += $('#dbsearch-artist').val() == '' ? '' : " AND (artist contains '" + $('#dbsearch-artist').val().trim() + "')";
-			searchStr += $('#dbsearch-album').val() == '' ? '' : " AND (album contains '" + $('#dbsearch-album').val().trim() + "')";
-			searchStr += $('#dbsearch-title').val() == '' ? '' : " AND (title contains '" + $('#dbsearch-title').val().trim() + "')";
-			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : " AND (albumartist contains '" + $('#dbsearch-albumartist').val().trim() + "')";
-			searchStr += $('#dbsearch-date').val() == '' ? '' : " AND (date contains '" + $('#dbsearch-date').val().trim() + "')";
-			searchStr += $('#dbsearch-composer').val() == '' ? '' : " AND (composer contains '" + $('#dbsearch-composer').val().trim() + "')";
-            searchStr += $('#dbsearch-conductor').val() == '' ? '' : " AND (conductor contains '" + $('#dbsearch-conductor').val().trim() + "')";
-			searchStr += $('#dbsearch-performer').val() == '' ? '' : " AND (performer contains '" + $('#dbsearch-performer').val().trim() + "')";
-            searchStr += $('#dbsearch-work').val() == '' ? '' : " AND (work contains '" + $('#dbsearch-work').val().trim() + "')";
-			searchStr += $('#dbsearch-comment').val() == '' ? '' : " AND (comment contains '" + $('#dbsearch-comment').val().trim() + "')";
-			searchStr += $('#dbsearch-file').val() == '' ? '' : " AND (file contains '" + $('#dbsearch-file').val().trim() + "')";
-			if (searchStr != '') {
-                searchStr = searchStr.slice(5);
-                if (currentView == 'folder') {
-                    $.getJSON('command/music-library.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {
-                        renderFolderView(data, '', searchStr);
-                    });
-                }
-                else if (currentView == 'tag' || currentView == 'album') {
-                    applyLibFilter('tags', searchStr);
-                }
-			}
-		}
-	});
-	$('#db-search-reset').click(function(e) {
-		$('#dbsearch-alltags, #dbsearch-genre, #dbsearch-artist, #dbsearch-album, #dbsearch-title, #dbsearch-albumartist, #dbsearch-date, #dbsearch-composer, #dbsearch-conductor, #dbsearch-performer, #dbsearch-comment, #dbsearch-file').val('');
-		$('#dbsearch-alltags').focus();
-	});
-	$('#dbsearch-modal').on('shown.bs.modal', function(e) {
-		$('#db-search-results').css('font-weight', 'normal');
-		$('.database li').removeClass('active');
-		$('#dbsearch-alltags').focus();
-	});
 	$('#db-search-results').click(function(e) {
 		$('.database li').removeClass('active');
 		$('#db-search-results').css('font-weight', 'bold');
@@ -1290,6 +1239,93 @@ jQuery(document).ready(function($) { 'use strict';
     //
     // MISCELLANEOUS
     //
+    // Advanced search (Folder/Tag/Album views)
+	$('#db-search-submit').click(function(e) {
+        var searchType = '';
+		var searchStr = '';
+
+        if ($('#dbsearch-predefined-filters').val() != '') {
+            searchType = $('#dbsearch-predefined-filters').val().trim().toLowerCase();
+            searchStr = '';
+        } else if ($('#dbsearch-alltags').val() != '') {
+            searchType = 'any';
+			searchStr = currentView == 'folder'? $('#dbsearch-alltags').val().trim() : "(any contains '" + $('#dbsearch-alltags').val().trim() + "')";
+		} else {
+            searchType = 'specific'; // For Folder view only
+			searchStr += $('#dbsearch-genre').val() == '' ? '' : " AND (genre contains '" + $('#dbsearch-genre').val().trim() + "')";
+			searchStr += $('#dbsearch-artist').val() == '' ? '' : " AND (artist contains '" + $('#dbsearch-artist').val().trim() + "')";
+			searchStr += $('#dbsearch-album').val() == '' ? '' : " AND (album contains '" + $('#dbsearch-album').val().trim() + "')";
+			searchStr += $('#dbsearch-title').val() == '' ? '' : " AND (title contains '" + $('#dbsearch-title').val().trim() + "')";
+			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : " AND (albumartist contains '" + $('#dbsearch-albumartist').val().trim() + "')";
+			searchStr += $('#dbsearch-date').val() == '' ? '' : " AND (date contains '" + $('#dbsearch-date').val().trim() + "')";
+			searchStr += $('#dbsearch-composer').val() == '' ? '' : " AND (composer contains '" + $('#dbsearch-composer').val().trim() + "')";
+            searchStr += $('#dbsearch-conductor').val() == '' ? '' : " AND (conductor contains '" + $('#dbsearch-conductor').val().trim() + "')";
+			searchStr += $('#dbsearch-performer').val() == '' ? '' : " AND (performer contains '" + $('#dbsearch-performer').val().trim() + "')";
+            searchStr += $('#dbsearch-work').val() == '' ? '' : " AND (work contains '" + $('#dbsearch-work').val().trim() + "')";
+			searchStr += $('#dbsearch-comment').val() == '' ? '' : " AND (comment contains '" + $('#dbsearch-comment').val().trim() + "')";
+			searchStr += $('#dbsearch-file').val() == '' ? '' : " AND (file contains '" + $('#dbsearch-file').val().trim() + "')";
+			if (searchStr != '') {
+                searchStr = searchStr.slice(5);
+			} else {
+                searchType = '';
+            }
+		}
+        if (searchType == '' && searchStr == '') {
+            notify('search_fields_empty', 'Search not performed', '5_seconds');
+        } else {
+            if (currentView == 'folder') {
+                $.getJSON('command/music-library.php?cmd=search' + '&tagname=' + searchType, {'query': searchStr}, function(data) {
+                    renderFolderView(data, '', searchStr);
+                });
+            } else if (currentView == 'tag' || currentView == 'album') {
+                if (searchType == 'any' || searchType == 'specific') {
+                    // Search by tags
+                    searchType = 'tags';
+                } else {
+                    // Search by predefined filter
+                    parts = splitStringAtFirstSpace(searchType);
+                    if (parts.length == 2) {
+                        searchType = parts[0];
+                        searchStr = parts[1];
+                    }
+                }
+
+                if (GLOBAL.allFilters.includes(searchType)) {
+                    var parts = splitStringAtFirstSpace(searchType);
+                    if (parts.length == 2) {
+                        searchStr = parts[1];
+                    }
+                    applyLibFilter(searchType, searchStr);
+                } else {
+                    notify('search_filter_invalid', 'Search not performed', '5_seconds');
+                }
+            }
+        }
+	});
+    $('#db-search-reset').click(function(e) {
+        var specificTags =
+            '#dbsearch-genre,' +
+            '#dbsearch-artist,' +
+            '#dbsearch-album,' +
+            '#dbsearch-title,' +
+            '#dbsearch-albumartist,' +
+            '#dbsearch-date,' +
+            '#dbsearch-composer,' +
+            '#dbsearch-conductor,' +
+            '#dbsearch-performer,' +
+            '#dbsearch-work,' +
+            '#dbsearch-comment,' +
+            '#dbsearch-file';
+        $('#dbsearch-predefined-filters, #dbsearch-alltags,' + specificTags).val('');
+        $('#dbsearch-predefined-filters').focus();
+	});
+	$('#dbsearch-modal').on('shown.bs.modal', function(e) {
+        currentView == 'folder' ? $('#predefined-filters-div').hide() : $('#predefined-filters-div').show();
+		$('#db-search-results').css('font-weight', 'normal');
+		$('.database li').removeClass('active');
+        $('#dbsearch-predefined-filters').focus();
+	});
+
     // Queue search
 	$('#playqueue-filter').keyup(function(e){
 		if (!showSearchResetPq) {
@@ -1328,7 +1364,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.playqueue li').css('display', 'block');
 	});
 
-    // Library search
+    // Library Tag/Album search
     // NOTE: The keydown event was added to work around an issue where Firefox steals the Enter key and keyup never happens.
     $('#lib-album-filter').on('keydown keyup', function(e){
         //console.log(e);
@@ -1352,13 +1388,11 @@ jQuery(document).ready(function($) { 'use strict';
             if (GLOBAL.allFilters.includes(filter[0])) {
                 if (GLOBAL.twoArgFilters.includes(filter[0])) {
                     applyLibFilter(filter[0], filter[1]);
-                }
-                else {
+                } else {
                     applyLibFilter(filter[0]);
                 }
-            }
-            // Default to filterType = any
-            else {
+            } else {
+                // Default to filterType = any
                 applyLibFilter('any', filter[0] + (filter[1] ? ' ' + filter[1] : ''));
             }
 
@@ -1366,7 +1400,6 @@ jQuery(document).ready(function($) { 'use strict';
             $('#viewswitch').click();
         }
 	});
-
 	$('#searchResetLib').click(function(e) {
 		e.preventDefault();
 		document.getElementById("lib-album-filter").focus();
