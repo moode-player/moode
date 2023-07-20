@@ -1245,13 +1245,14 @@ jQuery(document).ready(function($) { 'use strict';
 		var searchStr = '';
 
         if ($('#dbsearch-predefined-filters').val() != '') {
+            // NOTE: This input field is hidden in Folder view because ut does not support predefined filters
             searchType = $('#dbsearch-predefined-filters').val().trim().toLowerCase();
             searchStr = '';
         } else if ($('#dbsearch-alltags').val() != '') {
             searchType = 'any';
 			searchStr = currentView == 'folder'? $('#dbsearch-alltags').val().trim() : "(any contains '" + $('#dbsearch-alltags').val().trim() + "')";
 		} else {
-            searchType = 'specific'; // For Folder view only
+            searchType = 'specific'; // NOTE: This searchType is for Folder view only
 			searchStr += $('#dbsearch-genre').val() == '' ? '' : " AND (genre contains '" + $('#dbsearch-genre').val().trim() + "')";
 			searchStr += $('#dbsearch-artist').val() == '' ? '' : " AND (artist contains '" + $('#dbsearch-artist').val().trim() + "')";
 			searchStr += $('#dbsearch-album').val() == '' ? '' : " AND (album contains '" + $('#dbsearch-album').val().trim() + "')";
@@ -1274,30 +1275,26 @@ jQuery(document).ready(function($) { 'use strict';
             notify('search_fields_empty', 'Search not performed', '5_seconds');
         } else {
             if (currentView == 'folder') {
+                // NOTE: searchType will be 'any' or 'specific'
                 $.getJSON('command/music-library.php?cmd=search' + '&tagname=' + searchType, {'query': searchStr}, function(data) {
                     renderFolderView(data, '', searchStr);
                 });
             } else if (currentView == 'tag' || currentView == 'album') {
                 if (searchType == 'any' || searchType == 'specific') {
                     // Search by tags
-                    searchType = 'tags';
+                    applyLibFilter('tags', searchStr);
                 } else {
                     // Search by predefined filter
-                    parts = splitStringAtFirstSpace(searchType);
-                    if (parts.length == 2) {
+                    var parts = splitStringAtFirstSpace(searchType);
+                    if (parts.length == 2) { // Two arg filter
                         searchType = parts[0];
                         searchStr = parts[1];
                     }
-                }
-
-                if (GLOBAL.allFilters.includes(searchType)) {
-                    var parts = splitStringAtFirstSpace(searchType);
-                    if (parts.length == 2) {
-                        searchStr = parts[1];
+                    if (GLOBAL.allFilters.includes(searchType)) {
+                        applyLibFilter(searchType, searchStr);
+                    } else {
+                        notify('predefined_filter_invalid', 'Search not performed', '5_seconds');
                     }
-                    applyLibFilter(searchType, searchStr);
-                } else {
-                    notify('search_filter_invalid', 'Search not performed', '5_seconds');
                 }
             }
         }
