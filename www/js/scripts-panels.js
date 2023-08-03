@@ -1239,6 +1239,90 @@ jQuery(document).ready(function($) { 'use strict';
     //
     // MISCELLANEOUS
     //
+    // Saved Searches (Tag/Album view)
+    $('#saved-search-modal').on('shown.bs.modal', function(e) {
+        $('#saved-search-items li').removeClass('active');
+        updateSavedSearchModal();
+	});
+    // Click Subset item
+    $('#saved-search-items').on('click', '.saved-search-item', function(e) {
+        // Store item index for use in context menu
+        UI.dbEntry[0] = $('#saved-search-items .saved-search-item').index(this);
+        // Don't display context menu for active item since it can't be deleted
+        if ($('#saved-search-item-' + (UI.dbEntry[0] + 1).toString()).data('name') == SESSION.json['lib_active_search']) {
+            return false;
+        } else {
+            // Hide delete option for LIB_FULL_LIBRARY which will always be item 0
+            UI.dbEntry[0] == 0 ? $('#menu-item-delete-saved-search').hide() : $('#menu-item-delete-saved-search').show();
+        	$('#saved-search-items li').removeClass('active');
+            $('#saved-search-item-' + (UI.dbEntry[0] + 1).toString()).addClass('active');
+        }
+    });
+    // Activate or Delete saved search
+    $('#context-menu-saved-search-contents a').click(function(e) {
+        var cmd = $(this).data('cmd');
+        var name = $('#saved-search-item-' + (UI.dbEntry[0] + 1).toString()).data('name');
+        if (cmd == 'activate_saved_search') {
+            SESSION.json['lib_active_search'] = name;
+            $.post('command/music-library.php?cmd=' + cmd, {'name': name}, function(data) {
+                applyLibFilter(data['filter_type'], data['filter_str'])
+                updateSavedSearchModal();
+            }, 'json');
+        } else {
+            // Delete
+            $.post('command/music-library.php?cmd=' + cmd, {'name': name}, function() {
+                updateSavedSearchModal();
+            });
+        }
+	});
+    // Save search
+    $('#btn-save-search').click(function(e) {
+        var name = $('#saved-search-name').val().trim();
+        if (name == '') {
+            notify('search_name_blank');
+        } else {
+            e.stopImmediatePropagation();
+            $.post('command/music-library.php?cmd=create_saved_search', {'name': name});
+            // Allow worker job to complete
+            setTimeout(function() {
+    			updateSavedSearchModal();
+    		}, 2000);
+
+        }
+    });
+    // Update Saved Search items
+    function updateSavedSearchModal() {
+        // Name input and current search criteria
+        $('#saved-search-name').val('');
+        $('#lib-search-criteria').text(SESSION.json['library_flatlist_filter']
+            + (SESSION.json['library_flatlist_filter_str'] == '' ? '' : ': ' + SESSION.json['library_flatlist_filter_str']));
+        // Subset list
+        $.post('command/music-library.php?cmd=get_saved_searches', function(data) {
+            var element = document.getElementById('saved-search-items');
+            element.innerHTML = '';
+            if (data.length > 0) {
+                var output = '';
+                for (i = 0; i < data.length; i++) {
+                    var active = SESSION.json['lib_active_search'] == data[i]['name'] ? '<span id="saved-search-item-check" style="float:right;"><i class="fal fa-check"></i></span>' : '';
+                    output += '<li id="saved-search-item-' + (i + 1)
+                        + '" class="saved-search-item" data-toggle="context" data-target="#context-menu-saved-search-contents" '
+                        + 'data-name="' + data[i]['name'] + '">';
+                    output += '<span class="saved-search-item-line1">' + data[i]['name'] + active + '</span>';
+                    output += '<span class="saved-search-item-line2">' + data[i]['filter'] + '</span>';
+                    output += '</li>';
+                }
+            } else {
+                // ERROR: No saved searches found (item 1 LIB_FULL_LIBRARY should always exist
+            }
+            element.innerHTML = output;
+        }, 'json');
+    }
+    // Clear active search
+    function clearActiveSearch() {
+        SESSION.json['lib_active_search'] = 'None';
+        $.post('command/music-library.php?cmd=clear_active_search');
+    }
+
     // Advanced search (Folder/Tag/Album views)
 	$('#db-search-submit').click(function(e) {
         var searchType = '';
@@ -1275,6 +1359,7 @@ jQuery(document).ready(function($) { 'use strict';
             notify('search_fields_empty', 'Search not performed', '5_seconds');
         } else {
             if (currentView == 'folder') {
+                clearActiveSearch();
                 // NOTE: searchType will be 'any' or 'specific'
                 $.getJSON('command/music-library.php?cmd=search' + '&tagname=' + searchType, {'query': searchStr}, function(data) {
                     renderFolderView(data, '', searchStr);
@@ -1282,6 +1367,7 @@ jQuery(document).ready(function($) { 'use strict';
             } else if (currentView == 'tag' || currentView == 'album') {
                 if (searchType == 'any' || searchType == 'specific') {
                     // Search by tags
+                    clearActiveSearch();
                     applyLibFilter('tags', searchStr);
                 } else {
                     // Search by predefined filter
@@ -1291,6 +1377,7 @@ jQuery(document).ready(function($) { 'use strict';
                         searchStr = parts[1];
                     }
                     if (GLOBAL.allFilters.includes(searchType)) {
+                        clearActiveSearch();
                         applyLibFilter(searchType, searchStr);
                     } else {
                         notify('predefined_filter_invalid', 'Search not performed', '5_seconds');
@@ -1314,13 +1401,58 @@ jQuery(document).ready(function($) { 'use strict';
             '#dbsearch-comment,' +
             '#dbsearch-file';
         $('#dbsearch-predefined-filters, #dbsearch-alltags,' + specificTags).val('');
-        $('#dbsearch-predefined-filters').focus();
+        //DELETE$('#dbsearch-predefined-filters').focus();
 	});
 	$('#dbsearch-modal').on('shown.bs.modal', function(e) {
         currentView == 'folder' ? $('#predefined-filters-div').hide() : $('#predefined-filters-div').show();
 		$('#db-search-results').css('font-weight', 'normal');
 		$('.database li').removeClass('active');
-        $('#dbsearch-predefined-filters').focus();
+        //DELETE$('#dbsearch-predefined-filters').focus();
+	});
+
+    // Library Tag/Album search
+    // NOTE: The keydown event was added to work around an issue where Firefox steals the Enter key and keyup never happens.
+    $('#lib-album-filter').on('keydown keyup', function(e){
+        //console.log(e);
+        if (e.type == 'keyup') {
+            e.preventDefault();
+        }
+
+        $('#lib-album-filter').val().length > 0 ? $('#searchResetLib').show() : $('#searchResetLib').hide();
+
+        if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
+            clearActiveSearch();
+            $('#lib-album-filter').blur();
+
+            // Parse search string
+            var searchStr = $(this).val().trim().toLowerCase();
+            var filter = splitStringAtFirstSpace(searchStr);
+            if (filter.length == 1) {
+                filter[1] = '';
+            }
+
+            // Apply filter
+            if (GLOBAL.allFilters.includes(filter[0])) {
+                if (GLOBAL.twoArgFilters.includes(filter[0])) {
+                    applyLibFilter(filter[0], filter[1]);
+                } else {
+                    applyLibFilter(filter[0]);
+                }
+            } else {
+                // Default to filterType = any
+                applyLibFilter('any', filter[0] + (filter[1] ? ' ' + filter[1] : ''));
+            }
+
+            // Close menu
+            $('#viewswitch').click();
+        }
+	});
+	$('#searchResetLib').click(function(e) {
+		e.preventDefault();
+		document.getElementById("lib-album-filter").focus();
+        $('#lib-album-filter').val('');
+        $('#searchResetLib').hide();
+		return false;
 	});
 
     // Queue search
@@ -1359,50 +1491,6 @@ jQuery(document).ready(function($) { 'use strict';
 		$("#searchResetPlayqueue").hide();
 		showSearchResetPq = false;
 		$('.playqueue li').css('display', 'block');
-	});
-
-    // Library Tag/Album search
-    // NOTE: The keydown event was added to work around an issue where Firefox steals the Enter key and keyup never happens.
-    $('#lib-album-filter').on('keydown keyup', function(e){
-        //console.log(e);
-        if (e.type == 'keyup') {
-            e.preventDefault();
-        }
-
-        $('#lib-album-filter').val().length > 0 ? $('#searchResetLib').show() : $('#searchResetLib').hide();
-
-        if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
-            $('#lib-album-filter').blur();
-
-            // Parse search string
-            var searchStr = $(this).val().trim().toLowerCase();
-            var filter = splitStringAtFirstSpace(searchStr);
-            if (filter.length == 1) {
-                filter[1] = '';
-            }
-
-            // Apply filter
-            if (GLOBAL.allFilters.includes(filter[0])) {
-                if (GLOBAL.twoArgFilters.includes(filter[0])) {
-                    applyLibFilter(filter[0], filter[1]);
-                } else {
-                    applyLibFilter(filter[0]);
-                }
-            } else {
-                // Default to filterType = any
-                applyLibFilter('any', filter[0] + (filter[1] ? ' ' + filter[1] : ''));
-            }
-
-            // Close menu
-            $('#viewswitch').click();
-        }
-	});
-	$('#searchResetLib').click(function(e) {
-		e.preventDefault();
-		document.getElementById("lib-album-filter").focus();
-        $('#lib-album-filter').val('');
-        $('#searchResetLib').hide();
-		return false;
 	});
 
 	// Playback history search

@@ -152,13 +152,13 @@
 					</form>
 					<span aria-label="Reset" id="searchResetLib" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
 				</button>
-				<button aria-label="Advanced Search" class="btn adv-search-btn menu-separator hide" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i> Advanced search</button>
+				<button aria-label="Advanced Search" class="btn adv-search-btn hide" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i> Advanced search</button>
+				<button aria-label="Saved searches" class="btn saved-search-btn menu-separator" href="#saved-search-modal" data-toggle="modal"><i class="fas fa-search-plus"></i> Saved searches</button>
 				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Album" class="btn album-view-btn" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Playlist" class="btn playlist-view-btn" href="#playlist-panel"><i class="fas fa-list-alt"></i> Playlist<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Subset" class="btn filters-btn menu-separator" href="#subsets-modal"><i class="fas fa-clone"></i> Subset</button>
+				<button aria-label="Playlist" class="btn playlist-view-btn menu-seperatior" href="#playlist-panel"><i class="fas fa-list-alt"></i> Playlist<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="All Music" class="btn view-all no-icon">All Music<span><i class="fal fa-check"></i></span></button>
 				<button aria-label="Recently Added" class="btn view-recents no-icon">Recently Added<span><i class="fal fa-check"></i></span></button>
 			</ul>
@@ -308,21 +308,6 @@
 	</div>
 </div>
 
-<!-- LIBRARY FILTERS -->
-<!-- Note this feature has not been implemented yet -->
-<div id="filters-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="filters-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="filters-modal-label">Library Filters</h3>
-	</div>
-	<div class="modal-body">
-		Filter list goes here
-	</div>
-	<div class="modal-footer">
-		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-update-filter btn-primary" data-dismiss="modal">Save</button>
-	</div>
-</div>
-
 <!-- ADVANCED SEARCH -->
 <div id="dbsearch-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -341,7 +326,7 @@
 		<div id="predefined-filters-div" class="control-group">
             <label class="control-label" for="dbsearch-predefined-filters">Predefined filter</label>
             <div class="controls">
-                <input id="dbsearch-predefined-filters" class="input-large" type="text" autofocus>
+                <input id="dbsearch-predefined-filters" class="input-large" type="text">
 				<a aria-label="Help" class="info-toggle" data-cmd="info-dbsearch-predefined-filters" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-dbsearch-predefined-filters" class="help-block hide">
 					The filters listed below will override "All tags" or "Specific tags" searches. Filter names are case insensative.<br>
@@ -429,6 +414,45 @@
 		<button aria-label="Submit" class="btn btn-primary" id="db-search-submit" data-dismiss="modal">Submit</button>
 	</div>
 </div>
+
+<!-- SAVED SEARCHES (TAG/ALBUM VIEW) -->
+<div id="saved-search-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="saved-search-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="saved-search-modal-label">Saved searches</h3>
+	</div>
+	<div class="modal-body">
+		<div class="control-group">
+            <label class="control-label" for="saved-search-name">Save as name</label>
+            <div class="controls">
+                <input id="saved-search-name" class="input-large" type="text" name="saved_search_name" maxlength="200" value="">
+				<a aria-label="Help" class="info-toggle" data-cmd="info-saved-search-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-saved-search-name" class="help-block hide">
+                	Enter a name to create a new Saved Search based on the current search criteria below. If a Saved Search of the same name already exists it will be overwritten.
+                </span>
+            </div>
+			<label class="control-label" for="lib-search-criteria">Current search criterua</label>
+			<div class="controls">
+				<div id="lib-search-criteria" class="input-large"></div>
+			</div>
+        </div>
+		<div id="saved-search-items-container">
+			<ul id="saved-search-items"></ul>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Save" id="btn-save-search" class="btn btn-primary" data-dismiss="modal">Save</button>
+	</div>
+</div>
+
+
+<div id="delete-saved-search-item" class="saved-search-item hide">
+	<button id="btn-delete-saved-search-item" class="saved-search-item btn btn-primary btn-small modal-button-style">Delete</button>;
+</div>
+<div id="activate-saved-search-item" class="saved-search-item hide">
+	<button id="btn-activate-saved-search-item" class="saved-search-item btn btn-primary btn-small modal-button-style">Activate</button>;
+</div>
+
 
 <!-- QUEUE ITEM DELETE/MOVE -->
 <div id="delete-playqueue-item-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="delete-playqueue-item-modal-label" aria-hidden="true">
@@ -2647,6 +2671,13 @@
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="delete_pl_item"><i class="fal fa-trash sx"></i> Delete item(s)</a></li>
 			<li><a href="#notarget" data-cmd="move_pl_item"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-saved-search-contents" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="activate_saved_search"><i class="fal fa-filter sx"></i> Activate</a></li>
+			<li id="menu-item-delete-saved-search"><a href="#notarget" data-cmd="delete_saved_search"><i class="fal fa-trash sx"></i> Delete</a></li>
 		</ul>
 	</div>
 

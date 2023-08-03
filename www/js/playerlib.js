@@ -59,6 +59,9 @@ const RADIO_BITRATE_THRESHOLD       = 128;
 // For legacy Radio Manager station export
 const STATION_EXPORT_DIR = '/'; // var/www
 
+// Library Subsets
+const LIB_FULL_LIBRARY = 'Full Library (Default)';
+
 var UI = {
     knob: null,
     path: '',
@@ -4096,18 +4099,18 @@ function makeActive (vswitch, panel, view) {
 		case 'radio':
 			$('#viewswitch').addClass('vr');
 			$('#playbar-toggles .add-item-to-favorites').show();
-            $('#random-album, .adv-search-btn').hide();
+            $('#random-album, .adv-search-btn, .saved-searchs-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .add-item-to-favorites').show();
-            $('#random-album, .adv-search-btn').hide();
+            $('#random-album, .adv-search-btn, .saved-search-btn').hide();
 			break;
         case 'tag':
 			$('#viewswitch').addClass('vt');
             $('#playbar-toggles .add-item-to-favorites').hide();
-            $('#random-album, .adv-search-btn').show();
+            $('#random-album, .adv-search-btn, .saved-search-btn').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
             $('#index-albumcovers').attr('style', 'display:none!important');
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
@@ -4116,7 +4119,7 @@ function makeActive (vswitch, panel, view) {
 		case 'album':
 			$('#viewswitch').addClass('va');
             $('#playbar-toggles .add-item-to-favorites').hide();
-            $('#random-album, .adv-search-btn').show();
+            $('#random-album, .adv-search-btn, .saved-search-btn').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
@@ -4133,7 +4136,7 @@ function makeActive (vswitch, panel, view) {
         case 'playlist':
 			$('#viewswitch').addClass('vp');
 			$('#playbar-toggles .add-item-to-favorites').show();
-            $('#random-album, .adv-search-btn').hide();
+            $('#random-album, .adv-search-btn, .saved-search-btn').hide();
 			lazyLode('playlist');
 			break;
 	}
@@ -4366,13 +4369,18 @@ function applyLibFilter(filterType, filterStr = '') {
     //console.log(filterType, filterStr);
     SESSION.json['library_flatlist_filter'] = filterType;
     SESSION.json['library_flatlist_filter_str'] = filterStr;
+    // NOTE: SESSION.json['lib_active_search'] is set in the following:
+    // - scripts-panels.js $('##context-menu-saved-search-contents a').click
+    // - sctipts-library.js $('#genreheader, #library-header').on('click'
 
     // Clear filtered libcache files (_folder, _format, _tag)
     $.post('command/music-library.php?cmd=clear_libcache_filtered', function() {
         // Apply new filter
         $.post('command/cfg-table.php?cmd=upd_cfg_system',
-            {'library_flatlist_filter': filterType,
-            'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str']},
+            //{'library_flatlist_filter': filterType,
+            {'library_flatlist_filter': SESSION.json['library_flatlist_filter'],
+            'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str'],
+            'lib_active_search': SESSION.json['lib_active_search']},
             function() {
             LIB.recentlyAddedClicked = false;
             LIB.filters.genres.length = 0;

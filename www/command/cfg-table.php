@@ -99,6 +99,10 @@ switch ($_GET['cmd']) {
 			$_SESSION['lib_scope'] = $_POST['lib_scope'];
 			unset($_POST['lib_scope']);
 		}
+		if (isset($_POST['lib_active_search'])) {
+			$_SESSION['lib_active_search'] = $_POST['lib_active_search'];
+			unset($_POST['lib_active_search']);
+		}
 		if (isset($_POST['on_screen_kbd'])) {
 			$_SESSION['on_screen_kbd'] = $_POST['on_screen_kbd'];
 			unset($_POST['on_screen_kbd']);
@@ -137,6 +141,7 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['updater_auto_check'] = $_SESSION['updater_auto_check'];
 	$cfgSystem['updater_available_update'] = $_SESSION['updater_available_update'];
 	$cfgSystem['lib_scope'] = $_SESSION['lib_scope'];
+	$cfgSystem['lib_active_search'] = $_SESSION['lib_active_search'];
 	$cfgSystem['auto_coverview'] = $_SESSION['auto_coverview'];
 	$cfgSystem['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
 }
