@@ -21,9 +21,8 @@
 # 2. To match MPD listings, results for /media are prepended with "USB/".
 # 3. A music file must match one of the extensions listed below obtained from decoder-plugin values via MPD -V.
 #
-# Option to scan for "Default" or "All" audio formats
-# $_SESSION['library_thmgen_scan']
-#
+# moOde audio player (C) 2024 Tim Curtis
+# Option to scan for "Default" or "All" audio formats: $_SESSION['library_thmgen_scan']
 # NOTE: Including image file formats in the REGEX allows the thumbnail generator to create thumbs for
 # parent folders of the Album folder.
 #
