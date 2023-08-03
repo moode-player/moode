@@ -597,7 +597,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playlist-items li.active,
 #playlist-names li.active {background: var(--accentxta);}
 
-#saved-search-items li span,
+#saved-search-items li span {display:block;}
 #playlist-items li span,
 #playlist-names li {display:block;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 
