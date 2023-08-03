@@ -17,7 +17,7 @@
 
 New Features
 
-- NEW: Library Saved Searches
+- NEW: Save/Reuse searches for Library Tag/Album view 
 
 Updates
 
