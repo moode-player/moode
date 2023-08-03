@@ -15,6 +15,10 @@
 #
 ################################################################################
 
+New Features
+
+- NEW: Library Saved Searches
+
 Updates
 
 - UPD: Add support for LDAC encoder to Bluetooth
