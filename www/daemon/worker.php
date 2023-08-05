@@ -153,6 +153,8 @@ sysCmd('touch ' . LIBCACHE_BASE . '_hdonly.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossless.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossy.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_tag.json');
+sysCmd("echo -n '" . json_encode(['filter_type' => 'full_lib', 'filter_str' => '']) . "'" .
+	' | tee "' . LIBSEARCH_BASE . LIB_FULL_LIBRARY . '.json" > /dev/null');
 sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
 sysCmd('touch /var/log/shairport-sync.log');
@@ -1040,9 +1042,14 @@ if (!isset($_SESSION['lib_scope'])) {
 	$_SESSION['lib_scope'] = 'all';
 }
 workerLog('worker: Library scope (' . $_SESSION['lib_scope'] . ')');
+// Library active search
+if (!isset($_SESSION['lib_active_search'])) {
+	$_SESSION['lib_active_search'] = 'None';
+}
+workerLog('worker: Library active search (' . $_SESSION['lib_active_search'] . ')');
 
 // Reset view to Playback
-workerLog('worker: View reset to playback');
+workerLog('worker: View reset to (Playback)');
 $view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' . $_SESSION['current_view'] : $_SESSION['current_view'];
 phpSession('write', 'current_view', $view);
 sendEngCmd('refresh_screen');
@@ -1940,6 +1947,15 @@ function runQueuedJob() {
 				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 			}
 			$GLOBALS['check_library_update'] = '1';
+			break;
+
+		// Library saved searches
+		case 'create_saved_search':
+			$fh = fopen(LIBSEARCH_BASE . $_SESSION['w_queueargs'] . '.json', 'w');
+			$data = json_encode(['filter_type' => $_SESSION['library_flatlist_filter'], 'filter_str' => $_SESSION['library_flatlist_filter_str']]);
+			fwrite($fh, $data);
+			fclose($fh);
+			sysCmd('chmod 0777 "' . $file . '"');
 			break;
 
 		// lib-config jobs

@@ -99,6 +99,10 @@ const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
+// Library Saved Searches
+const LIBSEARCH_BASE = '/var/local/www/libsearch_';
+const LIB_FULL_LIBRARY = 'Full Library (Default)';
+
 // Recorder plugin (currently not available)
 const RECORDER_RECORDINGS_DIR 	 = '/Recordings';
 const RECORDER_DEFAULT_COVER	 = 'Recorded Radio.jpg';

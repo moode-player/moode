@@ -94,6 +94,8 @@ function notify(title, msg, duration = '2_seconds') {
         // Advanced search
         search_fields_empty: 'Search fields are empty',
         predefined_filter_invalid: 'Predefined filter invalid',
+        // Library saved searches
+        search_name_blank: 'Name is blank',
         // Miscellaneous
         upd_clock_radio: 'Clock radio updated',
 		settings_updated: 'Settings updated',

@@ -921,6 +921,7 @@ var renderSongs = function(albumPos) {
 // Click genre or menu header (reset all)
 $('#genreheader, #library-header').on('click', function(e) {
     if (SESSION.json['library_flatlist_filter'] != 'full_lib' && $(e.target).parent('#genreheader').length == 0 && GLOBAL.musicScope == 'all') {
+        SESSION.json['lib_active_search'] = LIB_FULL_LIBRARY;
 		applyLibFilter('full_lib');
 		return;
 	}

@@ -392,6 +392,9 @@ readers do not read off random characters that represent icons */
 .fa-search:before {
   content: "\f002"; }
 
+.fa-search-plus:before {
+  content: "\f00e"; }
+
 .fa-signal:before {
   content: "\f012"; }
 

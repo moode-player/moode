@@ -15,6 +15,10 @@
 #
 ################################################################################
 
+New Features
+
+- NEW: Save/Reuse searches for Library Tag/Album view 
+
 Updates
 
 - UPD: Add support for LDAC encoder to Bluetooth

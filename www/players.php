@@ -46,6 +46,7 @@ $thisIpAddr = getThisIpAddr();
 
 // Parse the results
 $_players = '';
+$_players_action_div_hide = '';
 $timeout = getStreamTimeout();
 foreach ($port6600Hosts as $ipAddr) {
 	if ($ipAddr != $thisIpAddr) {
@@ -75,6 +76,7 @@ foreach ($port6600Hosts as $ipAddr) {
 // Check for no players found
 if (empty(trim($_players))) {
 	$_players = '<li id="players-no-players-found">No players found</li>';
+	$_players_action_div_hide = 'hide';
 }
 
 // Close the "Discovering players..." notification

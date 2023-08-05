@@ -534,6 +534,21 @@ function clearLibCacheFiltered() {
 	sqlUpdate('cfg_system', sqlConnect(), 'lib_pos','-1,-1,-1');
 }
 
+// Return saved search names
+function getSavedSearches() {
+	$searches = [];
+	array_push($searches, array('name' => LIB_FULL_LIBRARY, 'filter' => 'full_lib'));
+	foreach(glob(LIBSEARCH_BASE . '*.json') as $file) {
+		$name = ltrim(pathinfo($file, PATHINFO_FILENAME), LIBSEARCH_BASE);
+		$filter = json_decode(file_get_contents($file), true);
+		if ($name != LIB_FULL_LIBRARY) {
+			array_push($searches, array('name' => $name, 'filter' => $filter['filter_type'] .
+				(empty($filter['filter_str']) ? '' : ': ' . $filter['filter_str'])));
+		}
+	}
+	return $searches;
+}
+
 // Extract bit depth, sample rate and audio format for display
 function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 	// $displayFormats: 'default' Ex: 16/44.1k FLAC, 'verbose' Ex: 16 bit, 44.1 kHz, Stereo FLAC
@@ -607,6 +622,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 				formatRate($sampleRate) . ' ' . $format :
 				$bitDepth . '/' . formatRate($sampleRate) . ' ' . $format;
 		} else {
+			// 'verbose'
 			$encodedAt = $bitDepth == '?' ?
 				formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format :
 				$bitDepth . ' bit, ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format;

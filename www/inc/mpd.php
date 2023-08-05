@@ -28,12 +28,11 @@ require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
 // Scan the network for hosts with open port 6600 (MPD)
-function scanForMPDHosts() {
+function scanForMPDHosts($retryCount = 2) {
     $thisIpAddr = getThisIpAddr();
 	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
 	$port = '6600';
 
-	$retryCount = 2;
 	for ($i = 0; $i < $retryCount; $i++) {
 		sysCmd('nmap -Pn -p T:' . $port . ' ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
 		$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');

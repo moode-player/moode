@@ -570,24 +570,52 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playlist-panel.active {height:100vh;display:block;}
 #playlist-panel.active #index-playlist {display:block;}
 #playlist-panel.active #btnlist-top-pl {display:block;}
+
+/* Saved search selectors added */
+#saved-search-items-container,
 #playlist-items-container,
 #playlist-names-container {display:block;margin:0 auto 0 auto;width:74%;height:25em;padding:1em 1em 0 1em;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;background-color:var(--btnshade2);}
 #playlist-names-container {padding-top:0;}
+
+#saved-search-items-container ul,
 #playlist-items-container ul,
 #playlist-names-container ul {margin:0;counter-reset:item;list-style-type:none;}
+
+#saved-search-items,
 #playlist-items {margin-top:0;}
 #playlist-names {margin-top:3em!important;}
-#playlist-items li, #playlist-names li {padding:.5em 0;line-height:1.25em;cursor:pointer;}
-#playlist-items li:before, #playlist-names li:before {float:left;width:2em;letter-spacing:-1px;text-align:right;counter-increment:item;content:counter(item) " ";margin-right:.75em;}
-#playlist-items li.active, #playlist-names li.active {background: var(--accentxta);}
-#playlist-items li span, #playlist-names li {display:block;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+
+#saved-search-items li,
+#playlist-items li,
+#playlist-names li {padding:.5em 0;line-height:1.25em;cursor:pointer;}
+
+#saved-search-items li:before,
+#playlist-items li:before,
+#playlist-names li:before {float:left;width:2em;letter-spacing:-1px;text-align:right;counter-increment:item;content:counter(item) " ";margin-right:.75em;}
+
+#saved-search-items li.active,
+#playlist-items li.active,
+#playlist-names li.active {background: var(--accentxta);}
+
+#saved-search-items li span {display:block;}
+#playlist-items li span,
+#playlist-names li {display:block;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+
+#context-menu-saved-search-contents,
 #context-menu-pl-contents {z-index:99999!important;}
 #item-to-add,
 #station-path,
 #playlist-path {font-style:italic;}
 .playlist-name {font-weight:600;}
+
+.saved-search-item-line1,
 .pl-item-line1 {font-size:1em;}
+.saved-search-item-line2,
 .pl-item-line2 {font-size:.9em;margin-left: calc(2.5em + 1.25vmin);color:var(--textvariant);}
+
+#lib-search-criteria {background-color:transparent;border:none;color:inherit;padding:0.2em 0 10px;}
+/* End Saved Search */
+
 #delete-playlist-item input,
 #move-playlist-item input,
 #addto-playlist-name input {height:24px;margin: 0 4px 0 0;}
