@@ -1399,13 +1399,13 @@ function renderPlayqueue(state) {
 						var name = typeof(data[i].Name) === 'undefined' ? 'Radio station' : data[i].Name;
 						output += name;
 						if (i == parseInt(MPD.json['song'])) { // active
-							//DELETE$('#playbar-currentalbum, #ss-currentalbum').html(name + '<span id="playbar-hd-badge"></span>');
+							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(name + '<span id="playbar-hd-badge"></span>');
 						}
 					}
 					else {
 						output += RADIO.json[data[i].file]['name'];
 						if (i == parseInt(MPD.json['song'])) { // active
-							//DELETE$('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hd-badge"></span>');
+							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hd-badge"></span>');
 						}
 					}
 				}
@@ -2206,26 +2206,18 @@ function setVolume(level, event) {
 	if (SESSION.json['volmute'] == '0') {
         //console.log('unmute (setvol ' + SESSION.json['volknob'] + ')');
 		SESSION.json['volknob'] = level.toString();
-        // TEST sync ajax
+        // Use sync AJAX
 		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, false);
     } else {
         // Muted
 		if (level == 0 && event == 'mute')	{
-
-            // TEST using ALSA instead of MPD to set hardware volume
             if (SESSION.json['mpdmixer'] == 'hardware') {
-                // TEST sync ajax
+                // Use sync AJAX
                 sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, false);
             } else {
                 //console.log('mute (setvol 0)');
                 sendMpdCmd('setvol 0');
             }
-
-			//console.log('setvol 0 | mute');
-            /* NOTE: not needed since mute is handled above in sendVolCmd()
-            if (SESSION.json['multiroom_tx'] == 'On') {
-                sendVolCmd('POST', 'mute_rx_vol', '', true); // Async
-            }*/
 		} else {
 			// Vol up/dn btns pressed, just store the volume for display
 			SESSION.json['volknob'] = level.toString();

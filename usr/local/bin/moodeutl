@@ -19,7 +19,7 @@
  *
  */
 
-const VERSION = '3.0.0';
+const VERSION = '3.0.1';
 
 set_include_path('/var/www/inc');
 
@@ -162,8 +162,8 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tUpdate features availability
  -d\t\tDump session file (requires sudo)
  -D [var name] \tDelete session variable (requires sudo)
- -e [filename]\tExport settings to [filename] or ./moodecfg-<timestamp>.ini
- -i\t\tImport settings (/boot/moodecfg.ini)
+ -e [filename]\tExport settings to [filename] or ~/moodecfg-<timestamp>.ini (requires sudo)
+ -i\t\tImport settings from /boot/moodecfg.ini (requires sudo)
  -f\t\tPrint supported audio formats
  -F\t\tPrint full alsacap info
  -l\t\tPrint moode log
@@ -471,15 +471,30 @@ function checkStationUrls($argv) {
 }
 
 function exportAutoconfig($argv) {
+	if (posix_getuid() != 0) {
+		echo "This option requires sudo\n";
+		return;
+	}
+
 	$homeDir = '/home/' . getUserID();
-	$cfgFile = count($argv)==3 ? $argv[2] : sprintf($homeDir . "/moodecfg-%s.ini", date('ymd_His'));
-	echo "Current moOde settings exported to " . $cfgFile . "\n";
+	$cfgFile = count($argv) == 3 ? $argv[2] : sprintf($homeDir . "/moodecfg-%s.ini", date('ymd_His'));
+	// NOTE: Don't print if $cfgFile contains '/tmp/' because this is just an intermediate file created by
+	// autocfg-gen.php when moodeutl -e is called by backup_manager.py
+	if (strpos($cfgFile, '/tmp/') === false) {
+		echo "Configuration settings exported to " . $cfgFile . "\n";
+	}
 	echo shell_exec('/var/www/util/autocfg-gen.php > ' . $cfgFile);
 }
 
 function importAutoconfig() {
-	echo "Import moOde autoconfig settings\n";
+	if (posix_getuid() != 0) {
+		echo "This option requires sudo\n";
+		return;
+	}
+
+	echo "Importing configuration settings...\n";
 	echo shell_exec('sudo /var/www/util/autocfg-import.php');
+	echo "Reboot required\n";
 }
 
 function listAudioOverlays() {

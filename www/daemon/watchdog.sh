@@ -72,7 +72,7 @@ while true; do
 		fi
 	else
 		if [[ $VOLSYNC_RUNNING = 1 ]]; then
-			message_log "Error: CamillaDSP volume sync stopped (it should not have been be running)"
+			message_log "Error: CamillaDSP volume sync stopped (it should not have been been running)"
 			systemctl stop mpd2cdspvolume
 		fi
 	fi

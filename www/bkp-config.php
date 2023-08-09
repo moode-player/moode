@@ -29,8 +29,6 @@ const TMP_RESTORE_ZIP = '/tmp/restore.zip';
 const TMP_SCRIPT_FILE = '/tmp/script';
 const BACKUP_FILE_PREFIX = 'backup_';
 
-phpSession('open');
-
 if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	$backupOptions = '';
 	if (isset($_POST['backup_system']) && $_POST['backup_system'] == '1') {
@@ -50,8 +48,11 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	}
 
 	if (empty($backupOptions)) {
+		phpSession('open');
 		$_SESSION['notify']['title'] = 'Specify at least one item to backup';
+		phpSession('close');
 	} else {
+		$userID = getUserID();
 		$backupOptions = '--what ' . $backupOptions . ' ';
 
 		/*if(isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']) {
@@ -60,17 +61,23 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 
 		if (file_exists(TMP_SCRIPT_FILE)) {
 			$backupOptions .= '--script ' . TMP_SCRIPT_FILE . ' ';
-			$userID = getUserID();
 			sysCmd('chown ' . $userID . ':' . $userID . ' ' . TMP_SCRIPT_FILE);
 		}
 
+		// NOTE: Close the session here to avoid active session conflict if config/prefs are selected to be backed up.
+		// In this case we end up with backup_manager.py -> moodeutl -e -> autocfg-gen.php which also opens the session.
+		//phpSession('close');
+
 		// Generate backup zip
 		sysCmd('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
+		sysCmd('chown ' . $userID . ':' . $userID . ' ' . TMP_BACKUP_ZIP);
 		//workerLog('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
 
 		// Create name for backup file in browser
 		$dt = new DateTime('NOW');
+		phpSession('open');
 		$backupFileName = BACKUP_FILE_PREFIX . $_SESSION['hostname'].'_'. $dt->format('ymd_Hi').'.zip';
+		phpSession('close');
 
 		header("Content-Description: File Transfer");
 		header("Content-type: application/octet-stream");
@@ -104,37 +111,48 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		}
 
 		if (empty($restoreOptions)) {
+			phpSession('open');
 			$_SESSION['notify']['title'] = 'Specify at least one item to restore';
+			phpSession('close');
 		} else {
 			$restoreOptions = '--what ' . $restoreOptions . ' ';
 
-			// TODO: Maybe reset file rights after backup_manager.py ?
 			sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('rm ' . TMP_RESTORE_ZIP);
+			// Set permissions in case we don't reboot
+			sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT);
+			sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT . '*.*');
+			sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
 
 			// Request reboot if system settings are part of restore
 			$title = 'Restore complete';
 			if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
 				$msg = 'Reboot required';
-				$duration = 60;
+				$duration = 10;
 				//submitJob('reboot', '', 'Restore complete', 'System rebooting...');
 			} else {
 				$msg = '';
 				$duration = 5;
 			}
+			phpSession('open');
 			$_SESSION['notify']['title'] = $title;
 			$_SESSION['notify']['msg'] = $msg;
 			$_SESSION['notify']['duration'] = $duration;
+			phpSession('close');
 
 			// DEBUG:
+			// phpSession('open');
 			//$_SESSION['notify']['title'] = 'DEBUG';
 			//$_SESSION['notify']['msg'] = $restoreOptions;
 			//$_SESSION['notify']['duration'] = 10;
+			// phpSession('close');
 		}
 	} else {
 		$_imported_backupfile = 'No file selected';
+		phpSession('open');
 		$_SESSION['notify']['title'] = 'Select a backup file';
 		$_SESSION['notify']['duration'] = 3;
+		phpSession('close');
 	}
 } else if (isset($_POST['import_backupfile'])) {
 	$_imported_backupfile = 'Uploaded: <b>' . $_FILES['restore_backupfile']['name'] . '</b>';
@@ -149,14 +167,14 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 } else if (isset($_POST['reset_options'])) {
 	sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/script');
 	$_imported_backupfile = 'No file selected';
+	phpSession('open');
 	$_SESSION['notify']['title'] = 'Options have been reset';
 	$_SESSION['notify']['duration'] = 3;
+	phpSession('close');
 } else {
 	$_imported_backupfile = 'No file selected';
 	$_imported_scriptfile = 'No file selected';
 }
-
-phpSession('close');
 
  // Helper method to generate html code for toggle button
 function genToggleButton($name, $value, $disabled) {
@@ -202,7 +220,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 
 waitWorker('bkp-config');
 
-$tpl = "bkp-config.html";
+$tpl = $msg == 'Reboot required' ? "sys-config.html" : "bkp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
