@@ -129,10 +129,6 @@ else
 	sqlite3 $SQLDB "UPDATE cfg_system SET value=$LEVEL WHERE param='volknob'"
 fi
 
-##
-# TEST using ALSA instead of MPD to set hardware volume
-##
-
 # NOTE: Volume update --> MPD idle timeout --> UI updated
 
 # Mute if indicated

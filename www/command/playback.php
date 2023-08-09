@@ -31,9 +31,6 @@ $sock = getMpdSock();
 switch ($_GET['cmd']) {
 	 // Called from function setVolume() in playelib.js
 	case 'upd_volume':
-
-		// TEST using ALSA instead of MPD to set Hardware volume and handle mute
-
 		// Local volume
 		phpSession('open');
 		$currentVol = $_SESSION['volknob']; // Save for Receiver
