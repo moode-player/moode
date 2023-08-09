@@ -17,26 +17,27 @@
 
 New Features
 
-- NEW: Save/Reuse searches for Library Tag/Album view 
+- NEW: Save and reuse searches for Library Tag/Album view
 
 Updates
 
-- UPD: Add support for LDAC encoder to Bluetooth
-- UPD: Add support for SBC XQ/XQ+ quality settings (default to XQ+)
-- UPD: Add CamillaDSP support for Bluetooth inbound connection
+- UPD: Add support for Bluetooth LDAC encoder
+- UPD: Add support for Bluetooth SBC XQ/XQ+ quality (default to XQ+)
+- UPD: Add support for CamillaDSP to Bluetooth inbound connection
 - UPD: Add plus (+) entries to Prefs "Thumbgen scan" to include image types
-- UPD: Add btrfs file system to udisks-glue auto-mount config (PR/631)
-- UPD: Add PixelRatio to the viewport debug popup
+- UPD: Add predefined filters from Quick search to Library Advanced search
+- UPD: Add BTRFS (B-Tree File System) to udisks-glue auto-mount config (PR/631)
 - UPD: Add System config option to adjust responsiveness of worker daemon
 - UPD: Add option to moodeutl to print daemon sleep intervals (responsiveness)
-- UPD: Add options to moodeutl to print mount monitor and auto config logs
-- UPD: Add option for predefined filters to Library Advanced search
+- UPD: Add option to moodeutl to print Mount monitor and Auto-config logs
+- UPD: Add PixelRatio to the viewport debug popup
+- UPD: Improve Backup/Restore (add missing settings, refactor code)
 - UPD: Improve renderer event handling when CamillaDSP volume is used
-- UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 - UPD: Improve Players >> feature by adding capability to send commands
-- UPD: Improve positioning and size if of [HD] and [HiRes] badges
+- UPD: Improve positioning and size of [HD] and [HiRes] badges
 - UPD: Improve kbps bitrate reporting for FLAC stations (assume 900 kbps)
-- UPD: Improve various help text and labels
+- UPD: Improve various help text, labels and notification messages
+- UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 
 Radio Stations (New Image Only)
 
@@ -50,6 +51,7 @@ Bug fixes
 - FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
 - FIX: Extraneous hostname added to string returned by get_rx_status
 - FIX: Triggerhappy default user permissions not sufficient to run ALSA commands
+- FIX: Duplicate source mounts created when restoring from backup
 
 ################################################################################
 #
