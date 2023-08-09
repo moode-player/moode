@@ -485,6 +485,9 @@ workerLog('worker: --');
 workerLog('worker: -- Software update');
 workerLog('worker: --');
 //
+if (!isset($_SESSION['updater_auto_check'])) {
+	$_SESSION['updater_auto_check'] = 'Off';
+}
 $validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip[0] != '172.24.1.1');
 $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
@@ -1118,7 +1121,9 @@ if (file_exists('/boot/moodebackup.zip')) {
 if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 
+	phpSession('open');
 	autoConfig('/boot/moodecfg.ini');
+	phpSession('close');
 
 	sysCmd('sync');
 	autoCfgLog('autocfg: System restarted');
