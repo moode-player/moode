@@ -1401,13 +1401,11 @@ jQuery(document).ready(function($) { 'use strict';
             '#dbsearch-comment,' +
             '#dbsearch-file';
         $('#dbsearch-predefined-filters, #dbsearch-alltags,' + specificTags).val('');
-        //DELETE$('#dbsearch-predefined-filters').focus();
 	});
 	$('#dbsearch-modal').on('shown.bs.modal', function(e) {
         currentView == 'folder' ? $('#predefined-filters-div').hide() : $('#predefined-filters-div').show();
 		$('#db-search-results').css('font-weight', 'normal');
 		$('.database li').removeClass('active');
-        //DELETE$('#dbsearch-predefined-filters').focus();
 	});
 
     // Library Tag/Album search

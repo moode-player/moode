@@ -203,12 +203,10 @@ phpSession('close');
 
 waitWorker('lib-config');
 
-// Update library if indicated after sourcecfg job completes
 if ($initiateLibraryUpd == true) {
-	//DELETE$title = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
-	//DELETEsubmitJob('update_library', '', $title, 'Updating library...');
 	phpSession('open');
 	$_SESSION['notify']['title'] = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
+	$_SESSION['notify']['msg'] = 'Library update required';
 	phpSession('close');
 	unset($_GET['cmd']);
 }

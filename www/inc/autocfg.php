@@ -412,8 +412,6 @@ function autoConfigSettings() {
 
 		'Network (eth0)',
 		['requires' => ['ethmethod', 'ethipaddr', 'ethnetmask', 'ethgateway', 'ethpridns', 'ethsecdns'], 'handler' => function($values) {
-			//$dbh = sqlConnect();
-			//DELETE$netcfg = sqlQuery('select * from cfg_network', $dbh);
 			$value = array('method' => $values['ethmethod'], 'ipaddr' => $values['ethipaddr'], 'netmask' => $values['ethnetmask'],
 				'gateway' => $values['ethgateway'], 'pridns' => $values['ethpridns'], 'secdns' => $values['ethsecdns']);
 			sqlUpdate('cfg_network', sqlConnect(), 'eth0', $value);

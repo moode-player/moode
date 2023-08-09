@@ -1399,13 +1399,13 @@ function renderPlayqueue(state) {
 						var name = typeof(data[i].Name) === 'undefined' ? 'Radio station' : data[i].Name;
 						output += name;
 						if (i == parseInt(MPD.json['song'])) { // active
-							//DELETE$('#playbar-currentalbum, #ss-currentalbum').html(name + '<span id="playbar-hd-badge"></span>');
+							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(name + '<span id="playbar-hd-badge"></span>');
 						}
 					}
 					else {
 						output += RADIO.json[data[i].file]['name'];
 						if (i == parseInt(MPD.json['song'])) { // active
-							//DELETE$('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hd-badge"></span>');
+							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hd-badge"></span>');
 						}
 					}
 				}
