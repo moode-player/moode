@@ -36,6 +36,7 @@ Updates
 - UPD: Improve Players >> feature by adding capability to send commands
 - UPD: Improve positioning and size of [HD] and [HiRes] badges
 - UPD: Improve kbps bitrate reporting for FLAC stations (assume 900 kbps)
+- UPD: Improve Config screen toggle buttons (SET no longer required)
 - UPD: Improve various help text, labels and notification messages
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 
