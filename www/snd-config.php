@@ -129,7 +129,7 @@ if (isset($_POST['update_drvoptions'])) {
 // Max volume
 if (isset($_POST['update_alsavolume_max'])) {
 	if (isset($_POST['alsavolume_max'])) {
-		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Settings updated', '');
+		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Settings updated');
 		phpSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
 	}
 }
@@ -140,7 +140,7 @@ if (isset($_POST['update_alsa_output_mode'])) {
 		$newOutputMode = $_POST['alsa_output_mode'];
 		// NOTE: Update session first for functions used in job
 		phpSession('write', 'alsa_output_mode', $newOutputMode);
-		submitJob('alsa_output_mode', $oldOutputMode, 'Settings updated', '');
+		submitJob('alsa_output_mode', $oldOutputMode, 'Settings updated');
 	}
 }
 // Loopback
@@ -154,11 +154,11 @@ if (isset($_POST['update_alsa_loopback'])) {
 				$_SESSION['notify']['msg'] = 'Loopback is in use';
 				$_SESSION['notify']['duration'] = 5;
 			} else {
-				submitJob('alsa_loopback', 'Off', 'Settings updated', '');
+				submitJob('alsa_loopback', 'Off', 'Settings updated');
 				phpSession('write', 'alsa_loopback', 'Off');
 			}
 		} else {
-			submitJob('alsa_loopback', 'On', 'Settings updated', '');
+			submitJob('alsa_loopback', 'On', 'Settings updated');
 			phpSession('write', 'alsa_loopback', 'On');
 		}
 	}
@@ -170,7 +170,7 @@ if (isset($_POST['update_alsa_loopback'])) {
 
 // Restart mpd
 if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
-	submitJob('mpdrestart', '', 'MPD restarted', '');
+	submitJob('mpdrestart', '', 'MPD restarted');
 }
 // Autoplay last played item after reboot/powerup
 if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
@@ -245,21 +245,21 @@ if (isset($_POST['update_volume_db_display']) && $_POST['volume_db_display'] != 
 }
 // USB volume knob
 if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
-	submitJob('usb_volknob', $_POST['usb_volknob'], 'Settings updated', '');
+	submitJob('usb_volknob', $_POST['usb_volknob'], 'Settings updated');
 	phpSession('write', 'usb_volknob', $_POST['usb_volknob']);
 }
-// Rotary encoder
+// Rotary encoder service
 if (isset($_POST['update_rotenc'])) {
-	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
-		$title = 'Settings updated';
-		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
-	}
 	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
-		$title = 'Settings updated';
 		phpSession('write', 'rotaryenc', $_POST['rotaryenc']);
+		submitJob('rotaryenc', $_POST['rotaryenc'], 'Settings updated');
 	}
-	if (isset($title)) {
-		submitJob('rotaryenc', $_POST['rotaryenc'], $title, '');
+}
+// Rotary encoder settings
+if (isset($_POST['update_rotenc_params'])) {
+	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
+		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
+		submitJob('rotaryenc', $_POST['rotaryenc'], 'Settings updated');
 	}
 }
 
@@ -267,17 +267,17 @@ if (isset($_POST['update_rotenc'])) {
 
 // Crossfade
 if (isset($_POST['mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION['mpdcrossfade']) {
-	submitJob('mpdcrossfade', $_POST['mpdcrossfade'], 'Settings updated', '');
+	submitJob('mpdcrossfade', $_POST['mpdcrossfade'], 'Settings updated');
 	phpSession('write', 'mpdcrossfade', $_POST['mpdcrossfade']);
 }
 // Crossfeed
 if (isset($_POST['crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed']) {
 	phpSession('write', 'crossfeed', $_POST['crossfeed']);
-	submitJob('crossfeed', $_POST['crossfeed'], 'Settings updated', '');
+	submitJob('crossfeed', $_POST['crossfeed'], 'Settings updated');
 }
 // Polarity inversion
 if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
-	submitJob('invpolarity', $_POST['invert_polarity'], 'Settings updated', '');
+	submitJob('invpolarity', $_POST['invert_polarity'], 'Settings updated');
 	phpSession('write', 'invert_polarity', $_POST['invert_polarity']);
 }
 
@@ -285,7 +285,7 @@ if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SE
 
 // Server
 if (isset($_POST['mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
-	submitJob('mpd_httpd', $_POST['mpd_httpd'], 'Settings updated', '');
+	submitJob('mpd_httpd', $_POST['mpd_httpd'], 'Settings updated');
 	phpSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
 }
 // Port
@@ -329,7 +329,7 @@ unset($eqfa12p);
 if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
 	// Pass old,new curve name to worker job
 	phpSession('write', 'alsaequal', $_POST['alsaequal']);
-	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Settings updated', '');
+	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Settings updated');
 }
 
 phpSession('close');
@@ -448,22 +448,26 @@ $_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_
 $_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
 // Loopback
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
-$_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-alsa-loopback').click();\" " . $_alsa_loopback_disable;
+$_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Multiroom configure
 $_multiroom_feat_enable = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 
 // MPD OPTIONS
 
 // Autoplay after start
-$_select['autoplay_on']  .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['autoplay_off'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-autoplay').click();\"";
+$_select['autoplay_on']  .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['autoplay_off'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Metadata file
-$_select['extmeta_on']  .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-1\" value=\"1\" " . (($_SESSION['extmeta'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['extmeta_off'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-2\" value=\"0\" " . (($_SESSION['extmeta'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-extmeta').click();\"";
+$_select['extmeta_on']  .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-1\" value=\"1\" " . (($_SESSION['extmeta'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['extmeta_off'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-2\" value=\"0\" " . (($_SESSION['extmeta'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Auto-shuffle
-$_select['ashufflesvc_on']  .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['ashufflesvc_off'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-ashufflesvc').click();\"";
+$_select['ashufflesvc_on']  .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['ashufflesvc_off'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['ashuffle_mode'] .= "<option value=\"Track\" " . (($_SESSION['ashuffle_mode'] == 'Track') ? "selected" : "") . ">Track</option>\n";
 $_select['ashuffle_mode'] .= "<option value=\"Album\" " . (($_SESSION['ashuffle_mode'] == 'Album') ? "selected" : "") . ">Album</option>\n";
 $_ashuffle_filter = str_replace('"', '&quot;', $_SESSION['ashuffle_filter']);
@@ -474,18 +478,17 @@ $_select['volume_step_limit'] .= "<option value=\"10\" " . (($_SESSION['volume_s
 // Max MPD volume
 $_volume_mpd_max = $_SESSION['volume_mpd_max'];
 // Display dB volume
-$_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-/* TEST: $autoClick = " onchange=\"$('#btn-update-volume-db-display').click();\"";
+$autoClick = " onchange=\"$('#btn-set-volume-db-display').click();\"";
 $_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-*/
 // USB volume knob
-$_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-usb-volknob').click();\"";
+$_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Rotary encoder
-$_select['rotaryenc_on']  .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['rotaryenc_off'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-rotaryenc').click();\"";
+$_select['rotaryenc_on']  .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rotaryenc_off'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rotenc_params'] = $_SESSION['rotenc_params'];
 // Crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
@@ -515,8 +518,9 @@ if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off' && $_
 }
 
 // Polarity inversion
-$_select['invert_polarity_on']  .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['invert_polarity_off'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-nvert-polarity').click();\" " . $_invpolarity_set_disabled;
+$_select['invert_polarity_on']  .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['invert_polarity_off'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Crossfeed
 $_select['crossfeed'] .= "<option value=\"Off\" " . (($_SESSION['crossfeed'] == 'Off' OR $_SESSION['crossfeed'] == '') ? "selected" : "") . ">Off</option>\n";
 if ($_crossfeed_set_disabled == '') {
@@ -526,8 +530,9 @@ if ($_crossfeed_set_disabled == '') {
 	$_select['crossfeed'] .= "<option value=\"650 10.0\" " . (($_SESSION['crossfeed'] == '650 10.0') ? "selected" : "") . ">650 Hz 10.0 dB</option>\n";
 }
 // HTTP streaming server
-$_select['mpd_httpd_on']  .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd-1\" value=\"1\" " . (($_SESSION['mpd_httpd'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['mpd_httpd_off'] .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd-2\" value=\"0\" " . (($_SESSION['mpd_httpd'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-mpd-httpd').click();\"";
+$_select['mpd_httpd_on']  .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd-1\" value=\"1\" " . (($_SESSION['mpd_httpd'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['mpd_httpd_off'] .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd-2\" value=\"0\" " . (($_SESSION['mpd_httpd'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Port
 $_mpd_httpd_port = $_SESSION['mpd_httpd_port'];
 // Encoder

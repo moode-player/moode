@@ -245,8 +245,8 @@ $_multiroom_tx_query_timeout = $cfgMultiroom['tx_query_timeout'];
 $_select['multiroom_rx'] .= "<option value=\"Disabled\" " . (($_SESSION['multiroom_rx'] == 'Disabled') ? "selected" : "") . ">Disabled</option>\n";
 $_select['multiroom_rx'] .= "<option value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "selected" : "") . ">On</option>\n";
 $_select['multiroom_rx'] .= "<option value=\"Off\" " . (($_SESSION['multiroom_rx'] == 'Off') ? "selected" : "") . ">Off</option>\n";
-$_select['multiroom_rx_mastervol_opt_in_yes'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-1\" value=\"1\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-$_select['multiroom_rx_mastervol_opt_in_no'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-2\" value=\"0\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['multiroom_rx_mastervol_opt_in_on'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-1\" value=\"1\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+$_select['multiroom_rx_mastervol_opt_in_off'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-2\" value=\"0\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
 $_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0], '%');
@@ -254,7 +254,7 @@ if (stripos($_multiroom_rx_alsavol, 'amixer:') === false) {
 	$_multiroom_rx_alsavol_msg = '';
 	$_multiroom_rx_alsavol_disable = '';
 } else {
-	$_multiroom_rx_alsavol_msg = '<i>Hardware volume controller not detected</i><br>';
+	$_multiroom_rx_alsavol_msg = '<span class="config-msg-static"><i>Hardware volume controller not detected</i></span>';
 	$_multiroom_rx_alsavol_disable = 'disabled';
 }
 // Advanced options

@@ -121,6 +121,11 @@ jQuery(document).ready(function($){ 'use strict';
 		$('.busy-spinner').show();
 	});
 
+    // Dim disabled toggle controls
+    $('input[type=radio]:disabled').each (function() {
+        $('.' + $(this).attr('id').slice(0, -2)).css('opacity', '.5');
+    });
+
 	// EQ configs
 	$('#eqp-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqp-config.php?curve=' + $(this).val());
@@ -248,13 +253,6 @@ jQuery(document).ready(function($){ 'use strict';
             $('#options').val('soft,timeo=10,retrans=1,ro,nolock');
             //$('#info-mount-flags').html('vers=1.0 or higher may be needed depending on what the NAS requires.');
 		}
-        /* DEPRECATED due to removal of obsolete and unmaintained djmount
-		else if ($(this).val() == 'upnp') {
-			$('#userid-password').hide();
-			$('#scan-btn').show();
-			$('#edit-server').hide();
-			$('#advanced-options').hide();
-		}*/
 	});
 
 	// NAS config pre-load manual server entry

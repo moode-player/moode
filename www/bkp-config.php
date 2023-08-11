@@ -180,10 +180,10 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 function genToggleButton($name, $value, $disabled) {
 	$id = str_replace('_', '-', $name);
 	$template = '
-	<div class="toggle config-toggle-yn" %disable_style>
-		<label class="toggle-radio" for="toggle-%id-2">YES</label>
+	<div class="toggle" %disable_style>
+		<label class="toggle-radio toggle-%id" for="toggle-%id-2">ON </label>
 		<input type="radio" name="%name" id="toggle-%id-1" value="1" %checked1>
-		<label class="toggle-radio" for="toggle-%id-1">NO</label>
+		<label class="toggle-radio toggle-%id" for="toggle-%id-1">OFF</label>
 		<input type="radio" name="%name" id="toggle-%id-2" value="0" %checked0>
 	</div>
 	<a aria-label="Help" class="config-info-toggle" data-cmd="info-%id" href="#notarget"><i class="fas fa-info-circle"></i></a>';

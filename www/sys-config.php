@@ -37,7 +37,7 @@ $dbh = sqlConnect();
 if (isset($_POST['update_updater_auto_check'])) {
 	if (isset($_POST['updater_auto_check']) && $_POST['updater_auto_check'] != $_SESSION['updater_auto_check']) {
 		$_SESSION['updater_auto_check'] = $_POST['updater_auto_check'];
-		submitJob('updater_auto_check', $_POST['updater_auto_check'], 'Settings updated', '');
+		submitJob('updater_auto_check', $_POST['updater_auto_check'], 'Settings updated');
 	}
 }
 
@@ -85,7 +85,7 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['msg'] = "Update cannot proceed without at least 500M space";
 			$_SESSION['notify']['duration'] = 20;
 		} else {
-			submitJob('install_update', '', '', '');
+			submitJob('install_update');
 			header('location: sys-status.php');
 		}
 	}
@@ -95,7 +95,7 @@ if (isset($_POST['install_update'])) {
 
 if (isset($_POST['update_time_zone'])) {
 	if (isset($_POST['timezone']) && $_POST['timezone'] != $_SESSION['timezone']) {
-		submitJob('timezone', $_POST['timezone'], 'Settings updated', '');
+		submitJob('timezone', $_POST['timezone'], 'Settings updated');
 		phpSession('write', 'timezone', $_POST['timezone']);
 	}
 }
@@ -134,7 +134,7 @@ if (isset($_POST['update_worker_responsiveness']) && $_SESSION['worker_responsiv
 }
 
 if (isset($_POST['update_cpugov'])) {
-	submitJob('cpugov', $_POST['cpugov'], 'Settings updated', '');
+	submitJob('cpugov', $_POST['cpugov'], 'Settings updated');
 	phpSession('write', 'cpugov', $_POST['cpugov']);
 }
 
@@ -158,17 +158,17 @@ if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
 }
 
 if (isset($_POST['hdmiport']) && $_POST['hdmiport'] != $_SESSION['hdmiport']) {
-	submitJob('hdmiport', $_POST['hdmiport'], 'Settings updated', '');
+	submitJob('hdmiport', $_POST['hdmiport'], 'Settings updated');
 	phpSession('write', 'hdmiport', $_POST['hdmiport']);
 }
 
 if (isset($_POST['update_actled']) && $_POST['actled'] != explode(',', $_SESSION['led_state'])[0]) {
-	submitJob('actled', $_POST['actled'], 'Settings updated', '');
+	submitJob('actled', $_POST['actled'], 'Settings updated');
 	phpSession('write', 'led_state', $_POST['actled'] . ',' . explode(',', $_SESSION['led_state'])[1]);
 }
 
 if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION['led_state'])[1]) {
-	submitJob('pwrled', $_POST['pwrled'], 'Settings updated', '');
+	submitJob('pwrled', $_POST['pwrled'], 'Settings updated');
 	phpSession('write', 'led_state', explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled']);
 }
 
@@ -197,8 +197,11 @@ if (isset($_POST['update_localui'])) {
     }
 }
 
-if (isset($_POST['update_restart_localui'])) {
-	submitJob('localui_restart', '', 'Local display restarted');
+if (isset($_POST['update_wake_display'])) {
+    if (isset($_POST['wake_display']) && $_POST['wake_display'] != $_SESSION['wake_display']) {
+        phpSession('write', 'wake_display', $_POST['wake_display']);
+		$_SESSION['notify']['title'] = 'Settings updated';
+    }
 }
 
 if (isset($_POST['update_touchscn'])) {
@@ -212,13 +215,6 @@ if (isset($_POST['update_scnblank'])) {
     if (isset($_POST['scnblank']) && $_POST['scnblank'] != $_SESSION['scnblank']) {
         submitJob('scnblank', $_POST['scnblank'], 'Settings updated', 'Local display restarted');
         phpSession('write', 'scnblank', $_POST['scnblank']);
-    }
-}
-
-if (isset($_POST['update_wake_display'])) {
-    if (isset($_POST['wake_display']) && $_POST['wake_display'] != $_SESSION['wake_display']) {
-        phpSession('write', 'wake_display', $_POST['wake_display']);
-		$_SESSION['notify']['title'] = 'Settings updated';
     }
 }
 
@@ -254,31 +250,34 @@ if (isset($_POST['update_toggle_coverview'])) {
 	$result = sysCmd('/var/www/util/coverview.php ' . $_SESSION['toggle_coverview']);
 }
 
-// FILE SHARING
+if (isset($_POST['update_restart_localui'])) {
+	submitJob('localui_restart', '', 'Local display restarted');
+}
+
 
 if (isset($_POST['update_fs_smb'])) {
 	if (isset($_POST['fs_smb']) && $_POST['fs_smb'] != $_SESSION['fs_smb']) {
 		phpSession('write', 'fs_smb', $_POST['fs_smb']);
-		submitJob('fs_smb', $_POST['fs_smb'], 'Settings updated', '');
+		submitJob('fs_smb', $_POST['fs_smb'], 'Settings updated');
 	}
 }
 
 if (isset($_POST['update_fs_nfs'])) {
 	if (isset($_POST['fs_nfs']) && $_POST['fs_nfs'] != $_SESSION['fs_nfs']) {
 		phpSession('write', 'fs_nfs', $_POST['fs_nfs']);
-		submitJob('fs_nfs', $_POST['fs_nfs'], 'Settings updated', '');
+		submitJob('fs_nfs', $_POST['fs_nfs'], 'Settings updated');
 	}
 }
 if (isset($_POST['update_fs_nfs_access'])) {
 	if (isset($_POST['fs_nfs_access']) && $_POST['fs_nfs_access'] != $_SESSION['fs_nfs_access']) {
 		phpSession('write', 'fs_nfs_access', $_POST['fs_nfs_access']);
-		submitJob('fs_nfs_access', 'restart', 'Settings updated', '');
+		submitJob('fs_nfs_access', 'restart', 'Settings updated');
 	}
 }
 if (isset($_POST['update_fs_nfs_options'])) {
 	if (isset($_POST['fs_nfs_options']) && $_POST['fs_nfs_options'] != $_SESSION['fs_nfs_options']) {
 		phpSession('write', 'fs_nfs_options', $_POST['fs_nfs_options']);
-		submitJob('fs_nfs_options', 'restart', 'Settings updated', '');
+		submitJob('fs_nfs_options', 'restart', 'Settings updated');
 	}
 }
 
@@ -286,7 +285,7 @@ if (isset($_POST['update_fs_nfs_options'])) {
 
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
-		submitJob('lcdup', $_POST['lcdup'], 'Settings updated', '');
+		submitJob('lcdup', $_POST['lcdup'], 'Settings updated');
 		phpSession('write', 'lcdup', $_POST['lcdup']);
 		phpSession('write', 'extmeta', '1'); // Turn on external metadata generation
 	}
@@ -294,14 +293,14 @@ if (isset($_POST['update_lcdup'])) {
 
 if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_svc']) {
 	phpSession('write', 'gpio_svc', $_POST['gpio_svc']);
-	submitJob('gpio_svc', $_POST['gpio_svc'], 'Settings updated', '');
+	submitJob('gpio_svc', $_POST['gpio_svc'], 'Settings updated');
 }
 
 // SECURITY
 
 if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
 	phpSession('write', 'shellinabox', $_POST['shellinabox']);
-	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated', '');
+	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated');
 }
 
 // MAINTENANCE
@@ -318,11 +317,11 @@ if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
  	exit();
 }
 if (isset($_POST['update_clear_syslogs'])) {
-	submitJob('clearsyslogs', '', 'System logs cleared', '');
+	submitJob('clearsyslogs', '', 'System logs cleared');
 }
 
 if (isset($_POST['update_clear_playhistory'])) {
-	submitJob('clearplayhistory', '', 'Playback history cleared', '');
+	submitJob('clearplayhistory', '', 'Playback history cleared');
 }
 
 if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
@@ -337,8 +336,9 @@ sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/s
 
 // SOFTWARE UPDATE
 
-$_select['updater_auto_check_on']  .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-1\" value=\"On\" " . (($_SESSION['updater_auto_check'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['updater_auto_check_off'] .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-2\" value=\"Off\" " . (($_SESSION['updater_auto_check'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-updater-auto-check').click();\"";
+$_select['updater_auto_check_on']  .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-1\" value=\"On\" " . (($_SESSION['updater_auto_check'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['updater_auto_check_off'] .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-2\" value=\"Off\" " . (($_SESSION['updater_auto_check'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // GENERAL
 
@@ -363,28 +363,33 @@ $name = $_SESSION['hdwrrev'];
 // Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B
 if (stripos($name, 'Pi-Zero W') !== false || stripos($name, 'Pi-Zero 2 W') !== false || $model == '3' || $model == '4') {
 	$_wifibt_hide = '';
-	$_select['p3wifi_on']  .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['p3wifi_off'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['p3bt_on']  .= "<input type=\"radio\" name=\"p3bt\" id=\"toggle-p3bt-1\" value=\"1\" " . (($_SESSION['p3bt'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['p3bt_off'] .= "<input type=\"radio\" name=\"p3bt\" id=\"toggle-p3bt-2\" value=\"0\" " . (($_SESSION['p3bt'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-p3wifi').click();\"";
+	$_select['p3wifi_on']  .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['p3wifi_off'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-p3bt').click();\"";
+	$_select['p3bt_on']  .= "<input type=\"radio\" name=\"p3bt\" id=\"toggle-p3bt-1\" value=\"1\" " . (($_SESSION['p3bt'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['p3bt_off'] .= "<input type=\"radio\" name=\"p3bt\" id=\"toggle-p3bt-2\" value=\"0\" " . (($_SESSION['p3bt'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_wifibt_hide = 'hide';
 }
 
-$_select['hdmiport_on']  .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-1\" value=\"1\" " . (($_SESSION['hdmiport'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['hdmiport_off'] .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-2\" value=\"0\" " . (($_SESSION['hdmiport'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-hdmiport').click();\"";
+$_select['hdmiport_on']  .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-1\" value=\"1\" " . (($_SESSION['hdmiport'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['hdmiport_off'] .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-2\" value=\"0\" " . (($_SESSION['hdmiport'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 $actled = explode(',', $_SESSION['led_state'])[0];
-$_select['actled_on']  .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-1\" value=\"1\" " . (($actled == '1') ? "checked=\"checked\"" : "") . ">\n";
-$_select['actled_off'] .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-2\" value=\"0\" " . (($actled == '0') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-actled').click();\"";
+$_select['actled_on']  .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-1\" value=\"1\" " . (($actled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['actled_off'] .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-2\" value=\"0\" " . (($actled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero' || substr($_SESSION['hdwrrev'], 3, 1) == '1' || $_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 	$_pwrled_hide = 'hide';
 } else {
 	$_pwrled_hide = '';
 	$pwrled = explode(',', $_SESSION['led_state'])[1];
-	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-pwrled').click();\"";
+	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 }
 
 $_select['ipaddr_timeout'] .= "<option value=\"10\" " . (($_SESSION['ipaddr_timeout'] == '10') ? "selected" : "") . ">10</option>\n";
@@ -395,14 +400,16 @@ $_select['ipaddr_timeout'] .= "<option value=\"90\" " . (($_SESSION['ipaddr_time
 $_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_timeout'] == '120') ? "selected" : "") . ">120</option>\n";
 $_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_timeout'] == '120') ? "selected" : "") . ">180</option>\n";
 
-$_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-eth0chk').click();\"";
+$_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-// TEST
+// TEST: HTTPS-only mode
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	$_feat_https = '';
-	$_select['nginx_https_only_on']  .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-1\" value=\"1\" " . (($_SESSION['nginx_https_only'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['nginx_https_only_off'] .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-2\" value=\"0\" " . (($_SESSION['nginx_https_only'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-nginx-https-only').click();\"";
+	$_select['nginx_https_only_on']  .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-1\" value=\"1\" " . (($_SESSION['nginx_https_only'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['nginx_https_only_off'] .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-2\" value=\"0\" " . (($_SESSION['nginx_https_only'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_feat_https = 'hide';
 }
@@ -410,8 +417,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 $model = substr($_SESSION['hdwrrev'], 3, 1);
 if ($model == '3') { // Pi-3B, B+, A+
 	$_usbboot_hide = '';
-	$_select['usbboot_on']  .= "<input type=\"radio\" name=\"usbboot\" id=\"toggle-usbboot-1\" value=\"1\" " . ">\n";
-	$_select['usbboot_off'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggle-usbboot-2\" value=\"0\" " . "checked=\"checked\"".">\n";
 	$result = sysCmd('vcgencmd otp_dump | grep 17:');
 	if ($result[0] == '17:3020000a') {
 		$_usbboot_btn_disable = 'disabled';
@@ -437,14 +442,17 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 		$_localui_link_disable = 'onclick="return false;"';
 	}
 
-	$_select['localui_on']  .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['localui_off'] .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-2\" value=\"0\" " . (($_SESSION['localui'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-localui').click();\"";
+	$_select['localui_on']  .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['localui_off'] .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-2\" value=\"0\" " . (($_SESSION['localui'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-	$_select['touchscn_on']  .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-1\" value=\"1\" " . (($_SESSION['touchscn'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['touchscn_off'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-wake-display').click();\" " . $_localui_btn_disable;
+	$_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['wake_display_off'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-	$_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake_display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['wake_display_off'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake_display-2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-touchscn').click();\" " . $_localui_btn_disable;
+	$_select['touchscn_on']  .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-1\" value=\"1\" " . (($_SESSION['touchscn'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['touchscn_off'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
 	$_select['scnblank'] .= "<option value=\"10\" " . (($_SESSION['scnblank'] == '10') ? "selected" : "") . ">10 Secs</option>\n";
@@ -466,8 +474,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
 	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
 
-	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-on-screen-kbd').click();\" " . $_localui_btn_disable;
+	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	$_coverview_onoff = $_SESSION['toggle_coverview'] == '-off' ? 'Off' : 'On';
 } else {
@@ -476,11 +485,13 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 
 // FILE SHARING
 
-$_select['fs_smb_on']  .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-1\" value=\"On\" " . (($_SESSION['fs_smb'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['fs_smb_off'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-2\" value=\"Off\" " . (($_SESSION['fs_smb'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-fs-smb').click();\"";
+$_select['fs_smb_on']  .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-1\" value=\"On\" " . (($_SESSION['fs_smb'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['fs_smb_off'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-2\" value=\"Off\" " . (($_SESSION['fs_smb'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-$_select['fs_nfs_on']  .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-1\" value=\"On\" " . (($_SESSION['fs_nfs'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['fs_nfs_off'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-2\" value=\"Off\" " . (($_SESSION['fs_nfs'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-fs-nfs').click();\"";
+$_select['fs_nfs_on']  .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-1\" value=\"On\" " . (($_SESSION['fs_nfs'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['fs_nfs_off'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-2\" value=\"Off\" " . (($_SESSION['fs_nfs'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
 $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
 $ipAddrParts = explode('.', $_SESSION['ipaddress']);
@@ -488,21 +499,24 @@ $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] 
 
 // PERIPHERALS
 
-$_select['lcdup_on']  .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['lcdup_off'] .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-lcdup').click();\"";
+$_select['lcdup_on']  .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['lcdup_off'] .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	$_feat_gpio = '';
-	$_select['gpio_svc_on']  .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle-gpio_svc-1\" value=\"1\" " . (($_SESSION['gpio_svc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['gpio_svc_off'] .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle-gpio_svc-2\" value=\"0\" " . (($_SESSION['gpio_svc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-gpio-svc').click();\"";
+	$_select['gpio_svc_on']  .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle-gpio-svc-1\" value=\"1\" " . (($_SESSION['gpio_svc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['gpio_svc_off'] .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle-gpio-svc-2\" value=\"0\" " . (($_SESSION['gpio_svc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_feat_gpio = 'hide';
 }
 
 // SECURITY
 
-$_select['shellinabox_on']  .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['shellinabox_off'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-shellinabox').click();\"";
+$_select['shellinabox_on']  .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['shellinabox_off'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['hostip'] = getHostIp();
 if ($_SESSION['shellinabox'] == '1') {
 	$_webssh_open_disable = '';
@@ -514,8 +528,9 @@ if ($_SESSION['shellinabox'] == '1') {
 
 // MAINTENANCE
 
-$_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['debuglog_off'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-2\" value=\"0\" " . (($_SESSION['debuglog'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-debuglog').click();\"";
+$_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['debuglog_off'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-2\" value=\"0\" " . (($_SESSION['debuglog'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 waitWorker('sys-config');
 

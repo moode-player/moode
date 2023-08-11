@@ -28,10 +28,10 @@
 			<label class="control-label">Notification</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-updater-auto-check-2">ON</label>$_select[updater_auto_check_on]
-					<label class="toggle-radio" for="toggle-updater-auto-check-1">OFF</label>$_select[updater_auto_check_off]
+					<label class="toggle-radio toggle-updater-auto-check" for="toggle-updater-auto-check-2">ON</label>$_select[updater_auto_check_on]
+					<label class="toggle-radio toggle-updater-auto-check" for="toggle-updater-auto-check-1">OFF</label>$_select[updater_auto_check_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_updater_auto_check" value="novalue">Set</button>
+				<button id="btn-set-updater-auto-check" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_updater_auto_check" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-update-updater-auto-check" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-update-updater-auto-check" class="config-help-info">
 					Display a notification badge in Playback view if an available software update was detected during startup.
@@ -151,10 +151,10 @@
 				<label class="control-label">WiFi</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggle-p3wifi-2">ON </label>$_select[p3wifi_on]
-						<label class="toggle-radio" for="toggle-p3wifi-1">OFF</label>$_select[p3wifi_off]
+						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-2">ON </label>$_select[p3wifi_on]
+						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-1">OFF</label>$_select[p3wifi_off]
 					</div>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
+					<button id="btn-set-p3wifi" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-p3wifi" class="config-help-info">
 						The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
@@ -164,10 +164,10 @@
 				<label class="control-label">Bluetooth</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggle-p3bt-2">ON </label>$_select[p3bt_on]
-						<label class="toggle-radio" for="toggle-p3bt-1">OFF</label>$_select[p3bt_off]
+						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-2">ON </label>$_select[p3bt_on]
+						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-1">OFF</label>$_select[p3bt_off]
 					</div>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
+					<button id="btn-set-p3bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-p3bt" class="config-help-info">
 						The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
@@ -178,10 +178,10 @@
 			<label class="control-label">HDMI port</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-hdmiport-2">ON </label>$_select[hdmiport_on]
-					<label class="toggle-radio" for="toggle-hdmiport-1">OFF</label>$_select[hdmiport_off]
+					<label class="toggle-radio toggle-hdmiport" for="toggle-hdmiport-2">ON </label>$_select[hdmiport_on]
+					<label class="toggle-radio toggle-hdmiport" for="toggle-hdmiport-1">OFF</label>$_select[hdmiport_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmiport" value="novalue">Set</button>
+				<button id="btn-set-hdmiport" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmiport" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmiport" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-hdmiport" class="config-help-info">
 					Leaving the HDMI port ON uses +25 mA and lengthens boot time.
@@ -191,10 +191,10 @@
 			<label class="control-label">LED0 (Activity)</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-actled-2">ON </label>$_select[actled_on]
-					<label class="toggle-radio" for="toggle-actled-1">OFF</label>$_select[actled_off]
+					<label class="toggle-radio toggle-actled" for="toggle-actled-2">ON </label>$_select[actled_on]
+					<label class="toggle-radio toggle-actled" for="toggle-actled-1">OFF</label>$_select[actled_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
+				<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-actled" class="config-help-info">
 					LED0 default trigger is SDCard (mmc0) activity.
@@ -205,10 +205,10 @@
 				<label class="control-label">LED1 (Power)</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggle-pwrled-2">ON </label>$_select[pwrled_on]
-						<label class="toggle-radio" for="toggle-pwrled-1">OFF</label>$_select[pwrled_off]
+						<label class="toggle-radio toggle-pwrled" for="toggle-pwrled-2">ON </label>$_select[pwrled_on]
+						<label class="toggle-radio toggle-pwrled" for="toggle-pwrled-1">OFF</label>$_select[pwrled_off]
 					</div>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
+					<button id="btn-set-pwrled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-pwrled" class="config-help-info">
 						LED1 default trigger is default-on for Power.
@@ -233,10 +233,10 @@
 			<label class="control-label">Wait for Ethernet</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-eth0chk-2">ON </label>$_select[eth0chk_on]
-					<label class="toggle-radio" for="toggle-eth0chk-1">OFF</label>$_select[eth0chk_off]
+					<label class="toggle-radio toggle-eth0chk" for="toggle-eth0chk-2">ON </label>$_select[eth0chk_on]
+					<label class="toggle-radio toggle-eth0chk" for="toggle-eth0chk-1">OFF</label>$_select[eth0chk_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
+				<button id="btn-set-eth0chk" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-eth0chk" class="config-help-info">
 					Wait for up to "Address timeout" seconds for an address to be assigned to the Ethernet adapter.
@@ -244,16 +244,16 @@
 				</span>
 			</div>
 
-			<!-- TEST: HTTPS-only mode-->
+			<!-- TEST: HTTPS-only mode -->
 			<div class="$_feat_https">
 				<div class="config-horiz-rule"></div>
 				<label class="control-label">HTTPS-Only Mode</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggle-nginx-https-only-2">ON </label>$_select[nginx_https_only_on]
-						<label class="toggle-radio" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
+						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-2">ON </label>$_select[nginx_https_only_on]
+						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
 					</div>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
+					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
 					<span class="config-help-static">
 						Secure the communication channel between your Web Browser and moOde using the HTTPS protocol and a self-signed security certificate.
 						Since a self-signed certificate is being used your Browser will display a warning that the site could not be verified as a trusted website.
@@ -269,10 +269,10 @@
 			<label class="control-label">Display</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-localui-2">ON </label>$_select[localui_on]
-					<label class="toggle-radio" for="toggle-localui-1">OFF</label>$_select[localui_off]
+					<label class="toggle-radio toggle-localui" for="toggle-localui-2">ON </label>$_select[localui_on]
+					<label class="toggle-radio toggle-localui" for="toggle-localui-1">OFF</label>$_select[localui_off]
 				</div>
-                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
+                <button id="btn-set-localui" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-localui" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-localui" class="config-help-info">
 					Display moOde UI on locally attached display.
@@ -282,10 +282,10 @@
 			<label class="control-label">Wake on play</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-wake_display-2">ON </label>$_select[wake_display_on]
-					<label class="toggle-radio" for="toggle-wake_display-1">OFF</label>$_select[wake_display_off]
+					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-2">ON </label>$_select[wake_display_on]
+					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
 				</div>
-                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
+                <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_wake_display" class="config-help-info">
 					Wake the display when audio starts playing.
@@ -295,10 +295,10 @@
 			<label class="control-label">Mouse cursor</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-touchscn-2">ON </label>$_select[touchscn_on]
-					<label class="toggle-radio" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
+					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-2">ON </label>$_select[touchscn_on]
+					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
 				</div>
-                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
+                <button id="btn-set-touchscn" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-touchscn" class="config-help-info">
 					This prevents the cursor from showing on the display or Touch screen
@@ -346,10 +346,10 @@
 			<label class="control-label">Popup keyboard</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
-					<label class="toggle-radio" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
+					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
+					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
 				</div>
-                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_localui_btn_disable>Set</button>
+                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_localui_btn_disable>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-on-screen-kbd" class="config-help-info">
 					On-screen popup keyboard by @Nutul.
@@ -378,10 +378,10 @@
 			<label class="control-label">SMB (Samba)</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-fs-smb-2">ON </label>$_select[fs_smb_on]
-					<label class="toggle-radio" for="toggle-fs-smb-1">OFF</label>$_select[fs_smb_off]
+					<label class="toggle-radio toggle-fs-smb" for="toggle-fs-smb-2">ON </label>$_select[fs_smb_on]
+					<label class="toggle-radio toggle-fs-smb" for="toggle-fs-smb-1">OFF</label>$_select[fs_smb_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_smb" value="novalue">Set</button>
+				<button id="btn-set-fs-smb" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_smb" value="novalue">Set</button>
 				<span class="config-help-static">
 					Server Message Block (SMB) allows files to be shared over a network with Windows, Mac and Linux clients.<br>
 					Shares are automatically created for NAS, SDCard, Playlists and USB storage devices.
@@ -393,10 +393,10 @@
 			<label class="control-label">NFS</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-fs-nfs-2">ON </label>$_select[fs_nfs_on]
-					<label class="toggle-radio" for="toggle-fs-nfs-1">OFF</label>$_select[fs_nfs_off]
+					<label class="toggle-radio toggle-fs-nfs" for="toggle-fs-nfs-2">ON </label>$_select[fs_nfs_on]
+					<label class="toggle-radio toggle-fs-nfs" for="toggle-fs-nfs-1">OFF</label>$_select[fs_nfs_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs" value="novalue">Set</button>
+				<button id="btn-set-fs-nfs" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs" value="novalue">Set</button>
 				<span class="config-help-static">
 					Network File Sharing (NFS) allows files to be shared over a network with Linux clients.<br>
 					<b>Exports: </b> USB storage devices mounted to /media are automatically maintained in /etc/exports. Other storage locations must be manualy added.<br>
@@ -431,10 +431,10 @@
 			<label class="control-label">LCD updater</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-lcdup-2">ON </label>$_select[lcdup_on]
-					<label class="toggle-radio" for="toggle-lcdup-1">OFF</label>$_select[lcdup_off]
+					<label class="toggle-radio toggle-lcdup" for="toggle-lcdup-2">ON </label>$_select[lcdup_on]
+					<label class="toggle-radio toggle-lcdup" for="toggle-lcdup-1">OFF</label>$_select[lcdup_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
+				<button id="btn-set-lcdup" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-lcdup" class="config-help-info">
 					The LCD update engine runs the lcd-updater.py script whenever UI state changes.<br>
@@ -446,10 +446,10 @@
 				<label class="control-label">GPIO buttons</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggle-gpio_svc-2">ON </label>$_select[gpio_svc_on]
-						<label class="toggle-radio" for="toggle-gpio_svc-1">OFF</label>$_select[gpio_svc_off]
+						<label class="toggle-radio toggle-gpio-svc" for="toggle-gpio-svc-2">ON </label>$_select[gpio_svc_on]
+						<label class="toggle-radio toggle-gpio-svc" for="toggle-gpio-svc-1">OFF</label>$_select[gpio_svc_off]
 					</div>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_gpio_svc" value="novalue">Set</button>
+					<button id="btn-set-gpio-svc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_gpio_svc" value="novalue">Set</button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-gpio-svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-gpio-svc" class="config-help-info">
 						Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.
@@ -468,10 +468,10 @@
 			<label class="control-label">Web SSH</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-shellinabox-2">ON </label>$_select[shellinabox_on]
-					<label class="toggle-radio" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
+					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-2">ON </label>$_select[shellinabox_on]
+					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable>Set</button>
+				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-shellinabox" class="config-help-info">
 					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
@@ -539,10 +539,10 @@
 			<label class="control-label">Debug logging</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-debuglog-2">ON </label>$_select[debuglog_on]
-					<label class="toggle-radio" for="toggle-debuglog-1">OFF</label>$_select[debuglog_off]
+					<label class="toggle-radio toggle-debuglog" for="toggle-debuglog-2">ON </label>$_select[debuglog_on]
+					<label class="toggle-radio toggle-debuglog" for="toggle-debuglog-1">OFF</label>$_select[debuglog_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
+				<button id="btn-set-debuglog" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-debuglog" class="config-help-info">
 					Log debug information<br>
