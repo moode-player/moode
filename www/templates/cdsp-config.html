@@ -24,9 +24,8 @@
 <div class="container">
 	<h1 class="cdsp-config">CamillaDSP</h1>
 	<p>
-		CamillaDSP is a general purpose Digital Signal Processing engine for routing and filtering sound. It can be used for building crossovers for active speakers, performing room correction, equalization or volume control.
-		<br><br>
-		Version: $_select[version]
+		CamillaDSP is a general purpose Digital Signal Processing (DSP) engine for routing and filtering sound. It can be used for building crossovers for active speakers, performing room correction, equalization and high resolution volume control.
+		This version is $_select[version]
 	</p>
 
 	<form class="form-horizontal" action="" method="post" >
@@ -56,9 +55,9 @@
 
 			<label class="control-label">Default device</label>
 			<div class="controls">
-				<div class="toggle config-toggle-yn">
-					<label class="toggle-radio" for="toggle-cdsp-use-default-device-2">YES</label>$_select[cdsp_use_default_device_yes]
-					<label class="toggle-radio" for="toggle-cdsp-use-default-device-1">NO </label>$_select[cdsp_use_default_device_no]
+				<div class="toggle">
+					<label class="toggle-radio toggle-cdsp-use-default-device" for="toggle-cdsp-use-default-device-2">ON </label>$_select[cdsp_use_default_device_on]
+					<label class="toggle-radio toggle-cdsp-use-default-device" for="toggle-cdsp-use-default-device-1">OFF</label>$_select[cdsp_use_default_device_off]
 				</div>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-use-default-device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-cdsp-use-default-device" class="config-help-info">
@@ -248,8 +247,8 @@
 			<label class="control-label">Status</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-camillagui2">ON </label>$_select[camillagui1]
-					<label class="toggle-radio" for="toggle-camillagui1">OFF</label>$_select[camillagui0]
+					<label class="toggle-radio toggle-camillagui" for="toggle-camillagui-2">ON </label>$_select[camillagui_on]
+					<label class="toggle-radio toggle-camillagui" for="toggle-camillagui-1">OFF</label>$_select[camillagui_off]
 				</div>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-camillagui" class="config-help-info">
@@ -261,12 +260,12 @@
 			<label class="control-label" >Expert mode</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-camillaguiexpert2">ON </label>$_select[camillaguiexpert1]
-					<label class="toggle-radio" for="toggle-camillaguiexpert1">OFF</label>$_select[camillaguiexpert0]
+					<label class="toggle-radio toggle-camillaguiexpert" for="toggle-camillaguiexpert-2">ON </label>$_select[camillaguiexpert_on]
+					<label class="toggle-radio toggle-camillaguiexpert" for="toggle-camillaguiexpert-1">OFF</label>$_select[camillaguiexpert_off]
 				</div>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camillaguiexpert" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-camillaguiexpert" class="config-help-info">
-					Show advanced options for example playback/capture device settings and resampling.
+					Show advanced options for example Playback/Capture device settings and Resampling.
 				</span>
 				<button id="btn-update-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui_expert" value="1" style="display:none"/>
 			</div>

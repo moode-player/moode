@@ -31,7 +31,7 @@
 
 		<p class="sub-legend">
 			Specify which parts of the system will be included in the backup zip file. A script file may optionally be added that performs custom actions during the restore process. It is run during moOde startup as part of restoring the Configuration settings.
-			Note that WiFi and AP mode passwords will be included in the Configuration settings part of the backup.
+			Note that WiFi and AP mode passwords will be included in the Configuration/Prefs settings part of the backup.
 		</p>
 
 		<div class="control-group">
@@ -49,11 +49,11 @@
 				</span>
 			</div>
 
-			<label class="control-label">Config/Prefs</label>
+			<label class="control-label">Configuration/Prefs</label>
 			<div class="controls">
 				$_togglebtn_backup_system
 				<span id="info-backup-system" class="config-help-info">
-					Backup configuration settings and preferences including backdrop image if any.
+					Backup configuration settings and preferences including a backdrop image if any.
 				</span>
 			</div>
 
@@ -117,7 +117,7 @@
 
 		<p class="sub-legend">
 			Specify which parts of the system will be restored.
-			The Yes/No option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration settings.
+			The ON/OFF option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration/Prefs settings.
 		</p>
 
 		<div class="control-group">

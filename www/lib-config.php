@@ -51,7 +51,7 @@ if (isset($_POST['remount_sources'])) {
 if (isset($_POST['update_fs_mountmon'])) {
 	if (isset($_POST['fs_mountmon']) && $_POST['fs_mountmon'] != $_SESSION['fs_mountmon']) {
 		$_SESSION['fs_mountmon'] = $_POST['fs_mountmon'];
-		submitJob('fs_mountmon', $_POST['fs_mountmon'], 'Settings updated', '');
+		submitJob('fs_mountmon', $_POST['fs_mountmon'], 'Settings updated');
 	}
 }
 // Regenerate MPD database
@@ -85,7 +85,7 @@ if (isset($_POST['regen_thmcache'])) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	} else {
 		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
-		submitJob('regen_thmcache', '', 'Regenerating thumbnail cache...', '');
+		submitJob('regen_thmcache', '', 'Regenerating thumbnail cache...');
 	}
 }
 
@@ -96,7 +96,7 @@ if (isset($_POST['delete']) && $_POST['delete'] == 1) {
 	$initiateLibraryUpd = true;
 	$_POST['mount']['action'] = 'delete';
 	$_POST['mount']['id'] = $_SESSION['src_mpid'];
-	submitJob('sourcecfg', $_POST, '', '');
+	submitJob('sourcecfg', $_POST);
 }
 // Save source
 if (isset($_POST['save']) && $_POST['save'] == 1) {
@@ -150,7 +150,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$array['mount']['wsize'] = $_POST['mount']['wsize'];
 		$array['mount']['options'] = $_POST['mount']['options'];
 
-		submitJob('sourcecfg', $array, '', '');
+		submitJob('sourcecfg', $array);
 	}
 }
 // Scanner
@@ -220,7 +220,6 @@ if (!isset($_GET['cmd'])) {
 	$mounts = sqlRead('cfg_source', $dbh);
 	foreach ($mounts as $mp) {
 		$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
-		//$_mounts .= "<p><a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width:70%;background-color:#333;text-align:left;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
 		$_mounts .= "<a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a>";
 	}
 
@@ -232,16 +231,19 @@ if (!isset($_GET['cmd'])) {
 	}
 
 	// Mount monitor
-	$_select['fs_mountmon_on']  .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-1\" value=\"On\" " . (($_SESSION['fs_mountmon'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['fs_mountmon_off'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-2\" value=\"Off\" " . (($_SESSION['fs_mountmon'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-fs-mountmon').click();\"";
+	$_select['fs_mountmon_on']  .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-1\" value=\"On\" " . (($_SESSION['fs_mountmon'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['fs_mountmon_off'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-2\" value=\"Off\" " . (($_SESSION['fs_mountmon'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Auto-update MPD database on USB insert/remove
-	$_select['usb_auto_updatedb1'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb0\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['usb_auto_updatedb0'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb1\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-usb-auto-updatedb').click();\"";
+	$_select['usb_auto_updatedb_on'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-1\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['usb_auto_updatedb_off'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-2\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Ignore .cue files
-	$_select['cuefiles_ignore1'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore0\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['cuefiles_ignore0'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore1\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+	$autoClick = " onchange=\"$('#btn-set-cuefiles-ignore').click();\"";
+	$_select['cuefiles_ignore_on'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-1\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['cuefiles_ignore_off'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-2\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Thumbcache status
 	$_thmcache_status = $_SESSION['thmcache_status'];

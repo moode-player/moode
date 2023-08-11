@@ -29,7 +29,7 @@ if (isset($_POST['update_audio_input']) && $_POST['audio_input'] != $_SESSION['a
 		$_SESSION['notify']['duration'] = 6;
 	} else {
 		phpSession('write', 'audioin', $_POST['audio_input']);
-		submitJob('audioin', $_POST['audio_input'], 'Input set to ' . $_POST['audio_input'], '');
+		submitJob('audioin', $_POST['audio_input'], 'Input set to ' . $_POST['audio_input']);
 	}
 }
 
@@ -40,7 +40,7 @@ if (isset($_POST['update_resume_mpd']) && $_POST['resume_mpd'] != $_SESSION['rsm
 
 if (isset($_POST['update_audio_output']) && $_POST['audio_output'] != $_SESSION['audioout']) {
 	phpSession('write', 'audioout', $_POST['audio_output']);
-	submitJob('audioout', $_POST['audio_output'], 'Output set to ' . $_POST['audio_output'], '');
+	submitJob('audioout', $_POST['audio_output'], 'Output set to ' . $_POST['audio_output']);
 }
 
 phpSession('close');

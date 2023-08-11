@@ -26,6 +26,7 @@ body {
 	--config-bg-color: #151515;
 	--config-menu-bg-color: rgba(50,50,50,0.95);
 	--config-toggleoff-bg-color: rgba(128,128,128,0.2);
+	--config-toggleoff-color: #888;
 	--config-help-color: #888;
 	--config-help-margin-top: -10px;
 	--config-ctl-margin-right: 12px;
@@ -52,7 +53,7 @@ legend {font-size:1.5rem;font-weight:200;border-bottom:1px solid #888;margin-bot
 
 .toggle,
 .toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
-.config-toggle-yn {width:80px;}
+.toggle.toggle-off .toggle-radio {color:var(--config-toggleoff-color);}
 
 input[type=text],
 input[type=number],
