@@ -2435,6 +2435,20 @@ $(document).on('click', '.context-menu a', function(e) {
                 }
             });
             break;
+        case 'playqueue_time':
+            var mins = 0;
+            var secs = 0;
+            $('#playqueue-list .playqueue-action').each(function() {
+                var trackTime = $(this).text().slice(0, -1);
+                if (trackTime.length > 0) {
+                    var mmss = trackTime.split(':');
+                    mins += parseInt(mmss[0]);
+                    secs += parseInt(mmss[1]);
+                }
+            });
+            var timeRemaining = formatSongTime((mins * 60) + secs);
+            notify('playqueue_time', timeRemaining, '5_seconds');
+            break;
         case 'track_info_playback':
             if ($('#currentsong').html() != '') {
                 var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';

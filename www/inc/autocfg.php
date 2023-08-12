@@ -227,6 +227,10 @@ function autoConfigSettings() {
 		'Security',
 		['requires' => ['shellinabox'], 'handler' => setphpSession],
 
+		'Logs',
+		['requires' => ['reduce_sys_logging'], 'handler' => setSessionVarOnly],
+		//['requires' => ['debuglog'], 'handler' => setSessionVarOnly],
+
 		'I2S Device',
 		['requires' => ['i2soverlay'], 'handler' => function($values) {
 			phpSession('write', 'i2soverlay', $values['i2soverlay']);

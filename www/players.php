@@ -25,7 +25,7 @@ require_once __DIR__ . '/inc/sql.php';
 
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	if (!isset($_POST['ipaddr'])) {
-		workerLog('players.php: No IP addresses for command ' . $_GET['cmd']);
+		workerLog('players.php: No destination IP addresses for command ' . $_GET['cmd']);
 	} else {
 		$count = count($_POST['ipaddr']);
 		for ($i = 0; $i < $count; $i++) {

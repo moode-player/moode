@@ -28,8 +28,10 @@ Updates
 - UPD: Add predefined filters from Quick search to Library Advanced search
 - UPD: Add BTRFS (B-Tree File System) to udisks-glue auto-mount config (PR/631)
 - UPD: Add System config option to adjust responsiveness of worker daemon
+- UPD: Add System config option to reduce system logging
 - UPD: Add option to moodeutl to print daemon sleep intervals (responsiveness)
 - UPD: Add option to moodeutl to print Mount monitor and Auto-config logs
+- UPD: Add "Queue time" to the Playback and Playqueue context menus
 - UPD: Add PixelRatio to the viewport debug popup
 - UPD: Improve Backup/Restore (add missing settings, refactor code)
 - UPD: Improve renderer event handling when CamillaDSP volume is used

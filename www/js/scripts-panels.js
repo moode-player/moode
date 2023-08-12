@@ -1735,7 +1735,7 @@ jQuery(document).ready(function($) { 'use strict';
                 $('#players-submit-confirm-msg').text('Click again to confirm');
             } else {
                 $('#players-modal').modal('toggle');
-                notify('players_action_submit', cmd, '5_seconds');
+                notify('players_action_submit', cmd);
                 $.post('players.php?cmd=' + cmd, {'ipaddr': ipaddr});
             }
         }

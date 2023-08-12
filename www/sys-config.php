@@ -303,7 +303,7 @@ if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['s
 	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated');
 }
 
-// MAINTENANCE
+// LOGS
 
 if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
 	$fileName = 'moode.log';
@@ -316,6 +316,7 @@ if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
 	readfile ($fileLocation . $fileName);
  	exit();
 }
+
 if (isset($_POST['update_clear_syslogs'])) {
 	submitJob('clearsyslogs', '', 'System logs cleared');
 }
@@ -324,7 +325,12 @@ if (isset($_POST['update_clear_playhistory'])) {
 	submitJob('clearplayhistory', '', 'Playback history cleared');
 }
 
-if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
+if (isset($_POST['update_reduce_sys_logging']) && $_POST['reduce_sys_logging'] != $_SESSION['reduce_sys_logging']) {
+	$_SESSION['reduce_sys_logging'] = $_POST['reduce_sys_logging'];
+	submitJob('reduce_sys_logging', $_POST['reduce_sys_logging'], 'Settings updated', 'Restart reauired');
+}
+
+if (isset($_POST['update_debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 	$_SESSION['debuglog'] = $_POST['debuglog'];
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
@@ -526,7 +532,11 @@ if ($_SESSION['shellinabox'] == '1') {
 	$_webssh_link_disable = 'onclick="return false;"';
 }
 
-// MAINTENANCE
+// LOGS
+
+$autoClick = " onchange=\"$('#btn-set-reduce-sys-logging').click();\"";
+$_select['reduce_sys_logging_on']  .= "<input type=\"radio\" name=\"reduce_sys_logging\" id=\"toggle-reduce-sys-logging-1\" value=\"1\" " . (($_SESSION['reduce_sys_logging'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['reduce_sys_logging_off'] .= "<input type=\"radio\" name=\"reduce_sys_logging\" id=\"toggle-reduce-sys-logging-2\" value=\"0\" " . (($_SESSION['reduce_sys_logging'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 $autoClick = " onchange=\"$('#btn-set-debuglog').click();\"";
 $_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
