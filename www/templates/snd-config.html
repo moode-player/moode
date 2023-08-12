@@ -139,10 +139,13 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable>Set</button>
 				<span class="config-help-static">
 					<b>Default (plughw)</b><br>
-					Perform format conversions if needed for example zero-pad the bit depth to a width required by the audio device.<br>
+					This mode provides for best compatibility with audio devices by performing format conversions if needed for example zero-pad bit depth to a width required by the audio device.<br>
+					Supported by Equalizers, MPD, Bluetooth (inbound), AirPlay and Spotify renderers.<br>
 					<b>Direct (hw)</b><br>
-					No format conversions are performed. The audio device must accept the format or playback will not occur.<br>
-					Supported by MPD, CamillaDSP, Bluetooth (inbound), AirPlay and Spotify renderers.<br>
+					This mode does not perform any format conversions. The audio device must accept the given format or playback will not occur.<br>
+					Supported by Equalizers and renderers as listed for Default (plughw) mode<br>
+					<b>Pure Direct (hw)</b><br>
+					This is the same as Direct (hw) mode except that Equalizers are not supported.
 				</span>
 			</div>
 

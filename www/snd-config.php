@@ -446,6 +446,7 @@ if ($_SESSION['alsavolume'] == 'none') {
 $_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
 $_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
 $_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
+$_select['alsa_output_mode'] .= "<option value=\"hwp\" " . (($_SESSION['alsa_output_mode'] == 'hwp') ? "selected" : "") . ">Pure Direct (hw)</option>\n";
 // Loopback
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
 $autoClick = " onchange=\"$('#btn-set-alsa-loopback').click();\" " . $_alsa_loopback_disable;

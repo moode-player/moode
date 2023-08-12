@@ -48,10 +48,11 @@ foreach ($result as $row) {
     $currentSettings[$row['param']] = $row['value'];
 }
 
-// Add certain session-only params
+// Add certain session-only params so they are available to autoConfigExtract()
 $currentSettings['updater_auto_check'] = $_SESSION['updater_auto_check'];
 $currentSettings['worker_responsiveness'] = $_SESSION['worker_responsiveness'];
 $currentSettings['fs_mountmon'] = $_SESSION['fs_mountmon'];
+$currentSettings['reduce_sys_logging'] = $_SESSION['reduce_sys_logging'];
 
 // Extract to ini file
 print(autoConfigExtract($currentSettings));

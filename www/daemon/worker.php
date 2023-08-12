@@ -204,6 +204,12 @@ if (!isset($_SESSION['debuglog'])) {
 }
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
 
+// Reduce system logging
+if (!isset($_SESSION['reduce_sys_logging'])) {
+	$_SESSION['reduce_sys_logging'] = '0';
+}
+workerLog('worker: Reduced system logging (' . ($_SESSION['reduce_sys_logging'] == '1' ? 'ON' : 'OFF') . ')');
+
 // Reconfigure certain 3rd party installs
 // RoonBridge
 // NOTE: Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
@@ -2705,10 +2711,12 @@ function runQueuedJob() {
 		case 'compactdb':
 			sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
 			break;
-		case 'nettime': // not working...
-			sysCmd('systemctl stop ntp');
-			sysCmd('ntpd -qgx > /dev/null 2>&1 &');
-			sysCmd('systemctl start ntp');
+		case 'reduce_sys_logging':
+			if ($_SESSION['w_queueargs'] == '1') {
+				sysCmd('systemctl disable rsyslog');
+			} else {
+				sysCmd('systemctl enable rsyslog');
+			}
 			break;
 
 		// inp-config jobs
