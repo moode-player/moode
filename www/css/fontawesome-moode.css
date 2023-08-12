@@ -257,8 +257,8 @@ readers do not read off random characters that represent icons */
 .fa-chevron-square-right:before {
   content: "\f32b"; }
 
-.fa-clone:before {
-  content: "\f24d"; }
+.fa-clock:before {
+  content: "\f017"; }
 
 .fa-cog:before {
   content: "\f013"; }
