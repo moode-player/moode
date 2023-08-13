@@ -2446,8 +2446,8 @@ $(document).on('click', '.context-menu a', function(e) {
                     secs += parseInt(mmss[1]);
                 }
             });
-            var timeRemaining = formatSongTime((mins * 60) + secs);
-            notify('playqueue_time', timeRemaining, '5_seconds');
+            var totalPlayTime = formatSongTime((mins * 60) + secs);
+            notify('playqueue_time', totalPlayTime, '5_seconds');
             break;
         case 'track_info_playback':
             if ($('#currentsong').html() != '') {
@@ -4105,7 +4105,7 @@ function makeActive (vswitch, panel, view) {
 		case 'radio':
 			$('#viewswitch').addClass('vr');
 			$('#playbar-toggles .add-item-to-favorites').show();
-            $('#random-album, .adv-search-btn, .saved-searchs-btn').hide();
+            $('#random-album, .adv-search-btn, .saved-search-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
