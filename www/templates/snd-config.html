@@ -138,14 +138,11 @@
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable>Set</button>
 				<span class="config-help-static">
-					<b>Default (plughw)</b><br>
-					This mode provides for best compatibility with audio devices by performing format conversions if needed for example zero-pad bit depth to a width required by the audio device.<br>
-					Supported by Equalizers, MPD, Bluetooth (inbound), AirPlay and Spotify renderers.<br>
-					<b>Direct (hw)</b><br>
-					This mode does not perform any format conversions. The audio device must accept the given format or playback will not occur.<br>
-					Supported by Equalizers and renderers as listed for Default (plughw) mode<br>
-					<b>Pure Direct (hw)</b><br>
-					This is the same as Direct (hw) mode except that Equalizers are not supported.
+					<b>Default</b><br>
+					Uses the ALSA "plughw" plugin to perform format conversions if needed to match audio device requirements for example zero-padding the bit depth.<br>
+					<b>Direct</b><br>
+					Uses the ALSA "hw" plugin which does not preform any format conversions. The audio device must accept the given format or playback will not occur.<br>
+					<b>NOTE:</b> These modes apply to MPD, Bluetooth (inbound), AirPlay, Spotify Connect, and the Equalizers.
 				</span>
 			</div>
 
@@ -155,7 +152,6 @@
 					<label class="toggle-radio toggle-alsa-loopback" for="toggle-alsa-loopback-2">ON </label>$_select[alsa_loopback_on]
 					<label class="toggle-radio toggle-alsa-loopback" for="toggle-alsa-loopback-1">OFF</label>$_select[alsa_loopback_off]
 				</div>
-				<!-- TEST: -->
 				<button id="btn-set-alsa-loopback" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 				<span class="config-help-static">
 					The Loopback device provides a copy of the PCM output stream that can be accessed by reading "hw:Loopback,1,0".<br>

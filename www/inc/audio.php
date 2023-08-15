@@ -140,6 +140,9 @@ function setAudioOut($output) {
 
 // Update ALSA audio out and Bt out confs
 function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
+	// $outputMode:
+	// - plughw	Default
+	// - hw		Direct
 	if ($_SESSION['audioout'] == 'Local') {
 		// With DSP
 		if ($_SESSION['alsaequal'] != 'Off') {

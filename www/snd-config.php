@@ -444,9 +444,8 @@ if ($_SESSION['alsavolume'] == 'none') {
 }
 // Output mode
 $_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
-$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
-$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
-$_select['alsa_output_mode'] .= "<option value=\"hwp\" " . (($_SESSION['alsa_output_mode'] == 'hwp') ? "selected" : "") . ">Pure Direct (hw)</option>\n";
+$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
+$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
 // Loopback
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
 $autoClick = " onchange=\"$('#btn-set-alsa-loopback').click();\" " . $_alsa_loopback_disable;
@@ -494,8 +493,10 @@ $_select['rotenc_params'] = $_SESSION['rotenc_params'];
 // Crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
 // Configure DSP buttons
-if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off' && $_SESSION['multiroom_rx'] != 'On') {
-	// Local out. NOTE: Only one of the DSP'can be on
+if ($_SESSION['audioout'] == 'Local' &&
+	$_SESSION['multiroom_tx'] == 'Off' &&
+	$_SESSION['multiroom_rx'] != 'On') {
+	// Only one DSP'can be on
 	$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
@@ -503,14 +504,15 @@ if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off' && $_
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
 	$cmmodel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
 	$name = $_SESSION['hdwrrev'];
-	// Pi-Zero 2 W, Pi-2B rev 1.2, Allo USBridge SIG, Pi-3B/B+/A+, Pi-4B
+	// CamillaDSP can only be used on ARM7
 	if ((strpos($name, 'Pi-Zero 2') !== false) || $name == 'Pi-2B 1.2 1GB' || $model == '3' || $model == '4' || $name == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 		$_camilladsp_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
 	} else {
 		$_camilladsp_set_disabled = 'disabled';
 	}
 } else {
-	// Bluetooth out or Multiroom Sender/Receiver On. NOTE: Don't allow any DSP to be set
+	// Don't allow any DSP to be set for:
+	// Bluetooth speaker, Multiroom Sender/Receiver On or ALSA output mode "Pure Direct"
 	$_invpolarity_set_disabled = 'disabled';
 	$_crossfeed_set_disabled = 'disabled';
 	$_eqfa12p_set_disabled = 'disabled';

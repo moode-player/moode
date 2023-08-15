@@ -99,6 +99,9 @@ const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
+// ALSA output modes
+const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct');
+
 // Library Saved Searches
 const LIBSEARCH_BASE = '/var/local/www/libsearch_';
 const LIB_FULL_LIBRARY = 'Full Library (Default)';

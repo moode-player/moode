@@ -499,6 +499,24 @@ $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
 //
 workerLog('worker: --');
+workerLog('worker: -- File sharing');
+workerLog('worker: --');
+//
+
+// SMB
+if ($_SESSION['fs_smb'] == 'On') {
+	sysCmd('systemctl start smbd');
+	sysCmd('systemctl start nmbd');
+}
+// NFS
+if ($_SESSION['fs_nfs'] == 'On') {
+	sysCmd('systemctl start nfs-server');
+}
+workerLog('worker: SMB file sharing (' . $_SESSION['fs_smb'] . ')');
+workerLog('worker: NFS file sharing (' . $_SESSION['fs_nfs'] . ')');
+
+//
+workerLog('worker: --');
 workerLog('worker: -- Audio config');
 workerLog('worker: --');
 //
@@ -593,8 +611,7 @@ if (substr($result[0], 0, 6 ) == 'amixer') {
 }
 
 // Report ALSA output mode
-$alsaOutputMode = $_SESSION['alsa_output_mode'] == 'plughw' ? 'Default: plughw' : 'Direct: hw';
-workerLog('worker: ALSA output mode (' . $alsaOutputMode . ')');
+workerLog('worker: ALSA output mode (' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ')');
 
 // Start ALSA loopback
 if ($_SESSION['alsa_loopback'] == 'On') {
@@ -653,24 +670,6 @@ if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 }
 unset($cdsp);
 workerLog('worker: CamillaDSP configuration (' . rtrim($_SESSION['camilladsp'], '.yml') . ')');
-
-//
-workerLog('worker: --');
-workerLog('worker: -- File sharing');
-workerLog('worker: --');
-//
-
-// SMB
-if ($_SESSION['fs_smb'] == 'On') {
-	sysCmd('systemctl start smbd');
-	sysCmd('systemctl start nmbd');
-}
-// NFS
-if ($_SESSION['fs_nfs'] == 'On') {
-	sysCmd('systemctl start nfs-server');
-}
-workerLog('worker: SMB file sharing (' . $_SESSION['fs_smb'] . ')');
-workerLog('worker: NFS file sharing (' . $_SESSION['fs_nfs'] . ')');
 
 //
 workerLog('worker: --');
