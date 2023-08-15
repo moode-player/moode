@@ -31,7 +31,7 @@
 
 		<p class="sub-legend">
 			Specify which parts of the system will be included in the backup zip file. A script file may optionally be added that performs custom actions during the restore process. It is run during moOde startup as part of restoring the Configuration settings.
-			Note that WiFi and AP mode passwords will be included in the Configuration/Prefs settings part of the backup.
+			Note that WiFi and AP mode passwords will be included in the Config and Prefs part of the backup.
 		</p>
 
 		<div class="control-group">
@@ -49,7 +49,7 @@
 				</span>
 			</div>
 
-			<label class="control-label">Configuration/Prefs</label>
+			<label class="control-label">Config and Prefs</label>
 			<div class="controls">
 				$_togglebtn_backup_system
 				<span id="info-backup-system" class="config-help-info">
@@ -70,6 +70,14 @@
 				$_togglebtn_backup_playlists
 				<span id="info-backup-playlists" class="config-help-info">
 					Backup playlists.
+				</span>
+			</div>
+
+			<label class="control-label">Saved searches</label>
+			<div class="controls">
+				$_togglebtn_backup_searches
+				<span id="info-backup-searches" class="config-help-info">
+					Backup saved searches.
 				</span>
 			</div>
 
@@ -117,7 +125,7 @@
 
 		<p class="sub-legend">
 			Specify which parts of the system will be restored.
-			The ON/OFF option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration/Prefs settings.
+			The ON/OFF option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring Config and Prefs.
 		</p>
 
 		<div class="control-group">
@@ -142,6 +150,14 @@
 				$_togglebtn_restore_playlists
 				<span id="info-restore-playlists" class="config-help-info">
 					Restore playlists.
+				</span>
+			</div>
+
+			<label class="control-label">Saved searches</label>
+			<div class="controls">
+				$_togglebtn_restore_searches
+				<span id="info-restore-searches" class="config-help-info">
+					Restore saved searches.
 				</span>
 			</div>
 
@@ -180,7 +196,7 @@
 			<div class="controls">
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="restore_start" form="restore" value="1">Restore System</button>
 				<span class="config-help-static">
-					A reboot is required if Configuration settings are part of the restore.
+					A reboot is required if Config and Prefs are part of the restore.
 				</span>
 			</div>
 		</div>
