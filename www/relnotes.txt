@@ -41,6 +41,7 @@ Updates
 - UPD: Improve Config screen toggle buttons (SET no longer required)
 - UPD: Improve various help text, labels and notification messages
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
+- UPD: Add saved searches to Backup/Restore
 
 Radio Stations (New Image Only)
 
