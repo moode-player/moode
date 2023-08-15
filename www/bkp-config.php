@@ -37,14 +37,17 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	if (isset($_POST['backup_camilladsp']) && $_POST['backup_camilladsp'] == '1') {
 		$backupOptions .= $backupOptions ? ' cdsp' : 'cdsp';
 	}
+	if (isset($_POST['backup_playlists']) && $_POST['backup_playlists'] == '1') {
+		$backupOptions .= $backupOptions ? ' playlists' : 'playlists';
+	}
+	if (isset($_POST['backup_searches']) && $_POST['backup_searches'] == '1') {
+		$backupOptions .= $backupOptions ? ' searches' : 'searches';
+	}
 	if (isset($_POST['backup_radiostations_moode']) && $_POST['backup_radiostations_moode'] == '1') {
 		$backupOptions .= $backupOptions ? ' r_moode' : 'r_moode';
 	}
 	if (isset($_POST['backup_radiostations_other']) && $_POST['backup_radiostations_other'] == '1') {
 		$backupOptions .= $backupOptions ? ' r_other' : 'r_other';
-	}
-	if (isset($_POST['backup_playlists']) && $_POST['backup_playlists'] == '1') {
-		$backupOptions .= $backupOptions ? ' playlists' : 'playlists';
 	}
 
 	if (empty($backupOptions)) {
@@ -100,14 +103,17 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		if (isset($_POST['restore_camilladsp']) && $_POST['restore_camilladsp'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' cdsp' : 'cdsp';
 		}
+		if (isset($_POST['restore_playlists']) && $_POST['restore_playlists'] == '1') {
+			$restoreOptions .= $restoreOptions ? ' playlists' : 'playlists';
+		}
+		if (isset($_POST['restore_searches']) && $_POST['restore_searches'] == '1') {
+			$restoreOptions .= $restoreOptions ? ' searches' : 'searches';
+		}
 		if (isset($_POST['restore_radiostations_moode']) && $_POST['restore_radiostations_moode'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' r_moode' : 'r_moode';
 		}
 		if (isset($_POST['restore_radiostations_other']) && $_POST['restore_radiostations_other'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' r_other' : 'r_other';
-		}
-		if(isset($_POST['restore_playlists']) && $_POST['restore_playlists'] == '1') {
-			$restoreOptions .= $restoreOptions ? ' playlists' : 'playlists';
 		}
 
 		if (empty($restoreOptions)) {
@@ -117,9 +123,10 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		} else {
 			$restoreOptions = '--what ' . $restoreOptions . ' ';
 
+			//workerLog('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('rm ' . TMP_RESTORE_ZIP);
-			// Set permissions in case we don't reboot
+			// Set permissions in case the restore doesn't require a reboot
 			sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT);
 			sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT . '*.*');
 			sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
@@ -202,9 +209,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_restore_hidden = 'hidden';
 	$_togglebtn_backup_system = genToggleButton('backup_system', True, False);
 	$_togglebtn_backup_camilladsp = genToggleButton('backup_camilladsp', True, False);
+	$_togglebtn_backup_playlists = genToggleButton('backup_playlists', True, False);
+	$_togglebtn_backup_searches = genToggleButton('backup_searches', True, False);
 	$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', True, False);
 	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, False);
-	$_togglebtn_backup_playlists = genToggleButton('backup_playlists', True, False);
 } else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
 	$_heading = 'Restore';
 	$_backup_hidden = 'hidden';
@@ -213,9 +221,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	//workerLog(print_r($backupOptions, true));
 	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), !in_array('config', $backupOptions));
 	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), !in_array('cdsp', $backupOptions));
+	$_togglebtn_restore_playlists = genToggleButton('restore_playlists', in_array('playlists', $backupOptions), !in_array('playlists', $backupOptions));
+	$_togglebtn_restore_searches = genToggleButton('restore_searches', in_array('searches', $backupOptions), !in_array('searches', $backupOptions));
 	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), !in_array('r_moode', $backupOptions));
 	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), !in_array('r_other', $backupOptions));
-	$_togglebtn_restore_playlists = genToggleButton('restore_playlists', in_array('playlists', $backupOptions), !in_array('playlists', $backupOptions));
 }
 
 waitWorker('bkp-config');
