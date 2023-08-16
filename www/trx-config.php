@@ -213,11 +213,13 @@ $_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
 $_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Hide' ? '' : 'hide';
 
 // Sender
-$_select['multiroom_tx_on']  .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle-multiroom-tx-1\" value=\"On\" " . (($_SESSION['multiroom_tx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['multiroom_tx_off'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle-multiroom-tx-2\" value=\"Off\" " . (($_SESSION['multiroom_tx'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-multiroom-tx').click();\" " . $_multiroom_tx_disable;
+$_select['multiroom_tx_on']  .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle-multiroom-tx-1\" value=\"On\" " . (($_SESSION['multiroom_tx'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['multiroom_tx_off'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle-multiroom-tx-2\" value=\"Off\" " . (($_SESSION['multiroom_tx'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
-$_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-alsa-loopback').click();\" " . $_localui_btn_disable;
+$_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 if (!isset($_SESSION['rx_hostnames'])) {
 	$_rx_hostnames = 'Discover has not been run yet';
 } else {
@@ -245,8 +247,9 @@ $_multiroom_tx_query_timeout = $cfgMultiroom['tx_query_timeout'];
 $_select['multiroom_rx'] .= "<option value=\"Disabled\" " . (($_SESSION['multiroom_rx'] == 'Disabled') ? "selected" : "") . ">Disabled</option>\n";
 $_select['multiroom_rx'] .= "<option value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "selected" : "") . ">On</option>\n";
 $_select['multiroom_rx'] .= "<option value=\"Off\" " . (($_SESSION['multiroom_rx'] == 'Off') ? "selected" : "") . ">Off</option>\n";
-$_select['multiroom_rx_mastervol_opt_in_on'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-1\" value=\"1\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-$_select['multiroom_rx_mastervol_opt_in_off'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-2\" value=\"0\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"$('#btn-set-multiroom-rx-mastervol-opt-in').click();\" " . $_localui_btn_disable;
+$_select['multiroom_rx_mastervol_opt_in_on'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-1\" value=\"1\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['multiroom_rx_mastervol_opt_in_off'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-2\" value=\"0\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
 $_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0], '%');
