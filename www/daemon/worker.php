@@ -1062,6 +1062,15 @@ $view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' .
 phpSession('write', 'current_view', $view);
 sendEngCmd('refresh_screen');
 
+// Worker sleep interval
+if (!isset($_SESSION['worker_responsiveness'])) {
+	$_SESSION['worker_responsiveness'] = 'Default';
+}
+// Mount monitor
+if (!isset($_SESSION['fs_mountmon'])) {
+	$_SESSION['fs_mountmon'] = 'Off';
+}
+
 //
 // Globals section
 //
@@ -1144,9 +1153,6 @@ workerLog('worker: --');
 //
 
 // Start mount monitor
-if (!isset($_SESSION['fs_mountmon'])) {
-	$_SESSION['fs_mountmon'] = 'Off';
-}
 sysCmd('killall -s 9 mountmon.php');
 if ($_SESSION['fs_mountmon'] == 'On') {
 	sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
@@ -1159,10 +1165,7 @@ $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $db
 sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
 workerLog('worker: Watchdog monitor (started)');
 
-// Worker wakeup interval
-if (!isset($_SESSION['worker_responsiveness'])) {
-	$_SESSION['worker_responsiveness'] = 'Default';
-}
+// Sleep intervals
 workerLog('worker: Responsiveness (' . $_SESSION['worker_responsiveness'] . ')');
 debugLog('worker: Sleep intervals (' .
 	'worker=' . WORKER_SLEEP / 1000000 . ', ' .
