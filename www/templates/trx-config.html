@@ -36,7 +36,7 @@
 					<label class="toggle-radio toggle-multiroom-tx" for="toggle-multiroom-tx-2">ON </label>$_select[multiroom_tx_on]
 					<label class="toggle-radio toggle-multiroom-tx" for="toggle-multiroom-tx-1">OFF</label>$_select[multiroom_tx_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx" value="novalue" $_multiroom_tx_disable>Set</button>
+				<button id="btn-set-multiroom-tx" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx" value="novalue" $_multiroom_tx_disable>Set</button>
 			</div>
 
 			<label class="control-label">Loopback</label>
@@ -45,7 +45,7 @@
 					<label class="toggle-radio toggle-alsa-loopback" for="toggle-alsa-loopback-2">ON </label>$_select[alsa_loopback_on]
 					<label class="toggle-radio toggle-alsa-loopback" for="toggle-alsa-loopback-1">OFF</label>$_select[alsa_loopback_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
+				<button id="btn-set-alsa-loopback" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 				<span class="config-help-static">
 					Before turning ALSA Loopback ON ensure Audio output is set to HDMI or Headphone and all DSP in Audio Config is OFF.
                 </span>
@@ -147,7 +147,7 @@
 					<label class="toggle-radio toggle-multiroom-rx-mastervol-opt-in" for="toggle-multiroom-rx-mastervol-opt-in-2">ON </label>$_select[multiroom_rx_mastervol_opt_in_on]
 					<label class="toggle-radio toggle-multiroom-rx-mastervol-opt-in" for="toggle-multiroom-rx-mastervol-opt-in-1">OFF</label>$_select[multiroom_rx_mastervol_opt_in_off]
 				</div>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_mastervol_opt_in" value="novalue">Set</button>
+				<button id="btn-set-multiroom-rx-mastervol-opt-in" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_mastervol_opt_in" value="novalue">Set</button>
 				<span class="config-help-static">
 					Specify whether the Receiver accepts changes made by the Sender volume control.
 					Note that on the Receivers&nbsp;<i class="fas fa-rss"></i>&nbsp;screen a volume knob icon&nbsp;<i class="fal fa-dot-circle"></i>&nbsp;will appear for those that have opted in.
