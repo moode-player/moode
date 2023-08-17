@@ -670,7 +670,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				// NOTE: Hardcode displayed bitrates for .m3u8 320K and FLAC stations because MPD returns bitrate 0
 				if (strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320 kbps';
-				} else if (strpos($_SESSION[$song['file']]['name'], 'FLAC') !== false) {
+				} else if ($_SESSION[$song['file']]['format'] == 'FLAC') {
                     $current['bitrate'] = '900 kbps';
                 }
 			} else {
