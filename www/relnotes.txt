@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2023-08-16 TC moOde 8.3.4
+# 2023-08-17 TC moOde 8.3.4
 #
 ################################################################################
 
@@ -49,8 +49,6 @@ Radio Stations (New Image Only)
 
 Bug fixes
 
-- FIX: Allo Katana DAC driver load fail on Pi-4B (** PENDING KERNEL UPDATE **)
-- FIX: Allo Boss 2 driver no sound output on 6.1 kernel (** PENDING KERNEL UPDATE **)
 - FIX: HDMI volume incorrectly set to +4dB at 100% instead of 0dB (PR/636)
 - FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
 - FIX: Extraneous hostname added to string returned by get_rx_status
