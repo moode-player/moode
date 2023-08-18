@@ -81,6 +81,8 @@ function genFlatList($sock) {
 			// Return full library
 			case 'full_lib':
 			// These filters are in genLibrary()
+			case 'channels':
+			case 'multichannel':
 			case 'encoded':
 			case 'hdonly':
 			case 'year':
@@ -240,6 +242,17 @@ function genLibrary($flat) {
 			}
 		}
 
+		// Multichannel or channel number
+		if ($_SESSION['library_flatlist_filter'] == 'channels' || $_SESSION['library_flatlist_filter'] == 'multichannel') {
+			$channels = getChannels($flatData);
+		
+			if ($_SESSION['library_flatlist_filter'] == 'channels') {
+				$push = ($channels == $_SESSION['library_flatlist_filter_str']) ? true : false;
+			} else {
+				$push = ($channels > 2) ? true : false;
+			}	
+		}
+
 		if ($push === true) {
 			$songData = array(
 				'file' => $flatData['file'],
@@ -303,6 +316,7 @@ function libcacheFile() {
 			break;
 		case 'folder':
 		case 'format':
+		case 'multichannel':
 		case 'hdonly':
 		case 'lossless':
 		case 'lossy':
@@ -314,6 +328,7 @@ function libcacheFile() {
 		case 'composer':
 		case 'conductor':
 		case 'encoded':
+		case 'channels':
 		case 'file':
 		case 'genre':
 		case 'label':
@@ -423,6 +438,17 @@ function genLibraryUTF8Rep($flat) {
 				$push = strpos($encodedAt, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
 			} else {
 				$push = strpos($encodedAt, 'h', -1) !== false ? true : false;
+			}
+		}
+
+		// Multichannel or channel number
+		if ($_SESSION['library_flatlist_filter'] == 'channels' || $_SESSION['library_flatlist_filter'] == 'multichannel') {
+			$channels = getChannels($flatData);
+
+			if ($_SESSION['library_flatlist_filter'] == 'channels') {
+				$push = ($channels == $_SESSION['library_flatlist_filter_str']) ? true : false;
+			} else {
+				$push = ($channels > 2) ? true : false;
 			}
 		}
 
@@ -620,7 +646,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		if ($displayFormat == 'default') {
 			$encodedAt = $bitDepth == '?' ?
 				formatRate($sampleRate) . ' ' . $format :
-				$bitDepth . '/' . formatRate($sampleRate) . ' ' . $format;
+				$bitDepth . '/' . formatRate($sampleRate) . '/' . $channels . ' ' . $format;
 		} else {
 			// 'verbose'
 			$encodedAt = $bitDepth == '?' ?
@@ -644,6 +670,12 @@ function getMpdEncodedAt($file) {
 	$mpdEncodedAt = explode(':', $songData['Format']);
 
 	return $mpdEncodedAt;
+}
+
+function getChannels($songData) {
+	// $mpdEncodedAt = getMpdEncodedAt($songData['file']);
+	$mpdEncodedAt = explode(':', $songData['Format']);
+	return $mpdEncodedAt[2];
 }
 
 // Auto-shuffle random play

@@ -231,7 +231,7 @@ function formatChannels($channels) {
 	} else if ($channels == '2' || $channels == '*') {
 	 	$str = 'Stereo';
 	} else if ($channels > 2) {
-	 	$str = 'Multichannel';
+	 	$str = 'Multichannel (' . $channels . ')';
 	} else {
 		$str = 'Undefined';
 	}
