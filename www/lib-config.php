@@ -231,17 +231,17 @@ if (!isset($_GET['cmd'])) {
 	}
 
 	// Mount monitor
-	$autoClick = " onchange=\"$('#btn-set-fs-mountmon').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-fs-mountmon');\"";
 	$_select['fs_mountmon_on']  .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-1\" value=\"On\" " . (($_SESSION['fs_mountmon'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['fs_mountmon_off'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-2\" value=\"Off\" " . (($_SESSION['fs_mountmon'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Auto-update MPD database on USB insert/remove
-	$autoClick = " onchange=\"$('#btn-set-usb-auto-updatedb').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-usb-auto-updatedb');\"";
 	$_select['usb_auto_updatedb_on'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-1\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['usb_auto_updatedb_off'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-2\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Ignore .cue files
-	$autoClick = " onchange=\"$('#btn-set-cuefiles-ignore').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-cuefiles-ignore');\"";
 	$_select['cuefiles_ignore_on'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-1\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['cuefiles_ignore_off'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-2\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 

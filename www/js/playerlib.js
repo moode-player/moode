@@ -4515,3 +4515,11 @@ function updateRxVolDisplay(selector, value) {
     selector = selector.slice(0, -7); // Remove '-slider' leaving ...-vol
     $('#' + selector).text(value);
 }
+
+// Auto-click SET button for Configs
+// The delay allows the radio button slide animation to fully complete on touch devices
+function autoClick(selector) {
+    setTimeout(function() {
+        $(selector).click();
+    }, 250);
+}

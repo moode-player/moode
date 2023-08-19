@@ -342,7 +342,7 @@ sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/s
 
 // SOFTWARE UPDATE
 
-$autoClick = " onchange=\"$('#btn-set-updater-auto-check').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-updater-auto-check');\"";
 $_select['updater_auto_check_on']  .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-1\" value=\"On\" " . (($_SESSION['updater_auto_check'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['updater_auto_check_off'] .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-2\" value=\"Off\" " . (($_SESSION['updater_auto_check'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
@@ -369,22 +369,22 @@ $name = $_SESSION['hdwrrev'];
 // Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B
 if (stripos($name, 'Pi-Zero W') !== false || stripos($name, 'Pi-Zero 2 W') !== false || $model == '3' || $model == '4') {
 	$_wifibt_hide = '';
-	$autoClick = " onchange=\"$('#btn-set-p3wifi').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-p3wifi');\"";
 	$_select['p3wifi_on']  .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['p3wifi_off'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$autoClick = " onchange=\"$('#btn-set-p3bt').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-p3bt');\"";
 	$_select['p3bt_on']  .= "<input type=\"radio\" name=\"p3bt\" id=\"toggle-p3bt-1\" value=\"1\" " . (($_SESSION['p3bt'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['p3bt_off'] .= "<input type=\"radio\" name=\"p3bt\" id=\"toggle-p3bt-2\" value=\"0\" " . (($_SESSION['p3bt'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_wifibt_hide = 'hide';
 }
 
-$autoClick = " onchange=\"$('#btn-set-hdmiport').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-hdmiport');\"";
 $_select['hdmiport_on']  .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-1\" value=\"1\" " . (($_SESSION['hdmiport'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['hdmiport_off'] .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-2\" value=\"0\" " . (($_SESSION['hdmiport'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 $actled = explode(',', $_SESSION['led_state'])[0];
-$autoClick = " onchange=\"$('#btn-set-actled').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-actled');\"";
 $_select['actled_on']  .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-1\" value=\"1\" " . (($actled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['actled_off'] .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-2\" value=\"0\" " . (($actled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
@@ -393,7 +393,7 @@ if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero' || substr($_SESSION['hdwrrev
 } else {
 	$_pwrled_hide = '';
 	$pwrled = explode(',', $_SESSION['led_state'])[1];
-	$autoClick = " onchange=\"$('#btn-set-pwrled').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-pwrled');\"";
 	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 }
@@ -406,14 +406,14 @@ $_select['ipaddr_timeout'] .= "<option value=\"90\" " . (($_SESSION['ipaddr_time
 $_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_timeout'] == '120') ? "selected" : "") . ">120</option>\n";
 $_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_timeout'] == '120') ? "selected" : "") . ">180</option>\n";
 
-$autoClick = " onchange=\"$('#btn-set-eth0chk').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-eth0chk');\"";
 $_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // TEST: HTTPS-only mode
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	$_feat_https = '';
-	$autoClick = " onchange=\"$('#btn-set-nginx-https-only').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-nginx-https-only');\"";
 	$_select['nginx_https_only_on']  .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-1\" value=\"1\" " . (($_SESSION['nginx_https_only'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['nginx_https_only_off'] .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-2\" value=\"0\" " . (($_SESSION['nginx_https_only'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
@@ -448,15 +448,15 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 		$_localui_link_disable = 'onclick="return false;"';
 	}
 
-	$autoClick = " onchange=\"$('#btn-set-localui').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-localui');\"";
 	$_select['localui_on']  .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['localui_off'] .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-2\" value=\"0\" " . (($_SESSION['localui'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-	$autoClick = " onchange=\"$('#btn-set-wake-display').click();\" " . $_localui_btn_disable;
+	$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\" " . $_localui_btn_disable;
 	$_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['wake_display_off'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-	$autoClick = " onchange=\"$('#btn-set-touchscn').click();\" " . $_localui_btn_disable;
+	$autoClick = " onchange=\"autoClick('#btn-set-touchscn');\" " . $_localui_btn_disable;
 	$_select['touchscn_on']  .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-1\" value=\"1\" " . (($_SESSION['touchscn'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['touchscn_off'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
@@ -480,7 +480,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
 	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
 
-	$autoClick = " onchange=\"$('#btn-set-on-screen-kbd').click();\" " . $_localui_btn_disable;
+	$autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_localui_btn_disable;
 	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
@@ -491,11 +491,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 
 // FILE SHARING
 
-$autoClick = " onchange=\"$('#btn-set-fs-smb').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-fs-smb');\"";
 $_select['fs_smb_on']  .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-1\" value=\"On\" " . (($_SESSION['fs_smb'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['fs_smb_off'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-2\" value=\"Off\" " . (($_SESSION['fs_smb'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-$autoClick = " onchange=\"$('#btn-set-fs-nfs').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-fs-nfs');\"";
 $_select['fs_nfs_on']  .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-1\" value=\"On\" " . (($_SESSION['fs_nfs'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['fs_nfs_off'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-2\" value=\"Off\" " . (($_SESSION['fs_nfs'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
@@ -505,13 +505,13 @@ $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] 
 
 // PERIPHERALS
 
-$autoClick = " onchange=\"$('#btn-set-lcdup').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-lcdup');\"";
 $_select['lcdup_on']  .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['lcdup_off'] .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	$_feat_gpio = '';
-	$autoClick = " onchange=\"$('#btn-set-gpio-svc').click();\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-gpio-svc');\"";
 	$_select['gpio_svc_on']  .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle-gpio-svc-1\" value=\"1\" " . (($_SESSION['gpio_svc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['gpio_svc_off'] .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle-gpio-svc-2\" value=\"0\" " . (($_SESSION['gpio_svc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
@@ -520,7 +520,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 
 // SECURITY
 
-$autoClick = " onchange=\"$('#btn-set-shellinabox').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-shellinabox');\"";
 $_select['shellinabox_on']  .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['shellinabox_off'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['hostip'] = getHostIp();
@@ -534,11 +534,11 @@ if ($_SESSION['shellinabox'] == '1') {
 
 // LOGS
 
-$autoClick = " onchange=\"$('#btn-set-reduce-sys-logging').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-reduce-sys-logging');\"";
 $_select['reduce_sys_logging_on']  .= "<input type=\"radio\" name=\"reduce_sys_logging\" id=\"toggle-reduce-sys-logging-1\" value=\"1\" " . (($_SESSION['reduce_sys_logging'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['reduce_sys_logging_off'] .= "<input type=\"radio\" name=\"reduce_sys_logging\" id=\"toggle-reduce-sys-logging-2\" value=\"0\" " . (($_SESSION['reduce_sys_logging'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-$autoClick = " onchange=\"$('#btn-set-debuglog').click();\"";
+$autoClick = " onchange=\"autoClick('#btn-set-debuglog');\"";
 $_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['debuglog_off'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-2\" value=\"0\" " . (($_SESSION['debuglog'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
