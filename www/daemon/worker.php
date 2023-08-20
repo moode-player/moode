@@ -152,6 +152,7 @@ sysCmd('touch ' . LIBCACHE_BASE . '_format.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_hdonly.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossless.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossy.json');
+sysCmd('touch ' . LIBCACHE_BASE . '_multichannel.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_tag.json');
 sysCmd("echo -n '" . json_encode(['filter_type' => 'full_lib', 'filter_str' => '']) . "'" .
 	' | tee "' . LIBSEARCH_BASE . LIB_FULL_LIBRARY . '.json" > /dev/null');
