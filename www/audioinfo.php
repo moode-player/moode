@@ -32,6 +32,8 @@ phpSession('open_ro');
 
 // Hardware params
 $hwParams = getAlsaHwParams(getAlsaCardNum());
+//workerLog('audioinfo.php: cardnum: ' . print_r(getAlsaCardNum(), true));
+//workerLog('audioinfo.php: hwparams: ' . print_r($hwParams, true));
 
 // Cfg_mpd settings
 $cfgMPD = getCfgMpd($dbh);

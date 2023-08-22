@@ -154,11 +154,12 @@ function getAlsaCards() {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 		$cards[$i] = empty($cardID) ? 'empty' : $cardID;
 	}
+	//workerLog('getAlsaCards(): ' . print_r($cards, true));
 	return $cards;
 }
 
 function getAlsaCardNum() {
-	return $_SESSION['multiroom_tx'] == 'On' ? array_search('Dummy', getAlsaCards()) : $_SESSION['cardnum'];
+	return $_SESSION['multiroom_tx'] == 'On' ? (array_search('Dummy', getAlsaCards()) - 1) : $_SESSION['cardnum'];
 }
 
 // Volume support routines for MPD and CamillaDSP
