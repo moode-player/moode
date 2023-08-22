@@ -11,6 +11,22 @@
 
 ################################################################################
 #
+# 2023-MM-DD TC moOde 8.3.6
+#
+################################################################################
+
+Updates
+
+- UPD: 
+
+Bug fixes
+
+- FIX: Toggle button auto-click not working on CamillaDSP Config
+- FIX: Typo in Equalizers heading on Audio Config
+- FIX: Rates not showing on Audio info for Multiroom sender
+
+################################################################################
+#
 # 2023-08-19 TC moOde 8.3.5
 #
 ################################################################################
