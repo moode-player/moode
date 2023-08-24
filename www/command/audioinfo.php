@@ -83,7 +83,7 @@ function parseTrackInfo($resp) {
 	} else {
 		$array = array();
 		$line = strtok($resp, "\n");
-		$numLines = 14;
+		$numLines = 15;
 
 		for ($i = 0; $i < $numLines; $i++) {
 			$array[$i] = '';
@@ -140,7 +140,7 @@ function parseTrackInfo($resp) {
 					$array[12] = array('Duration' => formatSongTime($value));
 					break;
 				case 'Comment':
-					$array[14] = array($element => $value);
+					$array[15] = array($element => $value);
 					break;
 			}
 
@@ -154,7 +154,10 @@ function parseTrackInfo($resp) {
 		$array[6] = !empty(rtrim($genres, ', ')) ? array('Genres' => rtrim($genres, ', ')) : '';
 		// Audio format
 		$encodedAt = getEncodedAt(array('file' => $file), 'default');
-		$array[13] = $encodedAt == 'Not playing' ? '' : array('Audio format' => $encodedAt);
+		if ($encodedAt != 'Not playing') {
+			$array[13] = array('Audio Format' => $encodedAt[0] . '/' . $encodedAt[1] . ' ' . $encodedAt[3]);
+			$array[14] = array('Channels' => formatChannels($encodedAt[2]));
+		}
 	}
 
 	return $array;

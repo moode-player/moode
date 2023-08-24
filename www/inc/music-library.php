@@ -646,7 +646,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		if ($displayFormat == 'default') {
 			$encodedAt = $bitDepth == '?' ?
 				formatRate($sampleRate) . ' ' . $format :
-				$bitDepth . '/' . formatRate($sampleRate) . ' ' . $format;
+				$bitDepth . '/' . formatRate($sampleRate) . '/' . $channels . '/' . $format;
 		} else {
 			// 'verbose'
 			$encodedAt = $bitDepth == '?' ?
