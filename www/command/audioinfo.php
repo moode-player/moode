@@ -155,8 +155,9 @@ function parseTrackInfo($resp) {
 		// Audio format
 		$encodedAt = getEncodedAt(array('file' => $file), 'default');
 		if ($encodedAt != 'Not playing') {
-			$array[13] = array('Audio Format' => $encodedAt[0] . '/' . $encodedAt[1] . ' ' . $encodedAt[3]);
-			$array[14] = array('Channels' => formatChannels($encodedAt[2]));
+			$formatData = explode('/', $encodedAt);
+			$array[13] = array('Audio Format' => $formatData[0] . '/' . $formatData[1] . ' ' . $formatData[3]);
+			$array[14] = array('Channels' => formatChannels($formatData[2]));
 		}
 	}
 
