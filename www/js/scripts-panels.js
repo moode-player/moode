@@ -1327,34 +1327,41 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#db-search-submit').click(function(e) {
         var searchType = '';
 		var searchStr = '';
+        //var tags = ['genre', 'artist', 'album', 'title', 'albumartist', 'date',
+        //    'composer', 'conductor', 'performer', 'work', 'comment', 'file'];
+
+        // Search operators
+        // NOTE: Add 'starts_with' operator when bump to MPD 0.24
+        function setSearchStr(str) {
+            str = str.trim();
+            if (str.startsWith('== ') || str.startsWith('!= ')) {
+                str = str.slice(0, 3) + "'" +  str.slice(3) + "'";
+            } else {
+                str = "contains '" + str + "'";
+            }
+            return str;
+        }
 
         if ($('#dbsearch-predefined-filters').val() != '') {
-            // NOTE: This input field is hidden in Folder view because ut does not support predefined filters
+            // NOTE: This input field is hidden in Folder view because that view does not support predefined filters
             searchType = $('#dbsearch-predefined-filters').val().trim().toLowerCase();
             searchStr = '';
         } else if ($('#dbsearch-alltags').val() != '') {
             searchType = 'any';
-			searchStr = currentView == 'folder'? $('#dbsearch-alltags').val().trim() : "(any contains '" + $('#dbsearch-alltags').val().trim() + "')";
+            searchStr = currentView == 'folder' ? $('#dbsearch-alltags').val().trim() : '(any ' + setSearchStr($('#dbsearch-alltags').val()) + ')';
 		} else {
             searchType = 'specific'; // NOTE: This searchType is for Folder view only
-			searchStr += $('#dbsearch-genre').val() == '' ? '' : " AND (genre contains '" + $('#dbsearch-genre').val().trim() + "')";
-			searchStr += $('#dbsearch-artist').val() == '' ? '' : " AND (artist contains '" + $('#dbsearch-artist').val().trim() + "')";
-			searchStr += $('#dbsearch-album').val() == '' ? '' : " AND (album contains '" + $('#dbsearch-album').val().trim() + "')";
-			searchStr += $('#dbsearch-title').val() == '' ? '' : " AND (title contains '" + $('#dbsearch-title').val().trim() + "')";
-			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : " AND (albumartist contains '" + $('#dbsearch-albumartist').val().trim() + "')";
-			searchStr += $('#dbsearch-date').val() == '' ? '' : " AND (date contains '" + $('#dbsearch-date').val().trim() + "')";
-			searchStr += $('#dbsearch-composer').val() == '' ? '' : " AND (composer contains '" + $('#dbsearch-composer').val().trim() + "')";
-            searchStr += $('#dbsearch-conductor').val() == '' ? '' : " AND (conductor contains '" + $('#dbsearch-conductor').val().trim() + "')";
-			searchStr += $('#dbsearch-performer').val() == '' ? '' : " AND (performer contains '" + $('#dbsearch-performer').val().trim() + "')";
-            searchStr += $('#dbsearch-work').val() == '' ? '' : " AND (work contains '" + $('#dbsearch-work').val().trim() + "')";
-			searchStr += $('#dbsearch-comment').val() == '' ? '' : " AND (comment contains '" + $('#dbsearch-comment').val().trim() + "')";
-			searchStr += $('#dbsearch-file').val() == '' ? '' : " AND (file contains '" + $('#dbsearch-file').val().trim() + "')";
+            GLOBAL.searchTags.forEach(function(tag) {
+                searchStr += $('#dbsearch-' + tag).val() == '' ? '' : ' AND (' + tag + ' ' + setSearchStr($('#dbsearch-' + tag).val()) + ')';
+            });
+
 			if (searchStr != '') {
                 searchStr = searchStr.slice(5);
 			} else {
                 searchType = '';
             }
 		}
+
         if (searchType == '' && searchStr == '') {
             notify('search_fields_empty', 'Search not performed', '5_seconds');
         } else {
@@ -1387,19 +1394,11 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
     $('#db-search-reset').click(function(e) {
-        var specificTags =
-            '#dbsearch-genre,' +
-            '#dbsearch-artist,' +
-            '#dbsearch-album,' +
-            '#dbsearch-title,' +
-            '#dbsearch-albumartist,' +
-            '#dbsearch-date,' +
-            '#dbsearch-composer,' +
-            '#dbsearch-conductor,' +
-            '#dbsearch-performer,' +
-            '#dbsearch-work,' +
-            '#dbsearch-comment,' +
-            '#dbsearch-file';
+        var specificTags = '';
+        GLOBAL.searchTags.forEach(function(tag) {
+            specificTags += '#dbsearch-' + tag + ',';
+        });
+        specificTags = specificTags.slice(0, -1);
         $('#dbsearch-predefined-filters, #dbsearch-alltags,' + specificTags).val('');
 	});
 	$('#dbsearch-modal').on('shown.bs.modal', function(e) {

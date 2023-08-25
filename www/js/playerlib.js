@@ -148,8 +148,11 @@ var GLOBAL = {
     thisClientIP: '',
     chromium: false,
     ssClockIntervalID: '',
-    reconnecting: false
+    reconnecting: false,
+    searchTags: ['genre', 'artist', 'album', 'title', 'albumartist', 'date',
+        'composer', 'conductor', 'performer', 'work', 'comment', 'file']
 };
+
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
 
 // Live timeline

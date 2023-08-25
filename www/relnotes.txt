@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD: 
+- UPD: Add comparison operators == and != to Library Advanced search
 
 Bug fixes
 
