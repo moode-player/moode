@@ -1537,7 +1537,7 @@ function renderFolderView(data, path, searchstr) {
 		var s = (data.length == 1) ? '' : 's';
 		var text = result + ' item' + s;
 		$('#db-search-results').show();
-		$('#db-search-results').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-db-search-results">' + text +'</a>');
+        $('#db-search-results').html('<span data-toggle="context" data-target="#context-menu-db-search-results">' + text +'</span>');
 	}
 
 	// Output the list
@@ -4020,6 +4020,7 @@ $('#context-backdrop').click(function(e){
     if (currentView == 'folder' || currentView == 'radio' || currentView == 'playlist') {
         //console.log(UI.dbPos[UI.dbPos[10]], UI.dbEntry[3]);
         $('#' + UI.dbEntry[3]).removeClass('active');
+        $('#db-search-results').css('font-weight', 'normal');
     }
     else if (currentView == 'tag') {
         $('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
