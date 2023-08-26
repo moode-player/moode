@@ -874,7 +874,11 @@ var renderSongs = function(albumPos) {
             $('#lib-collection-stats').html('');
             $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
         } else {
-    		$('#lib-collection-stats').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
+    		$('#lib-collection-stats').html(
+                formatNumCommas(filteredSongs.length)
+                + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ')
+                + formatLibTotalTime(LIB.totalTime)
+            );
         }
 	} else {
 		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
@@ -900,7 +904,14 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 'Music Collection' + libFilter + '</button>');
         }
-        $('#lib-collection-stats').html(filteredAlbums.length + ' albums, ' + filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
+        $('#lib-collection-stats').html(
+            formatNumCommas(filteredAlbums.length)
+            + ' albums, '
+            + formatNumCommas(filteredSongs.length)
+            + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ')
+            +  '<br>'
+            + formatLibTotalTime(LIB.totalTime)
+        );
 	}
 }
 
@@ -1817,39 +1828,33 @@ $('#context-menu-lib-album-heading a').click(function(e) {
 	}
 });
 
-// Format total time for all songs in library
-function formatLibTotalTime(seconds) {
-	var output, hours, minutes, hh, mm, ss;
+// Format total tracks time
+function formatLibTotalTime(totalSecs) {
+	var output, hours, minutes, hhStr, mmStr;
 
-    if(isNaN(parseInt(seconds))) {
+    if(isNaN(parseInt(totalSecs))) {
     	output = '';
-    }
-	else {
-	    hours = ~~(seconds / 3600); // ~~ = faster Math.floor
-    	seconds %= 3600;
-    	minutes = ~~(seconds / 60);
+    } else {
+        // Parse hours and minutes
+	    hours = ~~(totalSecs / 3600); // ~~ is faster than Math.floor
+    	totalSecs %= 3600; // Use remainder to calculate minutes
+    	minutes = ~~(totalSecs / 60);
 
-        hh = hours == 0 ? '' : (hours == 1 ? hours + ' hr' : hours + ' hrs');
-        mm = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
-
+        // Format output string
+        hhStr = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
+        mmStr = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
 		if (hours > 0) {
-			if (minutes > 0) {
-				output = hh + ' ' + mm;
-			}
-            else {
-				output = hh;
-			}
-		}
-        else {
-			output = mm;
+            output = minutes > 0 ? hhStr + ' ' + mmStr : hhStr;
+		} else {
+			output = mmStr;
 		}
     }
-    //return formatNumCommas(output);
-    return output;
+
+    return formatNumCommas(output);
 }
 
-function formatNumCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+function formatNumCommas(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function showHideTracks(posChange) {

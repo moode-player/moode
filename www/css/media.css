@@ -155,7 +155,7 @@ body {
 	#lib-file .songartist {float:left;width:calc(40% - 25px);overflow:hidden;left:60%;margin-left:5px;}
 	#lib-file .songyear {display:none;}
 	.lib-entry {padding: 0 .25em;}
-	#lib-collection-stats {font-size:1rem;float:left;margin-left:.25em;}
+	#lib-collection-stats {font-size:1rem;float:left;text-align:left;margin-left:.25em;margin-top:.5em;}
 	#trackscontainer {width:100%;max-width:100%;}
 	#db-path {display:none;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
