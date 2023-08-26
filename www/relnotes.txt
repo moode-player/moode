@@ -20,6 +20,7 @@ Updates
 - UPD: Add comparison operators == and != to Library Advanced search
 - UPD: Improve collection stats displayed in Library Tag/Album views
 - UPD: Improve Folder view search results tally
+- UPD: Add emphasis (bold) to Queue time notification
 - UPD: Update Quick help for new search comparison operators
 
 Bug fixes
@@ -27,6 +28,8 @@ Bug fixes
 - FIX: Toggle button auto-click not working on CamillaDSP Config
 - FIX: Typo in Equalizers heading on Audio Config
 - FIX: Rates not showing on Audio info for Multiroom sender
+- FIX: In-place update overwriting BUFFERTIME in bluealsaaplay.conf
+- FIX: In-place update not adding SBC XQ+ line in bluealsa.service
 
 ################################################################################
 #
