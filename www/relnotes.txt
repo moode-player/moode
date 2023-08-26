@@ -18,6 +18,7 @@
 Updates
 
 - UPD: Add comparison operators == and != to Library Advanced search
+- UPD: Improve collection stats displayed in Library Tag/Album views 
 
 Bug fixes
 
