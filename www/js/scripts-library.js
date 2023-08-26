@@ -864,26 +864,19 @@ var renderSongs = function(albumPos) {
 	if (filteredAlbums.length == 1 || LIB.filters.albums.length || typeof(albumPos) !== 'undefined') {
 		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' +
 			'<img class="lib-coverart" src="' + filteredAlbums[UI.libPos[0]].imgurl + '" ' + 'alt="Cover art not found"' + '></a>');
-        $('#lib-albumname').html(filteredSongs[0].album);
 
 		if (albumPos && !UI.libPos[0]) {
 			artist = filteredAlbums[UI.libPos[0]].album_artist; // @Atair: album_artist !
-		}
-		else {
+		} else {
 			artist = filteredSongs[0].album_artist; // @Atair: album_artist !
 		}
         if (filteredSongs[0].album == 'Nothing found') {
-            $('#lib-artistname, #artistsList, #lib-albumyear, #lib-numtracks, #lib-encoded-at').html('');
+            $('#lib-collection-stats').html('');
             $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
+        } else {
+    		$('#lib-collection-stats').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
         }
-        else {
-            $('#lib-artistname').html(artist);
-    		$('#lib-albumyear').html(filteredSongs[0].year);
-    		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
-    		$('#lib-encoded-at').html(filteredSongs[0].encoded_at.split(',')[0]);
-        }
-	}
-	else {
+	} else {
 		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
@@ -895,26 +888,19 @@ var renderSongs = function(albumPos) {
                 artistName + '</button>'
             );
             artist = '';
-        }
-        else if (LIB.filters.genres.length > 0) {
+        } else if (LIB.filters.genres.length > 0) {
             var genreName = LIB.filters.genres.length == 1 ? LIB.filters.genres[0] : 'Multiple Genres Selected';
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + genreName + '</button>');
-        }
-        else {
+        } else {
             if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
                 var libFilter = '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> Filtered</div>';
-            }
-            else {
+            } else {
                 var libFilter = '';
             }
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 'Music Collection' + libFilter + '</button>');
         }
-		$('#lib-albumname').html(album);
-		$('#lib-artistname').html(artist);
-		$('#lib-albumyear').html('');
-		$('#lib-numtracks').html(formatNumCommas(filteredAlbums.length) + ' albums<br>' + formatNumCommas(filteredSongs.length) + ((filteredSongs.length == 1) ? ' track<br>' : ' tracks<br>') + formatLibTotalTime(LIB.totalTime));
-		$('#lib-encoded-at').html('');
+        $('#lib-collection-stats').html(filteredAlbums.length + ' albums, ' + filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
 	}
 }
 
@@ -1843,7 +1829,7 @@ function formatLibTotalTime(seconds) {
     	seconds %= 3600;
     	minutes = ~~(seconds / 60);
 
-        hh = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
+        hh = hours == 0 ? '' : (hours == 1 ? hours + ' hr' : hours + ' hrs');
         mm = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
 
 		if (hours > 0) {
@@ -1858,7 +1844,8 @@ function formatLibTotalTime(seconds) {
 			output = mm;
 		}
     }
-    return formatNumCommas(output);
+    //return formatNumCommas(output);
+    return output;
 }
 
 function formatNumCommas(x) {

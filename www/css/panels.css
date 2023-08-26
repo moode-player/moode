@@ -408,15 +408,10 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-coverart-meta-area {width:20vw;line-height:normal;padding:0;float:left;position:fixed;}
 #lib-coverart-img {margin:.5em .5em 0 .5em;}
 #lib-coverart-img a {display:inline-block;}
-#lib-meta-summary {margin:0 0.5em 0 0.5em;line-height:normal;font-size:.9em;}
+#lib-collection-stats {font-size:.75em;font-style:italic;text-align:center;margin-top:0.25em;}
 img.lib-coverart {float:left;width:calc(20vw - 1em);box-shadow:0px 0px .2em rgba(0,0,0,0.2);}
 img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);box-shadow:0px 0px .2em rgba(0,0,0,0.2);position:absolute;opacity:.4}
-.lib-albumname-meta {margin-top:0px;font-weight:700;text-align:center;}
-.lib-artistname-meta {margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-weight:700;text-align:center;cursor:pointer;}
-.lib-albumyear-meta {display:none;text-align:center;}
-.lib-numtracks-meta {font-style:italic;margin-top:.5em;color:inherit !important;text-align:center;}
-.lib-encoded-at-meta {font-style:italic;color:inherit !important;text-align:center;}
 #lib-content ul {display:table;overflow-x:hidden;word-break:break-word;}
 #lib-content li {display:block;position:relative;cursor:pointer;line-height:1.25em;}
 #songsList {padding-bottom:5.3rem;margin:.5em .25em;width:calc(100% - var(--sbw));}
@@ -434,7 +429,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 .lib-album-heading {font-size:.9em;opacity:.75;padding:.75em;margin:0;text-transform:uppercase;background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);display:none;}
 #songsList .lib-disc a.active {font-weight:600;color:unset;}
 #songsList .lib-album-heading a.active {font-weight:600;color:unset;}
-#trackscontainer {width:calc(80vw - var(--sbw));float:right;}
+#trackscontainer {width:calc(80vw - var(--sbw));float:right;min-height:21em;}
 #m-countdown {padding-right:5px;font-size:10px;}
 #m-total {font-size:10px;padding-left:5px;}
 .recently-added {margin-top:-1.5em;float:left;position:relative;padding:.25em .5em 0em .5em;}

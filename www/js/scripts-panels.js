@@ -430,7 +430,7 @@ jQuery(document).ready(function($) { 'use strict';
 		    $('#albumsList .lib-entry').removeClass('active');
 			$('#lib-album').scrollTo(0, 0);
 			$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
-			$('#lib-albumname, #lib-artistname, #lib-albumyear, #lib-numtracks, #songsList').html('');
+            $('#lib-collection-stats, #songsList').html('');
 			UI.libPos[0] = -1;
 			storeLibPos(UI.libPos);
 		}
@@ -744,13 +744,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
 
-	// Click on artist name in lib meta area
-	$('#lib-artistname').click(function(e) {
-		$('#artistsList .lib-entry').filter(function() {return $(this).text() == $('#lib-artistname').text()}).click();
-		customScroll('artists', UI.libPos[2], 200);
-	});
-
-    // Click on title in playback or cv
+    // Click on title in Playback or CoverView
     $('#playback-panel').click(function(e) {
         if ($('#playback-panel').hasClass('cv')) {
             e.preventDefault();

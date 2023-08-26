@@ -149,23 +149,13 @@ body {
 	#lib-coverart-img {float:left;min-width:var(--tag-view-cover-size);width:var(--tag-view-cover-size);height:var(--tag-view-cover-size);margin:.25em;position:relative;}
 	#lib-coverart-meta-area img {height:var(--tag-view-cover-size);width:var(--tag-view-cover-size);min-width:var(--tag-view-cover-size);max-width:var(--tag-view-cover-size);left:.25em;top:.25em;}
 	#lib-coverart-meta-area {position:unset;float:left;width:100%;line-height:14px;}
-	#lib-meta-summary {width:calc(100% - var(--tag-view-cover-size) - 1em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
 	#songsList {padding-bottom:12rem;margin:.25em !important;}
 	#lib-file .songname {overflow:hidden;float:left;width:calc(49% - 15px);height:auto;margin-left:5px;}
 	#lib-file .songtime {float:left;width:10%;left:50%;margin-left:5px;}
 	#lib-file .songartist {float:left;width:calc(40% - 25px);overflow:hidden;left:60%;margin-left:5px;}
 	#lib-file .songyear {display:none;}
 	.lib-entry {padding: 0 .25em;}
-	.lib-albumyear-meta {display:block;}
-	.lib-albumname-meta {font-weight:600;text-align:left;overflow:hidden;width:100%;word-wrap: break-word;}
-	.lib-artistname-meta,
-	.lib-albumyear-meta,
-	.lib-numtracks-meta,
-	.lib-encoded-at-meta {text-align:left;}
-	.lib-artistname-meta,
-	.lib-albumyear-meta,
-	.lib-numtracks-meta {font-size:calc(0.65em + 1vmin);}
-	.lib-numtracks-meta {margin-top:0;}
+	#lib-collection-stats {font-size:1rem;float:left;margin-left:.25em;}
 	#trackscontainer {width:100%;max-width:100%;}
 	#db-path {display:none;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
@@ -173,7 +163,6 @@ body {
 	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
 	.database .db-action {font-size:1.3em;}
 	#lib-albumcover {left:0;}
-	#lib-meta-summary {line-height:1.75rem;font-size:1em;margin:.25em 0 0 0;float:right;}
 	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
 	#index-genres {right:calc(50% + var(--sbw));}
 	#index-artists {right:calc(0% + var(--sbw));}
@@ -364,8 +353,6 @@ body {
 	#tagview-text-cover {font-size:1.35rem;}
 	#tagview-text-cover,
 	img.lib-artistart {height:calc(14vw - 1em);width:calc(14vw - 1em);}
-	.lib-numtracks-meta {margin-top:1.5em;}
-
 	/* Album, Folder, Radio and Playlist views */
 	#lib-albumcover,
 	#container-browse,
