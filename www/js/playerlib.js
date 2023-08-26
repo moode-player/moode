@@ -2450,7 +2450,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 }
             });
             var totalPlayTime = formatSongTime((mins * 60) + secs);
-            notify('playqueue_time', totalPlayTime, '5_seconds');
+            notify('playqueue_time', '<b>' + totalPlayTime + '</b>', '5_seconds');
             break;
         case 'track_info_playback':
             if ($('#currentsong').html() != '') {
