@@ -153,7 +153,7 @@ function parseTrackInfo($resp) {
 		$array[2] = !empty(rtrim($artists, ', ')) ? array('Artists' => rtrim($artists, ', ')) : '';
 		$array[6] = !empty(rtrim($genres, ', ')) ? array('Genres' => rtrim($genres, ', ')) : '';
 		// Audio format
-		$encodedAt = getEncodedAt(array('file' => $file), 'default');
+		$encodedAt = getEncodedAt(array('file' => $file), 'verbose');
 		$array[13] = $encodedAt == 'Not playing' ? '' : array('Audio format' => $encodedAt);
 	}
 

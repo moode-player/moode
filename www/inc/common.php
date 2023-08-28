@@ -54,7 +54,7 @@ function debugLog($msg, $mode = 'a') {
 		// NOTE: $_SESSION['debuglog'] = not set means the session is not active
 		return;
 	}
-	
+
 	$fh = fopen(MOODE_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
@@ -231,9 +231,9 @@ function formatChannels($channels) {
 	} else if ($channels == '2' || $channels == '*') {
 	 	$str = 'Stereo';
 	} else if ($channels > 2) {
-	 	$str = 'Multichannel';
+	 	$str = $channels . '-Channel';
 	} else {
-		$str = 'Undefined';
+		$str = '?-Channel';
 	}
  	return $str;
 }
