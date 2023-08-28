@@ -346,6 +346,7 @@ body {
 	#lib-artist-header,
 	#lib-album-header {font-size:1.1rem;}
 	#bottom-row {left:env(safe-area-inset-left);top:54%;height:35%}
+	#lib-collection-stats {font-size:.75rem;}
 	#trackscontainer {width:calc(79vw - var(--sbw));float:left;}
 	#trackscontainer span {font-size:1.1rem;}
 	#lib-coverart-meta-area {width:14vw;position:relative;}
