@@ -18,10 +18,11 @@
 Updates
 
 - UPD: Add comparison operators == and != to Library Advanced search
+- UPD: Update Quick help for new search comparison operators
 - UPD: Improve collection stats displayed in Library Tag/Album views
 - UPD: Improve Folder view search results tally
+- UPD: Add channel count to Audio info
 - UPD: Add emphasis (bold) to Queue time notification
-- UPD: Update Quick help for new search comparison operators
 
 Bug fixes
 
