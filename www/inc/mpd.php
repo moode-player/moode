@@ -724,8 +724,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				$current['hidef'] = 'yes';
 			} else {
 				// PCM or Multichannel PCM
-				$current['hidef'] = ($mpdFormatTag[1] != 'f' && $mpdFormatTag[1] > ALBUM_BIT_DEPTH_THRESHOLD) ||
-					$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? 'yes' : 'no';
+				$current['hidef'] = ($mpdFormatTag[1] == 'f' || $mpdFormatTag[1] > ALBUM_BIT_DEPTH_THRESHOLD ||
+					$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD) ? 'yes' : 'no';
 			}
 		}
 	}

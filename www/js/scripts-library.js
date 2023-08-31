@@ -616,7 +616,11 @@ var renderAlbums = function() {
     }
 
     // SESSION.json['library_encoded_at']
-    // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
+    // 0 = No (searchable)
+    // 1 = HD only
+    // 2 = Text
+    // 3 = Badge
+    // 9 = No
     var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
     var tagViewHdDiv = '';
     var tagViewNvDiv = '';
@@ -634,7 +638,9 @@ var renderAlbums = function() {
         }
 
         // encoded_at:
-        // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
+        // [0] bits/rate format
+        // [1] flag: "l" lossy, "s" standard def or "h" high def
+        // [2] channels
         if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
             var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="lib-encoded-at-hdonly-tagview">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
@@ -843,7 +849,6 @@ var renderSongs = function(albumPos) {
 			LIB.totalTime += parseSongTime(filteredSongs[i].time);
 		}
 	}
-
 	var element = document.getElementById('songsList');
 	element.innerHTML = output;
 
@@ -871,7 +876,10 @@ var renderSongs = function(albumPos) {
 			artist = filteredSongs[0].album_artist; // @Atair: album_artist !
 		}
         if (filteredSongs[0].album == 'Nothing found') {
-            $('#lib-collection-stats').html('');
+            $('#albumsList .lib-entry, #artistsList .lib-entry').removeClass('active');
+            $('.lib-encoded-at-hdonly, .lib-encoded-at-text, .lib-encoded-at-badge').text('');
+            $('.tag-cover-text').css('transform', 'translateY(0.5em)');
+            $('#songsList, #lib-collection-stats').text('');
             $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
         } else {
     		$('#lib-collection-stats').html(
@@ -1152,6 +1160,10 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 
 // Click album cover
 $('#albumcovers').on('click', 'img', function(e) {
+    if ($('#albumcovers .lib-entry .album-name').eq(UI.libPos[1]).text() == 'Nothing found') {
+        return false;
+    }
+
 	var pos = $(this).parents('li').index();
     var posChange = pos != UI.libPos[1] ? true : false;
     LIB.albumClicked = true;
