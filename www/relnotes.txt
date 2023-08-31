@@ -18,17 +18,20 @@
 Updates
 
 - UPD: Add comparison operators == and != to Library Advanced search
-- UPD: Update Quick help for new search comparison operators
+- UPD: Add channels and multichannel options to 'encoded' predefined search
 - UPD: Improve collection stats displayed in Library Tag/Album views
+- UPD: Improve consistency in how audio format is displayed
 - UPD: Improve Folder view search results tally
 - UPD: Add channel count to Audio info
 - UPD: Add emphasis (bold) to Queue time notification
+- UPD: Update Quick help for new search features
 
 Bug fixes
 
 - FIX: Toggle button auto-click not working on CamillaDSP Config
 - FIX: Typo in Equalizers heading on Audio Config
 - FIX: Rates not showing on Audio info for Multiroom sender
+- FIX: Tag/Album views not being cleared correctly when no search results
 - FIX: In-place update overwriting BUFFERTIME in bluealsaaplay.conf
 - FIX: In-place update not adding SBC XQ+ line in bluealsa.service
 
