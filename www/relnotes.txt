@@ -19,12 +19,18 @@ Updates
 
 - UPD: Add comparison operators == and != to Library Advanced search
 - UPD: Add channels and multichannel options to 'encoded' predefined search
+- UPD: Add channel count to Audio info
+- UPD: Add emphasis (bold) to Queue time notification
+- UPD: Add 1600 x 600 widescreen display format to CSS
 - UPD: Improve collection stats displayed in Library Tag/Album views
 - UPD: Improve consistency in how audio format is displayed
 - UPD: Improve Folder view search results tally
-- UPD: Add channel count to Audio info
-- UPD: Add emphasis (bold) to Queue time notification
 - UPD: Update Quick help for new search features
+
+Radio stations
+
+- UPD: NTS station metadata bitrate to 256 kbps
+- UPD: Update Soma FM - DEF CON Radio cover
 
 Bug fixes
 
@@ -34,6 +40,7 @@ Bug fixes
 - FIX: Tag/Album views not being cleared correctly when no search results
 - FIX: In-place update overwriting BUFFERTIME in bluealsaaplay.conf
 - FIX: In-place update not adding SBC XQ+ line in bluealsa.service
+- FIX: Metadata under cover art clipped on 1280 x 400 widescreen display
 
 ################################################################################
 #
@@ -79,7 +86,7 @@ Updates
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 - UPD: Add saved searches to Backup/Restore
 
-Radio Stations (New Image Only)
+Radio Stations (New image only)
 
 - UPD: Radio Paradise stations to FLAC with metadata
 
@@ -158,7 +165,7 @@ Audio devices
 - NEW: Raspberry Pi DAC Pro (I2S)
 - NEW: Raspberry Pi DigiAMP+ (I2S)
 
-Radio Stations (New Image Only)
+Radio Stations (New image only)
 
 - NEW: FluxFM - 2000's Naughty
 - NEW: FluxFM - Chillout Radio
@@ -218,7 +225,7 @@ Audio devices
 
 - NEW: ProtoDAC TDA1387 X8 (I2S)
 
-Security (new image only)
+Security (New image only)
 
 - UPD: The ISO image does not contain the userid pi, SSH service, WiFi SSID or
        Access Point password. Refer to the moOde Setup guide for details on
@@ -315,7 +322,7 @@ Bug fixes
 
 Updates
 
-- UPD: Bump to Linux kernel 5.15.76 #1597 (new image only)
+- UPD: Bump to Linux kernel 5.15.76 #1597 (New image only)
 - UPD: Bump to MPD 0.23.11
 - UPD: Bump to shairport-sync 4.1.1
 - UPD: Bump to CamillaDSP 1.0.3
@@ -425,7 +432,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 5.15.61 build #1579 (new image only)
+- UPD: Bump to Linux kernel 5.15.61 build #1579 (New image only)
 - UPD: Bump to librespot 0.4.2
 - UPD: Bump camillagui to 1.0.0 rc4
 - UPD: Bump camilla-backend to 1.0.0 rc5
@@ -521,7 +528,7 @@ Updates
 - UPD: Add option to include playlists in Backup/Restore
 - UPD: Add Preferences option to play selected track plus following tracks
 - UPD: Add Preferences option to auto-start CoverView on local display
-- UPD: Add new Soma FM stations to Default Playlist (new image only)
+- UPD: Add new Soma FM stations to Default Playlist (New image only)
 - UPD: Add get_currentsong command to the command API (see the Setup guide)
 - UPD: Add "No limit" option to Preferences, Library, Recently added filter
 - UPD: Add Chinese, Japanese and Korean fonts for use in the Local display feature
