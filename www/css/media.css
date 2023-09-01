@@ -496,7 +496,8 @@ body {
 /*
 // Ultra-wide screens
 */
-@media (max-height:549px) and (width:1919px) {
+@media (max-height:549px) and (width:1919px),
+       (max-height:599px) and (width:1599px) {
 	/* Hide the volume knob */
 	#volzone {display:none;}
 
@@ -647,10 +648,6 @@ body {
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	#playback-cover {margin-top:-2em;}
 	img.coverart {width:73vh;}
-
-	/* Metadata under the cover art in Playback view */
-	#currentalbum-div {height:1.5em!important;margin-top:-.2rem;}
-	#currentartist-div {height:1.5em!important;margin-top:-.2rem;}
 
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.75em;margin-top:10px;}
