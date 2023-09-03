@@ -25,6 +25,7 @@ Updates
 - UPD: Improve collection stats displayed in Library Tag/Album views
 - UPD: Improve consistency in how audio format is displayed
 - UPD: Improve Folder view search results tally
+- UPD: Improve layout and help for CamillaDSP Config
 - UPD: Update Quick help for new search features
 
 Radio stations
