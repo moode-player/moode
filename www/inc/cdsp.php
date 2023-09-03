@@ -246,12 +246,12 @@ class CamillaDsp {
             exec($cmd, $output, $exitcode);
             $exitcode = $exitcode == 0 ? 1 : 0;
 
-        }else {
-            $output[] = 'Config file "' . $configFullPath. '" NOT found';
+        } else {
+            $output[] = 'Configuration file "' . $configFullPath. '" not found';
         }
         $result = [];
         $result['valid'] = $exitcode;
-        $result['msg'] =  $output;
+        $result['msg'] = str_replace('Config is', 'Configuration is', $output);
 
         return $result;
     }
@@ -468,7 +468,7 @@ class CamillaDsp {
                         return NULL;
                     }
                     else {
-                        $output[] = 'Could not find generated files.';
+                        $output[] = 'Could not find generated files';
                         return $output;
                     }
                 }else{
@@ -488,18 +488,18 @@ class CamillaDsp {
                         return NULL;
                     }
                     else {
-                        $output[] = 'Could not find generated files.';
+                        $output[] = 'Could not find generated files';
                         return $output;
                     }
                 }
 
             }
             else {
-                return ['Sox not found (please install sox)'];
+                return ['SoX not found, please install SoX'];
             }
         }
         else {
-            return ['File is not a (stereo) wave file.'];
+            return ['File is not a Stereo wave file'];
         }
 
     }

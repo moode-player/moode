@@ -65,10 +65,10 @@ else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
 	$selectedConfigLabel = str_replace('.yml', '', $cdsp->getConfigLabel($selectedConfig));
 
 	if($checkResult['valid'] == true) {
-		$_SESSION['notify']['title'] = 'Config is valid';
+		$_SESSION['notify']['title'] = 'Configuration is valid';
 		$_SESSION['notify']['msg'] = $selectedConfigLabel;
 	} else {
-		$_SESSION['notify']['title'] = 'Config is not valid';
+		$_SESSION['notify']['title'] = 'Configuration is not valid';
 		$_SESSION['notify']['msg'] = $selectedConfigLabel;
 	}
 }
@@ -103,28 +103,29 @@ else if ($selectedConfig && isset($_POST['export']) && $_POST['export'] == '1') 
 }
 // Remove
 else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') {
-	if ($_SESSION['camilladsp'] != $selectedConfig) { // Can't remove active config
-		$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig;
+	if ($_SESSION['camilladsp'] != $selectedConfig . '.yml') { // Can't remove active config
+		$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig . '.yml';
 		unlink($configFileName);
-		$_SESSION['notify']['title'] = 'Config removed';
+		$_SESSION['notify']['title'] = 'Configuration removed';
 		$_SESSION['notify']['msg'] = $selectedConfig;
 		$selectedConfig = null;
 	} else {
-		$_SESSION['notify']['title'] = 'Cannot remove active config';
+		$_SESSION['notify']['title'] = 'Cannot remove active configuration';
 	}
 }
+
 // New pipeline
 else if (isset($_POST['create_new_pipeline']) && $_POST['create_new_pipeline'] == '1') {
 	$cdsp->newConfig($_POST['new_pipeline_name'] . '.yml');
 	$selectedConfig = $_POST['new_pipeline_name'] . '.yml';
-	$_SESSION['notify']['title'] = 'Config created';
+	$_SESSION['notify']['title'] = 'Configuration created';
 	$_SESSION['notify']['msg'] = $_POST['new_pipeline_name'];
 }
 // Copy pipeline
 else if ($selectedConfig && isset($_POST['copy_pipeline']) && $_POST['copy_pipeline'] == '1') {
-	$cdsp->copyConfig($selectedConfig, $_POST['copyto_pipeline_name'] . '.yml');
+	$cdsp->copyConfig($selectedConfig . '.yml', $_POST['copyto_pipeline_name'] . '.yml');
 	$selectedConfig = $_POST['copyto_pipeline_name'] . '.yml';
-	$_SESSION['notify']['title'] = 'Config copied to';
+	$_SESSION['notify']['title'] = 'Configuration copied to';
 	$_SESSION['notify']['msg'] = $_POST['copyto_pipeline_name'];
 }
 // Coeffs import (Upload)
@@ -150,7 +151,7 @@ else if ($selectedCoeff && isset($_POST['export']) && $_POST['export'] == '1') {
 else if ($selectedCoeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $selectedCoeff;
 	unlink($configFileName);
-	$_SESSION['notify']['title'] = 'Config removed';
+	$_SESSION['notify']['title'] = 'Configuration removed';
 	$_SESSION['notify']['msg'] = $selectedCoeff;
 	$selectedCoeff = null;
 }
@@ -199,8 +200,7 @@ foreach ($configs as $configFile => $configName) {
 	$selected = (($selectedConfig == $configFile || ($selectedConfig == null) && $_selected_config == null)) ? 'selected' : '';
 	$_select['cdsp_config'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configName));
 	if ($selected == 'selected') {
-		$_selected_config = $configFile;
-		//$_selected_config = $selected;
+		$_selected_config = $configName;
 		$selectedConfig = $configFile;
 	}
 }
@@ -217,16 +217,17 @@ foreach ($configs as $configFile => $configName) {
 $btn_conv_style = 'style="display: none;"';
 if ($_selected_coeff) {
 	$coeffInfo = $cdsp->coeffInfo($_selected_coeff);
-	foreach ($coeffInfo as  $param => $value) {
-		$_coeff_info_html .= ucfirst($param) . ' = ' . $value . '<br/>';
+	$_coeff_info_html = '';
+	foreach ($coeffInfo as $param => $value) {
+		$_coeff_info_html .= '<tr><td>' . ucfirst($param) . '</td><td>' . $value . '</td></tr>';
 	}
-	$_coeff_info_html = rtrim($_coeff_info_html, '<br/>');
 }
 
 $_select['version'] = str_replace('CamillaDSP', '', $cdsp->version());
 
 $_select['cdsp_use_default_device_on'] .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 $_select['cdsp_use_default_device_off']  .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
+$_alsa_plugin_and_cardnum = $_SESSION['cdsp_fix_playback'] == 'No' ? '' : $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 
 if ($_SESSION['camilladsp_quickconv']) {
 	$quickConvConfig =$cdsp->stringToQuickConvolutionConfig($_SESSION['camilladsp_quickconv']);

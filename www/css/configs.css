@@ -99,6 +99,9 @@ a.show-hide-password {vertical-align:top;}
 /* lib-config */
 .config-btn-music-source {font-size:1.15em;width:80%;background-color:#333;text-align:left;}
 
+/* CamillaDSP Config */
+.cdsp-help-table td {padding:0 0.5em 0 0;}
+
 /* Miscellaneous */
 .config-horiz-rule {border-bottom:1px solid #333;margin:4px 0 calc(4px + var(--config-ctl-margin-bottom)) 0;font-size:1.15em;font-style:italic;color:var(--config-help-color);}
 a.btn.btn-medium.btn-primary {font-size:16px;}
