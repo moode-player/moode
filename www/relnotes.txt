@@ -42,6 +42,7 @@ Bug fixes
 - FIX: In-place update overwriting BUFFERTIME in bluealsaaplay.conf
 - FIX: In-place update not adding SBC XQ+ line in bluealsa.service
 - FIX: Metadata under cover art clipped on 1280 x 400 widescreen display
+- FIX: Auto-shuffle filter string embedded quotes not being restored
 
 ################################################################################
 #
