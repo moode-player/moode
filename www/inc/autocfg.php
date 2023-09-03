@@ -742,6 +742,9 @@ function autoConfigExtract($currentSettings) {
 				foreach ($config['requires'] as $configName) {
 					$configKey = array_key_exists('session_var', $config) ? $config['session_var'] : $configName;
 					if (array_key_exists($configKey, $currentSettings)) {
+						if ($configKey == 'ashuffle_filter') {
+							$currentSettings[$configKey] = str_replace('"', '\"', $currentSettings[$configKey]);
+						}
 						$autoConfigString = $autoConfigString . $configKey . " = \"" . $currentSettings[$configKey] . "\"\n";
 					}
 				}
