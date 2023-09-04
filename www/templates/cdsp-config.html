@@ -47,8 +47,8 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-cdsp-mode" class="config-help-info">
 					<b>Off:</b> No signal processing will occur.<br>
-					<b>Custom:</b> Use a custom configuration.<br>
-					<b>Quick convolution:</b> Use the filter in the "Quick convolution filter" section below to provide basic convolution with gain.<br>
+					<b>Custom:</b> Manually create a CamillaDSP setup for example when using multiple output devices.<br>
+					<b>Quick convolution:</b> Use the selection in "Quick convolution filter" below to provide basic convolution with gain.<br>
 					<b>Configurations:</b> Use one of the listed pipeline configurations.
 				</span>
 			</div>
@@ -123,7 +123,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				$_check_msg_quick_convolution
 				<span id="info-cdsp-qc-type" class="config-help-info">
-					Speficy the type for the selected impulse response file. Note for .wav files select WAVE, there is no need to convert the files to RAW.
+					Specify the type for the selected impulse response file. Note for wav files select WAVE, there is no need to convert the files to raw.
 				</span>
 			</div>
 		</div>
@@ -154,7 +154,7 @@
 				<button id="btn-update-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui" value="1" style="display:none"/>
 			</div>
 
-			<label class="control-label" >Expert mode</label>
+			<label class="control-label">Expert mode</label>
 			<div class="controls">
 				<div class="toggle">
 					<label class="toggle-radio toggle-camillaguiexpert" for="toggle-camillaguiexpert-2">ON </label>$_select[camillaguiexpert_on]
