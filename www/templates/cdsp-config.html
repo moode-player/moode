@@ -129,9 +129,12 @@
 		</div>
 	</form>
 
-	<legend>Pipeline editor</legend>
 	<form class="form-horizontal" action="#pipeline-editor" method="post">
 		<a id="pipeline-editor"></a>
+
+		<legend>Pipeline editor
+			<a href="cdsp-configeditor.php" target="camillagui"><button class="legend-config btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>
+		</legend>
 
 		<div class="control-group">
 			<span class="config-help-static $_camillagui_notfound_show" >
@@ -165,11 +168,6 @@
 					Show advanced options for example Playback/Capture device settings and Resampling.
 				</span>
 				<button id="btn-update-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui_expert" value="1" style="display:none"/>
-			</div>
-
-			<div class="controls">
-				<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary config-btn" $_open_camillagui_disabled>Open</button></a>
-				<span class="config-btn-after">Pipeline editor</span>
 			</div>
 		</div>
 	</form>
