@@ -27,11 +27,12 @@ Updates
 - UPD: Improve Folder view search results tally
 - UPD: Improve layout and help for CamillaDSP Config
 - UPD: Update Quick help for new search features
+- UPD: Radio logo updates are included with in-place update
 
 Radio stations
 
 - UPD: NTS station metadata bitrate to 256 kbps
-- UPD: Update Soma FM - DEF CON Radio cover
+- UPD: Update Soma FM - DEF CON Radio logo
 
 Bug fixes
 
