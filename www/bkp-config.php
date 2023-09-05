@@ -133,8 +133,8 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 
 			// Request reboot if system settings are part of restore
 			$title = 'Restore complete';
-			if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
-				$msg = 'Reboot required';
+			if(empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1')) {
+				$msg = 'Reboot required<br><br>The system will reboot twice as part of restoring Config and Prefs settings';
 				$duration = 10;
 				//submitJob('reboot', '', 'Restore complete', 'System rebooting...');
 			} else {
