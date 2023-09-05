@@ -31,7 +31,7 @@ Updates
 
 Radio stations
 
-- UPD: NTS station metadata bitrate to 256 kbps
+- UPD: Update NTS station metadata bitrate to 256 kbps
 - UPD: Update Soma FM - DEF CON Radio logo
 
 Bug fixes
@@ -44,6 +44,7 @@ Bug fixes
 - FIX: In-place update not adding SBC XQ+ line in bluealsa.service
 - FIX: Metadata under cover art clipped on 1280 x 400 widescreen display
 - FIX: Auto-shuffle filter string embedded quotes not being restored
+- FIX: Reduced system logging setting not being restored correctly
 
 ################################################################################
 #
@@ -89,7 +90,7 @@ Updates
 - UPD: Place most recently selected CamillaDSP configs at top of Quick menu
 - UPD: Add saved searches to Backup/Restore
 
-Radio Stations (New image only)
+Radio Stations
 
 - UPD: Radio Paradise stations to FLAC with metadata
 
@@ -168,7 +169,7 @@ Audio devices
 - NEW: Raspberry Pi DAC Pro (I2S)
 - NEW: Raspberry Pi DigiAMP+ (I2S)
 
-Radio Stations (New image only)
+Radio Stations
 
 - NEW: FluxFM - 2000's Naughty
 - NEW: FluxFM - Chillout Radio
