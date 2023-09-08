@@ -142,6 +142,7 @@ var GLOBAL = {
     nativeLazyLoad: false,
     playqueueChanged: false,
 	initTime: 0,
+    searchOperators: ['==', '!=', '=~', '!~'],
     oneArgFilters: ['full_lib', 'hdonly', 'lossless', 'lossy'],
     twoArgFilters: ['album', 'albumartist', 'any', 'artist', 'composer', 'conductor', 'encoded', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
     allFilters: [],

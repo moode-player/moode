@@ -1317,24 +1317,23 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/music-library.php?cmd=clear_active_search');
     }
 
+    // Search operators
+    // NOTE: Add 'starts_with' operator when bump to MPD 0.24
+    function setSearchStr(str) {
+        str = str.trim();
+
+        if ($.inArray(str.slice(0, 2), GLOBAL.searchOperators) && str.slice(2, 3) == ' ') {
+            str = str.slice(0, 3) + "'" +  str.slice(3) + "'";
+        } else {
+            str = "contains '" + str + "'";
+        }
+        return str;
+    }
+
     // Advanced search (Folder/Tag/Album views)
 	$('#db-search-submit').click(function(e) {
         var searchType = '';
 		var searchStr = '';
-        //var tags = ['genre', 'artist', 'album', 'title', 'albumartist', 'date',
-        //    'composer', 'conductor', 'performer', 'work', 'comment', 'file'];
-
-        // Search operators
-        // NOTE: Add 'starts_with' operator when bump to MPD 0.24
-        function setSearchStr(str) {
-            str = str.trim();
-            if (str.startsWith('== ') || str.startsWith('!= ')) {
-                str = str.slice(0, 3) + "'" +  str.slice(3) + "'";
-            } else {
-                str = "contains '" + str + "'";
-            }
-            return str;
-        }
 
         if ($('#dbsearch-predefined-filters').val() != '') {
             // NOTE: This input field is hidden in Folder view because that view does not support predefined filters

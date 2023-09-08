@@ -342,8 +342,8 @@
                 <input id="dbsearch-alltags" class="input-large" type="text">
 				<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-alltags" class="help-block hide">
-                	All tags are searched using an OR relationship. Comparison operators == or != can be specified otherwise 'contains' is the default.
-					The format is == value or != value.
+                	All tags are searched using an OR relationship. Comparison operators ==, !=, =~ or !~ can be specified otherwise 'contains' is the default.
+					There must be a space between the comparison operator and the search string.
                 </span>
             </div>
         </div>
@@ -355,8 +355,8 @@
                 <input id="dbsearch-genre" class="input-large" type="text" name="dbsearch_genre" value="">
 				<a aria-label="Help" class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-specifictags" class="help-block hide">
-                	Non-empty tags are searched using an AND relationship. Comparison operators == or != can be specified otherwise 'contains' is the default.
-					The format is == value or != value.
+                	Non-empty tags are searched using an AND relationship. Comparison operators ==, !=, =~ or !~ can be specified otherwise 'contains' is the default.
+					There must be a space between the comparison operator and the search string.
                 </span>
             </div>
             <label class="control-label" for="dbsearch-artist">Artist</label>
