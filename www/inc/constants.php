@@ -18,42 +18,45 @@
  *
  */
 
-const MPD_RESPONSE_ERR = 'ACK';
-const MPD_RESPONSE_OK = 'OK';
-const MPD_MUSICROOT = '/var/lib/mpd/music/';
-const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
-const PLAYLIST_COVERS_ROOT = '/var/local/www/imagesw/playlist-covers/';
-const RADIO_LOGOS_ROOT = '/var/local/www/imagesw/radio-logos/';
-const TMP_IMAGE_PREFIX = '__tmp__';
-const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
-const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
+// Log files
 const MOODE_LOG = '/var/log/moode.log';
 const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
 const UPDATER_LOG = '/var/log/moode_update.log';
 const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
 const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
+// MPD
+const MPD_RESPONSE_ERR = 'ACK';
+const MPD_RESPONSE_OK = 'OK';
+const MPD_MUSICROOT = '/var/lib/mpd/music/';
+const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
-const PORT_FILE = '/tmp/moode_portfile';
-const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
+// SQLite
+const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
+const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
+// Library/Playback
 const LIBCACHE_BASE = '/var/local/www/libcache';
-const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
-const SESSION_SAVE_PATH = '/var/local/php';
-const STATION_EXPORT_DIR = '/var/local/www/imagesw';
-const MPD_VERSIONS_CONF = '/var/local/www/mpd_versions.conf';
-const LOGO_ROOT_DIR = 'imagesw/radio-logos/';
+const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
+const DEF_RADIO_TITLE = 'Radio station';
 const DEF_RADIO_COVER = 'images/default-cover-v6.svg';
 const DEF_COVER = 'images/default-cover-v6.svg';
-const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
-const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
-const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
-const BOOT_CONFIG_TXT = '/boot/config.txt';
-const BOOT_CONFIG_BKP = '/boot/bootcfg.bkp';
-
-// Size and quality factor for small thumbs
-// Used in thumb-gen.php, worker.php
-const THM_SM_W = 80;
+const PLAYLIST_COVERS_ROOT = '/var/local/www/imagesw/playlist-covers/';
+const RADIO_LOGOS_ROOT = '/var/local/www/imagesw/radio-logos/';
+const LOGO_ROOT_DIR = 'imagesw/radio-logos/';
+const TMP_IMAGE_PREFIX = '__tmp__';
+const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
+const STATION_EXPORT_DIR = '/var/local/www/imagesw';
+// Thumbnail generator
+const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
+const THM_SM_W = 80; // Small thumbs
 const THM_SM_H = 80;
 const THM_SM_Q = 75;
+// System files
+const PORT_FILE = '/tmp/moode_portfile'; // Command engine
+const SESSION_SAVE_PATH = '/var/local/php';
+const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
+const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
+const BOOT_CONFIG_TXT = '/boot/config.txt';
+const BOOT_CONFIG_BKP = '/boot/bootcfg.bkp';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
@@ -86,7 +89,7 @@ const SOX_UPSAMPLE_ONLY_4148K	= 2; // Upsample only 44.1K and 48K source rates
 const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
 
 // Album and Radio HD badge parameters
-// NOTE: These are mirrored in playerlib.js
+// NOTE: Mirrored in playerlib.js
 const ALBUM_HD_BADGE_TEXT 			= 'HD';
 const ALBUM_BIT_DEPTH_THRESHOLD 	= 16;
 const ALBUM_SAMPLE_RATE_THRESHOLD 	= 44100;
@@ -106,7 +109,7 @@ const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct');
 const LIBSEARCH_BASE = '/var/local/www/libsearch_';
 const LIB_FULL_LIBRARY = 'Full Library (Default)';
 
-// Recorder plugin (currently not available)
+// Recorder plugin (currently n/a)
 const RECORDER_RECORDINGS_DIR 	 = '/Recordings';
 const RECORDER_DEFAULT_COVER	 = 'Recorded Radio.jpg';
 const RECORDER_DEFAULT_ALBUM_TAG = 'Recorded YYYY-MM-DD';
