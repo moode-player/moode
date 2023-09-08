@@ -11,6 +11,22 @@
 
 ################################################################################
 #
+# 2023-MM-DD TC moOde 8.3.7
+#
+################################################################################
+
+Updates
+
+- UPD: Add comparison operators =~ and !~ to Library Advanced search
+- UPD: For NTS station replace bogus title tag " - " with the default title
+- UPD: Add channel count to extra metadata on Playback and CoverView
+
+Bug fixes
+
+- FIX: Tag/Album scroll/highlight item sync not working
+
+################################################################################
+#
 # 2023-09-05 TC moOde 8.3.6
 #
 ################################################################################
