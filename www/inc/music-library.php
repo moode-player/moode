@@ -609,6 +609,8 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			$encodedAt = ($bits == 'f' ? '24/' : $bits . '/') .
 				formatRate($mpdFormatTag[0]) . ' ' . strtoupper($ext) . ',' . $hiDef . ',' . $mpdFormatTag[2];
 		}
+	// End special section
+
 	} else if (isset($songData['Name']) || (substr($songData['file'], 0, 4) == 'http' && !isset($songData['Artist']))) {
 		// Radio station
 		$encodedAt = $displayFormat == 'verbose' ? 'VBR compression' : 'VBR';
@@ -622,7 +624,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			$encodedAt = '?';
 		} else {
 			if ($displayFormat == 'default') {
-				$encodedAt = formatRate($result[1]) . ' MHz, DSD';
+				$encodedAt = formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch DSD';
 			} else {
 				// 'verbose'
 				$encodedAt = '1 bit, ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]) . ' DSD';
@@ -666,7 +668,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		if ($displayFormat == 'default') {
 			$encodedAt = $bitDepth == '?' ?
 				formatRate($sampleRate) . 'kHz, ' . $format :
-				$bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $format;
+				$bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch ' . $format;
 		} else {
 			// 'verbose'
 			$encodedAt = $bitDepth == '?' ?
