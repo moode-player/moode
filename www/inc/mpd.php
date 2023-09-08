@@ -647,8 +647,10 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['artist'] = 'Radio station';
 			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
-			if (!isset($song['Title']) || trim($song['Title']) == '') {
-				$current['title'] = 'Streaming source';
+			if (!isset($song['Title']) ||
+                trim($song['Title']) == '-' || // NTS
+                trim($song['Title']) == '') {
+				$current['title'] = DEF_RADIO_TITLE;
 			} else {
 				// Use custom name for certain stations if needed
 				// EX: $current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
