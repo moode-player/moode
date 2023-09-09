@@ -324,7 +324,7 @@
 				<a aria-label="Help" class="info-toggle" data-cmd="info-dbsearch-predefined-filters" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-dbsearch-predefined-filters" class="help-block hide">
 					The filters listed below will override "All tags" or "Specific tags" searches. Filter names are case insensative.<br>
-					<b>Encoded</b> [bits/rate]<br>
+					<b>Encoded</b> [bits | rate | bits/rate | Nch | multichannel]<br>
 					<b>Format</b> [.ext]<br>
 					<b>Folder</b> [path]<br>
 					<b>HDonly</b> Sample rate > 44.1 kHz or bit depth > 16<br>
@@ -342,7 +342,7 @@
                 <input id="dbsearch-alltags" class="input-large" type="text">
 				<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-alltags" class="help-block hide">
-                	All tags are searched using an OR relationship. Comparison operators ==, !=, =~ or !~ can be specified otherwise 'contains' is the default.
+                	All tags are searched using an OR relationship. Searches are not case sensitive and partial matches are the default unless one of the strict comparison operators '==' or '!=' is used. The comparison operators '=~' or '!~' can also be used to perform searches based on a PERL regular expressions.
 					There must be a space between the comparison operator and the search string.
                 </span>
             </div>
@@ -355,7 +355,7 @@
                 <input id="dbsearch-genre" class="input-large" type="text" name="dbsearch_genre" value="">
 				<a aria-label="Help" class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-specifictags" class="help-block hide">
-                	Non-empty tags are searched using an AND relationship. Comparison operators ==, !=, =~ or !~ can be specified otherwise 'contains' is the default.
+                	Non-empty tags are searched using an AND relationship. Searches are not case sensitive and partial matches are the default unless one of the strict comparison operators '==' or '!=' is used. The comparison operators '=~' or '!~' can also be used to perform searches based on PERL regular expressions.
 					There must be a space between the comparison operator and the search string.
                 </span>
             </div>
