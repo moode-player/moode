@@ -736,7 +736,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playbar-hd-badge,
 #ss-hd-badge,
 .playback-hd-badge {display:none;position:relative;filter:brightness(85%);color:gold;background:#000;border:2px solid gold;
-	border-radius:8%;font-size:.6em;font-family:sans-serif;font-style:normal;font-weight:700;
+	border-radius:8%;font-size:.6em;font-family:sans-serif;font-style:normal;font-weight:600;
 	margin-right:.5em;padding:0 .5em;bottom:.15rem;}
 /* Radio manager */
 .modal-button-style {display:inline-block;margin:0 10px 10px 0;color:inherit!important;}

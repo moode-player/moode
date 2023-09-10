@@ -997,10 +997,7 @@ function renderUI() {
     		$('#extra-tags-display, #ss-extra-metadata').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
             $('#countdown-sample-rate, #songsand-sample-rate').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bps'));
     	} else {
-            var extraTagsDisplay = '';
-            extraTagsDisplay = formatExtraTagsString();
-            extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) :
-                $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
+            $('#extra-tags-display').html(formatExtraTagsString());
             $('#ss-extra-metadata').html(MPD.json['encoded']);
             $('#countdown-sample-rate, #songsand-sample-rate').text(MPD.json['encoded']);
     	}
@@ -1045,7 +1042,17 @@ function renderUI() {
         }
 
         // Set HD badge text
-        $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(MPD.json['artist'] == 'Radio station' ? RADIO_HD_BADGE_TEXT : ALBUM_HD_BADGE_TEXT);
+        if (MPD.json['artist'] == 'Radio station') {
+            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(RADIO_HD_BADGE_TEXT);
+        } else if (MPD.json['audio_sample_rate'] !== null) {
+            if (MPD.json['audio_sample_rate'].slice(0, 3) == 'dsd') {
+               $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(MPD.json['audio_sample_rate'].toUpperCase());
+           } else {
+               $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(ALBUM_HD_BADGE_TEXT);
+           }
+        } else {
+            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text('');
+        }
 
         // Show/hide HD badge
         if (MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9') {
