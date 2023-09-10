@@ -527,8 +527,6 @@ function printMPDLog() {
 	else {
 		echo 'The MPD log is empty or was previously cleared' . "\n";
 	}
-
-	echo shell_exec('cat ' . MPD_LOG);
 }
 
 function printUpdateLog() {
