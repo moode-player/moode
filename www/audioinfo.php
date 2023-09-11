@@ -91,7 +91,7 @@ if ($aplActive == '1') {
 	$mpdStatus = getMpdStatus($sock);
 
 	if ($hwParams['status'] == 'active' || ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play')) {
-		// DSD: Native bitstream, DoP or DSD to PMC on-the-fly conversion
+		// DSD: Native bitstream, DoP or DSD to PCM on-the-fly conversion
 		if ($mpdStatus['audio_sample_depth'] == 'dsd64') {
 			$_encoded_at = 'DSD64, 1 bit, 2.822 MHz Stereo';
 			if ($cfgMPD['dop'] == 'yes') {
