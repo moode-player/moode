@@ -570,7 +570,9 @@ function getSavedSearches() {
 }
 
 // Return bit depth, sample rate, audio format, flag (lossy/stddef/hidef) and channels
-// Uses MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
+// Uses MPD lsinfo Format tag (rate:bits:channels or dsdnnn,channels) for PCM and WavPack DSD
+// Uses mediainfo for DSD (DSF/DFF)
+//
 // Library
 // - PCM:			bits/rate format,Flag,channels
 // - PCM (lossy): 	format,l,channels
@@ -579,17 +581,18 @@ function getSavedSearches() {
 // l lossy
 // s standard def
 // h high def (bits >16 or rate > 44.1 or format DSD)
-// Display format examples
+//
+// Display
 // - 'default' 16/44.1 kHz FLAC | 24/44.1 kHz MP3 | 2.882 MHz DSD
 // - 'verbose' 16 bit, 44.1 kHz, Stereo FLAC | 24 bit, 44.1 kHz Stereo MP3 | 1 bit, 2.882 MHz, Stereo DSD
 function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 	$encodedAt = '';
 	$songData['file'] = ensureAudioFile($songData['file']);
 	$ext = getFileExt($songData['file']);
+	$mpdFormatTag = explode(':', $songData['Format']); // MPD lsinfo: rate:bits:channels
 
 	// Special section for calls from genLibrary() to populate the "encoded_at" element
 	if ($calledFromGenLib) {
-		$mpdFormatTag = explode(':', $songData['Format']); // MPD lsinfo: rate:bits:channels
 		if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
 			// Lossy: bit depth has no meaning so it's omitted
 			// format,l,channels
@@ -599,6 +602,10 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			// rate,DSD,h,channels
 			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
 			$encodedAt = empty($result[1]) ? 'DSD,h' : formatRate($result[1]) . ' DSD,h,' . $result[2];
+		} else if ($ext == 'wv') {
+			// WavPack DSD: dsd64:2
+			// rate,DSD,h,channels
+			$encodedAt = formatRate($mpdFormatTag[0]) . ' DSD,h,' . $mpdFormatTag[1];
 		} else {
 			// PCM or Multichannel PCM
 			// bits/rate format,[h|s],channels
@@ -630,6 +637,14 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 				$encodedAt = '1 bit, ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]) . ' DSD';
 			}
 		}
+	} else if ($ext == 'wv') {
+		// WavPack DSD file
+		if ($displayFormat == 'default') {
+			$encodedAt = formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch DSD';
+		} else {
+			// 'verbose'
+			$encodedAt = '1 bit, ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]) . ' DSD';
+		}
 	} else if ($songData['file'] == '') {
 		return 'Not playing';
 	} else {
@@ -644,7 +659,6 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		if ($result[0] == '' || $result[1] == '') {
 			// Empty mediainfo so fallback to MPD lsinfo Format tag rate:bits:channels
 			$format = isset($songData['Format']) ? $songData['Format'] : getMpdFormatTag($songData['file']);
-			workerLog($format);
 			$mpdFormatTag = explode(':', $format);
 			if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
 				$bits = ''; // Bits omitted for lossless

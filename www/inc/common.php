@@ -220,7 +220,7 @@ function formatSongTime($sec) {
 function formatRate ($rate) {
 	$rates = array('*' => '*', '32000' => '32', '48000' => '48', '96000' => '96', '192000' => '192', '384000' => '384', '768000' => '768',
 	'22050' => '22.05', '44100' => '44.1', '88200' => '88.2', '176400' => '176.4', '352800' => '352.8', '705600' => '705.6',
-	'dsd64' => 'dsd64', 'dsd128' => 'dsd128', 'dsd256' => 'dsd256', 'dsd512' => 'dsd512', 'dsd1024' => 'dsd1024',
+	'dsd64' => '2.822', 'dsd128' => '5.644', 'dsd256' => '11.288', 'dsd512' => '22.576', 'dsd1024' => '45.152',
 	'2822400' => '2.822', '5644800' => '5.644', '11289600' => '11.288', '22579200' => '22.576', 45158400 => 45.152);
 	return $rates[$rate];
 }
@@ -236,6 +236,18 @@ function formatChannels($channels) {
 		$str = '?-Channel';
 	}
  	return $str;
+}
+
+function formatDoP($format) {
+	$str = array(
+		'dsd64' => array('decoded_to' => 'DoP 24 bit 176.4 kHz, Stereo', 'decode_rate' => '8.467 Mbps'),
+		'dsd128' => array('decoded_to' => 'DoP 24 bit 352.8 kHz, Stereo', 'decode_rate' => '16.934 Mbps'),
+		'dsd256' => array('decoded_to' => 'DoP 24 bit 705.6 kHz, Stereo', 'decode_rate' => '33.868 Mbps'),
+		'dsd512' => array('decoded_to' => 'DoP 24 bit 1.411 MHz, Stereo', 'decode_rate' => '67.736 Mbps'),
+		'dsd1024' => array('decoded_to' => 'DoP 24 bit 2.822 MHz, Stereo', 'decode_rate' => '135.472 Mbps')
+	);
+
+	return $str[$format];
 }
 
 function uiNotify($notify) {

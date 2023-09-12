@@ -40,17 +40,6 @@ function formatExtraTagsString () {
     }
 
     output = output.slice(0, -3); // Strip trailing bullet
-
-    if (output == '') {
-        if (MPD.json['audio_sample_depth'] !== null && MPD.json['audio_sample_rate'] !== null) {
-            if (MPD.json['audio_sample_rate'].slice(0, 3) == 'dsd') {
-                output = MPD.json['audio_sample_rate'].toUpperCase();
-            } else {
-                output = MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate'];
-            }
-        }
-    }
-
     return output;
 }
 

@@ -1045,8 +1045,8 @@ function renderUI() {
         if (MPD.json['artist'] == 'Radio station') {
             $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(RADIO_HD_BADGE_TEXT);
         } else if (MPD.json['audio_sample_rate'] !== null) {
-            if (MPD.json['audio_sample_rate'].slice(0, 3) == 'dsd') {
-               $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(MPD.json['audio_sample_rate'].toUpperCase());
+            if (MPD.json['audio_format'].slice(0, 3) == 'dsd') {
+               $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(MPD.json['audio_format'].toUpperCase());
            } else {
                $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(ALBUM_HD_BADGE_TEXT);
            }

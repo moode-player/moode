@@ -92,66 +92,22 @@ if ($aplActive == '1') {
 
 	if ($hwParams['status'] == 'active' || ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play')) {
 		// DSD: Native bitstream, DoP or DSD to PCM on-the-fly conversion
-		if ($mpdStatus['audio_sample_depth'] == 'dsd64') {
-			$_encoded_at = 'DSD64, 1 bit, 2.822 MHz Stereo';
+		if (strpos($mpdStatus['audio_format'], 'dsd') !== false) {
+			// Encoded at
+			$_encoded_at =
+				strtoupper($mpdStatus['audio_format']) . ',' .
+				$mpdStatus['audio_sample_depth'] . ' bit, ' .
+				$mpdStatus['audio_sample_rate'] . ' MHz ' .
+				$mpdStatus['audio_channels'];
+			// Decoded to
 			if ($cfgMPD['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 176.4 kHz, Stereo';
-				$_decode_rate = '8.467 Mbps';
+				$dop = formatDoP($mpdStatus['audio_format']);
+				$_decoded_to = $dop['decoded_to'];
+				$_decode_rate = $dop['decode_rate'];;
 			} else if ($hwParams['format'] == 'DSD bitstream') {
 				$_decoded_to = 'DSD bitstream';
 				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
 			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		} else if ($mpdStatus['audio_sample_depth'] == 'dsd128') {
-			$_encoded_at = 'DSD128, 1 bit, 5.644 MHz Stereo';
-			if ($cfgMPD['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 352.8 kHz, Stereo';
-				$_decode_rate = '16.934 Mbps';
-			} else if ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		} else if ($mpdStatus['audio_sample_depth'] == 'dsd256') {
-			$_encoded_at = 'DSD256, 1 bit, 11.288 MHz Stereo';
-			if ($cfgMPD['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 705.6 kHz, Stereo';
-				$_decode_rate = '33.868 Mbps';
-			} else if ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		} else if ($mpdStatus['audio_sample_depth'] == 'dsd512') {
-			$_encoded_at = 'DSD512, 1 bit, 22.576 MHz Stereo';
-			if ($cfgMPD['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 1.411 MHz, Stereo';
-				$_decode_rate = '67.736 Mbps';
-			} else if ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		}
-		else if ($mpdStatus['audio_sample_depth'] == 'dsd1024') {
-			$_encoded_at = 'DSD1024, 1 bit, 45.152 Mbps Stereo';
-			if ($cfgMPD['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 2.822 MHz, Stereo';
-				$_decode_rate = '135.472 Mbps';
-			}
-			elseif ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-			else {
 				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
 				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
 			}
@@ -293,7 +249,7 @@ if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == 
 		$_selective_resample = 'Off';
 		$_resample_quality = 'Off';
 	} else {
-		$_resample_rate = $cfgMPD['audio_output_depth'] . ' bit, ' . $cfgMPD['audio_output_rate'] . ' kHz, ' . $cfgMPD['audio_output_chan'];
+		$_resample_rate = $cfgMPD['audio_output_depth'] . ' bit, ' . $cfgMPD['audio_output_rate'] . ' kHz, ' . $cfgMPD['audio_output_channels'];
 		$resample_modes = array('0' => 'disabled',
 			SOX_UPSAMPLE_ALL => 'Source < target rate',
 			SOX_UPSAMPLE_ONLY_41K => 'Only 44.1K source rate',
@@ -423,16 +379,17 @@ function getCfgMpd($dbh) {
 		$array[$row['param']] = $row['value'];
 	}
 
+	// SoX resampling
 	// Ex 44100:16:2 or disabled
 	if ($array['audio_output_format'] == 'disabled') {
 	 	$array['audio_output_rate'] = '';
 	 	$array['audio_output_depth'] = '';
-	 	$array['audio_output_chan'] = '';
+	 	$array['audio_output_channels'] = '';
 	} else {
 	 	$format = explode(":", $array['audio_output_format']);
 	 	$array['audio_output_rate'] = formatRate($format[0]);
 	 	$array['audio_output_depth'] = $format[1];
-	 	$array['audio_output_chan'] = formatChannels($format[2]);
+	 	$array['audio_output_channels'] = formatChannels($format[2]);
 	}
 
 	return $array;

@@ -228,27 +228,33 @@ function formatMpdStatus($resp) {
 		$status['elapsed'] = $time[0];
 		$status['time'] = $time[1];
 
-		// Sample rate
-		// Example formats for $status['audio'], dsd64:2, dsd128:2, 44100:24:2
+		// Example formats for $status['audio'], dsd64:2, 44100:24:2
 	 	$audioFormat = explode(':', $status['audio']);
+
+        // Format
+        $status['audio_format'] = strpos($audioFormat[0], 'dsd') !== false ? $audioFormat[0] : 'pcm';
+
+        // Sample rate
 	 	$status['audio_sample_rate'] = formatRate($audioFormat[0]);
 
 		// Bit depth
-		if (strpos($status['audio_sample_rate'], 'dsd') !== false) {
-			$status['audio_sample_depth'] = $status['audio_sample_rate'];
+		if ($status['audio_format'] != 'pcm') {
+			// DSD
+            $status['audio_sample_depth'] = '1';
 		} else {
 			// Workaround for AAC files that show "f" for bit depth, assume decoded to 24 bit
 		 	$status['audio_sample_depth'] = $audioFormat[1] == 'f' ? '24' : $audioFormat[1];
 		}
 
 	 	// Channels
-	 	if (strpos($status['audio_sample_rate'], 'dsd') !== false) {
+	 	if ($status['audio_format'] != 'pcm') {
+            // DSD
 	 		$status['audio_channels'] = formatChannels($audioFormat[1]);
 	 	} else {
 		 	$status['audio_channels'] = formatChannels($audioFormat[2]);
 		}
 
-		// Bit rate
+		// Bitrate
 		if (!isset($status['bitrate']) || trim($status['bitrate']) == '') {
 			$status['bitrate'] = '0 bps';
 		} else {
@@ -262,7 +268,6 @@ function formatMpdStatus($resp) {
 			}
 		}
 	}
-
 	return $status;
 }
 
@@ -723,6 +728,9 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				$current['hidef'] = 'no';
 			} else if ($ext == 'dsf' || $ext == 'dff') {
 				// DSD
+				$current['hidef'] = 'yes';
+            } else if ($ext == 'wv') {
+				// WavPack DSD
 				$current['hidef'] = 'yes';
 			} else {
 				// PCM or Multichannel PCM

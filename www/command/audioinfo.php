@@ -96,7 +96,9 @@ function parseTrackInfo($resp) {
 				// Not needed for display
 				case 'duration':
 				case 'Last-Modified':
+					break;
 				case 'Format':
+					$format = $value;
 					break;
 				// All others
 				case 'file':
@@ -153,7 +155,8 @@ function parseTrackInfo($resp) {
 		$array[2] = !empty(rtrim($artists, ', ')) ? array('Artists' => rtrim($artists, ', ')) : '';
 		$array[6] = !empty(rtrim($genres, ', ')) ? array('Genres' => rtrim($genres, ', ')) : '';
 		// Audio format
-		$encodedAt = getEncodedAt(array('file' => $file), 'verbose');
+		$encodedAt = getEncodedAt(array('file' => $file, 'Format' => $format), 'verbose');
+
 		$array[13] = $encodedAt == 'Not playing' ? '' : array('Audio format' => $encodedAt);
 	}
 
