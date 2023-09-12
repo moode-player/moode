@@ -1759,6 +1759,9 @@ function renderRadioView() {
             else if (sortTag == 'genre') {
                 return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
             }
+            else if (sortTag == 'bitrate') {
+                return collator.compare(b[sortTag], a[sortTag]);
+            }
             else {
                 return collator.compare(a[sortTag], b[sortTag]);
             }
@@ -1772,6 +1775,9 @@ function renderRadioView() {
             }
             else if (sortTag == 'genre') {
                 return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
+            }
+            else if (sortTag == 'bitrate') {
+                return collator.compare(b[sortTag], a[sortTag]);
             }
             else {
                 return collator.compare(a[sortTag], b[sortTag]);
