@@ -23,6 +23,7 @@ Updates
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
 - UPD: For NTS stations replace bogus title tag " - " with default title
 - UPD: For Radio station bitrate sort use descending order (high to low)
+- UPD: For stations not transmitting a title tag show "Radio station" 
 
 Bug fixes
 
