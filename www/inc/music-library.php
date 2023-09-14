@@ -602,7 +602,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			// rate,DSD,h,channels
 			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
 			$encodedAt = empty($result[1]) ? 'DSD,h' : formatRate($result[1]) . ' DSD,h,' . $result[2];
-		} else if ($ext == 'wv') {
+		} else if ($ext == 'wv' && strpos($mpdFormatTag[0], 'dsd') !== false) {
 			// WavPack DSD: dsd64:2
 			// rate,DSD,h,channels
 			$encodedAt = formatRate($mpdFormatTag[0]) . ' DSD,h,' . $mpdFormatTag[1];
@@ -638,12 +638,22 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			}
 		}
 	} else if ($ext == 'wv') {
-		// WavPack DSD file
-		if ($displayFormat == 'default') {
-			$encodedAt = formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch DSD';
+		if (strpos($mpdFormatTag[0], 'dsd') !== false) {
+			// WavPack DSD file
+			if ($displayFormat == 'default') {
+				$encodedAt = formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch DSD';
+			} else {
+				// 'verbose'
+				$encodedAt = '1 bit, ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]) . ' DSD';
+			}
 		} else {
-			// 'verbose'
-			$encodedAt = '1 bit, ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]) . ' DSD';
+			// WavPack PCM file
+			if ($displayFormat == 'default') {
+				$encodedAt = $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch WavPack';
+			} else {
+				// 'verbose'
+				$encodedAt = $mpdFormatTag[1] . ' bit, ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]) . ' WavPack';
+			}
 		}
 	} else if ($songData['file'] == '') {
 		return 'Not playing';
