@@ -21,14 +21,14 @@ Updates
 - UPD: Add channel count to extra metadata
 - UPD: Add DSD badge for DSF/DFF/WavPack DSD formats
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
-- UPD: For NTS stations replace bogus title tag " - " with default title
-- UPD: For Radio station bitrate sort use descending order (high to low)
-- UPD: For stations not transmitting a title tag show "Radio station" 
+- UPD: Replace bogus title tag " - " in NTS Live stations with default title
+- UPD: Sort by station bitrate in descending order (high to low)
+- UPD: Show "Radio station" for stations that don;t transmit a title tag
 
 Bug fixes
 
-- FIX: Tag/Album scroll/highlight item sync not working
-- FIX: WavPack DSD format encoded-at info not correct
+- FIX: Tag/Album sync (auto-scroll then highlight item) not working
+- FIX: WavPack format information not correct in Library and Audio info
 
 ################################################################################
 #
