@@ -212,7 +212,7 @@ function formatMpdStatus($resp) {
 			$status['elapsed'] = $time[0];
 			$status['time'] = $time[1];
 		} else {
-			// Song file, Podcsst
+			// Tracks, Podcast
 			if ($time[0] != '0') {
 				$percent = round(($time[0] * 100) / $time[1]);
 				$status['elapsed'] = $time[0];
@@ -228,17 +228,17 @@ function formatMpdStatus($resp) {
 		$status['elapsed'] = $time[0];
 		$status['time'] = $time[1];
 
-		// Example formats for $status['audio'], dsd64:2, 44100:24:2
+		// dsd64:2, 44100:24:2
 	 	$audioFormat = explode(':', $status['audio']);
 
         // Format
-        $status['audio_format'] = strpos($audioFormat[0], 'dsd') !== false ? $audioFormat[0] : 'pcm';
+        $status['audio_format'] = strpos($audioFormat[0], 'dsd') !== false ? strtoupper($audioFormat[0]) : 'PCM';
 
         // Sample rate
 	 	$status['audio_sample_rate'] = formatRate($audioFormat[0]);
 
 		// Bit depth
-		if ($status['audio_format'] != 'pcm') {
+		if ($status['audio_format'] != 'PCM') {
 			// DSD
             $status['audio_sample_depth'] = '1';
 		} else {
@@ -247,7 +247,7 @@ function formatMpdStatus($resp) {
 		}
 
 	 	// Channels
-	 	if ($status['audio_format'] != 'pcm') {
+	 	if ($status['audio_format'] != 'PCM') {
             // DSD
 	 		$status['audio_channels'] = formatChannels($audioFormat[1]);
 	 	} else {

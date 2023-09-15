@@ -731,13 +731,14 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .lib-encoded-at-notvisible {display:none}
 .lib-encoded-at-text {color:var(--textvariant);}
 .lib-encoded-at-badge {position:absolute;float:right;width:6.75em;line-height:1.5em;right:1.15rem;color:white;background:rgba(64,64,64,.9);border-radius:10%;font-size:.65em;font-style:normal;font-weight:normal;transform:translate(0%, -195%);}
-.lib-encoded-at-hdonly {filter:brightness(90%);position:absolute;float:right;padding:.1em .2em 0 .3em;line-height:1.2em;right:1.15rem;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:600;transform:translate(0%, -195%);}
+.lib-encoded-at-hdonly {filter:brightness(85%);position:absolute;float:right;padding:.1em .2em 0 .3em;line-height:1.2em;right:1.15rem;color:gold;background:#000;border:1px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:600;transform:translate(0%, -195%);}
 .lib-encoded-at-hdonly-tagview {position:absolute;padding:.05rem .2em 0 .3em;line-height:1.2em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;font-size:.39em;font-style:normal;font-weight:600;}
 #playbar-hd-badge,
 #ss-hd-badge,
-.playback-hd-badge {display:none;position:relative;filter:brightness(85%);color:gold;background:#000;border:2px solid gold;
+.playback-hd-badge {display:none;position:relative;filter:brightness(85%);color:gold;background:#000;border:1px solid gold;
 	border-radius:8%;font-size:.6em;font-family:sans-serif;font-style:normal;font-weight:600;
 	margin-right:.5em;padding:0 .5em;bottom:.15rem;}
+#ss-hd-badge {bottom:.25rem;}
 /* Radio manager */
 .modal-button-style {display:inline-block;margin:0 10px 10px 0;color:inherit!important;}
 /* Radio view, Playlist view */

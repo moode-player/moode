@@ -643,12 +643,15 @@ var renderAlbums = function() {
         // [2] channels
         if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
-            var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="lib-encoded-at-hdonly-tagview">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
+            var encodedAt = filteredAlbums[i].encoded_at.split(',');
+            var tagViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
+                '<div class="lib-encoded-at-hdonly-tagview">' + albumHDBadge(encodedAt[0].split(' ')[1]) + '</div>' : '';
             var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
             // Album view
             var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
             var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
-            var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ? '<div class="lib-encoded-at-hdonly">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
+            var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
+                '<div class="lib-encoded-at-hdonly">' + albumHDBadge(encodedAt[0].split(' ')[1]) + '</div>' : '';
             var albumViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + encodedAt[0] + '</div>' : '';
             var albumViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + encodedAt[0] + '</div>' : '';
         }
@@ -877,7 +880,7 @@ var renderSongs = function(albumPos) {
 		}
         if (filteredSongs[0].album == 'Nothing found') {
             $('#albumsList .lib-entry, #artistsList .lib-entry').removeClass('active');
-            $('.lib-encoded-at-hdonly, .lib-encoded-at-text, .lib-encoded-at-badge').text('');
+            $('.lib-encoded-at-hdonly, lib-encoded-at-hdonly-tagview, .lib-encoded-at-text, .lib-encoded-at-badge').text('');
             $('.tag-cover-text').css('transform', 'translateY(0.5em)');
             $('#songsList, #lib-collection-stats').text('');
             $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
