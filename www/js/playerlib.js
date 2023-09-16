@@ -1050,7 +1050,10 @@ function renderUI() {
         }
 
         // Show/hide HD badge
-        if (MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9') {
+        if (MPD.json['audio_sample_rate'] !== null &&
+            MPD.json['hidef'] == 'yes' &&
+            SESSION.json['library_encoded_at'] &&
+            SESSION.json['library_encoded_at'] != '9') {
             // Playback
             if (MPD.json['artist'] == 'Radio station') {
                 $('#currentartist-div span.playback-hd-badge').show();
