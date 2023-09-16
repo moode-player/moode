@@ -21,9 +21,10 @@ Updates
 - UPD: Add channel count to extra metadata
 - UPD: Add DSD badge for DSF/DFF/WavPack DSD formats
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
+- UPD: Add button to show Receivers modal on Bluetooth renderer overlay
 - UPD: Replace bogus title tag " - " in NTS Live stations with default title
 - UPD: Sort by station bitrate in descending order (high to low)
-- UPD: Show "Radio station" for stations that don;t transmit a title tag
+- UPD: Show "Radio station" for stations that don't transmit a title tag
 
 Bug fixes
 
