@@ -488,23 +488,22 @@ function engineCmd() {
                     var connectedClients = typeof(cmd[1]) == 'undefined' ? 'Undefined' : cmd[1].replace(/;/g, ', ');
                     inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">Bluetooth Active: ' + connectedClients + '</span>' +
-                        '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
+                        '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
+                        receiversBtn());
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
     				inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">AirPlay Active</span>' +
                         '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
-                        receiversBtn);
+                        receiversBtn());
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
     				inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">Spotify Active</span>' +
                         '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
-                        receiversBtn);
+                        receiversBtn());
                     break;
                 case 'slactive1':
                 case 'slactive0':
@@ -1161,23 +1160,22 @@ function renderUI() {
     	if (SESSION.json['btactive'] == '1') {
     		inpSrcIndicator('btactive1',
             '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
-            '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
+            '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
+            receiversBtn());
      	}
     	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
     		inpSrcIndicator('aplactive1',
             '<span id="inpsrc-msg-text">AirPlay Active</span>' +
             '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
-            receiversBtn);
+            receiversBtn());
     	}
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">Receivers</a></div>' : '';
             inpSrcIndicator('spotactive1',
             '<span id="inpsrc-msg-text">Spotify Active</span>' +
             '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
-            receiversBtn);
+            receiversBtn());
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
@@ -1207,6 +1205,15 @@ function renderUI() {
     		$('.busy-spinner').hide();
     	}
     });
+}
+
+// Button on renderer overlay to show multiroom receivers modal
+function receiversBtn() {
+    // data-cmd=
+    // - multiroom_rx_modal (full modal w/on/off, mute and volume)
+    // - multiroom_rx_modal_limited (just the on/off checkbox)
+    return SESSION.json['multiroom_tx'] != 'On' ? '' :
+        '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal">Receivers</a></div>';
 }
 
 // Generate search url
