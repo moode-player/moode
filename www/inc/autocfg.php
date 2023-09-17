@@ -365,10 +365,11 @@ function autoConfigSettings() {
 		['requires' => ['pairing_agent'], 'handler' => setphpSession],
 		 // NOTE: The btmulti var was removed in 8.2.3 because the sharing feature became obsolete
 		['requires' => ['btmulti'], 'handler' => setphpSession],
-		['requires' => ['bluez_pcm_buffer'], 'handler' => setphpSession],
-		['requires' => ['audioout'], 'handler' => function($values) {
-			phpSession('write', 'audioout', $values['audioout']);
+		['requires' => ['bluez_pcm_buffer'], 'handler' => function($values) {
+			phpSession('write', 'bluez_pcm_buffer', $values['bluez_pcm_buffer']);
+			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
 		}],
+		['requires' => ['audioout'], 'handler' => setphpSession],
 
 		'AirPlay',
 		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption',
@@ -546,6 +547,7 @@ function autoConfigSettings() {
 		['requires' => ['library_onetouch_pl'], 'handler' => setphpSession],
 		['requires' => ['library_albumview_sort'], 'handler' => setphpSession],
 		['requires' => ['library_tagview_sort'], 'handler' => setphpSession],
+		['requires' => ['library_track_play'], 'handler' => setphpSession],
 		['requires' => ['library_recently_added'], 'handler' => setphpSession],
 		['requires' => ['library_encoded_at'], 'handler' => setphpSession],
 		['requires' => ['library_covsearchpri'], 'handler' => setphpSession],
