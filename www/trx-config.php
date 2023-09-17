@@ -201,8 +201,14 @@ foreach ($params as $row) {
 $_feat_multiroom = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && $_SESSION['alsaequal'] == 'Off' &&
 	$_SESSION['camilladsp'] == 'off' && $_SESSION['invert_polarity'] == '0') ? false : true;
-$_multiroom_tx_disable = ($_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true || ($_SESSION['adevname'] != 'Pi HDMI 1' &&
-	$_SESSION['adevname'] != 'Pi Headphone jack') || $_SESSION['mpdmixer'] != 'hardware') ? 'disabled' : '';
+if ($_SESSION['multiroom_tx'] == 'Off') {
+	$_multiroom_tx_disable = (
+		$_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true ||
+		($_SESSION['adevname'] != 'Pi HDMI 1' && $_SESSION['adevname'] != 'Pi Headphone jack') ||
+		$_SESSION['mpdmixer'] != 'hardware') ? 'disabled' : '';	
+} else {
+	$_multiroom_tx_disable = '';
+}
 $_tx_restart_btn_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
 $_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Hide' ? '' : 'hide';
