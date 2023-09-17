@@ -412,14 +412,19 @@ function updMpdConf($i2sDevice) {
 	phpSession('write', 'cardnum', $cardNum);
 	// ALSA mixer name
 	phpSession('write', 'amixname', getAlsaMixerName($i2sDevice));
-	// Hardware volume
+	// If no hardware volume controller then revert to mixer_type = software
 	phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
 	if ($_SESSION['alsavolume'] == 'none' && $mixerType == 'hardware') {
 		$mixerType = 'software';
 		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
-	// MPD mixer_type (Hardware, Software, Fixed (0dB), Null)
+	// MPD mixer_type: Hardware, Software, Fixed (0dB), or Null
 	phpSession('write', 'mpdmixer', $mixerType);
+    // Ensure mpdmixer_local = mpdmixer
+    if ($_SESSION['audioout'] == 'Local') {
+        phpSession('write', 'mpdmixer_local', $mixerType);
+    }
+
 	// Audio device friendly name
 	$adevName = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$cardNum] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);

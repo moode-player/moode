@@ -416,8 +416,8 @@ if (empty($wlan0)) {
 	workerLog('worker: wlan0 adapter does not exist');
 } else {
 	$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
-	//$cfgSSID = sqlQuery("SELECT ssid FROM cfg_ssid where ssid not in ('" . $cfgNetwork[1]['wlanssid'] . "', 'None (activates AP mode)')", $dbh);
-	$cfgSSID = sysCmd("moodeutl -q \" SELECT ssid FROM cfg_ssid where ssid not in ('" . $cfgNetwork[1]['wlanssid'] . "', 'None (activates AP mode)')\"");
+	//DELETE: $cfgSSID = sqlQuery("SELECT ssid FROM cfg_ssid WHERE ssid NOT IN ('" . $cfgNetwork[1]['wlanssid'] . "', 'None (activates AP mode)')", $dbh);
+	$cfgSSID = sysCmd("moodeutl -q \"SELECT ssid FROM cfg_ssid WHERE ssid NOT IN ('" . $cfgNetwork[1]['wlanssid'] . "', 'None (activates AP mode)')\"");
 	$altSSIDList = empty($cfgSSID) ? 'None' : implode(',', $cfgSSID);
 	workerLog('worker: wlan0 adapter exists');
 	workerLog('worker: wlan0 country (' . $cfgNetwork[1]['wlan_country'] . ')');
@@ -592,21 +592,29 @@ if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 
 // Store alsa mixer name for use by sysutil.sh get/set-alsavol and vol.sh
 //phpSession('write', 'amixname', getAlsaMixerName($_SESSION['i2sdevice']));
+// Report ALSA mixer name
 workerLog('worker: ALSA mixer name (' . $_SESSION['amixname'] . ')');
-$mixerName = $_SESSION['mpdmixer'];
-$mixerName = isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerName;
-$mixerName = $mixerName == 'none' ? 'fixed 0dB' : $mixerName;
-workerLog('worker: MPD mixer type (' . ($mixerName) . ')');
+
+// Report MPD mixer type (friendly name)
+$mixerType = ucfirst($_SESSION['mpdmixer']);
+$mixerType = isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerType;
+$mixerType = $mixerType == 'None' ? 'Fixed 0dB' : $mixerType;
+workerLog('worker: MPD mixer type (' . $mixerType . ')');
+
+// Ensure mpdmixer_local = mpdmixer
+if ($_SESSION['audioout'] == 'Local') {
+	phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
+}
 
 // Check for presence of hardware volume controller
 $result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
 if (substr($result[0], 0, 6 ) == 'amixer') {
-	phpSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
-	workerLog('worker: Hdwr volume controller not detected');
+	phpSession('write', 'alsavolume', 'none');
+	workerLog('worker: Hardware volume controller not detected');
 } else {
 	$result[0] = str_replace('%', '', $result[0]);
 	phpSession('write', 'alsavolume', $result[0]); // volume level
-	workerLog('worker: Hdwr volume controller exists');
+	workerLog('worker: Hardware volume controller exists');
 	workerLog('worker: Max ALSA volume (' . $_SESSION['alsavolume_max'] . '%)');
 }
 
@@ -620,6 +628,18 @@ if ($_SESSION['alsa_loopback'] == 'On') {
 	sysCmd('modprobe -r snd-aloop');
 }
 workerLog('worker: ALSA loopback (' . $_SESSION['alsa_loopback'] . ')');
+
+// CamillaDSP
+if (!isset($_SESSION['camilladsp_volume_range'])) {
+	$_SESSION['camilladsp_volume_range'] = '60';
+}
+$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+$cdsp->selectConfig($_SESSION['camilladsp']);
+if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+}
+unset($cdsp);
+workerLog('worker: CamillaDSP configuration (' . rtrim($_SESSION['camilladsp'], '.yml') . ')');
 
 // Configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
@@ -646,7 +666,6 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_
 }
 
 // Reset renderer active flags
-workerLog('worker: Renderer active flags (reset)');
 // If any are still 1 then a reboot or power off occured while the renderer was active
 // which would leave ALSA or CamillaDSP volume at 100% so let's reset volume to 0.
 $result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'aplactive', 'spotactive',
@@ -658,18 +677,7 @@ if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['valu
 }
 $result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
 	OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
-
-// CamillaDSP
-if (!isset($_SESSION['camilladsp_volume_range'])) {
-	$_SESSION['camilladsp_volume_range'] = '60';
-}
-$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
-$cdsp->selectConfig($_SESSION['camilladsp']);
-if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-}
-unset($cdsp);
-workerLog('worker: CamillaDSP configuration (' . rtrim($_SESSION['camilladsp'], '.yml') . ')');
+workerLog('worker: Renderer active flags (reset)');
 
 //
 workerLog('worker: --');
@@ -719,25 +727,25 @@ workerLog('worker: --');
 //
 
 // USB sources
-workerLog('worker: USB sources');
 $usbDrives = sysCmd('ls /media');
-if ($usbDrives[0] == '') {
-	workerLog('worker: No drives found');
+if (empty($usbDrives)) {
+	workerLog('worker: USB: No drives found');
 } else {
 	foreach ($usbDrives as $usbDrive) {
-		workerLog('worker: ' . $usbDrive);
+		workerLog('worker: USB: ' . $usbDrive);
 	}
 }
-
 // NAS sources
-workerLog('worker: NAS sources');
 $mounts = sqlRead('cfg_source', $dbh);
-foreach ($mounts as $mp) {
-	workerLog('worker: ' . $mp['name']);
+if ($mounts === true) { // Empty result
+	workerLog('worker: NAS: No music sources defined');
+} else {
+	foreach ($mounts as $mp) {
+		workerLog('worker: NAS: ' . $mp['name']);
+	}
+	$result = sourceMount('mountall');
+	workerLog('worker: NAS: ' . $result);
 }
-$result = sourceMount('mountall');
-workerLog('worker: ' . $result);
-
 //
 workerLog('worker: --');
 workerLog('worker: -- Feature availability');
@@ -2585,7 +2593,7 @@ function runQueuedJob() {
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
 			break;
-		// TEST
+		// TEST:
 		case 'nginx_https_only':
 			if ($_SESSION['w_queueargs'] == '0') {
 				sysCmd("sed -i 's/return 301/#return 301/' /etc/nginx/nginx.conf");
