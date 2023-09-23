@@ -123,7 +123,7 @@ html {background-color:inherit;}
 
 /* main ui */
 #currentsong, #currentalbum, #currentartist, #format-bitrate, #elapsed, #countdown-display {display:block;}
-#extra-tags-display {font-size:1rem;color:var(--textvariant);padding-top:.5em;text-align:center;display:block;cursor:pointer;}
+#extra-tags-display {color:var(--textvariant);padding-top:.5em;text-align:center;display:block;cursor:pointer;}
 #currentsong {font-size:1.35em;padding-top:1.65rem;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
 #currentalbum, #currentartist {font-size:1.25em;padding-top:1.65rem;cursor:pointer;font-weight:500;}
 #currentalbum-div,
@@ -453,13 +453,14 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #screen-saver {animation: fadeIn var(--fadein-rate);color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
 #ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #ss-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:none;transform:translateZ(0);}
-#ss-clock, #ss-extra-metadata {display:none;}
+#ss-clock, #ss-extra-metadata, #ss-extra-metadata-output-format {display:none;}
 .ss-clock {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;color:var(--textvariant);font-size:6em;font-weight:200;}
 #ss-coverart-url img {width:75vh;}
 #ss-currentsong {font-weight:600;}
 #ss-currentsong, #ss-currentalbum-div, #ss-extra-metadata {margin-top:1em;}
 .ss-backdrop {min-width:100vw;min-height:100vh;max-width:unset;transform:translate(-50%, -50%);background-position:center center;position:relative;top:50vh;left:50vw;}
 .ss-coverart {position:fixed;top:1.5em;width:100%;}
+/* CoverView Default */
 body.cv #panel-footer {display:none!important;}
 body.cvpb #panel-footer {display:flex !important;background-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;}
 body.cv #panel-header,
@@ -474,16 +475,24 @@ body.cv #playbar-currentalbum {display:none;padding-bottom:.5em;}
 body.cv #ss-currentsong,
 body.cv #ss-currentalbum {font-size:1.4em;}
 body.cv #screen-saver {display:block !important;}
+/* CoverView Playbar */
 body.cvpb #playbar {box-shadow:none;color:#eee;}
 body.cvpb #playbar-timeline {top:50%;width:35%;transform:translate(-50%, -50%);}
 body.cvpb #cv-playqueue-btn {display:block;}
 body.cvpb #random-album {display:none!important;}
 body.cvpb #playbar-toggles .add-item-to-favorites {display:block!important;}
 #cv-playqueue {display:none;position:absolute;top:1.5em;right:.1em;width:40vmin;z-index:2;height:calc(100% - 2.75em - 45px);overflow:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(32,32,32,.25);}
+/* CoverView Wide */
+body.cvwide #ss-currentsong {font-size:1.4em;}
 body.cvwide #ss-coverart-url img {float:left;margin-left:5em;width:80vh;}
-body.cvwide #ss-metadata {float:left;top:15vh;left:100vh;text-align:left;font-size:2em;position:absolute;right:10vh;}
-body.cvwide #ss-currentalbum {margin:0!important;}
-body.cvwide-xmeta #ss-extra-metadata {display:block;color:var(--textvariant);font-size:.85em;margin-top:1.5em;}
+
+/*body.cvwide #ss-metadata {float:left;top:15vh;left:100vh;text-align:left;font-size:2em;position:absolute;right:10vh;}*/
+body.cvwide #ss-metadata {position:absolute;float:left;text-align:left;top:50%;transform:translateY(-50%);left:calc(80vh + 4em);right:2em;font-size:2em;}
+body.cvwide #ss-currentalbum {font-size:1.2em}
+body.cvwide-xmeta #ss-extra-metadata,
+body.cvwide-xmeta #ss-extra-metadata-output-format {display:block;color:var(--textvariant);font-size:.85em;margin-top:1.5em;}
+body.cvwide-xmeta #ss-extra-metadata-output-format {margin-top:0;}
+body.cvwide #ss-currentartist {font-size:1.2em;margin-top:1em;}
 body:not(.cvpb) #ss-coverart-url img {margin-top:1.5em;}
 body:not(.cvwide) #ss-metadata {width:98%;margin:0 auto;}
 body.cv #playback-controls,
@@ -737,8 +746,8 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #ss-hd-badge,
 .playback-hd-badge {display:none;position:relative;filter:brightness(85%);color:gold;background:#000;border:1px solid gold;
 	border-radius:8%;font-size:.6em;font-family:sans-serif;font-style:normal;font-weight:600;
-	margin-right:.5em;padding:0 .5em;bottom:.15rem;}
-#ss-hd-badge {bottom:.25rem;}
+	margin-right:.5em;padding:0 .5em;bottom:.16rem;}
+#ss-hd-badge {bottom:.3rem;}
 /* Radio manager */
 .modal-button-style {display:inline-block;margin:0 10px 10px 0;color:inherit!important;}
 /* Radio view, Playlist view */

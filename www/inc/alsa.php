@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/cdsp.php';
+require_once __DIR__ . '/mpd.php';
 require_once __DIR__ . '/sql.php';
 
 function getAlsaMixerName($i2sDevice) {
@@ -116,34 +117,34 @@ function getAlsaHwParams($cardNum) {
 			$line = strtok("\n");
 		}
 
-		// Rate "44100 (44100/1)"
-	 	$rate = substr($array['rate'], 0, strpos($array['rate'], ' ('));
+		// Rates: '44100 (44100/1)' etc
+	 	$rate = substr($array['rate'], 0, strpos($array['rate'], ' (')); // Could use: explode(' ', $array['rate'])
 	 	$array['rate'] = formatRate($rate);
 	 	$floatRate = (float)$rate;
 
 		if (substr($array['format'], 0, 3) == 'DSD') {
-			// format DSD_U16_BE" or "DSD_U32_BE"
+			// Formats: 'DSD_U16_BE' or 'DSD_U32_BE'
 			$floatBits = (float)substr($array['format'], 5, 2);
-			$array['format'] = 'DSD bitstream';
+			$array['format'] = 'DSD';
 		} else {
-			// format "S24_3LE" etc
+			// Formats: 'S24_3LE' etc
 			$array['format'] = substr($array['format'], 1, 2);
 			$floatBits = (float)$array['format'];
 		}
 
-		// channels
+		// Channels: '1', '2', '6' etc
 		$floatChannels = (float)$array['channels'];
 		$array['channels'] = formatChannels($array['channels']);
 
-		// Mbps rate
+		// Mbps rate: calculated
 		$array['status'] = 'active';
 		$array['calcrate'] = number_format((($floatRate * $floatBits * $floatChannels) / 1000000), 3, '.', '');
 	} else {
-		$array['status'] = trim($result, "\n");
+		$array['status'] = trim($result, "\n"); // closed
 		$array['calcrate'] = '0 bps';
 	}
 
-	return $array;
+	return $array; // rate, format, channels, status, calcrate (Mbps)
 }
 
 // Get ALSA card ID's
@@ -180,4 +181,50 @@ function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
 			}
 			break;
 	}
+}
+
+function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
+	phpSession('open_ro');
+
+	// Called from command/audioinfo.php
+	if ($mpdState == '') {
+		$mpdStatus = getMpdStatus(getMpdSock());
+		$mpdState = $mpdStatus['state'];
+		$mpdAudioSampleRate = $mpdStatus['audio_sample_rate'];
+	}
+
+	// Called from enhanceMetadata() in inc/mpd.php
+	if ($mpdState == 'play') {
+		if ($_SESSION['audioout'] == 'Bluetooth') {
+			$outputFormat = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
+		} else {
+			// Local
+			$hwParams = getAlsaHwParams(getAlsaCardNum());
+			if ($hwParams['status'] == 'active') {
+				// NOTE: $hwParams['format'] = 'DSD' or PCM bit depth
+				$channels = getChannelCount($hwParams['channels']);
+				$outputFormat = $hwParams['format'] == 'DSD' ?
+					'DSD ' . $mpdAudioSampleRate . ' MHz, ' . $channels :
+					'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, '. $channels;
+			} else {
+				$outputFormat = 'Not playing';
+			}
+		}
+	} else {
+		$outputFormat = 'Not playing';
+	}
+
+	return $outputFormat;
+}
+
+function getChannelCount($channelStr) {
+	if ($channelStr == 'Mono') {
+		$channelCount = '1';
+	} else if ($channelStr == 'Stereo') {
+		$channelCount = '2';
+	} else {
+		$channelCount = substr($channelStr, 0, 1); // N-Channel or ?-Channel
+	}
+
+	return $channelCount .'ch';
 }

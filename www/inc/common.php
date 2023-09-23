@@ -241,15 +241,15 @@ function formatChannels($channels) {
  	return $str;
 }
 
-function formatDoP($format) {
-	$str = array(
-		'dsd64' => array('decoded_to' => 'DoP 24 bit 176.4 kHz, Stereo', 'decode_rate' => '8.467 Mbps'),
-		'dsd128' => array('decoded_to' => 'DoP 24 bit 352.8 kHz, Stereo', 'decode_rate' => '16.934 Mbps'),
-		'dsd256' => array('decoded_to' => 'DoP 24 bit 705.6 kHz, Stereo', 'decode_rate' => '33.868 Mbps'),
-		'dsd512' => array('decoded_to' => 'DoP 24 bit 1.411 MHz, Stereo', 'decode_rate' => '67.736 Mbps'),
-		'dsd1024' => array('decoded_to' => 'DoP 24 bit 2.822 MHz, Stereo', 'decode_rate' => '135.472 Mbps')
+function formatDoP($DSDFormat) {
+	$DoPFormats = array(
+		'DSD64' => array('decoded_to' => 'DoP 24 bit 176.4 kHz, Stereo', 'decode_rate' => '8.467 Mbps'),
+		'DSD128' => array('decoded_to' => 'DoP 24 bit 352.8 kHz, Stereo', 'decode_rate' => '16.934 Mbps'),
+		'DSD256' => array('decoded_to' => 'DoP 24 bit 705.6 kHz, Stereo', 'decode_rate' => '33.868 Mbps'),
+		'DSD512' => array('decoded_to' => 'DoP 24 bit 1.411 MHz, Stereo', 'decode_rate' => '67.736 Mbps'),
+		'DSD1024' => array('decoded_to' => 'DoP 24 bit 2.822 MHz, Stereo', 'decode_rate' => '135.472 Mbps')
 	);
-	return $str[$format];
+	return $DoPFormats[$DSDFormat];
 }
 
 function uiNotify($notify) {

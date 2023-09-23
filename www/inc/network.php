@@ -167,20 +167,20 @@ flush ruleset
 
 table ip filter {
         # Allow all packets inbound
-        chain IMPUT {
-                type filter hook input priority 0; policy accept;
+        chain INPUT {
+            type filter hook input priority 0; policy accept;
         }
         # Forwad packets from WLAN to LAN, and LAN to WLAN if WLAN initiated the connection
         chain FORWARD {
-                type filter hook forward priority 0; policy accept;
-                iifname "wlan0" oifname "eth0" accept
-                iifname "eth0" oifname "wlan0" ct state established accept
-                iifname "eth0" oifname "wlan0" ct state related accept
-                iifname "eth0" oifname "wlan0" drop
+            type filter hook forward priority 0; policy accept;
+            iifname "wlan0" oifname "eth0" accept
+            iifname "eth0" oifname "wlan0" ct state established accept
+            iifname "eth0" oifname "wlan0" ct state related accept
+            iifname "eth0" oifname "wlan0" drop
         }
         # Allow all packets outbound
         chain OUTPUT {
-                type filter hook output priority 100; policy accept;
+            type filter hook output priority 100; policy accept;
         }
 }
 
@@ -193,7 +193,7 @@ table ip nat {
         chain POSTROUTING {
             type nat hook postrouting priority 100; policy accept;
             oifname "eth0" masquerade
-
+		}
 }';
 
 	fwrite($fp, $data);

@@ -598,6 +598,7 @@ function setCuefilesIgnore($ignore) {
 
 // Create enhanced MPD metadata
 function enhanceMetadata($current, $sock, $caller = '') {
+    // NOTE: $current is output from getMpdStatus() in engine-mpd.php
 	$song = getCurrentSong($sock);
 	$current['file'] = $song['file'];
 	$current['thumb_hash'] = '';
@@ -637,8 +638,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			if ($caller == 'engine_mpd_php') {
 				phpSession('close');
 			}
-		}
-		else {
+		} else {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
 
@@ -743,6 +743,9 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD) ? 'yes' : 'no';
 			}
 		}
+
+        // ALSA output format (or 'Not playing')
+        $current['output'] = getALSAOutputFormat($current['state'], $current['audio_sample_rate']);
 	}
 
 	return $current;

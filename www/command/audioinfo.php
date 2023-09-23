@@ -18,6 +18,7 @@
  *
  */
 
+require_once __DIR__ . '/../inc/alsa.php';
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/music-library.php';
@@ -32,6 +33,9 @@ switch ($_GET['cmd']) {
 		$sock = getMpdSock();
 		sendMpdCmd($sock,'lsinfo "' . $_GET['path'] .'"');
 		echo json_encode(parseTrackInfo(readMpdResp($sock)));
+		break;
+	case 'output_format':
+		echo json_encode(getALSAOutputFormat());
 		break;
 }
 

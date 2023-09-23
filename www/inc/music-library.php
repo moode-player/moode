@@ -574,17 +574,17 @@ function getSavedSearches() {
 // Uses mediainfo for DSD (DSF/DFF)
 //
 // Library
-// - PCM:			bits/rate format,Flag,channels
+// - PCM:			format bits/rate,Flag,channels
 // - PCM (lossy): 	format,l,channels
-// - DSD: 			rate DSD,h,channels
+// - DSD: 			DSD rate,h,channels
 // Flag
 // l lossy
 // s standard def
 // h high def (bits >16 or rate > 44.1 or format DSD)
 //
 // Display
-// - 'default' 16/44.1 kHz FLAC | 24/44.1 kHz MP3 | 2.882 MHz DSD
-// - 'verbose' 16 bit, 44.1 kHz, Stereo FLAC | 24 bit, 44.1 kHz Stereo MP3 | 1 bit, 2.882 MHz, Stereo DSD
+// - 'default' FLAC 16/44.1 kHz, 2ch | DSD 2.882 MHz, 2ch
+// - 'verbose' FLAC 16 bit 44.1 kHz, Stereo | DSD 1 bit 2.882 MHz, Stereo
 function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 	$encodedAt = '';
 	$songData['file'] = ensureAudioFile($songData['file']);
@@ -598,14 +598,16 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			// format,l,channels
 			$encodedAt = strtoupper($ext) . ',l,' . $mpdFormatTag[2];
 		} else if ($ext == 'dsf' || $ext == 'dff') {
-			// DSD
-			// rate,DSD,h,channels
+			// DSD: DSF/DFF
+			// DSD rate,h,channels
 			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
-			$encodedAt = empty($result[1]) ? 'DSD,h' : formatRate($result[1]) . ' DSD,h,' . $result[2];
+			//$encodedAt = empty($result[1]) ? 'DSD,h' : formatRate($result[1]) . ' DSD,h,' . $result[2];
+			$encodedAt = empty($result[1]) ? 'DSD,h' : 'DSD ' . formatRate($result[1]) . ',h,' . $result[2];
 		} else if ($ext == 'wv' && strpos($mpdFormatTag[0], 'dsd') !== false) {
-			// WavPack DSD: dsd64:2
-			// rate,DSD,h,channels
-			$encodedAt = formatRate($mpdFormatTag[0]) . ' DSD,h,' . $mpdFormatTag[1];
+			// DSD: WavPack (format dsd64:2)
+			// DSD rate,h,channels
+			//$encodedAt = formatRate($mpdFormatTag[0]) . ' DSD,h,' . $mpdFormatTag[1];
+			$encodedAt = 'DSD ' . formatRate($mpdFormatTag[0]) . ',h,' . $mpdFormatTag[1];
 		} else {
 			// PCM or Multichannel PCM
 			// bits/rate format,[h|s],channels
@@ -613,14 +615,14 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			$bits = ($ext == 'm4a' && $mpdFormatTag[1] == '32') ? '24' : $mpdFormatTag[1];
 			$hiDef = ($bits == 'f' || $bits > ALBUM_BIT_DEPTH_THRESHOLD ||
 				$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD) ? 'h' : 's';
-			$encodedAt = ($bits == 'f' ? '24/' : $bits . '/') .
-				formatRate($mpdFormatTag[0]) . ' ' . strtoupper($ext) . ',' . $hiDef . ',' . $mpdFormatTag[2];
+			$encodedAt = strtoupper($ext) . ' ' . ($bits == 'f' ? '24/' : $bits . '/') .
+				formatRate($mpdFormatTag[0]) . ',' . $hiDef . ',' . $mpdFormatTag[2];
 		}
 	// End special section
 
 	} else if (isset($songData['Name']) || (substr($songData['file'], 0, 4) == 'http' && !isset($songData['Artist']))) {
 		// Radio station
-		$encodedAt = $displayFormat == 'verbose' ? 'VBR compression' : 'VBR';
+		$encodedAt = $displayFormat == 'verbose' ? 'VBR Compression' : 'VBR';
 	} else if (substr($songData['file'], 0, 4) == 'http' && isset($songData['Artist'])) {
 		// UPnP file
 		$encodedAt = 'Unknown';
@@ -631,28 +633,34 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			$encodedAt = '?';
 		} else {
 			if ($displayFormat == 'default') {
-				$encodedAt = formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch DSD';
+				//$encodedAt = formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch DSD';
+				$encodedAt = 'DSD ' . formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch';
 			} else {
 				// 'verbose'
-				$encodedAt = '1 bit, ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]) . ' DSD';
+				//$encodedAt = '1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]) . ' DSD';
+				$encodedAt = ' DSD 1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]);
 			}
 		}
 	} else if ($ext == 'wv') {
 		if (strpos($mpdFormatTag[0], 'dsd') !== false) {
 			// WavPack DSD file
 			if ($displayFormat == 'default') {
-				$encodedAt = formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch DSD';
+				//$encodedAt = formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch DSD';
+				$encodedAt = 'DSD ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch';
 			} else {
 				// 'verbose'
-				$encodedAt = '1 bit, ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]) . ' DSD';
+				//$encodedAt = '1 bit ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]) . ' DSD';
+				$encodedAt = 'DSD 1 bit ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]);
 			}
 		} else {
 			// WavPack PCM file
 			if ($displayFormat == 'default') {
-				$encodedAt = $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch WavPack';
+				//$encodedAt = $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch WavPack';
+				$encodedAt = 'WavPack ' . $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch';
 			} else {
 				// 'verbose'
-				$encodedAt = $mpdFormatTag[1] . ' bit, ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]) . ' WavPack';
+				//$encodedAt = $mpdFormatTag[1] . ' bit ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]) . ' WavPack';
+				$encodedAt = 'WavPack ' . $mpdFormatTag[1] . ' bit ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]);
 			}
 		}
 	} else if ($songData['file'] == '') {
@@ -691,13 +699,17 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 
 		if ($displayFormat == 'default') {
 			$encodedAt = $bitDepth == '?' ?
-				formatRate($sampleRate) . 'kHz, ' . $format :
-				$bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch ' . $format;
+				//formatRate($sampleRate) . 'kHz, ' . $format :
+				//$bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch ' . $format;
+				$format . ' ' . formatRate($sampleRate) . 'kHz' :
+				$format . ' ' . $bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch';
 		} else {
 			// 'verbose'
 			$encodedAt = $bitDepth == '?' ?
-				formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format :
-				$bitDepth . ' bit, ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format;
+				//formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format :
+				//$bitDepth . ' bit ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format;
+				$format . ' ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) :
+				$format . ' ' . $bitDepth . ' bit ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels);
 		}
 	}
 
