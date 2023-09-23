@@ -45,7 +45,16 @@
     <link href="css/bootstrap-select.css" rel="stylesheet">
     <link href="css/flat-ui.css" rel="stylesheet">
     <link href="css/jquery.pnotify.default.css" rel="stylesheet">
-    <link href="css/fontawesome-moode.css" rel="stylesheet">
+    <link href="css/fa-brands.css" rel="stylesheet">
+    <link href="css/fa-duotone.css" rel="stylesheet">
+    <link href="css/fa-fontawesome.css" rel="stylesheet">
+    <link href="css/fa-light.css" rel="stylesheet">
+    <link href="css/fa-regular.css" rel="stylesheet">
+    <link href="css/fa-sharp-light.css" rel="stylesheet">
+    <link href="css/fa-sharp-regular.css" rel="stylesheet">
+    <link href="css/fa-sharp-solid.css" rel="stylesheet">
+    <link href="css/fa-solid.css" rel="stylesheet">
+    <link href="css/fa-thin.css" rel="stylesheet">
     <link href="css/panels.css" rel="stylesheet">
     <link href="css/configs.css" rel="stylesheet">
     <link href="css/moode.css" rel="stylesheet">
