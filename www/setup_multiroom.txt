@@ -16,7 +16,7 @@ PREFACE
 
 This release of moOde Multiroom audio is designed for listening in a casual
 or background setting. There is no support in this release for audiophile
-features including uncompressed PCM format, rates greater than 48 kHz, DSP or
+features including uncompressed PCM format, rates greater than 48K, DSP or
 clock correction between Sender and Receiver. These features may however appear
 in future releases.
 
