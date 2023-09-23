@@ -18,13 +18,16 @@
 Updates
 
 - UPD: Add comparison operators =~ and !~ (PERL regex) to Library Adv search
-- UPD: Add channel count to extra metadata
 - UPD: Add DSD badge for DSF/DFF/WavPack DSD formats
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
 - UPD: Add button to show Receivers modal on Bluetooth renderer overlay
+- UPD: Add channel count to extra metadata
+- UPD: Add ALSA output format ('output') to extra metadata
 - UPD: Replace bogus title tag " - " in NTS Live stations with default title
 - UPD: Sort by station bitrate in descending order (high to low)
 - UPD: Show "Radio station" for stations that don't transmit a title tag
+- UPD: Improve metadata layout in CoverView wide mode
+- UPD: Standardize display style for encodedAt and ALSA output formats
 
 Bug fixes
 
