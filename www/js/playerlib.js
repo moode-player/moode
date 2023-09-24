@@ -1846,7 +1846,7 @@ function renderRadioView() {
         var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
         var radioViewNvDiv = '';
         var radioViewHdDiv = '';
-        //var radioViewTxDiv = '';
+        var radioViewTxDiv = '';
         var radioViewBgDiv = '';
 
         // Favorites header (if any) and end flag
@@ -1870,10 +1870,10 @@ function renderRadioView() {
             // Encoded-at div's
             if (encodedAtOption != 9) {
                 var bitrate = parseInt(data[i].bitrate);
-                var bitrateAndFormat = data[i].bitrate + 'K ' + data[i].format;
+                var bitrateAndFormat = data[i].format + ' ' + data[i].bitrate + 'K ';
                 var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
                 var radioViewHdDiv = (encodedAtOption == 1 && bitrate > RADIO_BITRATE_THRESHOLD) ? '<div class="lib-encoded-at-hdonly">' + RADIO_HD_BADGE_TEXT + '</div>' : '';
-                //var radioViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + bitrateAndFormat + '</div>' : '';
+                var radioViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + bitrateAndFormat + '</div>' : '';
                 var radioViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }
 
@@ -1935,7 +1935,7 @@ function renderRadioView() {
             output += languageDiv;
             output += genreDiv;
 
-            //output += radioViewTxDiv;
+            output += radioViewTxDiv;
             output += radioViewNvDiv;
             output += '</li>';
 
