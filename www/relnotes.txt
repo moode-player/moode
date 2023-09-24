@@ -18,7 +18,7 @@
 Updates
 
 - UPD: Add comparison operators =~ and !~ (PERL regex) to Library Adv search
-- UPD: Add DSD badge for DSF/DFF/WavPack DSD formats
+- UPD: Add DSDNN badge for DSF/DFF/WavPack DSD formats
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
 - UPD: Add button to show Receivers modal on Bluetooth renderer overlay
 - UPD: Add channel count to extra metadata
