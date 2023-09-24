@@ -124,7 +124,7 @@ html {background-color:inherit;}
 /* main ui */
 #currentsong, #currentalbum, #currentartist, #format-bitrate, #elapsed, #countdown-display {display:block;}
 #extra-tags-display {color:var(--textvariant);padding-top:.5em;text-align:center;display:block;cursor:pointer;}
-#currentsong {font-size:1.35em;padding-top:1.65rem;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
+#currentsong {font-size:1.5em;padding-top:1em;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
 #currentalbum, #currentartist {font-size:1.25em;padding-top:1.65rem;cursor:pointer;font-weight:500;}
 #currentalbum-div,
 #currentartist-div {display:inline-flex;justify-content: center;}

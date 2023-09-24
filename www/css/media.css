@@ -68,15 +68,13 @@ body {
 	.covers {width:100%;padding:0;margin:0;}
 
 	/* Metadata under the cover art in Playback view */
-	#songsand {font-size:1.5rem;width:90%}
-	#timeline {display:block;width:74vw;}
+	#songsand {font-size:1.25em;width:90%}
+	#timeline {display:none;width:74vw;}
 	#mobile-time {display:block;}
 	#extra-tags-display {display:none;}
-	#currentsong {font-size:1.25em;}
-	#currentsong, #currentartist {padding-top:1rem;}
-	#currentartist {font-size:1.25em;}
-	#currentalbum {font-size:1.25em;padding-top:1.25rem;}
-	#songsand-sample-rate {display:block;font-size:1.5rem;padding:1.25rem 0;color:var(--textvariant);}
+	#currentsong {font-size:1.5em;padding-top:1em;}
+	#currentartist, #currentalbum {font-size:1.25em;padding-top:1em;}
+	#songsand-sample-rate {display:block;font-size:1.25em;padding-top:1em;color:var(--textvariant);}
 
 	/* Playback view Queue */
 	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
@@ -261,6 +259,7 @@ body {
 	#currentalbum {padding-top:0;}
 	#currentsong,
 	#currentartist {padding-top:.75rem;}
+	#currentsong {font-size:1.75em;}
 
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.5em;margin-top:10px;}
@@ -478,6 +477,13 @@ body {
 }
 
 /*
+// Long titles
+*/
+@media (max-height:800px) and (orientation:landscape) {
+	#currentsong {max-height:3.5em;overflow:hidden;}
+}
+
+/*
 // Large displays
 */
 @media (min-height:900px) and (min-width:1920px) {
@@ -534,7 +540,7 @@ body {
 	#currentsong {font-size:2em;}
 	#extra-tags-display {display:none;}
 	#currentsong,
-	#currentartist {padding-top:.75rem;text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
+	#currentartist {padding-top:.75rem;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 	#currentartist-div {width:inherit;}
 	#currentalbum {padding-top:0;}
 

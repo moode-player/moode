@@ -1006,7 +1006,7 @@ function renderUI() {
         		$('#extra-tags-display').text(bitRate + ' • ' + MPD.json['output']);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
-                $('#extra-tags-display').html(formatExtraTagsString());
+                $('#extra-tags-display').text(formatExtraTagsString());
                 $('#ss-extra-metadata, #songsand-sample-rate').text(MPD.json['encoded']);
                 $('#countdown-sample-rate').text(MPD.json['encoded'].split(',')[0]);
         	}
