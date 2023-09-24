@@ -66,7 +66,7 @@ foreach ($port6600Hosts as $ipAddr) {
 
 			$_players .= sprintf('
 				<li><a href="http://%s" class="btn btn-large target-blank-link" data-ipaddr="%s" target="_blank">
-				<i class="fas fa-sitemap"></i>
+				<i class="fa-solid fa-sharp fa-sitemap"></i>
 				<br>%s%s
 				</a></li>', $ipAddr, $ipAddr, $host, $rxIndicator);
 		}

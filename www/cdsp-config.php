@@ -323,7 +323,7 @@ if(file_exists($extensions_config)) {
 	<div class="controls">
 		<a href="%s"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Open</button></a>
 		<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-			<a aria-label="Help" class="info-toggle" data-cmd="info-%s" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-%s" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 		</div>
 		<span id="info-%s" class="help-block-configs help-block-margin legend-info-help hide">
 			%s<br>

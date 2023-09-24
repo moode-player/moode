@@ -23,11 +23,13 @@ Updates
 - UPD: Add button to show Receivers modal on Bluetooth renderer overlay
 - UPD: Add channel count to extra metadata
 - UPD: Add ALSA output format ('output') to extra metadata
-- UPD: Replace bogus title tag " - " in NTS Live stations with default title
-- UPD: Sort by station bitrate in descending order (high to low)
-- UPD: Show "Radio station" for stations that don't transmit a title tag
 - UPD: Improve metadata layout in CoverView wide mode
+- UPD: Improve sort headings in Radio and Playlist views
+- UPD: Improve bitrate sort in Radio view (sort high to low)
+- UPD: Replace bogus title tag " - " in NTS Live stations with default title
+- UPD: Show "Radio station" for stations that don't transmit a title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
+- UPD: Bump to Fontawesome 6.4.2 Pro icon set and update specific icons
 
 Bug fixes
 

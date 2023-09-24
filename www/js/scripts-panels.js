@@ -1297,7 +1297,7 @@ jQuery(document).ready(function($) { 'use strict';
             if (data.length > 0) {
                 var output = '';
                 for (i = 0; i < data.length; i++) {
-                    var active = SESSION.json['lib_active_search'] == data[i]['name'] ? '<span id="saved-search-item-check" style="float:right;"><i class="fal fa-check"></i></span>' : '';
+                    var active = SESSION.json['lib_active_search'] == data[i]['name'] ? '<span id="saved-search-item-check" style="float:right;"><i class="fa-regular fa-sharp fa-check"></i></span>' : '';
                     output += '<li id="saved-search-item-' + (i + 1)
                         + '" class="saved-search-item" data-toggle="context" data-target="#context-menu-saved-search-contents" '
                         + 'data-name="' + data[i]['name'] + '">';

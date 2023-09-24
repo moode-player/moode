@@ -193,7 +193,7 @@ function genToggleButton($name, $value, $disabled) {
 		<label class="toggle-radio toggle-%id" for="toggle-%id-1">OFF</label>
 		<input type="radio" name="%name" id="toggle-%id-2" value="0" %checked0>
 	</div>
-	<a aria-label="Help" class="config-info-toggle" data-cmd="info-%id" href="#notarget"><i class="fas fa-info-circle"></i></a>';
+	<a aria-label="Help" class="config-info-toggle" data-cmd="info-%id" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>';
 
 	return strtr($template , [
 		'%id' => $id,

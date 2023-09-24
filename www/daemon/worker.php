@@ -1776,7 +1776,7 @@ function updPlayHistory() {
 
 	// Search url
 	$searcheng = 'http://www.google.com/search?q=';
-	$searchurl = '<a href="' . $searcheng . $searchstr . '" class="playhistory-link target-blank-link" target="_blank"><i class="fas fa-external-link-square"></i></a>';
+	$searchurl = '<a href="' . $searcheng . $searchstr . '" class="playhistory-link target-blank-link" target="_blank"><i class="fa-solid fa-sharp fa-external-link-square"></i></a>';
 
 	// Update playback history log
 	if ($title != '' && $title != $_SESSION['phistsong']) {

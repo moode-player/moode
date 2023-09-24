@@ -49,7 +49,7 @@
 				<div class="input-append">
 					<input id="playqueue-filter" type="text" value="" placeholder="search">
 				</div>
-				<button aria-label="Reset" id="searchResetPlayqueue" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+				<button aria-label="Reset" id="searchResetPlayqueue" class="btn hide" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></button>
 			</form>
 		</div>
 		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
@@ -77,10 +77,10 @@
 					</div>
 					<div id="playbtns" class="btn-toolbar">
 						<div class="btn-group">
-							<button aria-label="Add To Favorites" class="btn btn-cmd add-item-to-favorites"><i class="fal fa-heart"></i></button>
-							<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-step-backward"></i></button>
-							<button aria-label="Play / Pause" class="btn btn-cmd play"><i class="fas fa-play"></i></button>
-							<button aria-label="Next" class="btn btn-cmd next"><i class="fas fa-step-forward"></i></button>
+							<button aria-label="Add To Favorites" class="btn btn-cmd add-item-to-favorites"><i class="fa-regular fa-sharp fa-heart"></i></button>
+							<button aria-label="Previous" class="btn btn-cmd prev"><i class="fa-solid fa-sharp fa-step-backward"></i></button>
+							<button aria-label="Play / Pause" class="btn btn-cmd play"><i class="fa-solid fa-sharp fa-play"></i></button>
+							<button aria-label="Next" class="btn btn-cmd next"><i class="fa-solid fa-sharp fa-step-forward"></i></button>
 						</div>
 					</div>
 					<div id="volzone">
@@ -98,13 +98,13 @@
 					</div>
 					<div id="togglebtns">
 						<div class="btn-group">
-							<button class="btn btn-cmd playback-context-menu" data-toggle="context" data-target="#context-menu-playback" aria-label="Context Menu" ><i class="far fa-ellipsis-h"></i></button>
-							<button class="btn btn-cmd btn-toggle random" data-cmd="random" aria-label="Random"><i class="fal fa-random"></i></button>
-							<button class="btn btn-cmd coverview" aria-label="Cover View"><i class="fal fa-tv"></i></button>
-							<button class="btn btn-cmd toggle-song hide" href="#notarget" data-cmd="toggle_song" aria-label="Last track"><i class="fal fa-exchange-alt"></i></button>
-							<button class="btn btn-cmd ralbum"><i class="fal fa-dot-circle" aria-label="Random Album"></i></button>
-							<button class="btn volume-popup-btn hide" data-toggle="modal" aria-label="Volume"><i class="fal fa-volume-up"></i><div id="mvol-bar"><div id="mvol-bg"></div><div aria-label="Volume" id="mvol-progress"></div></div></button>
-							<button class="btn btn-cmd add-item-to-favorites" aria-label="Add To Favorites"s><i class="fal fa-heart"></i></button>
+							<button class="btn btn-cmd playback-context-menu" data-toggle="context" data-target="#context-menu-playback" aria-label="Context Menu" ><i class="fa-regular fa-sharp fa-ellipsis-h"></i></button>
+							<button class="btn btn-cmd btn-toggle random" data-cmd="random" aria-label="Random"><i class="fa-regular fa-sharp fa-random"></i></button>
+							<button class="btn btn-cmd coverview" aria-label="Cover View"><i class="fa-regular fa-sharp fa-tv"></i></button>
+							<button class="btn btn-cmd toggle-song hide" href="#notarget" data-cmd="toggle_song" aria-label="Last track"><i class="fa-regular fa-sharp fa-exchange-alt"></i></button>
+							<button class="btn btn-cmd ralbum"><i class="fa-regular fa-sharp fa-dot-circle" aria-label="Random Album"></i></button>
+							<button class="btn volume-popup-btn hide" data-toggle="modal" aria-label="Volume"><i class="fa-regular fa-sharp fa-volume-up"></i><div id="mvol-bar"><div id="mvol-bg"></div><div aria-label="Volume" id="mvol-progress"></div></div></button>
+							<button class="btn btn-cmd add-item-to-favorites" aria-label="Add To Favorites"s><i class="fa-regular fa-sharp fa-heart"></i></button>
 						</div>
 					</div>
 				</div>
@@ -146,23 +146,23 @@
 	<!-- LIBRARY VIEWSWITCH MENU -->
 	<div id="viewswitch" class="viewswitch hide">
 		<div class="dropdown">
-			<a aria-label="Library menu" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
+			<a aria-label="Library menu" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fa-solid fa-sharp fa-chevron-down"></i></a>
 			<ul class="dropdown-menu context-menu" role="menu">
 				<button aria-label="Quisk search" id="viewswitch-search" class="viewswearch btn menu-separator">
 					<form id="lib-album-search" method="post" onSubmit="return false;">
 						<input id="lib-album-filter" type="text" value="" placeholder="search">
 					</form>
-					<span aria-label="Reset" id="searchResetLib" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
+					<span aria-label="Reset" id="searchResetLib" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></span>
 				</button>
-				<button aria-label="Advanced Search" class="btn adv-search-btn hide" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i> Advanced search</button>
-				<button aria-label="Saved searches" class="btn saved-search-btn menu-separator" href="#saved-search-modal" data-toggle="modal"><i class="fas fa-search-plus"></i> Saved searches</button>
-				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Album" class="btn album-view-btn" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Playlist" class="btn playlist-view-btn menu-seperatior" href="#playlist-panel"><i class="fas fa-list-alt"></i> Playlist<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="All Music" class="btn view-all no-icon">All Music<span><i class="fal fa-check"></i></span></button>
-				<button aria-label="Recently Added" class="btn view-recents no-icon">Recently Added<span><i class="fal fa-check"></i></span></button>
+				<button aria-label="Advanced Search" class="btn adv-search-btn hide" href="#dbsearch-modal" data-toggle="modal"><i class="fa-regular fa-sharp fa-search"></i> Advanced search</button>
+				<button aria-label="Saved searches" class="btn saved-search-btn menu-separator" href="#saved-search-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-search-plus"></i> Saved searches</button>
+				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fa-solid fa-sharp fa-microphone"></i> Radio<span class="pane"><i class="fa-regular fa-sharp fa-check"></i></span></button>
+				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fa-solid fa-sharp fa-folder"></i> Folder<span class="pane"><i class="fa-regular fa-sharp fa-check"></i></span></button>
+				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fa-solid fa-sharp fa-columns"></i> Tag<span class="pane"><i class="fa-regular fa-sharp fa-check"></i></span></button>
+				<button aria-label="Album" class="btn album-view-btn" href="#library-panel"><i class="fa-solid fa-sharp fa-th"></i> Album<span class="pane"><i class="fa-regular fa-sharp fa-check"></i></span></button>
+				<button aria-label="Playlist" class="btn playlist-view-btn menu-seperatior" href="#playlist-panel"><i class="fa-solid fa-sharp fa-list-alt"></i> Playlist<span class="pane"><i class="fa-regular fa-sharp fa-check"></i></span></button>
+				<button aria-label="All Music" class="btn view-all no-icon">All Music<span><i class="fa-regular fa-sharp fa-check"></i></span></button>
+				<button aria-label="Recently Added" class="btn view-recents no-icon">Recently Added<span><i class="fa-regular fa-sharp fa-check"></i></span></button>
 			</ul>
     	</div>
 	</div>
@@ -236,10 +236,10 @@
 	<div id="folder-panel" class="tab-pane">
 		<div id="container-browse">
 			<div aria-label="Back" class="btnlist btnlist-top btnlist-top-db">
-				<button id="db-back" class="btn"><i class="far fa-angle-left"></i></button>
-				<button aria-label="Home" id="db-home" class="btn"><i class="fas fa-home"></i></button>
-				<button aria-label="Refresh" id="db-refresh" class="btn"><i class="far fa-redo"></i></button>
-				<button aria-label="Search" id="db-advsearch" class="btn" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i></button>
+				<button id="db-back" class="btn"><i class="fa-regular fa-sharp fa-angle-left"></i></button>
+				<button aria-label="Home" id="db-home" class="btn"><i class="fa-solid fa-sharp fa-home"></i></button>
+				<button aria-label="Refresh" id="db-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
+				<button aria-label="Search" id="db-advsearch" class="btn" href="#dbsearch-modal" data-toggle="modal"><i class="fa-regular fa-sharp fa-search"></i></button>
 				<form id="db-fastsearch" onsubmit="return false;">
 					<div class="input-append">
 						<input id="dbfs" type="text" value="" placeholder="search">
@@ -261,14 +261,14 @@
 	<div id="radio-panel" class="tab-pane">
 		<div id="container-radio">
 			<div class="btnlist btnlist-top btnlist-top-ra">
-				<button aria-label="Radio Manager" id="btn-ra-manager" class="btn"><i class="fas fa-cog"></i></button>
-				<button aria-label="Refresh" id="btn-ra-refresh" class="btn"><i class="far fa-redo"></i></button>
-				<button aria-label="New Station" id="btn-ra-new" class="btn"><i class="far fa-plus"></i></button>
+				<button aria-label="Radio Manager" id="btn-ra-manager" class="btn"><i class="fa-solid fa-sharp fa-cog"></i></button>
+				<button aria-label="Refresh" id="btn-ra-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
+				<button aria-label="New Station" id="btn-ra-new" class="btn"><i class="fa-regular fa-sharp fa-plus"></i></button>
 				<form id="ra-search" class="" method="post" onSubmit="return false;">
 					<div class="input-append">
 						<input id="ra-filter" type="text" value="" placeholder="search">
 					</div>
-					<button aria-label="Reset" id="btn-ra-search-reset" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+					<button aria-label="Reset" id="btn-ra-search-reset" class="btn hide" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></button>
 				</form>
 			</div>
 			<div id="database-radio">
@@ -284,14 +284,14 @@
 	<div id="playlist-panel" class="tab-pane">
 		<div id="container-playlist">
 			<div class="btnlist btnlist-top btnlist-top-pl">
-				<button aria-label="Playlist Manager" id="btn-pl-manager" class="btn"><i class="fas fa-cog"></i></button>
-				<button aria-label="Refresh" id="btn-pl-refresh" class="btn"><i class="far fa-redo"></i></button>
-				<button aria-label="New Playlist" id="btn-pl-new" class="btn"><i class="far fa-plus"></i></button>
+				<button aria-label="Playlist Manager" id="btn-pl-manager" class="btn"><i class="fa-solid fa-sharp fa-cog"></i></button>
+				<button aria-label="Refresh" id="btn-pl-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
+				<button aria-label="New Playlist" id="btn-pl-new" class="btn"><i class="fa-regular fa-sharp fa-plus"></i></button>
 				<form id="pl-search" class="" method="post" onSubmit="return false;">
 					<div class="input-append">
 						<input id="pl-filter" type="text" value="" placeholder="search">
 					</div>
-					<button aria-label="Reset" id="btn-pl-search-reset" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+					<button aria-label="Reset" id="btn-pl-search-reset" class="btn hide" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></button>
 				</form>
 			</div>
 			<div id="database-playlist">
@@ -323,7 +323,7 @@
             <label class="control-label" for="dbsearch-predefined-filters">Predefined filter</label>
             <div class="controls">
                 <input id="dbsearch-predefined-filters" class="input-large" type="text">
-				<a aria-label="Help" class="info-toggle" data-cmd="info-dbsearch-predefined-filters" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-dbsearch-predefined-filters" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-dbsearch-predefined-filters" class="help-block hide">
 					The filters listed below will override "All tags" or "Specific tags" searches. Filter names are case insensative.<br>
 					<b>Encoded</b> [bits | rate | bits/rate | Nch | multichannel]<br>
@@ -342,7 +342,7 @@
             <label class="control-label" for="dbsearch-alltags">Search all tags</label>
             <div class="controls">
                 <input id="dbsearch-alltags" class="input-large" type="text">
-				<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-alltags" class="help-block hide">
                 	All tags are searched using an OR relationship. Searches are not case sensitive and partial matches are the default unless one of the strict comparison operators '==' or '!=' is used. The comparison operators '=~' or '!~' can also be used to perform searches based on a PERL regular expressions.
 					There must be a space between the comparison operator and the search string.
@@ -355,7 +355,7 @@
             <label class="control-label" for="dbsearch-genre">Genre</label>
             <div class="controls">
                 <input id="dbsearch-genre" class="input-large" type="text" name="dbsearch_genre" value="">
-				<a aria-label="Help" class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-specifictags" class="help-block hide">
                 	Non-empty tags are searched using an AND relationship. Searches are not case sensitive and partial matches are the default unless one of the strict comparison operators '==' or '!=' is used. The comparison operators '=~' or '!~' can also be used to perform searches based on PERL regular expressions.
 					There must be a space between the comparison operator and the search string.
@@ -423,7 +423,7 @@
             <label class="control-label" for="saved-search-name">Save as name</label>
             <div class="controls">
                 <input id="saved-search-name" class="input-large" type="text" name="saved_search_name" maxlength="200" value="">
-				<a aria-label="Help" class="info-toggle" data-cmd="info-saved-search-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-saved-search-name" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-saved-search-name" class="help-block hide">
                 	Enter a name to create a new Saved Search based on the current search criteria below. If a Saved Search of the same name already exists it will be overwritten.
                 </span>
@@ -462,12 +462,12 @@
             <label class="control-label" for="delete-playqueue-item-begpos">Beginning item</label>
             <div class="controls">
                 <input id="delete-playqueue-item-begpos" class="input-mini" type="number" min="1" max="" value="">
-				<button aria-label="Delete" id="btn-delete-setpos-top" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+				<button aria-label="Delete" id="btn-delete-setpos-top" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-up fa-sm fa-sm"></i></button>
             </div>
             <label class="control-label" for="delete-playqueue-item-endpos">Ending item</label>
             <div class="controls">
                 <input id="delete-playqueue-item-endpos" class="input-mini" type="number" min="1" max="" value="">
-				<button aria-label="Delete" id="btn-delete-setpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+				<button aria-label="Delete" id="btn-delete-setpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-down fa-sm fa-sm"></i></button>
             </div>
         </div>
 	</div>
@@ -486,18 +486,18 @@
             <label class="control-label" for="move-playqueue-item-begpos">Beginning item</label>
             <div class="controls">
                 <input id="move-playqueue-item-begpos" class="input-mini" type="number" min="1" max="" value="">
-				<button aria-label="To The Top" id="btn-move-setpos-top" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+				<button aria-label="To The Top" id="btn-move-setpos-top" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-up fa-sm fa-sm"></i></button>
             </div>
             <label class="control-label" for="move-playqueue-item-endpos">Ending item</label>
             <div class="controls">
                 <input id="move-playqueue-item-endpos" class="input-mini" type="number" min="1" max="" value="">
-				<button aria-label="To The Bottom" id="btn-move-setpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+				<button aria-label="To The Bottom" id="btn-move-setpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-down fa-sm fa-sm"></i></button>
             </div>
             <label class="control-label" for="move-playqueue-item-newpos">New position</label>
             <div class="controls">
                 <input id="move-playqueue-item-newpos" class="input-mini" type="number" min="1" max="" value="">
-				<button aria-label="Up" id="btn-move-setnewpos-top" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-				<button aria-label="Down" id="btn-move-setnewpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+				<button aria-label="Up" id="btn-move-setnewpos-top" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-up fa-sm fa-sm"></i></button>
+				<button aria-label="Down" id="btn-move-setnewpos-bot" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-down fa-sm fa-sm"></i></button>
             </div>
         </div>
 	</div>
@@ -543,7 +543,7 @@
 				<div class="controls">
 					<input id="playlist-favorites-name" type="text" value="" autofocus>
 					<span class="help-block">
-						Sets the playlist where favorited <i class="far fa-heart"></i> items are stored.
+						Sets the playlist where favorited <i class="fa-regular fa-sharp fa-heart"></i> items are stored.
 						If the playlist does not already exist a new one will be created.
 					</span>
 		        </div>
@@ -596,7 +596,7 @@
 								<ul id="theme-name-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-themecolor" class="help-block hide">
 		                	Sets the background and text color.
 		                </span>
@@ -632,7 +632,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-accentcolor" class="help-block hide">
 	                    	Sets the color of the volume and time knobs and other active elements.
 	                    </span>
@@ -672,7 +672,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-alphablend" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-alphablend" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-alphablend" class="help-block hide">
 	                    	Sets the opacity of the background color from 0.00 (fully transparent) to 1.00 (fully opaque). Values less than 1.00 allow cover and image backdrops to become visible.
 	                    </span>
@@ -686,7 +686,7 @@
 								<button id="remove-bgimage" class="btn btn-primary btn-small modal-button-style hide">Remove</button>
 							</div>
 							<div id="current-bgimage"></div>
-							<a aria-label="Help" class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<a aria-label="Help" class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 							<div id="error-bgimage"></div>
 							<div id="info-bgimage" class="help-block hide">
 								Sets the backdrop to the choosen JPEG image. Max image size is 1MB.
@@ -708,7 +708,7 @@
 									</ul>
 								</div>
 							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-cover-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-cover-backdrop" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 							<span id="info-cover-backdrop" class="help-block hide">
 		                    	Sets the backdrop to the currently displayed cover art.
 		                    </span>
@@ -733,7 +733,7 @@
 									</ul>
 								</div>
 							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-cover-blur" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-cover-blur" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 							<span id="info-cover-blur" class="help-block hide">
 		                    	Sets the amount of blur to apply to the cover backdrop.
 		                    </span>
@@ -757,7 +757,7 @@
 									</ul>
 								</div>
 							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-cover-scale" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-cover-scale" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 							<span id="info-cover-scale" class="help-block hide">
 		                    	Increases the size of the cover backdrop.
 		                    </span>
@@ -779,7 +779,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-adaptive" class="help-block hide">
 	                    	Sets the color scheme for Playback view based on the dominant color in the cover art.
 	                    </span>
@@ -800,7 +800,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-backdrop" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-renderer-backdrop" class="help-block hide">
 							Display the image or cover backdrop instead of the semi-transparent dark overlay when a renderer is playing.
 						</span>
@@ -825,7 +825,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-font-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-font-size" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-font-size" class="help-block hide">
 							Increase or decrease the size of text.
 						</span>
@@ -846,7 +846,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-native-lazyload" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-native-lazyload" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-native-lazyload" class="help-block hide">
 							Set the method used by the Browser to lazyload cover thumbnails.<br>
 							<b>Yes: </b>Use internal Browser routine. This is the default and is generally fastest.<br>
@@ -876,7 +876,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-playqueue-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-playqueue-art" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-playqueue-art" class="help-block hide">
 							Shows thumbnail images for songs and radio stations in the Queue.
 							Note that showing thumbnails when there are a large number if items in the Queue may impact performance.
@@ -898,7 +898,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-npicon" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-npicon" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-show-npicon" class="help-block hide">
 							Show the EQ bars animation icon next to the currently playing item in the Queue.
 							Note that showing the icon may impact performance when using an attached local display.
@@ -907,7 +907,7 @@
 					<label class="control-label" for="extra-tags">Extra metadata</label>
 	                <div class="controls">
 						<input id="extra-tags" class="input-large" type="text">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-extra-tags" class="help-block hide">
 		                    Display under the cover art any combination of tags listed below in any order. If no tags are to be displayed enter None or leave the field blank.<br>
 							<b>Tags: </b>album, genre, track, disc, date, composer, conductor, performer, encoded, output
@@ -937,7 +937,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-search_site" class="help-block hide">
 							By clicking the current track title in Playback view an internet search is launched with the selected site.
 							A combination of artist and album is searched. Wikipedia search is restricted to artist only.
@@ -959,7 +959,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-play-history" class="help-block hide">
 	                    	Log each track played to the playback history log. Tracks in the log can be clicked to launch a Google search. The log can be cleared in System config.
 	                    </span>
@@ -992,7 +992,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_album" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_album" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_onetouch_album" class="help-block hide">
 	                    	Specify an action to be performed when clicking a cover in Album view.
 	                    </span>
@@ -1017,7 +1017,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_radio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_radio" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_onetouch_radio" class="help-block hide">
 	                    	Specify an action to be performed when clicking a cover in Radio view.
 	                    </span>
@@ -1042,7 +1042,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-onetouch-pl" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-onetouch-pl" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-onetouch-pl" class="help-block hide">
 	                    	Specify an action to be performed when clicking a playlist in Playlist view.
 	                    </span>
@@ -1065,7 +1065,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-albumview-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-albumview-sort-order" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-albumview-sort-order" class="help-block hide">
 							<b>by Album: </b>Albums are sorted alphabetically.<br>
 	                        <b>by Artist: </b>Albums for each artist are sorted alphabetically.<br>
@@ -1093,7 +1093,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tagview-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tagview-sort-order" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-tagview-sort-order" class="help-block hide">
 							<b>by Album: </b>Albums are sorted alphabetically.<br>
 							<b>by Album/Year: </b>Albums are sorted alphabetically in the full list. When an Artist is clicked albums for the artist are sorted chronologically<br>
@@ -1119,7 +1119,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-track-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-track-play" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-track-play" class="help-block hide">
 							For the track list in Tag/Album views this option controls whether the Play and Clear/Play actions add only the selected track to the Queue or the selected track and all following tracks.<br>
 	                    	<b>Track: </b>Play selected track only.<br>
@@ -1146,7 +1146,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-recently-added" class="help-block hide">
 		                	Time period used to filter the Library for recently added albums. The default is 1 month.
 							Note that the "No limit" option provides a way to achieve a "date added" sort of the Library.
@@ -1171,7 +1171,7 @@
 							</ul>
 						</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-show-encoded-at" class="help-block hide">
                     		The bit depth and sample rate can be displayed in one of several formats on or below the cover art.
 							The "HD only" option displays an HD badge when the bit depth for song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for radio stations the bit rate is &gt; 128 kbps.
@@ -1193,7 +1193,7 @@
 							</ul>
 						</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-cover-search-priority" class="help-block hide">
 							This option determines whether the cover art extractor and thumbnail generator look first for embedded covers or cover image files.
 	                    </span>
@@ -1217,7 +1217,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbgen-scan" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbgen-scan" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-thumbgen-scan" class="help-block hide">
 							Specify which audio formats are scanned by the thumbnail generator. Selecting "Default" can result in a faster scan.<br>
 	                    	<b>Default: </b>aac, aiff, dff, dsf, flac, m4a, mp3, mp4, ogg, wav and wv.<br>
@@ -1246,7 +1246,7 @@
 							</ul>
 						</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-hires-thumbnails" class="help-block hide">
 						This option sets the resolution of the JPEG images output by the thumbnail generator. Regenerate the thumbnail images after changing this setting.
 						Note that "Auto" uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).
@@ -1275,7 +1275,7 @@
 							</ul>
 						</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbnail-columns" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbnail-columns" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-thumbnail-columns" class="help-block hide">
 		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for desktop/tablet and the second is for mobile.
 	                    </span>
@@ -1303,7 +1303,7 @@
 								</ul>
 							</div>
  						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-tag-view-genre" class="help-block hide">
 							Select whether to populate the first column in Tag view with genres (default) or with composers.
 						</span>
@@ -1326,7 +1326,7 @@
 								</ul>
 							</div>
  						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-tag-view-artist" class="help-block hide">
 							Select how to populate the Artist list in Tag view.<br>
 							<b>Artist: </b>List all artists, album artists, performers and conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
@@ -1353,7 +1353,7 @@
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
  		                    Determine how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
  	                    </span>
@@ -1374,7 +1374,7 @@
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  						<span id="info-library-inc-comment-tag" class="help-block hide">
 							The comment text is displayed in Tag/Album views after the year in the album title
 							or as an album heading in the track list if "Album key" is set to include @AlbumID.
@@ -1383,7 +1383,7 @@
 					<label class="control-label" for="ignore-articles">Ignore articles</label>
 	                <div class="controls">
 	                    <input id="ignore-articles" class="input-large" type="text">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-ignore-articles" class="help-block hide">
 							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
 						</span>
@@ -1404,7 +1404,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-show-genres-column" class="help-block hide">
 	                    	Show the genres column in Tag view.
 	                    </span>
@@ -1425,7 +1425,7 @@
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  						<span id="info-show-tagview-covers" class="help-block hide">
  		                    Show cover art in the album column in Tag view.
  	                    </span>
@@ -1446,7 +1446,7 @@
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  						<span id="info-ellipsis-limited-text" class="help-block hide">
  		                    Display ellipsis limited text underneath the cover art in Album view for a more compact look.
  	                    </span>
@@ -1467,7 +1467,7 @@
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  						<span id="info-utf8-char-filter" class="help-block hide">
 							Replace non-UTF8 characters with UTF8 compliant characters which may be present in song files. Setting this to Yes may impact the performance of the Library.
  	                    </span>
@@ -1501,7 +1501,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-timeout" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-scnsaver-timeout" class="help-block hide">
 	                    	Show CoverView on all connected clients after the specified number of minutes.
 	                    </span>
@@ -1522,7 +1522,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-auto-coverview" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-auto-coverview" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-auto-coverview" class="help-block hide">
 	                    	Automatically show CoverView on a locally attached display. Connected clients are not affected.
 	                    </span>
@@ -1546,7 +1546,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-style" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-style" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-scnsaver-style" class="help-block hide">
 	                    	Set the effect used for the backdrop.<br>
 							<b>Animated: </b>Color change overlay.<br>
@@ -1574,7 +1574,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-scnsaver-mode" class="help-block hide">
 	                    	Display cover art, a digital clock or an analog clock with an optional sweep second hand.
 	                    </span>
@@ -1595,7 +1595,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-layout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-layout" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-scnsaver-layout" class="help-block hide">
 	                    	<b>Default: </b>Cover art centered and metadata underneath.<br>
 							<b>Wide: </b>Cover art on the left and metadata on the right.
@@ -1617,7 +1617,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-cvpb" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-cvpb" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-show-cvpb" class="help-block hide">
 							Show or hide the Playbar when in CoverView.
 						</span>
@@ -1638,7 +1638,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-xmeta" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-xmeta" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-scnsaver-xmeta" class="help-block hide">
 							Display sample rate and audio format underneath the metadata in wide layout.
 	                    </span>
@@ -1772,7 +1772,7 @@
 							</ul>
 						</div>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-action" class="help-block hide">
 						The Restart action is initiated 45 seconds after the specified stop time.
 					</span>
@@ -1817,7 +1817,7 @@
 					<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'radio')">
 				</div>
 				<div id="preview-new-logoimage" class="modal-cover-preview"></div>
-				<a aria-label="Help" class="info-toggle" id="info-toggle-new-logoimage" data-cmd="info-new-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-new-logoimage" data-cmd="info-new-logoimage" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<div id="error-new-logoimage"></div>
 				<div id="info-new-logoimage" class="help-block hide">
 					Add a JPEG logo image for the station. Max size is 1MB.
@@ -1841,7 +1841,7 @@
 							</ul>
 						</div>
 						</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-new-station-type" class="help-block hide">
 						This setting controls the visibility of the station and whether it's considered a favorite. Stations marked as hidden can be un-hidden via the Radio Manager.
 					</span>
@@ -1849,7 +1849,7 @@
 				<label class="control-label" for="new-station-genre">Genre</label>
 				<div class="controls">
 					<input id="new-station-genre" class="input-large" type="text" name="new_station_genre" maxlength="200" value="">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-genre" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-new-station-genre" class="help-block hide">
 						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma plus space).
 					</span>
@@ -1861,7 +1861,7 @@
 				<label class="control-label" for="new-station-home-page">Home page</label>
 				<div class="controls">
                     <input id="new-station-home-page" class="input-large" type="text" name="new_station_home_page" maxlength="200" value="">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-home-page" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-new-station-home-page" class="help-block hide">
 						URL for the station's home page. This link is used when clicking on the default title under the cover art in Playback view. The default title is used when a station does not transmit a title.
 					</span>
@@ -1902,7 +1902,7 @@
 							</ul>
 						</div>
 						</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-new-station-geo-fenced" class="help-block hide">
 						Specifies whether the station stream is only avalable in a certain country or region.
 					</span>
@@ -1947,7 +1947,7 @@
 					<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'radio')">
 				</div>
 				<div id="preview-edit-logoimage" class="modal-cover-preview"></div>
-				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<div id="error-edit-logoimage"></div>
 				<div id="info-edit-logoimage" class="help-block hide">
 					Add a JPEG image for the station. Max size is 1MB.
@@ -1972,7 +1972,7 @@
 							</ul>
 						</div>
 						</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-edit-station-type" class="help-block hide">
 						This setting controls the visibility of the station and whether it's considered a favorite. Stations marked as hidden can be un-hidden via the Radio Manager.
 					</span>
@@ -1980,7 +1980,7 @@
 				<label class="control-label" for="edit-station-genre">Genre</label>
 				<div class="controls">
 					<input id="edit-station-genre" class="input-large" type="text" name="edit_station_genre" maxlength="200" value="">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-genre" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-edit-station-genre" class="help-block hide">
 						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma plus space).
 					</span>
@@ -1992,7 +1992,7 @@
 				<label class="control-label" for="new-station-home-page">Home page</label>
 				<div class="controls">
                     <input id="edit-station-home-page" class="input-large" type="text" name="edit_station_home_page" maxlength="200" value="">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-home-page" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-home-page" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-edit-station-home-page" class="help-block hide">
 						URL for the station's home page. This link is used when clicking on the default title under the cover art in Playback view. The default title is used when a station does not transmit a title.
 					</span>
@@ -2033,7 +2033,7 @@
 							</ul>
 						</div>
 						</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-edit-station-geo-fenced" class="help-block hide">
 						Specifies whether the station stream is only avalable in a certain country or region.
 					</span>
@@ -2097,7 +2097,7 @@
 						</ul>
 					</div>
 				</div>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-sort-tag" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-radioview-sort-tag" class="help-block hide">
 					Specify which tag is used to sort the station list.
 				</span>
@@ -2119,7 +2119,7 @@
 						</ul>
 					</div>
 				</div>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-group-method" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-radioview-group-method" class="help-block hide">
 					Specify how to break the list into groups separated by a named header. The "Favorites first" selection places favorite stations at the top of the list sorted by Name followed by the rest of the stations grouped by sort tag.
 				</span>
@@ -2148,7 +2148,7 @@
 						</ul>
 					</div>
 				</div>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-radioview-show-hide-moode" class="help-block hide">
 					<b>Show hidden: </b>Display hidden moOde stations for review but leave their type set to "hidden".<br>
 					<b>Hide all: </b>Set all moOde stations to type "hidden" except for favorites.<br>
@@ -2176,7 +2176,7 @@
 						</ul>
 					</div>
 				</div>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-radioview-show-hide-other" class="help-block hide">
 					<b>Show hidden: </b> Display other (non-moOde) hidden stations for review but leave their type set to "hidden".<br>
 					<b>Hide all: </b> Set all other (non-moOde) stations to type "hidden" except for favorites.<br>
@@ -2203,7 +2203,7 @@
 							</ul>
 						</div>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-enabled" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-enabled" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-recorder-enabled" class="help-block hide">
 						Turn the stream recorder On/Off.
 					</span>
@@ -2223,7 +2223,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-recorder-storage" class="help-block hide">
 							Specify the path where the folder named Recordings is located. The folder will automatically be created if it doesn't already exist.
 							Note only EXT4 format is allowed for the partition containing the recordings folder.
@@ -2245,7 +2245,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-tag-recordings" class="help-block hide">
 							Convert all raw recordings (WAV files in the Recordings folder) to FLAC and tag them using the following tags/values.<br>
 							<b>Genre: </b>"Recordings"<br>
@@ -2269,7 +2269,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-recorder-album-tag" class="help-block hide">
 							Set Album tag to selected name.<br>
 							<span id="selected-album-tag"></span>
@@ -2289,7 +2289,7 @@
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-delete-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-delete-recordings" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-delete-recordings" class="help-block hide">
 							Delete raw recordings that have not been converted to FLAC and tagged yet. These are the WAV files directly under the Recordings folder. Files that have been previously converted to FLAC and placed in subfolders are not deleted.
 						</span>
@@ -2322,7 +2322,7 @@
 					<input type="file" id="new-plcoverimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'playlist')">
 				</div>
 				<div id="preview-new-plcoverimage" class="modal-cover-preview"></div>
-				<a aria-label="Help" class="info-toggle" id="info-toggle-new-plcoverimage" data-cmd="info-new-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-new-plcoverimage" data-cmd="info-new-plcoverimage" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<div id="error-new-plcoverimage"></div>
 				<div id="info-new-plcoverimage" class="help-block hide">
 					Add a JPEG image for the playlist. Max image size is 1MB.
@@ -2332,7 +2332,7 @@
 				<label class="control-label" for="new-playlist-genre">Genre</label>
 				<div class="controls">
 					<input id="new-playlist-genre" class="input-large" type="text" name="new_playlist_genre" maxlength="200" value="">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-new-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-playlist-genre" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-new-playlist-genre" class="help-block hide">
 						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma plus space).
 					</span>
@@ -2363,7 +2363,7 @@
 					<input type="file" id="edit-plcoverimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'playlist')">
 				</div>
 				<div id="preview-edit-plcoverimage" class="modal-cover-preview"></div>
-				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-plcoverimage" data-cmd="info-edit-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" id="info-toggle-edit-plcoverimage" data-cmd="info-edit-plcoverimage" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<div id="error-edit-plcoverimage"></div>
 				<div id="info-edit-plcoverimage" class="help-block hide">
 					Add a JPEG image for the playlist. Max size is 1MB.
@@ -2374,7 +2374,7 @@
 				<label class="control-label" for="edit-playlist-genre">Genre</label>
 				<div class="controls">
 					<input id="edit-playlist-genre" class="input-large" type="text" name="edit_playlist_genre" maxlength="200" value="">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-playlist-genre" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-edit-playlist-genre" class="help-block hide">
 						The first genre is the primary genre followed by related or sub-genres separated by ", " (comma plus space).
 					</span>
@@ -2441,7 +2441,7 @@
 						</ul>
 					</div>
 				</div>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-plview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-plview-sort-tag" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-plview-sort-tag" class="help-block hide">
 					Specify which tag is used to sort the playlists.
 				</span>
@@ -2462,7 +2462,7 @@
 						</ul>
 					</div>
 				</div>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-plview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-plview-group-method" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-plview-group-method" class="help-block hide">
 					Specify how to break the list into groups separated by a named header.
 				</span>
@@ -2503,10 +2503,10 @@
 	<div id="playhistory-search">
 		<div class="input-append">
 			<input id="ph-filter" class="input-large" type="text" value="" placeholder="search">
-			<button aria-label="Reset" id="search-reset-ph" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+			<button aria-label="Reset" id="search-reset-ph" class="btn hide" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></button>
 			<span id="ph-filter-results" class="hide"></span>
-			<button aria-label="First Page" id="ph-first-page" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
-			<button aria-label="Last Page" id="ph-last-page" class="btn btn-small btn-primary modal-button-style"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+			<button aria-label="First Page" id="ph-first-page" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-up fa-sm fa-sm"></i></button>
+			<button aria-label="Last Page" id="ph-last-page" class="btn btn-small btn-primary modal-button-style"><i class="fa-regular fa-sharp fa-angle-double-down fa-sm fa-sm"></i></button>
 		</div>
 	</div>
 	<div class="modal-body" id="container-playhistory">
@@ -2528,9 +2528,9 @@
 			</div>
 		</div>
 		<div id="volbtns-2">
-			<button aria-label="Volume Up" id="volumeup-2" class="btn btn-cmd btn-volume btn-primary" ontouchstart=""><i class="far fa-plus fa-xs"></i></button>
+			<button aria-label="Volume Up" id="volumeup-2" class="btn btn-cmd btn-volume btn-primary" ontouchstart=""><i class="fa-regular fa-sharp fa-plus fa-xs"></i></button>
 			<div aria-label="Volume Display" class="volume-display" href="#notarget"><div></div></div>
-			<button aria-label="Volume Down" id="volumedn-2" class="btn btn-cmd btn-volume btn-primary" ontouchstart=""><i class="far fa-minus fa-xs"></i></button>
+			<button aria-label="Volume Down" id="volumedn-2" class="btn btn-cmd btn-volume btn-primary" ontouchstart=""><i class="fa-regular fa-sharp fa-minus fa-xs"></i></button>
 		</div>
 		<div aria-label="Volume Display dB" class="volume-display-db"></div>
 	</div>
@@ -2543,165 +2543,165 @@
 <div id="context-menus">
 	<div id="context-menu-folder" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="update_folder"><i class="fal fa-sync sx"></i> Update this folder</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="update_folder"><i class="fa-regular fa-sharp fa-sync sx"></i> Update this folder</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-folder-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="track_info_folder"><i class="fal fa-music sx"></i> Audio info</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="track_info_folder"><i class="fa-regular fa-sharp fa-music sx"></i> Audio info</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-savedpl-root" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li class="menu-separator"><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li class="menu-separator"><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-savedpl-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-db-search-results" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_group"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-lib-item" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a id="play-track" href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a id="clear-play-track" href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
-			<li><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fal fa-list-alt sx"></i> Add to playlist</a></li>
-			<li><a href="#notarget" data-cmd="track_info_lib"><i class="fal fa-music sx"></i> Audio info</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a id="play-track" href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a id="clear-play-track" href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-alt sx"></i> Add to playlist</a></li>
+			<li><a href="#notarget" data-cmd="track_info_lib"><i class="fa-regular fa-sharp fa-music sx"></i> Audio info</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-lib-album" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
-			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fal fa-list-alt sx"></i> Add to playlist</a></li>
-			<li><a id="tracklist-toggle" href="#notarget" data-cmd="tracklist"><i class="fal fa-list sx"></i> Show tracks</a></li>
+			<li><a href="#notarget" data-cmd="add_group"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_group"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_group_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-alt sx"></i> Add to playlist</a></li>
+			<li><a id="tracklist-toggle" href="#notarget" data-cmd="tracklist"><i class="fa-regular fa-sharp fa-list sx"></i> Show tracks</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-lib-disc" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
-			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fal fa-list-alt sx"></i> Add to playlist</a></li>
+			<li><a href="#notarget" data-cmd="add_group"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_group"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_group_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-alt sx"></i> Add to playlist</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-lib-album-heading" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
-			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fal fa-list-alt sx"></i> Add to playlist</a></li>
+			<li><a href="#notarget" data-cmd="add_group"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_group"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_group_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-alt sx"></i> Add to playlist</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-radio-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
-			<li ><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li class="menu-separator"><a href="#notarget" data-cmd="get_playlist_names"><i class="fal fa-list-alt sx"></i> Add to playlist</a></li>
-			<li><a href="#notarget" data-cmd="edit_station"><i class="fal fa-edit sx"></i> Edit station</a></li>
-			<li><a href="#notarget" data-cmd="delete_station"><i class="fal fa-trash sx"></i> Delete station</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li ><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li class="menu-separator"><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-alt sx"></i> Add to playlist</a></li>
+			<li><a href="#notarget" data-cmd="edit_station"><i class="fa-regular fa-sharp fa-edit sx"></i> Edit station</a></li>
+			<li><a href="#notarget" data-cmd="delete_station"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete station</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-playlist-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
-			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li><a href="#notarget" data-cmd="edit_playlist"><i class="fal fa-edit sx"></i> Edit playlist</a></li>
-			<li><a href="#notarget" data-cmd="delete_playlist"><i class="fal fa-trash sx"></i> Delete playlist</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="edit_playlist"><i class="fa-regular fa-sharp fa-edit sx"></i> Edit playlist</a></li>
+			<li><a href="#notarget" data-cmd="delete_playlist"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete playlist</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-pl-contents" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="delete_pl_item"><i class="fal fa-trash sx"></i> Delete item(s)</a></li>
-			<li><a href="#notarget" data-cmd="move_pl_item"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
+			<li><a href="#notarget" data-cmd="delete_pl_item"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete item(s)</a></li>
+			<li><a href="#notarget" data-cmd="move_pl_item"><i class="fa-regular fa-sharp fa-arrow-up sx"></i> Move item(s)</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-saved-search-contents" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="activate_saved_search"><i class="fal fa-filter sx"></i> Activate</a></li>
-			<li id="menu-item-delete-saved-search"><a href="#notarget" data-cmd="delete_saved_search"><i class="fal fa-trash sx"></i> Delete</a></li>
+			<li><a href="#notarget" data-cmd="activate_saved_search"><i class="fa-regular fa-sharp fa-filter sx"></i> Activate</a></li>
+			<li id="menu-item-delete-saved-search"><a href="#notarget" data-cmd="delete_saved_search"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-playqueue-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="delete_playqueue_item"><i class="fal fa-trash sx"></i> Delete item(s)</a></li>
-			<li><a href="#notarget" data-cmd="move_playqueue_item"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
-			<li><a href="#notarget" data-cmd="setforclockradio"><i class="fal fa-alarm-clock sx"></i> Set for clock radio</a></li>
-			<li><a href="#notarget" data-cmd="track_info_playqueue"><i class="fal fa-music sx"></i> Audio info</a></li>
-			<li><a href="#notarget" data-cmd="playqueue_time"><i class="fal fa-clock sx"></i> Queue time</a></li>
+			<li><a href="#notarget" data-cmd="delete_playqueue_item"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete item(s)</a></li>
+			<li><a href="#notarget" data-cmd="move_playqueue_item"><i class="fa-regular fa-sharp fa-arrow-up sx"></i> Move item(s)</a></li>
+			<li><a href="#notarget" data-cmd="setforclockradio"><i class="fa-regular fa-sharp fa-alarm-clock sx"></i> Set for clock radio</a></li>
+			<li><a href="#notarget" data-cmd="track_info_playqueue"><i class="fa-regular fa-sharp fa-music sx"></i> Audio info</a></li>
+			<li><a href="#notarget" data-cmd="playqueue_time"><i class="fa-regular fa-sharp fa-clock sx"></i> Queue time</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-playback" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="save_queue_to_playlist"><i class="fal fa-save sx"></i> Save Queue to playlist</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="set_favorites_name"><i class="fal fa-heart-circle sx"></i> Set Favorites name</a></li>
-			<li><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>
-			<li><a href="#notarget" data-cmd="repeat"><i class="fal fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fal fa-check"></i></span></a></li>
-			<li><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="clear"><i class="fal fa-trash sx"></i> Clear queue</a></li>
-			<li id="context-menu-stream-recorder" class="hide"><a href="#notarget" data-cmd="stream_recorder"><i class="fal fa-video sx"></i> Record stream<span id="menu-check-recorder"><i class="fal fa-check"></i></span></a></li>
-			<li id="context-menu-multiroom-sender" class="hide"><a href="#notarget" data-cmd="multiroom_rx_modal"><i class="fas fa-rss"></i> Receivers</a></li>
-			<li><a href="#notarget" data-cmd="track_info_playback"><i class="fal fa-music sx"></i> Audio info</a></li>
-			<li><a href="#notarget" data-cmd="toggle_song"><i class="fal fa-exchange-alt sx"></i> Last track</a></li>
-			<li><a href="#notarget" data-cmd="playqueue_time"><i class="fal fa-clock sx"></i> Queue time</a></li>
+			<li><a href="#notarget" data-cmd="save_queue_to_playlist"><i class="fa-regular fa-sharp fa-save sx"></i> Save Queue to playlist</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="set_favorites_name"><i class="fa-regular fa-sharp fa-heart-circle sx"></i> Set Favorites name</a></li>
+			<li><a href="#notarget" data-cmd="consume"><i class="fa-regular fa-sharp fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fa-regular fa-sharp fa-check"></i></span></a></li>
+			<li><a href="#notarget" data-cmd="repeat"><i class="fa-regular fa-sharp fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fa-regular fa-sharp fa-check"></i></span></a></li>
+			<li><a href="#notarget" data-cmd="single"><i class="fa-regular fa-sharp fa-redo sx"></i> Single<span id="menu-check-single"><i class="fa-regular fa-sharp fa-check"></i></span></a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="clear"><i class="fa-regular fa-sharp fa-trash sx"></i> Clear queue</a></li>
+			<li id="context-menu-stream-recorder" class="hide"><a href="#notarget" data-cmd="stream_recorder"><i class="fa-regular fa-sharp fa-video sx"></i> Record stream<span id="menu-check-recorder"><i class="fa-regular fa-sharp fa-check"></i></span></a></li>
+			<li id="context-menu-multiroom-sender" class="hide"><a href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-solid fa-sharp fa-rss"></i> Receivers</a></li>
+			<li><a href="#notarget" data-cmd="track_info_playback"><i class="fa-regular fa-sharp fa-music sx"></i> Audio info</a></li>
+			<li><a href="#notarget" data-cmd="toggle_song"><i class="fa-regular fa-sharp fa-exchange-alt sx"></i> Last track</a></li>
+			<li><a href="#notarget" data-cmd="playqueue_time"><i class="fa-regular fa-sharp fa-clock sx"></i> Queue time</a></li>
 		</ul>
 	</div>
 </div>

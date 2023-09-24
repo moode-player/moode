@@ -32,7 +32,7 @@
 					<label class="toggle-radio toggle-updater-auto-check" for="toggle-updater-auto-check-1">OFF</label>$_select[updater_auto_check_off]
 				</div>
 				<button id="btn-set-updater-auto-check" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_updater_auto_check" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-update-updater-auto-check" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-update-updater-auto-check" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-update-updater-auto-check" class="config-help-info">
 					Display a notification badge in Playback view if an available software update was detected during startup.
 				</span>
@@ -41,7 +41,7 @@
 			<label class="control-label">Available</label>
 			<div class="controls">
 				<button class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="checkfor_update" value="novalue">Check</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-checkfor-update" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-checkfor-update" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				$_available_upd
 				<span id="info-checkfor-update" class="config-help-info">
 					Check for an available software update.
@@ -51,7 +51,7 @@
 			<label class="control-label">Status</label>
 			<div class="controls">
 				<a href="sys-status.php"><button class="btn btn-medium btn-primary config-btn">View</button></a>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-view-status" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-view-status" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-view-status" class="config-help-info">
 					View progress of the active in-place update or if the update has previously been applied view the update log.
 				</span>
@@ -100,7 +100,7 @@
 					$_select[worker_responsiveness]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-worker-responsiveness" class="config-help-info">
 					<b>Default:</b> Suitable for all Raspberry Pi models.<br>
 					<b>Boosted:</b> Best for multi-core Raspberry Pi's. This provides more responsiveness when using the Configuration screens or making other setting changes that require Worker.
@@ -113,7 +113,7 @@
 					$_select[cpugov]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cpugov" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-cpugov" class="config-help-info">
 					<b>On-demand:</b> Scale CPU frequency from min to max based on load.<br>
 					<b>Performance:</b> Run the CPU at max frequency.
@@ -135,7 +135,7 @@
 				<label class="control-label">USB boot (Pi-3*)</label>
 				<div class="controls">
 					<a href="#enable-usbboot" data-toggle="modal"><button class="btn btn-primary btn-medium config-btn" $_usbboot_btn_disable>Enable</button></a>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-usb-boot" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-usb-boot" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-usb-boot" class="config-help-info config-help-no-margin">
 						For Pi-3B, 3B+, and 3A+ this option programs OTP memory to enable booting from USB drive. After OTP is updated the system can boot from either uSD card or USB drive.
 	                </span>
@@ -155,7 +155,7 @@
 						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-1">OFF</label>$_select[p3wifi_off]
 					</div>
 					<button id="btn-set-p3wifi" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-p3wifi" class="config-help-info">
 						The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
                     </span>
@@ -168,7 +168,7 @@
 						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-1">OFF</label>$_select[p3bt_off]
 					</div>
 					<button id="btn-set-p3bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-p3bt" class="config-help-info">
 						The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
                     </span>
@@ -182,7 +182,7 @@
 					<label class="toggle-radio toggle-hdmiport" for="toggle-hdmiport-1">OFF</label>$_select[hdmiport_off]
 				</div>
 				<button id="btn-set-hdmiport" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmiport" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmiport" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmiport" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-hdmiport" class="config-help-info">
 					Leaving the HDMI port ON uses +25 mA and lengthens boot time.
                 </span>
@@ -195,7 +195,7 @@
 					<label class="toggle-radio toggle-actled" for="toggle-actled-1">OFF</label>$_select[actled_off]
 				</div>
 				<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-actled" class="config-help-info">
 					LED0 default trigger is SDCard (mmc0) activity.
                 </span>
@@ -209,7 +209,7 @@
 						<label class="toggle-radio toggle-pwrled" for="toggle-pwrled-1">OFF</label>$_select[pwrled_off]
 					</div>
 					<button id="btn-set-pwrled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-pwrled" class="config-help-info">
 						LED1 default trigger is default-on for Power.
                     </span>
@@ -237,7 +237,7 @@
 					<label class="toggle-radio toggle-eth0chk" for="toggle-eth0chk-1">OFF</label>$_select[eth0chk_off]
 				</div>
 				<button id="btn-set-eth0chk" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-eth0chk" class="config-help-info">
 					Wait for up to "Address timeout" seconds for an address to be assigned to the Ethernet adapter.
 					If set to NO the address check will be skipped and startup time will be reduced.
@@ -273,7 +273,7 @@
 					<label class="toggle-radio toggle-localui" for="toggle-localui-1">OFF</label>$_select[localui_off]
 				</div>
                 <button id="btn-set-localui" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-localui" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-localui" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-localui" class="config-help-info">
 					Display moOde UI on locally attached display.
                 </span>
@@ -286,7 +286,7 @@
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
 				</div>
                 <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_wake_display" class="config-help-info">
 					Wake the display when audio starts playing.
                 </span>
@@ -299,7 +299,7 @@
 					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
 				</div>
                 <button id="btn-set-touchscn" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-touchscn" class="config-help-info">
 					This prevents the cursor from showing on the display or Touch screen
                 </span>
@@ -317,7 +317,7 @@
 			<div class="controls">
             	<input class="config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_localui_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-brightness" class="config-help-info">
 					Backlight brightness for 7" Pi Touch. Values are 0 - 255.
                 </span>
@@ -329,7 +329,7 @@
 					$_select[pixel_aspect_ratio]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_localui_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_pixel_aspect_ratio" class="config-help-info">
 					Rectangular (default) or square pixels for 7" Pi Touch.
                 </span>
@@ -350,7 +350,7 @@
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
 				</div>
                 <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_localui_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-on-screen-kbd" class="config-help-info">
 					On-screen popup keyboard by @Nutul.
                 </span>
@@ -435,7 +435,7 @@
 					<label class="toggle-radio toggle-lcdup" for="toggle-lcdup-1">OFF</label>$_select[lcdup_off]
 				</div>
 				<button id="btn-set-lcdup" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-lcdup" class="config-help-info">
 					The LCD update engine runs the lcd-updater.py script whenever UI state changes.<br>
 					A stub lcd-updater.py script is located in the /var/local/www/commandw/ directory.
@@ -450,7 +450,7 @@
 						<label class="toggle-radio toggle-gpio-svc" for="toggle-gpio-svc-1">OFF</label>$_select[gpio_svc_off]
 					</div>
 					<button id="btn-set-gpio-svc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_gpio_svc" value="novalue">Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-gpio-svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-gpio-svc" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-gpio-svc" class="config-help-info">
 						Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.
                     </span>
@@ -472,7 +472,7 @@
 					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
 				</div>
 				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-shellinabox" class="config-help-info">
 					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
                 </span>
@@ -489,7 +489,7 @@
 			<label class="control-label">Backup system</label>
 			<div class="controls">
 				<a href="bkp-config.php?action=backup"><button class="btn btn-medium btn-primary config-btn">Backup</button></a>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-system" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-backup-system" class="config-help-info">
 					Backup configuration settings and preferences, radio stations, playlists and CamillaDSP configs.
                 </span>
@@ -498,7 +498,7 @@
 			<label class="control-label">Restore system</label>
 			<div class="controls">
 				<a href="bkp-config.php?action=restore"><button class="btn btn-medium btn-primary config-btn">Restore</button></a>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-restore-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-restore-system" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-restore-system" class="config-help-info">
 					Restore configuration settings and preferences, radio stations, playlists and CamillaDSP configs.
                 </span>
@@ -510,7 +510,7 @@
 			<label class="control-label">Startup log</label>
 			<div class="controls">
 				<button class="btn btn-medium btn-primary config-btn" type="submit" name="download_logs" value="1">Download</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-download-logs" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-download-logs" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-download-logs" class="config-help-info">
 					Download the moOde startup log: /var/log/moode.log
                 </span>
@@ -519,7 +519,7 @@
 			<label class="control-label">System logs</label>
 			<div class="controls">
 				<a href="#clear-syslogs" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-syslogs" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-syslogs" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-clear-syslogs" class="config-help-info">
 					Clear various system log files. Note the logs are cleared periodically by the Maintenance task.
                 </span>
@@ -528,7 +528,7 @@
 			<label class="control-label">Play history log</label>
 			<div class="controls">
 				<a href="#clear-playbackhist" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-playhistory" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-playhistory" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-clear-playhistory" class="config-help-info">
 					Clear the playback history log. Perform this task periodically since the log grows over time.
                 </span>
@@ -543,7 +543,7 @@
 					<label class="toggle-radio toggle-reduce-sys-logging" for="toggle-reduce-sys-logging-1">OFF</label>$_select[reduce_sys_logging_off]
 				</div>
 				<button id="btn-set-reduce-sys-logging" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_reduce_sys_logging" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-reduce-sys-logging" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-reduce-sys-logging" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-reduce-sys-logging" class="config-help-info">
 					Reduce the amount of system log data generated by disabling the rsyslog service.
                 </span>
@@ -556,7 +556,7 @@
 					<label class="toggle-radio toggle-debuglog" for="toggle-debuglog-1">OFF</label>$_select[debuglog_off]
 				</div>
 				<button id="btn-set-debuglog" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-debuglog" class="config-help-info">
 					Log debug information<br>
 					- <b>Moode startup log: </b>/var/log/moode.log<br>

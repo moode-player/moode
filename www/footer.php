@@ -60,21 +60,21 @@
 	<div class="modal-body">
 		<div id="configure">
 			<ul>
-				<li><a href="lib-config.php" class="btn btn-large"><i class="fas fa-database"></i><br>Library</a></li>
-				<li><a href="snd-config.php" class="btn btn-large"><i class="fas fa-volume-up"></i><br>Audio</a></li>
-				<li><a href="net-config.php" class="btn btn-large"><i class="fas fa-sitemap"></i><br>Network</a></li>
-				<li><a href="sys-config.php" class="btn btn-large"><i class="fas fa-cogs"></i><br>System</a></li>
-				<li><a href="ren-config.php" class="btn btn-large"><i class="fas fa-play-circle"></i><br>Renderers</a></li>
-				<li><a href="mpd-config.php" class="btn btn-large"><i class="fas fa-play"></i><br>MPD</a></li>
-				<li><a href="cdsp-config.php" class="btn btn-large"><i class="fas fa-sliders-v-square"></i><br>CamillaDSP</a></li>
+				<li><a href="lib-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-database"></i><br>Library</a></li>
+				<li><a href="snd-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-volume-up"></i><br>Audio</a></li>
+				<li><a href="net-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-sitemap"></i><br>Network</a></li>
+				<li><a href="sys-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-cogs"></i><br>System</a></li>
+				<li><a href="ren-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-play-circle"></i><br>Renderers</a></li>
+				<li><a href="mpd-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-play"></i><br>MPD</a></li>
+				<li><a href="cdsp-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-sliders-v-square"></i><br>CamillaDSP</a></li>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) { ?>
 					<li><a href="trx-config.php" class="btn btn-large"><i class="fas fas fa-rss"></i><br>Multiroom</a></li>
 				<?php } ?>
 				<?php if ($section == 'index') { ?>
-					<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fas fa-alarm-clock"></i><br>Clock radio</a></li>
+					<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fa-solid fa-sharp fa-alarm-clock"></i><br>Clock radio</a></li>
 				<?php } ?>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) { ?>
-					<li><a href="inp-config.php" class="btn btn-large"><i class="far fa-scrubber"></i><br>Input select</a></li>
+					<li><a href="inp-config.php" class="btn btn-large"><i class="fa-regular fa-sharp fa-scrubber"></i><br>Input select</a></li>
 				<?php } ?>
 			</ul>
 		</div>

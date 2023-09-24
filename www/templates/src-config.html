@@ -33,7 +33,7 @@
 		</legend>
 
 		<a data-toggle="modal" href="#moode-log" class="btn btn-medium config-btn $_hide_error" style="background-color: #333;">
-			<i class="fas fa-times red sx"></i>Click to view the mount error
+			<i class="fa-solid fa-sharp fa-times red sx"></i>Click to view the mount error
 		</a>
 
 		<div class="control-group">
@@ -42,7 +42,7 @@
 				<select id="type" name="mount[type]" class="config-select-large">
 					$_protocol
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-fileshare-protocol" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-fileshare-protocol" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-fileshare-protocol" class="config-help-info">
 					Choose the type corresponding to the file sharing protocol used on the remote host.
 					Note that NFS mounts that fail can cause up to a 2 minute timeout. This screen will appear to hang when this happens.
@@ -55,7 +55,7 @@
 					$_address
 				</select>
 				<button id="scan-btn" class="btn btn-primary btn-small config-btn-set btn-submit status-msg $_scan_btn_hide" data-msg="Scan in progress" type="submit" name="scan" value="1">Scan</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-server" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-server" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-server" class="config-help-info">
 					SCAN generates a list of paths to SMB or NFS shares found on the network.
 					A path consists of the host or IP address followed by a forward slash followed by the share name
@@ -71,14 +71,14 @@
 				<label class="control-label" for="nas-usr">Userid</label>
 				<div class="controls">
 					<input  id="nas-usr" class="config-input-large" type="text" pattern="[^'\u0022]+" name="mount[username]" value="$_username">
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				</div>
 
 				<label class="control-label" for="nas-pasw">Password</label>
 				<div class="controls">
 					<input  id="nas-pasw" class="config-input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fal fa-eye"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fa-regular fa-sharp fa-eye"></i></a>
 					<span id="info-nas-uidpwd" class="config-help-info">
 						Try userid Guest and a blank password unless your NAS device requires a specific userid/password.
 						Note that single and double quotes are not allowed.
@@ -91,7 +91,7 @@
 				<input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{1,25}" id="nas-name" name="mount[name]" value="$_name">
 				<input type="hidden" name="mount[id]" value="$_id">
 				<input type="hidden" name="mount[action]" value="$_action">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-source-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-source-name" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-source-name" class="config-help-info">
 					Friendly name (alias) for this Music Source. The name will appear in Library Folder view under the NAS folder.
 					Format is 1-25 characters, alphanumeric, hyphen allowed.
@@ -111,7 +111,7 @@
 						<option value="utf8" $_charset>UTF-8 (Default)</option>
 						<option value="iso8859-1" $_charset>ISO-8859-1</option>
 					</select>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-mount-charset" class="config-help-info">
 						This setting determines how characters are encoded. The default is UTF-8 which is a multibyte encoding that can represent any Unicode character. ISO 8859-1 is a single-byte encoding that can represent the first 256 Unicode characters. Both encode ASCII exactly the same way.
                     </span>
@@ -121,7 +121,7 @@
 					<label class="control-label" for="nas-rsize">Rsize</label>
 					<div class="controls">
 						<input class="config-input-large" type="number" id="nas-rsize" name="mount[rsize]" value="$_rsize">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-mount-rsize" class="config-help-info">
 							Default for this setting is 61440.
 	                    </span>
@@ -130,7 +130,7 @@
 					<label class="control-label" for="nas-wsize">Wsize</label>
 					<div class="controls">
 						<input class="config-input-large" type="number" id="nas-wsize" name="mount[wsize]" value="$_wsize">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-mount-wsize" class="config-help-info">
 							Default for this setting is 65536.
 	                    </span>

@@ -478,7 +478,7 @@ function engineCmd() {
                     var inputSourceName = typeof(cmd[1]) == 'undefined' ? 'Undefined' : cmd[1];
                     inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">' + inputSourceName +
-                        ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
+                        ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fa-regular fa-sharp fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
                         '</span><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
                     );
                     break;
@@ -1011,7 +1011,7 @@ function renderUI() {
                 $('#countdown-sample-rate').text(MPD.json['encoded'].split(',')[0]);
         	}
 
-            $('#ss-extra-metadata-output-format').html('<i class="fal fa-play-circle"></i>' + ' ' + MPD.json['output']);
+            $('#ss-extra-metadata-output-format').html('<i class="fa-regular fa-sharp fa-play-circle"></i>' + ' ' + MPD.json['output']);
         }
 
         // Default metadata
@@ -1176,7 +1176,7 @@ function renderUI() {
     	if (SESSION.json['inpactive'] == '1') {
     		inpSrcIndicator('inpactive1',
                 '<span id="inpsrc-msg-text">' + SESSION.json['audioin'] +
-                ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
+                ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fa-regular fa-sharp fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
                 '</span><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
             );
     	}
@@ -1434,7 +1434,7 @@ function renderPlayqueue(state) {
 
 					// Line 2, station name
 					output += '<span class="pll2">';
-					output += '<i class="fas fa-microphone"></i> ';
+					output += '<i class="fa-solid fa-sharp fa-microphone"></i> ';
 
 					if (typeof(RADIO.json[data[i].file]) === 'undefined') {
 						var name = typeof(data[i].Name) === 'undefined' ? 'Radio station' : data[i].Name;
@@ -1587,8 +1587,8 @@ function renderFolderView(data, path, searchstr) {
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-            output += path == '' ?  '<i class="fas fa-hdd icon-root"></i></a></div>' :
-                (data[i].cover_hash == '' ? '<i class="fas fa-folder"></i></a></div>' :
+            output += path == '' ?  '<i class="fa-solid fa-sharp fa-hdd icon-root"></i></a></div>' :
+                (data[i].cover_hash == '' ? '<i class="fa-solid fa-sharp fa-folder"></i></a></div>' :
                 '<img src="' + 'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg' + '"></img></a></div>');
             var dirName = data[i].directory.replace(path + '/', '');
             dirName = dirName.lastIndexOf('.cue') == -1 ? dirName : dirName.substr(0, dirName.lastIndexOf('.cue'));
@@ -1604,7 +1604,7 @@ function renderFolderView(data, path, searchstr) {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
     			output += '<div class="db-icon db-action">';
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-root">';
-    			output += '<i class="fas fa-list-alt icon-root"></i></a></div>';
+    			output += '<i class="fa-solid fa-sharp fa-list-alt icon-root"></i></a></div>';
     			output += '<div class="db-entry db-savedplaylist db-browse"><div>' + data[i].playlist; + '</div></div>';
     			output += '</li>';
     		}
@@ -1642,7 +1642,7 @@ function renderFolderView(data, path, searchstr) {
                     var itemType = 'CUE sheet';
     				output += '<div class="db-icon db-song db-browse db-action">';
                     output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item">';
-                    output += '<i class="fas fa-list-alt icon-root db-browse-icon"></i></a></div>';
+                    output += '<i class="fa-solid fa-sharp fa-list-alt icon-root db-browse-icon"></i></a></div>';
                     output += '<div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
     			}
     			else {
@@ -2705,7 +2705,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 var rxChecked = rxStatusParts[1] == 'On' ? 'checked' : ''; // Status
                                 var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
                                 var rxMuteIcon = rxStatusParts[3] == '1' ? 'fa-volume-mute' : 'fa-volume-up'; // Mute
-                                var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fal fa-dot-circle"></i>'; // Master vol opt-in
+                                var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fa-regular fa-sharp fa-dot-circle"></i>'; // Master vol opt-in
 
                                 output += '<div class="control-group">';
                                 // Receiver hostname
@@ -2764,7 +2764,7 @@ $(document).on('click', '.context-menu a', function(e) {
                     $('.dropdown-cdsp-line span').remove();
                     var selectedHTML = $('a[data-cdspconfig="' + selectedConfig + '"]').html();
                     $('a[data-cdspconfig="' + selectedConfig + '"]').html(selectedHTML +
-                        '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
+                        '<span id="menu-check-cdsp"><i class="fa-regular fa-sharp fa-check"></i></span>');
     			},
     			error: function() {
                     notify('cdsp_config_update_failed', selectedConfig, '10_seconds');
@@ -4445,7 +4445,7 @@ function applyLibFilter(filterType, filterStr = '') {
         	LIB.filters.albums.length = 0;
     		LIB.artistClicked = false;
             LIB.albumClicked = false;
-            $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+            $('#tracklist-toggle').html('<i class="fa-regular fa-sharp fa-list sx"></i> Show tracks');
 			GLOBAL.musicScope = 'all';
 
     		if (currentView == 'album') {

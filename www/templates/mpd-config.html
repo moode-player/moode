@@ -42,7 +42,7 @@
 				<select id="dsd-usb" name="conf[dop]" class="config-select-large">
 					$_mpd_select[dop]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-dsd-audio" class="config-help-info">
 					<b>Native DSD:</b>&nbsp;If the audio device reports that it supports Native DSD then MPD will send the unaltered DSD bitstream to the device otherwose MPD will perform DSD to PCM on-the-fly conversion.<br>
 					<b>DSD over PCM (DoP):</b>&nbsp;There is no way to detect if an audio device supports DoP so only enable this if you are certain that the device support it otherwise the encapsulated DSD bitstream may cause loud or unpredictable distortion.
@@ -54,7 +54,7 @@
 				<select id="stop_dsd_silence" name="conf[stop_dsd_silence]" class="config-select-large">
 					$_mpd_select[stop_dsd_silence]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_stop_dsd_silence" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_stop_dsd_silence" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_stop_dsd_silence" class="config-help-info">
 					Play silence before manually stopping or pausing DSD/DoP playback. This is a workaround for some audio devices that emit noise when stopping DSD/DoP playback.
 				</span>
@@ -65,7 +65,7 @@
 				<select id="thesycon_dsd_workaround" name="conf[thesycon_dsd_workaround]" class="config-select-large">
 					$_mpd_select[thesycon_dsd_workaround]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_thesycon_dsd_workaround" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_thesycon_dsd_workaround" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_thesycon_dsd_workaround" class="config-help-info">
 					Enable a workaround for a bug in Thesycon USB audio receivers. On these devices playing DSD512 or PCM causes all subsequent attempts to play other DSD rates to fail which can be fixed by briefly playing PCM at 44.1 kHz.
 				</span>
@@ -111,7 +111,7 @@
 	                    <select id="selective_resample_mode" name="conf[selective_resample_mode]" class="config-select-large">
 							$_mpd_select[selective_resample_mode]
 	                    </select>
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
                         $_selective_mode_selected
 						<span id="info_selective_resample_mode" class="config-help-info">
 							<p>These charts show the effect of selective resampling modes for the example target rates.</p>
@@ -127,7 +127,7 @@
                 <select id="sox_quality" name="conf[sox_quality]" class="config-select-large">
 					$_mpd_select[sox_quality]
                 </select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_quality" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_quality" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_sox_quality" class="config-help-info config-help-no-margin">
 					<b>Very high: </b>Precision 28, Phase response 50 (Linear phase), Passband end 91%, Stopband begin 100%, Attenuation 0dB.<br>
 					<b>High (Default): </b>Precision 20, Phase response 50 (Linear phase), Passband end 91%, Stopband_begin 100%, Attenuation 0dB.<br>
@@ -148,7 +148,7 @@
 	                    <select id="sox_precision" name="conf[sox_precision]" class="config-select-large">
 							$_mpd_select[sox_precision]
 	                    </select>
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_precision" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_precision" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_sox_precision" class="config-help-info">
 							Default is 20 bits which corresponds to the "High quality" setting. The "Very high quality" setting uses 28 bits.
 						</span>
@@ -156,7 +156,7 @@
 	                <label class="control-label" for="sox_phase_response">Phase response</label>
 	                <div class="controls">
 	                    <input class="config-input-large" type="number" id="sox_phase_response" name="conf[sox_phase_response]" value="$_mpd_select[sox_phase_response]" min="0" max="50">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_phase_response" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_phase_response" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_sox_phase_response" class="help-block-configs help-block-margin3 hide">
 							Range is 0 to 50 where 0 = minimum phase, 25 = intermediate phase and 50 = linear phase. Default is 50.
 	                    </span>
@@ -164,7 +164,7 @@
 	                <label class="control-label" for="sox_passband_end">Passband end (%)</label>
 	                <div class="controls">
 	                    <input class="config-input-large" type="number" id="sox_passband_end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_passband_end" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_passband_end" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_sox_passband_end" class="help-block-configs help-block-margin3 hide">
 							Original bandwidth of source used. Range is 80 to 100% where 100% represents the Nyquist frequency. Default is 95%.
 	                    </span>
@@ -172,7 +172,7 @@
 	                <label class="control-label" for="sox_stopband_begin">Stopband begin (%)</label>
 	                <div class="controls">
 	                    <input class="config-input-large" type="number" id="sox_stopband_begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_stopband_begin" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_stopband_begin" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_sox_stopband_begin" class="help-block-configs help-block-margin3 hide">
 							A percentage greater than or equal to 100. Default is 100% which represents the Nyquist frequency.
 	                    </span>
@@ -180,7 +180,7 @@
 	                <label class="control-label" for="sox_attenuation">Attenuation (dB)</label>
 	                <div class="controls">
 	                    <input class="config-input-large" type="number" id="sox_attenuation" name="conf[sox_attenuation]" value="$_mpd_select[sox_attenuation]" min="0" max="24" step="0.1">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_attenuation" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_attenuation" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_sox_attenuation" class="help-block-configs help-block-margin3 hide">
 							Reduce the amplitude of the source to prevent clipping. Range is 0 to 24dB. Default is 0dB.
 	                    </span>
@@ -188,7 +188,7 @@
 	                <label class="control-label" for="sox_flags">Flags</label>
 	                <div class="controls">
 						<input class="config-input-large" type="number" id="sox_flags" name="conf[sox_flags]" value="$_mpd_select[sox_flags]">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_flags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_flags" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info_sox_flags" class="help-block-configs help-block-margin3 hide">
 							Bit mask for setting special SoX options.<br>
 							00 ROLLOFF_SMALL 0.01 dB<br>
@@ -207,7 +207,7 @@
                 <select id="sox-multithreading" name="conf[sox_multithreading]" class="config-select-large">
 					$_mpd_select[sox_multithreading]
                 </select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-multithreading" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-multithreading" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-sox-multithreading" class="config-help-info">
                     Run SoX in multiple threads for improved efficiency.<br>
 				</span>
@@ -220,7 +220,7 @@
 				<select id="replaygain" name="conf[replaygain]" class="config-select-large">
 					$_mpd_select[replaygain]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-replaygain" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-replaygain" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-replaygain" class="config-help-info">
 					Adjust the volume of songs played using ReplayGain tags. Setting this to "album" will adjust volume using the album's ReplayGain tags, while setting it to "track" will	adjust it using the track ReplayGain tags. Setting it to "auto" uses the track ReplayGain tags if MPD random play is activated otherwise the album ReplayGain tags. Currently only FLAC, Ogg Vorbis, Musepack, and MP3 (through ID3v2 ReplayGain tags, not APEv2) are supported.
                </span>
@@ -229,7 +229,7 @@
             <label class="control-label" for="replaygain-preamp">ReplayGain preamp</label>
             <div class="controls">
                 <input class="config-input-large" type="number" id="replaygain-preamp" name="conf[replaygain_preamp]" value="$_mpd_select[replaygain_preamp]" min="-15" max="15">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-replaygain-preamp" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-replaygain-preamp" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-replaygain-preamp" class="config-help-info">
 					The gain (in dB) applied to songs with ReplayGain tags. Range is -15 to 15.
                 </span>
@@ -240,7 +240,7 @@
 				<select id="volume-normalization" name="conf[volume_normalization]" class="config-select-large">
 					$_mpd_select[volume_normalization]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-volume-normalization" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-volume-normalization" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-volume-normalization" class="config-help-info">
 					Adjust the volume of songs as they play so that they sound as though they are of equal loudness.
 					Note that output bit depth will be converted to 16 bit.
@@ -252,7 +252,7 @@
             <label class="control-label" for="audio-buffer-size">Audio buffer (MB)</label>
             <div class="controls">
                 <input class="config-input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4" max="64">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-audio-buffer-size" class="config-help-info">
                 	Size of the buffer for audio samples. Range is 4 to 64MB. Default size is 4MB.
                 </span>
@@ -261,7 +261,7 @@
 			<label class="control-label" for="max_output_buffer_size">Output buffer (MB)</label>
             <div class="controls">
                 <input class="config-input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_max_output_buffer_size" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_max_output_buffer_size" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_max_output_buffer_size" class="config-help-info">
                 	Size of the buffer for command output. Range is 8 to 512MB. Default is 128MB.
                 </span>
@@ -270,7 +270,7 @@
 			<label class="control-label" for="max_playlist_length">Max Queue items</label>
             <div class="controls">
                 <input class="config-input-large" type="number" id="max_playlist_length" name="conf[max_playlist_length]" value="$_mpd_select[max_playlist_length]" min="2" max="32768">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_max_playlist_length" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_max_playlist_length" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_max_playlist_length" class="config-help-info">
                 	Range is 2 to 32768 Queue items. Default is 16384 items.
                 </span>
@@ -281,7 +281,7 @@
 				<select id="input_cache" name="conf[input_cache]" class="config-select-large">
 					$_mpd_select[input_cache]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-input-cache" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-input-cache" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-input-cache" class="config-help-info">
 					The input cache prefetches queued song files into memory before they are going to be played. If the cache grows larger than the specified size, older files will be evicted.
 			   </span>
@@ -294,7 +294,7 @@
 				<select id="log_level" name="conf[log_level]" class="config-select-large">
 					$_mpd_select[log_level]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-log_level" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-log_level" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-log_level" class="config-help-info">
 					Control the amount of detail in the MPD log (/var/log/mpd/log).
                </span>
@@ -305,7 +305,7 @@
 				<select id="buffer-time" name="conf[buffer_time]" class="config-select-large">
 					$_mpd_select[buffer_time]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-buffer-time" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-buffer-time" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-buffer-time" class="config-help-info">
 					Device sample buffer length in milliseconds.
 				</span>
@@ -314,7 +314,7 @@
             <label class="control-label" for="period-time">Device period (ms)</label>
              <div class="controls">
  				<input class="config-input-large" type="number" id="period-time" name="conf[period_time]" value="$_period_time" readonly>
- 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-period-time" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-period-time" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  				<span id="info-period-time" class="config-help-info">
                     The time in milliseconds between sample transfers to the host (calculated as device_buffer_length / 4).
  				</span>
