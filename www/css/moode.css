@@ -22,8 +22,8 @@ a:focus {color:var(--accentxts);} /* Fixes blue outline on control after closing
 .btn:focus, a:focus {outline:0 !important;box-shadow:none !important;}
 
 #audioinfo-tabs {display:flex;position:relative;width:25em;max-width:50%;margin-bottom:1em;}
-.horiz-rule-radioview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:92%!important;padding-bottom:0!important;}
-.horiz-rule-playlistview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:92%!important;padding-bottom:0!important;}
+.horiz-rule-radioview,
+.horiz-rule-playlistview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:97%!important;padding-bottom:0!important;margin-top:1em!important;}
 .horiz-rule-preferences {width:48%;text-align:right;margin:.25em 0;font-size: 1.15em;font-style:italic;color:var(--textvariant);}
 
 /* general */
