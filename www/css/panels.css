@@ -178,8 +178,9 @@ html {background-color:inherit;}
 #total {position:absolute;top:62%;left:50%;transform:translate(-50%);font-size:1.5vw;}
 .total-radio {background-image:var(--radiobadge);background-position:center center;background-size:100%;background-repeat:no-repeat;width:3.5em;height:20px;margin-left:0 !important;}
 #playbtns, #playbtns .btn-group {font-size:1em;margin:1em 0;}
-#playbtns .btn {font-size:3.4vw;padding:1.25rem;}
+#playbtns .play {font-size:3.25vw;padding:1.25rem;}
 #playbtns .next, #playbtns .prev {font-size:3vw;}
+.play {width:2em;}
 #togglebtns {padding-top:2rem;}
 #togglebtns .btn-group {font-size:1em;white-space:normal;width:100%;}
 #togglebtns .btn-group .btn {font-size:.9em;margin:0 .3em;width:12%;padding:0;}

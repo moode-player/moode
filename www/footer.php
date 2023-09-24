@@ -68,7 +68,7 @@
 				<li><a href="mpd-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-play"></i><br>MPD</a></li>
 				<li><a href="cdsp-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-sliders-v-square"></i><br>CamillaDSP</a></li>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) { ?>
-					<li><a href="trx-config.php" class="btn btn-large"><i class="fas fas fa-rss"></i><br>Multiroom</a></li>
+					<li><a href="trx-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-rss"></i><br>Multiroom</a></li>
 				<?php } ?>
 				<?php if ($section == 'index') { ?>
 					<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fa-solid fa-sharp fa-alarm-clock"></i><br>Clock radio</a></li>

@@ -812,7 +812,7 @@ function disableVolKnob() {
 function resetPlayCtls() {
 	//console.log('resetPlayCtls():');
 	$('#m-total, #playbar-total, #playbar-mtotal').text(formatKnobTotal('0'));
-	$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
+	$('.play i').removeClass('fa-pause').addClass('fa-play');
 	$('#total').html(formatKnobTotal('0'));
 	$('.playqueue li.active ').removeClass('active');
 
@@ -919,7 +919,7 @@ function renderUI() {
 
     	// Playback controls, Queue item highlight
         if (MPD.json['state'] == 'play') {
-    		$('.play i').removeClass('fas fa-play').addClass('fas fa-pause');
+    		$('.play i').removeClass('fa-play').addClass('fa-pause');
 			//document.body.style.setProperty('--npicon', npIcon);
     		$('.playqueue li.active, .cv-playqueue li.active').removeClass('active');
             $('.playqueue li.paused, .cv-playqueue li.paused').removeClass('paused');
@@ -927,7 +927,7 @@ function renderUI() {
             $('.cv-playqueue li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
             setNpIcon();
         } else if (MPD.json['state'] == 'pause' || MPD.json['state'] == 'stop') {
-    		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
+    		$('.play i').removeClass('fa-pause').addClass('fa-play');
 			//document.body.style.setProperty('--npicon', npIconPaused);
             if (typeof(MPD.json['song']) != 'undefined') {
                 $('.playqueue li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('paused');
@@ -1002,7 +1002,7 @@ function renderUI() {
             $('#ss-extra-metadata-output-format').text('');
         } else {
             if (MPD.json['artist'] == 'Radio station') {
-                var bitRate = MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bps'
+                var bitRate = MPD.json['bitrate'] ? 'VBR ' + MPD.json['bitrate'] : 'Variable bps'
         		$('#extra-tags-display').text(bitRate + ' • ' + MPD.json['output']);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
@@ -1657,7 +1657,7 @@ function renderFolderView(data, path, searchstr) {
     				}
                     output += '<div class="db-icon db-song db-browse db-action">';
                     output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item">';
-                    output += '<i class="fas ' + iconClass + ' db-browse db-browse-icon"></i></a></div>';
+                    output += '<i class="fa-solid fa-sharp ' + iconClass + ' db-browse db-browse-icon"></i></a></div>';
                     output += '<div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
     			}
 
@@ -2725,7 +2725,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                     // Mute toggle
                                     output += '<div class="modal-button-style multiroom-modal-btn">';
                                     output += '<button id="multiroom-rx-' + item + '-mute" class="btn btn-primary btn-small multiroom-modal-mute" data-item="' + item +
-                                        '"' + volDisabled + '><i class="fas ' + rxMuteIcon + '"></i></button>';
+                                        '"' + volDisabled + '><i class="fa-solid fa-sharp ' + rxMuteIcon + '"></i></button>';
                                     output += '</div>';
                                     // Master volume opt-in indicator
                                     output += '<div class="modal-button-style multiroom-modal-btn">';

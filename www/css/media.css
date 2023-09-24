@@ -91,7 +91,7 @@ body {
 	#togglebtns {display:block;}
 	#playbtns {margin:0;}
 	#playbtns .btn {font-size:3em;padding:.5em 1em;}
-	#playbtns .play {font-size:3.25em;}
+	#playbtns .play {font-size:3.25em;width:2.75em;}
 	#togglebtns {padding:0;}
 	#togglebtns .btn-group {width:unset;display:inline-flex;}
 	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;}
@@ -289,6 +289,7 @@ body {
 
 	/* Play and toggle buttons under the time knob */
 	#playbtns .btn {font-size:3vw;padding:1.5rem 1.75rem;}
+	#playbtns .play {font-size:3.25vw;}
 	#togglebtns .btn-group .btn {font-size:1.25em;}
 	#togglebtns .ralbum {display:none;}
 	#togglebtns .volume-popup-btn {display:inline-block;}
@@ -562,6 +563,7 @@ body {
 
 	/* Play and toggle buttons under the time knob */
 	#playbtns .btn {font-size:2vw;padding:1.25rem 2rem;}
+	#playbtns .play {font-size:2.25vw;}
 	#togglebtns .btn-group .btn {font-size:1.5em;}
 	#togglebtns .ralbum {display:none;}
 	#togglebtns .volume-popup-btn {display:inline-block;}
@@ -678,6 +680,7 @@ body {
 
 	/* Play and toggle buttons under the time knob */
 	#playbtns .btn {font-size:2vw;padding:1.25rem 2rem;}
+	#playbtns .play {font-size:2.25vw;}
 	#togglebtns .btn-group .btn {font-size:1.5em;}
 	#togglebtns .ralbum {display:none;}
 	#togglebtns .volume-popup-btn {display:inline-block;}

@@ -219,7 +219,7 @@ if (!isset($_GET['cmd'])) {
 	// Display list of music sources if any
 	$mounts = sqlRead('cfg_source', $dbh);
 	foreach ($mounts as $mp) {
-		$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
+		$icon = mountExists($mp['name']) ? "<i class='fa-solid fa-sharp fa-check green sx'></i>" : "<i class='fa-solid fa-sharp fa-times red sx'></i>";
 		$_mounts .= "<a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a>";
 	}
 

@@ -1752,7 +1752,7 @@ jQuery(document).ready(function($) { 'use strict';
         var item = $(this).data('item');
         var iconClass = $('#multiroom-rx-' + item + '-mute i').hasClass('fa-volume-up') ? 'fa-volume-mute' : 'fa-volume-up';
         var mute = iconClass =='fa-volume-mute' ? 'Muted' : 'Unmuted';
-        $('#multiroom-rx-' + item + '-mute').html('<i class="fas ' + iconClass + '"></i>');
+        $('#multiroom-rx-' + item + '-mute').html('<i class="fa-solid fa-sharp ' + iconClass + '"></i>');
         $.post('command/multiroom.php?cmd=set_rx_status', {'mute': mute, 'item': item}, function(data) {}, 'json');
     });
 
