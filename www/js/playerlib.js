@@ -1626,7 +1626,7 @@ function renderFolderView(data, path, searchstr) {
 
                 output += '</img></a></div>';
                 output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">';
-                var artist = data[i].Artist ? data[i].Artist : (data[i].AlbumArtist ? data[i].AlbumArtist : 'Artist tag undefined')
+                var artist = data[i].AlbumArtist ? data[i].AlbumArtist : (data[i].Artist ? data[i].Artist : 'Artist tag undefined')
                 output += '<div>' + data[i].Album + '<span>' + artist + '</span></div></div>';
                 output += '</li>';
             }
@@ -1635,9 +1635,12 @@ function renderFolderView(data, path, searchstr) {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">';
     			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
-                output += (data[i].Track ? data[i].Track : "•") + '</a></div>';
+                output += (data[i].Track ? data[i].Track : "•") + '</a>';
+                output += '</div>';
     			output += '<div class="db-entry db-song" data-toggle="context" data-target="#context-menu-folder-item"><div>';
-                output += data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span></div>';
+                output += data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span>';
+                output += '<span>' + (data[i].Artist != data[i].AlbumArtist ? data[i].Artist : '') + '</span>';
+                output += '</div>';
     		}
     		else {
                 // Playlist item
@@ -1656,8 +1659,8 @@ function renderFolderView(data, path, searchstr) {
                         var iconClass = 'fa-microphone';
     				}
                     else {
-                        var itemType = 'Song file';
-                        var iconClass = 'fa-music';
+                        var itemType = 'Music file';
+                        var iconClass = 'fa-file-music';
     				}
                     output += '<div class="db-icon db-song db-browse db-action">';
                     output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item">';

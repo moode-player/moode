@@ -239,7 +239,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .database-radio li, .database-playlist li {width:var(--thumbcols);text-align:center;font-size:.95em;margin:0 .1em;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5em 0;}
 .station-name {font-weight:600;}
 .database li {padding:0 2rem 0 1.35rem;}
-.database span {display:block;font-weight:normal;color:inherit;opacity:.60;}
+.database span {display:block;font-weight:normal;color:var(--textvariant);}
 .playqueue span, .cv-playqueue span {line-height:normal;margin-left:calc(3em + 1vmin);display:block;}
 .pll1 {font-size:1em;}
 .pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important;margin-left: calc(3em + 1.5vmin)!important;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
@@ -268,7 +268,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .playqueue .pll1, .cv-playqueue .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playqueue .playqueue-entry, .cv-playqueue .playqueue-entry {padding:0px;}
 .playqueue .playqueue-thumb, .cv-playqueue .playqueue-thumb {float:left;width:2.4em;height:2.4em;margin-left:1.2vmin!important;margin-right:1.2vmin;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
-.database .db-entry {margin-left:4rem;padding:.75em 0;max-width:calc(100vw - 10px);overflow:hidden;font-size:1.1rem;line-height:normal;border-bottom:1px solid var(--btnshade);}
+.database .db-entry {margin-left:4rem;padding:1em 0;max-width:calc(100vw - 10px);overflow:hidden;font-size:1.1rem;line-height:normal;border-bottom:1px solid var(--btnshade);}
 .database .db-song {padding:.5em 0;}
 .database .db-icon {display:block;height:2.4em !important;width:2.4em !important;position:absolute !important;top:50%;transform:translate(0, -50%);padding:0;color:inherit;}
 .database .db-icon .btn {font-size:1em;padding:0;width:100%;}
@@ -282,13 +282,13 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #lib-file .songtime {font-style:normal;margin-left:1em;float:left;display:table-cell;}
 #lib-file .songyear {font-style:normal;position:absolute;right:1em;float:right;display:table-cell;}
 #playqueue .songtime {font-size:.8em;font-style:normal;font-weight:normal;word-break:normal;color:var(--textvariant);}
-.db-song .songtime {position:absolute;top:1em;right:1.5em;opacity:1;}
+.db-song .songtime {float:right;color:var(--adapttxt);}
 .icon-root {color:inherit;}
 .playqueue .playqueue-action, .cv-playqueue .playqueue-action {float:right;padding:0;text-align:center;}
 .cv-playqueue .playqueue-action {display:none;}
 .database .db-action, .database .db-album-action {float:left;width:3.2rem;padding:0;position:relative;font-size:1.25em;line-height:normal;}
 .database .db-action i {width:2.2rem;}
-.database .db-entry div {padding-left:.25em;max-width:68vw;}
+.database .db-entry div {padding-left:.25em;}
 .playqueue .playqueue-action, .playqueue .db-action a {position:relative;width:4.5em;margin-left:1em;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
 .cv-playqueue .playqueue-action, .cv-playqueue .db-action a {position:relative;width:4.5em;margin-left:1em!important;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
 #db-search-results {font-size:1em;font-style:italic;padding:1em;display:none;cursor:pointer;}
