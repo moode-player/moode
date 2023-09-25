@@ -56,7 +56,7 @@ foreach ($port6600Hosts as $ipAddr) {
 			if ($status != 'Unknown command') {  // r740 or higher host
 				$rxStatus = explode(',', $status);
 				// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname
-				$rxIndicator = $rxStatus[1] == 'On' ? '<i class="players-rx-indicator fa-solid fa-sharp fa-rss"></i>' : '';
+				$rxIndicator = $rxStatus[1] == 'On' ? '<i class="players-rx-indicator fa-solid fa-sharp fa-speaker"></i>' : '';
 				// NOTE: r800 status will have a 6th element (hostname) otherwise use ip address
 				$host = count($rxStatus) > 5 ? $rxStatus[5] : $ipAddr;
 			} else {

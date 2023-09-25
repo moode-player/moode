@@ -177,12 +177,12 @@
 			<a id="lib-config-btn" class="btn" href="lib-config.php"><span>Library</span><i class="fa-solid fa-sharp fa-database"></i></a>
 			<a id="snd-config-btn" class="btn" href="snd-config.php"><span>Audio</span><i class="fa-solid fa-sharp fa-volume-up"></i></a>
 			<a id="net-config-btn" class="btn" href="net-config.php"><span>Network</span><i class="fa-solid fa-sharp fa-sitemap"></i></a>
-			<a id="sys-config-btn" class="btn" href="sys-config.php"><span>System</span><i class="fa-solid fa-sharp fa-cogs"></i></a>
+			<a id="sys-config-btn" class="btn" href="sys-config.php"><span>System</span><i class="fa-solid fa-sharp fa-gears"></i></a>
             <a id="ren-config-btn" class="btn" href="ren-config.php"><span>Renderers</span><i class="fa-solid fa-sharp fa-play-circle"></i></a>
 		</div>
 
 		<div id="library-header"></div>
-        <div id="multiroom-sender" class="context-menu"><a class="btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-solid fa-sharp fa-rss"></i></a></div>
+        <div id="multiroom-sender" class="context-menu"><a class="btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-solid fa-sharp fa-speakers"></i></a></div>
 
 		<?php
 			if ($section == 'index' && $_SESSION['camilladsp'] != "off") {
@@ -217,7 +217,7 @@
 			<a aria-label="Menu" class="dropdown-toggle btn target-blank-link" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget"><div id="mblur">mm</div><div id="mbrand">m</div></a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 				<?php if ($section == 'index') { ?>
-                    <li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-cog sx"></i> Configure</a></li>
+                    <li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i> Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fa-solid fa-sharp fa-edit sx"></i> Preferences</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fa-solid fa-sharp fa-sync sx"></i> Update library</a></li>
 					<li id="bluetooth-hide"><a href="blu-config.php"><i class="fa-solid fa-sharp fa-wifi sx"></i> Bluetooth</a></li>
@@ -228,7 +228,7 @@
 					<li class="menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fa-solid fa-sharp fa-redo sx"></i> Refresh</a></li>
 					<li><a href="#power-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-power-off sx"></i> Power</a></li>
 				<?php } else { ?>
-					<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-cog sx"></i> Configure</a></li>
+					<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i> Configure</a></li>
                     <li><a href="javascript:audioPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
 					<li id="sysinfo-menu-item"><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-file-alt sx"></i> System info</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fa-solid fa-sharp fa-info sx"></i> Quick help</a></li>

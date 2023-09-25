@@ -1011,7 +1011,7 @@ function renderUI() {
                 $('#countdown-sample-rate').text(MPD.json['encoded'].split(',')[0]);
         	}
 
-            $('#ss-extra-metadata-output-format').html('<i class="fa-regular fa-sharp fa-play-circle"></i>' + ' ' + MPD.json['output']);
+            $('#ss-extra-metadata-output-format').html('<i class="fa-regular fa-sharp fa-waveform"></i>' + ' ' + MPD.json['output']);
         }
 
         // Default metadata
@@ -1587,7 +1587,8 @@ function renderFolderView(data, path, searchstr) {
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-            output += path == '' ?  '<i class="fa-solid fa-sharp fa-hdd icon-root"></i></a></div>' :
+            // TODO: data[i].directory NAS, SDCARD, USB -> fa-server, fa-sd-card, fa-usb-drive
+            output += path == '' ?  '<i class="fa-solid fa-sharp fa-database icon-root"></i></a></div>' :
                 (data[i].cover_hash == '' ? '<i class="fa-solid fa-sharp fa-folder"></i></a></div>' :
                 '<img src="' + 'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg' + '"></img></a></div>');
             var dirName = data[i].directory.replace(path + '/', '');
@@ -1604,7 +1605,7 @@ function renderFolderView(data, path, searchstr) {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
     			output += '<div class="db-icon db-action">';
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-root">';
-    			output += '<i class="fa-solid fa-sharp fa-list-alt icon-root"></i></a></div>';
+    			output += '<i class="fa-solid fa-sharp fa-list-music icon-root"></i></a></div>';
     			output += '<div class="db-entry db-savedplaylist db-browse"><div>' + data[i].playlist; + '</div></div>';
     			output += '</li>';
     		}
@@ -1642,7 +1643,7 @@ function renderFolderView(data, path, searchstr) {
                     var itemType = 'CUE sheet';
     				output += '<div class="db-icon db-song db-browse db-action">';
                     output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item">';
-                    output += '<i class="fa-solid fa-sharp fa-list-alt icon-root db-browse-icon"></i></a></div>';
+                    output += '<i class="fa-solid fa-sharp fa-list-music icon-root db-browse-icon"></i></a></div>';
                     output += '<div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
     			}
     			else {
@@ -2705,7 +2706,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 var rxChecked = rxStatusParts[1] == 'On' ? 'checked' : ''; // Status
                                 var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
                                 var rxMuteIcon = rxStatusParts[3] == '1' ? 'fa-volume-mute' : 'fa-volume-up'; // Mute
-                                var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fa-regular fa-sharp fa-dot-circle"></i>'; // Master vol opt-in
+                                var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fa-regular fa-sharp fa-dial"></i>'; // Master vol opt-in
 
                                 output += '<div class="control-group">';
                                 // Receiver hostname
