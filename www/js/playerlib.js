@@ -1583,12 +1583,15 @@ function renderFolderView(data, path, searchstr) {
 			continue;
 		}
     	if (data[i].directory) {
+            var rootFolderIcon = 'fa-circle-question';
+            if (data[i].directory == 'NAS' || data[i].directory == 'SDCARD' || data[i].directory == 'USB') {
+                rootFolderIcon = getParamOrValue('value', data[i].directory);
+            }
             var cueVirtualDir = false;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-            // TODO: data[i].directory NAS, SDCARD, USB -> fa-server, fa-sd-card, fa-usb-drive
-            output += path == '' ?  '<i class="fa-solid fa-sharp fa-database icon-root"></i></a></div>' :
+            output += path == '' ?  '<i class="fa-solid fa-sharp ' + rootFolderIcon + ' icon-root"></i></a></div>' :
                 (data[i].cover_hash == '' ? '<i class="fa-solid fa-sharp fa-folder"></i></a></div>' :
                 '<img src="' + 'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg' + '"></img></a></div>');
             var dirName = data[i].directory.replace(path + '/', '');

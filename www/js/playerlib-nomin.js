@@ -69,8 +69,10 @@ function getParamOrValue (type, key) {
         ['Regular','r'],['Favorite','f'],['Hidden','h'],
         // Thumbnail resolutions
         ['Auto','Auto'],['400px','400px,75'],['500px','500px,60'],['600px','600px,60'],
-        // Player group actions
-        ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library']
+        // Players >> group actions
+        ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library'],
+        // Root folder icons
+        ['NAS','fa-server'],['RADIO','fa-microphone'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive']
     ]);
 
     if (type == 'value') {
