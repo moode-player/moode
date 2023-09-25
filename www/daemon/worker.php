@@ -1515,7 +1515,11 @@ function updExtMetaFile() {
 	// Output rate
 	$hwParams = getAlsaHwParams($_SESSION['cardnum']);
 	if ($hwParams['status'] == 'active') {
-		$hwParamsFormat = $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
+		if ($hwParams['format'] == 'DSD') {
+			$hwParamsFormat = 'DSD Bitstream, ' . $hwParams['channels'];
+		} else {
+			$hwParamsFormat = 'PCM ' . $hwParams['format'] . ' bit ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
+		}
 		$hwParamsCalcrate = ', ' . $hwParams['calcrate'] . ' Mbps';
 	} else if ($_SESSION['multiroom_tx'] == 'On') {
 		$hwParamsFormat = '';
@@ -1526,7 +1530,6 @@ function updExtMetaFile() {
 	}
 	// Currentsong.txt
 	$fileMeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
-	//workerLog($fileMeta['file'] . ' | ' . $hwParamsCalcrate);
 
 	if ($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['slactive'] == '1'
 		|| $GLOBALS['rbactive'] == '1' || $GLOBALS['inpactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
@@ -1561,7 +1564,7 @@ function updExtMetaFile() {
 		$current = getMpdStatus($sock);
 		$current = enhanceMetadata($current, $sock, 'worker_php');
 		closeMpdSock($sock);
-
+		//workerLog(print_r($current, true));
 		//workerLog('updExtMetaFile(): currentencoded=' . $_SESSION['currentencoded']);
 
 		// Write file only if something has changed
@@ -1580,9 +1583,9 @@ function updExtMetaFile() {
 			$data .= 'date=' . $current['date'] . "\n";
 			$data .= 'composer=' . $current['composer'] . "\n";
 			// Other
-			$data .= 'encoded=' . getEncodedAt($current, 'default') . "\n";
+			$data .= 'encoded=' . $current['encoded'] . "\n";
 			$data .= 'bitrate=' . $current['bitrate'] . "\n";
-			$data .= 'outrate=' . $hwParamsFormat . $hwParamsCalcrate . "\n"; ;
+			$data .= 'outrate=' . $current['output'] . $hwParamsCalcrate . "\n"; ;
 			$data .= 'volume=' . $_SESSION['volknob'] . "\n";
 			$data .= 'mute=' . $_SESSION['volmute'] . "\n";
 			$data .= 'state=' . $current['state'] . "\n";
