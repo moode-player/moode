@@ -41,13 +41,14 @@ const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
 //						  97206
 
-// For setTimout() in milliseconds
+// Timeouts in milliseconds
 const DEFAULT_TIMEOUT   = 250;
 const CLRPLAY_TIMEOUT   = 500;
 const LAZYLOAD_TIMEOUT  = 750;
 const SEARCH_TIMEOUT    = 750;
 const RALBUM_TIMEOUT    = 500;
 const ENGINE_TIMEOUT    = 3000;
+const CV_QUEUE_TIMEOUT  = 60000;
 
 // Album and Radio HD parameters
 const ALBUM_HD_BADGE_TEXT           = 'HD';
@@ -134,7 +135,7 @@ var GLOBAL = {
 	regExIgnoreArticles: '',
     libRendered: false,
     libLoading: false,
-    playbarPlaylistTimer: '',
+    cvQueueTimer: '',
     pqActionClicked: false,
     mpdMaxVolume: 0,
     lastTimeCount: 0,

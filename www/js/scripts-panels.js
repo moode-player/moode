@@ -1606,15 +1606,15 @@ jQuery(document).ready(function($) { 'use strict';
             }
             customScroll('cv-playqueue', parseInt(MPD.json['song']));
 
-            GLOBAL.playbarPlaylistTimer = setTimeout(function() {
+            GLOBAL.cvQueueTimer = setTimeout(function() {
                 $('#cv-playqueue ul').html('');
                 $('#cv-playqueue').hide();
-            }, 20000);
+            }, CV_QUEUE_TIMEOUT);
         }
         else {
             e.preventDefault();
             $('#cv-playqueue ul').html('');
-            window.clearTimeout(GLOBAL.playbarPlaylistTimer);
+            window.clearTimeout(GLOBAL.cvQueueTimer);
         }
 	});
 
