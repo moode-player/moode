@@ -55,28 +55,28 @@ $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh
 if ($aplActive == '1') {
 	$_file = 'AirPlay stream';
 	$_encoded_at = 'PCM';
-	$_decoded_to = '16 bit 44.1 kHz, Stereo';
-	$_decode_rate = 'VBR';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
+	$_decode_rate = '';
 } else if ($spotActive == '1') {
 	$_file = 'Spotify stream';
 	$_encoded_at = 'PCM';
-	$_decoded_to = '16 bit 44.1 kHz, Stereo';
-	$_decode_rate = 'VBR';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
+	$_decode_rate = '';
 } else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = 'Unknown';
-	$_decode_rate = 'VBR';
+	$_decode_rate = '';
 } else if ($rbActive == '1') {
 	$_file = 'RoonBridge stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = 'Unknown';
-	$_decode_rate = 'VBR';
+	$_decode_rate = '';
 } else if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_file = 'Bluetooth stream';
 	$_encoded_at = 'Unknown';
-	$_decoded_to = '16 bit 44.1 kHz, Stereo'; // Maybe also 48K ?
-	$_decode_rate = 'VBR';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo'; // Maybe also 48K ?
+	$_decode_rate = '';
 } else {
 	$song = getCurrentSong($sock);
 	$_file = $song['file'];
