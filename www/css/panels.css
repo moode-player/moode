@@ -181,6 +181,7 @@ html {background-color:inherit;}
 #playbtns .play {font-size:3.25vw;padding:1.25rem;}
 #playbtns .next, #playbtns .prev {font-size:3vw;}
 .play {width:2em;}
+.fa-play:before {margin-left:4px;}
 #togglebtns {padding-top:2rem;}
 #togglebtns .btn-group {font-size:1em;white-space:normal;width:100%;}
 #togglebtns .btn-group .btn {font-size:.9em;margin:0 .3em;width:12%;padding:0;}
@@ -667,7 +668,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-toggles i {font-size:1.1rem;margin-top:1px;}
 #playbar-toggles .coverview i {font-size:.9rem;}
 #playbar-volume-popup-btn {width:3rem!important;}
-#playbar-volume-level {margin-left:.15em;vertical-align:top;}
+#playbar-volume-level {font-size:1em;margin-left:.25em;}
 #m-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
 #m-radio {position:relative;transform:translate(-50%, 0);margin-top:.5em;}
 /* for hide/show Genres column in Library Tag view */

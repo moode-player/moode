@@ -412,6 +412,14 @@ body {
 }
 
 /*
+// iPhone7/SE portrait
+*/
+@media (height:667px) and (width:375px) {
+	#currentsong {max-height:3.5em;overflow:hidden;}
+	#playbtns .btn-group {margin-bottom:-1em;}
+}
+
+/*
 // Pi 7" Touch
 */
 /* 443 = Square pixel, 479 = Default pixel */

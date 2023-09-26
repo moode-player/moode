@@ -70,7 +70,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {color:inherit;}
 .help-block-modal {margin:0 !important;}
 /* Players and Configure modals */
-#players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
+#players, #configure {max-width:calc(4 * 10em);margin-left:auto;margin-right:auto;text-align:center;}
 #players .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
 #players ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
 #players ul, #configure ul {margin:0;display:inline-table;}
