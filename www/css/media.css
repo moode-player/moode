@@ -205,6 +205,7 @@ body {
 	.config-info-toggle,
 	.config-help-static {display:none;}
 	#config-home {left:4em;}
+	#config-home i {top:.25em;}
 	#config-tabs span {display:none!important;}
 	#config-tabs i {display:flex!important;}
 

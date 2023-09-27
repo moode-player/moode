@@ -45,8 +45,8 @@
     <link href="css/bootstrap-select.css" rel="stylesheet">
     <link href="css/flat-ui.css" rel="stylesheet">
     <link href="css/jquery.pnotify.default.css" rel="stylesheet">
-    <link href="css/fa-brands.css" rel="stylesheet">
-    <link href="css/fa-duotone.css" rel="stylesheet">
+    <!--link href="css/fa-brands.css" rel="stylesheet"-->
+    <!--link href="css/fa-duotone.css" rel="stylesheet"-->
     <link href="css/fa-fontawesome.css" rel="stylesheet">
     <link href="css/fa-light.css" rel="stylesheet">
     <link href="css/fa-regular.css" rel="stylesheet">
@@ -54,7 +54,7 @@
     <link href="css/fa-sharp-regular.css" rel="stylesheet">
     <link href="css/fa-sharp-solid.css" rel="stylesheet">
     <link href="css/fa-solid.css" rel="stylesheet">
-    <link href="css/fa-thin.css" rel="stylesheet">
+    <<!--link href="css/fa-thin.css" rel="stylesheet"-->
     <link href="css/panels.css" rel="stylesheet">
     <link href="css/configs.css" rel="stylesheet">
     <link href="css/moode.css" rel="stylesheet">
@@ -192,7 +192,7 @@
 		?>
 		<div class="dropdown" id="dropdown-cdsp-btn">
 			<a aria-label="Menu" class="dropdown-toggle btn" id="menu-cdsp" role="button" data-toggle="dropdown" data-target="#" href="#notarget">
-                <i class="fa-solid fa-sharp fa-sliders-v-square"></i>
+                <i class="fa-solid fa-sharp fa-square-sliders-vertical"></i>
 			</a>
 			<ul id="dropdown-cdsp-menu" class="dropdown-menu" role="menu" aria-labelledby="menu-settings_x">
 			<?php
