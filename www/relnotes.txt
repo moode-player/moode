@@ -20,14 +20,15 @@ Updates
 - UPD: Add comparison operators =~ and !~ (PERL regex) to Library Adv search
 - UPD: Add DSDNN badge for DSF/DFF/WavPack DSD formats
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
-- UPD: Add button to show Receivers modal on Bluetooth renderer overlay
+- UPD: Add Receivers btn on renderer overlay when connecting to Multiroom sender
+- UPD: Add Audio info button on renderer overlay
 - UPD: Add channel count to extra metadata
-- UPD: Add ALSA output format ('output') to extra metadata
+- UPD: Add ALSA output format (output) to extra metadata
 - UPD: Add Artist under Title in Folder view (if Artist not = AlbumArtist)
 - UPD: Improve metadata layout in CoverView wide mode
 - UPD: Improve sort headings in Radio and Playlist views
 - UPD: Improve bitrate sort in Radio view (sort high to low)
-- UPD: Improve GPIO Config help and labels 
+- UPD: Improve GPIO Config help and labels
 - UPD: Replace bogus title tag " - " in NTS Live stations with default title
 - UPD: Show "Radio station" for stations that don't transmit a title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
