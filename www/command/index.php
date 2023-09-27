@@ -27,9 +27,12 @@ require_once __DIR__ . '/../inc/mpd.php';
 if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 	echo 'Command missing';
 } else if (stripos($_GET['cmd'], '.sh') === false && stripos($_GET['cmd'], '.php') === false) {
+	// PHP functions
 	if ($_GET['cmd'] == 'get_currentsong') {
 		$array = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "=");
 		echo json_encode($array);
+	} else if ($_GET['cmd'] == 'get_output_format') {
+		echo json_encode(getALSAOutputFormat());
 	} else {
 		// MPD commands
 		if (false === ($sock = openMpdSock('localhost', 6600))) {

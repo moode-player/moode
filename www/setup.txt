@@ -270,12 +270,17 @@ data it is in JSON or plain text format following REST guidelines.
 
 1. Base URL is http://moode/command/?cmd=
 2. MPD commands that are listed in MPC help
-3. Volume commands that are listed in /var/www/vol.sh --help
-4. Library update is via the command libupd-submit.php
-5. CoverView on/off is via the command coverview.php on/off
-6. Song info is via the command get_currentsong which returns the contents
-   of the Metadata file /var/local/www/currentsong.txt encoded as JSON.
-   NOTE: Turn on the Metadata file via Audio Config in the MPD Options section.
+3. /var/www/vol.sh cmd
+Volume commands that are listed in /var/www/vol.sh --help
+4. libupd-submit.php
+Submit a Music Library update
+5. coverview.php on|off
+Turn the CoverView screen saver on or off
+6. get_currentsong
+Returns the contents of the file /var/local/www/currentsong.txt encoded as JSON.
+Turn on the Metadata file option in Audio Config to generate this file.
+7. get_output_format
+ALSA output format or 'Not playing' is returned
 
 moOde utility command:
 
