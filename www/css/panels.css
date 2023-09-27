@@ -113,10 +113,12 @@ html {background-color:inherit;}
 /* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 /* Buttons */
+.audioinfo-renderer,
 .configure-renderer,
 .disconnect-renderer,
 .turnoff-renderer {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
  /* Mask hover effect */
+.audioinfo-renderer:hover,
 .configure-renderer:hover,
 .disconnect-renderer:hover,
 .turnoff-renderer:hover {background-color:var(--btnshade4);}

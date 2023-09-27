@@ -222,14 +222,14 @@
                     <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fa-solid fa-sharp fa-sync sx"></i> Update library</a></li>
 					<li id="bluetooth-hide"><a href="blu-config.php"><i class="fa-solid fa-sharp fa-wifi sx"></i> Bluetooth</a></li>
 					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-forward sx"></i> Players</a></li>
-                    <li><a href="javascript:audioPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
+                    <li><a href="javascript:audioInfoPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fa-solid fa-sharp fa-book sx"></i> Play history</a></li>
 					<li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fa-solid fa-sharp fa-info sx"></i> Quick help</a></li>
 					<li class="menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fa-solid fa-sharp fa-redo sx"></i> Refresh</a></li>
 					<li><a href="#power-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-power-off sx"></i> Power</a></li>
 				<?php } else { ?>
 					<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i> Configure</a></li>
-                    <li><a href="javascript:audioPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
+                    <li><a href="javascript:audioInfoPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
 					<li id="sysinfo-menu-item"><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-file-alt sx"></i> System info</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fa-solid fa-sharp fa-info sx"></i> Quick help</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="fa-solid fa-sharp fa-info sx"></i> About</a></li>
