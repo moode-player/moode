@@ -39,7 +39,7 @@ jQuery(document).ready(function($){ 'use strict';
 
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
-	// store device pixel ratio
+	// Store device pixel ratio
     $.post('command/cfg-table.php?cmd=upd_cfg_system', {'library_pixelratio': window.devicePixelRatio});
 
 	// Load current cfg
@@ -55,7 +55,7 @@ jQuery(document).ready(function($){ 'use strict';
     	var tempOp = themeOp;
     	if (themeOp == 0.74902) {tempOp = 0.1};
 
-    	// set theme
+    	// Set theme
     	themeColor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
     	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
     	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
