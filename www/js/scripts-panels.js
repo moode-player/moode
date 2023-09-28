@@ -137,8 +137,8 @@ jQuery(document).ready(function($) { 'use strict';
     	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
     	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
     	if (SESSION.json['adaptive'] == "No") {document.body.style.setProperty('--adaptmbg', themeBack);}
-    	blurrr == true ? themeOp = .85 : themeOp = .95;
-
+        //themeOp = blurrr == true ? .85 : .95;
+        themeOp = .75; // A bit less opacity for menu background
 
         function mutate(mutations) {
             mutations.forEach(function(mutation) {

@@ -106,7 +106,7 @@ html {background-color:inherit;}
 .inpsrc {position:fixed;z-index:9999;backdrop-filter: blur(5px);-webkit-backdrop-filter:blur(5px);overflow:hidden;color:var(--adapttext);background-color:var(--modalbkdr);display:none;}
 #inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;text-align:center;}
 /* Input source name */
-#inpsrc-msg {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
+#inpsrc-msg {animation: fadeIn var(--fadein-rate);padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
 #inpsrc-msg a {color:#eee;}
 #inpsrc-msg i {font-size:1.5em;}
 #inpsrc-msg-text {display:block;font-size:1em;margin-bottom:0.5em;}
@@ -206,8 +206,8 @@ html {background-color:inherit;}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
 #menu-cdsp {font-size:1.25rem;}
 #dropdown-cdsp-btn {right:4.6rem!important;top:env(safe-area-inset-top)!important;}
-#dropdown-cdsp-menu {max-height:calc(100vh - 12rem);overflow:scroll;min-width:20rem!important;}
-.cdsp-menu-background {background-image:url(../images/camilladsp.svg);background-repeat:no-repeat;background-position:top;background-blend-mode:overlay;}
+#dropdown-cdsp-menu {max-height:calc(100vh - 12rem);overflow:scroll;min-width:20rem!important;padding-top:.5em;}
+.cdsp-menu-background {background-image:url(../images/camilladsp.svg);background-repeat:no-repeat;background-position:top;background-blend-mode:overlay;background-size:10.5em;background-origin:content-box;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
 .dropdown-cdsp-line {padding-left:1em;}
 #panel-footer {bottom:0;width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
