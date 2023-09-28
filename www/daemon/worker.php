@@ -1548,7 +1548,7 @@ function updExtMetaFile() {
 			$renderer = 'Bluetooth Active';
 		}
 		// Write file only if something has changed
-	if ($fileMeta['file'] != $renderer && $hwParamsCalcrate != '0 bps') {
+		if ($fileMeta['file'] != $renderer && $hwParamsCalcrate != '0 bps') {
 			//workerLog('worker: Writing currentsong file');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			$data = 'file=' . $renderer . "\n";
