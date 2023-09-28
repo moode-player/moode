@@ -194,11 +194,11 @@
 			<a aria-label="Menu" class="dropdown-toggle btn" id="menu-cdsp" role="button" data-toggle="dropdown" data-target="#" href="#notarget">
                 <i class="fa-solid fa-sharp fa-square-sliders-vertical"></i>
 			</a>
-			<ul id="dropdown-cdsp-menu" class="dropdown-menu" role="menu" aria-labelledby="menu-settings_x">
+			<ul id="dropdown-cdsp-menu" class="dropdown-menu cdsp-menu-background" role="menu" aria-labelledby="menu-settings_x">
 			<?php
 				foreach ($cdspConfigs as $configFile=>$configName) {
                     $menuSeparator = $configName == 'Quick convolution filter' ? ' menu-separator' : '';
-                    $checkMark = $_SESSION['camilladsp'] == $configFile ? '<span id="menu-check-cdsp"><i class="fa-regular fa-sharp fa-check"></i></span>' : '';
+                    $checkMark = $_SESSION['camilladsp'] == $configFile ? '<span id="menu-check-cdsp"><i class="fa-solid fa-sharp fa-check"></i></span>' : '';
 					echo '<li class="context-menu dropdown-cdsp-line' . $menuSeparator .
                         '"><a href="#notarget" data-cmd="camilladsp_config" data-cdspconfig="' .
                         $configFile . '" data-cdsplabel="' . $configName . '">' . ucfirst($configName) .
