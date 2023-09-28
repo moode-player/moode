@@ -184,8 +184,6 @@ function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
 }
 
 function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
-	phpSession('open_ro');
-
 	// Called from command/audioinfo.php
 	if ($mpdState == '') {
 		$mpdStatus = getMpdStatus(getMpdSock());
@@ -195,7 +193,8 @@ function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
 
 	// Called from enhanceMetadata() in inc/mpd.php
 	if ($mpdState == 'play') {
-		if ($_SESSION['audioout'] == 'Bluetooth') {
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioout'", sqlConnect());
+		if ($result['value'] == 'Bluetooth') {
 			$outputFormat = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
 		} else {
 			// Local
