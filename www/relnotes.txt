@@ -17,6 +17,7 @@
 
 Updates
 
+- UPD: Bump to shairport-sync 4.3.1 and NQPTP 1.2.4 (Pending)
 - UPD: Add comparison operators =~ and !~ (PERL regex) to Library Adv search
 - UPD: Add DSDNN badge for DSF/DFF/WavPack DSD formats
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
