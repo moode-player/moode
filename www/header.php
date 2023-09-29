@@ -179,6 +179,7 @@
 			<a id="net-config-btn" class="btn" href="net-config.php"><span>Network</span><i class="fa-solid fa-sharp fa-sitemap"></i></a>
 			<a id="sys-config-btn" class="btn" href="sys-config.php"><span>System</span><i class="fa-solid fa-sharp fa-gears"></i></a>
             <a id="ren-config-btn" class="btn" href="ren-config.php"><span>Renderers</span><i class="fa-solid fa-sharp fa-play-circle"></i></a>
+            <a id="per-config-btn" class="btn" href="per-config.php"><span>Peripherals</span><i class="fa-solid fa-sharp fa-display"></i></a>
 		</div>
 
 		<div id="library-header"></div>

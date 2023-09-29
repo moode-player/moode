@@ -65,6 +65,7 @@
 				<li><a href="net-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-sitemap"></i><br>Network</a></li>
 				<li><a href="sys-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-gears"></i><br>System</a></li>
 				<li><a href="ren-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-play-circle"></i><br>Renderers</a></li>
+				<li><a href="per-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-display"></i><br>Peripherals</a></li>
 				<li><a href="mpd-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-play"></i><br>MPD</a></li>
 				<li><a href="cdsp-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-square-sliders-vertical"></i><br>CamillaDSP</a></li>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) { ?>

@@ -356,7 +356,7 @@ function storeBackLink($section, $tpl) {
 	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 	//workerLog('storeBackLink(): refererLink=' . substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/')));
 
-	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config', 'ren-config');
+	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config', 'ren-config', 'per-config');
 	$tplConfigs = array(
 		'apl-config.html'	=> '/ren-config.php',
 		'bkp-config.html'	=> '/sys-config.php',
@@ -364,7 +364,7 @@ function storeBackLink($section, $tpl) {
 		'cdsp-configeditor.html' => '/cdsp-config.php',
 		'eqg-config.html'	=> '/snd-config.php',
 		'eqp-config.html'	=> '/snd-config.php',
-		'gpio-config.html'	=> '/sys-config.php',
+		'gpio-config.html'	=> '/per-config.php',
 		'spo-config.html' 	=> '/ren-config.php',
 		'sqe-config.html'	=> '/ren-config.php',
 		'src-config.html'	=> '/lib-config.php',

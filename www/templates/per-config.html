@@ -1,0 +1,188 @@
+<!--
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+-->
+<div id="container">
+<div class="container">
+	<h1 class="per-config">Peripherals</h1>
+
+	<form class="form-horizontal" method="post">
+		<div class="control-group $_feat_localui">
+			<legend>Local Display</legend>
+			
+			<label class="control-label">Display</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-localui" for="toggle-localui-2">ON </label>$_select[localui_on]
+					<label class="toggle-radio toggle-localui" for="toggle-localui-1">OFF</label>$_select[localui_off]
+				</div>
+                <button id="btn-set-localui" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-localui" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-localui" class="config-help-info">
+					Display moOde UI on locally attached display.
+                </span>
+            </div>
+
+			<label class="control-label">Wake on play</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-2">ON </label>$_select[wake_display_on]
+					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
+				</div>
+                <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info_wake_display" class="config-help-info">
+					Wake the display when audio starts playing.
+                </span>
+            </div>
+
+			<label class="control-label">Mouse cursor</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-2">ON </label>$_select[touchscn_on]
+					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
+				</div>
+                <button id="btn-set-touchscn" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-touchscn" class="config-help-info">
+					This prevents the cursor from showing on the display or Touch screen
+                </span>
+            </div>
+
+			<label class="control-label" for="scnblank">Screen blank</label>
+			<div class="controls">
+				<select id="scnblank" class="config-select-large" name="scnblank">
+					$_select[scnblank]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_localui_btn_disable>Set</button>
+			</div>
+
+			<label class="control-label" for="scnbrightness">Brightness</label>
+			<div class="controls">
+            	<input class="config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-brightness" class="config-help-info">
+					Backlight brightness for 7" Pi Touch. Values are 0 - 255.
+                </span>
+			</div>
+
+			<label class="control-label" for="pixel-aspect-ratio">Pixel aspect ratio</label>
+			<div class="controls">
+				<select id="pixel-aspect-ratio" class="config-select-large" name="pixel_aspect_ratio">
+					$_select[pixel_aspect_ratio]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info_pixel_aspect_ratio" class="config-help-info">
+					Rectangular (default) or square pixels for 7" Pi Touch.
+                </span>
+			</div>
+
+			<label class="control-label" for="scnrotate">Rotate screen</label>
+			<div class="controls">
+				<select id="scnrotate" class="config-select-large" name="scnrotate">
+					$_select[scnrotate]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnrotate" value="novalue" $_localui_btn_disable>Set</button>
+			</div>
+
+			<label class="control-label">Popup keyboard</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
+					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
+				</div>
+                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-on-screen-kbd" class="config-help-info">
+					On-screen popup keyboard by @Nutul.
+                </span>
+            </div>
+
+			<div class="controls">
+				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_localui_btn_disable>Toggle</button>
+				<span class="config-btn-after">CoverView</span>
+				<span class="config-help-static">
+					Current toggle state: $_coverview_onoff
+				</span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary config-btn" $_localui_btn_disable>Restart</button></a>
+				<span class="config-btn-after">Local UI</span>
+				<span class="config-help-static">
+					Restarting clears the chromium browser cache.
+				</span>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<legend>Other peripherals</legend>
+
+			<div class="$_feat_gpio">
+				<label class="control-label">GPIO buttons</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-gpio-svc" for="toggle-gpio-svc-2">ON </label>$_select[gpio_svc_on]
+						<label class="toggle-radio toggle-gpio-svc" for="toggle-gpio-svc-1">OFF</label>$_select[gpio_svc_off]
+					</div>
+					<button id="btn-set-gpio-svc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_gpio_svc" value="novalue">Set</button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-gpio-svc" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-gpio-svc" class="config-help-info">
+						Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.
+                    </span>
+				</div>
+
+				<div class="controls">
+					<a href="gpio-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
+					<span class="config-btn-after">GPIO pin mappings</span>
+				</div>
+			</div>
+
+			<label class="control-label">LCD updater</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-lcdup" for="toggle-lcdup-2">ON </label>$_select[lcdup_on]
+					<label class="toggle-radio toggle-lcdup" for="toggle-lcdup-1">OFF</label>$_select[lcdup_off]
+				</div>
+				<button id="btn-set-lcdup" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-lcdup" class="config-help-info">
+					The LCD update engine runs the lcd-updater.py script whenever UI state changes.<br>
+					A stub lcd-updater.py script is located in the /var/local/www/commandw/ directory.
+                </span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="restart-localui" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="restart-localui-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Restart Local UI?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_restart_localui" value="novalue">Yes</button>
+		</div>
+	</div>
+</form>

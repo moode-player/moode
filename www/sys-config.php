@@ -183,12 +183,13 @@ if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 }
 
 // TEST
+
 if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_SESSION['nginx_https_only']) {
 	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
 	submitJob('nginx_https_only', $_POST['nginx_https_only'], 'Settings updated', 'Restart required');
 }
 
-// LOCAL DISPLAY
+/*DELETE:// LOCAL DISPLAY
 
 if (isset($_POST['update_localui'])) {
     if (isset($_POST['localui']) && $_POST['localui'] != $_SESSION['localui']) {
@@ -253,7 +254,8 @@ if (isset($_POST['update_toggle_coverview'])) {
 if (isset($_POST['update_restart_localui'])) {
 	submitJob('localui_restart', '', 'Local display restarted');
 }
-
+*/
+// FILE SHARING
 
 if (isset($_POST['update_fs_smb'])) {
 	if (isset($_POST['fs_smb']) && $_POST['fs_smb'] != $_SESSION['fs_smb']) {
@@ -281,7 +283,7 @@ if (isset($_POST['update_fs_nfs_options'])) {
 	}
 }
 
-// PERIPHERALS
+/*DELETE:// PERIPHERALS
 
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
@@ -295,7 +297,7 @@ if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_sv
 	phpSession('write', 'gpio_svc', $_POST['gpio_svc']);
 	submitJob('gpio_svc', $_POST['gpio_svc'], 'Settings updated');
 }
-
+*/
 // SECURITY
 
 if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
@@ -411,6 +413,7 @@ $_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-e
 $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // TEST: HTTPS-only mode
+
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	$_feat_https = '';
 	$autoClick = " onchange=\"autoClick('#btn-set-nginx-https-only');\"";
@@ -436,7 +439,7 @@ if ($model == '3') { // Pi-3B, B+, A+
 	$_usbboot_hide = 'hide';
 }
 
-// LOCAL DISPLAY
+/*DELETE:// LOCAL DISPLAY
 
 if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_feat_localui = '';
@@ -488,7 +491,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 } else {
 	$_feat_localui = 'hide';
 }
-
+*/
 // FILE SHARING
 
 $autoClick = " onchange=\"autoClick('#btn-set-fs-smb');\"";
@@ -503,7 +506,7 @@ $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
 $ipAddrParts = explode('.', $_SESSION['ipaddress']);
 $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
 
-// PERIPHERALS
+/*DELETE:// PERIPHERALS
 
 $autoClick = " onchange=\"autoClick('#btn-set-lcdup');\"";
 $_select['lcdup_on']  .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -517,7 +520,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 } else {
 	$_feat_gpio = 'hide';
 }
-
+*/
 // SECURITY
 
 $autoClick = " onchange=\"autoClick('#btn-set-shellinabox');\"";
