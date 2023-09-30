@@ -25,7 +25,7 @@
 	<form class="form-horizontal" method="post">
 		<div class="control-group $_feat_localui">
 			<legend>Local Display</legend>
-			
+
 			<label class="control-label">Display</label>
 			<div class="controls">
 				<div class="toggle">
@@ -65,6 +65,19 @@
                 </span>
             </div>
 
+			<label class="control-label">Popup keyboard</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
+					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
+				</div>
+                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-on-screen-kbd" class="config-help-info">
+					On-screen popup keyboard by @Nutul.
+                </span>
+            </div>
+
 			<label class="control-label" for="scnblank">Screen blank</label>
 			<div class="controls">
 				<select id="scnblank" class="config-select-large" name="scnblank">
@@ -72,6 +85,26 @@
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_localui_btn_disable>Set</button>
 			</div>
+
+			<div class="controls">
+				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_localui_btn_disable>Toggle</button>
+				<span class="config-btn-after">CoverView</span>
+				<span class="config-help-static">
+					Current toggle state: $_coverview_onoff
+				</span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary config-btn" $_localui_btn_disable>Restart</button></a>
+				<span class="config-btn-after">Local Display</span>
+				<span class="config-help-static">
+					Restarting clears the chromium browser cache.
+				</span>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<legend>Pi 7 inch Touch</legend>
 
 			<label class="control-label" for="scnbrightness">Brightness</label>
 			<div class="controls">
@@ -101,35 +134,6 @@
 					$_select[scnrotate]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnrotate" value="novalue" $_localui_btn_disable>Set</button>
-			</div>
-
-			<label class="control-label">Popup keyboard</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
-					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
-				</div>
-                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_localui_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<span id="info-on-screen-kbd" class="config-help-info">
-					On-screen popup keyboard by @Nutul.
-                </span>
-            </div>
-
-			<div class="controls">
-				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_localui_btn_disable>Toggle</button>
-				<span class="config-btn-after">CoverView</span>
-				<span class="config-help-static">
-					Current toggle state: $_coverview_onoff
-				</span>
-			</div>
-
-			<div class="controls">
-				<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary config-btn" $_localui_btn_disable>Restart</button></a>
-				<span class="config-btn-after">Local UI</span>
-				<span class="config-help-static">
-					Restarting clears the chromium browser cache.
-				</span>
 			</div>
 		</div>
 
