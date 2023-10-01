@@ -161,7 +161,7 @@ if ($aplActive == '1') {
 }
 // DSP and output mode
 if ($_SESSION['invert_polarity'] == '1') {
-	$dsp = 'Invpolarity';
+	$dsp = 'Polarity inversion';
 	$outputMode = $_SESSION['alsa_output_mode'];
 } else if ($_SESSION['crossfeed'] != 'Off') {
 	$dsp = 'Crossfeed';
