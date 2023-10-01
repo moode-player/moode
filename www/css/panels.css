@@ -286,7 +286,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #lib-file .songtime {font-style:normal;margin-left:1em;float:left;display:table-cell;}
 #lib-file .songyear {font-style:normal;position:absolute;right:1em;float:right;display:table-cell;}
 #playqueue .songtime {font-size:.8em;font-style:normal;font-weight:normal;word-break:normal;color:var(--textvariant);}
-.db-song .songtime {float:right;color:var(--adapttxt);}
+.db-song .songtime {float:right;color:var(--adapttext);}
 .icon-root {color:inherit;}
 .playqueue .playqueue-action, .cv-playqueue .playqueue-action {float:right;padding:0;text-align:center;}
 .cv-playqueue .playqueue-action {display:none;}
@@ -786,6 +786,6 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .controls-select {margin-bottom:5px;}
 .recorder-on {border-bottom: 2px solid var(--accentxts);}
 #selected-album-tag {font-style:italic;}
-#multiroom-sender {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;}
-#multiroom-sender a {font-size:1.25rem;color:var(--textvariant);}
+#multiroom-sender {position:relative;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;}
+#multiroom-sender a {font-size:1.25rem;color:var(--textvariant);/*color:var(--adapttext);*/}
 #menu-cdsp {color:var(--adapttext);}
