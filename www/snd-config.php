@@ -522,7 +522,7 @@ if ($_SESSION['audioout'] == 'Local' &&
 }
 
 // Polarity inversion
-$autoClick = " onchange=\"autoClick('#btn-set-nvert-polarity');\" " . $_invpolarity_set_disabled;
+$autoClick = " onchange=\"autoClick('#btn-set-invert-polarity');\" " . $_invpolarity_set_disabled;
 $_select['invert_polarity_on']  .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['invert_polarity_off'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Crossfeed
