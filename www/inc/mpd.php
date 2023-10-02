@@ -669,7 +669,9 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 			if (isset($_SESSION[$song['file']])) {
 				// Use transmitted name for SOMA FM stations
-				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
+				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ?
+                    (isset($song['Name']) ? $song['Name'] : $_SESSION[$song['file']]['name']) :
+                    $_SESSION[$song['file']]['name'];
 				// Include original station name
 				// DEPRECATE: $current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
@@ -691,6 +693,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				// DEPRECATE $current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
 			}
+            //workerLog(print_r($song, true));
 		} else {
 			// Song file, UPnP URL or Podcast
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
