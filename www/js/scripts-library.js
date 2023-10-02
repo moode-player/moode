@@ -828,7 +828,7 @@ var renderSongs = function(albumPos) {
             }
 
 			var composer = filteredSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + filteredSongs[i].composer + '</span></span>';
-			var highlight = (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && MPD.json['state'] == 'play') ? ' lib-track-highlight' : '';
+			var highlight = (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && MPD.json['state'] == 'play') ? ' lib-track-npicon' : '';
 
             output += albumDiv
                 + discDiv

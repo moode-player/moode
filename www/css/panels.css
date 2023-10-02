@@ -60,7 +60,7 @@ body {
 	--thumbmargin: 0px;
 	--coverback: '';
 	--config_modal_btn_bg: rgba(64,64,64,0.08);
-	--npicon: url('../images/4band-npicon/audiow.svg');
+	--npicon: url('');
 	--fadein-rate: .5s;
 }
 
@@ -266,7 +266,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #library-panel.limited .lib-entry span, #radio-panel.limited .station-name span, #playlist-panel.limited .playlist-name span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {background-color:var(--btnshade);}
 .playqueue .active .pll1, .cv-playqueue .active .pll1 {color:var(--accentxts);font-weight:700;}
-.playqueue li.active:before, .cv-playqueue li.active:before, .lib-track-highlight {color:transparent!important;background:var(--npicon) no-repeat right;background-size:1.25em;}
+.playqueue li.active:before, .cv-playqueue li.active:before, .lib-track-npicon {color:transparent!important;background:var(--npicon) no-repeat right;background-size:1.25em;}
 .playqueue li.paused:before, .cv-playqueue li.paused:before {color:unset!important;background:unset;}
 .playqueue li.no-npicon:before, .cv-playqueue li.no-npicon:before {color:unset!important;background:unset;}
 .playqueue .pll1, .cv-playqueue .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
