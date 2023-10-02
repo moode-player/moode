@@ -45,6 +45,7 @@ Bug fixes
 - FIX: Backup/Restore missing Prefs, Library, Track play setting
 - FIX: Restore not updating buffer size in /etc/bluealsaaplay.conf
 - FIX: Invert polarity auto-click not working
+- FIX: SomaFM station name displays null when tag not present
 
 ################################################################################
 #
