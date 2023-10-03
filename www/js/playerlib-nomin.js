@@ -72,7 +72,9 @@ function getParamOrValue (type, key) {
         // Players >> group actions
         ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library'],
         // Root folder icons
-        ['NAS','fa-server'],['RADIO','fa-microphone'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive']
+        ['NAS','fa-server'],['RADIO','fa-microphone'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
+        // Now-playing icon
+        ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer']
     ]);
 
     if (type == 'value') {

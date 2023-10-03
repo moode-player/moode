@@ -828,12 +828,12 @@ var renderSongs = function(albumPos) {
             }
 
 			var composer = filteredSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + filteredSongs[i].composer + '</span></span>';
-			var highlight = (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && MPD.json['state'] == 'play') ? ' lib-track-npicon' : '';
+			var npIcon = (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && MPD.json['state'] == 'play') ? ' lib-track-npicon' : '';
 
             output += albumDiv
                 + discDiv
                 + '<li id="lib-song-' + (i + 1) + '" class="clearfix lib-track" data-toggle="context" data-target="#context-menu-lib-item">'
-    			+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + filteredSongs[i].tracknum + '</span>'
+    			+ '<div class="lib-entry-song"><span class="songtrack' + npIcon + '">' + filteredSongs[i].tracknum + '</span>'
     			+ '<span class="songname">' + filteredSongs[i].title + '</span>'
     			+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
 
