@@ -523,11 +523,11 @@ body.no-touch .cover-menu {opacity:0;}
 #eqp-input-ctls {opacity:.5;font-size:.9em}
 #master-gain {margin-bottom:1em;}
 #master-gain-up, #master-gain-dn {display:inline-block;margin-bottom:0;font-size:1.25em;font-family:'SF Mono','Roboto Mono',monospace;}
-input[type="range"].hslide2 {width:12em;height:2em;-webkit-appearance: slider-horizontal;margin:.5em 0;}
+input[type='range'].hslide2 {width:12em;height:2em;appearance:auto;margin:.5em 0;}
 input[type='range'].hslide2::-webkit-slider-thumb {background:#fff;background-image:'';height:1.25em;width:1.25em;}
 /* 10-band Graphic EQ */
 .eqg-label {text-align:center;margin:.75em 0 1em .75em;opacity:.5;font-size:.9em;font-style:italic;}
-input[type="range"].vslide2 {height:10em;width:2.5em;-webkit-appearance: slider-vertical;margin:.5em 0;}
+input[type='range'][orient=vertical].vslide2 {height:10em;width:2.5em;appearance:slider-vertical;margin:.5em 0;}
 input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-image:'';height:1.25em;width:1.25em;}
 .vslide3 {width:9%;display:inline-block;}
 
@@ -691,7 +691,7 @@ input[type='range']::-webkit-slider-thumb {background:transparent;height:20px;wi
 .timeline-thm input[type='range']::-webkit-slider-thumb {height:20px;width:11px;background-repeat:no-repeat;}
 body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-image:var(--fatthumb);width:20px;}
 input[type='range']::-moz-range-thumb {border:none;width:0.75em;height:0.75em;border-radius:50%;box-shadow:0 0 0.125em #333;background:#fff;}
-input[type="range"].vslide2 {height:10em;width:2.5em;margin:.5em 0;-webkit-appearance: slider-vertical;}
+input[type='range'][orient=vertical].vslide2 {height:10em;width:2.5em;margin:.5em 0;appearance:slider-vertical;}
 input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;radius:50%;background-image:'';height:1em;width:1em;}
 input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radius:unset;background-color:var(--timecolor);}
 /* animate favorites button */
