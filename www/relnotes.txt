@@ -38,6 +38,13 @@ Updates
 - UPD: Standardize display style for encodedAt and ALSA output formats
 - UPD: Move Local Display and Peripherals from System to Peripherals Config
 
+Radio stations
+
+- NEW: Eirewave
+- NEW: Soma FM - Bossa Beyond
+- NEW: Soma FM - The In-Sound
+- NEW: Soma FM - Tiki Time
+
 Bug fixes
 
 - FIX: Tag/Album sync (auto-scroll then highlight item) not working
