@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Aug 31 09:48:42 2023
+-- File generated with SQLiteStudio v3.1.0 on Wed Oct 4 14:01:54 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -507,6 +507,10 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (244, 'https://fluxmusic.api.radiosphere.io/channels/melides-art-radio/stream.mp3?quality=4', 'FluxFM - Melides Art Radio', 'r', 'local', 'Indie, Eclectic', 'FluxFM', 'German', 'Germany', 'Europe', '64', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (245, 'https://streams.fluxfm.de/flux-hamburg/mp3-320/audio/', 'FluxFM - Hamburg', 'r', 'local', 'Pop, Culture', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (246, 'https://fluxmusic.api.radiosphere.io/channels/alternative/stream.aac?quality=4', 'FluxFM - Radio Alternative', 'r', 'local', 'Alternative', 'FluxFM', 'German', 'Germany', 'Europe', '64', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (247, 'http://eirewave.ice.infomaniak.ch/eirewave-128.mp3', 'Eirewave', 'r', 'local', 'Pop, Rock', 'Eirewave', 'English', 'United Kingdom', 'Europe', '128', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (248, 'https://ice5.somafm.com/bossa-128-aac', 'Soma FM - Bossa Beyond', 'r', 'local', 'Bossanova, World', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (249, 'https://ice5.somafm.com/insound-128-aac', 'Soma FM - The In-Sound', 'r', 'local', 'Pop, Oldies', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (250, 'https://ice6.somafm.com/tikitime-128-aac', 'Soma FM - Tiki Time', 'r', 'local', 'Tiki, World', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
 -- Table: cfg_airplay
