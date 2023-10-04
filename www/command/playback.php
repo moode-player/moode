@@ -106,6 +106,9 @@ switch ($_GET['cmd']) {
 	case 'get_play_history':
 		echo json_encode(getPlayHistory(shell_exec('cat /var/log/moode_playhistory.log')));
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 // Close MPD socket

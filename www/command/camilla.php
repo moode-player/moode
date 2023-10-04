@@ -45,4 +45,7 @@ switch ($_GET['cmd']) {
 			workerLog('camilla.php: Error: $_POST[cdspconfig] missing or empty');
 		}
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }

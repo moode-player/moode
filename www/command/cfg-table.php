@@ -126,6 +126,9 @@ switch ($_GET['cmd']) {
 			echo json_encode($result); // Return all rows
 		}
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 function addExtraSessionVars(&$cfgSystem) {

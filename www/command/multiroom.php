@@ -50,7 +50,7 @@ switch ($_GET['cmd']) {
 					$rxStatus .= $status . ':';
     			}
     		}
-			
+
     		$rxStatus = empty($rxStatus) ? 'No receivers found' : rtrim($rxStatus, ':');
     	}
 
@@ -88,5 +88,8 @@ switch ($_GET['cmd']) {
 		phpSession('open');
 		$_SESSION[$_GET['cmd']] = $_POST['adv_toggle'];
         phpSession('close');
+		break;
+	default:
+		echo 'Unknown command';
 		break;
 }

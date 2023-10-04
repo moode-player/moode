@@ -47,6 +47,9 @@ switch ($_GET['cmd']) {
 			}
 		}
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 phpSession('close');

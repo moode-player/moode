@@ -64,6 +64,9 @@ switch ($_GET['cmd']) {
 	case 'put_radioview_show_hide':
 		putRadioViewShowHide($_POST['block'], $_POST['type']);
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 // Close MPD socket

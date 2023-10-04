@@ -42,4 +42,7 @@ switch ($_GET['cmd']) {
 	 		echo json_encode('worker busy');
 	 	}
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }

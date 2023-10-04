@@ -152,6 +152,9 @@ switch ($_GET['cmd']) {
 		chainMpdCmds($sock, $cmds);
         putToggleSongId('0');
 		break;
+    default:
+		echo 'Unknown command';
+		break;
 }
 
 // Close MPD socket

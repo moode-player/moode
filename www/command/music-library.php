@@ -95,6 +95,9 @@ switch ($_GET['cmd']) {
 		}
 		echo json_encode($status);
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 // Close MPD socket

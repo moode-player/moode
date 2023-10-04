@@ -34,6 +34,9 @@ switch ($_GET['cmd']) {
 		sendMpdCmd($sock,'lsinfo "' . $_GET['path'] .'"');
 		echo json_encode(parseTrackInfo(readMpdResp($sock)));
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 // Parse station info
