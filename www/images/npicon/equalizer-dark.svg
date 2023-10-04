@@ -1,25 +1,25 @@
 <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
-<svg width="21" height="16" viewBox="0 0 21 20" xmlns="http://www.w3.org/2000/svg" fill="#202020">
-    <g transform="matrix(1 0 0 -1 0 16)">
-       <rect x="0" width="4.5" height="16" rx="1">
+<svg viewBox="0 0 24 20" fill="#202020" xmlns="http://www.w3.org/2000/svg">
+    <g transform="matrix(1 0 0 -1 0 18)">
+       <rect x="0" width="4.5" height="20" rx="1">
             <animate attributeName="height"
                  begin="0s" dur="3.5s"
                  values="5;13.75;8.25;1.25;14.75;5.75;14.25;8.25;3;3.5;15;5" calcMode="linear"
                  repeatCount="indefinite" />
         </rect>
-        <rect x="5.5" width="4.5" height="12.5" rx="1">
+        <rect x="5.5" width="4.5" height="16.5" rx="1">
             <animate attributeName="height"
                  begin="0s" dur="2.75s"
                  values="12.5;8.5;14.5;5.75;14;5.75;8.5;14;16;13.5;5.25;12.5" calcMode="linear"
                  repeatCount="indefinite" />
         </rect>
-        <rect x="11" width="4.5" height="7.5" rx="1">
+        <rect x="11" width="4.5" height="11.5" rx="1">
             <animate attributeName="height"
                  begin="0s" dur="3.5s"
                  values="7.5;11.25;3.25;16;12;14;11.25;15;8.5;5.75;13.75;7.5" calcMode="linear"
                  repeatCount="indefinite" />
         </rect>
-        <rect x="16.5" width="4.5" height="7.5" rx="1">
+        <rect x="16.5" width="4.5" height="11.5" rx="1">
             <animate attributeName="height"
                  begin="0s" dur="2.75s"
                  values="5.75;14.25;9.25;8.25;7;12;10.75;7.5;15;8.5;7" calcMode="linear"
