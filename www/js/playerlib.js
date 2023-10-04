@@ -626,6 +626,9 @@ function engineCmdLite() {
                         location.reload(true);
                     }, DEFAULT_TIMEOUT);
                     break;
+                case 'close_notification':
+                    $('.ui-pnotify-closer').click();
+                    break;
                 case 'reduce_fpm_pool':
                     // This functions as a dummy command which has the effect of
                     // causing engine-cmd.php to start releasing idle connections
@@ -688,7 +691,8 @@ function screenSaver(cmd) {
 	} else if (cmd.slice(-1) == '1') {
         // Show CoverView
         coverView = true; // NOTE: This is set to false in the screen saver reset click() handler
-		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+		//$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+        $('#ss-coverart-url').html($('#coverart-url').html());
         $('body').addClass('cv')
         if (SESSION.json['show_cvpb'] == 'Yes') {
             $('body').addClass('cvpb');
@@ -827,6 +831,11 @@ function resetPlayCtls() {
     updKnobStartFrom(0, MPD.json['state']);
 
 	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').text('00:00');
+    UI.mobile ? $('#playbar-mcount').css('display', 'block') : $('#playbar-mcount').css('display', 'none');
+
+    $('#extra-tags-display, #ss-extra-metadata').text('Not playing');
+    $('#countdown-sample-rate, #songsand-sample-rate').text('');
+    $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
 }
 
 function renderUIVol() {
@@ -992,21 +1001,23 @@ function renderUI() {
     	// Extra metadata displayed under the cover
         // (1) #countdown-sample-rate is displayed in the time knob on Ultrawide displays
         // (2) #songsand-sample-rate is displayed under the metadata in mobile portrait
-        // Stop or pause
-    	if (MPD.json['state'] == 'stop') { // Radio station
-    		$('#extra-tags-display, #ss-extra-metadata, #countdown-sample-rate').text('Not playing');
+    	if (MPD.json['state'] == 'stop') {
+            // Radio station or end of Queue
+    		$('#extra-tags-display, #ss-extra-metadata').text('Not playing');
             $('#countdown-sample-rate, #songsand-sample-rate').text('');
             $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
-        } else if (MPD.json['state'] == 'pause') { // Track
+        } else if (MPD.json['state'] == 'pause') {
+            // Track
             $('#extra-tags-display').text(formatExtraTagsString());
             $('#ss-extra-metadata-output-format, #countdown-sample-rate').text('Not playing');
             $('#ss-extra-metadata-output-format').removeClass('ss-npicon');
-        // Play
     	} else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
+            // Play and no extra tags
             $('#extra-tags-display, #ss-extra-metadata').text('');
             $('#countdown-sample-rate').text('')
             $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
         } else {
+            // Play
             if (MPD.json['artist'] == 'Radio station') {
                 var bitRate = MPD.json['bitrate'] ? 'VBR ' + MPD.json['bitrate'] : 'Variable bps'
         		$('#extra-tags-display').text(bitRate + ' • ' + MPD.json['output']);
@@ -2095,6 +2106,7 @@ function renderPlaylistNames (path) {
 
 // Return formatted total time and show/hide certain elements
 function formatKnobTotal(mpdTime) {
+    //console.log('formatKnobTotal()');
 	if (MPD.json['artist'] == 'Radio station') {
 		var formattedTotalTime = '';
 		$('#total').html('').addClass('total-radio'); // Radio badge
