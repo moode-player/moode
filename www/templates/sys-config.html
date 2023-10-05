@@ -94,7 +94,7 @@
 
 		<div class="control-group">
 			<legend>Startup options</legend>
-			<label class="control-label" for="worker-responsiveness">Worker responsiveness</label>
+			<label class="control-label" for="worker-responsiveness">Worker response</label>
 			<div class="controls">
 				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness">
 					$_select[worker_responsiveness]
@@ -103,7 +103,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-worker-responsiveness" class="config-help-info">
 					<b>Default:</b> Suitable for all Raspberry Pi models.<br>
-					<b>Boosted:</b> Best for multi-core Raspberry Pi's. This provides more responsiveness when using the Configuration screens or making other setting changes that require Worker.
+					<b>Boosted:</b> Best for multi-core Raspberry Pi's. This provides more responsiveness when using the Configuration screens or making other setting changes that require processing by the Worker daemon.
 				</span>
 			</div>
 
@@ -126,8 +126,8 @@
 					$_select[usb_auto_mounter]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_usb_auto_mounter" value="novalue">Set</button>
-				<span class="config-help-info">
-					NOTE: Select Devmon for older ARMv6 platforms (Pi-1B, Pi-Zero/W).
+				<span class="config-help-static">
+					Select Devmon for older ARMv6 platforms Pi-1B, Pi-Zero, and Pi-Zero W.
 				</span>
 			</div>
 
