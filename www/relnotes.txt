@@ -54,6 +54,7 @@ Bug fixes
 - FIX: Restore not updating buffer size in /etc/bluealsaaplay.conf
 - FIX: Invert polarity auto-click not working
 - FIX: SomaFM station name displays null when tag not present
+- FIX: WebUI visual glitch when MPD is restarted
 
 ################################################################################
 #
