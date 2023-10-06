@@ -279,37 +279,38 @@ function engineMpd() {
 			if (typeof(MPD.json['error']) === 'undefined') {
 				//console.log('engineMpd(): idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
 
-				if (UI.hideReconnect === true) {
-					hideReconnect();
-				}
-				// MPD restarted by watchdog, manually via cli, etc
+                // MPD restarted by watchdog, worker, a2dp-autoconnect, manually via cli, etc
 				if (MPD.json['idle_timeout_event'] === '') {
 					// NOP
-				}
-				// Database update
-				if (MPD.json['idle_timeout_event'] == 'changed: update') {
-					if (typeof(MPD.json['updating_db']) != 'undefined') {
-						$('.busy-spinner').show();
-					}
-					else {
-						$('.busy-spinner').hide();
-					}
-				}
-				// Render volume
-				else if (MPD.json['idle_timeout_event'] == 'changed: mixer') {
-					renderUIVol();
-				}
-				// When last item in playlist finishes just update a few things
-				else if (MPD.json['idle_timeout_event'] == 'changed: player' && MPD.json['file'] == null) {
-					resetPlayCtls();
-				}
-				// Render full UI
-				else {
-					if (MPD.json['date']) MPD.json['date'] = MPD.json['date'].slice(0,4); // should fix in php but...
-					renderUI();
-				}
+				} else {
+    				if (UI.hideReconnect === true) {
+    					hideReconnect();
+    				}
+    				// Database update
+    				if (MPD.json['idle_timeout_event'] == 'changed: update') {
+    					if (typeof(MPD.json['updating_db']) != 'undefined') {
+    						$('.busy-spinner').show();
+    					}
+    					else {
+    						$('.busy-spinner').hide();
+    					}
+    				}
+    				// Render volume
+    				else if (MPD.json['idle_timeout_event'] == 'changed: mixer') {
+    					renderUIVol();
+    				}
+    				// When last item in playlist finishes just update a few things
+    				else if (MPD.json['idle_timeout_event'] == 'changed: player' && MPD.json['file'] == null) {
+    					resetPlayCtls();
+    				}
+    				// Render full UI
+    				else {
+    					if (MPD.json['date']) MPD.json['date'] = MPD.json['date'].slice(0,4); // should fix in php but...
+    					renderUI();
+    				}
+                }
 
-				engineMpd();
+    			engineMpd();
 			}
 			// Error of some sort
 			else {
@@ -339,7 +340,7 @@ function engineMpd() {
 				}
 				// MPD bug may have been fixed in 0.20.20 ?
 				else if (MPD.json['error'] == 'Not seekable') {
-					// nop
+					// NOP
 				}
 				// Other network or MPD errors
 				else {
@@ -392,19 +393,23 @@ function engineMpdLite() {
 			if (typeof(MPD.json['error']) === 'undefined') {
 				//console.log('engineMpdLite: idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
 
-				if (UI.hideReconnect === true) {
-					hideReconnect();
-				}
-				// Database update
-				if (typeof(MPD.json['updating_db']) != 'undefined') {
-					$('.busy-spinner').show();
-				}
-				else {
-					$('.busy-spinner').hide();
-				}
+                // MPD restarted by watchdog, worker, a2dp-autoconnect, manually via cli, etc
+				if (MPD.json['idle_timeout_event'] === '') {
+					// NOP
+				} else {
+    				if (UI.hideReconnect === true) {
+    					hideReconnect();
+    				}
+    				// Database update
+    				if (typeof(MPD.json['updating_db']) != 'undefined') {
+    					$('.busy-spinner').show();
+    				}
+    				else {
+    					$('.busy-spinner').hide();
+    				}
+                }
 
 				engineMpdLite();
-
 			}
 			// Error of some sort
 			else {
@@ -1025,7 +1030,9 @@ function renderUI() {
         	} else {
                 $('#extra-tags-display').text(formatExtraTagsString());
                 $('#ss-extra-metadata, #songsand-sample-rate').text(MPD.json['encoded']);
-                $('#countdown-sample-rate').text(MPD.json['encoded'].split(',')[0]);
+                $('#countdown-sample-rate').text(
+                    (typeof(MPD.json['encoded']) === 'undefined' ? '' : MPD.json['encoded'].split(',')[0])
+                );
         	}
 
             if (SESSION.json['show_npicon'] != 'None') {
