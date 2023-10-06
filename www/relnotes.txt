@@ -36,7 +36,8 @@ Updates
 - UPD: Replace bogus title tag " - " in NTS Live stations with default title
 - UPD: Show "Radio station" for stations that don't transmit a title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
-- UPD: Move Local Display and Peripherals from System to Peripherals Config
+- UPD: Move Local Display to Peripherals Config
+- UPD: Move DLNA server to File Sharing section of System Config
 
 Radio stations
 
