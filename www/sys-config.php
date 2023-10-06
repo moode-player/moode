@@ -217,6 +217,32 @@ if (isset($_POST['update_fs_nfs_options'])) {
 	}
 }
 
+if (isset($_POST['update_dlna_settings'])) {
+	$currentDlnaName = $_SESSION['dlnaname'];
+	if (isset($_POST['dlnaname']) && $_POST['dlnaname'] != $_SESSION['dlnaname']) {
+		$title = 'Settings updated';
+		$msg = '';
+		phpSession('write', 'dlnaname', $_POST['dlnaname']);
+	}
+	if (isset($_POST['dlnasvc']) && $_POST['dlnasvc'] != $_SESSION['dlnasvc']) {
+		$title = 'Settings updated';
+		$msg = $_POST['dlnasvc'] == 1 ? 'Database rebuild initiated' : '';
+		phpSession('write', 'dlnasvc', $_POST['dlnasvc']);
+	}
+	if (isset($title)) {
+		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $title, $msg);
+	}
+}
+if (isset($_POST['rebuild_dlnadb'])) {
+	if ($_SESSION['dlnasvc'] == 1) {
+		submitJob('dlnarebuild', '', 'Database rebuild initiated...');
+	}
+	else {
+		$_SESSION['notify']['title'] = 'Turn DLNA server on';
+		$_SESSION['notify']['msg'] = 'Database rebuild will initiate';
+	}
+}
+
 // SECURITY
 
 if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
@@ -371,6 +397,14 @@ $_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
 $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
 $ipAddrParts = explode('.', $_SESSION['ipaddress']);
 $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
+
+$_feat_minidlna = $_SESSION['feat_bitmask'] & FEAT_MINIDLNA ? '' : 'hide';
+$autoClick = " onchange=\"autoClick('#btn-set-dlnasvc');\"";
+$_select['dlnasvc_on']  .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-1\" value=\"1\" " . (($_SESSION['dlnasvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['dlnasvc_off'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-2\" value=\"0\" " . (($_SESSION['dlnasvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['dlnaname'] = $_SESSION['dlnaname'];
+$_select['hostip'] = getHostIp();
+
 
 // SECURITY
 

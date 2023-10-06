@@ -316,39 +316,6 @@
 				<span class="config-btn-after">UPnP settings</span>
 			</div>
 		</div>
-
-		<div class="control-group $_feat_minidlna">
-			<legend>DLNA Media Server</legend>
-			<p class="sub-legend">This service indexes music sources defined for MPD and makes them available to UPnP control points.</p>
-			<label class="control-label">Service</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-dlnasvc" for="toggle-dlnasvc-2">ON </label>$_select[dlnasvc_on]
-					<label class="toggle-radio toggle-dlnasvc" for="toggle-dlnasvc-1">OFF</label>$_select[dlnasvc_off]
-				</div>
-				<button id="btn-set-dlnasvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dlnasvc" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<span id="info-dlnasvc" class="config-help-info">
-					DLNA media server (miniDLNA) by Justin Maggard.
-                </span>
-			</div>
-
-			<label class="control-label" for="dlnaname">Name</label>
-			<div class="controls">
-				<input class="config-input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
-			</div>
-
-			<div class="controls">
-				<a data-toggle="modal" href="#rebuild-dlnadb" $_dlna_link_disable><button class="btn btn-medium btn-primary config-btn" $_dlna_btn_disable>Rebuild</button>
-				<span class="config-btn-after">DLNA database</span>
-			</div>
-
-			<div class="controls">
-				<a href="http://$_select[hostip]:8200" class="btn btn-medium btn-primary config-btn target-blank-link" target="_blank" $_dlna_link_disable $_dlna_btn_disable>View</a>
-				<span class="config-btn-after">Database status</span>
-			</div>
-		</div>
 	</form>
 </div>
 </div>

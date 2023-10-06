@@ -168,33 +168,6 @@ if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upn
 	submitJob('upnpsvc', '', 'UPnP renderer restarted');
 }
 
-// DLNA media server
-if (isset($_POST['update_dlna_settings'])) {
-	$currentDlnaName = $_SESSION['dlnaname'];
-	if (isset($_POST['dlnaname']) && $_POST['dlnaname'] != $_SESSION['dlnaname']) {
-		$title = 'Settings updated';
-		$msg = '';
-		phpSession('write', 'dlnaname', $_POST['dlnaname']);
-	}
-	if (isset($_POST['dlnasvc']) && $_POST['dlnasvc'] != $_SESSION['dlnasvc']) {
-		$title = 'Settings updated';
-		$msg = $_POST['dlnasvc'] == 1 ? 'Database rebuild initiated' : '';
-		phpSession('write', 'dlnasvc', $_POST['dlnasvc']);
-	}
-	if (isset($title)) {
-		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $title, $msg);
-	}
-}
-if (isset($_POST['rebuild_dlnadb'])) {
-	if ($_SESSION['dlnasvc'] == 1) {
-		submitJob('dlnarebuild', '', 'Database rebuild initiated...');
-	}
-	else {
-		$_SESSION['notify']['title'] = 'Turn DLNA server on';
-		$_SESSION['notify']['msg'] = 'Database rebuild will initiate';
-	}
-}
-
 phpSession('close');
 
 // Bluetooth
@@ -278,14 +251,6 @@ $autoClick = " onchange=\"autoClick('#btn-set-upnpsvc');\"";
 $_select['upnpsvc_on']  .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-1\" value=\"1\" " . (($_SESSION['upnpsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['upnpsvc_off'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-2\" value=\"0\" " . (($_SESSION['upnpsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['upnpname'] = $_SESSION['upnpname'];
-
-// DLNA media server
-$_feat_minidlna = $_SESSION['feat_bitmask'] & FEAT_MINIDLNA ? '' : 'hide';
-$autoClick = " onchange=\"autoClick('#btn-set-dlnasvc');\"";
-$_select['dlnasvc_on']  .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-1\" value=\"1\" " . (($_SESSION['dlnasvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['dlnasvc_off'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-2\" value=\"0\" " . (($_SESSION['dlnasvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['dlnaname'] = $_SESSION['dlnaname'];
-$_select['hostip'] = getHostIp();
 
 waitWorker('ren-config');
 
