@@ -30,6 +30,7 @@ Updates
 - UPD: Add Artist under Title in Folder view (if Artist not = AlbumArtist)
 - UPD: Add Prefs option for static waveform now-playing icon
 - UPD: Improve metadata layout in CoverView wide mode
+- UPD: Improve icon for volume popup by always showing level
 - UPD: Improve sort headings in Radio and Playlist views
 - UPD: Improve bitrate sort in Radio view (sort high to low)
 - UPD: Improve GPIO Config help and labels
