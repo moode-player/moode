@@ -282,7 +282,10 @@
 				<button class="btn btn-cmd btn-toggle random" data-cmd="random" aria-label="Random"><i class="fa-regular fa-sharp fa-random"></i></button>
                 <button class="btn btn-cmd btn-toggle hide" id="cv-playqueue-btn" aria-label="Queue"><i class="fa-regular fa-sharp fa-list"></i></button>
 				<button class="btn btn-cmd coverview" aria-label="Cover View"><i class="fa-regular fa-sharp fa-tv"></i></button>
-                <button class="btn volume-popup-btn" id="playbar-volume-popup-btn" data-toggle="modal" aria-label="Volume"><i class="fa-solid fa-sharp fa-volume-off"></i><span id="playbar-volume-level"></span></button>
+                <button class="btn volume-popup-btn" id="playbar-volume-popup-btn" data-toggle="modal" aria-label="Volume">
+                    <i class="fa-solid fa-sharp fa-volume-off"></i>
+                    <span class="mpd-volume-level"></span>
+                </button>
                 <button class="btn btn-cmd hide" id="random-album" aria-label="Random Album"><i class="fa-regular fa-sharp fa-dot-circle"></i></button>
 				<button class="btn btn-cmd add-item-to-favorites hide" aria-label="Add To Favorites"><i class="fa-regular fa-sharp fa-heart"></i></button>
 			</div>

@@ -815,11 +815,10 @@ function disableVolKnob() {
 	SESSION.json['volmute'] == '1';
     $('#volumedn, #volumeup, #volumedn-2, #volumeup-2').prop('disabled', true);
     $('#volumeup, #volumedn, #volumedn-2, #volumeup-2, .volume-display').css('opacity', '.3');
-	$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, #playbar-volume-level').text('0dB');
+	$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, .mpd-volume-level').text('0dB');
 	$('.volume-display').css('cursor', 'unset');
-    $('.volume-popup-btn').hide();
+
 	if (UI.mobile) {
-		$('#mvol-progress').css('width', '100%');
 		$('.repeat').show();
 	}
 }
@@ -879,17 +878,18 @@ function renderUIVol() {
 
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
-    		$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, #playbar-volume-level').text(SESSION.json['volknob']);
+    		$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, .mpd-volume-level').text(SESSION.json['volknob']);
             $('.volume-display-db').text(SESSION.json['volume_db_display'] == '1' ? MPD.json['mapped_db_vol'] : '');
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
-    		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
     			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('mute');
-                $('#playbar-volume-level').text('x');
+                $('.mpd-volume-level').text('');
+                $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-off').addClass('fa-volume-xmark');
     		} else {
-    			$('.volume-display div, #playbar-volume-level').text(SESSION.json['volknob']);
+    			$('.volume-display div, .mpd-volume-level').text(SESSION.json['volknob']);
+                $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-xmark').addClass('fa-volume-off');
     		}
     	}
     });
@@ -924,17 +924,18 @@ function renderUI() {
 
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
-    		$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, #playbar-volume-level').text(SESSION.json['volknob']);
+    		$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, .mpd-volume-level').text(SESSION.json['volknob']);
             $('.volume-display-db').text(SESSION.json['volume_db_display'] == '1' ? MPD.json['mapped_db_vol'] : '');
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
-    		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
     			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('mute');
-                $('#playbar-volume-level').text('x');
+                $('.mpd-volume-level').text('');
+                $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-off').addClass('fa-volume-xmark');
     		} else {
-    			$('.volume-display div, #playbar-volume-level').text(SESSION.json['volknob']);
+    			$('.volume-display div, .mpd-volume-level').text(SESSION.json['volknob']);
+                $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-xmark').addClass('fa-volume-off');
     		}
     	}
 
