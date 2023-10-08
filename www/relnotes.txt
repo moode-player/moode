@@ -35,6 +35,7 @@ Updates
 - UPD: Improve bitrate sort in Radio view (sort high to low)
 - UPD: Improve GPIO Config help and labels
 - UPD: Replace bogus title tag " - " in NTS Live stations with default title
+- UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
 - UPD: Show "Radio station" for stations that don't transmit a title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
 - UPD: Move Local Display to Peripherals Config
