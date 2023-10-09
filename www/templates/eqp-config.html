@@ -57,7 +57,7 @@
 			<button id="master-gain-up" class="btn" href="#notarget">&plus;</button>
 			<div id="master-gain">$_select[master_gain] dB</div>
 
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1"></div>
 				<div class="eqp-col1">Enabled</div>
 				<div class="eqp-col1">Freq (Hz)</div>
@@ -65,84 +65,84 @@
 				<div class="eqp-col1">Gain (dB)</div>
 			</div>
 
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 1</div>
-				<div class="eqp-col1"><select id="band1-enabled" class="select-mini eqp-select eqp-select-margin" name="band1_enabled" style="width:71.5px;">$_select[band1_enabled]</select></div>
+				<div class="eqp-col1"><select id="band1-enabled" class="select-mini eqp-select eqp-select-margin" name="band1_enabled">$_select[band1_enabled]</select></div>
 				<div class="eqp-col1"><input id="band1-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band1_freq" value="$_select[band1_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band1-q" name="band1_q" value="$_select[band1_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band1_gain" value="$_select[band1_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 2</div>
-				<div class="eqp-col1"><select id="band2-enabled" class="select-mini eqp-select eqp-select-margin" name="band2_enabled" style="width:71.5px;">$_select[band2_enabled]</select></div>
+				<div class="eqp-col1"><select id="band2-enabled" class="select-mini eqp-select eqp-select-margin" name="band2_enabled">$_select[band2_enabled]</select></div>
 				<div class="eqp-col1"><input id="band2-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band2_freq" value="$_select[band2_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band2-q" name="band2_q" value="$_select[band2_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band2-gain" name="band2_gain" value="$_select[band2_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 3</div>
-				<div class="eqp-col1"><select id="band3-enabled" class="select-mini eqp-select eqp-select-margin" name="band3_enabled" style="width:71.5px;">$_select[band3_enabled]</select></div>
+				<div class="eqp-col1"><select id="band3-enabled" class="select-mini eqp-select eqp-select-margin" name="band3_enabled">$_select[band3_enabled]</select></div>
 				<div class="eqp-col1"><input id="band3-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band3_freq" value="$_select[band3_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band3-q" name="band3_q" value="$_select[band3_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band3-gain" name="band3_gain" value="$_select[band3_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 4</div>
 				<div class="eqp-col1"><select id="band4-enabled" class="select-mini eqp-select eqp-select-margin" name="band4_enabled" style="width:71.5px;">$_select[band4_enabled]</select></div>
 				<div class="eqp-col1"><input id="band4-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band4_freq" value="$_select[band4_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band4-q" name="band4_q" value="$_select[band4_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band4-gain" name="band4_gain" value="$_select[band4_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 5</div>
 				<div class="eqp-col1"><select id="band5-enabled" class="select-mini eqp-select eqp-select-margin" name="band5_enabled" style="width:71.5px;">$_select[band5_enabled]</select></div>
 				<div class="eqp-col1"><input id="band5-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band5_freq" value="$_select[band5_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band5-q" name="band5_q" value="$_select[band5_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band5-gain" name="band5_gain" value="$_select[band5_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 6</div>
 				<div class="eqp-col1"><select id="band6-enabled" class="select-mini eqp-select eqp-select-margin" name="band6_enabled" style="width:71.5px;">$_select[band6_enabled]</select></div>
 				<div class="eqp-col1"><input id="band6-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band6_freq" value="$_select[band6_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band6-q" name="band6_q" value="$_select[band6_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band6-gain" name="band6_gain" value="$_select[band6_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 7</div>
 				<div class="eqp-col1"><select id="band7-enabled" class="select-mini eqp-select eqp-select-margin" name="band7_enabled" style="width:71.5px;">$_select[band7_enabled]</select></div>
 				<div class="eqp-col1"><input id="band7-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band7_freq" value="$_select[band7_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band7-q" name="band7_q" value="$_select[band7_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band7-gain" name="band7_gain" value="$_select[band7_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 8</div>
 				<div class="eqp-col1"><select id="band8-enabled" class="select-mini eqp-select eqp-select-margin" name="band8_enabled" style="width:71.5px;">$_select[band8_enabled]</select></div>
 				<div class="eqp-col1"><input id="band8-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band8_freq" value="$_select[band8_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band8-q" name="band8_q" value="$_select[band8_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band8-gain" name="band8_gain" value="$_select[band8_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 9</div>
 				<div class="eqp-col1"><select id="band9-enabled" class="select-mini eqp-select eqp-select-margin" name="band9_enabled" style="width:71.5px;">$_select[band9_enabled]</select></div>
 				<div class="eqp-col1"><input id="band9-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band9_freq" value="$_select[band9_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band9-q" name="band9_q" value="$_select[band9_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band9-gain" name="band9_gain" value="$_select[band9_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 10</div>
 				<div class="eqp-col1"><select id="band10-enabled" class="select-mini eqp-select eqp-select-margin" name="band10_enabled" style="width:71.5px;">$_select[band10_enabled]</select></div>
 				<div class="eqp-col1"><input id="band10-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band10_freq" value="$_select[band10_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band10-q" name="band10_q" value="$_select[band10_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band10-gain" name="band10_gain" value="$_select[band10_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 11</div>
 				<div class="eqp-col1"><select id="band11-enabled" class="select-mini eqp-select eqp-select-margin" name="band11_enabled" style="width:71.5px;">$_select[band11_enabled]</select></div>
 				<div class="eqp-col1"><input id="band11-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band11_freq" value="$_select[band11_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band11-q" name="band11_q" value="$_select[band11_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band11-gain" name="band11_gain" value="$_select[band11_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 12</div>
 				<div class="eqp-col1"><select id="band12-enabled" class="select-mini eqp-select eqp-select-margin" name="band12_enabled" style="width:71.5px;">$_select[band12_enabled]</select></div>
 				<div class="eqp-col1"><input id="band12-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band12_freq" value="$_select[band12_freq]"></div>
