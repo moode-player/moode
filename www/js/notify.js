@@ -46,7 +46,7 @@ function notify(title, msg, duration = '2_seconds') {
         saving_queue: 'Saving Queue',
         queue_saved: 'Queue saved',
 		playlist_name_needed: 'Enter a name for the playlist',
-		playlist_name_error: 'NAS, RADIO and SDCARD cannot be used in the name',
+		playlist_name_error: 'NAS, RADIO, SDCARD and USB cannot be used in the name',
         setting_favorites_name: 'Setting Favorites name',
         favorites_name_set: 'Favorites name has been set',
         adding_favorite: 'Adding favorite',

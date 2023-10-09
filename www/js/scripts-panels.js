@@ -689,7 +689,7 @@ jQuery(document).ready(function($) { 'use strict';
 		var plName = $('#playlist-save-name').val();
 
 		if (plName) {
-			if (~plName.indexOf('NAS') || ~plName.indexOf('RADIO') || ~plName.indexOf('SDCARD')) {
+			if (containsBaseFolderName(plName)) {
 				notify('playlist_name_error');
 			} else {
                 notify('saving_queue');
@@ -711,7 +711,7 @@ jQuery(document).ready(function($) { 'use strict';
 		var favoritesName = $('#playlist-favorites-name').val();
 
 		if (favoritesName) {
-			if (~favoritesName.indexOf('NAS') || ~favoritesName.indexOf('RADIO') || ~favoritesName.indexOf('SDCARD')) {
+			if (containsBaseFolderName(favoritesName)) {
 				notify('playlist_name_error');
 			} else {
                 notify('setting_favorites_name');
