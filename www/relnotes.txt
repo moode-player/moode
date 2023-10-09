@@ -29,6 +29,7 @@ Updates
 - UPD: Add ALSA output format (output) to extra metadata
 - UPD: Add Artist under Title in Folder view (if Artist not = AlbumArtist)
 - UPD: Add Prefs option for static waveform now-playing icon
+- UPD: Add BSSID to info on Network Config
 - UPD: Improve metadata layout in CoverView wide mode
 - UPD: Improve icon for volume popup by always showing level
 - UPD: Improve sort headings in Radio and Playlist views
