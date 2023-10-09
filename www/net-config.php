@@ -174,6 +174,7 @@ $ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1"
 // Get link quality and signal level
 if (!empty($ipAddr[0])) {
 	$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
+	$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3');
 	$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 	$array = explode('=', $signal[0]);
 	$qual = explode('/', $array[1]);
@@ -187,7 +188,7 @@ if ($_SESSION['apactivated'] == true) {
 } else {
 	$_wlan0currentip = empty($ipAddr[0]) ? 'Not in use' :
 	'Address: ' . $ipAddr[0] . '<br>' .
-	'Network: ' . $ssid[0] . '<br>' .
+	'Network: ' . $ssid[0] . ' (' . $bssid[0] . ')<br>' .
 	'Quality: ' . $quality . '% level ' . $level;
 }
 
