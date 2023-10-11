@@ -132,15 +132,16 @@
 				, tp = {"position":"absolute","z-index":9999}
 				, Y, X, parentOffset;
 
-				//console.log(mouseX + ', ' + mouseY);
-				if ($('body').css('zoom') == '0.75') {
-					boundsX = Math.round(boundsX * 1.25);
-					boundsY = Math.round(boundsY * 1.25);
-					mouseX = Math.round(mouseX * 1.25);
-					mouseY = Math.round(mouseY * 1.25);
-					menuHeight = Math.round(menuHeight * .75);
-					menuWidth = Math.round(menuWidth * .75);
-				}
+			//console.log(mouseX + ', ' + mouseY);
+			if ($('body').css('zoom') == '0.75') {
+				boundsX = Math.round(boundsX * 1.25);
+				boundsY = Math.round(boundsY * 1.25);
+				mouseX = Math.round(mouseX * 1.25);
+				mouseY = Math.round(mouseY * 1.25);
+				menuHeight = Math.round(menuHeight * .75);
+				menuWidth = Math.round(menuWidth * .75);
+			}
+
 			if (mouseY + menuHeight > boundsY) {
 				Y = {"top": mouseY - menuHeight + $(window).scrollTop()}; // was mouseY - menuHeight
 				//console.log('cuty ' + (mouseY - menuHeight + $(window).scrollTop()));
@@ -149,14 +150,19 @@
 				//console.log((mouseY + $(window).scrollTop()));
 			}
 
-			if ((mouseX + menuWidth > boundsX) && ((mouseX - menuWidth) > 0)) {
-				X = {"left": mouseX - menuWidth + $(window).scrollLeft() - 15};  // was mouseX - menuWidth
+			// Adjustment factor
+			// - So menu is not too close to ... icon
+			// - And doesn't go past the right boundary creating a horizontal scrollbar
+			var adjX = 15;
+
+			if ((mouseX + menuWidth + adjX > boundsX) && (mouseX - menuWidth > 0)) {
+				X = {"left": mouseX - menuWidth + $(window).scrollLeft() - adjX};  // was mouseX - menuWidth
 				//console.log('cutx ' + (mouseX - menuWidth + $(window).scrollLeft()));
 			} else {
-				X = {"left": mouseX + $(window).scrollLeft() + 15};
+				X = {"left": mouseX + $(window).scrollLeft() + adjX};
 				//console.log((mouseX + $(window).scrollLeft()));
 			}
-			//console.log(mouseX + ', ' + mouseY + ', ' + boundsX + ', ' + boundsY);
+			//console.log((mouseX + menuWidth) + ', ' + boundsX + ' | ' + (mouseX - menuWidth));
 
 			// If context-menu's parent is positioned using absolute or relative positioning,
 			// the calculated mouse position will be incorrect.
@@ -164,6 +170,7 @@
 			parentOffset = $menu.offsetParent().offset();
 			X.left = X.left - parentOffset.left;
 			Y.top = Y.top - parentOffset.top;
+			//console.log(X.left + ',' + Y.top);
 
 			return $.extend(tp, Y, X);
 		}
@@ -202,9 +209,12 @@
 	$(document)
 		// ACXMOD: contextmenu -> click
 		.on('click.context.data-api', '[data-toggle=context]', function(e) {
+				// NEEDED ?
 				var pos = $(this).offset();
 				UI.dbEntry[1] = pos.left;
 				UI.dbEntry[2] = pos.top;
+				//console.log(pos);
+
 				$(this).contextmenu('show',e);
 				e.preventDefault();
 		});
