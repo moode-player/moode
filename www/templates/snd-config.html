@@ -137,11 +137,10 @@
 					$_select[alsa_output_mode]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-outpu-mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span class="config-help-static">
 					ALSA: $_alsa_plugin_and_cardnum
 				</span>
-				<span id="info-alsa-outpu-mode" class="config-help-info">
+				<span class="config-help-static">
 					<b>Default:</b> Use the ALSA "plughw" plugin to perform format conversions if needed to match audio device requirements for example zero-padding the bit depth.<br>
 					<b>Direct:</b>	Use the ALSA "hw" plugin which does not preform any format conversions. The audio device must accept the given format or playback will not occur.<br>
 					<b>NOTE:</b> These modes apply to MPD, Bluetooth (inbound), AirPlay, Spotify Connect, and the Equalizers.
