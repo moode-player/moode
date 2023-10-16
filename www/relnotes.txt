@@ -39,6 +39,7 @@ Updates
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
 - UPD: Show "Radio station" for stations that don't transmit a title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
+- UPD: Add ALSA output mode option to Bluetooth Control
 - UPD: Move Local Display to Peripherals Config
 - UPD: Move DLNA server to File Sharing section of System Config
 
@@ -48,6 +49,10 @@ Radio stations
 - NEW: Soma FM - Bossa Beyond
 - NEW: Soma FM - The In-Sound
 - NEW: Soma FM - Tiki Time
+
+Security
+
+- UPD: Remove AP mode PSK from hostapd.conf
 
 Bug fixes
 
