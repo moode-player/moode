@@ -111,6 +111,13 @@ if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
+// ALSA output mode
+if (isset($_POST['update_bt_alsa_output_mode']) && $_POST['update_bt_alsa_output_mode'] == '1') {
+	$_SESSION['bt_alsa_output_mode'] = $_POST['bt_alsa_output_mode'];
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_POST['bt_alsa_output_mode'] . "' /etc/bluealsaaplay.conf");
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
+
 phpSession('close');
 
 // Command list
@@ -194,6 +201,10 @@ $_select['pcm_buffer'] .= "<option value=\"125000\" " . (($_SESSION['bluez_pcm_b
 $_select['pcm_buffer'] .= "<option value=\"60000\" "  . (($_SESSION['bluez_pcm_buffer'] == '60000') ? "selected" : "")  . "> 60 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"40000\" "  . (($_SESSION['bluez_pcm_buffer'] == '40000') ? "selected" : "")  . "> 40 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"20000\" "  . (($_SESSION['bluez_pcm_buffer'] == '20000') ? "selected" : "")  . "> 20 ms</option>\n";
+
+// ALSA output mode
+$_select['bt_alsa_output_mode'] .= "<option value=\"_audioout\" " . (($_SESSION['bt_alsa_output_mode'] == '_audioout') ? "selected" : "") . ">Default</option>\n";
+$_select['bt_alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['bt_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Compatibility</option>\n";
 
 waitWorker('blu-config');
 

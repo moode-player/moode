@@ -370,6 +370,7 @@ function autoConfigSettings() {
 			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
 		}],
 		['requires' => ['audioout'], 'handler' => setphpSession],
+		['requires' => ['bt_alsa_output_mode'], 'handler' => setSessionVarOnly],
 
 		'AirPlay',
 		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption',

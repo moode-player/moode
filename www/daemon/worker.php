@@ -779,7 +779,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 			workerLog('worker: Bluetooth (available: ' . $status . ')');
 			if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
 				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
-				workerLog('worker: Pairing agent (started)');
+				workerLog('worker: Bluetooth Pairing agent (started)');
 			}
 		} else {
 			workerLog('worker: Bluetooth available: ' . $status);
@@ -790,6 +790,12 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 } else {
 	workerLog('worker: Bluetooth (n/a)');
 }
+// Bluetooth ALSA output mode
+if (!isset($_SESSION['bt_alsa_output_mode'])) {
+	$_SESSION['bt_alsa_output_mode'] = '_audioout';
+}
+workerLog('worker: Bluetooth ALSA output mode (' . BT_ALSA_OUTPUT_MODE_NAME[$_SESSION['bt_alsa_output_mode']] . ')');
+
 
 // Start airplay renderer
 if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {

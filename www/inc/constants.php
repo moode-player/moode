@@ -104,6 +104,8 @@ const STREAM_RECORDER		= 'Stream Recorder';
 
 // ALSA output modes
 const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct');
+// Bluetooth ALSA output modes
+const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
 
 // Library Saved Searches
 const LIBSEARCH_BASE = '/var/local/www/libsearch_';

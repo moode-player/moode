@@ -160,6 +160,7 @@ if ($aplActive == '1') {
 	$renderer = 'MPD';
 }
 // DSP and output mode
+
 if ($_SESSION['invert_polarity'] == '1') {
 	$dsp = 'Polarity inversion';
 	$outputMode = $_SESSION['alsa_output_mode'];
@@ -179,6 +180,15 @@ if ($_SESSION['invert_polarity'] == '1') {
 	$dsp = '';
 	$outputMode = $_SESSION['alsa_output_mode'];
 }
+
+// Bluetooth overrides
+if ($btActive === true) {
+	if ($_SESSION['bt_alsa_output_mode'] == 'plughw') {
+		$dsp = '';
+		$outputMode = 'plughw';
+	}
+}
+
 // Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {
 	$_audio_output_chain = 'MPD -> Bluetooth stream -> Bluetooth speaker';
