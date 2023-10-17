@@ -863,28 +863,6 @@
 		<div class="accordian"><span class="h5">Playback</span>
 			<div class="kontrol">
 				<div class="control-group">
-					<label class="control-label" for="playqueue-art-enabled">Queue thumbs</label>
-					<div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="playqueue-art-enabled" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playqueue-art-enabled-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playqueue-art-enabled-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-playqueue-art" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-playqueue-art" class="help-block hide">
-							Shows thumbnail images for songs and radio stations in the Queue.
-							Note that showing thumbnails when there are a large number if items in the Queue may impact performance.
-						</span>
-					</div>
 					<label class="control-label" for="show-npicon">Now-playing icon</label>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
@@ -970,11 +948,138 @@
 				</div>
 			</div>
 		</div>
+		<!-- COVER ART -->
+		<div class="accordian"><span class="h5">Cover Art</span>
+			<div class="kontrol">
+				<div class="control-group">
+					<label class="control-label" for="cover-search-priority">Search priority</label>
+	                <div class="controls">
+					<div class="btn-group bootstrap-select select-large">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="cover-search-priority" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Embedded</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Cover file</span></a></li>
+							</ul>
+						</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-cover-search-priority" class="help-block hide">
+							Specify whether the Thumbnail generator looks first for embedded covers or cover image files.
+	                    </span>
+	                </div>
+					<label class="control-label" for="thumbgen-scan">Audio formats</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="thumbgen-scan" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">Default</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">All</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">Default+</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">All+</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbgen-scan" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-thumbgen-scan" class="help-block hide">
+							Specify which audio formats are scanned by the Thumbnail generator. Selecting "Default" can result in a faster scan.<br>
+	                    	<b>Default: </b>aac, aiff, dff, dsf, flac, m4a, mp3, mp4, ogg, wav and wv.<br>
+							<b>All: </b>All audio formats listed in the output of the MPD -V command.<br>
+							<b>Plus: </b>The + option adds image types jpg/jpeg, png, tif/tiff to the scan which enables thumbnails to be generated for images
+							in parent folders of the Album folder for example Artist or CD box set images.<br>
+							Note that incorrect thumbnails may appear in the Library if the Album folder also contains image files and "Cover search priority" is set to Embedded.
+	                    </span>
+					</div>
+					<label class="control-label" for="hires-thumbnails">Resolution</label>
+	                <div class="controls">
+					<div class="btn-group bootstrap-select select-large">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="hires-thumbnails" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px</span></a></li>
+							</ul>
+						</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-hires-thumbnails" class="help-block hide">
+							Specify the resolution of images output by the Thumbnail generator.<br>
+							<b>Auto</b> Use the device Pixel Ratio to set an optimum resolution and quality while
+							maintaining the smallest file size for fastest image load time. This can result in lower resolution images.<br>
+							<b>NNNpx</b> Use the specified resolution.<br>
+							Note that after changing this setting open Library Config and Regenerate the thumbnail images.
+	                    </span>
+	                </div>
+					<label class="control-label" for="playqueue-art-enabled">Queue thumbs</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="playqueue-art-enabled" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playqueue-art-enabled-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playqueue-art-enabled-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-playqueue-art" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-playqueue-art" class="help-block hide">
+							Specify whether thumbnail images are displayed in the Queue.<br>
+							Note that when there are a large number if items in the Queue, showing thumbs may impact performance.
+						</span>
+					</div>
+					<label class="control-label" for="show-tagview-covers">Tag view thumbs</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-tagview-covers" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-show-tagview-covers" class="help-block hide">
+							Specify whether thumbnail images are displayed in the Album column in Tag view.<br>
+							Note that when there are a large number if items in the Album column, showing thumbs may impact performance.
+ 	                    </span>
+ 	                </div>
+				</div>
+			</div>
+		</div>
 		<!-- LIBRARY (STANDARD SETTINGS)-->
 		<div class="accordian"><span class="h5">Library</span>
 			<div class="kontrol">
 				<div class="control-group">
-					<label class="control-label" for="onetouch_album">One touch album</label>
+					<label class="control-label" for="onetouch_album">One-touch album</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1000,7 +1105,7 @@
 	                    	Specify an action to be performed when clicking a cover in Album view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch_radio">One touch radio</label>
+					<label class="control-label" for="onetouch_radio">One-touch radio</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1025,7 +1130,7 @@
 	                    	Specify an action to be performed when clicking a cover in Radio view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch-pl">One touch playlist</label>
+					<label class="control-label" for="onetouch-pl">One-touch playlist</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1050,7 +1155,7 @@
 	                    	Specify an action to be performed when clicking a playlist in Playlist view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="albumview-sort-order">Albumview sort order</label>
+					<label class="control-label" for="albumview-sort-order">Album view sort</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1077,7 +1182,7 @@
 	                        Note that when sorted by year if not all tracks in the album have the same year then the latest year will be used. If no year tag exists or if the year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
-					<label class="control-label" for="tagview-sort-order">Tagview sort order</label>
+					<label class="control-label" for="tagview-sort-order">Tag view sort</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1106,6 +1211,54 @@
 	                        Note that when sorted by year if not all tracks in the album have the same year then the latest year will be used. If no year tag exists or if the year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
+					<label class="control-label" for="tag-view-genre">Genre column</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tag-view-genre" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Genre</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Composer</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-tag-view-genre" class="help-block hide">
+							Specify how to populate the Genre column in Tag view.
+						</span>
+	                </div>
+					<label class="control-label" for="tag-view-artist">Artist column</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tag-view-artist" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist+</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-tag-view-artist" class="help-block hide">
+							Specify how to populate the Artist column in Tag view.<br>
+							<b>Artist: </b>List all artists, album artists, performers and conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
+							<b>Artist (Strict): </b>List only artists. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
+							<b>Album Artist: </b>List all album artists. Compilation albums are listed under the album artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
+							<b>Album Artist+: </b>Same as "Album Artist" except compilation albums listed for a selected album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected album artist.
+						</span>
+	                </div>
 					<label class="control-label" for="track-play">Track play</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
@@ -1129,7 +1282,7 @@
 							<b>Track+: </b>Play selected track and all following tracks.
 	                    </span>
 					</div>
-					<label class="control-label" for="recently-added">Recently added filter</label>
+					<label class="control-label" for="recently-added">Recently added</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1155,7 +1308,7 @@
 							Note that the "No limit" option provides a way to achieve a "date added" sort of the Library.
 	                    </span>
 	                </div>
-					<label class="control-label" for="show-encoded-at">Show sample rate</label>
+					<label class="control-label" for="show-encoded-at">Sample rate</label>
 	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1180,83 +1333,28 @@
 							The "HD only" option displays an HD badge when the bit depth for song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for radio stations the bit rate is &gt; 128 kbps.
 	                    </span>
 	                </div>
-					<label class="control-label" for="cover-search-priority">Cover search priority</label>
-	                <div class="controls">
-					<div class="btn-group bootstrap-select select-large">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="cover-search-priority" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Embedded</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Cover file</span></a></li>
-							</ul>
-						</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-cover-search-priority" class="help-block hide">
-							This option determines whether the cover art extractor and thumbnail generator look first for embedded covers or cover image files.
-	                    </span>
-	                </div>
-
-					<label class="control-label" for="thumbgen-scan">Thumbgen scan</label>
-	                <div class="controls">
+					<label class="control-label" for="ellipsis-limited-text">Ellipsis text</label>
+ 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="thumbgen-scan" class="filter-option pull-left">
+								<div id="ellipsis-limited-text" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">Default</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">All</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">Default+</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="thumbgen-scan-sel"><span class="text">All+</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbgen-scan" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-thumbgen-scan" class="help-block hide">
-							Specify which audio formats are scanned by the thumbnail generator. Selecting "Default" can result in a faster scan.<br>
-	                    	<b>Default: </b>aac, aiff, dff, dsf, flac, m4a, mp3, mp4, ogg, wav and wv.<br>
-							<b>All: </b>All audio formats listed in the output of the MPD -V command.<br>
-							<b>Plus: </b>The + option adds image types jpg/jpeg, png, tif/tiff to the scan which enables thumbnails to be generated for images
-							in parent folders of the Album folder for example Artist or CD box set images. NOTE: Incorrect thumbnails may appear
-							in the Library if the Album folder also contains image files and "Cover search priority" is set to Embedded.
-	                    </span>
-					</div>
-
-					<label class="control-label" for="hires-thumbnails">Thumbnail resolution</label>
-	                <div class="controls">
-					<div class="btn-group bootstrap-select select-large">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="hires-thumbnails" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px</span></a></li>
-							</ul>
-						</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-hires-thumbnails" class="help-block hide">
-						This option sets the resolution of the JPEG images output by the thumbnail generator. Regenerate the thumbnail images after changing this setting.
-						Note that "Auto" uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).
-						This can result in lower resolution images.
-	                    </span>
-	                </div>
-					<label class="control-label" for="thumbnail-columns">Thumbnail columns</label>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-ellipsis-limited-text" class="help-block hide">
+ 		                    Display ellipsis limited text underneath the cover art in Album view for a more compact look.
+ 	                    </span>
+ 	                </div>
+					<label class="control-label" for="thumbnail-columns">Column layout</label>
 	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1280,63 +1378,36 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-thumbnail-columns" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-thumbnail-columns" class="help-block hide">
-		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for desktop/tablet and the second is for mobile.
+		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for desktop and the second is for mobile.
 	                    </span>
 	                </div>
 				</div>
 			</div>
 		</div>
 		<!-- LIBRARY (ADVANCED)-->
-		<div class="accordian"><span class="h5">Advanced</span>
+		<div class="accordian"><span class="h5">Library Advanced</span>
 			<div class="kontrol">
 				<div class="control-group">
-					<label class="control-label" for="tag-view-genre">Tag view genre</label>
+					<label class="control-label" for="show-genres-column">Show genres</label>
 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
+   						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="tag-view-genre" class="filter-option pull-left">
+								<div id="show-genres-column" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Genres</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Composers</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
- 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-tag-view-genre" class="help-block hide">
-							Select whether to populate the first column in Tag view with genres (default) or with composers.
-						</span>
-	                </div>
-					<label class="control-label" for="tag-view-artist">Tag view artist</label>
-	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="tag-view-artist" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist+</span></a></li>
-								</ul>
-							</div>
- 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-tag-view-artist" class="help-block hide">
-							Select how to populate the Artist list in Tag view.<br>
-							<b>Artist: </b>List all artists, album artists, performers and conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-							<b>Artist (Strict): </b>List only artists. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-							<b>Album Artist: </b>List all album artists. Compilation albums are listed under the album artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
-							<b>Album Artist+: </b>Same as "Album Artist" except compilation albums listed for a selected album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected album artist.
-						</span>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-show-genres-column" class="help-block hide">
+	                    	Specify whether or not to show the Genres column in Tag view.
+	                    </span>
 	                </div>
 					<label class="control-label" for="library-album-key">Album key</label>
  	                <div class="controls">
@@ -1358,10 +1429,10 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
- 		                    Determine how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
+ 		                    Specify how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
  	                    </span>
  	                </div>
-					<label class="control-label" for="library-inc-comment-tag">Include comment tag</label>
+					<label class="control-label" for="library-inc-comment-tag">Comment tag</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1391,70 +1462,7 @@
 							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
 						</span>
 	                </div>
-					<label class="control-label" for="show-genres-column">Show genres column</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="show-genres-column" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-show-genres-column" class="help-block hide">
-	                    	Show the genres column in Tag view.
-	                    </span>
-	                </div>
-					<label class="control-label" for="show-tagview-covers">Show tagview covers</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="show-tagview-covers" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
- 						<span id="info-show-tagview-covers" class="help-block hide">
- 		                    Show cover art in the album column in Tag view.
- 	                    </span>
- 	                </div>
-					<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="ellipsis-limited-text" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
- 						<span id="info-ellipsis-limited-text" class="help-block hide">
- 		                    Display ellipsis limited text underneath the cover art in Album view for a more compact look.
- 	                    </span>
- 	                </div>
-					<label class="control-label" for="utf8-char-filter">UTF8 character filter</label>
+					<label class="control-label" for="utf8-char-filter">UTF-8 filter</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1472,7 +1480,8 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
  						<span id="info-utf8-char-filter" class="help-block hide">
-							Replace non-UTF8 characters with UTF8 compliant characters which may be present in song files. Setting this to Yes may impact the performance of the Library.
+							Specify whether to replace non-UTF-8 characters which may be present in files with UTF-8 compliant characters.<br>
+							Note that this is only a best effort approach. It is not guaranteed to work, may result in an empty Library and may impact performance.
  	                    </span>
  	                </div>
 				</div>
@@ -1604,7 +1613,7 @@
 							<b>Wide: </b>Cover art on the left and metadata on the right.
 	                    </span>
 	                </div>
-					<label class="control-label" for="show-cvpb">CoverView playbar</label>
+					<label class="control-label" for="show-cvpb">Playbar</label>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
