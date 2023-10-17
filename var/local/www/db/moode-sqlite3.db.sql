@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Oct 4 14:01:54 2023
+-- File generated with SQLiteStudio v3.1.0 on Tue Oct 17 10:52:43 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -223,7 +223,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (158, 'multiroom_tx', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Disabled');
 INSERT INTO cfg_system (id, param, value) VALUES (160, 'rxactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (161, 'library_onetouch_radio', 'Play');
-INSERT INTO cfg_system (id, param, value) VALUES (162, 'library_tagview_genre', 'Genres');
+INSERT INTO cfg_system (id, param, value) VALUES (162, 'library_tagview_genre', 'Genre');
 INSERT INTO cfg_system (id, param, value) VALUES (163, 'auto_coverview', '-off');
 INSERT INTO cfg_system (id, param, value) VALUES (164, 'maint_interval', '21600');
 INSERT INTO cfg_system (id, param, value) VALUES (165, 'library_track_play', 'Track');

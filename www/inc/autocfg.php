@@ -557,7 +557,12 @@ function autoConfigSettings() {
 		['requires' => ['library_thumbnail_columns'], 'handler' => setphpSession],
 
 		'Library (Advanced)',
-		['requires' => ['library_tagview_genre'], 'handler' => setphpSession],
+		['requires' => ['library_tagview_genre'], 'handler' => function($values) {
+			$value = $values['library_tagview_genre'] == 'Genres' ? 'Genre' :
+				($values['library_tagview_genre'] == 'Composers' ? 'Composer' : $values['library_tagview_genre']);
+			phpSession('write', 'library_tagview_genre', $value);
+		}],
+		//['requires' => ['library_tagview_genre'], 'handler' => setphpSession],
 		['requires' => ['library_tagview_artist'], 'handler' => setphpSession],
 		['requires' => ['library_misc_options'], 'handler' => setphpSession],
 		['requires' => ['library_ignore_articles'], 'handler' => setphpSession],

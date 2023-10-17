@@ -140,7 +140,7 @@ function genFlatList($sock) {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			} else if ($element == 'Genre') {
-				if ($_SESSION['library_tagview_genre'] == 'Genres') {
+				if ($_SESSION['library_tagview_genre'] == 'Genre') {
 					if ($flat[$item]['Genre']) {
 						array_push($flat[$item]['Genre'], $value);
 					} else {
@@ -148,7 +148,7 @@ function genFlatList($sock) {
 					}
 				}
 			} else if ($element == 'Composer') {
- 				if ($_SESSION['library_tagview_genre'] == 'Composers') {
+ 				if ($_SESSION['library_tagview_genre'] == 'Composer') {
 					if ($flat[$item]['Genre']) {
 						array_push($flat[$item]['Genre'], $value);
 					} else {
