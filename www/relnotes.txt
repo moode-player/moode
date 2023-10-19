@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD: Bump to shairport-sync 4.3.1
+- UPD: Bump to shairport-sync 4.3.2
 - UPD: Bump to NQPTP 1.2.4
 - UPD: Bump to Font Awesome 6.4.2 Pro and update specific icons
 - UPD: Add comparison operators =~ and !~ (PERL regex) to Library Adv search
