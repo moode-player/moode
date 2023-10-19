@@ -1211,6 +1211,27 @@
 	                        Note that when sorted by year if not all tracks in the album have the same year then the latest year will be used. If no year tag exists or if the year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
+					<label class="control-label" for="show-genres-column">Show genres</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-genres-column" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-show-genres-column" class="help-block hide">
+	                    	Specify whether or not to show the Genres column in Tag view.
+	                    </span>
+	                </div>
 					<label class="control-label" for="tag-view-genre">Genre column</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
@@ -1381,34 +1402,6 @@
 		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for desktop and the second is for mobile.
 	                    </span>
 	                </div>
-				</div>
-			</div>
-		</div>
-		<!-- LIBRARY (ADVANCED)-->
-		<div class="accordian"><span class="h5">Library Advanced</span>
-			<div class="kontrol">
-				<div class="control-group">
-					<label class="control-label" for="show-genres-column">Show genres</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="show-genres-column" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info-show-genres-column" class="help-block hide">
-	                    	Specify whether or not to show the Genres column in Tag view.
-	                    </span>
-	                </div>
 					<label class="control-label" for="library-album-key">Album key</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
@@ -1483,7 +1476,7 @@
 							Specify whether to replace non-UTF-8 characters which may be present in files with UTF-8 compliant characters.<br>
 							Note that this is only a best effort approach. It is not guaranteed to work, may result in an empty Library and may impact performance.
  	                    </span>
- 	                </div>
+ 	                </div>					
 				</div>
 			</div>
 		</div>
