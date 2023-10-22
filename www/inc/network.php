@@ -154,7 +154,9 @@ function cfgNetIfaces() {
 	// Set regulatory domain
 	sysCmd('iw reg set "' . $cfgNetwork[1]['wlan_country'] . '" >/dev/null 2>&1');
 
-	// TODO: Enhance rule set to enable general purpose hotspot.
+	// TODO: Enhance rule set to enable general purpose hotspot
+	// NOTE: Missing parenthesis fix was inadvertently included in another commit
+	// Sept 23, 2023 "Improve metadata layout in CV wide - part 1" 48927e4d40b4ce5e03b477f2959415850bf9b558
 	// Write /etc/nftables.conf
 	$fp = fopen('/etc/nftables.conf', 'w');
 	$data  = "#########################################\n";
