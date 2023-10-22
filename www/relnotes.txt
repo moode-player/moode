@@ -68,6 +68,7 @@ Bug fixes
 - FIX: Base folder RADIO not excluded correctly in Folder view
 - FIX: WebUI visual glitch when MPD is restarted
 - FIX: Playbar context menu overflows right boundary
+- FIX: Missing parenthesis when generating in nftables.conf 
 
 ################################################################################
 #
