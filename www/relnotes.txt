@@ -3,7 +3,7 @@
 #  RELEASE NOTES
 #
 #  These release notes reflect the content contained in the official release of
-#  moOde audio player from the moOde audio player project.
+#  moOde audio player.
 #
 #  (C) Tim Curtis 2014 http://moodeaudio.org
 #
@@ -64,7 +64,7 @@ Bug fixes
 - FIX: Backup/Restore missing Prefs, Library, Track play setting
 - FIX: Restore not updating buffer size in /etc/bluealsaaplay.conf
 - FIX: Invert polarity auto-click not working
-- FIX: SomaFM station name displays null when tag not present
+- FIX: Soma FM station name displays null when tag not present
 - FIX: Base folder RADIO not excluded correctly in Folder view
 - FIX: WebUI visual glitch when MPD is restarted
 - FIX: Playbar context menu overflows right boundary
