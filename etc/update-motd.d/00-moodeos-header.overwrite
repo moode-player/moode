@@ -1,23 +1,32 @@
 #!/bin/bash
 
-MOODE_RELEASE=$(moodeutl --mooderel | tr -d '\n')
-HDWR_REV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='hdwrrev'")
-[ $(uname -m) = "aarch64" ] && KERNEL_ARCH="64-bit" || KERNEL_ARCH="32-bit"
+# RaspiOS info
+RPIOS_VER=$(cat /etc/debian_version)
+RPIOS_MVER=$(cat /etc/debian_version | cut -d "." -f 1)
+if [ "$RPIOS_MVER" -lt "12" ]; then RPIOS_NAME="Bullseye"; else RPIOS_NAME="Bookworm"; fi
+RPIOS_ARCH=$(dpkg -l | grep nano | awk '{print $4}')
+if [ $RPIOS_ARCH = "arm64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
+# Linux info
+if [ "$RPIOS_MVER" -lt "12" ]; then KERNEL_VER=$(uname -r | cut -d "-" -f 1); else KERNEL_VER=$(uname -v | cut -d ":" -f 2 | cut -d "-" -f 1); fi
+KERNEL_ARCH=$(uname -m)
+if [ $KERNEL_ARCH = "aarch64" ]; then KERNEL_BITS="64-bit"; else KERNEL_BITS="32-bit"; fi
+# Device info
+RPI_MODEL=$(/var/www/util/pirev.py | awk '{print "Pi-"$2" "$4}')
 AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='adevname'")
+# moOde release
+MOODE_REL=$(moodeutl --mooderel | tr -d '\n')
 
-echo Linux: $(uname -vr | awk '{print $1" "$2}') \| $(uname -m) \($KERNEL_ARCH\) \| "RaspiOS: "$(cat /etc/debian_version)
-echo Model: $HDWR_REV
-echo Audio: $AUDIO_DEV
+echo " "
+echo "RPiOS: $RPIOS_VER ($RPIOS_NAME $RPIOS_BITS) | Linux: $KERNEL_VER ($KERNEL_BITS)"
+echo "Model: $RPI_MODEL"
+echo "Audio: $AUDIO_DEV"
 
 echo "
 
-                      ____     __      ___
-          __ _  ___  / __ \___/ /__   ( _ )
-         /  ' \/ _ \/ /_/ / _  / -_) / _  |
-        /_/_/_/\___/\____/\_,_/\__/  \___/
+    m o O d e   8   s e r i e s   s o f t w a r e
 
                  moOde audio player
-              Release $MOODE_RELEASE
+              Release $MOODE_REL
                 (C) 2014 Tim Curtis
 
 
@@ -27,6 +36,4 @@ in the individual files in /usr/share/doc/*/copyright or
 in the moOde source files. moOde comes with absolutely
 no warranties either expressed or implied, or any other
 such guarantees.
-
-To set a new password for your userid type 'passwd'.
 "
