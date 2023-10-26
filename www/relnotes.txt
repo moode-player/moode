@@ -17,6 +17,7 @@
 
 Updates
 
+- UPD: Bump to MPD 0.23.14
 - UPD: Bump to shairport-sync 4.3.2
 - UPD: Bump to NQPTP 1.2.4
 - UPD: Bump to Font Awesome 6.4.2 Pro and update specific icons
@@ -68,7 +69,7 @@ Bug fixes
 - FIX: Base folder RADIO not excluded correctly in Folder view
 - FIX: WebUI visual glitch when MPD is restarted
 - FIX: Playbar context menu overflows right boundary
-- FIX: Missing parenthesis when generating in nftables.conf 
+- FIX: Missing parenthesis when generating in nftables.conf
 
 ################################################################################
 #
