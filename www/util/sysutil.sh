@@ -205,3 +205,18 @@ if [[ $1 = "clearbrcache" ]]; then
 	rm -rf "/home/$HOME_DIR/.config/chromium/Default"
     exit
 fi
+
+# Get OS info
+if [[ $1 = "get-osinfo" ]]; then
+	RPIOS_VER=$(cat /etc/debian_version)
+	RPIOS_MVER=$(cat /etc/debian_version | cut -d "." -f 1)
+	if [ "$RPIOS_MVER" -lt "12" ]; then RPIOS_NAME="Bullseye"; else RPIOS_NAME="Bookworm"; fi
+	RPIOS_ARCH=$(dpkg -l | grep nano | awk '{print $4}')
+	if [ $RPIOS_ARCH = "arm64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
+	# Linux info
+	if [ "$RPIOS_MVER" -lt "12" ]; then KERNEL_VER=$(uname -r | cut -d "-" -f 1); else KERNEL_VER=$(uname -v | cut -d ":" -f 2 | cut -d "-" -f 1); fi
+	KERNEL_ARCH=$(uname -m)
+	if [ $KERNEL_ARCH = "aarch64" ]; then KERNEL_BITS="64-bit"; else KERNEL_BITS="32-bit"; fi
+
+	echo "RPiOS: $RPIOS_VER $RPIOS_NAME $RPIOS_BITS | Linux: $KERNEL_VER $KERNEL_BITS"
+fi

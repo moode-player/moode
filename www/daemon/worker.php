@@ -137,8 +137,29 @@ if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
 	workerLog('worker: WARNING: Restart required');
 }
 
+// Prune old session vars
+sysCmd('moodeutl -D airplayactv');
+sysCmd('moodeutl -D AVAILABLE');
+sysCmd('moodeutl -D eth_port_fix');
+sysCmd('moodeutl -D card_error');
+sysCmd('moodeutl -D cdsp_from_link');
+sysCmd('moodeutl -D saved_upnp_path');
+sysCmd('moodeutl -D upnp_browser');
+sysCmd('moodeutl -D btmulti');
+sysCmd('moodeutl -D upd_rx_adv_toggle');
+sysCmd('moodeutl -D upd_tx_adv_toggle');
+sysCmd('moodeutl -D piano_dualmode');
+sysCmd('moodeutl -D wrkready');
+workerLog('worker: Session vacuumed');
+
+// Open session and load cfg_system and cfg_radio
+phpSession('load_system');
+phpSession('load_radio');
+workerLog('worker: Session loaded');
+
 // Ensure package holds are in effect
 sysCmd('moode-apt-mark hold > /dev/null 2>&1');
+workerLog('worker: Package holds applied');
 
 // Ensure certain files exist and with the correct permissions
 if (!file_exists(PLAY_HISTORY_LOG)) {
@@ -176,39 +197,53 @@ sysCmd('chmod 0666 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 /var/log/shairport-sync.log');
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
-workerLog('worker: File check (OK)');
-
-// Prune old session vars
-sysCmd('moodeutl -D airplayactv');
-sysCmd('moodeutl -D AVAILABLE');
-sysCmd('moodeutl -D eth_port_fix');
-sysCmd('moodeutl -D card_error');
-sysCmd('moodeutl -D cdsp_from_link');
-sysCmd('moodeutl -D saved_upnp_path');
-sysCmd('moodeutl -D upnp_browser');
-sysCmd('moodeutl -D btmulti');
-sysCmd('moodeutl -D upd_rx_adv_toggle');
-sysCmd('moodeutl -D upd_tx_adv_toggle');
-sysCmd('moodeutl -D piano_dualmode');
-sysCmd('moodeutl -D wrkready');
-workerLog('worker: Session vacuumed');
-
-// Open session and load cfg_system and cfg_radio
-phpSession('load_system');
-phpSession('load_radio');
-workerLog('worker: Session loaded');
+workerLog('worker: File check: ok');
 
 // Debug logging
 if (!isset($_SESSION['debuglog'])) {
 	$_SESSION['debuglog'] = '0';
 }
-workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
+workerLog('worker: Debug logging: ' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off'));
 
 // Reduce system logging
 if (!isset($_SESSION['reduce_sys_logging'])) {
 	$_SESSION['reduce_sys_logging'] = '0';
 }
-workerLog('worker: Reduced system logging (' . ($_SESSION['reduce_sys_logging'] == '1' ? 'ON' : 'OFF') . ')');
+workerLog('worker: Reduced logging: ' . ($_SESSION['reduce_sys_logging'] == '1' ? 'on' : 'off'));
+
+//
+workerLog('worker: --');
+workerLog('worker: -- Audio debug');
+workerLog('worker: --');
+//
+
+// Verify audio device configuration
+$mpdDevice = sqlQuery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
+$cards = getAlsaCards();
+workerLog('worker: ALSA cards: 0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
+workerLog('worker: MPD config: ' . $mpdDevice[0]['value'] . ':' . $_SESSION['adevname'] .
+	' | mixer:' . trim($_SESSION['amixname']) . ' | cardnum:' . $mpdDevice[0]['value']);
+
+// Check for device not found
+if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdDevice[0]['value']] == 'empty') {
+	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpdDevice[0]['value']);
+}
+
+// Zero out ALSA volume
+$alsaMixerName = getAlsaMixerName($_SESSION['i2sdevice']);
+if ($alsaMixerName != 'Invalid card number.') {
+	workerLog('worker: ALSA mixer actual: ' . ($alsaMixerName == 'none' ? 'none' : '[' . $alsaMixerName . ']'));
+	if ($alsaMixerName != 'none') {
+		sysCmd('amixer sset ' . '"' . $alsaMixerName . '"' . ' on' ); // Ensure state is 'on'
+		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName . '"' . ' 0');
+		$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $alsaMixerName . '"');
+		workerLog('worker: ALSA volume set to: ' . $result[0]);
+	} else {
+		phpSession('write', 'alsavolume', 'none');
+		phpSession('write', 'amixname', 'none');
+		workerLog('worker: Hdwr volume controller: none detected');
+	}
+}
 
 // Reconfigure certain 3rd party installs
 // RoonBridge
@@ -233,40 +268,6 @@ if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
 
 //
 workerLog('worker: --');
-workerLog('worker: -- Audio debug');
-workerLog('worker: --');
-//
-
-// Verify audio device configuration
-$mpdDevice = sqlQuery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
-$cards = getAlsaCards();
-workerLog('worker: ALSA cards: (0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
-workerLog('worker: MPD config: (' . $mpdDevice[0]['value'] . ':' . $_SESSION['adevname'] .
-	' | mixer:(' . $_SESSION['amixname'] . ') | card:' . $mpdDevice[0]['value'] . ')');
-
-// Check for device not found
-if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdDevice[0]['value']] == 'empty') {
-	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpdDevice[0]['value']);
-}
-
-// Zero out ALSA volume
-$alsaMixerName = getAlsaMixerName($_SESSION['i2sdevice']);
-if ($alsaMixerName != 'Invalid card number.') {
-	workerLog('worker: ALSA mixer actual (' . $alsaMixerName . ')');
-	if ($alsaMixerName != 'none') {
-		sysCmd('amixer sset ' . '"' . $alsaMixerName . '"' . ' on' ); // Ensure state is 'on'
-		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName . '"' . ' 0');
-		$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $alsaMixerName . '"');
-		workerLog('worker: ALSA ' . trim($alsaMixerName) . ' volume set to (' . $result[0] . ')');
-	} else {
-		phpSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
-		phpSession('write', 'amixname', 'none');
-		workerLog('worker: ALSA volume (none)');
-	}
-}
-
-//
-workerLog('worker: --');
 workerLog('worker: -- System');
 workerLog('worker: --');
 //
@@ -280,26 +281,26 @@ phpSession('write', 'keyboard', trim($keyboard[0], "\""));
 // Store platform data
 phpSession('write', 'hdwrrev', getHdwrRev());
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
-$_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
-$_SESSION['kernelver'] = sysCmd("uname -vr | awk '{print $1\" \"$2}'")[0];
-$_SESSION['procarch'] = sysCmd('uname -m')[0];
+// get-osinfo: 'RPiOS: 11.8 (Bullseye 64-bit) | Linux: 6.1.21 (64-bit)'
+$osInfo = explode(' | ', sysCmd('/var/www/util/sysutil.sh "get-osinfo"')[0]);
+$_SESSION['raspbianver'] = explode(': ', $osInfo[0])[1];
+$_SESSION['kernelver'] = explode(': ', $osInfo[1])[1];
 $_SESSION['mpdver'] = sysCmd("mpd -V | grep 'Music Player Daemon' | awk '{print $4}'")[0];
 $_SESSION['user_id'] = getUserID();
 $_SESSION['home_dir'] = '/home/' . $_SESSION['user_id'];
 
 // Log platform data
-workerLog('worker: Host      (' . $_SESSION['hostname'] . ')');
-workerLog('worker: Hardware  (' . $_SESSION['hdwrrev'] . ')');
-workerLog('worker: moOde     (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
-workerLog('worker: RaspiOS   (' . $_SESSION['raspbianver'] . ')');
-workerLog('worker: Kernel    (' . $_SESSION['kernelver'] . ')');
-workerLog('worker: Procarch  (' . $_SESSION['procarch'] . ', ' . ($_SESSION['procarch'] == 'aarch64' ? '64-bit' : '32-bit') . ')');
-workerLog('worker: MPD ver   (' . $_SESSION['mpdver'] . ')');
-workerLog('worker: CPU gov   (' . $_SESSION['cpugov'] . ')');
-workerLog('worker: Userid    (' . $_SESSION['user_id'] . ')');
-workerLog('worker: Homedir   (' . $_SESSION['home_dir'] . ')');
-workerLog('worker: Timezone  (' . $_SESSION['timezone'] . ')');
-workerLog('worker: Keyboard  (' . $_SESSION['keyboard'] . ')');
+workerLog('worker: Host:     ' . $_SESSION['hostname']);
+workerLog('worker: Hardware: ' . $_SESSION['hdwrrev']);
+workerLog('worker: moOde:    ' . getMoodeRel('verbose')); // major.minor.patch yyyy-mm-dd
+workerLog('worker: RaspiOS:  ' . $_SESSION['raspbianver']);
+workerLog('worker: Kernel:   ' . $_SESSION['kernelver']);
+workerLog('worker: MPD ver:  ' . $_SESSION['mpdver']);
+workerLog('worker: CPU gov:  ' . $_SESSION['cpugov']);
+workerLog('worker: Userid:   ' . $_SESSION['user_id']);
+workerLog('worker: Homedir:  ' . $_SESSION['home_dir']);
+workerLog('worker: Timezone: ' . $_SESSION['timezone']);
+workerLog('worker: Keyboard: ' . $_SESSION['keyboard']);
 // USB boot
 $piModelNum = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModelNum == '3') { // 3B, B+, A+
@@ -310,7 +311,7 @@ if ($piModelNum == '3') { // 3B, B+, A+
 	} else {
 		$msg = 'not enabled yet';
 	}
-	workerLog('worker: USB boot  (' . $msg .')');
+	workerLog('worker: USB boot: ' . $msg);
 } else if ($piModelNum == '4') { // 4, 400
 	$bootloaderMinDate = new DateTime("Sep 3 2020");
 	$bootloaderActualDate = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1\" \" $2\" \" $3}'")[0]);
@@ -319,21 +320,21 @@ if ($piModelNum == '3') { // 3B, B+, A+
 	} else {
 		$msg = 'not enabled yet';
 	}
-	workerLog('worker: USB boot  (' . $msg .')');
+	workerLog('worker: USB boot: ' . $msg);
 } else {
-	workerLog('worker: USB boot  (not available)');
+	workerLog('worker: USB boot: not available');
 }
 
 // Rootfs expansion
 // NOTE: Default for release images is to auto-expand at first boot. Development images may be set to a custom size.
 $result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
 $msg = $result[0] > DEV_ROOTFS_SIZE ? 'expanded' : 'not expanded';
-workerLog('worker: File sys  (' . $msg . ')');
+workerLog('worker: File system: ' . $msg);
 
 // Turn on/off HDMI port
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
 sysCmd($cmd . ' > /dev/null');
-workerLog('worker: HDMI port (' . ($_SESSION['hdmiport'] == '1' ? 'On)' : 'Off)'));
+workerLog('worker: HDMI port: ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
 
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {

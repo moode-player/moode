@@ -2934,7 +2934,6 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'aboutmoode':
     		$('#sys-raspbian-ver').text(SESSION.json['raspbianver']);
     		$('#sys-kernel-ver').text(SESSION.json['kernelver']);
-    		$('#sys-processor-arch').text(SESSION.json['procarch']);
     		$('#sys-hardware-rev').text(SESSION.json['hdwrrev']);
     		$('#sys-mpd-ver').text(SESSION.json['mpdver']);
             $('#about-modal').modal();

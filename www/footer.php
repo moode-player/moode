@@ -43,7 +43,6 @@
 			<li>RaspiOS: <span id="sys-raspbian-ver"></span></li>
 			<li>Linux kernel: <span id="sys-kernel-ver"></span></li>
 			<li>Pi model: <span id="sys-hardware-rev"></span></li>
-			<li>Architecture: <span id="sys-processor-arch"></span></li>
 			<li>MPD version: <span id="sys-mpd-ver"></span></li>
 		</ul>
 	</div>

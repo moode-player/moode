@@ -1,15 +1,7 @@
 #!/bin/bash
 
-# RaspiOS info
-RPIOS_VER=$(cat /etc/debian_version)
-RPIOS_MVER=$(cat /etc/debian_version | cut -d "." -f 1)
-if [ "$RPIOS_MVER" -lt "12" ]; then RPIOS_NAME="Bullseye"; else RPIOS_NAME="Bookworm"; fi
-RPIOS_ARCH=$(dpkg -l | grep nano | awk '{print $4}')
-if [ $RPIOS_ARCH = "arm64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
-# Linux info
-if [ "$RPIOS_MVER" -lt "12" ]; then KERNEL_VER=$(uname -r | cut -d "-" -f 1); else KERNEL_VER=$(uname -v | cut -d ":" -f 2 | cut -d "-" -f 1); fi
-KERNEL_ARCH=$(uname -m)
-if [ $KERNEL_ARCH = "aarch64" ]; then KERNEL_BITS="64-bit"; else KERNEL_BITS="32-bit"; fi
+# OS info
+OS_INFO=$(/var/www/util/sysutil.sh "get-osinfo")
 # Device info
 RPI_MODEL=$(/var/www/util/pirev.py | awk '{print "Pi-"$2" "$4}')
 AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='adevname'")
@@ -17,15 +9,14 @@ AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_sy
 MOODE_REL=$(moodeutl --mooderel | tr -d '\n')
 
 echo " "
-echo "RPiOS: $RPIOS_VER ($RPIOS_NAME $RPIOS_BITS) | Linux: $KERNEL_VER ($KERNEL_BITS)"
+echo $OS_INFO
 echo "Model: $RPI_MODEL"
 echo "Audio: $AUDIO_DEV"
 
 echo "
 
-    m o O d e   8   s e r i e s   s o f t w a r e
+        m o O d e   a u d i o   p l a y e r
 
-                 moOde audio player
               Release $MOODE_REL
                 (C) 2014 Tim Curtis
 

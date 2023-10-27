@@ -144,8 +144,11 @@ switch ($option) {
 		$file = file_get_contents('/var/www/footer.min.php');
 		echo substr($file, strpos($file, 'Release: ') + 9, 16) . "\n";
 		break;
-	case '--revision':
+	case '--pirev':
 		echo shell_exec('/var/www/util/pirev.py');
+		break;
+	case '--osinfo':
+		echo shell_exec('/var/www/util/sysutil.sh "get-osinfo"');
 		break;
 	case '--version':
 		echo VERSION . "\n";
@@ -188,7 +191,8 @@ With no OPTION print the help text and exit.
  --autocfglog\tPrint auto config update log
  --sleepint\tPrint daemon sleep intervals
  --mooderel\tPrint moOde release
- --revision\tPrint hardware revision
+ --pirev\tPrint Pi revision
+ --osinfo\tPrint OS info
  --version\tPrint program version
  --help\t\tPrint this help text\n";
 		break;
