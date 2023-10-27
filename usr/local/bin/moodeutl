@@ -300,26 +300,25 @@ function audioFormats($option) {
 		echo 'No device found at MPD configured card ' . $cardNum . "\n";
 	}
 	else {
-		$audioOutput = trim(shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params | grep closed'));
+		$hwParams = trim(shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params | grep closed'));
 
-		if ($audioOutput == 'closed') {
+		if ($hwParams == 'closed') {
 			// Just formats for the configured device
 			if ($option == '-f') {
 				$result = shell_exec('alsacap -C ' . $cardNum . ' -D 0 2>&1 | grep "Sample formats:"');
 				if (!empty($result)) {
 					echo explode(': ', $result)[1];
-				}
-				else {
+				} else {
 					echo "Unable to detect formats\n";
 				}
-			}
-			// $option == '-F': full info for all devices
-			else {
+			} else {
+				// $option == '-F': full info for all devices
 				$result = shell_exec('alsacap 2>&1');
 				echo $result;
 			}
-		}
-		else {
+		} else if (empty($hwParams)) {
+			echo 'WARNING: Card ' . $cardNum . ' hwparams is empty' . "\n";
+		} else {
 			if (posix_getuid() != 0) {
 				echo "This option requires sudo if the device is in use\n";
 				return;
