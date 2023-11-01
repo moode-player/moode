@@ -1373,7 +1373,8 @@ function updateActivePlayqueueItem() {
     				if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
     	                // Line 1 title
     	                if (typeof(data[i].Title) === 'undefined' ||
-                            data[i].Title.trim() == '-' || // NTS
+                            data[i].Title.trim() == '-' || // NTS can return just a dash in its Title tag
+                            data[i].Title.substring(0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
                             data[i].Title.trim() == '') {
                             // Use default title
     						$('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(DEF_RADIO_TITLE);
@@ -1447,8 +1448,10 @@ function renderPlayqueue(state) {
 					output += showPlayqueueThumb && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
                         '<span class="playqueue-thumb">' + playqueueLazy + logoThumb + '></span>' : '';
 	                // Line 1 title
+                    // NOTE: See updateActivePlayqueueItem() and enhanceMetadata() for Title tag matching code
 	                if (typeof(data[i].Title) === 'undefined' ||
-                        data[i].Title.trim() == '-' || // NTS
+                        data[i].Title.trim() == '-' || // NTS can return just a dash in its Title tag
+                        data[i].Title.substring(0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
                         data[i].Title.trim() == '') {
                         // Use default title
 						output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
@@ -1470,7 +1473,7 @@ function renderPlayqueue(state) {
 						}
 					}
 
-					// Line 2, station name
+					// Line 2 station name
 					output += '<span class="pll2">';
 					output += '<i class="fa-solid fa-sharp fa-microphone"></i> ';
 
@@ -4076,7 +4079,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 
         SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
         // TODO: Use .substring(0, 7) instead of includes
-        if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].includes('Release')) {
+        if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].substring(0, 7) == 'Release') {
             $('#updater-notification').show();
         } else {
             $('#updater-notification').hide();

@@ -665,7 +665,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
 			if (!isset($song['Title']) ||
-                trim($song['Title']) == '-' || // NTS
+                trim($song['Title']) == '-' || // NTS can return just a dash in its Title tag
+                substr($song['Title'], 0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
                 trim($song['Title']) == '') {
 				$current['title'] = DEF_RADIO_TITLE;
 			} else {
@@ -688,11 +689,10 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					// URL logo image
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
-				// NOTE: Hardcode displayed bitrates for .m3u8 320K and FLAC stations because MPD returns bitrate 0
-				if (strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
-					$current['bitrate'] = '320 kbps';
-				} else if ($_SESSION[$song['file']]['format'] == 'FLAC') {
-                    $current['bitrate'] = '900 kbps';
+                // NOTE: Use bitrate in station metadata for AAC-LC (HLS) and FLAC streams
+                // because MPD returns bitrate 0 in its status
+                if ($_SESSION[$song['file']]['format'] == 'AAC-LC' || $_SESSION[$song['file']]['format'] == 'FLAC') {
+                    $current['bitrate'] = $_SESSION[$song['file']]['bitrate'] . ' kbps';
                 }
 			} else {
 				// Not in radio station table, use transmitted name or 'Unknown'
