@@ -47,6 +47,10 @@ Updates
 - UPD: Move Prefs thumbnail and cover art options to dedicated section
 - UPD: Move selected Library prefs options for a more logical grouping
 
+Audio devices
+
+- NEW: ProtoDAC TDA1387 X8 (FifoPiMa)
+
 Radio stations
 
 - NEW: Eirewave
