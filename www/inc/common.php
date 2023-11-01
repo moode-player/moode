@@ -303,19 +303,19 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 // Wait for worker to process job
 // NOTE: Called from cfg scripts
 function waitWorker($caller) {
-	debugLog('waitWorker(): Start (' . $caller . ', w_active=' . $_SESSION['w_active'] . ')');
+	debugLog('waitWorker(): Start ' . $caller . ', w_active=' . $_SESSION['w_active']);
 	$loopCnt = 0;
 
 	if ($_SESSION['w_active'] == 1) {
 		do {
 			usleep(WAITWORKER_SLEEP);
-			debugLog('waitWorker(): Wait  (' . ++$loopCnt . ')');
+			debugLog('waitWorker(): Wait  ' . ++$loopCnt);
 
 			phpSession('open_ro');
 		} while ($_SESSION['w_active'] != 0);
 	}
 
-	debugLog('waitWorker(): End   (' . $caller . ', w_active=' . $_SESSION['w_active'] . ')');
+	debugLog('waitWorker(): End   ' . $caller . ', w_active=' . $_SESSION['w_active']);
 }
 
 // $path

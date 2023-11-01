@@ -538,13 +538,20 @@ function getMpdOutputs($sock) {
 
 		if ($element == 'outputid') {
 			$id = $value;
-			$array[$id] = 'MPD output ' . ($id + 1) . ' ';
+			//$array[$id] = 'MPD output ' . ($id + 1) . ' ';
 		}
 		if ($element == 'outputname') {
+            if ($value == 'ALSA Default') {
+                $value = 'ALSA Default:   ';
+            } else if ($value == 'ALSA Bluetooth') {
+                $value = 'ALSA Bluetooth: ';
+            } else if ($value == 'HTTP Server') {
+                $value = 'HTTP Server:    ';
+            }
 			$array[$id] .= $value;
 		}
 		if ($element == 'outputenabled') {
-			$array[$id] .= $value == '0' ? ' (Off)' : ' (On)';
+			$array[$id] .= $value == '0' ? 'off' : 'on';
 		}
 
 		$line = strtok("\n");

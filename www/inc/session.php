@@ -31,11 +31,11 @@ function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
 		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
 		if ($result[0] == '-rw-rw-rw-,www-data,www-data') {
-			workerLog('worker: Session permissions (OK)');
+			workerLog('worker: Session check:     ok');
 			break;
 		}
 		else {
-			workerLog('worker: Session permissions retry (' . ($i + 1) . ')');
+			workerLog('worker: Session check:     retry ' . ($i + 1));
 			sysCmd('chown www-data:www-data ' . $session_file);
 			sysCmd('chmod 0666 ' . $session_file);
 		}
@@ -48,8 +48,10 @@ function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
 		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
 		if ($result[0] != '-rw-rw-rw-,www-data,www-data') {
-			workerLog('worker: Session permissions (Failed after ' . $max_loops . ' retries)');
-			workerLog('worker: Session permissions (' . $result[0] . ')');
+			workerLog('worker: Session check:     failed after ' . $max_loops . ' retries');
+			workerLog('worker: Permissions:       ' . $result[0]);
+		} else {
+			workerLog('worker: Session check:     ok');
 		}
 	}
 }
