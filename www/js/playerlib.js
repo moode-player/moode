@@ -4075,6 +4075,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#playback-controls').css('display', '');
 
         SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
+        // TODO: Use .substring(0, 7) instead of includes
         if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].includes('Release')) {
             $('#updater-notification').show();
         } else {
