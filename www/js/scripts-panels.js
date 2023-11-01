@@ -303,15 +303,13 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         // Software update
-        // TODO: Use .substring(0, 7) instead of includes
-        if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].includes('Release')) {
+        if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].substring(0, 7) == 'Release') {
             if (currentView.indexOf('playback') != -1) {
                 $('#updater-notification').show();
             }
         }
         $('#updater-notification').click(function(e) {
-            // TODO: Use .substring(0, 7) instead of includes
-            if (SESSION.json['updater_available_update'].includes('Release')) {
+            if (SESSION.json['updater_available_update'].substring(0, 7) == 'Release') {
                 var msg = SESSION.json['updater_available_update'] + '<br><br>This notification can be turned off in System Config';
                 notify('updater', msg, 'infinite');
             } else {
