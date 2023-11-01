@@ -527,12 +527,12 @@ if (!file_exists('/etc/mpd.conf')) {
 	$updateMpdConf = true;
 	$mpdConfUpdMsg = 'MPD config:    WARNING: file missing, regenerating it';
 } else {
-	switch (playbackDestinationType()) {
-		case PlaybackDestinationType.TX:
+	switch (audioOutputTarget()) {
+		case AudioOutputTargetType.TRXSEND:
 			// Skip update otherwise Multiroom Sender ALSA config gets reverted
 			$mpdConfUpdMsg = 'MPD config:    update skipped (Multiroom sender on)';
 			break;
-		case PlaybackDestinationType.USB:
+		case AudioOutputTargetType.USB:
 			if( $_SESSION['inplace_upd_applied'] == '1' ) {
 				$mpdConfUpdMsg = 'MPD config:    updated (USB audio device + In-place update applied)';
 				$updateMpdConf = true;
@@ -541,13 +541,13 @@ if (!file_exists('/etc/mpd.conf')) {
 				$mpdConfUpdMsg = 'MPD config:    update skipped (USB audio device)';
 			}
 			break;
-		case PlaybackDestinationType.LOCAL:
-		case PlaybackDestinationType.I2S:
+		case AudioOutputTargetType.INTEGRATED:
+		case AudioOutputTargetType.I2S:
 			$updateMpdConf = true;
 			$mpdConfUpdMsg = 'MPD config:    updated';
 			break;
 		default:
-			$mpdConfUpdMsg = 'MPD config:    ERROR: Unknown playback destination type';
+			$mpdConfUpdMsg = 'MPD config:    ERROR: Unknown audio output target';
 			break;
 	}
 }
@@ -1929,28 +1929,28 @@ function updaterAutoCheck($validIPAddress) {
 	return $msg;
 }
 
-// Determine playback destination
-class PlaybackDestinationType
+// Return audio output target
+class AudioOutputTargetType
 {
-    public const LOCAL = 1;
-    public const I2S   = 2;
-    public const USB   = 3;
-    public const TX    = 4;
+    public const INTEGRATED = 1;
+    public const I2S   		= 2;
+    public const USB   		= 3;
+    public const TRXSEND	= 4;
 }
-function playbackDestinationType() {
-	$localDecvices = array('Pi HDMI 1', 'Pi HDMI 2', 'Pi Headphone jack');
+function audioOutputTarget() {
+	$integratedDevices = array('Pi HDMI 1', 'Pi HDMI 2', 'Pi Headphone jack');
 
-	if ($_SESSION['multiroom_tx'] !== 'Off') {
-		$playbackDestType = PlaybackDestinationType.TX;
+	if ($_SESSION['multiroom_tx'] != 'Off') {
+		$outputTarget = AudioOutputTargetType.TRXSEND;
 	} else if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
-		$playbackDestType = PlaybackDestinationType.I2S;
-	} else if (in_array($_SESSION['adevname'], $localDecvices) ) {
-		$playbackDestType = PlaybackDestinationType.LOCAL;
+		$outputTarget = AudioOutputTargetType.I2S;
+	} else if (in_array($_SESSION['adevname'], $integratedDevices) ) {
+		$outputTarget = AudioOutputTargetType.INTEGRATED;
 	} else {
-		$playbackDestType = PlaybackDestinationType.USB;
+		$outputTarget = AudioOutputTargetType.USB;
 	}
 
-	return $playbackDestType;
+	return $outputTarget;
 }
 
 // DLNA server
