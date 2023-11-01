@@ -36,6 +36,7 @@ Updates
 - UPD: Improve sort headings in Radio and Playlist views
 - UPD: Improve bitrate sort in Radio view (sort high to low)
 - UPD: Improve GPIO Config help and labels
+- UPD: Improve readability and parsing of startup log
 - UPD: Replace bogus title tag " - " in NTS Live stations with default title
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
 - UPD: Show "Radio station" for stations that don't transmit a title tag
@@ -52,6 +53,8 @@ Radio stations
 - NEW: Soma FM - Bossa Beyond
 - NEW: Soma FM - The In-Sound
 - NEW: Soma FM - Tiki Time
+- UPD: Jazz24
+- UPD: BBC stations
 
 Security
 
@@ -70,6 +73,7 @@ Bug fixes
 - FIX: WebUI visual glitch when MPD is restarted
 - FIX: Playbar context menu overflows right boundary
 - FIX: Missing parenthesis when generating in nftables.conf
+- FIX: Moodeutl -f/-F can hang if hwparams is empty (rare)
 
 ################################################################################
 #
