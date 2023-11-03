@@ -203,25 +203,19 @@ function stopSqueezeLite() {
 }
 
 function cfgSqueezelite() {
-	// Update sql table with current MPD device num
+	// Update AUDIODEVICE param
 	$dbh = sqlConnect();
-	$array = sqlQuery('SELECT value FROM cfg_mpd WHERE param="device"', $dbh);
-	sqlUpdate('cfg_sl', $dbh, 'AUDIODEVICE', $array[0]['value']);
+	$alsaOutput = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+	sqlUpdate('cfg_sl', $dbh, 'AUDIODEVICE', $alsaOutput);
 
 	// Load settings
 	$result = sqlRead('cfg_sl', $dbh);
 
 	// Generate config file output
 	foreach ($result as $row) {
-		if ($row['param'] == 'AUDIODEVICE') {
-			$data .= $row['param'] . '="hw:' . $row['value'] . ',0"' . "\n";
-		}
-		else {
-			$data .= $row['param'] . '=' . $row['value'] . "\n";
-		}
+		$data .= $row['param'] . '=' . $row['value'] . "\n";
 	}
 
-	// Write config file
 	$fh = fopen('/etc/squeezelite.conf', 'w');
 	fwrite($fh, $data);
 	fclose($fh);

@@ -2126,6 +2126,11 @@ function runQueuedJob() {
 					sysCmd('killall librespot');
 					startSpotify();
 				}
+				if ($_SESSION['slsvc'] == 1) {
+					sysCmd('killall squeezelite');
+					cfgSqueezelite();
+					startSqueezelite();
+				}
 			}
 
 			// DEBUG:
@@ -2182,6 +2187,11 @@ function runQueuedJob() {
 			if ($_SESSION['spotifysvc'] == 1) {
 				stopSpotify();
 				startSpotify();
+			}
+			if ($_SESSION['slsvc'] == 1) {
+				stopSqueezelite();
+				cfgSqueezelite();
+				startSqueezelite();
 			}
 			// Reenable HTTP server
 			setMpdHttpd();

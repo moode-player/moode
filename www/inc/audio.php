@@ -165,6 +165,9 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $outputMode . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $outputMode . ':' . $cardNum . ",0\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		}
+
+		// Update squeezelite.conf
+		cfgSqueezelite();
 	} else {
 		// Bluetooth out
 		sysCmd("sed -i '/slave.pcm/c\slave.pcm \"btstream\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
