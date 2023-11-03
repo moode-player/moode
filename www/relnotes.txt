@@ -40,6 +40,7 @@ Updates
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
 - UPD: Show "Radio station" for stations that transmit a bogus title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
+- UPD: Configure Squeezelite AUDIODEVICE param using Audio Config settings
 - UPD: Move Local Display to Peripherals Config
 - UPD: Move DLNA server to File Sharing section of System Config
 - UPD: Move Prefs thumbnail and cover art options to dedicated section
