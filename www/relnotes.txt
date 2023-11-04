@@ -36,6 +36,7 @@ Updates
 - UPD: Improve sort headings in Radio and Playlist views
 - UPD: Improve bitrate sort in Radio view (sort high to low)
 - UPD: Improve GPIO Config help and labels
+- UPD: Improve Squeezelite Config help
 - UPD: Improve readability and parsing of startup log
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
 - UPD: Show "Radio station" for stations that transmit a bogus title tag
