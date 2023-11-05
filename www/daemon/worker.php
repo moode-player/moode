@@ -707,13 +707,16 @@ $resp = readMpdResp($sock);
 // Ignore CUE files
 setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 workerLog('worker: MPD ignore CUE:     ' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no'));
-// Load Default PLaylist if first boot
+// On first boot load Default PLaylist and run MPD database update
 if ($_SESSION['first_use_help'] == 'y,y') {
 	sendMpdCmd($sock, 'clear');
 	$resp = readMpdResp($sock);
 	sendMpdCmd($sock, 'load "Default Playlist"');
 	$resp = readMpdResp($sock);
 	workerLog('worker: MPD first boot:     default playlist loaded');
+	sendMpdCmd($sock, 'update');
+	$resp = readMpdResp($sock);
+	workerLog('worker: MPD first boot:     database update submitted');
 }
 // MPD/CamillaDSP volume sync
 workerLog('worker: MPD CDSP volsync:   ' . ucfirst($_SESSION['camilladsp_volume_sync']));

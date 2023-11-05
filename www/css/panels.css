@@ -756,7 +756,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 .radioview-metadata-text, .playlistview-metadata-text {color:var(--textvariant);font-weight:500}
 /* First use help */
 #playback-firstuse-help, #playbar-firstuse-help {display:none;position:absolute;background:rgba(0,0,0,0.9);cursor:pointer;}
-#playback-firstuse-help:after, #playbar-firstuse-help:after {position:absolute;top:.75em;right:.75em;font-family:"Font Awesome 5 Pro";content:"\f057";color:var(--accentxts);font-size:1.75em;font-weight:100;}
+#playback-firstuse-help:after, #playbar-firstuse-help:after {position:absolute;top:.75em;right:.75em;font-family:"Font Awesome 6 Pro";content:"\f057";color:var(--accentxts);font-size:1.75em;font-weight:100;}
 #playback-firstuse-help {height:calc(38vw - 2em);width:calc(38vw - 2em);z-index:999;}
 #playbar-firstuse-help {z-index:9999;height:100%;width:100%;}
 #playback-firstuse-help div, #playbar-firstuse-help div {box-sizing:border-box;border:2px dashed var(--accentxts);height:calc(100% - 8px);width:calc(100% - 8px);margin:4px 0 0 4px;}

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Nov 1 17:33:21 2023
+-- File generated with SQLiteStudio v3.1.0 on Sat Nov 4 18:31:16 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -99,7 +99,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'HDMI');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
-INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'album,genre,track,disc,date,composer,conductor,performer,encoded');
+INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'album,genre,track,disc,date,composer,conductor,performer,encoded,output');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
@@ -217,7 +217,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
 INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (154, 'recorder_album_tag', 'Recorded YYYY-MM-DD');
 INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Waveform');
 INSERT INTO cfg_system (id, param, value) VALUES (157, 'show_cvpb', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (158, 'multiroom_tx', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Disabled');
@@ -236,7 +236,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (171, 'native_lazyload', 'Yes')
 INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'No action');
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
-INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
