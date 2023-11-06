@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Nov 4 18:31:16 2023
+-- File generated with SQLiteStudio v3.1.0 on Mon Nov 6 07:07:21 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -200,7 +200,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (135, 'font_size', 'Normal');
 INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '10');
 INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_columns', '6/2 (Default)');
-INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '9');
+INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
 INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
