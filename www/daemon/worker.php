@@ -1890,10 +1890,16 @@ function getHdwrRev() {
 // Log info for the active interface (eth0 or wlan0)
 function logNetworkInfo($interface) {
 	$name = $interface == 'eth0' ? 'Eth: ' : 'Wlan: ';
+
+	$result = sqlQuery("SELECT iface, method FROM cfg_network WHERE iface!='apd0'", $GLOBALS['dbh']);
+	$method = $result[0]['iface'] == $interface ? $result[0]['method'] : $result[0]['method'];
+
 	$line3 = sysCmd("cat /etc/resolv.conf | awk '/^nameserver/ {print $2; exit}'")[0]; // First nameserver entry of possibly many
 	$line2 = sysCmd("cat /etc/resolv.conf | awk '/^domain/ {print $2; exit}'")[0]; // First domain entry of possibly many
 	$primaryDns = !empty($line3) ? $line3 : $line2;
 	$domainName = !empty($line3) ? $line2 : 'none found';
+
+	workerLog('worker: ' . $name . 'method  ' . $method);
  	workerLog('worker: ' . $name . 'address ' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $2}'")[0]);
 	workerLog('worker: ' . $name . 'netmask ' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $4}'")[0]);
 	workerLog('worker: ' . $name . 'gateway ' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0]);
