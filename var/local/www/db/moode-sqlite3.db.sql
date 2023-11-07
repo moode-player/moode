@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Nov 6 07:07:21 2023
+-- File generated with SQLiteStudio v3.1.0 on Tue Nov 7 09:29:39 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -109,7 +109,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (44, 'hdwrrev', '');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
 INSERT INTO cfg_system (id, param, value) VALUES (47, 'fs_nfs_options', 'rw,sync,no_subtree_check,no_root_squash');
-INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Play');
+INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Show tracks');
 INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (50, 'aplactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (51, 'ipaddr_timeout', '90');
