@@ -3101,7 +3101,7 @@ $('#btn-preferences-update').click(function(e){
 
     // Library (Advanced)
     if (SESSION.json['library_tagview_genre'] != $('#tag-view-genre span').text()) {clearLibcacheAllReqd = true;}
-    if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {clearLibcacheAllReqd = true;}
     if (miscLibOptions[1] != $('#library-album-key span').text()) {clearLibcacheAllReqd = true;}
     if (miscLibOptions[0] != $('#library-inc-comment-tag span').text()) {clearLibcacheAllReqd = true;}
     if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}

@@ -1265,6 +1265,7 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Reduced)</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist+</span></a></li>
@@ -1274,10 +1275,11 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-tag-view-artist" class="help-block hide">
 							Specify how to populate the Artist column in Tag view.<br>
-							<b>Artist: </b>List all artists, album artists, performers and conductors. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-							<b>Artist (Strict): </b>List only artists. Compilation albums listed for a selected artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-							<b>Album Artist: </b>List all album artists. Compilation albums are listed under the album artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
-							<b>Album Artist+: </b>Same as "Album Artist" except compilation albums listed for a selected album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected album artist.
+							<b>Artist: </b>List artists, album artists, performers and conductors. Compilation albums listed for an artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the artist.<br>
+							<b>Artist (Reduced): </b>Same as above except exclude album artists<br>
+							<b>Artist (Strict): </b>List only artists (the artist tag). Compilation album handling is same as for Artist above.<br>
+							<b>Album Artist: </b>List album artists. Compilation albums are listed under the album artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
+							<b>Album Artist+: </b>Same as Album Artist above except compilation albums listed for a album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the album artist.
 						</span>
 	                </div>
 					<label class="control-label" for="track-play">Track play</label>
@@ -1476,7 +1478,7 @@
 							Specify whether to replace non-UTF-8 characters which may be present in files with UTF-8 compliant characters.<br>
 							Note that this is only a best effort approach. It is not guaranteed to work, may result in an empty Library and may impact performance.
  	                    </span>
- 	                </div>					
+ 	                </div>
 				</div>
 			</div>
 		</div>

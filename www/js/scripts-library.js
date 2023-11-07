@@ -169,9 +169,7 @@ function reduceGenres(acc, track) {
 // a selected artist will show only the tracks belonging to the Artist. Clicking the Album will
 // toggle between showing all the album's tracks and just those for the selected artist.
 // Artist (Strict):
-// List only Artists. Compilation albums listed for a selected artist will show only the tracks
-// belonging to the Artist. Clicking the Album will toggle between showing all the album's tracks
-// and just those for the selected artist.
+// List only Artists (the artist tag). Compilation albums are handles same as above.
 // Album Artist:
 // List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists"
 // or any other string that was used to identify compilation albums. This is the old 671 behavior.
@@ -180,14 +178,17 @@ function reduceGenres(acc, track) {
 // the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all
 // the album's tracks and just those for the selected Album Artist.
 function reduceArtists(acc, track) {
-	if (track.album_artist && SESSION.json['library_tagview_artist'] != 'Artist (Strict)') {
+	if (track.album_artist &&
+        SESSION.json['library_tagview_artist'] != 'Artist (Reduced)' && 
+        SESSION.json['library_tagview_artist'] != 'Artist (Strict)') {
 		var album_artist = (track.album_artist).toLowerCase();
 		if (!acc[album_artist]) {
 			acc[album_artist] = [];
 			acc[album_artist].artist = track.album_artist;
 		}
 		acc[album_artist].push(track);
-		if (SESSION.json['library_tagview_artist'].includes('Album Artist')) { // Album Artist or Album Artist+
+		if (SESSION.json['library_tagview_artist'].includes('Album Artist')) {
+            // Album Artist or Album Artist+
 			return acc;
 		}
 	}

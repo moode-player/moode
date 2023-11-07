@@ -265,14 +265,8 @@ jQuery(document).ready(function($) { 'use strict';
             ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
             '' : ' by ' + SESSION.json['library_tagview_sort']));
         // Artists column header
-        if (SESSION.json['library_tagview_artist'] == 'Album Artist+') {
-            var artistsHeader = 'Album Artists+';
-        } else if (SESSION.json['library_tagview_artist'] == 'Artist (Strict)') {
-            var artistsHeader = 'Artists (Strict)';
-        } else {
-            var artistsHeader = SESSION.json['library_tagview_artist'] + 's'
-        }
-        $('#artistheader > div').html(artistsHeader);
+        var artistHeader = SESSION.json['library_tagview_artist'].replace('Artist', 'Artists');
+        $('#artistheader > div').html(artistHeader);
         // Hide alphabits index if indicated
         if (SESSION.json['library_albumview_sort'] == 'Year') {
             $('#index-albums').hide();

@@ -155,27 +155,31 @@ function genFlatList($sock) {
 						$flat[$item]['Genre'] = array($value);
 					}
 				}
-				$flat[$item][$element] = $value; // NOTE: Uncomment if Composer is included in output of GenLibrary()
+				 // NOTE: Uncomment this line if Composer is included in output of GenLibrary()
+				$flat[$item][$element] = $value;
 			} else if ($element == 'Artist') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
 				} else {
 					$flat[$item]['Artist'] = array($value);
 				}
-			} else if ($element == 'Performer') { // @Atair: Add performers to artists
+			 // @Atair: Add performers and conductors to artists
+			} else if ($element == 'Performer' && $_SESSION['library_tagview_artist'] != 'Artist (Strict)') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
 				} else {
 					$flat[$item]['Artist'] = array($value);
 				}
-				//$flat[$item][$element] = $value; // NOTE: Uncomment if Performer is included in output of GenLibrary()
-			} else if ($element == 'Conductor') { // @Atair: Add conductor to artists
+				// NOTE: Uncomment this line if Performer is included in output of GenLibrary()
+				//$flat[$item][$element] = $value;
+			} else if ($element == 'Conductor' && $_SESSION['library_tagview_artist'] != 'Artist (Strict)') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
 				} else {
 					$flat[$item]['Artist'] = array($value);
 				}
-				//$flat[$item][$element] = $value; // NOTE: Uncomment if Conductor is included in output of GenLibrary()
+				// NOTE: Uncomment this line if Conductor is included in output of GenLibrary()
+				//$flat[$item][$element] = $value;
 			} else {
 				$flat[$item][$element] = $value;
 			}
