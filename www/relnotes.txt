@@ -3,7 +3,7 @@
 #  RELEASE NOTES
 #
 #  These release notes reflect the content contained in the official release of
-#  moOde audio player from the moOde audio player project.
+#  moOde audio player.
 #
 #  (C) Tim Curtis 2014 http://moodeaudio.org
 #
@@ -11,32 +11,425 @@
 
 ################################################################################
 #
-# 2022-MM-DD TC moOde 8.2.3
+# 2023-11-04 moOde 8.3.7 (Bullseye)
 #
 ################################################################################
 
 Updates
 
-- UPD: Bump to CamillaDSP 1.0.2
-- UPD: Add UI layout for Ultra-wide screens
-- UPD: Add Analog clock option for CoverView
-- UPD: Use thin style for CoverView clocks
-- UPD: Improve CUE handling and presentation
-- UPD: Improve restart/shutdown notifications
-- UPD: Improve Quick help
-- UPD: Use the correct name for AirPlay
-- UPD: Default to Playback view after startup
-- UPD: Refactor CSS and config templates
+- UPD: Bump to MPD 0.23.14
+- UPD: Bump to shairport-sync 4.3.2
+- UPD: Bump to NQPTP 1.2.4
+- UPD: Bump to Font Awesome 6.4.2 Pro and update specific icons
+- UPD: Add comparison operators =~ and !~ (PERL regex) to Library Adv search
+- UPD: Add DSD<number> badge for DSF/DFF/WavPack DSD formats
+- UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
+- UPD: Add Receivers btn on renderer overlay when connecting to Multiroom sender
+- UPD: Add Audio info button on renderer overlay
+- UPD: Add channel count and ALSA output format 'output' to extra metadata
+- UPD: Add Artist under Title in Folder view (if Artist not = AlbumArtist)
+- UPD: Add Prefs option for static waveform now-playing icon
+- UPD: Add BSSID to info on Network Config
+- UPD: Add ALSA output mode option to Bluetooth Control
+- UPD: Improve metadata layout in CoverView wide mode
+- UPD: Improve icon for volume popup by always showing level
+- UPD: Improve sort headings in Radio and Playlist views
+- UPD: Improve bitrate sort in Radio view (sort high to low)
+- UPD: Improve GPIO Config help and labels
+- UPD: Improve Squeezelite Config help
+- UPD: Improve readability and parsing of startup log
+- UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
+- UPD: Show "Radio station" for stations that transmit a bogus title tag
+- UPD: Standardize display style for encodedAt and ALSA output formats
+- UPD: Configure Squeezelite AUDIODEVICE param using Audio Config settings
+- UPD: Move Local Display to Peripherals Config
+- UPD: Move DLNA server to File Sharing section of System Config
+- UPD: Move Prefs thumbnail and cover art options to dedicated section
+- UPD: Move selected Library prefs options for a more logical grouping
+
+Audio devices
+
+- NEW: ProtoDAC TDA1387 X8 (FifoPiMa)
+
+Radio stations
+
+- NEW: Eirewave
+- NEW: Soma FM - Bossa Beyond
+- NEW: Soma FM - The In-Sound
+- NEW: Soma FM - Tiki Time
+- UPD: Jazz24
+- UPD: BBC stations
+
+Security
+
+- UPD: Remove AP mode PSK from hostapd.conf
 
 Bug fixes
 
-- Fix: SMB server ON/OFF setting not working
-- FIX: Top border of Playbar is visible
-- FIX: Startup hangs if Bluetooth on but no adapter is present
+- FIX: Tag/Album sync (auto-scroll then highlight item) not working
+- FIX: WavPack format information not correct in Library and Audio info
+- FIX: MPD mixer reverts to "software' after disconnecting bluetooth device
+- FIX: Backup/Restore missing Prefs, Library, Track play setting
+- FIX: Restore not updating buffer size in /etc/bluealsaaplay.conf
+- FIX: Invert polarity auto-click not working
+- FIX: Soma FM station name displays null when tag not present
+- FIX: Base folder RADIO not excluded correctly in Folder view
+- FIX: WebUI visual glitch when MPD is restarted
+- FIX: Playbar context menu overflows right boundary
+- FIX: Missing parenthesis when generating in nftables.conf
+- FIX: Moodeutl -f/-F can hang if hwparams is empty (rare)
 
 ################################################################################
 #
-# 2022-10-23 TC moOde 8.2.2
+# 2023-09-05 moOde 8.3.6 (Bullseye)
+#
+################################################################################
+
+Updates
+
+- UPD: Add comparison operators == and != to Library Advanced search
+- UPD: Add channels and multichannel options to 'encoded' predefined search
+- UPD: Add channel count to Audio info
+- UPD: Add emphasis (bold) to Queue time notification
+- UPD: Add 1600 x 600 widescreen display format to CSS
+- UPD: Improve collection stats displayed in Library Tag/Album views
+- UPD: Improve consistency in how audio format is displayed
+- UPD: Improve Folder view search results tally
+- UPD: Improve layout and help for CamillaDSP Config
+- UPD: Update Quick help for new search features
+- UPD: Radio logo updates are included with in-place update
+
+Radio stations
+
+- UPD: Update NTS station metadata bitrate to 256 kbps
+- UPD: Update Soma FM - DEF CON Radio logo
+
+Bug fixes
+
+- FIX: Toggle button auto-click not working on CamillaDSP Config
+- FIX: Typo in Equalizers heading on Audio Config
+- FIX: Rates not showing on Audio info for Multiroom sender
+- FIX: Tag/Album views not being cleared correctly when no search results
+- FIX: In-place update overwriting BUFFERTIME in bluealsaaplay.conf
+- FIX: In-place update not adding SBC XQ+ line in bluealsa.service
+- FIX: Metadata under cover art clipped on 1280 x 400 widescreen display
+- FIX: Auto-shuffle filter string embedded quotes not being restored
+- FIX: Reduced system logging setting not being restored correctly
+
+################################################################################
+#
+# 2023-08-19 moOde 8.3.5 (Bullseye)
+#
+################################################################################
+
+Bug fixes
+
+- FIX: Config screen toggle button slide animation on touch devices
+
+################################################################################
+#
+# 2023-08-17 moOde 8.3.4 (Bullseye)
+#
+################################################################################
+
+New Features
+
+- NEW: Save and reuse searches for Library Tag/Album view
+
+Updates
+
+- UPD: Add support for Bluetooth LDAC encoder
+- UPD: Add support for Bluetooth SBC XQ/XQ+ quality (default to XQ+)
+- UPD: Add support for CamillaDSP to Bluetooth inbound connection
+- UPD: Add plus (+) entries to Prefs "Thumbgen scan" to include image types
+- UPD: Add predefined filters from Quick search to Library Advanced search
+- UPD: Add BTRFS (B-Tree File System) to udisks-glue auto-mount config (PR/631)
+- UPD: Add System config option to adjust responsiveness of worker daemon
+- UPD: Add System config option to reduce system logging
+- UPD: Add option to moodeutl to print daemon sleep intervals (responsiveness)
+- UPD: Add option to moodeutl to print Mount monitor and Auto-config logs
+- UPD: Add "Queue time" to the Playback and Playqueue context menus
+- UPD: Add PixelRatio to the viewport debug popup
+- UPD: Improve Backup/Restore (add missing settings, refactor code)
+- UPD: Improve renderer event handling when CamillaDSP volume is used
+- UPD: Improve Players >> feature by adding capability to send commands
+- UPD: Improve positioning and size of [HD] and [HiRes] badges
+- UPD: Improve kbps bitrate reporting for FLAC stations (assume 900 kbps)
+- UPD: Improve Config screen toggle buttons (SET no longer required)
+- UPD: Improve various help text, labels and notification messages
+- UPD: Place most recently selected CamillaDSP configs at top of Quick menu
+- UPD: Add saved searches to Backup/Restore
+
+Radio Stations
+
+- UPD: Radio Paradise stations to FLAC with metadata
+
+Bug fixes
+
+- FIX: HDMI volume incorrectly set to +4dB at 100% instead of 0dB (PR/636)
+- FIX: Wrong message printed for Mixer type when USB DAC has no Hardware mixer
+- FIX: Extraneous hostname added to string returned by get_rx_status
+- FIX: Triggerhappy default user permissions not sufficient to run ALSA commands
+- FIX: Duplicate source mounts created when restoring from backup
+
+################################################################################
+#
+# 2023-06-08 moOde 8.3.3 (Bullseye)
+#
+################################################################################
+
+Audio devices
+
+- NOTE: Allo Katana I2S driver load fail on Pi-4, Katana DAC and 6.1.y kernel
+
+Updates
+
+- UPD: Bump to shairport-sync 4.2.0
+- UPD: Bump to nqptp 1.2.1 (Precision Timing Protocol for AirPlay 2)
+- UPD: Bump to bluez-alsa 4.1.0 with aptX/aptX-HD
+- UPD: Improve menu, modal and selected icon size/text on mobile portrait
+- UPD: Add capability for Folder images in Folder view
+- UPD: Add "Thumbnail scan" Prefs option to set audio formats to be scanned
+- UPD: Add "cache=none" to SMB default mount options to prevent log spam
+- UPD: Add note to Setup guide regarding requirement for SSH userid/password
+- UPD: Add note to Quickhelp regarding search field input constraints
+- UPD: Add 4 and 3 column selections for Prefs Thumbnail columns option
+- UPD: Support user defined level 1 dirs under /mnt/ for thumbnail generator
+- UPD: Import timezone and keyboard layout from Pi Imager
+
+Bug fixes
+
+- FIX: Test button not working on Graphic Equalizer
+- FIX: Modal input field background not visible on GEQ/PEQ configs
+- FIX: Cover art extractor not handling uppercase mime image type
+- FIX: Incorrect version of bluez-alsa on release 8.3.2 image
+- FIX: Playlist covers not restored as part of System Restore
+
+################################################################################
+#
+# 2023-04-21 moOde 8.3.2 (Bullseye)
+#
+################################################################################
+
+Audio devices
+
+- NOTE: Allo Boss 2 I2S driver not working on new 6.1.y kernel branch
+
+Updates
+
+- UPD: Remove reference to pi userid from SSH header
+
+Bug fixes
+
+- FIX: Worker startup fails on Pi-Zero due to incomplete "is-system-running" test
+- FIX: Haveged daemon fails to start on Pi-Zero (arm6 platforms)
+- FIX: Power and activity LED ON/OFF options not working
+- FIX: Clicking on context menu check mark icon displays default moOde cover
+
+################################################################################
+#
+# 2023-04-17 moOde 8.3.1 (Bullseye)
+#
+################################################################################
+
+Audio devices
+
+- NEW: Raspberry Pi Codec (I2S)
+- NEW: Raspberry Pi DAC+ (I2S)
+- NEW: Raspberry Pi DAC Pro (I2S)
+- NEW: Raspberry Pi DigiAMP+ (I2S)
+
+Radio Stations
+
+- NEW: FluxFM - 2000's Naughty
+- NEW: FluxFM - Chillout Radio
+- NEW: FluxFM - Hamburg
+- NEW: FluxFM - Indie Disco
+- NEW: FluxFM - Melides Art Radio
+- NEW: FluxFM - Radio Alternative
+- UPD: FluxFM station group
+- UPD: 2BOB Radio 104.7 FM
+- UPD: Czech Radio Classic
+
+Updates
+
+- UPD: Bump to Linux kernel 6.1.21 build #1642
+- UPD: Bump to upmpdcli 1.7.7
+- UPD: Bump to libnpupnp 5.0.1
+- UPD: Bump to libupnpp 0.22.4
+- UPD: Bump to libupnp-bindings 0.21.0
+- UPD: Bump to mpd2cdspvolume 0.3.1
+- UPD: Add Volume range option for CamillaDSP volume type
+- UPD: Add pinout diagram link to GPIO Config help
+- UPD: Change overlay name rpi-dac to i2s-dac
+- UPD: Change overlay name rpi-cirrus-wm5102 to cirrus-wm5102
+- UPD: Improve the help for the NFS server option
+- UPD: Improve the security section if the Setup guide
+- UPD: Remove playlist import from moodeutl (never implemented)
+- UPD: Replace hard coded /home/pi references
+- UPD: Move all moOde related log files to /var/log
+- UPD: Replace unmaintained Allo ASIX driver with stock driver
+- UPD: Allow Multiroom Receiver w/o Hardware volume
+- UPD: Add CamillaDSP volume sync to watchdog monitor
+
+Bug fixes
+
+- FIX: Rpi Imager WiFi credential import fail due to race condition
+- FIX: CamillaDSP volume restore after renderer ends
+- FIX: CamillaDSP volume proxy high CPU utilization
+- FIX: CamillaDSP quick config menu height
+- FIX: CamillaDSP Loudness.yml
+- FIX: Favorites playlist overwritten during in-place update
+- FIX: Debug message being displayed in update check
+
+################################################################################
+#
+# 2023-03-14 moOde 8.3.0 (Bullseye)
+#
+################################################################################
+
+New Features
+
+- NEW: Volume type "CamillaDSP" software volume (64-bit with dither)
+- NEW: CamillaDSP Loudness, Volume Control and Polarity Inv (New image only)
+- NEW: Use ALSA instead of MPD to control Hardware volume
+- NEW: Monitor in-place update via WebUI Status screen instead of SSH
+
+Audio devices
+
+- NEW: ProtoDAC TDA1387 X8 (I2S)
+
+Security (New image only)
+
+- UPD: The ISO image does not contain the userid pi, SSH service, WiFi SSID or
+       Access Point password. Refer to the moOde Setup guide for details on
+       how to set these up.
+
+Updates
+
+- UPD: Bump to MPD 0.23.12
+- UPD: Bump to bluez-alsa 4.0.0
+- UPD: Add CamillaDSP volume support to Airplay and Spotify Connect
+- UPD: Add ALSA buffer_time option to MPD Config
+- UPD: Add WPA3-Personal Transition Mode to Network Config
+- UPD: Add Home button to configs header (returns to Playback view)
+- UPD: Add quick jump indexes back to Pi Touch
+- UPD: Add AlbumArtist to ashuffle mode to handle same name albums
+- UPD: Add moodeutl option for printing ALSA hwparams
+- UPD: Add System Config option for downloading the Startup log
+- UPD: Improve readability of Receivers modal
+- UPD: Improve help text and labels in CamillaDSP Config
+- UPD: Improve viewswitch tabs in configs (use icons for mobile)
+- UPD: Improve Airplay protocol option
+- UPD: Improve WiFi section in startup (faster AP mode activation)
+- UPD: Sync CoverView auto and toggle during startup
+- UPD: Move Metadata file option to MPD section of Audio Config
+- UPD: Update Chip Options help for Piano 2.1 DAC Stereo mode
+- UPD: Sort the output from the Wifi SCAN
+- UPD: Setup guide to reflect new security information
+
+Bug fixes
+
+- FIX: Session ID missing in moodeutl -i (autocfg-import.php)
+- FIX: Mapped ALSA volume not being used to set ALSA volume max
+- FIX: Allo Piano 2.1 mixer name "Digital" no longer used by driver
+- FIX: Audioinfo does not report renderer info
+- FIX: Default thumb image not showing in Queue for UPnP files
+- FIX: Format of auto_coverview value in System info
+- FIX: Error not logged when source mount fails
+- FIX: Wrong PSK used in saved SSID's
+
+################################################################################
+#
+# 2023-01-20 moOde 8.2.5 (Bullseye)
+#
+################################################################################
+
+Updates
+
+- UPD: Bump to Linux kernel 5.15.84 build #1613
+- UPD: Add transition animation for panels and modals
+- UPD: Improve efficiency of Boss 2 Digital (DoP) volume sync
+- UPD: Improve NGINX configuration including proxy for CamillaGUI
+- UPD: Prevent log spam in /var/log/auth.log
+- UPD: Prevent 'next' wrapping last to first track when MPD random is on
+- UPD: Mask hover color on modal footer buttons
+- UPD: Bump default TRX jitter and ALSA buffer from 32/64 to 64/128
+- UPD: Add button to Local Display section for turning CoverView On/Off
+- UPD: Add format 44100:16:2 to HTTP server lame encoding
+- UPD: Add --kiosk to chromium-browser start to hide the URL status bar
+
+Bug fixes
+
+- FIX: Input select Analog/SPDIF setting change not working
+- FIX: Metadata clipped in CoverView default when no Playbar and mobile landscape
+- FIX: Playbar timeline visible on some screen sizes when Queue empty
+- FIX: Tag view track list album headings not HTML escaped for compare
+- FIX: Volume and ralbum buttons missing from Pi Touch
+- FIX: Audio info shows Loopback setting even when its off
+- FIX: Tag view size of lib-artistart in mobile landscape
+- FIX: Position of CoverView wide mode controls on notch phones
+- FIX: Display of 176.4 sample rate in MPD config
+- FIX: Multiroom Show/Hide advanced not persisting
+- FIX: Library Tag/Album view search "Not found" cover missing
+
+################################################################################
+#
+# 2022-12-27 moOde 8.2.4 (Bullseye)
+#
+################################################################################
+
+Bug fixes
+
+- FIX: Airplay crash due to syntax error in conf on new image
+- FIX: CamillaDSP quick convolution yaml check fails
+- FIX: RoonBridge Resume MPD setting not functioning
+- FIX: Media query rule set for Pi 7" Touch
+- FIX: Media query rule set for mobile portrait
+- FIX: Song title dash visible when end of queue
+
+################################################################################
+#
+# 2022-12-18 moOde 8.2.3 (Bullseye)
+#
+################################################################################
+
+Updates
+
+- UPD: Bump to Linux kernel 5.15.76 #1597 (New image only)
+- UPD: Bump to MPD 0.23.11
+- UPD: Bump to shairport-sync 4.1.1
+- UPD: Bump to CamillaDSP 1.0.3
+- UPD: Bump to CamillaGUI 1.0.1
+- UPD: Add UI layout for Smartphone landscape
+- UPD: Add UI layout for Ultra-wide screens
+- UPD: Add Analog clock option for CoverView
+- UPD: Improve CUE handling and presentation
+- UPD: Improve restart/shutdown notifications
+- UPD: Improve Quick help
+- UPD: Remove Bluetooth speaker sharing option (obsolete)
+- UPD: Use thin style for CoverView clocks
+- UPD: Use the correct name for AirPlay
+- UPD: Default to Playback view after startup
+- UPD: Only list Bluetooth on main menu if its On
+- UPD: Refactor CSS and config templates
+
+Radio stations
+
+- UPD: BBC Worldwide stations to HLS streams
+
+Bug fixes
+
+- FIX: SMB server ON/OFF setting not working
+- FIX: Top border of Playbar is visible
+- FIX: Startup hangs if Bluetooth on but no adapter is present
+- FIX: Space bar not working in On-Screen Keyboard
+- FIX: Unmount by id in sourceMount() not working
+- FIX: Mount monitor unmount fail due to sourceMount() bug
+
+################################################################################
+#
+# 2022-10-23 moOde 8.2.2 (Bullseye)
 #
 ################################################################################
 
@@ -67,7 +460,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-10-07 TC moOde 8.2.1
+# 2022-10-07 moOde 8.2.1 (Bullseye)
 #
 ################################################################################
 
@@ -99,7 +492,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-09-16 TC moOde 8.2.0
+# 2022-09-16 moOde 8.2.0 (Bullseye)
 #
 ################################################################################
 
@@ -113,7 +506,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 5.15.61 build #1579 (new image only)
+- UPD: Bump to Linux kernel 5.15.61 build #1579 (New image only)
 - UPD: Bump to librespot 0.4.2
 - UPD: Bump camillagui to 1.0.0 rc4
 - UPD: Bump camilla-backend to 1.0.0 rc5
@@ -149,7 +542,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-07-08 TC moOde 8.1.2
+# 2022-07-08 moOde 8.1.2 (Bullseye)
 #
 ################################################################################
 
@@ -174,7 +567,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-06-24 TC moOde 8.1.1
+# 2022-06-24 moOde 8.1.1 (Bullseye)
 #
 ################################################################################
 
@@ -186,7 +579,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-06-21 TC moOde 8.1.0
+# 2022-06-21 moOde 8.1.0 (Bullseye)
 #
 ################################################################################
 
@@ -209,7 +602,7 @@ Updates
 - UPD: Add option to include playlists in Backup/Restore
 - UPD: Add Preferences option to play selected track plus following tracks
 - UPD: Add Preferences option to auto-start CoverView on local display
-- UPD: Add new Soma FM stations to Default Playlist (new image only)
+- UPD: Add new Soma FM stations to Default Playlist (New image only)
 - UPD: Add get_currentsong command to the command API (see the Setup guide)
 - UPD: Add "No limit" option to Preferences, Library, Recently added filter
 - UPD: Add Chinese, Japanese and Korean fonts for use in the Local display feature
@@ -248,7 +641,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-03-25 TC moOde 8.0.2
+# 2022-03-25 moOde 8.0.2 (Bullseye)
 #
 ################################################################################
 
@@ -285,7 +678,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-03-17 TC moOde 8.0.1
+# 2022-03-17 moOde 8.0.1 (Bullseye)
 #
 ################################################################################
 
@@ -302,7 +695,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2022-03-12 TC moOde 8.0.0
+# 2022-03-12 moOde 8.0.0 (Bullseye)
 #
 ################################################################################
 
@@ -353,7 +746,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-12-17 TC moOde 7.6.1
+# 2021-12-17 moOde 7.6.1 (Buster)
 #
 ################################################################################
 
@@ -377,7 +770,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-11-20 TC moOde 7.6.0
+# 2021-11-20 moOde 7.6.0 (Buster)
 #
 ################################################################################
 
@@ -409,7 +802,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-11-09 TC moOde 7.5.0
+# 2021-11-09 moOde 7.5.0 (Buster)
 #
 ################################################################################
 
@@ -453,7 +846,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-10-02 TC moOde 7.4.1
+# 2021-10-02 moOde 7.4.1 (Buster)
 #
 ################################################################################
 
@@ -470,7 +863,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-09-24 TC moOde 7.4.0
+# 2021-09-24 moOde 7.4.0 (Buster)
 #
 ################################################################################
 
@@ -519,7 +912,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-06-25 TC moOde 7.3.0
+# 2021-06-25 moOde 7.3.0 (Buster)
 #
 ################################################################################
 
@@ -566,7 +959,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-05-06 TC moOde 7.2.1
+# 2021-05-06 moOde 7.2.1 (Buster)
 #
 ################################################################################
 
@@ -586,7 +979,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-04-24 TC moOde 7.2.0
+# 2021-04-24 moOde 7.2.0 (Buster)
 #
 ################################################################################
 
@@ -629,7 +1022,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2021-03-15 TC moOde 7.1.0
+# 2021-03-15 moOde 7.1.0 (Buster)
 #
 ################################################################################
 
@@ -685,7 +1078,7 @@ Updates
 - UPD: Library Config option to ignore CUE files
 - UPD: Decode Pi revision from bitmask instead of from table
 - UPD: Allow negative pregain for Spotify renderer
-- UPD: Add option fo include Composers in Tag view Artist list
+- UPD: Add option to include Composers in Tag view Artist list
 
 Bug fixes
 
@@ -705,7 +1098,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-12-23 TC moOde 7.0.1
+# 2020-12-23 moOde 7.0.1 (Buster)
 #
 ################################################################################
 
@@ -721,7 +1114,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-12-15 TC moOde 7.0.0
+# 2020-12-15 moOde 7.0.0 (Buster)
 #
 ################################################################################
 
@@ -825,7 +1218,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-07-22 TC moOde 6.7.1
+# 2020-07-22 moOde 6.7.1 (Buster)
 #
 ################################################################################
 
@@ -844,7 +1237,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-07-19 TC moOde 6.7.0
+# 2020-07-19 moOde 6.7.0 (Buster)
 #
 ################################################################################
 
@@ -871,7 +1264,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-07-09 TC moOde 6.6.0
+# 2020-07-09 moOde 6.6.0 (Buster)
 #
 ################################################################################
 
@@ -949,7 +1342,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-05-03 TC moOde 6.5.2
+# 2020-05-03 moOde 6.5.2 (Buster)
 #
 ################################################################################
 
@@ -970,7 +1363,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-04-27 TC moOde 6.5.1
+# 2020-04-27 moOde 6.5.1 (Buster)
 #
 ################################################################################
 
@@ -990,7 +1383,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2020-04-24 TC moOde 6.5.0
+# 2020-04-24 moOde 6.5.0 (Buster)
 #
 ################################################################################
 
@@ -1064,7 +1457,7 @@ Radio stations
 
 ################################################################################
 #
-# 6.4.2 2020-02-12
+# 2020-02-12 moOde 6.4.2 (Buster)
 #
 ################################################################################
 
@@ -1087,7 +1480,7 @@ Bug fixes
 
 ################################################################################
 #
-# 6.4.1 2020-01-23
+# 2020-01-23 moOde 6.4.1 (Buster)
 #
 ################################################################################
 
@@ -1125,7 +1518,7 @@ Bug fixes
 
 ################################################################################
 #
-# 6.4.0 2019-11-24
+# 2019-11-24 moOde 6.4.0 (Buster)
 #
 ################################################################################
 
@@ -1177,7 +1570,7 @@ Bug fixes
 
 ################################################################################
 #
-# 6.3.0 2019-10-02
+# 2019-10-02 moOde 6.3.0 (Buster)
 #
 ################################################################################
 
@@ -1209,7 +1602,7 @@ Bug fixes
 
 ################################################################################
 #
-# 6.2.1 2019-09-12
+# 2019-09-12 moOde 6.2.1 (Buster)
 #
 ################################################################################
 
@@ -1221,7 +1614,7 @@ Bug fixes
 
 ################################################################################
 #
-# 6.2.0 2019-09-05
+# 2019-09-05 moOde 6.2.0 (Buster)
 #
 ################################################################################
 
@@ -1253,7 +1646,7 @@ Bug fixes
 
 ################################################################################
 #
-# 6.1.0 2019-08-18
+# 2019-08-18 moOde 6.1.0 (Buster)
 #
 ################################################################################
 
@@ -1277,7 +1670,7 @@ Bug fixes
 
 ################################################################################
 #
-# 6.0.0 2019-08-08
+# 2019-08-08 moOde 6.1.0 (Buster)
 #
 ################################################################################
 
@@ -1333,7 +1726,7 @@ Bug fixes
 
 ################################################################################
 #
-# 5.3.1 2019-06-12
+# 2019-06-12 moOde 5.3.1 (Stretch)
 #
 ################################################################################
 
@@ -1354,7 +1747,7 @@ Bug fixes
 
 ################################################################################
 #
-# 5.3.0 2019-05-30
+# 2019-05-30 moOde 5.3.0 (Stretch)
 #
 ################################################################################
 
@@ -1391,7 +1784,7 @@ Bug fixes
 
 ################################################################################
 #
-# 5.2.0 2019-05-07
+# 2019-05-07 moOde 5.2.0 (Stretch)
 #
 ################################################################################
 
@@ -1425,7 +1818,7 @@ Bug fixes
 
 ################################################################################
 #
-# 5.1.0 2019-04-22
+# 2019-04-22 moOde 5.1.0 (Stretch)
 #
 ################################################################################
 
@@ -1450,7 +1843,7 @@ Bug fixes
 
 ################################################################################
 #
-# 5.0.0 2019-04-12
+# 2019-04-12 moOde 5.0.0 (Stretch)
 #
 ################################################################################
 
@@ -1548,7 +1941,7 @@ Bug fixes
 
 ################################################################################
 #
-# 4.4.0 2018-12-19 update
+# 2018-12-19 moOde 4.4.0 (Stretch)
 #
 ################################################################################
 
@@ -1558,7 +1951,7 @@ Bug fixes
 
 ################################################################################
 #
-# 4.4.0 2018-12-18 update
+# 2018-12-18 moOde 4.4.0 (Stretch)
 #
 ################################################################################
 
@@ -1592,7 +1985,7 @@ Bug fixes
 
 ################################################################################
 #
-# 4.4.0 2018-12-09
+# 2018-12-09 moOde 4.4.0 (Stretch)
 #
 ################################################################################
 
@@ -1652,7 +2045,7 @@ Bug fixes
 
 ################################################################################
 #
-# 4.3.0 2018-10-19 update
+# 2018-10-19 moOde 4.3.0 (Stretch)
 #
 ################################################################################
 
@@ -1684,7 +2077,7 @@ Bug fixes
 
 ################################################################################
 #
-# 4.3.0 2018-09-27
+# 2018-09-27 moOde 4.3.0 (Stretch)
 #
 ################################################################################
 
@@ -1737,7 +2130,7 @@ Bug fixes
 
 ################################################################################
 #
-# 4.2.0 2018-07-18 update
+# 2018-07-18 moOde 4.2.0 (Stretch)
 #
 ################################################################################
 
@@ -1761,7 +2154,7 @@ Radio stations
 
 ################################################################################
 #
-# 4.2.0 2018-07-11
+# 2018-07-11 moOde 4.2.0 (Stretch)
 #
 ################################################################################
 
@@ -1841,7 +2234,7 @@ Radio stations
 
 ################################################################################
 #
-# 4.1.0 2018-04-02
+# 2018-04-02 moOde 4.1.0 (Stretch)
 #
 ################################################################################
 
@@ -1910,7 +2303,7 @@ Bug fixes
 
 ################################################################################
 #
-# 4.0.0 2018-01-26
+# 2018-01-26 moOde 4.0.0 (Stretch)
 #
 ################################################################################
 
@@ -2086,7 +2479,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.8.4 2017-08-28
+# 2017-08-28 moOde 3.8.4 (Jessie)
 #
 ################################################################################
 
@@ -2102,7 +2495,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.8.3 2017-08-23
+# 2017-08-23 moOde 3.8.3 (Jessie)
 #
 ################################################################################
 
@@ -2119,7 +2512,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.8.2 2017-08-13
+# 2017-08-13 moOde 3.8.2 (Jessie)
 #
 ################################################################################
 
@@ -2138,7 +2531,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.8.1 2017-08-07
+# 2017-08-07 moOde 3.8.1 (Jessie)
 #
 ################################################################################
 
@@ -2160,7 +2553,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.8.0 2017-07-31
+# 2017-07-31 moOde 3.8.0 (Jessie)
 #
 ################################################################################
 
@@ -2204,7 +2597,7 @@ Audio Devices
 
 ################################################################################
 #
-# 3.7.0 2017-05-25
+# 2017-05-25 moOde 3.7.0 (Jessie)
 #
 ################################################################################
 
@@ -2266,7 +2659,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.6.0 2017-04-23
+# 2017-04-23 moOde 3.6.0 (Jessie)
 #
 ################################################################################
 
@@ -2290,7 +2683,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.5.0 2017-04-12
+# 2017-04-12 moOde 3.5.0 (Jessie)
 #
 ################################################################################
 
@@ -2381,7 +2774,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.1.0 2016-12-05
+# 2016-12-05 moOde 3.1.0 (Jessie)
 #
 ################################################################################
 
@@ -2407,7 +2800,7 @@ Bug fixes
 
 ################################################################################
 #
-# 3.0.0 2016-11-27
+# 2016-11-27 moOde 3.0.0 (Jessie)
 #
 ################################################################################
 
@@ -2474,7 +2867,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.7.0 2016-08-28
+# 2016-08-28 moOde 2.7.0 (Jessie)
 #
 ################################################################################
 
@@ -2557,7 +2950,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.6.0 2016-06-07
+# 2016-06-07 moOde 2.6.0 (Jessie)
 #
 ################################################################################
 
@@ -2699,7 +3092,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.5.0 2016-02-27
+# 2016-02-27 moOde 2.5.0 (Jessie)
 #
 ################################################################################
 
@@ -2817,7 +3210,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.4.0 2015-10-30
+# 2015-10-30 moOde 2.5.0 (Jessie)
 #
 ################################################################################
 
@@ -2888,7 +3281,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.3.0 2015-09-05
+# 2015-09-05 moOde 2.3.0 (Jessie)
 #
 ################################################################################
 
@@ -2904,7 +3297,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.2.0 2015-08-30
+# 2015-08-30 moOde 2.2.0 (Jessie)
 #
 ################################################################################
 
@@ -2952,7 +3345,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.1.0 2015-07-31
+# 2015-07-31 moOde 2.1.0 (Jessie)
 #
 ################################################################################
 
@@ -2991,7 +3384,7 @@ Bug fixes
 
 ################################################################################
 #
-# 2.0.0 2015-06-26
+# 2015-06-26 moOde 2.0.0 (Jessie)
 #
 ################################################################################
 
@@ -3044,7 +3437,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.9.0 2015-05-30
+# 2015-05-30 moOde 1.9.0 (Jessie)
 #
 ################################################################################
 
@@ -3090,7 +3483,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.8.0 2015-04-29
+# 2015-04-29 moOde 1.8.0 (Jessie)
 #
 ################################################################################
 
@@ -3139,7 +3532,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.7.0 2015-03-21
+# 2015-03-21 moOde 1.7.0 (Jessie)
 #
 ################################################################################
 
@@ -3168,7 +3561,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.6.0 2015-02-25
+# 2015-02-25 moOde 1.6.0 (Jessie)
 #
 ################################################################################
 
@@ -3205,7 +3598,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.5.0 2015-01-27
+# 2015-01-27 moOde 1.5.0 (Jessie)
 #
 ################################################################################
 
@@ -3264,7 +3657,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.4.0 2015-01-01
+# 2015-01-01 moOde 1.4.0 (Jessie)
 #
 ################################################################################
 
@@ -3292,7 +3685,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.3.0 2014-12-23
+# 2014-12-23 moOde 1.3.0 (Jessie)
 #
 ################################################################################
 
@@ -3367,7 +3760,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.2.0 2014-10-31
+# 2014-10-31 moOde 1.2.0 (Jessie)
 #
 ################################################################################
 
@@ -3402,7 +3795,7 @@ Bug fixes
 
 ################################################################################
 #
-# 1.1.0 2014-09-17
+# 2014-09-17 moOde 1.1.0 (Jessie)
 #
 ################################################################################
 
@@ -3440,7 +3833,7 @@ Bug Fixes
 
 ################################################################################
 #
-# 1.0.0 2014-08-23
+# 2014-08-23 moOde 1.0.0 (Jessie)
 #
 ################################################################################
 

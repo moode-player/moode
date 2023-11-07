@@ -30,46 +30,53 @@ $sock = getMpdSock();
 $dbh = sqlConnect();
 phpSession('open_ro');
 
-// Hardware params
-$cardNum = $_SESSION['multiroom_tx'] == 'On' ? array_search('Dummy', getAlsaCards()) : $_SESSION['cardnum'];
-$hwParams = getAlsaHwParams($cardNum);
+// ALSA Hardware params
+$hwParams = getAlsaHwParams(getAlsaCardNum());
+//workerLog('audioinfo.php: cardnum: ' . print_r(getAlsaCardNum(), true));
+//workerLog('audioinfo.php: hwparams: ' . print_r($hwParams, true));
 
-// Cfg_mpd settings
-$cfgMpd = getCfgMpd($dbh);
+// SQL table cfg_mpd settings
+$cfgMPD = getCfgMpd($dbh);
 
 // Bluetooth active
 $result = sysCmd('pgrep -l bluealsa-aplay');
 $btActive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 
+// Other renderer active
+$aplActive = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $dbh)[0]['value'];
+$spotActive = sqlQuery("SELECT value FROM cfg_system WHERE param='spotactive'", $dbh)[0]['value'];
+$slActive = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $dbh)[0]['value'];
+$rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh)[0]['value'];
+
 //
 // INPUT
 //
 
-if ($_SESSION['aplactive'] == '1') {
+if ($aplActive == '1') {
 	$_file = 'AirPlay stream';
-	$_encoded_at = 'Unknown';
-	$_decoded_to = '16 bit, 44.1 kHz, Stereo, ';
-	$_decode_rate = 'VBR';
-} else if ($_SESSION['spotactive'] == '1') {
+	$_encoded_at = 'PCM';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
+	$_decode_rate = '';
+} else if ($spotActive == '1') {
 	$_file = 'Spotify stream';
-	$_encoded_at = 'Unknown';
-	$_decoded_to = '16 bit, 44.1 kHz, Stereo, ';
-	$_decode_rate = 'VBR';
-} else if ($_SESSION['slactive'] == '1') {
+	$_encoded_at = 'PCM';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
+	$_decode_rate = '';
+} else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';
 	$_encoded_at = 'Unknown';
-	$_decoded_to = 'Unknown, ';
-	$_decode_rate = 'VBR';
-} else if ($_SESSION['rbactive'] == '1') {
+	$_decoded_to = 'Unknown';
+	$_decode_rate = '';
+} else if ($rbActive == '1') {
 	$_file = 'RoonBridge stream';
 	$_encoded_at = 'Unknown';
-	$_decoded_to = 'Unknown, ';
-	$_decode_rate = 'VBR';
+	$_decoded_to = 'Unknown';
+	$_decode_rate = '';
 } else if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_file = 'Bluetooth stream';
 	$_encoded_at = 'Unknown';
-	$_decoded_to = '16 bit, 44.1 kHz, Stereo, ';
-	$_decode_rate = 'VBR';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo'; // Maybe also 48K ?
+	$_decode_rate = '';
 } else {
 	$song = getCurrentSong($sock);
 	$_file = $song['file'];
@@ -84,74 +91,29 @@ if ($_SESSION['aplactive'] == '1') {
 	$mpdStatus = getMpdStatus($sock);
 
 	if ($hwParams['status'] == 'active' || ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play')) {
-		// DSD: Native bitstream, DoP or DSD to PMC on-the-fly conversion
-		if ($mpdStatus['audio_sample_depth'] == 'dsd64') {
-			$_encoded_at = 'DSD64, 1 bit, 2.822 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 176.4 kHz, Stereo';
-				$_decode_rate = '8.467 Mbps';
-			} else if ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
+		// DSD: Native bitstream, DoP or DSD to PCM on-the-fly conversion
+		if (strpos($mpdStatus['audio_format'], 'DSD') !== false) {
+			// Encoded at
+			$_encoded_at =
+				'DSD 1 bit ' .
+				$mpdStatus['audio_sample_rate'] . ' MHz, ' .
+				$mpdStatus['audio_channels'];
+			// Decoded to
+			if ($cfgMPD['dop'] == 'yes') {
+				$dop = formatDoP($mpdStatus['audio_format']);
+				$_decoded_to = $dop['decoded_to'];
+				$_decode_rate = $dop['decode_rate'];
+			} else if ($hwParams['format'] == 'DSD') {
+				$_decoded_to = 'DSD 1 bit ' . $mpdStatus['audio_sample_rate'] . ' MHz, ' . $mpdStatus['audio_channels'];
 				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
 			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		} else if ($mpdStatus['audio_sample_depth'] == 'dsd128') {
-			$_encoded_at = 'DSD128, 1 bit, 5.644 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 352.8 kHz, Stereo';
-				$_decode_rate = '16.934 Mbps';
-			} else if ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		} else if ($mpdStatus['audio_sample_depth'] == 'dsd256') {
-			$_encoded_at = 'DSD256, 1 bit, 11.288 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 705.6 kHz, Stereo';
-				$_decode_rate = '33.868 Mbps';
-			} else if ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		} else if ($mpdStatus['audio_sample_depth'] == 'dsd512') {
-			$_encoded_at = 'DSD512, 1 bit, 22.576 MHz Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 1.411 MHz, Stereo';
-				$_decode_rate = '67.736 Mbps';
-			} else if ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			} else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-		}
-		else if ($mpdStatus['audio_sample_depth'] == 'dsd1024') {
-			$_encoded_at = 'DSD1024, 1 bit, 45.152 Mbps Stereo';
-			if ($cfgMpd['dop'] == 'yes') {
-				$_decoded_to = 'DoP 24 bit 2.822 MHz, Stereo';
-				$_decode_rate = '135.472 Mbps';
-			}
-			elseif ($hwParams['format'] == 'DSD bitstream') {
-				$_decoded_to = 'DSD bitstream';
-				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
-			}
-			else {
-				$_decoded_to = 'PCM, ' . $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
+				$_decoded_to = 'PCM ' . $hwParams['format'] . ' bit ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
 				$_decode_rate = $hwParams['calcrate'] . ' Mbps';
 			}
 		} else {
 			// PCM
-			$_decoded_to = $mpdStatus['audio_sample_depth'] . ' bit, ' . $mpdStatus['audio_sample_rate'];
-			$_decoded_to .= empty($mpdStatus['audio_sample_rate']) ? '' : ' kHz, ' . $mpdStatus['audio_channels'];
+			$rate = empty($mpdStatus['audio_sample_rate']) ? '?' : $mpdStatus['audio_sample_rate'];
+			$_decoded_to = 'PCM ' . $mpdStatus['audio_sample_depth'] . ' bit ' . $rate . ' kHz, ' . $mpdStatus['audio_channels'];
 			$_decode_rate = $mpdStatus['bitrate'];
 		}
 		$_decode_rate = ', ' . $_decode_rate;
@@ -165,35 +127,42 @@ if ($_SESSION['aplactive'] == '1') {
 // OUTPUT
 //
 
+// Output format
 if ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play') {
-	$_hwparams_format = '16 bit, 44.1 kHz, Stereo, ';
+	$_hwparams_format = 'PCM 16 bit 44.1 kHz, Stereo, ';
 	$_hwparams_calcrate = '1.411 Mbps';
 } else if ($hwParams['status'] == 'active') {
-	$pcmRate = $hwParams['format'] == 'DSD bitstream' ?  '' : ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-	$_hwparams_format = $hwParams['format'] . $pcmRate;
+	// NOTE: $hwParams['format'] = 'DSD' or PCM bit depth
+	$format = $hwParams['format'] == 'DSD' ?
+		'DSD 1 bit ' . $mpdStatus['audio_sample_rate'] . ' MHz, ' . $mpdStatus['audio_channels'] :
+		'PCM ' . $hwParams['format'] . ' bit ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
+	$_hwparams_format = $format;
 	$_hwparams_calcrate = ', ' . $hwParams['calcrate'] . ' Mbps';
 } else {
 	$_hwparams_format = '';
 	$_hwparams_calcrate = 'Not playing';
 }
+$_alsa_output_format = $_hwparams_format . $_hwparams_calcrate;
+
 // Output chain
 // Renderer
-if ($_SESSION['slactive'] == '1') {
-	$renderer = 'Squeezelite';
-} else if ($_SESSION['rbactive'] == '1') {
-	$renderer = 'Roonbridge';
-} else if ($_SESSION['aplactive'] == '1') {
+if ($aplActive == '1') {
 	$renderer = 'AirPlay';
-} else if ($_SESSION['spotactive'] == '1') {
+} else if ($spotActive == '1') {
 	$renderer = 'Spotify';
+} else if ($slActive == '1') {
+	$renderer = 'Squeezelite';
+} else if ($rbActive == '1') {
+	$renderer = 'Roonbridge';
 } else if ($btActive === true) {
 	$renderer = 'Bluetooth';
 } else {
 	$renderer = 'MPD';
 }
 // DSP and output mode
+
 if ($_SESSION['invert_polarity'] == '1') {
-	$dsp = 'Invpolarity';
+	$dsp = 'Polarity inversion';
 	$outputMode = $_SESSION['alsa_output_mode'];
 } else if ($_SESSION['crossfeed'] != 'Off') {
 	$dsp = 'Crossfeed';
@@ -211,38 +180,55 @@ if ($_SESSION['invert_polarity'] == '1') {
 	$dsp = '';
 	$outputMode = $_SESSION['alsa_output_mode'];
 }
+
+// Bluetooth overrides
+if ($btActive === true) {
+	if ($_SESSION['bt_alsa_output_mode'] == 'plughw') {
+		$dsp = '';
+		$outputMode = 'plughw';
+	}
+}
+
 // Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {
-	$_alsa_output_chain = 'MPD -> Bluetooth stream -> Bluetooth speaker';
+	$_audio_output_chain = 'MPD -> Bluetooth stream -> Bluetooth speaker';
 } else if ($_SESSION['multiroom_tx'] == 'On') {
-	$_alsa_output_chain = $renderer . ' -> Multiroom Sender';
+	$_audio_output_chain = $renderer . ' -> Multiroom Sender';
 } else if ($_SESSION['multiroom_rx'] == 'On') {
-	$_alsa_output_chain = 'Multiroom Receiver -> Device';
+	$_audio_output_chain = 'Multiroom Receiver -> Device';
 } else if ($renderer == 'Squeezelite' || $renderer == 'Roonbridge') {
-	$_alsa_output_chain = $renderer;
+	$_audio_output_chain = $renderer;
 } else if ($dsp != '') {
-	$_alsa_output_chain = $renderer . ' -> ' . $dsp . ' -> ' . $outputMode . ' -> Device';
+	$_audio_output_chain = $renderer . ' -> ' . $dsp . ' -> ' . $outputMode . ' -> Device';
 } else {
-	$_alsa_output_chain = $renderer . ' -> ' . $outputMode . ' -> Device';
+	$_audio_output_chain = $renderer . ' -> ' . $outputMode . ' -> Device';
 }
 
 // ALSA Output mode and Loopback
-$_alsa_output_mode = $_SESSION['multiroom_tx'] == 'On' ? 'Loopback (hw)' : ($_SESSION['alsa_output_mode'] == 'plughw' ? 'Default (plughw)' : 'Direct (hw)');
-$_alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback']; // NOTE: 'off' is a class that hides the element
+$_alsa_output_mode = $_SESSION['multiroom_tx'] == 'On' ?
+	'Loopback' :
+	ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $outputMode . ')';
+$_alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback'];
+$_alsa_loopback_class = $_alsa_loopback; // NOTE: 'off' is a class that hides the element
 
 //
 // DSP
 //
 
-// Volume type
+// Volume type and range
+$_cdsp_volume_range = 'off'; // Range only applies to mixer CamillaDSP
 if ($_SESSION['mpdmixer'] == 'hardware') {
 	$_volume_mixer = 'Hardware (On-chip)';
 }
-elseif ($_SESSION['mpdmixer'] == 'software') {
-	$_volume_mixer = 'Software (MPD)';
+else if ($_SESSION['mpdmixer'] == 'software') {
+	$_volume_mixer = 'MPD Software (24-bit)'; // 32-bit?
 }
-elseif ($_SESSION['mpdmixer'] == 'none') {
+else if ($_SESSION['mpdmixer'] == 'none') {
 	$_volume_mixer = 'Fixed (0dB output)';
+}
+else if ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp_volume_sync'] == 'on') {
+	$_volume_mixer = 'CamillaDSP (64-bit)';
+	$_cdsp_volume_range = $_SESSION['camilladsp_volume_range'] . ' dB';
 }
 elseif ($_SESSION['mpdmixer'] == 'null') {
 	$_volume_mixer = 'Null (External control)';
@@ -251,8 +237,8 @@ else {
 	$_volume_mixer = 'ERROR: Unknow MPD volume type';
 }
 
-if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' ||
-	$_SESSION['inpactive'] == '1' || $_SESSION['rbactive'] == '1' || $btActive === true || $_SESSION['audioout'] == 'Bluetooth') {
+if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == '1' ||
+	$btActive === true || $_SESSION['audioout'] == 'Bluetooth' || $_SESSION['inpactive'] == '1') {
 	// Renderer active
 	// NOTE: Class 'off' hides the item
 	$_resample_rate = '';
@@ -263,7 +249,7 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 	$_replaygain = 'off';
 	$_vol_normalize = 'off';
 
-	if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1') {
+	if ($aplActive == '1' || $spotActive == '1') {
 		$_peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$_geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
         $_camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);
@@ -275,12 +261,12 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 } else {
 	// MPD
 	// Resampling
-	if ($cfgMpd['audio_output_format'] == 'disabled') {
+	if ($cfgMPD['audio_output_format'] == 'disabled') {
 		$_resample_rate = 'Off';
 		$_selective_resample = 'Off';
 		$_resample_quality = 'Off';
 	} else {
-		$_resample_rate = $cfgMpd['audio_output_depth'] . ' bit, ' . $cfgMpd['audio_output_rate'] . ' kHz, ' . $cfgMpd['audio_output_chan'];
+		$_resample_rate = $cfgMPD['audio_output_depth'] . ' bit, ' . $cfgMPD['audio_output_rate'] . ' kHz, ' . $cfgMPD['audio_output_channels'];
 		$resample_modes = array('0' => 'disabled',
 			SOX_UPSAMPLE_ALL => 'Source < target rate',
 			SOX_UPSAMPLE_ONLY_41K => 'Only 44.1K source rate',
@@ -288,17 +274,17 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 			SOX_ADHERE_BASE_FREQ => 'Resample (adhere to base freq)',
 			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'Source < target rate (adhere to base freq)'
 		);
-		$_selective_resampling_hide = '';
-		$_selective_resample = $resample_modes[$cfgMpd['selective_resample_mode']];
-		$_resample_quality = $cfgMpd['sox_quality'];
-		if ($cfgMpd['sox_quality'] == 'custom') {
+		$_selective_resampling_hide = ''; // <!-- This is ment to control visibility of the feature in case MPD no longer supports the patch -->
+		$_selective_resample = $resample_modes[$cfgMPD['selective_resample_mode']];
+		$_resample_quality = $cfgMPD['sox_quality'];
+		if ($cfgMPD['sox_quality'] == 'custom') {
 			$_resample_quality .= ' [' .
-			'p=' . $cfgMpd['sox_precision'] .
-			' | r=' . $cfgMpd['sox_phase_response'] .
-			' | e=' . $cfgMpd['sox_passband_end'] .
-			' | b=' . $cfgMpd['sox_stopband_begin'] .
-			' | a=' . $cfgMpd['sox_attenuation'] .
-			' | f=' . $cfgMpd['sox_flags'] . ']';
+			'p=' . $cfgMPD['sox_precision'] .
+			' | r=' . $cfgMPD['sox_phase_response'] .
+			' | e=' . $cfgMPD['sox_passband_end'] .
+			' | b=' . $cfgMPD['sox_stopband_begin'] .
+			' | a=' . $cfgMPD['sox_attenuation'] .
+			' | f=' . $cfgMPD['sox_flags'] . ']';
 		}
 	}
 	// Polarity inversion
@@ -318,8 +304,8 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 	$_geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
     $_camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);
 	// Replaygain and volume normalization
-	$_replaygain = $cfgMpd['replaygain'];
-	$_vol_normalize = $cfgMpd['volume_normalization'] == 'no' ? 'off' : $cfgMpd['volume_normalization'];
+	$_replaygain = $cfgMPD['replaygain'];
+	$_vol_normalize = $cfgMPD['volume_normalization'] == 'no' ? 'off' : $cfgMPD['volume_normalization'];
 }
 // Chip options
 $result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
@@ -383,7 +369,7 @@ if ($result === true) { // Not in table
 	$_iface = $result[0]['iface'];
 }
 $_devname = $_SESSION['adevname'];
-$_mixer_name = $_SESSION['amixname'];
+$_mixer_name = $_SESSION['amixname'] == 'none' ? 'n/a' : $_SESSION['amixname'];
 $_audio_formats = $_SESSION['audio_formats'];
 $_hdwr_rev = $_SESSION['hdwrrev'];
 
@@ -410,17 +396,17 @@ function getCfgMpd($dbh) {
 		$array[$row['param']] = $row['value'];
 	}
 
+	// SoX resampling
 	// Ex 44100:16:2 or disabled
 	if ($array['audio_output_format'] == 'disabled') {
 	 	$array['audio_output_rate'] = '';
 	 	$array['audio_output_depth'] = '';
-	 	$array['audio_output_chan'] = '';
-	}
-	else {
+	 	$array['audio_output_channels'] = '';
+	} else {
 	 	$format = explode(":", $array['audio_output_format']);
 	 	$array['audio_output_rate'] = formatRate($format[0]);
 	 	$array['audio_output_depth'] = $format[1];
-	 	$array['audio_output_chan'] = formatChannels($format[2]);
+	 	$array['audio_output_channels'] = formatChannels($format[2]);
 	}
 
 	return $array;

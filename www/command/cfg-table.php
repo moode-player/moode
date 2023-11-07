@@ -99,6 +99,10 @@ switch ($_GET['cmd']) {
 			$_SESSION['lib_scope'] = $_POST['lib_scope'];
 			unset($_POST['lib_scope']);
 		}
+		if (isset($_POST['lib_active_search'])) {
+			$_SESSION['lib_active_search'] = $_POST['lib_active_search'];
+			unset($_POST['lib_active_search']);
+		}
 		if (isset($_POST['on_screen_kbd'])) {
 			$_SESSION['on_screen_kbd'] = $_POST['on_screen_kbd'];
 			unset($_POST['on_screen_kbd']);
@@ -122,13 +126,16 @@ switch ($_GET['cmd']) {
 			echo json_encode($result); // Return all rows
 		}
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['debuglog'] = $_SESSION['debuglog'];
-	$cfgSystem['kernelver'] = $_SESSION['kernelver'];
-	$cfgSystem['procarch'] = $_SESSION['procarch'];
 	$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
+	$cfgSystem['kernelver'] = $_SESSION['kernelver'];
+	$cfgSystem['mpdver'] = $_SESSION['mpdver'];
 	$cfgSystem['ipaddress'] = $_SESSION['ipaddress'];
 	$cfgSystem['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
 	$cfgSystem['rx_hostnames'] = $_SESSION['rx_hostnames'];
@@ -136,5 +143,7 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['updater_auto_check'] = $_SESSION['updater_auto_check'];
 	$cfgSystem['updater_available_update'] = $_SESSION['updater_available_update'];
 	$cfgSystem['lib_scope'] = $_SESSION['lib_scope'];
+	$cfgSystem['lib_active_search'] = $_SESSION['lib_active_search'];
+	$cfgSystem['auto_coverview'] = $_SESSION['auto_coverview'];
 	$cfgSystem['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
 }

@@ -157,6 +157,9 @@ switch ($_GET['cmd']) {
 		$array = array('name' => $playlist['name'], 'genre' => $playlist['genre'], 'items' => $playlist['items']);
 		echo json_encode($array);
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
 
 // Close MPD socket

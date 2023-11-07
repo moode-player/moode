@@ -73,13 +73,13 @@
 }
 
 .osk-special {
-    font-family: 'Font Awesome 5 Pro';
+    font-family: 'Font Awesome 6 Pro';
     width: var(--keyWspe);
 }
 
 .osk-inc, .osk-dec,
 .osk-max, .osk-min {
-    font-family: 'Font Awesome 5 Pro';
+    font-family: 'Font Awesome 6 Pro';
 }
 
 .osk-enter {

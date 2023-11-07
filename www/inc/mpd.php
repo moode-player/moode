@@ -23,17 +23,23 @@
 
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/alsa.php';
+require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
 // Scan the network for hosts with open port 6600 (MPD)
-function scanForMPDHosts() {
-	$this_ipaddr = sysCmd('hostname -I')[0];
-	$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
-	$port = '6600'; // MPD
+function scanForMPDHosts($retryCount = 2) {
+    $thisIpAddr = getThisIpAddr();
+	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
+	$port = '6600';
 
-	sysCmd('nmap -Pn -p ' . $port . ' ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
-	$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+	for ($i = 0; $i < $retryCount; $i++) {
+		sysCmd('nmap -Pn -p T:' . $port . ' ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+		$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+		if (!empty($hosts)) {
+			break;
+		}
+	}
 
 	return $hosts;
 }
@@ -41,7 +47,7 @@ function scanForMPDHosts() {
 // Return MPD socket or exit script
 function getMpdSock() {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('getMpdSock(): Connection to MPD failed');
+		debugLog('getMpdSock(): Connection to MPD failed');
 		exit(0);
 	} else {
 		return $sock;
@@ -206,7 +212,7 @@ function formatMpdStatus($resp) {
 			$status['elapsed'] = $time[0];
 			$status['time'] = $time[1];
 		} else {
-			// Song file, Podcsst
+			// Tracks, Podcast
 			if ($time[0] != '0') {
 				$percent = round(($time[0] * 100) / $time[1]);
 				$status['elapsed'] = $time[0];
@@ -222,27 +228,33 @@ function formatMpdStatus($resp) {
 		$status['elapsed'] = $time[0];
 		$status['time'] = $time[1];
 
-		// Sample rate
-		// Example formats for $status['audio'], dsd64:2, dsd128:2, 44100:24:2
+		// dsd64:2, 44100:24:2
 	 	$audioFormat = explode(':', $status['audio']);
+
+        // Format
+        $status['audio_format'] = strpos($audioFormat[0], 'dsd') !== false ? strtoupper($audioFormat[0]) : 'PCM';
+
+        // Sample rate
 	 	$status['audio_sample_rate'] = formatRate($audioFormat[0]);
 
 		// Bit depth
-		if (strpos($status['audio_sample_rate'], 'dsd') !== false) {
-			$status['audio_sample_depth'] = $status['audio_sample_rate'];
+		if ($status['audio_format'] != 'PCM') {
+			// DSD
+            $status['audio_sample_depth'] = '1';
 		} else {
 			// Workaround for AAC files that show "f" for bit depth, assume decoded to 24 bit
 		 	$status['audio_sample_depth'] = $audioFormat[1] == 'f' ? '24' : $audioFormat[1];
 		}
 
 	 	// Channels
-	 	if (strpos($status['audio_sample_rate'], 'dsd') !== false) {
+	 	if ($status['audio_format'] != 'PCM') {
+            // DSD
 	 		$status['audio_channels'] = formatChannels($audioFormat[1]);
 	 	} else {
 		 	$status['audio_channels'] = formatChannels($audioFormat[2]);
 		}
 
-		// Bit rate
+		// Bitrate
 		if (!isset($status['bitrate']) || trim($status['bitrate']) == '') {
 			$status['bitrate'] = '0 bps';
 		} else {
@@ -256,7 +268,6 @@ function formatMpdStatus($resp) {
 			}
 		}
 	}
-
 	return $status;
 }
 
@@ -278,10 +289,10 @@ function formatMpdQueryResults($resp) {
 				$array[$idx]['fileext'] = getFileExt($value);
 			} else if ($element == 'directory') {
 				$idx++;
-				$diridx++; // Save directory index for further processing
+				$dirIdx++; // Save directory index for further processing
 				$array[$idx]['directory'] = $value;
-				$cover_hash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
-				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $cover_hash  . '_sm.jpg') ? $cover_hash : '';
+				$coverHash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
+				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $coverHash  . '_sm.jpg') ? $coverHash : '';
 			} else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
 					$idx++;
@@ -300,9 +311,9 @@ function formatMpdQueryResults($resp) {
 		}
 
 		// Put dirs on top
-		if (isset($diridx) && isset($array[0]['file']) ) {
-			$files = array_slice($array, 0, -$diridx);
-            $dirs = array_slice($array, -$diridx);
+		if (isset($dirIdx) && isset($array[0]['file']) ) {
+			$files = array_slice($array, 0, -$dirIdx);
+            $dirs = array_slice($array, -$dirIdx);
             $array = array_merge($dirs, $files);
 		}
 	}
@@ -350,21 +361,25 @@ function updMpdConf($i2sDevice) {
 			case 'replay_gain_handler':
 				$replayGainHandler = $cfg['value'];
 				break;
-			case 'auto_resample':
-				$autoResample = $cfg['value'];
-				break;
-			case 'auto_channels':
-				$autoChannels = $cfg['value'];
-				break;
-			case 'auto_format':
-				$autoFormat = $cfg['value'];
-				break;
+			// ALSA: Only used if not default 500000 microseconds
 			case 'buffer_time':
+				$bufferTimeDefault = '500000';
 				$bufferTime = $cfg['value'];
 				break;
+			// Not used
 			case 'period_time':
 				$periodTime = $cfg['value'];
 				break;
+			case 'auto_resample': // Not used
+				$autoResample = $cfg['value'];
+				break;
+			case 'auto_channels': // Not used
+				$autoChannels = $cfg['value'];
+				break;
+			case 'auto_format': // Not used
+				$autoFormat = $cfg['value'];
+				break;
+			// SoX options
 			case 'sox_precision':
 				$soxPrecision = $cfg['value'];
 				break;
@@ -397,15 +412,19 @@ function updMpdConf($i2sDevice) {
 	phpSession('write', 'cardnum', $cardNum);
 	// ALSA mixer name
 	phpSession('write', 'amixname', getAlsaMixerName($i2sDevice));
-	// Hardware volume
+	// If no hardware volume controller then revert to mixer_type = software
 	phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
 	if ($_SESSION['alsavolume'] == 'none' && $mixerType == 'hardware') {
 		$mixerType = 'software';
 		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
-	// MPD mixer_type (Hardware, Software, Fixed (0dB, Null))
+	// MPD mixer_type: Hardware, Software, Fixed (0dB), or Null
 	phpSession('write', 'mpdmixer', $mixerType);
-	phpSession('write', 'mpdmixer_local', $mixerType);
+    // Ensure mpdmixer_local = mpdmixer
+    if ($_SESSION['audioout'] == 'Local') {
+        phpSession('write', 'mpdmixer_local', $mixerType);
+    }
+
 	// Audio device friendly name
 	$adevName = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$cardNum] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
@@ -445,7 +464,7 @@ function updMpdConf($i2sDevice) {
 	$data .= "}\n\n";
 
 	// ALSA default
-	// NOTE: Chain is MPD -> [_audioout || MPD_DSP -> _audioout] -> [[plughw || hw]|| ALSA_DSP -> [plughw || hw]] -> audio device
+	// MPD -> {_audioout || DSP(MPD) -> _audioout} -> {{plughw || hw} || DSP(ALSA/Camilla) -> {plughw || hw}} -> audio device
 	$data .= "audio_output {\n";
 	$data .= "type \"alsa\"\n";
 	$data .= "name \"" . ALSA_DEFAULT . "\"\n";
@@ -455,6 +474,7 @@ function updMpdConf($i2sDevice) {
 	$data .= "dop \"" . $dop . "\"\n";
 	$data .= "stop_dsd_silence \"" . $stopDsdSilence . "\"\n";
 	$data .= "thesycon_dsd_workaround \"" . $thesyconDsdWorkaround . "\"\n";
+	$data .= $bufferTime == $bufferTimeDefault ? '' : "buffer_time \"" . $bufferTime . "\"\n";
 	$data .= "}\n\n";
 
 	// ALSA bluetooth
@@ -475,11 +495,12 @@ function updMpdConf($i2sDevice) {
 	$data .= $_SESSION['mpd_httpd_encoder'] == 'flac' ? "compression \"0\"\n" : "bitrate \"320\"\n";
 	$data .= "tags \"yes\"\n";
 	$data .= "always_on \"yes\"\n";
+	$data .= $_SESSION['mpd_httpd_encoder'] == 'lame' ? "format \"44100:16:2\"\n" : '';
 	$data .= "}\n\n";
 
 	// Stream recorder
 	if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
-		include '/var/www/inc/recorder_mpd.php';
+		include '/var/www/inc/recorder-mpd.php';
 	}
 
 	if ($_SESSION['feat_bitmask'] & FEAT_DEVTWEAKS) {
@@ -487,12 +508,12 @@ function updMpdConf($i2sDevice) {
 		fwrite($fh, $data);
 		fclose($fh);
 		sysCmd("/var/www/util/mpdconf_merge.py /etc/mpd.moode.conf /etc/mpd.custom.conf");
-	}
-	else {
+	} else {
 		$fh = fopen('/etc/mpd.conf', 'w');
 		fwrite($fh, $data);
 		fclose($fh);
 	}
+
 	// Update ALSA and BT confs
 	updAudioOutAndBtOutConfs($cardNum, $_SESSION['alsa_output_mode']);
 	updDspAndBtInConfs($cardNum, $_SESSION['alsa_output_mode']);
@@ -517,13 +538,20 @@ function getMpdOutputs($sock) {
 
 		if ($element == 'outputid') {
 			$id = $value;
-			$array[$id] = 'MPD output ' . ($id + 1) . ' ';
+			//$array[$id] = 'MPD output ' . ($id + 1) . ' ';
 		}
 		if ($element == 'outputname') {
+            if ($value == 'ALSA Default') {
+                $value = 'ALSA Default:   ';
+            } else if ($value == 'ALSA Bluetooth') {
+                $value = 'ALSA Bluetooth: ';
+            } else if ($value == 'HTTP Server') {
+                $value = 'HTTP Server:    ';
+            }
 			$array[$id] .= $value;
 		}
 		if ($element == 'outputenabled') {
-			$array[$id] .= $value == '0' ? ' (Off)' : ' (On)';
+			$array[$id] .= $value == '0' ? 'off' : 'on';
 		}
 
 		$line = strtok("\n");
@@ -533,12 +561,16 @@ function getMpdOutputs($sock) {
 }
 
 // Reconfigure MPD volume
-function reconfMpdVolume($mixerType) {
-	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
-	phpSession('write', 'mpdmixer', $mixerType);
-	// Reset hardware volume to 0dB if indicated
-	if (($mixerType == 'software' || $mixerType == 'none') && $_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+function changeMPDMixer($mixerType) {
+	$mixer = $mixerType == 'camilladsp' ? 'null' : $mixerType;
+	// Update params
+	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixer);
+	phpSession('write', 'mpdmixer', $mixer);
+	// Reset ALSA volume to 0dB if indicated
+	if ($_SESSION['alsavolume'] != 'none') {
+		if ($mixerType == 'software' || $mixerType == 'none' || $mixerType == 'camilladsp') {
+			sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		}
 	}
 	// Update /etc/mpd.conf
 	updMpdConf($_SESSION['i2sdevice']);
@@ -573,6 +605,7 @@ function setCuefilesIgnore($ignore) {
 
 // Create enhanced MPD metadata
 function enhanceMetadata($current, $sock, $caller = '') {
+    // NOTE: $current is output from getMpdStatus() in engine-mpd.php
 	$song = getCurrentSong($sock);
 	$current['file'] = $song['file'];
 	$current['thumb_hash'] = '';
@@ -612,8 +645,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			if ($caller == 'engine_mpd_php') {
 				phpSession('close');
 			}
-		}
-		else {
+		} else {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
 
@@ -632,8 +664,11 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['artist'] = 'Radio station';
 			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
-			if (!isset($song['Title']) || trim($song['Title']) == '') {
-				$current['title'] = 'Streaming source';
+			if (!isset($song['Title']) ||
+                trim($song['Title']) == '-' || // NTS can return just a dash in its Title tag
+                substr($song['Title'], 0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
+                trim($song['Title']) == '') {
+				$current['title'] = DEF_RADIO_TITLE;
 			} else {
 				// Use custom name for certain stations if needed
 				// EX: $current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
@@ -642,7 +677,9 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 			if (isset($_SESSION[$song['file']])) {
 				// Use transmitted name for SOMA FM stations
-				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
+				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ?
+                    (isset($song['Name']) ? $song['Name'] : $_SESSION[$song['file']]['name']) :
+                    $_SESSION[$song['file']]['name'];
 				// Include original station name
 				// DEPRECATE: $current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
@@ -652,16 +689,18 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					// URL logo image
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
-				# NOTE: Hardcode displayed bitrate for .m3u8 320K stations because MPD does not pick up the rate
-				if (strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
-					$current['bitrate'] = '320 kbps';
-				}
+                // NOTE: Use bitrate in station metadata for AAC-LC (HLS) and FLAC streams
+                // because MPD returns bitrate 0 in its status
+                if ($_SESSION[$song['file']]['format'] == 'AAC-LC' || $_SESSION[$song['file']]['format'] == 'FLAC') {
+                    $current['bitrate'] = $_SESSION[$song['file']]['bitrate'] . ' kbps';
+                }
 			} else {
 				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 				// DEPRECATE $current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
 			}
+            //workerLog(print_r($song, true));
 		} else {
 			// Song file, UPnP URL or Podcast
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
@@ -705,12 +744,18 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			} else if ($ext == 'dsf' || $ext == 'dff') {
 				// DSD
 				$current['hidef'] = 'yes';
+            } else if ($ext == 'wv') {
+				// WavPack DSD
+				$current['hidef'] = 'yes';
 			} else {
 				// PCM or Multichannel PCM
-				$current['hidef'] = ($mpdFormatTag[1] != 'f' && $mpdFormatTag[1] > ALBUM_BIT_DEPTH_THRESHOLD) ||
-					$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? 'yes' : 'no';
+				$current['hidef'] = ($mpdFormatTag[1] == 'f' || $mpdFormatTag[1] > ALBUM_BIT_DEPTH_THRESHOLD ||
+					$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD) ? 'yes' : 'no';
 			}
 		}
+
+        // ALSA output format (or 'Not playing')
+        $current['output'] = getALSAOutputFormat($current['state'], $current['audio_sample_rate']);
 	}
 
 	return $current;
@@ -725,13 +770,33 @@ function getUpnpCoverUrl() {
 
 function getMappedDbVol() {
 	phpSession('open_ro');
-	$cardNum = $_SESSION['cardnum'];
-	$mixerName = '"' . $_SESSION['amixname'] . '"';
-	$mpdMixerType = $_SESSION['mpdmixer'];
 
-	$result = sysCmd('amixer -c ' . $cardNum . ' sget ' . $mixerName . ' | ' . "awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
-	$mappedDbVol = explode('.', $result[0])[0];
-	return (empty($result[0]) || $mpdMixerType == 'software') ? '' : ($mappedDbVol < -127 ? -127 : $mappedDbVol) . 'dB';
+	if (isMPD2CamillaDSPVolSyncEnabled() && doesCamillaDSPCfgHaveVolFilter()) {
+		// For CamillaDSP volume
+		$result = sqlRead('cfg_system', sqlConnect(), 'volknob');
+		$dynamicRange = $_SESSION['camilladsp_volume_range'];
+		$mappedDbVol = CamillaDsp::calcMappedDbVol($result[0]['value'], $dynamicRange) ;
+		$mappedDbVol = round($mappedDbVol, 1);
+		if ($mappedDbVol == '0') {
+			$mappedDbVol = '0dB';
+		} else if ($mappedDbVol == '-120') {
+			$mappedDbVol = '-120dB';
+		} else {
+			$mappedDbVol = ($mappedDbVol > -10 ? number_format($mappedDbVol, 1) : substr($mappedDbVol, 0, 3)) . 'dB';
+		}
+	} else {
+		// For MPD volume
+		$result = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .
+			"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
+		if (empty($result[0]) || $_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'null') {
+			$mappedDbVol = '';
+		} else {
+			$result = explode('.', $result[0])[0];
+			$mappedDbVol = ($result < -127 ? '-127' : $result) . 'dB';
+		}
+	}
+
+	return $mappedDbVol;
 }
 
 function getCoverHash($file) {
@@ -783,7 +848,7 @@ function getCoverHash($file) {
 // Modified versions of coverart.php functions
 // (C) 2015 Andreas Goetz
 function rtnHash($mime, $hash) {
-	switch ($mime) {
+	switch (strtolower($mime)) {
 		case "image/gif":
 		case "image/jpg":
 		case "image/jpeg":

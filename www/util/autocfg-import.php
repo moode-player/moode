@@ -29,15 +29,15 @@ require_once __DIR__ . '/../inc/sql.php';
 require_once __DIR__ . '/../inc/autocfg.php';
 
 if (file_exists('/boot/moodecfg.ini')) {
+	session_id(phpSession('get_sessionid'));
 	phpSession('open');
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 	autoConfig('/boot/moodecfg.ini');
 	sysCmd('sync');
 	phpSession('close');
-}
-else {
-	autoCfgLog('autocfg: no file "/boot/moodecfg.ini" to import\n');
-	print("no file \"/boot/moodecfg.ini\" to import\n");
+} else {
+	autoCfgLog('autocfg-import: No settings file "/boot/moodecfg.ini" to import\n');
+	print("No settings file \"/boot/moodecfg.ini\" to import\n");
 }
 
 ?>

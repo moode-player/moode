@@ -50,6 +50,7 @@
  *  gulp deploy [--test]        - Deploys everything needed (inc php etc) {app.deploy}.
  *              [--force]                  With the option --test deploy to build/dist (app.dist).
  *              [--all]           Also deploy moodeutl and the /var/local/www dir
+ *              [--remote]        Deploy to target Pi by using ssh/scp
  *
  *                                Deploy only copy/update, never removes files.
  *                                When used to real don't forget to sudo first
@@ -398,6 +399,7 @@ gulp.task('patchheader', function (done) {
         .pipe($.if('header.php', $.cacheBust({
             type: 'timestamp'
             }))  )
+        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -413,6 +415,7 @@ gulp.task('patchfooter', function (done) {
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
+        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -423,6 +426,7 @@ gulp.task('patchindex', function (done) {
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.replace(/indextpl[.]html/g, "indextpl.min.html"))
         .pipe($.replace(/footer[.]php/g, "footer.min.php"))
+        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -432,6 +436,7 @@ gulp.task('patchconfigs', function (done) {
     return gulp.src(pkg.app.src+'/*-config.php')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.replace(/footer[.]php/g, "footer.min.php"))
+        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -446,6 +451,7 @@ gulp.task('minifyhtml', function (done) {
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
+        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION+'/templates'))
         .on('end', done);
@@ -513,6 +519,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
         //.pipe($.size({showFiles: true, total: true}))
         .pipe($.if('*.html', $.replaceTask({ patterns: REPLACEMENT_PATTERNS})))
+        .pipe($.chmod(0o755))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
 }));
@@ -520,6 +527,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 
 gulp.task('deployfront', function (done) {
     return gulp.src( [pkg.app.dest+'/**/*', '!'+pkg.app.dest+'/index.html'] )
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
+        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
 });
@@ -533,7 +541,7 @@ gulp.task('upload2remote', function (done) {
         host: pkg.remote.host,
         username: pkg.remote.user,
         password: pkg.remote.password,
-        dest: '/home/pi/www.deploy'}))
+        dest: '/tmp/www.deploy'}))
     .on('error', function(err) {
         console.log(err);
     })
@@ -548,7 +556,7 @@ gulp.task('deploy2remote', function (done) {
     return gulpSSH
         .exec(['sudo rm -rf /var/www.prev',
                'sudo mv /var/www/ /var/www.prev',
-               'sudo mv /home/pi/www.deploy /var/www',
+               'sudo mv /tmp/www.deploy /var/www',
                'sudo chmod -R +x /var/www/command/*',
                'sudo chmod -R +x /var/www/util/*',
                // required if uploaded from windows

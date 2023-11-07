@@ -104,10 +104,18 @@ function cfgNetIfaces() {
 		$data .= "network={\n";
 		$data .= 'ssid=' . '"' . $cfgNetwork[1]['wlanssid'] . '"' . "\n";
 		$data .= 'priority=100' . "\n";
-		$data .= "scan_ssid=1\n"; // Scan even if SSID is hidden
+		$data .= "scan_ssid=1\n"; // Probe for hidden SSID's
 		if ($cfgNetwork[1]['wlansec'] == 'wpa') {
-			// Secure
+			// WPA/WPA2 Personal
 			$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+		} else if ($cfgNetwork[1]['wlansec'] == 'wpa23') {
+			// WPA3 Personal Transition Mode
+			$data .= 'psk=' . $cfgNetwork[1]['wlan_psk'] . "\n";
+			$data .= 'key_mgmt=WPA-PSK-SHA256' . "\n";
+			$data .= 'ieee80211w=2' . "\n";
+		} else if ($cfgNetwork[1]['wlansec'] == 'wpa3') {
+			// WPA3 Personal
+			// TBD
 		} else {
 			// No security
 			$data .= "key_mgmt=NONE\n";
@@ -120,10 +128,18 @@ function cfgNetIfaces() {
 			$data .= "network={\n";
 			$data .= 'ssid=' . '"' . $row['ssid'] . '"' . "\n";
 			$data .= 'priority=10' . "\n";
-			$data .= "scan_ssid=1\n"; // Scan even if SSID is hidden
+			$data .= "scan_ssid=1\n"; // Probe for hidden SSID's
 			if ($row['sec'] == 'wpa') {
-				// Secure
+				// WPA/WPA2 Personal
 				$data .= 'psk=' . $row['psk'] . "\n";
+			} else if ($row['sec'] == 'wpa23') {
+				// WPA3 Personal Transition Mode
+				$data .= 'psk=' . $row['psk'] . "\n";
+				$data .= 'key_mgmt=WPA-PSK-SHA256' . "\n";
+				$data .= 'ieee80211w=2' . "\n";
+			} else if ($row['sec'] == 'wpa3') {
+				// WPA3 Personal
+				// TBD
 			} else {
 				// No security
 				$data .= "key_mgmt=NONE\n";
@@ -138,6 +154,9 @@ function cfgNetIfaces() {
 	// Set regulatory domain
 	sysCmd('iw reg set "' . $cfgNetwork[1]['wlan_country'] . '" >/dev/null 2>&1');
 
+	// TODO: Enhance rule set to enable general purpose hotspot
+	// NOTE: Missing parenthesis fix was inadvertently included in another commit
+	// Sept 23, 2023 "Improve metadata layout in CV wide - part 1" 48927e4d40b4ce5e03b477f2959415850bf9b558
 	// Write /etc/nftables.conf
 	$fp = fopen('/etc/nftables.conf', 'w');
 	$data  = "#########################################\n";
@@ -150,20 +169,20 @@ flush ruleset
 
 table ip filter {
         # Allow all packets inbound
-        chain IMPUT {
-                type filter hook input priority 0; policy accept;
+        chain INPUT {
+            type filter hook input priority 0; policy accept;
         }
         # Forwad packets from WLAN to LAN, and LAN to WLAN if WLAN initiated the connection
         chain FORWARD {
-                type filter hook forward priority 0; policy accept;
-                iifname "wlan0" oifname "eth0" accept
-                iifname "eth0" oifname "wlan0" ct state established accept
-                iifname "eth0" oifname "wlan0" ct state related accept
-                iifname "eth0" oifname "wlan0" drop
+            type filter hook forward priority 0; policy accept;
+            iifname "wlan0" oifname "eth0" accept
+            iifname "eth0" oifname "wlan0" ct state established accept
+            iifname "eth0" oifname "wlan0" ct state related accept
+            iifname "eth0" oifname "wlan0" drop
         }
         # Allow all packets outbound
         chain OUTPUT {
-                type filter hook output priority 100; policy accept;
+            type filter hook output priority 100; policy accept;
         }
 }
 
@@ -176,7 +195,7 @@ table ip nat {
         chain POSTROUTING {
             type nat hook postrouting priority 100; policy accept;
             oifname "eth0" masquerade
-
+		}
 }';
 
 	fwrite($fp, $data);
@@ -247,7 +266,7 @@ function checkForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
 		if (!empty($ipAddr[0])) {
 			break;
 		} else {
-			workerLog('worker: ' . $iface .' check '. $i . ' for IP address');
+			debugLog('worker: ' . $iface .' check '. ($i + 1) . ' for IP address');
 			sleep($sleepTime);
 		}
 	}
@@ -293,18 +312,16 @@ function genWpaPSK($ssid, $passphrase) {
 	return $psk[1];
 }
 
-// Pi integrated wifi adapter enable/disable
+// Pi integrated WiFi adapter enable/disable
 function ctlWifi($ctl) {
 	$cmd = $ctl == '0' ? 'sed -i /disable-wifi/c\dtoverlay=disable-wifi ' . '/boot/config.txt' :
 		'sed -i /disable-wifi/c\#dtoverlay=disable-wifi ' . '/boot/config.txt';
 	sysCmd($cmd);
 }
 
-// pi3 bt adapter enable/disable
+// Pi integrated Bluetooth adapter enable/disable
 function ctlBt($ctl) {
-	if ($ctl == '0') {
-		sysCmd('sed -i /disable-bt/c\dtoverlay=disable-bt ' . '/boot/config.txt');
-	} else {
-		sysCmd('sed -i /disable-bt/c\#dtoverlay=disable-bt ' . '/boot/config.txt');
-	}
+	$cmd = $ctl == '0' ? 'sed -i /disable-bt/c\dtoverlay=disable-bt ' . '/boot/config.txt' :
+		'sed -i /disable-bt/c\#dtoverlay=disable-bt ' . '/boot/config.txt';
+	sysCmd($cmd);
 }

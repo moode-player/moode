@@ -29,26 +29,37 @@ $dbh = sqlConnect();
 $sock = getMpdSock();
 
 switch ($_GET['cmd']) {
+	 // Called from function setVolume() in playelib.js
 	case 'upd_volume':
-		// Local MPD volume
+		// Local volume
 		phpSession('open');
-		$currentVol = $_SESSION['volknob'];
-		phpSession('write', 'volknob', $_POST['volknob']);
-		phpSession('close');
-		sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
-		$resp = readMpdResp($sock);
+		$currentVol = $_SESSION['volknob']; // Save for Receiver
 
-		// Receiver(s) MPD volume
+		if ($_POST['event'] != 'mute') {
+			phpSession('write', 'volknob', $_POST['volknob']);
+		}
+		phpSession('close');
+
+		if ($_SESSION['mpdmixer'] == 'hardware') {
+			sysCmd('amixer -M -c ' . $_SESSION['cardnum'] . ' sset "' . $_SESSION['amixname'] . '" ' . $_POST['volknob'] . '%' );
+		} else {
+			sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
+			$resp = readMpdResp($sock);
+		}
+
+		// Receiver(s) volume
 		if ($_SESSION['multiroom_tx'] == 'On') {
 			$volDiff = $currentVol - $_POST['volknob'];
-			if ($_POST['event'] == 'unmute') {
-				$rxVolCmd = '-mute'; // Toggle mute off
+
+			if ($_POST['event'] == 'mute' || $_POST['event'] == 'unmute') {
+				$rxVolCmd = '-mute'; // Toggle mute on/off
 			} else if ($volDiff == 0) {
 				$rxVolCmd = $_POST['volknob'];
 			} else {
 				$rxVolCmd = $volDiff < 0 ? '-up ' . abs($volDiff) : '-dn ' . $volDiff;
 			}
-			updReceiverVol($rxVolCmd, true); // Master volume change
+
+			updReceiverVol($rxVolCmd, true); // True = Master volume change
 		}
 
 		echo json_encode('OK');
@@ -93,7 +104,10 @@ switch ($_GET['cmd']) {
 		echo json_encode('OK');
 		break;
 	case 'get_play_history':
-		echo json_encode(getPlayHistory(shell_exec('cat /var/local/www/playhistory.log')));
+		echo json_encode(getPlayHistory(shell_exec('cat /var/log/moode_playhistory.log')));
+		break;
+	default:
+		echo 'Unknown command';
 		break;
 }
 

@@ -38,6 +38,7 @@ from zipfile import ZipFile
 import sys
 import csv
 import re
+import hashlib
 
 VERSION = "1.1"
 
@@ -375,7 +376,7 @@ Version=2"""
             if how == StationManager.IMPORT_CLEAR:
                 self.clear_stations(scope)
             else:
-                missing, added, difference, common = self.diff(stations_db, stations_bu, fields_db)
+                missing, added, difference, common = self.diff(backup, stations_db, stations_bu, fields_db)
                 stations_to_import = [station for station in stations_bu if station['name'] in missing+difference]
 
 
@@ -503,7 +504,7 @@ Version=2"""
             cursor.execute(query)
         self.conn.commit()
 
-    def diff(self, stations_db, stations_bu, fields):
+    def diff(self, backup, stations_db, stations_bu, fields):
         stations_db_map = [station['name'] for station in stations_db]
         stations_bu_map = [station['name'] for station in stations_bu]
 
@@ -516,12 +517,43 @@ Version=2"""
         common_stations= []
         stations_with_difference = []
         for station in common_stations_: #[:1]:
-            differences = self.compare_station_settings(stations_db_map[station], stations_bu_map[station], fields)
+            differences = self.compare_station_settings(backup, stations_db_map[station], stations_bu_map[station], fields)
             if len(differences)>=1:
                 stations_with_difference.append(station)
             else:
                 common_stations.append(station)
         return (missing_stations_db, additional_stations_db, stations_with_difference, common_stations )
+
+    def diff_logo(self, backup, station_db, station_bu):
+
+            try:
+                local_base_name = station_db['name']
+
+                if station_db['logo'] != 'local':
+                    local_base_name = os.path.basename(station_db['logo'])[:-4]
+
+                image_filename = path.join(self.radio_logos_path, local_base_name+'.jpg')
+                image_filename_thumb = path.join(self.radio_logos_path, 'thumbs', local_base_name+'.jpg')
+                image_filename_thumb_sm = path.join(self.radio_logos_path, 'thumbs', local_base_name+'_sm.jpg')
+
+                hash_file = hashlib.md5(open(image_filename,'rb').read()).hexdigest().strip()
+                hash_backup = hashlib.md5(backup.read(os.path.join(self.archive_images_location, '{}.jpg'.format(local_base_name)))).hexdigest().strip()
+                if hash_file != hash_backup:
+                    return True
+
+                hash_file = hashlib.md5(open(image_filename_thumb,'rb').read()).hexdigest().strip()
+                hash_backup = hashlib.md5(backup.read(os.path.join(self.archive_images_location, 'thumbs','{}.jpg'.format(local_base_name)))).hexdigest().strip()
+                if hash_file != hash_backup:
+                    return True
+
+                hash_file = hashlib.md5(open(image_filename_thumb_sm,'rb').read()).hexdigest().strip()
+                hash_backup = hashlib.md5(backup.read(os.path.join(self.archive_images_location, 'thumbs','{}_sm.jpg'.format(local_base_name)))).hexdigest().strip()
+                if hash_file != hash_backup:
+                    return True
+            except Exception as e:
+                print(e)
+
+            return False
 
     def do_diff(self, scope, diff_output=None):
         print('compare')
@@ -555,7 +587,7 @@ Version=2"""
             stations_bu_map = {station['name']: station for station in stations_bu}
 
             common_fields = list(set(colnames_db) & set(colnames_bu))
-            missing_stations_db, additional_stations_db, stations_with_difference, common_stations = self.diff(stations_db, stations_bu, common_fields)
+            missing_stations_db, additional_stations_db, stations_with_difference, common_stations = self.diff(backup, stations_db, stations_bu, common_fields)
 
             if len( missing_stations_db) == 0 and len(additional_stations_db) == 0 and len(stations_with_difference) == 0:
                 print('Stations: ok')
@@ -574,7 +606,7 @@ Version=2"""
                 if len(stations_with_difference) >=1:
                     print('\tStations with difference in settings:')
                     for name in stations_with_difference:
-                        differences = self.compare_station_settings(stations_db_map[name], stations_bu_map[name], common_fields)
+                        differences = self.compare_station_settings(backup, stations_db_map[name], stations_bu_map[name], common_fields)
                         print('\t- \'{}\' : {}'.format(name, ", ".join(differences)))
 
             #TODO: Not coded very nice, but was in hurry. Refactor and remove duplicates existing code.
@@ -613,9 +645,13 @@ Version=2"""
                             if path.exists(image_filename_thumb_sm):
                                 diff_backup.write(image_filename_thumb_sm, 'radio-logos/thumbs/'+station['name']+'_sm.jpg')
 
+    def compare_station_settings(self, backup, data_db, data_bu, fields):
+        differences = self._compare_station_settings(data_db, data_bu, fields)
+        if self.diff_logo(backup, data_db,  data_bu):
+            differences.append('logo_hash')
 
-
-    def compare_station_settings(self, data_db, data_bu, fields):
+        return differences
+    def _compare_station_settings(self, data_db, data_bu, fields):
         differs = False
         settings_differs = []
         for field in fields:

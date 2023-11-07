@@ -24,91 +24,14 @@
 set_include_path('/var/www/inc');
 error_reporting(E_ERROR);
 
-// Include PHP 8 equivalent funcrtions which are initially used in the CUE
-// support functions in this file.
+// PHP 8 equivalent funcrtions are used in the CUE support functions in this file
 require_once __DIR__ . '/php8-equiv.php';
 
-// Common
-const MPD_RESPONSE_ERR = 'ACK';
-const MPD_RESPONSE_OK = 'OK';
-const MPD_MUSICROOT = '/var/lib/mpd/music/';
-const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
-const PLAYLIST_COVERS_ROOT = '/var/local/www/imagesw/playlist-covers/';
-const RADIO_LOGOS_ROOT = '/var/local/www/imagesw/radio-logos/';
-const TMP_IMAGE_PREFIX = '__tmp__';
-const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
-const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
-const MOODE_LOG = '/var/log/moode.log';
-const AUTOCFG_LOG = '/home/pi/autocfg.log';
-const MPD_LOG = '/var/log/mpd/log';
-const PLAY_HISTORY_LOG = '/var/local/www/playhistory.log';
-const MOUNTMON_LOG = '/var/log/mountmon.log';
-const PORT_FILE = '/tmp/portfile';
-const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
-const LIBCACHE_BASE = '/var/local/www/libcache';
-const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
-const SESSION_SAVE_PATH = '/var/local/php';
-const STATION_EXPORT_DIR = '/var/local/www/imagesw';
-const MPD_VERSIONS_CONF = '/var/local/www/mpd_versions.conf';
-const LOGO_ROOT_DIR = 'imagesw/radio-logos/';
-const DEF_RADIO_COVER = 'images/default-cover-v6.svg';
-const DEF_COVER = 'images/default-cover-v6.svg';
-const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
-const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
-const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
+// Constants
+require_once __DIR__ . '/constants.php';
 
-// Size and quality factor for small thumbs
-// Used in thumb-gen.php, worker.php
-const THM_SM_W = 80;
-const THM_SM_H = 80;
-const THM_SM_Q = 75;
-
-// Features availability bitmask
-// NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
-// sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
-const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
-const FEAT_AIRPLAY		= 2;		// y AirPlay renderer
-const FEAT_MINIDLNA 	= 4;		// y DLNA server
-const FEAT_RECORDER		= 8; 		//   Stream recorder
-const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
-const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
-const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
-const FEAT_ROONBRIDGE	= 128;		// y RoonBridge renderer
-const FEAT_LOCALUI		= 256;		// y Local display
-const FEAT_INPSOURCE	= 512;		// y Input source select
-const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
-const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
-const FEAT_GPIO 		= 4096;		// y GPIO button handler
-const FEAT_RESERVED		= 8192;		// y Reserved for future use
-const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
-const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
-const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
-//						-------
-//						  97207
-
-// Selective resampling bitmask
-const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate
-const SOX_UPSAMPLE_ONLY_41K		= 1; // Upsample only 44.1K source rate
-const SOX_UPSAMPLE_ONLY_4148K	= 2; // Upsample only 44.1K and 48K source rates
-const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
-
-// Album and Radio HD badge parameters
-// NOTE: These are mirrored in playerlib.js
-const ALBUM_HD_BADGE_TEXT 			= 'HD';
-const ALBUM_BIT_DEPTH_THRESHOLD 	= 16;
-const ALBUM_SAMPLE_RATE_THRESHOLD 	= 44100;
-const RADIO_HD_BADGE_TEXT 			= 'HiRes';
-const RADIO_BITRATE_THRESHOLD 		= 128;
-
-// MPD output names
-const ALSA_DEFAULT			= 'ALSA Default';
-const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
-const HTTP_SERVER			= 'HTTP Server';
-const STREAM_RECORDER		= 'Stream Recorder';
-
-// Other constants
-const RECORDER_DEFAULT_ALBUM_TAG	= 'Recorded YYYY-MM-DD';
+// Daemon loop sleep intervals
+require_once __DIR__ .  '/sleep-interval.php';
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
@@ -128,6 +51,7 @@ function autoCfgLog($msg, $mode = 'a') {
 function debugLog($msg, $mode = 'a') {
 	// Logging off
 	if (!isset($_SESSION['debuglog']) || $_SESSION['debuglog'] == '0') {
+		// NOTE: $_SESSION['debuglog'] = not set means the session is not active
 		return;
 	}
 
@@ -167,7 +91,7 @@ function echoTemplate($template) {
 function sendEngCmd ($cmd) {
 	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
 		// This case is ok and occurs if UI has never been started
-		workerLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
+		debugLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
 	} else {
 		// Retry until UI connects or retry limit reached
 		$retry_limit = 4;
@@ -294,10 +218,13 @@ function formatSongTime($sec) {
 }
 
 function formatRate ($rate) {
-	$rates = array('*' => '*', '32000' => '32', '48000' => '48', '96000' => '96', '192000' => '192', '384000' => '384', '768000' => '768',
-	'22050' => '22.05', '44100' => '44.1', '88200' => '88.2', '176400' => '176.4', '352800' => '352.8', '705600' => '705.6',
-	'dsd64' => 'dsd64', 'dsd128' => 'dsd128', 'dsd256' => 'dsd256', 'dsd512' => 'dsd512', 'dsd1024' => 'dsd1024',
-	'2822400' => '2.822', '5644800' => '5.644', '11289600' => '11.288', '22579200' => '22.576', 45158400 => 45.152);
+	$rates = array(
+		'*' => '*',
+		'22050' => '22.05', '44100' => '44.1', '88200' => '88.2', '176400' => '176.4', '352800' => '352.8', '705600' => '705.6',
+		'32000' => '32', '48000' => '48', '96000' => '96', '192000' => '192', '384000' => '384', '768000' => '768',
+		'2822400' => '2.822', '5644800' => '5.644', '11289600' => '11.288', '22579200' => '22.576', 45158400 => 45.152,
+		'dsd64' => '2.822', 'dsd128' => '5.644', 'dsd256' => '11.288', 'dsd512' => '22.576', 'dsd1024' => '45.152'
+	);
 	return $rates[$rate];
 }
 
@@ -307,11 +234,22 @@ function formatChannels($channels) {
 	} else if ($channels == '2' || $channels == '*') {
 	 	$str = 'Stereo';
 	} else if ($channels > 2) {
-	 	$str = 'Multichannel';
+	 	$str = $channels . '-Channel';
 	} else {
-		$str = 'Undefined';
+		$str = '?-Channel';
 	}
  	return $str;
+}
+
+function formatDoP($DSDFormat) {
+	$DoPFormats = array(
+		'DSD64' => array('decoded_to' => 'DoP 24 bit 176.4 kHz, Stereo', 'decode_rate' => '8.467 Mbps'),
+		'DSD128' => array('decoded_to' => 'DoP 24 bit 352.8 kHz, Stereo', 'decode_rate' => '16.934 Mbps'),
+		'DSD256' => array('decoded_to' => 'DoP 24 bit 705.6 kHz, Stereo', 'decode_rate' => '33.868 Mbps'),
+		'DSD512' => array('decoded_to' => 'DoP 24 bit 1.411 MHz, Stereo', 'decode_rate' => '67.736 Mbps'),
+		'DSD1024' => array('decoded_to' => 'DoP 24 bit 2.822 MHz, Stereo', 'decode_rate' => '135.472 Mbps')
+	);
+	return $DoPFormats[$DSDFormat];
 }
 
 function uiNotify($notify) {
@@ -355,27 +293,29 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 
 		return true;
 	} else {
-		echo json_encode('worker busy');
+		//echo json_encode('worker busy');
+		$_SESSION['notify']['title'] = 'System is busy';
+		$_SESSION['notify']['msg'] = 'Try again';
 		return false;
 	}
 }
 
 // Wait for worker to process job
 // NOTE: Called from cfg scripts
-function waitWorker($sleepTime, $caller) {
-	debugLog('waitWorker(): Start (' . $caller . ', w_active=' . $_SESSION['w_active'] . ')');
+function waitWorker($caller) {
+	debugLog('waitWorker(): Start ' . $caller . ', w_active=' . $_SESSION['w_active']);
 	$loopCnt = 0;
 
 	if ($_SESSION['w_active'] == 1) {
 		do {
-			sleep($sleepTime);
-			debugLog('waitWorker(): Wait  (' . ++$loopCnt . ')');
+			usleep(WAITWORKER_SLEEP);
+			debugLog('waitWorker(): Wait  ' . ++$loopCnt);
 
 			phpSession('open_ro');
 		} while ($_SESSION['w_active'] != 0);
 	}
 
-	debugLog('waitWorker(): End   (' . $caller . ', w_active=' . $_SESSION['w_active'] . ')');
+	debugLog('waitWorker(): End   ' . $caller . ', w_active=' . $_SESSION['w_active']);
 }
 
 // $path
@@ -416,19 +356,20 @@ function storeBackLink($section, $tpl) {
 	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 	//workerLog('storeBackLink(): refererLink=' . substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/')));
 
-	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config', 'ren-config');
+	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config', 'ren-config', 'per-config');
 	$tplConfigs = array(
-		'apl-config.html'	=> '/ren-config.php#airplay',
-		'bkp-config.html'	=> '/sys-config.php#system-maint',
-		'cdsp-config.html' 	=> '/snd-config.php#equalizers',
+		'apl-config.html'	=> '/ren-config.php',
+		'bkp-config.html'	=> '/sys-config.php',
+		'cdsp-config.html' 	=> '/snd-config.php',
 		'cdsp-configeditor.html' => '/cdsp-config.php',
-		'eqg-config.html'	=> '/snd-config.php#equalizers',
-		'eqp-config.html'	=> '/snd-config.php#equalizers',
-		'gpio-config.html'	=> '/sys-config.php#local-services',
-		'spo-config.html' 	=> '/ren-config.php#spotify',
-		'sqe-config.html'	=> '/ren-config.php#squeezelite',
+		'eqg-config.html'	=> '/snd-config.php',
+		'eqp-config.html'	=> '/snd-config.php',
+		'gpio-config.html'	=> '/per-config.php',
+		'spo-config.html' 	=> '/ren-config.php',
+		'sqe-config.html'	=> '/ren-config.php',
 		'src-config.html'	=> '/lib-config.php',
-		'upp-config.html' 	=> '/ren-config.php#upnp-dlna'
+		'sys-status.html'	=> '/sys-config.php',
+		'upp-config.html' 	=> '/ren-config.php'
 	);
 
 	phpSession('open');
@@ -456,6 +397,8 @@ function storeBackLink($section, $tpl) {
 
 // Used for 2 levels back: cdsp-configeditor -> cdsp-config -> /index.php
 function setAltBackLink() {
+	phpSession('open');
+
 	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 
 	// NOTE: $_SESSION['alt_back_link'] is reset to '' in /index.php
@@ -466,4 +409,18 @@ function setAltBackLink() {
 			$_SESSION['alt_back_link'] = '/snd-config.php#equalizers';
 		}
 	}
+
+	phpSession('close');
+}
+
+function getUserID() {
+	$result = sysCmd('ls /home/');
+	return $result[0];
+}
+
+// NOTE:
+// hostname -I = 192.168.1.121 fd87:f129:9943:4934:1192:907d:d9b6:e98d
+// hostname -I | cut -d " " -f 1 = 192.168.1.121
+function getThisIpAddr() {
+	return sysCmd('hostname -I | cut -d " " -f 1')[0];
 }

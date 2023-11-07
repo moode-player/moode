@@ -35,6 +35,7 @@ function notify(title, msg, duration = '2_seconds') {
         clear_play_group: 'Playing after Queue cleared',
         queue_item_removed: 'Removed from Queue',
 		queue_item_moved: 'Queue items moved',
+        playqueue_time: 'Total play time',
         // Library
         clear_libcache: 'Library cache cleared',
         update_library: 'Updating library...',
@@ -42,13 +43,13 @@ function notify(title, msg, duration = '2_seconds') {
         library_loading: 'Library loading...',
         regen_thumbs: 'Thumbnail resolution updated',
         // Playlist/Queue
-        saving_queue: 'Saving Queue...',
+        saving_queue: 'Saving Queue',
         queue_saved: 'Queue saved',
 		playlist_name_needed: 'Enter a name for the playlist',
-		playlist_name_error: 'NAS, RADIO and SDCARD cannot be used in the name',
-        setting_favorites_name: 'Setting Favorites name...',
+		playlist_name_error: 'NAS, RADIO, SDCARD and USB cannot be used in the name',
+        setting_favorites_name: 'Setting Favorites name',
         favorites_name_set: 'Favorites name has been set',
-        adding_favorite: 'Adding favorite...',
+        adding_favorite: 'Adding favorite',
         favorite_added: 'Favorite added',
 		no_favorite_to_add: 'Nothing to add',
         // Playlist view
@@ -72,33 +73,43 @@ function notify(title, msg, duration = '2_seconds') {
         no_receivers_found: 'No receivers found',
         run_receiver_discovery: 'Run receiver Discovery',
         // CamillaDSP
-        update_cdsp: 'Updating configuration...',
-        update_cdsp_ok: 'Configuration updated',
-        update_cdsp_err: 'Configuration update failed',
+        cdsp_updating_config: 'Updating configuration...',
+        cdsp_config_updated: 'Configuration updated',
+        cdsp_config_update_failed: 'Configuraton update failed',
         // Renderers
         renderer_disconnect: 'Disconnecting...',
         renderer_turnoff: 'Turning off...',
         // Network config
 		needssid: 'Static IP requres an SSID',
 		needdhcp: 'Blank SSID requires DHCP',
-        // Miscellaneous
-        upd_clock_radio: 'Clock radio updated',
-		settings_updated: 'Settings updated',
-		gathering_info: 'Gathering info...',
-        discovering_players: 'Discovering players...',
+        // System
         restart: 'Restarting...',
 		shutdown: 'Shutting down...',
         reconnect: 'Reconnecting...',
         mpderror: 'MPD error',
         viewport: 'Viewport',
         updater: 'An update is available',
-        // Recorder
+        // Players >>
+        discovering_players: 'Discovering players...',
+        players_action_submit: 'Action submitted',
+        // Advanced search
+        search_fields_empty: 'Search fields are empty',
+        predefined_filter_invalid: 'Predefined filter invalid',
+        // Library saved searches
+        search_name_blank: 'Name is blank',
+        // Miscellaneous
+        upd_clock_radio: 'Clock radio updated',
+		settings_updated: 'Settings updated',
+		gathering_info: 'Gathering info...',
+        installing_plugin: 'Installing plugin...',
+        // Recorder plugin
         recorder_installed: 'Recorder installed',
         recorder_uninstalled: 'Recorder uninstalled',
         recorder_plugin_na: 'Recorder plugin not available',
-        recorder_deleted: 'Recordings deleted',
+        recorder_deleted: 'Raw recordings deleted',
         recorder_tagging: 'Recordings being tagged...',
-        recorder_tagged: 'Tagging complete'
+        recorder_tagged: 'Tagging complete',
+        recorder_nofiles: 'No files to tag'
     };
 
     if (typeof titles[title] === undefined) {
@@ -106,6 +117,9 @@ function notify(title, msg, duration = '2_seconds') {
     }
 
     switch (duration) {
+        case '2_seconds': // Default
+            duration = 2000;
+            break;
         case '3_seconds':
             duration = 3000;
             break;
@@ -117,9 +131,6 @@ function notify(title, msg, duration = '2_seconds') {
             break;
         case 'infinite':
             duration = 86400000; // 24 hours
-            break;
-        default:
-            duration = 2000;
             break;
     }
 

@@ -19,8 +19,7 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='rsmaftersl' or param='wrkready' or param='inpactive'")
-# friendly names
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','rsmaftersl','wrkready','inpactive')")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
 ALSAVOLUME=${arr[1]}
@@ -36,10 +35,10 @@ fi
 if [[ $WRKREADY == "1" ]]; then
 	echo Worker ready
 	# See if -V hardware mixer is present in OTHEROPTIONS
-	VOPT=$(sqlite3 $SQLDB "select * from cfg_sl where value like '%-V%'")
+	VOPT=$(sqlite3 $SQLDB "SELECT * FROM cfg_sl WHERE value LIKE '%-V%'")
 	if [[ $1 = "0" ]] ; then
 		echo Power off
-		$(sqlite3 $SQLDB "update cfg_system set value='0' where param='slactive'")
+		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='slactive'")
 		if [[ $VOPT != "" ]] ; then
 			ALSAVOL=$(/var/www/util/sysutil.sh get-alsavol "`/var/www/util/sysutil.sh get-mixername| sed 's/[()]/"/g'`")
 			if [[ $ALSAVOL == "0%" ]] ; then
@@ -54,9 +53,9 @@ if [[ $WRKREADY == "1" ]]; then
 		fi
 	elif [[ $1 = "1" ]] ; then
 		echo Power on
+		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='slactive'")
 		/usr/bin/mpc stop > /dev/null
 		sleep 1
-		$(sqlite3 $SQLDB "update cfg_system set value='1' where param='slactive'")
 		if [[ $ALSAVOLUME != "none" && $VOPT == "" ]]; then
 			/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi

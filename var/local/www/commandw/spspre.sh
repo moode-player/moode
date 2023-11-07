@@ -19,28 +19,34 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='inpactive' or param='multiroom_tx'")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','camilladsp_volume_sync','inpactive','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
-ALSAVOLUME_MAX=${arr[0]}
-ALSAVOLUME=${arr[1]}
-AMIXNAME=${arr[2]}
-INPACTIVE=${arr[3]}
-MULTIROOM_TX=${arr[4]}
+VOLKNOB=${arr[0]}
+ALSAVOLUME_MAX=${arr[1]}
+ALSAVOLUME=${arr[2]}
+AMIXNAME=${arr[3]}
+CDSP_VOLSYNC=${arr[4]}
+INPACTIVE=${arr[5]}
+MULTIROOM_TX=${arr[6]}
 RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
-/usr/bin/mpc stop > /dev/null
+$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='aplactive'")
 
-# Allow time for ui update
+/usr/bin/mpc stop > /dev/null
+# Allow time for UI update
 sleep 1
 
-$(sqlite3 $SQLDB "update cfg_system set value='1' where param='aplactive'")
-
 # Local
-if [[ $ALSAVOLUME != "none" ]]; then
+if [[ $CDSP_VOLSYNC == "on" ]]; then
+	# Save knob level then set camilladsp volume to 100% (0dB)
+	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB' WHERE param='volknob_mpd'")
+	/var/www/vol.sh 100
+elif [[ $ALSAVOLUME != "none" ]]; then
+	# Set 0dB ALSA volume
 	/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 fi
 
@@ -51,7 +57,7 @@ if [[ $MULTIROOM_TX == "On" ]]; then
 		if [[ $RESULT != "" ]]; then
 			RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				echo echo $(date +%F" "%T)"spspre.sh trx-control.php -set-alsavol failed: $IP_ADDR" >> /home/pi/renderer_error.log
+				echo echo $(date +%F" "%T)"spspre.sh trx-control.php -set-alsavol failed: $IP_ADDR" >> /var/log/moode_renderer_error.log
 			fi
 		fi
 	done

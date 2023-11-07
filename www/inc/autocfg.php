@@ -23,6 +23,14 @@
  * (C) 2020 @bitlab (@bitkeeper Git)
  */
 
+/**
+ * NOTE: The Session must be opened by caller prior to calling
+ * - autoConfigSettings()
+ * - autoConfigExtract()
+ * - autoConfig()
+ */
+
+
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/audio.php';
 require_once __DIR__ . '/mpd.php';
@@ -36,73 +44,77 @@ require_once __DIR__ . '/sql.php';
  * Is used by import and export of the auto-configure settings.
  *
  * Mainly it returns an array with:
- * - Which settings are support
+ * - Which settings are supported
  * - A read handler for import
  * - A write handler for export
  */
 function autoConfigSettings() {
 	$debug = true;
-	// Handler is config item name is just setting the playSession
+
+	// Handler for setting just the session var
+	function setSessionVarOnly($values) {
+		$_SESSION[array_key_first($values)] = $values[array_key_first($values)];
+	}
+
+	// Handler for seting the session var and sql value
 	function setphpSession($values) {
 		phpSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
 
-	// Handler is config item name is just setting the playSession and a syscmd call to sysutil.sh
-	function setphpSessionAndSysCmd($values, $command ) {
-		sysCmd('/var/www/util/sysutil.sh '.sprintf($command, $values[array_key_first($values)]) );
+	// Handler for seting the session var, sql value and a syscmd call to sysutil.sh
+	function setphpSessionAndSysCmd($values, $cmd) {
+		sysCmd('/var/www/util/sysutil.sh '. sprintf($cmd, $values[array_key_first($values)]) );
 		phpSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
 
 	function setCfgMpd($values) {
 		$dbh = sqlConnect();
-		$total_query ='';
-		foreach ($values  as $key=>$value) {
-			$query = sprintf('update cfg_mpd set value="%s" where param="%s"; ', $value, $key);
+		foreach ($values as $key => $value) {
+			$query = sprintf("update cfg_mpd set value='%s' where param='%s'", $value, $key);
 			$result = sqlQuery($query, $dbh);
 		}
 	}
 
 	function getCfgMpd($values) {
 		$dbh = sqlConnect();
-		$result ='';
-		foreach ($values  as $key) {
-			$query = 'select param,value from cfg_mpd where param="' . $key . '"';
-			$rows = sqlQuery($query, $dbh);
-			$result = $result . sprintf("%s = \"%s\"\n", $key, $rows[0]['value']);
+		$str = '';
+		foreach ($values as $key) {
+			$query = "select param, value from cfg_mpd where param='" . $key . "'";
+			$result = sqlQuery($query, $dbh);
+			$str .= sprintf("%s = \"%s\"\n", $key, $result[0]['value']);
 		}
-		return $result;
+		return $str;
+	}
+
+	// Can not be directly called as handler, but as shorthand within handler
+	function setDbParams($table, $values, $prefix = '') {
+		$dbh = sqlConnect();
+		foreach ($values as $key => $value) {
+			$param =  strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key ;
+			$result = sqlUpdate($table, $dbh, $param, $value);
+		}
 	}
 
 	// Can not be directly called as handler, but as shorthand with in handler
-	function setDbParams($dbtable, $values, $prefix = '') {
+	function getDbParams($table, $values, $prefix = '') {
 		$dbh = sqlConnect();
-		$total_query ='';
-		foreach ($values  as $key=>$value) {
-			$param =  strlen($prefix) > 0 ? str_replace($prefix, "", $key) : $key ;
-			sqlUpdate($dbtable, $dbh, $param, $value);
-		}
-	}
-
-	// Can not be directly called as handler, but as shorthand with in handler
-	function getDbParams($dbtable, $values, $prefix = '') {
-		$dbh = sqlConnect();
-		$result ='';
-		foreach ($values  as $key) {
-			$param =  strlen($prefix) > 0 ? str_replace($prefix, "", $key) : $key ;
-			$query = 'select param,value from '.$dbtable.' where param="' . $param . '"';
-			$rows = sqlQuery($query, $dbh);
-			if ($rows) {
-				$result = $result . sprintf("%s = \"%s\"\n", $key, $rows[0]['value']);
+		$str ='';
+		foreach ($values as $key) {
+			$param =  strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key ;
+			$query = 'select param,value from '. $table .' where param="' . $param . '"';
+			$result = sqlQuery($query, $dbh);
+			if ($result) {
+				$str .= sprintf("%s = \"%s\"\n", $key, $result[0]['value']);
 			}
 		}
-		return $result;
+		return $str;
 	}
 
 	// Configuration of the autoconfig item handling
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//              most item only have 1 autoconfig item, but network setting requires multiple to be present
 	// - handler for setting the config item
-	// - command - argument for sysutil.sh when setphpSessionAndSysCmd handler is used.
+	// - command - argument for sysutil.sh when setphpSessionAndSysCmd handler is used
 	$configurationHandlers = [
 		'Names',
 		['requires' => ['browsertitle'], 'handler' => setphpSession],
@@ -116,27 +128,46 @@ function autoConfigSettings() {
 			$result = sqlQuery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
 			sysCmd('/var/www/util/sysutil.sh chg-name squeezelite "' . $currentName . '" ' . '"' . $values['squeezelitename'] . '"');
 		}, 'custom_write' => function($values) {
-			$dbh = sqlConnect();
-			$result = sqlQuery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
-			return "squeezelitename = \"".$result."\"\n";
+			$result = sqlQuery("select value from cfg_sl where param='PLAYERNAME'", sqlConnect());
+			return "squeezelitename = \"" . $result[0]['value'] . "\"\n";
 		}],
 		['requires' => ['upnpname'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'chg-name upnp "' . $_SESSION['upnpname'] . '" "%s"'],
 		['requires' => ['dlnaname'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'chg-name dlna "' . $_SESSION['dlnaname'] . '" "%s"'],
 
 		'System',
+		['requires' => ['updater_auto_check'], 'handler' => setSessionVarOnly],
 		['requires' => ['timezone'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
 		['requires' => ['keyboard'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'set-keyboard %s'],
-		// TODO: Decide use the same value as in the database or make Captalized ?then also required a custom writer?
-		// ['requires' => ['cpugov'], 'handler' => function($values) {
-		// TODO: Use native of the caption one ?, is not the same as in session. give problems with extraction
-		// phpSession('write', 'cpugov', $values['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
-		//}],
-		['requires' => ['cpugov'], 'handler' => setphpSession],
-		['requires' => ['hdmiport'], 'handler' => setphpSession],
-		['requires' => ['ipaddr_timeout'], 'handler' => setphpSession],
-		['requires' => ['eth0chk'], 'handler' => setphpSession],
-		['requires' => ['led_state'], 'handler' => setphpSession],
-		['requires' => ['localui'], 'handler' => setphpSession],
+		['requires' => ['worker_responsiveness'], 'handler' => function($values) {
+			$_SESSION['worker_responsiveness'] = $values['worker_responsiveness'];
+			if ($values['worker_responsiveness'] == 'Default') {
+				$workerSleep = 3000000;
+				$waitworkerSleep = 1000000;
+			} else {
+				$workerSleep = 1500000;
+				$waitworkerSleep = 750000;
+			}
+			sysCmd('sed -i "/const WORKER_SLEEP/c\const WORKER_SLEEP = ' . $workerSleep . ';" /var/www/inc/sleep-interval.php');
+			sysCmd('sed -i "/const WAITWORKER_SLEEP/c\const WAITWORKER_SLEEP = ' . $waitworkerSleep . ';" /var/www/inc/sleep-interval.php');
+		}],
+		['requires' => ['cpugov'], 'handler' => function($values) {
+			phpSession('write', 'cpugov', $values['cpugov']);
+			sysCmd('sh -c ' . "'" . 'echo "' . $values['cpugov'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
+		}],
+		['requires' => ['usb_auto_mounter'], 'handler' => function($values) {
+			phpSession('write', 'usb_auto_mounter', $values['usb_auto_mounter']);
+			if ($values['usb_auto_mounter'] == 'udisks-glue') {
+				sysCmd('sed -e "/udisks-glue/ s/^#*//" -i /etc/rc.local');
+				sysCmd('sed -e "/devmon/ s/^#*/#/" -i /etc/rc.local');
+				sysCmd('systemctl enable udisks');
+				sysCmd('systemctl disable udisks2');
+			} else if ($values['usb_auto_mounter'] == 'devmon') {
+				sysCmd('sed -e "/udisks-glue/ s/^#*/#/" -i /etc/rc.local');
+				sysCmd('sed -e "/devmon/ s/^#*//" -i /etc/rc.local');
+				sysCmd('systemctl disable udisks');
+				sysCmd('systemctl enable udisks2');
+			}
+		}],
 		['requires' => ['p3wifi'], 'handler' => function($values) {
 			ctlWifi($values['p3wifi']);
 			phpSession('write', 'p3wifi', $values['p3wifi']);
@@ -145,6 +176,65 @@ function autoConfigSettings() {
 			ctlBt($values['p3bt']);
 			phpSession('write', 'p3bt', $values['p3bt']);
 		}],
+		['requires' => ['hdmiport'], 'handler' => setphpSession],
+		['requires' => ['led_state'], 'handler' => setphpSession],
+		['requires' => ['ipaddr_timeout'], 'handler' => setphpSession],
+		['requires' => ['eth0chk'], 'handler' => setphpSession],
+
+		'Local Display',
+		['requires' => ['localui'], 'handler' => setphpSession],
+
+		'File Sharing',
+		['requires' => ['fs_smb'], 'handler' => setphpSession],
+		['requires' => ['fs_nfs'], 'handler' => setphpSession],
+		['requires' => ['fs_nfs_access'], 'handler' => setphpSession],
+		['requires' => ['fs_nfs_options'], 'handler' => setphpSession],
+		['requires' => ['lcdup'], 'handler' => setphpSession],
+
+		'GPIO Buttons',
+		['requires' => ['gpio_svc'], 'handler' => setphpSession],
+		['requires' => ['gpio_button'], 'handler' => function($values) {
+			$dbh = sqlConnect();
+			// Buttons: id 1 - 8
+			for ($i = 1; $i <= 8; $i++) {
+				$val = explode('|', $values['gpio_button'][$i]);
+				$query = "update cfg_gpio set " .
+					"pin='" . $val[0] . "'," .
+					"enabled='" . $val[1] . "'," .
+					"command='" . $val[2] . "'," .
+					"param='" . $val[3] . "'," .
+					"value='" . $val[4] . "' " .
+					"where id='" . $i . "'";
+				$result = sqlQuery($query, $dbh);
+			}
+			// Bounce time: id 99
+			$val = explode('|', $values['gpio_button'][99]);
+			$query = "update cfg_gpio set " .
+				"param='" . $val[3] . "'," .
+				"value='" . $val[4] . "' " .
+				"where id='99'";
+			$result = sqlQuery($query, $dbh);
+		}, 'custom_write' => function($values) {
+			$result = sqlRead('cfg_gpio', sqlConnect());
+			$format = "gpio_button[%s] = \"%s|%s|%s|%s|%s\"\n";
+			$str = '';
+			foreach ($result as $row) {
+				$str .= sprintf($format, $row['id'], $row['pin'], $row['enabled'], $row['command'], $row['param'], $row['value']);
+			}
+			return $str;
+		}],
+
+		'Security',
+		['requires' => ['shellinabox'], 'handler' => setphpSession],
+
+		'Logs',
+		['requires' => ['reduce_sys_logging'], 'handler' => function($values) {
+			$cmd = $values['reduce_sys_logging'] == '1' ? 'disable' : 'enable';
+			sysCmd('systemctl '. $cmd . ' rsyslog');
+			$_SESSION['reduce_sys_logging'] = $values['reduce_sys_logging'];
+		}],
+		// NOTE: Not restored so we can avoid unnecessary logging in case user forgets they turned it on
+		//['requires' => ['debuglog'], 'handler' => setSessionVarOnly],
 
 		'I2S Device',
 		['requires' => ['i2soverlay'], 'handler' => function($values) {
@@ -177,7 +267,7 @@ function autoConfigSettings() {
 				return getDbParams('cfg_multiroom', $values, 'multiroom_');
 		}],
 
-		'MPD',
+		'MPD Config',
 		['requires' => ['mixer_type'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['device'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['audio_output_format'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
@@ -197,6 +287,8 @@ function autoConfigSettings() {
 		['requires' => ['log_level'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['stop_dsd_silence'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['thesycon_dsd_workaround'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+
+		'MPD Options',
 		['requires' => ['autoplay'], 'handler' => setphpSession],
 		['requires' => ['mpdcrossfade'], 'handler' => setphpSession],
 		['requires' => ['crossfeed'], 'handler' => setphpSession],
@@ -215,55 +307,50 @@ function autoConfigSettings() {
 		['requires' => ['mpd_httpd_port'], 'handler' => setphpSession],
 		['requires' => ['mpd_httpd_encoder'], 'handler' => setphpSession],
 
-		'DSP',
-		['requires' => ['alsaequal'], 'handler' => setphpSession],
-		['requires' => ['eqfa12p'], 'handler' => setphpSession],
+		'CamillaDSP',
+		['requires' => ['camilladsp'], 'handler' => setphpSession],
+		['requires' => ['camilladsp_volume_sync'], 'handler' => setphpSession],
 		['requires' => ['camilladsp_quickconv'], 'handler' => setphpSession],
 		['requires' => ['cdsp_fix_playback'], 'handler' => setphpSession],
-		['requires' => ['camilladsp'], 'handler' => setphpSession],
 
 		'Parametric EQ',
-		['requires' => [ 'eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {
+		['requires' => ['eqfa12p'], 'handler' => setphpSession],
+		['requires' => ['eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {
 			require_once __DIR__ . '/eqp.php';
-			$dbh = sqlConnect();
-			$eqp = Eqp12($dbh);
+			$eqp = Eqp12(sqlConnect());
 			$eqp->import($values);
 		}, 'custom_write' => function($values) {
 			require_once __DIR__ . '/eqp.php';
-			$dbh = sqlConnect();
-			$eqp = Eqp12($dbh);
-			$eqp_export = $eqp->export();
-			return $eqp_export ;
+			$eqp = Eqp12(sqlConnect());
+			$str = $eqp->export();
+			return $str;
 		}],
 
 		'Graphic EQ',
-		['requires' => [ 'eqg_curve_name', 'eqg_curve_values'], 'handler' => function($values) {
+		['requires' => ['alsaequal'], 'handler' => setphpSession],
+		['requires' => ['eqg_curve_name', 'eqg_curve_values'], 'handler' => function($values) {
 			$dbh = sqlConnect();
-			$curve_count = count($values['eqg_curve_name']);
-			$querystr = 'DELETE FROM cfg_eqalsa;';
-			$result = sqlQuery($querystr, $dbh);
-			for($index =0; $index< $curve_count; $index++) {
-				$curve_name = $values['eqg_curve_name'][$index];
-				$curve_values = $values['eqg_curve_values'][$index];
-				$querystr ="INSERT INTO cfg_eqalsa (curve_name, curve_values) VALUES ('" . $curve_name . "', '" . $curve_values . "');";
-				$result = sqlQuery($querystr, $dbh);
+			$result = sqlQuery('delete from cfg_eqalsa', $dbh);
+			$count = count($values['eqg_curve_name']);
+			for ($i = 0; $i < $count; $i++) {
+				$curveName = $values['eqg_curve_name'][$i];
+				$curveValues = $values['eqg_curve_values'][$i];
+				$query ="insert into cfg_eqalsa (curve_name, curve_values) values ('" . $curveName . "', '" . $curveValues . "')";
+				$result = sqlQuery($query, $dbh);
 			}
 		}, 'custom_write' => function($values) {
-			$dbh = sqlConnect();
-			$mounts = sqlRead('cfg_eqalsa', $dbh);
-			$stringformat = "eqg_%s[%d] = \"%s\"\n";
-			$eqg_export = "";
-			foreach ($mounts  as $index=>$mp) {
-				$eqg_export =  $eqg_export . sprintf($stringformat, 'curve_name', $index, $mp['curve_name']);
-				$eqg_export =  $eqg_export . sprintf($stringformat, 'curve_values', $index, $mp['curve_values']);
+			$result = sqlRead('cfg_eqalsa', sqlConnect());
+			$format = "eqg_%s[%d] = \"%s\"\n";
+			$str = '';
+			foreach ($result as $i => $row) {
+				$str .= sprintf($format, 'curve_name', $i, $row['curve_name']);
+				$str .= sprintf($format, 'curve_values', $i, $row['curve_values']);
 			}
-			return $eqg_export;
+			return $str;
 		}],
 
 		'Renderers',
 		['requires' => ['btsvc'], 'handler' => setphpSession],
-		['requires' => ['pairing_agent'], 'handler' => setphpSession],
-		['requires' => ['btmulti'], 'handler' => setphpSession],
 		['requires' => ['rsmafterbt'], 'handler' => setphpSession],
 		['requires' => ['airplaysvc'], 'handler' => setphpSession],
 		['requires' => ['rsmafterapl'], 'handler' => setphpSession],
@@ -275,8 +362,15 @@ function autoConfigSettings() {
 		['requires' => ['rsmafterrb'], 'handler' => setphpSession],
 
 		'Bluetooth',
-		['requires' => ['bluez_pcm_buffer'], 'handler' => setphpSession],
+		['requires' => ['pairing_agent'], 'handler' => setphpSession],
+		 // NOTE: The btmulti var was removed in 8.2.3 because the sharing feature became obsolete
+		['requires' => ['btmulti'], 'handler' => setphpSession],
+		['requires' => ['bluez_pcm_buffer'], 'handler' => function($values) {
+			phpSession('write', 'bluez_pcm_buffer', $values['bluez_pcm_buffer']);
+			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
+		}],
 		['requires' => ['audioout'], 'handler' => setphpSession],
+		['requires' => ['bt_alsa_output_mode'], 'handler' => setSessionVarOnly],
 
 		'AirPlay',
 		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption',
@@ -329,23 +423,20 @@ function autoConfigSettings() {
 
 		'Network (eth0)',
 		['requires' => ['ethmethod', 'ethipaddr', 'ethnetmask', 'ethgateway', 'ethpridns', 'ethsecdns'], 'handler' => function($values) {
-			$dbh = sqlConnect();
-			$netcfg = sqlQuery('select * from cfg_network', $dbh);
 			$value = array('method' => $values['ethmethod'], 'ipaddr' => $values['ethipaddr'], 'netmask' => $values['ethnetmask'],
 				'gateway' => $values['ethgateway'], 'pridns' => $values['ethpridns'], 'secdns' => $values['ethsecdns']);
-			sqlUpdate('cfg_network', $dbh, 'eth0', $value);
+			sqlUpdate('cfg_network', sqlConnect(), 'eth0', $value);
 			cfgNetIfaces();
 		}, 'custom_write' => function($values) {
-			$dbh = sqlConnect();
-			$row = sqlQuery("select * from cfg_network where iface='eth0'", $dbh)[0];
-			$result="";
-			$result = $result."ethmethod = \"" . $row['method'] . "\"\n";
-			$result = $result."ethipaddr = \"" . $row['ipaddr'] . "\"\n";
-			$result = $result."ethnetmask = \"" . $row['netmask'] . "\"\n";
-			$result = $result."ethgateway = \"" . $row['gateway'] . "\"\n";
-			$result = $result."ethpridns = \"" . $row['pridns'] . "\"\n";
-			$result = $result."ethsecdns = \"" . $row['secdns'] . "\"\n";
-			return $result;
+			$result = sqlQuery("select * from cfg_network where iface='eth0'", sqlConnect());
+			$str = '';
+			$str .= "ethmethod = \"" . $result[0]['method'] . "\"\n";
+			$str .= "ethipaddr = \"" . $result[0]['ipaddr'] . "\"\n";
+			$str .= "ethnetmask = \"" . $result[0]['netmask'] . "\"\n";
+			$str .= "ethgateway = \"" . $result[0]['gateway'] . "\"\n";
+			$str .= "ethpridns = \"" . $result[0]['pridns'] . "\"\n";
+			$str .= "ethsecdns = \"" . $result[0]['secdns'] . "\"\n";
+			return $str;
 		}],
 
 		'Network (wlan0)',
@@ -355,11 +446,12 @@ function autoConfigSettings() {
 			$dbh = sqlConnect();
 			$psk = (key_exists('wlanpsk', $optionals) && !empty($optionals['wlanpsk'])) ? $optionals['wlanpsk'] :
 				genWpaPSK($values['wlanssid'], $values['wlanpwd']);
-			$netcfg = sqlQuery('select * from cfg_network', $dbh);
-			$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
-				'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
-				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-				'wlan_channel' => '', 'wlan_country' =>  $netcfg[1]['wlan_country']);
+			$cfgNetwork = sqlQuery('select * from cfg_network', $dbh);
+			$value = array('method' => $cfgNetwork[1]['method'], 'ipaddr' => $cfgNetwork[1]['ipaddr'],
+				'netmask' => $cfgNetwork[1]['netmask'],	'gateway' => $cfgNetwork[1]['gateway'],
+				'pridns' => $cfgNetwork[1]['pridns'], 'secdns' => $cfgNetwork[1]['secdns'],
+				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk,
+				'wlan_psk' => $psk, 'wlan_channel' => '', 'wlan_country' =>  $cfgNetwork[1]['wlan_country']);
 			if (key_exists('wlanmethod', $optionals)) {$value['method'] = $optionals['wlanmethod'];}
 			if (key_exists('wlanipaddr', $optionals)) {$value['ipaddr'] = $optionals['wlanipaddr'];}
 			if (key_exists('wlannetmask', $optionals)) {$value['netmask'] = $optionals['wlannetmask'];}
@@ -371,70 +463,68 @@ function autoConfigSettings() {
 			cfgNetIfaces();
 		},
 		'custom_write' => function($values) {
-			$dbh = sqlConnect();
-			$row = sqlQuery("select * from cfg_network where iface='wlan0'", $dbh)[0];
-			$result="";
-			$result = $result."wlanmethod = \"" . $row['method'] . "\"\n";
-			$result = $result."wlanipaddr = \"" . $row['ipaddr'] . "\"\n";
-			$result = $result."wlannetmask = \"" . $row['netmask'] . "\"\n";
-			$result = $result."wlangateway = \"" . $row['gateway'] . "\"\n";
-			$result = $result."wlanpridns = \"" . $row['pridns'] . "\"\n";
-			$result = $result."wlansecdns = \"" . $row['secdns'] . "\"\n";
-			$result = $result."wlanssid = \"" . $row['wlanssid'] . "\"\n";
-			$result = $result."wlansec = \"" . $row['wlansec'] . "\"\n";
-			$result = $result."wlanpwd = \"" . "" . "\"\n"; // Keep empty
-			$result = $result."wlanpsk = \"" . $row['wlan_psk'] . "\"\n";
-			$result = $result."wlancountry = \"" . $row['wlan_country'] . "\"\n";
-			return $result;
+			$result = sqlQuery("select * from cfg_network where iface='wlan0'", sqlConnect());
+			$str = '';
+			$str .= "wlanmethod = \"" . $result[0]['method'] . "\"\n";
+			$str .= "wlanipaddr = \"" . $result[0]['ipaddr'] . "\"\n";
+			$str .= "wlannetmask = \"" . $result[0]['netmask'] . "\"\n";
+			$str .= "wlangateway = \"" . $result[0]['gateway'] . "\"\n";
+			$str .= "wlanpridns = \"" . $result[0]['pridns'] . "\"\n";
+			$str .= "wlansecdns = \"" . $result[0]['secdns'] . "\"\n";
+			$str .= "wlanssid = \"" . $result[0]['wlanssid'] . "\"\n";
+			$str .= "wlansec = \"" . $result[0]['wlansec'] . "\"\n";
+			$str .= "wlanpwd = \"" . "" . "\"\n"; // Keep empty
+			$str .= "wlanpsk = \"" . $result[0]['wlan_psk'] . "\"\n";
+			$str .= "wlancountry = \"" . $result[0]['wlan_country'] . "\"\n";
+			return $str;
 		}],
 
 		['requires' => ['ssid_ssid', 'ssid_sec', 'ssid_psk'],
 		'handler' => function($values) {
 			$dbh = sqlConnect();
 			sqlDelete('cfg_ssid', $dbh);
-			$ssid_count = count($values['ssid_ssid']);
-			for($index = 0; $index < $ssid_count; $index++) {
-				$value_str = "\"" . $values['ssid_ssid'][$index] . "\", \""  .  $values['ssid_sec'][$index]	. "\", \"" . $values['ssid_psk'][$index] . "\"";
-				sqlInsert('cfg_ssid', $dbh, $value_str);
+			$count = count($values['ssid_ssid']);
+			for ($i = 0; $i < $count; $i++) {
+				$value = "\"" . $values['ssid_ssid'][$i] . "\", \""  .
+					$values['ssid_sec'][$i]	. "\", \"" . $values['ssid_psk'][$i] . "\"";
+				sqlInsert('cfg_ssid', $dbh, $value);
 			}
 			cfgNetIfaces();
 		}, 'custom_write' => function($values) {
-			$dbh = sqlConnect();
-			$ssids = sqlRead('cfg_ssid', $dbh);
-			$stringformat = "ssid_%s[%d] = \"%s\"\n";
-			$ssid_export = "";
-			foreach ($ssids  as $index=>$mp) {
-				$ssid_export =  $ssid_export . sprintf($stringformat, 'ssid', $index, $mp['ssid']);
-				$ssid_export =  $ssid_export . sprintf($stringformat, 'sec', $index, $mp['sec']);
-				$ssid_export =  $ssid_export . sprintf($stringformat, 'psk', $index, $mp['psk']);
+			$result = sqlRead('cfg_ssid', sqlConnect());
+			$format = "ssid_%s[%d] = \"%s\"\n";
+			$str = '';
+			foreach ($result as $i => $row) {
+				$str .= sprintf($format, 'ssid', $i, $row['ssid']);
+				$str .= sprintf($format, 'sec', $i, $row['sec']);
+				$str .= sprintf($format, 'psk', $i, $row['psk']);
 			}
-			return $ssid_export;
+			return $str;
 		}],
 
 		'Network (apd0)',
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'],
 		'optionals' => ['apdpsk'],
 		'handler' => function($values, $optionals) {
-			$dbh = sqlConnect();
 			$psk = (key_exists('apdpsk', $optionals) && !empty($optionals['apdpsk'])) ? $optionals['apdpsk'] :
 				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' =>  $psk,
 				'wlan_country' => '', 'wlan_channel' => $values['apdchan'], 'wlan_router' => 'Off'); // Always set router_mode to Off
-			sqlUpdate('cfg_network', $dbh, 'apd0', $value);
+			sqlUpdate('cfg_network', sqlConnect(), 'apd0', $value);
 			cfgHostApd();
-		},
-		'custom_write' => function($values) {
-			$dbh = sqlConnect();
-			$row = sqlQuery("select * from cfg_network where iface='apd0'", $dbh)[0];
-			$result = $result . "apdssid = \"" . $row['wlanssid'] . "\"\n";
-			$result = $result . "apdpwd = \"" . "" . "\"\n"; // Keep empty
-			$result = $result . "apdpsk = \"" . $row['wlan_psk'] . "\"\n";
-			$result = $result . "apdchan = \"" . $row['wlan_channel'] . "\"\n";
-			$result = $result . "apdrouter = \"" . 'Off' . "\"\n";
-			return $result;
+		}, 'custom_write' => function($values) {
+			$result = sqlQuery("select * from cfg_network where iface='apd0'", sqlConnect());
+			$str = '';
+			$str .= "apdssid = \"" . $result[0]['wlanssid'] . "\"\n";
+			$str .= "apdpwd = \"" . "" . "\"\n"; // Keep empty
+			$str .= "apdpsk = \"" . $result[0]['wlan_psk'] . "\"\n";
+			$str .= "apdchan = \"" . $result[0]['wlan_channel'] . "\"\n";
+			$str .= "apdrouter = \"" . 'Off' . "\"\n";
+			return $str;
 		}],
 
+		// Preferences
 		'Appearance',
 		['requires' => ['themename'], 'handler' => setphpSession],
 		['requires' => ['accent_color'], 'handler' => setphpSession],
@@ -458,14 +548,21 @@ function autoConfigSettings() {
 		['requires' => ['library_onetouch_pl'], 'handler' => setphpSession],
 		['requires' => ['library_albumview_sort'], 'handler' => setphpSession],
 		['requires' => ['library_tagview_sort'], 'handler' => setphpSession],
+		['requires' => ['library_track_play'], 'handler' => setphpSession],
 		['requires' => ['library_recently_added'], 'handler' => setphpSession],
 		['requires' => ['library_encoded_at'], 'handler' => setphpSession],
 		['requires' => ['library_covsearchpri'], 'handler' => setphpSession],
+		['requires' => ['library_thmgen_scan'], 'handler' => setphpSession],
 		['requires' => ['library_hiresthm'], 'handler' => setphpSession],
 		['requires' => ['library_thumbnail_columns'], 'handler' => setphpSession],
 
 		'Library (Advanced)',
-		['requires' => ['library_tagview_genre'], 'handler' => setphpSession],
+		['requires' => ['library_tagview_genre'], 'handler' => function($values) {
+			$value = $values['library_tagview_genre'] == 'Genres' ? 'Genre' :
+				($values['library_tagview_genre'] == 'Composers' ? 'Composer' : $values['library_tagview_genre']);
+			phpSession('write', 'library_tagview_genre', $value);
+		}],
+		//['requires' => ['library_tagview_genre'], 'handler' => setphpSession],
 		['requires' => ['library_tagview_artist'], 'handler' => setphpSession],
 		['requires' => ['library_misc_options'], 'handler' => setphpSession],
 		['requires' => ['library_ignore_articles'], 'handler' => setphpSession],
@@ -476,7 +573,7 @@ function autoConfigSettings() {
 
 		'CoverView',
 		['requires' => ['scnsaver_timeout'], 'handler' => setphpSession], // Timed display
-		['requires' => ['toggle_coverview'], 'handler' => setphpSession], // Automatic display
+		['requires' => ['auto_coverview'], 'handler' => setphpSession], // Automatic display
 		['requires' => ['scnsaver_style'], 'handler' => setphpSession],
 		['requires' => ['scnsaver_mode'], 'handler' => setphpSession],
 		['requires' => ['scnsaver_layout'], 'handler' => setphpSession],
@@ -487,10 +584,11 @@ function autoConfigSettings() {
 			phpSession('write', 'first_use_help', ($values['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
 		}, 'custom_write' => function($values) {
 			$value = $_SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
-			return "first_use_help = \"".$value."\"\n";
+			return "first_use_help = \"" . $value . "\"\n";
 		}],
 
 		'Sources',
+		['requires' => ['fs_mountmon'], 'handler' => setSessionVarOnly],
 		['requires' => ['usb_auto_updatedb'], 'handler' => setphpSession],
 		['requires' => ['cuefiles_ignore'], 'handler' => setphpSession],
 		// Sources are using the array construction of the ini reader
@@ -498,40 +596,34 @@ function autoConfigSettings() {
 		['requires' => ['source_name', 'source_type', 'source_address', 'source_remotedir', 'source_username', 'source_password',
 			'source_charset', 'source_rsize', 'source_wsize', 'source_wsize', 'source_options'], 'handler' => function($values) {
 			// Remove existing mounts
-			$dbh = sqlConnect();
-			$existing_mounts = sqlRead('cfg_source', $dbh);
-			foreach ($existing_mounts  as $mount) {
-				$mount['action'] = 'delete';
-				sourceCfg($mount);
-			}
-			// Add new ones from import
-			$source_count = count($values['source_name']);
+			sqlDelete('cfg_source', sqlConnect());
+			// Add new ones from ini file
+			$count = count($values['source_name']);
 			$keys = array_keys($values);
-			for($index = 0; $index < $source_count; $index++) {
+			for ($i = 0; $i < $count; $i++) {
 				$mount = ['mount' => ['action' => 'add']];
-				foreach($keys as $key) {
-					$mount['mount'][substr($key, 7)] = $values[$key][$index];
+				foreach ($keys as $key) {
+					$mount['mount'][substr($key, 7)] = $values[$key][$i];
 				}
 				sourceCfg($mount);
 			}
 		}, 'custom_write' => function($values) {
-			$dbh = sqlConnect();
-			$mounts = sqlRead('cfg_source', $dbh);
-			$stringformat = "source_%s[%d] = \"%s\"\n";
-			$source_export = "";
-			foreach ($mounts  as $index=>$mp) {
-				$source_export =  $source_export . sprintf($stringformat, 'name', $index, $mp['name']);
-				$source_export =  $source_export . sprintf($stringformat, 'type', $index, $mp['type']);
-				$source_export =  $source_export . sprintf($stringformat, 'address', $index, $mp['address']);
-				$source_export =  $source_export . sprintf($stringformat, 'remotedir', $index, $mp['remotedir']);
-				$source_export =  $source_export . sprintf($stringformat, 'username', $index, $mp['username']);
-				$source_export =  $source_export . sprintf($stringformat, 'password', $index, $mp['password']);
-				$source_export =  $source_export . sprintf($stringformat, 'charset', $index, $mp['charset']);
-				$source_export =  $source_export . sprintf($stringformat, 'rsize', $index, $mp['rsize']);
-				$source_export =  $source_export . sprintf($stringformat, 'wsize', $index, $mp['wsize']);
-				$source_export =  $source_export . sprintf($stringformat, 'options', $index, $mp['options']);
-				}
-			return $source_export;
+			$result = sqlRead('cfg_source', sqlConnect());
+			$format = "source_%s[%d] = \"%s\"\n";
+			$str = '';
+			foreach ($result as $i => $mp) {
+				$str .= sprintf($format, 'name', $i, $mp['name']);
+				$str .= sprintf($format, 'type', $i, $mp['type']);
+				$str .= sprintf($format, 'address', $i, $mp['address']);
+				$str .= sprintf($format, 'remotedir', $i, $mp['remotedir']);
+				$str .= sprintf($format, 'username', $i, $mp['username']);
+				$str .= sprintf($format, 'password', $i, $mp['password']);
+				$str .= sprintf($format, 'charset', $i, $mp['charset']);
+				$str .= sprintf($format, 'rsize', $i, $mp['rsize']);
+				$str .= sprintf($format, 'wsize', $i, $mp['wsize']);
+				$str .= sprintf($format, 'options', $i, $mp['options']);
+			}
+			return $str;
 		}]
 	];
 
@@ -539,7 +631,7 @@ function autoConfigSettings() {
 }
 
 /**
- * Import auto-configure settings.
+ * Import auto-configure settings
  */
 function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure initiated');
@@ -559,9 +651,8 @@ function autoConfig($cfgfile) {
 			// Print new section header
 			if (is_string($config)) {
 				autoCfgLog('autocfg: - ' . $config);
-			}
 			// Check if all required cfgkeys are present
-			elseif (!array_diff_key(array_flip($config['requires']), $autocfg)) {
+			} else if (!array_diff_key(array_flip($config['requires']), $autocfg)) {
 				// Create dict key/value of required settings
 				$values = array_intersect_key($autocfg, array_flip($config['requires']));
 				// Only get dict key/value of optionals that are present
@@ -580,17 +671,15 @@ function autoConfig($cfgfile) {
 				if (!array_key_exists('cmd', $config)) {
 					if (array_key_exists( 'optionals', $config)) {
 						$config['handler'] ($values, $optionals);
-					}
-					else {
+					} else {
 						$config['handler'] ($values);
 					}
-				}
-				else {
+				} else {
 					$config['handler'] ($values, $config['cmd']);
 				}
 			}
-			// Detect reuires with multiple keys which are no all present in provided configs
-			elseif (count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $autocfg)) >= 1) {
+			// Detect requires with multiple keys which are no all present in provided configs
+			else if (count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $autocfg)) >= 1) {
 				$incompleteset = " [ ";
 				foreach ($config['requires'] as $config_require) {
 					$incompleteset = $incompleteset . " ". $config_require;
@@ -610,8 +699,7 @@ function autoConfig($cfgfile) {
 				foreach ($output as $line) {
 					autoCfgLog($line);
 				}
-			}
-			else {
+			} else {
 				autoCfgLog('autocfg: Error script not found!');
 			}
 			unset($autocfg[$script_key]);
@@ -636,8 +724,8 @@ function autoConfig($cfgfile) {
 /**
  * Generates an autoconfig file as string based on the current settings
  */
-function autoconfigExtract() {
-	$autoconfigstring = <<<EOT
+function autoConfigExtract($currentSettings) {
+	$autoConfigString = <<<EOT
 	; #########################################
 	; Copy this file to /boot/moodecfg.ini
 	; It will be processed at startup and the
@@ -654,33 +742,32 @@ function autoconfigExtract() {
 
 	EOT;
 
-	$autoconfigstring = sprintf($autoconfigstring, getMoodeRel('verbose'), date('Y-m-d H:i:s'));
+	$autoConfigString = sprintf($autoConfigString, getMoodeRel('verbose'), date('Y-m-d H:i:s'));
 
 	$configurationHandlers = autoConfigSettings(); // Contains supported configuration items
 	foreach ($configurationHandlers as &$config) {
 		$values = array();
 		// Print new section header
 		if (is_string($config)) {
-			$autoconfigstring = $autoconfigstring . "\n[" . $config. "]\n";
-		}
-		else {
+			$autoConfigString = $autoConfigString . "\n[" . $config. "]\n";
+		} else {
 			if (!array_key_exists('custom_write', $config)) {
-				foreach ($config['requires'] as $config_name) {
-					$config_key = array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
-					if (array_key_exists($config_key, $_SESSION)) {
-						$autoconfigstring = $autoconfigstring . $config_key . " = \"" . $_SESSION[$config_key] . "\"\n";
+				foreach ($config['requires'] as $configName) {
+					$configKey = array_key_exists('session_var', $config) ? $config['session_var'] : $configName;
+					if (array_key_exists($configKey, $currentSettings)) {
+						if ($configKey == 'ashuffle_filter') {
+							$currentSettings[$configKey] = str_replace('"', '\"', $currentSettings[$configKey]);
+						}
+						$autoConfigString = $autoConfigString . $configKey . " = \"" . $currentSettings[$configKey] . "\"\n";
 					}
 				}
-			}
-			else {
-				$autoconfigstring = $autoconfigstring . $config['custom_write'] (
+			} else {
+				$autoConfigString = $autoConfigString . $config['custom_write'] (
 					array_merge($config['requires'], array_key_exists('optionals', $config) ? $config['optionals'] : [])
 				);
 			}
 		}
 	}
 
-	return $autoconfigstring . "\n";
+	return $autoConfigString . "\n";
 }
-
-?>

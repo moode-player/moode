@@ -23,45 +23,47 @@ require_once __DIR__ . '/inc/session.php';
 
 phpSession('open');
 
-if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']) {
-	if ($_POST['update_audioin'] != 'Local' && $_SESSION['mpdmixer'] == 'software') {
-		$_SESSION['notify']['title'] = 'MPD Volume control must first be set to Hardware or Disabled (0dB)';
+if (isset($_POST['update_audio_input']) && $_POST['audio_input'] != $_SESSION['audioin']) {
+	if ($_POST['update_audio_input'] != 'Local' && $_SESSION['mpdmixer'] == 'software') {
+		$_SESSION['notify']['title'] = 'MPD Volume control must first be set to Hardware or Fixed (0dB)';
 		$_SESSION['notify']['duration'] = 6;
-	}
-	else {
-		phpSession('write', 'audioin', $_POST['audioin']);
-		submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
+	} else {
+		phpSession('write', 'audioin', $_POST['audio_input']);
+		submitJob('audioin', $_POST['audio_input'], 'Input set to ' . $_POST['audio_input']);
 	}
 }
-if (isset($_POST['update_rsmafterinp']) && $_POST['rsmafterinp'] != $_SESSION['rsmafterinp']) {
-	phpSession('write', 'rsmafterinp', $_POST['rsmafterinp']);
+
+if (isset($_POST['update_resume_mpd']) && $_POST['resume_mpd'] != $_SESSION['rsmafterinp']) {
+	phpSession('write', 'rsmafterinp', $_POST['resume_mpd']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-if (isset($_POST['update_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
-	phpSession('write', 'audioout', $_POST['audioout']);
-	submitJob('audioout', $_POST['audioout'], 'Output set to ' . $_POST['audioout'], '');
+
+if (isset($_POST['update_audio_output']) && $_POST['audio_output'] != $_SESSION['audioout']) {
+	phpSession('write', 'audioout', $_POST['audio_output']);
+	submitJob('audioout', $_POST['audio_output'], 'Output set to ' . $_POST['audio_output']);
 }
 
 phpSession('close');
 
 // Input source
-$_select['audioin'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">Local (MPD)</option>\n";
+$_select['audio_input'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">MPD</option>\n";
 if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
-	$_select['audioin'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
-}
-elseif ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
-	$_select['audioin'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
+	$_select['audio_input'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
+} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+	$_select['audio_input'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
 }
 
 // Resume MPD after changing to Local
-$_select['rsmafterinp'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterinp'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['rsmafterinp'] .= "<option value=\"No\" " . (($_SESSION['rsmafterinp'] == 'No') ? "selected" : "") . ">No</option>\n";
+$_select['resume_mpd'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterinp'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['resume_mpd'] .= "<option value=\"No\" " . (($_SESSION['rsmafterinp'] == 'No') ? "selected" : "") . ">No</option>\n";
 
 // Output device
-$_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local device</option>\n";
-//$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth stream</option>\n";
+$_select['audio_output'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local device</option>\n";
+if ($_SESSION['btsvc'] == '1') {
+	$_select['audio_output'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth speaker</option>\n";
+}
 
-waitWorker(1, 'inp-config');
+waitWorker('inp-config');
 
 $tpl = "inp-config.html";
 $section = basename(__FILE__, '.php');

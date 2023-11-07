@@ -34,52 +34,63 @@ phpSession('open');
 
 // Output device
 if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSION['cardnum']) {
+	 // AirPlay & Spotify restarted if device (cardnum) changed
+	$deviceChange = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0;
+	// 0 = Special mixer change action not required
+	$mixerChange = 0;
 
-	// AirPlay and Spotify will be restarted if device (cardnum) has changed
-	$device_chg = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0;
-
-	// Mixer change (no mixer change)
-	$mixer_chg = 0;
-
-	// Update SQL table
 	sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
-
-	// Submit job
-	$queue_args = $device_chg . ',' . $mixer_chg;
-	submitJob('mpdcfg', $queue_args, 'Settings updated', 'MPD restarted');
+	$queueArgs = $deviceChange . ',' . $mixerChange;
+	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
-
 // Volume type
 if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mpdmixer']) {
-	// Changing to Fixed (0dB)
-	if ($_POST['mixer_type'] == 'none') {
-		$mixer_chg = 'fixed';
-	}
-	// Changing from Fixed (0dB)
-	elseif ($_SESSION['mpdmixer'] == 'none') {
-		$mixer_chg = $_POST['mixer_type'];
-	}
-	// Change between hardware, software or null mixer
-	else {
-		$mixer_chg = 0;
+	$mixerTypeSelected = $_POST['mixer_type'];
+	$camillaDspVolumeSync = 'off';
+
+	if ($mixerTypeSelected == 'none' || $mixerTypeSelected == 'null') {
+		// Changing to Fixed (0dB) or Null
+		$mixerChange = 'fixed_or_null';
+	} else if ($mixerTypeSelected == 'camilladsp') {
+		if (doesCamillaDSPCfgHaveVolFilter()) {
+			$mixerTypeSelected = 'null';
+			$mixerChange = 'fixed_or_null';
+			$camillaDspVolumeSync = 'on';
+		} else {
+			$mixerTypeSelected = 'no_volume_filter';
+		}
+	} else if ($_SESSION['mpdmixer'] == 'none' || $_SESSION['mpdmixer'] == 'null') {
+		// Changing from Fixed (0dB) or Null
+		$mixerChange = $mixerTypeSelected;
+	} else {
+		// 0 = Special mixer change action not required
+		$mixerChange = 0;
 	}
 
-	// Device change (no device change)
-	$device_chg = 0;
-
-	// Update SQL table
-	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $_POST['mixer_type']);
-
-	// Submit job
-	$queue_args = $device_chg . ',' . $mixer_chg;
-	submitJob('mpdcfg', $queue_args, 'Settings updated', 'MPD restarted');
+	if ($mixerTypeSelected == 'no_volume_filter') {
+		$_SESSION['notify']['title'] = 'Cannot set to CamillaDSP';
+		$_SESSION['notify']['msg'] = 'Current CamillaDSP configuration does not contain a Volume filter';
+		$_SESSION['notify']['duration'] = 5;
+	} else {
+		phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
+		$deviceChange = 0;
+		sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $mixerTypeSelected);
+		$queueArgs = $deviceChange . ',' . $mixerChange;
+		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+	}
+}
+// CamillaDSP volume range
+if (isset($_POST['update_camilladsp_volume_range']) && $_POST['camilladsp_volume_range'] != $_SESSION['camilladsp_volume_range']) {
+	$_SESSION['camilladsp_volume_range'] = $_POST['camilladsp_volume_range'];
+	sysCmd("sed -i '/dynamic_range/c\dynamic_range = " . $_SESSION['camilladsp_volume_range'] . "' /etc/mpd2cdspvolume.config");
+	sysCmd('systemctl restart mpd2cdspvolume');
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // I2S AUDIO DEVICE
 
 // Flag that controls what is displayed in the Output device field after changing I2S device or overlay
-$_reboot_required = 0;
-
+$rebootRequired = 0;
 // Named device
 if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice']) && $_POST['i2sdevice'] != $_SESSION['i2sdevice']) {
@@ -87,8 +98,7 @@ if (isset($_POST['update_i2s_device'])) {
 		$msg = $_POST['i2sdevice'] == 'None' ?
 			'<b>Restart required</b><br>After restart select an Output device.' :
 			'<b>Restart required</b><br>After restart edit chip and/or driver options.';
-
-		$_reboot_required = 1;
+		$rebootRequired = 1;
 		submitJob('i2sdevice', $_POST['i2sdevice'], 'Settings updated', $msg, 300);
 	}
 }
@@ -99,8 +109,7 @@ if (isset($_POST['update_i2s_overlay'])) {
 		$msg = $_POST['i2soverlay'] == 'None' ?
 			'<b>Restart required</b><br>After restart select Output device.' :
 			'<b>Restart required</b>';
-
-		$_reboot_required = 1;
+		$rebootRequired = 1;
 		submitJob('i2sdevice', 'None', 'Settings updated', $msg, 300);
 	}
 }
@@ -109,9 +118,8 @@ if (isset($_POST['update_drvoptions'])) {
 	if (isset($_POST['drvoptions']) && $_POST['drvoptions'] != 'none') {
 		$result = sqlQuery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 		$driver = explode(',', $result[0]['driver']);
-		$driverupd = $_POST['drvoptions'] == 'Enabled' ? $driver[0] . ',' . $result[0]['drvoptions'] : $driver[0];
-
-		$result = sqlQuery("UPDATE cfg_audiodev SET driver='" . $driverupd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
+		$driverUpd = $_POST['drvoptions'] == 'Enabled' ? $driver[0] . ',' . $result[0]['drvoptions'] : $driver[0];
+		$result = sqlQuery("UPDATE cfg_audiodev SET driver='" . $driverUpd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 		submitJob('i2sdevice', $_SESSION['i2sdevice'], 'Settings updated', 'Restart required');
 	}
 }
@@ -121,24 +129,23 @@ if (isset($_POST['update_drvoptions'])) {
 // Max volume
 if (isset($_POST['update_alsavolume_max'])) {
 	if (isset($_POST['alsavolume_max'])) {
-		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Settings updated', '');
+		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Settings updated');
 		phpSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
 	}
 }
 // Output mode
 if (isset($_POST['update_alsa_output_mode'])) {
 	if (isset($_POST['alsa_output_mode']) && $_POST['alsa_output_mode'] != $_SESSION['alsa_output_mode']) {
-		$old_output_mode = $_SESSION['alsa_output_mode'];
-		$new_output_mode = $_POST['alsa_output_mode'];
+		$oldOutputMode = $_SESSION['alsa_output_mode'];
+		$newOutputMode = $_POST['alsa_output_mode'];
 		// NOTE: Update session first for functions used in job
-		phpSession('write', 'alsa_output_mode', $new_output_mode);
-		submitJob('alsa_output_mode', $old_output_mode, 'Settings updated', '');
+		phpSession('write', 'alsa_output_mode', $newOutputMode);
+		submitJob('alsa_output_mode', $oldOutputMode, 'Settings updated');
 	}
 }
 // Loopback
 if (isset($_POST['update_alsa_loopback'])) {
 	if (isset($_POST['alsa_loopback']) && $_POST['alsa_loopback'] != $_SESSION['alsa_loopback']) {
-
 		// Check to see if module is in use
 		if ($_POST['alsa_loopback'] == 'Off') {
 			$result = sysCmd('sudo modprobe -r snd-aloop');
@@ -146,14 +153,12 @@ if (isset($_POST['update_alsa_loopback'])) {
 				$_SESSION['notify']['title'] = 'Unable to turn off';
 				$_SESSION['notify']['msg'] = 'Loopback is in use';
 				$_SESSION['notify']['duration'] = 5;
-			}
-			else {
-				submitJob('alsa_loopback', 'Off', 'Settings updated', '');
+			} else {
+				submitJob('alsa_loopback', 'Off', 'Settings updated');
 				phpSession('write', 'alsa_loopback', 'Off');
 			}
-		}
-		else {
-			submitJob('alsa_loopback', 'On', 'Settings updated', '');
+		} else {
+			submitJob('alsa_loopback', 'On', 'Settings updated');
 			phpSession('write', 'alsa_loopback', 'On');
 		}
 	}
@@ -165,12 +170,18 @@ if (isset($_POST['update_alsa_loopback'])) {
 
 // Restart mpd
 if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
-	submitJob('mpdrestart', '', 'MPD restarted', '');
+	submitJob('mpdrestart', '', 'MPD restarted');
 }
 // Autoplay last played item after reboot/powerup
 if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 	$_SESSION['notify']['title'] = 'Settings updated';
 	phpSession('write', 'autoplay', $_POST['autoplay']);
+}
+
+// Metadata file
+if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
+	phpSession('write', 'extmeta', $_POST['extmeta']);
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // Auto-shuffle
@@ -179,12 +190,10 @@ if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
 	$_SESSION['notify']['title'] = 'Settings updated';
 	phpSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
-
 	// Turn off MPD random play so no conflict
 	$sock = openMpdSock('localhost', 6600);
 	sendMpdCmd($sock, 'random 0');
 	$resp = readMpdResp($sock);
-
 	// Kill the service if indicated
 	if ($_POST['ashufflesvc'] == 0) {
 		sysCmd('killall -s 9 ashuffle > /dev/null');
@@ -200,8 +209,7 @@ if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSIO
 		$_SESSION['notify']['title'] = 'Settings updated';
 		$_SESSION['notify']['msg'] = 'Random play turned off';
 		stopAutoShuffle();
-	}
-	else {
+	} else {
 		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
@@ -213,8 +221,7 @@ if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SE
 		$_SESSION['notify']['title'] = 'Settings updated';
 		$_SESSION['notify']['msg'] = 'Random play turned off';
 		stopAutoShuffle();
-	}
-	else {
+	} else {
 		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
@@ -238,23 +245,21 @@ if (isset($_POST['update_volume_db_display']) && $_POST['volume_db_display'] != 
 }
 // USB volume knob
 if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
-	submitJob('usb_volknob', $_POST['usb_volknob'], 'Settings updated', '');
+	submitJob('usb_volknob', $_POST['usb_volknob'], 'Settings updated');
 	phpSession('write', 'usb_volknob', $_POST['usb_volknob']);
 }
-// Rotary encoder
+// Rotary encoder service
 if (isset($_POST['update_rotenc'])) {
-	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
-		$title = 'Settings updated';
-		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
-	}
-
 	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
-		$title = 'Settings updated';
 		phpSession('write', 'rotaryenc', $_POST['rotaryenc']);
+		submitJob('rotaryenc', $_POST['rotaryenc'], 'Settings updated');
 	}
-
-	if (isset($title)) {
-		submitJob('rotaryenc', $_POST['rotaryenc'], $title, '');
+}
+// Rotary encoder settings
+if (isset($_POST['update_rotenc_params'])) {
+	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
+		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
+		submitJob('rotaryenc', $_POST['rotaryenc'], 'Settings updated');
 	}
 }
 
@@ -262,17 +267,17 @@ if (isset($_POST['update_rotenc'])) {
 
 // Crossfade
 if (isset($_POST['mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION['mpdcrossfade']) {
-	submitJob('mpdcrossfade', $_POST['mpdcrossfade'], 'Settings updated', '');
+	submitJob('mpdcrossfade', $_POST['mpdcrossfade'], 'Settings updated');
 	phpSession('write', 'mpdcrossfade', $_POST['mpdcrossfade']);
 }
 // Crossfeed
 if (isset($_POST['crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed']) {
 	phpSession('write', 'crossfeed', $_POST['crossfeed']);
-	submitJob('crossfeed', $_POST['crossfeed'], 'Settings updated', '');
+	submitJob('crossfeed', $_POST['crossfeed'], 'Settings updated');
 }
 // Polarity inversion
 if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
-	submitJob('invpolarity', $_POST['invert_polarity'], 'Settings updated', '');
+	submitJob('invpolarity', $_POST['invert_polarity'], 'Settings updated');
 	phpSession('write', 'invert_polarity', $_POST['invert_polarity']);
 }
 
@@ -280,7 +285,7 @@ if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SE
 
 // Server
 if (isset($_POST['mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
-	submitJob('mpd_httpd', $_POST['mpd_httpd'], 'Settings updated', '');
+	submitJob('mpd_httpd', $_POST['mpd_httpd'], 'Settings updated');
 	phpSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
 }
 // Port
@@ -299,19 +304,16 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 // CamillaDSP
 if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
 	$currentMode = $_SESSION['camilladsp'];
+	$newMode = $_POST['camilladsp'];
 	phpSession('write', 'camilladsp', $_POST['camilladsp']);
 	$cdsp->selectConfig($_POST['camilladsp']);
+
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
-    if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-		submitJob('camilladsp', $_POST['camilladsp'], 'Settings updated', '');
-	} else {
-		$cdsp->reloadConfig();
-	}
+	updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
 }
-
 // Parametric eq
 $eqfa12p = Eqp12($dbh);
 if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] || intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex())) {
@@ -323,64 +325,79 @@ if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $
 	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Settings updated', 'MPD restarted');
 }
 unset($eqfa12p);
-
 // Graphic eq
 if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
 	// Pass old,new curve name to worker job
 	phpSession('write', 'alsaequal', $_POST['alsaequal']);
-	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Settings updated', '');
+	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Settings updated');
 }
 
 phpSession('close');
 
-// LOAD MPD PARAMS
 $result = sqlRead('cfg_mpd', $dbh);
-$mpdconf = array();
+$cfgMPD = array();
 foreach ($result as $row) {
-	$mpdconf[$row['param']] = $row['value'];
+	$cfgMPD[$row['param']] = $row['value'];
 }
 
 // AUDIO OUTPUT
 
 // Output device
 // Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device
-$dev = $_reboot_required == true ? array('********') : getAlsaDeviceNames();
-if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
-if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
-if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdconf['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
-if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($mpdconf['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
+$dev = $rebootRequired == true ? array('********') : getAlsaDeviceNames();
+if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($cfgMPD['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
+if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($cfgMPD['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
+if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($cfgMPD['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
+if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
 $cards = getAlsaCards();
-$_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdconf['device']] == 'empty') ? 'Device turned off or disconnected' : '';
+$_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$cfgMPD['device']] == 'empty') ? 'Device turned off or disconnected' : '';
 // Volume type
-// Hardware, Software, Fixed (0dB), Null (External control)
-if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
-	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
+// Hardware, Software, Fixed (0dB), Null (External control), CamillaDSP
+if ($_SESSION['alsavolume'] != 'none') {
+	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($cfgMPD['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
 }
-$_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($mpdconf['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($mpdconf['mixer_type'] == 'null') ? "selected" : "") . ">Null (External control)</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"software\" " .
+	($cfgMPD['mixer_type'] == 'software' ? "selected" : "") . ">Software</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"none\" " .
+	($cfgMPD['mixer_type'] == 'none' ? "selected" : "") . ">Fixed (0dB output)</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"null\" " .
+	($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'off' ? "selected" : "") . ">Null (External control)</option>\n";
+if ($_SESSION['camilladsp'] != 'off') {
+	$_mpd_select['mixer_type'] .= "<option value=\"camilladsp\" " .
+		(($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? "selected" : "") . ">CamillaDSP</option>\n";
+	$_camilladsp_volume_range_hide = $cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on' ? '' : 'hide';
+	$_select['camilladsp_volume_range'] .= "<option value=\"30\" " . (($_SESSION['camilladsp_volume_range'] == '30') ? "selected" : "") . ">30 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"40\" " . (($_SESSION['camilladsp_volume_range'] == '40') ? "selected" : "") . ">40 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"50\" " . (($_SESSION['camilladsp_volume_range'] == '50') ? "selected" : "") . ">50 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"60\" " . (($_SESSION['camilladsp_volume_range'] == '60') ? "selected" : "") . ">60 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"70\" " . (($_SESSION['camilladsp_volume_range'] == '70') ? "selected" : "") . ">70 dB</option>\n";
+	$_select['camilladsp_volume_range'] .= "<option value=\"80\" " . (($_SESSION['camilladsp_volume_range'] == '80') ? "selected" : "") . ">80 dB</option>\n";
+} else {
+	$_camilladsp_volume_range_hide = 'hide';
+}
 // Named I2S devices
 $result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
+sort($result);
 $array = array();
 $array[0]['name'] = 'None';
-$dac_list = array_merge($array, $result);
-foreach ($dac_list as $dac) {
+$dacList = array_merge($array, $result);
+foreach ($dacList as $dac) {
 	$selected = ($_SESSION['i2sdevice'] == $dac['name']) ? ' selected' : '';
 	$_i2s['i2sdevice'] .= sprintf('<option value="%s"%s>%s</option>\n', $dac['name'], $selected, $dac['name']);
 }
 // DT overlays
-$overlay_list = sysCmd('moodeutl -o');
-array_unshift($overlay_list, 'None');
-foreach ($overlay_list as $overlay) {
-	$overlay_name = ($overlay == 'None') ? $overlay : substr($overlay, 0, -5); // Strip .dtbo extension
+$overlayList = sysCmd('moodeutl -o');
+array_unshift($overlayList, 'None');
+foreach ($overlayList as $overlay) {
+	$overlayName = ($overlay == 'None') ? $overlay : substr($overlay, 0, -5); // Strip .dtbo extension
 	// NOTE: This can be used to filter the list
-	/*$result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes' AND driver='" . $overlay_name . "'", $dbh);
-	if ($result === true || $overlay_name == 'None') { // true = query executed but returnes no results
-		$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
-		$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
+	/*$result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes' AND driver='" . $overlayName . "'", $dbh);
+	if ($result === true || $overlayName == 'None') { // true = query executed but returnes no results
+		$selected = ($_SESSION['i2soverlay'] == $overlayName) ? ' selected' : '';
+		$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlayName, $selected, $overlayName);
 	}*/
-	$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
-	$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
+	$selected = ($_SESSION['i2soverlay'] == $overlayName) ? ' selected' : '';
+	$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlayName, $selected, $overlayName);
 }
 // Driver options
 $result = sqlQuery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
@@ -388,8 +405,7 @@ if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
 	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
 	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
 	$_driveropt_btn_disable = '';
-}
-else {
+} else {
 	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
 	$_driveropt_btn_disable = 'disabled';
 }
@@ -403,8 +419,7 @@ if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' ||
 	$_chip_link_disable = 'onclick="return false;"';
 	$_i2sdevice_btn_disable = 'disabled';
 	$_i2soverlay_btn_disable = 'disabled';
-}
-else {
+} else {
 	$_output_device_btn_disabled = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? '' : 'disabled';
 	$_volume_type_btn_disabled = '';
 	$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
@@ -419,35 +434,41 @@ else {
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max = '';
 	$_alsavolume_max_readonly = 'readonly';
-	$_alsavolume_max_hide = 'hide'; // Hides the SET button
-	$_alsavolume_max_msg = "<em>&nbsp;Hardware volume controller not detected</em>";
-}
-else {
+	$_alsavolume_max_disable = 'disabled';
+	$_alsavolume_max_msg = "<i>Hardware volume controller not detected</i><br>";
+} else {
 	$_alsavolume_max = $_SESSION['alsavolume_max'];
 	$_alsavolume_max_readonly = '';
-	$_alsavolume_max_hide = '';
+	$_alsavolume_max_disable = '';
 	$_alsavolume_max_msg = '';
 }
 // Output mode
 $_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
-$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
-$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
+$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
+$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
+$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 // Loopback
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
-$_select['alsa_loopback1'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
-
+$autoClick = " onchange=\"autoClick('#btn-set-alsa-loopback');\" " . $_alsa_loopback_disable;
+$_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Multiroom configure
 $_multiroom_feat_enable = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 
 // MPD OPTIONS
 
 // Autoplay after start
-$_select['autoplay1'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['autoplay0'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-autoplay');\"";
+$_select['autoplay_on']  .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['autoplay_off'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+// Metadata file
+$autoClick = " onchange=\"autoClick('#btn-set-extmeta');\"";
+$_select['extmeta_on']  .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-1\" value=\"1\" " . (($_SESSION['extmeta'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['extmeta_off'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-2\" value=\"0\" " . (($_SESSION['extmeta'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Auto-shuffle
-$_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['ashufflesvc0'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-ashufflesvc');\"";
+$_select['ashufflesvc_on']  .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['ashufflesvc_off'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['ashuffle_mode'] .= "<option value=\"Track\" " . (($_SESSION['ashuffle_mode'] == 'Track') ? "selected" : "") . ">Track</option>\n";
 $_select['ashuffle_mode'] .= "<option value=\"Album\" " . (($_SESSION['ashuffle_mode'] == 'Album') ? "selected" : "") . ">Album</option>\n";
 $_ashuffle_filter = str_replace('"', '&quot;', $_SESSION['ashuffle_filter']);
@@ -458,21 +479,25 @@ $_select['volume_step_limit'] .= "<option value=\"10\" " . (($_SESSION['volume_s
 // Max MPD volume
 $_volume_mpd_max = $_SESSION['volume_mpd_max'];
 // Display dB volume
-$_select['volume_db_display1'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle_volume_db_display1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['volume_db_display0'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle_volume_db_display2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-volume-db-display');\"";
+$_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // USB volume knob
-$_select['usb_volknob1'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle_usb_volknob1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['usb_volknob0'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle_usb_volknob2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-usb-volknob');\"";
+$_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Rotary encoder
-$_select['rotaryenc1'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['rotaryenc0'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-rotaryenc');\"";
+$_select['rotaryenc_on']  .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rotaryenc_off'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rotenc_params'] = $_SESSION['rotenc_params'];
 // Crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
-
-// Local out
-// NOTE: Only one of the DSP'can be on
-if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off' && $_SESSION['multiroom_rx'] != 'On') {
+// Configure DSP buttons
+if ($_SESSION['audioout'] == 'Local' &&
+	$_SESSION['multiroom_tx'] == 'Off' &&
+	$_SESSION['multiroom_rx'] != 'On') {
+	// Only one DSP'can be on
 	$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
@@ -480,17 +505,15 @@ if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off' && $_
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
 	$cmmodel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
 	$name = $_SESSION['hdwrrev'];
-	// Pi-Zero 2 W, Pi-2B rev 1.2, Allo USBridge SIG, Pi-3B/B+/A+, Pi-4B
+	// CamillaDSP can only be used on ARM7
 	if ((strpos($name, 'Pi-Zero 2') !== false) || $name == 'Pi-2B 1.2 1GB' || $model == '3' || $model == '4' || $name == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 		$_camilladsp_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-	}
-	else {
+	} else {
 		$_camilladsp_set_disabled = 'disabled';
 	}
-}
-// Bluetooth out or Multiroom Sender or Receiver On
-// NOTE: Don't allow any DSP to be set
-else {
+} else {
+	// Don't allow any DSP to be set for:
+	// Bluetooth speaker, Multiroom Sender/Receiver On or ALSA output mode "Pure Direct"
 	$_invpolarity_set_disabled = 'disabled';
 	$_crossfeed_set_disabled = 'disabled';
 	$_eqfa12p_set_disabled = 'disabled';
@@ -499,8 +522,9 @@ else {
 }
 
 // Polarity inversion
-$_select['invert_polarity1'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['invert_polarity0'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-invert-polarity');\" " . $_invpolarity_set_disabled;
+$_select['invert_polarity_on']  .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['invert_polarity_off'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Crossfeed
 $_select['crossfeed'] .= "<option value=\"Off\" " . (($_SESSION['crossfeed'] == 'Off' OR $_SESSION['crossfeed'] == '') ? "selected" : "") . ">Off</option>\n";
 if ($_crossfeed_set_disabled == '') {
@@ -510,8 +534,9 @@ if ($_crossfeed_set_disabled == '') {
 	$_select['crossfeed'] .= "<option value=\"650 10.0\" " . (($_SESSION['crossfeed'] == '650 10.0') ? "selected" : "") . ">650 Hz 10.0 dB</option>\n";
 }
 // HTTP streaming server
-$_select['mpd_httpd1'] .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd1\" value=\"1\" " . (($_SESSION['mpd_httpd'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['mpd_httpd0'] .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd2\" value=\"0\" " . (($_SESSION['mpd_httpd'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-mpd-httpd');\"";
+$_select['mpd_httpd_on']  .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd-1\" value=\"1\" " . (($_SESSION['mpd_httpd'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['mpd_httpd_off'] .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd-2\" value=\"0\" " . (($_SESSION['mpd_httpd'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Port
 $_mpd_httpd_port = $_SESSION['mpd_httpd_port'];
 // Encoder
@@ -524,22 +549,20 @@ $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_ht
 $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
-	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
+	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, ucfirst($config_name));
 }
-
-//Check, if the config file is valid
-if( $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {
-	$camilladsp_config_check_result = $cdsp->checkConfigFile($_SESSION['camilladsp']);
-	$camilladsp_config_check_output = implode('<br>', $camilladsp_config_check_result['msg']);
-	if( $camilladsp_config_check_result['valid'] == CDSP_CHECK_NOTFOUND) {
-		$camilladsp_config_check = "<span style='color: red'>&#10007;</span> ".$camilladsp_config_check_output;
-	} elseif( $camilladsp_config_check_result['valid'] == CDSP_CHECK_VALID) {
-		$camilladsp_config_check = "<span style='color: green'>&check;</span> " . $camilladsp_config_check_output;
+// Check if the config file is valid
+if ($_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {
+	$result = $cdsp->checkConfigFile($_SESSION['camilladsp']);
+	$output = implode('<br>', $result['msg']);
+	if ($result['valid'] == CDSP_CHECK_NOTFOUND) {
+		$_camilladsp_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
+	} else if ($result['valid'] == CDSP_CHECK_VALID) {
+		$_camilladsp_config_check = '<div class="config-help-static"><span style="color: green">&check;</span> ' . $output . '</div>';
 	} else {
-		$camilladsp_config_check = "<span style='color: red'>&#10007;</span> " . $camilladsp_config_check_output;
+		$_camilladsp_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
 	}
 }
-
 // Parametric equalizer
 $eqfa12p = Eqp12($dbh);
 $presets = $eqfa12p->getPresets();
@@ -552,7 +575,6 @@ foreach ($curveList as $key=>$curveName) {
 	$_select['eqfa12p'] .= sprintf('<option value="%s" %s>%s</option>\n', $key, $selected, $curveName);
 }
 unset($eqfa12p);
-
 // Graphic equalizer
 $result = sqlQuery('SELECT curve_name FROM cfg_eqalsa', $dbh);
 $array = array();
@@ -564,7 +586,7 @@ foreach ($curveList as $curve) {
 	$_select['alsaequal'] .= sprintf('<option value="%s" %s>%s</option>\n', $curve['curve_name'], $selected, $curveName);
 }
 
-waitWorker(1, 'snd-config');
+waitWorker('snd-config');
 
 $tpl = "snd-config.html";
 $section = basename(__FILE__, '.php');

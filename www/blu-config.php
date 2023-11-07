@@ -28,10 +28,6 @@ require_once __DIR__ . '/inc/cdsp.php';
 
 phpSession('open');
 
-//
-// FORM SUBMIT
-//
-
 // Controller commands
 if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
 	$cmd = $_POST['btcmd'];
@@ -80,7 +76,7 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	setAudioOut($_POST['audioout']);
 }
 
-// Change MPD audio output
+// Change audio destination
 if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		// Change to Bluetooth out, update MAC address
@@ -115,36 +111,31 @@ if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
-phpSession('close');
+// ALSA output mode
+if (isset($_POST['update_bt_alsa_output_mode']) && $_POST['update_bt_alsa_output_mode'] == '1') {
+	$_SESSION['bt_alsa_output_mode'] = $_POST['bt_alsa_output_mode'];
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_POST['bt_alsa_output_mode'] . "' /etc/bluealsaaplay.conf");
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
 
-//
-// TEMPLATE DATA
-//
+phpSession('close');
 
 // Command list
 $_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Standard)</option>\n";
-$_cmd['btcmd'] .= "<option value=\"-S\" " . (($cmd == '-S') ? "selected" : "") . ">SCAN (Include LE devices)</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-S\" " . (($cmd == '-S') ? "selected" : "") . ">SCAN (Plus LE devices)</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-p\" " . (($cmd == '-p') ? "selected" : "") . ">LIST paired</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-c\" " . (($cmd == '-c') ? "selected" : "") . ">LIST connected</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-l\" " . (($cmd == '-l') ? "selected" : "") . ">LIST trusted</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-D\" " . (($cmd == '-D') ? "selected" : "") . ">DISCONNECT all</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-R\" " . (($cmd == '-R') ? "selected" : "") . ">REMOVE all devices</option>\n";
-//$_cmd['btcmd'] .= "<option value=\"-i\" " . (($cmd == '-i') ? "selected" : "") . ">INITIALIZE controller</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-H\" " . (($cmd == '-H') ? "selected" : "") . ">HELP</option>\n";
 
 // Initial control states
 $_hide_ctl['paired_device'] = 'hide';
 $_hide_ctl['connected_device'] = 'hide';
 $_hide_ctl['scanned_device'] = 'hide';
-//$_hide_ctl['chg_audioout'] = $cmd == '-c' ? '' : 'hide';
 $_bt_disabled = $_SESSION['btsvc'] == '1' ? '' : 'disabled';
-if($_SESSION['btsvc'] == '1') {
-	$_bt_msg_hide = 'hide';
-	$_bt_msg_margin = '';
-} else {
-	$_bt_msg_hide = '';
-	$_bt_msg_margin = 'config-help-no-margin';
-}
+
 if ($cmd == '-p' || $cmd == '-c') {
 	$_ao_msg_hide = '';
 	$_ao_msg_margin = 'config-help-no-margin';
@@ -155,25 +146,16 @@ if ($cmd == '-p' || $cmd == '-c') {
 
 // Run the cmd
 $result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
-if ($cmd == '-i') {
-	// Remove ansi color codes and fix formatting in the output of -i
-	$result = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $result);
-	$result = str_replace('Waiting to connect to bluetoothd...', 'Waiting to connect to bluetoothd...<br>', $result);
-}
 
 // Format output for HTML
-if ($cmd == '-H' || $cmd == '-i') {
-	for ($i = 0; $i < count($result); $i++) {
-		$_cmd_output .= $result[$i] . "<br>";
-	}
-}
-else {
+if ($cmd == '-H') {
+	$_cmd_output = 'Turn Bluetooth on in Renderers then select a command to submit to the controller<br>';
+} else {
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {
 			if (stripos($result[$i], 'Trust expires') !== false) {
 				$_cmd_output .= $result[$i] . '<br>**<br>';
-			}
-			else {
+			} else {
 				$_cmd_output .= '** ' . substr($result[$i], 21) . '<br>';
 			}
 		}
@@ -220,7 +202,11 @@ $_select['pcm_buffer'] .= "<option value=\"60000\" "  . (($_SESSION['bluez_pcm_b
 $_select['pcm_buffer'] .= "<option value=\"40000\" "  . (($_SESSION['bluez_pcm_buffer'] == '40000') ? "selected" : "")  . "> 40 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"20000\" "  . (($_SESSION['bluez_pcm_buffer'] == '20000') ? "selected" : "")  . "> 20 ms</option>\n";
 
-waitWorker(1, 'blu-config');
+// ALSA output mode
+$_select['bt_alsa_output_mode'] .= "<option value=\"_audioout\" " . (($_SESSION['bt_alsa_output_mode'] == '_audioout') ? "selected" : "") . ">Default</option>\n";
+$_select['bt_alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['bt_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Compatibility</option>\n";
+
+waitWorker('blu-config');
 
 $tpl = "blu-config.html";
 $section = basename(__FILE__, '.php');

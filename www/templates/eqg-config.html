@@ -22,99 +22,125 @@
 <div class="container">
 	<h1 class="snd-config">Graphic EQ</h1>
 
-    <form class="form-horizontal" action="" method="post">
-    	<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
-			<a data-toggle="modal" href="#new-curvename"><button class="btn btn-medium btn-primary">New</button></a>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Update existing curve with new parameters.<br>
-				REMOVE: Delete the selected curve.<br>
-				NEW: Create copy of current with new name.<br>
-            </span>
+	<form class="form-horizontal" action="" method="post">
+    	<legend>Curve
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="legend-config btn btn-medium btn-primary">Remove</button></a>
+			<a data-toggle="modal" href="#new-curvename"><button class="legend-config btn btn-medium btn-primary">New</button></a>
+			<button class="legend-config btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fa-solid fa-sharp fa-play"></i> Test</button>
 		</legend>
 
-    	<legend>Test &nbsp;
-			<button class="btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-play" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
-				Start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable Play.<br>
-            </span>
-		</legend>
-		<select id="eqg-curve-name" class="input-large" name="curve_name">
-			$_select[curve_name]
-		</select>
-		<a aria-label="Help" class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
-		<span id="info-curve-name" class="help-block-configs help-block-margin hide">
-			Friendly name for the curve.<br>
-        </span>
+		<p class="sub-legend">
+			The TEST button will start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable this option.
+		</p>
 
-		<br>
+		<div class="control-group">
+			<select id="eqg-curve-name" class="config-select-large" name="curve_name">
+				$_select[curve_name]
+			</select>
+			<a aria-label="Help" class="config-info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+			<span id="info-curve-name" class="config-help-info">
+				Name for the curve.
+	        </span>
+		</div>
 
 		<div id="equalizer" class="sliderbank">
 			<div class="eqg-label">Alsaequal values</div>
-			<div class="vslide3"><div id="freq1">$_select[freq1]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq1" value="$_select[freq1]" oninput="updEqgFreq('#freq1', this.value)"><div>31</div></div>
-			<div class="vslide3"><div id="freq2">$_select[freq2]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq2" value="$_select[freq2]" oninput="updEqgFreq('#freq2', this.value)"><div>63</div></div>
-			<div class="vslide3"><div id="freq3">$_select[freq3]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq3" value="$_select[freq3]" oninput="updEqgFreq('#freq3', this.value)"><div>125</div></div>
-			<div class="vslide3"><div id="freq4">$_select[freq4]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq4" value="$_select[freq4]" oninput="updEqgFreq('#freq4', this.value)"><div>250</div></div>
-			<div class="vslide3"><div id="freq5">$_select[freq5]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq5" value="$_select[freq5]" oninput="updEqgFreq('#freq5', this.value)"><div>500</div></div>
-			<div class="vslide3"><div id="freq6">$_select[freq6]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq6" value="$_select[freq6]" oninput="updEqgFreq('#freq6', this.value)"><div>1K</div></div>
-			<div class="vslide3"><div id="freq7">$_select[freq7]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq7" value="$_select[freq7]" oninput="updEqgFreq('#freq7', this.value)"><div>2K</div></div>
-			<div class="vslide3"><div id="freq8">$_select[freq8]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq8" value="$_select[freq8]" oninput="updEqgFreq('#freq8', this.value)"><div>4K</div></div>
-			<div class="vslide3"><div id="freq9">$_select[freq9]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq9" value="$_select[freq9]" oninput="updEqgFreq('#freq9', this.value)"><div>8K</div></div>
-			<div class="vslide3"><div id="freq10">$_select[freq10]</div><input class="vslide2" type="range" orient="vertical" min="28" max="94" step="1" name="freq10" value="$_select[freq10]" oninput="updEqgFreq('#freq10', this.value)"><div>16K</div></div>
+			<div class="eqg-vslider-group">
+				<div class="eqg-vslider">
+					<div id="freq1">$_select[freq1]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq1" value="$_select[freq1]" oninput="updEqgFreq('#freq1', this.value)">
+					<div>31</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq2">$_select[freq2]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq2" value="$_select[freq2]" oninput="updEqgFreq('#freq2', this.value)">
+					<div>63</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq3">$_select[freq1]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq3" value="$_select[freq3]" oninput="updEqgFreq('#freq3', this.value)">
+					<div>125</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq4">$_select[freq2]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq4" value="$_select[freq4]" oninput="updEqgFreq('#freq4', this.value)">
+					<div>250</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq5">$_select[freq1]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq5" value="$_select[freq5]" oninput="updEqgFreq('#freq5', this.value)">
+					<div>500</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq6">$_select[freq2]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq6" value="$_select[freq6]" oninput="updEqgFreq('#freq6', this.value)">
+					<div>1K</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq7">$_select[freq1]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq7" value="$_select[freq7]" oninput="updEqgFreq('#freq7', this.value)">
+					<div>2K</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq8">$_select[freq2]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq8" value="$_select[freq8]" oninput="updEqgFreq('#freq8', this.value)">
+					<div>4K</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq9">$_select[freq1]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq9" value="$_select[freq9]" oninput="updEqgFreq('#freq9', this.value)">
+					<div>8K</div>
+				</div>
+				<div class="eqg-vslider">
+					<div id="freq10">$_select[freq2]</div>
+					<input class="vslide2" type="range" min="28" max="94" step="1" name="freq10" value="$_select[freq10]" oninput="updEqgFreq('#freq10', this.value)">
+					<div>16K</div>
+				</div>
+			</div>
 			<div class="eqg-label">Frequency Bands (Hz)</div>
 		</div>
 	</form>
 </div>
 </div>
 
-<!-- MODAL POPUPS -->
-
 <form class="form-horizontal" method="post">
-	<div id="rm-curve" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove EQ curve</h3>
+	<div id="rm-curve" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove EQ curve?</h3>
 		</div>
-
 		<div class="modal-body txtmid">
-			<h4 id="rmcurve">$_selected_curve</h4>
-			<span class="help-block">
+			<h4 >$_selected_curve</h4>
+			<span class="config-help-static">
 				$_disable_rm_msg
 			</span>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="rmcurve" value="1" $_disable_rm>Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="remove_curve" value="1" $_disable_rm>Yes</button>
 		</div>
 	</div>
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="new-curvename" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-curvename-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Enter new curve name</h3>
+	<div id="new-curvename" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="new-curvename-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Create new curve</h3>
 		</div>
-
 		<div class="modal-body">
 			<div class="control-group">
-				<label class="control-label" for="new-curvename">Curve name</label>
+				<label class="control-label" for="new-curvename-input">Curve name</label>
 				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9 .\-]{1,32}" id="new-curvename-input" name="new-curvename" value="" autofocus>
-					<span class="help-block help-block-modal">
-						Length 1-32 chars, alphanumeric, space, period and dash are allowed.
+					<input id="new-curvename-input" class="config-input-large config-modal-input" type="text" pattern="[A-Za-z0-9 .\-]{1,32}" name="new_curve_name" value="" autofocus>
+					<span class="config-help-static">
+						Length 1-32 chars. Space, period and dash are allowed.
 					</span>
 				</div>
 			</div>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="newcurvename" value="1">Ok</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="new_curve" value="1">Create</button>
 		</div>
 	</div>
 </form>

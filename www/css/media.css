@@ -21,6 +21,13 @@
 // MEDIA QUERIES
 */
 
+body {
+	--tag-view-cover-size: 100px;
+}
+
+/*
+// Portrait
+*/
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-coverart-url img {width:80vw;}
@@ -28,158 +35,81 @@
 	body.cv #playbar-toggles .btn {margin:0 .25rem}
 }
 
-@media (max-width:479px) {
+/*
+// Mobile Portrait
+*/
+@media (max-width:479px) and (orientation:portrait) {
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
-	#playback-controls {width:100%;}
-	#extra-tags {padding-top:.45em;}
-	.modal-sm {min-width:80%;max-width:80%;}
-	#playback-cover {width:100%;text-align:center;margin-left:auto;margin-right:auto;padding-top:.25em;}
-	#playback-queue {width:100%;font-size: calc(calc(.85em + 1vmin));}
-	.playqueue .active .speaker {left:2px;}
-	.input-large {width: initial;}
- 	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
-	.lib-albumyear-meta {display:block;}
-	#lib-artist-header, #lib-artist {left:50%;width:50%;}
-	#lib-album-header, #lib-album {left:100%;width:50%;}
-	#top-columns {left:-50%;}
-	#lib-genre-header, #lib-genre {left:0%;width:50%;}
-	.lib-entry {padding: 0 .25em;}
-	/*.lib-entry-song {font-size:1em;}*/
-	#lib-file {left:0%;width:100%;padding-left:0px;}
-
-	#tagview-text-cover {font-size:1rem;width:75px;height:75px;padding:0;margin:.25em;}
-	#lib-coverart-img {float:left;min-width:75px;width:75px;height:75px;margin:.25em;position:relative;}
-	#lib-coverart-meta-area img {height:75px;width:75px;min-width:75px;max-width:75px;left:.25em;top:.25em;}
-	#lib-coverart-meta-area {float:left;width:100%;line-height:14px;}
-	#lib-meta-summary {width:calc(100% - 75px - 1em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
-
-	#songsList {margin:.25em !important;}
-	#lib-file .songname {overflow:hidden;float:left;width:calc(49% - 15px);height:auto;margin-left:5px;}
-	#lib-file .songtime {float:left;width:10%;left:50%;margin-left:5px;}
-	#lib-file .songartist {float:left;width:calc(40% - 25px);overflow:hidden;left:60%;margin-left:5px;}
-	#lib-file .songyear {display:none;}
-	.lib-albumname-meta {font-weight:600;text-align:left;overflow:hidden;width:100%;word-wrap: break-word;}
-	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta, .lib-encoded-at-meta {text-align:left;}
-	#trackscontainer {width:100%;max-width:100%;}
-	.container-playback {padding: 0;}
-	#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
-	#mt1, #mt2, #mt3 {font-size:inherit;}
-	#mt1 {margin:4rem 1.5rem 0rem 1.5rem;}
-	#mt3 {margin-right:5px;float:right;margin-top:25vh;}
-	#mt1 .btn, #mt3 .btn {font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;/*color:var(--textvariant);*/}
-	#mt1 .btn i {min-width:1.25rem;}
-	#mt2 {display:block;}
-	#mt3 .btn-primary, #mt1 .btn-primary {color:var(--accentxts);}
-	.tab-content.visacc #mt1 .btn {color:var(--textvariant);}
-	.tab-content.visacc #mt1 .btn-primary {color:var(--adapttext);background-color:var(--btnshade2);}
-	#msingle {display:none;}
-	#madd-item-to-favorites i {font-size:1.1em;}
-	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
-	#playqueue-search, #lib-album-search, #save-queue-to-playlist-form, #ra-search, #pl-search {margin-left: 0px;}
-	/*.database li {margin-left:2px;margin-right:5px;}*/
-	/* display:flex & playback stuff */
 	.no-fluid {flex-direction:column-reverse;}
-	.covers {padding:0;margin:0;}
-	#playbtns {margin:0;}
-	#togglebtns {padding:0;}
-	#togglebtns .btn-group {display:inline-flex;}
-	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;/*color:var(--textvariant);*/}
-	#togglebtns .btn-group .btn i {min-width:1.25rem;}
-	#playbtns, #togglebtns/*, .volume-popup-btn-*/ {display:block;}
-	.coverview {display:none;}
-	#currentsong {font-size:1.5em;font-weight:bold;}
-	#currentalbum {font-size:1.35em;}
-	#currentartist {font-size:1.35em;margin-bottom:1.35em;}
-	#timeline {display:block;width:74vw;}
-	#mobile-time {display:block;}
-	.btn btn-cmd btn-toggle {font-size:.75em;}
+	#playback-panel {padding-top:3em;}
+	#playback-panel,
+	#content {position:relative;}
+	.tab-content {height:unset;}
+	.ui-pnotify {font-size:1.25rem;}
+
+	/* Popup volume control */
+	#volpad {width:100%;}
+	#volume-popup .modal-footer button {width:40%;}
+	#volcontrol-2 {height:65vw;width:65vw;}
+	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;font-size:8.5vw;}
+	#volume-popup .volume-display {font-size:10vw}
+	#volume-pad {height:85vw;width:85vw;}
+	#volpad .volume-display-db {left:65%;font-size:1.5em;}
+
+	/* Playback view */
+	#timezone,
+	#volzone {display:none;}
+	#playback-cover {position:relative;width:100%;text-align:center;margin-left:auto;margin-right:auto;padding-top:.25em;}
+	#playback-queue {z-index:unset;width:100%;font-size: calc(calc(.85em + 1vmin));}
 	img.coverart {width:50vh;height:auto;max-width:90vw;max-height:90vw;border:none;}
 	#playback-firstuse-help {height:50vh;width:50vh;max-height:90vw;max-width:90vw;left:50%;transform:translate(-50%);}
-	img.libart {width:90%;}
-	.modal-sm2 {min-width:80%;}
-	.form-horizontal .controls {margin-left:32.5%;}
-	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
-	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
-	.bootstrap-select:not([class*="span"]) {width:140px;}
-	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
-	#playbar-hd-badge {/*margin-top:.6em;*/display:none!important;}
-	#playbar-currentalbum {display:block;} /* so ellipsis works */
-	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
-	#playbar-volume-popup-btn {width:initial!important;}
-	/*#extra-tags-display {display:none;}*/
-	#db-path {display:none;}
-	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
-	.config-select-large {width: 204px!important;}
-}
+	.container-playback {padding: 0;}
+	.covers {width:100%;padding:0;margin:0;}
+	#togglebtns .btn-group .btn.volume-popup-btn {display:inline-block;width:3.25em;}
 
-/* Smaller portrait for small screens */
-@media (max-width:479px) and (orientation:portrait) {
-	#content.fancy #container-playqueue {-webkit-mask-image:unset;}
-	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
-	.database .db-action {font-size:1.3em;}
-	/*.dropdown-menu {min-width:180px;}*/
-	#panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:16rem;} /* Make this one a bit wider */
-	#context-menu-playback .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-	#lib-album-search input, #lib-album-search input, #current-tab, #library-header {font-size:1.11rem;}
-	.dropdown-menu > li > a, .viewswitch .btn {font-size:1.16rem;line-height:2.75em;}
-	#playback-panel, #content {position:relative;}
-	.modal-body{padding:0 .75rem;max-height:80vh;}
-	.modal-footer .btn {width:40%;}
-	.modal .h5 {width:42%;}
-	.modal-body .form-horizontal .control-label {width:42%;}
-	.modal-body .form-horizontal .controls {margin-left:45%;}
-	.input-xlarge {width:150px;} /* same as medium */
-	#timezone, #volzone {display:none;}
-	#playback-cover {position:relative;}
-	#playback-queue {z-index:unset;}
-	.ralbum svg {height:1.2rem;width:1.2rem;}
-	#togglebtns .btn-group {width:unset;}
-	#songsand {font-size:1.5rem;width:90%}
-	#currentsong, #currentartist {padding-top:1rem;}
-	#currentalbum {padding-top:1.25rem;}
-	.tab-content {height:unset;}
-	.covers {width:100%;}
-	#panel-footer, #playbar {height:10rem;}
-	#playbar-cover {height:9rem;width:9rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
-	#playbar-controls .prev {display:none;}
-	#songsList {padding-bottom:9rem;}
-	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {font-size:calc(0.65em + 1vmin);}
-	#playbtns .btn {font-size:3em;padding:.5em 1em;}
-	.dbtn {display:inline-block;font-size:3em;padding:0 1rem;width:25%;line-height:20px;vertical-align:middle;}
+	/* Metadata under the cover art in Playback view */
+	#songsand {font-size:1.25em;width:90%}
+	#timeline {display:none;width:74vw;}
+	#mobile-time {display:block;}
+	#extra-tags-display {display:none;}
+	#currentsong {font-size:1.5em;padding-top:1em;}
+	#currentartist, #currentalbum {font-size:1.25em;padding-top:1em;}
+	#songsand-sample-rate {display:block;font-size:1.25em;padding-top:1em;color:var(--textvariant);}
+
+	/* Playback view Queue */
+	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
 	.playqueue span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
 	.playqueue span {margin-left:calc(3.8rem + 1vmin) !important;}
 	.playqueue {padding:0 0 15rem 0;min-height:33vh;}
 	.playqueue li:before {width:2.5em!important;}
-	.playqueue .playqueue-action, .playqueue .db-action a {padding:.4em 1.25em 1em 0;margin-left:1.25em!important;}
-	.ui-pnotify {top:40% !important;}
-	#lib-albumcover {left:0;}
-	#lib-meta-summary {line-height:1.75rem;font-size:1em;margin:.25em 0 0 0;float:right;}
-	.lib-numtracks-meta {margin-top:0;}
-	/* ellipsis madness */
-	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
-	/* stuff */
-	#ss-currentsong {font-size:1.5em;}
-	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
-	#ss-coverart-url img {width:65vh;}
-	#volpad {width:100%;}
-	#volume-popup .modal-footer button {width:40%;/*margin:0;*/}
-	.modal-xs {min-width:70%;}
-	#lib-coverart-meta-area {position:unset;}
-	.btn-save-queue-to-playlist {margin:1em 1em 4em 1em;}
-	/*.alphabits {right:0%!important;top:0%!important;}*/
-	#index-genres {right:calc(50% + var(--sbw));}
-	#index-artists {right:calc(0% + var(--sbw));}
-	#index-albums {right:calc(-50% + var(--sbw));}
-	#volcontrol-2 {height:65vw;width:65vw;}
-	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;font-size:8.5vw;}
-	#volume-popup .volume-display {font-size:9.5vw}
-	#volume-pad {height:85vw;width:85vw;}
-	#volpad .volume-display-db {left:65%;font-size:1.5em;}
-	#panel-header .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
-	/* playbar */
+	.playqueue .playqueue-action,
+	.playqueue .db-action a {padding:.4em 1.25em 1em 0;margin-left:1.25em!important;}
+
+	/* Play and toggle buttons */
+	#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
+	#playbtns,
+	#togglebtns {display:block;}
+	#playbtns {margin:0;}
+	#playbtns .btn {font-size:3em;padding:.5em 1em;}
+	#playbtns .play {font-size:3.5em;width:2.75em;}
+	#togglebtns {padding:0;}
+	#togglebtns .btn-group {width:unset;display:inline-flex;}
+	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;}
+	#togglebtns .btn-group .btn.volume-popup-btn {padding:0;}
+	.btn .btn-cmd .btn-toggle {font-size:.75em;}
+	.ralbum svg {height:1.2rem;width:1.2rem;}
+
+	/* Playbar */
+	#panel-footer, #playbar {height:10rem;}
+	#playbar-cover {height:9rem;width:9rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
+	#playbar-controls .prev {display:none;}
+	#playbar-hd-badge {display:none!important;}
+	#playbar-currentalbum {display:block;} /* So ellipsis works */
+	.mpd-volume-level {font-size:1.2rem;vertical-align:initial}
+	#playbar-volume-popup-btn {width:initial!important;}
 	#playbar-div {display:block;}
-	#playbar-mtime {display:flex;position:relative;}
+	/*#playbar-mtime {display:flex;position:relative;}*/
 	#playbar-title {text-align:left;top:0;margin-left:1em;width:67vw;height:auto;position:relative;transform:none;font-size:1.5em;line-height:2.2em;left:0;padding:0 0 .75em 0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {margin-top:.25em;right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
@@ -189,43 +119,292 @@
 	#playbar-timeline {display:none;}
 	#playbar-toggles .coverview {display:none;}
 	#playbar-toggles .ralbum {display:inline-block;}
-	#playbar-toggles .ralbum svg {height:12px;width:12px;margin-top:2px;} /* only valid fancy */
-	#playbar-div {display:block;}
+	#playbar-toggles .ralbum svg {height:12px;width:12px;margin-top:2px;}
+	.coverview {display:none;}
+
+	/* Menu 'm', CamillaDSP and multiroom Sender icons/buttons */
+	#menu-settings {font-size:2rem;}
+	#menu-cdsp {font-size:1.5rem;}
+	#multiroom-sender a {font-size: 1.45rem;}
+	/* Library button and header text */
+	#current-tab {font-size:1.35rem;}
+	#library-header {font-size:1.11rem;}
+	/* Search input */
+	#lib-album-search input,
+	#pl-search input,
+	#playqueue-search input,
+	#ra-search input {font-size:1.25em;}
+
+	/* Library */
+	#lib-artist-header,
+	#lib-artist {left:50%;width:50%;}
+	#lib-album-header,
+	#lib-album {left:100%;width:50%;}
+	#top-columns {left:-50%;}
+	#lib-genre-header,
+	#lib-genre {left:0%;width:50%;}
+	#lib-file {left:0%;width:100%;padding-left:0px;}
+	#tagview-text-cover {font-size:1rem;width:var(--tag-view-cover-size);height:var(--tag-view-cover-size);padding:0;margin:.25em;}
+	#lib-coverart-img {float:left;min-width:var(--tag-view-cover-size);width:var(--tag-view-cover-size);height:var(--tag-view-cover-size);margin:.25em;position:relative;}
+	#lib-coverart-meta-area img {height:var(--tag-view-cover-size);width:var(--tag-view-cover-size);min-width:var(--tag-view-cover-size);max-width:var(--tag-view-cover-size);left:.25em;top:.25em;}
+	#lib-coverart-meta-area {position:unset;float:left;width:100%;line-height:14px;}
+	#songsList {padding-bottom:12rem;margin:.25em !important;}
+	#lib-file .songname {overflow:hidden;float:left;width:calc(49% - 15px);height:auto;margin-left:5px;}
+	#lib-file .songtime {float:left;width:10%;left:50%;margin-left:5px;}
+	#lib-file .songartist {float:left;width:calc(40% - 25px);overflow:hidden;left:60%;margin-left:5px;}
+	#lib-file .songyear {display:none;}
+	.lib-entry {padding: 0 .25em;}
+	#lib-collection-stats {font-size:1rem;float:left;text-align:left;margin-left:.25em;margin-top:.5em;}
+	#trackscontainer {width:100%;max-width:100%;}
+	#db-path {display:none;}
+	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
+	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
+	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
+	.database .db-action {font-size:1.3em;}
+	#lib-albumcover {left:0;}
+	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
+	#index-genres {right:calc(50% + var(--sbw));}
+	#index-artists {right:calc(0% + var(--sbw));}
+	#index-albums {right:calc(-50% + var(--sbw));}
 	/* This undoes the normal nogenres setting cos on mobile we already only show two cols in Tag view */
-	#top-columns.nogenre #lib-genre-header, #top-columns.nogenre #index-genres, #top-columns.nogenre #lib-genre {display:block;}
-	#top-columns.nogenre #lib-artist-header, #top-columns.nogenre #lib-artist {left:50%;width:50%;}
+	#top-columns.nogenre #lib-genre-header,
+	#top-columns.nogenre #index-genres,
+	#top-columns.nogenre #lib-genre {display:block;}
+	#top-columns.nogenre #lib-artist-header,
+	#top-columns.nogenre #lib-artist {left:50%;width:50%;}
+	#top-columns.nogenre #lib-album-header,
+	#top-columns.nogenre #lib-album {left:100%;width:50%;}
 	#top-columns.nogenre #index-artists {right:calc(0% + var(--sbw));}
-	#top-columns.nogenre #lib-album-header, #top-columns.nogenre #lib-album {left:100%;width:50%;}
-	.modal {min-width:100vw;}
-	.btn-group.bootstrap-select.bootstrap-select-mini {width:6.5rem;}
-	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
-	.config-select-large {width: 204px!important;}	
+
+	/* Menus */
+	#panel-header .dropdown-menu,
+	.viewswitch .dropdown-menu {min-width:16rem;font-size:1.3rem;line-height:3.75rem;}
+	#context-menu-playback .dropdown-menu {min-width:15rem;}
+	.dropdown-menu>li>a {font-size:1.3rem;line-height:3.75rem;}
+	.viewswitch .btn {font-size:1em;}
+	#dropdown-cdsp-menu {max-height:calc(100vh - 20rem);}
+
+	/* Modals */
+	.modal {min-width:100vw;font-size:1.2rem;}
+	.modal-header h3 {font-size:1.75rem;}
+	.modal-body {padding:0 .75rem;max-height:74vh;}
+	.modal-body .form-horizontal .control-label {width:42%;}
+	.modal-body .form-horizontal .controls {margin-left:45%;}
+	.modal .select-large {width:36vw;}
+	.modal .input-large {width:36vw;}
+	.info-toggle,
+	.help-block {display:none;}
+	#audioinfo-tabs .btn {font-size:1.2rem;}
+
+	/* For the configs */
+	.container {padding:1em 1em 0;}
+	.form-horizontal .controls {margin-left:32.5%;}
+	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
+	.config-select-large:not([class*=span]) {width:37vw;}
+	.config-input-large {width:34vw;}
+	.config-info-toggle,
+	.config-help-static {display:none;}
+	#config-home {left:4em;}
+	#config-home i {top:.25em;}
+	#config-tabs span {display:none!important;}
+	#config-tabs i {display:flex!important;}
+
+	/* CoverView */
+	#screen-saver {display:none;}
+
+	/* Miscellaneous */
+	.ui-pnotify {top:40% !important;}
 }
 
-/* In-browser view for mobile screens */
+/*
+// Mobile Landscape
+*/
+@media (max-height:479px) and (orientation:landscape) {
+	/* Header bar height */
+	#playback-panel {padding-top:3em;}
+
+	/* Hide the volume knob */
+	#volzone {display:none;}
+	.ui-pnotify {font-size:1.25rem;}
+
+	/* Popup volume control */
+	#volcontrol-2 {height:22vw;width:22vw;padding:2em;}
+	#volumedn-2,
+	#volumeup-2 {font-size:2.5vw;}
+	#volume-popup .volume-display {font-size:3.75vw;}
+
+	/* Audioinfo popup modal */
+	#audioinfo-modal {width:35%!important;}
+
+	/* Multiroom and Updater header icons */
+	#multiroom-sender {left:46%!important;}
+	#multiroom-sender a {font-size: 1.45rem;}
+	#updater-notification {left:50%!important;}
+
+	/* Main cover and thumbnails for Radio, Album and Playlist views */
+	img.coverart {width:65vh;}
+	.cover-menu {background-size:2rem 2rem;background-position: 0.5rem 2.5rem;}
+	.album-name,
+	.artyear,
+	.station-name,
+	.playlist-name {font-size:1.25em;}
+	#lib-content li {line-height:1.35em;}
+
+	/* Metadata under the cover art in Playback view */
+	#extra-tags-display {display:none;}
+	#songsand {margin-top:1.5em;}
+	#currentartist-div,
+	#currentalbum-div {width:inherit;}
+	#currentalbum,
+	#currentsong,
+	#currentartist {font-size:1.5em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#currentalbum {padding-top:0;}
+	#currentsong,
+	#currentartist {padding-top:.75rem;}
+	#currentsong {font-size:1.75em;}
+
+	/* Playback view Queue  */
+	.playqueue li:before {font-size:1.5em;margin-top:10px;}
+	.playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
+	.playqueue .pll1 {font-size:1rem;}
+    .playqueue .pll2 {font-size:.9rem;line-height:inherit;margin-left:calc(3.5em + 1vmin)!important}
+	.playqueue-action {font-size:1rem!important;}
+
+	/* CoverView cover art */
+	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 10em);height:calc(100vh - 10em);margin-top:1em;}
+	/* CoverView Queue */
+	#cv-playqueue {width:75vmin;padding-bottom:1em;}
+	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
+	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
+	.cv-playqueue .pll1 {font-size:1.25rem;}
+	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
+	/* Coverview metadata */
+	body.cvpb:not(.cvwide) #playbar-timeline {top:75%;}
+
+	/* Time knob */
+	#countdown {height:17vw;width:17vw;}
+    #countdown div {margin:0 auto;} /* Needed to center the knob */
+    #countdown-display {position:absolute;top:47%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:2.25vw;font-weight:500;cursor:pointer;}
+    #total {position:absolute;top:62%;left:50%;transform:translate(-50%);font-size:1.5vw;}
+	.total-radio {font-size:1.65vw!important;}
+
+	/* Play and toggle buttons under the time knob */
+	#playbtns .btn {font-size:3vw;padding:1.5rem 1.75rem;}
+	#playbtns .play {font-size:3.5em;}
+	#togglebtns .btn-group .btn {font-size:1.25em;}
+	#togglebtns .ralbum {display:none;}
+	#togglebtns .btn-group .btn.volume-popup-btn {display:inline-block;width:3em;}
+	#togglebtns {padding-top:.5rem;}
+
+	/* Playbar */
+	#panel-footer {padding-bottom:env(safe-area-inset-bottom);}
+	body:not(.cvwide) #playbar {padding-bottom:calc(env(safe-area-inset-bottom) * 1.75);}
+	body.cvpb:not(.cvwide) #playbar {padding-bottom:calc(env(safe-area-inset-bottom) * 1.75);}
+	#playbar-cover {top:env(safe-area-inset-bottom);}
+	#playbar-title {font-size: 1.25em;padding-bottom:1.15rem!important;}
+	#playbar-title-line-2 {margin-top:0;}
+	#playbar-timeline {display:none;margin-bottom:calc(env(safe-area-inset-bottom) / 2);}
+	#playbar-volume-popup-btn {height:2.4rem!important;}
+	#playbar-mtime {display:none;}
+
+	/* Menu 'm' and CamillaDSP buttons */
+	#menu-settings {font-size:2rem;margin-right:.5em;}
+	#menu-cdsp {font-size:1.5rem;}
+	#dropdown-cdsp-btn {right:calc(4.6rem + .5em)!important;}
+	.busy-spinner {right:calc(3.25rem + .85em)}
+	/* Library button and header text */
+	#current-tab {font-size:1.35rem;}
+	#library-header {font-size:1.11rem;}
+	/* Search input */
+	#lib-album-search input,
+	#pl-search input,
+	#playqueue-search input,
+	#ra-search input {font-size:1.25em!important;}
+
+	/* Library */
+	.viewswitch {left:calc(env(safe-area-inset-left) + 1rem);}
+	#library-header {font-size:1.1rem;}
+	#index-genres,
+	#index-artists,
+	#index-albums,
+	#index-albumcovers,
+	#index-browse,
+	#index-radio,
+	#index-playlist {display:none!important;}
+
+	/* Tag view */
+	#top-columns {width:calc(100% - env(safe-area-inset-left));left:env(safe-area-inset-left);height:calc(54% - 2.75rem - env(safe-area-inset-top));}
+	#top-columns .lib-entry,
+	#lib-genre-header,
+	#lib-artist-header,
+	#lib-album-header {font-size:1.1rem;}
+	#bottom-row {left:env(safe-area-inset-left);top:54%;height:35%}
+	#lib-collection-stats {font-size:.75rem;}
+	#trackscontainer {width:calc(79vw - var(--sbw));float:left;}
+	#trackscontainer span {font-size:1.1rem;}
+	#lib-coverart-meta-area {width:14vw;position:relative;}
+	#songsList {padding-bottom:10rem;}
+	#tagview-text-cover {font-size:1.35rem;}
+	#tagview-text-cover,
+	img.lib-artistart {height:calc(14vw - 1em);width:calc(14vw - 1em);}
+	/* Album, Folder, Radio and Playlist views */
+	#lib-albumcover,
+	#container-browse,
+	#container-radio,
+	#container-playlist {left:env(safe-area-inset-left);width:calc(100% - env(safe-area-inset-left) - 1rem);}
+
+	/* Menus */
+	.dropdown-menu>li>a,
+	.viewswitch .btn {line-height:2.5rem;font-size:1.15em;}
+	.adv.search-btn {display:none;}
+
+	/* Renderer active overlays: Text and button */
+	#inpsrc-indicator {font-size:2.85em;}
+
+	/* For the configs */
+	#panel-header,
+	.container {margin-left:calc(env(safe-area-inset-left) + 1rem);}
+	.container p {font-size:12px;}
+	.config-info-toggle i,
+	.show-hide-password i {margin-top:7px;font-size:1.75em;}
+	.config-btn-after,
+	.config-input-after,
+	.config-toggle-after {font-size:12px;}
+	.config-horiz-rule {font-size:12px;}
+	.config-btn-music-source {font-size:1.5em;}
+	#config-home {left:4em;}
+	#config-tabs span {display:none!important;}
+	#config-tabs i {display:flex!important;}
+
+	/* Modals */
+	.modal-body {max-height:calc(62vh - env(safe-area-inset-bottom) + 1rem);}
+}
+
+/*
+// In-browser view for mobile screens
+*/
 @media (max-width:479px) and (max-height:622px) and (orientation:portrait) {
 	#coverart-url img {width:45vh;min-height:45vh;}
 }
-
-/* In-browser view for smaller mobile screens */
+/* For smaller mobile screens */
 @media (max-width:479px) and (max-height:460px) and (orientation:portrait) {
 	#coverart-url img {width:45vh;min-height:45vh;}
 	#mt1 {margin:2.25em 0 0 0;}
 	#mobile-toolbar {bottom:3.5vh;}
 	#currentsong, #currentalbum {padding-top:.75em;font-size:1.1em;}
 }
-
 @media (max-height:640px) and (orientation:portrait)  {
 	img.coverart {width:45vh;}
 	#playback-firstuse-help {height:45vh;width:45vh;}
 }
-
 @media (max-width:360px) {
 	.modal-body .form-horizontal .control-label {width:38%;}
 	.modal-body .form-horizontal .controls {margin-left:40%;}
 }
 
-/* iPhone5 portrait */
+/*
+// iPhone5 portrait
+*/
 @media (max-height:568px) and (max-width:320px) {
 	.playqueue {font-size:1.2em;}
 	.playqueue li:before {width:1.75em;}
@@ -233,67 +412,134 @@
 	.bootstrap-select.select-medium:not([class*="span"]) {width:140px;}
 }
 
-/* Large screens */
-@media (min-height:900px) and (min-width:1920px) {
-	/*.dropdown-menu, #context-menu-playback .dropdown-menu {min-width:13em;}*/
-	#ss-backdrop {filter: blur(40px);}
-	#ss-currentsong {font-size:1.5em;}
-	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
-	#lib-coverart-meta-area {width:18vw;}
-
-	img.lib-artistart {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
-	#tagview-text-cover {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
-	#trackscontainer {width:calc(82vw - var(--sbw));}
-
-	#volcontrol, #countdown {height:15vw;width:15vw;}
-}
-
-/* Pi 7" Touch */
-/* 553 = Square pixel AR, 598 = Default pixel AR */
-@media (min-height:553px) and (width:998px) {
-	.playqueue .pll1 {font-size:1rem;}
-	.playqueue .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
-	.playqueue .playqueue-action {padding:1rem 0;}
-	#playbtns {margin:.25em 0;}
-	#playbar-title {font-size:1rem;}
-	img.coverart {width:55vh;}
-	#playback-firstuse-help {height:55vh;width:55vh;}
-	#countdown-display {margin-top:0;}
-	.volume-display, .volume-display-db {margin-top:.3em;}
-	#songsand {font-size:1.25em;}
-}
-
-/* 443 = Square pixel AR, 479 = Default pixel AR */
-@media (min-height:443px) and (width:799px) {
-	.playqueue .pll1 {font-size:1rem;}
-	.playqueue .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
-	.playqueue .playqueue-action {padding:1rem 0;}
-	#playbtns {margin:.25em 0;}
-	#playbar-title {font-size:1rem;}
-	img.coverart {width:55vh;}
-	#playback-firstuse-help {height:55vh;width:55vh;}
-	#countdown-display {margin-top:0;}
-	.volume-display, .volume-display-db {margin-top:.3em;}
-	#songsand {font-size:1.25em;}
+/*
+// iPhone7/SE portrait
+*/
+@media (height:667px) and (width:375px) {
+	#currentsong {max-height:3.5em;overflow:hidden;}
+	#playbtns .btn-group {margin-bottom:-1em;}
 }
 
 /*
-// Ultra-wide screen 480 & 550 x 1920
+// Pi 7" Touch
 */
-@media (max-height:549px) and (width:1919px) {
+/* 443 = Square pixel, 479 = Default pixel */
+@media (height:443px) and (width:799px),
+	   (height:479px) and (width:799px) {
+	/* Panel header */
+	#multiroom-sender {left:50%!important;}
+	#updater-notification {left:54%!important;}
+
+	/* Search input */
+	#lib-album-filter,
+	.input-append {font-size:1.25em;}
+
+	/* Playback */
+	#togglebtns .btn-group .btn.volume-popup-btn {display:none;}
+	#playbtns .play {font-size: 2.75em;}
+
+	/* Queue */
+	#cv-playqueue {width:60vmin;}
+	.playqueue .pll1 {font-size:1rem;}
+	.playqueue .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
+	.playqueue .playqueue-action {padding:1rem 0;}
+
+	/* Knobs and buttons */
+	#timeknob {margin:.5em;}
+	#countdown-display {margin-top:0;}
+	#playbtns {margin:.25em 0;}
+	#playbtns .btn {padding:1.5rem 1rem;}
+	#volzone {display:block;}
+	.volume-display,
+	.volume-display-db {margin-top:0;}
+	#togglebtns {padding-top:1.5rem;}
+	#togglebtns .volume-popup-btn {display:none;}
+	#togglebtns .ralbum {display:inline-block;}
+
+	/* Cover art amd metadata */
+	body.cvwide #ss-coverart {top:2.5em;}
+	body.cvwide #ss-coverart-url img {width:75vh;height:100%;margin-left:3em;}
+	body.cvwide #ss-metadata {left:calc(80vh + 2em);}
+	body:not(.cvpb) #ss-coverart-url img {width:75vh;height:100%}
+	#currentalbum,
+	#currentartist,
+	#currentsong {font-size:1.25em;}
+	#ss-currentalbum-div,
+	#ss-currentsong,
+	#ss-extra-metadata {margin-top: 0.75em;}
+	#songsand {font-size:1.25em;}
+	#playback-firstuse-help {height:55vh;width:55vh;}
+
+	/* Playbar */
+	#playbar-title {font-size:1rem;}
+	#playbar-timeline {display:block;}
+
+	/* Library */
+	#index-genres,
+	#index-artists,
+	#index-albums,
+	#index-albumcovers,
+	#index-browse,
+	#index-radio,
+	#index-playlist {display:block!important;}
+}
+
+/*
+// CoverView wide
+*/
+@media (min-height:480px) and (orientation:landscape) {
+	body.cvwide #ss-coverart {top:3em;}
+}
+
+/*
+// Long titles
+*/
+@media (max-height:800px) and (orientation:landscape) {
+	#currentsong {max-height:3.5em;overflow:hidden;}
+}
+
+/*
+// Large displays
+*/
+@media (min-height:900px) and (min-width:1920px) {
+	#ss-backdrop {filter: blur(40px);}
+	#ss-currentsong {font-size:1.5em!important;}
+	#ss-currentalbum, #ss-currentartist {font-size:1.25em!important;}
+	#lib-coverart-meta-area {width:18vw;}
+	img.lib-artistart {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
+	#tagview-text-cover {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
+	#trackscontainer {width:calc(82vw - var(--sbw));}
+	#volcontrol, #countdown {height:15vw;width:15vw;}
+}
+
+/*
+// Ultra-wide screens
+*/
+@media (max-height:549px) and (width:1919px),
+       (max-height:599px) and (width:1599px) {
 	/* Hide the volume knob */
 	#volzone {display:none;}
+
 	/* Popup volume control */
 	#volcontrol-2 {height:18vw;width:18vw;padding: 2em;}
 	#volumedn-2,
 	#volumeup-2 {font-size:2.5vw;}
 	#volume-popup .volume-display {font-size:2.75vw;}
-	/* CoverView screen saver */
+
+	/* CoverView cover art */
 	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
-	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
+	/* CoverView Queue */
+	#cv-playqueue {width:75vmin;}
+	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
+	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
+	.cv-playqueue .pll1 {font-size:1.25rem;}
+	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
+
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
+
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
+	#playback-cover {margin-top:-1em;}
 	img.coverart {width:72vh;}
 	.cover-menu {background-size:2.5rem 2.5rem;background-position: 0.75rem 2rem;}
 	.album-name,
@@ -301,163 +547,214 @@
 	.station-name,
 	.playlist-name {font-size:1.25em;}
 	#lib-content li {line-height:1.35em;}
+
 	/* Metadata under the cover art in Playback view */
-	#extra-tags-display,
+	#songsand {margin-top:1em;}
+	#currentalbum,
+	#currentartist {font-size:1.75em;}
+	#currentsong {font-size:2em;}
+	#extra-tags-display {display:none;}
 	#currentsong,
-	#currentartist {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
-	.playback-hd-badge {margin-top:0;bottom:0;height:1.25em!important;top:.85rem!important;padding-top:0.15em;}
+	#currentartist {padding-top:.75rem;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#currentartist-div {width:inherit;}
+	#currentalbum {padding-top:0;}
+
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.75em;margin-top:10px;}
 	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
-	.playqueue .pll1 {font-size:1.9rem;}
+	.playqueue .pll1 {font-size:1.5rem;}
     .playqueue .pll2 {font-size:1.5rem;margin-left:calc(3em + 1vmin)!important}
 	.playqueue-action {font-size:1.25rem!important;}
-	/* CoverView Queue */
-	#cv-playqueue {width:75vmin;}
-	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
-	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
-	.cv-playqueue .pll1 {font-size:1.25rem;}
-	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
+
 	/* Time knob */
+	#countdown-sample-rate {display:block;position:absolute;left:50%;transform:translate(-50%,-50%);font-size:1vw;font-weight:500;top:28%;color:var(--textvariant);}
 	#countdown {margin:0 auto;height:16.5vw;width:16.5vw;}
-    #countdown div {margin:0 auto;} /* needed to center the knob */
+    #countdown div {margin:0 auto;} /* Needed to center the knob */
     #countdown-display {position:absolute;top:47%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:2.5vw;font-weight:500;cursor:pointer;}
     #total {position:absolute;top:62%;left:50%;transform:translate(-50%);font-size:1.5vw;}
 	.total-radio {top:65%!important}
-	/* Metadata under the cover art in Playback view */
-	#currentsong {font-size:1.5rem;}
-	#currentsong,
-	#currentartist,
-	#currentalbum {padding-top:.75rem;}
+
 	/* Play and toggle buttons under the time knob */
 	#playbtns .btn {font-size:2vw;padding:1.25rem 2rem;}
+	#playbtns .play {font-size:2.25vw;}
 	#togglebtns .btn-group .btn {font-size:1.5em;}
 	#togglebtns .ralbum {display:none;}
 	#togglebtns .volume-popup-btn {display:inline-block;}
+
+	/* Playbar */
+	#playbar-title {font-size: 1.25em;padding-bottom:1.15rem!important;}
+	#playbar-title-line-2 {margin-top:0;}
+
+	/* Library */
+	#current-tab,
+	#library-header {font-size:1.1rem;}
+	#index-genres,
+	#index-artists,
+	#index-albums,
+	#index-albumcovers,
+	#index-browse,
+	#index-radio,
+	#index-playlist {display:none!important;}
+
 	/* Tag view */
-	#top-columns {width:80vw;left:10vw;}
-	#lib-coverart-meta-area {display:none;}
-	#trackscontainer {margin-right:10vw;}
+	#top-columns .lib-entry,
+	#lib-genre-header,
+	#lib-artist-header,
+	#lib-album-header {font-size:1.1rem;}
+	#trackscontainer {width:calc(90vw - var(--sbw));}
+	#trackscontainer span {font-size:1.1rem;}
+	#lib-coverart-meta-area {width:10.5vw;}
+	#songsList {padding-bottom:10rem;}
+	#tagview-text-cover {font-size:1.35rem;height:calc(10.5vw - 1rem);width:calc(10.5vw - 1rem);}
+
+	/* Search input and Menu "m" button */
+	#lib-album-search input,
+	#pl-search input,
+	#playqueue-search input,
+	#ra-search input {font-size:1.25em;}
+	#menu-settings {font-size:1.9rem;}
+	.adv.search-btn {display:none;}
+
 	/* Dropdown and context menus */
-	.dropdown-menu>li>a,
-	.viewswitch .btn {line-height:2.5rem;font-size:1.15em;}
+	.dropdown-menu>li>a {line-height:2.25rem;font-size:1.15em;padding:0.35em 0.5em;}
+	.viewswitch .btn {line-height:2.75rem;font-size:1.15em;}
+
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:2.85em;}
+
 	/* For the configs */
 	.container {margin-left:25vw;margin-right:25vw;}
+	.container p {font-size:12px;}
+
+	/* Modals */
+	.modal-body {max-height:calc(70vh + 1rem);}
 }
+
 /* Specifically for 480 x 1920 */
-@media (max-height:479px) and (orientation:landscape) {
+@media (max-height:479px) and (width:1919px) {
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
-	img.coverart {width:70vh;}
-	/* Toggle buttons under the time knob */
-	#togglebtns {padding-top:.5rem;}
+	#playback-cover {margin-top:-2em;}
+	img.coverart {width:73vh;}
+
+	/* Metadata under the cover art in Playback view */
+	#currentalbum {padding-top:0;}
+
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.75em;margin-top:10px;}
 	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
 	.playqueue .pll1 {font-size:1.25rem;}
     .playqueue .pll2 {font-size:1.15rem;margin-left:calc(3.5em + 1vmin)!important}
+
 	/* CoverView Queue */
 	#cv-playqueue {width:75vmin;}
 	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
 	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
 	.cv-playqueue .pll1 {font-size:1.25rem;}
 	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
+
 	/* Time knob */
-	#countdown {height:14vw;width:14vw;}
-	#countdown-display {font-size:1.75vw;}
-	#total {font-size:1vw;}
+	#countdown {height:14.5vw;width:14.5vw;}
+	#countdown-sample-rate {font-size:.85vw;}
+	#countdown-display {font-size:1.85vw;top:48%;}
+	#total {top:64%;font-size:1vw!important;}
+	.total-radio {top:65%!important}
 }
 
-/* iPhone Max sizes */
-@media (width:414px) and (height:896px) {
-	.ui-pnotify {left:50%;top:25%;transform:translate(-50%, -50%);}
-	#playbar-toggles {right:calc(env(safe-area-inset-right) + 1rem);}
-	#mt1 {margin:6rem 1.5rem 0rem 1.5rem;}
-	.timeline-bg {margin-top:1px;}
-	.busy-spinner {top:calc(env(safe-area-inset-top) + .3rem);}
-	.db-spinsync {top:calc(env(safe-area-inset-top) + -.2rem);}
-	.config-exit {top:calc(env(safe-area-inset-top) - .5rem);}
-	#radio-panel .viewswitch, #playlist-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
-	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
+/* Specifically for 400 x 1280 */
+@media (max-height:399px) and (width:1279px) {
+	/* Main cover and thumbnails for Radio, Album and Playlist views */
+	#playback-cover {margin-top:-2em;}
+	img.coverart {width:73vh;}
+
+	/* Playback view Queue  */
+	.playqueue li:before {font-size:1.75em;margin-top:10px;}
+	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
+	.playqueue .pll1 {font-size:1.25rem;}
+    .playqueue .pll2 {font-size:1.15rem;margin-left:calc(3.5em + 1vmin)!important}
+
+	/* CoverView Queue */
+	#cv-playqueue {width:75vmin;}
+	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
+	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
+	.cv-playqueue .pll1 {font-size:1.25rem;}
+	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
+
+	/* Time knob */
+	#countdown-sample-rate {display:block;position:absolute;left:50%;transform:translate(-50%,-50%);font-size:1vw;font-weight:500;top:28%;color:var(--textvariant);}
+	#countdown {margin:0 auto;height:14.5vw;width:14.5vw;}
+    #countdown div {margin:0 auto;} /* Needed to center the knob */
+    #countdown-display {position:absolute;top:47%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:2.5vw;font-weight:500;cursor:pointer;}
+    #total {position:absolute;top:64%;left:50%;transform:translate(-50%);font-size:1.5vw;}
+	.total-radio {top:65%!important}
+	/* Time knob adjustments */
+	#countdown-sample-rate {font-size:.85vw;}
+	#countdown-display {font-size:1.85vw;top:48%;}
+	#total {font-size:1vw!important;}
+
+	/* Play and toggle buttons under the time knob */
+	#playbtns .btn {font-size:2vw;padding:1.25rem 2rem;}
+	#playbtns .play {font-size:2.25vw;}
+	#togglebtns .btn-group .btn {font-size:1.5em;}
+	#togglebtns .ralbum {display:none;}
+	#togglebtns .volume-popup-btn {display:inline-block;}
+
+	/* Tag view */
+	#top-columns .lib-entry,
+	#lib-genre-header,
+	#lib-artist-header,
+	#lib-album-header {font-size:1.1rem;}
+	#trackscontainer {width:calc(90vw - var(--sbw));}
+	#trackscontainer span {font-size:1.1rem;}
+	#lib-coverart-meta-area {width:10vw;}
+	#songsList {padding-bottom:6rem;}
+	#tagview-text-cover {font-size:1.35rem;height:calc(10vw - 1rem);width:calc(10vw - 1rem);}
+
+	/* Search inputs */
+	#lib-album-search,
+	#pl-search,
+	#playqueue-search,
+	#ra-search {font-size:1.25em;}
+
+	/* Renderer active overlays: Text and button */
+	#inpsrc-indicator {font-size:2.85em;}
+
+	/* Dropdown and context menus */
+	.dropdown-menu>li>a {line-height:2.25rem;font-size:1.15em;padding:0.35em 0.5em;}
+	.viewswitch .btn {line-height:2.75rem;font-size:1.15em;}
+
+	/* For the configs */
+	.container {margin-left:25vw;margin-right:25vw;}
+	.container p {font-size:12px;}
+
+	/* Modals */
+	.modal-body {max-height:calc(62vh + 1rem);}
 }
 
-/* larger portrait screens for newui */
-@media (orientation: portrait) and (min-aspect-ratio:600/1024) {
-	#playback-panel.newui #timezone {left:12.5%;top:59%;}
-	#playback-panel.newui #volzone {right:12.5%;top:59%;}
-	#playback-panel.newui #playback-cover {width:75vw;}
-	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:75vw;max-height:75vw;}
-	#playback-panel.newui #container-playqueue, #playback-panel.cv #container-playqueue {width:60%;height:55%;}
-	#playback-panel.newui#albumcovers .lib-entry img, #playback-panel.newui.database-radio img, #playback-panel.newui.database-playlist img {max-height: calc(31vw * .9);}
-	#playback-panel.newui#albumcovers li, #playback-panel.newui.database-radio li, #playback-panel.newui.database-playlist li {width:31vw;}
-	#playback-panel.newui #volcontrol, #playback-panel.newui #volcontrol-2, #playback-panel.newui #countdown {height:12.5rem;width:12.5rem;}
-}
-@media (orientation: portrait) and (min-aspect-ratio:2/3) {
-	#playback-panel.newui #timezone {left:12.5%;top:59%;}
-	#playback-panel.newui #volzone {right:12.5%;top:59%;}
-	#playback-panel.newui #playback-cover {width:60vw;} /* 60% cover h/w */
-	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:60vw;max-height:60vw;}
-	#playback-panel.newui #playback-firstuse-help {height:60vw;width:60vw;}
-	#playback-panel.newui #container-playqueue, #playback-panel.cv #container-playqueue {width:60%;height:58%;}
-	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
-}
-@media (orientation: portrait) and (min-aspect-ratio:834/1194) { /* ipad pro 11 since I can fine tune */
-	#playback-panel.newui #timezone {top:61%;}
-	#playback-panel.newui #volzone {top:61%;}
-	#playback-panel.newui #playback-cover {width:70vw;} /* 70% cover h/w */
-	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:70vw;max-height:70vw;}
-	#playback-panel.newui #playback-firstuse-help {height:70vw;width:70vw;}
-	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
-}
-/*DELETE@media (orientation: landscape) and (max-aspect-ratio:3/2){
-	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}
-	#playback-panel.newui #playback-firstuse-help {height:40vw;width:40vw;}
-	#playback-panel.newui #timezone, #playback-panel.newui #volzone {height:40vw;}
-}*/
-@media (height:834px) and (width:1194px) {
-	/*#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}*/
-	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
-	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}
-}
-@media (height:790px) and (width:1194px) {
-	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;transition: width .5s;}
-	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
-	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}
-}
-
-/* Don't show UI in landscape on Smartphone sized screens */
-@media (orientation:landscape) and (max-height:432px) {
-	/*#landscape-backdrop {display:block;}*/
-}
-
-/* Use custom scroll bars for devices with an attached pointing device (mouse, trackpad, etc) */
-@media (any-pointer: fine) {
+/*
+	NOTE: Class is only applied if overlay scrollbars don't exist (GLOBAL.sbw > 0)
+	The query (any-Pointer: fine) is For devices that have a high accuracy mouse/trackpad attached
+	The default .custom-scrollbars is meant for Firefox ?
+*/
+/*@media (any-pointer: fine) {*/
 	.custom-scrollbars ::-webkit-scrollbar {
 		width: 11px;
-   }
+   	}
    .custom-scrollbars ::-webkit-scrollbar-track:hover {
 	    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
 		border-radius: 6px;
-   }
+   	}
    .custom-scrollbars ::-webkit-scrollbar-thumb {
 		border-radius: 6px;
 		background-color: var(--btnshade2);
 		border:2px solid rgba(0,0,0,0);
 		background-clip: padding-box;
 		min-height:1.5em;
-   }
+   	}
    .custom-scrollbars ::-webkit-scrollbar-thumb:active {
-	   background-color:var(--textvariant);
-   }
-   /* Firefox */
-   .custom-scrollbars * {
-	   scrollbar-width: thin;
-	   scrollbar-color: auto;
-   }
-}
-
-/* Existing input width selectors don't work because override by bootstrap-select. Add !important to prevent that */
-@media (min-width:650px) {
-	.input-xlarge{width:270px !important;}
-}
+		background-color:var(--textvariant);
+   	}
+   .custom-scrollbars {
+		scrollbar-width: thin;
+		scrollbar-color: auto;
+	}
+/*}*/

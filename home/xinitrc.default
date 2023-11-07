@@ -36,4 +36,5 @@ chromium-browser --app="http://localhost/" \
 --enable-features="OverlayScrollbar" \
 --no-first-run \
 --disable-infobars \
---disable-session-crashed-bubble
+--disable-session-crashed-bubble \
+--kiosk

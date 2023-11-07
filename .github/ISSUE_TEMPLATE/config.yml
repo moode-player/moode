@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "⛔ Troubleshooting and Support"
+    url: https://moodeaudio.org/
+    about: "General troubleshooting and support for moOde audio player is provided in the moOde Forum. Visit the Support section at moodeaudio.org for information on how to register for the Forum. Thanks in advance for helping us keep the development issue tracker clean!"

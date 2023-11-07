@@ -69,7 +69,7 @@ $_select['session_timeout'] = $cfgAirplay['session_timeout'];
 $_select['audio_backend_latency_offset_in_seconds'] = $cfgAirplay['audio_backend_latency_offset_in_seconds'];
 $_select['audio_backend_buffer_desired_length_in_seconds'] = $cfgAirplay['audio_backend_buffer_desired_length_in_seconds'];
 
-waitWorker(1, 'apl-config');
+waitWorker('apl-config');
 
 $tpl = "apl-config.html";
 $section = basename(__FILE__, '.php');

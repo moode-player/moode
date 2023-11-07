@@ -23,299 +23,254 @@
 <div id="container">
 <div class="container">
 	<h1 class="cdsp-config">CamillaDSP</h1>
+	<p class="sub-legend>">Version: $_select[version]</p>
 	<p>
-		Version:&nbsp;$_select[version]<br>
+		CamillaDSP is a general purpose Digital Signal Processing (DSP) tool for routing and filtering sound. It can be used for building crossovers for active speakers, performing room correction, equalization and high resolution volume control.
 	</p>
-	<form class="form-horizontal" action="" method="post" >
-    	<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-config-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-config-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				Update the configuration and restart CamillaDSP if required.<br>
-				Contributors:<br>
-				- @HenrikEnquist - CamillaDSP & GUI<br>
-				- @seashell - CamillaDSP ALSA interface driver (cdsp_alsa)<br>
-				- @JWahle & @bitlab - Integration into moOde
-            </span>
-		</legend>
 
-		<legend>General</legend>
+	<form class="form-horizontal" action="" method="post" >
+		<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
+		</legend>
+		<p class="sub-legend $_camilladsp_set_disabled_message">
+			To use CamillaDSP turn off all other DSP, EQ and Multiroom options in Audio and Multiroom Config.
+		</p>
+
+		<div class="config-horiz-rule">General</div>
+
 		<div class="control-group">
-			<label class="control-label" for="cdsp-setting-mode">Configuration</label>
+			<label class="control-label" for="cdsp-mode">Signal processing</label>
 			<div class="controls">
-				<select id="cdsp-setting-mode" class="input-xxlarge" name="cdsp-mode" $_save_disabled>
+				<select id="cdsp-mode" class="config-select-xxlarge" name="cdsp_mode" $_save_disabled>
 					$_select[cdsp_mode]
 				</select>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-cdspmode" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
-					<b>Off:&nbsp;</b>Don't use CamillaDSP.<br/>
-					<b>Custom:&nbsp;</b>Use a custom alsa_cdsp configuration.<br>
-					<b>Quick convolution filter:&nbsp;</b>Use a quick configuration for setting up a basic convolution filter with a gain. No need to provide a configuration file.<br>
-					<b>Listed:&nbsp;</b>Use one of the listed configuration files.
-				</span>
-				<span class="help-block-configs help-block-margin $_camilladsp_set_disabled_message">
-					Before you can use CamillaDSP, first turn off DSP, EQ and Multiroom options in the Audio and Multiroom tabs
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-cdsp-mode" class="config-help-info">
+					<b>Off:</b> No signal processing will occur.<br>
+					<b>Custom:</b> Manually create a CamillaDSP setup for example when using multiple output devices.<br>
+					<b>Quick convolution:</b> Use the selection in "Quick convolution filter" below to provide basic convolution with gain.<br>
+					<b>Configurations:</b> Use one of the listed pipeline configurations.
 				</span>
 			</div>
-			<br>
+
 			<label class="control-label">Default device</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-cdsp-playbackdevice2">YES</label>
-					$_select[cdsp_patch_playback_device1]
-					<label class="toggle-radio" for="toggle-cdsp-playbackdevice1">NO</label>
-					$_select[cdsp_patch_playback_device0]
+					<label class="toggle-radio toggle-cdsp-use-default-device" for="toggle-cdsp-use-default-device-2">ON </label>$_select[cdsp_use_default_device_on]
+					<label class="toggle-radio toggle-cdsp-use-default-device" for="toggle-cdsp-use-default-device-1">OFF</label>$_select[cdsp_use_default_device_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-				  <a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-playbackdevice" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span id="info-cdsp-playbackdevice" class="help-block-configs help-block-margin legend-info-help hide">
-					<b>Yes:&nbsp;</b>Use the moOde defined audio device and format for the configuration.<br/>
-					<b>No:&nbsp;</b>Use an audio device thats different from the moOde defined device for example if you want to create a multi-channel crossover.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-use-default-device" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span class="config-help-static">
+					ALSA: $_alsa_plugin_and_cardnum
+				</span>
+				<span id="info-cdsp-use-default-device" class="config-help-info">
+					<b>ON:</b> Use the output device and mode defined in Audio Config.<br>
+					<b>OFF:</b> Specify a different device and mode using the Pipeline editor for example if you want to create a multi-channel crossover.
 				</span>
 			</div>
-            <label class="control-label" for="log_level">Log level</label>
+
+            <label class="control-label" for="log-level">Log level</label>
             <div class="controls">
-				<select id="log_level" name="log_level" class="input-large">
+				<select id="log-level" name="log_level" class="config-select-large">
 					$_cdsp_log_level
 				</select>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-log_level" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-log_level" class="help-block-configs help-block-margin hide">
-					Control the amount of detail of CamillaDSP in the MPD log (/var/log/mpd/log).
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-log-level" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-log-level" class="config-help-info">
+					Control the amount of detail for CamillaDSP entries in the MPD log.
                </span>
             </div>
 		</div>
 
-		<legend>Quick convolution filter</legend>
+		<div class="config-horiz-rule">Quick convolution filter</div>
+
 		<div class="control-group">
-			<label class="control-label" for="cdsp-basiccon-gain">Gain</label>
+			<label class="control-label" for="cdsp-qc-gain">Gain (dB)</label>
 			<div class="controls">
-				<input class="input-large" type="number" maxlength="3" min="-40" max="20" step="0.1" id="cdsp-basiccon-gain" name="cdsp_basiccon_gain" value="$_quickconv_gain_value">&nbsp;dB
-				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-gain" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span  id="info-cdsp-qc-gain" class="help-block-configs help-block-margin legend-info-help hide">
-					Adjusting the Gain can help prevent clipping. The range is -40dB to 20dB.<br/>
-					You can open the Pipeline editor below to analyze if the signal is clipping or show frequency curve of the filter.
+				<input class="config-input-large" type="number" maxlength="3" min="-40" max="20" step="0.1" id="cdsp-qc-gain" name="cdsp_qc_gain" value="$_cdsp_qc_gain">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-qc-gain" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-cdsp-qc-gain" class="config-help-info">
+					Adjusting the Gain can help prevent clipping. The range is -40dB to 20dB. Open the Pipeline editor to see if the signal is clipping or to show the frequency curve of the filter.
 				</span>
 			</div>
 
-			<label class="control-label" for="cdsp-basiccon-left">IR Left</label>
-			<div class="controls controls-select">
-			    <select id="cdsp-basiccon-left" class="input-xxlarge" name="cdsp_basicconv_left" >
-					$_select[cdsp_quickconv_irl]
+			<label class="control-label" for="cdsp-qc-ir-left">IR left</label>
+			<div class="controls">
+			    <select id="cdsp-qc-ir-left" class="config-select-xxlarge" name="cdsp_qc_ir_left">
+					$_select[cdsp_qc_ir_left]
 				</select>
-				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-left" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span  id="info-cdsp-qc-left" class="help-block-configs help-block-margin legend-info-help hide">
-					Select an impulse response to use for the convolution.<br/>
-					New impulse reponses can be added in the Convolution file section.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-qc-ir-left" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-cdsp-qc-ir-left" class="config-help-info">
+					Select an impulse response to use for the convolution. New impulse reponse files can be added in the File management section.
 				</span>
 			</div>
 
-			<label class="control-label" for="cdsp-basiccon-right">IR Right</label>
-			<div class="controls controls-select">
-			    <select id="cdsp-basiccon-right" class="input-xxlarge" name="cdsp_basicconv_right" >
-					$_select[cdsp_quickconv_irr]
+			<label class="control-label" for="cdsp-qc-ir-right">IR right</label>
+			<div class="controls">
+			    <select id="cdsp-qc-ir-right" class="config-select-xxlarge" name="cdsp_qc_ir_right">
+					$_select[cdsp_qc_ir_right]
 				</select>
-				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-right" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span  id="info-cdsp-qc-right" class="help-block-configs help-block-margin legend-info-help hide">
-					Select an impulse response to use for the convolution.<br/>
-					New impulse reponses can be added in the Convolution file section.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-qc-right" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-cdsp-qc-right" class="config-help-info">
+					Select an impulse response to use for the convolution. New impulse reponse files can be added in the File management section.
 				</span>
 			</div>
 
-			<label class="control-label" for="cdsp-basiccon-type">IR Type</label>
-			<div class="controls controls-select">
-			    <select id="cdsp-basiccon-type" class="input-large" name="cdsp_basicconv_type" >
-					$_select[cdsp_quickconv_irtype]
+			<label class="control-label" for="cdsp-qc-ir-type">Type/format</label>
+			<div class="controls">
+			    <select id="cdsp-qc-ir-type" class="config-select-large" name="cdsp_qc_ir_type">
+					$_select[cdsp_qc_ir_type]
 				</select>
-				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span  id="info-cdsp-qc-type" class="help-block-configs help-block-margin legend-info-help hide">
-					Set the type of the selected impulse response file. For wave files just select WAVE, not need to convert to RAW. Info about a specific impulse response file is available in the Convolution file section.<br/>
-					See <a href="https://github.com/HEnquist/camilladsp#fir">CamillaDSP</a> for project information.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				$_check_msg_quick_convolution
+				<span id="info-cdsp-qc-type" class="config-help-info">
+					Specify the type for the selected impulse response file. Note for wav files select WAVE, there is no need to convert the files to raw.
 				</span>
-				<div id="cdsp_check_msg_quic_convolution">
-					$checkMsgQuickConvolution
-				</div>
 			</div>
 		</div>
 	</form>
 
-	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-		<legend>Pipeline configuration</legend>
-		<div class="control-group">
-			<label class="control-label" for="cdsp-configs">Pipeline</label>
-			<div class="controls">
-			    <select id="cdsp-configs" class="input-xxlarge" name="cdsp-config" onchange="$('#btn-automatic-check').click();">
-					$_select[cdsp_configs]
-				</select>
-				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="checkauto" value="1"  style="display:none" ></button>
-				<br/>
-				<div id="cdsp_check_msg">
-				$checkMsg
-				</div>
-			</div>
-		</div>
+	<form class="form-horizontal" action="#pipeline-editor" method="post">
+		<a id="pipeline-editor"></a>
+
+		<legend>Pipeline editor
+			<a href="cdsp-configeditor.php" target="camillagui"><button class="legend-config btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>
+		</legend>
 
 		<div class="control-group">
-			<div class="controls">
-				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary">Delete</button></a>
-				<a data-toggle="modal" href="#copy-pipeline"><button class="btn btn-medium btn-primary">Copy</button></a>&nbsp;&nbsp;
-				<a data-toggle="modal" href="#new-pipeline"><button class="btn btn-medium btn-primary">New</button></a>&nbsp;&nbsp;
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
-				<div class="modal-button-style">
-					<label for="pipelineconfig" id="choose-pipeline-cfg" class="btn btn-primary btn-medium">Upload</label>
-					<input type="file" id="pipelineconfig" accept=".yml" name="pipelineconfig" style="display:none" onchange="$('#btn-import-pipeline').click();" >
-					<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
-				</div>&nbsp;&nbsp;
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="check" value="1">Check</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-configuration-actions" class="help-block-configs help-block-margin hide">
-					<b>Delete:&nbsp;</b>Delete the selected configuation file.<br/>
-					<b>Copy:&nbsp;</b>Provide new name and copy the selected configuation file.<br/>
-					<b>New:&nbsp;</b>Create empty new configuration (contains minimal required settings).<br/>
-					<b>Download:&nbsp;</b>Download the selected configuation file.<br/>
-					<b>Upload:&nbsp;</b>Upload a new configuration file. If file already exists it will be overwritten.<br/>
-					<b>Check:&nbsp;</b>Check if the selected configuration is a valid CamillaDSP configuration.<br/><br/>
-
-					Changes to the configuration are effective immediately after pausing/stopping playback.<br>
-					Information on how to create CamillaDSP configuration files can be found on the
-					<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
-					<br>
-					If CamillaDSP can't play audio, errors will be reported to the MPD log <code>/var/log/mpd/log</code><br>
-					In case this is due to channel counts or sampling rates which are not supported by your DAC,<br>
-					you can either handle this in CamillaDSP with mixers or resamplers<br>
-					or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
-					If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.<br>
-					<br>
-					To create new configurations you have three choices:<br>
-					The easy start by copying an existing configuration and start the camillagui (at the bottom of this page).<br>
-					Press the new button for minimal configuration and edit this on.
-					Or brew your own configuration file from scratch in text editor.	With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
-<code><span style="white-space: pre;">
-devices:
-  samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
-  chunksize: 4096 # increase, if buffer underruns occur when using higher samplerates (e.g. to 8192, 16384, 32768, 65536, ...)
-  queuelimit: 1  # increasing this introduces significant latency when stopping playback or changing songs
-                 # e.g.: samplerate=44100, chunksize=1024, queuelimit=44 => latency ~ 1s
-  capture:
-    type: Stdin
-    channels: 2  # irrelevant - will always be overridden (currently always 2)
-    format: S32LE  # irrelevant - will always be overridden with the incoming sample format
-  playback:
-    type: Alsa
-    channels: 2
-    device: "$sound_device_type:$current_sound_device_number"  # by default, this is automatically updated when configuration is choosen. (correct value is only shown, when playback is stopped.)																									  #
-    format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats (correct value is only shown, when playback is stopped)
-</span></code><br><br/>
-					Any reference to a convolution file should be relative like <code>../coeffs/yourfile.wav</code>
-				</div>
-			</div>
-		</div>
-	</form>
-
-	<form class="form-horizontal" action="#conv_file" method="post" enctype="multipart/form-data">
-		<a id="conv_file"></a>
-		<legend><a href="#conv_file"></a>Convolution file</legend>
-		<div class="control-group">
-			<label class="control-label" for="cdsp-coeffs">Impulse response</label>
-			<div class="controls" >
-				     <select id="cdsp-coeffs" class="input-xxlarge" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#btn-check-coeff').click();">
-					$_select[cdsp_coeffs]
-				</select>
-				<div id="coeff-info" >
-					$coeffInfoHtml
-				</div>
-			</div>
-		</div>
-
-		<!-- ids and names aren't correct: (copy of above now)-->
-		<div class="control-group">
-			<div class="controls">
-				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary">Delete</button></a>&nbsp;&nbsp;
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
-				<div class="modal-button-style">
-					<label for="coeffsfile" id="choose-coeff-cfg" class="btn btn-primary btn-medium">Upload new</label>
-					<input type="file" id="coeffsfile" accept=".wav,.txt,.raw,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();" >
-					<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
-				</div>&nbsp;&nbsp;
-				<button id="btn-check-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="info" value="1" style="display:none" >Info</button>
-
-				<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
-						<b>Delete:&nbsp;</b>Delete the selected convolution file.<br/>
-						<b>Download:&nbsp;</b>Download the selected convolution file.<br/>
-						<b>Upload:&nbsp;</b>Upload a convolution file, existing ones are overwritten.<br/>
- 			    </div>
-			</div>
-		</div>
-	</form>
-
-	<form class="form-horizontal" action="#pipeline_editor" method="post" >
-		<a id="pipeline_editor"></a>
-		<legend>Pipeline editor</legend>
-		<div class="control-group">
-			<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help $_camillagui_notfound_show" >
+			<span class="config-help-static $_camillagui_notfound_show" >
 				<span style='color: red'>&#10007;</span> Pipeline editor not found or not installed.
 			</span>
-			<span id="info-camillagui-problems" class="help-block-configs help-block-margin legend-info-help $_camillagui_status_problems">
+			<span class="config-help-static $_camillagui_status_problems">
 				<span style='color: red'>&#10007;</span> Unknown problem with Pipeline editor.
 			</span>
 
-			<label class="control-label" >Status</label>
+			<label class="control-label">Status</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-camillagui2">ON</label>
-					$_select[camillagui1]
-					<label class="toggle-radio" for="toggle-camillagui1">OFF</label>
-					$_select[camillagui0]
+					<label class="toggle-radio toggle-camillagui" for="toggle-camillagui-2">ON </label>$_select[camillagui_on]
+					<label class="toggle-radio toggle-camillagui" for="toggle-camillagui-1">OFF</label>$_select[camillagui_off]
 				</div>
-
-				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-				  <a aria-label="Help" class="info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			    </div>
-				<span id="info-camillagui" class="help-block-configs help-block-margin legend-info-help hide">
-					Show the current On/Off status of the Pipeline editor.<br>
-					To conserve system resources after a reboot the Pipeline editor is automatically turned off.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-camillagui" class="config-help-info">
+					Show the current On/Off status of the Pipeline editor Web service.
 				</span>
-
-				<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillagui" value="1" style="display:none"/>
+				<button id="btn-update-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui" value="1" style="display:none"/>
 			</div>
 
-			<label class="control-label" >Expert mode</label>
+			<label class="control-label">Expert mode</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-camillaguiexpert2">ON</label>
-					$_select[camillaguiexpert1]
-					<label class="toggle-radio" for="toggle-camillaguiexpert1">OFF</label>
-					$_select[camillaguiexpert0]
+					<label class="toggle-radio toggle-camillaguiexpert" for="toggle-camillaguiexpert-2">ON </label>$_select[camillaguiexpert_on]
+					<label class="toggle-radio toggle-camillaguiexpert" for="toggle-camillaguiexpert-1">OFF</label>$_select[camillaguiexpert_off]
 				</div>
-
-				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-				  <a aria-label="Help" class="info-toggle" data-cmd="info-camillaguiexpert" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			    </div>
-				<span id="info-camillaguiexpert" class="help-block-configs help-block-margin legend-info-help hide">
-					Show settings like playback and capture device settings.<br>
-					Only required for custom setups.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camillaguiexpert" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-camillaguiexpert" class="config-help-info">
+					Show advanced options for example Playback/Capture device settings and Resampling.
 				</span>
+				<button id="btn-update-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui_expert" value="1" style="display:none"/>
+			</div>
+		</div>
+	</form>
 
-				<button id="btn-updat-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillaguiexpert" value="1" style="display:none"/>
+	<legend>File management</legend>
+	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+		<div class="control-group">
+			<label class="control-label" for="cdsp-config">Configuration</label>
+			<div class="controls">
+			    <select id="cdsp-config" class="config-select-xxlarge" name="cdsp_config" onchange="$('#btn-automatic-check').click();">
+					$_select[cdsp_config]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-config" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span class="config-help-static">$_check_msg_config</span>
+				<span id="info-cdsp-config" class="config-help-info">
+					View the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp#pipeline" target="_blank">CamillaDSP documentation</a> for information on Pipeline configuration files.<br>
+					<b>Default configurations</b><br>
+					<table class="cdsp-help-table">
+						<tr><td>ASH-IR R02 Control Room</td><td>Binaural Room Impulse Response R02 Control Room from the ASH-IR dataset (without HpCF)</td></tr>
+						<tr><td>Crossfeed Bs2b</td><td>Bs2b from Wang-Yue which contains 5 setting sets. Refer to link for more information</td></tr>
+						<tr><td>Crossfeed Mikhail</td><td>Mikhail Naganov, customize with own IR correction</td></tr>
+						<tr><td>Crossfeed MPM</td><td>Mikhail Phonitor Mini (MPM). Mikhail Naganov reverse engineered SPL Phonitor Mini Crossfeed with DSP by Ebert-Hanke</td></tr>
+						<tr><td>Crossfeed Natural</td><td>Ebert-Hanke implementation of Natural roughly modeled after some publications by Jan Meier</td></tr>
+						<tr><td>Crossfeed Chu Moy</td><td>Ebert-Hanke implementation of Pow Chu Moy Crossfeed based on Linkwitz</td></tr>
+						<tr><td>Flat</td><td>Empty config (no DSP)</td></tr>
+						<tr><td>Loudness</td><td>Loudness volume curve with 3dB high boost, 6dB low boost and -3dB gain</td></tr>
+						<tr><td>MS-Matrix Narrow</td><td>M-S (Mid-Side) matrix with side signal reduced</td></tr>
+						<tr><td>MS-Matrix Wide</td><td>M-S (Mid-Side) matrix with side signal increased</td></tr>
+						<tr><td>PEQ 10-Band</td><td>Generic example of a 10 band parametric equalizer</td></tr>
+						<tr><td>Polarity Inversion</td><td>Invert channel +/- polarity</td></tr>
+						<tr><td>Polarity Inversion with VC</td><td>Invert channel +/- polarity and use CamillaDSP volume control</td></tr>
+						<tr><td>Trifield 3-channel</td><td>Michael Gerzon derived Trifield decoder. Requires at least 3 channels available for output</td></tr>
+						<tr><td>Volume Control</td><td>CamillaDSP volume control</td></tr>
+					</table>
+				</span>
+				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="check_auto" value="1"  style="display:none" ></button>
 			</div>
 
 			<div class="controls">
-				<div style="margin-top:.5em">
-					<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>&nbsp;Pipeline editor<br>
-				</div>
-				<span class="help-block-configs help-block-margin">
-					This will open the webinterface of camilladsp. With it you can create your configurations.<br>
-				</span>
+				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
+				<a data-toggle="modal" href="#copy-pipeline"><button class="btn btn-medium btn-primary config-btn">Copy</button></a>
+				<a data-toggle="modal" href="#create-new-pipeline"><button class="btn btn-medium btn-primary config-btn">New</button></a>
+				<button class="btn btn-medium btn-primary config-btn" type="submit" name="export" value="1">Download</button>
 
+				<label for="pipeline-config" id="choose-pipeline-cfg" class="btn btn-primary btn-medium config-btn">Upload</label>
+				<input type="file" id="pipeline-config" accept=".yml" name="pipeline_config" style="display:none" onchange="$('#btn-import-pipeline').click();" >
+				<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
+
+				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="check" value="1">Check</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-configuration-actions" class="config-help-info">
+					<b>Remove:</b> Delete the selected configuation file.<br>
+					<b>Copy:</b> Copy the selected configuation file to a new file with a different name.<br>
+					<b>New:</b> Create a new configuration with minimim required settings.<br>
+					<b>Download:</b> Download the selected configuation file.<br>
+					<b>Upload:</b> Upload a configuration file. If the file already exists it will be overwritten.<br>
+					<b>Check:</b> Check if the selected configuration is valid.
+					<br><br>
+					<b>Usage notes:</b><br>
+					Changes to the configuration are effective immediately after pausing/stopping playback. If CamillaDSP can't
+					play audio, errors will be reported to the MPD log <code>/var/log/mpd/log</code> If this is due to channel
+					counts or sampling rates not supported by the audio device, adjust CamillaDSP mixers or	resamplers or change
+					the audio format passed to CamillaDSP in the ALSA configuration file <code>/etc/alsa/conf.d/camilladsp.conf</code>
+					Errors in this file are typically reported in <code>/var/log/moode.log</code> and <code>/var/log/syslog</code>
+				</span>
+			</div>
+		</div>
+	</form>
+
+	<form class="form-horizontal" action="#conv-file" method="post" enctype="multipart/form-data">
+		<a id="conv-file"></a>
+
+		<div class="control-group">
+			<label class="control-label" for="cdsp-coeffs">Convolution</label>
+			<div class="controls" >
+				<select id="cdsp-coeffs" class="config-select-xxlarge" name="cdsp_coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#btn-check-coeff').click();">
+					$_select[cdsp_coeffs]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-coeffs" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<div id="info-cdsp-coeffs" class="config-help-info">
+					View the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp#fir" target="_blank">CamillaDSP documentation</a>for infirmation on impulse response files.<br>
+ 			    </div>
+				<span class="config-help-static">
+					<table class="cdsp-help-table">
+						$_coeff_info_html
+					</table>
+				</span>
+			</div>
+
+			<!-- ids and names aren't correct: (copy of above now)-->
+			<div class="controls">
+				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
+				<button class="btn btn-medium btn-primary config-btn config-btn" type="submit" name="export" value="1">Download</button>
+				<label for="coeffs-file" id="choose-coeff-cfg" class="btn btn-medium btn-primary config-btn">Upload</label>
+				<input type="file" id="coeffs-file" accept=".wav,.txt,.raw,.csv" name="coeffs_file" style="display:none" onchange="$('#btn-import-coeff').click();">
+				<button id="btn-import-coeff" class="btn btn-medium btn-primary  config-btn btn-submit" type="submit" name="import" value="1"  style="display:none"</button>
+				<button id="btn-check-coeff" class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="info" value="1" style="display:none">Info</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<div id="info-convolution-actions" class="config-help-info">
+					<b>Remove:</b> Delete the selected convolution file.<br>
+					<b>Download:</b> Download the selected convolution file.<br>
+					<b>Upload:</b> Upload a convolution file. If the file already exists it will be overwritten.
+ 			    </div>
 			</div>
 		</div>
 	</form>
@@ -331,23 +286,18 @@ devices:
 </div>
 </div>
 
-<!-- MODAL POPUPS -->
-
 <form class="form-horizontal" method="post">
-	<div id="remove-pipeline" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
-		<input id="config_remove_id" type="hidden" name="cdsp-config" value="$selectedConfig"/>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove Pipeline</h3>
+	<div id="remove-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
+		<input id="config_remove_id" type="hidden" name="cdsp_config" value="$_selected_config"/>
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove Configuration?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h4 id="removepipeline">$_selected_pipeline</h4>
-			<span class="help-block" style="margin-bottom:5px;">
+		<div class="modal-body txtmid">
+			<h4>$_selected_config</h4>
+			<span class="config-help-static">
 				$_disable_rm_msg
 			</span>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="remove" value="1" $_disable_rm>Yes</button>
@@ -356,20 +306,18 @@ devices:
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="remove-coeff" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-coeff-label" aria-hidden="true">
-		<input id="coeff_remove_id" type="hidden" name="cdsp-coeffs" value="$_selected_coeff"/>
+	<div id="remove-coeff" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-coeff-label" aria-hidden="true">
+		<input id="coeff_remove_id" type="hidden" name="cdsp_coeffs" value="$_selected_coeff"/>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove Coefficients</h3>
+			<h3>Remove Convolution?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h4 id="removecoeff">$_selected_pipeline</h4>
-			<span class="help-block" style="margin-bottom:5px;">
+		<div class="modal-body txtmid">
+			<h4>$_selected_coeff</h4>
+			<span class="config-help-static">
 				$_disable_rm_msg
 			</span>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="remove" value="1" $_disable_rm>Yes</button>
@@ -378,48 +326,48 @@ devices:
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="copy-pipeline" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="copy-pipeline-label" aria-hidden="true">
-		<input id="config_copy_id" type="hidden" name="cdsp-config" value="$selectedConfig"/>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Copy pipeline to</h3>
+	<div id="copy-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="copy-pipeline-label" aria-hidden="true">
+		<input type="hidden" name="cdsp_config" value="$_selected_config"/>
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Copy pipeline?</h3>
 		</div>
-
 		<div class="modal-body">
 			<div class="control-group">
-				<label class="control-label" for="new-pipelinename">Pipeline name</label>
-				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9 .\-_]*" id="new-pipelineinput" name="new-pipelinename" value="" autofocus>
+				<div class="control-group">
+					<label class="control-label" for="selected-pipeline-name">From</label>
+					<div class="controls">
+						<input id="selected-pipeline-name" class="config-modal-input" type="text" value="$_selected_config" readonly>
+					</div>
+					<label class="control-label" for="copyto-pipeline-name">To</label>
+					<div class="controls">
+						<input id="copyto-pipeline-name" class="config-modal-input" type="text" pattern="[A-Za-z0-9 \-_]*" name="copyto_pipeline_name" value="" autofocus>
+					</div>
 				</div>
 			</div>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="copypipeline" value="1">Ok</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="copy_pipeline" value="1">Yes</button>
 		</div>
 	</div>
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="new-pipeline" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-pipeline-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Create new pipeline configuration</h3>
+	<div id="create-new-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="new-pipeline-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Create new pipeline?</h3>
 		</div>
-
 		<div class="modal-body">
 			<div class="control-group">
-				<label class="control-label" for="new-pipelinename">Pipeline name</label>
+				<label class="control-label" for="new-pipeline-name">Name</label>
 				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9 .\-_]*" id="new-pipelineinput" name="new-pipelinename" value="" autofocus>
+					<input class="config-modal-input" type="text" pattern="[A-Za-z0-9 \-_]*" id="new-pipeline-name" name="new_pipeline_name" value="" autofocus>
 				</div>
 			</div>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="newpipeline" value="1">Ok</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="create_new_pipeline" value="1">Yes</button>
 		</div>
 	</div>
 </form>

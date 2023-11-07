@@ -22,98 +22,86 @@
 <div class="container">
 	<h1 class="snd-config">Bluetooth Control</h1>
 
-	<!-- TEMPLATE -->
-
-   <form class="form-horizontal" action="" method="post">
+    <form class="form-horizontal" action="" method="post">
     	<legend>Devices</legend>
 		<div class="control-group">
-			<label class="control-label">Command</label>
-			<div class="controls">
-				<select id="btcmd" class="config-select-large" name="btcmd">
-					$_cmd[btcmd]
-				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="run_btcmd" value="1" $_bt_disabled>Submit</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-btcmd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-btcmd" class="config-help-info $_bt_msg_margin">
-					Select a command to submit to the Bluetooth controller.
-		        </span>
-				<span class="config-help-static $_bt_msg_hide">
-					Open Renderers and turn on Bluetooth then select a command to submit to the controller.
-		        </span>
-				<div id="blu-config-cmd-output">
-					$_cmd_output
-				</div>
+			<select id="btcmd" class="config-select-large" name="btcmd">
+				$_cmd[btcmd]
+			</select>
+			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="run_btcmd" value="1" $_bt_disabled>Submit</button>
+			<a aria-label="Help" class="config-info-toggle" data-cmd="info-btcmd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+			<span id="info-btcmd" class="config-help-info">
+				Select a command to submit to the Bluetooth controller.
+	        </span>
+			<div id="blu-config-cmd-output">
+				$_cmd_output
 			</div>
 
 			<div class="$_hide_ctl[paired_device]">
-				<label class="control-label">Device</label>
-				<div class="controls">
-					<select id="paired-device" class="config-select-large" name="paired_device">
-						$_device[paired_device]
-					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="connectto_device" value="1">Connect</button>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="rm_paired_device" value="1">Remove</button>
-					<span class="config-help-static">
-						Connect or remove a paired device. This also changes to the selected audio output.
-		            </span>
-				</div>
+				<select id="paired-device" class="config-select-large" name="paired_device">
+					$_device[paired_device]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="connectto_device" value="1">Connect</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="rm_paired_device" value="1">Remove</button>
+				<span class="config-help-static">
+					Connect or remove a paired device. This also changes to the selected audio output.
+	            </span>
 			</div>
 
 			<div class="$_hide_ctl[connected_device]">
-				<label class="control-label">Device</label>
-				<div class="controls">
-					<select id="connected-device" class="config-select-large" name="connected_device">
-						$_device[connected_device]
-					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
-					<span class="config-help-static">
-						Disconnect the currently connected device. This also changes to the selected audio output.
-		            </span>
-				</div>
+				<select id="connected-device" class="config-select-large" name="connected_device">
+					$_device[connected_device]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
+				<span class="config-help-static">
+					Disconnect the currently connected device. This also changes to the selected audio output.
+	            </span>
 			</div>
 
 			<div class="$_hide_ctl[scanned_device]">
-				<label class="control-label">Device</label>
-				<div class="controls">
-					<select id="scanned-device" class="config-select-large" name="scanned_device">
-						$_device[scanned_device]
-					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="pairwith_device" value="1">Pair</button>
-					<span class="config-help-static">
-						Select a device to pair with.
-		            </span>
-				</div>
+				<select id="scanned-device" class="config-select-large" name="scanned_device">
+					$_device[scanned_device]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="pairwith_device" value="1">Pair</button>
+				<span class="config-help-static">
+					Select a device to pair with.
+	            </span>
 			</div>
 		</div>
 
 		<legend>Audio output</legend>
 		<div class="control-group">
-			<div class="$_hide_ctl[chg_audioout]">
-				<label class="control-label">Destination</label>
-				<div class="controls">
-					<select id="audioout" class="config-select-large" name="audioout">
-						$_select[audioout]
-					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="chg_audioout" value="1">Change</button>
-					<span class="config-help-static $_ao_msg_margin">
-						Route output to the local audio device or to a remote Bluetooth speaker.
-		            </span>
-					<span class="config-help-static $_ao_msg_hide">
-						Changing from Bluetooth to Local will automatically disconnect the device.
-		            </span>
-				</div>
-			</div>
+			<select id="audioout" class="config-select-large" name="audioout">
+				$_select[audioout]
+			</select>
+			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="chg_audioout" value="1">Change</button>
+			<span class="config-help-static">
+				<b>Local audio: </b>Route connected client output to the Local audio device.<br>
+				<b>Bluetooth speaker: </b>Route MPD output to a remote Bluetooth speaker.
+            </span>
+			<span class="config-help-static $_ao_msg_hide">
+				NOTE: Changing from Bluetooth speaker to Local audio will automatically disconnect from the speaker.
+            </span>
 
-			<label class="control-label">Output buffer</label>
-			<div class="controls">
-				<select id="pcm_buffer" class="config-select-large" name="pcm_buffer">
-					$_select[pcm_buffer]
-				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pcm_buffer" value="1">Set</button>
-				<span class="config-help-static">
-					Length of the output buffer in milliseconds. Lower values reduce latency but may cause dropouts.
-		        </span>
-			</div>
+			<select id="pcm_buffer" class="config-select-large" name="pcm_buffer">
+				$_select[pcm_buffer]
+			</select>
+			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pcm_buffer" value="1">Set</button>
+			<span class="config-help-static">
+				Length of the output buffer in milliseconds. Lower values reduce latency but may cause dropouts.
+	        </span>
+		</div>
+
+		<legend>ALSA output mode</legend>
+		<div class="control-group">
+			<select id="bt-alsa-output-mode" class="config-select-large" name="bt_alsa_output_mode">
+				$_select[bt_alsa_output_mode]
+			</select>
+			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_alsa_output_mode" value="1">Set</button>
+			<span class="config-help-static">
+				<b>Default: </b>Use the "Output mode" setting from Audio Config. This enables DSP to be used.<br>
+				<b>Compatibility: </b>This mode provides improved device compatibility but does not support DSP.
+            </span>
 		</div>
 	</form>
 </div>

@@ -6,7 +6,7 @@
 #  player. Additional configuration help is provided within the player via Menu,
 #  Quick help and the (i) information buttons.
 #
-#  Version: 1.2 2022-08-09
+#  Updated: 2023-05-09
 #
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -14,21 +14,45 @@
 
 GENERAL INFORMATION
 
-To access the moOde UI open a Web Browser and enter one of the URL's below. The
-system is configured via the "m" menu Configure and Preferences selections.
+Access the moOde WebUI using a Browser and one of the URL's below. Configuration
+and other options are available via the "m" moOde menu.
 
 - http://moode
 - http://moode.local
 - http://IP_ADDRESS
 
-An explanation of how to operate moOde audio player can be found in Quick help
-which is located on the main (m) menu.
+An explanation of how to operate moOde audio player is contained in Quick help
+located on the moOde menu and also at the link below.
+https://github.com/moode-player/docs/blob/main/Quickhelp.pdf
 
-To access the operating system command console use Secure Shell (SSH). An easy
-to use Web SSH terminal is available in System Config.
+SECURITY AND OPERATING SYSTEM (OS) IMAGE
 
-- Userid    pi
-- Password  moodeaudio
+For improved security the OS image does not contain the userid pi, SSH service,
+WiFi SSID or Access Point password.
+
+- Use the official Raspberry Pi Imager to choose a moOde OS image, enable SSH,
+  create a userid and password and optionally a WiFi SSID and password.
+
+  *** READ THIS ***
+  1. SSH and userid/password are REQUIRED for correct operation of moOde.
+  2. Do not set the host name using the Imager. Refer to CUSTOM CONFIGURATIONS
+     in this guide for information on changing the host name.
+
+- An Access Point password can be set using the Network Configuration screen
+  after accessing the moOde WebUI, or before first boot via a moodecfg.ini
+  file as described in the CUSTOM CONFIGURATIONS section.
+
+- The moOde OS images are listed in the "Media Player OS" category of the Pi
+  Imager, or if they were downloaded directly via the Download page at
+  http://moodeaudio.org they can be selected via the "Use custom" category.
+
+- Refer to the links below for more information on operating system security
+  and how to download and use the Raspberry Pi Imager.
+  https://www.raspberrypi.com/software/
+  https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
+
+To access the OS command console use Secure Shell (SSH). An easy to use WebSSH
+terminal is available in the WebUI, System Config screen.
 
 ACCESS POINT (AP) MODE
 
@@ -37,7 +61,7 @@ refer to the settings below.
 
 - IP address    172.24.1.1
 - SSID          Moode
-- Password      moodeaudio
+- Password      Refer to the SECURITY section
 - Channel       6
 
 AP mode starts automatically when any of the following are true.
@@ -78,7 +102,7 @@ IN-PLACE SOFTWARE UPDATES
 
 IMAGE WRITING UTILITIES
 
-THe official Raspberry Pi Imager can be downloaded via the URL below.
+The official Raspberry Pi Imager can be downloaded via the URL below.
 https://www.raspberrypi.org/documentation/installation/installing-images/
 
 PLAYER SETUP AND CONFIGURATON
@@ -95,7 +119,7 @@ PLAYER SETUP AND CONFIGURATON
    - Access Point (AP) mode
    a) Insert WiFi adapter that supports AP mode
    b) Power on
-   c) Join network: SSID = Moode, password = moodeaudio
+   c) Join network: SSID = Moode, password = Refer to SECURITY section
    d) http://172.24.1.1 or http://moode.local
 
 2. AUDIO DEVICE SETUP
@@ -183,7 +207,7 @@ Customize the player by using any of the following procedures.
    h) Power on
 
    - Access Point (AP) mode
-   a) Join network SSID = Moode, password = moodeaudio
+   a) Join network SSID = Moode, password = Refer to SECURITY section
    b) http://172.24.1.1 or http://moode.local
    c) Menu, Configure, Network
    d) Configure a WiFi connection
@@ -204,7 +228,7 @@ Customize the player by using any of the following procedures.
    e) Copy the moodecfg.ini file from the PC or Mac to /boot on the SD Card
    f) Eject the SD Card
    f) Insert the SD Card into the Pi and power up
-   g) The Pi will reboot twice to perform the auto-configure
+   g) The Pi will reboot twice to perform the auto-configuration process
 
 AFTER PLAYER SETUP
 
@@ -239,17 +263,29 @@ Follow these instructions for making certain types of changes.
    e) Remove WiFi adapter
    f) Power on
 
-COMMAND API
+COMMAND AND REST API
 
-Below are a list of commands that can be submitted to moOde via HTTP or SSH.
+Commands can be submitted to moOde via HTTP or SSH. If an HTTP command returns
+data it is in JSON or plain text format following REST guidelines.
 
 1. Base URL is http://moode/command/?cmd=
 2. MPD commands that are listed in MPC help
-3. Volume commands that are listed in /var/www/vol.sh --help
-4. Library update is via the command libupd-submit.php
-5. CoverView on/off is via the command coverview.php on/off
-6. Song info is via the command get_currentsong which returns the contents
-   of the file /var/local/www/currentsong.txt encoded as JSON
+3. /var/www/vol.sh cmd
+Volume commands that are listed in /var/www/vol.sh --help
+4. libupd-submit.php
+Submit a Music Library update
+5. coverview.php on|off
+Turn the CoverView screen saver on or off
+6. get_currentsong
+Returns the contents of the file /var/local/www/currentsong.txt encoded as JSON.
+Turn on the Metadata file option in Audio Config to generate this file.
+7. get_output_format
+ALSA output format or 'Not playing' is returned
+
+moOde utility command:
+
+The SSH command "moodeutl" can be used for obtaining status or manipulating
+certain parts of moOde. For a list of options type moodeutl --help
 
 HTTP examples:
 

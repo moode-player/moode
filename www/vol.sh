@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-VER="7.4.0"
+VER="8.3.0"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
@@ -49,7 +49,7 @@ if [[ $1 = "--version" ]]; then
 fi
 
 # Get config settings
-RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob', 'volmute', 'mpdmixer', 'volume_mpd_max')")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','volmute','amixname','mpdmixer','cardnum','volume_mpd_max')")
 
 # Check for empty result due to "Database locked" error
 if [[ $RESULT = "" ]]; then
@@ -61,8 +61,10 @@ fi
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
 VOLMUTE=${arr[1]}
-MPDMIXER=${arr[2]}
-VOLUME_MPD_MAX=${arr[3]}
+AMIXNAME=${arr[2]}
+MPDMIXER=${arr[3]}
+CARDNUM=${arr[4]}
+VOLUME_MPD_MAX=${arr[5]}
 
 # For MPD mixer type Fixed (0dB) we just exit
 if [[ $MPDMIXER = "none" ]]; then
@@ -127,11 +129,21 @@ else
 	sqlite3 $SQLDB "UPDATE cfg_system SET value=$LEVEL WHERE param='volknob'"
 fi
 
+# NOTE: Volume update --> MPD idle timeout --> UI updated
+
 # Mute if indicated
 if [[ $VOLMUTE = "1" ]]; then
-	mpc volume 0 >/dev/null
+	if [[ $MPDMIXER = "hardware" ]]; then
+		amixer -M -c $CARDNUM sset "$AMIXNAME" 0% >/dev/null
+	else
+		mpc volume 0 >/dev/null
+	fi
 	exit 1
 fi
 
-# Volume: update MPD volume --> MPD idle timeout --> UI updated
-mpc volume $LEVEL >/dev/null
+# Set volume
+if [[ $MPDMIXER = "hardware" ]]; then
+	amixer -M -c $CARDNUM sset "$AMIXNAME" $LEVEL% >/dev/null
+else
+	mpc volume $LEVEL >/dev/null
+fi

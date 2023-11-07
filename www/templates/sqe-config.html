@@ -27,11 +27,15 @@
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 		</legend>
 
+        <p class="sub-legend">
+			For a full list of squeezelite command options visit the man page at <a href="https://ralph-irving.github.io/squeezelite.html" class="target-blank-link" target="_blank">https://ralph-irving.github.io/squeezelite.html</a>
+		</p>
+
         <div class="control-group">
             <label class="control-label" for="renderer-name">Name</label>
             <div class="controls">
-                <input class="input-large" type="text" id="renderer-name" name="config[PLAYERNAME]" value="$_sl_select[renderer_name]">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-renderer_name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+                <input class="config-input-large" type="text" id="renderer-name" name="config[PLAYERNAME]" value="$_sl_select[renderer_name]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-renderer_name" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-renderer_name" class="config-help-info">
 					Friendly name that will appear in LMS
                 </span>
@@ -39,53 +43,61 @@
 
             <label class="control-label" for="alsa-buffer">ALSA params</label>
             <div class="controls">
-                <input class="input-large" type="text" id="alsa-params" name="config[ALSAPARAMS]" value="$_sl_select[alsa_params]">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-params" href="#notarget"><i class="fas fa-info-circle"></i></a>
+                <input class="config-input-large" type="text" id="alsa-params" name="config[ALSAPARAMS]" value="$_sl_select[alsa_params]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-params" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-alsa-params" class="config-help-info">
-					b = buffer time, p = period count, f sample format (16|24|24_3|32), m = use mmap (0|1)<br>
-                	b less than 500 treated as buffer time in ms, otherwise size in bytes<br>
-					p less than 50 treated as period count, otherwise size in bytes
+                    <b>b:p:f:m</b><br>
+					<b>b </b>Buffer time. If less than 500 then treated as buffer time in ms, otherwise size in bytes.<br>
+                    <b>p </b>Period count. If less than 50 treated as period count, otherwise size in bytes.<br>
+                    <b>f </b>Sample format 16|24|24_3|32<br>
+                    <b>m </b>Use mmap 0|1
                 </span>
             </div>
 
-            <label class="control-label" for="output-buffers">Output buffers (KB)</label>
+            <label class="control-label" for="output-buffers">Output buffers</label>
             <div class="controls">
-                <input class="input-large" type="text" id="output-buffers" name="config[OUTPUTBUFFERS]" value="$_sl_select[output_buffers]">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-buffers" href="#notarget"><i class="fas fa-info-circle"></i></a>
+                <input class="config-input-large" type="text" id="output-buffers" name="config[OUTPUTBUFFERS]" value="$_sl_select[output_buffers]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-buffers" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-output-buffers" class="config-help-info">
-					streamBuffer:dspBuffer must be less than available RAM
+                    Stream Buffer:DSP Buffer in kilobytes. Must be less than available RAM.
                 </span>
             </div>
 
             <label class="control-label" for="task-priority">Task priority</label>
             <div class="controls">
-                <input class="input-large" type="number" id="task-priority" name="config[TASKPRIORITY]" value="$_sl_select[task_priority]" min="1" max="99">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-task-priority" href="#notarget"><i class="fas fa-info-circle"></i></a>
+                <input class="config-input-large" type="number" id="task-priority" name="config[TASKPRIORITY]" value="$_sl_select[task_priority]" min="1" max="99">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-task-priority" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-task-priority" class="config-help-info">
-                	Default: 45, min/max priority is 1/99
+                	Default is 45, range is 1-99.
                 </span>
             </div>
 
             <label class="control-label" for="audio-codecs">Audio codecs</label>
             <div class="controls">
-                <input class="input-large" type="text" id="audio-codecs" name="config[CODECS]" value="$_sl_select[audio_codecs]">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-codecs" href="#notarget"><i class="fas fa-info-circle"></i></a>
+                <input class="config-input-large" type="text" id="audio-codecs" name="config[CODECS]" value="$_sl_select[audio_codecs]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-codecs" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-audio-codecs" class="config-help-info">
-                	Default: flac,pcm,mp3,ogg,aac,alac,dsd
-					Available codecs: flac,pcm,mp3,ogg,aac,wma,alac,dsd,mad,mpg
+                	<b>Default: </b>flac,pcm,mp3,ogg,aac,alac,dsd<br>
+					<b>Available: </b>flac,pcm,mp3,ogg,aac,wma,alac,dsd,mad,mpg
                 </span>
             </div>
 
             <label class="control-label" for="other-options">Other options</label>
             <div class="controls">
-                <input class="input-large" type="text" id="other-options" name="config[OTHEROPTIONS]" value="$_sl_select[other_options]">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-other-options" href="#notarget"><i class="fas fa-info-circle"></i></a>
+                <input class="config-input-large" type="text" id="other-options" name="config[OTHEROPTIONS]" value="$_sl_select[other_options]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-other-options" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-other-options" class="config-help-info">
-                	Default: -W -D 500 -R E -S /var/local/www/commandw/slpower.sh<br>
-					-V [control] Use ALSA control for volume, otherwise use software volume.<br>
-					-D [delay][:format] Output device supports DSD<br>
+                	<b>Default: </b>-W -D 500 -R E -S /var/local/www/commandw/slpower.sh<br>
+					<b>-V [control] </b>Use ALSA control for volume, otherwise use software volume.<br>
+					<b>-D [delay][:format] </b>Output device supports DSD<br>
 					[delay] = optional delay in ms switching between PCM and DSD<br>
 					[:format] = dop (default if not specified), u8, u16le, u16be, u32le oe u32be.<br>
+                    <b>-C [timeout] </b>Close the output device after [timeout] seconds of the player being idle.
+                    The default is to always keep the device open as long as the player is "on"<br>
+                    <b>-s [server][:port] </b>Connect to the specified Logitech Media Server, otherwise use automatic
+                    discovery to find server on the local network. This option should only be needed
+                    if automatic discovery does not work, or the server is not on the local network
+                    segment e.g., behind a router.
                 </span>
             </div>
         </div>

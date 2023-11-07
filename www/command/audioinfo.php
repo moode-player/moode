@@ -18,6 +18,7 @@
  *
  */
 
+require_once __DIR__ . '/../inc/alsa.php';
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/music-library.php';
@@ -32,6 +33,9 @@ switch ($_GET['cmd']) {
 		$sock = getMpdSock();
 		sendMpdCmd($sock,'lsinfo "' . $_GET['path'] .'"');
 		echo json_encode(parseTrackInfo(readMpdResp($sock)));
+		break;
+	default:
+		echo 'Unknown command';
 		break;
 }
 
@@ -58,7 +62,7 @@ function parseStationInfo($path) {
 }
 
 function parseTrackInfo($resp) {
-	workerLog('parseTrackInfo(): (' . $resp . ')');
+	//workerLog('parseTrackInfo(): (' . $resp . ')');
 	/* Layout
 	0  Cover url
 	1  File path
@@ -96,7 +100,9 @@ function parseTrackInfo($resp) {
 				// Not needed for display
 				case 'duration':
 				case 'Last-Modified':
+					break;
 				case 'Format':
+					$format = $value;
 					break;
 				// All others
 				case 'file':
@@ -153,7 +159,8 @@ function parseTrackInfo($resp) {
 		$array[2] = !empty(rtrim($artists, ', ')) ? array('Artists' => rtrim($artists, ', ')) : '';
 		$array[6] = !empty(rtrim($genres, ', ')) ? array('Genres' => rtrim($genres, ', ')) : '';
 		// Audio format
-		$encodedAt = getEncodedAt(array('file' => $file), 'default');
+		$encodedAt = getEncodedAt(array('file' => $file, 'Format' => $format), 'verbose');
+
 		$array[13] = $encodedAt == 'Not playing' ? '' : array('Audio format' => $encodedAt);
 	}
 

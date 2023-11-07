@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+HOME_DIR=$(ls /home/)
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 if [[ $1 = "set-timezone" ]]; then
@@ -74,16 +75,16 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "$2")
 		exit
 	else
-		# Set-alsavol
-		AMIXNAME=$(sqlite3 $SQLDB "select value from cfg_system where param='amixname'")
+		# Set-alsavol (Note: % is appended to LEVEL)
+		ADEVNAME=$(sqlite3 $SQLDB "select value from cfg_system where param='adevname'")
 		MIXER_TYPE=$(sqlite3 $SQLDB "select value from cfg_mpd where param='mixer_type'")
-		if [[ $3 = "100" && $AMIXNAME = "HDMI" && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "none" ) ]]; then
+		if [[ $3 = "100" && ($ADEVNAME = "Pi HDMI 1" || $ADEVNAME = "Pi HDMI 2") && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "none" ) ]]; then
 			LEVEL="0dB"
 		else
 			LEVEL="$3%"
 		fi
-		amixer -c $CARD_NUM sset "$2" $LEVEL >/dev/null
-
+		# Use mapped volume option
+		amixer -M -c $CARD_NUM sset "$2" $LEVEL >/dev/null
 		exit
 	fi
 fi
@@ -144,16 +145,17 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/mpd/log --size 0
 	truncate /var/log/nginx/access.log --size 0
 	truncate /var/log/nginx/error.log --size 0
-	truncate /var/log/php7.4-fpm.log --size 0
+	truncate /var/log/php*-fpm.log --size 0
 	truncate /var/log/php_errors.log --size 0
 	truncate /var/log/regen_ssh_keys.log --size 0
 	truncate /var/log/samba/log.nmbd --size 0
 	truncate /var/log/samba/log.smbd --size 0
 	truncate /var/log/shairport-sync.log --size 0
-	truncate /var/log/mountmon.log --size 0
+	truncate /var/log/moode_mountmon.log --size 0
 	truncate /var/log/syslog --size 0
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
+	truncate /var/log/Xorg.*.log --size 0
 
 	# Rotated logs from settings in /etc/logrotate.d
 	rm /var/log/*.log.* 2> /dev/null
@@ -163,20 +165,20 @@ if [[ $1 = "clear-syslogs" ]]; then
 	rm /var/log/btmp.* 2> /dev/null
 	rm /var/log/apt/*.log.* 2> /dev/null
 	rm /var/log/nginx/*.log.* 2> /dev/null
-	rm /var/log/samba/log.*.* 2> /dev/null
-
+	rm /var/log/samba/log.wb* 2> /dev/null
+	rm /var/log/samba/log.winbindd 2> /dev/null
 	exit
 fi
 
 if [[ $1 = "clear-playhistory" ]]; then
 	TIMESTAMP=$(date +'%Y%m%d %H%M%S')
 	LOGMSG=" Log initialized"
-	echo $TIMESTAMP$LOGMSG > /var/local/www/playhistory.log
+	echo $TIMESTAMP$LOGMSG > /var/log/moode_playhistory.log
 	exit
 fi
 
 if [[ $1 = "clear-history" ]]; then
-	truncate /home/pi/.bash_history --size 0
+	truncate "/home/$HOME_DIR/.bash_history" --size 0
 	exit
 fi
 
@@ -198,8 +200,23 @@ fi
 
 # Clear chrome browser cache
 if [[ $1 = "clearbrcache" ]]; then
-	rm -rf /home/pi/.cache/chromium
+	rm -rf "/home/$HOME_DIR/.cache/chromium"
 	# NOTE: This deletes any 3rd party extensions like xontab but it more effectively clears cache corruption
-	rm -rf /home/pi/.config/chromium/Default
+	rm -rf "/home/$HOME_DIR/.config/chromium/Default"
     exit
+fi
+
+# Get OS info
+if [[ $1 = "get-osinfo" ]]; then
+	RPIOS_VER=$(cat /etc/debian_version)
+	RPIOS_MVER=$(cat /etc/debian_version | cut -d "." -f 1)
+	if [ "$RPIOS_MVER" -lt "12" ]; then RPIOS_NAME="Bullseye"; else RPIOS_NAME="Bookworm"; fi
+	RPIOS_ARCH=$(dpkg -l | grep nano | awk '{print $4}')
+	if [ $RPIOS_ARCH = "arm64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
+	# Linux info
+	if [ "$RPIOS_MVER" -lt "12" ]; then KERNEL_VER=$(uname -r | cut -d "-" -f 1); else KERNEL_VER=$(uname -v | cut -d ":" -f 2 | cut -d "-" -f 1); fi
+	KERNEL_ARCH=$(uname -m)
+	if [ $KERNEL_ARCH = "aarch64" ]; then KERNEL_BITS="64-bit"; else KERNEL_BITS="32-bit"; fi
+
+	echo "RPiOS: $RPIOS_VER $RPIOS_NAME $RPIOS_BITS | Linux: $KERNEL_VER $KERNEL_BITS"
 fi

@@ -37,6 +37,7 @@ function stopMultiroomSender() {
 	sysCmd('killall trx-tx');
 }
 
+# TODO: Test using _audioout.conf instead of $_SESSION['cardnum'] . ',0
 function startMultiroomReceiver() {
 	$params = sqlRead('cfg_multiroom', sqlConnect());
 	foreach ($params as $row) {

@@ -21,7 +21,8 @@
 
  /**
   * autocfg-gen exports the supported autoconfig settings to the screen.
-  * Don't use this file directly but instead use the moodeutl -e option
+  * Don't use this file directly but instead use the command "sudo moodeutl -e" otherwise the
+  * session_id() function will not be able to access the PHP session
   * (C) 2020 @bitlab (@bitkeeper Git)
   */
 
@@ -29,11 +30,29 @@ require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/sql.php';
 require_once __DIR__ . '/../inc/autocfg.php';
 
-$_SESSION = [];
-$params = sqlRead('cfg_system', sqlConnect());
-foreach ($params as $row) {
-    $_SESSION[$row['param']] = $row['value'];
+// Open the session for read
+// NOTE: moodeutl has to be run with sudo otherwise the session can't be accessed
+$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+session_id($sessionId);
+if (session_start() === false) {
+    workerLog('autocfg-gen.php: Session start failed, script exited');
+    exit(1);
+} else {
+    session_write_close();
 }
 
-print(autoconfigExtract());
-?>
+// Load session+sql params
+$result = sqlRead('cfg_system', sqlConnect());
+$currentSettings = array();
+foreach ($result as $row) {
+    $currentSettings[$row['param']] = $row['value'];
+}
+
+// Add certain session-only params so they are available to autoConfigExtract()
+$currentSettings['updater_auto_check'] = $_SESSION['updater_auto_check'];
+$currentSettings['worker_responsiveness'] = $_SESSION['worker_responsiveness'];
+$currentSettings['fs_mountmon'] = $_SESSION['fs_mountmon'];
+$currentSettings['reduce_sys_logging'] = $_SESSION['reduce_sys_logging'];
+
+// Extract to ini file
+print(autoConfigExtract($currentSettings));

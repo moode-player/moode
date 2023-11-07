@@ -22,9 +22,13 @@ require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
+session_id(phpSession('get_sessionid'));
+phpSession('open');
+
 switch ($_GET['cmd']) {
 	case 'reboot':
 	case 'poweroff':
+	case 'update_library':
 		if (submitJob($_GET['cmd'])) {
 			echo json_encode('job submitted');
 		} else {
@@ -35,7 +39,6 @@ switch ($_GET['cmd']) {
 		echo json_encode($_SERVER['REMOTE_ADDR']);
 		break;
 	case 'restart_localui':
-		phpSession('open_ro');
 		if ($_SESSION['localui'] == '1') {
 			if (submitJob('localui_restart')) {
 				echo json_encode('job submitted');
@@ -44,4 +47,9 @@ switch ($_GET['cmd']) {
 			}
 		}
 		break;
+	default:
+		echo 'Unknown command';
+		break;
 }
+
+phpSession('close');

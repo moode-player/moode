@@ -47,7 +47,7 @@ switch ($_GET['cmd']) {
     				debugLog('multiroom.php: get_rx_status failed: ' . $rxHostNames[$i]);
     			} else {
     				// rx, On/Off/Disabled/Unknown, volume, mute_1/0, mastervol_opt_in_1/0, hostname
-    				$rxStatus .= $status . ',' . $rxHostNames[$i] . ':';
+					$rxStatus .= $status . ':';
     			}
     		}
 
@@ -83,10 +83,13 @@ switch ($_GET['cmd']) {
 
     	echo json_encode('OK');
         break;
-    case 'upd_tx_adv_toggle':
-	case 'upd_rx_adv_toggle':
+    case 'tx_adv_toggle':
+	case 'rx_adv_toggle':
 		phpSession('open');
 		$_SESSION[$_GET['cmd']] = $_POST['adv_toggle'];
         phpSession('close');
+		break;
+	default:
+		echo 'Unknown command';
 		break;
 }

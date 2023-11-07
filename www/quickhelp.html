@@ -19,45 +19,72 @@
  */
 -->
 
-<h4>General</h4>
+<h5>General</h5>
 <p>There are four main sections to moOde: Playback, Library, CoverView and Configuration.</p>
-<p>Switching between Playback and the Library is accomplished by tapping on the cover art in Playback or on any open area of the Playbar in the Library.</p>
+<p>Switching between Playback and the Library is accomplished by clicking on the cover art in Playback or on any open area of the Playbar in the Library.</p>
 
-<h4>Playback</h4>
+<h5>Playback</h5>
 <p>The Playback screen includes the play queue (Queue), volume and time knobs, playback controls, cover art and metadata.
 
-<h4>Library</h4>
+<h5>Library</h5>
 <p>The library provides Radio, Folder, Tag, Album and Playlist views for browsing and selecting content and a Playbar for displaying song information and controlling playback. Options for configuring various aspects of the Library including sort order, recently added and more are located in the Library section of Preferences.</p>
-<h4>Searching the Library</h4>
-<p>Powerful search features are available in Tag and Album view that allow the Library to be filtered based on entered text, tag value pairs or special, predefined filters. These are entered in the search field on the Library menu. There is also an Advanced search dialog that enables multiple tag value pairs to be submitted.</p>
+<h5>Searching the Library</h5>
+<p>Powerful search features are available that allow the Library to be filtered based on entered text, tag value pairs or special, predefined filters. There is also an Advanced search dialog that enables multiple tag value pairs to be submitted.</p>
+<p>Tag and Album views</p>
 <div id="quickhelp-bullet-list">
 	<ul>
 		<li><span> General</span>
-			<p>Searches are not case sensitive and partial matches are considered valid. Searches are cleared by tapping on the "Filtered by" heading.</p>
+			<p>Searches are not case sensitive and partial matches are the default unless one of the strict comparison operators '==' or '!=' is used. The comparison operators '=~' or '!~' can also be used to perform searches based on PERL regular expressions. Searches are cleared by clicking on the "Filtered by" heading.</p>
+			<p>NOTE: The "search" field only supports a single tag value pair or a single Predefined filter.</p>
 		</li>
 		<li><span> Tag value pairs</span>
 			<p>The following tags are supported: Any, Genre, Artist, Album, Title, Album Artist, Date, Composer, Conductor, Performer, Work, Comment and File.</p>
 			<p>Examples: genre rock | artist frank sinatra | artist mccartney | any zeppelin</p>
 		</li>
 		<li><span> The Any tag</span>
-			<p>The Any tag performs a search of all tags using an OR relationship. An Any search is automatically invoked when the first word of text entered in the search field does not match any of the tag or predefined filter names.</p>
+			<p>The Any tag performs a search of all tags using an OR relationship. An Any search is automatically invoked when the first word of text entered in the "search" field does not match any of the tag or predefined filter names.</p>
 			<p>Examples: yellow submarine | all that you can't leave behind | frank sinatra | 1962</p>
 		</li>
 		<li><span> Predefined filters</span>
-			<p>The following predefined filters are available: Encoded [bits/rate], Format [.ext], Folder [path], Hdonly, Lossless, Lossy and Year [yyyy] or [yyyy-yyyy].</p>
-			<p>Examples: encoded 24/96 | encoded 192 | hdonly | format .dsf | folder u2/achtung baby | lossy | year 1962 | year 1994-1998</p>
+			<p>The following predefined filters are available: Encoded [bits/rate | Nch | multichannel], Format [.ext], Folder [path], HDonly, Lossless, Lossy and Year [yyyy] or [yyyy-yyyy].</p>
+			<p>Examples: encoded 24/96 | encoded 192 | encoded 24 | encoded 6ch | encoded multichannel | hdonly | format .dsf | folder u2/achtung baby | lossy | year 1962 | year 1994-1998</p>
+		</li>
+		<li><span> Saved searches</span>
+			<p>Searches can be saved and subsequently activated using the "Saved searches" item on the Library dropdown menu.</p>
+		</li>
+	</ul>
+</div>
+<p>Folder view</p>
+<div id="quickhelp-bullet-list">
+	<ul>
+		<li><span> General</span>
+			<p>Searches are not case sensitive and partial matches are considered valid. Searches are cleared by clicking on the Home icon.</p>
+		</li>
+		<li><span> Search results talley</span>
+			<p>Click the search tally to display a context menu containing Add, Play, Clear/Play.</p>
+		</li>
+	</ul>
+</div>
+<p>Radio and Playlist view</p>
+<div id="quickhelp-bullet-list">
+	<ul>
+		<li><span> General</span>
+			<p>Searches are not case sensitive and a progressive Typedown search method is used on the displayed items.</p>
+		</li>
+		<li><span> Clearing the search</span>
+			<p>Click the Browse by header or the x icon in the "search" field to clear the search.</p>
 		</li>
 	</ul>
 </div>
 
-<h4>CoverView</h4>
+<h5>CoverView</h5>
 <p>The CoverView screen saver provides a large sized cover art image or optional Analog or Digital clock, a Playbar for controlling playback and several backdrop options that can be selected in the CoverView section of Preferences.</p>
 
-<h4>Configuration</h4>
+<h5>Configuration</h5>
 <p>The Configuration screens are accessed via the Main Menu and provide settings for the Library, Audio, Network, System and Renderers.</p>
 
-<h4>Queue</h4>
-<p>The Queue is displayed in Playback and CoverView and contains all items to be played. It's populated primarily by selecting an item from the Library and then tapping one of the Queue commands listed on a context menu. It can also be populated automatically by Auto-shuffle. The Queue commands are listed below.</p>
+<h5>Queue</h5>
+<p>The Queue is displayed in Playback and CoverView and contains all items to be played. It's populated primarily by selecting an item from the Library and then clicking one of the Queue commands listed on a context menu. It can also be populated automatically by Auto-shuffle. The Queue commands are listed below.</p>
 <div id="quickhelp-bullet-list">
 	<ul>
 		<li><span> Add | Play</span>
@@ -69,13 +96,16 @@
 		<li><span> Add next | Play next</span>
 			<p>The "Add next" command adds the item immediately after the currently playing or last played item. The "Play next" command first checks to see if the item is already in the Queue and then plays the existing item otherwise it does the same as "Add next" then begins play.</p>
 		</li>
+		<li><span> Clear queue</span>
+			<p>This command is available in the ellipsis context menu in Playback view and on the Playbar.</p>
+		</li>
 		<li>
 			<p>For the track list in Library Tag and Album views the Play and Clear/Play actions can be configured via a Preferences option to either add the selected track to the Queue or the selected track and all following tracks.</p>
 		</li
 	</ul>
 </div>
 
-<h4>Playlists</h4>
+<h5>Playlists</h5>
 <p> Creating, editing and managing playlists is done primarily in Library Playlist view. Playlists can also be created via context menu items "Save Queue to playlist", "Set Favorites name" and "Add to playlist".</p>
 <div id="quickhelp-bullet-list">
 	<ul>
@@ -83,7 +113,7 @@
 			<p>The "Save Queue to playlist" command displays a list of available playlists and adds the item to the end of the selected playlist or a new playlist if one is specified.</p>
 		</li>
 		<li><span> Set Favorites name</span>
-			<p>The "Set Favorites name" command displays an input form for specifying the name of the playlist that contains items favorited by clicking the Heart <i class="far fa-heart"></i> button. If the playlist does not already exist it will be created.</p>
+			<p>The "Set Favorites name" command displays an input form for specifying the name of the playlist that contains items favorited by clicking the Heart <i class="fa-regular fa-sharp fa-heart"></i> button. If the playlist does not already exist it will be created.</p>
 		</li>
 		<li><span> Add to playlist</span>
 			<p>The "Add to playlist" command displays a list of available playlists and adds the item to the end of the selected playlist or a new playlist if one is specified.</p>
@@ -91,8 +121,8 @@
 	</ul>
 </div>
 
-<h4>Multiroom audio</h4>
-<p>A moOde multiroom audio system consists of a Sender and Receivers. The Sender should be a dedicated moOde player configured to output to the integrated HDMI port or optioally the Headphone jack but not connected to any speakers or headphones. It functions solely as a Music Server that Sends its audio output to one or more Receivers. For additional information <a href="./setup_multiroom.txt" class="multiroom-setup-link" target="_blank">View multiroom setup guide</a></p>
+<h5>Multiroom audio</h5>
+<p>A moOde multiroom audio system consists of a Sender and Receivers. The Sender should be a dedicated moOde player configured to output to the integrated HDMI port or optioally the Headphone jack but not connected to any speakers or headphones. It functions solely as a Music Server that Sends its audio output to one or more Receivers. For additional information <a href="./setup_multiroom.txt" class="target-blank-link" target="_blank">View multiroom setup guide</a></p>
 <div id="quickhelp-bullet-list">
 	<ul>
 		<li><span> Configuration</span>
@@ -102,7 +132,7 @@
 			<p>The volume knob on the Sender system provides master volume control by sending the volume change to the Receivers which apply it to their own volume. Receivers can be configured to opt in or out of Master volume control via Multiroom Config.</p>
 		</li>
 		<li><span> Receiver control</span>
-			<p>Receivers can be centrally controlled from the Sender system via the Receivers panel which is accessed by the&nbsp;<i class="fas fa-rss"></i>&nbsp;button at the top of Playback view.</p>
+			<p>Receivers can be centrally controlled from the Sender system via the Receivers panel which is accessed via the&nbsp;<i class="fa-solid fa-sharp fa-speakers"></i>&nbsp;button at the top of Playback view or the Receivers item in the ellipsis context menu in Playback view and on the Playbar.</p>
 		</li>
 		<li><span> Networking</span>
 			<p>The performance of the system depends on having low latency, high throughput networking and hosts. Discovery of Receivers relies on Multicast DNS. Addressing for the audio distribution protocol relies on IP Multicast using a default address of 239.0.0.1.</p>
@@ -113,96 +143,96 @@
 	</ul>
 </div>
 
-<h4>Special Menu Items</h4>
+<h5>Special Menu Items</h5>
 <p>Most menu items are self explanatory but several perform unique functions.</p>
 <div id="quickhelp-icon-list">
 	<ul>
-		<li><i class="fas fa-forward sx"></i>
+		<li><i class="fa-solid fa-sharp fa-forward sx"></i>
 			<span> Players</span>
-			<p>This item is located on the Main menu. It displays a list of other moOde players discovered on the network. Tapping a player opens it's WebUI. If a player is functioning as a Multiroom Receiver the &nbsp;<i class="fas fa-rss"></i>&nbsp;icon will appear next to its name.</p>
+			<p>This item is located on the Main menu. It displays a list of other moOde players discovered on the network. Submit an action to apply to all the players listed or click an individual player to open it. The Submit button will request a second click for confirmation. If a player is functioning as a Multiroom Receiver the &nbsp;<i class="fa-solid fa-sharp fa-speaker"></i>&nbsp;icon will appear next to its name.</p>
 		</li>
-		<li><i class="far fa-music sx"></i>
+		<li><i class="fa-regular fa-sharp fa-music sx"></i>
 			<span> Audio info</span>
-			<p>This item is located on the Main menu and ellipsis context menus on Playback and Playbar. If its opened from the Main menu it displays hardware related information about the item currently being played and is divided into three sections including Input/Output, DSP and Audio Device. If its opened from the ellipsis context menu it displays metadata information about the station or track currently being played.</p>
+			<p>This item is located on the Main menu and ellipsis context menu in Playback view and on the Playbar. If its opened from the Main menu it displays audio format and hardware related information about the item currently being played and is divided into three sections including Input/Output, DSP and Audio Device. If its opened from the ellipsis context menu it displays metadata information about the station or track currently being played.</p>
 		</li>
 	</ul>
 </div>
 
-<h4>Special Buttons</h4>
+<h5>Special Buttons</h5>
 <p>Most buttons are self explanatory but several perform unique functions.</p>
 <div id="quickhelp-icon-list">
 	<ul>
-		<li><i class="far fa-sliders-v-square sx"></i>
+		<li><i class="fa-regular fa-sharp fa-square-sliders-vertical sx"></i>
 			<span> CamillaDSP Quick Select</span>
-			<p>Display a menu of available CamillaDSP filters. This button appears at the top of Playback view when CamillaDSP is On.</p>
+			<p>Display a menu of available CamillaDSP configurations. This button appears at the top of Playback view when CamillaDSP is On.</p>
 		</li>
-		<li><i class="far fa-tv sx"></i>
+		<li><i class="fa-regular fa-sharp fa-tv sx"></i>
 			<span> CoverView</span>
-			<p>Display full screen CoverView screen saver. Tapping anywhere off of the Playbar dismisses CoverView.</p>
+			<p>Display full screen CoverView screen saver. clicking anywhere off of the Playbar dismisses CoverView.</p>
 		</li>
-		<li><i class="far fa-random sx"></i>
+		<li><i class="fa-regular fa-sharp fa-random sx"></i>
 			<span> Random</span>
 			<p>Play randomly selected tracks from the Queue (default) or if Auto-shuffle is ON (see Audio Config) play randomly selected tracks or albums from the entire Music Library.</p>
 		</li>
-		<li><i class="far fa-arrow-down sx"></i>
+		<li><i class="fa-regular fa-sharp fa-arrow-down sx"></i>
 			<span> Consume</span>
 			<p>Remove the track from the Queue after it finishes playing. Consume mode is automatically enabled when Auto-shuffle is ON.</p>
 		</li>
-		<li><i class="far fa-repeat sx"></i>
+		<li><i class="fa-regular fa-sharp fa-repeat sx"></i>
 			<span> Repeat</span>
 			<p>Repeat the Queue or if Single is enabled then repeat the track.</p>
 		</li>
-		<li><i class="far fa-redo sx"></i>
+		<li><i class="fa-regular fa-sharp fa-redo sx"></i>
 			<span> Single</span>
 			<p>Used in conjunction with Repeat to repeat a single track.</p>
 		</li>
-		<li><i class="far fa-exchange-alt sx"></i>
+		<li><i class="fa-regular fa-sharp fa-exchange-alt sx"></i>
 			<span> Last track</span>
 			<p>Toggle between the currently playing item and the last played item.</p>
 		</li>
-		<li><i class="far fa-dot-circle sx"></i>
+		<li><i class="fa-regular fa-sharp fa-dot-circle sx"></i>
 			<span> Select random album</span>
 			<p>Select a random Album for review when in Tag or Album view.</p>
 		</li>
-		<li><i class="far fa-asterisk sx"></i>
+		<li><i class="fa-regular fa-sharp fa-asterisk sx"></i>
 			<span> Play a random album</span>
 			<p>Randomly select an album from the Music Library and perform the action specified for the "One touch action" setting. This setting is in the Playback section of Preferences.</p>
 		</li>
-		<li><i class="far fa-heart sx"></i>
+		<li><i class="fa-regular fa-sharp fa-heart sx"></i>
 			<span> Favorite</span>
 			<p>Add the currently selected item in the Queue to the Favorites playlist. Playlists are listed in Library Playlist view.</p>
 		</li>
 	</ul>
 </div>
 
-<h4>Active Elements</h4>
+<h5>Active Elements</h5>
 <p>There are several non-button elements in the UI that perform an action when tapped.</p>
 <div id="quickhelp-bullet-list">
 	<ul>
 		<li><span> One touch action</span>
-			<p>When tapping a cover in Library Radio or Album view, or tapping the "Play a random album" <i class="far fa-asterisk sx"></i> button in Playback, perform the action specified for the "One touch action" setting. This setting is in the Library section of Preferences.</p>
+			<p>When clicking a cover in Library Radio or Album view, or clicking the "Play a random album" <i class="fa-regular fa-sharp fa-asterisk sx"></i> button in Playback, perform the action specified for the "One touch action" setting. This setting is in the Library section of Preferences.</p>
 		</li>
 		<li><span> Renderer Active screens</span>
-			<p>Tapping on the title in the center of Bluetooth, Analog Input or S/PDIF Input Active will launch their respective Configuration screens which allow the input/output settings to be changed.</p>
+			<p>clicking on the title in the center of Bluetooth, Analog Input or S/PDIF Input Active will launch their respective Configuration screens which allow the input/output settings to be changed.</p>
 		</li>
 		<li><span> Time knob</span>
-			<p>Tapping on the time while a song file is playing will toggle between counting the time up or down. Tapping or dragging the time ring moves forward or backward in the song.</p>
+			<p>clicking on the time while a song file is playing will toggle between counting the time up or down. clicking or dragging the time ring moves forward or backward in the song.</p>
 		</li>
 		<li><span> Volume knob</span>
-			<p>Tapping on the numeric volume level toggles the mute state. Tapping ahead on the volume ring advances the volume by a maximum number of steps called the Volume step limit. This limit can be set via Audio Config. Tapping the plus/minus buttons adjusts volume by 1 step.</p>
+			<p>clicking on the numeric volume level toggles the mute state. clicking ahead on the volume ring advances the volume by a maximum number of steps called the Volume step limit. This limit can be set via Audio Config. clicking the plus/minus buttons adjusts volume by 1 step.</p>
 		</li>
 		<li><span> Extra metadata</span>
-			<p>In Playback tapping the extra metadata under the cover art opens the Station or Track tab on the Audio info screen.</p>
+			<p>Clicking on the extra metadata under the cover art in Playback view opens the Station or Track tab on the Audio info screen.</p>
 		</li>
 		<li><span> Song title</span>
-			<p>In Playback tapping the song title under the cover art launches a search in a separate Browser tab. The search engine used can be selected in the Playback section of Preferences.</p>
+			<p>In Playback clicking the song title under the cover art launches a search in a separate Browser tab. The search engine used can be selected in the Playback section of Preferences.</p>
 			<p>On Smartphones it scrolls the Queue to that item.</p>
 		</li>
 		<li><span> Station or Artist name</span>
-			<p>In Playback tapping the Radio station name or the Artist name under the cover art switches to Radio or Tag view respectively. In Tag view the artist filter is applied. In Radio view the list is scrolled to the station.</p>
+			<p>In Playback clicking the Radio station name or the Artist name under the cover art switches to Radio or Tag view respectively. In Tag view the artist filter is applied. In Radio view the list is scrolled to the station.</p>
 		</li>
 		<li><span> Swipe gestures</span>
-			<p>On Smartphones swiping up scrolls the Queue into view and tapping on the Playbar returns to Playback. In Library tag view swiping sideways shows/hides the Genres column.</p>
+			<p>On Smartphones swiping up scrolls the Queue into view and clicking on the Playbar returns to Playback. In Library tag view swiping sideways shows/hides the Genres column.</p>
 		</li>
 	</ul>
 </div>

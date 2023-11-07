@@ -272,7 +272,7 @@ function keyPress(aEvent) {
             break;
 
         default:
-            var thisText = OSK.LAYOUTS[OSK.layoutNdx][OSK.shiftMode][1 * this.getAttribute('oskrow')][1 * this.getAttribute('oskcol')];
+            var thisText = OSK.keySpace == this ? ' ' : OSK.LAYOUTS[OSK.layoutNdx][OSK.shiftMode][1 * this.getAttribute('oskrow')][1 * this.getAttribute('oskcol')];
             if (isNumeric) {
                 numVal = 1 * ("" + OSK.linkedInput.value + thisText);
                 if (numVal > maxVal) { numVal = maxVal; }

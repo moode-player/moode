@@ -24,98 +24,127 @@
 <div id="container">
 <div class="container">
 	<h1 class="lib-config">Music Library</h1>
-	<legend>Music Sources</legend>
-
-	<p>
-		<a href="lib-config.php?cmd=add"><button class="btn btn-medium btn-primary">Create</button></a><span class="config-label">Music source</span>
-	</p>
-
-	<p>NOTE: After saving or removing a source, return to Playback or Library then select "Update library" from the Menu.</p>
-	<p>List of configured Music sources (click to edit)</p>
 
 	<form class="form-horizontal" method="post">
-		$_mounts
-
-		<p>
-			<a href="#remount-sources" data-toggle="modal"><button class="btn btn-medium btn-primary">Re-mount</button><span class="config-label">Music sources</span></a>
-			<span id="info-remount" class="help-block-configs help-block-margin">
-				Unmount then remount music sources.
-            </span>
+		<legend>Music Sources</legend>
+		<p class="sub-legend">
+			Create a Music Source when the song files reside on another computer in the network.
+			After saving or removing a source, return to Playback or Library then select "Update library" from the Menu.
 		</p>
+
+		<div class="control-group">
+			<a href="lib-config.php?cmd=add"><button class="btn btn-medium btn-primary config-btn">Create</button></a>
+			<span class="config-btn-after">Music source</span>
+
+			<div>$_mounts</div>
+
+			<a href="#remount-sources" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Re-mount</button></a>
+			<span class="config-btn-after">Music sources</span>
+			<a aria-label="Help" class="config-info-toggle" data-cmd="info-remount-sources" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+			<span id="info-remount-sources" class="config-help-info">
+				Unmount all music sources then re-mount them.
+			</span>
+
+			<div>
+				<div class="toggle">
+					<label class="toggle-radio toggle-fs-mount-monitor" for="toggle-fs-mount-monitor-2">ON </label>$_select[fs_mountmon_on]
+					<label class="toggle-radio toggle-fs-mount-monitor" for="toggle-fs-mount-monitor-1">OFF</label>$_select[fs_mountmon_off]
+				</div>
+				<span class="config-toggle-after">Mount monitor</span>
+				<button id="btn-set-fs-mountmon" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_mountmon" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-monitor" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-mount-monitor" class="config-help-info">
+					Attempt to automatically restore Music Source mounts that become temporarily unavailable due to network or file sharing service interruption.
+					Due to the protocols used in SMB and NFS there can be long timeouts when checking a mount or performing a re-mount.
+					Refer to the file /var/log/moode_mountmon.log when Debug logging is on.
+				</span>
+			</div>
+		</div>
 
 		<legend>Music Database</legend>
-		<p>
-			<a href="#regen-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Music library</span></a>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-regen-mpddb" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-regen-mpddb" class="help-block-configs help-block-margin hide">
-				Regenerate the MPD database by scanning all files then update the thumbnail cache.
-            </span>
+		<p class="sub-legend">
+			The Music Database contains information about each song file in the collection.
+			It's populated by MPD using song file metadata tags during "Update library" and then enhanced by moOde with additional metadata.
 		</p>
 
-		<p>
-			<a href="#clear-libcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Clear</button><span class="config-label">Library tag cache</span></a>
-			<span id="info-clear-libcache" class="help-block-configs help-block-margin">
-				The tag cache will be regenerated the next time the Library is opened.
-            </span>
-		</p>
+		<div class="control-group">
+			<div>
+				<a href="#regen-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Regenerate</button></a>
+				<span class="config-btn-after">Music database</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-regen-mpddb" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-regen-mpddb" class="config-help-info">
+					Regenerate the music database and then update the album cover thumbnail cache.
+	            </span>
+			</div>
 
-		<div class="toggle">
-			<label class="toggle-radio" for="toggle_usb_auto_updatedb1">YES</label>
-			$_select[usb_auto_updatedb1]
-			<label class="toggle-radio" for="toggle_usb_auto_updatedb0">NO</label>
-			$_select[usb_auto_updatedb0]
-		</div>
-		<div style="display: inline-block; vertical-align: top; margin-top: 5px;">
-			<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_usb_auto_updatedb" value="novalue">Set</button>
-		</div>
-		<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em;">
-			Automatically update the MPD database on USB insert or remove.
-        </span>
-		<p/>
+			<div>
+				<a href="#clear-libcache" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
+				<span class="config-btn-after">Library tag cache</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-libcache" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-clear-libcache" class="config-help-info">
+					The tag cache will be regenerated when returning to Playback or Library view.
+	            </span>
+			</div>
 
-		<div class="toggle">
-			<label class="toggle-radio" for="toggle_cuefiles_ignore1">YES</label>
-			$_select[cuefiles_ignore1]
-			<label class="toggle-radio" for="toggle_cuefiles_ignore0">NO</label>
-			$_select[cuefiles_ignore0]
-		</div>
-		<div style="display: inline-block; vertical-align: top; margin-top: 5px;">
-			<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_cuefiles_ignore" value="novalue">Set</button>
-		</div>
-		<span id="info-cuefiles-ignore" class="help-block-configs" style="margin-top:-.35em;">
-			Ignore CUE files. Prevent duplicate tracks entries. Requires update of the library.
-        </span>
+			<div>
+				<div class="toggle">
+					<label class="toggle-radio toggle-usb-auto-updatedb" for="toggle-usb-auto-updatedb-2">ON </label>$_select[usb_auto_updatedb_on]
+					<label class="toggle-radio toggle-usb-auto-updatedb" for="toggle-usb-auto-updatedb-1">OFF</label>$_select[usb_auto_updatedb_off]
+				</div>
+				<span class="config-toggle-after">Auto-update database (USB drive)</span>
+				<button id="btn-set-usb-auto-updatedb" class="hide btn btn-primary btn-small btn-submit config-btn-set" type="submit" name="update_usb_auto_updatedb" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-usb-auto-update" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-usb-auto-update" class="config-help-info">
+					Automatically update the music database when a USB drive is inserted or removed.
+		        </span>
+			</div>
 
-		<p></p>
+			<div>
+				<div class="toggle">
+					<label class="toggle-radio toggle-cuefiles-ignore" for="toggle-cuefiles-ignore-2">ON </label>$_select[cuefiles_ignore_on]
+					<label class="toggle-radio toggle-cuefiles-ignore" for="toggle-cuefiles-ignore-1">OFF</label>$_select[cuefiles_ignore_off]
+				</div>
+				<span class="config-toggle-after">Ignore CUE files</span>
+				<button id="btn-set-cuefiles-ignore" class="hide btn btn-primary btn-small btn-submit config-btn-set" type="submit" name="update_cuefiles_ignore" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cuefiles-ignore" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-cuefiles-ignore" class="config-help-info">
+					This can help prevent duplicate tracks entries when a .cue file is present in the album directory.
+					After changing this setting return to Playback or Library then select "Update library" from the Menu.
+		        </span>
+			</div>
+		</div>
+
 		<legend>Thumbnail Generator</legend>
-		<p>
-			<a href="#regen-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Album cover thumbnail cache</span></a>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
-				Regenerate the thumbnail cache by first deleting it before adding covers.
-            </span>
+		<p class="sub-legend">
+			Album cover thumbnail images are used to populate the Library views, Playbar and the Queue.
+			The Playback and Library sections of Preferences contain options for thumbnail images.
 		</p>
 
-		<p>
-			<a id="view-thmcache-status" href="#notarget"><button class="btn btn-medium btn-primary">VIEW STATUS</button></a><span id="thmcache-status" class="config-label">$_thmcache_status</span>
-		</p>
-		<p></p>
+		<div class="control-group">
+			<div>
+				<a href="#regen-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Regenerate</button></a>
+				<span class="config-btn-after">Album cover thumbnail cache</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-regen-thmcache" class="config-help-info">
+					Regenerate the album cover thumbnail cache by first deleting it and then re-populating it with newly generated album cover thumbnails.
+	            </span>
+			</div>
+
+			<div>
+				<a id="view-thmcache-status" href="#notarget"><button class="btn btn-medium btn-primary config-btn">View Status</button></a>
+				<span id="thmcache-status" class="config-btn-after">$_thmcache_status</span>
+			</div>
+		</div>
 	</form>
 </div>
 </div>
 
-<!-- MODAL POPUPS -->
-
 <form class="form-horizontal" method="post">
-	<div id="remount-sources" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remount-sources-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="remount-sources" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remount-sources-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remount music sources?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Remount music sources?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="remount_sources" value="novalue">Yes</button>
@@ -124,15 +153,11 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="regen-mpddb" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="regen-mpddb-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="regen-mpddb" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="regen-mpddb-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Regenerate Music Library?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Regenerate Music Library?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="regen_library" value="novalue">Yes</button>
@@ -141,15 +166,11 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="clear-libcache" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="clear-libcache-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="clear-libcache" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-libcache-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Clear library tag cache?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Clear library tag cache?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="clear_libcache" value="novalue">Yes</button>
@@ -158,15 +179,11 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="regen-thmcache" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="regen-thmcache-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="regen-thmcache" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="regen-thmcache-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Regenerate thumbnail cache?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Regenerate thumbnail cache?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="regen_thmcache" value="novalue">Yes</button>

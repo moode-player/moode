@@ -25,70 +25,61 @@ require_once __DIR__ . '/inc/cdsp.php';
 phpSession('open');
 
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
-$selectedConfig = isset($_POST['cdsp-config']) ? $_POST['cdsp-config']: NULL;
-$selected_coeff = isset($_POST['cdsp-coeffs']) ? $_POST['cdsp-coeffs']: NULL;
-/**
- * Post parameter processing
- */
+$selectedConfig = isset($_POST['cdsp_config']) ? $_POST['cdsp_config'] : null;
+$selectedCoeff = isset($_POST['cdsp_coeffs']) ? $_POST['cdsp_coeffs'] : null;
 
-// Save
 if (isset($_POST['save']) && $_POST['save'] == '1') {
-	if( isset($_POST['cdsp_basiccon_gain']) && isset($_POST['cdsp_basicconv_left']) && isset($_POST['cdsp_basicconv_right'])) {
-		$gain = $_POST['cdsp_basiccon_gain'];
-		$convL = $_POST['cdsp_basicconv_left'];
-		$convR = $_POST['cdsp_basicconv_right'];
-		$convT = $_POST['cdsp_basicconv_type'];
-
+	if (isset($_POST['cdsp_mode'])) {
+		$currentMode = $_SESSION['camilladsp'];
+		$newMode = $_POST['cdsp_mode'];
+		phpSession('write', 'camilladsp', $_POST['cdsp_mode']);
+		$cdsp->selectConfig($_POST['cdsp_mode']);
+	}
+	if (isset($_POST['cdsp_use_default_device'])) {
+		$useDefaultDevice = $_POST['cdsp_use_default_device'];
+		phpSession('write', 'cdsp_fix_playback', $useDefaultDevice == "1" ? "Yes" : "No");
+	}
+	if (isset($_POST['cdsp_qc_gain']) && isset($_POST['cdsp_qc_ir_left']) && isset($_POST['cdsp_qc_ir_right'])) {
+		$gain = $_POST['cdsp_qc_gain'];
+		$convL = $_POST['cdsp_qc_ir_left'];
+		$convR = $_POST['cdsp_qc_ir_right'];
+		$convT = $_POST['cdsp_qc_ir_type'];
 		$cfg = $gain . ';' . $convL . ';' . $convR . ';' . $convT;
-		$cdsp->setQuickConvolutionConfig( $cdsp->stringToQuickConvolutionConfig($cfg) );
+		$cdsp->setQuickConvolutionConfig($cdsp->stringToQuickConvolutionConfig($cfg));
 		phpSession('write', 'camilladsp_quickconv', $cfg);
 	}
 
-	if (isset($_POST['cdsp_playbackdevice'])) {
-		$patchPlaybackDevice = $_POST['cdsp_playbackdevice'];
-		phpSession('write', 'cdsp_fix_playback', $patchPlaybackDevice == "1" ? "Yes" : "No");
-	}
-
-	if (isset($_POST['cdsp-mode'])) {
-		$currentMode = $_SESSION['camilladsp'];
-		phpSession('write', 'camilladsp', $_POST['cdsp-mode']);
-		$cdsp->selectConfig($_POST['cdsp-mode']);
-	}
-
-	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+	if ($_SESSION['cdsp_fix_playback'] == 'Yes') {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
-	if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-		submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
-	} else {
-		$cdsp->reloadConfig();
-	}
+	updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
 
-	if( $_POST['log_level'] != $cdsp->getLogLevel() ) {
+	if ($_POST['log_level'] != $cdsp->getLogLevel()) {
 		$cdsp->setLogLevel($_POST['log_level']);
 	}
 }
-
 // Check
 else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
 	$checkResult = $cdsp->checkConfigFile($selectedConfig);
+	$selectedConfigLabel = str_replace('.yml', '', $cdsp->getConfigLabel($selectedConfig));
 
-	$selectedConfigLabel = $cdsp->getConfigLabel( $selectedConfig );
-	if($checkResult['valid'] == True) {
-		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is valid');
-	}else {
-		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is not valid');
+	if($checkResult['valid'] == true) {
+		$_SESSION['notify']['title'] = 'Configuration is valid';
+		$_SESSION['notify']['msg'] = $selectedConfigLabel;
+	} else {
+		$_SESSION['notify']['title'] = 'Configuration is not valid';
+		$_SESSION['notify']['msg'] = $selectedConfigLabel;
 	}
 }
 // Import (Upload)
-else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['import'] == '1') {
-	$configFileBaseName = $_FILES["pipelineconfig"]["name"];
+else if (isset($_FILES['pipeline_config']) && isset($_POST['import']) && $_POST['import'] == '1') {
+	$configFileBaseName = $_FILES["pipeline_config"]["name"];
 	$configFileName = $cdsp->getConfigsLocationsFileName() . $configFileBaseName;
-	move_uploaded_file($_FILES["pipelineconfig"]["tmp_name"], $configFileName);
+	move_uploaded_file($_FILES["pipeline_config"]["tmp_name"], $configFileName);
 
-	if( $_SESSION['camilladsp'] == $configFileBaseName ) { // if upload active config, fix it
-		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+	if ($_SESSION['camilladsp'] == $configFileBaseName) { // if upload active config, fix it
+		if ($_SESSION['cdsp_fix_playback'] == 'Yes') {
 			$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 		}
 		$cdsp->reloadConfig();
@@ -96,7 +87,8 @@ else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['
 		$cdsp->patchRelConvPath($configFileBaseName);
 	}
 	$selectedConfig = $configFileBaseName;
-	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $configFileBaseName . '\" completed');
+	$_SESSION['notify']['title'] = 'Upload completed';
+	$_SESSION['notify']['msg'] = $configFileBaseName;
 }
 // Export (Download)
 else if ($selectedConfig && isset($_POST['export']) && $_POST['export'] == '1') {
@@ -111,65 +103,71 @@ else if ($selectedConfig && isset($_POST['export']) && $_POST['export'] == '1') 
 }
 // Remove
 else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') {
-
-	if( $_SESSION['camilladsp'] != $selectedConfig ) { // can't remove active config
-		$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig;
+	if ($_SESSION['camilladsp'] != $selectedConfig . '.yml') { // Can't remove active config
+		$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig . '.yml';
 		unlink($configFileName);
-		$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $selectedConfig . '\" completed');
-		$selectedConfig = NULL;
+		$_SESSION['notify']['title'] = 'Configuration removed';
+		$_SESSION['notify']['msg'] = $selectedConfig;
+		$selectedConfig = null;
+	} else {
+		$_SESSION['notify']['title'] = 'Cannot remove active configuration';
 	}
-	else {
-		$_SESSION['notify']['title'] = htmlentities('Cannot remove active configuration \"' . $selectedConfig . '\"');
-	}
-}
-// New pipeline
-else if (isset($_POST['newpipeline']) && $_POST['newpipeline'] == '1') {
-	$cdsp->newConfig($_POST['new-pipelinename'] . '.yml');
-	$selectedConfig = $_POST['new-pipelinename'] . '.yml';
 }
 
+// New pipeline
+else if (isset($_POST['create_new_pipeline']) && $_POST['create_new_pipeline'] == '1') {
+	$cdsp->newConfig($_POST['new_pipeline_name'] . '.yml');
+	$selectedConfig = $_POST['new_pipeline_name'] . '.yml';
+	$_SESSION['notify']['title'] = 'Configuration created';
+	$_SESSION['notify']['msg'] = $_POST['new_pipeline_name'];
+}
 // Copy pipeline
-else if ($selectedConfig && isset($_POST['copypipeline']) && $_POST['copypipeline'] == '1') {
-	$cdsp->copyConfig($selectedConfig, $_POST['new-pipelinename'] . '.yml');
-	$selectedConfig = $_POST['new-pipelinename'] . '.yml';
+else if ($selectedConfig && isset($_POST['copy_pipeline']) && $_POST['copy_pipeline'] == '1') {
+	$cdsp->copyConfig($selectedConfig . '.yml', $_POST['copyto_pipeline_name'] . '.yml');
+	$selectedConfig = $_POST['copyto_pipeline_name'] . '.yml';
+	$_SESSION['notify']['title'] = 'Configuration copied to';
+	$_SESSION['notify']['msg'] = $_POST['copyto_pipeline_name'];
 }
 // Coeffs import (Upload)
-else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['import'] == '1') {
-	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffsfile"]["name"];
-	move_uploaded_file($_FILES["coeffsfile"]["tmp_name"], $configFileName);
-	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["coeffsfile"]["name"] . '\" completed');
-
-	$selected_coeff = $_FILES["coeffsfile"]["name"];
+else if (isset($_FILES['coeffs_file']) && isset($_POST['import']) && $_POST['import'] == '1') {
+	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffs_file"]["name"];
+	move_uploaded_file($_FILES["coeffs_file"]["tmp_name"], $configFileName);
+	$_SESSION['notify']['title'] = 'Upload complete';
+	$_SESSION['notify']['msg'] = $_FILES["coeffs_file"]["name"];
+	$selectedCoeff = $_FILES["coeffs_file"]["name"];
 }
 // Coeffs export (Download)
-else if ($selected_coeff && isset($_POST['export']) && $_POST['export'] == '1') {
-	$configFileName = $cdsp->getCoeffsLocation() . $selected_coeff;
+else if ($selectedCoeff && isset($_POST['export']) && $_POST['export'] == '1') {
+	$configFileName = $cdsp->getCoeffsLocation() . $selectedCoeff;
 
 	header("Content-Description: File Transfer");
 	header("Content-Type: application/binary");
-	header("Content-Disposition: attachment; filename=\"". $selected_coeff ."\"");
+	header("Content-Disposition: attachment; filename=\"". $selectedCoeff ."\"");
 
 	readfile ($configFileName);
  	exit();
 }
 // Coeffs remove
-else if ($selected_coeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
-	$configFileName = $cdsp->getCoeffsLocation() . $selected_coeff;
+else if ($selectedCoeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
+	$configFileName = $cdsp->getCoeffsLocation() . $selectedCoeff;
 	unlink($configFileName);
-	$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $selected_coeff . '\" completed');
-	$selected_coeff = NULL;
+	$_SESSION['notify']['title'] = 'Configuration removed';
+	$_SESSION['notify']['msg'] = $selectedCoeff;
+	$selectedCoeff = null;
 }
-else if ($selected_coeff && isset($_POST['info']) && $_POST['info'] == '1') {
+else if ($selectedCoeff && isset($_POST['info']) && $_POST['info'] == '1') {
 // no implementation required, just a placeholder
 }
 
 // camillagui status toggle
-else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
+else if (isset($_POST['camillaguistatus']) && isset($_POST['update_camillagui']) && $_POST['update_camillagui'] == '1') {
  	$cdsp->changeCamillaStatus($_POST['camillaguistatus']);
 }
-else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['updatecamillaguiexpert']) && $_POST['updatecamillaguiexpert'] == '1') {
+else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['update_camillagui_expert']) && $_POST['update_camillagui_expert'] == '1') {
 	$cdsp->setGuiExpertMode($_POST['camillaguiexpertstatus'] == '1');
 }
+
+phpSession('close');
 
 /**
  * Generate data for html templating
@@ -191,70 +189,68 @@ if ($_SESSION['invert_polarity'] != '0' ||
 }
 
 $configs = $cdsp->getAvailableConfigs();
-foreach ($configs as $config_file=>$config_name) {
-	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
-	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
+foreach ($configs as $configFile => $configName) {
+	$selected = ($_SESSION['camilladsp'] == $configFile) ? 'selected' : '';
+	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configName));
 }
 
 $configs = $cdsp->getAvailableConfigsRaw();
-$_selected = NULL;
-foreach ($configs as $config_file=>$config_name) {
-	$selected = ($selectedConfig == $config_file || ($selectedConfig == NULL && $_selected == NULL) ) ? 'selected' : '';
-	$_select['cdsp_configs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
+$_selected_config = null;
+foreach ($configs as $configFile => $configName) {
+	$selected = (($selectedConfig == $configFile || ($selectedConfig == null) && $_selected_config == null)) ? 'selected' : '';
+	$_select['cdsp_config'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configName));
 	if ($selected == 'selected') {
-		$_selected = $selected;
-		$selectedConfig = $config_file;
+		$_selected_config = $configName;
+		$selectedConfig = $configFile;
 	}
 }
 
 $configs = $cdsp->getAvailableCoeffs();
-$_selected_coeff = NULL;
-foreach ($configs as $config_file=>$config_name) {
-	$selected = ($selected_coeff == $config_file || ($selected_coeff == NULL && $_selected_coeff == NULL) ) ? 'selected' : '';
-	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
+$_selected_coeff = null;
+foreach ($configs as $configFile => $configName) {
+	$selected = ($selectedCoeff == $configFile || ($selectedCoeff == null && $_selected_coeff == null)) ? 'selected' : '';
+	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configFile));
 	if ($selected == 'selected') {
-		$_selected_coeff = $config_file;
+		$_selected_coeff = $configFile;
 	}
 }
-
 $btn_conv_style = 'style="display: none;"';
-if( $_selected_coeff ) {
+if ($_selected_coeff) {
 	$coeffInfo = $cdsp->coeffInfo($_selected_coeff);
-	$coeffInfoHtml = 'Info:<br/>';
-	foreach ($coeffInfo as  $param=>$value) {
-		$coeffInfoHtml .= ''. $param . ' = ' . $value . '<br/>';
+	$_coeff_info_html = '';
+	foreach ($coeffInfo as $param => $value) {
+		$_coeff_info_html .= '<tr><td>' . ucfirst($param) . '</td><td>' . $value . '</td></tr>';
 	}
 }
 
-$_select['cdsp_patch_playback_device1'] .= "<input type=\"radio\" name=\"cdsp_playbackdevice\" id=\"toggle-cdsp-playbackdevice1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
-$_select['cdsp_patch_playback_device0'] .= "<input type=\"radio\" name=\"cdsp_playbackdevice\" id=\"toggle-cdsp-playbackdevice2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
+$_select['version'] = str_replace('CamillaDSP', '', $cdsp->version());
 
-$_select['version'] = $cdsp->version();
+$_select['cdsp_use_default_device_on'] .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
+$_select['cdsp_use_default_device_off']  .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
+$_alsa_plugin_and_cardnum = $_SESSION['cdsp_fix_playback'] == 'No' ? '' : $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 
-
-if( $_SESSION['camilladsp_quickconv'] ) {
+if ($_SESSION['camilladsp_quickconv']) {
 	$quickConvConfig =$cdsp->stringToQuickConvolutionConfig($_SESSION['camilladsp_quickconv']);
-	$_quickconv_gain_value = $quickConvConfig['gain'];
-	$quickconv_left_value = $quickConvConfig['irl'];
-	$quickconv_right_value = $quickConvConfig['irr'];
-	$quickconv_ir_type_value = $quickConvConfig['irtype'];
+	$_cdsp_qc_gain = $quickConvConfig['gain'];
+	$quickConvIRL = $quickConvConfig['irl'];
+	$quickConvIRR = $quickConvConfig['irr'];
+	$quickConvIRType = $quickConvConfig['irtype'];
 }
 
-foreach ($configs as $config_file=>$config_name) {
-	$selected = ($quickconv_left_value == $config_file ) ? 'selected' : '';
-	$_select['cdsp_quickconv_irl'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
+foreach ($configs as $configFile => $configName) {
+	$selected = ($quickConvIRL == $configFile) ? 'selected' : '';
+	$_select['cdsp_qc_ir_left'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configFile));
 }
 
-foreach ($configs as $config_file=>$config_name) {
-	$selected = ($quickconv_right_value == $config_file ) ? 'selected' : '';
-	$_select['cdsp_quickconv_irr'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
+foreach ($configs as $configFile => $configName) {
+	$selected = ($quickConvIRR == $configFile) ? 'selected' : '';
+	$_select['cdsp_qc_ir_right'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configFile));
 }
 
-foreach ($cdsp->impulseResponseType() as $ir_type) {
-	$selected = ($quickconv_ir_type_value == $ir_type ) ? 'selected' : '';
-	$_select['cdsp_quickconv_irtype'] .= sprintf("<option value='%s' %s>%s</option>\n", $ir_type, $selected, $ir_type);
+foreach ($cdsp->impulseResponseType() as $irType) {
+	$selected = ($quickConvIRType == $irType) ? 'selected' : '';
+	$_select['cdsp_qc_ir_type'] .= sprintf("<option value='%s' %s>%s</option>\n", $irType, $selected, $irType);
 }
-
 
 // Extract settings needed to show camilladsp configuration template:
 
@@ -270,7 +266,7 @@ foreach ($supported_soundformats as $cdsp_format) {
 	$sound_device_supported_sample_formats .= $cdsp_format . ' ';
 }
 
-if(count($supported_soundformats) >= 1) {
+if (count($supported_soundformats) >= 1) {
 	$sound_device_sample_format = $supported_soundformats[0];
 	$sound_device_type = 'hw';
 }
@@ -278,9 +274,9 @@ if(count($supported_soundformats) >= 1) {
 function checkResultToHtml($checkResult) {
 	$message = '';
 	$checkMsgRaw = implode('<br>', $checkResult['msg']);
-	if( $checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
-		$message = "<span style='color: red'>&#10007;</span> ".$checkMsgRaw;
-	} elseif( $checkResult['valid'] == CDSP_CHECK_VALID) {
+	if ($checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
+		$message = "<span style='color: red'>&#10007;</span> ". $checkMsgRaw;
+	} else if ($checkResult['valid'] == CDSP_CHECK_VALID) {
 		$message = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
 	} else {
 		$message = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
@@ -288,31 +284,32 @@ function checkResultToHtml($checkResult) {
 	return $message;
 }
 
-$checkMsg = '';
-$checkMsgQuickConvolution = '';
-if( $selectedConfig) {
-	if(isset($checkResult) == false) {
+$_check_msg_config = '';
+$_check_msg_quick_convolution = '';
+if ($selectedConfig) {
+	if (!isset($checkResult)) {
 		$checkResult = $cdsp->checkConfigFile($selectedConfig);
 	}
-	$checkMsg = checkResultToHtml($checkResult );
+	$_check_msg_config = checkResultToHtml($checkResult);
 }
-
-if ( $cdsp->isQuickConvolutionActive() ) {
-	$checkMsgQuickConvolution = checkResultToHtml( $cdsp->checkConfigFile( $cdsp->getConfig() ) );
+if ($cdsp->isQuickConvolutionActive()) {
+	$_check_msg_quick_convolution =
+		'<span class="config-help-static">' .
+			checkResultToHtml($cdsp->checkConfigFile($cdsp->getConfig())) .
+		'</span>';
 }
 
 $camillaGuiStatus = $cdsp->getCamillaGuiStatus();
-$camillaGuiClickHandler = " onchange=\"$('#btn-updat-camilla-gui').click();\"";
-$camillaGuiExpertClickHandler = " onchange=\"$('#btn-updat-camilla-gui-expert').click();\"";
-$_select['camillagui1'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui1\" value=\"1\" " . (($camillaGuiStatus == CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
-$_select['camillagui0'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui2\" value=\"0\" " . (($camillaGuiStatus != CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
-$_select['camillaguiexpert1'] .= "<input type=\"radio\" name=\"camillaguiexpertstatus\" id=\"toggle-camillaguiexpert1\" value=\"1\" " . (($cdsp->getGuiExpertMode() == true) ? "checked=\"checked\"" : $camillaGuiExpertClickHandler) . " >\n";
-$_select['camillaguiexpert0'] .= "<input type=\"radio\" name=\"camillaguiexpertstatus\" id=\"toggle-camillaguiexpert2\" value=\"0\" " . (($cdsp->getGuiExpertMode() != true) ? "checked=\"checked\"" : $camillaGuiExpertClickHandler) . " >\n";
+$camillaGuiClickHandler = " onchange=\"autoClick('#btn-update-camilla-gui');\"";
+$camillaGuiExpertClickHandler = " onchange=\"autoClick('#btn-update-camilla-gui-expert');\"";
+$_select['camillagui_on'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui-1\" value=\"1\" " . (($camillaGuiStatus == CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
+$_select['camillagui_off'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui-2\" value=\"0\" " . (($camillaGuiStatus != CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
+$_select['camillaguiexpert_on'] .= "<input type=\"radio\" name=\"camillaguiexpertstatus\" id=\"toggle-camillaguiexpert-1\" value=\"1\" " . (($cdsp->getGuiExpertMode() == true) ? "checked=\"checked\"" : $camillaGuiExpertClickHandler) . " >\n";
+$_select['camillaguiexpert_off'] .= "<input type=\"radio\" name=\"camillaguiexpertstatus\" id=\"toggle-camillaguiexpert-2\" value=\"0\" " . (($cdsp->getGuiExpertMode() != true) ? "checked=\"checked\"" : $camillaGuiExpertClickHandler) . " >\n";
 
-
-$_open_camillagui_disabled = $camillaGuiStatus == CGUI_CHECK_ACTIVE ? '': 'disabled';
-$_camillagui_notfound_show = $camillaGuiStatus == CGUI_CHECK_NOTFOUND ? '': 'hide';
-$_camillagui_status_problems = $camillaGuiStatus == CGUI_CHECK_ACTIVE || $camillaGuiStatus == CGUI_CHECK_INACTIVE || $camillaGuiStatus == CGUI_CHECK_NOTFOUND? 'hide': '';
+$_open_camillagui_disabled = $camillaGuiStatus == CGUI_CHECK_ACTIVE ? '' : 'disabled';
+$_camillagui_notfound_show = $camillaGuiStatus == CGUI_CHECK_NOTFOUND ? '' : 'hide';
+$_camillagui_status_problems = $camillaGuiStatus == CGUI_CHECK_ACTIVE || $camillaGuiStatus == CGUI_CHECK_INACTIVE || $camillaGuiStatus == CGUI_CHECK_NOTFOUND? 'hide' : '';
 
 // The extension mechanism is intended for dynamic adding function plugins for generating CamillaDSP configurations
 $extensions_config = '/var/local/www/cdsp_extensions.json';
@@ -326,7 +323,7 @@ if(file_exists($extensions_config)) {
 	<div class="controls">
 		<a href="%s"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Open</button></a>
 		<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-			<a aria-label="Help" class="info-toggle" data-cmd="info-%s" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-%s" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 		</div>
 		<span id="info-%s" class="help-block-configs help-block-margin legend-info-help hide">
 			%s<br>
@@ -348,9 +345,8 @@ $_cdsp_log_level .= "<option value=\"default\" " . (($cdsp_log_level == 'default
 $_cdsp_log_level .= "<option value=\"verbose\" " . (($cdsp_log_level == 'verbose') ? "selected" : "") . " >Verbose</option>\n";
 
 setAltBackLink();
-phpSession('close');
 
-waitWorker(1, 'cdsp-config');
+waitWorker('cdsp-config');
 
 $tpl = "cdsp-config.html";
 $section = basename(__FILE__, '.php');

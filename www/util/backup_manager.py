@@ -28,6 +28,7 @@ import argparse
 # TC
 import logging
 import datetime
+import glob
 
 from os import system, path, walk
 import os
@@ -36,7 +37,7 @@ from zipfile import ZipFile
 from station_manager import StationManager
 
 class BackupManager(StationManager):
-    VERSION = "2.1"
+    VERSION = "2.2"
 
     CDSPCFG_BASE = '/usr/share/camilladsp/'
     MOODECFGINI_TMP = '/tmp/moodecfg.ini'
@@ -44,6 +45,7 @@ class BackupManager(StationManager):
     OPT_CFG = 'config'
     OPT_CDSP = 'cdsp'
     OPT_PL ='playlists'
+    OPT_SEARCHES ='searches'
     OPT_RS_MOODE ='r_moode'
     OPT_RS_OTHER = 'r_other'
 
@@ -52,6 +54,9 @@ class BackupManager(StationManager):
     CDSPCFG_RESTORE_BASE = '/usr/share'
     PLAYLIST_PATH = '/var/lib/mpd'
     PLAYLIST_COVERS_PATH = '/var/local/www/imagesw'
+    SEARCHES_PATH = '/var/local/www'
+    SEARCHES_PATTERN = 'libsearch_*.json'
+    SEARCHES_RESTORE_BASE = '/var/local'
 
 
     # for test
@@ -101,7 +106,7 @@ class BackupManager(StationManager):
 
             # backup camilladsp configurations
             if BackupManager.OPT_CDSP in what:
-                if path.exists(BackupManager.CDSPCFG_BASE ):
+                if path.exists(BackupManager.CDSPCFG_BASE):
                     if path.exists(path.join(BackupManager.CDSPCFG_BASE, 'configs')):
                         print('Backup camilladsp configs')
                         for fpath, subdirs, files in walk(path.join(BackupManager.CDSPCFG_BASE, 'configs')):
@@ -122,6 +127,11 @@ class BackupManager(StationManager):
                     for fpath, subdirs, files in walk(path.join(BackupManager.PLAYLIST_COVERS_PATH, 'playlist-covers')):
                         for name in files:
                             backup.write(path.join(fpath, name), path.join('playlist-covers', name))
+            if BackupManager.OPT_SEARCHES in what:
+                if path.exists(BackupManager.SEARCHES_PATH):
+                    print('Backup saved searches')
+                    for file in glob.glob(path.join(BackupManager.SEARCHES_PATH, BackupManager.SEARCHES_PATTERN)):
+                        backup.write(file, path.join('www', os.path.basename(file)))
 
     def do_restore(self, what):
         # restore radio stations
@@ -161,13 +171,20 @@ class BackupManager(StationManager):
 
             if BackupManager.OPT_PL in what:
                 #names = [ name  for name in backup.namelist() if 'playlists/' in name  and not 'Default Playlist.m3u' in name ]
-                names = [ name  for name in backup.namelist() if 'playlists/' in name ]
-                if len(names) >= 0:
+                plNames = [ name  for name in backup.namelist() if 'playlists/' in name ]
+                if len(plNames) >= 0:
                     print('Restore playlists')
-                    backup.extractall (BackupManager.PLAYLIST_PATH, names)
+                    backup.extractall (BackupManager.PLAYLIST_PATH, plNames)
+                plCoverNames = [ name  for name in backup.namelist() if 'playlist-covers/' in name ]
+                if len(plCoverNames) >= 0:
                     print('Restore playlist covers')
-                    backup.extractall (BackupManager.PLAYLIST_COVERS_PATH, names)
+                    backup.extractall (BackupManager.PLAYLIST_COVERS_PATH, plCoverNames)
 
+            if BackupManager.OPT_SEARCHES in what:
+                searchNames = [name for name in backup.namelist() if 'www/' in name]
+                if len(searchNames) >= 0:
+                    print('Restore saved searches')
+                    backup.extractall (BackupManager.SEARCHES_RESTORE_BASE, searchNames)
 
     def do_info(self):
         configPresent = False
@@ -175,6 +192,7 @@ class BackupManager(StationManager):
         rs_moode_present = False
         rs_other_present = False
         playlistsPresent = False
+        searchesPresent = False
 
         if os.path.exists(self.backup_file):
             # fake target db version
@@ -198,6 +216,9 @@ class BackupManager(StationManager):
                 names = [ name  for name in backup.namelist() if 'playlists/' in name]
                 playlistsPresent = len( names) >= 1
 
+                names = [ name  for name in backup.namelist() if 'www/' in name]
+                searchesPresent = len( names) >= 1
+
         content = []
         if configPresent:
             print('config')
@@ -214,6 +235,9 @@ class BackupManager(StationManager):
         if playlistsPresent:
             print('playlists')
             content.append('playlists')
+        if searchesPresent:
+            print('searches')
+            content.append('searches')
 
         return content
 
@@ -227,8 +251,8 @@ def get_cmdline_arguments():
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(BackupManager.VERSION))
 
     parser.add_argument('--what', dest = 'what', nargs="+",
-                   choices = ['config', 'cdsp', 'playlists', 'r_moode', 'r_other'], default = None ,
-                   help = 'Indicate what to backup/restore (default for backup: config cdsp playlists, r_other, default on restore: auto detect content)')
+                   choices = ['config', 'cdsp', 'playlists', 'searches', 'r_moode', 'r_other'], default = None ,
+                   help = 'Indicate what to backup/restore (default for backup: config cdsp playlists, searches, r_other, default on restore: auto detect content)')
 
     group = parser.add_mutually_exclusive_group( required = True)
     group.add_argument('--backup', dest = 'do_backup', action = 'store_const',
@@ -272,7 +296,7 @@ if __name__ == "__main__":
         print("ERROR: No backup file specified. Required for backup or restore.")
         exit(11)
 
-    what =  ['config','cdsp', 'playlists', 'r_other']
+    what =  ['config','cdsp', 'playlists', 'searches', 'r_other']
     if args.what:
         what = args.what
 

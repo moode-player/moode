@@ -24,32 +24,33 @@
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/sql.php';
 
-function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
-	$session_file = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
+function phpSessionCheck($maxLoops = 3, $sleepTime = 2) {
+	$sessionFile = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
 
-	for ($i = 0; $i < $max_loops; $i++) {
-		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
+	for ($i = 0; $i < $maxLoops; $i++) {
+		$result = sysCmd('ls -l ' . $sessionFile . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
 		if ($result[0] == '-rw-rw-rw-,www-data,www-data') {
-			workerLog('worker: Session permissions (OK)');
+			workerLog('worker: Session check:     ok');
 			break;
-		}
-		else {
-			workerLog('worker: Session permissions retry (' . ($i + 1) . ')');
-			sysCmd('chown www-data:www-data ' . $session_file);
-			sysCmd('chmod 0666 ' . $session_file);
+		} else {
+			workerLog('worker: Session check:     retry ' . ($i + 1));
+			sysCmd('chown www-data:www-data ' . $sessionFile);
+			sysCmd('chmod 0666 ' . $sessionFile);
 		}
 
-		sleep($sleep_time);
+		sleep($sleepTime);
 	}
 
 	// Check for failure case on the way out
-	if ($i == $max_loops) {
-		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
+	if ($i == $maxLoops) {
+		$result = sysCmd('ls -l ' . $sessionFile . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
 		if ($result[0] != '-rw-rw-rw-,www-data,www-data') {
-			workerLog('worker: Session permissions (Failed after ' . $max_loops . ' retries)');
-			workerLog('worker: Session permissions (' . $result[0] . ')');
+			workerLog('worker: Session check:     failed after ' . $maxLoops . ' retries');
+			workerLog('worker: Permissions:       ' . $result[0]);
+		} else {
+			workerLog('worker: Session check:     ok');
 		}
 	}
 }
@@ -100,8 +101,8 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 			}
 			break;
 		case 'get_status':
-			$status = session_status();
 			// NOTE: $param can be used to mark locations in the caller(s) for example phpSession('get_status', ' 1')
+			$status = session_status();
 			debugLog('phpSession(get_status)' . $param . ': status=' . ($status == 0 ? 'PHP_SESSION_DISABLED' : ($status == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
 			return $status;
 			break;

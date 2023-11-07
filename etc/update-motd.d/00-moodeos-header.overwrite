@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# OS info
+OS_INFO=$(/var/www/util/sysutil.sh "get-osinfo")
+# Device info
+RPI_MODEL=$(/var/www/util/pirev.py | awk '{print "Pi-"$2" "$4}')
+AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='adevname'")
+# moOde release
+MOODE_REL=$(moodeutl --mooderel | tr -d '\n')
+
+echo " "
+echo $OS_INFO
+echo "Model: $RPI_MODEL"
+echo "Audio: $AUDIO_DEV"
+
+echo "
+
+        m o O d e   a u d i o   p l a y e r
+
+              Release $MOODE_REL
+                (C) 2014 Tim Curtis
+
+
+The programs included with moOde are free software; the
+exact distribution terms for each program are described
+in the individual files in /usr/share/doc/*/copyright or
+in the moOde source files. moOde comes with absolutely
+no warranties either expressed or implied, or any other
+such guarantees.
+"

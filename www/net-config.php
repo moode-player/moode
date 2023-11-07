@@ -173,6 +173,8 @@ $ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1"
 
 // Get link quality and signal level
 if (!empty($ipAddr[0])) {
+	$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
+	$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3');
 	$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 	$array = explode('=', $signal[0]);
 	$qual = explode('/', $array[1]);
@@ -180,18 +182,21 @@ if (!empty($ipAddr[0])) {
 	$lev = explode('/', $array[2]);
 	$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
 }
-
 // Determine message to display
 if ($_SESSION['apactivated'] == true) {
-	$_wlan0currentip = empty($ipAddr[0]) ? 'Unable to activate AP mode' : $ipAddr[0] . ' - AP mode active';
+	$_wlan0currentip = empty($ipAddr[0]) ? 'Unable to activate AP mode' : $ipAddr[0] . ' AP mode active';
 } else {
-	$_wlan0currentip = empty($ipAddr[0]) ? 'Not in use' : $ipAddr[0] . ' - quality ' . $quality . '%, level ' . $level;
+	$_wlan0currentip = empty($ipAddr[0]) ? 'Not in use' :
+	'Address: ' . $ipAddr[0] . '<br>' .
+	'Network: ' . $ssid[0] . ' (' . $bssid[0] . ')<br>' .
+	'Quality: ' . $quality . '% level ' . $level;
 }
 
 // SSID, scanner, security protocol, password
 if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'"); // Do twice to improve results
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'");
+	sort($result, SORT_NATURAL | SORT_FLAG_CASE);
 	$array = array();
 	$array[0] = 'None (activates AP mode)';
 	$ssidList = array_merge($array, $result);
@@ -205,7 +210,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		}
 	}
 } else {
-	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1') {
+	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1' && !empty($_POST['wlan0otherssid'])) {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
 	} else if ($cfgNetwork[1]['wlanssid'] == 'None (activates AP mode)') {
@@ -215,9 +220,11 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', htmlentities($cfgNetwork[1]['wlanssid']));
 	}
 }
-$_wlan0sec .= "<option value=\"wpa\"" . ($cfgNetwork[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
+$_wlan0sec .= "<option value=\"wpa\"" . ($cfgNetwork[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2-Personal</option>\n";
+$_wlan0sec .= "<option value=\"wpa23\"" . ($cfgNetwork[1]['wlansec'] == 'wpa23' ? 'selected' : '') . ">WPA3-Personal Transition Mode</option>\n";
+// TBD $_wlan0sec .= "<option value=\"wpa3\"" . ($cfgNetwork[1]['wlansec'] == 'wpa3' ? 'selected' : '') . ">WPA3 Personal</option>\n";
 $_wlan0sec .= "<option value=\"none\"" . ($cfgNetwork[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
-$_wlan0pwd = $cfgNetwork[1]['wlanpwd']; // old: htmlentities($cfgNetwork[1]['wlanpwd'])
+$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
 
 // WiFi country code
 $zoneList = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
@@ -247,10 +254,17 @@ $_wlan0secdns = $cfgNetwork[1]['secdns'];
 $_wlan0apdssid = $cfgNetwork[2]['wlanssid'];
 $_wlan0apdchan = $cfgNetwork[2]['wlan_channel'];
 $_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
-$_select['wlan0apd_router1'] .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router1\" value=\"On\" " . (($cfgNetwork[2]['wlan_router'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['wlan0apd_router0'] .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router2\" value=\"Off\" " . (($cfgNetwork[2]['wlan_router'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$_select['wlan0apd_router_on']  .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router-1\" value=\"On\" " . (($cfgNetwork[2]['wlan_router'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['wlan0apd_router_off'] .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router-2\" value=\"Off\" " . (($cfgNetwork[2]['wlan_router'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+if (empty($_wlan0apdpwd)) {
+	phpSession('open');
+	$_SESSION['notify']['title'] = 'Notice';
+	$_SESSION['notify']['msg'] = 'An Access Point password needs to be entered';
+	$_SESSION['notify']['duration'] = 10;
+	phpSession('close');
+}
 
-waitWorker(1, 'net-config');
+waitWorker('net-config');
 
 $tpl = "net-config.html";
 $section = basename(__FILE__, '.php');

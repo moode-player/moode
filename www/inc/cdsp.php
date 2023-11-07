@@ -33,6 +33,9 @@ const CGUI_CHECK_ACTIVE = 0;
 const CGUI_CHECK_INACTIVE = 3;
 const CGUI_CHECK_ERROR = -2;
 const CGUI_CHECK_NOTFOUND = -1;
+
+const CDSP_VOLFILTER_MSG = 'Set Volume type to CamillaDSP';
+
 class CamillaDsp {
 
     private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.conf';
@@ -243,12 +246,12 @@ class CamillaDsp {
             exec($cmd, $output, $exitcode);
             $exitcode = $exitcode == 0 ? 1 : 0;
 
-        }else {
-            $output[] = 'Config file "' . $configFullPath. '" NOT found';
+        } else {
+            $output[] = 'Configuration file "' . $configFullPath. '" not found';
         }
         $result = [];
         $result['valid'] = $exitcode;
-        $result['msg'] =  $output;
+        $result['msg'] = str_replace('Config is', 'Configuration is', $output);
 
         return $result;
     }
@@ -264,19 +267,22 @@ class CamillaDsp {
      * Returns list  available options for the camilladsp setting, including the Off and Custom
      */
     function getAvailableConfigs($extended = True) {
-        $configs = [];
+        $configsFirst = [];
+        $configsRest = [];
         // If extended moode is used, return also Off and custom as selectors
         if( $extended == True ) {
-            $configs['off'] = 'Off'; // don't use camilla
-            $configs['custom'] = 'Custom'; // custom configuration setup used
-            $configs['__quick_convolution__.yml'] = 'Quick convolution filter'; // custom configuration setup used
+            $configsFirst['off'] = 'Off'; // don't use camilla
+            $configsFirst['custom'] = 'Custom'; // custom configuration setup used
+            $configsFirst['__quick_convolution__.yml'] = 'Quick convolution filter'; // custom configuration setup used
         }
-        foreach (glob($this->CAMILLA_CONFIG_DIR . '/configs/*.yml') as $filename) {
-                $fileParts = pathinfo($filename);
-                if($fileParts['basename'] != "__quick_convolution__.yml") {
-                    $configs[$fileParts['basename']] = $fileParts['filename'];
-                }
+        foreach (glob($this->CAMILLA_CONFIG_DIR . '/configs/*.yml') as $fileName) {
+            $fileParts = pathinfo($fileName);
+            if($fileParts['basename'] != "__quick_convolution__.yml") {
+                $configsRest[$fileParts['basename']] = $fileParts['filename'];
+            }
         }
+        ksort($configsRest, SORT_NATURAL | SORT_FLAG_CASE);
+        $configs = array_merge($configsFirst, $configsRest);
         return $configs;
     }
 
@@ -389,9 +395,11 @@ class CamillaDsp {
 
     function changeCamillaStatus($enable) {
         if($enable) {
+            sysCmd("sudo systemctl enable camillagui");
             sysCmd("sudo systemctl start camillagui");
         }else {
             sysCmd("sudo systemctl stop camillagui");
+            sysCmd("sudo systemctl disable camillagui");
         }
     }
 
@@ -460,7 +468,7 @@ class CamillaDsp {
                         return NULL;
                     }
                     else {
-                        $output[] = 'Could not find generated files.';
+                        $output[] = 'Could not find generated files';
                         return $output;
                     }
                 }else{
@@ -480,18 +488,18 @@ class CamillaDsp {
                         return NULL;
                     }
                     else {
-                        $output[] = 'Could not find generated files.';
+                        $output[] = 'Could not find generated files';
                         return $output;
                     }
                 }
 
             }
             else {
-                return ['Sox not found (please install sox)'];
+                return ['SoX not found, please install SoX'];
             }
         }
         else {
-            return ['File is not a (stereo) wave file.'];
+            return ['File is not a Stereo wave file'];
         }
 
     }
@@ -545,6 +553,76 @@ class CamillaDsp {
     function restore($values) {
     }
 
+    static function calcMappedDbVol($volume, $dynamic_range) {
+        $x = $volume/100.0;
+        $y = pow(10, $dynamic_range/20);
+        $a = 1/$y;
+        $b = log($y);
+        $y= $a*exp($b*($x));
+        if ($x < .1) {
+            $y = $x*10*$a*exp(0.1*$b);
+        }
+        if( $y == 0) {
+            $y = 0.000001; // NOTE: Must be same value in /usr/local/bin/mpd2cdspvolume function lin_vol_curve()
+        }
+        return 20* log10($y);
+    }
+}
+
+// TODO: Change these to cdsp-> member functions
+
+function isMPD2CamillaDSPVolSyncEnabled() {
+	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
+}
+
+function doesCamillaDSPCfgHaveVolFilter($configFile = null) {
+	$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
+	$resultVol = sysCmd('fgrep -o "type: Volume" "' . $configFile . '"');
+    $resultLdn = sysCmd('fgrep -o "type: Loudness" "' . $configFile . '"');
+	return (($resultVol[0] == 'type: Volume' || $resultLdn[0] == 'type: Loudness' ) && $_SESSION['camilladsp'] !='off');
+}
+
+function updateCamillaDSPCfg($newMode, $currentMode, $cdsp) {
+    $defaultMixer = $_SESSION['alsavolume'] != 'none' ? 'Hardware' : 'Software';
+
+    if ($newMode != $currentMode && ($newMode == 'off' || $currentMode == 'off')) {
+        // Switching to/from Off
+        if (doesCamillaDSPCfgHaveVolFilter($newMode)) {
+            // Has volume filter
+            $notifyMsg = ',Volume type changed to:<br>CamillaDSP';
+            $queueArg1 = ',change_mixer_to_camilladsp';
+        } else {
+            // Either off or does not have volume filter
+            $notifyMsg = $newMode != 'off' ? ',no_mixer_change' : ',Volume type changed to:<br>' . $defaultMixer;
+            $queueArg1 = $newMode != 'off' ? '' : ',change_mixer_to_default';
+        }
+        sendEngCmd('cdsp_updating_config' . $notifyMsg);
+        submitJob('camilladsp', $newMode . $queueArg1);
+    } else {
+        // Switching between configs
+        $newModeVolFilter = doesCamillaDSPCfgHaveVolFilter($newMode);
+        $currentModeVolFilter = doesCamillaDSPCfgHaveVolFilter($currentMode);
+
+        if ($newModeVolFilter === true && $currentModeVolFilter === true) {
+            // Both have volume filter
+            $cdsp->reloadConfig();
+        } else if ($newModeVolFilter === false && $currentModeVolFilter === false) {
+            // Neither have volume filter
+            $cdsp->reloadConfig();
+        } else if ($newModeVolFilter === true) {
+            // Switch from one w/o volume filter to one with
+            $notifyMsg = ',Volume type changed to:<br>CamillaDSP';
+            $queueArg1 = ',change_mixer_to_camilladsp';
+            sendEngCmd('cdsp_updating_config' . $notifyMsg);
+            submitJob('camilladsp', $newMode . $queueArg1);
+        } else if ($newModeVolFilter === false) {
+            // Switch from one with a volume filter to one without
+            $notifyMsg = ',Volume type changed to:<br>' . $defaultMixer;
+            $queueArg1 = ',change_mixer_to_default';
+            sendEngCmd('cdsp_updating_config' . $notifyMsg);
+            submitJob('camilladsp', $newMode . $queueArg1);
+        }
+    }
 }
 
 function test_cdsp() {
@@ -637,11 +715,8 @@ function test_cdsp() {
 
 }
 
-
-
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
     test_cdsp();
 }
-
 
 ?>

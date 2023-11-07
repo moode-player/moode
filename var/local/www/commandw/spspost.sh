@@ -19,17 +19,19 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-$(sqlite3 $SQLDB "update cfg_system set value='0' where param='aplactive'")
+$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='aplactive'")
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterapl' or param='inpactive' or param='multiroom_tx'")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','mpdmixer','rsmafterapl','camilladsp_volume_sync','inpactive','volknob_mpd','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
 ALSAVOLUME=${arr[1]}
 AMIXNAME=${arr[2]}
 MPDMIXER=${arr[3]}
 RSMAFTERAPL=${arr[4]}
-INPACTIVE=${arr[5]}
-MULTIROOM_TX=${arr[6]}
+CDSP_VOLSYNC=${arr[5]}
+INPACTIVE=${arr[6]}
+VOLKNOB_MPD=${arr[7]}
+MULTIROOM_TX=${arr[8]}
 RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
 
 if [[ $INPACTIVE == '1' ]]; then
@@ -37,13 +39,22 @@ if [[ $INPACTIVE == '1' ]]; then
 fi
 
 # Local
-# Restore 0dB hardware volume when MPD configured as below
+if [[ $CDSP_VOLSYNC == "on" ]]; then
+	# Restore knob volume to saved MPD volume
+	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB_MPD' WHERE param='volknob'")
+	/var/www/vol.sh -restore
+	systemctl restart mpd2cdspvolume
+else
+	# Restore knob volume
+	/var/www/vol.sh -restore
+fi
+# TODO: Is this needed?
 if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 	if [[ $ALSAVOLUME != "none" ]]; then
+		# Restore 0dB ALSA volume
 		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 fi
-/var/www/vol.sh -restore
 
 # Multiroom receivers
 if [[ $MULTIROOM_TX == "On" ]]; then
@@ -52,7 +63,7 @@ if [[ $MULTIROOM_TX == "On" ]]; then
 		if [[ $RESULT != "" ]]; then
 			RESULT=$(curl -G -S -s --data-urlencode "cmd=vol.sh -restore" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				echo $(date +%F" "%T)" spspost.sh vol.sh -restore failed: $IP_ADDR" >> /home/pi/renderer_error.log
+				echo $(date +%F" "%T)" spspost.sh vol.sh -restore failed: $IP_ADDR" >> /var/log/moode_renderer_error.log
 			fi
 		fi
 	done

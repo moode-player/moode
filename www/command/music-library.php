@@ -55,6 +55,30 @@ switch ($_GET['cmd']) {
 	case 'clear_libcache_filtered':
 		clearLibCacheFiltered();
 		break;
+	case 'get_saved_searches':
+		echo json_encode(getSavedSearches());
+		break;
+	case 'activate_saved_search':
+		phpSession('open');
+		$_SESSION['lib_active_search'] = $_POST['name'];
+		phpSession('close');
+		echo file_get_contents(LIBSEARCH_BASE . $_POST['name'] . '.json');
+		break;
+	case 'delete_saved_search':
+		sysCmd('rm "' . LIBSEARCH_BASE . $_POST['name'] . '.json"');
+		break;
+	case 'clear_active_search':
+		phpSession('open');
+		$_SESSION['lib_active_search'] = 'None';
+		phpSession('close');
+		break;
+	case 'create_saved_search':
+		if (submitJob('create_saved_search', $_POST['name'], '', '')) {
+			echo json_encode('job submitted');
+		} else {
+			echo json_encode('worker busy');
+		}
+		break;
 	case 'thumcache_status':
 		if (isset($_SESSION['thmcache_status']) && !empty($_SESSION['thmcache_status'])) {
 			$status = $_SESSION['thmcache_status'];
@@ -70,6 +94,9 @@ switch ($_GET['cmd']) {
 			}
 		}
 		echo json_encode($status);
+		break;
+	default:
+		echo 'Unknown command';
 		break;
 }
 

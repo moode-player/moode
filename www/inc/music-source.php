@@ -140,10 +140,12 @@ function sourceMount($action, $id = '', $log = '') {
 					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
 				}
 				$mp[0]['error'] = 'Mount error';
-				if ($log == 'workerlog') {
+				if ($log == '') {
+					// Mounts performed by Library or Music Source Config
 					workerLog('worker: Try (' . $mountStr . ')');
 					workerLog('worker: Err (' . implode("\n", $result) . ')');
 				} else {
+					// Mounts performed by the monitor daemon ($log = 'mountmonlog')
 					mountmonLog('- Try (' . $mountStr . ')');
 					mountmonLog('- Err (' . implode("\n", $result) . ')');
 				}
@@ -159,11 +161,11 @@ function sourceMount($action, $id = '', $log = '') {
 			break;
 		case 'unmount':
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
-			if (mountExists($mp['name'])) {
-				if ($mp['type'] == 'cifs') {
-					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // -l (lazy) -f (force)
+			if (mountExists($mp[0]['name'])) {
+				if ($mp[0]['type'] == 'cifs') {
+					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // -l (lazy) -f (force)
 				} else {
-					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
+					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"');
 				}
 			}
 			$return = true;

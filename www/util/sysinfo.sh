@@ -30,7 +30,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
 	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
 	echo -e "\nPlatform\t\t= $hdwrrev\c"
-	echo -e "\nArchitecture\t\t= $ARCH ($kernel_architecture)\c"
+	echo -e "\nArchitecture\t\t= $ARCH\c"
+	echo -e "\nHome directory\t\t= /home/$HOME_DIR\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
 	echo -e "\nTimezone\t\t= $timezone\c"
 	echo -e "\nCurrent time\t\t= $NOW\c"
@@ -63,15 +64,20 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nThrottled bitmask\t= $THROTTLED_BITMASK\c"
 	echo -e "\nThrottled text\t\t= $THROTTLED_TEXT\c"
 	echo -e "\n\c"
+	echo -e "\nWorker responsiveness\t= $WORKER_RESPONSIVENESS\c"
 	echo -e "\nCPU governor\t\t= $GOV\c"
-	echo -e "\nOnboard WiFi\t\t= $piwifi\c"
-	echo -e "\nOnboard BT\t\t= $pibt\c"
+	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
+	echo -e "\nPi integrated WiFi\t= $piwifi\c"
+	echo -e "\nPi integrated BT\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
 	echo -e "\nLED state\t\t= $led_state\c"
 	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
 	echo -e "\nEthernet check\t\t= $eth0chk\c"
-	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
+	if [ $(($feat_bitmask & $FEAT_HTTPS)) -ne 0 ]; then
+		echo -e "\nHTTPS-Only mode\t\t= $HTTPS_ONLY\c"
+	fi
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
+	echo -e "\nReduced sys logging\t= $REDUCE_SYS_LOGGING\c"
 	echo -e "\n\c"
 	echo -e "\nSMB file sharing\t= $fs_smb\c"
 	echo -e "\nNFS file sharing\t= $fs_nfs\c"
@@ -172,6 +178,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nParametric EQ\t\t= $eqfa12p\c"
 	echo -e "\nGraphic EQ\t\t= $alsaequal\c"
 	echo -e "\nCamillaDSP\t\t= $camilladsp\c"
+	echo -e "\nCamillaDSP volsync\t= $camilladsp_volume_sync\c"
 	echo -e "\nMPD httpd\t\t= $mpd_httpd\c"
 	echo -e "\nIgnore CUE files\t= $cuefiles_ignore\n"
 }
@@ -212,6 +219,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nShow sample rate\t= $library_encoded_at\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
 	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
+	echo -e "\nThumbgen scan fmts\t= $library_thmgen_scan\c"
 	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
 	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
 	echo -e "\n\nLibrary (Advanced)\c"
@@ -229,11 +237,11 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nTimed display\t= $scnsaver_timeout\c"
-	echo -e "\nAutomatic display\t= $toggle_coverview\c"
+	echo -e "\nTimed display\t\t= $scnsaver_timeout\c"
+	echo -e "\nAutomatic display\t= $auto_coverview\c"
 	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
-	echo -e "\nLayout\t\t= $scnsaver_layout\c"
+	echo -e "\nLayout\t\t\t= $scnsaver_layout\c"
 	echo -e "\nExtra metadata\t\t= $scnsaver_xmeta\n"
 }
 
@@ -260,7 +268,7 @@ PLAYLIST_MANAGER_SETTINGS() {
 
 MPD_SETTINGS() {
 	echo -e "M P D   S E T T I N G S"
-	echo -e "\nVersion\t\t\t= $mpdver\c"
+	echo -e "\nVersion\t\t\t= $(mpd -V | grep 'Music Player Daemon' | awk '{print $4}')\c"
 	echo -e "\nVolume type\t\t= $mixer_type\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
 	echo -e "\nSelective resampling\t= $selective_resample_mode\c"
@@ -281,12 +289,12 @@ MPD_SETTINGS() {
 	echo -e "\nAudio buffer\t\t= $audio_buffer_size (MB)\c"
 	echo -e "\nOutput buffer size\t= $max_output_buffer_size (MB)\c"
 	echo -e "\nMax playlist items\t= $max_playlist_length\c"
-	echo -e "\nInput cache\t\t= $input_cache\n"
+	echo -e "\nInput cache\t\t= $input_cache\c"
+	echo -e "\nDevice buffer\t\t= $(( $buffer_time / 1000 )) (ms)\c"
+	echo -e "\nDevice period\t\t= $(( $buffer_time / 4000 )) (ms)\n"
 	#echo -e "\nALSA auto-resample\t= $auto_resample\c"
 	#echo -e "\nALSA auto-channels\t= $auto_channels\c"
 	#echo -e "\nALSA auto-format\t= $auto_format\c"
-	#echo -e "\nHardware buffer time\t= $buffer_time\c"
-	#echo -e "\nHardware period time\t= $period_time\n"
 }
 RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
@@ -295,9 +303,9 @@ RENDERER_SETTINGS() {
 		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
 		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER\c"
 		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
-		echo -e "\nSpeaker sharing\t\t= $btmulti\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
-		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\n"
+		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\c"
+		echo -e "\nALSA output mode\t= $BT_ALSA_OUTPUT_MODE\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
@@ -388,6 +396,7 @@ MOODE_LOG() {
 #
 
 # Features availability bitmask
+FEAT_HTTPS=1
 FEAT_AIRPLAY=2
 FEAT_MINIDLNA=4
 FEAT_RECORDER=8
@@ -419,14 +428,18 @@ RASPIOS_VER=`cat /etc/debian_version`
 KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
-ARCH=`uname -m`
-
+[ $(uname -m) = "aarch64" ] && ARCH="aarch64 (64-bit)" || ARCH="armhf (32-bit)"
+HOME_DIR=$(ls /home/)
 # Similar to moodeutl
 MEM_TOTAL=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')             
+MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
 MEM_TOTAL=$(( $MEM_TOTAL / 1000 ))
 MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
+
+WORKER_RESPONSIVENESS=$(moodeutl -d | grep worker_responsiveness | cut -d"|" -f2)
+TMP=$(moodeutl -d | grep reduce_sys_logging | cut -d"|" -f2)
+[[ "$TMP" = "1" ]] && REDUCE_SYS_LOGGING="On" || REDUCE_SYS_LOGGING="Off"
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
@@ -450,6 +463,10 @@ fi
 if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
+
+TMP=$(moodeutl -d | grep nginx_https_only | cut -d"|" -f2)
+[[ "$TMP" = "1" ]] && HTTPS_ONLY="On" || HTTPS_ONLY="Off"
+
 TMP="$(lsblk -o size -nb /dev/disk/by-label/rootfs)"
 if [[ $TMP -gt $DEV_ROOTFS_SIZE ]]; then
 	FSEXPAND="expanded"
@@ -467,13 +484,13 @@ UPTIME="$(uptime -p)"
 
 [[ $(cat /proc/cpuinfo | grep 'Revision' | cut -f 2 -d " ") == 2* ]] && WARRANTY=void || WARRANTY=OK
 
-grep -q mmc0 /sys/class/leds/led0/trigger && LED0="on" || LED0="off"
-
-if [ $(ls /sys/class/leds | grep led1) ]; then
-	grep -q mmc0 /sys/class/leds/led1/trigger && LED1="on" || LED1="off"
-else
-	LED1="not accessible"
-fi
+# Replaced by led_state from cfg_system
+#grep -q "[actpwr]" /sys/class/leds/ACT/trigger && LED0="on" || LED0="off"
+#if [ $(ls /sys/class/leds | grep PWR) ]; then
+#	grep -q "[actpwr]" /sys/class/leds/PWR/trigger && LED1="on" || LED1="off"
+#else
+#	LED1="not accessible"
+#fi
 
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
 THROTTLED_BITMASK=`vcgencmd get_throttled | cut -d"=" -f2`
@@ -500,6 +517,8 @@ BLUETOOTH_VER=$(bluetoothd -v)
 BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
 PARING_AGENT_VER="1.0.0"
 PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
+output_mode=$(moodeutl -d | grep bt_alsa_output_mode | cut -d"|" -f2)
+[[ $output_mode = "_audioout" ]] && BT_ALSA_OUTPUT_MODE="Default (_audioout)" || BT_ALSA_OUTPUT_MODE="Compatibility (plughw)"
 
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
@@ -633,7 +652,7 @@ if [[ -f "/opt/RoonBridge/start.sh" ]]; then
 else
 	rbsvc="Not installed"
 fi
-mpdver=${arr[15]}
+RESERVED_16=${arr[15]}
 rbactive=${arr[16]}
 adevname=${arr[17]}
 clkradio_mode=${arr[18]}
@@ -703,7 +722,7 @@ fi
 cardnum=${arr[76]}
 [[ "${arr[77]}" = "1" ]] && btsvc="On" || btsvc="Off"
 btname=${arr[78]}
-[[ "${arr[79]}" = "1" ]] && btmulti="Yes" || btmulti="No"
+[[ "${arr[79]}" = "on" ]] && camilladsp_volume_sync='On' || camilladsp_volume_sync='Off'
 feat_bitmask=${arr[80]}
 if [[ "${arr[81]}" = "604800000" ]]; then
 	library_recently_added="1 Week"
@@ -760,7 +779,7 @@ ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
 library_albumview_sort=${arr[125]}
-kernel_architecture=${arr[126]}
+library_thmgen_scan=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
 [[ "${arr[128]}" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
 led_state=${arr[129]}
@@ -812,7 +831,7 @@ multiroom_rx=${arr[158]}
 rxactive=${arr[159]}
 library_onetouch_radio=${arr[160]}
 library_tagview_genres=${arr[161]}
-toggle_coverview=${arr[162]}
+[[ "${arr[162]}" = "-on" ]] && auto_coverview="On" || auto_coverview="Off"
 maint_interval=${arr[163]}
 library_track_play=${arr[164]}
 playlist_pos==${arr[165]}
@@ -850,7 +869,7 @@ if [ $MODEL = 3 ]; then
 elif [ $MODEL = 4 ]; then
 	BOOTLOADER_MIN_DATE=20200903
 	TMP=$(vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}')
-	BOOTLOADER_ACTUAL_DATE=$(date -d"$TMP" +%Y%m%d        )
+	BOOTLOADER_ACTUAL_DATE=$(date -d"$TMP" +%Y%m%d)
 	let DIFF=($(date +%s -d $BOOTLOADER_ACTUAL_DATE)-$(date +%s -d $BOOTLOADER_MIN_DATE))/86400
 	if (("$DIFF" >= "0")); then
 		USBBOOT="enabled"

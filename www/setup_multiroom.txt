@@ -16,7 +16,7 @@ PREFACE
 
 This release of moOde Multiroom audio is designed for listening in a casual
 or background setting. There is no support in this release for audiophile
-features including uncompressed PCM format, rates greater than 48 kHz, DSP or
+features including uncompressed PCM format, rates greater than 48K, DSP or
 clock correction between Sender and Receiver. These features may however appear
 in future releases.
 
@@ -73,7 +73,9 @@ A) Audio Configuration (Menu, Configure, Audio)
 
 1. In the Audio Output section
    - Configure settings appropriate for the audio device being used
-   - Volume type must be set to "Hardware"
+   - To control Receiver volume via the Sender set "Volume type" to "Hardware"
+     CAUTION: Software or Fixed (0dB) can also be used but volume output will
+     be 0dB (100%) regardless of Sender volume setting
 2. In the ALSA options section
    - Select an ALSA output mode being mindful of the Help text
    - Set ALSA Loopback to "OFF"

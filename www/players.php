@@ -23,12 +23,30 @@ require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/multiroom.php'; // For getStreamTimeout()
 require_once __DIR__ . '/inc/sql.php';
 
+if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
+	if (!isset($_POST['ipaddr'])) {
+		workerLog('players.php: No destination IP addresses for command ' . $_GET['cmd']);
+	} else {
+		$count = count($_POST['ipaddr']);
+		for ($i = 0; $i < $count; $i++) {
+			if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
+				'/command/system.php?cmd=' . $_GET['cmd']))) {
+				workerLog('players.php: ERROR: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' failed');
+			} else {
+				workerLog('players.php: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' result: ' . $result);
+			}
+		}
+	}
+	exit(0);
+}
+
 // Scan the network for hosts with open port 6600 (MPD)
 $port6600Hosts = scanForMPDHosts();
-$thisIpAddr = sysCmd('hostname -I')[0];
+$thisIpAddr = getThisIpAddr();
 
 // Parse the results
 $_players = '';
+$_players_action_div_hide = '';
 $timeout = getStreamTimeout();
 foreach ($port6600Hosts as $ipAddr) {
 	if ($ipAddr != $thisIpAddr) {
@@ -38,7 +56,7 @@ foreach ($port6600Hosts as $ipAddr) {
 			if ($status != 'Unknown command') {  // r740 or higher host
 				$rxStatus = explode(',', $status);
 				// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname
-				$rxIndicator = $rxStatus[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
+				$rxIndicator = $rxStatus[1] == 'On' ? '<i class="players-rx-indicator fa-solid fa-sharp fa-speaker"></i>' : '';
 				// NOTE: r800 status will have a 6th element (hostname) otherwise use ip address
 				$host = count($rxStatus) > 5 ? $rxStatus[5] : $ipAddr;
 			} else {
@@ -47,18 +65,22 @@ foreach ($port6600Hosts as $ipAddr) {
 			}
 
 			$_players .= sprintf('
-				<li><a href="http://%s" class="btn btn-large">
-				<i class="fas fa-sitemap"></i>
+				<li><a href="http://%s" class="btn btn-large target-blank-link" data-ipaddr="%s" target="_blank">
+				<i class="fa-solid fa-sharp fa-sitemap"></i>
 				<br>%s%s
-				</a></li>', $ipAddr, $host, $rxIndicator);
+				</a></li>', $ipAddr, $ipAddr, $host, $rxIndicator);
 		}
 	}
 }
 
 // Check for no players found
 if (empty(trim($_players))) {
-	$_players = '<li style="font-size:large">No other players found</li>';
+	$_players = '<li id="players-no-players-found">No players found</li>';
+	$_players_action_div_hide = 'hide';
 }
+
+// Close the "Discovering players..." notification
+sendEngCmd('close_notification');
 
 $tpl = 'players.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');

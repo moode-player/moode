@@ -30,7 +30,7 @@
 				<span class="right">$_file</span>
 			</li>
 			<li>
-				<span class="left">Encoded at</span>
+				<span class="left">Source format</span>
 				<span class="right">$_encoded_at</span>
 			</li>
 			<li>
@@ -38,18 +38,18 @@
 				<span class="right">$_decoded_to$_decode_rate</span>
 			</li>
 			<li>
-				<span class="left">Output rate</span>
-				<span class="right">$_hwparams_format$_hwparams_calcrate</span>
+				<span class="left">Output format</span>
+				<span class="right">$_alsa_output_format</span>
 			</li>
 			<li>
-				<span class="left">Output mode</span>
-				<span class="right">ALSA $_alsa_output_mode</span>
+				<span class="left">ALSA mode</span>
+				<span class="right">$_alsa_output_mode</span>
 			</li>
 			<li>
-				<span class="left">Output chain</span>
-				<span class="right">$_alsa_output_chain</span>
+				<span class="left">Audio chain</span>
+				<span class="right">$_audio_output_chain</span>
 			</li>
-			<li class="$alsa_loopback">
+			<li class="$_alsa_loopback_class">
 				<span class="left">Loopback</span>
 				<span class="right">$_alsa_loopback</span>
 			</li>
@@ -59,13 +59,14 @@
 				<span class="left">Resample rate</span>
 				<span class="right">$_resample_rate</span>
 			</li>
-			<li class="$_selective_resampling_hide">
-				<span class="left">Selective rate</span>
-				<span class="right">$_selective_resample</span>
-			</li>
 			<li class="$_resample_quality">
-				<span class="left">Resample quality</span>
+				<span class="left">Quality</span>
 				<span class="right">$_resample_quality</span>
+			</li>
+			<!-- This is to control visibility of the feature in case MPD no longer supports the patch -->
+			<li class="$_selective_resampling_hide">
+				<span class="left">Selective</span>
+				<span class="right">$_selective_resample</span>
 			</li>
 			<li class="$_polarity_inv">
 				<span class="left">Polarity invert</span>
@@ -106,6 +107,10 @@
 			<li>
 				<span class="left">Volume type</span>
 				<span class="right">$_volume_mixer</span>
+			</li>
+			<li class="$_cdsp_volume_range">
+				<span class="left">Volume range</span>
+				<span class="right">$_cdsp_volume_range</span>
 			</li>
 
 		<div class="h5">Audio Device</div>

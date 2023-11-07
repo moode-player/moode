@@ -21,132 +21,126 @@
 <div id="container">
 <div class="container">
 	<h1 class="lib-config">Music Source</h1>
+	<p>
+		Specify the path to the remote host computer that is sharing song files on the network.
+		After saving or removing a music source, return to Playback or Library then select "Update library" from the Menu.
+	</p>
 
 	<form class="form-horizontal" action="lib-config.php" method="post">
-		<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a href="#remove-source" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
-			<!--a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a-->
-			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help">
-				NOTE: After saving or removing the source, return to Playback or Library then select "Update library" from the Menu.
-            </span>
+		<legend>Remote host
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			<a href="#remove-source" data-toggle="modal" class="$_hide_remove"><button class="legend-config btn btn-medium btn-primary">Remove</button></a>
 		</legend>
-		<a data-toggle="modal" href="#moode-log" class="btn btn-small $_hide_error" style="margin-bottom: 15px; background-color: #333;">
-			<i class="fas fa-times red sx"></i>NAS mount error: Click to view moode.log for errors
+
+		<a data-toggle="modal" href="#moode-log" class="btn btn-medium config-btn $_hide_error" style="background-color: #333;">
+			<i class="fa-solid fa-sharp fa-times red sx"></i>Click to view the mount error
 		</a>
 
-		<legend>Remote server</legend>
 		<div class="control-group">
 			<label class="control-label" for="type">Type</label>
 			<div class="controls">
-				<select id="type" name="mount[type]" class="input-large">
+				<select id="type" name="mount[type]" class="config-select-large">
 					$_protocol
 				</select>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-fileshare-protocol" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-fileshare-protocol" class="help-block-configs help-block-margin hide">
-					Choose the type that corresponds to the file sharing protocol used on the remote server.<br>
-					NOTE: NFS mounts that fail can cause up to a 1-2 min timeout. This screen will appear to hang when this happens.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-fileshare-protocol" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-fileshare-protocol" class="config-help-info">
+					Choose the type corresponding to the file sharing protocol used on the remote host.
+					Note that NFS mounts that fail can cause up to a 2 minute timeout. This screen will appear to hang when this happens.
                 </span>
 			</div>
-		</div>
-		<div class="control-group">
+
 			<label class="control-label" id="server-label" for="address">Path</label>
 			<div class="controls">
-				<select id="address" name="mount[address]" class="input-large">
+				<select id="address" name="mount[address]" class="config-select-large">
 					$_address
 				</select>
-				<button id="scan-btn" class="btn btn-primary btn-small set-button  btn-submit status-msg $_scan_btn_hide" data-msg="Scan in progress" type="submit" name="scan" value="1">Scan</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-server" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-server" class="help-block-configs help-block-margin hide">
-					The format for Path is: host_or_ip_address/share_name.
-					SCAN generates a list of SMB or NFS shares available on the network.<br>
-					NOTE: For NFS the scanner only scans for NFSv4 hosts (port 2049 open).
+				<button id="scan-btn" class="btn btn-primary btn-small config-btn-set btn-submit status-msg $_scan_btn_hide" data-msg="Scan in progress" type="submit" name="scan" value="1">Scan</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-server" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-server" class="config-help-info">
+					SCAN generates a list of paths to SMB or NFS shares found on the network.
+					A path consists of the host or IP address followed by a forward slash followed by the share name
+					for example SomeHost/ShareName.
                 </span>
-				<div id="edit-server" class="help-block-margin $_edit_server_hide">
-					<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary" style="margin-top:.25em;">EDIT</button></a>&nbsp;Path manually
+				<div id="edit-server" $_edit_server_hide">
+					<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary config-btn" >Edit</button></a>
+					<span class="config-btn-after">Path manually</span>
 				</div>
 			</div>
-		</div>
 
-		<div id="userid-password" class="$_userid_pwd_hide">
-			<div class="control-group" >
-				<label class="control-label" for="nas-usr">User ID</label>
+			<div id="userid-password" class="$_userid_pwd_hide">
+				<label class="control-label" for="nas-usr">Userid</label>
 				<div class="controls">
-					<input  id="nas-usr" class="input-large" type="text" pattern="[^'\u0022]+" name="mount[username]" value="$_username">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<input  id="nas-usr" class="config-input-large" type="text" pattern="[^'\u0022]+" name="mount[username]" value="$_username">
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				</div>
+
 				<label class="control-label" for="nas-pasw">Password</label>
 				<div class="controls">
-					<input  id="nas-pasw" class="input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fal fa-eye"></i></a>
-					<span id="info-nas-uidpwd" class="help-block-configs help-block-margin hide">
-						Try userid = Guest and a blank password unless your NAS device requires a specific userid/password.<br>
-						NOTE: Single and double quotes are not allowed.
-                    </span>
+					<input  id="nas-pasw" class="config-input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fa-regular fa-sharp fa-eye"></i></a>
+					<span id="info-nas-uidpwd" class="config-help-info">
+						Try userid Guest and a blank password unless your NAS device requires a specific userid/password.
+						Note that single and double quotes are not allowed.
+		            </span>
 				</div>
 			</div>
-		</div>
 
-		<div class="control-group">
 			<label class="control-label" for="nas-name">Name</label>
 			<div class="controls">
-				<input class="input-large" type="text" pattern="[A-Za-z0-9\-]{1,25}" id="nas-name" name="mount[name]" value="$_name">
+				<input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{1,25}" id="nas-name" name="mount[name]" value="$_name">
 				<input type="hidden" name="mount[id]" value="$_id">
 				<input type="hidden" name="mount[action]" value="$_action">
-				<a aria-label="Help" class="info-toggle" data-cmd="info-source-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-source-name" class="help-block-configs help-block-margin hide">
-					This name will appear in Library Folder view under the NAS folder.<br>
-					1-25 chars, alphanumeric and hyphen allowed.
-                </span>
-				<span class="help-block-configs help-block-margin">
-                	Friendly name (alias) for this Music source.<br>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-source-name" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-source-name" class="config-help-info">
+					Friendly name (alias) for this Music Source. The name will appear in Library Folder view under the NAS folder.
+					Format is 1-25 characters, alphanumeric, hyphen allowed.
                 </span>
 			</div>
 		</div>
 
 		<div id="advanced-options" class="$_advanced_options_hide">
-			<legend>Advanced</legend>
+			<legend>Advanced
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+
 			<div class="control-group">
 				<label class="control-label" for="nas-charset">Character encoding</label>
 				<div class="controls">
-					<select id="nas-charset" name="mount[charset]" class="input-large">
+					<select id="nas-charset" name="mount[charset]" class="config-select-large">
 						<option value="utf8" $_charset>UTF-8 (Default)</option>
 						<option value="iso8859-1" $_charset>ISO-8859-1</option>
 					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mount-charset" class="help-block-configs help-block-margin hide">
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-mount-charset" class="config-help-info">
 						This setting determines how characters are encoded. The default is UTF-8 which is a multibyte encoding that can represent any Unicode character. ISO 8859-1 is a single-byte encoding that can represent the first 256 Unicode characters. Both encode ASCII exactly the same way.
                     </span>
 				</div>
-			</div>
-			<div id="rw-size" class="$_rw_size_hide">
-				<div class="control-group">
+
+				<div id="rw-size" class="$_rw_size_hide">
 					<label class="control-label" for="nas-rsize">Rsize</label>
 					<div class="controls">
-						<input class="input-large" type="number" id="nas-rsize" name="mount[rsize]" value="$_rsize">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-mount-rsize" class="help-block-configs help-block-margin hide">
+						<input class="config-input-large" type="number" id="nas-rsize" name="mount[rsize]" value="$_rsize">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-mount-rsize" class="config-help-info">
 							Default for this setting is 61440.
 	                    </span>
 					</div>
-				</div>
-				<div class="control-group">
+
 					<label class="control-label" for="nas-wsize">Wsize</label>
 					<div class="controls">
-						<input class="input-large" type="number" id="nas-wsize" name="mount[wsize]" value="$_wsize">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-mount-wsize" class="help-block-configs help-block-margin hide">
+						<input class="config-input-large" type="number" id="nas-wsize" name="mount[wsize]" value="$_wsize">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-mount-wsize" class="config-help-info">
 							Default for this setting is 65536.
 	                    </span>
 					</div>
 				</div>
-			</div>
-			<div class="control-group">
+
 				<label class="control-label" for="options">Mount options</label>
 				<div class="controls">
-					<input class="input-large" type="text" id="options" name="mount[options]" value="$_options">
-					<span id="info-mount-flags" class="help-block-configs help-block-margin">
+					<input class="config-input-large" type="text" id="options" name="mount[options]" value="$_options">
+					<span id="info-mount-flags" class="config-help-static">
 						Most mount options are auto-negotiated when the mount is attempted but in some cases auto-negotiation cannot determine the correct values and the mount may fail. In this case certain options must be explicitly added. Some of these are listed below.<br>
 						SMB: vers=x.y, sec=ntlm or sec=ntlmssp<br>
 						NFS: vers=x.y, type=nfs2, nfs3 or nfs4
@@ -158,16 +152,12 @@
 </div>
 </div>
 
-<!-- MODAL POPUPS -->
-
 <form class="form-horizontal" method="post">
-	<div id="remove-source" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="remove-source-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="remove-source" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-source-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove Music source: $_name?</h3>
 		</div>
-		<div class="modal-body">
-			<h6>Remove Music source: $_name?</h6>
-		</div>
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="delete" value="1">Yes</button>
@@ -175,43 +165,35 @@
 	</div>
 </form>
 
-<div id="moode-log" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="moode-log-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<div id="moode-log" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="moode-log-label" aria-hidden="true">
+	<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3>Moode Log</h3>
 	</div>
-
 	<div class="modal-body">
 		<pre>
 			$_moode_log
 		</pre>
 	</div>
-
 	<div class="modal-footer">
 		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <form class="form-horizontal" method="post">
-	<div id="manual-server" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="manual-server-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h6>Manual path entry</h6>
+	<div id="manual-server" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="manual-server-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Manual path entry</h3>
 		</div>
-
 		<div class="modal-body">
-			<div class="control-group">
-				<label class="control-label" for="manualserver">Path</label>
-				<div class="controls">
-					<input id="manualserver" class="input-large" type="text" pattern="^[A-Za-z0-9]{1,1}.*$" name="nas_manualserver" value="" autofocus>
-					<input id="mounttype" type="hidden" name="mounttype" value="">
-					<div id="info-manualserver" class="help-block" style="margin-top:5px;">
-						Format is Host/Share or IPaddr/Share. Up to 64 chars, leading slash / not allowed.
-                    </div>
-				</div>
+			<label class="control-label" for="manualserver">Path</label>
+			<div class="controls">
+				<input id="manualserver" class="config-input-xlarge config-modal-input" type="text" pattern="^[A-Za-z0-9]{1,1}.*$" name="nas_manualserver" value="" autofocus>
+				<input id="mounttype" type="hidden" name="mounttype" value="">
+				<div id="info-manualserver" class="help-block" style="margin-top:5px;">
+					Format is Host/Share or IPaddr/Share. Up to 64 chars, leading slash / not allowed.
+                </div>
 			</div>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="manualentry" value="1">Ok</button>

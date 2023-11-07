@@ -1,0 +1,55 @@
+---
+devices:
+  samplerate: 44100
+  chunksize: 1024
+  queuelimit: 1
+  capture:
+    type: File
+    channels: 2
+    filename: /dev/stdin
+    format: S16LE
+  playback:
+    type: Alsa
+    channels: 2
+    device: plughw:0,0
+    format: S32LE
+filters:
+  loudness:
+    parameters:
+      high_boost: 3
+      low_boost: 6
+      ramp_time: 200
+      reference_level: -6
+    type: Loudness
+mixers:
+  stereo:
+    channels:
+      in: 2
+      out: 2
+    mapping:
+    - dest: 0
+      mute: false
+      sources:
+      - channel: 0
+        gain: -3
+        inverted: false
+        mute: false
+    - dest: 1
+      mute: false
+      sources:
+      - channel: 1
+        gain: -3
+        inverted: false
+        mute: false
+pipeline:
+- name: stereo
+  type: Mixer
+- channel: 0
+  names:
+  - loudness
+  type: Filter
+- channel: 1
+  names:
+  - loudness
+  type: Filter
+...

@@ -1,0 +1,11 @@
+[Unit]
+Description=Bluealsa proxy
+Requires=bluetooth.service
+After=bluetooth.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/bluealsa -p a2dp-source -p a2dp-sink -c aptx -c aptx-hd -c ldac --sbc-quality=xq+
+
+[Install]
+WantedBy=multi-user.target

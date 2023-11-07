@@ -34,13 +34,36 @@ phpSession('open');
 // For save/remove actions
 $initiateLibraryUpd = false;
 
-// LIB CONFIG POSTS
+// LIBRARY CONFIG
 
-// Rescan mpd database
+// Re-mount NAS sources
+if (isset($_POST['remount_sources'])) {
+	$result = sqlRead('cfg_source', $dbh);
+	if ($result === true) {
+		$_SESSION['notify']['title'] = 'No music sources configured';
+	} else {
+		$resultUnmount = sourceMount('unmountall');
+		$resultMount = sourceMount('mountall');
+		$_SESSION['notify']['title'] = 'Re-mounting music sources...';
+	}
+}
+// Mount monitor
+if (isset($_POST['update_fs_mountmon'])) {
+	if (isset($_POST['fs_mountmon']) && $_POST['fs_mountmon'] != $_SESSION['fs_mountmon']) {
+		$_SESSION['fs_mountmon'] = $_POST['fs_mountmon'];
+		submitJob('fs_mountmon', $_POST['fs_mountmon'], 'Settings updated');
+	}
+}
+// Regenerate MPD database
 if (isset($_POST['regen_library'])) {
 	submitJob('regen_library', '', 'Regenerating library...', 'Stay on this screen until the progress spinner is cleared');
 }
-// Auto-update mpd db on usb insert or remove
+// Clear library cache
+if (isset($_POST['clear_libcache'])) {
+	clearLibCacheAll();
+	$_SESSION['notify']['title'] = 'Library tag cache cleared';
+}
+// Auto-update MPD database on USB insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
 	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
 		$_SESSION['notify']['title'] = 'Settings updated';
@@ -55,23 +78,6 @@ if (isset($_POST['update_cuefiles_ignore'])) {
 		submitJob('cuefiles_ignore', $_POST['cuefiles_ignore'], 'Settings updated', 'MPD restarted');
 	}
 }
-// Re-mount nas sources
-if (isset($_POST['remount_sources'])) {
-	$result = sqlRead('cfg_source', $dbh);
-	if ($result === true) {
-		$_SESSION['notify']['title'] = 'No sources configured';
-	} else {
-		$resultUnmount = sourceMount('unmountall');
-		$resultMount = sourceMount('mountall');
-		//workerLog('lib-config: remount_sources: (' . $resultUnmount . ', ' . $resultMount . ')');
-		$_SESSION['notify']['title'] = 'Re-mounting music sources...';
-	}
-}
-// Clear library cache
-if (isset($_POST['clear_libcache'])) {
-	clearLibCacheAll();
-	$_SESSION['notify']['title'] = 'Library tag cache cleared';
-}
 // Regenerate thumbnail cache
 if (isset($_POST['regen_thmcache'])) {
 	$result = sysCmd('pgrep -l thumb-gen.php');
@@ -79,18 +85,18 @@ if (isset($_POST['regen_thmcache'])) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	} else {
 		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
-		submitJob('regen_thmcache', '', 'Regenerating thumbnail cache...', '');
+		submitJob('regen_thmcache', '', 'Regenerating thumbnail cache...');
 	}
 }
 
-// SOURCE CONFIG POSTS
+// MUSIC SOURCE CONFIG
 
 // Remove source
 if (isset($_POST['delete']) && $_POST['delete'] == 1) {
 	$initiateLibraryUpd = true;
 	$_POST['mount']['action'] = 'delete';
 	$_POST['mount']['id'] = $_SESSION['src_mpid'];
-	submitJob('sourcecfg', $_POST, '', '');
+	submitJob('sourcecfg', $_POST);
 }
 // Save source
 if (isset($_POST['save']) && $_POST['save'] == 1) {
@@ -123,7 +129,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		if (empty(trim($_POST['mount']['wsize']))) {$_POST['mount']['wsize'] = 65536;}
 		if (empty(trim($_POST['mount']['options']))) {
 			if ($_POST['mount']['type'] == 'cifs') {
-				$_POST['mount']['options'] = "vers=1.0,ro,noserverino,dir_mode=0777,file_mode=0777";
+				$_POST['mount']['options'] = "vers=1.0,ro,noserverino,cache=none,dir_mode=0777,file_mode=0777";
 			} else if ($_POST['mount']['type'] == 'nfs') {
 				$_POST['mount']['options'] = "soft,timeo=10,retrans=1,ro,nolock";
 			}
@@ -144,7 +150,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$array['mount']['wsize'] = $_POST['mount']['wsize'];
 		$array['mount']['options'] = $_POST['mount']['options'];
 
-		submitJob('sourcecfg', $array, '', '');
+		submitJob('sourcecfg', $array);
 	}
 }
 // Scanner
@@ -171,7 +177,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 
 	// NFS
 	if ($_POST['mount']['type'] == 'nfs') {
-		$thisIpAddr = sysCmd('hostname -I')[0];
+		$thisIpAddr = getThisIpAddr();
 		$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
 		$port = '2049'; // NFSv4
 
@@ -195,49 +201,56 @@ if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 
 phpSession('close');
 
-waitWorker(1, 'lib-config');
+waitWorker('lib-config');
 
-// Update library if indicated after sourcecfg job completes
 if ($initiateLibraryUpd == true) {
-	//$title = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
-	//submitJob('update_library', '', $title, 'Updating library...');
 	phpSession('open');
 	$_SESSION['notify']['title'] = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
+	$_SESSION['notify']['msg'] = 'Library update required';
 	phpSession('close');
 	unset($_GET['cmd']);
 }
 
-// LIB CONFIG FORM
+// LIBRARY CONFIG
+
 if (!isset($_GET['cmd'])) {
 	$tpl = "lib-config.html";
 
 	// Display list of music sources if any
 	$mounts = sqlRead('cfg_source', $dbh);
 	foreach ($mounts as $mp) {
-		$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
-		$_mounts .= "<p><a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width:70%;background-color:#333;text-align:left;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
+		$icon = mountExists($mp['name']) ? "<i class='fa-solid fa-sharp fa-check green sx'></i>" : "<i class='fa-solid fa-sharp fa-times red sx'></i>";
+		$_mounts .= "<a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a>";
 	}
 
 	// Messages
 	if ($mounts === true) {
-		$_mounts .= '<p class="btn btn-large" style="width:70%;background-color:#333;text-align:left;">None configured</p><p></p>';
+		$_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
 	} else if ($mounts === false) {
-		$_mounts .= '<p class="btn btn-large" style="width:70%;background-color:#333;text-align:left;">Query failed</p>';
+		$_mounts .= '<span class="btn-large config-btn config-btn-music-source">Query failed</span>';
 	}
 
-	// Auto-updatedb on usb insert/remove
-	$_select['usb_auto_updatedb1'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb0\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['usb_auto_updatedb0'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb1\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+	// Mount monitor
+	$autoClick = " onchange=\"autoClick('#btn-set-fs-mountmon');\"";
+	$_select['fs_mountmon_on']  .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-1\" value=\"On\" " . (($_SESSION['fs_mountmon'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['fs_mountmon_off'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-2\" value=\"Off\" " . (($_SESSION['fs_mountmon'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-	// Ignore cuefiles on lbirary scan
-	$_select['cuefiles_ignore1'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore0\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['cuefiles_ignore0'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore1\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+	// Auto-update MPD database on USB insert/remove
+	$autoClick = " onchange=\"autoClick('#btn-set-usb-auto-updatedb');\"";
+	$_select['usb_auto_updatedb_on'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-1\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['usb_auto_updatedb_off'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-2\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+	// Ignore .cue files
+	$autoClick = " onchange=\"autoClick('#btn-set-cuefiles-ignore');\"";
+	$_select['cuefiles_ignore_on'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-1\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['cuefiles_ignore_off'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-2\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Thumbcache status
 	$_thmcache_status = $_SESSION['thmcache_status'];
 }
 
-// SOURCE CONFIG FORM
+// MUSIC SOURCE CONFIG
+
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	$tpl = 'src-config.html';
 
@@ -267,7 +280,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				if (empty($_error)) {
 					$_hide_error = 'hide';
 				} else {
-					$_moode_log = "\n" . file_get_contents(MOODE_LOG);
+					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
 				}
 			}
 		}
@@ -295,7 +308,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_userid_pwd_hide = '';
 				$_advanced_options_hide = '';
 				$_rw_size_hide = '';
-				$_options = 'ro,noserverino,dir_mode=0777,file_mode=0777';
+				$_options = 'ro,noserverino,cache=none,dir_mode=0777,file_mode=0777';
 			} else if ($_POST['mounttype'] == 'nfs' || $_POST['mount']['type'] == 'nfs') {
 				$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\" selected>NFS</option>\n";
@@ -310,7 +323,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 			// CIFS (default))
 			$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
 			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
-			$_options = 'ro,noserverino,dir_mode=0777,file_mode=0777';
+			$_options = 'ro,noserverino,cache=none,dir_mode=0777,file_mode=0777';
 		}
 
 		$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : ' '; // Space for select

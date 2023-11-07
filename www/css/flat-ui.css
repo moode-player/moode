@@ -137,8 +137,8 @@ h6 {
   .btn.btn-primary {
     background: none;
 	 color: var(--accentxts);}
-    .btn.btn-primary:hover, .btn.btn-primary:focus {
-      color: var(--accentxts); }
+    /*DELETE.btn.btn-primary:hover, .btn.btn-primary:focus {
+      color: var(--accentxts); }*/
     .btn.btn-primary:active, .btn.btn-primary.active {
       background: none;
   	  color: var(--accentxts); }

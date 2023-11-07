@@ -20,6 +20,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# $1: Loop sleep time (secs)
+if [ -z $1 ]; then WATCHDOG_SLEEP=6; else WATCHDOG_SLEEP=$1; fi
+
 # NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool
 FPM_MAX_LIMIT=64
 FPM_MIN_LIMIT=32
@@ -59,11 +62,25 @@ while true; do
 		systemctl start mpd
 	fi
 
+	# CamillaDSP volume sync
+	VOLSYNC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='camilladsp_volume_sync'")
+	VOLSYNC_RUNNING=$(pgrep -c -F /var/run/mpd2cdspvol/mpd2cdspvol.pid)
+	if [[ $VOLSYNC = "on" ]]; then
+		if [[ $VOLSYNC_RUNNING != 1 ]]; then
+			message_log "Error: CamillaDSP volume sync restarted (check MPD log for messages)"
+			systemctl start mpd2cdspvolume
+		fi
+	else
+		if [[ $VOLSYNC_RUNNING = 1 ]]; then
+			message_log "Error: CamillaDSP volume sync stopped (it should not have been been running)"
+			systemctl stop mpd2cdspvolume
+		fi
+	fi
+
 	# Wake local display on play
 	MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx'")
 	if [[ $MULTIROOM_TX = "On" ]]; then
 		LOOPBACK_HW_PARAMS=$(cat /proc/asound/card2/pcm0p/sub0/hw_params)
-
 		if [[ $LOOPBACK_HW_PARAMS = "closed" ]]; then
 			MSG="Info: Multiroom sender is not transmitting"
 		else
@@ -73,7 +90,6 @@ while true; do
 	else
 		LOCAL_CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
 		LOCAL_HW_PARAMS=$(cat /proc/asound/card$LOCAL_CARD_NUM/pcm0p/sub0/hw_params)
-
 		if [[ $LOCAL_HW_PARAMS = "closed" || $LOCAL_HW_PARAMS = "" ]]; then
 			MSG="Info: Local audio output is closed or audio device is disconnected"
 		else
@@ -85,7 +101,7 @@ while true; do
 	# DEBUG
 	#message_log "$MSG"
 
-	sleep 6
+	sleep $WATCHDOG_SLEEP
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 	MPD_RUNNING=$(pgrep -c -x mpd)
 

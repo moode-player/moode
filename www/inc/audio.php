@@ -100,14 +100,15 @@ function setAudioIn($inputSource) {
 // Set MPD and renderer audio output
 function setAudioOut($output) {
 	if ($output == 'Local') {
-		reconfMpdVolume($_SESSION['mpdmixer_local']);
+		changeMPDMixer($_SESSION['mpdmixer_local']);
 		sysCmd('/var/www/vol.sh -restore');
 		sysCmd('mpc stop');
 		sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 	} else if ($output == 'Bluetooth') {
-		if ($_SESSION['mpdmixer'] == 'none') {
-			reconfMpdVolume('software');
-			phpSession('write', 'mpdmixer_local', 'none');
+		// Save if Fixed (0dB) or Hardware
+		if ($_SESSION['mpdmixer'] == 'none' || $_SESSION['mpdmixer'] == 'hardware') {
+			phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
+			changeMPDMixer('software');
 		}
 
 		phpSession('write', 'btactive', '0');
@@ -139,6 +140,9 @@ function setAudioOut($output) {
 
 // Update ALSA audio out and Bt out confs
 function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
+	// $outputMode:
+	// - plughw	Default
+	// - hw		Direct
 	if ($_SESSION['audioout'] == 'Local') {
 		// With DSP
 		if ($_SESSION['alsaequal'] != 'Off') {
@@ -161,6 +165,9 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $outputMode . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $outputMode . ':' . $cardNum . ",0\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		}
+
+		// Update squeezelite.conf
+		cfgSqueezelite();
 	} else {
 		// Bluetooth out
 		sysCmd("sed -i '/slave.pcm/c\slave.pcm \"btstream\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
@@ -185,6 +192,7 @@ function updDspAndBtInConfs($cardNum, $newOutputMode, $oldOutputMode = '') {
 	}
 
 	// Bluetooth confs (incoming connections)
-	sysCmd("sed -i '/pcm \"" . $oldOutputMode . "/c\pcm \"" . $newOutputMode . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
-	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $newOutputMode . ':' . $cardNum . ",0' /etc/bluealsaaplay.conf");
+	// NOTE: Section removed, not needed anymore since bluealsaaplay.conf using AUDIODEV=_audioout instead of ALSA hw or plughw
+
+	// TODO: check option to determine whether _audioout or plughw is used.
 }

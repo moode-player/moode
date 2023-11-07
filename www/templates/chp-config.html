@@ -22,265 +22,250 @@
 <div class="container">
 	<h1 class="snd-config">Chip Options</h1>
 
+	<!-- Burr Brown PCM and TAS chips -->
     <form class="form-horizontal" action="" method="post">
-    	<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Update chip options.<br>
-            </span>
-		</legend>
+		<div class="control-group $_burrbrown_hide">
+			<legend>Burr Brown PCM/TAS family
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+			<p class=sub-legend>This includes many PCM5 and TAS series DAC and Amp chips</p>
 
-    	<legend>Options</legend>
-
-		<div class="$_burrbrown_hide">
-			<h4>Burr Brown PCM and TAS chips</h4>
-			<div class="control-group">
-				<label class="control-label" for="digfilter">Oversampling filter</label>
-				<div class="controls">
-					<select id="digfilter" class="input-large" name="config[digfilter]">
-						$_select[digfilter]
-					</select>
-					<span class="help-block-configs help-block-margin">
-                    	Filter is applied to PCM samples at oversampling stage just prior to sigma-delta modulator.<br>
-						Playback is automatically restarted to make filter change effective.<br>
-						NOTE: Filter is bypassed if sample rate is 384 kHz.
-                    </span>
-				</div>
+			<label class="control-label" for="digfilter">Oversampling filter</label>
+			<div class="controls">
+				<select id="digfilter" class="config-select-large" name="config[digfilter]">
+					$_select[digfilter]
+				</select>
+				<span class="config-help-static">
+                	The filter is applied to PCM samples at the oversampling stage.
+					Playback is automatically restarted to make filter change effective.
+					Note that Filter is bypassed if sample rate is 384 kHz.
+                </span>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="analoggain">Analog gain</label>
-				<div class="controls">
-					<select id="analoggain" class="input-large" name="config[analoggain]">
-						$_select[analoggain]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						 Analog gain can be set to 0 dB (2-Vrms) or –6 dB (1-Vrms).
-                    </span>
-				</div>
+			<label class="control-label" for="analoggain">Analog gain</label>
+			<div class="controls">
+				<select id="analoggain" class="config-select-large" name="config[analoggain]">
+					$_select[analoggain]
+				</select>
+				<span class="config-help-static">
+					 Analog gain can be set to 0 dB (2-Vrms) or –6 dB (1-Vrms).
+                </span>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="analogboost">Analog gain boost</label>
-				<div class="controls">
-					<select id="analogboost" class="input-large" name="config[analogboost]">
-						$_select[analogboost]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						 Analog gain boost can be set to 0 dB (normal amplitude) or .8 dB (10% boosted amplitude).
-                   </span>
-				</div>
+			<label class="control-label" for="analogboost">Analog gain boost</label>
+			<div class="controls">
+				<select id="analogboost" class="config-select-large" name="config[analogboost]">
+					$_select[analogboost]
+				</select>
+				<span class="config-help-static">
+					 Analog gain boost can be set to 0 dB (normal amplitude) or .8 dB (10% boosted amplitude).
+               </span>
 			</div>
 		</div>
 
-		<div class="$_allo_piano_hide">
-			<legend></legend>
-			<h4>Allo Piano 2.1 (Dual PCM5142)</h4>
-			<div class="control-group">
-				<label class="control-label" for="outputmode">Output mode</label>
-				<div class="controls">
-					<select id="outputmode" class="input-large" name="config[outputmode]">
-						$_select[outputmode]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Dual-Mono: main DAC outputs L ch and Sub DAC outputs R ch (L/mute mute/R).<br>
-						Dual-Stereo: both DAC's output L/R channels (L/R L/R).<br>
-						Stereo: all freq to Main L/R, Sub L/R muted<br>
-						Subwoofer: 2.1/2.2 (high freq to Main L/R, low freq to Sub L / Sub L/R)<br>
-                    </span>
-				</div>
+		<!-- Allo Piano 2.1 (Dual Burr Brown PCM5142 chips) -->
+		<div class="control-group $_allo_piano_hide">
+			<legend>Allo Piano 2.1 DAC
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+			<p class=sub-legend>These options are for the dual Burr Brown PCM5142 implementation on the Piano 2.1 board.</p>
+
+			<label class="control-label" for="outputmode">Output mode</label>
+			<div class="controls">
+				<select id="outputmode" class="config-select-large" name="config[outputmode]">
+					$_select[outputmode]
+				</select>
+				<span class="config-help-static">
+					<b>Dual-Mono: </b>Main DAC outputs L ch and Sub DAC outputs R ch (L/mute mute/R).<br>
+					<b>Dual-Stereo: </b>Both DAC's output L/R channels (L/R L/R).<br>
+					<b>Stereo: </b>All freq to Main L/R AND Sub L/R<br>
+					<b>Subwoofer: </b>2.1/2.2 (High freq to main L/R, Low freq to sub L / sub L/R)<br>
+                </span>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="lowpassfreq">Subwoofer x-over freq</label>
-				<div class="controls">
-					<select id="lowpass" class="input-large" name="config[lowpass]" $_allo_piano_submode_disabled>
-						$_select[lowpass]
-					</select>
-					&nbsp;Hz
-					<span class="help-block-configs help-block-margin">
-						Frequency range: 60 - 200 Hz.<br>
-                    </span>
-				</div>
+
+			<label class="control-label" for="lowpassfreq">Crossover freq</label>
+			<div class="controls">
+				<select id="lowpass" class="config-select-large" name="config[lowpass]" $_allo_piano_submode_disabled>
+					$_select[lowpass]
+				</select>
+				&nbsp;Hz
+				<span class="config-help-static">
+					Frequency range is 60 - 200 Hz.<br>
+                </span>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="subwvol">Subwoofer volume</label>
-				<div class="controls">
-                    <input class="input-mini" type="number" maxlength="3" min="0" max="100" id="subwvol" name="config[subwvol]" value="$subwvol" $_allo_piano_submode_disabled> %
-					<span class="help-block-configs help-block-margin">
-						Volume range: 0 - 100%.
-                    </span>
-				</div>
+
+			<label class="control-label" for="subwvol">Subwoofer volume</label>
+			<div class="controls">
+                <input class="config-imput-large" type="number" maxlength="3" min="0" max="100" id="subwvol" name="config[subwvol]" value="$subwvol" $_allo_piano_submode_disabled> %
+				<span class="config-help-static">
+					Volume range is 0 - 100%.
+                </span>
 			</div>
 		</div>
 
-		<div class="$_allo_katana_hide">
-			<h4>Allo Katana DAC (ESS Sabre ES9038Q2M)</h4>
-			<div class="control-group">
-				<label class="control-label" for="katana_osf">Oversampling filter</label>
-				<div class="controls">
-					<select id="katana_osf" class="input-large" name="config[katana_osf]">
-						$_select[katana_osf]
-					</select>
-					<span class="help-block-configs help-block-margin">
-                    	Filter is applied to PCM samples at oversampling stage.<br>
-						Playback is automatically restarted to make filter change effective.<br>
-						Default: Apodizing Fast Roll-off Filter
-                    </span>
-				</div>
+		<!-- Allo Katana DAC (ESS Sabre ES9038Q2M chip) -->
+		<div class="control-group $_allo_katana_hide">
+			<legend>Allo Katana DAC
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+			<p class=sub-legend>These options are for the ESS Sabre ES9038Q2M implementation on the Katana board.</p>
+
+			<label class="control-label" for="katana-osf">Oversampling filter</label>
+			<div class="controls">
+				<select id="katana-osf" class="config-select-large" name="config[katana_osf]">
+					$_select[katana_osf]
+				</select>
+				<span class="config-help-static">
+                	The filter is applied to PCM samples at the oversampling stage.
+					Playback is automatically restarted to make filter change effective.
+					The default is "Apodizing Fast Roll-off".
+                </span>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="katana_deemphasis">De-emphasis</label>
-				<div class="controls">
-					<select id="katana_deemphasis" class="input-large" name="config[katana_deemphasis]">
-						$_select[katana_deemphasis]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						 De-emphasis can be set to Bypass, 32 44.1 eor 48 kHz.<br>
-						 Default: Bypass
-                    </span>
-				</div>
+			<label class="control-label" for="katana-deemphasis">De-emphasis</label>
+			<div class="controls">
+				<select id="katana-deemphasis" class="config-select-large" name="config[katana_deemphasis]">
+					$_select[katana_deemphasis]
+				</select>
+				<span class="config-help-static">
+					 De-emphasis can be set to Bypass, 32, 44.1 or 48 kHz. The default is "Bypass".
+                </span>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="katana_dop">DSD over PCM (DoP)</label>
-				<div class="controls">
-					<select id="katana_dop" class="input-large" name="config[katana_dop]">
-						$_select[katana_dop]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						 Enable or disable support for DSD over PCM (DoP) protocol.<br>
-						 Default: On
-                   </span>
-				</div>
+			<label class="control-label" for="katana-dop">DSD over PCM</label>
+			<div class="controls">
+				<select id="katana-dop" class="config-select-large" name="config[katana_dop]">
+					$_select[katana_dop]
+				</select>
+				<span class="config-help-static">
+					 Turn On/Off support for DSD over PCM (DoP) protocol. The default is "On"
+               </span>
 			</div>
 		</div>
 
-		<div class="$_allo_boss2_hide">
-			<h4>Allo Boss 2 DAC</h4>
-			<div class="control-group">
-				<label class="control-label" for="boss2_deemphasis_filter">De-emphasis filter</label>
-				<div class="controls">
-					<select id="boss2_deemphasis_filter" class="input-large" name="config[boss2_deemphasis_filter]">
-						$_select[boss2_deemphasis_filter]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Default: Off
-                    </span>
-				</div>
+		<!-- Allo Boss 2 DAC (Cirrus Logic CS43198 chip) -->
+		<div class="control-group $_allo_boss2_hide">
+			<legend>Allo Boss 2 DAC
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+			<p class=sub-legend>These options are for the Cirrus Logic CS43198 implementation on the Boss 2 board.</p>
+
+			<label class="control-label" for="boss2-deemphasis-filter">De-emphasis filter</label>
+			<div class="controls">
+				<select id="boss2-deemphasis-filter" class="config-select-large" name="config[boss2_deemphasis_filter]">
+					$_select[boss2_deemphasis_filter]
+				</select>
+				<span class="config-help-static">
+					The default is "Off".
+                </span>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="boss2_filter_speed">Filter speed</label>
-				<div class="controls">
-					<select id="boss2_filter_speed" class="input-large" name="config[boss2_filter_speed]">
-						$_select[boss2_filter_speed]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Default: Fast
-                    </span>
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="boss2_highpass_filter">High pass filter</label>
-				<div class="controls">
-					<select id="boss2_highpass_filter" class="input-large" name="config[boss2_highpass_filter]">
-						$_select[boss2_highpass_filter]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Default: On
-                    </span>
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="boss2_nonosf_emulate">Non-oversample emulate</label>
-				<div class="controls">
-					<select id="boss2_nonosf_emulate" class="input-large" name="config[boss2_nonosf_emulate]">
-						$_select[boss2_nonosf_emulate]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Default: Off
-                    </span>
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="boss2_phase_compensation">Phase compensation</label>
-				<div class="controls">
-					<select id="boss2_phase_compensation" class="input-large" name="config[boss2_phase_compensation]">
-						$_select[boss2_phase_compensation]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Default: Off
-                    </span>
-				</div>
+			<label class="control-label" for="boss2-filter-speed">Filter speed</label>
+			<div class="controls">
+				<select id="boss2-filter-speed" class="config-select-large" name="config[boss2_filter_speed]">
+					$_select[boss2_filter_speed]
+				</select>
+				<span class="config-help-static">
+					The default is "Fast".
+                </span>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="boss2_hv_enable">HV enable</label>
-				<div class="controls">
-					<select id="boss2_hv_enable" class="input-large" name="config[boss2_hv_enable]">
-						$_select[boss2_hv_enable]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Analog output voltage.<br>
-						Default: 1.7 vrms
-                    </span>
-				</div>
+			<label class="control-label" for="boss2-highpass-filter">High pass filter</label>
+			<div class="controls">
+				<select id="boss2-highpass-filter" class="config-select-large" name="config[boss2_highpass_filter]">
+					$_select[boss2_highpass_filter]
+				</select>
+				<span class="config-help-static">
+					The default is "On".
+                </span>
 			</div>
+
+			<label class="control-label" for="boss2-nonosf-emulate">Emulate NOS</label>
+			<div class="controls">
+				<select id="boss2-nonosf-emulate" class="config-select-large" name="config[boss2_nonosf_emulate]">
+					$_select[boss2_nonosf_emulate]
+				</select>
+				<span class="config-help-static">
+					Emulate Non-Oversampling (NOS). The default is "Off".
+                </span>
+			</div>
+
+			<label class="control-label" for="boss2-phase-compensation">Phase compensation</label>
+			<div class="controls">
+				<select id="boss2-phase-compensation" class="config-select-large" name="config[boss2_phase_compensation]">
+					$_select[boss2_phase_compensation]
+				</select>
+				<span class="config-help-static">
+					The default is "Off".
+                </span>
+			</div>
+
+			<label class="control-label" for="boss2-hv-enable">HV enable</label>
+			<div class="controls">
+				<select id="boss2-hv-enable" class="config-select-large" name="config[boss2_hv_enable]">
+					$_select[boss2_hv_enable]
+				</select>
+				<span class="config-help-static">
+					Analog output voltage. The default is "1.7 vrms".
+                </span>
+			</div>
+
 			<!-- NOTE: this volume is automatically sync'd with master volume in worker.php event loop
-			<div class="control-group">
-				<label class="control-label" for="boss2_dop_volume">DoP volume</label>
-				<div class="controls">
-					<input class="input-mini" type="number" maxlength="3" min="0" max="100" id="subwvol" name="config[boss2_dop_volume]" value="$boss2_dop_volume"> %
-					<span class="help-block-configs help-block-margin">
-						Volume range: 0 - 100%.
-                    </span>
-				</div>
+			<label class="control-label" for="boss2-dop-volume">DoP volume</label>
+			<div class="controls">
+				<input id="boss2-dop-volume" class="config-input-large" type="number" maxlength="3" min="0" max="100" id="subwvol" name="config[boss2_dop_volume]" value="$boss2_dop_volume"> %
+				<span class="config-help-static">
+					The volume range is 0 - 100%.
+                </span>
 			</div-->
 		</div>
 
-		<div class="$_audiophonics_q2m_hide">
-			<h4>$_audiophonics_q2m_device_name</h4>
-			<div class="control-group">
-				<label class="control-label" for="audiophonics_q2m_osf">Oversampling filter</label>
-				<div class="controls">
-					<select id="audiophonics_q2m_osf" class="input-large" name="config[audiophonics_q2m_osf]">
-						$_select[audiophonics_q2m_osf]
-					</select>
-					<span class="help-block-configs help-block-margin">
-                    	Filter is applied to PCM samples at oversampling stage.<br>
-						Playback is automatically restarted to make filter change effective.<br>
-                    </span>
-				</div>
+		<!-- Audiophonics (ESS Sabre ES9028/9038 pre and post 2019 boards) -->
+		<div class="control-group $_audiophonics_q2m_hide">
+			<legend>Audiophonics ES9028/9038 DAC
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+			<p class=sub-legend>These options are for the ESS Sabre ES9028/9038 implementation on the Audiophonics board.</p>
+
+			<label class="control-label" for="audiophonics-q2m-osf">Oversampling filter</label>
+			<div class="controls">
+				<select id="audiophonics-q2m-osf" class="config-select-large" name="config[audiophonics_q2m_osf]">
+					$_select[audiophonics_q2m_osf]
+				</select>
+				<span class="config-help-static">
+                	The filter is applied to PCM samples at the oversampling stage.
+					Playback is automatically restarted to make filter change effective.
+					The default is "Apodizing Fast Roll-off".
+                </span>
 			</div>
 
 			<!-- NOTE: This option is handled in the Source Select screen -->
-			<div class="control-group hide">
-				<label class="control-label" for="audiophonics_q2m_input">DAC input</label>
-				<div class="controls">
-					<select id="audiophonics_q2m_input" class="input-large" name="config[audiophonics_q2m_input]">
-						$_select[audiophonics_q2m_input]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						Default: I2S
-                    </span>
-				</div>
+			<label class="control-label" for="audiophonics-q2m-input">DAC input</label>
+			<div class="controls">
+				<select id="audiophonics-q2m-input" class="config-select-large" name="config[audiophonics_q2m_input]">
+					$_select[audiophonics_q2m_input]
+				</select>
+				<span class="config-help-static">
+					The default is "I2S".
+                </span>
 			</div>
 		</div>
 
-		<div class="$_merus_ma12070p">
-			<h4>MERUS(tm) Amp piHAT ZW</h4>
-			<div class="control-group">
-				<label class="control-label" for="katana_osf">Power mode profile</label>
-				<div class="controls">
-					<select id="merus_ma12070p_pmp" class="input-large" name="config[merus_ma12070p_pmp]">
-						$_select[merus_ma12070p_pmp]
-					</select>
-					<span class="help-block-configs help-block-margin">
-                    	The MA12070P provides different power mode profiles for operating the internal power amplifiers. They define optimal settings of the amplifier for the intended application. The power mode profile selection affects various parameters such as switching frequency, modulation scheme and loop-gain, thus providing flexibility in design tradeoffs such as audio performance, power loss and EMI.
-                    </span>
-				</div>
+		<!-- MERUS(tm) Amp piHAT ZW (MERUS MA12070P chip) -->
+		<div class="control-group $_merus_ma12070p">
+			<legend>MERUS(tm) Amp piHAT ZW
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+			<p class=sub-legend>These options are for the MERUS MA12070P implementation on the MERUS Amp board.</p>
+
+			<label class="control-label" for="merus-ma12070p-pmp">Power mode profile</label>
+			<div class="controls">
+				<select id="merus-ma12070p-pmp" class="config-select-large" name="config[merus_ma12070p_pmp]">
+					$_select[merus_ma12070p_pmp]
+				</select>
+				<span class="config-help-static">
+                	The MA12070P provides different power mode profiles for operating the internal amplifiers. They define optimal settings of the amplifier for the intended application. The power mode profile selection affects various parameters such as switching frequency, modulation scheme and loop-gain, thus providing flexibility in design tradeoffs such as audio performance, power loss and EMI.
+                </span>
 			</div>
 		</div>
 	</form>

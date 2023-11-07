@@ -24,49 +24,40 @@
 <div class="container">
 	<h1 class="snd-config">Parametric EQ</h1>
 
-    <form class="form-horizontal" action="" method="post">
-    	<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
-  		    <a data-toggle="modal" href="#new-curvename"><button class="btn btn-medium btn-primary">New</button></a>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Update existing curve with new parameters.<br>
-				REMOVE: Delete the selected curve.<br>
-				NEW: Create copy of current with new name.<br>
-            </span>
+	<form class="form-horizontal" action="" method="post">
+    	<legend>Curve
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="legend-config btn btn-medium btn-primary">Remove</button></a>
+			<a data-toggle="modal" href="#new-curvename"><button class="legend-config btn btn-medium btn-primary">New</button></a>
+			<button class="legend-config btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fa-solid fa-sharp fa-play"></i> Test</button>
 		</legend>
 
-    	<legend>Test &nbsp;
-			<button class="btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-play" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
-				Start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable Play.<br>
-            </span>
-		</legend>
+		<p class="sub-legend">
+			The TEST button will start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable this option.
+		</p>
 
-		<select id="eqp-curve-name" class="input-large" name="curve_id">
-			$_select[curve_name]
-		</select>
-		<a aria-label="Help" class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
-		<span id="info-curve-name" class="help-block-configs help-block-margin hide">
-			Master gain: -24 to 24 dB (applies to all 12 frequency bands).<br>
-			Individual bands:<br>
-			- Frequency: 10 to 18000 Hz<br>
-			- Q: 0.06 to 8 (higher values correspond to increasing resonance)<br>
-			- Gain: -24 to 24 dB<br>
-        </span>
-
-		<br>
+		<div class="control-group">
+			<select id="eqp-curve-name" class="config-select-large" name="curve_id">
+				$_select[curve_name]
+			</select>
+			<a aria-label="Help" class="config-info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+			<span id="info-curve-name" class="config-help-info">
+				Master gain: -24 to 24 dB (applies to all 12 frequency bands).<br>
+				Individual bands:<br>
+				- Frequency: 10 to 18000 Hz<br>
+				- Q: 0.06 to 8 (higher values correspond to increasing resonance)<br>
+				- Gain: -24 to 24 dB<br>
+	        </span>
+		</div>
 
 		<div id="equalizer" class="sliderbank">
 			<div>Master Gain</div>
-			<button id="master-gain-dn" class="btn" href="#notarget">-</button>
+			<button id="master-gain-dn" class="btn" href="#notarget">&minus;</button>
 			<input id="master-gain-slider" class="hslide2" type="range" min="-24" max="24" step=".1" name="master_gain" value="$_select[master_gain]" oninput="updEqpMasterGain('#master-gain', this.value)">
-			<button id="master-gain-up" class="btn" href="#notarget">+</button>
+			<button id="master-gain-up" class="btn" href="#notarget">&plus;</button>
 			<div id="master-gain">$_select[master_gain] dB</div>
 
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1"></div>
 				<div class="eqp-col1">Enabled</div>
 				<div class="eqp-col1">Freq (Hz)</div>
@@ -74,86 +65,86 @@
 				<div class="eqp-col1">Gain (dB)</div>
 			</div>
 
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 1</div>
-				<div class="eqp-col1"><select id="band1-enabled" class="select-mini eqp-select" name="band1_enabled" style="width:71.5px;">$_select[band1_enabled]</select></div>
+				<div class="eqp-col1"><select id="band1-enabled" class="select-mini eqp-select eqp-select-margin" name="band1_enabled">$_select[band1_enabled]</select></div>
 				<div class="eqp-col1"><input id="band1-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band1_freq" value="$_select[band1_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band1-q" name="band1_q" value="$_select[band1_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band1_gain" value="$_select[band1_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 2</div>
-				<div class="eqp-col1"><select id="band2-enabled" class="select-mini eqp-select" name="band2_enabled" style="width:71.5px;">$_select[band2_enabled]</select></div>
+				<div class="eqp-col1"><select id="band2-enabled" class="select-mini eqp-select eqp-select-margin" name="band2_enabled">$_select[band2_enabled]</select></div>
 				<div class="eqp-col1"><input id="band2-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band2_freq" value="$_select[band2_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band2-q" name="band2_q" value="$_select[band2_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band2-gain" name="band2_gain" value="$_select[band2_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 3</div>
-				<div class="eqp-col1"><select id="band3-enabled" class="select-mini eqp-select" name="band3_enabled" style="width:71.5px;">$_select[band3_enabled]</select></div>
+				<div class="eqp-col1"><select id="band3-enabled" class="select-mini eqp-select eqp-select-margin" name="band3_enabled">$_select[band3_enabled]</select></div>
 				<div class="eqp-col1"><input id="band3-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band3_freq" value="$_select[band3_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band3-q" name="band3_q" value="$_select[band3_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band3-gain" name="band3_gain" value="$_select[band3_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 4</div>
-				<div class="eqp-col1"><select id="band4-enabled" class="select-mini eqp-select" name="band4_enabled" style="width:71.5px;">$_select[band4_enabled]</select></div>
+				<div class="eqp-col1"><select id="band4-enabled" class="select-mini eqp-select eqp-select-margin" name="band4_enabled" style="width:71.5px;">$_select[band4_enabled]</select></div>
 				<div class="eqp-col1"><input id="band4-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band4_freq" value="$_select[band4_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band4-q" name="band4_q" value="$_select[band4_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band4-gain" name="band4_gain" value="$_select[band4_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 5</div>
-				<div class="eqp-col1"><select id="band5-enabled" class="select-mini eqp-select" name="band5_enabled" style="width:71.5px;">$_select[band5_enabled]</select></div>
+				<div class="eqp-col1"><select id="band5-enabled" class="select-mini eqp-select eqp-select-margin" name="band5_enabled" style="width:71.5px;">$_select[band5_enabled]</select></div>
 				<div class="eqp-col1"><input id="band5-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band5_freq" value="$_select[band5_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band5-q" name="band5_q" value="$_select[band5_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band5-gain" name="band5_gain" value="$_select[band5_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 6</div>
-				<div class="eqp-col1"><select id="band6-enabled" class="select-mini eqp-select" name="band6_enabled" style="width:71.5px;">$_select[band6_enabled]</select></div>
+				<div class="eqp-col1"><select id="band6-enabled" class="select-mini eqp-select eqp-select-margin" name="band6_enabled" style="width:71.5px;">$_select[band6_enabled]</select></div>
 				<div class="eqp-col1"><input id="band6-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band6_freq" value="$_select[band6_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band6-q" name="band6_q" value="$_select[band6_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band6-gain" name="band6_gain" value="$_select[band6_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 7</div>
-				<div class="eqp-col1"><select id="band7-enabled" class="select-mini eqp-select" name="band7_enabled" style="width:71.5px;">$_select[band7_enabled]</select></div>
+				<div class="eqp-col1"><select id="band7-enabled" class="select-mini eqp-select eqp-select-margin" name="band7_enabled" style="width:71.5px;">$_select[band7_enabled]</select></div>
 				<div class="eqp-col1"><input id="band7-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band7_freq" value="$_select[band7_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band7-q" name="band7_q" value="$_select[band7_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band7-gain" name="band7_gain" value="$_select[band7_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 8</div>
-				<div class="eqp-col1"><select id="band8-enabled" class="select-mini eqp-select" name="band8_enabled" style="width:71.5px;">$_select[band8_enabled]</select></div>
+				<div class="eqp-col1"><select id="band8-enabled" class="select-mini eqp-select eqp-select-margin" name="band8_enabled" style="width:71.5px;">$_select[band8_enabled]</select></div>
 				<div class="eqp-col1"><input id="band8-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band8_freq" value="$_select[band8_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band8-q" name="band8_q" value="$_select[band8_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band8-gain" name="band8_gain" value="$_select[band8_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 9</div>
-				<div class="eqp-col1"><select id="band9-enabled" class="select-mini eqp-select" name="band9_enabled" style="width:71.5px;">$_select[band9_enabled]</select></div>
+				<div class="eqp-col1"><select id="band9-enabled" class="select-mini eqp-select eqp-select-margin" name="band9_enabled" style="width:71.5px;">$_select[band9_enabled]</select></div>
 				<div class="eqp-col1"><input id="band9-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band9_freq" value="$_select[band9_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band9-q" name="band9_q" value="$_select[band9_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band9-gain" name="band9_gain" value="$_select[band9_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 10</div>
-				<div class="eqp-col1"><select id="band10-enabled" class="select-mini eqp-select" name="band10_enabled" style="width:71.5px;">$_select[band10_enabled]</select></div>
+				<div class="eqp-col1"><select id="band10-enabled" class="select-mini eqp-select eqp-select-margin" name="band10_enabled" style="width:71.5px;">$_select[band10_enabled]</select></div>
 				<div class="eqp-col1"><input id="band10-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band10_freq" value="$_select[band10_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band10-q" name="band10_q" value="$_select[band10_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band10-gain" name="band10_gain" value="$_select[band10_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 11</div>
-				<div class="eqp-col1"><select id="band11-enabled" class="select-mini eqp-select" name="band11_enabled" style="width:71.5px;">$_select[band11_enabled]</select></div>
+				<div class="eqp-col1"><select id="band11-enabled" class="select-mini eqp-select eqp-select-margin" name="band11_enabled" style="width:71.5px;">$_select[band11_enabled]</select></div>
 				<div class="eqp-col1"><input id="band11-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band11_freq" value="$_select[band11_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band11-q" name="band11_q" value="$_select[band11_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band11-gain" name="band11_gain" value="$_select[band11_gain]"></div>
 			</div>
-			<div class="equ-input-ctls">
+			<div>
 				<div class="eqp-col1">Band 12</div>
-				<div class="eqp-col1"><select id="band12-enabled" class="select-mini eqp-select" name="band12_enabled" style="width:71.5px;">$_select[band12_enabled]</select></div>
+				<div class="eqp-col1"><select id="band12-enabled" class="select-mini eqp-select eqp-select-margin" name="band12_enabled" style="width:71.5px;">$_select[band12_enabled]</select></div>
 				<div class="eqp-col1"><input id="band12-freq-input" class="input-mini eqp-input" type="number" min="10" max="18000" step="1" name="band12_freq" value="$_select[band12_freq]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".06" max="8" step=".001" id="band12-q" name="band12_q" value="$_select[band12_q]"></div>
 				<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band12-gain" name="band12_gain" value="$_select[band12_gain]"></div>
@@ -163,23 +154,18 @@
 </div>
 </div>
 
-<!-- MODAL POPUPS -->
-
 <form class="form-horizontal" method="post">
-	<div id="rm-curve" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
+	<div id="rm-curve" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
 		<input type="hidden" name="curve_id" value="$_selected_curve_id"/>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove EQ curve</h3>
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove EQ curve?</h3>
 		</div>
-
 		<div class="modal-body txtmid">
 			<h4 id="rmcurve">$_selected_curve</h4>
-			<span class="help-block" style="margin-bottom:5px;">
+			<span class="config-help-static">
 				$_disable_rm_msg
 			</span>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="rmcurve" value="1" $_disable_rm>Yes</button>
@@ -188,28 +174,25 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="new-curvename" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-curvename-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Enter new curve name</h3>
+	<div id="new-curvename" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="new-curvename-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Create new curve</h3>
 		</div>
-
 		<div class="modal-body">
 			<div class="control-group">
-				<label class="control-label" for="new-curvename">Curve name</label>
+				<label class="control-label" for="new-curvename-input">Curve name</label>
 				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9 .\-]{1,32}" id="new-curvename-input" name="new-curvename" value="" autofocus>
+					<input id="new-curvename-input" class="config-input-large config-modal-input" type="text" pattern="[A-Za-z0-9 .\-]{1,32}" name="new_curve_name" value="" autofocus>
 					<input type="hidden" name="curve_id" value="$_selected_curve_id"/>
-					<span class="help-block help-block-modal">
-						Length 1-32 chars, alphanumeric, space, period and dash are allowed.
+					<span class="config-help-static">
+						Length 1-32 chars, space, period and dash are allowed.
 					</span>
 				</div>
 			</div>
 		</div>
-
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="newcurvename" value="1">Ok</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="newcurvename" value="1">Create</button>
 		</div>
 	</div>
 </form>

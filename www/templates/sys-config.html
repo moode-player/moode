@@ -23,130 +23,153 @@
 	<h1 class="sys-config">System</h1>
 
 	<form class="form-horizontal" method="post">
-	    <p style="margin-top:1.5em;">
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="checkfor_update" value="novalue">Check</button>&nbsp;for software update<br>
-			$_available_upd
-	    </p>
-
-		<legend>General</legend>
 		<div class="control-group">
-			<label class="control-label" for="timezone">Timezone</label>
-			<div class="controls">
-				<select id="timezone" class="input-large" name="timezone">
-					$_timezone[timezone]
-				</select>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_time_zone" value="novalue" style="margin-left: 8px;">Set</button>
-			</div>
-		</div>
-
-		<div class="control-group" >
-            <label class="control-label" for="hostname">Host name</label>
-            <div class="controls">
-                <input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_host_name" value="novalue">Set</button>
-				<span class="help-block-configs help-block-margin">
-					Length 3-63 chars, alphanumeric and hyphen allowed.
-				</span>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="keyboard">Keyboard layout</label>
-            <div class="controls">
-                <select id="keyboard" class="input-large" name="keyboard">
-                    $_keyboard[keyboard]
-                </select>
-                <button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_keyboard" value="novalue" style="margin-left: 8px;">Set</button>
-            </div>
-        </div>
-
-		<div class="control-group" >
-            <label class="control-label" for="browsertitle">Browser title</label>
-            <div class="controls">
-                <input class="input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_browser_title" value="novalue">Set</button>
-            </div>
-        </div>
-
-		<legend>Startup options</legend>
-		<div class="control-group" >
-			<label class="control-label">Auto check update</label>
+			<legend>Software update</legend>
+			<label class="control-label">Notification</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-updater-auto-check2">ON</label>
-					$_select[updater_auto_check1]
-					<label class="toggle-radio" for="toggle-updater-auto-check1">OFF</label>
-					$_select[updater_auto_check0]
+					<label class="toggle-radio toggle-updater-auto-check" for="toggle-updater-auto-check-2">ON</label>$_select[updater_auto_check_on]
+					<label class="toggle-radio toggle-updater-auto-check" for="toggle-updater-auto-check-1">OFF</label>$_select[updater_auto_check_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_updater_auto_check" value="novalue">Set</button>
-				</div>
-				<span class="help-block-configs help-block-margin2">
-					Automatically check for a software update during startup and display a notification in Playback view.
+				<button id="btn-set-updater-auto-check" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_updater_auto_check" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-update-updater-auto-check" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-update-updater-auto-check" class="config-help-info">
+					Display a notification badge in Playback view if an available software update was detected during startup.
 				</span>
 			</div>
-        </div>
+
+			<label class="control-label">Available</label>
+			<div class="controls">
+				<button class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="checkfor_update" value="novalue">Check</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-checkfor-update" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				$_available_upd
+				<span id="info-checkfor-update" class="config-help-info">
+					Check for an available software update.
+				</span>
+		    </div>
+
+			<label class="control-label">Status</label>
+			<div class="controls">
+				<a href="sys-status.php"><button class="btn btn-medium btn-primary config-btn">View</button></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-view-status" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-view-status" class="config-help-info">
+					View progress of the active in-place update or if the update has previously been applied view the update log.
+				</span>
+		    </div>
+		</div>
 
 		<div class="control-group">
+			<legend>General</legend>
+			<label class="control-label" for="timezone">Timezone</label>
+			<div class="controls">
+				<select id="timezone" class="config-select-large" name="timezone">
+					$_timezone[timezone]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_time_zone" value="novalue">Set</button>
+			</div>
+
+            <label class="control-label" for="hostname">Host/player name</label>
+            <div class="controls">
+                <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue">Set</button>
+				<span class="config-help-info">
+					Length 3-63 characters, alphanumeric and hyphen allowed. This is the name that will appear on the network.
+				</span>
+            </div>
+
+            <label class="control-label" for="keyboard">Keyboard layout</label>
+            <div class="controls">
+                <select id="keyboard" class="config-select-large" name="keyboard">
+                    $_keyboard[keyboard]
+                </select>
+                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue">Set</button>
+            </div>
+
+            <label class="control-label" for="browsertitle">Browser title</label>
+            <div class="controls">
+                <input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue">Set</button>
+            </div>
+		</div>
+
+		<div class="control-group">
+			<legend>Startup options</legend>
+			<label class="control-label" for="worker-responsiveness">Worker response</label>
+			<div class="controls">
+				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness">
+					$_select[worker_responsiveness]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-worker-responsiveness" class="config-help-info">
+					<b>Default:</b> Suitable for all Raspberry Pi models.<br>
+					<b>Boosted:</b> Best for multi-core Raspberry Pi's. This provides more responsiveness when using the Configuration screens or making other setting changes that require processing by the Worker daemon.
+				</span>
+			</div>
+
 			<label class="control-label" for="cpugov">CPU governor</label>
 			<div class="controls">
-				<select id="cpugov" class="input-large" name="cpugov">
+				<select id="cpugov" class="config-select-large" name="cpugov">
 					$_select[cpugov]
 				</select>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_cpugov" value="novalue">Set</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-cpugov" class="help-block-configs help-block-margin hide">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cpugov" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-cpugov" class="config-help-info">
 					<b>On-demand:</b> Scale CPU frequency from min to max based on load.<br>
-					<b>Performance:</b> Run the CPU at max frequency.<br>
+					<b>Performance:</b> Run the CPU at max frequency.
 				</span>
 			</div>
-		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="usb_auto_mounter">USB auto-mounter</label>
+			<label class="control-label" for="usb-auto-mounter">USB auto-mount</label>
 			<div class="controls">
-				<select id="usb_auto_mounter" class="input-large" name="usb_auto_mounter">
+				<select id="usb-auto-mounter" class="config-select-large" name="usb_auto_mounter">
 					$_select[usb_auto_mounter]
 				</select>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_usb_auto_mounter" value="novalue">Set</button>
-				<span class="help-block-configs help-block-margin">
-					NOTE: Select Devmon for older ARMv6 platforms (Pi-1B, Pi-Zero/W).
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_usb_auto_mounter" value="novalue">Set</button>
+				<span class="config-help-static">
+					Select Devmon for older ARMv6 platforms Pi-1B, Pi-Zero, and Pi-Zero W.
 				</span>
 			</div>
-		</div>
 
-		<div class="control-group">
+			<div class="$_usbboot_hide">
+				<label class="control-label">USB boot (Pi-3*)</label>
+				<div class="controls">
+					<a href="#enable-usbboot" data-toggle="modal"><button class="btn btn-primary btn-medium config-btn" $_usbboot_btn_disable>Enable</button></a>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-usb-boot" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-usb-boot" class="config-help-info config-help-no-margin">
+						For Pi-3B, 3B+, and 3A+ this option programs OTP memory to enable booting from USB drive. After OTP is updated the system can boot from either uSD card or USB drive.
+	                </span>
+					<span class="config-help-static">
+						$_usbboot_msg
+					</span>
+				</div>
+			</div>
+
+			<div class="config-horiz-rule"></div>
+
 			<div class="$_wifibt_hide">
-				<label class="control-label">Integrated WiFi adapter</label>
+				<label class="control-label">WiFi</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="togglep3wifi2">ON</label>
-						$_select[p3wifi1]
-						<label class="toggle-radio" for="togglep3wifi1">OFF</label>
-						$_select[p3wifi0]
+						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-2">ON </label>$_select[p3wifi_on]
+						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-1">OFF</label>$_select[p3wifi_off]
 					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-p3wifi" class="help-block-configs help-block-margin2 hide">
+					<button id="btn-set-p3wifi" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-p3wifi" class="config-help-info">
 						The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
                     </span>
 				</div>
 
-				<label class="control-label">Integrated BT adapter</label>
+				<label class="control-label">Bluetooth</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="togglep3bt2">ON</label>
-						$_select[p3bt1]
-						<label class="toggle-radio" for="togglep3bt1">OFF</label>
-						$_select[p3bt0]
+						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-2">ON </label>$_select[p3bt_on]
+						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-1">OFF</label>$_select[p3bt_off]
 					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-p3bt" class="help-block-configs help-block-margin2 hide">
+					<button id="btn-set-p3bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-p3bt" class="config-help-info">
 						The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
                     </span>
 				</div>
@@ -155,33 +178,25 @@
 			<label class="control-label">HDMI port</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="togglehdmiport2">ON</label>
-					$_select[hdmiport1]
-					<label class="toggle-radio" for="togglehdmiport1">OFF</label>
-					$_select[hdmiport0]
+					<label class="toggle-radio toggle-hdmiport" for="toggle-hdmiport-2">ON </label>$_select[hdmiport_on]
+					<label class="toggle-radio toggle-hdmiport" for="toggle-hdmiport-1">OFF</label>$_select[hdmiport_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_hdmiport" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-hdmiport" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span id="info-hdmiport" class="help-block-configs help-block-margin2 hide">
-					Leaving the HDMI port ON uses +25 mA and lengthens boot time.<br>
+				<button id="btn-set-hdmiport" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmiport" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmiport" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmiport" class="config-help-info">
+					Leaving the HDMI port ON uses +25 mA and lengthens boot time.
                 </span>
 			</div>
 
 			<label class="control-label">LED0 (Activity)</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle_actled2">ON</label>
-					$_select[actled1]
-					<label class="toggle-radio" for="toggle_actled1">OFF</label>
-					$_select[actled0]
+					<label class="toggle-radio toggle-actled" for="toggle-actled-2">ON </label>$_select[actled_on]
+					<label class="toggle-radio toggle-actled" for="toggle-actled-1">OFF</label>$_select[actled_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-actled" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span id="info-actled" class="help-block-configs help-block-margin2 hide">
+				<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-actled" class="config-help-info">
 					LED0 default trigger is SDCard (mmc0) activity.
                 </span>
 			</div>
@@ -190,417 +205,252 @@
 				<label class="control-label">LED1 (Power)</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggle_pwrled2">ON</label>
-						$_select[pwrled1]
-						<label class="toggle-radio" for="toggle_pwrled1">OFF</label>
-						$_select[pwrled0]
+						<label class="toggle-radio toggle-pwrled" for="toggle-pwrled-2">ON </label>$_select[pwrled_on]
+						<label class="toggle-radio toggle-pwrled" for="toggle-pwrled-1">OFF</label>$_select[pwrled_off]
 					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-pwrled" class="help-block-configs help-block-margin2 hide">
+					<button id="btn-set-pwrled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-pwrled" class="config-help-info">
 						LED1 default trigger is default-on for Power.
                     </span>
 				</div>
 			</div>
 
-			<label class="control-label" for="ipaddr_timeout">IP addr timeout (secs)</label>
+			<div class="config-horiz-rule"></div>
+
+			<label class="control-label" for="ipaddr-timeout">Address timeout</label>
 			<div class="controls">
-				<select id="ipaddr_timeout" class="input-large" name="ipaddr_timeout">
+				<select id="ipaddr-timeout" class="config-select-large" name="ipaddr_timeout">
 					$_select[ipaddr_timeout]
 				</select>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue">Set</button>
-				<span class="help-block-configs help-block-margin">
-					Wait for up to the specified number of seconds for an IP address to be assigned to an adapter during moOde startup.<br>
-				    NOTE: AP mode will be started if the WLAN adapter has not been assigned an IP address providing an IP address has not also been assigned to the Ethernet adapter.
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue">Set</button>
+				<span class="config-help-static">
+					Wait up to the specified number of seconds for an IP address to be assigned to an adapter during startup.
+				    AP mode will be started if neither WiFi nor Ethernet adapters have been assigned an IP address.
 				</span>
 			</div>
-		</div>
 
-		<div class="control-group">
-			<label class="control-label">Wait for Ethernet addr</label>
+			<label class="control-label">Wait for Ethernet</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggleeth0chk2">YES</label>
-					$_select[eth0chk1]
-					<label class="toggle-radio" for="toggleeth0chk1">NO</label>
-					$_select[eth0chk0]
+					<label class="toggle-radio toggle-eth0chk" for="toggle-eth0chk-2">ON </label>$_select[eth0chk_on]
+					<label class="toggle-radio toggle-eth0chk" for="toggle-eth0chk-1">OFF</label>$_select[eth0chk_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span class="help-block-configs help-block-margin" style="margin-top: -10px; padding-top: 0px;">
-					Wait for up to "IP addr timeout" seconds for an address to be assigned to the Ethernet adapter.<br>
-					Default is NO which will skip the IP address check for the Ethernet adapter and shorten boot time.
+				<button id="btn-set-eth0chk" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-eth0chk" class="config-help-info">
+					Wait for up to "Address timeout" seconds for an address to be assigned to the Ethernet adapter.
+					If set to NO the address check will be skipped and startup time will be reduced.
 				</span>
 			</div>
-		</div>
 
-		<div class="$_usbboot_hide">
-			<div class="control-group">
-				<label class="control-label">USB boot</label>
-				<div class="controls">
-					<a href="#enable-usbboot" data-toggle="modal"><button class="btn btn-primary btn-small" style="margin-top:0px;">Enable</button></a>
-					<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-usb-boot" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span class="help-block-configs help-block-margin" style="margin-top: 0px; padding-top: 0px;">
-						$_usbboot_msg
-					</span>
-					<span id="info-usb-boot" class="help-block-configs help-block-margin hide">
-						Programs Pi-3B OTP memory to enable booting from USB drive.<br>
-						- This is a pernament modification and only needs to be done once.<br>
-						- After OTP is updated, system can boot from SD card or USB drive.
-                    </span>
-				</div>
-			</div>
-		</div>
-
-		<div class="$_feat_localui">
-			<legend id="local-display">Local Display</legend>
-			<div class="control-group">
-				<label class="control-label">Display</label>
+			<!-- TEST: HTTPS-only mode -->
+			<div class="$_feat_https">
+				<div class="config-horiz-rule"></div>
+				<label class="control-label">HTTPS-Only Mode</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="togglelocalui2">ON</label>
-						$_select[localui1]
-						<label class="toggle-radio" for="togglelocalui1">OFF</label>
-						$_select[localui0]
+						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-2">ON </label>$_select[nginx_https_only_on]
+						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
 					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-	                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-localui" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-localui" class="help-block-configs help-block-margin2 hide">
-						Display moOde UI on locally attached display.
-                    </span>
-                </div>
-
-				<label class="control-label">Wake display on play</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_wake_display2">ON</label>
-						$_select[wake_display1]
-						<label class="toggle-radio" for="toggle_wake_display1">OFF</label>
-						$_select[wake_display0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-	                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info_wake_display" class="help-block-configs help-block-margin2 hide">
-						Wake the display when audio starts playing.
-                    </span>
-                </div>
-
-				<label class="control-label">Mouse cursor</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggletouchscn2">ON</label>
-						$_select[touchscn1]
-						<label class="toggle-radio" for="toggletouchscn1">OFF</label>
-						$_select[touchscn0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-	                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-touchscn" class="help-block-configs help-block-margin2 hide">
-						This prevents the cursor from showing on the display or Touch screen<br>
-                    </span>
-                </div>
-
-				<label class="control-label" for="scnblank">Screen blank</label>
-				<div class="controls">
-					<select id="scnblank" class="input-large" name="scnblank">
-						$_select[scnblank]
-					</select>
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_scnblank" value="novalue" style="margin-left: 8px;" $_localui_btn_disable>Set</button>
-				</div>
-            </div>
-
-			<div class="control-group" style="margin-top:1em;">
-				<label class="control-label" for="scnbrightness">Brightness</label>
-				<div class="controls">
-                	<input class="input-mini" style="margin-right: 14px;" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_scnbrightness" value="novalue" style="margin-left: 8px;" $_localui_btn_disable>Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-brightness" class="help-block-configs help-block-margin hide">
-						Backlight brightness for 7" Pi Touch. Values are 0 - 255.
-                    </span>
-				</div>
-            </div>
-
-			<div class="control-group">
-				<label class="control-label" for="pixel_aspect_ratio">Pixel aspect ratio</label>
-				<div class="controls">
-					<select id="pixel_aspect_ratio" class="input-large" name="pixel_aspect_ratio">
-						$_select[pixel_aspect_ratio]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" style="margin-left: 8px;" $_localui_btn_disable>Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_pixel_aspect_ratio" class="help-block-configs help-block-margin hide">
-						Rectangular (default) or square pixels for 7" Pi Touch.
-                    </span>
-				</div>
-            </div>
-
-			<div class="control-group">
-				<label class="control-label" for="scnrotate">Rotate screen</label>
-				<div class="controls">
-					<select id="scnrotate" class="input-large" name="scnrotate">
-						$_select[scnrotate]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_scnrotate" value="novalue" style="margin-left: 8px;" $_localui_btn_disable>Set</button>
-				</div>
-            </div>
-
-			<div class="control-group">
-				<label class="control-label">On-screen keyboard</label>
-				<div class="controls">
-					<button id="btn-on-screen-kbd" class="btn btn-primary btn-small" style="margin-top:0px;">Enable</button>
-					<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-on-screen-kbd" class="help-block-configs help-block-margin hide">
-						On-screen popup keyboard by @Nutul.
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<div class="controls">
-					<div>
-						<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary" style="margin-top:0;" $_localui_btn_disable>Restart</button></a>&nbsp;Local UI<br>
-					</div>
-					<span class="help-block-configs help-block-margin">
-						NOTE: Restarting clears the chromium browser cache.
+					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
+					<span class="config-help-static">
+						Secure the communication channel between your Web Browser and moOde using the HTTPS protocol and a self-signed security certificate.
+						Since a self-signed certificate is being used your Browser will display a warning that the site could not be verified as a trusted website.
+						These easy to follow <a class="target-blank-link" href="https://it.nmu.edu/docs/adding-security-exception-your-browser" target="_blank">instructions</a>
+						explain how to suppress the warning for Chrome, Edge, Firefox and Safari Browsers.
 					</span>
 				</div>
 			</div>
 		</div>
 
-		<legend>File sharing</legend>
 		<div class="control-group">
+			<legend>File sharing</legend>
+			<p class="sub-legend">
+				These services enable files that reside on this host to be accessible over the network by other hosts.
+			</p>
+
 			<label class="control-label">SMB (Samba)</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-fs-smb2">ON</label>
-					$_select[fs_smb1]
-					<label class="toggle-radio" for="toggle-fs-smb1">OFF</label>
-					$_select[fs_smb0]
+					<label class="toggle-radio toggle-fs-smb" for="toggle-fs-smb-2">ON </label>$_select[fs_smb_on]
+					<label class="toggle-radio toggle-fs-smb" for="toggle-fs-smb-1">OFF</label>$_select[fs_smb_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_fs_smb" value="novalue">Set</button>
-				</div>
-				<span class="help-block-configs help-block-margin2">
-					Server Message Block (SMB) allows directories and files to be shared over a network with Windows, Mac and Linux clients.
-					Share points for NAS, SDCard, Playlists and USB storage devices are automatically created.
+				<button id="btn-set-fs-smb" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_smb" value="novalue">Set</button>
+				<span class="config-help-static">
+					Server Message Block (SMB) allows files to be shared over a network with Windows, Mac and Linux clients.<br>
+					Shares are automatically created for NAS, SDCard, Playlists and USB storage devices.
                 </span>
 			</div>
 
-			<div class="config-horiz-rule" style="margin-top:1.15em;"></div>
+			<div class="config-horiz-rule"></div>
 
 			<label class="control-label">NFS</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggle-fs-nfs2">ON</label>
-					$_select[fs_nfs1]
-					<label class="toggle-radio" for="toggle-fs-nfs1">OFF</label>
-					$_select[fs_nfs0]
+					<label class="toggle-radio toggle-fs-nfs" for="toggle-fs-nfs-2">ON </label>$_select[fs_nfs_on]
+					<label class="toggle-radio toggle-fs-nfs" for="toggle-fs-nfs-1">OFF</label>$_select[fs_nfs_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_fs_nfs" value="novalue">Set</button>
-				</div>
-				<span class="help-block-configs help-block-margin2">
-					Network File Sharing (NFS) allows directories and files to be shared over a network with Linux clients.
-					USB storage devices are automatically added to or removed from /etc/exports.<br>
-					NOTE: Only Ext4 and Fat32 (VFAT) formats are recommended. Other formats may not work with NFS server.
+				<button id="btn-set-fs-nfs" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs" value="novalue">Set</button>
+				<span class="config-help-static">
+					Network File Sharing (NFS) allows files to be shared over a network with Linux clients.<br>
+					<b>Exports: </b> USB storage devices mounted to /media are automatically maintained in /etc/exports. Other storage locations must be manualy added.<br>
+					<b>Formats: </b> Only Ext4 and Fat32 (VFAT) file system formats are recommended.
 				</span>
 			</div>
 
 			<label class="control-label" for="fs-nfs-access">Access</label>
 			<div class="controls">
-				<input id="fs-nfs-access" class="input-large" type="text" name="fs_nfs_access" value="$_select[fs_nfs_access]" placeholder="IP address or subnet">
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_fs_nfs_access" value="novalue">Set</button>
-				<span class="help-block-configs help-block-margin3">
-					Specify a client IP address or subnet address that is allowed access to resources exported via NFS. Use Classless Inter-Domain Routing (CIDR) notation for the address (/24 for subnet and /32 for IP address).<br>
+				<input id="fs-nfs-access" class="input-large config-input-large" type="text" name="fs_nfs_access" value="$_select[fs_nfs_access]" placeholder="IP address or subnet">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_access" value="novalue">Set</button>
+				<span class="config-help-static">
+					Specify a client IP or subnet address that is allowed access to NFS exports.<br>
+					Use Classless Inter-Domain Routing (CIDR) notation (/24 for subnet, /32 for IP address).<br>
 					This subnet is: <b>$_this_subnet</b>
 				</span>
 			</div>
 
 			<label class="control-label" for="fs-nfs-options">Options</label>
 			<div class="controls">
-				<input id="fs-nfs-options" class="input-large" type="text" name="fs_nfs_options" value="$_select[fs_nfs_options]" required>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_fs_nfs_options" value="novalue">Set</button>
-				<span class="help-block-configs help-block-margin3">
+				<input id="fs-nfs-options" class="input-large config-input-large" type="text" name="fs_nfs_options" value="$_select[fs_nfs_options]" required>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_options" value="novalue">Set</button>
+				<span class="config-help-static">
 					These options determine the permissions granted to connected clients.<br>
 					Default options: rw,sync,no_subtree_check,no_root_squash
 				</span>
 			</div>
 
-			<div class="config-horiz-rule" style="margin-top:1.15em;"></div>
+			<div class="config-horiz-rule"></div>
 
-			<label class="control-label">Mount monitor</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio" for="toggle-fs-mount-monitor2">ON</label>
-					$_select[fs_mountmon1]
-					<label class="toggle-radio" for="toggle-fs-mount-monitor1">OFF</label>
-					$_select[fs_mountmon0]
-				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_fs_mountmon" value="novalue">Set</button>
-				</div>
-				<span class="help-block-configs help-block-margin2">
-					The Mount monitor is for clients that mount NAS hosts. It can help automatically restore mounts after NAS reboots, network interruptions or file sharing service interruptions.<br>
-					NOTE: Due to the protocols used in SMB and NFS file sharing there can sometimes be long timeouts when checking a mount or performing a re-mount.
-					Refer to the file /var/log/mountmon.log when Debug logging is On.
-				</span>
-			</div>
-		</div>
-
-		<legend id="local-services">Local Services</legend>
-		<div class="control-group">
-			<label class="control-label">Metadata file</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio" for="toggleextmeta2">ON</label>
-					$_select[extmeta1]
-					<label class="toggle-radio" for="toggleextmeta1">OFF</label>
-					$_select[extmeta0]
-				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_extmeta" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-extmeta" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span id="info-extmeta" class="help-block-configs help-block-margin2 hide">
-					Maintain enhanced metadata for the currently playing song or station in the /var/local/www/currentsong.txt file.<br>
-					NOTE: This file is updated within three seconds after any metadata updates on the UI.
-                </span>
-			</div>
-
-			<label class="control-label">LCD update engine</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio" for="togglelcdup2">ON</label>
-					$_select[lcdup1]
-					<label class="toggle-radio" for="togglelcdup1">OFF</label>
-					$_select[lcdup0]
-				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span id="info-lcdup" class="help-block-configs help-block-margin2 hide">
-					The LCD update engine runs the lcd-updater.py script whenever UI state changes.<br>
-					NOTE: A stub lcd-updater.py script is located in the /var/local/www/commandw/ directory.
-                </span>
-			</div>
-
-			<div class="$_feat_gpio">
-				<label class="control-label">GPIO button handler</label>
+			<div class="$_feat_minidlna">
+				<label class="control-label">DLNA</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggle_gpio_svc2">ON</label>
-						$_select[gpio_svc1]
-						<label class="toggle-radio" for="toggle_gpio_svc1">OFF</label>
-						$_select[gpio_svc0]
+						<label class="toggle-radio toggle-dlnasvc" for="toggle-dlnasvc-2">ON </label>$_select[dlnasvc_on]
+						<label class="toggle-radio toggle-dlnasvc" for="toggle-dlnasvc-1">OFF</label>$_select[dlnasvc_off]
 					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_gpio_svc" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_gpio_svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info_gpio_svc" class="help-block-configs help-block-margin2 hide">
-						Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.<br>
-                    </span>
-					<div class="help-block-margin4">
-						<a href="gpio-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;GPIO pin mappings<br>
-					</div>
+					<button id="btn-set-dlnasvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
+					<span class="config-help-static">
+						The DLNA media server indexes music sources defined for MPD and makes them available to UPnP control points.
+	                </span>
+				</div>
+
+				<label class="control-label" for="dlnaname">Name</label>
+				<div class="controls">
+					<input class="config-input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" required>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
+				</div>
+
+				<div class="controls">
+					<a data-toggle="modal" href="#rebuild-dlnadb" $_dlna_link_disable><button class="btn btn-medium btn-primary config-btn" $_dlna_btn_disable>Rebuild</button>
+					<span class="config-btn-after">DLNA database</span>
+				</div>
+
+				<div class="controls">
+					<a href="http://$_select[hostip]:8200" class="btn btn-medium btn-primary config-btn target-blank-link" target="_blank" $_dlna_link_disable $_dlna_btn_disable>View</a>
+					<span class="config-btn-after">Database status</span>
 				</div>
 			</div>
 		</div>
 
 		<div class="control-group">
-			<label class="control-label">SSH term server</label>
+			<legend>Security</legend>
+			<label class="control-label">Web SSH</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggleshellinabox2">ON</label>
-					$_select[shellinabox1]
-					<label class="toggle-radio" for="toggleshellinabox1">OFF</label>
-					$_select[shellinabox0]
+					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-2">ON </label>$_select[shellinabox_on]
+					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_shellinabox" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span id="info-shellinabox" class="help-block-configs help-block-margin2 hide">
-					Web based SSH terminal server using Shellinabox by Markus Gutschk and Luka Krajger.<br>
+				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-shellinabox" class="config-help-info">
+					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
                 </span>
-				<div class="help-block-margin4">
-					<a id="dlnasvc-link" href="http://$_select[hostip]:4200" target="_blank" class="btn btn-medium btn-primary $_ssh_btn_disable" style="padding-top:.35em;" $_ssh_link_disable>Open</a>&nbsp;Web SSH terminal<br>
-				</div>
+			</div>
+
+			<div class="controls">
+				<a href="http://$_select[hostip]:4200" class="btn btn-medium btn-primary config-btn target-blank-link" target="_blank" $_webssh_link_disable $_webssh_open_disable>Open</a>
+				<span class="config-btn-after">SSH terminal</span>
 			</div>
 		</div>
 
-		<legend id="system-maint">System Maintenance</legend>
 		<div class="control-group">
+			<legend>Backup/Restore</legend>
 			<label class="control-label">Backup system</label>
 			<div class="controls">
-				<a href="bkp-config.php?action=backup"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Backup</button></a>
-				<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-backup-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-backup-system" class="help-block-configs help-block-margin hide">
-					Backup settings, radio stations, playlists and CamillaDSP configs.
+				<a href="bkp-config.php?action=backup"><button class="btn btn-medium btn-primary config-btn">Backup</button></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-system" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-backup-system" class="config-help-info">
+					Backup configuration settings and preferences, radio stations, playlists and CamillaDSP configs.
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
 			<label class="control-label">Restore system</label>
 			<div class="controls">
-				<a href="bkp-config.php?action=restore"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Restore</button></a>
-				<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-restore-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-restore-system" class="help-block-configs help-block-margin hide">
-					Restore settings, radio stations, playlists and CamillaDSP configs.
+				<a href="bkp-config.php?action=restore"><button class="btn btn-medium btn-primary config-btn">Restore</button></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-restore-system" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-restore-system" class="config-help-info">
+					Restore configuration settings and preferences, radio stations, playlists and CamillaDSP configs.
                 </span>
 			</div>
 		</div>
 
 		<div class="control-group">
-			<label class="control-label">Playback history</label>
+			<legend>Logs</legend>
+			<label class="control-label">Startup log</label>
 			<div class="controls">
-				<a href="#clear-playbackhist" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Clear</button></a>
-				<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-clear-playhistory" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-clear-playhistory" class="help-block-configs help-block-margin hide">
-					Clear the playback history log. Perform this task periodically since the log grows over time.<br>
+				<button class="btn btn-medium btn-primary config-btn" type="submit" name="download_logs" value="1">Download</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-download-logs" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-download-logs" class="config-help-info">
+					Download the moOde startup log: /var/log/moode.log
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
 			<label class="control-label">System logs</label>
 			<div class="controls">
-				<a href="#clear-syslogs" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Clear</button></a>
-				<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-clear-syslogs" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-clear-syslogs" class="help-block-configs help-block-margin hide">
-					Clear various system log files. NOTE: The logs are cleared periodically by the automatic Maintenance task.<br>
+				<a href="#clear-syslogs" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-syslogs" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-clear-syslogs" class="config-help-info">
+					Clear various system log files. Note the logs are cleared periodically by the Maintenance task.
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
+			<label class="control-label">Play history log</label>
+			<div class="controls">
+				<a href="#clear-playbackhist" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-playhistory" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-clear-playhistory" class="config-help-info">
+					Clear the playback history log. Perform this task periodically since the log grows over time.
+                </span>
+			</div>
+
+			<div class="config-horiz-rule"></div>
+
+			<label class="control-label">Reduce logging</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-reduce-sys-logging" for="toggle-reduce-sys-logging-2">ON </label>$_select[reduce_sys_logging_on]
+					<label class="toggle-radio toggle-reduce-sys-logging" for="toggle-reduce-sys-logging-1">OFF</label>$_select[reduce_sys_logging_off]
+				</div>
+				<button id="btn-set-reduce-sys-logging" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_reduce_sys_logging" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-reduce-sys-logging" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-reduce-sys-logging" class="config-help-info">
+					Reduce the amount of system log data generated by disabling the rsyslog service.
+                </span>
+			</div>
+
 			<label class="control-label">Debug logging</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio" for="toggledebuglog2">ON</label>
-					$_select[debuglog1]
-					<label class="toggle-radio" for="toggledebuglog1">OFF</label>
-					$_select[debuglog0]
+					<label class="toggle-radio toggle-debuglog" for="toggle-debuglog-2">ON </label>$_select[debuglog_on]
+					<label class="toggle-radio toggle-debuglog" for="toggle-debuglog-1">OFF</label>$_select[debuglog_off]
 				</div>
-				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				</div>
-				<span id="info-debuglog" class="help-block-configs help-block-margin2 hide">
-					Increase the level of detail in moode log.<br>
+				<button id="btn-set-debuglog" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-debuglog" class="config-help-info">
+					Log debug information<br>
+					- <b>Moode startup log: </b>/var/log/moode.log<br>
+					- <b>Mount Monitor log: </b>/var/log/moode_mountmon.log
                 </span>
 			</div>
 		</div>
@@ -608,12 +458,9 @@
 </div>
 </div>
 
-<!-- MODAL POPUPS -->
-
 <form class="form-horizontal" method="post">
-	<div id="view-pkgcontent" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="view-pkgcontent-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="view-pkgcontent" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="view-pkgcontent-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3 id="view-pkgcontent-label">Package content</h3>
 		</div>
 		<div class="modal-body">
@@ -627,15 +474,11 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="enable-usbboot" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="enable-usbboot-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="enable-usbboot" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="enable-usbboot-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Enable USB boot?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Enable USB boot?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_usbboot" value="novalue">Yes</button>
@@ -644,15 +487,11 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="restart-localui" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="restart-localui-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="restart-localui" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="restart-localui-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Restart Local UI?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Restart Local UI?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_restart_localui" value="novalue">Yes</button>
@@ -661,15 +500,11 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="clear-playbackhist" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="clear-playbackhist-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="clear-playbackhist" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-playbackhist-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Clear playback history?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Clear playback history?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_playhistory" value="novalue">Yes</button>
@@ -678,15 +513,11 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="clear-syslogs" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="clear-syslogs-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div id="clear-syslogs" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-syslogs-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Clear system logs?</h3>
 		</div>
-
-		<div class="modal-body">
-			<h6>Clear system logs?</h6>
-		</div>
-
+		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_syslogs" value="novalue">Yes</button>

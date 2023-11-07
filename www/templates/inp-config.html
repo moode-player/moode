@@ -20,56 +20,54 @@
 -->
 <div id="container">
 <div class="container">
-	<h1 class="snd-config">Input Source</h1>
+	<h1 class="snd-config">Input Select</h1>
 
     <form class="form-horizontal" action="" method="post">
 		<legend>Settings</legend>
+
+		<p class="sub-legend">
+			This allows switching between MPD and the Analog or S/PDIF input on certain audio devices.
+			Curently only the Audiophonics ES9028/9038 DAC (S/PDIF) and HiFiBerry DAC+ ADC (Analog) are supported.
+			When configuring the audio device set Volume type to Hardware or Fixed (0dB).
+		</p>
+
 		<div class="control-group">
-			<label class="control-label" for="audioout">Input</label>
+			<label class="control-label" for="audio_input">Input</label>
 			<div class="controls">
-				<select id="audioin" class="select-medium2" name="audioin">
-					$_select[audioin]
+				<select id="audio_input" class="config-select-large" name="audio_input">
+					$_select[audio_input]
 				</select>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioin" value="novalue">Set</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info_audioin" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_audioin" class="help-block-configs help-block-margin hide">
-					Select which input source provides audio.<br>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_audio_input" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_audio_input" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info_audio_input" class="config-help-info">
+					Select which Input source provides audio.
 	            </span>
 			</div>
-		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="rsmafterinp">Resume MPD</label>
+			<label class="control-label" for="resume_mpd">Resume MPD</label>
 			<div class="controls">
-				<select id="rsmafterinp" class="select-medium2" name="rsmafterinp">
-					$_select[rsmafterinp]
+				<select id="resume_mpd" class="config-select-large" name="resume_mpd">
+					$_select[resume_mpd]
 				</select>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_rsmafterinp" value="novalue">Set</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info_rsmafterinp" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_rsmafterinp" class="help-block-configs help-block-margin hide">
-					Resume MPD playback after changing Audio source to Local (MPD).<br>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_resume_mpd" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_resume_mpd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info_resume_mpd" class="config-help-info">
+					Resume MPD playback after changing Input source to Local (MPD).
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
-			<label class="control-label" for="audioout">Output</label>
+			<label class="control-label" for="audio_output">Output</label>
 			<div class="controls">
-				<select id="audioout" class="select-medium2" name="audioout">
-					$_select[audioout]
+				<select id="audio_output" class="config-select-large" name="audio_output" readonly>
+					$_select[audio_output]
 				</select>
-				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioout" value="novalue">Set</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_audioout" class="help-block-configs help-block-margin hide">
-					Select which output device will receive audio from the selected source.
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_audio_output" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_audio_output" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info_audio_output" class="config-help-info">
+					Select which device will receive audio from the selected Input source.
 	            </span>
 			</div>
 		</div>
 	</form>
-
-	<div style="background-color: #333; font-size: 14px; line-height: 18px; padding: 10px; margin-right: 40px; font-family: Courier New">
-		Select which input source provides audio and which output device will receive it. The default input source is Local (MPD) and the default output device is the locally attached device (DAC, Amp or Transport).<br><br>
-		If the audio device offers input sources for example Analog or S/PDIF they will be listed. These input sources use Hardware volume so be sure to set MPD Volume control to Hardware or Disabled (0dB). If MPD Volume control is set to Hardware moOde can function as a preamp.<br>
-	</div>
 </div>
 </div>

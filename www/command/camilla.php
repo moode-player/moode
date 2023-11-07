@@ -21,10 +21,11 @@
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/cdsp.php';
+require_once __DIR__ . '/../inc/mpd.php';
 
 switch ($_GET['cmd']) {
 	case 'camilladsp_setconfig':
-		if (isset($_POST['cdspconfig'])) {
+		if (isset($_POST['cdspconfig']) && !empty($_POST['cdspconfig'])) {
 			phpSession('open');
 			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 			$currentMode = $_SESSION['camilladsp'];
@@ -33,17 +34,18 @@ switch ($_GET['cmd']) {
 			phpSession('close');
 
 			$cdsp->selectConfig($newMode);
+
 			if ($_SESSION['cdsp_fix_playback'] == 'Yes') {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			}
 
-			if ($_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-				submitJob('camilladsp', $newMode);
-			} else {
-				$cdsp->reloadConfig();
-			}
+			updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
 		} else {
-			workerLog('camilla.php Error: missing camilladsp config name');
+			sendEngCmd('cdsp_config_update_failed');
+			workerLog('camilla.php: Error: $_POST[cdspconfig] missing or empty');
 		}
+		break;
+	default:
+		echo 'Unknown command';
 		break;
 }

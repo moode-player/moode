@@ -19,6 +19,7 @@
  */
 
 require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/multiroom.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
@@ -81,7 +82,15 @@ function stopAirPlay() {
 	}
 
 	// Local
-	sysCmd('/var/www/vol.sh -restore');
+	if (isMPD2CamillaDSPVolSyncEnabled()) {
+		$dbh = sqlConnect();
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $dbh);
+		sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $dbh);
+		sysCmd('/var/www/vol.sh -restore');
+		sysCmd('systemctl restart mpd2cdspvolume');
+	} else {
+		sysCmd('/var/www/vol.sh -restore');
+	}
 
 	// Multiroom receivers
 	if ($_SESSION['multiroom_tx'] == "On" ) {
@@ -144,7 +153,7 @@ function startSpotify() {
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' .
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		' > /dev/null 2>&1 &';
-		//' -v > /home/pi/librespot.txt 2>&1 &'; // For debug
+		//' -v > /var/log/moode_librespot.log 2>&1 &'; // For debug
 
 	debugLog('startSpotify(): (' . $cmd . ')');
 	sysCmd($cmd);
@@ -154,7 +163,15 @@ function stopSpotify() {
 	sysCmd('killall librespot');
 
 	// Local
-	sysCmd('/var/www/vol.sh -restore');
+	if (isMPD2CamillaDSPVolSyncEnabled()) {
+		$dbh = sqlConnect();
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $dbh);
+		sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $dbh);
+		sysCmd('/var/www/vol.sh -restore');
+		sysCmd('systemctl restart mpd2cdspvolume');
+	} else {
+		sysCmd('/var/www/vol.sh -restore');
+	}
 
 	// Multiroom receivers
 	if ($_SESSION['multiroom_tx'] == "On" ) {
@@ -186,25 +203,19 @@ function stopSqueezeLite() {
 }
 
 function cfgSqueezelite() {
-	// Update sql table with current MPD device num
+	// Update AUDIODEVICE param
 	$dbh = sqlConnect();
-	$array = sqlQuery('SELECT value FROM cfg_mpd WHERE param="device"', $dbh);
-	sqlUpdate('cfg_sl', $dbh, 'AUDIODEVICE', $array[0]['value']);
+	$alsaOutput = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+	sqlUpdate('cfg_sl', $dbh, 'AUDIODEVICE', $alsaOutput);
 
 	// Load settings
 	$result = sqlRead('cfg_sl', $dbh);
 
 	// Generate config file output
 	foreach ($result as $row) {
-		if ($row['param'] == 'AUDIODEVICE') {
-			$data .= $row['param'] . '="hw:' . $row['value'] . ',0"' . "\n";
-		}
-		else {
-			$data .= $row['param'] . '=' . $row['value'] . "\n";
-		}
+		$data .= $row['param'] . '=' . $row['value'] . "\n";
 	}
 
-	// Write config file
 	$fh = fopen('/etc/squeezelite.conf', 'w');
 	fwrite($fh, $data);
 	fclose($fh);

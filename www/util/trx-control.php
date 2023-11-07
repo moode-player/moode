@@ -66,7 +66,7 @@ switch ($option) {
 	case '-set-alsavol':
 		if (isset($argv[2])) {
 			if ($_SESSION['multiroom_rx'] == 'On') {
-				setAlsavol($argv[2]);
+				sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $argv[2]);
 			}
 			$status = '';
 		} else {
@@ -84,25 +84,36 @@ if (phpSession('get_status') == PHP_SESSION_ACTIVE) {
 
 if ($status != '') {
 	echo $status;
+	//workerLog('Args: ' . $argv[1] . ' | ' . $argv[2]);
+	//workerLog('Stat: ' . $status);
 }
 exit(0);
 
 function rxOnOff($onoff) {
-	if ($_SESSION['mpdmixer'] == 'hardware' || $_SESSION['mpdmixer'] == 'none') {
+	// Don't allow CamillDSP volume
+	//if ($_SESSION['mpdmixer'] == 'hardware' || $_SESSION['mpdmixer'] == 'none') {
+	if ($_SESSION['mpdmixer'] != 'null') {
 		phpSession('write', 'multiroom_rx', $onoff);
 		$onoff == 'On' ? startMultiroomReceiver() : stopMultiroomReceiver();
 	}
 }
 
 function rxStatus() {
-	$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", sqlConnect());
-	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : ($_SESSION['mpdmixer'] == 'software' ? '?' : $_SESSION['volknob']);
+	$dbh = sqlConnect();
+	$mvOptIn = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", $dbh);
+	$volMute = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volmute'", $dbh);
+	// hardware		$_SESSION['volknob']
+	// software		0dB
+	// none			0dB
+	// null			?
+	$volume = $_SESSION['mpdmixer'] == 'hardware' ? $_SESSION['volknob'] :
+		(($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') ? '0dB' : '?');
 	return
 		'rx' . ',' . 						// Receiver
 		$_SESSION['multiroom_rx'] . ',' . 	// Status: On/Off/Disabled/Unknown
 		$volume . ',' .						// Volume
-		$_SESSION['volmute'] . ',' . 		// Mute state: 1/0
-		$result[0]['value'] . ',' . 		// Master volume opt-in: 1/0
+		$volMute[0]['value'] . ',' . 		// Mute state: 1/0
+		$mvOptIn[0]['value'] . ',' . 		// Master volume opt-in: 1/0
 		$_SESSION['hostname'];				// Hostname from System Config entry
 }
 
@@ -113,8 +124,4 @@ function txStatus() {
 
 function allStatus() {
 	return rxStatus() . ',' . txStatus();
-}
-
-function setAlsavol($vol) {
-	sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $vol);
 }

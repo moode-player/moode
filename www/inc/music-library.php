@@ -140,7 +140,7 @@ function genFlatList($sock) {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			} else if ($element == 'Genre') {
-				if ($_SESSION['library_tagview_genre'] == 'Genres') {
+				if ($_SESSION['library_tagview_genre'] == 'Genre') {
 					if ($flat[$item]['Genre']) {
 						array_push($flat[$item]['Genre'], $value);
 					} else {
@@ -148,7 +148,7 @@ function genFlatList($sock) {
 					}
 				}
 			} else if ($element == 'Composer') {
- 				if ($_SESSION['library_tagview_genre'] == 'Composers') {
+ 				if ($_SESSION['library_tagview_genre'] == 'Composer') {
 					if ($flat[$item]['Genre']) {
 						array_push($flat[$item]['Genre'], $value);
 					} else {
@@ -205,6 +205,10 @@ function genLibrary($flat) {
 		}
 	}
 
+	// Offsets in $encoded_at string
+	$channelsOffset = -1;
+	$hiDefFlagOffset = -3;
+
 	foreach ($flat as $flatData) {
 		// M4A probe for ALAC when filtering by Lossless/Lossy
 		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getFileExt($flatData['file']) == 'm4a') {
@@ -214,7 +218,7 @@ function genLibrary($flat) {
 
 			if ($_SESSION['library_flatlist_filter'] == 'lossless' && $alacFound !== false) {
 				$push = true;
-			} elseif ($_SESSION['library_flatlist_filter'] == 'lossy' && $alacFound === false) {
+			} else if ($_SESSION['library_flatlist_filter'] == 'lossy' && $alacFound === false) {
 				$push = true;
 			} else {
 				$push = false;
@@ -229,14 +233,20 @@ function genLibrary($flat) {
 			$push = ($trackYear >= $filterYear[0] && $trackYear <= $filterYear[1]) ? true : false;
 		}
 
-		// Encoded or HD filter
+		// Encoded or HD only filter
 		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
-			$encodedAt = getEncodedAt($flatData, 'default', true);
-
+			$encodedAt = getEncodedAt($flatData, 'default', true); // bits/rate format,Flag,channels
 			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
-				$push = strpos($encodedAt, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+				if ($_SESSION['library_flatlist_filter_str'] == 'multichannel') {
+					$push = substr($encodedAt, $channelsOffset) > 2 ? true : false;
+				} else if (substr($_SESSION['library_flatlist_filter_str'], -2) == 'ch') {
+					$channels = substr($_SESSION['library_flatlist_filter_str'], -3, 1);
+					$push = substr($encodedAt, $channelsOffset) == $channels ? true : false;
+				} else {
+					$push = strpos($encodedAt, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+				}
 			} else {
-				$push = strpos($encodedAt, 'h', -1) !== false ? true : false;
+				$push = strpos($encodedAt, 'h', $hiDefFlagOffset) !== false ? true : false;
 			}
 		}
 
@@ -273,7 +283,7 @@ function genLibrary($flat) {
 	}
 
 	// No filter results or empty MPD database
-	if (count($lib) == 1 && empty($lib[0]['file'])) {
+	if (count($lib) <= 1 && empty($lib[0]['file'])) {
 		$lib[0]['file'] = '';
 		$lib[0]['title'] = '';
 		$lib[0]['artist'] = array('');
@@ -391,6 +401,10 @@ function genLibraryUTF8Rep($flat) {
 		}
 	}
 
+	// Offsets in $encoded_at string
+	$channelsOffset = -1;
+	$hiDefFlagOffset = -3;
+
 	foreach ($flat as $flatData) {
 		// M4A probe for ALAC when filtering by Lossless/Lossy
 		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getFileExt($flatData['file']) == 'm4a') {
@@ -415,14 +429,20 @@ function genLibraryUTF8Rep($flat) {
 			$push = ($trackYear >= $filterYear[0] && $trackYear <= $filterYear[1]) ? true : false;
 		}
 
-		// Encoded or HD filter
+		// Encoded or HD only filter
 		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
-			$encodedAt = getEncodedAt($flatData, 'default', true);
-
+			$encodedAt = getEncodedAt($flatData, 'default', true); // bits/rate format,Flag,channels
 			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
-				$push = strpos($encodedAt, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+				if ($_SESSION['library_flatlist_filter_str'] == 'multichannel') {
+					$push = substr($encodedAt, $channelsOffset) > 2 ? true : false;
+				} else if (substr($_SESSION['library_flatlist_filter_str'], -2) == 'ch') {
+					$channels = substr($_SESSION['library_flatlist_filter_str'], -3, 1);
+					$push = substr($encodedAt, $channelsOffset) == $channels ? true : false;
+				} else {
+					$push = strpos($encodedAt, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+				}
 			} else {
-				$push = strpos($encodedAt, 'h', -1) !== false ? true : false;
+				$push = strpos($encodedAt, 'h', $hiDefFlagOffset) !== false ? true : false;
 			}
 		}
 
@@ -434,9 +454,10 @@ function genLibraryUTF8Rep($flat) {
 				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
 				'artist' => utf8repArray(($flatData['Artist'] ? $flatData['Artist'] : array())), //@Atair: array is expected in scripts-library.js even when empty
 				//@Atair:
-				// 1. album_artist shall never be empty, otherwise the sort routines in scripts-library.js complain,
+				// 1. artist can safely be empty, because it is no longed used as substitute for missing album_artist
+				// 2. album_artist shall never be empty, otherwise the sort routines in scripts-library.js complain,
 				//    because they expect artist as string and not as array in album_artist || artist constructs
-				// 2. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
+				// 3. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
 				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
 				'album_artist' => utf8rep(($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist'))),
 				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
@@ -533,46 +554,115 @@ function clearLibCacheFiltered() {
 	sqlUpdate('cfg_system', sqlConnect(), 'lib_pos','-1,-1,-1');
 }
 
-// Extract bit depth, sample rate and audio format for display
-function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
-	// $displayFormats: 'default' Ex: 16/44.1k FLAC, 'verbose' Ex: 16 bit, 44.1 kHz, Stereo FLAC
-	// NOTE: Bit depth is omitted if the format is lossy
+// Return saved search names
+function getSavedSearches() {
+	$searches = [];
+	array_push($searches, array('name' => LIB_FULL_LIBRARY, 'filter' => 'full_lib'));
+	foreach(glob(LIBSEARCH_BASE . '*.json') as $file) {
+		$name = ltrim(pathinfo($file, PATHINFO_FILENAME), LIBSEARCH_BASE);
+		$filter = json_decode(file_get_contents($file), true);
+		if ($name != LIB_FULL_LIBRARY) {
+			array_push($searches, array('name' => $name, 'filter' => $filter['filter_type'] .
+				(empty($filter['filter_str']) ? '' : ': ' . $filter['filter_str'])));
+		}
+	}
+	return $searches;
+}
 
-	$encodedAt = 'NULL';
+// Return bit depth, sample rate, audio format, flag (lossy/stddef/hidef) and channels
+// Uses MPD lsinfo Format tag (rate:bits:channels or dsdnnn,channels) for PCM and WavPack DSD
+// Uses mediainfo for DSD (DSF/DFF)
+//
+// Library
+// - PCM:			format bits/rate,Flag,channels
+// - PCM (lossy): 	format,l,channels
+// - DSD: 			DSD rate,h,channels
+// Flag
+// l lossy
+// s standard def
+// h high def (bits >16 or rate > 44.1 or format DSD)
+//
+// Display
+// - 'default' FLAC 16/44.1 kHz, 2ch | DSD 2.882 MHz, 2ch
+// - 'verbose' FLAC 16 bit 44.1 kHz, Stereo | DSD 1 bit 2.882 MHz, Stereo
+function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
+	$encodedAt = '';
 	$songData['file'] = ensureAudioFile($songData['file']);
 	$ext = getFileExt($songData['file']);
+	$mpdFormatTag = explode(':', $songData['Format']); // MPD lsinfo: rate:bits:channels
 
-	// Special section to handle calls from genLibrary() to populate the element "encoded_at"
-	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
-	// Returned string for PCM is "bits/rate format,flag" and for DSD it's "DSD rate,h"
-	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
+	// Special section for calls from genLibrary() to populate the "encoded_at" element
 	if ($calledFromGenLib) {
-		$mpdFormatTag = explode(':', $songData['Format']);
-		// Lossy: return just the format since bit depth has no meaning and bitrate is not known until playback
 		if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
-			$encodedAt = strtoupper($ext) . ',l';
+			// Lossy: bit depth has no meaning so it's omitted
+			// format,l,channels
+			$encodedAt = strtoupper($ext) . ',l,' . $mpdFormatTag[2];
 		} else if ($ext == 'dsf' || $ext == 'dff') {
-			// DSD
+			// DSD: DSF/DFF
+			// DSD rate,h,channels
 			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
-			$encodedAt = $result[1] == '' ? 'DSD,h' : formatRate($result[1]) . ' DSD,h';
+			//$encodedAt = empty($result[1]) ? 'DSD,h' : formatRate($result[1]) . ' DSD,h,' . $result[2];
+			$encodedAt = empty($result[1]) ? 'DSD,h' : 'DSD ' . formatRate($result[1]) . ',h,' . $result[2];
+		} else if ($ext == 'wv' && strpos($mpdFormatTag[0], 'dsd') !== false) {
+			// DSD: WavPack (format dsd64:2)
+			// DSD rate,h,channels
+			//$encodedAt = formatRate($mpdFormatTag[0]) . ' DSD,h,' . $mpdFormatTag[1];
+			$encodedAt = 'DSD ' . formatRate($mpdFormatTag[0]) . ',h,' . $mpdFormatTag[1];
 		} else {
 			// PCM or Multichannel PCM
-			// Workaround for wrong bit depth returned for ALAC encoded m4a files
-			$mpdFormatTag[1] = ($ext == 'm4a' && $mpdFormatTag[1] == '32') ? '24' : $mpdFormatTag[1];
-			$hiDef = ($mpdFormatTag[1] != 'f' && $mpdFormatTag[1] > ALBUM_BIT_DEPTH_THRESHOLD) ||
-				$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? ',h' : ',s';
-			$encodedAt = ($mpdFormatTag[1] == 'f' ? '' : $mpdFormatTag[1] . '/') . formatRate($mpdFormatTag[0]) . ' ' . strtoupper($ext) . $hiDef;
+			// bits/rate format,[h|s],channels
+			// NOTE: Assume 24 bit for m4a reporting 32 bit and any format with bits = f (float)
+			$bits = ($ext == 'm4a' && $mpdFormatTag[1] == '32') ? '24' : $mpdFormatTag[1];
+			$hiDef = ($bits == 'f' || $bits > ALBUM_BIT_DEPTH_THRESHOLD ||
+				$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD) ? 'h' : 's';
+			$encodedAt = strtoupper($ext) . ' ' . ($bits == 'f' ? '24/' : $bits . '/') .
+				formatRate($mpdFormatTag[0]) . ',' . $hiDef . ',' . $mpdFormatTag[2];
 		}
+	// End special section
+
 	} else if (isset($songData['Name']) || (substr($songData['file'], 0, 4) == 'http' && !isset($songData['Artist']))) {
 		// Radio station
-		$encodedAt = $displayFormat == 'verbose' ? 'VBR compression' : 'VBR';
+		$encodedAt = $displayFormat == 'verbose' ? 'VBR Compression' : 'VBR';
 	} else if (substr($songData['file'], 0, 4) == 'http' && isset($songData['Artist'])) {
 		// UPnP file
 		$encodedAt = 'Unknown';
 	} else if ($ext == 'dsf' || $ext == 'dff') {
 		// DSD file
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
-		$encodedAt = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' MHz');
+		if ($result[1] == '') {
+			$encodedAt = '?';
+		} else {
+			if ($displayFormat == 'default') {
+				//$encodedAt = formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch DSD';
+				$encodedAt = 'DSD ' . formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch';
+			} else {
+				// 'verbose'
+				//$encodedAt = '1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]) . ' DSD';
+				$encodedAt = ' DSD 1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]);
+			}
+		}
+	} else if ($ext == 'wv') {
+		if (strpos($mpdFormatTag[0], 'dsd') !== false) {
+			// WavPack DSD file
+			if ($displayFormat == 'default') {
+				//$encodedAt = formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch DSD';
+				$encodedAt = 'DSD ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch';
+			} else {
+				// 'verbose'
+				//$encodedAt = '1 bit ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]) . ' DSD';
+				$encodedAt = 'DSD 1 bit ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]);
+			}
+		} else {
+			// WavPack PCM file
+			if ($displayFormat == 'default') {
+				//$encodedAt = $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch WavPack';
+				$encodedAt = 'WavPack ' . $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch';
+			} else {
+				// 'verbose'
+				//$encodedAt = $mpdFormatTag[1] . ' bit ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]) . ' WavPack';
+				$encodedAt = 'WavPack ' . $mpdFormatTag[1] . ' bit ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]);
+			}
+		}
 	} else if ($songData['file'] == '') {
 		return 'Not playing';
 	} else {
@@ -581,17 +671,23 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			return 'File does not exist';
 		}
 		// Mediainfo
-		// NOTE: Mediainfo when called via exec() returns nothing if the file name contains accented characters
-		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"';
-		$result = sysCmd($cmd);
-
-		// NOTE: Exception handling for rare case where medoainfo returns blank bit depth or sample rate
+		// NOTE: Mediainfo called via sysCmd() i.e. exec() returns nothing if the file name contains accented chars
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
+		//workerLog(print_r($result, true));
 		if ($result[0] == '' || $result[1] == '') {
-			// Use MPD lsinfo
-			$mpdEncodedAt = getMpdEncodedAt($songData['file']);
-			$bitDepth = $mpdEncodedAt[1];
-			$sampleRate = $mpdEncodedAt[0];
-			$channels = $mpdEncodedAt[2];
+			// Empty mediainfo so fallback to MPD lsinfo Format tag rate:bits:channels
+			$format = isset($songData['Format']) ? $songData['Format'] : getMpdFormatTag($songData['file']);
+			$mpdFormatTag = explode(':', $format);
+			if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
+				$bits = ''; // Bits omitted for lossless
+			} else if ($mpdFormatTag[1] == 'f' || ($ext == 'm4a' && $mpdFormatTag[1] == '32')) {
+				$bits = '24';
+			} else {
+				$bits = $mpdFormatTag[1];
+			}
+			$bitDepth = $bits;
+			$sampleRate = $mpdFormatTag[0];
+			$channels = $mpdFormatTag[2];
 			$format = strtoupper($ext);
 		} else {
 			// Use mediainfo
@@ -603,30 +699,32 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 
 		if ($displayFormat == 'default') {
 			$encodedAt = $bitDepth == '?' ?
-				formatRate($sampleRate) . ' ' . $format :
-				$bitDepth . '/' . formatRate($sampleRate) . ' ' . $format;
+				//formatRate($sampleRate) . 'kHz, ' . $format :
+				//$bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch ' . $format;
+				$format . ' ' . formatRate($sampleRate) . 'kHz' :
+				$format . ' ' . $bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch';
 		} else {
+			// 'verbose'
 			$encodedAt = $bitDepth == '?' ?
-				formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format :
-				$bitDepth . ' bit, ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format;
+				//formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format :
+				//$bitDepth . ' bit ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format;
+				$format . ' ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) :
+				$format . ' ' . $bitDepth . ' bit ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels);
 		}
 	}
 
 	return $encodedAt;
 }
 
-// Return MPD format tag (rate:bits:channels)
-function getMpdEncodedAt($file) {
+// Return MPD format tag rate:bits:channels
+function getMpdFormatTag($file) {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('getMpdEncodedAt(): Connection to MPD failed');
-		$mpdEncodedAt = array('', '', '');
+		workerLog('getMpdFormatTag(): Connection to MPD failed');
 	}
-
 	sendMpdCmd($sock, 'lsinfo "' . $file . '"');
-	$songData = parseDelimFile(readMpdResp($sock), ': ');
-	$mpdEncodedAt = explode(':', $songData['Format']);
+	$trackData = parseDelimFile(readMpdResp($sock), ': ');
 
-	return $mpdEncodedAt;
+	return $trackData['Format'];
 }
 
 // Auto-shuffle random play
@@ -634,7 +732,7 @@ function startAutoShuffle() {
 	$filter = (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') ?
 		'mpc search ' . $_SESSION['ashuffle_filter'] . ' | ' : '';
 	$file = $filter != '' ? '--file -' : '';
-	$mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album ' : '';
+	$mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album albumartist ' : '';
 	sysCmd($filter . '/usr/bin/ashuffle --queue-buffer 1 ' . $mode . $file . ' > /dev/null 2>&1 &');
 }
 
