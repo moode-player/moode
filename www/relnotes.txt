@@ -39,6 +39,7 @@ Updates
 - UPD: Improve Squeezelite Config help
 - UPD: Improve readability and parsing of startup log
 - UPD: Improve the "Artist column" option in Prefs Library
+- UPD: Improve Favorite: update station type, include on Queue context menu
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
 - UPD: Show "Radio station" for stations that transmit a bogus title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
