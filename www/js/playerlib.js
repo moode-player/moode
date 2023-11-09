@@ -2657,6 +2657,14 @@ $(document).on('click', '.context-menu a', function(e) {
     		$('#move-playqueue-item-newpos').val(path + 1);
     		$('#move-playqueue-item-modal').modal();
             break;
+        case 'favorite_playqueue_item':
+            $.getJSON('command/queue.php?cmd=get_playqueue_item&songpos=' + path, function(data) {
+                notify('adding_favorite');
+                $.get('command/playlist.php?cmd=add_item_to_favorites&item=' + encodeURIComponent(data), function() {
+                    notify('favorite_added');
+                });
+            });
+            break;
         case 'setforclockradio':
         case 'setforclockradio-m':
     		if ($(this).data('cmd') == 'setforclockradio-m') { // Called from Configuration modal

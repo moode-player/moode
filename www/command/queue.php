@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
+require_once __DIR__ . '/../inc/music-library.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
@@ -28,7 +29,7 @@ phpSession('open_ro');
 
 // Turn off auto-shuffle and consume mode before Queue is updated
 $queueCmds = array(
-    'delete_playqueue_item', 'move_playqueue_item',
+    'delete_playqueue_item', 'move_playqueue_item', 'favorite_playqueue_item',
     'add_item', 'add_item_next', 'play_item', 'play_item_next', /*'clear_add_item',*/ 'clear_play_item',
     'add_group', 'add_group_next', 'play_group', 'play_group_next', /*'clear_add_group',*/ 'clear_play_group'
 );
@@ -55,6 +56,10 @@ switch ($_GET['cmd']) {
 	case 'move_playqueue_item':
 		sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
 		$resp = readMpdResp($sock);
+		break;
+    case 'get_playqueue_item':
+		sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
+        echo json_encode(parseDelimFile(readMpdResp($sock), ': ')['file']);
 		break;
 	case 'add_item':
 	case 'add_item_next':

@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
+require_once __DIR__ . '/../inc/music-library.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
@@ -144,6 +145,10 @@ switch ($_GET['cmd']) {
 			if (empty($result[0])) {
 				sysCmd('echo "' . $_GET['item'] . '" >> "' . $plFile . '"');
 			}
+
+			// NOTE: currently only radio stations have a favorites tag
+			$result = markItemAsFavorite($_GET['item']);
+			debugLog($result);
 		}
 		break;
 	case 'get_pl_items_fv': // For Folder view
@@ -323,4 +328,25 @@ function listPlaylistFv($plName) {
 	sendMpdCmd($sock, 'listplaylist "' . $plName . '"');
 	$resp = readMpdResp($sock);
 	return formatMpdQueryResults($resp);
+}
+
+// Mark item as favorite
+function markItemAsFavorite($item) {
+	// Only radio stations support a favorites tag
+	// NOTE: http could also be a UPnP file but no good way to tell
+	if (substr($item, 0, 4) == 'http') {
+		$dbh = sqlConnect();
+		$result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . $item . "'", $dbh);
+		if ($result === true) {
+			// Query execution succeeded but no match found
+			$msg = 'markItemAsFavorite(): Not in cfg_radio:' . $item;
+		} else {
+			$result = sqlQuery("UPDATE cfg_radio SET type='f' WHERE station='" . $item . "'", $dbh);
+			$msg = 'markItemAsFavorite(): Updated: ' . $item;
+		}
+	} else {
+		$msg = 'markItemAsFavorite(): Not a station: ' . $item;
+	}
+
+	return $msg;
 }
