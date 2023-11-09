@@ -550,7 +550,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 #index-genres {right:calc(66.85% + var(--sbw));top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
 #index-artists {right:calc(33.33% + var(--sbw));top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
 #index-albums {right:var(--sbw);top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
-#index-albumcovers {position:fixed;right:var(--sbw);top:calc(3.5rem + 1px);top:calc(3.5rem + 1px + env(safe-area-inset-top));height:calc(100% - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
+#index-albumcovers {right:var(--sbw);top:calc(3.5rem + 1px);top:calc(3.5rem + 1px + env(safe-area-inset-top));height:calc(100% - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
 #index-browse {right:var(--sbw);top:calc(3rem + 1px);height:calc(100% - 10rem);height:calc(100% - 10rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
 #index-radio {right:var(--sbw);top:calc(3rem + 1px);height:calc(100% - 12rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
 #index-playlist {right:var(--sbw);top:calc(3rem + 1px);height:calc(100% - 12rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
