@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Nov 7 09:29:39 2023
+-- File generated with SQLiteStudio v3.1.0 on Wed Nov 8 21:21:28 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -9,7 +9,7 @@ BEGIN TRANSACTION;
 -- Table: cfg_sl
 CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64));
 INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
-INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '0');
+INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', 'plughw:0,0');
 INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
 INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
 INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
