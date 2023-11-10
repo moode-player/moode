@@ -556,7 +556,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 #index-playlist {right:var(--sbw);top:calc(3rem + 1px);height:calc(100% - 12rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
 .alphabits {position:absolute;z-index:999;}
 .alphabits ul {display:table;height:100%;margin:0 !important;border-spacing:.2em;}
-.alphabits ul li {display:table-row !important;font-size:.8em;text-transform:uppercase;line-height:normal;font-weight:600;color:var(--textvariant);text-align:center;}
+.alphabits ul li {display:table-row !important;font-size:.8em;text-transform:uppercase;font-weight:600;color:var(--textvariant);text-align:center;}
 /* playback ellipsis context menu */
 #menu-check-consume, #menu-check-repeat, #menu-check-single, #menu-check-recorder {display:none;position:absolute;right:.45rem;}
 #menu-check-cdsp {display:inline;position:absolute;right:.45rem;}
