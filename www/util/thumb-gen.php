@@ -295,7 +295,7 @@ function outImage($mime, $data) {
 function getImage($path, $file = '') {
 	//workerLog('thumb-gen: getImage(): ' . $file);
 	if (!file_exists($path)) {
-		//workerLog('thumb-gen: getImage(): File does not exist: ' . $file);
+ 		//workerLog('thumb-gen: getImage(): File does not exist: ' . $file);
 		return false;
 	}
 
@@ -315,6 +315,19 @@ function getImage($path, $file = '') {
 			break;
 
 		// Embedded images
+		case 'dsf':
+			require_once __DIR__ . '/../inc/Extensions/Zend/Media/Dsd.php';
+			try {
+				$Dsd = new ZendEx_Media_Dsd($path, array('hash_only' => false));
+				
+				if (isset($Dsd->id3v2()->apic)) {
+					$image = outImage($Dsd->id3v2()->apic->mimeType, $Dsd->id3v2()->apic->imageData);
+				}
+			} catch (ZendEx_Media_Dsd_Exception $e) {
+				workerLog('thumb-gen: Error: ' . $e->getMessage() . ': ' . $file);
+			}
+			break;
+
 		case 'mp3':
 			require_once __DIR__ . '/../inc/Zend/Media/Id3v2.php';
 			try {

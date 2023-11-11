@@ -71,6 +71,19 @@ function getImage($path) {
 			outImage($mimeType, $imageData);
 			break;
 		// Embedded images
+		case 'dsf':
+			require_once __DIR__ . '/inc/Extensions/Zend/Media/Dsd.php';
+			try {
+				$Dsd = new ZendEx_Media_Dsd($path, array('hash_only' => false));
+				
+				if (isset($Dsd->id3v2()->apic)) {
+					outImage($Dsd->id3v2()->apic->mimeType, $Dsd->id3v2()->apic->imageData);
+				}
+			} catch (ZendEx_Media_Dsd_Exception $e) {
+				workerLog('coverart: Error: ' . $e->getMessage() . ': ' . $path);
+			}
+			break;
+
 		case 'mp3':
 			require_once __DIR__ . '/inc/Zend/Media/Id3v2.php';
 			try {
