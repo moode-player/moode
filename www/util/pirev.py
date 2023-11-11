@@ -54,7 +54,7 @@ PI_TYPES = {
     2: "A+",
     3: "B+",
     4: "2B",
-    5: "Alpha",
+    5: "Alpha (early prototype)",
     6: "CM1",
     8: "3B",
     9: "Zero",
@@ -67,7 +67,10 @@ PI_TYPES = {
     0x11: "4B",
     0x12: "Zero 2 W",
     0x13: "400",
-    0x14: "CM4"
+    0x14: "CM4",
+    0x15: "CM4S",
+    0x16: "Internal use only",
+    0x17: "5B"
 }
 
 PI_MEM = {
@@ -83,7 +86,8 @@ PI_PROC = {
     0: "BCM2835",
     1: "BCM2836",
     2: "BCM2837",
-    3: "BCM2711"
+    3: "BCM2711",
+    4: "BCM2712"
 }
 
 PI_MAN = {
@@ -159,7 +163,10 @@ def main():
     if args.code:
         code = int(args.code if "0x" == args.code[:2] else "0x" + args.code, 16)
     else:
-        cmd = "vcgencmd otp_dump | awk -F: '/^30:/{print substr($2,3)}'"
+        # NOTE: In otp_dump the Pi5 revcode is on line 32 while < Pi5 is on line 30.
+        #cmd = "vcgencmd otp_dump | awk -F: '/^30:/{print substr($2,3)}'"
+        # Alternate command for obtaining the revision code.
+        cmd = "cat /proc/cpuinfo | awk -F': ' '/Revision/ {print $2}'"
         code = int("0x" + subprocess.run(cmd, shell=True, text=True, capture_output=True).stdout.rstrip(), 16)
 
     rev_info = decode_new_style_code(code)
