@@ -316,10 +316,10 @@ function getImage($path, $file = '') {
 
 		// Embedded images
 		case 'dsf':
-			require_once __DIR__ . '/../inc/Extensions/Zend/Media/Dsd.php';
+			require_once __DIR__ . '/../inc/Zend/Media/Dsd.php';
 			try {
 				$Dsd = new ZendEx_Media_Dsd($path, array('hash_only' => false));
-				
+
 				if (isset($Dsd->id3v2()->apic)) {
 					$image = outImage($Dsd->id3v2()->apic->mimeType, $Dsd->id3v2()->apic->imageData);
 				}
