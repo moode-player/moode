@@ -123,3 +123,4 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-home i {font-size:1.5rem;position:relative;top:.2em;}
 #config-back a,
 #config-home a {color:var(--config-text-color);}
+#thmcache-status {max-width:80%;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
