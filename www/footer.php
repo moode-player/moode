@@ -76,7 +76,7 @@
 					<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m" disabled onclick="return false;"><i class="fa-solid fa-sharp fa-alarm-clock"></i><br>Clock radio</a></li>
 				<?php } ?>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) { ?>
-					<li><a href="inp-config.php" class="btn btn-large"><i class="fa-regular fa-sharp fa-scrubber"></i><br>Input select</a></li>
+					<li><a href="inp-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-dial"></i><br>Input select</a></li>
 				<?php } ?>
 			</ul>
 		</div>

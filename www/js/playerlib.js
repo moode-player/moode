@@ -2765,7 +2765,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 var rxChecked = rxStatusParts[1] == 'On' ? 'checked' : ''; // Status
                                 var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
                                 var rxMuteIcon = rxStatusParts[3] == '1' ? 'fa-volume-mute' : 'fa-volume-up'; // Mute
-                                var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fa-regular fa-sharp fa-dial"></i>'; // Master vol opt-in
+                                var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fa-regular fa-sharp fa-circle-check"></i>'; // Master vol opt-in
 
                                 output += '<div class="control-group">';
                                 // Receiver hostname
