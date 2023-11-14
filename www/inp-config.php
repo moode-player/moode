@@ -24,12 +24,13 @@ require_once __DIR__ . '/inc/session.php';
 phpSession('open');
 
 if (isset($_POST['update_audio_input']) && $_POST['audio_input'] != $_SESSION['audioin']) {
-	if ($_POST['update_audio_input'] != 'Local' && $_SESSION['mpdmixer'] == 'software') {
-		$_SESSION['notify']['title'] = 'MPD Volume control must first be set to Hardware or Fixed (0dB)';
+	if ($_POST['audio_input'] != 'Local' && $_SESSION['mpdmixer'] != 'hardware' && $_SESSION['mpdmixer'] != 'none') {
+		$_SESSION['notify']['title'] = 'Volume type must first be set to Hardware or Fixed (0dB)';
 		$_SESSION['notify']['duration'] = 6;
 	} else {
 		phpSession('write', 'audioin', $_POST['audio_input']);
-		submitJob('audioin', $_POST['audio_input'], 'Input set to ' . $_POST['audio_input']);
+		submitJob('audioin', $_POST['audio_input'],
+			'Source set to ' . ($_POST['audio_input'] == 'Local' ? 'MPD' : $_POST['audio_input']));
 	}
 }
 
@@ -58,7 +59,7 @@ $_select['resume_mpd'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterinp'] 
 $_select['resume_mpd'] .= "<option value=\"No\" " . (($_SESSION['rsmafterinp'] == 'No') ? "selected" : "") . ">No</option>\n";
 
 // Output device
-$_select['audio_output'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local device</option>\n";
+$_select['audio_output'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local audio</option>\n";
 if ($_SESSION['btsvc'] == '1') {
 	$_select['audio_output'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth speaker</option>\n";
 }

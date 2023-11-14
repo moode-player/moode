@@ -774,14 +774,12 @@ workerLog('worker: --');
 // Configure input select
 if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	$status = 'available';
-	$input = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog' : 'S/PDIF');
+	$src = $_SESSION['audioin'] == 'Local' ? 'MPD' : $_SESSION['audioin'];
 	$output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$_SESSION['cardnum']] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
-	$status .= ', in ' . $input . ', out ' . $output;
-	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
+	$status .= ', src ' . $src . ', out ' . $output;
+	if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
 		setAudioIn($_SESSION['audioin']);
-	} else {
-		phpSession('write', 'volknob_mpd', '0'); // Reset saved MPD volume
 	}
 } else {
 	$status = 'n/a';
@@ -792,7 +790,6 @@ workerLog('worker: Input select:    ' . $status);
 if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
 		$status = startBluetooth();
-
 		if ($status == 'started') {
 			if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
 				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
@@ -815,7 +812,6 @@ workerLog('worker: Bluetooth:       ' . $status);
 // Start airplay renderer
 if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
 	$_SESSION['airplay_protocol'] = getAirPlayProtocolVer();
-
 	if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
 		$status = 'started';
 		startAirPlay();
@@ -950,7 +946,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	if (!isset($_SESSION['nginx_https_only'])) {
 		$_SESSION['nginx_https_only'] = '0'; // Initially Off
 	}
-
 	if ($_SESSION['nginx_https_only'] == '1') {
 		$status = 'started';
 		$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
@@ -973,29 +968,30 @@ workerLog('worker: -- Volume levels');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Restore MPD volume level
-$inputSwitchDevices = array('HiFiBerry DAC+ ADC', 'Audiophonics ES9028/9038 DAC', 'Audiophonics ES9028/9038 DAC (Pre 2019)');
-if (!in_array($_SESSION['i2sdevice'], $inputSwitchDevices)) {
+// MPD or Source select volume
+if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
+ 	if ($_SESSION['audioin'] == 'Local') {
+		$volKnob = $_SESSION['volknob_mpd'] != 0 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	} else {
+		$volKnob = $_SESSION['volknob_preamp'];
+	}
+} else {
+	$volKnob = $_SESSION['volknob_mpd'] != 0 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 	phpSession('write', 'volknob_mpd', '0');
 	phpSession('write', 'volknob_preamp', '0');
 }
-workerLog('worker: Saved volume:  ' . $_SESSION['volknob_mpd']);
-workerLog('worker: Preamp volume: ' . $_SESSION['volknob_preamp']);
+sysCmd('/var/www/vol.sh ' . $volKnob);
+workerLog('worker: Volume knob:      ' . $volKnob);
+workerLog('worker: Saved MPD volume: ' . $_SESSION['volknob_mpd']);
+workerLog('worker: Saved SRC volume: ' . $_SESSION['volknob_preamp']);
+// Hardware (ALSA) volume
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
-// Set ALSA volume to 0dB (100%) depending on mixer type
 if ($_SESSION['alsavolume'] != 'none') {
 	setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
-}
-$volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-// Restore MPD volume
-sysCmd('/var/www/vol.sh ' . $volume);
-workerLog('worker: MPD volume:    ' . $volume);
-// Hardware (ALSA) volume
-if ($_SESSION['alsavolume'] != 'none') {
 	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	workerLog('worker: Hdwr volume:   ' . $result[0]);
+	workerLog('worker: Hdwr volume:      ' . $result[0]);
 } else {
-	workerLog('worker: Hdwr volume:   controller not detected');
+	workerLog('worker: Hdwr volume:      controller not detected');
 }
 
 //----------------------------------------------------------------------------//
@@ -1089,8 +1085,7 @@ workerLog('worker: Maintenance task:  ' . ($_SESSION['maint_interval'] / 60) . '
 
 // Reset view to Playback (assumes the WebUI is up and connected)
 $view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' . $_SESSION['current_view'] : $_SESSION['current_view'];
-phpSession('write', 'current_view', $view);
-sendEngCmd('refresh_screen');
+sendEngCmd('reset_view');
 workerLog('worker: Current view:      reset to Playback');
 
 //----------------------------------------------------------------------------//
@@ -1588,7 +1583,7 @@ function updExtMetaFile() {
 		} else if ($GLOBALS['rbactive'] == '1') {
 			$renderer = 'Roonbridge Active';
 		} else if ($GLOBALS['inpactive'] == '1') {
-			$renderer = $_SESSION['audioin'] .' Input Active';
+			$renderer = $_SESSION['audioin'] . ' Input Active';
 		} else {
 			$renderer = 'Bluetooth Active';
 		}

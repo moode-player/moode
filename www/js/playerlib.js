@@ -486,7 +486,7 @@ function engineCmd() {
                         '<span id="inpsrc-msg-text">' + inputSourceName +
                         ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fa-regular fa-sharp fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
                         '</span>' +
-                        '<a class="btn configure-renderer" href="inp-config.php">Input Source</a>' +
+                        '<a class="btn configure-renderer" href="inp-config.php">Input Select</a>' +
                         audioInfoBtn());
                     break;
                 case 'btactive1':
@@ -567,6 +567,7 @@ function engineCmd() {
                 case 'recorder_nofiles':
                     notify('recorder_nofiles', '', '5_seconds');
                     break;
+                case 'reset_view':
                 case 'refresh_screen':
                     setTimeout(function() {
                         location.reload(true);
@@ -626,7 +627,11 @@ function engineCmdLite() {
                 case 'cdsp_config_update_failed':
                     notify('cdsp_config_update_failed', '', '10_seconds');
                     break;
+                case 'reset_view':
                 case 'refresh_screen':
+                    if (cmd[0] == 'reset_view') {
+                        window.location.replace('/index.php');
+                    }
                     setTimeout(function() {
                         location.reload(true);
                     }, DEFAULT_TIMEOUT);
@@ -1205,7 +1210,7 @@ function renderUI() {
                 '<span id="inpsrc-msg-text">' + SESSION.json['audioin'] +
                 ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fa-regular fa-sharp fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
                 '</span>' +
-                '<a class="btn configure-renderer" href="inp-config.php">Input Source</a>' +
+                '<a class="btn configure-renderer" href="inp-config.php">Input Select</a>' +
                 audioInfoBtn());
     	}
     	// Bluetooth renderer

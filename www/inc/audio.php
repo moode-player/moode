@@ -58,17 +58,20 @@ function cfgI2sOverlay($i2sDevice) {
 // Set audio source
 function setAudioIn($inputSource) {
 	sysCmd('mpc stop');
-	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", sqlConnect());
-
- 	// No need to configure Local during startup (wrkready = 0)
-	if ($inputSource == 'Local' && $result[0]['value'] == '1') {
+	$wrkReady = sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", sqlConnect())[0]['value'];
+	// No need to configure Local during startup (wrkready = 0)
+	if ($inputSource == 'Local' && $wrkReady == '1') {
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 			sysCmd('killall -s 9 alsaloop');
 		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
 			sysCmd('amixer -c 0 sset "I2S/SPDIF Select" I2S');
 		}
 		if ($_SESSION['mpdmixer'] == 'hardware') {
+			// Save Preamp volume
 			phpSession('write', 'volknob_preamp', $_SESSION['volknob']);
+			// Restore saved MPD volume
+			// vol.sh only updates cfg_system 'volknob' so lets also update the SESSION var
+			phpSession('write', 'volknob', $_SESSION['volknob_mpd']);
 			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_mpd']);
 		}
 
@@ -78,12 +81,16 @@ function setAudioIn($inputSource) {
 			sysCmd('mpc play');
 		}
 	} else if ($inputSource == 'Analog' || $inputSource == 'S/PDIF') {
-		// NOTE: the Source Select form requires MPD Volume control is set to Hardware or Disabled (0dB)
+		// NOTE: the Source Select form requires MPD Volume control to be set to Hardware or Disabled (0dB)
 		if ($_SESSION['mpdmixer'] == 'hardware') {
-			if ($result[0]['value'] == '1') {
-				// Only update this value during startup (wrkready = 0)
+			// Don't update this value during startup (wrkready = 0)
+			if ($wrkReady == '1') {
+				// Save MPD volume
 				phpSession('write', 'volknob_mpd', $_SESSION['volknob']);
 			}
+			// Restore saved Preamp volume
+			// vol.sh only updates cfg_system 'volknob' so lets also update the SESSION var
+			phpSession('write', 'volknob', $_SESSION['volknob_preamp']);
 			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_preamp']);
 		}
 

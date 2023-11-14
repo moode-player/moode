@@ -107,6 +107,13 @@ const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct');
 // Bluetooth ALSA output modes
 const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
 
+// Source select devices
+const SRC_SELECT_DEVICES = array(
+    'HiFiBerry DAC+ ADC',
+    'Audiophonics ES9028/9038 DAC',
+    'Audiophonics ES9028/9038 DAC (Pre 2019)'
+);
+
 // Library Saved Searches
 const LIBSEARCH_BASE = '/var/local/www/libsearch_';
 const LIB_FULL_LIBRARY = 'Full Library (Default)';
