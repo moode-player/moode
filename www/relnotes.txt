@@ -23,6 +23,7 @@ Updates
 - UPD: Bump to Font Awesome 6.4.2 Pro and update specific icons
 - UPD: Add comparison operators =~ and !~ (PERL regex) to Library Adv search
 - UPD: Add DSD<number> badge for DSF/DFF/WavPack DSD formats
+- UPD: Add DSD format to embedded cover art extractor
 - UPD: Add WavPack format to Default/Default+ options for Prefs, Thumbgen scan
 - UPD: Add Receivers btn on renderer overlay when connecting to Multiroom sender
 - UPD: Add Audio info button on renderer overlay
@@ -40,6 +41,7 @@ Updates
 - UPD: Improve readability and parsing of startup log
 - UPD: Improve the "Artist column" option in Prefs Library
 - UPD: Improve Favorite: update station type, include on Queue context menu
+- UPD: Improve Input select configuration and volume handling
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
 - UPD: Show "Radio station" for stations that transmit a bogus title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
