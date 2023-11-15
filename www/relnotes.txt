@@ -32,6 +32,7 @@ Updates
 - UPD: Add Prefs option for static waveform now-playing icon
 - UPD: Add BSSID to info on Network Config
 - UPD: Add ALSA output mode option to Bluetooth Control
+- UPD: Add Pi-5B revision code parsing to pirev.py utility
 - UPD: Improve metadata layout in CoverView wide mode
 - UPD: Improve icon for volume popup by always showing level
 - UPD: Improve sort headings in Radio and Playlist views
@@ -43,6 +44,7 @@ Updates
 - UPD: Improve Favorite: update station type, include on Queue context menu
 - UPD: Improve Input select configuration and volume handling
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
+- UPD: Remove unreliable AirPlay protocol switcher
 - UPD: Show "Radio station" for stations that transmit a bogus title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
 - UPD: Configure Squeezelite AUDIODEVICE param using Audio Config settings
@@ -50,7 +52,6 @@ Updates
 - UPD: Move DLNA server to File Sharing section of System Config
 - UPD: Move Prefs thumbnail and cover art options to dedicated section
 - UPD: Move selected Library prefs options for a more logical grouping
-- UPD: Add Pi-5B revision code parsing to pirev.py utility
 
 Audio devices
 
