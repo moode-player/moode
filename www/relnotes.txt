@@ -44,7 +44,7 @@ Updates
 - UPD: Improve Favorite: update station type, include on Queue context menu
 - UPD: Improve Input select configuration and volume handling
 - UPD: Replace Chrome deprecated vertical sliders with cross-Browser sliders
-- UPD: Remove unreliable AirPlay protocol switcher
+- UPD: Remove unreliable AirPlay protocol switcher (only AirPlay 2 supported)
 - UPD: Show "Radio station" for stations that transmit a bogus title tag
 - UPD: Standardize display style for encodedAt and ALSA output formats
 - UPD: Configure Squeezelite AUDIODEVICE param using Audio Config settings
