@@ -47,9 +47,7 @@ function startBluetooth() {
 }
 
 function startAirPlay() {
-	if (getAirPlayProtocolVer() == '2') {
-		sysCmd('systemctl start nqptp');
-	}
+	sysCmd('systemctl start nqptp');
 
 	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
@@ -76,10 +74,7 @@ function startAirPlay() {
 
 function stopAirPlay() {
 	sysCmd('killall shairport-sync');
-
-	if (getAirPlayProtocolVer() == '2') {
-		sysCmd('systemctl stop nqptp');
-	}
+	sysCmd('systemctl stop nqptp');
 
 	// Local
 	if (isMPD2CamillaDSPVolSyncEnabled()) {
@@ -101,10 +96,6 @@ function stopAirPlay() {
 	phpSession('write', 'aplactive', '0');
 	$GLOBALS['aplactive'] = '0';
 	sendEngCmd('aplactive0');
-}
-
-function getAirPlayProtocolVer() {
-	return empty(sysCmd('shairport-sync -V | grep "AirPlay2"')) ? '1' : '2';
 }
 
 function startSpotify() {
