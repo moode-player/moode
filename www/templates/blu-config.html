@@ -69,7 +69,7 @@
 			</div>
 		</div>
 
-		<legend>Audio output</legend>
+		<legend>Audio routing</legend>
 		<div class="control-group">
 			<select id="audioout" class="config-select-large" name="audioout">
 				$_select[audioout]
@@ -88,7 +88,7 @@
 			</select>
 			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pcm_buffer" value="1">Set</button>
 			<span class="config-help-static">
-				Length of the output buffer in milliseconds. Lower values reduce latency but may cause dropouts.
+				I-O buffer length in milliseconds. Lower values reduce latency but may cause dropouts.
 	        </span>
 		</div>
 
