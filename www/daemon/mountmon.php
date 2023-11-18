@@ -21,14 +21,14 @@
 
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/music-source.php';
-require_once __DIR__ . '/../inc/session.php';
+require_once __DIR__ . '/../inc/session.php'; // Needed
 require_once __DIR__ . '/../inc/sql.php';
 
 $dbh = sqlConnect();
+session_id(phpSession('get_sessionid'));
 
 while (true) {
-	session_id(phpSession('get_sessionid'));
-	phpSession('open_ro');
+	phpSession('open_ro'); // Needed for mountmonLog() which checks $_SESSION['debuglog']
 
 	sleep(MOUNTMON_SLEEP);
 	$mounts = sqlRead('cfg_source', $dbh);

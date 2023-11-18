@@ -1914,12 +1914,29 @@
 						Specifies whether the station stream is only avalable in a certain country or region.
 					</span>
 				</div>
-				<!--
-				<label class="control-label" for="new-station-reserved2">Reserved2</label>
+				<label class="control-label" for="new-station-mpd-monitor">Monitor</label>
 				<div class="controls">
-                    <input id="new-station-reserved2" class="input-large" type="text" name="new_station_reserved2" maxlength="10" value="">
-                </div>
-				-->
+					<div class="btn-group bootstrap-select select-large">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="new-station-mpd-monitor" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-mpd-monitor-sel"><span class="text">Yes</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-mpd-monitor-sel"><span class="text">No</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-mpd-monitor" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-new-station-mpd-monitor" class="help-block hide">
+						Specifies whether the station stream will be monitored for MPD buffer underrun conditions that could result in stalled playback.
+						When this is detected MPD will be restarted and playback optionally resumed.<br>
+						<b>Note:</b> Search using keyword "monitored" to list all stations marked for monitoring.
+					</span>
+				</div>
 			</div>
         </div>
 	</div>
@@ -1978,7 +1995,7 @@
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Hidden</span></a></li>
 							</ul>
 						</div>
-						</div>
+					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-edit-station-type" class="help-block hide">
 						This setting controls the visibility of the station and whether it's considered a favorite. Stations marked as hidden can be un-hidden via the Radio Manager.
@@ -2039,18 +2056,35 @@
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">No</span></a></li>
 							</ul>
 						</div>
-						</div>
+					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-edit-station-geo-fenced" class="help-block hide">
 						Specifies whether the station stream is only avalable in a certain country or region.
 					</span>
 				</div>
-				<!--
-				<label class="control-label" for="new-station-reserved2">Reserved2</label>
+				<label class="control-label" for="edit-station-mpd-monitor">Monitor</label>
 				<div class="controls">
-                    <input id="edit-station-reserved2" class="input-large" type="text" name="edit_station_reserved2" maxlength="10" value="">
-                </div>
-				-->
+					<div class="btn-group bootstrap-select select-large">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="edit-station-mpd-monitor" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-mpd-monitor-sel"><span class="text">Yes</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-mpd-monitor-sel"><span class="text">No</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-mpd-monitor" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-edit-station-mpd-monitor" class="help-block hide">
+						Specifies whether the station stream will be monitored for MPD buffer underrun conditions that could result in stalled playback.
+						When this is detected MPD will be restarted and playback optionally resumed.<br>
+						<b>Note:</b> Search using keyword "monitored" to list all stations marked for monitoring.
+					</span>
+				</div>
 			</div>
         </div>
 	</div>
@@ -2189,6 +2223,98 @@
 					<b>Hide all: </b> Set all other (non-moOde) stations to type "hidden" except for favorites.<br>
 					<b>Un-hide all: </b> Set all other (non-moOde) stations to type "regular" except for favorites.<br>
 					Note that other stations are those that have been user added.
+				</span>
+			</div>
+		</div>
+		<!-- MPD RADIO STREAM MONITOR -->
+		<span class="h5">Stream monitor</span>
+		<div class="control-group">
+			<label class="control-label" for="radioview-monitor-svc">Service</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-large">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-monitor-svc" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-svc-sel"><span class="text">On</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-svc-sel"><span class="text">Off</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-monitor-svc" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-radioview-monitor-svc" class="help-block hide">
+					The monitor service runs in the background and checks for MPD buffer underrun conditions that could result in stalled playback.
+					When this is detected MPD will be restarted and playback optionally resumed.<br>
+					<b>Note:</b> Edit a station and set the Monitor field to Yes to have the station checked.
+				</span>
+			</div>
+			<label class="control-label" for="radioview-monitor-opt1">Sleep interval (secs)</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-large">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-monitor-opt1" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt1-sel"><span class="text">6 (Default)</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt1-sel"><span class="text">3</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt1-sel"><span class="text">1</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-monitor-opt1" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-radioview-monitor-opt1" class="help-block hide">
+					Specify how often the monitor service wakes up to check the MPD log for buffer underrun messages.
+				</span>
+			</div>
+			<label class="control-label" for="radioview-monitor-opt2">Resume play</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-large">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-monitor-opt2" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt2-sel"><span class="text">Yes</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt2-sel"><span class="text">No</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-monitor-opt2" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-radioview-monitor-opt2" class="help-block hide">
+					Specify whether to resume playback after MPD is restarted.
+				</span>
+			</div>
+			<label class="control-label" for="radioview-monitor-opt3">Message threshold</label>
+			<div class="controls">
+				<div class="btn-group bootstrap-select select-large">
+					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+						<div id="radioview-monitor-opt3" class="filter-option pull-left">
+							<span></span>
+						</div>&nbsp;
+						<div class="caret"></div>
+					</button>
+					<div class="dropdown-menu open">
+						<ul class="dropdown-menu custom-select inner" role="menu">
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt3-sel"><span class="text">3 (Default)</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt3-sel"><span class="text">6</span></a></li>
+							<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-monitor-opt3-sel"><span class="text">9</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-monitor-opt3" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-radioview-monitor-opt3" class="help-block hide">
+					Specify the number of buffer underrun message that need to occur before MPD is restarted.
 				</span>
 			</div>
 		</div>
@@ -2705,7 +2831,7 @@
 			<li><a href="#notarget" data-cmd="repeat"><i class="fa-regular fa-sharp fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fa-solid fa-sharp fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="single"><i class="fa-regular fa-sharp fa-redo sx"></i> Single<span id="menu-check-single"><i class="fa-solid fa-sharp fa-check"></i></span></a></li>
 			<li class="menu-separator"><a href="#notarget" data-cmd="clear"><i class="fa-regular fa-sharp fa-trash sx"></i> Clear queue</a></li>
-			<li id="context-menu-stream-recorder" class="hide"><a href="#notarget" data-cmd="stream_recorder"><i class="fa-regular fa-sharp fa-video sx"></i> Record stream<span id="menu-check-recorder"><i class="fa-solid fa-sharp fa-check"></i></span></a></li>
+			<li id="context-menu-stream-recorder" class="hide"><a href="#notarget" data-cmd="stream_recorder"><i class="fa-regular fa-sharp fa-cassette-tape sx"></i> Record stream<span id="menu-check-recorder"><i class="fa-solid fa-sharp fa-check"></i></span></a></li>
 			<li id="context-menu-multiroom-sender" class="hide"><a href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i> Receivers</a></li>
 			<li><a href="#notarget" data-cmd="track_info_playback"><i class="fa-regular fa-sharp fa-music sx"></i> Audio info</a></li>
 			<li><a href="#notarget" data-cmd="toggle_song"><i class="fa-regular fa-sharp fa-exchange-alt sx"></i> Last track</a></li>

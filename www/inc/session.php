@@ -96,9 +96,11 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 			// Load cfg_radio into session
 			$rows = sqlRead('cfg_radio', sqlConnect(), 'all');
 			foreach ($rows as $row) {
-				$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'],
-					'bitrate' => $row['bitrate'], 'format' => $row['format'], 'home_page' => $row['home_page']);
+				$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'],
+					'logo' => $row['logo'], 'bitrate' => $row['bitrate'], 'format' => $row['format'],
+					'home_page' => $row['home_page'], 'monitor' => $row['monitor']);
 			}
+			//workerLog(print_r($_SESSION, true));
 			break;
 		case 'get_status':
 			// NOTE: $param can be used to mark locations in the caller(s) for example phpSession('get_status', ' 1')

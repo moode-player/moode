@@ -64,7 +64,9 @@ switch ($_GET['cmd']) {
 			$result = sqlRead('cfg_radio', $dbh, 'all');
 			$cfgRadio = array();
 			foreach ($result as $row) {
-				$cfgRadio[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'], 'home_page' => $row['home_page']);
+				$cfgRadio[$row['station']] = array('name' => $row['name'], 'type' => $row['type'],
+					'logo' => $row['logo'], 'bitrate' => $row['bitrate'], 'format' => $row['format'],
+					'home_page' => $row['home_page'], 'monitor' => $row['monitor']);
 			}
 			$data['cfg_radio'] = $cfgRadio;
 		}
@@ -94,7 +96,7 @@ switch ($_GET['cmd']) {
 				$result[0]['bg_color'] . ")\">'" . ' /var/www/header.php');
 		}
 
-		// Session only with no mirror in cfg_system
+		// Session only vars with no mirror column in cfg_system
 		if (isset($_POST['lib_scope'])) {
 			$_SESSION['lib_scope'] = $_POST['lib_scope'];
 			unset($_POST['lib_scope']);
@@ -106,6 +108,14 @@ switch ($_GET['cmd']) {
 		if (isset($_POST['on_screen_kbd'])) {
 			$_SESSION['on_screen_kbd'] = $_POST['on_screen_kbd'];
 			unset($_POST['on_screen_kbd']);
+		}
+		if (isset($_POST['mpd_monitor_svc'])) {
+			$_SESSION['mpd_monitor_svc'] = $_POST['mpd_monitor_svc'];
+			unset($_POST['mpd_monitor_svc']);
+		}
+		if (isset($_POST['mpd_monitor_opt'])) {
+			$_SESSION['mpd_monitor_opt'] = $_POST['mpd_monitor_opt'];
+			unset($_POST['mpd_monitor_opt']);
 		}
 
 		// Update cfg_system
@@ -146,4 +156,6 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['lib_active_search'] = $_SESSION['lib_active_search'];
 	$cfgSystem['auto_coverview'] = $_SESSION['auto_coverview'];
 	$cfgSystem['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
+	$cfgSystem['mpd_monitor_svc'] = $_SESSION['mpd_monitor_svc'];
+	$cfgSystem['mpd_monitor_opt'] = $_SESSION['mpd_monitor_opt'];
 }

@@ -249,14 +249,15 @@ RADIO_MANAGER_SETTINGS() {
 	echo -e "R A D I O   M A N A G E R   S E T T I N G S"
 	echo -e "\nSort tag\t\t= $rv_sort_tag\c"
 	echo -e "\nGroup method\t\t= $rv_group_method\c"
+	echo -e "\nShow moOde stations\t= $rv_show_moode\c"
+	echo -e "\nShow other stations\t= $rv_show_other\c"
+	rv_stream_monitor=$(moodeutl -d | grep "mpd_monitor_svc" | cut -d"|" -f2)
 	if [ $(($feat_bitmask & $FEAT_RECORDER)) -ne 0 ]; then
-		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
-		echo -e "\nShow other stations\t= $rv_show_other\c"
+		echo -e "\nStream monitor\t\t= $rv_stream_monitor\c"
 		echo -e "\nRecorder status\t\t= $rv_recorder_status\c"
 		echo -e "\nRecorder storage\t= $rv_recorder_storage\n"
 	else
-		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
-		echo -e "\nShow other stations\t= $rv_show_other\n"
+		echo -e "\nStream monitor\t\t= $rv_stream_monitor\n"
 	fi
 }
 

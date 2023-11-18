@@ -179,7 +179,7 @@ function reduceGenres(acc, track) {
 // the album's tracks and just those for the selected Album Artist.
 function reduceArtists(acc, track) {
 	if (track.album_artist &&
-        SESSION.json['library_tagview_artist'] != 'Artist (Reduced)' && 
+        SESSION.json['library_tagview_artist'] != 'Artist (Reduced)' &&
         SESSION.json['library_tagview_artist'] != 'Artist (Strict)') {
 		var album_artist = (track.album_artist).toLowerCase();
 		if (!acc[album_artist]) {
@@ -1294,11 +1294,16 @@ $('#database-radio').on('click', 'img', function(e) {
 $('#btn-ra-manager').click(function(e) {
     var sortGroup = SESSION.json['radioview_sort_group'].split(',');
     var showHide = SESSION.json['radioview_show_hide'].split(',');
+    var monitorOpt = SESSION.json['mpd_monitor_opt'].split(',');
     $('#radioview-sort-tag span').text(sortGroup[0]);
     $('#radioview-group-method span').text(sortGroup[1]);
     $('#radioview-show-hide-moode span').text(showHide[0]);
     $('#radioview-show-hide-other span').text(showHide[1]);
     $('#import-export-msg').text('');
+    $('#radioview-monitor-svc span').text(SESSION.json['mpd_monitor_svc']);
+    $('#radioview-monitor-opt1 span').text((monitorOpt[0] == '6' ? '6 (Default)' : monitorOpt[0]));
+    $('#radioview-monitor-opt2 span').text(monitorOpt[1]);
+    $('#radioview-monitor-opt3 span').text((monitorOpt[2] == '3' ? '3 (Default)' : monitorOpt[2]));
 
     if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
         if (SESSION.json['recorder_status'] == 'Not installed') {
@@ -1353,6 +1358,12 @@ $('#btn-ra-manager').click(function(e) {
 $('#btn-upd-radio-manager').click(function(e) {
     SESSION.json['radioview_sort_group'] = $('#radioview-sort-tag span').text() + ',' + $('#radioview-group-method span').text();
     SESSION.json['radioview_show_hide'] = $('#radioview-show-hide-moode span').text() + ',' + $('#radioview-show-hide-other span').text();
+    var mpdMonitorSvcChange = SESSION.json['mpd_monitor_svc'] == $('#radioview-monitor-svc span').text() ? false : true;
+    SESSION.json['mpd_monitor_svc'] = $('#radioview-monitor-svc span').text();
+    var monitorOpt1 = $('#radioview-monitor-opt1 span').text() == '6 (Default)' ? '6' : $('#radioview-monitor-opt1 span').text();
+    var monitorOpt2 = $('#radioview-monitor-opt2 span').text();
+    var monitorOpt3 = $('#radioview-monitor-opt3 span').text() == '3 (Default)' ? '3' : $('#radioview-monitor-opt3 span').text();
+    SESSION.json['mpd_monitor_opt'] = monitorOpt1 + ',' + monitorOpt2 + ',' + monitorOpt3;
 
     if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
         var recorderStatus = $('#recorder-status span').text();
@@ -1368,69 +1379,95 @@ $('#btn-upd-radio-manager').click(function(e) {
         'radioview_show_hide': SESSION.json['radioview_show_hide'],
         'recorder_status': SESSION.json['recorder_status'],
         'recorder_storage': SESSION.json['recorder_storage'],
-        'recorder_album_tag': SESSION.json['recorder_album_tag']
+        'recorder_album_tag': SESSION.json['recorder_album_tag'],
+        'mpd_monitor_svc': SESSION.json['mpd_monitor_svc'],
+        'mpd_monitor_opt': SESSION.json['mpd_monitor_opt']
          }, function() {
-            if (recorderStatus == 'Install recorder') {
-                notify('installing_plugin', '', 'infinite');
-                $.ajax({
-            		type: 'GET',
-            		url: 'command/recorder-cmd.php?cmd=recorder_install',
-                    dataType: 'json',
-            		async: true,
-            		cache: false,
-            		success: function(msgKey) {
-                        if (msgKey == 'recorder_installed') {
-                            $('#stream-recorder-options, #context-menu-stream-recorder').show();
-                            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
-                            notify(msgKey, 'Reboot required', '10_seconds');
-                        } else {
-                            notify(msgKey);
-                        }
-            		},
-            		error: function() {
-                        // A 404 on recorder-cmd.php so we revert to 'not installed'
-                        SESSION.json['recorder_status'] = 'Not installed';
-                        $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_status': 'Not installed'});
-                        notify('recorder_plugin_na');
-            		}
-            	});
-            } else if (recorderStatus == 'Uninstall recorder') {
-                $.post('command/recorder-cmd.php?cmd=recorder_uninstall');
-                $('#stream-recorder-options, #context-menu-stream-recorder').hide();
-                notify('recorder_uninstalled', '', '5_seconds');
-            } else if (recorderStorageChange === true) {
-                $.post('command/recorder-cmd.php?cmd=recorder_storage_change');
-                $('.playback-context-menu i').removeClass('recorder-on');
-                $('#menu-check-recorder').css('display', 'none');
-                notify('settings_updated');
-            } else if (recorderStatusChange && (recorderStatus == 'On' || recorderStatus == 'Off')) {
-                $.post('command/recorder-cmd.php?cmd=recorder_on_off');
-                if (recorderStatus == 'On') {
-                    $('.playback-context-menu i').addClass('recorder-on');
-                    $('#menu-check-recorder').css('display', 'inline');
-
-                } else {
+            if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
+                // Stream recorder
+                if (recorderStatus == 'Install recorder') {
+                    notify('installing_plugin', '', 'infinite');
+                    $.ajax({
+                		type: 'GET',
+                		url: 'command/recorder-cmd.php?cmd=recorder_install',
+                        dataType: 'json',
+                		async: true,
+                		cache: false,
+                		success: function(msgKey) {
+                            if (msgKey == 'recorder_installed') {
+                                $('#stream-recorder-options, #context-menu-stream-recorder').show();
+                                $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
+                                notify(msgKey, 'Reboot required', '10_seconds');
+                            } else {
+                                notify(msgKey);
+                            }
+                		},
+                		error: function() {
+                            // A 404 on recorder-cmd.php so we revert to 'not installed'
+                            SESSION.json['recorder_status'] = 'Not installed';
+                            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_status': 'Not installed'});
+                            notify('recorder_plugin_na');
+                		}
+                	});
+                } else if (recorderStatus == 'Uninstall recorder') {
+                    $.post('command/recorder-cmd.php?cmd=recorder_uninstall');
+                    $('#stream-recorder-options, #context-menu-stream-recorder').hide();
+                    notify('recorder_uninstalled', '', '5_seconds');
+                } else if (recorderStorageChange === true) {
+                    $.post('command/recorder-cmd.php?cmd=recorder_storage_change');
                     $('.playback-context-menu i').removeClass('recorder-on');
                     $('#menu-check-recorder').css('display', 'none');
+                    notify('settings_updated');
+                } else if (recorderStatusChange && (recorderStatus == 'On' || recorderStatus == 'Off')) {
+                    $.post('command/recorder-cmd.php?cmd=recorder_on_off');
+                    if (recorderStatus == 'On') {
+                        $('.playback-context-menu i').addClass('recorder-on');
+                        $('#menu-check-recorder').css('display', 'inline');
+
+                    } else {
+                        $('.playback-context-menu i').removeClass('recorder-on');
+                        $('#menu-check-recorder').css('display', 'none');
+                    }
+                    notify('settings_updated', 'Recoder ' + recorderStatus);
+                } else if ($('#tag-recordings span').text() == 'Yes') {
+                    // NOTE: Completion message sent from back-end via sendEngCmd()
+                    notify('recorder_tagging', 'Wait until completion message appears', 'infinite');
+                    $('#tag-recordings span').text('No');
+                    $.post('command/recorder-cmd.php?cmd=recorder_tag_files');
+                } else if ($('#delete-recordings span').text() != 'No') {
+                    var fileName = $('#delete-recordings span').text();
+                    $.post('command/recorder-cmd.php?cmd=recorder_delete_files', {'file_name': fileName}, function() {
+                        notify('recorder_deleted', 'Updating library...', '5_seconds');
+                    });
+                    $('#delete-recordings span').text('No'); // Reset
+                // Rest of radio manager (dup of below)
+                } else if (mpdMonitorSvcChange) {
+                    $.post('command/radio.php?cmd=mpd_monitor_svc',
+                        {'svc_on_off': SESSION.json['mpd_monitor_svc']},
+                        function() {
+                            notify('settings_updated', 'Monitor ' + SESSION.json['mpd_monitor_svc']);
+                        }
+                    );
+                } else {
+                    notify('settings_updated');
                 }
-                notify('settings_updated');
-            } else if ($('#tag-recordings span').text() == 'Yes') {
-                // NOTE: Completion message sent from back-end via sendEngCmd()
-                notify('recorder_tagging', 'Wait until completion message appears', 'infinite');
-                $('#tag-recordings span').text('No');
-                $.post('command/recorder-cmd.php?cmd=recorder_tag_files');
-            } else if ($('#delete-recordings span').text() != 'No') {
-                var fileName = $('#delete-recordings span').text();
-                $.post('command/recorder-cmd.php?cmd=recorder_delete_files', {'file_name': fileName}, function() {
-                    notify('recorder_deleted', 'Updating library...', '5_seconds');
-                });
-                $('#delete-recordings span').text('No'); // Reset
             } else {
-                notify('settings_updated');
-                setTimeout(function() {
-                    $('#btn-ra-refresh').click();
-                }, DEFAULT_TIMEOUT);
+                // Rest of radio manager
+                if (mpdMonitorSvcChange) {
+                    $.post('command/radio.php?cmd=mpd_monitor_svc',
+                        {'svc_on_off': SESSION.json['mpd_monitor_svc']},
+                        function() {
+                            notify('settings_updated', 'Monitor ' + SESSION.json['mpd_monitor_svc']);
+                        }
+                    );
+                } else {
+                    notify('settings_updated');
+                }
             }
+
+            setTimeout(function() {
+                $('#btn-ra-refresh').click();
+            }, DEFAULT_TIMEOUT);
         }
     );
 });

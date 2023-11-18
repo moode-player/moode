@@ -260,16 +260,28 @@ function dumpSession() {
 
 	setSessionId();
 	session_start();
+	session_write_close();
 	foreach ($_SESSION as $key => $value) {
 		// Radio stations
 		if (substr($key, 0, 4) == 'http') {
-			echo $key . '|' . $value['name'] . '|' . $value['type'] . '|' . $value['bitrate'] . '|' . $value['format'] . "\n";
+			/*DELETE:$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'],
+				'logo' => $row['logo'],	'bitrate' => $row['bitrate'], 'format' => $row['format'],
+				'home_page' => $row['home_page'], 'monitor' => $row['monitor']);
+			*/
+			echo $key . '|' .
+				$value['name'] . '|' .
+				$value['type'] . '|' .
+				$value['logo'] . '|' .
+				$value['home_page'] . '|' .
+				$value['bitrate'] . '|' .
+				$value['format'] . '|' .
+				$value['monitor'] . "\n";
 		} else {
 			// Cfg_system, etc
 			echo $key . '|' . (is_array($value) ? 'Array' : $value) . "\n";
 		}
 	}
-	session_write_close();
+	//DELETE:session_write_close();
 }
 
 function deleteSessionVar($argv) {
@@ -379,10 +391,12 @@ function sqlQuery($argv) {
 }
 
 function restartServers() {
-	exec('sudo killall -s 9 worker.php');
 	exec('sudo killall -s 9 watchdog.sh');
 	exec('sudo killall -s 9 mountmon.php >/dev/null 2>&1');
-	exec('sudo rm /run/worker.pid');
+	exec('sudo killall -s 9 mpdmon.php >/dev/null 2>&1');
+	exec('sudo killall -s 9 worker.php');
+	exec('sudo rm /var/run/worker.pid');
+	exec('sudo systemctl stop mpd2cdspvolume');
 	exec('sudo systemctl restart php7.4-fpm');
 	exec('sudo systemctl restart nginx');
 	exec('sudo systemctl stop mpd');
@@ -423,23 +437,25 @@ function systemInfo() {
 }
 
 function tailLog() {
-	$size = filesize(MOODE_LOG) - 1024;
+	$logSize = filesize(MOODE_LOG) - 1024;
+
 	while (true) {
 		clearstatcache();
 		$currentSize = filesize(MOODE_LOG);
-		if ($size == $currentSize) {
-			sleep(1);
-		    continue;
+
+		if ($logSize != $currentSize) {
+			$fh = fopen(MOODE_LOG, "r");
+			fseek($fh, $logSize);
+
+			while ($data = fgets($fh)) {
+				echo $data;
+			}
+
+			fclose($fh);
+			$logSize = $currentSize;
 		}
 
-		$fh = fopen(MOODE_LOG, "r");
-		fseek($fh, $size);
-
-		while ($d = fgets($fh)) {
-			echo $d;
-		}
-		fclose($fh);
-		$size = $currentSize;
+		sleep(1);
 	}
 }
 
@@ -570,6 +586,7 @@ function printSleepInt() {
 		'waitworker=' . WAITWORKER_SLEEP / 1000000 . ' | ' .
 		'watchdog=' . WATCHDOG_SLEEP . ' | ' .
 		'mountmon=' . MOUNTMON_SLEEP . ' | ' .
+		'mpdmon=' . explode(',', $_SESSION['mpd_monitor_opt'])[0] . ' | ' .
 		'gpiobuttons=' . GPIOBUTTONS_SLEEP . "\n";
 }
 

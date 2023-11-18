@@ -918,7 +918,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-station-bitrate').val('');
         $('#new-station-format').val('');
         $('#new-station-geo-fenced span').text('No');
-        //$('#new-station-reserved2').val('');
+        $('#new-station-mpd-monitor span').text('No');
 
 		$('#new-station-modal').modal();
 	});
@@ -996,12 +996,14 @@ jQuery(document).ready(function($) { 'use strict';
                 'format': $('#new-station-format').val().trim(),
                 'geo_fenced': $('#new-station-geo-fenced span').text(),
                 'home_page': $('#new-station-home-page').val().trim(),
-                'reserved2': 'NULL'
+                'monitor': $('#new-station-mpd-monitor span').text()
             };
             notify('creating_station');
             $.post('command/radio.php?cmd=new_station', {'path': path}, function(msg) {
                 if (msg == 'OK') {
-                    RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
+                    RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo'],
+                    'bitrate': path['bitrate'], 'format': path['format'], 'home_page': path['home_page'],
+                    'monitor': path['monitor']};
                     notify('new_station');
                 } else {
                     notify('validation_check', msg, '10_seconds');
@@ -1030,12 +1032,14 @@ jQuery(document).ready(function($) { 'use strict';
                 'format': $('#edit-station-format').val().trim(),
                 'geo_fenced': $('#edit-station-geo-fenced span').text(),
                 'home_page': $('#edit-station-home-page').val().trim(),
-                'reserved2': 'NULL'
+                'monitor': $('#edit-station-mpd-monitor span').text()
             };
             notify('updating_station');
             $.post('command/radio.php?cmd=upd_station', {'path': path}, function(msg) {
                 if (msg == 'OK') {
-                    RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
+                    RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo'],
+                    'bitrate': path['bitrate'], 'format': path['format'], 'home_page': path['home_page'],
+                    'monitor': path['monitor']};
                     notify('upd_station');
                 } else {
                     notify('validation_check', msg, '10_seconds');

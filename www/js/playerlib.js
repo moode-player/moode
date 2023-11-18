@@ -1928,6 +1928,9 @@ function renderRadioView() {
                 var radioViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }
 
+            // Monitor div
+            var monitorDiv = data[i].monitor == 'Yes' ? '<div style="display:none">monitored</div>' : '';
+
             // Metadata div's
             var bitrateDiv = (sortTag == 'bitrate' || sortTag == 'format') ? '<div class="radioview-metadata-text">' + data[i].bitrate + 'K ' + data[i].format + '</div>' : '';
             var broadcasterDiv = (sortTag == 'broadcaster' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].broadcaster + '</div>' : '';
@@ -1988,6 +1991,7 @@ function renderRadioView() {
 
             output += radioViewTxDiv;
             output += radioViewNvDiv;
+            output += monitorDiv;
             output += '</li>';
 
             lastSortTagValue = data[i][sortTag];
@@ -2567,7 +2571,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-station-bitrate').val(data['bitrate']);
                 $('#edit-station-format').val(data['format']);
                 $('#edit-station-geo-fenced span').text(data['geo_fenced']);
-                //$('#edit-station-reserved2').val(data['reserved2']);
+                $('#edit-station-mpd-monitor span').text(data['monitor']);
 
         		$('#edit-station-modal').modal();
             }, 'json');

@@ -150,6 +150,7 @@ sysCmd('moodeutl -D upd_rx_adv_toggle');
 sysCmd('moodeutl -D upd_tx_adv_toggle');
 sysCmd('moodeutl -D piano_dualmode');
 sysCmd('moodeutl -D wrkready');
+sysCmd('moodeutl -D airplay_protocol');
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
@@ -1114,6 +1115,12 @@ if (!isset($_SESSION['fs_mountmon'])) {
 	$_SESSION['fs_mountmon'] = 'Off';
 }
 
+// MPD radio stream monitor
+if (!isset($_SESSION['mpd_monitor_svc'])) {
+	$_SESSION['mpd_monitor_svc'] = 'Off';
+	$_SESSION['mpd_monitor_opt'] = '6,Yes,3'; // sleep_interval,resume_play,msg_threshold
+}
+
 //----------------------------------------------------------------------------//
 // Globals section
 // NOTE: These globals are used in the worker event loop functions
@@ -1207,6 +1214,13 @@ if ($_SESSION['fs_mountmon'] == 'On') {
 }
 workerLog('worker: Mount monitor:    ' . ($_SESSION['fs_mountmon'] == 'On' ? 'started' : 'off'));
 
+// Start MPD radio stream monitor
+sysCmd('killall -s 9 mpdmon.php');
+if ($_SESSION['mpd_monitor_svc'] == 'On') {
+	sysCmd('/var/www/daemon/mpdmon.php "' . $_SESSION['mpd_monitor_opt'] . '" > /dev/null 2>&1 &');
+}
+workerLog('worker: MPD monitor:      ' . ($_SESSION['mpd_monitor_svc'] == 'On' ? 'started' : 'off'));
+
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
@@ -1220,6 +1234,7 @@ debugLog('worker: Sleep intervals:  ' .
 	'waitworker=' . WAITWORKER_SLEEP / 1000000 . ', ' .
 	'watchdog=' . WATCHDOG_SLEEP . ', ' .
 	'mountmon=' . MOUNTMON_SLEEP . ', ' .
+	'mpdmon=' . explode(',', $_SESSION['mpd_monitor_opt'])[0] . ', ' .
 	'gpiobuttons=' . GPIOBUTTONS_SLEEP
 );
 
