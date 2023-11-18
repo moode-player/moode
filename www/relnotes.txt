@@ -15,6 +15,10 @@
 #
 ################################################################################
 
+New features
+
+- NEW: Radio manager stream monitor for restarting stalled streams
+
 Updates
 
 - UPD: Bump to MPD 0.23.14
