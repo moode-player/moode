@@ -23,10 +23,11 @@ require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
-if (isset($argv[1]) && isset($argv[2]) && isset($argv[3])) {
-	$sleepInterval = $argv[1];
-	$resumePlay = $argv[2];
-	$threshold = $argv[3];
+if (isset($argv[1])) {
+	$opt = explode(',', $argv[1]);
+	$sleepInterval = $opt[0];
+	$resumePlay = $opt[1];
+	$threshold = $opt[2];
 } else {
 	$sleepInterval = 6;
 	$resumePlay = 'Yes';
@@ -59,7 +60,7 @@ while (true) {
 			$fh = fopen(MPD_LOG, "r");
 			fseek($fh, $logSize);
 
-			// Wait for new log message and check for match
+			// Read log messages and check for match
 		    while ($data = fgets($fh)) {
 				//workerLog($data);
 				if (strpos($data, $logMessage) !== false) {

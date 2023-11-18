@@ -1358,11 +1358,19 @@ $('#btn-ra-manager').click(function(e) {
 $('#btn-upd-radio-manager').click(function(e) {
     SESSION.json['radioview_sort_group'] = $('#radioview-sort-tag span').text() + ',' + $('#radioview-group-method span').text();
     SESSION.json['radioview_show_hide'] = $('#radioview-show-hide-moode span').text() + ',' + $('#radioview-show-hide-other span').text();
+
     var mpdMonitorSvcChange = SESSION.json['mpd_monitor_svc'] == $('#radioview-monitor-svc span').text() ? false : true;
     SESSION.json['mpd_monitor_svc'] = $('#radioview-monitor-svc span').text();
+
     var monitorOpt1 = $('#radioview-monitor-opt1 span').text() == '6 (Default)' ? '6' : $('#radioview-monitor-opt1 span').text();
     var monitorOpt2 = $('#radioview-monitor-opt2 span').text();
     var monitorOpt3 = $('#radioview-monitor-opt3 span').text() == '3 (Default)' ? '3' : $('#radioview-monitor-opt3 span').text();
+    var mpdMonitorOpt = SESSION.json['mpd_monitor_opt'].split(',');
+    if (mpdMonitorOpt[0] == monitorOpt1 && mpdMonitorOpt[1] == monitorOpt2 && mpdMonitorOpt[2] == monitorOpt3) {
+        var mpdMonitorOptChange = false;
+    } else {
+        var mpdMonitorOptChange = true;
+    }
     SESSION.json['mpd_monitor_opt'] = monitorOpt1 + ',' + monitorOpt2 + ',' + monitorOpt3;
 
     if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
@@ -1441,11 +1449,13 @@ $('#btn-upd-radio-manager').click(function(e) {
                     });
                     $('#delete-recordings span').text('No'); // Reset
                 // Rest of radio manager (dup of below)
-                } else if (mpdMonitorSvcChange) {
+                } else if (mpdMonitorSvcChange || mpdMonitorOptChange) {
                     $.post('command/radio.php?cmd=mpd_monitor_svc',
-                        {'svc_on_off': SESSION.json['mpd_monitor_svc']},
+                        {'svc': SESSION.json['mpd_monitor_svc'], 'opt': SESSION.json['mpd_monitor_opt']},
                         function() {
-                            notify('settings_updated', 'Monitor ' + SESSION.json['mpd_monitor_svc']);
+                            var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] :
+                            (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted' : '');
+                            notify('settings_updated', msg);
                         }
                     );
                 } else {
@@ -1453,11 +1463,13 @@ $('#btn-upd-radio-manager').click(function(e) {
                 }
             } else {
                 // Rest of radio manager
-                if (mpdMonitorSvcChange) {
+                if (mpdMonitorSvcChange || mpdMonitorOptChange) {
                     $.post('command/radio.php?cmd=mpd_monitor_svc',
-                        {'svc_on_off': SESSION.json['mpd_monitor_svc']},
+                        {'svc': SESSION.json['mpd_monitor_svc'], 'opt': SESSION.json['mpd_monitor_opt']},
                         function() {
-                            notify('settings_updated', 'Monitor ' + SESSION.json['mpd_monitor_svc']);
+                            var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] :
+                            (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted' : '');
+                            notify('settings_updated', msg);
                         }
                     );
                 } else {

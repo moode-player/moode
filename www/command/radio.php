@@ -67,8 +67,9 @@ switch ($_GET['cmd']) {
 
 	case 'mpd_monitor_svc':
 		sysCmd('killall -s 9 mpdmon.php');
-		if ($_POST['svc_on_off'] == 'On') {
-			sysCmd('/var/www/daemon/mpdmon.php "' . $_SESSION['mpd_monitor_opt'] . '" > /dev/null 2>&1 &');
+		//workerLog($_POST['svc'] . '|' . $_POST['opt']);
+		if ($_POST['svc'] == 'On') {
+			sysCmd('/var/www/daemon/mpdmon.php "' . $_POST['opt'] . '" > /dev/null 2>&1 &');
 		}
 		break;
 	default:
