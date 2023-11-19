@@ -64,6 +64,7 @@ Audio devices
 Radio stations
 
 - NEW: Eirewave
+- NEW: Davide of MIMIC
 - NEW: Soma FM - Bossa Beyond
 - NEW: Soma FM - The In-Sound
 - NEW: Soma FM - Tiki Time
