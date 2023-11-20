@@ -90,6 +90,7 @@ Bug fixes
 - FIX: Playbar context menu overflows right boundary
 - FIX: Missing parenthesis when generating in nftables.conf
 - FIX: Moodeutl -f/-F can hang if hwparams is empty (rare)
+- FIX: HD badge hidden when radio station stopped
 
 ################################################################################
 #
