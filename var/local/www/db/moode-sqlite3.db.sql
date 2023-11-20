@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun Nov 19 09:28:04 2023
+-- File generated with SQLiteStudio v3.1.0 on Mon Nov 20 07:22:57 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -188,7 +188,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (123, 'library_ignore_articles'
 INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (125, 'volknob_preamp', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (126, 'library_albumview_sort', 'Artist/Year');
-INSERT INTO cfg_system (id, param, value) VALUES (127, 'library_thmgen_scan', 'Default+');
+INSERT INTO cfg_system (id, param, value) VALUES (127, 'library_thmgen_scan', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (128, 'wake_display', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (129, 'usb_volknob', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (130, 'led_state', '1,1');
