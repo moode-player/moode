@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Nov 18 19:58:59 2023
+-- File generated with SQLiteStudio v3.1.0 on Sun Nov 19 09:28:04 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -99,7 +99,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'HDMI');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
-INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'album,genre,track,disc,date,composer,conductor,performer,encoded,output');
+INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'encoded,output,track,date,composer');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
@@ -151,7 +151,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (86, 'scnrotate', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (87, 'scnbrightness', '255');
 INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (89, 'res_software_upd_url', 'https://raw.githubusercontent.com/moode-player/updates/main/moode-player');
-INSERT INTO cfg_system (id, param, value) VALUES (90, 'alphablend', '1.0');
+INSERT INTO cfg_system (id, param, value) VALUES (90, 'alphablend', '0.75');
 INSERT INTO cfg_system (id, param, value) VALUES (91, 'adaptive', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (92, 'audioout', 'Local');
 INSERT INTO cfg_system (id, param, value) VALUES (93, 'audioin', 'Local');
@@ -167,11 +167,11 @@ INSERT INTO cfg_system (id, param, value) VALUES (102, 'spotifyname', 'Moode Spo
 INSERT INTO cfg_system (id, param, value) VALUES (103, 'spotactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (104, 'rsmafterspot', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (105, 'library_covsearchpri', 'Embedded cover');
-INSERT INTO cfg_system (id, param, value) VALUES (106, 'library_hiresthm', 'Auto');
+INSERT INTO cfg_system (id, param, value) VALUES (106, 'library_hiresthm', '600px,60');
 INSERT INTO cfg_system (id, param, value) VALUES (107, 'library_pixelratio', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (108, 'usb_auto_updatedb', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '20px');
+INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '5px');
 INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
 INSERT INTO cfg_system (id, param, value) VALUES (112, 'rsmafterrb', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Artist');
@@ -187,17 +187,17 @@ INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (123, 'library_ignore_articles', 'a,an,the');
 INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (125, 'volknob_preamp', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (126, 'library_albumview_sort', 'Artist');
-INSERT INTO cfg_system (id, param, value) VALUES (127, 'library_thmgen_scan', 'Default');
+INSERT INTO cfg_system (id, param, value) VALUES (126, 'library_albumview_sort', 'Artist/Year');
+INSERT INTO cfg_system (id, param, value) VALUES (127, 'library_thmgen_scan', 'Default+');
 INSERT INTO cfg_system (id, param, value) VALUES (128, 'wake_display', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (129, 'usb_volknob', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (130, 'led_state', '1,1');
 INSERT INTO cfg_system (id, param, value) VALUES (131, 'library_tagview_covers', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (132, 'library_tagview_sort', 'Artist');
+INSERT INTO cfg_system (id, param, value) VALUES (132, 'library_tagview_sort', 'Album/Year');
 INSERT INTO cfg_system (id, param, value) VALUES (133, 'library_ellipsis_limited_text', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (134, 'preferences_modal_state', '1,0,0,0,0');
 INSERT INTO cfg_system (id, param, value) VALUES (135, 'font_size', 'Normal');
-INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '10');
+INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '5');
 INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_columns', '6/2 (Default)');
 INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '1');
@@ -206,7 +206,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
 INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
-INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'full_lib');
 INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
 INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
