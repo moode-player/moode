@@ -1103,16 +1103,15 @@ function renderUI() {
         }
 
         // Show/hide HD badge
-        if (MPD.json['audio_sample_rate'] !== null &&
-            MPD.json['hidef'] == 'yes' &&
+        if (MPD.json['hidef'] == 'yes' &&
             SESSION.json['library_encoded_at'] &&
             SESSION.json['library_encoded_at'] != '9') {
             // Playback
             if (MPD.json['artist'] == 'Radio station') {
                 $('#currentartist-div span.playback-hd-badge').show();
             } else {
-                $('#currentartist-div span.playback-hd-badge').hide();
                 $('#currentalbum-div span.playback-hd-badge').show();
+                $('#currentartist-div span.playback-hd-badge').hide();
             }
             // Playbar
             $('#playbar-hd-badge').show();
@@ -1527,7 +1526,7 @@ function renderPlayqueue(state) {
             } // End loop
         }
 
-		// Render playlist
+		// Render Queue
 		var element = document.getElementById('playqueue-list');
 		element.innerHTML = output;
 
@@ -1546,6 +1545,7 @@ function renderPlayqueue(state) {
                 }
             }
         } else {
+            // Queue is empty
             $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
 
