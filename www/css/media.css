@@ -73,7 +73,7 @@ body {
 	#timeline {display:none;width:74vw;}
 	#mobile-time {display:block;}
 	#extra-tags-display {display:none;}
-	#currentsong {font-size:1.5em;padding-top:1em;}
+	#currentsong {font-size:1.5em;padding-top:1em;max-height:5em;overflow:hidden;}
 	#currentartist, #currentalbum {font-size:1.25em;padding-top:1em;}
 	#songsand-sample-rate {display:block;font-size:1.25em;padding-top:1em;color:var(--textvariant);}
 
