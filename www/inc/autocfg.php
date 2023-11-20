@@ -539,7 +539,16 @@ function autoConfigSettings() {
 		['requires' => ['playlist_art'], 'handler' => setphpSession],
 		['requires' => ['extra_tags'], 'handler' => setphpSession],
 		['requires' => ['playhist'], 'handler' => setphpSession],
-		['requires' => ['show_npicon'], 'handler' => setphpSession],
+		['requires' => ['show_npicon'], 'handler' => function($values) {
+			if ($values['show_npicon'] == 'Yes') {
+				$value = 'Waveform';
+			} else if ($values['show_npicon'] == 'No') {
+				$value = 'None';
+			} else {
+				$value = $values['show_npicon'];
+			}
+			phpSession('write', 'show_npicon', $value);
+		}],
 		['requires' => ['show_cvpb'], 'handler' => setphpSession],
 
 		'Library',
