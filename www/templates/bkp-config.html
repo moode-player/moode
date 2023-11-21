@@ -41,11 +41,11 @@
 				<input type="file" id="backup-scriptfile" accept=".sh,.py" name="backup_scriptfile" style="display:none" onchange="$('#btn-import-scriptfile').click();">
 				<button id="btn-import-scriptfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_scriptfile" value="1"  style="display:none"></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-scriptfile" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<span id="info-backup-scriptfile" class="config-help-info config-help-no-margin">
-					Add a script file that performs custom actions during the restore process.
-				</span>
 				<span class="config-help-static">
 					$_imported_scriptfile
+				</span>
+				<span id="info-backup-scriptfile" class="config-help-info">
+					Add a script file that performs custom actions during the restore process.
 				</span>
 			</div>
 
@@ -184,13 +184,13 @@
 				<button id="btn-import-backupfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_backupfile" value="1"  style="display:none"/>
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="reset_options" form="restore" value="1">Reset</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<span id="info-backupfile" class="config-help-info config-help-no-margin">
-					Select: Choose and upload a backup zip file that will be used for the restore process.<br>
-					Reset: Clear the uploaded file from the temp directory and reset the option buttons to No.
-				</span>
 				<div class="config-help-static">
 					$_imported_backupfile
 				</div>
+				<span id="info-backupfile" class="config-help-info">
+					Select: Choose and upload a backup zip file that will be used for the restore process.<br>
+					Reset: Clear the uploaded file from the temp directory and reset the option buttons to No.
+				</span>
 			</div>
 
 			<div class="controls">
