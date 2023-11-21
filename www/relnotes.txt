@@ -91,6 +91,7 @@ Bug fixes
 - FIX: Missing parenthesis when generating in nftables.conf
 - FIX: Moodeutl -f/-F can hang if hwparams is empty (rare)
 - FIX: HD badge hidden when radio station stopped
+- FIX: Other minor fixes
 
 ################################################################################
 #
