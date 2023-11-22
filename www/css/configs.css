@@ -80,7 +80,7 @@ input[type=password] {display:inline-block;height:22px;vertical-align:top;margin
 
 /* Help text */
 a.config-info-toggle {vertical-align:top;}
-.config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}
+.config-info-toggle i {vertical-align:top;margin-top:5px;font-size:18px;}
 .config-help-info,
 .config-help-static,
 .config-msg-static {display:block;font-size:12px;color:var(--config-help-color);margin-top:var(--config-help-margin-top);margin-bottom:var(--config-ctl-margin-bottom);}
@@ -92,7 +92,7 @@ a.config-info-toggle {vertical-align:top;}
 #sys-status-log-output {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
 /* net-config, src-config: Show/hide password plaintext */
 a.show-hide-password {vertical-align:top;}
-.show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin-bottom);}
+.show-hide-password i {vertical-align:top;margin-top:5px;font-size:18px;margin-left:var(--config-ctl-margin-bottom);}
 .left-margin-0 i {margin-left:0;}
 /* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:200vh;border:none;}
