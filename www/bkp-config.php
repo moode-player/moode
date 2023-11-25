@@ -28,6 +28,7 @@ const TMP_MOODECFG_INI = '/tmp/moodecfg.ini';
 const TMP_RESTORE_ZIP = '/tmp/restore.zip';
 const TMP_SCRIPT_FILE = '/tmp/script';
 const BACKUP_FILE_PREFIX = 'backup_';
+const CAMILLADSP_BASE_DIR = '/usr/share/camilladsp/';
 
 if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	$backupOptions = '';
@@ -123,7 +124,13 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		} else {
 			$restoreOptions = '--what ' . $restoreOptions . ' ';
 
-			//workerLog('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
+			// Clear CamillaDSP configs and IR files if option is set
+			if ($_POST['clear_before_restore_camilladsp'] == '1') {
+				sysCmd('rm ' . CAMILLADSP_BASE_DIR . 'coeffs/*');
+				sysCmd('find ' . CAMILLADSP_BASE_DIR . "configs ! -name '__quick_convolution__.yml' -type f -exec rm -f {} +");
+			}
+
+			//workerLog('bkp-config: /var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('rm ' . TMP_RESTORE_ZIP);
 			// Set permissions in case the restore doesn't require a reboot
@@ -184,7 +191,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 }
 
  // Helper method to generate html code for toggle button
-function genToggleButton($name, $value, $disabled) {
+function genToggleButton($name, $value, $disabled, $infoHelp = true) {
 	$id = str_replace('_', '-', $name);
 	$template = '
 	<div class="toggle" %disable_style>
@@ -192,8 +199,9 @@ function genToggleButton($name, $value, $disabled) {
 		<input type="radio" name="%name" id="toggle-%id-1" value="1" %checked1>
 		<label class="toggle-radio toggle-%id" for="toggle-%id-1">OFF</label>
 		<input type="radio" name="%name" id="toggle-%id-2" value="0" %checked0>
-	</div>
-	<a aria-label="Help" class="config-info-toggle" data-cmd="info-%id" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>';
+	</div>' . ($infoHelp === false ? '' :
+		'<a aria-label="Help" class="config-info-toggle" data-cmd="info-%id" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>');
+
 
 	return strtr($template , [
 		'%id' => $id,
@@ -221,6 +229,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	//workerLog(print_r($backupOptions, true));
 	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), !in_array('config', $backupOptions));
 	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), !in_array('cdsp', $backupOptions));
+	$_togglebtn_clear_before_restore_camilladsp = genToggleButton('clear_before_restore_camilladsp', false, !in_array('cdsp', $backupOptions), false);
 	$_togglebtn_restore_playlists = genToggleButton('restore_playlists', in_array('playlists', $backupOptions), !in_array('playlists', $backupOptions));
 	$_togglebtn_restore_searches = genToggleButton('restore_searches', in_array('searches', $backupOptions), !in_array('searches', $backupOptions));
 	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), !in_array('r_moode', $backupOptions));
