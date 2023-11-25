@@ -162,6 +162,7 @@ class BackupManager(StationManager):
                     backup.extract('bgimage.jpg', '/var/local/www/imagesw')
                     system('chmod a+r /var/local/www/imagesw/bgimage.jpg')
 
+            # TODO: Move cdsp clear_before_restore from bkp-config.php to here
             # restore camilladsp configs
             if BackupManager.OPT_CDSP in what:
                 names = [ name  for name in backup.namelist() if 'camilladsp/' in name]
