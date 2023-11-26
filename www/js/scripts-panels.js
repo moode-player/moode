@@ -1305,7 +1305,7 @@ jQuery(document).ready(function($) { 'use strict';
                     output += '</li>';
                 }
             } else {
-                // ERROR: No saved searches found (item 1 LIB_FULL_LIBRARY should always exist
+                // Error: No saved searches found (item 1 LIB_FULL_LIBRARY should always exist
             }
             element.innerHTML = output;
         }, 'json');

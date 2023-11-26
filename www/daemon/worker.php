@@ -97,7 +97,7 @@ workerLog('worker: Successfully daemonized');
 
 // Check for login user ID
 if (empty(getUserID())) {
-	$logMsg = 'worker: ERROR: Login User ID does not exist, unable to continue';
+	$logMsg = 'worker: Error: Login User ID does not exist, unable to continue';
 	workerLog($logMsg);
 	exit($logMsg . "\n");
 }
@@ -120,7 +120,7 @@ for ($i = 0; $i < $maxLoops; $i++) {
 if ($linuxStartupComplete === true) {
 	workerLog('worker: Linux startup complete');
 } else {
-	$logMsg = 'worker: ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
+	$logMsg = 'worker: Error: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
 	workerLog($logMsg);
 	exit($logMsg . "\n");
 }
@@ -133,8 +133,8 @@ if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
 } else {
 	// Restore
 	sysCmd('cp ' . BOOT_CONFIG_BKP . ' ' . BOOT_CONFIG_TXT);
-	workerLog('worker: WARNING: Boot config restored');
-	workerLog('worker: WARNING: Restart required');
+	workerLog('worker: Warning: Boot config restored');
+	workerLog('worker: Warning: Restart required');
 }
 
 // Prune old session vars
@@ -226,7 +226,7 @@ workerLog('worker: MPD config:  ' . $mpdDevice[0]['value'] . ':' . $_SESSION['ad
 
 // Check for device not found
 if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdDevice[0]['value']] == 'empty') {
-	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpdDevice[0]['value']);
+	workerLog('worker: Warning: No device found at MPD configured card ' . $mpdDevice[0]['value']);
 }
 
 // Zero out ALSA volume
@@ -383,7 +383,7 @@ if (file_exists('/etc/wpa_supplicant/wpa_supplicant.conf')) {
 			cfgHostApd();
 			workerLog('worker: WiFi SSID/PSK imported');
 		} else {
-			workerLog('worker: WARNING: WiFi SSID/PSK import failed');
+			workerLog('worker: Warning: WiFi SSID/PSK import failed');
 		}
 	}
 }
@@ -538,7 +538,7 @@ workerLog('worker: --');
 $updateMpdConf == false;
 if (!file_exists('/etc/mpd.conf')) {
 	$updateMpdConf = true;
-	$mpdConfUpdMsg = 'MPD config:    WARNING: file missing, regenerating it';
+	$mpdConfUpdMsg = 'MPD config:    Warning: file missing, regenerating it';
 } else {
 	switch (audioOutputTarget()) {
 		case AudioOutputTargetType.TRXSEND:
@@ -560,7 +560,7 @@ if (!file_exists('/etc/mpd.conf')) {
 			$mpdConfUpdMsg = 'MPD config:    updated';
 			break;
 		default:
-			$mpdConfUpdMsg = 'MPD config:    ERROR: Unknown audio output target';
+			$mpdConfUpdMsg = 'MPD config:    Error: Unknown audio output target';
 			break;
 	}
 }
@@ -588,7 +588,7 @@ if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
 	workerLog('worker: Audio device:  ' . $_SESSION['i2sdevice']);
 }
 if ($cards[$mpdDevice[0]['value']] == 'empty') {
-	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpdDevice[0]['value']);
+	workerLog('worker: Warning: No device found at MPD configured card ' . $mpdDevice[0]['value']);
 } else {
 	$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 	workerLog('worker: Formats:       ' . $_SESSION['audio_formats']);
@@ -1340,14 +1340,14 @@ function chkMaintenance() {
 		// Clear logs
 		$result = sysCmd('/var/www/util/sysutil.sh "clear-syslogs"');
 		if (!empty($result)) {
-			workerLog('worker: Maintenance: WARNING: Problem clearing system logs');
+			workerLog('worker: Maintenance: Warning: Problem clearing system logs');
 			workerLog('worker: Maintenance: ' . $result[0]);
 		}
 
 		// Compact SQLite database
 		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
 		if (!empty($result)) {
-			workerLog('worker: Maintenance: WARNING: Problem compacting SQLite database');
+			workerLog('worker: Maintenance: Warning: Problem compacting SQLite database');
 			workerLog('worker: Maintenance: ' . $result[0]);
 		}
 

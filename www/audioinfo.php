@@ -234,7 +234,7 @@ elseif ($_SESSION['mpdmixer'] == 'null') {
 	$_volume_mixer = 'Null (External control)';
 }
 else {
-	$_volume_mixer = 'ERROR: Unknow MPD volume type';
+	$_volume_mixer = 'Error: Unknow MPD volume type';
 }
 
 if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == '1' ||

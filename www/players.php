@@ -31,7 +31,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		for ($i = 0; $i < $count; $i++) {
 			if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
 				'/command/system.php?cmd=' . $_GET['cmd']))) {
-				workerLog('players.php: ERROR: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' failed');
+				workerLog('players.php: Error: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' failed');
 			} else {
 				workerLog('players.php: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' result: ' . $result);
 			}

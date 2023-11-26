@@ -98,12 +98,12 @@ Version=2"""
                     print('SQL database location is \'{}\''.format(self.db_file) )
             except Error as e:
                 if verbose:
-                    print('ERROR: Could not open SQL database at \'{}\''.format(self.db_file) )
+                    print('Error: Could not open SQL database at \'{}\''.format(self.db_file) )
                     print(e)
                 return_code = 5
         else:
             if verbose:
-                print('ERROR: SQL database not found at \'{}\''.format(self.db_file) )
+                print('Error: SQL database not found at \'{}\''.format(self.db_file) )
             return_code = 4
 
         for radio_logo_path in radio_logos_paths:
@@ -116,12 +116,12 @@ Version=2"""
                 print('Station logos location is \'{}\''.format(self.radio_logos_path ))
             if os.path.isdir(os.path.join(self.radio_logos_path, 'thumbs')) == False:
                 if verbose:
-                    print('ERROR: Could not find station logo thumbs at \'{}\''.format(os.path.join(self.radio_logos_path, 'thumbs')) )
+                    print('Error: Could not find station logo thumbs at \'{}\''.format(os.path.join(self.radio_logos_path, 'thumbs')) )
                 return_code = 2
         else:
             return_code = 1
             if verbose:
-                print('ERROR: Could not find station logos, tried {}'.format(", ".join(radio_logos_paths) ))
+                print('Error: Could not find station logos, tried {}'.format(", ".join(radio_logos_paths) ))
 
         self.db_ver = 7 if 'geo_fenced' in self.get_fields() else 6
 
@@ -136,7 +136,7 @@ Version=2"""
         if os.path.exists(self.backup_file) == False:
             return_code = 6
             if verbose:
-                print('ERROR: Station backup file \'{}\' not found.'.format(self.backup_file) )
+                print('Error: Station backup file \'{}\' not found.'.format(self.backup_file) )
         else:
             if verbose:
                 print('Using Station backup file \'{}\'.'.format(self.backup_file) )
@@ -148,13 +148,13 @@ Version=2"""
                 try:
                     info = backup.getinfo('var/local/www/db/cfg_radio.csv')
                     if verbose:
-                        print('WARNING: Station backup is an old format')
+                        print('Warning: Station backup is an old format')
                     self.backup_is_legacy_format = True
                     self.archive_images_location = StationManager.ARCHIVE_PATH_IMAGES_LEGACY
                 except KeyError:
                     return_code = 12
                     if verbose:
-                        print('ERROR: Station backup file \'{}\' is not a valid format'.format(self.backup_file))
+                        print('Error: Station backup file \'{}\' is not a valid format'.format(self.backup_file))
 
         return return_code
 
@@ -228,14 +228,14 @@ Version=2"""
             if path.exists(image_filename):
                 backup.write(image_filename, 'radio-logos/'+station['name']+'.jpg')
             else:
-                print('WARNING: Station logo not found for \' %s\'' %(image_filename) )
+                print('Warning: Station logo not found for \' %s\'' %(image_filename) )
 
             if path.exists(image_filename_thumb):
                 backup.write(image_filename_thumb, 'radio-logos/thumbs/'+station['name']+'.jpg')
                 if path.exists(image_filename_thumb_sm):
                     backup.write(image_filename_thumb_sm, 'radio-logos/thumbs/'+station['name']+'_sm.jpg')
             else:
-                print('WARNING: Station logo thumb not found for \' %s\'' %(image_filename) )
+                print('Warning: Station logo thumb not found for \' %s\'' %(image_filename) )
 
 
     def filter_stations(self, stations, scope, station_type = None):
@@ -270,7 +270,7 @@ Version=2"""
 
         # if source and target are both 7 or both 6 no need to do something
         if target_ver7 != source_ver7:
-            print('WARNING: Source and target differ, correcting used types')
+            print('Warning: Source and target differ, correcting used types')
             for station in data['stations']:
                 if target_ver7:
                     station['type'] = 'r'
@@ -300,7 +300,7 @@ Version=2"""
                     fields.append(field_raw.strip().split(' ')[0])
                 data['fields'] = fields
         except KeyError:
-            print("WARNING: no schema information, guessing moOde 6.7.1 station backup format")
+            print("Warning: no schema information, guessing moOde 6.7.1 station backup format")
             fields = ['id',
                     'station',
                     'name',
@@ -356,7 +356,7 @@ Version=2"""
             pass
         else:
             return_code = 3
-            print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            print('Error: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
 
         print('import')
         with ZipFile(self.backup_file, 'r') as backup:
@@ -451,7 +451,7 @@ Version=2"""
                 with open(os.path.join(self.radio_logos_path, 'thumbs', '{}.jpg'.format(name)), 'wb') as image_file:
                     image_file.write( backup.read(os.path.join(self.archive_images_location, 'thumbs', '{}.jpg'.format(name)) ) )
             except KeyError:
-                print("WARNING: Missing station logo thumb for '{}', generating one".format(name))
+                print("Warning: Missing station logo thumb for '{}', generating one".format(name))
                 os.system('ffmpeg -v 20 -y -i "{}" -s 200x200 "{}"'.format(os.path.join(self.radio_logos_path, '{}.jpg'.format(name))
                                                                         ,os.path.join(self.radio_logos_path, 'thumbs', '{}.jpg'.format(name)) ) )
 
@@ -460,13 +460,13 @@ Version=2"""
                     image_file.write( backup.read(os.path.join(self.archive_images_location, 'thumbs', '{}_sm.jpg'.format(name)) ) )
             except KeyError:
                 if self.db_ver >= 7:
-                    print("WARNING: Missing station logo thumb for '{}', generating one".format(name))
+                    print("Warning: Missing station logo thumb for '{}', generating one".format(name))
                     os.system('ffmpeg -v 20 -y -i "{}" -s 80x80 "{}"'.format(os.path.join(self.radio_logos_path, '{}.jpg'.format(name))
                                                                         ,os.path.join(self.radio_logos_path, 'thumbs', '{}_sm.jpg'.format(name)) ) )
 
 
         except KeyError as e:
-            print("ERROR: Missing station logo '{}'".format(name))
+            print("Error: Missing station logo '{}'".format(name))
 
 
     def clear_stations(self, scope):
@@ -638,7 +638,7 @@ Version=2"""
                         if path.exists(image_filename):
                             diff_backup.write(image_filename, 'radio-logos/'+station['name']+'.jpg')
                         else:
-                            print('WARNING: Station logo not found for \' %s\'' %(image_filename) )
+                            print('Warning: Station logo not found for \' %s\'' %(image_filename) )
 
                         if path.exists(image_filename_thumb):
                             diff_backup.write(image_filename_thumb, 'radio-logos/thumbs/'+station['name']+'.jpg')
@@ -739,10 +739,10 @@ if __name__ == "__main__":
 
     if args.do_import or args.do_clear:
         if os.geteuid() != 0:
-            print("ERROR: Root privileges are required for import or clear, run with sudo.")
+            print("Error: Root privileges are required for import or clear, run with sudo.")
             exit(10)
     if args.backupfile == None and (args.do_import or args.do_export or args.do_diff):
-        print("ERROR: No station backup file provided. Required for import, export and compare.")
+        print("Error: No station backup file provided. Required for import, export and compare.")
         exit(11)
 
 

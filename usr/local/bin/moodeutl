@@ -324,7 +324,7 @@ function audioFormats($option) {
 				echo $result;
 			}
 		} else if (empty($hwParams)) {
-			echo 'WARNING: Card ' . $cardNum . ' hwparams is empty' . "\n";
+			echo 'Warning: Card ' . $cardNum . ' hwparams is empty' . "\n";
 		} else {
 			if (posix_getuid() != 0) {
 				echo "This option requires sudo if the device is in use\n";

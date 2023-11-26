@@ -58,7 +58,7 @@ while (true) {
 
 					// Attempt remount
 					if ($fileSharingAccessible === false) {
-						mountmonLog('- WARNING: File sharing is not accessible');
+						mountmonLog('- Warning: File sharing is not accessible');
 					} else {
 						mountmonLog('- File sharing is accessible');
 						// Check for "Stale file handle" (NFS) or "Host is down" (SMB) return messages
@@ -78,7 +78,7 @@ while (true) {
 					sourceMount('mount', $mp['id'], 'mountmonlog');
 				}
 			} else {
-				mountmonLog('- WARNING: Remote host for ' . $mp['name'] . ' is unreachable');
+				mountmonLog('- Warning: Remote host for ' . $mp['name'] . ' is unreachable');
 			}
 		}
 	} else {
