@@ -38,7 +38,7 @@ Updates
 - UPD: Add underscore to allowed characters in manually entered SSID
 - UPD: Add ALSA output mode option to Bluetooth Control
 - UPD: Add Pi-5B revision code parsing to pirev.py utility
-- UPD: Add option to clear CamillaDSP configs and IR files before restore
+- UPD: Add option to remove CamillaDSP configs and IR files before restore
 - UPD: Improve metadata layout in CoverView wide mode
 - UPD: Improve icon for volume popup by always showing level
 - UPD: Improve sort headings in Radio and Playlist views
