@@ -122,14 +122,8 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 			$_SESSION['notify']['title'] = 'Specify at least one item to restore';
 			phpSession('close');
 		} else {
-			$restoreOptions = '--what ' . $restoreOptions . ' ';
-
-			// Clear CamillaDSP configs and IR files if option is set
-			if ($_POST['clear_before_restore_camilladsp'] == '1') {
-				sysCmd('rm ' . CAMILLADSP_BASE_DIR . 'coeffs/*');
-				sysCmd('find ' . CAMILLADSP_BASE_DIR . "configs ! -name '__quick_convolution__.yml' -type f -exec rm -f {} +");
-			}
-
+			$restoreOptions = '--what ' . $restoreOptions . ' ' .
+				($_POST['restore_camilladsp_with_replace'] == '1' ? '--cdsp-replace' : '') . ' ';
 			//workerLog('bkp-config: /var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('rm ' . TMP_RESTORE_ZIP);
@@ -229,7 +223,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	//workerLog(print_r($backupOptions, true));
 	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), !in_array('config', $backupOptions));
 	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), !in_array('cdsp', $backupOptions));
-	$_togglebtn_clear_before_restore_camilladsp = genToggleButton('clear_before_restore_camilladsp', false, !in_array('cdsp', $backupOptions), false);
+	$_togglebtn_restore_camilladsp_with_replace = genToggleButton('restore_camilladsp_with_replace', false, !in_array('cdsp', $backupOptions), false);
 	$_togglebtn_restore_playlists = genToggleButton('restore_playlists', in_array('playlists', $backupOptions), !in_array('playlists', $backupOptions));
 	$_togglebtn_restore_searches = genToggleButton('restore_searches', in_array('searches', $backupOptions), !in_array('searches', $backupOptions));
 	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), !in_array('r_moode', $backupOptions));

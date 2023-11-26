@@ -37,7 +37,7 @@ from zipfile import ZipFile
 from station_manager import StationManager
 
 class BackupManager(StationManager):
-    VERSION = "2.2"
+    VERSION = "2.3"
 
     CDSPCFG_BASE = '/usr/share/camilladsp/'
     MOODECFGINI_TMP = '/tmp/moodecfg.ini'
@@ -59,7 +59,7 @@ class BackupManager(StationManager):
     SEARCHES_RESTORE_BASE = '/var/local'
 
 
-    # for test
+    # For test
     # MOODECFGINI_RESTORE_PATH = '/tmp'
     # CDSPCFG_RESTORE_BASE = '/tmp'
 
@@ -78,7 +78,7 @@ class BackupManager(StationManager):
 
         zipmode = 'w'
         if scope:
-            # the stationmanager already creates a zipfile, so make the zipmode append
+            # The stationmanager already creates a zipfile, so make the zipmode append
             self.do_export(scope, None)
             zipmode = 'a'
 
@@ -93,7 +93,7 @@ class BackupManager(StationManager):
                 system ('sed -i "s/wlanpwd = .*/wlanpwd = \\"{}\\"/g" {}'.format(wlanpwd, BackupManager.MOODECFGINI_TMP))
 
         with ZipFile(self.backup_file, zipmode) as backup:
-            # backup moodecfg.ini
+            # Backup moodecfg.ini
             if BackupManager.OPT_CFG in what:
                 if os.path.exists(BackupManager.MOODECFGINI_TMP):
                     backup.write(BackupManager.MOODECFGINI_TMP, 'moodecfg.ini')
@@ -104,7 +104,7 @@ class BackupManager(StationManager):
                 if os.path.exists('/var/local/www/imagesw/bgimage.jpg'):
                     backup.write('/var/local/www/imagesw/bgimage.jpg', 'bgimage.jpg')
 
-            # backup camilladsp configurations
+            # Backup camilladsp configurations
             if BackupManager.OPT_CDSP in what:
                 if path.exists(BackupManager.CDSPCFG_BASE):
                     if path.exists(path.join(BackupManager.CDSPCFG_BASE, 'configs')):
@@ -133,8 +133,8 @@ class BackupManager(StationManager):
                     for file in glob.glob(path.join(BackupManager.SEARCHES_PATH, BackupManager.SEARCHES_PATTERN)):
                         backup.write(file, path.join('www', os.path.basename(file)))
 
-    def do_restore(self, what):
-        # restore radio stations
+    def do_restore(self, what, cdsp_replace):
+        # Restore radio stations
         scope = None
         if BackupManager.OPT_RS_OTHER in what and BackupManager.OPT_RS_MOODE in what:
             scope = 'all'
@@ -147,27 +147,32 @@ class BackupManager(StationManager):
             self.do_import(scope, 'clear')
 
         with ZipFile(self.backup_file, 'r') as backup:
-            # restore moodecfg.ini
+            # Restore moodecfg.ini
             if BackupManager.OPT_CFG in what:
                 try:
-                    print('Restore moodecfg.ini (requires reboot afterwards!)')
+                    print('Restore config and prefs (moodecfg.ini). Requires a reboot afterwards.')
                     backup.extract('moodecfg.ini', BackupManager.MOODECFGINI_RESTORE_PATH)
                     if 'script' in backup.namelist():
                         backup.extract('script', BackupManager.MOODECFGINI_RESTORE_PATH)
-
                 except KeyError:
-                    print("Backup doesn't contain moode configuration file.")
+                    print('Backup does not contain a moodecfg.ini file')
+
                 if 'bgimage.jpg' in backup.namelist():
-                    print('Restore bgimage.jpg')
+                    print('Restore background image file (bgimage.jpg)')
                     backup.extract('bgimage.jpg', '/var/local/www/imagesw')
                     system('chmod a+r /var/local/www/imagesw/bgimage.jpg')
 
-            # TODO: Move cdsp clear_before_restore from bkp-config.php to here
-            # restore camilladsp configs
+            # Restore CamillaDSP configs and IR files
             if BackupManager.OPT_CDSP in what:
                 names = [ name  for name in backup.namelist() if 'camilladsp/' in name]
                 if len(names) >= 0:
-                    print('Restore camilladsp config')
+                    if cdsp_replace:
+                        coeffsDir = path.join(BackupManager.CDSPCFG_BASE, 'coeffs')
+                        configsDir = path.join(BackupManager.CDSPCFG_BASE, 'configs')
+                        os.system('rm ' + coeffsDir + '/*')
+                        os.system('find ' + configsDir + " ! -name '__quick_convolution__.yml' -type f -exec rm -f {} +")
+                        print('Clear CamillaDSP configurations and IR files before restore')
+                    print('Restore CamillaDSP configurations and IR files')
                     backup.extractall (BackupManager.CDSPCFG_RESTORE_BASE, names)
 
             if BackupManager.OPT_PL in what:
@@ -196,7 +201,7 @@ class BackupManager(StationManager):
         searchesPresent = False
 
         if os.path.exists(self.backup_file):
-            # fake target db version
+            # Fake target db version
             self.db_ver = 7
             rsPresent = self.check_backup(0, False) == 0 # normal db or oldformat
 
@@ -245,41 +250,41 @@ class BackupManager(StationManager):
 
 def get_cmdline_arguments():
     epilog = 'Root privileges required for restore'
-    parser = argparse.ArgumentParser(description = 'Manages backup and restore of moOde system', epilog = epilog)
+    parser = argparse.ArgumentParser(description = 'Manages system backup and restore', epilog = epilog)
     parser.add_argument('backupfile',  default = None,
-                   help = 'Filename of the backup')
+        help = 'Path to the backup zip file')
 
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(BackupManager.VERSION))
 
     parser.add_argument('--what', dest = 'what', nargs="+",
-                   choices = ['config', 'cdsp', 'playlists', 'searches', 'r_moode', 'r_other'], default = None ,
-                   help = 'Indicate what to backup/restore (default for backup: config cdsp playlists, searches, r_other, default on restore: auto detect content)')
+        choices = ['config', 'cdsp', 'playlists', 'searches', 'r_moode', 'r_other'], default = None ,
+        help = 'Indicate what to backup or restore. Default for backup: config cdsp playlists searches r_other. Default for restore: Auto detect options')
 
     group = parser.add_mutually_exclusive_group( required = True)
     group.add_argument('--backup', dest = 'do_backup', action = 'store_const',
-                   const = sum,
-                   help = 'Create backup')
-
+        const = sum,
+        help = 'Create backup zip file')
     group.add_argument('--restore', dest = 'do_restore', action = 'store_const',
-                   const = sum,
-                   help = 'Restore backup')
+        const = sum,
+        help = 'Restore system from backup zip file')
+    group.add_argument('--info', dest='do_info',  action = 'store_const',
+        const=sum,
+        help = "Show which options were used to create the backup")
 
-    group.add_argument('--info', dest='do_info',  action = 'store_const',  const=sum,
-                   help = "Show which were used to create the backup")
-
+    parser.add_argument('--cdsp-replace', dest = 'cdsp_replace', action = 'store_true',
+        help = 'Replace CamillaDSP configurations and IR files before restoring')
 
     parser.add_argument('--db', default = '/var/local/www/db/moode-sqlite3.db',
-                   help = 'File name of the SQL database. (default: /var/local/www/db/moode-sqlite3.db')
+        help = 'File name of the SQL database. Default: /var/local/www/db/moode-sqlite3.db')
 
     parser.add_argument('--script', dest = 'script', default = None,
-                   help = 'Add script file to the backup (executed when restoring the backup)')
+        help = 'Add a script file to the backup which is executed during the restore of configs/prefs')
 
     parser.add_argument('--wlanpwd', dest = 'wlanpwd', default = None,
-                   help = 'When creating a backup, supply a password for wifi access (applied when restoring the backup)')
+        help = 'When creating a backup, supply a password for WiFi access which is applied during the restore')
 
     args = parser.parse_args()
     return args
-
 
 if __name__ == "__main__":
     #logging.basicConfig(filename='/tmp/py.log', level=logging.DEBUG)
@@ -291,10 +296,10 @@ if __name__ == "__main__":
 
     if args.do_restore:
         if os.geteuid() != 0:
-            print("ERROR: Root privileges are required for restore, run with sudo.")
+            print("Error: Root privileges are required for restore, run with sudo.")
             exit(10)
     if args.backupfile == None and (args.do_backup or args.do_restore):
-        print("ERROR: No backup file specified. Required for backup or restore.")
+        print("Error: No backup file specified. Required for backup or restore.")
         exit(11)
 
     what =  ['config','cdsp', 'playlists', 'searches', 'r_other']
@@ -315,7 +320,7 @@ if __name__ == "__main__":
         if args.do_backup:
              mgnr.do_backup(what, args.script, args.wlanpwd)
         elif args.do_restore:
-             mgnr.do_restore(what)
+             mgnr.do_restore(what, args.cdsp_replace)
         elif args.do_info:
              mgnr.do_info()
 
