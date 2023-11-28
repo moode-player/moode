@@ -138,6 +138,7 @@
 	<!-- MOBILE APP ICONS -->
 	<!-- Apple -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<link rel="apple-touch-icon" sizes="180x180" href="/v5-apple-touch-icon.png">
 	<link rel="mask-icon" href="/v5-safari-pinned-tab.svg" color="#5bbad5">
 	<!-- Android/Chrome -->
