@@ -56,7 +56,7 @@ while (true) {
 		$currentFile = $_SESSION['currentfile'];
 
 		if ($logSize != $currentSize) {
-			// Seek to end of log file
+			// Seek to last end position in log file
 			$fh = fopen(MPD_LOG, "r");
 			fseek($fh, $logSize);
 
