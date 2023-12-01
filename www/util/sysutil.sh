@@ -52,7 +52,7 @@ if [[ $1 = "chg-name" ]]; then
 	fi
 
 	if [[ $2 = "mpdzeroconf" ]]; then
-		sed -i "s/zeroconf_name $3/zeroconf_name $4/" /etc/mpd.conf
+		sed -i "s/zeroconf_name \"$3\"/zeroconf_name \"$4\"/" /etc/mpd.conf
 	fi
 
 	if [[ $2 = "bluetooth" ]]; then

@@ -30,13 +30,15 @@ SECURITY AND OPERATING SYSTEM (OS) IMAGE
 For improved security the OS image does not contain the userid pi, SSH service,
 WiFi SSID or Access Point password.
 
-- Use the official Raspberry Pi Imager to choose a moOde OS image, enable SSH,
-  create a userid and password and optionally a WiFi SSID and password.
+  *** READ 1 & 2 BELOW ***
 
-  *** READ THIS ***
-  1. SSH and userid/password are REQUIRED for correct operation of moOde.
-  2. Do not set the host name using the Imager. Refer to CUSTOM CONFIGURATIONS
-     in this guide for information on changing the host name.
+  1. The official Raspberry Pi Imager is REQUIRED to choose a moOde OS image,
+  enable SSH, create a userid and password and optionally set the host name and
+  WiFi SSID and password. If a host name is not set in the Imager then the
+  default hostname "moode" will be used.
+
+  2. SSH and userid/password are REQUIRED for correct operation of moOde. Failure
+  to set these will result in a non-functional player and WebUI.
 
 - An Access Point password can be set using the Network Configuration screen
   after accessing the moOde WebUI, or before first boot via a moodecfg.ini

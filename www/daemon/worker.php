@@ -272,6 +272,49 @@ workerLog('worker: -- System');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
+// Pi Imager: Import hostname
+$importedHostName = sysCmd('cat /etc/hostname')[0];
+if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
+	/* Defaults
+	hostname	moode
+	btname		Moode Bluetooth
+	airplayname	Moode AirPlay
+	spotifyname	Moode Spotify
+	upnpname	Moode UPNP
+	dlnaname	Moode DLNA
+	squeezelite	Moode		This is in cfg_sl PLAYERNAME and squeezelite.conf, no session var
+	mpdzeroconf Moode MPD	This is in mpd.conf, no session var
+	*/
+	// Host
+	phpSession('write', 'hostname', $importedHostName);
+	// Bluetooth
+	$newName = ucfirst($importedHostName) . ' Bluetooth';
+	sysCmd('/var/www/util/sysutil.sh chg-name bluetooth "' . 'Moode Bluetooth" "' . $newName . '"');
+	phpSession('write', 'btname', $newName);
+	// Airplay
+	phpSession('write', 'airplayname', ucfirst($importedHostName) . ' AirPlay');
+	// Spotify Connect
+	phpSession('write', 'spotifyname', ucfirst($importedHostName) . ' Spotify');
+	// Squeezelite
+	$newName = ucfirst($importedHostName);
+	$result = sqlQuery("UPDATE cfg_sl SET value='" . $newName . "' WHERE param='PLAYERNAME'", $dbh);
+	sysCmd('/var/www/util/sysutil.sh chg-name squeezelite "' . 'Moode" "' . $newName . '"');
+	// UPnP
+	$newName = ucfirst($importedHostName) . ' UPNP';
+	sysCmd('/var/www/util/sysutil.sh chg-name upnp "' . 'Moode UPNP" "' . $newName . '"');
+	phpSession('write', 'upnpname', $newName);
+	// DLNA
+	$newName = ucfirst($importedHostName) . ' DLNA';
+	sysCmd('/var/www/util/sysutil.sh chg-name dlna "' . 'Moode DLNA" "' . $newName . '"');
+	phpSession('write', 'dlnaname', $newName);
+	// MPD Zeroconf
+	$newName = ucfirst($importedHostName) . ' MPD';
+	$result = sqlQuery("UPDATE cfg_mpd SET value='" . $newName . "' WHERE param='zeroconf_name'", $dbh);
+	sysCmd('/var/www/util/sysutil.sh chg-name mpdzeroconf "' . 'Moode MPD" "' . $newName . '"');
+
+	workerLog('worker: Hostname imported');
+}
+
 // Pi Imager: Import time zone and keyboard layout
 $timeZone = sysCmd("timedatectl show | awk -F\"=\" '/Timezone/{print $2;exit;}'");
 $keyboard = sysCmd("cat /etc/default/keyboard | awk -F\"=\" '/XKBLAYOUT/{print $2;exit;}'");
@@ -2556,7 +2599,13 @@ function runQueuedJob() {
 			sysCmd('/var/www/util/sysutil.sh set-timezone ' . $_SESSION['w_queueargs']);
 			break;
 		case 'hostname':
+			// Change host name
 			sysCmd('/var/www/util/sysutil.sh chg-name host ' . $_SESSION['w_queueargs']);
+			// Change MPD zeroconf name
+			// NOTE: w_queueargs = "$_SESSION['hostname']" "$_POST['hostname']"
+			$name = explode('"', $_SESSION['w_queueargs']); // [1]: $_SESSION['hostname'], [3]: $_POST['hostname']
+			$result = sqlQuery("UPDATE cfg_mpd SET value='" . ucfirst($name[3]) . " MPD' WHERE param='zeroconf_name'", $GLOBALS['dbh']);
+			sysCmd('/var/www/util/sysutil.sh chg-name mpdzeroconf "' . ucfirst($name[1]) . ' MPD" "' . ucfirst($name[3]) . ' MPD"');
 			break;
 		case 'updater_auto_check':
 			$_SESSION['updater_auto_check'] = $_SESSION['w_queueargs'];
