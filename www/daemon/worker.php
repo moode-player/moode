@@ -763,16 +763,17 @@ $resp = readMpdResp($sock);
 // Ignore CUE files
 setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 workerLog('worker: MPD ignore CUE:     ' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no'));
-// On first boot load Default PLaylist and run MPD database update
+// On first boot update SDCARD dir to pick up Stereo Test file and then clear/load Default Playlist
 if ($_SESSION['first_use_help'] == 'y,y') {
+	sendMpdCmd($sock, 'update SDCARD');
+	$resp = readMpdResp($sock);
+	workerLog('worker: MPD first boot:     SDCARD scanned');
+	sleep(1);
 	sendMpdCmd($sock, 'clear');
 	$resp = readMpdResp($sock);
 	sendMpdCmd($sock, 'load "Default Playlist"');
 	$resp = readMpdResp($sock);
 	workerLog('worker: MPD first boot:     default playlist loaded');
-	sendMpdCmd($sock, 'update');
-	$resp = readMpdResp($sock);
-	workerLog('worker: MPD first boot:     database update submitted');
 }
 // MPD/CamillaDSP volume sync
 workerLog('worker: MPD CDSP volsync:   ' . lcfirst($_SESSION['camilladsp_volume_sync']));
