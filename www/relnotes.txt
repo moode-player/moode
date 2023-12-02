@@ -58,7 +58,7 @@ Updates
 - UPD: Move DLNA server to File Sharing section of System Config
 - UPD: Move Prefs thumbnail and cover art options to dedicated section
 - UPD: Move selected Library prefs options for a more logical grouping
-- UPD: Allow host name to be set and imported from Raspberry Pi Imager
+- UPD: Allow host name to be imported from Raspberry Pi Imager
 
 Audio devices
 
