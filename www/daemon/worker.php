@@ -1140,6 +1140,11 @@ workerLog('worker: Current view:      reset to Playback');
 $_SESSION['rx_adv_toggle'] = 'Show';
 $_SESSION['tx_adv_toggle'] = 'Show';
 
+// Library list positions
+phpSession('write', 'lib_pos', '-1,-1,-1');
+phpSession('write', 'radio_pos', '-1');
+phpSession('write', 'playlist_pos', '-1');
+
 // Library scope
 if (!isset($_SESSION['lib_scope'])) {
 	$_SESSION['lib_scope'] = 'all';
