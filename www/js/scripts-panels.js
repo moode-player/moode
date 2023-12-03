@@ -103,11 +103,11 @@ jQuery(document).ready(function($) { 'use strict';
     	UI.radioPos = parseInt(SESSION.json['radio_pos']);
         // Playlist
     	UI.playlistPos = parseInt(SESSION.json['playlist_pos']);
-    	// library
+    	// Library
     	var tmpStr = SESSION.json['lib_pos'].split(',');
-    	UI.libPos[0] = parseInt(tmpStr[0]); // album list
-    	UI.libPos[1] = parseInt(tmpStr[1]); // album cover
-    	UI.libPos[2] = parseInt(tmpStr[2]); // artist list
+    	UI.libPos[0] = parseInt(tmpStr[0]); // Album list
+    	UI.libPos[1] = parseInt(tmpStr[1]); // Album cover
+    	UI.libPos[2] = parseInt(tmpStr[2]); // Artist list
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);
