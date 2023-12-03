@@ -1096,10 +1096,8 @@ function renderUI() {
         // Set HD badge text
         if (MPD.json['artist'] == 'Radio station') {
             $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(RADIO_HD_BADGE_TEXT);
-        } else if (MPD.json['audio_sample_rate'] !== null) {
-            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(albumHDBadge(MPD.json['audio_format']));
         } else {
-            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text('');
+            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(albumHDBadge(MPD.json['audio_format']));
         }
 
         // Show/hide HD badge
