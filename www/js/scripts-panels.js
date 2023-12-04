@@ -92,8 +92,8 @@ jQuery(document).ready(function($) { 'use strict';
         getThumbHW();
 
         // Initiate loads
+        renderRadioView(false); // False = don't run lazylode() since it's going to be run as part of makeActive downstream
         loadLibrary(); // Tag and Album views
-        renderRadioView();
         renderPlaylistView();
         $.getJSON('command/music-library.php?cmd=lsinfo', {'path': ''}, function(data) {
             renderFolderView(data, '');
@@ -109,9 +109,9 @@ jQuery(document).ready(function($) { 'use strict';
     	UI.libPos[2] = parseInt(tmpStr[2]); // Artist list
         // Playlist view
     	UI.playlistPos = parseInt(SESSION.json['playlist_pos']);
-        console.log('scripts-panels: UI.radioPos', UI.radioPos);
-        console.log('scripts-panels: UI.libPos', UI.libPos);
-        console.log('scripts-panels: UI.playlistPos', UI.playlistPos);
+        //console.log('scripts-panels: UI.radioPos', UI.radioPos);
+        //console.log('scripts-panels: UI.libPos', UI.libPos);
+        //console.log('scripts-panels: UI.playlistPos', UI.playlistPos);
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);

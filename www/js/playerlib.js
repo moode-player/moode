@@ -1735,7 +1735,7 @@ s
 }
 
 // Render Radio view
-function renderRadioView() {
+function renderRadioView(lazyLoad = true) {
     var data = '';
     $.getJSON('command/radio.php?cmd=get_stations', function(data) {
         // Lazyload method
@@ -1998,7 +1998,12 @@ function renderRadioView() {
         // Render the list
 		var element = document.getElementById('radio-covers');
 		element.innerHTML = output;
-		if (currentView == 'radio') lazyLode('radio');
+
+        // NOTE: On page refresh (scripts-panels.js) lazyLoad is passed as false
+        // otherwise it defaults to true
+		if (currentView == 'radio'&& lazyLoad === true) {
+            lazyLode('radio');
+        }
     });
 }
 
@@ -2085,7 +2090,9 @@ function renderPlaylistView () {
         // Render the list
 		var element = document.getElementById('playlist-covers');
 		element.innerHTML = output;
-		if (currentView == 'playlist') lazyLode('playlist');
+		if (currentView == 'playlist') {
+            lazyLode('playlist');
+        }
     });
 }
 
@@ -4389,8 +4396,8 @@ function lazyLode(view) {
         // [1]: Album cover pos (album view)
         // [2]: Artist list pos (tag view)
         // Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
-        //console.log('UI.libPos', UI.libPos);
-        console.log('UI.radioPos', UI.radioPos);
+        //console.log(''lazyLode(): UI.libPos', UI.libPos);
+        //console.log('lazyLode(): UI.radioPos', UI.radioPos);
         var albumPos = UI.libPos[0];
         var albumCoverPos = UI.libPos[1];
 
@@ -4432,7 +4439,7 @@ function getRVHeaderCount() {
             return false;
         }
     });
-    console.log('getRVHeaderCount()', count, UI.radioPos);
+    //console.log('getRVHeaderCount():', count, UI.radioPos);
     return count;
 }
 
