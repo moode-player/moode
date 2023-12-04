@@ -44,7 +44,7 @@ const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 // Timeouts in milliseconds
 const DEFAULT_TIMEOUT   = 250;
 const CLRPLAY_TIMEOUT   = 500;
-const LAZYLOAD_TIMEOUT  = 750;
+const LAZYLOAD_TIMEOUT  = 1000;
 const SEARCH_TIMEOUT    = 750;
 const RALBUM_TIMEOUT    = 500;
 const ENGINE_TIMEOUT    = 3000;
@@ -90,10 +90,10 @@ var UI = {
 	dbCmd: '',
 	// Either 'lsinfo' or 'get_pl_items_fv'
 	libPos: [-1,-1,-1],
-	// [0]: Album list pos
-	// [1]: Album cover pos
-	// [2]: Artist list pos
-	// Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
+    // [0]: Album list pos (tag view)
+    // [1]: Album cover pos (album view)
+    // [2]: Artist list pos (tag view)
+    // Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
 	radioPos: -1,
     playlistPos: -1,
 	libAlbum: '',
@@ -4093,7 +4093,6 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#playback-controls').css('display', '');
 
         SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
-        // TODO: Use .substring(0, 7) instead of includes
         if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].substring(0, 7) == 'Release') {
             $('#updater-notification').show();
         } else {
@@ -4382,31 +4381,59 @@ function lazyLode(view) {
         }
     }
 
-    // Scroll to and for tag/album highlight selected item
+    // Scroll to item and for tag/album and radio, highlight the item
     // NOTE: Delay a bit so the list has time to load
     setTimeout(function() {
         // UI.libPos
-        // [0]: albums list pos (tag view)
-        // [1]: album cover pos (album view)
-        // [2]: artist list pos (tag view_)
+        // [0]: Album list pos (tag view)
+        // [1]: Album cover pos (album view)
+        // [2]: Artist list pos (tag view)
         // Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
+        //console.log('UI.libPos', UI.libPos);
+        console.log('UI.radioPos', UI.radioPos);
+        var albumPos = UI.libPos[0];
+        var albumCoverPos = UI.libPos[1];
+
         if (view == 'tag' && UI.libPos[0] >= 0) {
-            customScroll('albums', UI.libPos[0], scrollSpeed);
-            $('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
-            $('#albumsList .lib-entry').eq(UI.libPos[0]).click();
+            customScroll('artists', UI.libPos[2], scrollSpeed);
+            $('#artistsList .lib-entry').eq(UI.libPos[2]).addClass('active');
+            $('#artistsList .lib-entry').eq(UI.libPos[2]).click();
+
+            customScroll('albums', albumPos, scrollSpeed);
+            $('#albumsList .lib-entry').eq(albumPos).addClass('active');
+            $('#albumsList .lib-entry').eq(albumPos).click();
         } else if (view == 'album') {
-            if (UI.libPos[0] >= 0 && UI.libPos[1] >= 0) {
-                customScroll('albumcovers', UI.libPos[1], scrollSpeed);
-                $('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
+            if (UI.libPos[0] >= 0 && albumCoverPos >= 0) {
+                customScroll('albumcovers', albumCoverPos, scrollSpeed);
+                $('#albumcovers .lib-entry').eq(albumCoverPos).addClass('active');
             } else {
                 customScroll('albumcovers', 0, scrollSpeed);
             }
         } else if (view == 'radio' && UI.radioPos >= 0) {
+            var rvHeaderCount = getRVHeaderCount();  // NOTE: Also updates UI.radioPos
             customScroll('radio', UI.radioPos, scrollSpeed);
+            $('.database-radio li').removeClass('active');
+            $('#ra-' + (UI.radioPos - rvHeaderCount).toString()).addClass('active');
         } else if (view == 'playlist' && UI.playlistPos >= 0) {
             customScroll('playlist', UI.playlistPos, scrollSpeed);
         }
     }, LAZYLOAD_TIMEOUT);
+}
+
+// Return number of headers before the station and update UI.radioPos
+function getRVHeaderCount() {
+    var count = 0;
+    $('.database-radio li').each(function(index) {
+        if ($(this).hasClass('horiz-rule-radioview')) {
+            count = count + 1;
+        }
+        if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
+            UI.radioPos = index + 1;
+            return false;
+        }
+    });
+    console.log('getRVHeaderCount()', count, UI.radioPos);
+    return count;
 }
 
 function setFontSize() {

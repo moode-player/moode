@@ -1265,6 +1265,8 @@ $('#database-radio').on('click', 'img', function(e) {
 
     if (UI.dbEntry[3].substr(0, 3) == 'ra-') {
         $('#' + UI.dbEntry[3]).removeClass('active');
+    } else {
+        $('.database-radio li').removeClass('active');
     }
     UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');

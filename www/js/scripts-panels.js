@@ -99,15 +99,19 @@ jQuery(document).ready(function($) { 'use strict';
             renderFolderView(data, '');
         });
 
-    	// Radio
+        // Library item positions
+    	// Radio view
     	UI.radioPos = parseInt(SESSION.json['radio_pos']);
-        // Playlist
-    	UI.playlistPos = parseInt(SESSION.json['playlist_pos']);
-    	// Library
+    	// Tag/Album view
     	var tmpStr = SESSION.json['lib_pos'].split(',');
     	UI.libPos[0] = parseInt(tmpStr[0]); // Album list
     	UI.libPos[1] = parseInt(tmpStr[1]); // Album cover
     	UI.libPos[2] = parseInt(tmpStr[2]); // Artist list
+        // Playlist view
+    	UI.playlistPos = parseInt(SESSION.json['playlist_pos']);
+        console.log('scripts-panels: UI.radioPos', UI.radioPos);
+        console.log('scripts-panels: UI.libPos', UI.libPos);
+        console.log('scripts-panels: UI.playlistPos', UI.playlistPos);
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);
@@ -751,18 +755,6 @@ jQuery(document).ready(function($) { 'use strict';
         if (!$('#playback-panel').hasClass('cv')) {
             // Radio station
     		if (MPD.json['artist'] == 'Radio station') {
-                // Count number of headers before the item
-                var headerCount = 0;
-    			$('.database-radio li').each(function(index){
-                    if ($(this).hasClass('horiz-rule-radioview')) {
-                        headerCount = headerCount + 1;
-                    }
-                    if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
-    					UI.radioPos = index + 1;
-                        return false;
-    				}
-    			});
-
                 currentView = 'playback,radio';
     			$('#playback-switch').click();
 
@@ -770,21 +762,27 @@ jQuery(document).ready(function($) { 'use strict';
     				$('.radio-view-btn').click();
     			}
 
-                //console.log(UI.radioPos, headerCount, RADIO.json[MPD.json['file']]['name']);
+                var rvHeaderCount = getRVHeaderCount(); // NOTE: Also updates UI.radioPos
+                storeRadioPos(UI.radioPos);
+                //console.log(UI.radioPos, rvHeaderCount, RADIO.json[MPD.json['file']]['name']);
+
                 $('.database-radio li').removeClass('active');
                 setTimeout(function() {
-                    $('#ra-' + (UI.radioPos - headerCount)).addClass('active');
-                    UI.dbEntry[3] = 'ra-' + (UI.radioPos - headerCount);
+                    $('#ra-' + (UI.radioPos - rvHeaderCount).toString()).addClass('active');
+                    UI.dbEntry[3] = 'ra-' + (UI.radioPos - rvHeaderCount).toString();
                     customScroll('radio', UI.radioPos, 200);
                 }, DEFAULT_TIMEOUT);
-    		}
-    		// Song file
-    		else {
-                var thisText = $(this).text().indexOf('...') != -1 ? $(this).text().slice(0, -3) : $(this).text();
+    		} else {
+                // Song file
     			$('#playback-switch').click();
     			$('.tag-view-btn').click();
-				$('#artistsList .lib-entry').filter(function() {return $(this).text() == thisText/*MPD.json['artist']*/;}).click();
-				customScroll('artists', UI.libPos[2], 200);
+
+                var artistText = $(this).text().indexOf('...') != -1 ? $(this).text().slice(0, -3) : $(this).text();
+				$('#artistsList .lib-entry').filter(function() {return $(this).text() == artistText/*MPD.json['artist']*/;}).click();
+                customScroll('artists', UI.libPos[2], 200);
+
+                $('#albumsList .lib-entry .album-name-art').filter(function() {return $(this).text() == MPD.json['album'];}).click();
+                customScroll('albums', UI.libPos[0], 200);
     		}
         }
 	});

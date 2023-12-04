@@ -82,7 +82,7 @@ Security
 
 Bug fixes
 
-- FIX: Tag/Album sync (auto-scroll then highlight item) not working
+- FIX: Radio/Tag/Album sync (auto-scroll then highlight item) not working
 - FIX: WavPack format information not correct in Library and Audio info
 - FIX: MPD mixer reverts to "software' after disconnecting bluetooth device
 - FIX: Backup/Restore missing Prefs, Library, Track play setting
