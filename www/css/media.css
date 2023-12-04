@@ -161,6 +161,8 @@ body {
 	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
 	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
 	.database .db-action {font-size:1.3em;}
+	.database-playlist,
+	.database-radio {padding-bottom:20rem;}
 	#lib-albumcover {left:0;}
 	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
 	#index-genres {right:calc(50% + var(--sbw));}
