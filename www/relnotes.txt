@@ -18,6 +18,7 @@
 New features
 
 - NEW: Radio manager stream monitor for restarting stalled streams
+- NEW: Qobuz credentials section in UPnP Config
 
 Updates
 
