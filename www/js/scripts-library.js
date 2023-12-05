@@ -715,13 +715,16 @@ var renderAlbums = function() {
 		}
 	}
 
+    // TODO: Investigate why JQuery .lazyload() is used and not the lazylode() function
 	// Start lazy load
 	if ($('.album-view-btn').hasClass('active')) {
+        //lazylode('album');
 		$('img.lazy-albumview').lazyload({
 			container: $('#lib-albumcover')
 		});
 	}
 	else if ($('.tag-view-btn').hasClass('active') && SESSION.json['library_tagview_covers'] == 'Yes') {
+        //lazylode('tag');
 		$('img.lazy-tagview').lazyload({
 		    container: $('#lib-album')
 		});
