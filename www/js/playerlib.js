@@ -4396,16 +4396,17 @@ function lazyLode(view) {
         // [1]: Album cover pos (album view)
         // [2]: Artist list pos (tag view)
         // Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
-        //console.log(''lazyLode(): UI.libPos', UI.libPos);
+        //console.log('lazyLode(): UI.libPos', UI.libPos);
         //console.log('lazyLode(): UI.radioPos', UI.radioPos);
         var albumPos = UI.libPos[0];
         var albumCoverPos = UI.libPos[1];
 
         if (view == 'tag' && UI.libPos[0] >= 0) {
-            customScroll('artists', UI.libPos[2], scrollSpeed);
-            $('#artistsList .lib-entry').eq(UI.libPos[2]).addClass('active');
-            $('#artistsList .lib-entry').eq(UI.libPos[2]).click();
-
+            if (UI.libPos[2] >= 0) {
+                customScroll('artists', UI.libPos[2], scrollSpeed);
+                $('#artistsList .lib-entry').eq(UI.libPos[2]).addClass('active');
+                $('#artistsList .lib-entry').eq(UI.libPos[2]).click();
+            }
             customScroll('albums', albumPos, scrollSpeed);
             $('#albumsList .lib-entry').eq(albumPos).addClass('active');
             $('#albumsList .lib-entry').eq(albumPos).click();
