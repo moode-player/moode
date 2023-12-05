@@ -52,10 +52,19 @@ foreach ($result as $row) {
 	$cfgUPNP[$row['param']] = $row['value'];
 }
 
-$_select['checkcontentformat'] .= "<option value=\"1\" " . (($cfgUPNP['checkcontentformat'] == '1') ? "selected" : "") . ">Yes</option>\n";
-$_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfgUPNP['checkcontentformat'] == '0') ? "selected" : "") . ">No</option>\n";
+// General
 $_select['svctype'] .= "<option value=\"upnpav\" " . (($cfgUPNP['upnpav'] == '1') ? "selected" : "") . ">UPnP-A/V</option>\n";
 $_select['svctype'] .= "<option value=\"openhome\" " . (($cfgUPNP['openhome'] == '1') ? "selected" : "") . ">OpenHome</option>\n";
+$_select['checkcontentformat'] .= "<option value=\"1\" " . (($cfgUPNP['checkcontentformat'] == '1') ? "selected" : "") . ">Yes</option>\n";
+$_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfgUPNP['checkcontentformat'] == '0') ? "selected" : "") . ">No</option>\n";
+
+// Music services
+$_select['qobuzuser'] = $cfgUPNP['qobuzuser'];
+$_select['qobuzpass'] = $cfgUPNP['qobuzpass'];
+$_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfgUPNP['qobuzformatid'] == '5') ? "selected" : "") . ">MP3 320K</option>\n";
+$_select['qobuzformatid'] .= "<option value=\"6\" " . (($cfgUPNP['qobuzformatid'] == '6') ? "selected" : "") . ">FLAC</option>\n";
+$_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfgUPNP['qobuzformatid'] == '7') ? "selected" : "") . ">FLAC 24/96K</option>\n";
+$_select['qobuzformatid'] .= "<option value=\"27\" " . (($cfgUPNP['qobuzformatid'] == '27') ? "selected" : "") . ">Highest resolution available</option>\n";
 
 waitWorker('upp-config');
 

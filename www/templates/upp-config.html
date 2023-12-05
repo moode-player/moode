@@ -27,6 +27,8 @@
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 		</legend>
 
+		<div class="config-horiz-rule">General</div>
+
 		<div class="control-group">
 			<label class="control-label" for="upnpav">Service type</label>
 			<div class="controls">
@@ -47,6 +49,43 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-check-content-format" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-check-content-format" class="config-help-info">
 					Check that the input format is supported. Set this option to No if a control point or media server sends good audio data with bad metadata.<br>
+                </span>
+			</div>
+		</div>
+
+		<div class="config-horiz-rule">Qobuz Music Service</div>
+		<p class="sub-legend">
+			Entering subscription credentials here creates a proxy Media Server to the Qobuz Music Service. This Media Server will appear in the UPnP Control Point.
+		</p>
+
+		<div class="control-group">
+			<label class="control-label" for="qobuzuser">Qobuz userid</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="qobuzuser" name="config[qobuzuser]" value="$_select[qobuzuser]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-qobuzuser" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-qobuzuser" class="config-help-info">
+					Userid for the Qobuz subscription.
+                </span>
+			</div>
+
+			<label class="control-label" for="qobuzuser">Qobuz password</label>
+			<div class="controls">
+				<input class="config-input-large" type="password" id="qobuzpass" name="config[qobuzpass]" value="$_select[qobuzpass]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-qobuzpass" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<a class="show-hide-password" href="#notarget" data-id="qobuzpass"><i class="fa-regular fa-sharp fa-eye"></i></a>
+				<span id="info-qobuzpass" class="config-help-info">
+					Password for the Qobuz subscription.
+                </span>
+			</div>
+
+			<label class="control-label" for="qobuzformatid">Qobuz quality</label>
+			<div class="controls">
+				<select id="qobuzformatid" class="config-select-large" name="config[qobuzformatid]">
+					$_select[qobuzformatid]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-qobuzformatid" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-qobuzformatid" class="config-help-info">
+					Specify the desired stream quality or optionally "Highest resolution available" if the subscription allows all quality levels.
                 </span>
 			</div>
 		</div>
