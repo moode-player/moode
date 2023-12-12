@@ -183,6 +183,11 @@ $_mpd_select['buffer_time'] .= "<option value=\"200000\" " . (($cfgMPD['buffer_t
 $_mpd_select['buffer_time'] .= "<option value=\"100000\" " . (($cfgMPD['buffer_time'] == '100000') ? "selected" : "") . " >100</option>\n";
 $_period_time = $cfgMPD['buffer_time'] / 4000; // miliseconds
 
+// HTTP Proxy
+$_mpd_select['proxy'] = $cfgMPD['proxy'];
+$_mpd_select['proxy_user'] = $cfgMPD['proxy_user'];
+$_mpd_select['proxy_password'] = $cfgMPD['proxy_password'];
+
 waitWorker('mpd-config');
 
 $tpl = "mpd-config.html";

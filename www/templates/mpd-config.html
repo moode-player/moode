@@ -287,6 +287,38 @@
 			   </span>
 			</div>
 
+<!-- TODO: Refactor underscore ID's in code above, also in scripts-panels.js -->
+
+            <div class="config-horiz-rule">HTTP Proxy</div>
+
+            <label class="control-label" for="proxy-server">Server</label>
+            <div class="controls">
+                <input class="config-input-large" type="text" id="proxy-server" name="conf[proxy]" value="$_mpd_select[proxy]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-proxy-server" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-proxy-server" class="config-help-info">
+                	Specify the address of the HTTP proxy server for example proxy.isp.com:8080
+                </span>
+            </div>
+
+			<label class="control-label" for="proxy-user">Userid</label>
+            <div class="controls">
+                <input class="config-input-large" type="text" id="proxy-user" name="conf[proxy_user]" value="$_mpd_select[proxy_user]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-proxy-user" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-proxy-user" class="config-help-info">
+                    Specify the userid used to authenticate to the proxy server.
+                </span>
+            </div>
+
+            <label class="control-label" for="proxy-password">Password</label>
+            <div class="controls">
+                <input class="config-input-large" type="password" id="proxy-password" name="conf[proxy_password]" value="$_mpd_select[proxy_password]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-proxy-password" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+                <a class="show-hide-password" href="#notarget" data-id="proxy-password"><i class="fa-regular fa-sharp fa-eye"></i></a>
+				<span id="info-proxy-password" class="config-help-info">
+                    Specify the password used to authenticate to the proxy server.
+                </span>
+            </div>
+
             <div class="config-horiz-rule">Other options</div>
 
             <label class="control-label" for="log_level">Log level</label>

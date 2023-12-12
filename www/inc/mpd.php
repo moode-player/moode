@@ -401,6 +401,15 @@ function updMpdConf($i2sDevice) {
 			case 'selective_resample_mode':
 				$data .= $cfg['value'] != '0' ? $cfg['param'] . " \"" . $cfg['value'] . "\"\n" : '';
 				break;
+            case 'proxy':
+				$proxy = $cfg['value'];
+				break;
+            case 'proxy_user':
+				$proxyUser = $cfg['value'];
+				break;
+            case 'proxy_password':
+				$proxyPassword = $cfg['value'];
+				break;
 			// Default param handling
 			default:
 				$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
@@ -439,6 +448,9 @@ function updMpdConf($i2sDevice) {
 	$data .= "}\n\n";
 	$data .= "input {\n";
 	$data .= "plugin \"curl\"\n";
+    $data .= "proxy \"" . $proxy . "\"\n";
+    $data .= "proxy_userid \"" . $proxyUser . "\"\n";
+    $data .= "proxy_password \"" . $proxyPassword . "\"\n";
 	$data .= "}\n\n";
 
 	// Input cache

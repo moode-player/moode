@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Dec 5 16:00:48 2023
+-- File generated with SQLiteStudio v3.1.0 on Tue Dec 12 11:44:31 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -734,6 +734,9 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
 INSERT INTO cfg_mpd (id, param, value) VALUES (47, 'stop_dsd_silence', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (48, 'thesycon_dsd_workaround', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (49, 'proxy', '');
+INSERT INTO cfg_mpd (id, param, value) VALUES (50, 'proxy_user', '');
+INSERT INTO cfg_mpd (id, param, value) VALUES (51, 'proxy_password', '');
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
