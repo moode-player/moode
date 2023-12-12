@@ -1,4 +1,4 @@
-<!--
+selective-resample"<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -105,15 +105,15 @@
             </div>
 
     		<div class="$_selective_resampling_hide"> <!-- This is ment to control visibility of the feature in case MPD no longer supports the patch -->
-    			<div id="selective_resample" class="hide">
-	                <label class="control-label" for="selective_resample_mode">Selective resampling</label>
+    			<div id="selective-resample" class="hide">
+	                <label class="control-label" for="selective-resample-mode">Selective resampling</label>
 	                <div class="controls">
-	                    <select id="selective_resample_mode" name="conf[selective_resample_mode]" class="config-select-large">
+	                    <select id="selective-resample-mode" name="conf[selective_resample_mode]" class="config-select-large">
 							$_mpd_select[selective_resample_mode]
 	                    </select>
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-selective-resample-mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
                         $_selective_mode_selected
-						<span id="info_selective_resample_mode" class="config-help-info">
+						<span id="info-selective-resample-mode" class="config-help-info">
 							<p>These charts show the effect of selective resampling modes for the example target rates.</p>
 							<img src="images/Selective resampling chart 1.jpg" alt="Selective resampling chart 1"><br><br>
 							<img src="images/Selective resampling chart 2.jpg" alt="Selective resampling chart 2"><br><br>
@@ -122,13 +122,13 @@
     			</div>
     		</div>
 
-            <label class="control-label" for="sox_quality">Quality</label>
+            <label class="control-label" for="sox-quality">Quality</label>
             <div class="controls">
-                <select id="sox_quality" name="conf[sox_quality]" class="config-select-large">
+                <select id="sox-quality" name="conf[sox_quality]" class="config-select-large">
 					$_mpd_select[sox_quality]
                 </select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_quality" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<span id="info_sox_quality" class="config-help-info config-help-no-margin">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-quality" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-sox-quality" class="config-help-info config-help-no-margin">
 					<b>Very high: </b>Precision 28, Phase response 50 (Linear phase), Passband end 91%, Stopband begin 100%, Attenuation 0dB.<br>
 					<b>High (Default): </b>Precision 20, Phase response 50 (Linear phase), Passband end 91%, Stopband_begin 100%, Attenuation 0dB.<br>
 					<b>Medium: </b>Precision 16, Phase response 50 (Linear phase), Passband end 92%, Stopband begin 100%, Attenuation 0dB.<br>
@@ -142,54 +142,54 @@
             </div>
 
 			<div class="$_sox_custom_recipe_hide">
-				<div id="sox_custom_recipe" class="hide">
-					<label class="control-label" for="sox_precision">Precision</label>
+				<div id="sox-custom-recipe" class="hide">
+					<label class="control-label" for="sox-precision">Precision</label>
 	                <div class="controls">
-	                    <select id="sox_precision" name="conf[sox_precision]" class="config-select-large">
+	                    <select id="sox-precision" name="conf[sox_precision]" class="config-select-large">
 							$_mpd_select[sox_precision]
 	                    </select>
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_precision" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info_sox_precision" class="config-help-info">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-precision" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-sox-precision" class="config-help-info">
 							Default is 20 bits which corresponds to the "High quality" setting. The "Very high quality" setting uses 28 bits.
 						</span>
 					</div>
-	                <label class="control-label" for="sox_phase_response">Phase response</label>
+	                <label class="control-label" for="sox-phase-response">Phase response</label>
 	                <div class="controls">
-	                    <input class="config-input-large" type="number" id="sox_phase_response" name="conf[sox_phase_response]" value="$_mpd_select[sox_phase_response]" min="0" max="50">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_phase_response" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info_sox_phase_response" class="help-block-configs help-block-margin3 hide">
+	                    <input class="config-input-large" type="number" id="sox-phase-response" name="conf[sox_phase_response]" value="$_mpd_select[sox_phase_response]" min="0" max="50">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-phase-response" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-sox-phase-response" class="help-block-configs help-block-margin3 hide">
 							Range is 0 to 50 where 0 = minimum phase, 25 = intermediate phase and 50 = linear phase. Default is 50.
 	                    </span>
 	                </div>
-	                <label class="control-label" for="sox_passband_end">Passband end (%)</label>
+	                <label class="control-label" for="sox-passband-end">Passband end (%)</label>
 	                <div class="controls">
-	                    <input class="config-input-large" type="number" id="sox_passband_end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_passband_end" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info_sox_passband_end" class="help-block-configs help-block-margin3 hide">
+	                    <input class="config-input-large" type="number" id="sox-passband-end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-passband-end" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-sox-passband-end" class="help-block-configs help-block-margin3 hide">
 							Original bandwidth of source used. Range is 80 to 100% where 100% represents the Nyquist frequency. Default is 95%.
 	                    </span>
 	                </div>
-	                <label class="control-label" for="sox_stopband_begin">Stopband begin (%)</label>
+	                <label class="control-label" for="sox-stopband-begin">Stopband begin (%)</label>
 	                <div class="controls">
-	                    <input class="config-input-large" type="number" id="sox_stopband_begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_stopband_begin" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info_sox_stopband_begin" class="help-block-configs help-block-margin3 hide">
+	                    <input class="config-input-large" type="number" id="sox-stopband-begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-stopband-begin" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-sox-stopband-begin" class="help-block-configs help-block-margin3 hide">
 							A percentage greater than or equal to 100. Default is 100% which represents the Nyquist frequency.
 	                    </span>
 	                </div>
-	                <label class="control-label" for="sox_attenuation">Attenuation (dB)</label>
+	                <label class="control-label" for="sox-attenuation">Attenuation (dB)</label>
 	                <div class="controls">
-	                    <input class="config-input-large" type="number" id="sox_attenuation" name="conf[sox_attenuation]" value="$_mpd_select[sox_attenuation]" min="0" max="24" step="0.1">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_attenuation" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info_sox_attenuation" class="help-block-configs help-block-margin3 hide">
+	                    <input class="config-input-large" type="number" id="sox-attenuation" name="conf[sox_attenuation]" value="$_mpd_select[sox_attenuation]" min="0" max="24" step="0.1">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-attenuation" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-sox-attenuation" class="help-block-configs help-block-margin3 hide">
 							Reduce the amplitude of the source to prevent clipping. Range is 0 to 24dB. Default is 0dB.
 	                    </span>
 	                </div>
-	                <label class="control-label" for="sox_flags">Flags</label>
+	                <label class="control-label" for="sox-flags">Flags</label>
 	                <div class="controls">
-						<input class="config-input-large" type="number" id="sox_flags" name="conf[sox_flags]" value="$_mpd_select[sox_flags]">
-						<a aria-label="Help" class="config-info-toggle" data-cmd="info_sox_flags" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-						<span id="info_sox_flags" class="help-block-configs help-block-margin3 hide">
+						<input class="config-input-large" type="number" id="sox-flags" name="conf[sox_flags]" value="$_mpd_select[sox_flags]">
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-sox-flags" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-sox-flags" class="help-block-configs help-block-margin3 hide">
 							Bit mask for setting special SoX options.<br>
 							00 ROLLOFF_SMALL 0.01 dB<br>
 							01 ROLLOFF_MEDIUM 0.35 dB<br>

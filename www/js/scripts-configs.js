@@ -276,28 +276,28 @@ jQuery(document).ready(function($){ 'use strict';
     // MPD config show/hide Selective resample
     $('#sox-enabled, #sox-sample-rate').change(function() {
         if ($('#sox-enabled').val() == 'Yes' && $('#sox-sample-rate').val() != '*') {
-            $('#selective_resample').show();
+            $('#selective-resample').show();
         }
         else {
-            $('#selective_resample').hide();
+            $('#selective-resample').hide();
         }
 	});
     // MPD config show Selective resample field on page load/reload
 	if ($('#sox-enabled').length && $('#sox-enabled').val() == 'Yes' && $('#sox-sample-rate').val() != '*') {
-		$('#selective_resample').show();
+		$('#selective-resample').show();
 	}
     // MPD config show/hide SoX custom recipe fields
-    $('#sox_quality').change(function() {
-        if ($('#sox_quality').val() == 'custom') {
-            $('#sox_custom_recipe').show();
+    $('#sox-quality').change(function() {
+        if ($('#sox-quality').val() == 'custom') {
+            $('#sox-custom-recipe').show();
         }
         else {
-            $('#sox_custom_recipe').hide();
+            $('#sox-custom-recipe').hide();
         }
 	});
     // MPD config show SoX custom recipe fields on page load/reload
-	if ($('#sox_quality').length && $('#sox_quality').val() == 'custom') {
-		$('#sox_custom_recipe').show();
+	if ($('#sox-quality').length && $('#sox-quality').val() == 'custom') {
+		$('#sox-custom-recipe').show();
 	}
 
     // Sysinfo notification
