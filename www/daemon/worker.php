@@ -322,7 +322,7 @@ phpSession('write', 'timezone', $timeZone[0]);
 phpSession('write', 'keyboard', trim($keyboard[0], "\""));
 
 // Store platform data
-phpSession('write', 'hdwrrev', getHdwrRev());
+$_SESSION['hdwrrev'] = getHdwrRev();
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 // get-osinfo: 'RPiOS: 11.8 (Bullseye 64-bit) | Linux: 6.1.21 (64-bit)'
 $osInfo = explode(' | ', sysCmd('/var/www/util/sysutil.sh "get-osinfo"')[0]);
