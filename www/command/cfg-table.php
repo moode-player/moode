@@ -86,6 +86,10 @@ switch ($_GET['cmd']) {
 
 		echo json_encode($cfgSystem);
 		break;
+	case 'get_cfg_system_value':
+		$result = sqlRead('cfg_system', $dbh, $_GET['param']);
+		echo json_encode($result[0]['value']);
+		break;
 	case 'upd_cfg_system':
 		phpSession('open');
 

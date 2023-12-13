@@ -52,8 +52,9 @@ function deleteRadioStationObject (stationName) {
     }
 }
 
-// Return param or value from included map tables
-function getParamOrValue (type, key) {
+// Return key or value from included map tables
+// NOTE: This works only if all keys and values are unique
+function getKeyOrValue (type, item) {
     let mapTable = new Map([
         // Screen saver timeout
         ['Never','Never'],['1 minute','60'],['2 minutes','120'],['5 minutes','300'],['10 minutes','600'],['20 minutes','1200'],['30 minutes','1800'],['1 hour','3600'],
@@ -74,16 +75,17 @@ function getParamOrValue (type, key) {
         // Root folder icons
         ['NAS','fa-server'],['RADIO','fa-microphone'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
         // Now-playing icon
-        ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer']
+        ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer'],
+        // View -> Item position
+        ['radio','radio_pos'],['tag','lib_pos'],['album','lib_pos'],['playlist','playlist_pos']
     ]);
 
     if (type == 'value') {
-        var result = mapTable.get(key);
-    }
-    else if (type == 'param') {
-        for (let [param, value] of mapTable) {
-            if (value == key) {
-                var result = param;
+        var result = mapTable.get(item);
+    } else if (type == 'key') {
+        for (let [key, value] of mapTable) {
+            if (value == item) {
+                var result = key;
                 break;
             }
         }
