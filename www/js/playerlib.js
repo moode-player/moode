@@ -4433,15 +4433,17 @@ function lazyLode(view) {
 // Return number of headers before the station and update UI.radioPos
 function getRVHeaderCount() {
     var count = 0;
-    $('.database-radio li').each(function(index) {
-        if ($(this).hasClass('horiz-rule-radioview')) {
-            count = count + 1;
-        }
-        if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
-            UI.radioPos = index + 1;
-            return false;
-        }
-    });
+    if (typeof(RADIO.json[MPD.json['file']]) !== 'undefined') {
+        $('.database-radio li').each(function(index) {
+            if ($(this).hasClass('horiz-rule-radioview')) {
+                count = count + 1;
+            }
+            if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
+                UI.radioPos = index + 1;
+                return false;
+            }
+        });
+    }
     //console.log('getRVHeaderCount():', count, UI.radioPos);
     return count;
 }
