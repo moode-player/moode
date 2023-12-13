@@ -4005,19 +4005,14 @@ function listLook(selector, list, searchText) {
 	}
 }
 
-// Radio pos
+// Library item position functions
 function storeRadioPos(pos) {
-	//console.log('radio_pos', pos);
     $.post('command/cfg-table.php?cmd=upd_cfg_system', {'radio_pos': pos});
 }
-// Playlist pos
 function storePlaylistPos(pos) {
-	//console.log('playlist_pos', pos);
     $.post('command/cfg-table.php?cmd=upd_cfg_system', {'playlist_pos': pos});
 }
-// Library pos
 function storeLibPos(pos) {
-	//console.log('lib_pos', pos[0], pos[1], pos[2]);
     $.post('command/cfg-table.php?cmd=upd_cfg_system', {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2], 'lib_scope': GLOBAL.musicScope});
 }
 
@@ -4199,6 +4194,9 @@ function syncTimers() {
 // Active/inactive for buttons and panels
 function makeActive (vswitch, panel, view) {
     //const startTime = performance.now();
+
+    // TODO: Test fetching the _pos cfg_system params and enclosing the rest of the code in the callback function
+
 	if (UI.mobile) {
 		$('#playback-controls').css('display', '');
 		$('#content').css('height', '100vh');
