@@ -77,7 +77,7 @@ function getKeyOrValue (type, item) {
         // Now-playing icon
         ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer'],
         // View -> Item position
-        ['radio','radio_pos'],['tag','lib_pos'],['album','lib_pos'],['playlist','playlist_pos']
+        ['radio','radio_pos'],['folder','folder_pos'],['tag','lib_pos'],['album','lib_pos'],['playlist','playlist_pos']
     ]);
 
     if (type == 'value') {

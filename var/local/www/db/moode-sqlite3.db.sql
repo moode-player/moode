@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Dec 13 16:41:45 2023
+-- File generated with SQLiteStudio v3.1.0 on Wed Dec 13 16:59:02 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -105,7 +105,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (42, 'extmeta', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
-INSERT INTO cfg_system (id, param, value) VALUES (44, 'AVAILABLE_44', '');
+INSERT INTO cfg_system (id, param, value) VALUES (44, 'folder_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
 INSERT INTO cfg_system (id, param, value) VALUES (47, 'fs_nfs_options', 'rw,sync,no_subtree_check,no_root_squash');

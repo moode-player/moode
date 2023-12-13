@@ -682,12 +682,12 @@ lcdup=${arr[39]}
 library_show_genres=${arr[40]}
 extmeta=${arr[41]}
 i2soverlay=${arr[42]}
-AVAILABLE_43=${arr[43]}
+folder_pos=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
 bluez_pcm_buffer=${arr[45]}
 fs_nfs_options=${arr[46]}
 library_onetouch_album=${arr[47]}
-radiopos=${arr[48]}
+radio_pos=${arr[48]}
 aplactive=${arr[49]}
 ipaddr_timeout=${arr[50]}
 [[ "${arr[51]}" = "1" ]] && ashufflesvc="On" || ashufflesvc="Off"

@@ -4198,7 +4198,7 @@ function makeActive (vswitch, panel, view) {
     // TODO: Test fetching the _pos cfg_system params and enclosing the rest of the code in the callback function
     var param = getKeyOrValue('value', view);
     $.getJSON('command/cfg-table.php?cmd=get_cfg_system_value', {'param': param}, function(data) {
-        console.log(data);
+        console.log(view, data);
     });
 
 	if (UI.mobile) {
