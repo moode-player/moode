@@ -29,7 +29,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
 	echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
 	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
-	echo -e "\nPlatform\t\t= $HDWRREV\c"
+	echo -e "\nModel\t\t= $HDWRREV\c"
 	echo -e "\nArchitecture\t\t= $ARCH\c"
 	echo -e "\nHome directory\t\t= /home/$HOME_DIR\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
@@ -714,7 +714,7 @@ rotenc_params=${arr[70]}
 alsaequal=${arr[72]}
 eqfa12p=${arr[73]}
 rev=$(echo $HDWRREV | cut -c 4)
-# TODO: Add || rev = "5"
+# TODO: Add code for Pi-5
 if [[ $rev = "3" || $rev = "4" || $rev = "Z" ]]; then
 	[[ "${arr[74]}" = "1" ]] && piwifi="On" || piwifi="Off"
 	[[ "${arr[75]}" = "1" ]] && pibt="On" || pibt="Off"
@@ -861,6 +861,7 @@ apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
 apdrouter=$(echo ${arr[2]} | cut -f 15 -d "|")
 
 # Misc settings
+# TODO: Add section for Pi-5
 MODEL=${HDWRREV:3:1}
 if [ $MODEL = 3 ]; then
 	TMP="$(vcgencmd otp_dump | grep 17:)"
