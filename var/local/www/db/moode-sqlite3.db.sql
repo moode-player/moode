@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Dec 13 16:59:02 2023
+-- File generated with SQLiteStudio v3.1.0 on Fri Dec 15 09:36:35 2023
 --
 -- Text encoding used: UTF-8
 --
@@ -234,7 +234,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (169, 'fs_nfs', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '');
 INSERT INTO cfg_system (id, param, value) VALUES (171, 'native_lazyload', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'No action');
-INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover');
+INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
 
