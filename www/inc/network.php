@@ -312,6 +312,11 @@ function genWpaPSK($ssid, $passphrase) {
 	return $psk[1];
 }
 
+// For Bookworm nmconnection files
+function genUUID() {
+	return sysCmd('cat /proc/sys/kernel/random/uuid')[0];
+}
+
 // Pi integrated WiFi adapter enable/disable
 function ctlWifi($ctl) {
 	$cmd = $ctl == '0' ? 'sed -i /disable-wifi/c\dtoverlay=disable-wifi ' . '/boot/config.txt' :
