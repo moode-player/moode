@@ -89,12 +89,13 @@ var UI = {
     // [5]: Playname for clock radio
 	dbCmd: '',
 	// Either 'lsinfo' or 'get_pl_items_fv'
+    radioPos: -1,
+    folderPos: -1,
 	libPos: [-1,-1,-1],
     // [0]: Album list pos (tag view)
     // [1]: Album cover pos (album view)
     // [2]: Artist list pos (tag view)
     // Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
-	radioPos: -1,
     playlistPos: -1,
 	libAlbum: '',
 	mobile: false,
@@ -4195,11 +4196,12 @@ function syncTimers() {
 function makeActive (vswitch, panel, view) {
     //const startTime = performance.now();
 
-    // TODO: Test fetching the _pos cfg_system params and enclosing the rest of the code in the callback function
-    var param = getKeyOrValue('value', view);
+    // DEBUG: Fetch _pos cfg_system values
+    /*var param = getKeyOrValue('value', view);
     $.getJSON('command/cfg-table.php?cmd=get_cfg_system_value', {'param': param}, function(data) {
-        console.log(view, data);
-    });
+        console.log('makeActive(): cfg_system:', view, data);
+        console.log('makeActive(): UI.rflpPos:', UI.radioPos, UI.folderPos, UI.libPos, UI.playlistPos);
+    });*/
 
 	if (UI.mobile) {
 		$('#playback-controls').css('display', '');
@@ -4420,13 +4422,15 @@ function lazyLode(view) {
                 customScroll('albumcovers', 0, scrollSpeed);
             }
         } else if (view == 'radio' && UI.radioPos >= 0) {
-            var rvHeaderCount = getRVHeaderCount();  // NOTE: Also updates UI.radioPos
-            customScroll('radio', UI.radioPos, scrollSpeed);
+            var rvHeaderCount = getRVHeaderCount();  // NOTE: Also updates UI.radioPos and cfg_system
+            customScroll('radio', (UI.radioPos), scrollSpeed);
             $('.database-radio li').removeClass('active');
-            $('#ra-' + (UI.radioPos - rvHeaderCount).toString()).addClass('active');
+            $('#ra-' + (UI.radioPos - rvHeaderCount + 1).toString()).addClass('active');
         } else if (view == 'playlist' && UI.playlistPos >= 0) {
             customScroll('playlist', UI.playlistPos, scrollSpeed);
         }
+        // DEBUG:
+        //console.log('lazyLode():   UI.rflpPos:', UI.radioPos, UI.folderPos, UI.libPos, UI.playlistPos);
     }, LAZYLOAD_TIMEOUT);
 }
 
@@ -4439,10 +4443,11 @@ function getRVHeaderCount() {
                 count = count + 1;
             }
             if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
-                UI.radioPos = index + 1;
+                UI.radioPos = index;
                 return false;
             }
         });
+        storeRadioPos(UI.radioPos);
     }
     //console.log('getRVHeaderCount():', count, UI.radioPos);
     return count;
