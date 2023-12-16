@@ -89,6 +89,8 @@ if ($aplActive == '1') {
 
 	$_encoded_at = getEncodedAt($song, 'verbose');
 	$mpdStatus = getMpdStatus($sock);
+	//workerLog(print_r($_encoded_at, true));
+	//workerLog(print_r($mpdStatus, true));
 
 	if ($hwParams['status'] == 'active' || ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play')) {
 		// DSD: Native bitstream, DoP or DSD to PCM on-the-fly conversion
