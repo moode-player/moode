@@ -681,9 +681,9 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		if ($result[0] == '' || $result[1] == '') {
 			// Empty mediainfo so fallback to MPD lsinfo Format tag rate:bits:channels
 			$format = isset($songData['Format']) ? $songData['Format'] : getMpdFormatTag($songData['file']);
-			$mpdFormatTag = explode(':', $format);
+			$mpdFormatTag = explode(':', $format); //rate:bits:channels
 			if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
-				$bits = ''; // Bits omitted for lossless
+				$bits = '?'; // Bits unknown for lossly
 			} else if ($mpdFormatTag[1] == 'f' || ($ext == 'm4a' && $mpdFormatTag[1] == '32')) {
 				$bits = '24';
 			} else {
