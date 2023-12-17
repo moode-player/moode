@@ -683,7 +683,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			$format = isset($songData['Format']) ? $songData['Format'] : getMpdFormatTag($songData['file']);
 			$mpdFormatTag = explode(':', $format); //rate:bits:channels
 			if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
-				$bits = '?'; // Bits unknown for lossly
+				$bits = '?'; // Bits unknown for lossy
 			} else if ($mpdFormatTag[1] == 'f' || ($ext == 'm4a' && $mpdFormatTag[1] == '32')) {
 				$bits = '24';
 			} else {
