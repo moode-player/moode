@@ -19,7 +19,7 @@ New features
 
 Updates
 
-- UPD: Add cURL proxy option to MPD Config
+- UPD: Add HTTP proxy option to MPD Config
 
 Bug fixes
 
