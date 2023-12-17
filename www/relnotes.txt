@@ -23,6 +23,8 @@ Updates
 
 Bug fixes
 
+- FIX: getEncodedAt() bits assignment for lossy
+
 ################################################################################
 #
 # 2023-12-07 moOde 8.3.7 (Bullseye)
