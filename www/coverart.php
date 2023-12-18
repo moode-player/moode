@@ -19,10 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * - script looks for flac, mp3 or m4a embedded art, Folder, folder, Cover, cover png/jpg/jpeg files, or any other image file.
- * - call via /coverart.php/some/local/file/name
- * - make sure client is configured to hand cover requests to /coverart.php or setup an nginx catch-all rule:
- * - try_files $uri $uri/ /coverart.php;
+ * - Embedded cover art: flac, mp3, m4a or dsf files
+ * - Cover image files: Folder/folder, Cover/cover gif/jpg/jpeg/png/tif/tiff files, or any other image file.
+ * - Call via /coverart.php/some/local/file/name
+ * - Make sure client is configured to hand cover requests to /coverart.php or setup an nginx catch-all rule:
+ * - Try_files $uri $uri/ /coverart.php;
  *
  */
 
