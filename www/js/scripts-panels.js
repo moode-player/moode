@@ -764,13 +764,12 @@ jQuery(document).ready(function($) { 'use strict';
 
                 var rvHeaderCount = getRVHeaderCount(); // NOTE: Also updates UI.radioPos
                 storeRadioPos(UI.radioPos);
-                //console.log(UI.radioPos, rvHeaderCount, RADIO.json[MPD.json['file']]['name']);
 
-                $('.database-radio li').removeClass('active');
                 setTimeout(function() {
-                    $('#ra-' + (UI.radioPos - rvHeaderCount).toString()).addClass('active');
-                    UI.dbEntry[3] = 'ra-' + (UI.radioPos - rvHeaderCount).toString();
                     customScroll('radio', UI.radioPos, 200);
+                    $('.database-radio li').removeClass('active');
+                    $('#ra-' + (UI.radioPos - rvHeaderCount + 1).toString()).addClass('active');
+                    UI.dbEntry[3] = 'ra-' + (UI.radioPos - rvHeaderCount + 1).toString();
                 }, DEFAULT_TIMEOUT);
     		} else {
                 // Song file
