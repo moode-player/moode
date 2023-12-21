@@ -1546,13 +1546,14 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.btn-move-playqueue-item').click(function(e){
 		var begPos = $('#move-playqueue-item-begpos').val() - 1;
 		var endPos = $('#move-playqueue-item-endpos').val() - 1;
-		var newPos = $('#move-playqueue-item-newpos').val() - 1;
-
-		// Move begPos newPos or move begPos:endPos newPos
-        // NOTE: format for single or multiple, endPos not inclusive so must be bumped for multiple
+        var newPos = $('#move-playqueue-item-newpos').val() - 1;
+        var maxPos = $('#move-playqueue-item-newpos').attr('max') - 1;
 		if (begPos == endPos) {
             var cmd = 'move_playqueue_item&range=' + begPos + '&newpos=' + newPos;
         } else {
+            // The endPos item is not included in range so must be bumped by 1
+            // When newPos = maxPos bump back by endPos - begPos
+            newPos = newPos != maxPos ? newPos : newPos - (endPos - begPos);
             var cmd = 'move_playqueue_item&range=' + begPos + ':' + (endPos + 1) + '&newpos=' + newPos;
         }
 
