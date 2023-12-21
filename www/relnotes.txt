@@ -25,6 +25,8 @@ Updates
 Bug fixes
 
 - FIX: getEncodedAt() bits assignment for lossy
+- FIX: Incorrect index used when switching to Radio view via station click
+- FIX: Move Queue item range to end not working
 
 ################################################################################
 #
