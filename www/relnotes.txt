@@ -20,7 +20,7 @@ New features
 Updates
 
 - UPD: Add HTTP proxy option to MPD Config
-- UPD: Ad disc and track to condition for showing now-playing icon in track list
+- UPD: Add disc and track to condition for showing now-playing icon in track list
 
 Bug fixes
 
