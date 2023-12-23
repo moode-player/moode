@@ -559,6 +559,8 @@ function getMpdOutputs($sock) {
                 $value = 'ALSA Bluetooth: ';
             } else if ($value == 'HTTP Server') {
                 $value = 'HTTP Server:    ';
+            } else if ($value == 'Stream Recorder') {
+                $value = 'recorder:       ';
             }
 			$array[$id] .= $value;
 		}
