@@ -89,6 +89,7 @@ function notify(title, msg, duration = '2_seconds') {
         mpderror: 'MPD error',
         viewport: 'Viewport',
         updater: 'An update is available',
+        debug: "DEBUG",
         // Players >>
         discovering_players: 'Discovering players...',
         players_action_submit: 'Action submitted',
@@ -102,6 +103,7 @@ function notify(title, msg, duration = '2_seconds') {
 		settings_updated: 'Settings updated',
 		gathering_info: 'Gathering info...',
         installing_plugin: 'Installing plugin...',
+        auto_coverview: 'Auto-CoverView',
         // Recorder plugin
         recorder_installed: 'Recorder installed',
         recorder_uninstalled: 'Recorder uninstalled',

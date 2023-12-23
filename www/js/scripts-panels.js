@@ -385,10 +385,13 @@ jQuery(document).ready(function($) { 'use strict';
     	}
 
         // CoverView auto-display
+        //notify('debug', GLOBAL.userAgent, '10_seconds');
         if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['auto_coverview'] == '-on') {
+            var duration = 8000;
+            notify('auto_coverview', 'Activating in ' + (duration / 1000) + ' seconds', duration);
             setTimeout(function() {
                 screenSaver('scnactive1');
-            }, 8000);
+            }, duration);
         }
 
         // On-screen keyboard

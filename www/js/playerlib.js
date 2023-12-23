@@ -155,7 +155,8 @@ var GLOBAL = {
     reconnecting: false,
     searchTags: ['genre', 'artist', 'album', 'title', 'albumartist', 'date',
         'composer', 'conductor', 'performer', 'work', 'comment', 'file'],
-    npIcon: ''
+    npIcon: '',
+    userAgent: ''
 };
 
 // All Library filters
@@ -203,8 +204,9 @@ var lastYIQ = ''; // Last yiq value from setColors
 var coverView = false; // Coverview shown/hidden to save on more expensive conditional in interval timer
 
 // Detect chromium-browser
-var userAgent = navigator.userAgent;
-if (userAgent.indexOf('X11; CrOS armv') != -1 || userAgent.indexOf('X11; CrOS aarch64') != -1) {
+GLOBAL.userAgent = navigator.userAgent;
+//if (GLOBAL.userAgent.indexOf('X11; CrOS armv') != -1 || GLOBAL.userAgent.indexOf('X11; CrOS aarch64') != -1) {
+if (GLOBAL.userAgent.indexOf('CrOS') != -1) {
     GLOBAL.chromium = true;
 } else {
     GLOBAL.chromium = false;
