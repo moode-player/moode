@@ -449,7 +449,7 @@ function updMpdConf($i2sDevice) {
 	$data .= "input {\n";
 	$data .= "plugin \"curl\"\n";
     $data .= "proxy \"" . $proxy . "\"\n";
-    $data .= "proxy_userid \"" . $proxyUser . "\"\n";
+    $data .= "proxy_user \"" . $proxyUser . "\"\n";
     $data .= "proxy_password \"" . $proxyPassword . "\"\n";
 	$data .= "}\n\n";
 
