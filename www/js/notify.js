@@ -41,7 +41,7 @@ function notify(title, msg, duration = '2_seconds') {
         update_library: 'Updating library...',
         library_updating: 'Library update in progress',
         library_loading: 'Library loading...',
-        regen_thumbs: 'Thumbnail resolution updated',
+        regen_thumbs: 'Regenerate thumbnails',
         // Playlist/Queue
         saving_queue: 'Saving Queue',
         queue_saved: 'Queue saved',

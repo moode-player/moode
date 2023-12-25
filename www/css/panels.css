@@ -387,6 +387,7 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 .bgimglabel {margin-top:5px;} /* Gross but what r u gonna do */
 .modal label, .modal .controls {font-size:1em;}
 .control-label {margin-bottom:0px;font-size:inherit;}
+.control-xtra-bottom-margin {margin-bottom:8px!important;}
 .modal .controls input {padding:0px 0px 0 10px;}
 .btn-group>.btn, .btn-group>.dropdown-menu {font-size:1rem;}
 hr {border-color:#333;border-width:1px 0 0;}
