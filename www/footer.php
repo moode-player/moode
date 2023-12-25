@@ -27,8 +27,14 @@
 		<p id="moode-logo-text">m<span id="moode-logo-text-oo">oO</span>de<span id="moode-logo-text-tm">™</span></p>
 	</div>
 	<div class="modal-body">
+		<h5>Overview</h5>
 		<p>
-			Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.
+			moOde audio player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori under the Tsunamp project and subsequently enhanced by early efforts from the RaspyFi/Volumio projects. Refer to the Contributors link below more information.
+		</p>
+
+		<h5>Your Privacy</h5>
+		<p>
+			We want you to know that our audio player does not serve Ads, nag for subscriptions, use cookies, analytics/tracking or any other such technology. Player preference, configuration and operational data is stored on the local boot media and is not provided to any 3rd parties.
 		</p>
 		<h5>Release Information</h5>
 		<ul>
