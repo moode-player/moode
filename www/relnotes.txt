@@ -20,7 +20,8 @@ New features
 Updates
 
 - UPD: Add HTTP proxy option to MPD Config
-- UPD: Add disc and track to condition for showing now-playing icon in track list
+- UPD: Add disc and track to logic for showing now-playing icon in track list
+- UPD: Improve help text in System Config, Preferences and Quick help
 
 Bug fixes
 
@@ -28,6 +29,7 @@ Bug fixes
 - FIX: Incorrect index used when switching to Radio view via station click
 - FIX: Move Queue item range to end of Queue not working
 - FIX: CoverView Automatic display not working
+-
 
 ################################################################################
 #
