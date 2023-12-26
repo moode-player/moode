@@ -311,10 +311,14 @@ $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] =
 $_select['usb_auto_mounter'] .= "<option value=\"udisks-glue\" " . (($_SESSION['usb_auto_mounter'] == 'udisks-glue') ? "selected" : "") . ">Udisks-glue (Default)</option>\n";
 $_select['usb_auto_mounter'] .= "<option value=\"devmon\" " . (($_SESSION['usb_auto_mounter'] == 'devmon') ? "selected" : "") . ">Devmon</option>\n";
 
-$model = substr($_SESSION['hdwrrev'], 3, 1);
-$name = $_SESSION['hdwrrev'];
-// Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B
-if (stripos($name, 'Pi-Zero W') !== false || stripos($name, 'Pi-Zero 2 W') !== false || $model == '3' || $model == '4') {
+$piModel = substr($_SESSION['hdwrrev'], 3, 1);
+$piName = $_SESSION['hdwrrev'];
+// Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B
+if (
+	stripos($piName, 'Pi-Zero W') !== false ||
+	stripos($piName, 'Pi-Zero 2 W') !== false ||
+	$piModel >= 3
+) {
 	$_wifibt_hide = '';
 	$autoClick = " onchange=\"autoClick('#btn-set-p3wifi');\"";
 	$_select['p3wifi_on']  .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -368,8 +372,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	$_feat_https = 'hide';
 }
 
-$model = substr($_SESSION['hdwrrev'], 3, 1);
-if ($model == '3') { // Pi-3B, B+, A+
+$piModel = substr($_SESSION['hdwrrev'], 3, 1);
+if ($piModel == '3') { // Pi-3B, B+, A+
 	$_usbboot_hide = '';
 	$result = sysCmd('vcgencmd otp_dump | grep 17:');
 	if ($result[0] == '17:3020000a') {
@@ -380,7 +384,7 @@ if ($model == '3') { // Pi-3B, B+, A+
 		$_usbboot_msg = 'USB boot is not enabled yet';
 	}
 } else {
-	// NOTE: USB boot is enabled by default for pi 4, 400 with Sep 3 2020 or later boot loader
+	// NOTE: USB boot is enabled by default on Pi-4B, Pi-400 (Sep 3 2020 or later boot loader) and Pi-5B.
 	$_usbboot_hide = 'hide';
 }
 

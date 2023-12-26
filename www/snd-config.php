@@ -502,11 +502,16 @@ if ($_SESSION['audioout'] == 'Local' &&
 	$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_alsaequal_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$model = substr($_SESSION['hdwrrev'], 3, 1);
-	$cmmodel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
-	$name = $_SESSION['hdwrrev'];
-	// CamillaDSP can only be used on ARM7
-	if ((strpos($name, 'Pi-Zero 2') !== false) || $name == 'Pi-2B 1.2 1GB' || $model == '3' || $model == '4' || $name == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
+	$piModel = substr($_SESSION['hdwrrev'], 3, 1);
+	$piName = $_SESSION['hdwrrev'];
+	$cmModel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
+	// CamillaDSP can only be used on 64-bit capable ARM7
+	if (
+		strpos($piName, 'Pi-Zero 2') !== false ||
+		$piName == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' ||
+		$piName == 'Pi-2B 1.2 1GB' ||
+		$piModel >= 3
+	) {
 		$_camilladsp_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
 	} else {
 		$_camilladsp_set_disabled = 'disabled';

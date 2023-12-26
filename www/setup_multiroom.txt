@@ -37,8 +37,8 @@ BLOCK DIAGRAM
              | Ethernet                        |
              |                                 |
          +-------+                             |
-         |       | Pi-4 or 3B+                 | Ethernet and/or WiFi 5GHz
-         | Sendr | MPD
+         |       | Pi-3B+ or higher            | Ethernet and/or WiFi 5GHz
+         | Sendr | MPD                         |
          |       | Spotify, AirPlay            |
          +-------+                             |
                                                |
@@ -47,7 +47,7 @@ BLOCK DIAGRAM
                          +---------------------+---------------------+
                          |                     |                     |
                          |                     |                     |
-                         | Pi-4, 3B+, 3A+      |                     |
+                         | Pi-3A+ or higher    |                     |
                      +-------+             +-------+             +-------+
                      |       |             |       |             |       |
                      | Rcvr1 |             | Rcvr2 |             | Rcvr3 |

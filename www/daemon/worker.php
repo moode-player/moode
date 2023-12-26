@@ -345,8 +345,8 @@ workerLog('worker: Homedir:  ' . $_SESSION['home_dir']);
 workerLog('worker: Timezone: ' . $_SESSION['timezone']);
 workerLog('worker: Keyboard: ' . $_SESSION['keyboard']);
 // USB boot
-$piModelNum = substr($_SESSION['hdwrrev'], 3, 1);
-if ($piModelNum == '3') { // 3B, B+, A+
+$piModel = substr($_SESSION['hdwrrev'], 3, 1);
+if ($piModel == '3') { // 3B, B+, A+
 	$result = sysCmd('vcgencmd otp_dump | grep 17:');
 	if ($result[0] == '17:3020000a') {
 		sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
@@ -355,7 +355,7 @@ if ($piModelNum == '3') { // 3B, B+, A+
 		$msg = 'not enabled yet';
 	}
 	workerLog('worker: USB boot: ' . $msg);
-} else if ($piModelNum == '4') { // 4, 400
+} else if ($piModel == '4') { // 4, 400
 	$bootloaderMinDate = new DateTime("Sep 3 2020");
 	$bootloaderActualDate = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1\" \" $2\" \" $3}'")[0]);
 	if ($bootloaderActualDate >= $bootloaderMinDate) {
@@ -364,8 +364,10 @@ if ($piModelNum == '3') { // 3B, B+, A+
 		$msg = 'not enabled yet';
 	}
 	workerLog('worker: USB boot: ' . $msg);
+} else if ($piModel == '5') { // 5
+	workerLog('worker: USB boot: enabled');
 } else {
-	workerLog('worker: USB boot: not available');
+	workerLog('worker: USB boot: n/a');
 }
 
 // Rootfs expansion
@@ -512,7 +514,7 @@ if (empty($wlan0)) {
 	}
 
 	if (!empty($wlan0Ip)) {
-		if ($piModelNum == '3' || $piModelNum == '4' || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
+		if ($piModel >= 3 || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 			sysCmd('/sbin/iwconfig wlan0 power off');
 			workerLog('worker: Wlan: sleep   disabled');
 		}
@@ -1932,14 +1934,14 @@ function chkLibraryRegen() {
 // Return hardware revision
 function getHdwrRev() {
 	$array = explode("\t", sysCmd('/var/www/util/pirev.py')[0]);
-	$model = $array[1];
+	$piModel = $array[1];
 	$rev = $array[2];
 	$ram = $array[3];
 
-	if ($model == 'CM3+') {
+	if ($piModel == 'CM3+') {
 		$hdwrRev = 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]';
 	} else {
-		$hdwrRev = 'Pi-' . $model . ' ' . $rev . ' ' . $ram;
+		$hdwrRev = 'Pi-' . $piModel . ' ' . $rev . ' ' . $ram;
 	}
 
 	return $hdwrRev;

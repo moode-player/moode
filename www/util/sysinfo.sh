@@ -862,15 +862,15 @@ apdrouter=$(echo ${arr[2]} | cut -f 15 -d "|")
 
 # Misc settings
 # TODO: Add section for Pi-5
-MODEL=${HDWRREV:3:1}
-if [ $MODEL = 3 ]; then
+PI_MODEL=${HDWRREV:3:1}
+if [ $PI_MODEL = 3 ]; then
 	TMP="$(vcgencmd otp_dump | grep 17:)"
 	if [ "$TMP" = "17:3020000a" ]; then
 		USBBOOT="enabled"
 	else
 		USBBOOT="not enabled"
 	fi
-elif [ $MODEL = 4 ]; then
+elif [ $PI_MODEL = 4 ]; then
 	BOOTLOADER_MIN_DATE=20200903
 	TMP=$(vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}')
 	BOOTLOADER_ACTUAL_DATE=$(date -d"$TMP" +%Y%m%d)
@@ -880,6 +880,8 @@ elif [ $MODEL = 4 ]; then
 	else
 		USBBOOT="not enabled"
 	fi
+elif [ $PI_MODEL = 4 ]; then
+	USBBOOT="enabled"
 else
 	USBBOOT="not available"
 fi
