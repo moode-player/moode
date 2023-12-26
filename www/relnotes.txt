@@ -30,6 +30,7 @@ Bug fixes
 - FIX: Move Queue item range to end of Queue not working
 - FIX: CoverView Automatic display not activating
 - FIX: Popup on-screen keyboard not activating
+- FIX: Audioinfo not showing correct info for multiroom receiver
 
 ################################################################################
 #
