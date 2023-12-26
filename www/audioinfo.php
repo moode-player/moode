@@ -62,6 +62,11 @@ if ($aplActive == '1') {
 	$_encoded_at = 'PCM';
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
+} else if ($_SESSION['multiroom_rx'] == 'On') {
+	$_file = 'Multiroom sender stream';
+	$_encoded_at = 'Opus 16 bit 48 kHz, Stereo';
+	$_decoded_to = 'PCM 16 bit 48 kHz, Stereo';
+	$_decode_rate = '';
 } else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';
 	$_encoded_at = 'Unknown';
