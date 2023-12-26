@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2024-MM-DD moOde 8.4.0 (Bookworm)
+# 2024-MM-DD moOde 8.3.8 (Bullseye)
 #
 ################################################################################
 
@@ -21,7 +21,7 @@ Updates
 
 - UPD: Add HTTP proxy option to MPD Config
 - UPD: Add disc and track to logic for showing now-playing icon in track list
-- UPD: Improve help text in System Config, Preferences and Quick help
+- UPD: Improve help text System Config, Preferences and Quick help
 
 Bug fixes
 
