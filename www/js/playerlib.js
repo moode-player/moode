@@ -205,7 +205,6 @@ var coverView = false; // Coverview shown/hidden to save on more expensive condi
 
 // Detect chromium-browser
 GLOBAL.userAgent = navigator.userAgent;
-//if (GLOBAL.userAgent.indexOf('X11; CrOS armv') != -1 || GLOBAL.userAgent.indexOf('X11; CrOS aarch64') != -1) {
 if (GLOBAL.userAgent.indexOf('CrOS') != -1) {
     GLOBAL.chromium = true;
 } else {
