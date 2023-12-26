@@ -28,8 +28,8 @@ Bug fixes
 - FIX: getEncodedAt() bits assignment for lossy
 - FIX: Incorrect index used when switching to Radio view via station click
 - FIX: Move Queue item range to end of Queue not working
-- FIX: CoverView Automatic display not working
--
+- FIX: CoverView Automatic display not activating
+- FIX: Popup on-screen keyboard not activating
 
 ################################################################################
 #
