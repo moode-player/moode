@@ -576,10 +576,11 @@ function isMPD2CamillaDSPVolSyncEnabled() {
 }
 
 function doesCamillaDSPCfgHaveVolFilter($configFile = null) {
-	$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
-	$resultVol = sysCmd('fgrep -o "type: Volume" "' . $configFile . '"');
-    $resultLdn = sysCmd('fgrep -o "type: Loudness" "' . $configFile . '"');
-	return (($resultVol[0] == 'type: Volume' || $resultLdn[0] == 'type: Loudness' ) && $_SESSION['camilladsp'] !='off');
+	// $configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
+	// $resultVol = sysCmd('fgrep -o "type: Volume" "' . $configFile . '"');
+    // $resultLdn = sysCmd('fgrep -o "type: Loudness" "' . $configFile . '"');
+	// return (($resultVol[0] == 'type: Volume' || $resultLdn[0] == 'type: Loudness' ) && $_SESSION['camilladsp'] !='off');
+    return ($_SESSION['camilladsp'] !='off');
 }
 
 function updateCamillaDSPCfg($newMode, $currentMode, $cdsp) {
