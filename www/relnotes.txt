@@ -31,6 +31,7 @@ Bug fixes
 - FIX: CoverView Automatic display not activating
 - FIX: Popup on-screen keyboard not activating
 - FIX: Audioinfo not showing correct info for multiroom receiver
+- FIX: Browser title not being updated when importing host name
 
 ################################################################################
 #
