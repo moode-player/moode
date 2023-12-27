@@ -276,17 +276,20 @@ workerLog('worker: --');
 $importedHostName = sysCmd('cat /etc/hostname')[0];
 if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	/* Defaults
-	hostname	moode
-	btname		Moode Bluetooth
-	airplayname	Moode AirPlay
-	spotifyname	Moode Spotify
-	upnpname	Moode UPNP
-	dlnaname	Moode DLNA
-	squeezelite	Moode		This is in cfg_sl PLAYERNAME and squeezelite.conf, no session var
-	mpdzeroconf Moode MPD	This is in mpd.conf, no session var
+	hostname		moode
+	browsertotle 	Moode Player
+	btname			Moode Bluetooth
+	airplayname		Moode AirPlay
+	spotifyname		Moode Spotify
+	upnpname		Moode UPNP
+	dlnaname		Moode DLNA
+	squeezelite		Moode		In cfg_sl PLAYERNAME and squeezelite.conf, no session var
+	mpdzeroconf 	Moode MPD	In mpd.conf, no session var
 	*/
 	// Host
 	phpSession('write', 'hostname', $importedHostName);
+	// Browser title
+	phpSession('write', 'browsertitle', ucfirst($importedHostName) . ' Player');
 	// Bluetooth
 	$newName = ucfirst($importedHostName) . ' Bluetooth';
 	sysCmd('/var/www/util/sysutil.sh chg-name bluetooth "' . 'Moode Bluetooth" "' . $newName . '"');
