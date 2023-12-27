@@ -199,7 +199,5 @@ function updDspAndBtInConfs($cardNum, $newOutputMode, $oldOutputMode = '') {
 	}
 
 	// Bluetooth confs (incoming connections)
-	// NOTE: Section removed, not needed anymore since bluealsaaplay.conf using AUDIODEV=_audioout instead of ALSA hw or plughw
-
-	// TODO: check option to determine whether _audioout or plughw is used.
+	// NOTE: bluealsaaplay.conf AUDIODEV=_audioout or plughw depending on Bluetooth Config, ALSA output mode
 }
