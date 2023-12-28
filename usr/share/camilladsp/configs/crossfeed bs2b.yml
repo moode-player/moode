@@ -9,18 +9,17 @@ devices:
   capture_samplerate: 44100
   chunksize: 4096
   enable_rate_adjust: false
-  enable_resampling: false
   playback:
     type: Alsa
     channels: 2
     device: plughw:2,0
     format: S32LE
   queuelimit: 1
-  resampler_type: FastAsync
   samplerate: 44100
   silence_threshold: 0
   silence_timeout: 0
   target_level: 1024
+  volume_ramp_time: 150
 filters:
   cx1_hi:
     parameters:

@@ -3,6 +3,7 @@ devices:
   samplerate: 44100
   chunksize: 1024
   queuelimit: 1
+  volume_ramp_time: 150
   capture:
     type: File
     channels: 2
@@ -18,7 +19,7 @@ filters:
     parameters:
       high_boost: 3
       low_boost: 6
-      ramp_time: 200
+      fader: Main
       reference_level: -6
     type: Loudness
 mixers:
