@@ -277,7 +277,7 @@ $importedHostName = sysCmd('cat /etc/hostname')[0];
 if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	/* Defaults
 	hostname		moode
-	browsertotle 	Moode Player
+	browsertitle 	Moode Player
 	btname			Moode Bluetooth
 	airplayname		Moode AirPlay
 	spotifyname		Moode Spotify
