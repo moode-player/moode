@@ -2,6 +2,7 @@ devices:
   samplerate: 44100
   chunksize: 1024
   queuelimit: 1
+  volume_ramp_time: 150
   capture:
     type: File
     channels: 2
@@ -31,4 +32,4 @@ mixers:
 pipeline:
   - type: Mixer
     name: stereo
-    
+

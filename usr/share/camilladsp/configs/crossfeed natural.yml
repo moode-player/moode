@@ -6,10 +6,8 @@ devices:
     channels: 2
     filename: /dev/stdin
     format: S32LE
-  capture_samplerate: 44100
   chunksize: 4096
   enable_rate_adjust: false
-  enable_resampling: false
   playback:
     type: Alsa
     channels: 2
@@ -17,12 +15,12 @@ devices:
     format: S32LE
   queuelimit: 1
   rate_measure_interval: 1
-  resampler_type: FastAsync
   samplerate: 44100
   silence_threshold: 0
   silence_timeout: 0
   stop_on_rate_change: false
   target_level: 1024
+  volume_ramp_time: 150
 mixers:
   XF_IN:
     channels:

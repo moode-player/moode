@@ -2,6 +2,7 @@ devices:
   samplerate: 44100
   chunksize: 4096
   queuelimit: 1
+  volume_ramp_time: 150
   capture:
     type: File
     channels: 2
@@ -26,4 +27,4 @@ pipeline:
     channel: 1
     names:
       - mastergain
-      
+
