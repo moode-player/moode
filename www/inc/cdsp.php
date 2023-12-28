@@ -87,6 +87,23 @@ class CamillaDsp {
             if(key_exists('pipeline', $yml_cfg) && count($yml_cfg['pipeline']  )==0 ) {
                 unset($yml_cfg['mixers']);
             }
+
+            // patches required for migrating config to camilladsp 2.0
+            if( key_exists('volume_ramp_time', $yml_cfg['devices']) && $yml_cfg['devices']['volume_ramp_time'] != 150) {
+                $yml_cfg['devices']['volume_ramp_time'] = 150;
+            }
+            if( !key_exists('volume_ramp_time', $yml_cfg['devices']) ) {
+                $yml_cfg['devices']['volume_ramp_time'] = 150;
+            }
+            if( key_exists('enable_resampling', $yml_cfg['devices']) ) {
+                unset($yml_cfg['devices']['enable_resampling']);
+            }
+            if( key_exists('resampler_type', $yml_cfg['devices']) ) {
+                unset($yml_cfg['devices']['resampler_type']);
+            }
+            if( key_exists('capture_samplerate', $yml_cfg['devices']) && $yml_cfg['devices']['capture_samplerate'] == 0) {
+                unset($yml_cfg['devices']['capture_samplerate']);
+            }
             yaml_emit_file($this->getCurrentConfigFileName(), $yml_cfg);
         }
     }
