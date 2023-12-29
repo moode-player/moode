@@ -6,21 +6,19 @@ devices:
     channels: 2
     filename: /dev/stdin
     format: S32LE
-  capture_samplerate: 0
   chunksize: 1024
   enable_rate_adjust: false
-  enable_resampling: false
   playback:
     type: Alsa
     channels: 2
     device: plughw:2,0
     format: S32LE
   queuelimit: 1
-  resampler_type: BalancedAsync
   samplerate: 44100
   silence_threshold: 0
   silence_timeout: 0
   target_level: 0
+  volume_ramp_time: 150
 filters:
   peqgain:
     type: Gain

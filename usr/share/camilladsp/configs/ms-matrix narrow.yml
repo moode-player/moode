@@ -6,10 +6,8 @@ devices:
     channels: 2
     filename: /dev/stdin
     format: S32LE
-  capture_samplerate: 0
   chunksize: 4096
   enable_rate_adjust: false
-  enable_resampling: false
   playback:
     type: Alsa
     channels: 2
@@ -17,12 +15,12 @@ devices:
     format: S32LE
   queuelimit: 1
   rate_measure_interval: 1
-  resampler_type: Synchronous
   samplerate: 44100
   silence_threshold: -60
   silence_timeout: 3
   stop_on_rate_change: false
   target_level: 0
+  volume_ramp_time: 150
 filters:
   Stereo Image:
     parameters:

@@ -8,10 +8,8 @@ devices:
     read_bytes: 0
     skip_bytes: 0
     type: File
-  capture_samplerate: 0
   chunksize: 1024
   enable_rate_adjust: false
-  enable_resampling: false
   playback:
     channels: 2
     device: plughw:0,0
@@ -19,12 +17,12 @@ devices:
     type: Alsa
   queuelimit: 1
   rate_measure_interval: 1
-  resampler_type: Synchronous
   samplerate: 44100
   silence_threshold: -60
   silence_timeout: 3
   stop_on_rate_change: false
   target_level: 0
+  volume_ramp_time: 150
 filters:
   Volume:
     parameters:
