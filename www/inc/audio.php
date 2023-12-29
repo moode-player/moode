@@ -150,6 +150,7 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 	// $outputMode:
 	// - plughw	Default
 	// - hw		Direct
+	// TODO: hwpure - Pure Direct mode (hw) for MPD, Airplay, Spotify Connect and Squeezelite
 	if ($_SESSION['audioout'] == 'Local') {
 		// With DSP
 		if ($_SESSION['alsaequal'] != 'Off') {
