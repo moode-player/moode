@@ -852,6 +852,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 } else {
 	$status = 'n/a';
 }
+// Bluetooth SBC quality
+if (!isset($_SESSION['bluez_sbc_quality'])) {
+	$_SESSION['bluez_sbc_quality'] = 'xq+';
+}
 // Bluetooth ALSA output mode
 if (!isset($_SESSION['bt_alsa_output_mode'])) {
 	$_SESSION['bt_alsa_output_mode'] = '_audioout';

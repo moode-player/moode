@@ -69,7 +69,7 @@
 			</div>
 		</div>
 
-		<legend>Audio routing</legend>
+		<legend>Destination</legend>
 		<div class="control-group">
 			<select id="audioout" class="config-select-large" name="audioout">
 				$_select[audioout]
@@ -82,13 +82,29 @@
 			<span class="config-help-static $_ao_msg_hide">
 				NOTE: Changing from Bluetooth speaker to Local audio will automatically disconnect from the speaker.
             </span>
+		</div>
 
-			<select id="pcm_buffer" class="config-select-large" name="pcm_buffer">
+		<legend>Latency and bandwidth</legend>
+		<div class="control group">
+			<select id="pcm-buffer" class="config-select-large" name="pcm_buffer">
 				$_select[pcm_buffer]
 			</select>
 			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pcm_buffer" value="1">Set</button>
 			<span class="config-help-static">
 				I-O buffer length in milliseconds. Lower values reduce latency but may cause dropouts.
+	        </span>
+
+			<select id="sbc-quality" class="config-select-large" name="sbc_quality">
+				$_select[sbc_quality]
+			</select>
+			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_sbc_quality" value="1">Set</button>
+			<span class="config-help-static">
+				SBC encoder mode. Lower quality settings consume less bandwith but may reduce audio quality.<br>
+				<!--b>Low:</b> Mono 114 kbps, Stereo 213 kbps<br>
+				<b>Medium:</b> Mono 132 kbps, Stereo 237 kbps<br>
+				<b>High:</b> Mono 198 kbps, Stereo 345 kbps<br>
+				<b>XQ:</b> SBC Dual Channel HD 452 kbps<br>
+				<b>XQ+:</b> SBC Dual Channel HD 551 kbps-->
 	        </span>
 		</div>
 

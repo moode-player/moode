@@ -104,10 +104,18 @@ if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 	sleep(1);
 }
 
-// ALSA PCM buffer time
+// I-O buffer time
 if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 	phpSession('write', 'bluez_pcm_buffer', $_POST['pcm_buffer']);
 	sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $_POST['pcm_buffer'] . "' /etc/bluealsaaplay.conf");
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
+
+// SBC encoder mode
+if (isset($_POST['update_sbc_quality']) && $_POST['update_sbc_quality'] == '1') {
+	$_SESSION['bluez_sbc_quality'] = $_POST['sbc_quality'];
+	sysCmd("sed -i 's/--sbc-quality.*/--sbc-quality=" . $_POST['sbc_quality'] . "/' /etc/systemd/system/bluealsa.service");
+	sysCmd('systemctl daemon-reload');
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
@@ -194,13 +202,20 @@ if (in_array($cmd, $cmd_array)) {
 	$_hide_ctl[$type] = empty($_device[$type]) ? 'hide' : '';
 }
 
-// ALSA PCM output buffer time (micro seconds)
+// PCM I-O buffer time (micro seconds)
 $_select['pcm_buffer'] .= "<option value=\"500000\" " . (($_SESSION['bluez_pcm_buffer'] == '500000') ? "selected" : "") . ">500 ms (Default)</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"250000\" " . (($_SESSION['bluez_pcm_buffer'] == '250000') ? "selected" : "") . ">250 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"125000\" " . (($_SESSION['bluez_pcm_buffer'] == '125000') ? "selected" : "") . ">125 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"60000\" "  . (($_SESSION['bluez_pcm_buffer'] == '60000') ? "selected" : "")  . "> 60 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"40000\" "  . (($_SESSION['bluez_pcm_buffer'] == '40000') ? "selected" : "")  . "> 40 ms</option>\n";
 $_select['pcm_buffer'] .= "<option value=\"20000\" "  . (($_SESSION['bluez_pcm_buffer'] == '20000') ? "selected" : "")  . "> 20 ms</option>\n";
+
+// SBC quality
+$_select['sbc_quality'] .= "<option value=\"low\" " . (($_SESSION['bluez_sbc_quality'] == 'low') ? "selected" : "") . ">Low (213 kbps)</option>\n";
+$_select['sbc_quality'] .= "<option value=\"medium\" " . (($_SESSION['bluez_sbc_quality'] == 'medium') ? "selected" : "") . ">Medium (237 kbps)</option>\n";
+$_select['sbc_quality'] .= "<option value=\"high\" " . (($_SESSION['bluez_sbc_quality'] == 'high') ? "selected" : "") . ">High (345 kbps)</option>\n";
+$_select['sbc_quality'] .= "<option value=\"xq\" " . (($_SESSION['bluez_sbc_quality'] == 'xq') ? "selected" : "") . ">XQ (452 kbps)</option>\n";
+$_select['sbc_quality'] .= "<option value=\"xq+\" " . (($_SESSION['bluez_sbc_quality'] == 'xq+') ? "selected" : "") . ">XQ+ (551 kbps)</option>\n";
 
 // ALSA output mode
 $_select['bt_alsa_output_mode'] .= "<option value=\"_audioout\" " . (($_SESSION['bt_alsa_output_mode'] == '_audioout') ? "selected" : "") . ">Default</option>\n";
