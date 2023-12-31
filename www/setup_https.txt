@@ -2,7 +2,7 @@
 #
 #  Configuration Guide for moOde HTTPS mode
 #
-#  Version: 1.0 2023-12-30
+#  Version: 1.0 2023-12-31
 #
 #  (C) Tim Curtis 2023 http://moodeaudio.org
 #
@@ -25,36 +25,42 @@ Below is a basic procedure for managing HTTPS mode, configuring Browser
 settings and importing the certificate. The detailed steps vary depending on
 Browser and Operating System (OS).
 
-Turn HTTPS mode ON
+1. Turn HTTPS mode ON
 
-1. Open http://moode
-2. Turn HTTPS mode ON (in System Config)
-3. Reboot
+a. Open http://moode
+b. Turn HTTPS mode ON (in System Config)
+c. Reboot
 
-4. Open http://moode or https://moode
-5. Browser security warnings will appear and access to moOde will be blocked
-6. Click the appropriate button to View the security certificate
-7. Click the appropriate button to Export the certificate (specify DER encoding)
+d. Open http://moode or https://moode
+e. Browser security warnings will appear and access to moOde will be blocked
+f. Click the appropriate button to View the security certificate
+g. Click the appropriate button to Export the certificate (specify DER encoding)
 
-8. Open the OS Certificate Trust Store
-9. Import the certificate that was exported in the prior step into the System,
+h. Open the OS Certificate Trust Store
+i. Import the certificate that was exported in the prior step into the System,
    or other appropriate section of the Trust Store
-A. View the certificate in the Trust Store and set its Trust policy to "Always"
+j. View the certificate in the Trust Store and set its Trust policy to "Always"
 
-B. Refresh the Browser and a secure HTTPS connection should be established with
+k. Refresh the Browser and a secure HTTPS connection should be established with
    no Browser warnings
 
-Turn HTTPS mode OFF
+2. Turn HTTPS mode OFF
 
-  1. Open https://moode
-  2. Turn HTTPS mode OFF (in System Config)
-  3. Reboot
+  a. Open https://moode
+  b. Turn HTTPS mode OFF (in System Config)
+  c. Reboot
 
-  4. Open http://moode or https://moode
-  5. Browser site warnings will appear and moOde will not be accessible
-  6. Clear Browser cache and history
-  
-  7. Refresh the Browser and a non-secure HTTP connection should be established
+  d. Open http://moode or https://moode
+  e. Browser site warnings will appear and moOde will not be accessible
+  f. Clear Browser cache and history
+
+  g. Refresh the Browser and a non-secure HTTP connection should be established
+
+Changing the host name
+
+If the host name is changed via System Config a new security certificate will
+be automatically generated during startup after reboot. Refresh the Browser and
+repeat the certificate export/import procedure starting with step 1d.
 
 BASIC PROCEDURE (Mobile OS)
 
