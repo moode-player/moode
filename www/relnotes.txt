@@ -15,7 +15,9 @@
 #
 ################################################################################
 
-New features
+Security
+
+- NEW: Option for secure HTTPS mode (Experimental)
 
 Updates
 
