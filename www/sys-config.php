@@ -182,13 +182,6 @@ if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
-// TEST
-
-if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_SESSION['nginx_https_only']) {
-	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
-	submitJob('nginx_https_only', $_POST['nginx_https_only'], 'Settings updated', 'Restart required');
-}
-
 // FILE SHARING
 
 if (isset($_POST['update_fs_smb'])) {
@@ -248,6 +241,11 @@ if (isset($_POST['rebuild_dlnadb'])) {
 if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
 	phpSession('write', 'shellinabox', $_POST['shellinabox']);
 	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated');
+}
+// TEST: HTTPS mode
+if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_SESSION['nginx_https_only']) {
+	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
+	submitJob('nginx_https_only', $_POST['nginx_https_only'], 'Settings updated', 'Restart required');
 }
 
 // LOGS
@@ -361,17 +359,6 @@ $autoClick = " onchange=\"autoClick('#btn-set-eth0chk');\"";
 $_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-// TEST: HTTPS-only mode
-
-if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
-	$_feat_https = '';
-	$autoClick = " onchange=\"autoClick('#btn-set-nginx-https-only');\"";
-	$_select['nginx_https_only_on']  .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-1\" value=\"1\" " . (($_SESSION['nginx_https_only'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['nginx_https_only_off'] .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-2\" value=\"0\" " . (($_SESSION['nginx_https_only'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-} else {
-	$_feat_https = 'hide';
-}
-
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModel == '3') { // Pi-3B, B+, A+
 	$_usbboot_hide = '';
@@ -422,6 +409,15 @@ if ($_SESSION['shellinabox'] == '1') {
 } else {
 	$_webssh_open_disable = 'disabled';
 	$_webssh_link_disable = 'onclick="return false;"';
+}
+// TEST: HTTPS mode
+if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
+	$_feat_https = '';
+	$autoClick = " onchange=\"autoClick('#btn-set-nginx-https-only');\"";
+	$_select['nginx_https_only_on']  .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-1\" value=\"1\" " . (($_SESSION['nginx_https_only'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['nginx_https_only_off'] .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-2\" value=\"0\" " . (($_SESSION['nginx_https_only'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+} else {
+	$_feat_https = 'hide';
 }
 
 // LOGS

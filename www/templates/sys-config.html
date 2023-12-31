@@ -243,25 +243,6 @@
 					If set to NO the address check will be skipped and startup time will be reduced.
 				</span>
 			</div>
-
-			<!-- TEST: HTTPS-only mode -->
-			<div class="$_feat_https">
-				<div class="config-horiz-rule"></div>
-				<label class="control-label">HTTPS-Only Mode</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-2">ON </label>$_select[nginx_https_only_on]
-						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
-					</div>
-					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
-					<span class="config-help-static">
-						Secure the communication channel between your Web Browser and moOde using the HTTPS protocol and a self-signed security certificate.
-						Since a self-signed certificate is being used your Browser will display a warning that the site could not be verified as a trusted website.
-						These easy to follow <a class="target-blank-link" href="https://it.nmu.edu/docs/adding-security-exception-your-browser" target="_blank">instructions</a>
-						explain how to suppress the warning for Chrome, Edge, Firefox and Safari Browsers.
-					</span>
-				</div>
-			</div>
 		</div>
 
 		<div class="control-group">
@@ -368,10 +349,28 @@
 					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
                 </span>
 			</div>
-
 			<div class="controls">
 				<a href="http://$_select[hostip]:4200" class="btn btn-medium btn-primary config-btn target-blank-link" target="_blank" $_webssh_link_disable $_webssh_open_disable>Open</a>
 				<span class="config-btn-after">SSH terminal</span>
+			</div>
+
+			<div class="config-horiz-rule"></div>
+
+			<!-- TEST: HTTPS mode -->
+			<div class="$_feat_https">
+				<label class="control-label">HTTPS mode</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-2">ON </label>$_select[nginx_https_only_on]
+						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
+					</div>
+					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
+					<span class="config-help-static">
+						This is an <b>experimental feature</b> for enabling secure communication between the Browser and moOde.<br>
+						View the <a href="./setup_https.txt" class="target-blank-link" target="_blank">Configuration Guide</a>
+						for information on how HTTP mode works, Browser/OS settings, configuration and certificate import procedures.
+					</span>
+				</div>
 			</div>
 		</div>
 

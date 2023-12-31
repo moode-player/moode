@@ -74,7 +74,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
 	echo -e "\nEthernet check\t\t= $eth0chk\c"
 	if [ $(($feat_bitmask & $FEAT_HTTPS)) -ne 0 ]; then
-		echo -e "\nHTTPS-Only mode\t\t= $HTTPS_ONLY\c"
+		echo -e "\nHTTPS mode\t\t= $HTTPS_MODE\c"
 	fi
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
 	echo -e "\nReduced sys logging\t= $REDUCE_SYS_LOGGING\c"
@@ -467,7 +467,7 @@ if [ "$WLAN0MAC" = "" ]; then
 fi
 
 TMP=$(moodeutl -d | grep nginx_https_only | cut -d"|" -f2)
-[[ "$TMP" = "1" ]] && HTTPS_ONLY="On" || HTTPS_ONLY="Off"
+[[ "$TMP" = "1" ]] && HTTPS_MODE="On" || HTTPS_MODE="Off"
 
 TMP="$(lsblk -o size -nb /dev/disk/by-label/rootfs)"
 if [[ $TMP -gt $DEV_ROOTFS_SIZE ]]; then

@@ -975,6 +975,31 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 }
 workerLog('worker: GPIO buttons:    ' . $status);
 
+// TEST: Start HTTPS mode
+if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
+	if (!isset($_SESSION['nginx_https_only'])) {
+		$_SESSION['nginx_https_only'] = '0'; // Initially Off
+	}
+	if ($_SESSION['nginx_https_only'] == '1') {
+		$status = 'started';
+		// Check for host name change
+		$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
+		$CN = trim(sysCmd($cmd)[0]);
+		if ($CN != $_SESSION['hostname'] . '.local') {
+			sysCmd('/var/www/util/gen-cert.sh');
+			sysCmd('systemctl restart nginx');
+			$status .= ', Cert created for host: ' . $_SESSION['hostname'];
+		} else {
+			$status .= ', Cert exists for host: ' . $_SESSION['hostname'];
+		}
+	} else {
+		$status = 'available';
+	}
+} else {
+	$status = 'n/a';
+}
+workerLog('worker: HTTPS mode:      ' . $status);
+
 // Start stream recorder
 if ($_SESSION['feat_bitmask'] & FEAT_RECORDER) {
 	if ($_SESSION['recorder_status'] == 'Not installed') {
@@ -989,27 +1014,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_RECORDER) {
 	$status = 'n/a';
 }
 workerLog('worker: Stream recorder: ' . $status);
-
-// TEST: HTTPS-Only mode
-if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
-	if (!isset($_SESSION['nginx_https_only'])) {
-		$_SESSION['nginx_https_only'] = '0'; // Initially Off
-	}
-	if ($_SESSION['nginx_https_only'] == '1') {
-		$status = 'started';
-		$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
-		$CN = trim(sysCmd($cmd)[0]);
-		if ($CN != $_SESSION['hostname'] . '.local') {
-			sysCmd('/var/www/util/gen-cert.sh');
-			$status .= ', New cert created for ' . $_SESSION['hostname'];
-		}
-	} else {
-		$status = 'available';
-	}
-} else {
-	$status = 'n/a';
-}
-workerLog('worker: HTTPS-Only mode: ' . $status);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -2677,12 +2681,25 @@ function runQueuedJob() {
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
 			break;
-		// TEST:
+		// TEST: HTTPS mode
 		case 'nginx_https_only':
-			if ($_SESSION['w_queueargs'] == '0') {
-				sysCmd("sed -i 's/return 301/#return 301/' /etc/nginx/nginx.conf");
+			if ($_SESSION['w_queueargs'] == '1') {
+				// Create cert if needed
+				$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
+				$CN = trim(sysCmd($cmd)[0]);
+				if ($CN != $_SESSION['hostname'] . '.local') {
+					sysCmd('/var/www/util/gen-cert.sh');
+					workerLog('worker: Cert created for host: ' . $_SESSION['hostname']);
+				} else {
+					workerLog('worker: Cert exists for host: ' . $_SESSION['hostname']);
+				}
+				// Enable HTTPS
+				sysCmd('rm -f /etc/nginx/sites-enabled/*');
+				sysCmd('ln -s /etc/nginx/sites-available/moode-https.conf /etc/nginx/sites-enabled/moode-https.conf');
 			} else {
-				sysCmd("sed -i 's/#return 301/return 301/' /etc/nginx/nginx.conf");
+				// Enable HTTP
+				sysCmd('rm -f /etc/nginx/sites-enabled/*');
+				sysCmd('ln -s /etc/nginx/sites-available/moode-http.conf /etc/nginx/sites-enabled/moode-http.conf');
 			}
 			break;
 		case 'localui':

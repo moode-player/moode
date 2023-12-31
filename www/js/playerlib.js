@@ -21,7 +21,7 @@
  */
 
 // Features availability bitmask
-const FEAT_HTTPS        = 1;        //   HTTPS-Only mode
+const FEAT_HTTPS        = 1;        // y HTTPS mode
 const FEAT_AIRPLAY      = 2;        // y AirPlay renderer
 const FEAT_MINIDLNA     = 4;        // y DLNA server
 const FEAT_RECORDER     = 8;        //   Stream recorder
@@ -39,7 +39,7 @@ const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
-//						  97206
+//						  97207
 
 // Timeouts in milliseconds
 const DEFAULT_TIMEOUT   = 250;

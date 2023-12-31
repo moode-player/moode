@@ -19,7 +19,7 @@
  *
  */
 
-const VERSION = '3.0.1';
+const VERSION = '3.0.2';
 
 set_include_path('/var/www/inc');
 
@@ -33,7 +33,7 @@ require_once 'constants.php';
 require_once 'sleep-interval.php';
 
 $features = array(
-	FEAT_HTTPS => 'HTTPS-Only mode',
+	FEAT_HTTPS => 'HTTPS mode',
 	FEAT_AIRPLAY =>	'AirPlay renderer',
 	FEAT_MINIDLNA => 'DLNA server',
 	FEAT_RECORDER => 'Stream recorder',
