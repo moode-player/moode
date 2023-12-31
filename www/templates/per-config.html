@@ -46,8 +46,8 @@
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
 				</div>
                 <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<span id="info_wake_display" class="config-help-info">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wake-display" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-wake-display" class="config-help-info">
 					Wake the display when audio starts playing.
                 </span>
             </div>
@@ -84,6 +84,10 @@
 					$_select[scnblank]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scnblank" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-scnblank" class="config-help-info">
+					When playback has stopped the display will be turned off after the specified time period.
+                </span>
 			</div>
 
 			<div class="controls">
