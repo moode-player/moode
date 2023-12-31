@@ -23,6 +23,7 @@ Updates
 
 - UPD: Add HTTP proxy option to MPD Config
 - UPD: Add disc and track to logic for showing now-playing icon in track list
+- UPD: Add SBC quality mode option to Bluetooth Control
 - UPD: Improve help text System Config, Preferences and Quick help
 
 Bug fixes
