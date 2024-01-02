@@ -145,11 +145,9 @@ $_hide_ctl['scanned_device'] = 'hide';
 $_bt_disabled = $_SESSION['btsvc'] == '1' ? '' : 'disabled';
 
 if ($cmd == '-p' || $cmd == '-c') {
-	$_ao_msg_hide = '';
-	$_ao_msg_margin = 'config-help-no-margin';
+	$_audioout_msg = '<br>Changing from Bluetooth speaker to Local audio will automatically disconnect from the speaker.';
 } else {
-	$_ao_msg_hide = 'hide';
-	$_ao_msg_margin = '';
+	$_audioout_msg = '';
 }
 
 // Run the cmd

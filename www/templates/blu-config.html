@@ -67,25 +67,19 @@
 					Select a device to pair with.
 	            </span>
 			</div>
-		</div>
 
-		<legend>Destination</legend>
-		<div class="control-group">
+			<legend>Audio routing</legend>
 			<select id="audioout" class="config-select-large" name="audioout">
 				$_select[audioout]
 			</select>
-			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="chg_audioout" value="1">Change</button>
+			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="chg_audioout" value="1">Set</button>
 			<span class="config-help-static">
 				<b>Local audio: </b>Route connected client output to the Local audio device.<br>
 				<b>Bluetooth speaker: </b>Route MPD output to a remote Bluetooth speaker.
+				$_audioout_msg
             </span>
-			<span class="config-help-static $_ao_msg_hide">
-				NOTE: Changing from Bluetooth speaker to Local audio will automatically disconnect from the speaker.
-            </span>
-		</div>
 
-		<legend>Latency and bandwidth</legend>
-		<div class="control group">
+			<legend>Latency and bandwidth</legend>
 			<select id="pcm-buffer" class="config-select-large" name="pcm_buffer">
 				$_select[pcm_buffer]
 			</select>
@@ -106,10 +100,8 @@
 				<b>XQ:</b> SBC Dual Channel HD 452 kbps<br>
 				<b>XQ+:</b> SBC Dual Channel HD 551 kbps-->
 	        </span>
-		</div>
 
-		<legend>ALSA output mode</legend>
-		<div class="control-group">
+			<legend>ALSA output mode</legend>
 			<select id="bt-alsa-output-mode" class="config-select-large" name="bt_alsa_output_mode">
 				$_select[bt_alsa_output_mode]
 			</select>
