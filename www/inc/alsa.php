@@ -183,37 +183,48 @@ function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
 	}
 }
 
+// Needs the session to be available for getAlsaCardNum()
 function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
-	// Called from command/audioinfo.php
-	if ($mpdState == '') {
+	if ($mpdState == '') { // Called from command/index.php get_output_format
 		$mpdStatus = getMpdStatus(getMpdSock());
 		$mpdState = $mpdStatus['state'];
 		$mpdAudioSampleRate = $mpdStatus['audio_sample_rate'];
-	}
-
-	// Called from enhanceMetadata() in inc/mpd.php
-	if ($mpdState == 'play') {
+		$outputStr = alsaOutputStr();
+	} else if ($mpdState == 'play') { // Called from enhanceMetadata() in inc/mpd.php
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioout'", sqlConnect());
 		if ($result['value'] == 'Bluetooth') {
-			$outputFormat = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
+			$outputStr = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
 		} else {
-			// Local
-			$hwParams = getAlsaHwParams(getAlsaCardNum());
-			if ($hwParams['status'] == 'active') {
-				// NOTE: $hwParams['format'] = 'DSD' or PCM bit depth
-				$channels = getChannelCount($hwParams['channels']);
-				$outputFormat = $hwParams['format'] == 'DSD' ?
-					'DSD ' . $mpdAudioSampleRate . ' MHz, ' . $channels :
-					'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, '. $channels;
-			} else {
-				$outputFormat = 'Not playing';
-			}
+			$outputStr = alsaOutputStr();
 		}
 	} else {
-		$outputFormat = 'Not playing';
+		$outputStr = 'Not playing';
 	}
 
-	return $outputFormat;
+	return $outputStr;
+}
+
+function alsaOutputStr() {
+	$maxLoops = 3;
+	$sleepTime = 250000;
+	// Loop when checking hwparams to allow for any latency in the audio pipeline
+	for ($i = 0; $i < $maxLoops; $i++) {
+		$hwParams = getAlsaHwParams(getAlsaCardNum());
+		//workerLog('alsaOutputStr(): ' . ($i + 1) . ' ' . $hwParams['status']);
+		if ($hwParams['status'] == 'active') {
+			$channels = getChannelCount($hwParams['channels']);
+			$outputStr = $hwParams['format'] == 'DSD' ?
+				'DSD ' . $mpdAudioSampleRate . ' MHz, ' . $channels :
+				'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, '. $channels;
+			break;
+		} else {
+			$outputStr = 'Not playing';
+		}
+
+		usleep($sleepTime);
+	}
+
+	return$outputStr;
 }
 
 function getChannelCount($channelStr) {

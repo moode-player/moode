@@ -23,6 +23,8 @@
 
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
+require_once __DIR__ . '/../inc/session.php';
+require_once __DIR__ . '/../inc/sql.php';
 
 if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 	echo 'Command missing';
@@ -32,6 +34,7 @@ if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 		$array = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "=");
 		echo json_encode($array);
 	} else if ($_GET['cmd'] == 'get_output_format') {
+		phpSession('open_ro');
 		echo json_encode(getALSAOutputFormat());
 	} else {
 		// MPD commands
