@@ -24,16 +24,18 @@ fi
 #echo "Event: "$PLAYER_EVENT >> /var/log/moode_spotevent.log
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
-RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','mpdmixer','camilladsp_volume_sync','rsmafterspot','inpactive','multiroom_tx')")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','mpdmixer','camilladsp_volume_sync','rsmafterspot','inpactive','volknob_mpd','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
-ALSAVOLUME_MAX=${arr[0]}
-ALSAVOLUME=${arr[1]}
-AMIXNAME=${arr[2]}
-MPDMIXER=${arr[3]}
-CDSP_VOLSYNC=${arr[4]}
-RSMAFTERSPOT=${arr[5]}
-INPACTIVE=${arr[6]}
-MULTIROOM_TX=${arr[7]}
+VOLKNOB=${arr[0]}
+ALSAVOLUME_MAX=${arr[1]}
+ALSAVOLUME=${arr[2]}
+AMIXNAME=${arr[3]}
+MPDMIXER=${arr[4]}
+CDSP_VOLSYNC=${arr[5]}
+RSMAFTERSPOT=${arr[6]}
+INPACTIVE=${arr[7]}
+VOLKNOB_MPD=${arr[8]}
+MULTIROOM_TX=${arr[9]}
 RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
 
 if [[ $INPACTIVE == '1' ]]; then
