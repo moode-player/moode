@@ -181,28 +181,32 @@ function startSqueezeLite() {
 	if ($_SESSION['alsavolume'] != 'none') {
 		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
+	
 	sysCmd('systemctl start squeezelite');
 }
 
 function stopSqueezeLite() {
 	sysCmd('systemctl stop squeezelite');
-	sysCmd('/var/www/vol.sh -restore');
-	// Reset to inactive
+
+	if (isMPD2CamillaDSPVolSyncEnabled()) {
+		$dbh = sqlConnect();
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $dbh);
+		sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $dbh);
+		sysCmd('/var/www/vol.sh -restore');
+		sysCmd('systemctl restart mpd2cdspvolume');
+	} else {
+		sysCmd('/var/www/vol.sh -restore');
+	}
+
 	phpSession('write', 'slactive', '0');
 	$GLOBALS['slactive'] = '0';
 	sendEngCmd('slactive0');
 }
 
 function cfgSqueezelite() {
-	// Update AUDIODEVICE param
 	$dbh = sqlConnect();
-	$alsaOutput = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
-	sqlUpdate('cfg_sl', $dbh, 'AUDIODEVICE', $alsaOutput);
-
-	// Load settings
 	$result = sqlRead('cfg_sl', $dbh);
 
-	// Generate config file output
 	foreach ($result as $row) {
 		$data .= $row['param'] . '=' . $row['value'] . "\n";
 	}

@@ -28,9 +28,6 @@ phpSession('open');
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
-		if ($key == 'AUDIODEVICE') {
-			$value = $_SESSION['cardnum'];
-		}
 		sqlUpdate('cfg_sl', $dbh, $key, SQLite3::escapeString($value));
 	}
 
@@ -45,8 +42,6 @@ $cfgSL = array();
 foreach ($result as $row) {
 	$cfgSL[$row['param']] = $row['value'];
 }
-
-$dev = getAlsaDeviceNames();
 
 $_sl_select['renderer_name'] = $cfgSL['PLAYERNAME'];
 $_sl_select['alsa_params'] = $cfgSL['ALSAPARAMS'];

@@ -1025,16 +1025,16 @@ workerLog('worker: -- Volume levels');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// MPD or Source select volume
+// Source select (Analog or S/PDIF) or MPD volume
 if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
  	if ($_SESSION['audioin'] == 'Local') {
-		$volKnob = $_SESSION['volknob_mpd'] != 0 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+		$volKnob = $_SESSION['volknob_mpd'] != -1 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 	} else {
 		$volKnob = $_SESSION['volknob_preamp'];
 	}
 } else {
-	$volKnob = $_SESSION['volknob_mpd'] != 0 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-	phpSession('write', 'volknob_mpd', '0');
+	$volKnob = $_SESSION['volknob_mpd'] != -1 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	phpSession('write', 'volknob_mpd', '-1');
 	phpSession('write', 'volknob_preamp', '0');
 }
 sysCmd('/var/www/vol.sh ' . $volKnob);

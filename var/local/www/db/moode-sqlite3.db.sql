@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Dec 30 06:38:08 2023
+-- File generated with SQLiteStudio v3.1.0 on Thu Jan 4 07:52:30 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -9,7 +9,7 @@ BEGIN TRANSACTION;
 -- Table: cfg_sl
 CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64));
 INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
-INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', 'plughw:0,0');
+INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '_audioout');
 INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
 INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
 INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
@@ -185,7 +185,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (120, 'inpactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (121, 'rsmafterinp', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (123, 'library_ignore_articles', 'a,an,the');
-INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (125, 'volknob_preamp', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (126, 'library_albumview_sort', 'Artist/Year');
 INSERT INTO cfg_system (id, param, value) VALUES (127, 'library_thmgen_scan', 'Default');
