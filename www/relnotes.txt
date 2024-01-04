@@ -24,7 +24,8 @@ Updates
 - UPD: Add HTTP proxy option to MPD Config
 - UPD: Add disc and track to logic for showing now-playing icon in track list
 - UPD: Add SBC quality mode option to Bluetooth Control
-- UPD: Improve help text System Config, Preferences and Quick help
+- UPD: Update Squeezelite to use ALSA _audioout device (support CamillaDSP)
+- UPD: Improve help text on the Configs, Preferences and Quick help
 
 Bug fixes
 
@@ -33,8 +34,9 @@ Bug fixes
 - FIX: Move Queue item range to end of Queue not working
 - FIX: CoverView Automatic display not activating
 - FIX: Popup on-screen keyboard not activating
-- FIX: Audioinfo not showing correct info for multiroom receiver
+- FIX: Audioinfo not showing correct info for Multiroom receiver
 - FIX: Browser title not being updated when importing host name
+- FIX: Volume not restored correctly when Spotify Connect and CamillaDSP volume
 
 ################################################################################
 #
