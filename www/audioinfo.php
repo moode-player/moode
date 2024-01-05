@@ -52,7 +52,12 @@ $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh
 // INPUT
 //
 
-if ($aplActive == '1') {
+if ($btActive === true && $_SESSION['audioout'] == 'Local') {
+	$_file = 'Bluetooth stream';
+	$_encoded_at = 'Unknown';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo'; // Maybe also 48K ?
+	$_decode_rate = '';
+} else if ($aplActive == '1') {
 	$_file = 'AirPlay stream';
 	$_encoded_at = 'PCM';
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
@@ -61,11 +66,6 @@ if ($aplActive == '1') {
 	$_file = 'Spotify stream';
 	$_encoded_at = 'PCM';
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
-	$_decode_rate = '';
-} else if ($_SESSION['multiroom_rx'] == 'On') {
-	$_file = 'Multiroom sender stream';
-	$_encoded_at = 'Opus 16 bit 48 kHz, Stereo';
-	$_decoded_to = 'PCM 16 bit 48 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';
@@ -77,10 +77,10 @@ if ($aplActive == '1') {
 	$_encoded_at = 'Unknown';
 	$_decoded_to = 'Unknown';
 	$_decode_rate = '';
-} else if ($btActive === true && $_SESSION['audioout'] == 'Local') {
-	$_file = 'Bluetooth stream';
-	$_encoded_at = 'Unknown';
-	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo'; // Maybe also 48K ?
+} else if ($_SESSION['multiroom_rx'] == 'On') {
+	$_file = 'Multiroom sender stream';
+	$_encoded_at = 'Opus 16 bit 48 kHz, Stereo';
+	$_decoded_to = 'PCM 16 bit 48 kHz, Stereo';
 	$_decode_rate = '';
 } else {
 	$song = getCurrentSong($sock);
@@ -153,7 +153,9 @@ $_alsa_output_format = $_hwparams_format . $_hwparams_calcrate;
 
 // Output chain
 // Renderer
-if ($aplActive == '1') {
+if ($btActive === true) {
+	$renderer = 'Bluetooth';
+} else if ($aplActive == '1') {
 	$renderer = 'AirPlay';
 } else if ($spotActive == '1') {
 	$renderer = 'Spotify';
@@ -161,8 +163,6 @@ if ($aplActive == '1') {
 	$renderer = 'Squeezelite';
 } else if ($rbActive == '1') {
 	$renderer = 'Roonbridge';
-} else if ($btActive === true) {
-	$renderer = 'Bluetooth';
 } else {
 	$renderer = 'MPD';
 }
@@ -190,7 +190,7 @@ if ($_SESSION['invert_polarity'] == '1') {
 
 // Bluetooth overrides
 if ($btActive === true) {
-	if ($_SESSION['bt_alsa_output_mode'] == 'plughw') {
+	if ($_SESSION['bt_alsa_output_mode'] == 'plughw') { // Instead of _audioout
 		$dsp = '';
 		$outputMode = 'plughw';
 	}
@@ -203,8 +203,6 @@ if ($_SESSION['audioout'] == 'Bluetooth') {
 	$_audio_output_chain = $renderer . ' -> Multiroom Sender';
 } else if ($_SESSION['multiroom_rx'] == 'On') {
 	$_audio_output_chain = 'Multiroom Receiver -> Device';
-} else if ($renderer == 'Squeezelite' || $renderer == 'Roonbridge') {
-	$_audio_output_chain = $renderer;
 } else if ($dsp != '') {
 	$_audio_output_chain = $renderer . ' -> ' . $dsp . ' -> ' . $outputMode . ' -> Device';
 } else {
