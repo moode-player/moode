@@ -843,7 +843,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 		if ($status == 'started') {
 			if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
 				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
-				$status .= ', PA started';
+				$status .= ', Pairing Agent started';
 			}
 		}
 	} else {
