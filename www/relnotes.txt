@@ -26,6 +26,7 @@ Updates
 - UPD: Add SBC quality mode option to Bluetooth Control
 - UPD: Update Squeezelite to use ALSA _audioout device (support CamillaDSP)
 - UPD: Improve help text on the Configs, Preferences and Quick help
+- UPD: Improve Audio info line height so a bit more info shows on screen
 
 Bug fixes
 
