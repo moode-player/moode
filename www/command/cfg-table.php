@@ -96,8 +96,7 @@ switch ($_GET['cmd']) {
 		// Update theme meta tag in header.php
 		if (isset($_POST['themename']) && $_POST['themename'] != $_SESSION['themename']) {
 			$result = sqlRead('cfg_theme', $dbh, $_POST['themename']);
-			sysCmd("sed -i '/<meta name=\"theme-color\" content=/c\ \t<meta name=\"theme-color\" content=" . "\"rgb(" .
-				$result[0]['bg_color'] . ")\">'" . ' /var/www/header.php');
+			sysCmd('sed -i "s/theme-color.*/theme-color\" content=\"rgb(' . $result[0]['bg_color'] . ')\">/" /var/www/header.php');
 		}
 
 		// Session only vars with no mirror column in cfg_system
