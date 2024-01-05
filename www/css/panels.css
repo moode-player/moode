@@ -769,7 +769,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 /* Library filter */
 #lib-flatlist-filter {font-size:.5em;}
 /* Audio info */
-#container-iteminfo li {list-style:none;line-height:normal;padding:.5rem;overflow:auto;}
+#container-iteminfo li {list-style:none;line-height:normal;padding:.25rem;overflow:auto;}
 #container-iteminfo .h5 {margin:.6rem 0 .4rem 0;width:unset!important;}
 #container-iteminfo .left {float:left;color:var(--textvariant);font-weight:500;width:30%;}
 #container-iteminfo .right {float:right;width:70%;word-wrap: break-word;}
