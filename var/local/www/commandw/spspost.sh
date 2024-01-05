@@ -63,7 +63,7 @@ if [[ $MULTIROOM_TX == "On" ]]; then
 		if [[ $RESULT != "" ]]; then
 			RESULT=$(curl -G -S -s --data-urlencode "cmd=vol.sh -restore" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				echo $(date +%F" "%T)" spspost.sh vol.sh -restore failed: $IP_ADDR" >> /var/log/moode_renderer_error.log
+				echo $(date +%F" "%T)" spspost.sh vol.sh -restore failed: $IP_ADDR" >> /var/log/moode_spsevent.log
 			fi
 		fi
 	done

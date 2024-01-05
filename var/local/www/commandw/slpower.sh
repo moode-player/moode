@@ -29,7 +29,7 @@
 # Power on
 #
 
-echo "Run script" >> /var/log/moode_slpower.log
+#echo "Run script" >> /var/log/moode_slpower.log
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','mpdmixer','camilladsp_volume_sync','rsmaftersl','wrkready','inpactive','volknob_mpd')")
@@ -46,18 +46,21 @@ INPACTIVE=${arr[8]}
 VOLKNOB_MPD=${arr[9]}
 
 if [[ $INPACTIVE == "1" ]]; then
-	echo "Input source (Analog or S/PDIF) active, exit 1" >> /var/log/moode_slpower.log
+	echo "Input source (Analog or S/PDIF) active, exit 1"
+	#echo "Input source (Analog or S/PDIF) active, exit 1" >> /var/log/moode_slpower.log
 	exit 1
 fi
 
 if [[ $WRKREADY == "0" ]]; then
-	echo "Worker startup not complete, exit 0" >> /var/log/moode_slpower.log
+	echo "Worker startup not complete, exit 0"
+	#echo "Worker startup not complete, exit 0" >> /var/log/moode_slpower.log
 else
 	# See if -V hardware mixer is present in OTHEROPTIONS
 	VOPT=$(sqlite3 $SQLDB "SELECT * FROM cfg_sl WHERE value LIKE '%-V%'")
 
 	if [[ $1 == "0" ]]; then
-		echo "Power off" >> /var/log/moode_slpower.log
+		echo "Power off"
+		#echo "Power off" >> /var/log/moode_slpower.log
 		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='slactive'")
 
 		if [[ $CDSP_VOLSYNC == "on" ]] && [[ $VOLKNOB_MPD != "-1"  ]]; then
@@ -78,11 +81,13 @@ else
 		fi
 
 		if [[ $RSMAFTERSL == "Yes" ]]; then
-			echo "Resume MPD" >> /var/log/moode_slpower.log
+			echo "Resume MPD"
+			#echo "Resume MPD" >> /var/log/moode_slpower.log
 			/usr/bin/mpc play > /dev/null
 		fi
 	elif [[ $1 == "1" ]]; then
-		echo "Power on" >> /var/log/moode_slpower.log
+		echo "Power on"
+		#echo "Power on" >> /var/log/moode_slpower.log
 		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='slactive'")
 		/usr/bin/mpc stop > /dev/null
 		sleep 1
@@ -95,8 +100,9 @@ else
 			/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi
 	else
-		# Value 2 is returned (when squeezelite is first started and LMS is already running?)
-	    echo "Power button state ($1)" >> /var/log/moode_slpower.log
+		# Value 2 is sometimes returned (when squeezelite is first started and LMS is already running?)
+		echo "Power button state ($1)"
+	    #echo "Power button state ($1)" >> /var/log/moode_slpower.log
 	fi
 fi
 
