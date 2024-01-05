@@ -152,6 +152,9 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/samba/log.smbd --size 0
 	truncate /var/log/shairport-sync.log --size 0
 	truncate /var/log/moode_mountmon.log --size 0
+	truncate /var/log/moode_spotevent.log --size 0
+	truncate /var/log/moode_spsevent.log --size 0
+	truncate /var/log/moode_slpower.log --size 0
 	truncate /var/log/syslog --size 0
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
