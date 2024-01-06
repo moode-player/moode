@@ -272,7 +272,7 @@ if (isset($_POST['update_clear_playhistory'])) {
 
 if (isset($_POST['update_reduce_sys_logging']) && $_POST['reduce_sys_logging'] != $_SESSION['reduce_sys_logging']) {
 	$_SESSION['reduce_sys_logging'] = $_POST['reduce_sys_logging'];
-	submitJob('reduce_sys_logging', $_POST['reduce_sys_logging'], 'Settings updated', 'Restart reauired');
+	submitJob('reduce_sys_logging', $_POST['reduce_sys_logging'], 'Settings updated', 'Restart required');
 }
 
 if (isset($_POST['update_debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
