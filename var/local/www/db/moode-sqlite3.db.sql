@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Jan 4 07:52:30 2024
+-- File generated with SQLiteStudio v3.1.0 on Sat Jan 6 09:00:37 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -411,7 +411,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (148, 'http://stream.srg-ssr.ch/m/espace-2/mp3_128', 'RTS - Espace 2', 'r', 'local', 'Classical', 'SRG', 'French', 'Switzerland', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (149, 'http://stream.srg-ssr.ch/m/la-1ere/mp3_128', 'RTS - La Premiere', 'r', 'local', 'Pop', 'SRG', 'French', 'Switzerland', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (150, 'http://stream.srg-ssr.ch/m/option-musique/mp3_128', 'RTS - option musique', 'r', 'local', 'Alternative, Indie', 'SRG', 'French', 'Switzerland', 'Europe', '128', 'MP3', 'No', '', 'No');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (151, 'http://listen.jazz88.org/ksds.mp3', 'San Diego Jazz 88.3', 'r', 'local', 'Jazz', 'KSDS', 'English', 'United States', 'North America', '96', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (151, 'http://listen.jazz88.org/ksds.mp3', 'San Diego Jazz 88.3', 'r', 'local', 'Jazz', 'KSDS', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (152, 'http://edge-bauerall-01-gos2.sharp-stream.com/scalahigh.aac?aw_0_1st.skey=1650896299', 'Scala Radio', 'r', 'local', 'Classical, News, Classical, Requests', 'Bauer Planet Radio', 'English', 'United Kingdom', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (153, 'https://smoothjazz.cdnstream1.com/2586_320.mp3', 'SmoothLounge Global', 'r', 'local', 'Lounge, Smooth Lounge', 'Global Radio', 'English', 'United States', 'North America', '320', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (154, 'https://smoothjazz.cdnstream1.com/2585_320.mp3', 'SmoothJazz Global', 'r', 'local', 'Jazz, Smooth Jazz', 'Global Radio', 'English', 'United States', 'North America', '320', 'MP3', 'No', '', 'No');
