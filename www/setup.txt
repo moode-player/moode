@@ -291,21 +291,22 @@ certain parts of moOde. For a list of options type moodeutl --help
 
 HTTP examples:
 
-# Get song info
+# Get currently playing song info (JSON format)
+# This requires the Metadata file which can be turned on in Audio Config.
 http://moode/command/?cmd=get_currentsong
-{"file":"http:\/\/west-aac-64.streamthejazzgroove.com\/stream",
-"artist":"Radio station",
-"album":"The Jazz Groove",
-"title":"Russell Malone - You Will Know",
-"coverurl":"imagesw%2Fradio-logos%2FThe%20Jazz%20Groove.jpg",
-"track":"",
-"date":"",
-"composer":"",
-"encoded":"VBR",
-"bitrate":"",
-"outrate":"Multiroom sender",
-"volume":"15",
-"mute":"0",
+{"file":"NAS\/TRX-NFS-FLAC\/Billy Cobham\/Spectrum\/03 Spectrum.flac",
+"artist":"Billy Cobham",
+"album":"Spectrum",
+"title":"Spectrum",
+"coverurl":"\/coverart.php\/NAS%2FTRX-NFS-FLAC%2FBilly%20Cobham%2FSpectrum%2F03%20Spectrum.flac",
+"track":"3",
+"date":"1973",
+"composer":"Billy Cobham",
+"encoded":"FLAC 16\/44.1 kHz, 2ch",
+"bitrate":"826 kbps",
+"outrate":"PCM 24\/44.1 kHz, 2ch, 2.117 Mbps",
+"volume":"55",
+"mute":"1",
 "state":"play"}
 
 # MPD
