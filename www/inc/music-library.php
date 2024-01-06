@@ -626,7 +626,8 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 
 	} else if (isset($songData['Name']) || (substr($songData['file'], 0, 4) == 'http' && !isset($songData['Artist']))) {
 		// Radio station
-		$encodedAt = $displayFormat == 'verbose' ? 'VBR Compression' : 'VBR';
+		$format = isset($_SESSION[$songData['file']]['format']) ? $_SESSION[$songData['file']]['format'] : 'VBR';
+		$encodedAt = $displayFormat == 'verbose' ? $format . ' Compression' : $format;
 	} else if (substr($songData['file'], 0, 4) == 'http' && isset($songData['Artist'])) {
 		// UPnP file
 		$encodedAt = 'Unknown';
