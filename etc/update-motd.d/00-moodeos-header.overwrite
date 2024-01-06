@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# OS info
+SQLDB="/var/local/www/db/moode-sqlite3.db"
+HOST_NAME=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='hostname'")
+AUDIO_DEV=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='adevname'")
 OS_INFO=$(/var/www/util/sysutil.sh "get-osinfo")
-# Device info
 RPI_MODEL=$(/var/www/util/pirev.py | awk '{print "Pi-"$2" "$4}')
-AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='adevname'")
-# moOde release
 MOODE_REL=$(moodeutl --mooderel | tr -d '\n')
 
 echo " "
+echo "Host:  $HOST_NAME"
 echo $OS_INFO
 echo "Model: $RPI_MODEL"
 echo "Audio: $AUDIO_DEV"
