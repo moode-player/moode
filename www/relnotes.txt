@@ -27,6 +27,7 @@ Updates
 - UPD: Update Squeezelite to use ALSA _audioout device (support CamillaDSP)
 - UPD: Improve help text on the Configs, Preferences and Quick help
 - UPD: Improve Audio info line height so a bit more info shows on screen
+- UPD: Display actual station format instead of VBR
 
 Bug fixes
 
