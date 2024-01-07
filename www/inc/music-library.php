@@ -532,6 +532,7 @@ function utf8rep($str) {
 	return $str;
 }
 
+// Priority: OriginalDate, OriginalReleaseDate, Date
 function getTrackYear($trackData) {
     if (array_key_exists('OriginalDate', $trackData)) {
         $trackYear = substr($trackData['OriginalDate'], 0, 4);
@@ -542,6 +543,9 @@ function getTrackYear($trackData) {
     } else {
 		$trackYear = '';
 	}
+
+	// Set month to 00 if not present
+	$trackYear = empty(substr($trackYear, 4,2)) ? $trackYear . '00' : $trackYear;
 
     return $trackYear;
 }

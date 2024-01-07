@@ -631,8 +631,8 @@ var renderAlbums = function() {
     var albumViewBgDiv = '';
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
-        filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
-        filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
+        filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year.toString().slice(0, 4) + ')' : tagViewYear = '';
+        filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year.toString().slice(0, 4) + ')' : albumViewYear = '';
         if (miscLibOptions[0] == 'Yes') { // Comment tag included
             filteredAlbums[i].comment ? tagViewComment = filteredAlbums[i].comment : tagViewComment = '';
             filteredAlbumCovers[i].comment ? albumViewComment = filteredAlbumCovers[i].comment : albumViewComment = '';
