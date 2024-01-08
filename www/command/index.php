@@ -26,50 +26,66 @@ require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
-if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
-	echo 'Command missing';
-} else if (stripos($_GET['cmd'], '.sh') === false && stripos($_GET['cmd'], '.php') === false) {
-	// PHP functions
-	if ($_GET['cmd'] == 'get_currentsong') {
-		$array = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "=");
-		echo json_encode($array);
-	} else if ($_GET['cmd'] == 'get_output_format') {
+if (!isset($_GET['cmd']) || empty($_GET['cmd'])) {
+	echo 'Command is missing';
+	exit(1);
+}
+
+// DEBUG:
+//workerLog('index.php: cmd=' . $_GET['cmd']);
+
+$cmd = explode(' ', $_GET['cmd']);
+switch ($cmd[0]) {
+	case 'get_currentsong':
+		echo json_encode(parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "="));
+		break;
+	case 'get_output_format':
 		phpSession('open_ro');
 		echo json_encode(getALSAOutputFormat());
-	} else {
-		// MPD commands
+		break;
+	case 'get_volume':
+		$result = sysCmd('/var/www/vol.sh');
+		echo $result[0];
+		break;
+	case 'set_volume':			// N | -mute | -up N | -dn N
+	case 'vol.sh': 				// Deprecated: used in spotevent, spspost, multiroom.php
+		$result = sysCmd('/var/www/vol.sh' . getArgs($cmd));
+		break;
+	case 'set_coverview':		// -on | -off
+	case 'coverview.php':		// Deprecated: not used via http
+		$result = sysCmd('/var/www/util/coverview.php' . getArgs($cmd));
+		echo $result[0];
+		break;
+	case 'trx_control':			// Up to 3 args
+	case 'trx-control.php':		// Deprecated: used in: spotevent, spspre, multiroom.php, players.php, trx-config.php
+		$result = sysCmd('/var/www/util/trx-control.php' . getArgs($cmd));
+		echo $result[0];
+		break;
+	case 'upd_library':
+	case 'libupd-submit.php':	// Deprecated: not used via http
+		$result = sysCmd('/var/www/libupd-submit.php');
+		echo 'Library update submitted';
+		break;
+	default: // MPD commands
 		if (false === ($sock = openMpdSock('localhost', 6600))) {
-			workerLog('command/index.php: Connection to MPD failed');
+			debugLog('command/index.php: Connection to MPD failed');
 		} else {
 			sendMpdCmd($sock, $_GET['cmd']);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			if (stripos($resp, 'Error:')) {
-				echo $resp;
-			}
+			echo json_encode(parseMpdRespAsJSON($resp), JSON_FORCE_OBJECT);
 		}
+}
+
+function getArgs($cmd) {
+	$argCount = count($cmd);
+	if ($argCount > 1) {
+		for($i = 0; $i < $argCount; $i++) {
+			$args .= ' ' . $cmd[$i + 1];
+		}
+	} else {
+		$args = '';
 	}
-} else {
-	// PHP and BASH scripts
-    if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
-		if (substr_count($_GET['cmd'], '.') > 1) {
-			echo 'Invalid string'; // Reject directory traversal ../
-		} else if (stripos($_GET['cmd'], 'vol.sh') !== false) {
-			$result = sysCmd('/var/www/' . $_GET['cmd']);
-			echo $result[0];
-        } else if (stripos($_GET['cmd'], 'libupd-submit.php') !== false) {
-			$result = sysCmd('/var/www/' . $_GET['cmd']);
-			echo 'Library update submitted';
-        } else if (stripos($_GET['cmd'], 'trx-control.php') !== false) {
-			$result = sysCmd('/var/www/util/' . $_GET['cmd']);
-			echo $result[0];
-        } else if (stripos($_GET['cmd'], 'coverview.php') !== false) {
-			$result = sysCmd('/var/www/util/' . $_GET['cmd']);
-			echo $result[0];
-        } else {
-            echo 'Unknown command';
-        }
-    } else {
-    	echo 'Invalid string';
-    }
+
+	return $args;
 }

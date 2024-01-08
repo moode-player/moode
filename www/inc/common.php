@@ -211,6 +211,19 @@ function parseDelimFile($data, $delim) {
 	return $array;
 }
 
+function parseMpdRespAsJSON($resp) {
+	$array = array();
+	$line = strtok($resp, "\n");
+
+	while ($line) {
+		list($param, $value) = explode(': ', $line, 2);
+		array_push($array, $line);
+		$line = strtok("\n");
+	}
+
+	return $array;
+}
+
 function formatSongTime($sec) {
 	$mins = sprintf('%02d', floor($sec / 60));
 	$secs = sprintf(':%02d', (int) $sec % 60);

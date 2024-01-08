@@ -267,75 +267,67 @@ Follow these instructions for making certain types of changes.
 
 COMMAND AND REST API
 
-Commands can be submitted to moOde via HTTP or SSH. If an HTTP command returns
-data it is in JSON or plain text format following REST guidelines.
+Commands can be submitted to moOde via SSH or HTTP. If an HTTP command returns
+data it is in JSON format following REST guidelines.
 
-1. Base URL is http://moode/command/?cmd=
-2. MPD commands that are listed in MPC help
-3. /var/www/vol.sh cmd
-Volume commands that are listed in /var/www/vol.sh --help
-4. libupd-submit.php
-Submit a Music Library update
-5. coverview.php on|off
-Turn the CoverView screen saver on or off
-6. get_currentsong
-Returns the contents of the file /var/local/www/currentsong.txt encoded as JSON.
+REST API COMMANDS
+
+Base URL is http://moode/command/?cmd=
+
+get_currentsong
+Returns contents of the file /var/local/www/currentsong.txt.
 Turn on the Metadata file option in Audio Config to generate this file.
-7. get_output_format
-ALSA output format or 'Not playing' is returned
 
-moOde utility command:
+get_output_format
+ALSA output format or 'Not playing' is returned.
 
-The SSH command "moodeutl" can be used for obtaining status or manipulating
-certain parts of moOde. For a list of options type moodeutl --help
+get_volume
+Returns the Knob volume
 
-HTTP examples:
+set_volume
+Sets the knob volume to value N, up or down N or mute toggle.
+Arguments: N | -up N | -dn N | -mute
 
-# Get currently playing song info (JSON format)
-# This requires the Metadata file which can be turned on in Audio Config.
-http://moode/command/?cmd=get_currentsong
-{"file":"NAS\/TRX-NFS-FLAC\/Billy Cobham\/Spectrum\/03 Spectrum.flac",
-"artist":"Billy Cobham",
-"album":"Spectrum",
-"title":"Spectrum",
-"coverurl":"\/coverart.php\/NAS%2FTRX-NFS-FLAC%2FBilly%20Cobham%2FSpectrum%2F03%20Spectrum.flac",
-"track":"3",
-"date":"1973",
-"composer":"Billy Cobham",
-"encoded":"FLAC 16\/44.1 kHz, 2ch",
-"bitrate":"826 kbps",
-"outrate":"PCM 24\/44.1 kHz, 2ch, 2.117 Mbps",
-"volume":"55",
-"mute":"1",
-"state":"play"}
+set_coverview
+Turns CoverView screen saver on or off.
+Arguments: -on | -off
 
-# MPD
-http://moode/command/?cmd=stop
-http://moode/command/?cmd=play
+upd_library
+Submits an "Update library" command.
 
-# Volume
-http://moode/command/?cmd=vol.sh -up 2
-http://moode/command/?cmd=vol.sh -mute
+MPD commands
+See MPD protocol for list of commands.
+https://mpd.readthedocs.io/en/latest/protocol.html
 
-# Library update
-http://moode/command/?cmd=libupd-submit.php
+Deprecated REST API (http) commands. The following commands have been replaced
+by the equivalent commands above and at some point will not be supported. It is
+recommened to update scripts to use the new commands.
 
-SSH examples:
+- vol.sh
+- coverview.php
+- libupd-submit.php
 
-# MPD
-mpc stop
-mpc play
+SSH COMMANDS
 
-# Volume
-/var/www/vol.sh -up 2
-/var/www/vol.sh -mute
+moodeutl
+This command can be used for printing logs, status or for manipulating certain
+parts of moOde. For a list of options type moodeutl --help
 
-# Library update
-sudo /var/www/libupd-submit.php
+mpc
+This command can be used to control MPD. For a list of options type mpc help
 
-# CoverView on/off
-/var/www/util/coverview.php -on
-/var/www/util/coverview.php -off
+vol.sh
+This command can be used to get or set MPD volume and update the volume knob.
+For a list of options type /var/www/vol.sh --help
+To run it type /var/www/vol.sh <options>
+
+libupd-submit.php
+This command submits a "Library update".
+To run it type /var/www/libupd-submit.php
+
+coverview.php
+This command turns the CoverView screen saver on or off.
+To run it type /var/www/util/coverview.php -on | -off
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
