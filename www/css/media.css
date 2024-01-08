@@ -55,7 +55,7 @@ body {
 	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;font-size:8.5vw;}
 	#volume-popup .volume-display {font-size:10vw}
 	#volume-pad {height:85vw;width:85vw;}
-	#volpad .volume-display-db {left:65%;font-size:1.5em;}
+	#volpad .volume-display-db {left:64%;font-size:1.75em;}
 
 	/* Playback view */
 	#timezone,
@@ -230,10 +230,11 @@ body {
 	.ui-pnotify {font-size:1.25rem;}
 
 	/* Popup volume control */
-	#volcontrol-2 {height:22vw;width:22vw;padding:2em;}
+	/*DELETE:#volcontrol-2 {height:22vw;width:22vw;padding:2em;}
 	#volumedn-2,
-	#volumeup-2 {font-size:2.5vw;}
+	#volumeup-2 {font-size:2.5vw;}*/
 	#volume-popup .volume-display {font-size:3.75vw;}
+	#volpad .volume-display-db {left:68%;top:51%;font-size:1.5em;}
 
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
@@ -503,15 +504,16 @@ body {
 /*
 // Large displays
 */
-@media (min-height:900px) and (min-width:1920px) {
-	#ss-backdrop {filter: blur(40px);}
+@media (min-height:900px) and (min-width:1919px) {
+	/*DELETE:#ss-backdrop {filter: blur(40px);}
 	#ss-currentsong {font-size:1.5em!important;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em!important;}
 	#lib-coverart-meta-area {width:18vw;}
 	img.lib-artistart {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
 	#tagview-text-cover {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
 	#trackscontainer {width:calc(82vw - var(--sbw));}
-	#volcontrol, #countdown {height:15vw;width:15vw;}
+	#volcontrol, #countdown {height:15vw;width:15vw;}*/
+	.volume-display-db {font-size:1em;}
 }
 
 /*
