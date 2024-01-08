@@ -418,7 +418,7 @@ if (file_exists('/etc/wpa_supplicant/wpa_supplicant.conf')) {
 		// No moOde header so lets do the import
 		$ssid = sysCmd("cat /etc/wpa_supplicant/wpa_supplicant.conf 2>&1 | awk -F\"=\" '/ssid=\"/{print $2;exit;}'");
 		$psk = sysCmd("cat /etc/wpa_supplicant/wpa_supplicant.conf 2>&1 | awk -F\"=\" '/psk=/ {print $2;exit;}'");
-		$country = sysCmd("cat /etc/wpa_supplicant/wpa_supplicant.conf 2>&1 | awk -F\"=\" '/country=/ {print $2;exit;}'");
+		$country = sysCmd('cat /etc/default/crda | grep "REGDOMAIN=" | cut -d"=" -f2');
 		if (!empty($ssid) && !empty($psk)) {
 			// Update wlan0 SSID, PSK and Country
 			sqlQuery("UPDATE cfg_network SET wlanssid=" . $ssid[0] . ", wlanpwd='" . $psk[0] . "', wlan_psk='" . $psk[0] . "', wlan_country='" . $country[0] . "' WHERE id='2'", $dbh);
