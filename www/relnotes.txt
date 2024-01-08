@@ -41,6 +41,7 @@ Bug fixes
 - FIX: Audioinfo not showing correct info for Multiroom receiver
 - FIX: Browser title not being updated when importing host name
 - FIX: Volume not restored correctly when Spotify Connect and CamillaDSP volume
+- FIX: Import WiFi country code from Pi Imager not working
 
 ################################################################################
 #
