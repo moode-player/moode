@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Jan 6 09:00:37 2024
+-- File generated with SQLiteStudio v3.1.0 on Tue Jan 9 11:01:21 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -214,7 +214,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not i
 INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
 INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
-INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (154, 'recorder_album_tag', 'Recorded YYYY-MM-DD');
 INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Waveform');
