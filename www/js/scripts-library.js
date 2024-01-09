@@ -234,11 +234,18 @@ function getLastModified(albumTracks){
 	return new Date(Math.max.apply(null, allLastModified));
 }
 
+// Return album_year if exists and not '' otherwise max of track years
 function getYear(albumTracks){
-	var allYear = albumTracks.map(function(track){
-        return track.year;
-	});
-	return Math.max.apply(null, allYear);
+    if (typeof(albumTracks[0].album_year) == 'undefined' || albumTracks[0].album_year == '') {
+        var allYear = albumTracks.map(function(track){
+            return track.year;
+    	});
+    	var year = Math.max.apply(null, allYear);
+    } else {
+        var year = albumTracks[0].album_year;
+    }
+
+    return year;
 }
 
 function getAlbumArtist(albumTracks){
@@ -267,6 +274,7 @@ function groupLib(fullLib) {
 		var file = findAlbumProp(albumTracks, 'file');
 		var md5 = typeof(file) == 'undefined' ? 0 : $.md5(getParentDirectory(file));
 		var year = getYear(albumTracks);
+
 		return {
 			key: findAlbumProp(albumTracks, 'key'),
 			last_modified: getLastModified(albumTracks),
@@ -557,6 +565,7 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 		    return parseInt(a.year) - parseInt(b.year);
 		});
 	}
+
 	renderFunc();
 }
 

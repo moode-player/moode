@@ -272,6 +272,7 @@ function genLibrary($flat) {
 				//'performer' => ($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing'),
 				//'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
 				'year' => getTrackYear($flatData),
+				'album_year' => getAlbumYear($flatData),
 				'time' => $flatData['Time'],
 				'album' => ($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album'),
 				'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
@@ -468,6 +469,7 @@ function genLibraryUTF8Rep($flat) {
 				//'performer' => utf8rep(($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing')),
 				//'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
 				'year' => utf8rep(getTrackYear($flatData)),
+				'album_year' => utf8rep(getAlbumYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
 				'album' => utf8rep(($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album')),
 				'genre' => utf8repArray(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
@@ -535,19 +537,31 @@ function utf8rep($str) {
 // Priority: OriginalDate, OriginalReleaseDate, Date
 function getTrackYear($trackData) {
     if (array_key_exists('OriginalDate', $trackData)) {
-        $trackYear = substr($trackData['OriginalDate'], 0, 4);
+        $trackDate = $trackData['OriginalDate'];
     } else if (array_key_exists('OriginalReleaseDate', $trackData)) {
-        $trackYear = substr($trackData['OriginalReleaseDate'], 0, 4);
+        $trackDate = $trackData['OriginalReleaseDate'];
     } else if (array_key_exists('Date', $trackData)) {
-        $trackYear = substr($trackData['Date'], 0, 4);
+        $trackDate = $trackData['Date'];
     } else {
-		$trackYear = '';
+		$trackDate = '';
 	}
 
 	// Set month to 00 if not present
-	$trackYear = empty(substr($trackYear, 4,2)) ? $trackYear . '00' : $trackYear;
+	$trackYear = empty(substr($trackDate, 4, 2)) ? substr($trackDate, 0, 4) . '00' : substr($trackDate, 0, 6);
 
     return $trackYear;
+}
+
+// Process Comment tag for string "AlbumDate: YYYYMM"
+// Refer to scripts-library.js: function getYear()
+function getAlbumYear($trackData) {
+	if (array_key_exists('Comment', $trackData) && substr($trackData['Comment'], 0, 11) == 'AlbumDate: ') {
+		$albumYear = substr($trackData['Comment'], 11, 6);
+	} else {
+		$albumYear = '';
+	}
+
+	return $albumYear;
 }
 
 function clearLibCacheAll() {
