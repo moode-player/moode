@@ -29,6 +29,7 @@ Updates
 - UPD: Improve Audio info line height so a bit more info shows on screen
 - UPD: Display actual station format instead of VBR (Variable Bit Rate)
 - UPD: Allow for month (YYYYMM) in Date tag to improve Album/Year sort
+- UPD: Allow for "AlbumDate: YYYYMM" in Comment tag to improve Album/Year sort
 - UPD: Refactor REST API commands, refer to the Setup Guide for info
 
 Bug fixes
