@@ -21,6 +21,8 @@ Security
 
 Updates
 
+- UPD: Bump to CamillaDSP 2.0.0
+- UPD: Bump to squeezelite_1.9.9-1449+git20230814.8581aba-1
 - UPD: Add HTTP proxy option to MPD Config
 - UPD: Add disc and track to logic for showing now-playing icon in track list
 - UPD: Add SBC quality mode option to Bluetooth Control
