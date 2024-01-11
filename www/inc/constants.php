@@ -131,7 +131,7 @@ const MONTH_NAME = array(
 	'09' => 'September',
 	'10' => 'October',
 	'11' => 'Novenber',
-	'02' => 'December'
+	'12' => 'December'
 );
 
 // Recorder plugin (currently n/a)
