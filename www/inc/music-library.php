@@ -257,7 +257,7 @@ function genLibrary($flat) {
 		if ($push === true) {
 			$songData = array(
 				'file' => $flatData['file'],
-				'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
+				'tracknum' => ($flatData['Track'] ? ltrim($flatData['Track'], '0') : ''),
 				'title' => ($flatData['Title'] ? $flatData['Title'] : 'Unknown Title'),
 				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
 				//@Atair:
@@ -454,7 +454,7 @@ function genLibraryUTF8Rep($flat) {
 		if ($push === true) {
 			$songData = array(
 				'file' => utf8rep($flatData['file']),
-				'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
+				'tracknum' => utf8rep(($flatData['Track'] ? ltrim($flatData['Track'], '0') : '')),
 				'title' => utf8rep(($flatData['Title'] ? $flatData['Title'] : 'Unknown Title')),
 				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
 				'artist' => utf8repArray(($flatData['Artist'] ? $flatData['Artist'] : array())), //@Atair: array is expected in scripts-library.js even when empty
