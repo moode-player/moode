@@ -28,6 +28,10 @@ require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 require_once __DIR__ . '/inc/timezone.php';
 
+const TMP_NGINX_CRT_FILE = '/tmp/moode.crt';
+const TMP_NGINX_KEY_FILE = '/tmp/moode.key';
+const TMP_SELF_SIGNED_CER_FILE = '/tmp/moode.cer';
+
 phpSession('open');
 $dbh = sqlConnect();
 
@@ -242,10 +246,85 @@ if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['s
 	phpSession('write', 'shellinabox', $_POST['shellinabox']);
 	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated');
 }
-// TEST: HTTPS mode
+
+// HTTPS mode
 if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_SESSION['nginx_https_only']) {
 	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
 	submitJob('nginx_https_only', $_POST['nginx_https_only'], 'Settings updated', 'Restart required');
+}
+// NGINX certificate type
+if (isset($_POST['update_nginx_cert_type']) && $_POST['nginx_cert_type'] != $_SESSION['nginx_cert_type']) {
+	$_SESSION['nginx_cert_type'] = $_POST['nginx_cert_type'];
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
+// HTTP Strict Transport Security (HSTS)
+if (isset($_POST['update_nginx_hsts_policy']) && $_POST['nginx_hsts_policy'] != $_SESSION['nginx_hsts_policy']) {
+	$_SESSION['nginx_hsts_policy'] = $_POST['nginx_hsts_policy'];
+	$str = 'add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;';
+	$cmd = $_SESSION['nginx_hsts_policy'] == '1' ?
+		's/^#add_header Strict-Transport-Security.*/' . $str . '/' :
+		's/^add_header Strict-Transport-Security.*/#' . $str . '/';
+	sysCmd("sed -i '" . $cmd . "' /etc/nginx/ssl.conf");
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
+// Download self-signed certificate
+if (isset($_POST['download_self_signed_cert'])) {
+	if (file_exists('/etc/ssl/certs/moode.crt')) {
+		// Create Distinguished Encoding Rules (DER) encoded file
+		$userID = getUserID();
+		sysCmd('openssl x509 -outform der -in /etc/ssl/certs/moode.crt -out ' . TMP_SELF_SIGNED_CER_FILE);
+		sysCmd('chown ' . $userID . ':' . $userID . ' ' . TMP_SELF_SIGNED_CER_FILE);
+
+		$fileName = $_SESSION['hostname'] . '.local.cer';
+		phpSession('close');
+
+		header("Content-Description: File Transfer");
+		header("Content-type: application/octet-stream");
+		header("Content-Transfer-Encoding: binary");
+		header("Content-Disposition: attachment; filename=\"" . $fileName . "\"");
+		header("Content-length: " . filesize(TMP_SELF_SIGNED_CER_FILE));
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		readfile (TMP_SELF_SIGNED_CER_FILE);
+		sysCmd('rm ' . TMP_SELF_SIGNED_CER_FILE);
+		exit();
+	} else {
+		$_SESSION['notify']['title'] = 'Certificate file missing';
+		$_SESSION['msg'] = "Download cancelled";
+	}
+}
+// Upload CA-signed certificate .crt and .key files
+if (isset($_POST['upload_nginx_cert_files'])) {
+	//workerLog(print_r($_FILES, true));
+	if (empty($_FILES['nginx_cert_files']['name'][0]) || empty($_FILES['nginx_cert_files']['name'][1])) {
+		$_SESSION['notify']['title'] = 'Missing certificate file';
+		$_SESSION['msg'] = 'Both the .crt and .key files must be selected and uploaded';
+	} else {
+		$file0 = $_FILES['nginx_cert_files']['name'][0];
+		$file1 = $_FILES['nginx_cert_files']['name'][1];
+		$_uploaded_cert_files = 'Uploaded: <b>' . $file0 . ', ' . $file1 . '</b>';
+		if (substr($file0, -4) == '.crt' && substr($file1, -4) == '.key') {
+			rename($_FILES['nginx_cert_files']['tmp_name'][0], TMP_NGINX_CRT_FILE);
+			rename($_FILES['nginx_cert_files']['tmp_name'][1], TMP_NGINX_KEY_FILE);
+		} else if (substr($file0, -4) == '.key' && substr($file1, -4) == '.crt') {
+			rename($_FILES['nginx_cert_files']['tmp_name'][1], TMP_NGINX_CRT_FILE);
+			rename($_FILES['nginx_cert_files']['tmp_name'][0], TMP_NGINX_KEY_FILE);
+		} else {
+			$_SESSION['notify']['title'] = 'Missing certificate file';
+			$_SESSION['msg'] = 'Either the .crt or .key file is missing';
+		}
+	}
+}
+// Install CA-signed certificate
+if (isset($_POST['nginx_install_cert']) && $_POST['nginx_install_cert'] == 1) {
+	if (!file_exists(TMP_NGINX_CRT_FILE) || !file_exists(TMP_NGINX_KEY_FILE)) {
+		$_SESSION['notify']['title'] = 'Certificate file(s) missing';
+		$_SESSION['msg'] = 'Installation cancelled';
+	} else {
+		sysCmd('mv ' . TMP_NGINX_CRT_FILE . ' /etc/ssl/certs/');
+		sysCmd('mv ' . TMP_NGINX_KEY_FILE . ' /etc/ssl/private/');
+		$_SESSION['notify']['title'] = 'Certificate installed';
+	}
 }
 
 // LOGS
@@ -253,11 +332,11 @@ if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_
 if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
 	$fileName = 'moode.log';
 	$fileLocation = '/var/log/';
+	phpSession('close');
 
 	header("Content-Description: File Transfer");
 	header("Content-Type: application/log");
 	header("Content-Disposition: attachment; filename=\"". $fileName ."\"");
-
 	readfile ($fileLocation . $fileName);
  	exit();
 }
@@ -410,12 +489,27 @@ if ($_SESSION['shellinabox'] == '1') {
 	$_webssh_open_disable = 'disabled';
 	$_webssh_link_disable = 'onclick="return false;"';
 }
-// TEST: HTTPS mode
+// HTTPS mode
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	$_feat_https = '';
+	if ($_SESSION['nginx_cert_type'] == 'self-signed') {
+		$_ca_signed_cert = 'hide';
+		$_self_signed_cert = '';
+	} else {
+		$_ca_signed_cert = '';
+		$_self_signed_cert = 'hide';
+	}
+	// HTTPS mode
 	$autoClick = " onchange=\"autoClick('#btn-set-nginx-https-only');\"";
 	$_select['nginx_https_only_on']  .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-1\" value=\"1\" " . (($_SESSION['nginx_https_only'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['nginx_https_only_off'] .= "<input type=\"radio\" name=\"nginx_https_only\" id=\"toggle-nginx-https-only-2\" value=\"0\" " . (($_SESSION['nginx_https_only'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	// NGINX certificate type
+	$_select['nginx_cert_type'] .= "<option value=\"self-signed\" " . (($_SESSION['nginx_cert_type'] == 'self-signed') ? "selected" : "") . ">Self-signed</option>\n";
+	$_select['nginx_cert_type'] .= "<option value=\"ca-signed\" " . (($_SESSION['nginx_cert_type'] == 'ca-signed') ? "selected" : "") . ">CA-signed</option>\n";
+	// HTTP Strict Transport Security (HSTS)
+	$autoClick = " onchange=\"autoClick('#btn-set-nginx-hsts-policy');\" " . $_https_btn_disabled;
+	$_select['nginx_hsts_policy_on']  .= "<input type=\"radio\" name=\"nginx_hsts_policy\" id=\"toggle-nginx-hsts-policy-1\" value=\"1\" " . (($_SESSION['nginx_hsts_policy'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['nginx_hsts_policy_off'] .= "<input type=\"radio\" name=\"nginx_hsts_policy\" id=\"toggle-nginx-hsts-policy-2\" value=\"0\" " . (($_SESSION['nginx_hsts_policy'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_feat_https = 'hide';
 }

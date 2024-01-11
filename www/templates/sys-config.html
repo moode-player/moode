@@ -22,7 +22,7 @@
 <div class="container">
 	<h1 class="sys-config">System</h1>
 
-	<form class="form-horizontal" method="post">
+	<form class="form-horizontal" method="post" enctype="multipart/form-data">
 		<div class="control-group">
 			<legend>Software update</legend>
 			<label class="control-label">Notification</label>
@@ -356,7 +356,7 @@
 
 			<div class="config-horiz-rule"></div>
 
-			<!-- TEST: HTTPS mode -->
+			<!-- HTTPS mode -->
 			<div class="$_feat_https">
 				<label class="control-label">HTTPS mode</label>
 				<div class="controls">
@@ -365,11 +365,78 @@
 						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
 					</div>
 					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-https-only" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-nginx-https-only" class="config-help-info">
+						Turn this ON to configure NGINX web server to only accept HTTPS connections.
+					</span>
 					<span class="config-help-static">
 						This is an <b>experimental feature</b> for enabling secure communication between the Browser and moOde.<br>
 						View the <a href="./setup_https.txt" class="target-blank-link" target="_blank">Configuration Guide</a>
-						for information on how HTTP mode works, Browser/OS settings, configuration and certificate import procedures.
+						for information on how HTTP mode works.
+	                </span>
+				</div>
+
+				<label class="control-label" for="nginx-cert-type">Certificate type</label>
+				<div class="controls">
+					<select id="nginx-cert-type" class="config-select-large" name="nginx_cert_type">
+						$_select[nginx_cert_type]
+					</select>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue">Set</button>
+					<span class="config-help-static">
+						<b>Self-signed</b> Automatically generated and installed when HTTPS mode is turned ON.<br>
+					    <b>CA-signed:</b> Generated externally. Click the UPLOAD and INSTALL buttons for this type of certificate.
 					</span>
+				</div>
+
+				<label class="control-label">HSTS policy</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-nginx-hsts-policy" for="toggle-nginx-hsts-policy-2">ON </label>$_select[nginx_hsts_policy_on]
+						<label class="toggle-radio toggle-nginx-hsts-policy" for="toggle-nginx-hsts-policy-1">OFF</label>$_select[nginx_hsts_policy_off]
+					</div>
+					<button id="btn-set-nginx-hsts-policy" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_hsts_policy" value="novalue">Set</button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-hsts-policy" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+					<span id="info-nginx-hsts-policy" class="config-help-info">
+						Turn this ON to configure NGINX web server for HTTP Strict Transport Security (HSTS).
+					</span>
+					<span class="config-help-static">
+						<b>Caution:</b> Turning this ON sets a Browser policy that forces HTTPS even after turning HTTPS mode OFF.
+					</span>
+				</div>
+
+				<div class="$_self_signed_cert">
+					<label class="control-label">Certificate</label>
+					<div class="controls">
+						<button id="btn-download-self-signed-cert" class="btn btn-medium btn-primary config-btn" type="submit" name="download_self_signed_cert" value="1">Download</button>
+						<div class="config-help-static">
+							Download the self-signed certificate for import into the OS Certificate Trust Store.
+						</div>
+					</div>
+				</div>
+
+				<!-- ca-signed-cert-files | ca_signed_cert_files | btn-upload-ca-signed-cert-files -->
+				<div class="$_ca_signed_cert">
+					<label class="control-label">Certificate</label>
+					<div class="controls">
+						<label for="nginx-cert-files" id="choose-nginx-cert-files" class="btn btn-primary btn-medium config-btn">Upload</label>
+						<input type="file" id="nginx-cert-files" accept=".crt, .key" multiple name="nginx_cert_files[]" style="display:none" onchange="$('#btn-upload-nginx-cert-files').click();">
+						<button id="btn-upload-nginx-cert-files" class="btn btn-medium btn-primary btn-submit" type="submit" name="upload_nginx_cert_files" value="1" style="display:none"></button>
+						<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-cert-files" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+						<span id="info-nginx-cert-files" class="config-help-info">
+							Choose and upload the certificate .crt and .key files to be installed.<br>
+						</span>
+						<div class="config-help-static">
+							$_uploaded_cert_files
+						</div>
+					</div>
+
+					<!-- install_ca_signed_cert -->
+					<div class="controls">
+						<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="nginx_install_cert" value="1">Install Certificate</button>
+						<span class="config-help-static">
+							Install the .crt and .key files into the SSL configuration.
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>

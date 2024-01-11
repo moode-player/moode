@@ -21,7 +21,7 @@
 #
 
 # Template
-OPENSSL_CFG_FILE=/tmp/nginx-selfsigned.conf
+OPENSSL_CFG_FILE=/tmp/moode-selfsigned.conf
 cat >> $OPENSSL_CFG_FILE <<EOF
 [ req ]
 default_bits            = 2048
@@ -48,9 +48,9 @@ IP.1                    = 172.24.1.1
 EOF
 
 # Create cert
-SSL_CSR_FILE=/tmp/nginx-selfsigned.csr
-SSL_CRT_FILE=/etc/ssl/certs/nginx-selfsigned.crt
-SSL_KEY_FILE=/etc/ssl/private/nginx-selfsigned.key
+SSL_CSR_FILE=/tmp/moode.csr
+SSL_CRT_FILE=/etc/ssl/certs/moode.crt
+SSL_KEY_FILE=/etc/ssl/private/moode.key
 openssl req -new -config $OPENSSL_CFG_FILE -out $SSL_CSR_FILE -keyout $SSL_KEY_FILE
 openssl req -x509 -days 3650 -config $OPENSSL_CFG_FILE -in $SSL_CSR_FILE -key $SSL_KEY_FILE -out $SSL_CRT_FILE -extensions req_ext
 

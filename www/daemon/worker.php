@@ -979,22 +979,32 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 }
 workerLog('worker: GPIO buttons:    ' . $status);
 
-// TEST: Start HTTPS mode
+// Start HTTPS mode
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	if (!isset($_SESSION['nginx_https_only'])) {
-		$_SESSION['nginx_https_only'] = '0'; // Initially Off
+		$_SESSION['nginx_https_only'] = '0';
+		$_SESSION['nginx_cert_type'] = 'self-signed';
+		$_SESSION['nginx_hsts_policy'] = '0';
 	}
 	if ($_SESSION['nginx_https_only'] == '1') {
 		$status = 'started';
-		// Check for host name change
-		$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
-		$CN = trim(sysCmd($cmd)[0]);
-		if ($CN != $_SESSION['hostname'] . '.local') {
-			sysCmd('/var/www/util/gen-cert.sh');
-			sysCmd('systemctl restart nginx');
-			$status .= ', Cert created for host: ' . $_SESSION['hostname'];
+		if (!file_exists('/etc/ssl/certs/moode.crt')) {
+			$status .= ', Error: no certificate file found';
 		} else {
-			$status .= ', Cert exists for host: ' . $_SESSION['hostname'];
+			$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/moode.crt | grep "Subject: CN" | cut -d "=" -f 2';
+			$CN = trim(sysCmd($cmd)[0]);
+			// Check for host name change
+			if ($CN != $_SESSION['hostname'] . '.local') {
+				if ($_SESSION['nginx_cert_type'] == 'self-signed') {
+					sysCmd('/var/www/util/gen-cert.sh');
+					sysCmd('systemctl restart nginx');
+					$status .= ', Self-signed cert created for host: ' . $_SESSION['hostname'];
+				} else {
+					$status .= ', Ca-signed cert exists but CN does not match host: ' . $_SESSION['hostname'];
+				}
+			} else {
+				$status .= ', Using ' . ucfirst($_SESSION['nginx_cert_type']) . ' cert for host: ' . $_SESSION['hostname'];
+			}
 		}
 	} else {
 		$status = 'available';
@@ -2685,18 +2695,26 @@ function runQueuedJob() {
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
 			break;
-		// TEST: HTTPS mode
+		// HTTPS mode
 		case 'nginx_https_only':
 			if ($_SESSION['w_queueargs'] == '1') {
-				// Create cert if needed
-				$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/nginx-selfsigned.crt | grep "Subject: CN" | cut -d "=" -f 2';
+				$cmd = 'openssl x509 -text -noout -in /etc/ssl/certs/moode.crt | grep "Subject: CN" | cut -d "=" -f 2';
 				$CN = trim(sysCmd($cmd)[0]);
+				// Check for host name change
 				if ($CN != $_SESSION['hostname'] . '.local') {
-					sysCmd('/var/www/util/gen-cert.sh');
-					workerLog('worker: Cert created for host: ' . $_SESSION['hostname']);
+					if ($_SESSION['nginx_cert_type'] == 'self-signed') {
+						sysCmd('/var/www/util/gen-cert.sh');
+						sysCmd('systemctl restart nginx');
+						$status .= ', Self-signed cert created for host: ' . $_SESSION['hostname'];
+					} else {
+						$status .= ', Ca-signed cert exists but CN does not match host: ' . $_SESSION['hostname'];
+					}
 				} else {
-					workerLog('worker: Cert exists for host: ' . $_SESSION['hostname']);
+					$status .= ', Using ' . ucfirst($_SESSION['nginx_cert_type']) . ' cert for host: ' . $_SESSION['hostname'];
 				}
+
+				workerLog('worker: ' . $status);
+
 				// Enable HTTPS
 				sysCmd('rm -f /etc/nginx/sites-enabled/*');
 				sysCmd('ln -s /etc/nginx/sites-available/moode-https.conf /etc/nginx/sites-enabled/moode-https.conf');
