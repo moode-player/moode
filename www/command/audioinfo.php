@@ -140,7 +140,12 @@ function parseTrackInfo($resp) {
 					$array[10] = array($element => $value);
 					break;
 				case 'Date':
-					$array[11] = array($element => $value);
+					// Format YYYY or YYYYMM
+					$year = substr($value, 0, 4);
+					$month = substr($value, 4, 2);
+					$array[11] = empty($month) ?
+						array($element => $value) :
+						array($element => MONTH_NAME[$month] . ' ' . $year);
 					break;
 				case 'Time':
 					$array[12] = array('Duration' => formatSongTime($value));

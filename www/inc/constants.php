@@ -118,6 +118,22 @@ const SRC_SELECT_DEVICES = array(
 const LIBSEARCH_BASE = '/var/local/www/libsearch_';
 const LIB_FULL_LIBRARY = 'Full Library (Default)';
 
+// Month names
+const MONTH_NAME = array(
+	'01' => 'January',
+	'02' => 'February',
+	'03' => 'March',
+	'04' => 'April',
+	'05' => 'May',
+	'06' => 'June',
+	'07' => 'July',
+	'08' => 'August',
+	'09' => 'September',
+	'10' => 'October',
+	'11' => 'Novenber',
+	'02' => 'December'
+);
+
 // Recorder plugin (currently n/a)
 const RECORDER_RECORDINGS_DIR 	 = '/Recordings';
 const RECORDER_DEFAULT_COVER	 = 'Recorded Radio.jpg';
