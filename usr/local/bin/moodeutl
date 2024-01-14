@@ -316,26 +316,20 @@ function audioFormats($option) {
 				if (!empty($result)) {
 					echo explode(': ', $result)[1];
 				} else {
-					echo "Unable to detect formats\n";
+					echo "Alsacap was unable to detect formats\n";
 				}
 			} else {
 				// $option == '-F': full info for all devices
 				$result = shell_exec('alsacap 2>&1');
 				echo $result;
 			}
-		} else if (empty($hwParams)) {
-			echo 'Warning: Card ' . $cardNum . ' hwparams is empty' . "\n";
 		} else {
-			if (posix_getuid() != 0) {
-				echo "This option requires sudo if the device is in use\n";
-				return;
-			}
-
-			setSessionId();
+			echo "Device is busy, unable to detect formats\n";
+			/*DELETE:setSessionId();
 			session_start();
 			$formats = $_SESSION['audio_formats'];
 			session_write_close();
-			echo $formats . "\n";
+			echo $formats . "\n";*/
 		}
 	}
 }
