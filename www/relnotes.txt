@@ -28,7 +28,7 @@ Updates
 - UPD: Add SBC quality mode option to Bluetooth Control
 - UPD: Update Squeezelite to use ALSA _audioout device (support CamillaDSP)
 - UPD: Improve help text on the Configs, Preferences and Quick help
-- UPD: Improve Audio info line height so a bit more info shows on screen
+- UPD: Improve Audioinfo line height so a bit more info shows on screen
 - UPD: Allow for month (YYYYMM) in Date tag to improve Album/Year sort
 - UPD: Allow for "AlbumDate: YYYYMM" in Comment tag to improve Album/Year sort
 - UPD: Allow @ (at sign) in manually entered SSID in Network Config
@@ -45,6 +45,7 @@ Bug fixes
 - FIX: CoverView Automatic display not activating
 - FIX: Popup on-screen keyboard not activating
 - FIX: Audioinfo not showing correct info for Multiroom receiver
+- FIX: Audioinfo not showing correct Audio chain for Squeezelite renderer
 - FIX: Browser title not being updated when importing host name
 - FIX: Volume not restored correctly when Spotify Connect and CamillaDSP volume
 - FIX: Import WiFi country code from Pi Imager not working
