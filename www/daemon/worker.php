@@ -983,7 +983,7 @@ workerLog('worker: GPIO buttons:    ' . $status);
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	if (!isset($_SESSION['nginx_https_only'])) {
 		$_SESSION['nginx_https_only'] = '0';
-		$_SESSION['nginx_cert_type'] = 'self-signed';
+		$_SESSION['nginx_cert_type'] = 'automatic';
 		$_SESSION['nginx_hsts_policy'] = '0';
 	}
 	if ($_SESSION['nginx_https_only'] == '1') {
@@ -995,12 +995,12 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 			$CN = trim(sysCmd($cmd)[0]);
 			// Check for host name change
 			if ($CN != $_SESSION['hostname'] . '.local') {
-				if ($_SESSION['nginx_cert_type'] == 'self-signed') {
+				if ($_SESSION['nginx_cert_type'] == 'automatic') {
 					sysCmd('/var/www/util/gen-cert.sh');
 					sysCmd('systemctl restart nginx');
 					$status .= ', Self-signed cert created for host: ' . $_SESSION['hostname'];
 				} else {
-					$status .= ', Ca-signed cert exists but CN does not match host: ' . $_SESSION['hostname'];
+					$status .= ', Warning: Manually created cert exists but CN does not match host: ' . $_SESSION['hostname'];
 				}
 			} else {
 				$status .= ', Using ' . ucfirst($_SESSION['nginx_cert_type']) . ' cert for host: ' . $_SESSION['hostname'];
@@ -2702,12 +2702,12 @@ function runQueuedJob() {
 				$CN = trim(sysCmd($cmd)[0]);
 				// Check for host name change
 				if ($CN != $_SESSION['hostname'] . '.local') {
-					if ($_SESSION['nginx_cert_type'] == 'self-signed') {
+					if ($_SESSION['nginx_cert_type'] == 'automatic') {
 						sysCmd('/var/www/util/gen-cert.sh');
 						sysCmd('systemctl restart nginx');
 						$status .= ', Self-signed cert created for host: ' . $_SESSION['hostname'];
 					} else {
-						$status .= ', Ca-signed cert exists but CN does not match host: ' . $_SESSION['hostname'];
+						$status .= ', Warning: Manually created cert exists but CN does not match host: ' . $_SESSION['hostname'];
 					}
 				} else {
 					$status .= ', Using ' . ucfirst($_SESSION['nginx_cert_type']) . ' cert for host: ' . $_SESSION['hostname'];

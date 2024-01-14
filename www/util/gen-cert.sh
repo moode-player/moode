@@ -56,7 +56,7 @@ openssl req -x509 -days 3650 -config $OPENSSL_CFG_FILE -in $SSL_CSR_FILE -key $S
 
 # TEST: Add to chromium-browser trust store
 #sudo apt -y install libnss3-tools
-#CERT_NICKNAME=NGINX Self-signed Cert
+#CERT_NICKNAME=moOde self-signed cert
 #certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n $CERT_NICKNAME -i $SSL_CRT_FILE
 
 # TEST: Add to RaspiOS/Debian trust store (needed?)

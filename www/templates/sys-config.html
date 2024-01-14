@@ -370,7 +370,7 @@
 						Turn this ON to configure NGINX web server to only accept HTTPS connections.
 					</span>
 					<span class="config-help-static">
-						This is an <b>experimental feature</b> for enabling secure communication between the Browser and moOde.<br>
+						<b>Experimental feature: </b> Enable secure communication between the Browser and moOde.<br>
 						View the <a href="./setup_https.txt" class="target-blank-link" target="_blank">Configuration Guide</a>
 						for information on how HTTP mode works.
 	                </span>
@@ -383,12 +383,12 @@
 					</select>
 					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue">Set</button>
 					<span class="config-help-static">
-						<b>Self-signed</b> Automatically generated and installed when HTTPS mode is turned ON.<br>
-					    <b>CA-signed:</b> Generated externally. Click the UPLOAD and INSTALL buttons for this type of certificate.
+						<b>Automatic:</b> Automatically generate and install a self-signed certificate into NGINX web server when HTTPS mode is turned ON.<br>
+					    <b>Manual:</b> Click the UPLOAD followed by the INSTALL button for this type of certificate.
 					</span>
 				</div>
 
-				<label class="control-label">HSTS policy</label>
+				<!--SAVE:label class="control-label">HSTS policy</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio toggle-nginx-hsts-policy" for="toggle-nginx-hsts-policy-2">ON </label>$_select[nginx_hsts_policy_on]
@@ -402,20 +402,19 @@
 					<span class="config-help-static">
 						<b>Caution:</b> Turning this ON sets a Browser policy that forces HTTPS even after turning HTTPS mode OFF.
 					</span>
-				</div>
+				</div-->
 
-				<div class="$_self_signed_cert">
+				<div class="$_automatic_cert">
 					<label class="control-label">Certificate</label>
 					<div class="controls">
 						<button id="btn-download-self-signed-cert" class="btn btn-medium btn-primary config-btn" type="submit" name="download_self_signed_cert" value="1">Download</button>
 						<div class="config-help-static">
-							Download the self-signed certificate for import into the OS Certificate Trust Store.
+ 							Download the self-signed certificate for manual import into the certificate store on your client. The specific method for importing a certificate varies depending on the client OS.
 						</div>
 					</div>
 				</div>
 
-				<!-- ca-signed-cert-files | ca_signed_cert_files | btn-upload-ca-signed-cert-files -->
-				<div class="$_ca_signed_cert">
+				<div class="$_manual_cert">
 					<label class="control-label">Certificate</label>
 					<div class="controls">
 						<label for="nginx-cert-files" id="choose-nginx-cert-files" class="btn btn-primary btn-medium config-btn">Upload</label>
@@ -423,18 +422,17 @@
 						<button id="btn-upload-nginx-cert-files" class="btn btn-medium btn-primary btn-submit" type="submit" name="upload_nginx_cert_files" value="1" style="display:none"></button>
 						<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-cert-files" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 						<span id="info-nginx-cert-files" class="config-help-info">
-							Choose and upload the certificate .crt and .key files to be installed.<br>
+							Choose and upload the certificate .crt and .key files for subsequent installation into NGINX web server.
 						</span>
 						<div class="config-help-static">
 							$_uploaded_cert_files
 						</div>
 					</div>
 
-					<!-- install_ca_signed_cert -->
 					<div class="controls">
 						<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="nginx_install_cert" value="1">Install Certificate</button>
 						<span class="config-help-static">
-							Install the .crt and .key files into the SSL configuration.
+							Install the previously uploaded .crt and .key files into NGINX web server.
 						</span>
 					</div>
 				</div>
