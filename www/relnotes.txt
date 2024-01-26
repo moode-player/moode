@@ -21,11 +21,13 @@ Security
 
 Updates
 
-- UPD: Bump to CamillaDSP 2.0.0
+- UPD: Bump to CamillaDSP 2.0.1
+- UPD: Bump to mpd2cdspvolsync 1.0.0
 - UPD: Bump to squeezelite_1.9.9-1449+git20230814.8581aba-1
 - UPD: Add HTTP proxy option to MPD Config
 - UPD: Add disc and track to logic for showing now-playing icon in track list
 - UPD: Add SBC quality mode option to Bluetooth Control
+- UPD: Update Bluetooth to support Multiroom audio
 - UPD: Update Squeezelite to use ALSA _audioout device (support CamillaDSP)
 - UPD: Improve help text on the Configs, Preferences and Quick help
 - UPD: Improve Audioinfo line height so a bit more info shows on screen
