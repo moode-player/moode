@@ -39,7 +39,7 @@ switch ($_GET['cmd']) {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			}
 
-			updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
+			updCDSPConfig($newMode, $currentMode, $cdsp);
 		} else {
 			sendEngCmd('cdsp_config_update_failed');
 			workerLog('camilla.php: Error: $_POST[cdspconfig] missing or empty');

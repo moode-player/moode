@@ -48,10 +48,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	// No device or mixer changes (moved to snd-config.php)
-	$mixer_chg = 0;
-	$mixer_chg = 0;
-	$queue_args = $device_chg . ',' . $mixer_chg;
-	submitJob('mpdcfg', $queue_args, 'Settings updated', 'MPD restarted');
+	$deviceChange = 0;
+	$mixerChange = 0;
+	$queueArgs = $deviceChange . ',' . $mixerChange;
+	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
 
 // Load settings

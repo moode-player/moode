@@ -29,7 +29,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
 	echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
 	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
-	echo -e "\nModel\t\t= $HDWRREV\c"
+	echo -e "\nPi model\t\t= $HDWRREV\c"
 	echo -e "\nArchitecture\t\t= $ARCH\c"
 	echo -e "\nHome directory\t\t= /home/$HOME_DIR\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
@@ -251,7 +251,7 @@ RADIO_MANAGER_SETTINGS() {
 	echo -e "\nGroup method\t\t= $rv_group_method\c"
 	echo -e "\nShow moOde stations\t= $rv_show_moode\c"
 	echo -e "\nShow other stations\t= $rv_show_other\c"
-	rv_stream_monitor=$(moodeutl -d | grep "mpd_monitor_svc" | cut -d"|" -f2)
+	rv_stream_monitor=$(moodeutl -d -gv "mpd_monitor_svc")
 	if [ $(($feat_bitmask & $FEAT_RECORDER)) -ne 0 ]; then
 		echo -e "\nStream monitor\t\t= $rv_stream_monitor\c"
 		echo -e "\nRecorder status\t\t= $rv_recorder_status\c"
@@ -425,7 +425,7 @@ DEV_ROOTFS_SIZE=3670016000
 #
 
 HOSTNAME=`uname -n`
-HDWRREV=$(moodeutl -d | grep hdwrrev | cut -d"|" -f2)
+HDWRREV=$(moodeutl -d -gv hdwrrev)
 RASPIOS_VER=`cat /etc/debian_version`
 KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
@@ -439,8 +439,8 @@ MEM_TOTAL=$(( $MEM_TOTAL / 1000 ))
 MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
 
-WORKER_RESPONSIVENESS=$(moodeutl -d | grep worker_responsiveness | cut -d"|" -f2)
-TMP=$(moodeutl -d | grep reduce_sys_logging | cut -d"|" -f2)
+WORKER_RESPONSIVENESS=$(moodeutl -d -gv worker_responsiveness)
+TMP=$(moodeutl -d -gv reduce_sys_logging)
 [[ "$TMP" = "1" ]] && REDUCE_SYS_LOGGING="On" || REDUCE_SYS_LOGGING="Off"
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
@@ -466,7 +466,7 @@ if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
 
-TMP=$(moodeutl -d | grep nginx_https_only | cut -d"|" -f2)
+TMP=$(moodeutl -d -gv nginx_https_only)
 [[ "$TMP" = "1" ]] && HTTPS_MODE="On" || HTTPS_MODE="Off"
 
 TMP="$(lsblk -o size -nb /dev/disk/by-label/rootfs)"
@@ -519,7 +519,7 @@ BLUETOOTH_VER=$(bluetoothd -v)
 BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
 PARING_AGENT_VER="1.0.0"
 PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
-output_mode=$(moodeutl -d | grep bt_alsa_output_mode | cut -d"|" -f2)
+output_mode=$(moodeutl -d -gv bt_alsa_output_mode)
 [[ $output_mode = "_audioout" ]] && BT_ALSA_OUTPUT_MODE="Default (_audioout)" || BT_ALSA_OUTPUT_MODE="Compatibility (plughw)"
 
 # Moode release

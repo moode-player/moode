@@ -17,11 +17,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+LOGFILE="/var/log/moode_spotevent.log"
+DEBUG=$(sudo moodeutl -d -gv debuglog)
+
+debug_log () {
+	if [[ $DEBUG == '0' ]]; then
+		return 0
+	fi
+	echo "$1"
+	TIME=$(date +'%Y%m%d %H%M%S')
+	echo "$TIME $1" >> $LOGFILE
+}
+
+debug_log "Event: "$PLAYER_EVENT
+
 if [[ $PLAYER_EVENT != "started" ]] && [[ $PLAYER_EVENT != "stopped" ]]; then
-	#echo "Exit: "$PLAYER_EVENT >> /var/log/moode_spotevent.log
 	exit 0
 fi
-#echo "Event: "$PLAYER_EVENT >> /var/log/moode_spotevent.log
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','mpdmixer','camilladsp_volume_sync','rsmafterspot','inpactive','volknob_mpd','multiroom_tx')")
@@ -36,7 +48,7 @@ RSMAFTERSPOT=${arr[6]}
 INPACTIVE=${arr[7]}
 VOLKNOB_MPD=${arr[8]}
 MULTIROOM_TX=${arr[9]}
-RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
+RX_ADDRESSES=$(sudo moodeutl -d -gv rx_addresses)
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -44,16 +56,12 @@ fi
 
 if [[ $PLAYER_EVENT == "started" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='spotactive'")
-
 	/usr/bin/mpc stop > /dev/null
-	# Allow time for UI update
-	sleep 1
 
 	# Local
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
-		# Save knob level then set camilladsp volume to 100% (0dB)
-		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB' WHERE param='volknob_mpd'")
-		/var/www/vol.sh 100
+		# Set 0dB CDSP volume
+		sed -i '0,/- -.*/s//- 0.0/' /var/lib/cdsp/statefile.yml
 	elif [[ $ALSAVOLUME != "none" ]]; then
 		# Set 0dB ALSA volume
 		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
@@ -66,7 +74,7 @@ if [[ $PLAYER_EVENT == "started" ]]; then
 			if [[ $RESULT != "" ]]; then
 				RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 				if [[ $RESULT != "" ]]; then
-					echo $(date +%F" "%T)"spotevent.sh: trx-control.php -set-alsavol failed: $IP_ADDR" >> /var/log/moode_renderer_error.log
+					echo $(date +%F" "%T) "Event: trx-control.php -set-alsavol failed: $IP_ADDR" >> $LOGFILE
 				fi
 			fi
 		done
@@ -77,25 +85,12 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='spotactive'")
 
 	# Local
-	if [[ $CDSP_VOLSYNC == "on" ]]; then
-		# Restore knob volume to saved MPD volume
-		$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB_MPD' WHERE param='volknob'")
-		/var/www/vol.sh -restore
-		systemctl restart mpd2cdspvolume
-	else
-		# Restore knob volume
-		/var/www/vol.sh -restore
-	fi
-	# TODO: Is this needed?
-	if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
-		if [[ $ALSAVOLUME != "none" ]]; then
-			# Restore 0dB ALSA volume
-			/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
-		fi
-	fi
-
-	# Restore knob volume
 	/var/www/vol.sh -restore
+
+	if [[ $CDSP_VOLSYNC == "on" ]]; then
+		# Restore CDSP volume
+		systemctl restart mpd2cdspvolume
+	fi
 
 	# Multiroom receivers
 	if [[ $MULTIROOM_TX == "On" ]]; then
@@ -104,7 +99,7 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 			if [[ $RESULT != "" ]]; then
 				RESULT=$(curl -G -S -s --data-urlencode "cmd=vol.sh -restore" http://$IP_ADDR/command/)
 				if [[ $RESULT != "" ]]; then
-					echo $(date +%F" "%T)" spotevent.sh vol.sh -restore failed: $IP_ADDR" >> /var/log/moode_renderer_error.log
+					echo $(date +%F" "%T) "Event: vol.sh -restore failed: $IP_ADDR" >> $LOGFILE
 				fi
 			fi
 		done

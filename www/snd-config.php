@@ -36,9 +36,10 @@ phpSession('open');
 if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSION['cardnum']) {
 	 // AirPlay & Spotify restarted if device (cardnum) changed
 	$deviceChange = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0;
-	// 0 = Special mixer change action not required
+	// 0 = no mixer change
 	$mixerChange = 0;
 
+	phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
 	sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
 	$queueArgs = $deviceChange . ',' . $mixerChange;
 	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
@@ -46,38 +47,25 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 // Volume type
 if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mpdmixer']) {
 	$mixerTypeSelected = $_POST['mixer_type'];
-	$camillaDspVolumeSync = 'off';
 
-	if ($mixerTypeSelected == 'none' || $mixerTypeSelected == 'null') {
-		// Changing to Fixed (0dB) or Null
-		$mixerChange = 'fixed_or_null';
-	} else if ($mixerTypeSelected == 'camilladsp') {
-		if (doesCamillaDSPCfgHaveVolFilter()) {
-			$mixerTypeSelected = 'null';
-			$mixerChange = 'fixed_or_null';
-			$camillaDspVolumeSync = 'on';
-		} else {
-			$mixerTypeSelected = 'no_volume_filter';
-		}
-	} else if ($_SESSION['mpdmixer'] == 'none' || $_SESSION['mpdmixer'] == 'null') {
-		// Changing from Fixed (0dB) or Null
-		$mixerChange = $mixerTypeSelected;
+	if ($_POST['mixer_type'] == 'null') {
+		$mixerChange = 'camilladsp';
+		$camillaDspVolumeSync = 'on';
+	} else if ($_POST['mixer_type'] == 'none') {
+		$mixerChange = 'fixed';
+		$camillaDspVolumeSync = 'off';
 	} else {
-		// 0 = Special mixer change action not required
-		$mixerChange = 0;
+		// hardware or software
+		$mixerChange = $_POST['mixer_type'];
+		$camillaDspVolumeSync = 'off';
 	}
 
-	if ($mixerTypeSelected == 'no_volume_filter') {
-		$_SESSION['notify']['title'] = 'Cannot set to CamillaDSP';
-		$_SESSION['notify']['msg'] = 'Current CamillaDSP configuration does not contain a Volume filter';
-		$_SESSION['notify']['duration'] = 5;
-	} else {
-		phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
-		$deviceChange = 0;
-		sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $mixerTypeSelected);
-		$queueArgs = $deviceChange . ',' . $mixerChange;
-		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
-	}
+	phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
+	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $_POST['mixer_type']);
+
+	$deviceChange = 0;
+	$queueArgs = $deviceChange . ',' . $mixerChange;
+	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
 // CamillaDSP volume range
 if (isset($_POST['update_camilladsp_volume_range']) && $_POST['camilladsp_volume_range'] != $_SESSION['camilladsp_volume_range']) {
@@ -312,7 +300,7 @@ if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST[
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
-	updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
+	updCDSPConfig($newMode, $currentMode, $cdsp);
 }
 // Parametric eq
 $eqfa12p = Eqp12($dbh);
@@ -352,18 +340,16 @@ if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD
 $cards = getAlsaCards();
 $_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$cfgMPD['device']] == 'empty') ? 'Device turned off or disconnected' : '';
 // Volume type
-// Hardware, Software, Fixed (0dB), Null (External control), CamillaDSP
+// Hardware, Software, Fixed (none), CamillaDSP (null)
 if ($_SESSION['alsavolume'] != 'none') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($cfgMPD['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
 }
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " .
 	($cfgMPD['mixer_type'] == 'software' ? "selected" : "") . ">Software</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"none\" " .
-	($cfgMPD['mixer_type'] == 'none' ? "selected" : "") . ">Fixed (0dB output)</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"null\" " .
-	($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'off' ? "selected" : "") . ">Null (External control)</option>\n";
+	($cfgMPD['mixer_type'] == 'none' ? "selected" : "") . ">Fixed (0dB)</option>\n";
 if ($_SESSION['camilladsp'] != 'off') {
-	$_mpd_select['mixer_type'] .= "<option value=\"camilladsp\" " .
+	$_mpd_select['mixer_type'] .= "<option value=\"null\" " .
 		(($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? "selected" : "") . ">CamillaDSP</option>\n";
 	$_camilladsp_volume_range_hide = $cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on' ? '' : 'hide';
 	$_select['camilladsp_volume_range'] .= "<option value=\"30\" " . (($_SESSION['camilladsp_volume_range'] == '30') ? "selected" : "") . ">30 dB</option>\n";

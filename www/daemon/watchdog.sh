@@ -62,21 +62,6 @@ while true; do
 		systemctl start mpd
 	fi
 
-	# CamillaDSP volume sync
-	VOLSYNC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='camilladsp_volume_sync'")
-	VOLSYNC_RUNNING=$(pgrep -c -F /var/run/mpd2cdspvol/mpd2cdspvol.pid)
-	if [[ $VOLSYNC = "on" ]]; then
-		if [[ $VOLSYNC_RUNNING != 1 ]]; then
-			message_log "Error: CamillaDSP volume sync restarted (check MPD log for messages)"
-			systemctl start mpd2cdspvolume
-		fi
-	else
-		if [[ $VOLSYNC_RUNNING = 1 ]]; then
-			message_log "Error: CamillaDSP volume sync stopped (it should not have been been running)"
-			systemctl stop mpd2cdspvolume
-		fi
-	fi
-
 	# Wake local display on play
 	MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx'")
 	if [[ $MULTIROOM_TX = "On" ]]; then

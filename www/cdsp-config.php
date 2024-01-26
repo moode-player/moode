@@ -53,7 +53,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
-	updateCamillaDSPCfg($newMode, $currentMode, $cdsp);
+	updCDSPConfig($newMode, $currentMode, $cdsp);
 
 	if ($_POST['log_level'] != $cdsp->getLogLevel()) {
 		$cdsp->setLogLevel($_POST['log_level']);

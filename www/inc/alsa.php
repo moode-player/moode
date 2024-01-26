@@ -43,6 +43,9 @@ function getAlsaMixerName($i2sDevice) {
 			$mixerName = 'DSPVolume';
 		} else if ($_SESSION['i2soverlay'] == 'hifiberry-dacplushd') {
 			$mixerName = 'DAC';
+		// TODO: if verified add
+		//} else if ($i2sDevice == 'MERUS(tm) Amp piHAT ZW') {
+		//	$mixerName = 'A.Mstr Vol';
 		} else if (
 			$i2sDevice == 'Allo Katana DAC' ||
 			$i2sDevice == 'Allo Boss 2 DAC' ||
@@ -163,24 +166,8 @@ function getAlsaCardNum() {
 	return $_SESSION['multiroom_tx'] == 'On' ? (array_search('Dummy', getAlsaCards()) - 1) : $_SESSION['cardnum'];
 }
 
-// Volume support routines for MPD and CamillaDSP
-function setALSAVolumeForMPD($mpdMixer, $alsaMixerName, $alsaVolumeMax) {
-	$cmd = '/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName  . '" ';
-	switch ($mpdMixer) {
-		case 'hardware':
-			break;
-		case 'software':
-		case 'none': // Fixed (0dB)
-			sysCmd($cmd . $alsaVolumeMax);
-			break;
-		case 'null':
-			if (isMPD2CamillaDSPVolSyncEnabled() && doesCamillaDSPCfgHaveVolFilter()) {
-				sysCmd($cmd . $alsaVolumeMax);
-			} else {
-				sysCmd($cmd . '0');
-			}
-			break;
-	}
+function setALSAVolTo0dB($alsaVolMax = '100') {
+	sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $alsaVolMax);
 }
 
 // Needs the session to be available for getAlsaCardNum()

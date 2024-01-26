@@ -591,19 +591,26 @@ class CamillaDsp {
 
 // TODO: Change these to cdsp-> member functions
 
+// TODO: ??? Delete these after replacing caller code with if ($_SESSION['camilladsp'] !='off') ...
 function isMPD2CamillaDSPVolSyncEnabled() {
 	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
 }
-
 function doesCamillaDSPCfgHaveVolFilter($configFile = null) {
-	// $configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
-	// $resultVol = sysCmd('fgrep -o "type: Volume" "' . $configFile . '"');
-    // $resultLdn = sysCmd('fgrep -o "type: Loudness" "' . $configFile . '"');
-	// return (($resultVol[0] == 'type: Volume' || $resultLdn[0] == 'type: Loudness' ) && $_SESSION['camilladsp'] !='off');
+    // Camilla 2: always true when CamillaDSP on
     return ($_SESSION['camilladsp'] !='off');
+
+    // Camilla 1: conditional
+    //$configFile = empty($configFile) ? '/usr/share/camilladsp/working_config.yml' : '/usr/share/camilladsp/configs/' . $configFile;
+	//$resultVol = sysCmd('fgrep -o "type: Volume" "' . $configFile . '"');
+    //$resultLdn = sysCmd('fgrep -o "type: Loudness" "' . $configFile . '"');
+	//return (($resultVol[0] == 'type: Volume' || $resultLdn[0] == 'type: Loudness' ) && $_SESSION['camilladsp'] !='off');
 }
 
-function updateCamillaDSPCfg($newMode, $currentMode, $cdsp) {
+function setCDSPVolTo0dB () {
+    sysCmd("sed -i '0,/- -.*/s//- 0.0/' /var/lib/cdsp/statefile.yml");
+}
+
+function updCDSPConfig($newMode, $currentMode, $cdsp) {
     $defaultMixer = $_SESSION['alsavolume'] != 'none' ? 'Hardware' : 'Software';
 
     if ($newMode != $currentMode && ($newMode == 'off' || $currentMode == 'off')) {
@@ -627,21 +634,7 @@ function updateCamillaDSPCfg($newMode, $currentMode, $cdsp) {
         if ($newModeVolFilter === true && $currentModeVolFilter === true) {
             // Both have volume filter
             $cdsp->reloadConfig();
-        } else if ($newModeVolFilter === false && $currentModeVolFilter === false) {
-            // Neither have volume filter
-            $cdsp->reloadConfig();
-        } else if ($newModeVolFilter === true) {
-            // Switch from one w/o volume filter to one with
-            $notifyMsg = ',Volume type changed to:<br>CamillaDSP';
-            $queueArg1 = ',change_mixer_to_camilladsp';
-            sendEngCmd('cdsp_updating_config' . $notifyMsg);
-            submitJob('camilladsp', $newMode . $queueArg1);
-        } else if ($newModeVolFilter === false) {
-            // Switch from one with a volume filter to one without
-            $notifyMsg = ',Volume type changed to:<br>' . $defaultMixer;
-            $queueArg1 = ',change_mixer_to_default';
-            sendEngCmd('cdsp_updating_config' . $notifyMsg);
-            submitJob('camilladsp', $newMode . $queueArg1);
+            sendEngCmd('cdsp_config_updated' . ',' . $newMode);
         }
     }
 }

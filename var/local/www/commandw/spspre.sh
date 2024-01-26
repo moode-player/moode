@@ -17,8 +17,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-SQLDB=/var/local/www/db/moode-sqlite3.db
+LOGFILE="/var/log/moode_spsevent.log"
+DEBUG=$(sudo moodeutl -d -gv debuglog)
 
+debug_log () {
+	if [[ $DEBUG == '0' ]]; then
+		return 0
+	fi
+	echo "$1"
+	TIME=$(date +'%Y%m%d %H%M%S')
+	echo "$TIME $1" >> $LOGFILE
+}
+
+debug_log "Event: Run spspre.sh"
+
+SQLDB=/var/local/www/db/moode-sqlite3.db
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','camilladsp_volume_sync','inpactive','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
@@ -28,23 +41,19 @@ AMIXNAME=${arr[3]}
 CDSP_VOLSYNC=${arr[4]}
 INPACTIVE=${arr[5]}
 MULTIROOM_TX=${arr[6]}
-RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
+RX_ADDRESSES=$(sudo moodeutl -d -gv rx_addresses)
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
 $(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='aplactive'")
-
 /usr/bin/mpc stop > /dev/null
-# Allow time for UI update
-sleep 1
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
-	# Save knob level then set camilladsp volume to 100% (0dB)
-	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB' WHERE param='volknob_mpd'")
-	/var/www/vol.sh 100
+	# Set 0dB CDSP volume
+	sed -i '0,/- -.*/s//- 0.0/' /var/lib/cdsp/statefile.yml
 elif [[ $ALSAVOLUME != "none" ]]; then
 	# Set 0dB ALSA volume
 	/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
@@ -57,7 +66,7 @@ if [[ $MULTIROOM_TX == "On" ]]; then
 		if [[ $RESULT != "" ]]; then
 			RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				echo echo $(date +%F" "%T)"spspre.sh trx-control.php -set-alsavol failed: $IP_ADDR" >> /var/log/moode_spsevent.log
+				echo $(date +'%Y%m%d %H%M%S') "Event: trx-control.php -set-alsavol failed: $IP_ADDR" >> $LOGFILE
 			fi
 		fi
 	done

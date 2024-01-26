@@ -17,10 +17,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+LOGFILE="/var/log/moode_spsevent.log"
+DEBUG=$(sudo moodeutl -d -gv debuglog)
+
+debug_log () {
+	if [[ $DEBUG == '0' ]]; then
+		return 0
+	fi
+	echo "$1"
+	TIME=$(date +'%Y%m%d %H%M%S')
+	echo "$TIME $1" >> $LOGFILE
+}
+
+debug_log "Event: Run spspost.sh"
+
 SQLDB=/var/local/www/db/moode-sqlite3.db
-
 $(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='aplactive'")
-
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','mpdmixer','rsmafterapl','camilladsp_volume_sync','inpactive','volknob_mpd','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
@@ -32,28 +44,18 @@ CDSP_VOLSYNC=${arr[5]}
 INPACTIVE=${arr[6]}
 VOLKNOB_MPD=${arr[7]}
 MULTIROOM_TX=${arr[8]}
-RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
+RX_ADDRESSES=$(sudo moodeutl -d -gv rx_addresses)
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
 # Local
+/var/www/vol.sh -restore
+
 if [[ $CDSP_VOLSYNC == "on" ]]; then
-	# Restore knob volume to saved MPD volume
-	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='$VOLKNOB_MPD' WHERE param='volknob'")
-	/var/www/vol.sh -restore
+	# Restore CDSP volume
 	systemctl restart mpd2cdspvolume
-else
-	# Restore knob volume
-	/var/www/vol.sh -restore
-fi
-# TODO: Is this needed?
-if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
-	if [[ $ALSAVOLUME != "none" ]]; then
-		# Restore 0dB ALSA volume
-		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
-	fi
 fi
 
 # Multiroom receivers
@@ -63,7 +65,7 @@ if [[ $MULTIROOM_TX == "On" ]]; then
 		if [[ $RESULT != "" ]]; then
 			RESULT=$(curl -G -S -s --data-urlencode "cmd=vol.sh -restore" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				echo $(date +%F" "%T)" spspost.sh vol.sh -restore failed: $IP_ADDR" >> /var/log/moode_spsevent.log
+				echo $(date +'%Y%m%d %H%M%S') "Event: vol.sh -restore failed: $IP_ADDR" >> $LOGFILE
 			fi
 		fi
 	done

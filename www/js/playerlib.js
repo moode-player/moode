@@ -493,10 +493,8 @@ function engineCmd() {
                     break;
                 case 'btactive1':
                 case 'btactive0':
-                    // NOTE: cmd[1] contains the list of connected clients
-                    var connectedClients = typeof(cmd[1]) == 'undefined' ? 'Undefined' : cmd[1].replace(/;/g, ', ');
                     inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">Bluetooth Active: ' + connectedClients + '</span>' +
+                        '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
                         '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
                         receiversBtn() +
                         audioInfoBtn());
@@ -559,6 +557,9 @@ function engineCmd() {
                     break;
                 case 'cdsp_config_updated':
                     notify('cdsp_config_updated');
+                    if (typeof(cmd[1]) != 'undefined') {
+                        SESSION.json['camilladsp'] = cmd[1];
+                    }
                     break;
                 case 'cdsp_config_update_failed':
                     notify('cdsp_config_update_failed', '', '10_seconds');
@@ -623,7 +624,6 @@ function engineCmdLite() {
                     notify('cdsp_updating_config', msg, 'infinite');
                     break;
                 case 'cdsp_config_updated':
-                    // Could also display "Update complete"
                     $('.ui-pnotify-closer').click();
                     break;
                 case 'cdsp_config_update_failed':
@@ -865,7 +865,7 @@ function renderUIVol() {
             // Fixed (0dB)
     		disableVolKnob();
     	} else {
-            // Software, hardware or null/CamillaDSP
+            // Software, hardware or null (CamillaDSP)
             // If sync is enabled update knob volume for apps that set volume via MPD instead of vol.sh
     		if (SESSION.json['feat_bitmask'] & FEAT_UPNPSYNC) {
     			if (SESSION.json['btactive'] == '0' && SESSION.json['aplactive'] == '0' && SESSION.json['spotactive'] == '0'

@@ -178,7 +178,11 @@ sysCmd("echo -n '" . json_encode(['filter_type' => 'full_lib', 'filter_str' => '
 	' | tee "' . LIBSEARCH_BASE . LIB_FULL_LIBRARY . '.json" > /dev/null');
 sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
-sysCmd('touch /var/log/shairport-sync.log');
+sysCmd('touch ' . SHAIRPORT_SYNC_LOG);
+sysCmd('touch ' . LIBRESPOT_LOG);
+sysCmd('touch ' . SPOTEVENT_LOG);
+sysCmd('touch ' . SPSEVENT_LOG);
+sysCmd('touch ' . SLPOWER_LOG);
 sysCmd('truncate ' . MOUNTMON_LOG . ' --size 0');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
 // Delete any tmp files left over from New/Edit station or playlist
@@ -194,7 +198,11 @@ sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
 sysCmd('chmod 0666 /var/log/moode_playhistory.log');
 sysCmd('chmod 0666 /var/local/www/currentsong.txt');
 sysCmd('chmod 0666 /var/local/www/sysinfo.txt');
-sysCmd('chmod 0666 /var/log/shairport-sync.log');
+sysCmd('chmod 0666 ' . SHAIRPORT_SYNC_LOG);
+sysCmd('chmod 0666 ' . LIBRESPOT_LOG);
+sysCmd('chmod 0666 ' . SPOTEVENT_LOG);
+sysCmd('chmod 0666 ' . SPSEVENT_LOG);
+sysCmd('chmod 0666 ' . SLPOWER_LOG);
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
 workerLog('worker: File check complete');
@@ -217,33 +225,33 @@ workerLog('worker: -- Audio debug');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Verify audio device configuration
+// Report audio device configuration
 $mpdDevice = sqlQuery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
 $cards = getAlsaCards();
-workerLog('worker: ALSA cards:  0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
-workerLog('worker: MPD config:  ' . $mpdDevice[0]['value'] . ':' . $_SESSION['adevname'] .
+workerLog('worker: ALSA cards:   0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
+workerLog('worker: MPD config:   ' . $mpdDevice[0]['value'] . ':' . $_SESSION['adevname'] .
 	' | mixer:' . trim($_SESSION['amixname']) . ' | cardnum:' . $mpdDevice[0]['value']);
-
 // Check for device not found
 if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdDevice[0]['value']] == 'empty') {
 	workerLog('worker: Warning: No device found at MPD configured card ' . $mpdDevice[0]['value']);
 }
-
 // Zero out ALSA volume
 $alsaMixerName = getAlsaMixerName($_SESSION['i2sdevice']);
 if ($alsaMixerName != 'Invalid card number.') {
-	workerLog('worker: Mixer name:  ' . ($alsaMixerName == 'none' ? 'none exists' : '[' . $alsaMixerName . ']'));
+	workerLog('worker: Mixer name:   ' . ($alsaMixerName == 'none' ? 'none exists' : '[' . $alsaMixerName . ']'));
 	if ($alsaMixerName != 'none') {
 		sysCmd('amixer sset ' . '"' . $alsaMixerName . '"' . ' on' ); // Ensure state is 'on'
 		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName . '"' . ' 0');
 		$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $alsaMixerName . '"');
-		workerLog('worker: Hdwr volume: set to ' . $result[0]);
+		workerLog('worker: Hdwr volume:  set to ' . $result[0]);
 	} else {
 		phpSession('write', 'alsavolume', 'none');
 		phpSession('write', 'amixname', 'none');
-		workerLog('worker: Hdwr volume: controller not detected');
+		workerLog('worker: Hdwr volume:  controller not detected');
 	}
 }
+// Report knob value
+workerLog('worker: Volume knob:  ' . $_SESSION['volknob']);
 
 // Reconfigure certain 3rd party installs
 // RoonBridge
@@ -654,7 +662,7 @@ if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 // Report MPD mixer name
 $mixerType = ucfirst($_SESSION['mpdmixer']);
 $mixerType = isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerType;
-$mixerType = $mixerType == 'None' ? 'Fixed 0dB' : $mixerType;
+$mixerType = $mixerType == 'None' ? 'Fixed (0dB)' : $mixerType;
 workerLog('worker: Mixer type     ' . $mixerType);
 
 // Ensure mpdmixer_local = mpdmixer
@@ -1038,28 +1046,34 @@ workerLog('worker: --');
 // Source select (Analog or S/PDIF) or MPD volume
 if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
  	if ($_SESSION['audioin'] == 'Local') {
-		$volKnob = $_SESSION['volknob_mpd'] != -1 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+		$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 	} else {
 		$volKnob = $_SESSION['volknob_preamp'];
 	}
 } else {
-	$volKnob = $_SESSION['volknob_mpd'] != -1 ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 	phpSession('write', 'volknob_mpd', '-1');
 	phpSession('write', 'volknob_preamp', '0');
 }
 sysCmd('/var/www/vol.sh ' . $volKnob);
-workerLog('worker: Volume knob:      ' . $volKnob);
-workerLog('worker: Saved MPD volume: ' . $_SESSION['volknob_mpd']);
-workerLog('worker: Saved SRC volume: ' . $_SESSION['volknob_preamp']);
+workerLog('worker: Volume knob:   ' . $volKnob);
+workerLog('worker: Saved MPD vol: ' . $_SESSION['volknob_mpd']);
+workerLog('worker: Saved SRC vol: ' . $_SESSION['volknob_preamp']);
+workerLog('worker: Mixer type:    ' . $_SESSION['mpdmixer']);
 // Hardware (ALSA) volume
-// Since we initially set alsa volume to 0 at the beginning of startup it must be reset
 if ($_SESSION['alsavolume'] != 'none') {
-	setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
+ 	if ($_SESSION['mpdmixer'] != 'hardware') {
+		// Restore ALSA volume since it was initially set to 0 at the beginning of startup
+		setALSAVolTo0dB($_SESSION['alsavolume_max']);
+	}
 	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	workerLog('worker: Hdwr volume:      ' . $result[0]);
+	workerLog('worker: Hdwr volume:   ' . $result[0]);
 } else {
-	workerLog('worker: Hdwr volume:      controller not detected');
+	workerLog('worker: Hdwr volume:   controller not detected');
 }
+// CamillaDSP volume
+$result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'");
+workerLog('worker: CDSP volume:   ' . number_format($result[0], 1) . 'dB');
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -1396,7 +1410,7 @@ function chkScnSaver() {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
-				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
 				$GLOBALS['scnactive'] = '1';
 				sendEngCmd('scnactive1');
 			}
@@ -1470,34 +1484,53 @@ function chkBtActive() {
 		// Do this section only once
 		if ($_SESSION['btactive'] == '0') {
 			phpSession('write', 'btactive', '1');
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sysCmd('mpc stop'); // For added robustness
+			sendEngCmd('btactive1');
 
-			if (isMPD2CamillaDSPVolSyncEnabled()) {
-				// Save knob volume and set MPD volume to 100
-				sqlQuery("UPDATE cfg_system SET value='" . $_SESSION['volknob'] . "' WHERE param='volknob_mpd'", $GLOBALS['dbh']);
-				sysCmd('/var/www/vol.sh 100');
-			} else if ($_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+			// Local
+			if ($_SESSION['alsavolume'] != 'none') {
+		        setALSAVolTo0dB($_SESSION['alsavolume_max']);
+			}
+	        if ($_SESSION['camilladsp'] != 'off') {
+	            setCDSPVolTo0dB();
+	        }
+
+			// Multiroom receivers
+			if ($_SESSION['multiroom_tx'] == 'On') {
+				$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
+				$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
+				for ($i = 0; $i < count($rxAddresses); $i++) {
+					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max']))) {
+		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max']))) {
+		    				workerLog("worker: chkBtActive(): send 'set-alsavol alsavolume_max' failed: " . $rxHostNames[$i]);
+		    			}
+		    		}
+				}
 			}
 		}
-		sendEngCmd('btactive1'); // Placing here enables each conected device to be printed to the indicator overlay
-	}
-	else {
+	} else {
 		// Do this section only once
 		if ($_SESSION['btactive'] == '1') {
 			phpSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
 
-			if (isMPD2CamillaDSPVolSyncEnabled()) {
-				// Restore knob level to saved MPD level
-				$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob_mpd'", $GLOBALS['dbh']);
-				sqlQuery("UPDATE cfg_system SET value='" . $result[0]['value'] . "' WHERE param='volknob'", $GLOBALS['dbh']);
-				sysCmd('/var/www/vol.sh -restore');
-				sysCmd('systemctl restart mpd2cdspvolume');
-			} else {
-				sysCmd('/var/www/vol.sh -restore');
+			// Local
+			sysCmd('/var/www/vol.sh -restore');
+
+			// Multiroom receivers
+			if ($_SESSION['multiroom_tx'] == 'On') {
+				$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
+				$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
+				for ($i = 0; $i < count($rxAddresses); $i++) {
+					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=vol.sh -restore'))) {
+		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=vol.sh -restore'))) {
+		    				workerLog("worker: chkBtActive(): send 'vol.sh -restore' failed: " . $rxHostNames[$i]);
+		    			}
+		    		}
+				}
 			}
+
 			if ($_SESSION['rsmafterbt'] == '1') {
 				sysCmd('mpc play');
 			}
@@ -1512,7 +1545,7 @@ function chkAplActive() {
 		// Do this section only once
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sendEngCmd('aplactive1');
 		}
 	} else {
@@ -1531,7 +1564,7 @@ function chkSpotActive() {
 		// Do this section only once
 		if ($GLOBALS['spotactive'] == '0') {
 			$GLOBALS['spotactive'] = '1';
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sendEngCmd('spotactive1');
 		}
 	} else {
@@ -1550,7 +1583,7 @@ function chkSlActive() {
 		// Do this section only once
 		if ($GLOBALS['slactive'] == '0') {
 			$GLOBALS['slactive'] = '1';
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sendEngCmd('slactive1');
 		}
 	} else {
@@ -1575,7 +1608,7 @@ function chkRbActive() {
 			if ($GLOBALS['rbactive'] == '0') {
 				$GLOBALS['rbactive'] = '1';
 				phpSession('write', 'rbactive', '1');
-				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 				sendEngCmd('rbactive1');
 			}
 		} else {
@@ -1600,7 +1633,7 @@ function chkRxActive() {
 		// Do this section only once
 		if ($_SESSION['rxactive'] == '0') {
 			phpSession('write', 'rxactive', '1');
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sendEngCmd('rxactive1');
 		}
 	}
@@ -2166,14 +2199,12 @@ function runQueuedJob() {
 			// Store audio formats
 			$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 
-			// Set ALSA volume to 0dB (100%) depending on mixer type
-			if ($_SESSION['alsavolume'] != 'none') {
-				setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['alsavolume_max']);
+			// Set ALSA volume to 0dB (100%)
+			if ($_SESSION['alsavolume'] != 'none' && $_SESSION['mpdmixer'] != 'hardware') {
+				setALSAVolTo0dB($_SESSION['alsavolume_max']);
 			}
 
 			// Parse quereargs:
-			// [0] = device (cardnum) change 1/0
-			// [1] = mixer change 'fixed_or_null', 'hardware', 'software', 0
 			$queueArgs = explode(',', $_SESSION['w_queueargs']);
 			$deviceChange = $queueArgs[0];
 			$mixerChange = $queueArgs[1];
@@ -2187,26 +2218,36 @@ function runQueuedJob() {
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
 
-			if ($mixerChange == 'fixed_or_null') {
-				// Mixer changed to Fixed (0dB) or Null
+			// Output device (cardnum) change
+			if ($deviceChange == '1') {
 				sysCmd('/var/www/vol.sh 0');
-				sendEngCmd('refresh_screen'); // For Playback view when using CamillaDSP quick config
-			} else if ($mixerChange == 'software' || $mixerChange == 'hardware') {
-				// Mixer changed from Fixed (0dB) or Null
-				sysCmd('/var/www/vol.sh restore');
-				sendEngCmd('refresh_screen');
-			} else { // $mixerChange == 0
-				// Special mixer change action not required
-				sysCmd('/var/www/vol.sh restore');
+			}
+			// Volume type (MPD mixer) change
+			if ($mixerChange == '0') {
+				// 0 = No mixer change. Set by mpd-config.php
+				$startPlay = true;
+			} else {
+				// Mixer change
+				$startPlay = false;
+				if ($mixerChange == 'camilladsp') {
+					sysCmd('/var/www/vol.sh -restore');
+				} else {
+					// hardware, software, fixed
+					if ($_SESSION['camilladsp'] != 'off') {
+						setCDSPVolTo0dB();
+					}
+					sysCmd('/var/www/vol.sh -restore');
+				}
+				sendEngCmd('refresh_screen'); // Refresh connected clients
 			}
 
-			// Start play if was playing and mixer type not changed to Fixed (0dB) or Null
-			if (!empty($playing) && $mixerChange != 'fixed_or_null') {
+			// Start play if was playing
+			if (!empty($playing) && $startPlay == true) {
 				sysCmd('mpc play');
 			}
 
 			// Restart renderers if device (cardnum) changed
-			if ($deviceChange == true) {
+			if ($deviceChange == '1') {
 				if ($_SESSION['airplaysvc'] == 1) {
 					sysCmd('killall shairport-sync');
 					startAirPlay();
@@ -2223,22 +2264,24 @@ function runQueuedJob() {
 			}
 
 			// DEBUG:
-			$alsaVolume = $_SESSION['alsavolume'] == 'none' ? 'none' : sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
-			$playing = !empty(sysCmd('mpc status | grep "\[playing\]"')) ? 'playing' : 'paused';
-			workerLog('worker: Job mpdcfg: devchg|mixchg (' . $deviceChange . '|' . $mixerChange . '), alsavol (' . $alsaVolume . '), playstate (' . $playing . ')');
+			debugLog('worker: Job mpdcfg: ' .
+				'MIXER:' . $mixerChange . ', ' .
+				'KNOB:' . $_SESSION['volknob'] . ', ' .
+				'CAMILLADSP:' . ($_SESSION['camilladsp'] != 'off' ? 'on' : 'off') . ', ' .
+				'ALSAVOL:' . ($_SESSION['alsavolume'] == 'none' ? 'none' : sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0]) . ', ' .
+				'PLAY:' . ((!empty($playing) && $startPlay == true) ? 'yes' : 'no') . ', ' .
+				'DEVCHG:' . ($deviceChange == '0' ? 'no' : 'yes'));
 			break;
 
 		// snd-config jobs
 		case 'i2sdevice':
 			sysCmd('/var/www/vol.sh 0'); // Set knob and MPD/hardware volume to 0
-			phpSession('write', 'autoplay', '0'); // Prevent play before MPD setting applied
+			phpSession('write', 'autoplay', '0'); // Prevent auto-play before MPD setting applied
+			phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
 			cfgI2sOverlay($_SESSION['w_queueargs']);
 			break;
 		case 'alsavolume_max':
-			if ($_SESSION['alsavolume'] != 'none') {
-				// NOTE: For MPD volume type null: ALSA volume is set to 0 unless CamillaDSP volume is active then its set to max
-				setALSAVolumeForMPD($_SESSION['mpdmixer'], $_SESSION['amixname'], $_SESSION['w_queueargs']);
-			}
+			setALSAVolTo0dB($_SESSION['w_queueargs']);
 			break;
 		case 'alsa_output_mode':
 		case 'alsa_loopback':
@@ -2349,25 +2392,25 @@ function runQueuedJob() {
 							$volSync = 'on';
 							$serviceCmd = 'start';
 							$mixerType = 'camilladsp';
-							$volume = '-restore';
-							// Save knob volume for later restore
-							phpSession('write', 'volknob_mpd', $_SESSION['volknob']);
 						} else if ($queueArgs[1] == 'change_mixer_to_default') {
 							$volSync = 'off';
 							$serviceCmd = 'stop';
 							$mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
-							$volume = '-restore';
 						}
 						changeMPDMixer($mixerType);
-						// Start or stop MPD to CamillaDSP volume sync
+						// CamillaDSP volume sync
 						phpSession('write', 'camilladsp_volume_sync', $volSync);
 						sysCmd('systemctl '. $serviceCmd .' mpd2cdspvolume');
-						// Restart MPD
+						// Squeezelite (hogs the output so restart to pick up change in _audioout)
+						if ($_SESSION['slsvc'] == '1') {
+							sysCmd('systemctl restart squeezelite');
+						}
+						// MPD
 						sysCmd('systemctl restart mpd');
 						$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 						closeMpdSock($sock);
 						// Set volume level
-						sysCmd('/var/www/vol.sh ' . $volume);
+						sysCmd('/var/www/vol.sh -restore' );
 					}
 					// Notification
 					sendEngCmd('cdsp_config_updated');
@@ -2463,7 +2506,7 @@ function runQueuedJob() {
 				startAirPlay();
 			}
 
-			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
 				sysCmd('mpc play');
 			}
 			break;
@@ -2473,7 +2516,7 @@ function runQueuedJob() {
 				startSpotify();
 			}
 
-			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterspot'] == 'Yes') {
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterspot'] == 'Yes') {
 				sysCmd('mpc play');
 			}
 			break;
@@ -2492,7 +2535,7 @@ function runQueuedJob() {
 				stopSqueezeLite();
 			}
 
-			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmaftersl'] == 'Yes') {
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmaftersl'] == 'Yes') {
 				sysCmd('mpc play');
 			}
 			break;
@@ -2516,7 +2559,7 @@ function runQueuedJob() {
 				stopRoonBridge();
 			}
 
-			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterrb'] == 'Yes') {
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterrb'] == 'Yes') {
 				sysCmd('mpc play');
 			}
 			break;

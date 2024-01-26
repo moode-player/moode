@@ -34,8 +34,7 @@ if (false === ($fp = fopen(PORT_FILE, 'a'))) {
 	workerLog('engineCmd(): File create failed');
 	echo json_encode('file create failed');
 	exit();
-}
-else {
+} else {
 	//workerLog('engineCmd(): Updating portfile (add ' . $port . ')');
 	fwrite($fp, $port . "\n");
 	fclose($fp);
@@ -62,18 +61,7 @@ sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
 
 // Special cmd handling
 
-// Get names of connected bluetooth devices
-if ($cmd == 'btactive1') {
-	$result = sysCmd('/var/www/util/blu-control.sh -c');
-	$cmd .= ',';
-	for ($i = 2; $i < count($result); $i++) {
-		if ($result[$i] != '**') {
-			$cmd .= substr($result[$i], 21) . ';';
-		}
-	}
-	$cmd = rtrim($cmd, ';');
-}
-elseif ($cmd == 'inpactive1') {
+if ($cmd == 'inpactive1') {
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioin'", sqlConnect());
 	$cmd .= ',' . $result[0]['value'];
 }

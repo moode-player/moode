@@ -238,12 +238,11 @@ jQuery(document).ready(function($) { 'use strict';
 
     	// Set volume control state
     	if (SESSION.json['mpdmixer'] == 'none') {
+            // Fixed (0dB)
     		disableVolKnob();
-    		SESSION.json['volknob'] = '0';
-    		SESSION.json['volmute'] = '0';
-            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'volknob': '0', 'volmute': '0'});
-    	}
-    	else {
+            SESSION.json['volmute'] = '0';
+            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'volmute': '0'});
+    	} else {
     		$('#volume').val(SESSION.json['volknob']);
     		$('#volume-2').val(SESSION.json['volknob']);
     		$('.volume-display').css('opacity', '');
@@ -1768,6 +1767,17 @@ jQuery(document).ready(function($) { 'use strict';
     $('#dropdown-cdsp-btn').click(function(e) {
         var ul = $('#dropdown-cdsp-menu');
 
+        // Checked item
+        $('.dropdown-cdsp-line span').remove();
+        $('#dropdown-cdsp-menu li').each(function () {
+            var selectedConfig = SESSION.json['camilladsp'] == 'off' ? 'Off' : SESSION.json['camilladsp'].slice(0, -4);
+            if ($(this).text() == selectedConfig) {
+                var selectedHTML = $('a[data-cdspconfig="' + SESSION.json['camilladsp'] + '"]').html();
+                $('a[data-cdspconfig="' + SESSION.json['camilladsp'] + '"]').html(selectedHTML +
+                    '<span id="menu-check-cdsp"><i class="fa-solid fa-sharp fa-check"></i></span>');
+            }
+        });
+
         // First items
         $('#dropdown-cdsp-menu li').each(function () {
             if ($(this).text() == 'Off' ||
@@ -1786,6 +1796,8 @@ jQuery(document).ready(function($) { 'use strict';
                 ul.append($(this));
             }
         });
+
+        $('#dropdown-cdsp-menu').scrollTo(0, 200);
     });
 
 	// Info button (i) show/hide toggle

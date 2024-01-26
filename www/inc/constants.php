@@ -24,6 +24,11 @@ const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
 const UPDATER_LOG = '/var/log/moode_update.log';
 const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
 const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
+const SHAIRPORT_SYNC_LOG = '/var/log/moode_shairport-sync.log';
+const LIBRESPOT_LOG = '/var/log/moode_librespot.log';
+const SPOTEVENT_LOG = '/var/log/moode_spotevent.log';
+const SPSEVENT_LOG = '/var/log/moode_spsevent.log';
+const SLPOWER_LOG = '/var/log/moode_slpower.log';
 // MPD
 const MPD_RESPONSE_ERR = 'ACK';
 const MPD_RESPONSE_OK = 'OK';

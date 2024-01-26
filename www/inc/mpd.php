@@ -575,18 +575,19 @@ function getMpdOutputs($sock) {
 }
 
 // Reconfigure MPD volume
-function changeMPDMixer($mixerType) {
-	$mixer = $mixerType == 'camilladsp' ? 'null' : $mixerType;
-	// Update params
-	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixer);
-	phpSession('write', 'mpdmixer', $mixer);
-	// Reset ALSA volume to 0dB if indicated
-	if ($_SESSION['alsavolume'] != 'none') {
-		if ($mixerType == 'software' || $mixerType == 'none' || $mixerType == 'camilladsp') {
-			sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
-		}
+function changeMPDMixer($mixer) {
+	$mixerType = $mixer == 'camilladsp' ? 'null' : $mixer;
+
+	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
+	phpSession('write', 'mpdmixer', $mixerType);
+
+	if ($_SESSION['alsavolume'] != 'none' && $mixerType != 'hardware') {
+        setALSAVolTo0dB($_SESSION['alsavolume_max']);
 	}
-	// Update /etc/mpd.conf
+    if ($_SESSION['camilladsp'] != 'off' && $mixer != 'camilladsp') {
+        setCDSPVolTo0dB();
+    }
+
 	updMpdConf($_SESSION['i2sdevice']);
 }
 
