@@ -4673,7 +4673,7 @@ function setNpIcon() {
         $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-npicon');
         if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
             for (i = 0; i < filteredSongs.length; i++) {
-                if (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && filteredSongs[i].tracknum == MPD.json['track'] && (MPD.json['disc'] == "Disc tag missing" || filteredSongs[i].disc == MPD.json['disc'])) {
+                if (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && 1 * filteredSongs[i].tracknum == 1 * MPD.json['track'] && (MPD.json['disc'] == "Disc tag missing" || 1 * filteredSongs[i].disc == 1 * MPD.json['disc'])) {
                     $('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-npicon');
                     break;
                 }

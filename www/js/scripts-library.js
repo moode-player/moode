@@ -841,7 +841,7 @@ var renderSongs = function(albumPos) {
             }
 
 			var composer = filteredSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + filteredSongs[i].composer + '</span></span>';
-            var npIcon = (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && (MPD.json['disc'] == "Disc tag missing" || filteredSongs[i].disc == MPD.json['disc']) && filteredSongs[i].tracknum == MPD.json['track'] && MPD.json['state'] == 'play') ? ' lib-track-npicon' : '';
+            var npIcon = (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album'] && (MPD.json['disc'] == "Disc tag missing" || 1 * filteredSongs[i].disc == 1 * MPD.json['disc']) && 1 * filteredSongs[i].tracknum == 1 * MPD.json['track'] && MPD.json['state'] == 'play') ? ' lib-track-npicon' : '';
 
             output += albumDiv
                 + discDiv
