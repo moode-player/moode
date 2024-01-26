@@ -64,7 +64,7 @@ switch ($option) {
 		updateFeatures($features, $featBitmask, $argv);
 		break;
 	case '-d':
-		dumpSession();
+		dumpSession($argv);
 		break;
 	case '-D':
 		deleteSessionVar($argv);
@@ -164,7 +164,9 @@ With no OPTION print the help text and exit.
  -a\t\tPrint features availability
  -A [add|rm N] \tUpdate features availability
  -d\t\tDump session file (requires sudo)
- -D [var name] \tDelete session variable (requires sudo)
+ -d [-nr]\tDump session file, no radio (requires sudo)
+ -d [-gv var]\tDump session file, get value (requires sudo)
+ -D [var] \tDelete session variable (requires sudo)
  -e [filename]\tExport settings to [filename] or ~/moodecfg-<timestamp>.ini (requires sudo)
  -i\t\tImport settings from /boot/moodecfg.ini (requires sudo)
  -f\t\tPrint supported audio formats
@@ -252,36 +254,52 @@ function updateFeatures($features, $featBitmask, $argv) {
 	}
 }
 
-function dumpSession() {
+function dumpSession($argv) {
 	if (posix_getuid() != 0) {
 		echo "This option requires sudo\n";
 		return;
 	}
 
+	$validArgs = array('-nr', '-gv');
+	if (!empty($argv[2]) && !in_array($argv[2], $validArgs)) {
+		echo '2nd argument must be -nr or -gv' . "\n";
+		return;
+	} else {
+		$arg2 = $argv[2];
+		if ($arg2 == '-gv' && empty($argv[3])) {
+			echo '3nd argument is missing' . "\n";
+			return;
+		} else {
+			$arg3 = $argv[3]; // Session variable name
+		}
+	}
+
 	setSessionId();
 	session_start();
 	session_write_close();
-	foreach ($_SESSION as $key => $value) {
-		// Radio stations
-		if (substr($key, 0, 4) == 'http') {
-			/*DELETE:$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'],
-				'logo' => $row['logo'],	'bitrate' => $row['bitrate'], 'format' => $row['format'],
-				'home_page' => $row['home_page'], 'monitor' => $row['monitor']);
-			*/
-			echo $key . '|' .
-				$value['name'] . '|' .
-				$value['type'] . '|' .
-				$value['logo'] . '|' .
-				$value['home_page'] . '|' .
-				$value['bitrate'] . '|' .
-				$value['format'] . '|' .
-				$value['monitor'] . "\n";
-		} else {
-			// Cfg_system, etc
-			echo $key . '|' . (is_array($value) ? 'Array' : $value) . "\n";
+
+	if ($arg2 == '-gv') {
+		echo $_SESSION[$arg3] . "\n";
+	} else {
+		foreach ($_SESSION as $key => $value) {
+			// Radio stations
+			if (substr($key, 6, 1) == '/') {
+				if ($arg2 != '-nr') {
+					echo $key . '|' .
+						$value['name'] . '|' .
+						$value['type'] . '|' .
+						$value['logo'] . '|' .
+						$value['home_page'] . '|' .
+						$value['bitrate'] . '|' .
+						$value['format'] . '|' .
+						$value['monitor'] . "\n";
+				}
+			} else {
+				// Cfg_system, etc
+				echo $key . '|' . (is_array($value) ? 'Array' : $value) . "\n";
+			}
 		}
 	}
-	//DELETE:session_write_close();
 }
 
 function deleteSessionVar($argv) {
@@ -325,11 +343,6 @@ function audioFormats($option) {
 			}
 		} else {
 			echo "Device is busy, unable to detect formats\n";
-			/*DELETE:setSessionId();
-			session_start();
-			$formats = $_SESSION['audio_formats'];
-			session_write_close();
-			echo $formats . "\n";*/
 		}
 	}
 }
