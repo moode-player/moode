@@ -190,7 +190,10 @@
 
 		<div class="control-group $_feat_squeezelite">
 			<legend>Squeezelite</legend>
-			<p class="sub-legend">This service requires Logitech Media Server (LMS) to be running on the network.</p>
+			<p class="sub-legend">
+				This service requires Logitech Media Server (LMS) to be running on the network.<br>
+				<b>Note:</b> Squeezelite hogs the audio output by default and so should be the only renderer On otherwise it can interfere with the other renderers and with MPD.
+			</p>
 			<label class="control-label">Service</label>
 			<div class="controls">
 				<div class="toggle">
