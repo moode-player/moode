@@ -43,9 +43,8 @@ function getAlsaMixerName($i2sDevice) {
 			$mixerName = 'DSPVolume';
 		} else if ($_SESSION['i2soverlay'] == 'hifiberry-dacplushd') {
 			$mixerName = 'DAC';
-		// TODO: if verified add
-		//} else if ($i2sDevice == 'MERUS(tm) Amp piHAT ZW') {
-		//	$mixerName = 'A.Mstr Vol';
+		} else if ($i2sDevice == 'MERUS(tm) Amp piHAT ZW') {
+			$mixerName = 'A.Mstr Vol';
 		} else if (
 			$i2sDevice == 'Allo Katana DAC' ||
 			$i2sDevice == 'Allo Boss 2 DAC' ||

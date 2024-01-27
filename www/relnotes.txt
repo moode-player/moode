@@ -27,6 +27,7 @@ Updates
 - UPD: Add HTTP proxy option to MPD Config
 - UPD: Add disc and track to logic for showing now-playing icon in track list
 - UPD: Add SBC quality mode option to Bluetooth Control
+- UPD: Add mixer name 'A.Mstr Vol' for MERUS(tm) Amp piHAT ZW
 - UPD: Update Bluetooth to support Multiroom audio
 - UPD: Update Squeezelite to use ALSA _audioout device (support CamillaDSP)
 - UPD: Improve help text on the Configs, Preferences and Quick help
