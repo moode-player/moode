@@ -52,6 +52,7 @@ Bug fixes
 - FIX: Browser title not being updated when importing host name
 - FIX: Volume not restored correctly when Spotify Connect and CamillaDSP volume
 - FIX: Import WiFi country code from Pi Imager not working
+- FIX: Chromium fails to start after host name change
 
 ################################################################################
 #

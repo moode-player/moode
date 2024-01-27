@@ -35,6 +35,7 @@ if [[ $1 = "chg-name" ]]; then
 	if [ $2 = "host" ]; then
 		sed -i "s/$3/$4/" /etc/hostname
 		sed -i "s/$3/$4/" /etc/hosts
+		rm -rf /home/$HOME_DIR/.config/chromium/Singleton*
 	fi
 
 	if [[ $2 = "squeezelite" ]]; then
