@@ -786,7 +786,7 @@ function getUpnpCoverUrl() {
 function getMappedDbVol() {
 	phpSession('open_ro');
 
-	if (isMPD2CamillaDSPVolSyncEnabled() && doesCamillaDSPCfgHaveVolFilter()) {
+	if ($_SESSION['camilladsp'] !='off' && isMPD2CamillaDSPVolSyncEnabled()) {
 		// For CamillaDSP volume
 		$result = sqlRead('cfg_system', sqlConnect(), 'volknob');
 		$dynamicRange = $_SESSION['camilladsp_volume_range'];
