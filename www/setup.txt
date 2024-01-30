@@ -282,7 +282,7 @@ get_output_format
 ALSA output format or 'Not playing' is returned.
 
 get_volume
-Returns the Knob volume
+Returns the Knob volume.
 
 set_volume
 Sets the knob volume to value N, up or down N or mute toggle.
