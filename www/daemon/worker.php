@@ -2204,7 +2204,7 @@ function runQueuedJob() {
 				setALSAVolTo0dB($_SESSION['alsavolume_max']);
 			}
 
-			// Parse quereargs:
+			// Parse queue args:
 			$queueArgs = explode(',', $_SESSION['w_queueargs']);
 			$deviceChange = $queueArgs[0];
 			$mixerChange = $queueArgs[1];
@@ -2248,6 +2248,8 @@ function runQueuedJob() {
 
 			// Restart renderers if device (cardnum) changed
 			if ($deviceChange == '1') {
+				// TODO: Bluetooth?
+
 				if ($_SESSION['airplaysvc'] == 1) {
 					sysCmd('killall shairport-sync');
 					startAirPlay();
@@ -2398,6 +2400,7 @@ function runQueuedJob() {
 							$mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
 						}
 						changeMPDMixer($mixerType);
+
 						// CamillaDSP volume sync
 						phpSession('write', 'camilladsp_volume_sync', $volSync);
 						sysCmd('systemctl '. $serviceCmd .' mpd2cdspvolume');
@@ -2465,6 +2468,13 @@ function runQueuedJob() {
 			}
 			// Reenable HTTP server
 			setMpdHttpd();
+
+			debugLog('worker: Job ' . $_SESSION['w_queue'] . ': ' . 
+				'CAMILLA:' . ($_SESSION['camilladsp'] != 'off' ? 'on' : 'off') . ', ' .
+				'CFG_MPD:' . $cfgMPD['mixer_type'] . ', ' .
+				'SESSION:' . $_SESSION['mpdmixer']
+			);
+
 			break;
 		case 'mpdcrossfade':
 			sysCmd('mpc crossfade ' . $_SESSION['w_queueargs']);

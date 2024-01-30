@@ -513,10 +513,24 @@
 				<button id="btn-set-debuglog" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-debuglog" class="config-help-info">
-					Log debug information<br>
-					- <b>Moode startup log: </b>/var/log/moode.log<br>
-					- <b>Mount Monitor log: </b>/var/log/moode_mountmon.log
+					<b>Log files:</b><br>
+					<table class="cdsp-help-table">
+						<tr><td>Startup and Jobs</td><td>/var/log/moode.log</td></tr>
+						<tr><td>Mount monitor</td><td>/var/log/moode_mountmon.log</td></tr>
+						<tr><td>System updater</td><td>/var/log/moode_autocfg.log</td></tr>
+						<tr><td>Auto-config</td><td>/var/log/moode_update.log</td></tr>
+						<tr><td>Spotify</td><td>/var/log/moode_librespot.log</td></tr>
+						<tr><td>AirPlay</td><td>/var/log/moode_shairport-sync.log</td></tr>
+						<tr><td>Squeezelite event</td><td>/var/log/moode_slpower.log</td></tr>
+						<tr><td>Spotify event</td><td>/var/log/moode_spotevent.log</td></tr>
+						<tr><td>AirPlay event</td><td>/var/log/moode_spsevent.log</td></tr>
+						<tr><td>Play history</td><td>/var/log/moode_playhistory.log</td></tr>
+						<tr><td>WebUI Javascript</td><td>Browser console</td></tr>
+					</table>
                 </span>
+				<span class="config-help-static">
+					<b>Caution:</b> Only turn this option on when troubleshooting an issue. It can create large log files and degrade performance.
+				</span>
 			</div>
 		</div>
 	</form>
