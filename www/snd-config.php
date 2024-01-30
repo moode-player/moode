@@ -342,7 +342,8 @@ $_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] ==
 // Volume type
 // Hardware, Software, Fixed (none), CamillaDSP (null)
 if ($_SESSION['alsavolume'] != 'none') {
-	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($cfgMPD['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
+	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " .
+		($cfgMPD['mixer_type'] == 'hardware' ? "selected" : "") . ">Hardware</option>\n";
 }
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " .
 	($cfgMPD['mixer_type'] == 'software' ? "selected" : "") . ">Software</option>\n";
@@ -350,8 +351,8 @@ $_mpd_select['mixer_type'] .= "<option value=\"none\" " .
 	($cfgMPD['mixer_type'] == 'none' ? "selected" : "") . ">Fixed (0dB)</option>\n";
 if ($_SESSION['camilladsp'] != 'off') {
 	$_mpd_select['mixer_type'] .= "<option value=\"null\" " .
-		(($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? "selected" : "") . ">CamillaDSP</option>\n";
-	$_camilladsp_volume_range_hide = $cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on' ? '' : 'hide';
+		($cfgMPD['mixer_type'] == 'null' ? "selected" : "") . ">CamillaDSP</option>\n";
+	$_camilladsp_volume_range_hide = ($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? '' : 'hide';
 	$_select['camilladsp_volume_range'] .= "<option value=\"30\" " . (($_SESSION['camilladsp_volume_range'] == '30') ? "selected" : "") . ">30 dB</option>\n";
 	$_select['camilladsp_volume_range'] .= "<option value=\"40\" " . (($_SESSION['camilladsp_volume_range'] == '40') ? "selected" : "") . ">40 dB</option>\n";
 	$_select['camilladsp_volume_range'] .= "<option value=\"50\" " . (($_SESSION['camilladsp_volume_range'] == '50') ? "selected" : "") . ">50 dB</option>\n";
