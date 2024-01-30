@@ -51,7 +51,7 @@ function startAirPlay() {
 
 	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
-		$logging = '-vv';
+		$logging = '-v';
 		$logFile = SHAIRPORT_SYNC_LOG;
 	} else {
 		$logging = '';
