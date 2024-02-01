@@ -1493,7 +1493,7 @@ function chkBtActive() {
 		        setALSAVolTo0dB($_SESSION['alsavolume_max']);
 			}
 	        if ($_SESSION['camilladsp'] != 'off') {
-	            setCDSPVolTo0dB();
+	            setCDSPVolTo0dB('-6.0'); // Attenuate a bit for Bluetooth volume
 	        }
 
 			// Multiroom receivers
@@ -2469,7 +2469,7 @@ function runQueuedJob() {
 			// Reenable HTTP server
 			setMpdHttpd();
 
-			debugLog('worker: Job ' . $_SESSION['w_queue'] . ': ' . 
+			debugLog('worker: Job ' . $_SESSION['w_queue'] . ': ' .
 				'CAMILLA:' . ($_SESSION['camilladsp'] != 'off' ? 'on' : 'off') . ', ' .
 				'CFG_MPD:' . $cfgMPD['mixer_type'] . ', ' .
 				'SESSION:' . $_SESSION['mpdmixer']
