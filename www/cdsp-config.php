@@ -194,6 +194,9 @@ foreach ($configs as $configFile => $configName) {
 	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $configFile, $selected, ucfirst($configName));
 }
 
+$ymlConfig = yaml_parse_file($cdsp->getCurrentConfigFileName());
+$_config_description = key_exists('description', $ymlConfig) ? $ymlConfig['description'] : '';
+
 $configs = $cdsp->getAvailableConfigsRaw();
 $_selected_config = null;
 foreach ($configs as $configFile => $configName) {

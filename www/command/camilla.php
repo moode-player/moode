@@ -23,8 +23,10 @@ require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/cdsp.php';
 require_once __DIR__ . '/../inc/mpd.php';
 
+const CAMILLA_CONFIG_DIR = '/usr/share/camilladsp';
+
 switch ($_GET['cmd']) {
-	case 'camilladsp_setconfig':
+	case 'cdsp_set_config':
 		if (isset($_POST['cdspconfig']) && !empty($_POST['cdspconfig'])) {
 			phpSession('open');
 			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
@@ -44,6 +46,10 @@ switch ($_GET['cmd']) {
 			sendEngCmd('cdsp_config_update_failed');
 			workerLog('camilla.php: Error: $_POST[cdspconfig] missing or empty');
 		}
+		break;
+	case 'cdsp_get_config_desc':
+		$ymlConfig = yaml_parse_file(CAMILLA_CONFIG_DIR . '/configs/'. $_GET['selected_config'] . '.yml');
+		echo json_encode(key_exists('description', $ymlConfig) ? $ymlConfig['description'] : '');
 		break;
 	default:
 		echo 'Unknown command';

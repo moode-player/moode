@@ -2829,7 +2829,7 @@ $(document).on('click', '.context-menu a', function(e) {
 
     		$.ajax({
     			type: 'POST',
-    			url: 'command/camilla.php?cmd=camilladsp_setconfig',
+    			url: 'command/camilla.php?cmd=cdsp_set_config',
     			async: true,
     			cache: false,
     			data: {'cdspconfig': selectedConfig},

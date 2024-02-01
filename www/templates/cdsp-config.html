@@ -45,6 +45,9 @@
 					$_select[cdsp_mode]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="cdsp-config-description" class="config-help-static">
+					$_config_description
+				</span>
 				<span id="info-cdsp-mode" class="config-help-info">
 					<b>Off:</b> No signal processing will occur.<br>
 					<b>Custom:</b> Manually create a CamillaDSP setup for example when using multiple output devices.<br>
@@ -183,8 +186,8 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-config" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span class="config-help-static">$_check_msg_config</span>
 				<span id="info-cdsp-config" class="config-help-info">
-					View the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp#pipeline" target="_blank">CamillaDSP documentation</a> for information on Pipeline configuration files.<br>
-					<b>Default configurations</b><br>
+					View the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp?tab=readme-ov-file#table-of-contents" target="_blank">CamillaDSP documentation</a> for information on Pipeline configuration files.<br>
+					<b>Sample configurations</b><br>
 					<table class="cdsp-help-table">
 						<tr><td>ASH-IR R02 Control Room</td><td>Binaural Room Impulse Response R02 Control Room from the ASH-IR dataset (without HpCF)</td></tr>
 						<tr><td>Crossfeed Bs2b</td><td>Bs2b from Wang-Yue which contains 5 setting sets. Refer to link for more information</td></tr>
@@ -192,18 +195,17 @@
 						<tr><td>Crossfeed MPM</td><td>Mikhail Phonitor Mini (MPM). Mikhail Naganov reverse engineered SPL Phonitor Mini Crossfeed with DSP by Ebert-Hanke</td></tr>
 						<tr><td>Crossfeed Natural</td><td>Ebert-Hanke implementation of Natural roughly modeled after some publications by Jan Meier</td></tr>
 						<tr><td>Crossfeed Chu Moy</td><td>Ebert-Hanke implementation of Pow Chu Moy Crossfeed based on Linkwitz</td></tr>
-						<tr><td>Flat</td><td>Empty config (no DSP)</td></tr>
+						<tr><td>Flat</td><td>No signal processing</td></tr>
 						<tr><td>Loudness</td><td>Loudness volume curve with 3dB high boost, 6dB low boost and -3dB gain</td></tr>
 						<tr><td>MS-Matrix Narrow</td><td>M-S (Mid-Side) matrix with side signal reduced</td></tr>
 						<tr><td>MS-Matrix Wide</td><td>M-S (Mid-Side) matrix with side signal increased</td></tr>
 						<tr><td>PEQ 10-Band</td><td>Generic example of a 10 band parametric equalizer</td></tr>
-						<tr><td>Polarity Inversion</td><td>Invert channel +/- polarity</td></tr>
-						<tr><td>Polarity Inversion with VC</td><td>Invert channel +/- polarity and use CamillaDSP volume control</td></tr>
+						<tr><td>Polarity Inversion</td><td>Invert +/- polarity on both channels</td></tr>
+						<tr><td>ProtoDAC</td><td>Invert +/- polarity on both channels and apply dither to 16 bit samples</td></tr>
 						<tr><td>Trifield 3-channel</td><td>Michael Gerzon derived Trifield decoder. Requires at least 3 channels available for output</td></tr>
-						<tr><td>Volume Control</td><td>CamillaDSP volume control</td></tr>
 					</table>
 				</span>
-				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="check_auto" value="1"  style="display:none" ></button>
+				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="check_auto" value="1" style="display:none" ></button>
 			</div>
 
 			<div class="controls">
