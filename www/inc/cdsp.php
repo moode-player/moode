@@ -594,8 +594,8 @@ class CamillaDsp {
 function isMPD2CamillaDSPVolSyncEnabled() {
 	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
 }
-function setCDSPVolTo0dB () {
-    sysCmd("sed -i '0,/- -.*/s//- 0.0/' /var/lib/cdsp/statefile.yml");
+function setCDSPVolTo0dB ($vol = '0.0') {
+    sysCmd("sed -i '0,/- -.*/s//- " . $vol . "/' /var/lib/cdsp/statefile.yml");
 }
 function updCDSPConfig($newMode, $currentMode, $cdsp) {
     if ($newMode != $currentMode && ($newMode == 'off' || $currentMode == 'off')) {
