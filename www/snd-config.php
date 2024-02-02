@@ -552,13 +552,10 @@ if ($_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {
 	$result = $cdsp->checkConfigFile($_SESSION['camilladsp']);
 	$msg = implode('<br>', $result['msg']);
 	if ($result['valid'] == CDSP_CHECK_NOTFOUND) {
-		//$_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
 		$_config_check = '<span><span style="color: red">&#10007;</span> ' . $msg . '</span>';
 	} else if ($result['valid'] == CDSP_CHECK_VALID) {
-		//$_config_check = '<div class="config-help-static"><span style="color: green">&check;</span> ' . $output . '</div>';
 		$_config_check = '<span><span style="color: green">&check;</span> ' . $msg . '</span>';
 	} else {
-		//$_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
 		$_config_check = '<span><span style="color: red">&#10007;</span> ' . $msg . '</span>';
 	}
 }
