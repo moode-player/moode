@@ -434,15 +434,18 @@
 		</p>
 
 		<div class="control-group">
-			<label class="control-label" for="camilladsp">CamillaDSP</label>
+			<label class="control-label" for="cdsp-mode">CamillaDSP</label>
 			<div class="controls">
-				<select id="camilladsp" class="config-select-large" name="camilladsp">
-					$_select[camilladsp]
+				<select id="cdsp-mode" class="config-select-large" name="cdsp_mode">
+					$_select[cdsp_mode]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_camilladsp" value="novalue" $_camilladsp_set_disabled>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-camilladsp" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				$_camilladsp_config_check
-				<span id="info-camilladsp" class="config-help-info">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cdsp_mode" value="novalue" $_cdsp_mode_set_disabled>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="cdsp-config-description" class="config-help-static">
+					$_config_description
+					$_config_check
+				</span>
+				<span id="info-cdsp-mode" class="config-help-info">
 					CamillaDSP is a general purpose Digital Signal Processing engine for routing and filtering sound. It can be used for building crossovers for active speakers, performing room correction, equalization or volume control. CamillaDSP is maintained by Henrik Enquist. Integration into moOde was done by @bitlab.<br>
 					Feature summary:<br>
 					- IIR filters (BiQuad)<br>
@@ -459,7 +462,7 @@
 			</div>
 
 			<div class="controls">
-				<a href="cdsp-config.php"><button class="btn btn-medium btn-primary config-btn" $_camilladsp_set_disabled>Edit</button></a>
+				<a href="cdsp-config.php"><button class="btn btn-medium btn-primary config-btn" $_cdsp_mode_set_disabled>Edit</button></a>
 				<span class="config-btn-after">CamillaDSP settings</span>
 			</div>
 

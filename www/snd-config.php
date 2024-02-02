@@ -26,9 +26,9 @@ require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
+phpSession('open');
 $dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
-phpSession('open');
 
 // AUDIO OUTPUT
 
@@ -290,11 +290,11 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 // EQUALIZERS
 
 // CamillaDSP
-if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
+if (isset($_POST['update_cdsp_mode']) && $_POST['cdsp_mode'] != $_SESSION['camilladsp']) {
 	$currentMode = $_SESSION['camilladsp'];
-	$newMode = $_POST['camilladsp'];
-	phpSession('write', 'camilladsp', $_POST['camilladsp']);
-	$cdsp->selectConfig($_POST['camilladsp']);
+	$newMode = $_POST['cdsp_mode'];
+	phpSession('write', 'camilladsp', $_POST['cdsp_mode']);
+	$cdsp->selectConfig($_POST['cdsp_mode']);
 
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
@@ -541,18 +541,25 @@ $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_ht
 $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
-	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, ucfirst($config_name));
+	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, ucfirst($config_name));
 }
+// Display config description
+$ymlConfig = yaml_parse_file($cdsp->getCurrentConfigFileName());
+$_config_description = key_exists('description', $ymlConfig) ? $ymlConfig['description'] . '<br>' : '';
+
 // Check if the config file is valid
 if ($_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {
 	$result = $cdsp->checkConfigFile($_SESSION['camilladsp']);
-	$output = implode('<br>', $result['msg']);
+	$msg = implode('<br>', $result['msg']);
 	if ($result['valid'] == CDSP_CHECK_NOTFOUND) {
-		$_camilladsp_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
+		//$_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
+		$_config_check = '<span><span style="color: red">&#10007;</span> ' . $msg . '</span>';
 	} else if ($result['valid'] == CDSP_CHECK_VALID) {
-		$_camilladsp_config_check = '<div class="config-help-static"><span style="color: green">&check;</span> ' . $output . '</div>';
+		//$_config_check = '<div class="config-help-static"><span style="color: green">&check;</span> ' . $output . '</div>';
+		$_config_check = '<span><span style="color: green">&check;</span> ' . $msg . '</span>';
 	} else {
-		$_camilladsp_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
+		//$_config_check = '<div class="config-help-static"><span style="color: red">&#10007;</span> ' . $output . '</div>';
+		$_config_check = '<span><span style="color: red">&#10007;</span> ' . $msg . '</span>';
 	}
 }
 // Parametric equalizer
