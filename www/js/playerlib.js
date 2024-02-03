@@ -332,11 +332,11 @@ function engineMpd() {
                         notify('mpderror', MPD.json['error']['message'] + errorCode);
                     }
 				}
-				// MPD output --> Bluetooth but no actual BT connection
+				// MPD output -> Bluetooth but no actual BT connection
 				else if (MPD.json['error'] == 'Failed to open "ALSA bluetooth" (alsa); Failed to open ALSA device "btstream": No such device') {
 					notify('mpderror', 'Failed to open ALSA bluetooth output, no such device or connection');
 				}
-				// Client connects before mpd started by worker ?
+				// Client connects before MPD started by worker ?
 				else if (MPD.json['error'] == 'SyntaxError: JSON Parse error: Unexpected EOF') {
 					notify('mpderror', 'JSON Parse error: Unexpected EOF');
 				}
@@ -416,7 +416,7 @@ function engineMpdLite() {
 			// Error of some sort
 			else {
 				setTimeout(function(data) {
-					// Client connects before mpd started by worker, various other issues
+					// Client connects before MPD started by worker, various other issues
 					debugLog('engineMpdLite(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 
                     // TEST: Show reconnect overlay when on configs
