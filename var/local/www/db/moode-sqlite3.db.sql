@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Jan 9 11:01:21 2024
+-- File generated with SQLiteStudio v3.1.0 on Mon Feb 5 17:11:07 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -77,7 +77,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (12, 'alsa_output_mode', 'plugh
 INSERT INTO cfg_system (id, param, value) VALUES (13, 'rotaryenc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (16, 'res_plugins_url', 'https://raw.githubusercontent.com/moode-player/plugins/main');
+INSERT INTO cfg_system (id, param, value) VALUES (16, 'res_plugin_upd_url', 'https://raw.githubusercontent.com/moode-player/plugins/main');
 INSERT INTO cfg_system (id, param, value) VALUES (17, 'rbactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (18, 'adevname', 'Pi HDMI 1');
 INSERT INTO cfg_system (id, param, value) VALUES (19, 'clkradio_mode', 'Disabled');

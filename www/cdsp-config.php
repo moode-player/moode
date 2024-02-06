@@ -154,9 +154,11 @@ else if ($selectedCoeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
 	$_SESSION['notify']['title'] = 'Configuration removed';
 	$_SESSION['notify']['msg'] = $selectedCoeff;
 	$selectedCoeff = null;
-}
-else if ($selectedCoeff && isset($_POST['info']) && $_POST['info'] == '1') {
-// no implementation required, just a placeholder
+// Update to latest sample configs
+} else if (isset($_POST['install_sample_configs']) && $_POST['install_sample_configs'] == '1') {
+	submitJob('camilladsp_sample_configs','','Sample configs updated', 'Restart required');
+} else if ($selectedCoeff && isset($_POST['info']) && $_POST['info'] == '1') {
+	// no implementation required, just a placeholder
 }
 
 // camillagui status toggle

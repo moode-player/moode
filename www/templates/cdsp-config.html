@@ -262,7 +262,7 @@
 			<!-- ids and names aren't correct: (copy of above now)-->
 			<div class="controls">
 				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
-				<button class="btn btn-medium btn-primary config-btn config-btn" type="submit" name="export" value="1">Download</button>
+				<button class="btn btn-medium btn-primary config-btn" type="submit" name="export" value="1">Download</button>
 				<label for="coeffs-file" id="choose-coeff-cfg" class="btn btn-medium btn-primary config-btn">Upload</label>
 				<input type="file" id="coeffs-file" accept=".wav,.txt,.raw,.csv" name="coeffs_file" style="display:none" onchange="$('#btn-import-coeff').click();">
 				<button id="btn-import-coeff" class="btn btn-medium btn-primary  config-btn btn-submit" type="submit" name="import" value="1"  style="display:none"</button>
@@ -282,6 +282,19 @@
 		<legend>Extensions</legend>
 		<div class="control-group">
 			$extensions_html
+		</div>
+	</form>
+
+	<form class="form-horizontal" method="post">
+		<div class="control-group">
+			<label class="control-label">Sample configurations</label>
+			<div class="controls">
+				<a data-toggle="modal" href="#install-sample-configs"><button class="btn btn-medium btn-primary config-btn">Update</button></a>
+				<span class="config-help-static">
+					Update to the latest set of sample Pipeline configuration and coefficient files.<br>
+					<b>Caution:</b> A confirmation prompt will appear and if confirmed the latest set of configuration and coefficient files will be installed and will overwrite existing files of the same name. Be sure to first backup your CamillaDSP files using the BACKUP function on System Config.
+				</span>
+			</div>
 		</div>
 	</form>
 
@@ -370,6 +383,19 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="create_new_pipeline" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="install-sample-configs" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="install-sample-configs-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Update to Latest Sample Configurations?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="install_sample_configs" value="1">Yes</button>
 		</div>
 	</div>
 </form>

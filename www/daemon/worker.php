@@ -2476,6 +2476,12 @@ function runQueuedJob() {
 			);
 
 			break;
+		case 'camilladsp_sample_configs':
+			// https://raw.githubusercontent.com/moode-player/plugins/main
+			// $1 = component_name	camilladsp
+			// $2 - plugin_name		v2-sample-configs
+			sysCmd('/var/www/util/plugin-updater.sh "camilladsp" "v2-sample-configs"');
+			break;
 		case 'mpdcrossfade':
 			sysCmd('mpc crossfade ' . $_SESSION['w_queueargs']);
 			break;
