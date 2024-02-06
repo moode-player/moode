@@ -30,6 +30,7 @@ Updates
 - UPD: Add mixer name 'A.Mstr Vol' for MERUS(tm) Amp piHAT ZW
 - UPD: Update Bluetooth to support Multiroom audio
 - UPD: Update Squeezelite to use ALSA _audioout device (support CamillaDSP)
+- UPD: Update CDSP Config with new option to Update to latest sample configs
 - UPD: Improve help text on the Configs, Preferences and Quick help
 - UPD: Improve Audioinfo line height so a bit more info shows on screen
 - UPD: Allow for month (YYYYMM) in Date tag to improve Album/Year sort
