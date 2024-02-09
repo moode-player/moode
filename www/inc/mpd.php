@@ -585,7 +585,7 @@ function changeMPDMixer($mixer) {
         setALSAVolTo0dB($_SESSION['alsavolume_max']);
 	}
     if ($_SESSION['camilladsp'] != 'off' && $mixer != 'camilladsp') {
-        setCDSPVolTo0dB();
+        CamillaDSP::setCDSPVolTo0dB();
     }
 
 	updMpdConf($_SESSION['i2sdevice']);
@@ -786,7 +786,7 @@ function getUpnpCoverUrl() {
 function getMappedDbVol() {
 	phpSession('open_ro');
 
-	if ($_SESSION['camilladsp'] !='off' && isMPD2CamillaDSPVolSyncEnabled()) {
+	if (CamillaDsp::isMPD2CamillaDSPVolSyncEnabled()) {
 		// For CamillaDSP volume
 		$result = sqlRead('cfg_system', sqlConnect(), 'volknob');
 		$dynamicRange = $_SESSION['camilladsp_volume_range'];

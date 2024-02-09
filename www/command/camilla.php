@@ -39,7 +39,8 @@ switch ($_GET['cmd']) {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			}
 
-			updCDSPConfig($newMode, $currentMode, $cdsp);
+			$cdsp->updCDSPConfig($newMode, $currentMode, $cdsp);
+			unset($cdsp);
 		} else {
 			sendEngCmd('cdsp_config_update_failed');
 			workerLog('camilla.php: Error: $_POST[cdspconfig] missing or empty');
@@ -49,6 +50,7 @@ switch ($_GET['cmd']) {
 		phpSession('open_ro');
 		$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 		echo json_encode($cdsp->getConfigDescription($_GET['selected_config']));
+		unset($cdsp);
 		break;
 	default:
 		echo 'Unknown command';

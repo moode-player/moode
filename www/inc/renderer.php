@@ -87,7 +87,7 @@ function stopAirPlay() {
 
 	// Local
 	sysCmd('/var/www/vol.sh -restore');
-	if (isMPD2CamillaDSPVolSyncEnabled()) {
+	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
 		sysCmd('systemctl restart mpd2cdspvolume');
 	}
 	// Multiroom receivers
@@ -159,7 +159,7 @@ function stopSpotify() {
 
 	// Local
 	sysCmd('/var/www/vol.sh -restore');
-	if (isMPD2CamillaDSPVolSyncEnabled()) {
+	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
 		sysCmd('systemctl restart mpd2cdspvolume');
 	}
 	// Multiroom receivers
@@ -186,7 +186,7 @@ function stopSqueezeLite() {
 	sysCmd('systemctl stop squeezelite');
 
 	sysCmd('/var/www/vol.sh -restore');
-	if (isMPD2CamillaDSPVolSyncEnabled()) {
+	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
 		sysCmd('systemctl restart mpd2cdspvolume');
 	}
 

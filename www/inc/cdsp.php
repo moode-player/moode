@@ -592,6 +592,41 @@ class CamillaDsp {
         return $description;
     }
 
+    function updCDSPConfig($newMode, $currentMode, $cdsp) {
+        if ($newMode != $currentMode && ($newMode == 'off' || $currentMode == 'off')) {
+            // Switching to/from Off
+            if ($newMode == 'off') {
+                $mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
+                $notifyMsg = ',Volume type changed to:<br>' . ucfirst($mixerType);
+                $queueArg1 = ',change_mixer_to_default';
+            } else {
+                $mixerType = 'null';
+                $notifyMsg = ',Volume type changed to:<br>CamillaDSP';
+                $queueArg1 = ',change_mixer_to_camilladsp';
+            }
+
+            // We update it here so the "Volume type" field gets refreshed when the
+            // page returns after the CamillaDSP config is changed in the Equalizers
+            // section of Audio Config
+            sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
+
+            sendEngCmd('cdsp_updating_config' . $notifyMsg);
+            submitJob('camilladsp', $newMode . $queueArg1);
+        } else {
+            // Switching between configs
+            $cdsp->reloadConfig();
+            sendEngCmd('cdsp_config_updated' . ',' . $newMode);
+        }
+    }
+
+    static function isMPD2CamillaDSPVolSyncEnabled() {
+    	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
+    }
+
+    static function setCDSPVolTo0dB ($vol = '0.0') {
+        sysCmd("sed -i '0,/- -.*/s//- " . $vol . "/' /var/lib/cdsp/statefile.yml");
+    }
+
     static function calcMappedDbVol($volume, $dynamic_range) {
         $x = $volume/100.0;
         $y = pow(10, $dynamic_range/20);
@@ -605,41 +640,6 @@ class CamillaDsp {
             $y = 0.000001; // NOTE: Must be same value in /usr/local/bin/mpd2cdspvolume function lin_vol_curve()
         }
         return 20* log10($y);
-    }
-}
-
-// TODO: Change these to cdsp-> member functions
-
-function isMPD2CamillaDSPVolSyncEnabled() {
-	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
-}
-function setCDSPVolTo0dB ($vol = '0.0') {
-    sysCmd("sed -i '0,/- -.*/s//- " . $vol . "/' /var/lib/cdsp/statefile.yml");
-}
-function updCDSPConfig($newMode, $currentMode, $cdsp) {
-    if ($newMode != $currentMode && ($newMode == 'off' || $currentMode == 'off')) {
-        // Switching to/from Off
-        if ($newMode == 'off') {
-            $mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
-            $notifyMsg = ',Volume type changed to:<br>' . ucfirst($mixerType);
-            $queueArg1 = ',change_mixer_to_default';
-        } else {
-            $mixerType = 'null';
-            $notifyMsg = ',Volume type changed to:<br>CamillaDSP';
-            $queueArg1 = ',change_mixer_to_camilladsp';
-        }
-
-        // We update it here so the "Volume type" field gets refreshed when the
-        // page returns after the CamillaDSP config is changed in the Equalizers
-        // section of Audio Config
-        sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
-
-        sendEngCmd('cdsp_updating_config' . $notifyMsg);
-        submitJob('camilladsp', $newMode . $queueArg1);
-    } else {
-        // Switching between configs
-        $cdsp->reloadConfig();
-        sendEngCmd('cdsp_config_updated' . ',' . $newMode);
     }
 }
 

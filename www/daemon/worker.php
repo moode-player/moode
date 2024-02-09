@@ -661,7 +661,7 @@ if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 
 // Report MPD mixer name
 $mixerType = ucfirst($_SESSION['mpdmixer']);
-$mixerType = isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerType;
+$mixerType = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerType;
 $mixerType = $mixerType == 'None' ? 'Fixed (0dB)' : $mixerType;
 workerLog('worker: Mixer type     ' . $mixerType);
 
@@ -791,7 +791,7 @@ if ($_SESSION['first_use_help'] == 'y,y') {
 // MPD/CamillaDSP volume sync
 workerLog('worker: MPD CDSP volsync:   ' . lcfirst($_SESSION['camilladsp_volume_sync']));
 workerLog('worker: MPD CDSP volrange:  ' . $_SESSION['camilladsp_volume_range'] . ' dB');
-$serviceCmd = isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
+$serviceCmd = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
 sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
 //----------------------------------------------------------------------------//
@@ -1493,7 +1493,7 @@ function chkBtActive() {
 		        setALSAVolTo0dB($_SESSION['alsavolume_max']);
 			}
 	        if ($_SESSION['camilladsp'] != 'off') {
-	            setCDSPVolTo0dB('-6.0'); // Attenuate a bit for Bluetooth volume
+	            CamillaDSP::setCDSPVolTo0dB('-6.0'); // Attenuate a bit for Bluetooth volume
 	        }
 
 			// Multiroom receivers
@@ -2210,7 +2210,7 @@ function runQueuedJob() {
 			$mixerChange = $queueArgs[1];
 
 			// Start Camilla volume sync if indicated
-			$serviceCmd = isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
+			$serviceCmd = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
 			sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
 			// Restart MPD
@@ -2234,7 +2234,7 @@ function runQueuedJob() {
 				} else {
 					// hardware, software, fixed
 					if ($_SESSION['camilladsp'] != 'off') {
-						setCDSPVolTo0dB();
+						CamillaDSP::setCDSPVolTo0dB();
 					}
 					sysCmd('/var/www/vol.sh -restore');
 				}

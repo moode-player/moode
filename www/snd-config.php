@@ -300,7 +300,7 @@ if (isset($_POST['update_cdsp_mode']) && $_POST['cdsp_mode'] != $_SESSION['camil
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
-	updCDSPConfig($newMode, $currentMode, $cdsp);
+	$cdsp->updCDSPConfig($newMode, $currentMode, $cdsp);
 }
 // Parametric eq
 $eqfa12p = Eqp12($dbh);
