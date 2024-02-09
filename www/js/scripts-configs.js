@@ -326,8 +326,7 @@ jQuery(document).ready(function($){ 'use strict';
         GLOBAL.backupCreate = true;
     });
 
-    // CamillaDSP get config description
-    // Display it on cdsp-config under the dropdown
+    // CamillaDSP 2 config description
     $('#cdsp-mode').change(function(e) {
         var selectedConfig = $('#cdsp-mode :selected').text();
         $.getJSON('command/camilla.php?cmd=cdsp_get_config_desc&selected_config=' + selectedConfig, function(data) {

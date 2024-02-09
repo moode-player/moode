@@ -34,14 +34,18 @@ const CGUI_CHECK_INACTIVE = 3;
 const CGUI_CHECK_ERROR = -2;
 const CGUI_CHECK_NOTFOUND = -1;
 
-const CDSP_VOLFILTER_MSG = 'Set Volume type to CamillaDSP';
-
 class CamillaDsp {
 
     private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.conf';
     private $CAMILLA_CONFIG_DIR = '/usr/share/camilladsp';
     private $CAMILLA_EXE = '/usr/local/bin/camilladsp';
     private $CAMILLAGUI_WORKING_CONGIG = '/usr/share/camilladsp/working_config.yml';
+    private $DEFAULT_OPTIONS = array(
+    	'off' => 'Signal processing is off',
+    	'custom' => 'Manually create a CamillaDSP setup for example when using multiple output devices',
+        'quick convolution filter' => 'Use the selection in "Quick convolution filter" below to provide basic convolution with gain.',
+    	'__quick_convolution__.yml' => 'Use the selection in "Quick convolution filter" below to provide basic convolution with gain.'
+    );
     private $device = NULL;
     private $configfile = NULL;
     private $quickConvolutionConfig = ";;;";
@@ -356,8 +360,8 @@ class CamillaDsp {
         return $mediaInfo;
     }
 
-    function getConfigLabel($configname) {
-        $selectedConfigLabel = ($configname != '__quick_convolution__.yml') ? $configname : 'Quick convolution filter';
+    function getConfigLabel($configName) {
+        $selectedConfigLabel = ($configName != '__quick_convolution__.yml') ? $configName : 'Quick convolution filter';
         return $selectedConfigLabel;
     }
 
@@ -571,6 +575,21 @@ class CamillaDsp {
     }
 
     function restore($values) {
+    }
+
+    // CamillaDSP 2 config description
+    function getConfigDescription($config) {
+        $defOptions = $this->DEFAULT_OPTIONS;
+        if (key_exists(lcfirst($config), $defOptions)) {
+        	$description = $defOptions[lcfirst($config)];
+        } else {
+            $ext = substr($config, -4) != '.yml' ? '.yml' : '';
+        	$parsedConfig = yaml_parse_file($this->CAMILLA_CONFIG_DIR . '/configs/' . $config . $ext);
+        	$description = key_exists('description', $parsedConfig) ?
+        		$parsedConfig['description'] :
+        		'No description available';
+        }
+        return $description;
     }
 
     static function calcMappedDbVol($volume, $dynamic_range) {

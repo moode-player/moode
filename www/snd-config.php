@@ -543,9 +543,8 @@ foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
 	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, ucfirst($config_name));
 }
-// Display config description
-$ymlConfig = yaml_parse_file($cdsp->getCurrentConfigFileName());
-$_config_description = key_exists('description', $ymlConfig) ? $ymlConfig['description'] . '<br>' : '';
+// CamillaDSP 2 config description
+$_config_description = $cdsp->getConfigDescription($_SESSION['camilladsp']);
 
 // Check if the config file is valid
 if ($_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {

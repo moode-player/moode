@@ -23,8 +23,6 @@ require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/cdsp.php';
 require_once __DIR__ . '/../inc/mpd.php';
 
-const CAMILLA_CONFIG_DIR = '/usr/share/camilladsp';
-
 switch ($_GET['cmd']) {
 	case 'cdsp_set_config':
 		if (isset($_POST['cdspconfig']) && !empty($_POST['cdspconfig'])) {
@@ -48,8 +46,9 @@ switch ($_GET['cmd']) {
 		}
 		break;
 	case 'cdsp_get_config_desc':
-		$ymlConfig = yaml_parse_file(CAMILLA_CONFIG_DIR . '/configs/'. $_GET['selected_config'] . '.yml');
-		echo json_encode(key_exists('description', $ymlConfig) ? $ymlConfig['description'] : '');
+		phpSession('open_ro');
+		$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+		echo json_encode($cdsp->getConfigDescription($_GET['selected_config']));
 		break;
 	default:
 		echo 'Unknown command';
