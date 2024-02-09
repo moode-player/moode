@@ -40,7 +40,7 @@ WiFi SSID or Access Point password.
   2. SSH and userid/password are REQUIRED for correct operation of moOde. Failure
   to set these will result in a non-functional player and WebUI.
 
-- An Access Point password can be set using the Network Configuration screen
+- An Access Point password must be set using the Network Configuration screen
   after accessing the moOde WebUI, or before first boot via a moodecfg.ini
   file as described in the CUSTOM CONFIGURATIONS section.
 
