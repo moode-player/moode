@@ -2,68 +2,61 @@
 #
 #  Setup Guide for moOde audio player
 #
-#  These instructions are designed for an initial configuration of moOde audio
-#  player. Additional configuration help is provided within the player via Menu,
-#  Quick help and the (i) information buttons.
-#
-#  Updated: 2023-05-09
-#
+#  Updated: 2024-02-10
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
 ################################################################################
 
 GENERAL INFORMATION
 
-Access the moOde WebUI using a Browser and one of the URL's below. Configuration
-and other options are available via the "m" moOde menu.
+Access moOde using a Browser and one of the URL's below. After opening moOde
+in the Browser use the IOS or Android "Save to Home Screen" option to create a
+moOde App on your home screen. There is no need to download anything.
+http://moode, http://moode.local or http://IP_ADDRESS
 
-- http://moode
-- http://moode.local
-- http://IP_ADDRESS
+OPERATING ISTRUCTIONS
 
-An explanation of how to operate moOde audio player is contained in Quick help
-located on the moOde menu and also at the link below.
+Instructions for configuring and operating moOde are contained in Quick help
+which is located on the "m" menu and at the link below.
 https://github.com/moode-player/docs/blob/main/Quickhelp.pdf
 
-SECURITY AND OPERATING SYSTEM (OS) IMAGE
+MOODE OS IMAGE
 
-For improved security the OS image does not contain the userid pi, SSH service,
-WiFi SSID or Access Point password.
+For improved security the OS image does not contain a userid, WiFi SSID or
+Access Point password, and Secure Shell (SSH) access is disabled.
 
-  *** READ 1 & 2 BELOW ***
+  1. REQUIRED: The official Raspberry Pi Imager is required to enable SSH,
+  create a userid and password and optionally set the host name and WiFi SSID
+  and password. If a host name is not set in the Imager then the default
+  host name "moode" will be used.
 
-  1. The official Raspberry Pi Imager is REQUIRED to enable SSH, create a userid
-  and password and optionally set the host name and WiFi SSID and password. If a
-  host name is not set in the Imager then the default hostname "moode" will be
-  used.
+  2. REQUIRED: Userid, password and SSH are required otherwise moOde will not
+  function correctly.
 
-  2. SSH and userid/password are REQUIRED for correct operation of moOde. Failure
-  to set these will result in a non-functional player and WebUI.
+  3. REQUIRED: An Access Point password is required and is set after first boot
+  in the Network Configuration screen. This allows moOde to still be accessable
+  if it cannot connect to Ethernet or any configrred WiFi SSID's.
 
-- An Access Point password must be set using the Network Configuration screen
-  after accessing the moOde WebUI, or before first boot via a moodecfg.ini
-  file as described in the CUSTOM CONFIGURATIONS section.
-
-- The moOde OS images are listed in the "Media Player OS" category of the Pi
-  Imager, or if they were downloaded directly via the Download page at
-  http://moodeaudio.org they can be selected via the "Use custom" category.
+- OS images are listed in the "Media Player OS" category of the Raspberry Pi
+  Imager, or if they were downloaded directly from moodeaudio.org they can be
+  selected via the "Use custom" category in the Imager.
 
 - Refer to the links below for more information on operating system security
   and how to download and use the Raspberry Pi Imager.
   https://www.raspberrypi.com/software/
   https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/
 
-To access the OS command console use Secure Shell (SSH). An easy to use WebSSH
-terminal is available in the WebUI, System Config screen.
+To access the OS command console use SSH. An easy to use WebSSH terminal is
+available in the System Config screen.
 
 ACCESS POINT (AP) MODE
 
-To use to Access Point (AP) mode which is moOde's private 2.4 GHz WiFi network
+To use Access Point (AP) mode which is moOde's private 2.4 GHz WiFi network
 refer to the settings below.
 
 - IP address    172.24.1.1
 - SSID          Moode
-- Password      Refer to the SECURITY section
+- Password      As set in Network Config screen
 - Channel       6
 
 AP mode starts automatically when any of the following are true.
