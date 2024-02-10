@@ -234,6 +234,7 @@
                     <li><a href="javascript:audioInfoPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
 					<li id="sysinfo-menu-item"><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-file-alt sx"></i> System info</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fa-solid fa-sharp fa-info sx"></i> Quick help</a></li>
+                    <li class="context-menu"><a href="./setup.txt" class="target-blank-link" target="_blank"><i class="fa-solid fa-sharp fa-info sx"></i> Setup guide</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="fa-solid fa-sharp fa-info sx"></i> About</a></li>
 					<li><a href="javascript:location.reload(true); void 0"><i class="fa-solid fa-sharp fa-redo sx"></i> Refresh</a></li>
 					<li><a href="#power-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-power-off sx"></i> Power</a></li>
