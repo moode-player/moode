@@ -31,7 +31,8 @@ Access Point password, and Secure Shell (SSH) access is disabled.
   host name "moode" will be used.
 
   2. REQUIRED: Userid, password and SSH are required otherwise moOde will not
-  function correctly.
+  function correctly. When enabling SSH, select "Use password authentication"
+  which means the password specified for the userid is to be used. 
 
   3. REQUIRED: An Access Point password is required and is set after first boot
   in the Network Configuration screen. This allows moOde to still be accessable
