@@ -40,6 +40,7 @@ Updates
 - UPD: Display month name in Audio info if Date tag contains YYYYMM
 - UPD: Trim leading zero from track number in Tag/Album views (for CUE)
 - UPD: Refactor REST API commands (refer to Setup Guide for info)
+- UPD: Provide visual feedback when play controls are clicked
 
 Bug fixes
 
