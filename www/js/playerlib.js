@@ -222,6 +222,13 @@ function debugLog(msg) {
 // MPD commands
 function sendMpdCmd(cmd, async) {
 	if (typeof(async) === 'undefined') {async = true;}
+    //console.log(cmd);
+
+    if (cmd.includes('play') || cmd == 'pause' || cmd == 'stop') {
+        $('.play').addClass('active');
+    } else if (cmd == 'next' || cmd == 'previous') {
+        $('.' + cmd.substring(0, 4)).addClass('active');
+    }
 
 	$.ajax({
 		type: 'GET',
@@ -229,6 +236,7 @@ function sendMpdCmd(cmd, async) {
 		async: async,
 		cache: false,
 		success: function(data) {
+            //console.log(data);
 		}
     });
 }
@@ -962,6 +970,7 @@ function renderUI() {
             }
             $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-npicon');
         }
+        $('.play, .next, .prev').removeClass('active');
     	$('#total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#m-total, #playbar-total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + formatKnobTotal(MPD.json['time']));
