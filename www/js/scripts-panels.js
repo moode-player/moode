@@ -1770,7 +1770,8 @@ jQuery(document).ready(function($) { 'use strict';
         // Checked item
         $('.dropdown-cdsp-line span').remove();
         $('#dropdown-cdsp-menu li').each(function () {
-            var selectedConfig = SESSION.json['camilladsp'] == 'off' ? 'Off' : SESSION.json['camilladsp'].slice(0, -4);
+            var configName = SESSION.json['camilladsp'] == 'off' ? 'Off' : SESSION.json['camilladsp'].slice(0, -4);
+            var selectedConfig = configName.charAt(0).toUpperCase() + configName.slice(1);
             if ($(this).text() == selectedConfig) {
                 var selectedHTML = $('a[data-cdspconfig="' + SESSION.json['camilladsp'] + '"]').html();
                 $('a[data-cdspconfig="' + SESSION.json['camilladsp'] + '"]').html(selectedHTML +
