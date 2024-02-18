@@ -2,11 +2,11 @@
 #
 #  Setup Guide for moOde Multiroom Audio
 #
-#  These instructions are designed for an initial configuration of a moOde
-#  Multiroom Audio system. Additional configuration help is provided within the
-#  player via Menu, Quick help and the (i) information buttons.
+#  These instructions are designed for an initial configuration of a Multiroom
+#  Audio system. Additional configuration help is provided within the player
+#  via Menu, Quick help and the (i) information buttons.
 #
-#  Version: 1.2 2022-08-29
+#  Version: 1.3 2024-02-18
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
@@ -14,19 +14,19 @@
 
 PREFACE
 
-This release of moOde Multiroom audio is designed for listening in a casual
-or background setting. There is no support in this release for audiophile
-features including uncompressed PCM format, rates greater than 48K, DSP or
-clock correction between Sender and Receiver. These features may however appear
-in future releases.
+This release of Multiroom Audio is designed for listening in a casual or
+background setting. There is no support for audiophile features for example
+uncompressed PCM format, rates greater than 48K, DSP or clock sync between
+Sender and Receiver(s). These features may however appear in future releases.
 
 OVERVIEW
 
-A moOde multiroom audio system consists of a Sender and Receivers. The Sender
-should be a dedicated moOde player configured to output to the integrated HDMI
-port or optionally the Headphone jack but not connected to any speakers or
-headphones. It functions solely to send what it is currently playing to one or
-more Receivers. NOTE: There can only be one Sender on the network.
+A Multiroom Audio system consists of a Sender and one or more Receivers.
+The Sender should be a dedicated moOde player configured to output to the
+integrated HDMI port or optionally the Headphone jack but not connected to any
+speakers or headphones. It functions solely as a Music Server that sends
+its audio output to one or more Receivers. It can also be configured as a NAS
+to serve audio files from locally attached storage.
 
 BLOCK DIAGRAM
 
@@ -62,75 +62,72 @@ BLOCK DIAGRAM
 
 RECEIVER CONFIGURATION
 
-Receivers should be configured first. The Receiver player daemon is separate
-from MPD and the Audio Renderers and thus the Receiver configuration should be
-dedicated although it's not absolutely required. A Receiver can have AirPlay and
-Spotify renderers running in the background but there is no coordination between
-them and the Receiver player. Initiating a Spotify or AirPlay connection while
-the Receiver player is ON will result in audio output conflicts and errors.
+Receivers should be configured first. The Receiver daemon is separate from MPD
+and the other Audio Renderers and thus the Receiver configuration should be
+dedicated although it's not absolutely required. A Receiver can have Bluetooth,
+AirPlay and Spotify Connect renderers running in the background but there is no
+coordination between them and the Receiver player. Initiating a Bluetooth,
+Spotify Connect or AirPlay connection while the Receiver player is ON will
+result in audio output conflicts and errors.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
 1. In the Audio Output section
-   - Configure settings appropriate for the audio device being used
-   - To control Receiver volume via the Sender set "Volume type" to "Hardware"
+   a. Configure settings appropriate for the audio device being used
+   b. Set "Volume type" to "Hardware" to control Receiver volume via the Sender
      CAUTION: Software or Fixed (0dB) can also be used but volume output will
      be 0dB (100%) regardless of Sender volume setting
 2. In the ALSA options section
-   - Select an ALSA output mode being mindful of the Help text
-   - Set ALSA Loopback to "OFF"
-3. In the MPD Options section EDIT MPD settings
-   - Set SoX Resampling Enabled to "No"
-3. In the Equalizers section set the following DSP's to "Off"
-   - Crossfeed
-   - Polarity inversion
-   - Graphic EQ
-   - Parametric EQ
-   - CamillaDSP
+   a. Select an ALSA output mode being mindful of the Help text
+   b. Set ALSA Loopback to "OFF"
+3. In the MPD Options section EDIT MPD settings set SoX Resampling to "No"
+4. In the Equalizers section set the following DSP's to "Off"
+   a. Crossfeed
+   b. Polarity inversion
+   c. Graphic EQ
+   d. Parametric EQ
+   e. CamillaDSP
 
-B) Renderer Configuratiuon (Menu, Configure, Renderers)
+B) Renderer Configuration (Menu, Configure, Renderers)
 
 1. Set all Audio Renderers to "Off"
 2. Set DLNA server to "Off"
 
 C) Multiroom Configuration (Menu, Configure, Multiroom)
-   Optionally Multiroom CONFIGURE while still on Audio Config screen.
 
 1. Set the Receiver daemon to ON
-2. Set Master volume opt-in to YES if desired. This allows Receiver volume to be
-   controlled by the volume knob in Playback or Playbar view of the Sender.
+2. Set Master volume opt-in to YES. This allows Receiver volume to be controlled
+   by the volume knob in Playback or Playbar view of the Sender.
 
 SENDER CONFIGURATION
 
-The Sender should be a dedicated computer configured to output to the integrated
-HDMI port or optionally the Headphone jack but not connected to any speakers or
-headphones. It functions solely as a Music Server that sends its audio output to
-one or more multiroom Receivers.
+The Sender should be a configured to output to the integrated HDMI port or
+optionally the Headphone jack but not connected to any speakers or headphones.
+It functions solely as a Music Server that sends its audio output to one or more
+Receivers. It can also be used as a NAS by turning on SMB or NFS file sharing
+in System Config. Note: there can only be one Sender on the network.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
 1. In the Audio Output section
-   - Set Output device to "HDMI 1"
-   - Set Volume type to "Hardware"
-   - Set ALSA Output mode to "Default (plughw)"
-2. In the ALSA Options section
-   - Set ALSA Loopback to "ON"
-3. In the MPD Options section EDIT MPD settings
-   - Set SoX Resampling Enabled to "No"
+   a. Set Output device to "HDMI 1"
+   b. Set Volume type to "Hardware"
+   c. Set ALSA Output mode to "Default (plughw)"
+2. In the ALSA Options section set ALSA Loopback to "ON"
+3. In the MPD Options section EDIT MPD settings set SoX Resampling to "No"
 4. In the Equalizers section set the following DSP's to "Off"
-   - Crossfeed
-   - Polarity inversion
-   - Graphic EQ
-   - Parametric EQ
-   - CamillaDSP
+   a. Crossfeed
+   b. Polarity inversion
+   c. Graphic EQ
+   d. Parametric EQ
+   e. CamillaDSP
 
-B) Renderer Configuratiuon (Menu, Configure, Renderers)
+B) Renderer Configuration (Menu, Configure, Renderers)
 
 1. Set the following Audio Renderers to "Off"
-   - Bluetooth
-   - Squeezelite
-   - RoonBridge
-2. Optionally turn on AirPlay and/or Spotify connect renderers
+   a. Squeezelite
+   b. RoonBridge
+2. Optionally turn on Bluetooth, AirPlay and/or Spotify Connect renderers
 3. Set DLNA server to "Off"
 
 B) Sender Configuration (Menu, Configure, Multiroom)
@@ -141,7 +138,7 @@ B) Sender Configuration (Menu, Configure, Multiroom)
 2. Set Sender daemon to "ON"
 3. Optionally set Initial volume for the Receivers. This action simply sets
    each Receiver's volume to an initial level for convenience.
-4. In Playback view the Sender icon will appear at the top middle. Click this
+4. In Playback view the Receivers icon will appear at the top middle. Click this
    icon to open the Receivers panel which lists each Receiver, its On/Off state,
    volume and mute state. Receiver volume can be adjusted via the slider
    followed by clicking on the volume button. Mute state can be toggled by
@@ -171,22 +168,19 @@ B) Audio format
    than ALSA/Speex.
 2. Encoded Opus frames are transmitted over the network using RTP over UDP
 
-SPOTIFY AND AIRPLAY
+BLUETOOTH, SPOTIFY CONNECT AND AIRPLAY
 
-Playing Spotify or AirPlay through the Sender sets the Receiver hardware
-volume to 100% (0dB). Overall volume is controlled by the Spotify or AirPlay
-client. Receiver volume is restored after the client disconnects.
+Playing Bluetooth, Spotify or AirPlay through the Sender sets the Receiver
+volume to 100% (0dB). Overall volume is controlled by the Bluetooth, Spotify or
+AirPlay client app. Receiver volume is restored after the client disconnects.
 
 USAGE NOTES
 
-1. Spotify and AirPlay support is a work-in-progress (WIP) in this initial
-   release. AirPlay generally works well with few audio glitches but Spotify
-   can occasionally be glitchy.
-2. The 2.4 GHz WiFi band which is crowded and prone to interference should be
+1. The 2.4 GHz WiFi band which is crowded and prone to interference should be
    avoided. Use the 5GHz band for best results.
-3. ARM6 single-core Pi's including Pi-1B and Pi-Zero have not been tested as
+2. ARM6 single-core Pi's including Pi-1B and Pi-Zero have not been tested as
    either Sender or Receiver and so YMMV.
-4. The SQL table cfg_multiroom contains the configuration parameters for the
+3. The SQL table cfg_multiroom contains the configuration parameters for the
    feature. Parameters not exposed in the Multiroom Config screen can be edited
    in this table for development and testing purposes.
 
