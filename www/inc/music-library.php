@@ -233,7 +233,7 @@ function genLibrary($flat) {
 
 		// Date range filter
 		if ($_SESSION['library_flatlist_filter'] == 'year') {
-			$trackYear = getTrackYear($flatData);
+			$trackYear = substr(getTrackYear($flatData), 0, 4);
 			$push = ($trackYear >= $filterYear[0] && $trackYear <= $filterYear[1]) ? true : false;
 		}
 
@@ -430,7 +430,7 @@ function genLibraryUTF8Rep($flat) {
 
 		// Date range filter
 		if ($_SESSION['library_flatlist_filter'] == 'year') {
-			$trackYear = getTrackYear($flatData);
+			$trackYear = substr(getTrackYear($flatData), 0, 4);
 			$push = ($trackYear >= $filterYear[0] && $trackYear <= $filterYear[1]) ? true : false;
 		}
 
