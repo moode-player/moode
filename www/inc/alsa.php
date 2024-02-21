@@ -171,17 +171,17 @@ function setALSAVolTo0dB($alsaVolMax = '100') {
 
 // Needs the session to be available for getAlsaCardNum()
 function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
-	if ($mpdState == '') { // Called from command/index.php get_output_format
+	if ($mpdState == '') {
+		// Called from command/index.php get_output_format
 		$mpdStatus = getMpdStatus(getMpdSock());
-		$mpdState = $mpdStatus['state'];
-		$mpdAudioSampleRate = $mpdStatus['audio_sample_rate'];
-		$outputStr = alsaOutputStr();
-	} else if ($mpdState == 'play') { // Called from enhanceMetadata() in inc/mpd.php
+		$outputStr = alsaOutputStr($mpdStatus['audio_sample_rate']);
+	} else if ($mpdState == 'play') {
+		// Called from enhanceMetadata() in inc/mpd.php
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioout'", sqlConnect());
 		if ($result['value'] == 'Bluetooth') {
 			$outputStr = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
 		} else {
-			$outputStr = alsaOutputStr();
+			$outputStr = alsaOutputStr($mpdAudioSampleRate);
 		}
 	} else {
 		$outputStr = 'Not playing';
@@ -190,7 +190,7 @@ function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
 	return $outputStr;
 }
 
-function alsaOutputStr() {
+function alsaOutputStr($mpdAudioSampleRate = '') {
 	$maxLoops = 3;
 	$sleepTime = 250000;
 	// Loop when checking hwparams to allow for any latency in the audio pipeline

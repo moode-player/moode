@@ -1671,47 +1671,41 @@ function updBoss2DopVolume () {
 }
 
 function updExtMetaFile() {
-	// Output rate
-	$hwParams = getAlsaHwParams($_SESSION['cardnum']);
-	if ($hwParams['status'] == 'active') {
-		if ($hwParams['format'] == 'DSD') {
-			$hwParamsFormat = 'DSD Bitstream, ' . $hwParams['channels'];
-		} else {
-			$hwParamsFormat = 'PCM ' . $hwParams['format'] . ' bit ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
-		}
-		$hwParamsCalcrate = ', ' . $hwParams['calcrate'] . ' Mbps';
-	} else if ($_SESSION['multiroom_tx'] == 'On') {
-		$hwParamsFormat = '';
-		$hwParamsCalcrate = 'Multiroom sender';
-	} else {
-		$hwParamsFormat = '';
-		$hwParamsCalcrate = '0 bps';
-	}
-	// Currentsong.txt
-	$fileMeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
+	$fileData = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
 
-	if ($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['slactive'] == '1'
-		|| $GLOBALS['rbactive'] == '1' || $GLOBALS['inpactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
+	if ($GLOBALS['aplactive'] == '1') {
+		$renderer = 'AirPlay Active';
+	} else if ($GLOBALS['spotactive'] == '1') {
+		$renderer = 'Spotify Active';
+	} else if ($GLOBALS['slactive'] == '1') {
+		$renderer = 'Squeezelite Active';
+	} else if ($GLOBALS['rbactive'] == '1') {
+		$renderer = 'Roonbridge Active';
+	} else if ($GLOBALS['inpactive'] == '1') {
+		$renderer = $_SESSION['audioin'] . ' Input Active';
+	} else if ($_SESSION['btactive'] == '1' && $_SESSION['audioout'] == 'Local') {
+		$renderer = 'Bluetooth Active';
+	} else {
+		$renderer = '';
+	}
+
+	if (!empty($renderer)) {
 		//workerLog('worker: Renderer active');
-		if ($GLOBALS['aplactive'] == '1') {
-			$renderer = 'AirPlay Active';
-		} else if ($GLOBALS['spotactive'] == '1') {
-			$renderer = 'Spotify Active';
-		} else if ($GLOBALS['slactive'] == '1') {
-			$renderer = 'Squeezelite Active';
-		} else if ($GLOBALS['rbactive'] == '1') {
-			$renderer = 'Roonbridge Active';
-		} else if ($GLOBALS['inpactive'] == '1') {
-			$renderer = $_SESSION['audioin'] . ' Input Active';
+		$hwParams = getAlsaHwParams($_SESSION['cardnum']);
+
+		if ($hwParams['status'] == 'active') {
+			$hwParamsFormat = 'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, 2ch';
+		} else if ($_SESSION['multiroom_tx'] == 'On') {
+			$hwParamsFormat = 'PCM 16/48 kHz, 2ch (Multiroom sender)';
 		} else {
-			$renderer = 'Bluetooth Active';
+			$hwParamsFormat = 'Not playing';
 		}
-		// Write file only if something has changed
-		if ($fileMeta['file'] != $renderer && $hwParamsCalcrate != '0 bps') {
-			//workerLog('worker: Writing currentsong file');
+
+		if ($fileData['file'] != $renderer) {
+			//workerLog('worker: Update currentsong.txt file (Renderer)');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			$data = 'file=' . $renderer . "\n";
-			$data .= 'outrate=' . $hwParamsFormat . $hwParamsCalcrate . "\n"; ;
+			$data .= 'outrate=' . $hwParamsFormat . "\n"; ;
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
@@ -1720,16 +1714,19 @@ function updExtMetaFile() {
 	} else {
 		//workerLog('worker: MPD active');
 		$sock = openMpdSock('localhost', 6600);
-		$current = getMpdStatus($sock);
-		$current = enhanceMetadata($current, $sock, 'worker_php');
+		$status = getMpdStatus($sock);
+		$current = enhanceMetadata($status, $sock, 'worker_php');
 		closeMpdSock($sock);
-		//workerLog(print_r($current, true));
-		//workerLog('updExtMetaFile(): currentencoded=' . $_SESSION['currentencoded']);
 
-		// Write file only if something has changed
-		if ($current['title'] != $fileMeta['title'] || $current['album'] != $fileMeta['album'] || $_SESSION['volknob'] != $fileMeta['volume'] ||
-			$_SESSION['volmute'] != $fileMeta['mute'] || $current['state'] != $fileMeta['state'] || $fileMeta['outrate'] != $hwParamsFormat . $hwParamsCalcrate) {
-			//workerLog('worker: Writing currentsong file');
+		if (
+			$fileData['state'] != $current['state'] ||
+			$fileData['title'] != $current['title'] ||
+			$fileData['album'] != $current['album'] ||
+			$fileData['volume'] != $_SESSION['volknob'] ||
+			$fileData['mute'] != $_SESSION['volmute'] ||
+			$fileData['outrate'] != $current['output']
+		) {
+			//workerLog('worker: Update currentsong.txt file (MPD)');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			// Default
 			$data = 'file=' . $current['file'] . "\n";
@@ -1744,7 +1741,8 @@ function updExtMetaFile() {
 			// Other
 			$data .= 'encoded=' . $current['encoded'] . "\n";
 			$data .= 'bitrate=' . $current['bitrate'] . "\n";
-			$data .= 'outrate=' . $current['output'] . $hwParamsCalcrate . "\n"; ;
+			//$data .= 'outrate=' . $current['output'] . $hwParamsCalcrate . "\n"; ;
+			$data .= 'outrate=' . $current['output'] . "\n"; ;
 			$data .= 'volume=' . $_SESSION['volknob'] . "\n";
 			$data .= 'mute=' . $_SESSION['volmute'] . "\n";
 			$data .= 'state=' . $current['state'] . "\n";
