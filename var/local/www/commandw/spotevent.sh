@@ -57,6 +57,7 @@ fi
 if [[ $PLAYER_EVENT == "started" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='spotactive'")
 	/usr/bin/mpc stop > /dev/null
+	sleep 1
 
 	# Local
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
