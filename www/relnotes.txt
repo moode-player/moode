@@ -17,13 +17,15 @@
 
 Updates
 
-- UPD: Bump to CamillaDSP 2.0.1
+- UPD:
 
 Bug fixes
 
 - FIX: Graphic EQ displays wrong levels for 3rd to 10th freq band
-- FIX: CamillaDSP quick config sort and checkmark for selected config
+- FIX: CamillaDSP quick config sort and checkmark for original configs
 - FIX: V2 camilladsp.conf file not installed during in-place update
+- FIX: Metadata file (currentsong.txt) updated too often
+- FIX: Quick search not working for "year YYYY" or "year YYYY-YYYY"
 
 ################################################################################
 #
