@@ -18,6 +18,7 @@
 Updates
 
 - UPD: Multiroom setup guide
+- UPD: Add back delay after MPD stop to renderer event scripts
 
 Bug fixes
 
