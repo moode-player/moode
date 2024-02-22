@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD:
+- UPD: Multiroom setup guide
 
 Bug fixes
 
