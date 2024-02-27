@@ -232,7 +232,7 @@ $_select['version'] = str_replace('CamillaDSP', '', $cdsp->version());
 
 $_select['cdsp_use_default_device_on'] .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 $_select['cdsp_use_default_device_off']  .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
-$_alsa_plugin_and_cardnum = $_SESSION['cdsp_fix_playback'] == 'No' ? '' : $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+$_alsa_plugin_and_cardnum = $_SESSION['cdsp_fix_playback'] == 'No' ? '(Defined in Pipeline editor)' : $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 
 if ($_SESSION['camilladsp_quickconv']) {
 	$quickConvConfig =$cdsp->stringToQuickConvolutionConfig($_SESSION['camilladsp_quickconv']);

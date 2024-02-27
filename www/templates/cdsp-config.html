@@ -26,7 +26,7 @@
 	<p class="sub-legend>">Version: $_select[version]</p>
 	<p>
 		CamillaDSP is a Digital Signal Processing (DSP) tool for routing and filtering sound.
-		It can be used for software crossovers, room correction, equalization and many other types of DSP. 
+		It can be used for software crossovers, room correction, equalization and many other types of DSP.
 		View the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp?tab=readme-ov-file#table-of-contents" target="_blank">CamillaDSP documentation</a> for more information.<br>
 	</p>
 
@@ -58,7 +58,7 @@
 				</span>
 			</div>
 
-			<label class="control-label">Default device</label>
+			<label class="control-label">Default device options</label>
 			<div class="controls">
 				<div class="toggle">
 					<label class="toggle-radio toggle-cdsp-use-default-device" for="toggle-cdsp-use-default-device-2">ON </label>$_select[cdsp_use_default_device_on]
@@ -69,8 +69,8 @@
 					ALSA: $_alsa_plugin_and_cardnum
 				</span>
 				<span id="info-cdsp-use-default-device" class="config-help-info">
-					<b>ON:</b> Use the output device and mode defined in Audio Config.<br>
-					<b>OFF:</b> Specify a different device and mode using the Pipeline editor for example if you want to create a multi-channel crossover.
+					<b>ON:</b> Use the output device and mode defined in Audio Config and a Playback bit depth equal to the highest bit depth reported by the audio device.<br>
+					<b>OFF:</b> Specify device options using the Pipeline editor for example if you want to create a multi-channel crossover or set a specific Playback bit depth.
 				</span>
 			</div>
 
