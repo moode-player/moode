@@ -17,11 +17,11 @@
 
 Updates
 
-- UPD:
+- UPD: Improve (i) help for some items
 
 Bug fixes
 
-- NEW:
+- FIX:
 
 ################################################################################
 #
