@@ -18,6 +18,8 @@
 Updates
 
 - UPD: Improve (i) help for some items
+- UPD: CamillaDSP V2 configs and coeffs
+- UPD: Strip dashes from MusicBrainz dates in function getTrackYear()
 
 Bug fixes
 
