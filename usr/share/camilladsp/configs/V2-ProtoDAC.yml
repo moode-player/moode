@@ -1,0 +1,84 @@
+description: ProtoDAC TDA1387 X8 Non-oversampling DAC. Invert +/- signal polarity on both channels and apply Flat dither to
+  16 bit samples.
+devices:
+  adjust_period: null
+  capture:
+    channels: 2
+    extra_samples: null
+    filename: /dev/stdin
+    format: S24LE
+    read_bytes: null
+    skip_bytes: null
+    type: File
+  capture_samplerate: null
+  chunksize: 4096
+  enable_rate_adjust: null
+  playback:
+    channels: 2
+    device: hw:0,0
+    format: S24LE
+    type: Alsa
+  queuelimit: 1
+  rate_measure_interval: null
+  samplerate: 44100
+  silence_threshold: null
+  silence_timeout: null
+  stop_on_rate_change: null
+  target_level: null
+  volume_ramp_time: 150
+filters:
+  Dither:
+    description: null
+    parameters:
+      amplitude: 2
+      bits: 16
+      type: Flat
+    type: Dither
+  Master gain:
+    description: null
+    parameters:
+      gain: 0
+      inverted: false
+      mute: false
+      scale: dB
+    type: Gain
+mixers:
+  Stereo:
+    channels:
+      in: 2
+      out: 2
+    description: null
+    mapping:
+    - dest: 0
+      mute: false
+      sources:
+      - channel: 0
+        gain: 0
+        inverted: true
+        mute: false
+        scale: dB
+    - dest: 1
+      mute: false
+      sources:
+      - channel: 1
+        gain: 0
+        inverted: true
+        mute: false
+        scale: dB
+pipeline:
+- bypassed: null
+  channel: 0
+  description: null
+  names:
+  - Master gain
+  - Dither
+  type: Filter
+- bypassed: null
+  channel: 1
+  description: null
+  names:
+  - Master gain
+  - Dither
+  type: Filter
+processors: null
+title: ProtoDAC TDA1387 X8

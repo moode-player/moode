@@ -1,29 +1,53 @@
----
+description: 'Ebert-Hanke implementation of Pow Chu Moy Crossfeed based on Linkwitz.
+
+  '
 devices:
   adjust_period: 3
   capture:
-    type: File
     channels: 2
+    extra_samples: null
     filename: /dev/stdin
-    format: S32LE
+    format: S24LE
+    read_bytes: null
+    skip_bytes: null
+    type: File
+  capture_samplerate: 44100
   chunksize: 4096
   enable_rate_adjust: false
   playback:
-    type: Alsa
     channels: 2
-    device: plughw:2,0
-    format: S32LE
+    device: hw:0,0
+    format: S24LE
+    type: Alsa
   queuelimit: 1
+  rate_measure_interval: null
   samplerate: 44100
   silence_threshold: 0
   silence_timeout: 0
+  stop_on_rate_change: null
   target_level: 1024
   volume_ramp_time: 150
+filters:
+  XF_Cross_Lowpass:
+    description: null
+    parameters:
+      freq: 700
+      q: 0.5
+      type: Lowpass
+    type: Biquad
+  XF_Direct_Highshelf:
+    description: null
+    parameters:
+      freq: 950
+      gain: 2
+      type: HighshelfFO
+    type: Biquad
 mixers:
   XF_IN:
     channels:
       in: 2
       out: 4
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -32,6 +56,7 @@ mixers:
         gain: -8
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -39,6 +64,7 @@ mixers:
         gain: -2
         inverted: false
         mute: false
+        scale: null
     - dest: 2
       mute: false
       sources:
@@ -46,6 +72,7 @@ mixers:
         gain: -2
         inverted: false
         mute: false
+        scale: null
     - dest: 3
       mute: false
       sources:
@@ -53,10 +80,12 @@ mixers:
         gain: -8
         inverted: false
         mute: false
+        scale: null
   XF_OUT:
     channels:
       in: 4
       out: 2
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -65,10 +94,12 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
       - channel: 3
         gain: 0
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -76,42 +107,44 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
       - channel: 0
         gain: 0
         inverted: false
         mute: false
-filters:
-  XF_Cross_Lowpass:
-    type: Biquad
-    parameters:
-      type: Lowpass
-      freq: 700
-      q: 0.500000
-  XF_Direct_Highshelf:
-    type: Biquad
-    parameters:
-      type: HighshelfFO
-      freq: 950
-      gain: 2.000000
+        scale: null
 pipeline:
-- type: Mixer
+- bypassed: null
+  description: null
   name: XF_IN
-- type: Filter
+  type: Mixer
+- bypassed: null
   channel: 0
+  description: null
   names:
   - XF_Cross_Lowpass
-- type: Filter
+  type: Filter
+- bypassed: null
   channel: 1
+  description: null
   names:
   - XF_Direct_Highshelf
-- type: Filter
+  type: Filter
+- bypassed: null
   channel: 2
+  description: null
   names:
   - XF_Direct_Highshelf
-- type: Filter
+  type: Filter
+- bypassed: null
   channel: 3
+  description: null
   names:
   - XF_Cross_Lowpass
-- type: Mixer
+  type: Filter
+- bypassed: null
+  description: null
   name: XF_OUT
-...
+  type: Mixer
+processors: null
+title: Crossfeed Chu Moy

@@ -1,18 +1,22 @@
----
+description: M-S (Mid-Side) matrix with side signal increased.
 devices:
   adjust_period: 10
   capture:
-    type: File
     channels: 2
+    extra_samples: null
     filename: /dev/stdin
-    format: S32LE
+    format: S24LE
+    read_bytes: null
+    skip_bytes: null
+    type: File
+  capture_samplerate: null
   chunksize: 4096
   enable_rate_adjust: false
   playback:
-    type: Alsa
     channels: 2
-    device: plughw:2,0
-    format: S32LE
+    device: hw:0,0
+    format: S24LE
+    type: Alsa
   queuelimit: 1
   rate_measure_interval: 1
   samplerate: 44100
@@ -23,22 +27,27 @@ devices:
   volume_ramp_time: 150
 filters:
   Stereo Image:
+    description: null
     parameters:
-      gain: -6
+      gain: 6
       inverted: false
       mute: false
+      scale: null
     type: Gain
   pregain:
+    description: null
     parameters:
       gain: -3
       inverted: false
       mute: false
+      scale: null
     type: Gain
 mixers:
   MS:
     channels:
       in: 2
       out: 2
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -47,10 +56,12 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 1
         gain: -3
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -58,25 +69,38 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 1
         gain: -3
         inverted: true
         mute: false
+        scale: null
 pipeline:
-- channel: 0
+- bypassed: null
+  channel: 0
+  description: null
   names:
   - pregain
   type: Filter
-- channel: 1
+- bypassed: null
+  channel: 1
+  description: null
   names:
   - pregain
   type: Filter
-- name: MS
+- bypassed: null
+  description: null
+  name: MS
   type: Mixer
-- channel: 1
+- bypassed: null
+  channel: 1
+  description: null
   names:
   - Stereo Image
   type: Filter
-- name: MS
+- bypassed: null
+  description: null
+  name: MS
   type: Mixer
-...
+processors: null
+title: MS-Matrix Wide

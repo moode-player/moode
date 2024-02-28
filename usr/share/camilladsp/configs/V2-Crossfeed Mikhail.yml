@@ -1,19 +1,22 @@
----
+description: Mikhail Naganov, customize with own IR correction.
 devices:
   adjust_period: 3
   capture:
-    type: File
     channels: 2
+    extra_samples: null
     filename: /dev/stdin
-    format: S32LE
-  volume_ramp_time: 150
+    format: S24LE
+    read_bytes: null
+    skip_bytes: null
+    type: File
+  capture_samplerate: 44100
   chunksize: 4096
   enable_rate_adjust: false
   playback:
-    type: Alsa
     channels: 2
-    device: plughw:2,0
-    format: S32LE
+    device: hw:0,0
+    format: S24LE
+    type: Alsa
   queuelimit: 1
   rate_measure_interval: 1
   samplerate: 44100
@@ -21,81 +24,117 @@ devices:
   silence_timeout: 0
   stop_on_rate_change: false
   target_level: 1024
+  volume_ramp_time: 150
 filters:
+  XF_Cross_Highshelf:
+    description: null
+    parameters:
+      freq: 750
+      gain: -0.3
+      type: HighshelfFO
+    type: Biquad
+  XF_Cross_Peaking_EQ:
+    description: null
+    parameters:
+      freq: 180
+      gain: 0.5
+      q: 0.55
+      type: Peaking
+    type: Biquad
+  XF_Direct_Highshelf:
+    description: null
+    parameters:
+      freq: 200
+      gain: 2.3
+      type: HighshelfFO
+    type: Biquad
   ir_hpcf:
+    description: null
     parameters:
       channel: 0
-      filename: /usr/share/camilladsp/coeffs/HpCF_Sennheiser_HD800S_A.wav
+      filename: ../coeffs/V2-Sennheiser_HD800S_HpCF_A.wav
       type: Wav
     type: Conv
   ir_l_input_l_ear:
+    description: null
     parameters:
       channel: 0
-      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A-30.wav
+      filename: ../coeffs/V2-BRIR_R02_P1_E0_A-30.wav
       type: Wav
     type: Conv
   ir_l_input_r_ear:
+    description: null
     parameters:
       channel: 1
-      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A-30.wav
+      filename: ../coeffs/V2-BRIR_R02_P1_E0_A-30.wav
       type: Wav
     type: Conv
   ir_r_input_l_ear:
+    description: null
     parameters:
       channel: 0
-      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A30.wav
+      filename: ../coeffs/V2-BRIR_R02_P1_E0_A+30.wav
       type: Wav
     type: Conv
   ir_r_input_r_ear:
+    description: null
     parameters:
       channel: 1
-      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A30.wav
+      filename: ../coeffs/V2-BRIR_R02_P1_E0_A+30.wav
       type: Wav
     type: Conv
   mastergain:
+    description: null
     parameters:
       gain: -18
       inverted: false
       mute: false
+      scale: null
     type: Gain
 mixers:
   XF_IN:
     channels:
       in: 2
       out: 4
+    description: null
     mapping:
     - dest: 0
       mute: false
       sources:
       - channel: 0
-        gain: -6
+        gain: -9.9
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
       - channel: 0
-        gain: -6
+        gain: -2.3
         inverted: false
         mute: false
+        scale: null
     - dest: 2
       mute: false
       sources:
       - channel: 1
-        gain: -6
+        gain: -2.3
         inverted: false
         mute: false
+        scale: null
     - dest: 3
       mute: false
       sources:
       - channel: 1
-        gain: -6
+        gain: -9.9
         inverted: false
         mute: false
+        scale: null
   XF_OUT:
     channels:
       in: 4
       out: 2
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -104,10 +143,12 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
       - channel: 3
-        gain: 0
+        gain: -3
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -115,37 +156,60 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
       - channel: 0
-        gain: 0
+        gain: -3
         inverted: false
         mute: false
+        scale: null
 pipeline:
-- name: XF_IN
+- bypassed: null
+  description: null
+  name: XF_IN
   type: Mixer
-- channel: 0
+- bypassed: null
+  channel: 0
+  description: null
   names:
+  - XF_Cross_Highshelf
+  - XF_Cross_Peaking_EQ
   - ir_l_input_r_ear
   type: Filter
-- channel: 1
+- bypassed: null
+  channel: 1
+  description: null
   names:
-  - ir_l_input_l_ear
+  - XF_Direct_Highshelf
   type: Filter
-- channel: 2
+- bypassed: null
+  channel: 2
+  description: null
   names:
-  - ir_r_input_r_ear
+  - XF_Direct_Highshelf
   type: Filter
-- channel: 3
+- bypassed: null
+  channel: 3
+  description: null
   names:
+  - XF_Cross_Highshelf
+  - XF_Cross_Peaking_EQ
   - ir_r_input_l_ear
   type: Filter
-- name: XF_OUT
+- bypassed: null
+  description: null
+  name: XF_OUT
   type: Mixer
-- channel: 0
+- bypassed: null
+  channel: 0
+  description: null
   names:
   - ir_hpcf
   type: Filter
-- channel: 1
+- bypassed: null
+  channel: 1
+  description: null
   names:
   - ir_hpcf
   type: Filter
-...
+processors: null
+title: Crossfeed Mikhail

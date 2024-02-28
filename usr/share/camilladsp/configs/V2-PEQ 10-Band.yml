@@ -1,0 +1,178 @@
+description: Generic example of a 10 band parametric equalizer.
+devices:
+  adjust_period: 10
+  capture:
+    channels: 2
+    extra_samples: null
+    filename: /dev/stdin
+    format: S24LE
+    read_bytes: null
+    skip_bytes: null
+    type: File
+  capture_samplerate: null
+  chunksize: 1024
+  enable_rate_adjust: false
+  playback:
+    channels: 2
+    device: hw:0,0
+    format: S24LE
+    type: Alsa
+  queuelimit: 1
+  rate_measure_interval: null
+  samplerate: 44100
+  silence_threshold: 0
+  silence_timeout: 0
+  stop_on_rate_change: null
+  target_level: 0
+  volume_ramp_time: 150
+filters:
+  band_01:
+    description: null
+    parameters:
+      freq: 23
+      gain: 5.6
+      q: 0.93
+      type: Peaking
+    type: Biquad
+  band_02:
+    description: null
+    parameters:
+      freq: 61
+      gain: 1.9
+      q: 2.48
+      type: Peaking
+    type: Biquad
+  band_03:
+    description: null
+    parameters:
+      freq: 1702
+      gain: 3.2
+      q: 2.13
+      type: Peaking
+    type: Biquad
+  band_04:
+    description: null
+    parameters:
+      freq: 3286
+      gain: 2.6
+      q: 3.95
+      type: Peaking
+    type: Biquad
+  band_05:
+    description: null
+    parameters:
+      freq: 5648
+      gain: -4.6
+      q: 3.94
+      type: Peaking
+    type: Biquad
+  band_06:
+    description: null
+    parameters:
+      freq: 210
+      gain: -2.3
+      q: 1.32
+      type: Peaking
+    type: Biquad
+  band_07:
+    description: null
+    parameters:
+      freq: 449
+      gain: -0.7
+      q: 0.72
+      type: Peaking
+    type: Biquad
+  band_08:
+    description: null
+    parameters:
+      freq: 4393
+      gain: 0.2
+      q: 0.22
+      type: Peaking
+    type: Biquad
+  band_09:
+    description: null
+    parameters:
+      freq: 10533
+      gain: 2.2
+      q: 1.17
+      type: Peaking
+    type: Biquad
+  band_10:
+    description: null
+    parameters:
+      freq: 19366
+      gain: -11.6
+      q: 0.38
+      type: Peaking
+    type: Biquad
+  peqgain:
+    description: null
+    parameters:
+      gain: -6
+      inverted: false
+      mute: null
+      scale: null
+    type: Gain
+mixers:
+  stereo:
+    channels:
+      in: 2
+      out: 2
+    description: null
+    mapping:
+    - dest: 0
+      mute: null
+      sources:
+      - channel: 0
+        gain: 0
+        inverted: false
+        mute: null
+        scale: null
+    - dest: 1
+      mute: null
+      sources:
+      - channel: 1
+        gain: 0
+        inverted: false
+        mute: null
+        scale: null
+pipeline:
+- bypassed: null
+  description: null
+  name: stereo
+  type: Mixer
+- bypassed: null
+  channel: 0
+  description: null
+  names:
+  - peqgain
+  - band_01
+  - band_02
+  - band_03
+  - band_04
+  - band_05
+  - band_06
+  - band_07
+  - band_08
+  - band_09
+  - band_10
+  type: Filter
+- bypassed: null
+  channel: 1
+  description: null
+  names:
+  - peqgain
+  - band_01
+  - band_02
+  - band_03
+  - band_04
+  - band_05
+  - band_06
+  - band_07
+  - band_08
+  - band_09
+  - band_10
+  type: Filter
+processors: null
+title: Parametric EQ 10-Band

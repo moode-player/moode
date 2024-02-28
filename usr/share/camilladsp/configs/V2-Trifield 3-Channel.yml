@@ -1,19 +1,22 @@
+description: Michael Gerzon derived Trifield decoder. Requires at least 3 channels
+  available for output.
 devices:
   adjust_period: 10
   capture:
     channels: 2
-    extra_samples: 0
+    extra_samples: null
     filename: /dev/stdin
-    format: S16LE
-    read_bytes: 0
-    skip_bytes: 0
+    format: S24LE
+    read_bytes: null
+    skip_bytes: null
     type: File
+  capture_samplerate: null
   chunksize: 4096
   enable_rate_adjust: false
   playback:
-    channels: 3
-    device: plughw:0,0
-    format: S16LE
+    channels: 2
+    device: hw:0,0
+    format: S24LE
     type: Alsa
   queuelimit: 1
   rate_measure_interval: 1
@@ -25,34 +28,40 @@ devices:
   volume_ramp_time: 150
 filters:
   AP:
+    description: null
     parameters:
       freq: 5000
       q: 0.5
       type: Allpass
     type: Biquad
   HP:
+    description: null
     parameters:
       freq: 5000
       q: 0.5
       type: Highpass
     type: Biquad
   LP:
+    description: null
     parameters:
       freq: 5000
       q: 0.5
       type: Lowpass
     type: Biquad
   pregain:
+    description: null
     parameters:
       gain: -3
       inverted: false
       mute: false
+      scale: null
     type: Gain
 mixers:
   DIV:
     channels:
       in: 3
       out: 3
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -61,10 +70,12 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 1
         gain: -3
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -72,10 +83,12 @@ mixers:
         gain: -3
         inverted: true
         mute: false
+        scale: null
       - channel: 1
         gain: -3
         inverted: true
         mute: false
+        scale: null
     - dest: 2
       mute: false
       sources:
@@ -83,10 +96,12 @@ mixers:
         gain: -1
         inverted: false
         mute: false
+        scale: null
   LCR:
     channels:
       in: 3
       out: 3
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -95,6 +110,7 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -102,10 +118,12 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 2
         gain: -3
         inverted: false
         mute: false
+        scale: null
     - dest: 2
       mute: false
       sources:
@@ -113,14 +131,17 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 2
         gain: -3
         inverted: true
         mute: false
+        scale: null
   MS:
     channels:
       in: 2
       out: 3
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -129,10 +150,12 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 1
         gain: -3
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -140,10 +163,12 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 1
         gain: -3
         inverted: false
         mute: false
+        scale: null
     - dest: 2
       mute: false
       sources:
@@ -151,22 +176,36 @@ mixers:
         gain: -3
         inverted: false
         mute: false
+        scale: null
       - channel: 1
         gain: -3
         inverted: true
         mute: false
+        scale: null
 pipeline:
-- name: MS
+- bypassed: null
+  description: null
+  name: MS
   type: Mixer
-- channel: 0
+- bypassed: null
+  channel: 0
+  description: null
   names:
   - HP
   type: Filter
-- channel: 1
+- bypassed: null
+  channel: 1
+  description: null
   names:
   - LP
   type: Filter
-- name: DIV
+- bypassed: null
+  description: null
+  name: DIV
   type: Mixer
-- name: LCR
+- bypassed: null
+  description: null
+  name: LCR
   type: Mixer
+processors: null
+title: Trifield 3-Channel

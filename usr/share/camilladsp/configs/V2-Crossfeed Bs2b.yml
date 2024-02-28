@@ -1,116 +1,147 @@
----
+description: Bs2b from Wang-Yue which contains 5 setting sets.
 devices:
   adjust_period: 3
   capture:
-    type: File
     channels: 2
+    extra_samples: null
     filename: /dev/stdin
-    format: S32LE
+    format: S24LE
+    read_bytes: null
+    skip_bytes: null
+    type: File
   capture_samplerate: 44100
   chunksize: 4096
   enable_rate_adjust: false
   playback:
-    type: Alsa
     channels: 2
-    device: plughw:2,0
-    format: S32LE
+    device: hw:0,0
+    format: S24LE
+    type: Alsa
   queuelimit: 1
+  rate_measure_interval: null
   samplerate: 44100
   silence_threshold: 0
   silence_timeout: 0
+  stop_on_rate_change: null
   target_level: 1024
   volume_ramp_time: 150
 filters:
   cx1_hi:
+    description: null
     parameters:
-      freq: 954.400000
-      gain: -0.750000
+      freq: 954.4
+      gain: -0.75
+      q: 0.5
       type: Lowshelf
-      q: 0.500000
     type: Biquad
   cx1_lo:
+    description: null
     parameters:
       freq: 650
       type: LowpassFO
     type: Biquad
   cx1_lo_gain:
-    type: Gain
+    description: null
     parameters:
-      gain: -14.250000
+      gain: -14.25
       inverted: false
+      mute: null
+      scale: null
+    type: Gain
   cx2_hi:
+    description: null
     parameters:
-      freq: 824.700000
-      gain: -1.400000
+      freq: 824.7
+      gain: -1.4
+      q: 0.5
       type: Lowshelf
-      q: 0.500000
     type: Biquad
   cx2_lo:
+    description: null
     parameters:
       freq: 650
       type: LowpassFO
     type: Biquad
   cx2_lo_gain:
-    type: Gain
+    description: null
     parameters:
-      gain: -10.920000
+      gain: -10.92
       inverted: false
+      mute: null
+      scale: null
+    type: Gain
   cx3_hi:
+    description: null
     parameters:
-      freq: 868.970000
+      freq: 868.97
       gain: -2
+      q: 0.5
       type: Lowshelf
-      q: 0.500000
     type: Biquad
   cx3_lo:
+    description: null
     parameters:
       freq: 700
       type: LowpassFO
     type: Biquad
   cx3_lo_gain:
-    type: Gain
+    description: null
     parameters:
       gain: -8
       inverted: false
+      mute: null
+      scale: null
+    type: Gain
   cx4_hi:
+    description: null
     parameters:
-      freq: 873.890000
-      gain: -2.250000
+      freq: 873.89
+      gain: -2.25
+      q: 0.5
       type: Lowshelf
-      q: 0.500000
     type: Biquad
   cx4_lo:
+    description: null
     parameters:
       freq: 700
       type: LowpassFO
     type: Biquad
   cx4_lo_gain:
-    type: Gain
+    description: null
     parameters:
-      gain: -6.750000
+      gain: -6.75
       inverted: false
+      mute: null
+      scale: null
+    type: Gain
   cx5_hi:
+    description: null
     parameters:
-      freq: 884.290000
-      gain: -2.500000
+      freq: 884.29
+      gain: -2.5
+      q: 0.5
       type: Lowshelf
-      q: 0.500000
     type: Biquad
   cx5_lo:
+    description: null
     parameters:
       freq: 700
       type: LowpassFO
     type: Biquad
   cx5_lo_gain:
-    type: Gain
+    description: null
     parameters:
-      gain: -5.500000
+      gain: -5.5
       inverted: false
+      mute: null
+      scale: null
+    type: Gain
 mixers:
   2to4:
     channels:
       in: 2
       out: 4
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -119,6 +150,7 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -126,6 +158,7 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
     - dest: 2
       mute: false
       sources:
@@ -133,6 +166,7 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
     - dest: 3
       mute: false
       sources:
@@ -140,10 +174,12 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
   4to2:
     channels:
       in: 4
       out: 2
+    description: null
     mapping:
     - dest: 0
       mute: false
@@ -152,10 +188,12 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
       - channel: 2
         gain: 0
         inverted: false
         mute: false
+        scale: null
     - dest: 1
       mute: false
       sources:
@@ -163,31 +201,46 @@ mixers:
         gain: 0
         inverted: false
         mute: false
+        scale: null
       - channel: 3
         gain: 0
         inverted: false
         mute: false
+        scale: null
 pipeline:
-- type: Mixer
+- bypassed: null
+  description: null
   name: 2to4
-- channel: 0
-  names:
-  - cx5_hi
-  type: Filter
-- channel: 1
-  names:
-  - cx5_lo
-  - cx5_lo_gain
-  type: Filter
-- channel: 2
-  names:
-  - cx5_lo
-  - cx5_lo_gain
-  type: Filter
-- channel: 3
-  names:
-  - cx5_hi
-  type: Filter
-- name: 4to2
   type: Mixer
-...
+- bypassed: null
+  channel: 0
+  description: null
+  names:
+  - cx5_hi
+  type: Filter
+- bypassed: null
+  channel: 1
+  description: null
+  names:
+  - cx5_lo
+  - cx5_lo_gain
+  type: Filter
+- bypassed: null
+  channel: 2
+  description: null
+  names:
+  - cx5_lo
+  - cx5_lo_gain
+  type: Filter
+- bypassed: null
+  channel: 3
+  description: null
+  names:
+  - cx5_hi
+  type: Filter
+- bypassed: null
+  description: null
+  name: 4to2
+  type: Mixer
+processors: null
+title: Crossfeed Bs2b
