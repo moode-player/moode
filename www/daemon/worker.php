@@ -45,6 +45,8 @@ sysCmd('truncate ' . MOODE_LOG . ' --size 0');
 $dbh = sqlConnect();
 $result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", $dbh);
 $moodeSeries = substr(getMoodeRel(), 1, 1); // rNNN format
+$timeZone = sysCmd("timedatectl | awk -F' ' '/Time zone/{print $3}'")[0];
+date_default_timezone_set($timeZone);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -597,12 +599,12 @@ if (!file_exists('/etc/mpd.conf')) {
 	$mpdConfUpdMsg = 'MPD config:    Warning: file missing, regenerating it';
 } else {
 	switch (audioOutputTarget()) {
-		case AudioOutputTargetType.TRXSEND:
+		case AO_TRXSEND:
 			// Skip update otherwise Multiroom Sender ALSA config gets reverted
 			$mpdConfUpdMsg = 'MPD config:    update skipped (Multiroom sender on)';
 			break;
-		case AudioOutputTargetType.USB:
-			if( $_SESSION['inplace_upd_applied'] == '1' ) {
+		case AO_USB:
+			if($_SESSION['inplace_upd_applied'] == '1') {
 				$mpdConfUpdMsg = 'MPD config:    updated (USB audio device + In-place update applied)';
 				$updateMpdConf = true;
 			} else {
@@ -610,8 +612,8 @@ if (!file_exists('/etc/mpd.conf')) {
 				$mpdConfUpdMsg = 'MPD config:    update skipped (USB audio device)';
 			}
 			break;
-		case AudioOutputTargetType.INTEGRATED:
-		case AudioOutputTargetType.I2S:
+		case AO_INTEGRATED:
+		case AO_I2S:
 			$updateMpdConf = true;
 			$mpdConfUpdMsg = 'MPD config:    updated';
 			break;
@@ -2049,25 +2051,17 @@ function updaterAutoCheck($validIPAddress) {
 	return $msg;
 }
 
-// Return audio output target
-class AudioOutputTargetType
-{
-    public const INTEGRATED = 1;
-    public const I2S   		= 2;
-    public const USB   		= 3;
-    public const TRXSEND	= 4;
-}
 function audioOutputTarget() {
 	$integratedDevices = array('Pi HDMI 1', 'Pi HDMI 2', 'Pi Headphone jack');
 
 	if ($_SESSION['multiroom_tx'] != 'Off') {
-		$outputTarget = AudioOutputTargetType.TRXSEND;
+		$outputTarget = AO_TRXSEND;
 	} else if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
-		$outputTarget = AudioOutputTargetType.I2S;
+		$outputTarget = AO_I2S;
 	} else if (in_array($_SESSION['adevname'], $integratedDevices) ) {
-		$outputTarget = AudioOutputTargetType.INTEGRATED;
+		$outputTarget = AO_INTEGRATED;
 	} else {
-		$outputTarget = AudioOutputTargetType.USB;
+		$outputTarget = AO_USB;
 	}
 
 	return $outputTarget;
