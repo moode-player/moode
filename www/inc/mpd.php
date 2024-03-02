@@ -894,7 +894,7 @@ function getHash($path) {
 		case 'tif':
 		case 'tiff':
 			$stat = stat($path);
-			$hash = md5(file_get_contents($path, 1024) + $stat['size']);
+			$hash = md5((string)file_get_contents($path, 1024) . (string)$stat['size']);
 			break;
 
 		// Embedded images

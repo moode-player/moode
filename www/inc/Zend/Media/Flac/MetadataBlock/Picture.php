@@ -109,7 +109,7 @@ final class Zend_Media_Flac_MetadataBlock_Picture extends Zend_Media_Flac_Metada
         $this->_colorDepth = $this->_reader->readUInt32BE();
         $this->_numberOfColors = $this->_reader->readUInt32BE();
 		$this->_dataSize = $this->_reader->readUInt32BE(); // r44a
-		$this->_data = $hash_only === true ? md5($this->_reader->read(1024) + $this->_dataSize) : $this->_reader->read($this->_dataSize); // r44a, r44d add _dataSize to hash
+		$this->_data = $hash_only === true ? md5((string)$this->_reader->read(1024) . (string)$this->_dataSize) : $this->_reader->read($this->_dataSize); // r44a, r44d add _dataSize to hash
     }
 
     /**
