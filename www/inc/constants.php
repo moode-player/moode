@@ -18,6 +18,9 @@
  *
  */
 
+// PHP
+const PHP_VER = '8.2';
+
 // Log files
 const MOODE_LOG = '/var/log/moode.log';
 const AUTOCFG_LOG = '/var/log/moode_autocfg.log';

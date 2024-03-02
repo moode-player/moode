@@ -19,7 +19,7 @@
  *
  */
 
-const VERSION = '3.0.2';
+const VERSION = '9.0.0';
 
 set_include_path('/var/www/inc');
 
@@ -404,7 +404,7 @@ function restartServers() {
 	exec('sudo killall -s 9 worker.php');
 	exec('sudo rm /var/run/worker.pid');
 	exec('sudo systemctl stop mpd2cdspvolume');
-	exec('sudo systemctl restart php7.4-fpm');
+	exec('sudo systemctl restart php' . PHP_VER . '-fpm');
 	exec('sudo systemctl restart nginx');
 	exec('sudo systemctl stop mpd');
 	exec('sudo systemctl stop localui');
@@ -539,7 +539,7 @@ function printHWParams() {
 	if ($trxTx == 'On') {
 		$cardNum = '2';
 	} else {
-		$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));		
+		$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));
 	}
 	echo shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
 }
