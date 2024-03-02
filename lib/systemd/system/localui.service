@@ -1,6 +1,6 @@
 [Unit]
 Description=Start Chromium Browser
-After=nginx.service php7.4-fpm.service mpd.service
+After=nginx.service php8.2-fpm.service mpd.service
 
 [Service]
 Type=simple

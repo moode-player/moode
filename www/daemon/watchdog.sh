@@ -23,6 +23,8 @@
 # $1: Loop sleep time (secs)
 if [ -z $1 ]; then WATCHDOG_SLEEP=6; else WATCHDOG_SLEEP=$1; fi
 
+PHP_VER="8.2"
+
 # NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool
 FPM_MAX_LIMIT=64
 FPM_MIN_LIMIT=32
@@ -53,7 +55,7 @@ while true; do
 
 	if (( FPM_CNT > FPM_MAX_LIMIT )); then
 		message_log "Info: Resetting PHP-FPM worker pool"
-		systemctl restart php7.4-fpm
+		systemctl restart php$PHP_VER-fpm
 	fi
 
 	# MPD
