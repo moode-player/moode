@@ -38,6 +38,11 @@ const MPD_RESPONSE_OK = 'OK';
 const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
+// Audio outputs
+const AO_INTEGRATED = 1;
+const AO_I2S = 2;
+const AO_USB = 3;
+const AO_TRXSEND = 4;
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
@@ -63,8 +68,8 @@ const PORT_FILE = '/tmp/moode_portfile'; // Command engine
 const SESSION_SAVE_PATH = '/var/local/php';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
-const BOOT_CONFIG_TXT = '/boot/config.txt';
-const BOOT_CONFIG_BKP = '/boot/bootcfg.bkp';
+const BOOT_CONFIG_TXT = '/boot/firmware/config.txt';
+const BOOT_CONFIG_BKP = '/boot/firmware/bootcfg.bkp';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
