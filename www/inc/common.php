@@ -24,9 +24,6 @@
 set_include_path('/var/www/inc');
 error_reporting(E_ERROR);
 
-// PHP 8 equivalent funcrtions are used in the CUE support functions in this file
-require_once __DIR__ . '/php8-equiv.php';
-
 // Constants
 require_once __DIR__ . '/constants.php';
 
