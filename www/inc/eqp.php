@@ -37,7 +37,7 @@ function Eqp12($dbh)  {
 class Eqp {
 
     private $dbh = NULL;
-    private $band_count = EQP_BANDS12;
+    private $band_count = 12;
     private $table = "";
     private $alsa_file ="";
 
