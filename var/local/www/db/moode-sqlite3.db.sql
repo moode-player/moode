@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Feb 5 17:11:07 2024
+-- File generated with SQLiteStudio v3.1.0 on Sat Mar 2 17:50:37 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -605,6 +605,8 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (200, 'b1', 'Pi HDMI 1', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (201, 'b2', 'Pi HDMI 2', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (203, 'vc4hdmi0', 'Pi HDMI 1', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (204, 'vc4hdmi1', 'Pi HDMI 2', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (302, 'ProtoDAC TDA1387 X8', '', 'Philips TDA1387 (8 chip module)', '', 'I2S', 'yes', 'i2s-dac', '');
