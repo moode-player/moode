@@ -85,10 +85,17 @@ function unloadSndDummy () {
 	sysCmd('sudo modprobe -r snd-dummy');
 }
 
-// Returns the specified timeout for use in file_get_contents($URL) calls
+// Returns the specified timeout (n.n float format) for use in file_get_contents($URL) calls
 function getStreamTimeout() {
 	$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", sqlConnect());
 	$timeout = $result[0]['value'];
-	$options = array('http' => array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
+	$options = array('http' => array('timeout' => $timeout . '.0'));
+
+	// DEBUG
+	/*$options = array('http' => array(
+		'timeout' => $timeout . '.0',
+		'ignore_errors' => true));
+	workerLog(print_r($options, true));*/
+
 	return stream_context_create($options);
 }

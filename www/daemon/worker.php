@@ -362,7 +362,7 @@ $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModel == '3') { // 3B, B+, A+
 	$result = sysCmd('vcgencmd otp_dump | grep 17:');
 	if ($result[0] == '17:3020000a') {
-		sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
+		sysCmd('sed -i /program_usb_boot_mode/d ' . BOOT_CONFIG_TXT);
 		$msg = 'enabled';
 	} else {
 		$msg = 'not enabled yet';
@@ -1503,8 +1503,8 @@ function chkBtActive() {
 				$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
 				$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
 				for ($i = 0; $i < count($rxAddresses); $i++) {
-					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max']))) {
-		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max']))) {
+					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max'])))) {
+		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max'])))) {
 		    				workerLog("worker: chkBtActive(): send 'set-alsavol alsavolume_max' failed: " . $rxHostNames[$i]);
 		    			}
 		    		}
@@ -1525,8 +1525,8 @@ function chkBtActive() {
 				$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
 				$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
 				for ($i = 0; $i < count($rxAddresses); $i++) {
-					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=vol.sh -restore'))) {
-		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=vol.sh -restore'))) {
+					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('vol.sh -restore')))) {
+		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('vol.sh -restore')))) {
 		    				workerLog("worker: chkBtActive(): send 'vol.sh -restore' failed: " . $rxHostNames[$i]);
 		    			}
 		    		}
@@ -2720,8 +2720,8 @@ function runQueuedJob() {
 			}
 			break;
 		case 'usbboot':
-			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // Remove first to prevent duplicate adds
-			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
+			sysCmd('sed -i /program_usb_boot_mode/d ' . BOOT_CONFIG_TXT); // Remove first to prevent duplicate adds
+			sysCmd('echo program_usb_boot_mode=1 >> ' . BOOT_CONFIG_TXT);
 			break;
 		case 'p3wifi':
 			ctlWifi($_SESSION['w_queueargs']);
@@ -2806,18 +2806,18 @@ function runQueuedJob() {
 			break;
 		case 'pixel_aspect_ratio':
 			if ($_SESSION['w_queueargs'] == 'Square') {
-				sysCmd('sed -i /framebuffer_/d ' . '/boot/config.txt'); // Remove first to prevent any chance of duplicate adds
-				sysCmd('echo framebuffer_width=800 >> ' . '/boot/config.txt');
-				sysCmd('echo framebuffer_height=444 >> ' . '/boot/config.txt');
-				sysCmd('echo framebuffer_aspect=-1 >> ' . '/boot/config.txt');
+				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT); // Remove first to prevent any chance of duplicate adds
+				sysCmd('echo framebuffer_width=800 >> ' . BOOT_CONFIG_TXT);
+				sysCmd('echo framebuffer_height=444 >> ' . BOOT_CONFIG_TXT);
+				sysCmd('echo framebuffer_aspect=-1 >> ' . BOOT_CONFIG_TXT);
 			} else {
-				sysCmd('sed -i /framebuffer_/d ' . '/boot/config.txt');
+				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT);
 			}
 			break;
 		case 'scnrotate':
-			sysCmd('sed -i /lcd_rotate/d ' . '/boot/config.txt');
+			sysCmd('sed -i /lcd_rotate/d ' . BOOT_CONFIG_TXT);
 			if ($_SESSION['w_queueargs'] == '180') {
-				sysCmd('echo lcd_rotate=2 >> ' . '/boot/config.txt');
+				sysCmd('echo lcd_rotate=2 >> ' . BOOT_CONFIG_TXT);
 			}
 			break;
 		case 'clearbrcache':

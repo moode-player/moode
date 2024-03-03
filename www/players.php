@@ -30,7 +30,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		$count = count($_POST['ipaddr']);
 		for ($i = 0; $i < $count; $i++) {
 			if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
-				'/command/system.php?cmd=' . $_GET['cmd']))) {
+				'/command/system.php?cmd=' . rawurlencode($_GET['cmd'])))) {
 				workerLog('players.php: Error: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' failed');
 			} else {
 				workerLog('players.php: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' result: ' . $result);
@@ -50,7 +50,7 @@ $_players_action_div_hide = '';
 $timeout = getStreamTimeout();
 foreach ($port6600Hosts as $ipAddr) {
 	if ($ipAddr != $thisIpAddr) {
-		if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=trx-control.php -rx', false, $timeout))) {
+		if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=' . rawurlencode('trx-control.php -rx'), false, $timeout))) {
 			debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
 		} else {
 			if ($status != 'Unknown command') {  // r740 or higher host
