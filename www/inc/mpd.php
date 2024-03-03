@@ -34,8 +34,8 @@ function scanForMPDHosts($retryCount = 2) {
 	$port = '6600';
 
 	for ($i = 0; $i < $retryCount; $i++) {
-        sysCmd('nmap -Pn -p' . $port . ' --open ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
-		$ipAddresses = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+        sysCmd('nmap -Pn -p' . $port . ' --open ' . $subnet . '.0/24 -oG /tmp/mpd_nmap.scan >/dev/null');
+		$ipAddresses = sysCmd('cat /tmp/mpd_nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
 		if (!empty($ipAddresses)) {
 			break;
 		}

@@ -51,8 +51,8 @@ while (true) {
 					if ($mp['type'] == 'nfs') {
 						//mountmonLog('- Checking NFS mount'); // DEBUG
 						$port = '2049';
-						sysCmd('nmap -Pn -p ' . $port . ' ' . $mp['address'] . ' -oG /tmp/nmap.scan >/dev/null');
-						$result = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+						sysCmd('nmap -Pn -p ' . $port . ' ' . $mp['address'] . ' -oG /tmp/nfs_nmap.scan >/dev/null');
+						$result = sysCmd('cat /tmp/nfs_nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
 						$fileSharingAccessible = !empty($result) ? true : false;
 					}
 
