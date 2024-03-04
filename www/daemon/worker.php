@@ -390,6 +390,7 @@ $msg = $result[0] > DEV_ROOTFS_SIZE ? 'expanded' : 'not expanded';
 workerLog('worker: File sys: ' . $msg);
 
 // Turn on/off HDMI port
+// TODO: The tvservice command does not exist in Bookworm
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
 sysCmd($cmd . ' > /dev/null');
 workerLog('worker: HDMI out: ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
