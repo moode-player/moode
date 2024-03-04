@@ -428,8 +428,8 @@ DEV_ROOTFS_SIZE=3670016000
 
 HOSTNAME=`uname -n`
 HDWRREV=$(moodeutl -d -gv hdwrrev)
-RASPIOS_VER=`cat /etc/debian_version`
-KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
+RASPIOS_VER=`/var/www/util/sysutil.sh "get-osinfo" | awk '{print $2" " $3" " $4}'`
+KERNEL_VER=`/var/www/util/sysutil.sh "get-osinfo" | awk '{print $7" " $8}'`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
 [ $(uname -m) = "aarch64" ] && ARCH="aarch64 (64-bit)" || ARCH="armhf (32-bit)"
@@ -477,11 +477,12 @@ if [[ $TMP -gt $DEV_ROOTFS_SIZE ]]; then
 else
 	FSEXPAND="not expanded"
 fi
-ROOTSIZE="$(df -h | grep /dev/root | awk '{print $2}')"
-ROOTUSED="$(df | grep /dev/root | awk '{print $5}')"
-ROOTAVAIL="$(df -h | grep /dev/root | awk '{print $4}')"
-
-tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
+ROOTSIZE="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $2}')"
+ROOTUSED="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $3}')"
+ROOTAVAIL="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $4}')"
+# The tvservice command does not exist in Bookworm
+#tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
+HDMI="On"
 
 NOW=$(date +"%Y-%m-%d %T")
 UPTIME="$(uptime -p)"
