@@ -13,7 +13,8 @@ dtoverlay=vc4-kms-v3d
 max_framebuffers=2
 disable_fw_kms_setup=1
 arm_64bit=1
-# 
+#
+arm_boost=0
 disable_splash=1
 disable_overscan=1
 hdmi_drive=2
