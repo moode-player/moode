@@ -2582,10 +2582,10 @@ function runQueuedJob() {
 
 		case 'multiroom_tx':
 			if ($_SESSION['multiroom_tx'] == 'On') {
-				$cardnum = loadSndDummy(); // Reconfigure to dummy sound driver
+				$cardNum = loadSndDummy(); // Reconfigure to dummy sound driver
 
-				updAudioOutAndBtOutConfs($cardnum, 'hw');
-				updDspAndBtInConfs($cardnum, 'hw');
+				updAudioOutAndBtOutConfs($cardNum, 'hw');
+				updDspAndBtInConfs($cardNum, 'hw');
 				sysCmd('systemctl restart mpd');
 
 				startMultiroomSender();
