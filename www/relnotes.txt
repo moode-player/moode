@@ -18,11 +18,11 @@
 Updates
 
 - UPD: Improve (i) help for some items
-- UPD: CamillaDSP V2 configs and coeffs
+- UPD: CamillaDSP V2 sample configs and coeffs
 
 Bug fixes
 
-- FIX: MusicBrainz date format (with dashes) not being parsed 
+- FIX: MusicBrainz date format (with hyphens) not being parsed
 
 ################################################################################
 #
