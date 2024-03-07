@@ -62,7 +62,7 @@ function startAirPlay() {
 	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
 	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
 
-	// Interpolation param handled in config file
+	// NOTE: Interpolation param handled in config file
 	$cmd = '/usr/bin/shairport-sync ' . $logging .
 		' -a "' . $_SESSION['airplayname'] . '" ' .
 		'-- -d ' . $device . ' > ' . $logFile . ' 2>&1 &';
