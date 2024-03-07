@@ -5,15 +5,17 @@ otg_mode=1
 hdmi_force_hotplug:0=1
 hdmi_force_hotplug:1=1
 
+[pi5]
+dtoverlay=vc4-kms-v3d
+max_framebuffers=2
+
 [all]
 # Bookworm
 display_auto_detect=1
-auto_initramfs=1
-dtoverlay=vc4-kms-v3d
-max_framebuffers=2
 disable_fw_kms_setup=1
 arm_64bit=1
-#
+
+# General
 arm_boost=0
 disable_splash=1
 disable_overscan=1
