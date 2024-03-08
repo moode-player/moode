@@ -117,13 +117,14 @@ switch ($_GET['cmd']) {
 		break;
 	case 'play_group':
 	case 'play_group_next':
-		// Search the Queue for the group
+    	// Search the Queue for the group
 		sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
 		$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
 		$result = findInQueue($sock, 'album', $album);
-		// Group is already in the Queue if first and last file exist sequentially
 		$last = count($_POST['path']) - 1;
-		if ($_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
+
+		if (!empty($result) && $_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
+            // Group is already in the Queue if first and last file exist sequentially
 			$pos = $result[0]['Pos'];
 			sendMpdCmd($sock, 'play ' . $pos);
 			$resp = readMpdResp($sock);
@@ -143,7 +144,6 @@ switch ($_GET['cmd']) {
 			array_push($cmds, 'play ' . $pos);
 			chainMpdCmds($sock, $cmds);
 		}
-
         putToggleSongId($pos);
 		break;
 	/*case 'clear_add_group':*/
@@ -265,7 +265,7 @@ function findInQueue($sock, $tag, $search) {
 	$resp = readMpdResp($sock);
 
 	if ($resp == "OK\n") {
-		return 'findInQueue(): ' . $tag . ' ' . $search . ' not found';
+		return ''; // Not found
 	}
 
 	$queue = array();

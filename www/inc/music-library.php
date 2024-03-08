@@ -36,18 +36,14 @@ function loadLibrary($sock) {
 		return file_get_contents(libcacheFile());
 	} else {
 		$flat = genFlatList($sock);
-		if ($flat != '') {
-			// Normal or UTF8 replace
-			if ($_SESSION['library_utf8rep'] == 'No') {
-				$jsonLib = genLibrary($flat);
-			} else {
-				$jsonLib = genLibraryUTF8Rep($flat);
-			}
 
-			return $jsonLib;
+		if ($_SESSION['library_utf8rep'] == 'No') {
+			$jsonLib = genLibrary($flat);
 		} else {
-			return '';
+			$jsonLib = genLibraryUTF8Rep($flat);
 		}
+
+		return $jsonLib;
 	}
 }
 
@@ -122,10 +118,15 @@ function genFlatList($sock) {
 		}
 
 		sendMpdCmd($sock, $cmd);
-		$resp .= readMpdResp($sock);
+		$respTmp = readMpdResp($sock);
+		if ($respTmp != "OK\n") {
+			$resp .= $respTmp;
+		}
 	}
 
-	if (!is_null($resp)) {
+	if ($resp == '') {
+		return '';
+	} else {
 		$lines = explode("\n", $resp);
 		$item = 0;
 		$flat = array();
@@ -186,8 +187,6 @@ function genFlatList($sock) {
 		}
 
 		return $flat;
-	} else {
-		return '';
 	}
 }
 
@@ -237,9 +236,10 @@ function genLibrary($flat) {
 			$push = ($trackYear >= $filterYear[0] && $trackYear <= $filterYear[1]) ? true : false;
 		}
 
-		// Encoded or HD only filter
+		// Filters: encoded, hdonly
 		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
 			$encodedAt = getEncodedAt($flatData, 'default', true); // bits/rate format,Flag,channels
+
 			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
 				if ($_SESSION['library_flatlist_filter_str'] == 'multichannel') {
 					$push = substr($encodedAt, $channelsOffset) > 2 ? true : false;
@@ -267,7 +267,8 @@ function genLibrary($flat) {
 				// 3. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
 				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
 				'artist' => ($flatData['Artist'] ? $flatData['Artist'] : array()), //@Atair: array is expected in scripts-library.js even when empty
-				'album_artist' => ($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist')),
+				'album_artist' => ($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] :
+					($flatData['Artist'] ? (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist') : 'Unknown AlbumArtist')),
 				'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
 				//'performer' => ($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing'),
 				//'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
@@ -457,14 +458,15 @@ function genLibraryUTF8Rep($flat) {
 				'tracknum' => utf8rep(($flatData['Track'] ? ltrim($flatData['Track'], '0') : '')),
 				'title' => utf8rep(($flatData['Title'] ? $flatData['Title'] : 'Unknown Title')),
 				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-				'artist' => utf8repArray(($flatData['Artist'] ? $flatData['Artist'] : array())), //@Atair: array is expected in scripts-library.js even when empty
 				//@Atair:
 				// 1. artist can safely be empty, because it is no longed used as substitute for missing album_artist
 				// 2. album_artist shall never be empty, otherwise the sort routines in scripts-library.js complain,
 				//    because they expect artist as string and not as array in album_artist || artist constructs
 				// 3. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
 				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
-				'album_artist' => utf8rep(($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist'))),
+				'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : array())), //@Atair: array is expected in scripts-library.js even when empty
+				'album_artist' => utf8rep(($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] :
+					($flatData['Artist'] ? (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist') : 'Unknown AlbumArtist'))),
 				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
 				//'performer' => utf8rep(($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing')),
 				//'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
