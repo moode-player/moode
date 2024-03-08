@@ -27,7 +27,7 @@
  * @category   Zend
  * @package    Zend_Media
  * @subpackage ISO14496
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Box.php 177 2010-03-09 13:13:34Z svollbehr $
  */
@@ -39,7 +39,7 @@
  * @package    Zend_Media
  * @subpackage ISO14496
  * @author     Sven Vollbehr <sven@vollbehr.eu>
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Box.php 177 2010-03-09 13:13:34Z svollbehr $
  */
@@ -176,9 +176,9 @@ class Zend_Media_Iso14496_Box
      *
      * @return integer
      */
-    public final function getOffset() 
+    public final function getOffset()
     {
-        return $this->_offset; 
+        return $this->_offset;
     }
 
     /**
@@ -186,9 +186,9 @@ class Zend_Media_Iso14496_Box
      *
      * @param integer $offset The file offset to box start.
      */
-    public final function setOffset($offset) 
+    public final function setOffset($offset)
     {
-        $this->_offset = $offset; 
+        $this->_offset = $offset;
     }
 
     /**
@@ -200,7 +200,7 @@ class Zend_Media_Iso14496_Box
      */
     public final function getSize()
     {
-        return $this->_size; 
+        return $this->_size;
     }
 
     /**
@@ -227,9 +227,9 @@ class Zend_Media_Iso14496_Box
      *
      * @return string
      */
-    public final function getType() 
+    public final function getType()
     {
-        return $this->_type; 
+        return $this->_type;
     }
 
     /**
@@ -237,9 +237,9 @@ class Zend_Media_Iso14496_Box
      *
      * @param string $type The box type.
      */
-    public final function setType($type) 
+    public final function setType($type)
     {
-        $this->_type = $type; 
+        $this->_type = $type;
     }
 
     /**
@@ -247,9 +247,9 @@ class Zend_Media_Iso14496_Box
      *
      * @return Zend_Media_Iso14496_Box
      */
-    public final function getParent() 
+    public final function getParent()
     {
-        return $this->_parent; 
+        return $this->_parent;
     }
 
     /**
@@ -257,7 +257,7 @@ class Zend_Media_Iso14496_Box
      *
      * @param Zend_Media_Iso14496_Box $parent The parent box.
      */
-    public function setParent(&$parent) 
+    public function setParent(&$parent)
     {
         $this->_parent = $parent;
     }
@@ -267,7 +267,7 @@ class Zend_Media_Iso14496_Box
      *
      * @return boolean
      */
-    public final function isContainer() 
+    public final function isContainer()
     {
         return $this->_container;
     }
@@ -277,7 +277,7 @@ class Zend_Media_Iso14496_Box
      *
      * @return boolean
      */
-    public final function getContainer() 
+    public final function getContainer()
     {
         return $this->_container;
     }
@@ -304,7 +304,7 @@ class Zend_Media_Iso14496_Box
         if ($this->getType() != 'file') {
             self::$_path[] = $this->getType();
         }
-        $path = implode(self::$_path, '.');
+        $path = implode('.', self::$_path);
 
         while (true) {
             $offset = $this->_reader->getOffset();
@@ -640,7 +640,7 @@ class Zend_Media_Iso14496_Box
             $writer->writeGuid($this->_type);
         }
     }
-    
+
     /**
      * Writes the frame data with the header.
      *

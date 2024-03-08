@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Media
  * @subpackage ID3
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Wxxx.php 177 2010-03-09 13:13:34Z svollbehr $
  */
@@ -37,7 +37,7 @@ require_once 'Zend/Media/Id3/Encoding.php';
  * @subpackage ID3
  * @author     Sven Vollbehr <sven@vollbehr.eu>
  * @author     Ryan Butterfield <buttza@gmail.com>
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Wxxx.php 177 2010-03-09 13:13:34Z svollbehr $
  */
@@ -87,7 +87,7 @@ final class Zend_Media_Id3_Frame_Wxxx extends Zend_Media_Id3_LinkFrame
         }
         $this->_description =
             $this->_convertString($this->_description, $encoding);
-        $this->_link = implode($this->_explodeString8($this->_link, 1), '');
+        $this->_link = implode('', $this->_explodeString8($this->_link, 1));
     }
 
     /**
@@ -132,9 +132,9 @@ final class Zend_Media_Id3_Frame_Wxxx extends Zend_Media_Id3_LinkFrame
      *
      * @return string
      */
-    public function getDescription() 
+    public function getDescription()
     {
-         return $this->_description; 
+         return $this->_description;
     }
 
     /**
