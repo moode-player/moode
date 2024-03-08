@@ -83,8 +83,13 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 			// Load cfg_system into session
 			$rows = sqlRead('cfg_system', sqlConnect());
 			foreach ($rows as $row) {
-				$_SESSION[$row['param']] = $row['value'];
+				// Filter out params marked as reserved
+				if (!str_contains($row['param'], 'RESERVED_')) {
+					$_SESSION[$row['param']] = $row['value'];
+				}
 			}
+			// Remove certain SQL-only vars
+			unset($_SESSION['wrkready']);
 			break;
 		case 'load_radio':
 			// Delete radio station session vars to purge any orphans
