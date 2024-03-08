@@ -176,7 +176,6 @@ function autoConfigSettings() {
 			ctlBt($values['p3bt']);
 			phpSession('write', 'p3bt', $values['p3bt']);
 		}],
-		['requires' => ['hdmiport'], 'handler' => setphpSession],
 		['requires' => ['led_state'], 'handler' => setphpSession],
 		['requires' => ['ipaddr_timeout'], 'handler' => setphpSession],
 		['requires' => ['eth0chk'], 'handler' => setphpSession],

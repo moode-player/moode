@@ -153,6 +153,7 @@ sysCmd('moodeutl -D upd_tx_adv_toggle');
 sysCmd('moodeutl -D piano_dualmode');
 sysCmd('moodeutl -D wrkready');
 sysCmd('moodeutl -D airplay_protocol');
+sysCmd('moodeutl -D hdmiport');
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
@@ -389,11 +390,8 @@ $result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
 $msg = $result[0] > DEV_ROOTFS_SIZE ? 'expanded' : 'not expanded';
 workerLog('worker: File sys: ' . $msg);
 
-// Turn on/off HDMI port
-// TODO: The tvservice command does not exist in Bookworm
-$cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
-sysCmd($cmd . ' > /dev/null');
-workerLog('worker: HDMI out: ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
+// HDMI port(s)
+workerLog('worker: HDMI out: on');
 
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
@@ -2729,10 +2727,6 @@ function runQueuedJob() {
 			break;
 		case 'p3bt':
 			ctlBt($_SESSION['w_queueargs']);
-			break;
-		case 'hdmiport':
-			$cmd = $_SESSION['w_queueargs'] == '1' ? 'tvservice -p' : 'tvservice -o';
-			sysCmd($cmd . ' > /dev/null');
 			break;
 		case 'actled': // LED0
 			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {

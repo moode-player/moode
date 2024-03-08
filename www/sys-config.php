@@ -161,11 +161,6 @@ if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
 	phpSession('write', 'p3bt', $_POST['p3bt']);
 }
 
-if (isset($_POST['hdmiport']) && $_POST['hdmiport'] != $_SESSION['hdmiport']) {
-	submitJob('hdmiport', $_POST['hdmiport'], 'Settings updated');
-	phpSession('write', 'hdmiport', $_POST['hdmiport']);
-}
-
 if (isset($_POST['update_actled']) && $_POST['actled'] != explode(',', $_SESSION['led_state'])[0]) {
 	submitJob('actled', $_POST['actled'], 'Settings updated');
 	phpSession('write', 'led_state', $_POST['actled'] . ',' . explode(',', $_SESSION['led_state'])[1]);
@@ -413,10 +408,6 @@ if (
 } else {
 	$_wifibt_hide = 'hide';
 }
-
-$autoClick = " onchange=\"autoClick('#btn-set-hdmiport');\"";
-$_select['hdmiport_on']  .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-1\" value=\"1\" " . (($_SESSION['hdmiport'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['hdmiport_off'] .= "<input type=\"radio\" name=\"hdmiport\" id=\"toggle-hdmiport-2\" value=\"0\" " . (($_SESSION['hdmiport'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 $actled = explode(',', $_SESSION['led_state'])[0];
 $autoClick = " onchange=\"autoClick('#btn-set-actled');\"";

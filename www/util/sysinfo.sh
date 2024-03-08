@@ -480,8 +480,6 @@ fi
 ROOTSIZE="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $2}')"
 ROOTUSED="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $3}')"
 ROOTAVAIL="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $4}')"
-# The tvservice command does not exist in Bookworm
-#tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
 HDMI="On"
 
 NOW=$(date +"%Y-%m-%d %T")
@@ -657,7 +655,7 @@ if [[ -f "/opt/RoonBridge/start.sh" ]]; then
 else
 	rbsvc="Not installed"
 fi
-RESERVED_16=${arr[15]}
+res_plugin_upd_url=${arr[15]}
 rbactive=${arr[16]}
 adevname=${arr[17]}
 clkradio_mode=${arr[18]}
@@ -703,7 +701,7 @@ keyboard=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
 toggle_songid=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
-hdmiport=${arr[61]}
+RESERVED_62=${arr[61]}
 cpugov=${arr[62]}
 [[ "${arr[63]}" = "1" ]] && pairing_agent="On" || pairing_agent="Off"
 pkgid_suffix=${arr[64]}

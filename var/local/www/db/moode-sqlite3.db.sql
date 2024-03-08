@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Mar 2 17:50:37 2024
+-- File generated with SQLiteStudio v3.1.0 on Thu Mar 7 07:59:48 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -123,7 +123,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
 INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
 INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (62, 'hdmiport', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (62, 'RESERVED_62', '');
 INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
 INSERT INTO cfg_system (id, param, value) VALUES (64, 'pairing_agent', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
