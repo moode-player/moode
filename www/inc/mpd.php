@@ -482,7 +482,12 @@ function updMpdConf($i2sDevice) {
 	$data .= "name \"" . ALSA_DEFAULT . "\"\n";
 	$data .= "device \"_audioout\"\n";
 	$data .= "mixer_type \"" . $mixerType . "\"\n";
-	$data .= $mixerType == 'hardware' ? "mixer_control \"" . $_SESSION['amixname'] . "\"\n" . "mixer_device \"hw:" . $cardNum . "\"\n" . "mixer_index \"0\"\n" : '';
+	$data .= $mixerType == 'hardware' ?
+        "mixer_control \"" . $_SESSION['amixname'] . "\"\n" .
+        "mixer_device \"" . ($_SESSION['alsa_output_mode'] == 'iec958' ? ALSA_IEC958_DEVICE . $cardNum : 'hw:' . $cardNum) . "\"\n" .
+        //DELETE:"mixer_device \"" . ('hw:' . $cardNum) . "\"\n" .
+        "mixer_index \"0\"\n" :
+        '';
 	$data .= "dop \"" . $dop . "\"\n";
 	$data .= "stop_dsd_silence \"" . $stopDsdSilence . "\"\n";
 	$data .= "thesycon_dsd_workaround \"" . $thesyconDsdWorkaround . "\"\n";

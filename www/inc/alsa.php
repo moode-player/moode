@@ -104,6 +104,12 @@ function getAlsaDeviceNames() {
 	return $devices;
 }
 
+function getAlsaDevice($cardNum, $outputMode) {
+	return $outputMode == 'iec958' ?
+		ALSA_IEC958_DEVICE . $cardNum :
+		$outputMode . ':' . $cardNum . ',0';
+}
+
 function getAlsaHwParams($cardNum) {
 	$result = shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
 
@@ -129,8 +135,12 @@ function getAlsaHwParams($cardNum) {
 			$floatBits = (float)substr($array['format'], 5, 2);
 			$array['format'] = 'DSD';
 		} else {
-			// Formats: 'S24_3LE' etc
-			$array['format'] = substr($array['format'], 1, 2);
+			// Formats: 'S16_LE' etc or IEC958_SUBFRAME_LE (Pi-5 HDMI with KMS driver)
+			if ($array['format'] == ALSA_IEC958_FORMAT) {
+				$array['format'] = getMpdStatus(getMpdSock())['audio_sample_depth'];
+			} else {
+				$array['format'] = substr($array['format'], 1, 2);
+			}
 			$floatBits = (float)$array['format'];
 		}
 

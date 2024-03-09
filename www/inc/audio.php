@@ -145,11 +145,12 @@ function setAudioOut($output) {
 	sysCmd('systemctl restart mpd');
 }
 
-// Update ALSA audio out and Bt out confs
+// Update ALSA audio out and BT out confs
 function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 	// $outputMode:
-	// - plughw	Default
-	// - hw		Direct
+	// plughw	Default
+	// hw		Direct
+	// iec958	IEC958
 	if ($_SESSION['audioout'] == 'Local') {
 		// With DSP
 		if ($_SESSION['alsaequal'] != 'Off') {
@@ -169,8 +170,9 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \"invpolarity\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		} else {
 			// No DSP
-			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $outputMode . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
-			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $outputMode . ':' . $cardNum . ",0\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
+			$alsaDevice = getAlsaDevice($cardNum, $outputMode);
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $alsaDevice . "\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $alsaDevice . "\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		}
 
 		// Update squeezelite.conf

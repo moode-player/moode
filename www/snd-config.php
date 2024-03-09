@@ -332,11 +332,11 @@ foreach ($result as $row) {
 
 // Output device
 // Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device
-$dev = $rebootRequired == true ? array('********') : getAlsaDeviceNames();
-if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($cfgMPD['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
-if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($cfgMPD['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
-if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($cfgMPD['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
-if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
+$devNames = $rebootRequired == true ? array('********') : getAlsaDeviceNames();
+if ($devNames[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($cfgMPD['device'] == '0') ? "selected" : "") . " >$devNames[0]</option>\n";}
+if ($devNames[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($cfgMPD['device'] == '1') ? "selected" : "") . " >$devNames[1]</option>\n";}
+if ($devNames[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($cfgMPD['device'] == '2') ? "selected" : "") . " >$devNames[2]</option>\n";}
+if ($devNames[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD['device'] == '3') ? "selected" : "") . " >$devNames[3]</option>\n";}
 $cards = getAlsaCards();
 $_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$cfgMPD['device']] == 'empty') ? 'Device turned off or disconnected' : '';
 // Volume type
@@ -431,9 +431,15 @@ if ($_SESSION['alsavolume'] == 'none') {
 }
 // Output mode
 $_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
-$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
-$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
-$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+if (substr($_SESSION['hdwrrev'], 3, 1) >= 5 && str_contains($_SESSION['adevname'], 'HDMI')) {
+	// Pi-5 or higher and HDMI output set
+	$_select['alsa_output_mode'] .= "<option value=\"iec958\" " . (($_SESSION['alsa_output_mode'] == 'iec958') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['iec958'] . "</option>\n";
+	$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'];
+} else {
+	$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
+	$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
+	$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+}
 // Loopback
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
 $autoClick = " onchange=\"autoClick('#btn-set-alsa-loopback');\" " . $_alsa_loopback_disable;

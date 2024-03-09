@@ -141,8 +141,9 @@
 					ALSA: $_alsa_plugin_and_cardnum
 				</span>
 				<span class="config-help-static">
-					<b>Default: </b>Use ALSA "plughw" plugin which performs format conversions if needed to match audio device requirements.<br>
-					<b>Direct: </b>Use ALSA "hw" plugin which does not preform any format conversions. The audio device must accept the given format.<br>
+					<b>Default: </b>ALSA "plughw" plugin which performs format conversions if needed to match audio device requirements.<br>
+					<b>Direct: </b>ALSA "hw" plugin which does not perform format conversions. The audio device must accept the given format.<br>
+					<b>IEC958: </b>ALSA "iec958" plugin which provides IEC958_SUBFRAME_LE format for Pi-5 and higher HDMI audio.<br>
 					These modes apply to MPD, Bluetooth (inbound), AirPlay, Spotify Connect, Squeezelite and the Equalizers.
 				</span>
 			</div>

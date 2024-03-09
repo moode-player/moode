@@ -115,9 +115,10 @@ const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
-// ALSA output modes
-const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct');
-// Bluetooth ALSA output modes
+// ALSA mode/name, device, format
+const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct', 'iec958' => 'IEC958');
+const ALSA_IEC958_DEVICE = 'default:vc4hdmi';
+const ALSA_IEC958_FORMAT = 'IEC958_SUBFRAME_LE';
 const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
 
 // Source select devices
