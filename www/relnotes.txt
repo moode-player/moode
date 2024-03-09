@@ -17,7 +17,7 @@
 
 New features
 
-- NEW:
+- NEW: Support for IEC958 audio format including multichannel (Pi-5 HDMI only)
 
 Updates
 
