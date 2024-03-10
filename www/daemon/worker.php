@@ -384,12 +384,6 @@ if ($piModel == '3') { // 3B, B+, A+
 	workerLog('worker: USB boot: n/a');
 }
 
-// Rootfs expansion
-// NOTE: Default for release images is to auto-expand at first boot. Development images may be set to a custom size.
-$result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
-$msg = $result[0] > DEV_ROOTFS_SIZE ? 'expanded' : 'not expanded';
-workerLog('worker: File sys: ' . $msg);
-
 // HDMI port(s)
 workerLog('worker: HDMI out: on');
 
