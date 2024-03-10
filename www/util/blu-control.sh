@@ -152,7 +152,7 @@ LIST_DISCOVERED() {
 # List paired devices
 LIST_PAIRED() {
 	unset btdev
-	mapfile -t btdev < <(echo -e "paired-devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
+	mapfile -t btdev < <(echo -e "devices Paired\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
 	echo "** Paired devices"
 	echo "**"
 	for i in "${btdev[@]}" ; do
@@ -166,7 +166,7 @@ LIST_CONNECTED() {
 	echo "** Connected devices"
 	echo "**"
 	unset btdev
-	mapfile -t btdev < <(echo -e "paired-devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
+	mapfile -t btdev < <(echo -e "devices Paired\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
 	for i in "${btdev[@]}" ; do
 	   MAC=$(echo "$i" | cut -f 1 -d " ")
 	   statconnected="$( echo -e "info $MAC\nquit"  | bluetoothctl | grep "Connected" | cut -f 2 -d " ")"
@@ -193,7 +193,7 @@ REMOVE_ALL() {
 DISCONNECT_ALL() {
 	echo "** Disconnecting all devices"
 	unset btdev
-	mapfile -t btdev < <(echo -e "paired-devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
+	mapfile -t btdev < <(echo -e "devices Paired\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
 	for i in "${btdev[@]}" ; do
 	   MAC=$(echo "$i" | cut -f 1 -d " ")
 	   statconnected="$( echo -e "info $MAC\nquit"  | bluetoothctl | grep "Connected" | cut -f 2 -d " ")"
