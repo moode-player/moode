@@ -53,10 +53,9 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nUSB boot\t\t= $USBBOOT\c"
 	echo -e "\nWarranty\t\t= $WARRANTY\c"
 	echo -e "\n\c"
-	echo -e "\nRoot size\t\t= $ROOTSIZE\c"
-	echo -e "\nRoot used\t\t= $ROOTUSED\c"
-	echo -e "\nRoot available\t\t= $ROOTAVAIL\c"
-	echo -e "\nRoot expand\t\t= $FSEXPAND\c"
+	echo -e "\nRootFS size\t\t= $ROOTSIZE\c"
+	echo -e "\nRootFS used\t\t= $ROOTUSED\c"
+	echo -e "\nRootFS available\t= $ROOTAVAIL\c"
 	echo -e "\nMemory total\t\t= $MEM_TOTAL MB\c"
 	echo -e "\nMemory free\t\t= $MEM_AVAIL MB\c"
 	echo -e "\nMemory used\t\t= $MEM_USED MB\c"
@@ -471,15 +470,10 @@ fi
 TMP=$(moodeutl -d -gv nginx_https_only)
 [[ "$TMP" = "1" ]] && HTTPS_MODE="On" || HTTPS_MODE="Off"
 
-TMP="$(lsblk -o size -nb /dev/disk/by-label/rootfs)"
-if [[ $TMP -gt $DEV_ROOTFS_SIZE ]]; then
-	FSEXPAND="expanded"
-else
-	FSEXPAND="not expanded"
-fi
-ROOTSIZE="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $2}')"
-ROOTUSED="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $3}')"
-ROOTAVAIL="$(df -h | grep "/dev/mmcblk0p2" | awk '{print $4}')"
+ROOTSIZE=$(lsblk -n -o FSSIZE /dev/disk/by-label/rootfs | awk '{print $1}')
+ROOTUSED=$(lsblk -n -o FSUSED /dev/disk/by-label/rootfs | awk '{print $1}')
+ROOTAVAIL=$(lsblk -n -o FSAVAIL /dev/disk/by-label/rootfs | awk '{print $1}')
+
 HDMI="On"
 
 NOW=$(date +"%Y-%m-%d %T")
