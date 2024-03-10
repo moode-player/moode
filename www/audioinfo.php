@@ -190,10 +190,15 @@ if ($_SESSION['invert_polarity'] == '1') {
 
 // Bluetooth overrides
 if ($btActive === true) {
-	if ($_SESSION['bt_alsa_output_mode'] == 'plughw') { // Instead of _audioout
+	if ($_SESSION['alsa_output_mode'] == 'iec958') {
+		$outputModeName = ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']];
+	} else if ($_SESSION['bt_alsa_output_mode'] == 'plughw') { // Instead of _audioout
 		$dsp = '';
 		$outputMode = 'plughw';
+		$outputModeName = BT_ALSA_OUTPUT_MODE_NAME['plughw'];
 	}
+} else {
+	$outputModeName = ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']];
 }
 
 // Combine parts
@@ -212,7 +217,8 @@ if ($_SESSION['audioout'] == 'Bluetooth') {
 // ALSA Output mode and Loopback
 $_alsa_output_mode = $_SESSION['multiroom_tx'] == 'On' ?
 	'Loopback' :
-	ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $outputMode . ')';
+	//ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $outputMode . ')';
+	 $outputModeName . ' (' . $outputMode . ')';
 $_alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback'];
 $_alsa_loopback_class = $_alsa_loopback; // NOTE: 'off' is a class that hides the element
 
