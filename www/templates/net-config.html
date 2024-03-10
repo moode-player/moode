@@ -187,21 +187,10 @@
 		<p class="sub-legend">
 			Access Point (AP) mode enables access to moOde over its own private 2.4 GHz WiFi network named using the SSID below.
 			After connecting to the SSID enter the URL <b>http://172.24.1.1</b> or <b>http://moode.local</b> into a Browser to bring up the WebUI.
-			The AP can also function as a Router forwarding packets between the AP and Ethernet connection by turning on Router mode.
+			The AP also functions as a Hotspot forwarding packets between the AP and Ethernet connection if present.
 		</p>
 
 		<div class="control-group">
-			<label class="control-label">Router mode</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-wlan0apd-router" for="toggle-wlan0apd-router-2">ON </label>$_select[wlan0apd_router_on]
-					<label class="toggle-radio toggle-wlan0apd-router" for="toggle-wlan0apd-router-1">OFF</label>$_select[wlan0apd_router_off]
-				</div>
-				<span class="config-help-static">
-					 Router mode forwards packets between the Access Point and Ethernet connection.
-		        </span>
-			</div>
-
 	        <label class="control-label" for="apdssid">Network (SSID)</label>
 	        <div class="controls">
 	            <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,32}" id="apdssid" name="wlan0apdssid" value="$_wlan0apdssid" required>
