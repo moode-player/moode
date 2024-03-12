@@ -34,6 +34,10 @@ function cfgI2sOverlay($i2sDevice) {
 	$forceEepromRead0 = (stripos($i2sDevice, 'hifiberry') !== false || stripos($_SESSION['i2soverlay'], 'hifiberry') !== false) ?
 		'\nforce_eeprom_read=0' : '';
 
+	// On Pi-5 with I2S device, card 0 is vc4hdmi1 and card 1 is I2S device but sometimes the order is reversed
+	$cards = sysCmd("aplay -l | grep card | awk '{print $3}'");
+	str_contains($cards[0], 'vc4hdmi') ? $cardNum = '1' : $cardNum = '0';
+
 	if ($i2sDevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		// Reset to Pi HDMI-1
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" ' . BOOT_CONFIG_TXT);
@@ -43,15 +47,23 @@ function cfgI2sOverlay($i2sDevice) {
 		// Named I2S device
 		$result = sqlRead('cfg_audiodev', sqlConnect(), $i2sDevice);
 		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . $forceEepromRead0 . '" ' . BOOT_CONFIG_TXT);
-		phpSession('write', 'cardnum', '0');
+		phpSession('write', 'cardnum', $cardNum);
 		phpSession('write', 'adevname', $result[0]['name']);
-		sqlUpdate('cfg_mpd', sqlConnect(), 'device', '0');
+		sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
+		// Reset output mode if needed
+		if ($_SESSION['alsa_output_mode'] == 'iec958') {
+			phpSession('write', 'alsa_output_mode', 'plughw');
+		}
 	} else {
 		// DT overlay
 		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $_SESSION['i2soverlay'] . $forceEepromRead0 . '" ' . BOOT_CONFIG_TXT);
-		phpSession('write', 'cardnum', '0');
+		phpSession('write', 'cardnum', $cardNum);
 		phpSession('write', 'adevname', $_SESSION['i2soverlay']);
-		sqlUpdate('cfg_mpd', sqlConnect(), 'device', '0');
+		sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
+		// Reset output mode if needed
+		if ($_SESSION['alsa_output_mode'] == 'iec958') {
+			phpSession('write', 'alsa_output_mode', 'plughw');
+		}
 	}
 }
 
