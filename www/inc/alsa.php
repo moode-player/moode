@@ -175,6 +175,12 @@ function getAlsaCardNum() {
 	return $_SESSION['multiroom_tx'] == 'On' ? (array_search('Dummy', getAlsaCards()) - 1) : $_SESSION['cardnum'];
 }
 
+// With VC4 KMS driver + I2S device, card 0 is vc4hdmi1 and card 1 is I2S device but sometimes the order is reversed
+function getAlsaCardNumVC4I2S() {
+	$cards = sysCmd("aplay -l | grep card | awk '{print $3}'");
+	return str_contains($cards[0], 'vc4hdmi') ? '1' : '0';
+}
+
 function setALSAVolTo0dB($alsaVolMax = '100') {
 	sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $alsaVolMax);
 }

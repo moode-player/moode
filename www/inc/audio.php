@@ -34,9 +34,8 @@ function cfgI2sOverlay($i2sDevice) {
 	$forceEepromRead0 = (stripos($i2sDevice, 'hifiberry') !== false || stripos($_SESSION['i2soverlay'], 'hifiberry') !== false) ?
 		'\nforce_eeprom_read=0' : '';
 
-	// On Pi-5 with I2S device, card 0 is vc4hdmi1 and card 1 is I2S device but sometimes the order is reversed
-	$cards = sysCmd("aplay -l | grep card | awk '{print $3}'");
-	str_contains($cards[0], 'vc4hdmi') ? $cardNum = '1' : $cardNum = '0';
+	// With VC4 KMS driver + I2S device, card 0 is vc4hdmi1 and card 1 is I2S device but sometimes the order is reversed
+	$cardNum = getAlsaCardNumVC4I2S();
 
 	if ($i2sDevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		// Reset to Pi HDMI-1

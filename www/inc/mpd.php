@@ -418,6 +418,7 @@ function updMpdConf($i2sDevice) {
 	}
 
 	// ALSA card number
+    $cardNum = getAlsaCardNumVC4I2S();
 	phpSession('write', 'cardnum', $cardNum);
 	// ALSA mixer name
 	phpSession('write', 'amixname', getAlsaMixerName($i2sDevice));
