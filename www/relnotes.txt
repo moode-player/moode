@@ -18,7 +18,7 @@
 New features
 
 - NEW: HDMI/IEC958 audio format including multichannel
-- NEW: WiFi Hotspot
+- NEW: WiFi Hotspot (2.4 GHz WiFi bridged to Ethernet if present)
 
 Updates
 
