@@ -702,7 +702,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
                     (isset($song['Name']) ? $song['Name'] : $_SESSION[$song['file']]['name']) :
                     $_SESSION[$song['file']]['name'];
 				// Include original station name
-				// DEPRECATE: $current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
 					// Local logo image
 					$current['coverurl'] = rawurlencode(LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . '.jpg');
@@ -710,16 +709,16 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					// URL logo image
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
-                // NOTE: Use bitrate in station metadata for AAC-LC (HLS) and FLAC streams
-                // because MPD returns bitrate 0 in its status
-                if ($_SESSION[$song['file']]['format'] == 'AAC-LC' || $_SESSION[$song['file']]['format'] == 'FLAC') {
+                if ($_SESSION[$song['file']]['bitrate'] == '') {
+                    $current['bitrate'] == '';
+                } else {
                     $current['bitrate'] = $_SESSION[$song['file']]['bitrate'] . ' kbps';
                 }
 			} else {
 				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
-				// DEPRECATE $current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
+                $current['bitrate'] = '';
 			}
             //workerLog(print_r($song, true));
 		} else {

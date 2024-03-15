@@ -1041,9 +1041,17 @@ function renderUI() {
         } else {
             // Play
             if (MPD.json['artist'] == 'Radio station') {
-                var format = typeof(RADIO.json[MPD.json['file']]['format']) == 'undefined' ?
-                    'Variable bps' : RADIO.json[MPD.json['file']]['format'];
-                var bitRate = MPD.json['bitrate'] ? format + ' ' + MPD.json['bitrate'] : format;
+                if (typeof(RADIO.json[MPD.json['file']]['format']) == 'undefined' ||
+                    RADIO.json[MPD.json['file']]['format'] == '') {
+                    var format = 'VBR';
+                } else {
+                    var format = RADIO.json[MPD.json['file']]['format'];
+                }
+                if (MPD.json['bitrate'] == '') {
+                    var bitRate = format;
+                } else {
+                    var bitRate = format + ' ' + MPD.json['bitrate'];
+                }
         		$('#extra-tags-display').text(bitRate + ' • ' + MPD.json['output']);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
