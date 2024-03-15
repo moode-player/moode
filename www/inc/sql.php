@@ -71,12 +71,10 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', pridns='" . $value['pridns'] .
 				"', secdns='" . $value['secdns'] .
 				"', wlanssid='" . SQLite3::escapeString($value['wlanssid']) .
-				"', wlansec='" . $value['wlansec'] .
+				"', wlanuuid='" . $value['wlanuuid'] .
 				"', wlanpwd='" . SQLite3::escapeString($value['wlanpwd']) .
-				"', wlan_psk='" . $value['wlan_psk'] .
-				"', wlan_country='" . $value['wlan_country'] .
-				"', wlan_channel='" . $value['wlan_channel'] .
-				"', wlan_router='" . $value['wlan_router'] .
+				"', wlanpsk='" . $value['wlanpsk'] .
+				"', wlancc='" . $value['wlancc'] .
 				"' WHERE iface='" . $key . "'";
 			//workerLog('sqlUpdate: ' . $queryStr);
 			break;

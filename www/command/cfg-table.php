@@ -54,8 +54,8 @@ switch ($_GET['cmd']) {
 		foreach ($result as $row) {
 			$cfgNetwork[$row['iface']] = array('method' => $row['method'], 'ipaddr' => $row['ipaddr'], 'netmask' => $row['netmask'],
 			'gateway' => $row['gateway'], 'pridns' => $row['pridns'], 'secdns' => $row['secdns'], 'wlanssid' => $row['wlanssid'],
-			'wlansec' => $row['wlansec'], 'wlanpwd' => $row['wlanpwd'], 'wlan_psk' => $row['wlan_psk'],
-			'wlan_country' => $row['wlan_country'], 'wlan_channel' => $row['wlan_channel']);
+			'wlanuuid' => $row['wlanuuid'], 'wlanpwd' => $row['wlanpwd'], 'wlanpsk' => $row['wlanpsk'],
+			'wlancc' => $row['wlancc']);
 		}
 		$data['cfg_network'] = $cfgNetwork;
 

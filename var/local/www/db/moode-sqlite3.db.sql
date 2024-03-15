@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Mar 7 07:59:48 2024
+-- File generated with SQLiteStudio v3.1.0 on Wed Mar 13 08:07:12 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -257,7 +257,7 @@ INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (14
 INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (15, 'Whiteshade', '333', '243,243,243', '251,251,251,0.75');
 
 -- Table: cfg_ssid
-CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), sec CHAR (32), psk CHAR (32));
+CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32));
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));
@@ -617,10 +617,10 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (307, 'ProtoDAC TDA1387 X8 (FifoPiMa)', '', 'Philips TDA1387 (8 chip module)', '', 'I2S', 'yes', 'hifiberry-dacplus', '');
 
 -- Table: cfg_network
-CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3), wlan_router CHAR (32));
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', '', '', '', '6', 'Off');
+CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlanuuid CHAR (4), wlanpwd CHAR (64), wlanpsk CHAR (64), wlancc CHAR (2));
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'Activate Hotspot', '', '', '', 'US');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', '', '', '');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));

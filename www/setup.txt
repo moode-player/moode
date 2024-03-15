@@ -32,7 +32,7 @@ Access Point password, and Secure Shell (SSH) access is disabled.
 
   2. REQUIRED: Userid, password and SSH are required otherwise moOde will not
   function correctly. When enabling SSH, select "Use password authentication"
-  which means the password specified for the userid is to be used. 
+  which means the password specified for the userid is to be used.
 
   3. REQUIRED: An Access Point password is required and is set after first boot
   in the Network Configuration screen. This allows moOde to still be accessable
@@ -50,28 +50,21 @@ Access Point password, and Secure Shell (SSH) access is disabled.
 To access the OS command console use SSH. An easy to use WebSSH terminal is
 available in the System Config screen.
 
-ACCESS POINT (AP) MODE
+WIFI HOTSPOT
 
-To use Access Point (AP) mode which is moOde's private 2.4 GHz WiFi network
+To use the Hotspot which is moOde's private 2.4 GHz WiFi network
 refer to the settings below.
 
 - IP address    172.24.1.1
 - SSID          Moode
 - Password      As set in Network Config screen
-- Channel       6
 
-AP mode starts automatically when any of the following are true.
+The Hotspot starts automatically when any of the following are true.
 
-- WiFi SSID is set to "None (activates AP mode)" in Network Config, Router
-  mode is Off and there is no active Ethernet connection.
+- WiFi SSID is set to "Activate Hotspot" in Network Config.
 
 - WiFi SSID is defined in Network Config but no IP address was assigned after
-  attempting to connect to the SSID and there is no active Ethernet connection.
-
-- Router mode is On in Network Config and either WiFi SSID is defined but no IP
-  address was assigned or SSID is set to "None (activates AP mode)". An active
-  Ethernet connection is required for Router mode to function but it does not
-  need to be active at the time AP Router mode starts.
+  attempting to connect to the configured SSID or any saved SSID's.
 
 FILE SHARING
 

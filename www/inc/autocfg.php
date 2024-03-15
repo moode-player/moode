@@ -425,7 +425,7 @@ function autoConfigSettings() {
 			$value = array('method' => $values['ethmethod'], 'ipaddr' => $values['ethipaddr'], 'netmask' => $values['ethnetmask'],
 				'gateway' => $values['ethgateway'], 'pridns' => $values['ethpridns'], 'secdns' => $values['ethsecdns']);
 			sqlUpdate('cfg_network', sqlConnect(), 'eth0', $value);
-			cfgNetIfaces();
+			cfgNetworks();
 		}, 'custom_write' => function($values) {
 			$result = sqlQuery("select * from cfg_network where iface='eth0'", sqlConnect());
 			$str = '';
@@ -439,7 +439,7 @@ function autoConfigSettings() {
 		}],
 
 		'Network (wlan0)',
-		['requires' => ['wlanssid', 'wlanpwd', 'wlansec'],
+		['requires' => ['wlanssid', 'wlanpwd', 'wlanuuid'],
 		'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry', 'wlanpsk'],
 		'handler' => function($values, $optionals) {
 			$dbh = sqlConnect();
@@ -449,17 +449,17 @@ function autoConfigSettings() {
 			$value = array('method' => $cfgNetwork[1]['method'], 'ipaddr' => $cfgNetwork[1]['ipaddr'],
 				'netmask' => $cfgNetwork[1]['netmask'],	'gateway' => $cfgNetwork[1]['gateway'],
 				'pridns' => $cfgNetwork[1]['pridns'], 'secdns' => $cfgNetwork[1]['secdns'],
-				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk,
-				'wlan_psk' => $psk, 'wlan_channel' => '', 'wlan_country' =>  $cfgNetwork[1]['wlan_country']);
+				'wlanssid' => $values['wlanssid'], 'wlanuuid' => $values['wlanuuid'], 'wlanpwd' => $psk,
+				'wlanpsk' => $psk, 'wlancc' =>  $cfgNetwork[1]['wlancc']);
 			if (key_exists('wlanmethod', $optionals)) {$value['method'] = $optionals['wlanmethod'];}
 			if (key_exists('wlanipaddr', $optionals)) {$value['ipaddr'] = $optionals['wlanipaddr'];}
 			if (key_exists('wlannetmask', $optionals)) {$value['netmask'] = $optionals['wlannetmask'];}
 			if (key_exists('wlangateway', $optionals)) {$value['gateway'] = $optionals['wlangateway'];}
 			if (key_exists('wlanpridns', $optionals)) {$value['pridns'] = $optionals['wlanpridns'];}
 			if (key_exists('wlansecdns', $optionals)) {$value['secdns'] = $optionals['wlansecdns'];}
-			if (key_exists('wlancountry', $optionals)) {$value['wlan_country'] = $optionals['wlancountry'];}
+			if (key_exists('wlancountry', $optionals)) {$value['wlancc'] = $optionals['wlancountry'];}
 			sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
-			cfgNetIfaces();
+			cfgNetworks();
 		},
 		'custom_write' => function($values) {
 			$result = sqlQuery("select * from cfg_network where iface='wlan0'", sqlConnect());
@@ -471,10 +471,10 @@ function autoConfigSettings() {
 			$str .= "wlanpridns = \"" . $result[0]['pridns'] . "\"\n";
 			$str .= "wlansecdns = \"" . $result[0]['secdns'] . "\"\n";
 			$str .= "wlanssid = \"" . $result[0]['wlanssid'] . "\"\n";
-			$str .= "wlansec = \"" . $result[0]['wlansec'] . "\"\n";
+			$str .= "wlansec = \"" . $result[0]['wlanuuid'] . "\"\n";
 			$str .= "wlanpwd = \"" . "" . "\"\n"; // Keep empty
-			$str .= "wlanpsk = \"" . $result[0]['wlan_psk'] . "\"\n";
-			$str .= "wlancountry = \"" . $result[0]['wlan_country'] . "\"\n";
+			$str .= "wlanpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
+			$str .= "wlancountry = \"" . $result[0]['wlancc'] . "\"\n";
 			return $str;
 		}],
 
@@ -488,7 +488,7 @@ function autoConfigSettings() {
 					$values['ssid_sec'][$i]	. "\", \"" . $values['ssid_psk'][$i] . "\"";
 				sqlInsert('cfg_ssid', $dbh, $value);
 			}
-			cfgNetIfaces();
+			cfgNetworks();
 		}, 'custom_write' => function($values) {
 			$result = sqlRead('cfg_ssid', sqlConnect());
 			$format = "ssid_%s[%d] = \"%s\"\n";
@@ -508,18 +508,15 @@ function autoConfigSettings() {
 			$psk = (key_exists('apdpsk', $optionals) && !empty($optionals['apdpsk'])) ? $optionals['apdpsk'] :
 				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' =>  $psk,
-				'wlan_country' => '', 'wlan_channel' => $values['apdchan'], 'wlan_router' => 'Off'); // Always set router_mode to Off
+				'wlanssid' => $values['apdssid'], 'wlanuuid' => '', 'wlanpwd' => $psk, 'wlanpsk' =>  $psk,
+				'wlancc' => '');
 			sqlUpdate('cfg_network', sqlConnect(), 'apd0', $value);
-			cfgHostApd();
 		}, 'custom_write' => function($values) {
 			$result = sqlQuery("select * from cfg_network where iface='apd0'", sqlConnect());
 			$str = '';
 			$str .= "apdssid = \"" . $result[0]['wlanssid'] . "\"\n";
 			$str .= "apdpwd = \"" . "" . "\"\n"; // Keep empty
-			$str .= "apdpsk = \"" . $result[0]['wlan_psk'] . "\"\n";
-			$str .= "apdchan = \"" . $result[0]['wlan_channel'] . "\"\n";
-			$str .= "apdrouter = \"" . 'Off' . "\"\n";
+			$str .= "apdpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
 			return $str;
 		}],
 

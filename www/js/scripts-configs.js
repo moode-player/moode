@@ -171,22 +171,19 @@ jQuery(document).ready(function($){ 'use strict';
 		if ($(this).val() == 'static') {
 			$('#eth0-static').show();
 			//$('#wlan0-method').val('dhcp').change(); // prevent both from being set to 'static'
-		}
-		else {
+		} else {
 			$('#eth0-static').hide();
 		}
 	});
 	$('#wlan0-method').change(function() {
 		if ($(this).val() == 'static') {
-			if ($('#wlan0ssid').val() != 'None (activates AP mode)') {
+			if ($('#wlan0ssid').val() != 'Activate Hotspot') {
 			 	$('#wlan0-static').show();
 				//$('#eth0-method').val('dhcp').change(); // prevent both from being set to 'static'
-			}
-			else {
+			} else {
 				notify('needssid');
 			}
-		}
-        else {
+		} else {
             $('#wlan0-static').hide();
         }
 	});
@@ -195,31 +192,28 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#wlan0otherssid').focus();
 	});
 	$('#wlan0ssid').change(function() {
-        //console.log(NETWORK.json['wlan0']['wlanssid'], NETWORK.json['wlan0']['wlan_psk']);
+        //console.log(NETWORK.json['wlan0']['wlanssid'], NETWORK.json['wlan0']['wlanpsk']);
         if ($('#wlan0ssid').val() == NETWORK.json['wlan0']['wlanssid']) {
-            $('#wlan0pwd').val(NETWORK.json['wlan0']['wlan_psk']);
-        }
-        else {
+            $('#wlan0pwd').val(NETWORK.json['wlan0']['wlanpsk']);
+        } else {
             $('#wlan0pwd').val('');
         }
 
 		if ($('#wlan0-method').val() == 'static') {
-			if ($(this).val() == '' || $(this).val() == 'None (activates AP mode)') {
+			if ($(this).val() == '' || $(this).val() == 'Activate Hotspot') {
                 $('#wlan0-static').hide();
 				notify('needdhcp');
-			}
-            else {
+			} else {
                 $('#wlan0-static').show();
             }
 		}
 	});
     // apd0 SSID
     $('#apdssid').on('input', function() {
-        //console.log(NETWORK.json['apd0']['wlanssid'], NETWORK.json['apd0']['wlan_psk']);
+        //console.log(NETWORK.json['apd0']['wlanssid'], NETWORK.json['apd0']['wlanpsk']);
         if ($('#apdssid').val() == NETWORK.json['apd0']['wlanssid']) {
-            $('#apdpwd').val(NETWORK.json['apd0']['wlan_psk']);
-        }
-        else {
+            $('#apdpwd').val(NETWORK.json['apd0']['wlanpsk']);
+        } else {
             $('#apdpwd').val('');
         }
 	});

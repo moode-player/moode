@@ -43,8 +43,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWLAN MAC\t\t= $WLAN0MAC\c"
 	echo -e "\nWLAN country\t\t= $wlancountry\c"
 	echo -e "\nWLAN AP SSID\t\t= $apdssid\c"
-	echo -e "\nWLAN AP chan\t\t= $apdchan\c"
-	echo -e "\nWLAN AP router\t\t= $apdrouter\c"
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
@@ -849,11 +847,9 @@ scnsaver_xmeta=${arr[174]}
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
 readarray -t arr <<<"$RESULT"
 wlanssid=$(echo ${arr[1]} | cut -f 9 -d "|")
-wlansec=$(echo ${arr[1]} | cut -f 10 -d "|")
+wlanuuid=$(echo ${arr[1]} | cut -f 10 -d "|")
 wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
 apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
-apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
-apdrouter=$(echo ${arr[2]} | cut -f 15 -d "|")
 
 # Misc settings
 # TODO: Add section for Pi-5
