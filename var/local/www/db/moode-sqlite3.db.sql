@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Mar 13 08:07:12 2024
+-- File generated with SQLiteStudio v3.1.0 on Fri Mar 15 08:57:18 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -44,7 +44,7 @@ INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'openhome', '0');
 
 -- Table: cfg_spotify
 CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '160');
+INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '320');
 INSERT INTO cfg_spotify (id, param, value) VALUES (2, 'initial_volume', '0');
 INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'log');
 INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'No');
@@ -123,7 +123,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
 INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
 INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (62, 'RESERVED_62', '');
+INSERT INTO cfg_system (id, param, value) VALUES (62, 'ap_network_addr', '172.24.1.1/24');
 INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
 INSERT INTO cfg_system (id, param, value) VALUES (64, 'pairing_agent', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
