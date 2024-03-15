@@ -30,6 +30,10 @@ Bug fixes
 
 - FIX: MusicBrainz date format (with hyphens) not being parsed
 
+Radio stations
+
+- UPD: Kanal K
+
 ################################################################################
 #
 # 2024-02-23 moOde 8.3.9 (Bullseye)
