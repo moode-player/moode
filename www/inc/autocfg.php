@@ -226,15 +226,6 @@ function autoConfigSettings() {
 		'Security',
 		['requires' => ['shellinabox'], 'handler' => setphpSession],
 
-		'Logs',
-		['requires' => ['reduce_sys_logging'], 'handler' => function($values) {
-			$cmd = $values['reduce_sys_logging'] == '1' ? 'disable' : 'enable';
-			sysCmd('systemctl '. $cmd . ' rsyslog');
-			$_SESSION['reduce_sys_logging'] = $values['reduce_sys_logging'];
-		}],
-		// NOTE: Not restored so we can avoid unnecessary logging in case user forgets they turned it on
-		//['requires' => ['debuglog'], 'handler' => setSessionVarOnly],
-
 		'I2S Device',
 		['requires' => ['i2soverlay'], 'handler' => function($values) {
 			phpSession('write', 'i2soverlay', $values['i2soverlay']);

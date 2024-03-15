@@ -351,11 +351,6 @@ if (isset($_POST['update_clear_playhistory'])) {
 	submitJob('clearplayhistory', '', 'Playback history cleared');
 }
 
-if (isset($_POST['update_reduce_sys_logging']) && $_POST['reduce_sys_logging'] != $_SESSION['reduce_sys_logging']) {
-	$_SESSION['reduce_sys_logging'] = $_POST['reduce_sys_logging'];
-	submitJob('reduce_sys_logging', $_POST['reduce_sys_logging'], 'Settings updated', 'Restart required');
-}
-
 if (isset($_POST['update_debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 	$_SESSION['debuglog'] = $_POST['debuglog'];
 	$_SESSION['notify']['title'] = 'Settings updated';
@@ -513,10 +508,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 }
 
 // LOGS
-
-$autoClick = " onchange=\"autoClick('#btn-set-reduce-sys-logging');\"";
-$_select['reduce_sys_logging_on']  .= "<input type=\"radio\" name=\"reduce_sys_logging\" id=\"toggle-reduce-sys-logging-1\" value=\"1\" " . (($_SESSION['reduce_sys_logging'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['reduce_sys_logging_off'] .= "<input type=\"radio\" name=\"reduce_sys_logging\" id=\"toggle-reduce-sys-logging-2\" value=\"0\" " . (($_SESSION['reduce_sys_logging'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 $autoClick = " onchange=\"autoClick('#btn-set-debuglog');\"";
 $_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";

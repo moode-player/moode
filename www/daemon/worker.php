@@ -216,12 +216,6 @@ if (!isset($_SESSION['debuglog'])) {
 }
 workerLog('worker: Debug logging ' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off'));
 
-// Reduce system logging
-if (!isset($_SESSION['reduce_sys_logging'])) {
-	$_SESSION['reduce_sys_logging'] = '0';
-}
-workerLog('worker: Reduced logging ' . ($_SESSION['reduce_sys_logging'] == '1' ? 'on' : 'off'));
-
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- Audio debug');
@@ -2873,13 +2867,6 @@ function runQueuedJob() {
 			break;
 		case 'compactdb':
 			sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
-			break;
-		case 'reduce_sys_logging':
-			if ($_SESSION['w_queueargs'] == '1') {
-				sysCmd('systemctl disable rsyslog');
-			} else {
-				sysCmd('systemctl enable rsyslog');
-			}
 			break;
 
 		// inp-config jobs

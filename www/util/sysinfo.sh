@@ -74,7 +74,6 @@ SYSTEM_PARAMETERS() {
 		echo -e "\nHTTPS mode\t\t= $HTTPS_MODE\c"
 	fi
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
-	echo -e "\nReduced sys logging\t= $REDUCE_SYS_LOGGING\c"
 	echo -e "\n\c"
 	echo -e "\nSMB file sharing\t= $fs_smb\c"
 	echo -e "\nNFS file sharing\t= $fs_nfs\c"
@@ -439,8 +438,6 @@ MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
 
 WORKER_RESPONSIVENESS=$(moodeutl -d -gv worker_responsiveness)
-TMP=$(moodeutl -d -gv reduce_sys_logging)
-[[ "$TMP" = "1" ]] && REDUCE_SYS_LOGGING="On" || REDUCE_SYS_LOGGING="Off"
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
