@@ -250,6 +250,8 @@ $_wlan0secdns = $cfgNetwork[1]['secdns'];
 
 $_wlan0apdssid = $cfgNetwork[2]['wlanssid'];
 $_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
+$_ap_network = 'http://' . explode('/', $_SESSION['ap_network_addr'])[0];
+$_ap_host = 'http://' . $_wlan0apdssid . '.local';
 if (empty($_wlan0apdpwd)) {
 	phpSession('open');
 	$_SESSION['notify']['title'] = 'Notice';
