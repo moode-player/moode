@@ -43,8 +43,8 @@ foreach ($result as $row) {
 }
 
 $_select['bitrate'] .= "<option value=\"96\" " . (($cfgSpotify['bitrate'] == '96') ? "selected" : "") . ">96</option>\n";
-$_select['bitrate'] .= "<option value=\"160\" " . (($cfgSpotify['bitrate'] == '160') ? "selected" : "") . ">160 (Default)</option>\n";
-$_select['bitrate'] .= "<option value=\"320\" " . (($cfgSpotify['bitrate'] == '320') ? "selected" : "") . ">320</option>\n";
+$_select['bitrate'] .= "<option value=\"160\" " . (($cfgSpotify['bitrate'] == '160') ? "selected" : "") . ">160</option>\n";
+$_select['bitrate'] .= "<option value=\"320\" " . (($cfgSpotify['bitrate'] == '320') ? "selected" : "") . ">320 (Default)</option>\n";
 
 $_select['format'] .= "<option value=\"S16\" " . (($cfgSpotify['format'] == 'S16') ? "selected" : "") . ">S16 (Default)</option>\n";
 $_select['format'] .= "<option value=\"S24\" " . (($cfgSpotify['format'] == 'S24') ? "selected" : "") . ">S24</option>\n";
