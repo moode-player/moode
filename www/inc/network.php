@@ -114,7 +114,7 @@ function cfgNetworks() {
 	$data .= "psk=" . $cfgNetwork[2]['wlanpsk'] . "\n";
 	$data .= "[ipv4]\n";
 	$data .= "method=shared\n";
-	$data .= "address1=172.24.1.1/24\n";
+	$data .= "address1=" . $_SESSION['ap_network_addr'] . "\n";
 	$data .= "[ipv6]\n";
 	$data .= "addr-gen-mode=default\n";
 	$data .= "method=ignore\n";
