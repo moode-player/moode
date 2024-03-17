@@ -418,7 +418,10 @@ function updMpdConf($i2sDevice) {
 	}
 
 	// ALSA card number
-    $cardNum = getAlsaCardNumVC4I2S();
+    if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
+        $cardNum = getAlsaCardNumVC4I2S();
+        $result = sqlQuery("UPDATE cfg_mpd SET value='" . $cardNum . "' WHERE param='device'", sqlConnect());
+    }
 	phpSession('write', 'cardnum', $cardNum);
 	// ALSA mixer name
 	phpSession('write', 'amixname', getAlsaMixerName($i2sDevice));

@@ -232,6 +232,11 @@ workerLog('worker: MPD config:   ' . $mpdDevice[0]['value'] . ':' . $_SESSION['a
 if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdDevice[0]['value']] == 'empty') {
 	workerLog('worker: Warning: No device found at MPD configured card ' . $mpdDevice[0]['value']);
 }
+// Set output mode
+if (str_contains($cards[0], 'hdmi') || str_contains($cards[1], 'hdmi')) {
+	phpSession('write', 'alsa_output_mode', 'iec958');
+}
+workerLog('worker: ALSA mode:    ' . $_SESSION['alsa_output_mode']);
 // Zero out ALSA volume
 $alsaMixerName = getAlsaMixerName($_SESSION['i2sdevice']);
 if ($alsaMixerName != 'Invalid card number.') {

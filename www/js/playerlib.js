@@ -352,9 +352,16 @@ function engineMpd() {
 				else if (MPD.json['error'] == 'Not seekable') {
 					// NOP
 				}
-				// Other network or MPD errors
+				// Other MPD or network errors
 				else {
-					notify('mpderror', MPD.json['error']);
+                    if (MPD.json['error'].includes('Unknown error 524') && MPD.json['error'].includes('Failed to open ALSA device')) {
+                        // VC4 HDMI port not connected to an audio device
+                        // 'Failed to open "ALSA Default" (alsa); Failed to open ALSA device "_audioout": Unknown error 524'
+                        var msg = 'There is no audio device connected to the HDMI port';
+                    } else {
+                        var msg = MPD.json['error']
+                    }
+					notify('mpderror', msg);
 				}
 
 				renderUI();
