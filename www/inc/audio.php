@@ -74,7 +74,7 @@ function setAudioIn($inputSource) {
 	if ($inputSource == 'Local' && $wrkReady == '1') {
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 			sysCmd('killall -s 9 alsaloop');
-		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 			sysCmd('amixer -c 0 sset "I2S/SPDIF Select" I2S');
 		}
 		if ($_SESSION['mpdmixer'] == 'hardware') {
@@ -107,7 +107,7 @@ function setAudioIn($inputSource) {
 
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 			sysCmd('alsaloop > /dev/null 2>&1 &');
-		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 			sysCmd('amixer -c 0 sset "I2S/SPDIF Select" SPDIF');
 		}
 

@@ -125,8 +125,7 @@ const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Co
 // Source select devices
 const SRC_SELECT_DEVICES = array(
     'HiFiBerry DAC+ ADC',
-    'Audiophonics ES9028/9038 DAC',
-    'Audiophonics ES9028/9038 DAC (Pre 2019)'
+    'Audiophonics ES9028/9038 DAC'
 );
 
 // Library Saved Searches

@@ -112,7 +112,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	// Audiophonics ES9028/38 Q2M chip
-	if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+	if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 		$chipoptions = $_POST['config']['audiophonics_q2m_osf'] . ',' . $_POST['config']['audiophonics_q2m_input'];
 		$chiptype = 'ess_sabre_audiophonics_q2m';
 
@@ -282,7 +282,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 }
 
 // Audiophonics ES9028/38 Q2M DAC
-if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 	$_audiophonics_q2m_hide = '';
 	// Oversampling filter, input select
 	$audiophonics_q2m_osf = $array[0];

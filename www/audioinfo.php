@@ -358,7 +358,7 @@ if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchi
 	$katanaDop = $array[2];
 	$_chip_options = $katanaOsf . ', De-emphasis=' . $katanaDeemphasis . ', DoP=' . $katanaDop;
 
-} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 	$audiophonicsQ2mOsf = $array[0];
 	$audiophonicsQ2mInput = $array[1];
 	$_chip_options = 'Filter=' . $audiophonicsQ2mOsf . ', Input=' . $audiophonicsQ2mInput;

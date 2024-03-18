@@ -50,7 +50,7 @@ phpSession('close');
 $_select['audio_input'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">MPD</option>\n";
 if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 	$_select['audio_input'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
-} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 	$_select['audio_input'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
 }
 
