@@ -232,10 +232,6 @@ workerLog('worker: MPD config:   ' . $mpdDevice[0]['value'] . ':' . $_SESSION['a
 if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdDevice[0]['value']] == 'empty') {
 	workerLog('worker: Warning: No device found at MPD configured card ' . $mpdDevice[0]['value']);
 }
-// Set output mode
-if (str_contains($cards[0], 'hdmi') || str_contains($cards[1], 'hdmi')) {
-	phpSession('write', 'alsa_output_mode', 'iec958');
-}
 workerLog('worker: ALSA mode:    ' . $_SESSION['alsa_output_mode']);
 // Zero out ALSA volume
 $alsaMixerName = getAlsaMixerName($_SESSION['i2sdevice']);
@@ -588,16 +584,30 @@ if (!file_exists('/etc/mpd.conf')) {
 			$mpdConfUpdMsg = 'MPD config:    update skipped (Multiroom sender on)';
 			break;
 		case AO_USB:
-			if($_SESSION['inplace_upd_applied'] == '1') {
+			if ($_SESSION['inplace_upd_applied'] == '1') {
 				$mpdConfUpdMsg = 'MPD config:    updated (USB audio device + In-place update applied)';
 				$updateMpdConf = true;
 			} else {
 				// Skip update otherwise USB mixer name is not preserved if device unplugged or turned off
 				$mpdConfUpdMsg = 'MPD config:    update skipped (USB audio device)';
 			}
+			// Reset mode if needed
+			if ($_SESSION['alsa_output_mode'] == 'iec958') {
+				phpSession('write', 'alsa_output_mode', 'plughw');
+			}
 			break;
-		case AO_INTEGRATED:
+		case AO_PI_HDMI:
+			if ($_SESSION['alsa_output_mode'] != 'iec958') {
+				phpSession('write', 'alsa_output_mode', 'iec958');
+			}
+			$updateMpdConf = true;
+			$mpdConfUpdMsg = 'MPD config:    updated';
+			break;
+		case AO_PI_HPHONE:
 		case AO_I2S:
+			if ($_SESSION['alsa_output_mode'] == 'iec958') {
+				phpSession('write', 'alsa_output_mode', 'plughw');
+			}
 			$updateMpdConf = true;
 			$mpdConfUpdMsg = 'MPD config:    updated';
 			break;
@@ -2042,8 +2052,12 @@ function audioOutputTarget() {
 		$outputTarget = AO_TRXSEND;
 	} else if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
 		$outputTarget = AO_I2S;
-	} else if (in_array($_SESSION['adevname'], $integratedDevices) ) {
-		$outputTarget = AO_INTEGRATED;
+	} else if (in_array($_SESSION['adevname'], $integratedDevices)) {
+		if ($_SESSION['adevname'] == 'Pi Headphone jack') {
+			$outputTarget = AO_PI_HPHONE;
+		} else {
+			$outputTarget = AO_PI_HDMI;
+		}
 	} else {
 		$outputTarget = AO_USB;
 	}
@@ -2557,7 +2571,10 @@ function runQueuedJob() {
 			break;
 		case 'rbrestart':
 			sysCmd('mpc stop');
+
+			// TODO: Use stopRoonBridge()
 			sysCmd('systemctl stop roonbridge');
+
 			if ($_SESSION['rbsvc'] == '1') {
 				startRoonBridge();
 			}

@@ -39,10 +39,11 @@ const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
 // Audio outputs
-const AO_INTEGRATED = 1;
-const AO_I2S = 2;
-const AO_USB = 3;
-const AO_TRXSEND = 4;
+const AO_PI_HDMI = 1;
+const AO_PI_HPHONE = 2;
+const AO_I2S = 3;
+const AO_USB = 4;
+const AO_TRXSEND = 5;
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
