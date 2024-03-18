@@ -20,6 +20,11 @@
 HOME_DIR=$(ls /home/)
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
+if [ -z $1 ]; then
+	echo "Missing arg"
+	exit
+fi
+
 if [[ $1 = "set-timezone" ]]; then
 	timedatectl set-timezone "$2"
 	exit
@@ -129,7 +134,6 @@ if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-
 fi
 
 if [[ $1 = "clear-syslogs" ]]; then
-	# Operating logs
 	truncate /var/log/alternatives.log --size 0
 	truncate /var/log/apt/history.log --size 0
 	truncate /var/log/apt/term.log --size 0
@@ -157,7 +161,6 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/moode_spotevent.log --size 0
 	truncate /var/log/moode_spsevent.log --size 0
 	truncate /var/log/moode_slpower.log --size 0
-	truncate /var/log/syslog --size 0
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
 	truncate /var/log/Xorg.*.log --size 0
@@ -166,7 +169,6 @@ if [[ $1 = "clear-syslogs" ]]; then
 	rm /var/log/*.log.* 2> /dev/null
 	rm /var/log/debug.* 2> /dev/null
 	rm /var/log/messages.* 2> /dev/null
-	rm /var/log/syslog.* 2> /dev/null
 	rm /var/log/btmp.* 2> /dev/null
 	rm /var/log/apt/*.log.* 2> /dev/null
 	rm /var/log/nginx/*.log.* 2> /dev/null
@@ -215,7 +217,10 @@ fi
 if [[ $1 = "get-osinfo" ]]; then
 	RPIOS_VER=$(cat /etc/debian_version)
 	RPIOS_MVER=$(cat /etc/debian_version | cut -d "." -f 1)
-	if [ "$RPIOS_MVER" -lt "12" ]; then RPIOS_NAME="Bullseye"; else RPIOS_NAME="Bookworm"; fi
+	if [[ "$RPIOS_MVER" == "11" ]]; then RPIOS_NAME="Bullseye"; fi
+	if [[ "$RPIOS_MVER" == "12" ]]; then RPIOS_NAME="Bookworm"; fi
+	if [[ "$RPIOS_MVER" == "13" ]]; then RPIOS_NAME="Trxie"; fi
+	if [[ "$RPIOS_MVER" == "14" ]]; then RPIOS_NAME="Forky"; fi
 	RPIOS_ARCH=$(dpkg -l | grep nano | awk '{print $4}')
 	if [ $RPIOS_ARCH = "arm64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
 	# Linux info
