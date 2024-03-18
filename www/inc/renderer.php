@@ -213,11 +213,9 @@ function startRoonBridge() {
 	sysCmd('systemctl start roonbridge');
 }
 
-function stopRoonBridge () {
+function stopRoonBridge() {
 	sysCmd('systemctl stop roonbridge');
-
 	sysCmd('/var/www/vol.sh -restore');
-
 	phpSession('write', 'rbactive', '0');
 	$GLOBALS['rbactive'] = '0';
 	sendEngCmd('rbactive0');

@@ -2571,10 +2571,7 @@ function runQueuedJob() {
 			break;
 		case 'rbrestart':
 			sysCmd('mpc stop');
-
-			// TODO: Use stopRoonBridge()
-			sysCmd('systemctl stop roonbridge');
-
+			stopRoonBridge();
 			if ($_SESSION['rbsvc'] == '1') {
 				startRoonBridge();
 			}
