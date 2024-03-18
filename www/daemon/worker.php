@@ -140,20 +140,7 @@ if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
 }
 
 // Prune old session vars
-sysCmd('moodeutl -D airplayactv');
-sysCmd('moodeutl -D AVAILABLE');
-sysCmd('moodeutl -D eth_port_fix');
-sysCmd('moodeutl -D card_error');
-sysCmd('moodeutl -D cdsp_from_link');
-sysCmd('moodeutl -D saved_upnp_path');
-sysCmd('moodeutl -D upnp_browser');
-sysCmd('moodeutl -D btmulti');
-sysCmd('moodeutl -D upd_rx_adv_toggle');
-sysCmd('moodeutl -D upd_tx_adv_toggle');
-sysCmd('moodeutl -D piano_dualmode');
-sysCmd('moodeutl -D wrkready');
-sysCmd('moodeutl -D airplay_protocol');
-sysCmd('moodeutl -D hdmiport');
+//sysCmd('moodeutl -D session_var_name');
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
@@ -342,17 +329,17 @@ $_SESSION['user_id'] = getUserID();
 $_SESSION['home_dir'] = '/home/' . $_SESSION['user_id'];
 
 // Log platform data
-workerLog('worker: Host:     ' . $_SESSION['hostname']);
-workerLog('worker: Model:    ' . $_SESSION['hdwrrev']);
-workerLog('worker: moOde:    ' . getMoodeRel('verbose')); // major.minor.patch yyyy-mm-dd
-workerLog('worker: RaspiOS:  ' . $_SESSION['raspbianver']);
-workerLog('worker: Kernel:   ' . $_SESSION['kernelver']);
-workerLog('worker: MPD ver:  ' . $_SESSION['mpdver']);
-workerLog('worker: CPU gov:  ' . $_SESSION['cpugov']);
-workerLog('worker: Userid:   ' . $_SESSION['user_id']);
-workerLog('worker: Homedir:  ' . $_SESSION['home_dir']);
-workerLog('worker: Timezone: ' . $_SESSION['timezone']);
-workerLog('worker: Keyboard: ' . $_SESSION['keyboard']);
+workerLog('worker: Host name:     ' . $_SESSION['hostname']);
+workerLog('worker: RPi model:     ' . $_SESSION['hdwrrev']);
+workerLog('worker: moOde release: ' . getMoodeRel('verbose')); // major.minor.patch yyyy-mm-dd
+workerLog('worker: RaspiOS:       ' . $_SESSION['raspbianver']);
+workerLog('worker: Linux Kernel:  ' . $_SESSION['kernelver']);
+workerLog('worker: MPD version:   ' . $_SESSION['mpdver']);
+workerLog('worker: User id:       ' . $_SESSION['user_id']);
+workerLog('worker: Home folder:   ' . $_SESSION['home_dir']);
+workerLog('worker: Time zone:     ' . $_SESSION['timezone']);
+workerLog('worker: Kbd layout:    ' . $_SESSION['keyboard']);
+
 // USB boot
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModel == '3') { // 3B, B+, A+
@@ -363,7 +350,7 @@ if ($piModel == '3') { // 3B, B+, A+
 	} else {
 		$msg = 'not enabled yet';
 	}
-	workerLog('worker: USB boot: ' . $msg);
+	workerLog('worker: USB boot:      ' . $msg);
 } else if ($piModel == '4') { // 4, 400
 	$bootloaderMinDate = new DateTime("Sep 3 2020");
 	$bootloaderActualDate = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1\" \" $2\" \" $3}'")[0]);
@@ -372,15 +359,16 @@ if ($piModel == '3') { // 3B, B+, A+
 	} else {
 		$msg = 'not enabled yet';
 	}
-	workerLog('worker: USB boot: ' . $msg);
+	workerLog('worker: USB boot:      ' . $msg);
 } else if ($piModel == '5') { // 5
-	workerLog('worker: USB boot: enabled');
+	workerLog('worker: USB boot:      enabled');
 } else {
-	workerLog('worker: USB boot: n/a');
+	workerLog('worker: USB boot:      n/a');
 }
 
 // HDMI port(s)
-workerLog('worker: HDMI out: on');
+// They are always on in Bookworm
+workerLog('worker: HDMI ports(s): on');
 
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
@@ -401,6 +389,15 @@ if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: ' . ($led1Brightness == '0' ? 'off' : 'on'));
 }
+
+// Reduce power consumption when shutdown
+if (!isset($_SESSION['reduce_power'])) {
+	$_SESSION['reduce_power'] = 'off';
+}
+workerLog('worker: Reduce power:  ' . $_SESSION['reduce_power']);
+
+// CPU governor
+workerLog('worker: CPU governor:  ' . $_SESSION['cpugov']);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -2698,6 +2695,12 @@ function runQueuedJob() {
 			}
 			sysCmd('sed -i "/const WORKER_SLEEP/c\const WORKER_SLEEP = ' . $workerSleep . ';" /var/www/inc/sleep-interval.php');
 			sysCmd('sed -i "/const WAITWORKER_SLEEP/c\const WAITWORKER_SLEEP = ' . $waitworkerSleep . ';" /var/www/inc/sleep-interval.php');
+			break;
+		case 'reduce_power':
+			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
+			sysCmd('rpi-eeprom-config --out /tmp/boot.conf > /dev/null 2>&1');
+			sysCmd('sed -i s/^POWER_OFF_ON_HALT=.*/POWER_OFF_ON_HALT=' . $value . '/ /tmp/boot.conf > /dev/null 2>&1');
+			sysCmd('rpi-eeprom-config --apply /tmp/boot.conf > /dev/null 2>&1');
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");

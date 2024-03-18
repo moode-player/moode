@@ -151,6 +151,11 @@ if (isset($_POST['update_usbboot'])) {
 	submitJob('usbboot', '', 'Settings updated', 'Restart required');
 }
 
+if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce_power']) {
+	submitJob('reduce_power', $_POST['reduce_power'], 'Settings updated', 'Restart required');
+	phpSession('write', 'reduce_power', $_POST['reduce_power']);
+}
+
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
 	submitJob('p3wifi', $_POST['p3wifi'], 'Settings updated', 'Restart required');
 	phpSession('write', 'p3wifi', $_POST['p3wifi']);
@@ -387,6 +392,17 @@ $_select['usb_auto_mounter'] .= "<option value=\"devmon\" " . (($_SESSION['usb_a
 
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 $piName = $_SESSION['hdwrrev'];
+
+// Pi-5
+if ($piModel == '5') {
+	$_reduce_power_hide = '';
+	$autoClick = " onchange=\"autoClick('#btn-set-reduce-power');\"";
+	$_select['reduce_power_on']  .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-1\" value=\"on\" " . (($_SESSION['reduce_power'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['reduce_power_off'] .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-2\" value=\"off\" " . (($_SESSION['reduce_power'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+} else {
+	$_reduce_power_hide = 'hide';
+}
+
 // Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B
 if (
 	stripos($piName, 'Pi-Zero W') !== false ||
