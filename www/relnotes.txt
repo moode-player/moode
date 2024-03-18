@@ -29,6 +29,7 @@ Updates
 Bug fixes
 
 - FIX: MusicBrainz date format (with hyphens) not being parsed
+- FIX: RoonBridge restart and disconnect not working correctly
 
 Radio stations
 
