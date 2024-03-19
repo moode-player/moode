@@ -382,27 +382,36 @@ workerLog('worker: HDMI ports(s): on');
 
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : '/actpwr';
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: sysclass does not exist');
 } else if ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : '/actpwr';
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: sysclass does not exist');
-} else {
-	$led1Brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : '/actpwr';
-	sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
+} else if ($piModel == '5') {
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
+	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
+	workerLog('worker: Sys LED1: on');
+} else {
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	$led1Brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
+	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
+	sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: ' . ($led1Brightness == '0' ? 'off' : 'on'));
 }
 
-// Reduce power consumption when shutdown
+// Pi-5 POWER_OFF_ON_HALT
 if (!isset($_SESSION['reduce_power'])) {
-	$_SESSION['reduce_power'] = 'off';
+	$_SESSION['reduce_power'] = 'n/a';
+}
+if ($piModel == '5') {
+	$result = sysCmd('rpi-eeprom-config | grep "POWER_OFF_ON_HALT" | cut -d "=" -f 2')[0] == '1' ? 'on' : 'off';
+	$_SESSION['reduce_power'] = $result;
 }
 workerLog('worker: Reduce power:  ' . $_SESSION['reduce_power']);
 

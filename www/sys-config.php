@@ -425,7 +425,10 @@ $autoClick = " onchange=\"autoClick('#btn-set-actled');\"";
 $_select['actled_on']  .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-1\" value=\"1\" " . (($actled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['actled_off'] .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-2\" value=\"0\" " . (($actled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero' || substr($_SESSION['hdwrrev'], 3, 1) == '1' || $_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
+if ($PiModel == '1' ||
+	$piModel == '5' ||
+	str_contains($_SESSION['hdwrrev'], 'Pi-Zero') ||
+	str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
 	$_pwrled_hide = 'hide';
 } else {
 	$_pwrled_hide = '';
