@@ -127,6 +127,15 @@ if ($linuxStartupComplete === true) {
 	exit($logMsg . "\n");
 }
 
+// Import boot config.txt (first boot)
+$lines = file(BOOT_CONFIG_TXT);
+if (str_contains($lines[1], 'This file is managed by moOde')) {
+	workerLog('worker: Boot config is ok');
+} else {
+	sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+	sysCmd('reboot');
+}
+
 // Boot file recovery (rare)
 if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
 	// Backup
@@ -140,6 +149,7 @@ if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
 }
 
 // Prune old session vars
+// Example command
 //sysCmd('moodeutl -D session_var_name');
 
 // Open session and load cfg_system and cfg_radio
