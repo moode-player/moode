@@ -2,7 +2,7 @@
 #
 #  Setup Guide for moOde audio player
 #
-#  Updated: 2024-02-10
+#  Updated: 2024-03-19
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
 ################################################################################
@@ -23,7 +23,7 @@ https://github.com/moode-player/docs/blob/main/Quickhelp.pdf
 MOODE OS IMAGE
 
 For improved security the OS image does not contain a userid, WiFi SSID or
-Access Point password, and Secure Shell (SSH) access is disabled.
+Hotspot password, and Secure Shell (SSH) access is disabled.
 
   1. REQUIRED: The official Raspberry Pi Imager is required to enable SSH,
   create a userid and password and optionally set the host name and WiFi SSID
@@ -34,9 +34,9 @@ Access Point password, and Secure Shell (SSH) access is disabled.
   function correctly. When enabling SSH, select "Use password authentication"
   which means the password specified for the userid is to be used.
 
-  3. REQUIRED: An Access Point password is required and is set after first boot
+  3. REQUIRED: A Hotspot password is required and is set after first boot
   in the Network Configuration screen. This allows moOde to still be accessable
-  if it cannot connect to Ethernet or any configrred WiFi SSID's.
+  if it cannot connect to Ethernet or any configured WiFi SSID's.
 
 - OS images are listed in the "Media Player OS" category of the Raspberry Pi
   Imager, or if they were downloaded directly from moodeaudio.org they can be
@@ -62,7 +62,6 @@ refer to the settings below.
 The Hotspot starts automatically when any of the following are true.
 
 - WiFi SSID is set to "Activate Hotspot" in Network Config.
-
 - WiFi SSID is defined in Network Config but no IP address was assigned after
   attempting to connect to the configured SSID or any saved SSID's.
 
@@ -170,7 +169,7 @@ PLAYER SETUP AND CONFIGURATON
    a) http://moode, moode.local or IP_ADDRESS
    b) Play one of the radio stations
 
-   - AP mode
+   - Hotspot mode
 
    a) http://172.24.1.1 or http://moode.local
    b) Switch to Library Folder view
@@ -195,8 +194,8 @@ Customize the player by using any of the following procedures.
    g) Unplug Ethernet cable
    h) Power on
 
-   - Access Point (AP) mode
-   a) Join network SSID = Moode, password = Refer to SECURITY section
+   - Hotspot mode
+   a) Join Hotspot SSID, password = Refer to SECURITY section
    b) http://172.24.1.1 or http://moode.local
    c) Menu, Configure, Network
    d) Configure a WiFi connection
@@ -207,17 +206,6 @@ Customize the player by using any of the following procedures.
    a) Menu, Configure, System (and Audio)
    b) Click SET after entering an appropriate value in each name field
    c) Restart is required if changing Host name
-
-3. AUTO-CONFIGURE AT BOOT
-
-   a) Copy the file /boot/moodecfg.ini.default from the Pi to a PC or Mac
-   b) Rename it to moodecfg.ini
-   c) Edit the settings as needed
-   d) Insert an SD Card into a reader attached to the PC or Mac
-   e) Copy the moodecfg.ini file from the PC or Mac to /boot on the SD Card
-   f) Eject the SD Card
-   f) Insert the SD Card into the Pi and power up
-   g) The Pi will reboot twice to perform the auto-configuration process
 
 AFTER PLAYER SETUP
 
