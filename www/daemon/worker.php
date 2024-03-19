@@ -382,12 +382,12 @@ workerLog('worker: HDMI ports(s): on');
 
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: sysclass does not exist');
 } else if ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: sysclass does not exist');
@@ -412,6 +412,8 @@ if (!isset($_SESSION['reduce_power'])) {
 if ($piModel == '5') {
 	$result = sysCmd('rpi-eeprom-config | grep "POWER_OFF_ON_HALT" | cut -d "=" -f 2')[0] == '1' ? 'on' : 'off';
 	$_SESSION['reduce_power'] = $result;
+} else {
+	$_SESSION['reduce_power'] = 'n/a';
 }
 workerLog('worker: Reduce power:  ' . $_SESSION['reduce_power']);
 
