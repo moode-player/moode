@@ -1454,7 +1454,6 @@ function chkMaintenance() {
 
 		// Purge temp or unwanted resources
 		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
-		sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Temp file from legacy Radio Manager export
 
 		// Purge spurious session files
 		// These files are created when chromium starts/restarts
@@ -1465,20 +1464,6 @@ function chkMaintenance() {
 			if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $_SESSION['sessionid']) {
 				debugLog('worker: Maintenance: Purged spurious session file (' . $file . ')');
 				syscmd('rm ' . $dir . $file);
-			}
-		}
-
-		// LocalUI display (chromium browser)
-		// NOTE: This is a workaround for a chromium-browser bug in < r810 that causes 100% memory utilization after ~3 hours
-		// Enable it by creating the localui_maint file
-		if ($_SESSION['localui'] == '1' && file_exists($_SESSION['home_dir'] . '/localui_maint')) {
-			if (file_exists('home/pi/localui_refresh')) {
-				debugLog('worker: Maintenance: LocalUI refresh screen');
-				sendEngCmd('refresh_screen');
-			} else {
-				debugLog('worker: Maintenance: LocalUI restart');
-				stopLocalUI();
-				startLocalUI();
 			}
 		}
 
