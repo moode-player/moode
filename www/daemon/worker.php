@@ -385,22 +385,22 @@ if ($piModel == '1' || str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_cont
 	// Pi boards w/o a sysclass entry for LED1
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
-	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
-	workerLog('worker: Sys LED1: sysclass does not exist');
+	workerLog('worker: Sys LED0:      ' . ($led0Trigger == 'none' ? 'off' : 'on'));
+	workerLog('worker: Sys LED1:      sysclass does not exist');
 } else if ($piModel == '5') {
 	// Pi-5 dual-color (red/green) power/activity LED
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
-	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
-	workerLog('worker: Sys LED1: on');
+	workerLog('worker: Sys LED0:      ' . ($led0Trigger == 'none' ? 'off' : 'on'));
+	workerLog('worker: Sys LED1:      on');
 } else {
 	// All other Pi boards have 2 LED's (power and activity)
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	$led1Brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
-	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
-	workerLog('worker: Sys LED1: ' . ($led1Brightness == '0' ? 'off' : 'on'));
+	workerLog('worker: Sys LED0:      ' . ($led0Trigger == 'none' ? 'off' : 'on'));
+	workerLog('worker: Sys LED1:      ' . ($led1Brightness == '0' ? 'off' : 'on'));
 }
 
 // Pi-5 POWER_OFF_ON_HALT (shutdown wattage)
