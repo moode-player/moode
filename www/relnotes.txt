@@ -24,7 +24,6 @@ New features
 Updates
 
 - UPD: Improve (i) help for some items
-- UPD: CamillaDSP V2 sample configs and coeffs
 - UPD: HDMI On/Off option removed (not valid on Bookworm)
 - UPD: Remove obsolete devices from audio device table
 
