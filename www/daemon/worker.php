@@ -2485,12 +2485,6 @@ function runQueuedJob() {
 			);
 
 			break;
-		case 'camilladsp_sample_configs':
-			// https://raw.githubusercontent.com/moode-player/plugins/main
-			// $1 = component_name	camilladsp
-			// $2 - plugin_name		v2-sample-configs
-			sysCmd('/var/www/util/plugin-updater.sh "camilladsp" "v2-sample-configs"');
-			break;
 		case 'mpdcrossfade':
 			sysCmd('mpc crossfade ' . $_SESSION['w_queueargs']);
 			break;
@@ -2689,6 +2683,12 @@ function runQueuedJob() {
 		// sys-config jobs
 		case 'install_update':
 			$result = sysCmd('/var/www/util/system-updater.sh ' . getPkgId() . ' > /dev/null 2>&1 &');
+			break;
+		case 'install_plugin':
+			// $args = component_name,plugin_name
+			$args = explode(',', $_SESSION['w_queueargs']);
+			sysCmd('/var/www/util/plugin-updater.sh "' . $args[0] . '" "' . $args[1] . '"' . ' > /dev/null 2>&1');
+			workerLog('worker: Plugin: ' . $args[1] . ' installed');
 			break;
 		case 'timezone':
 			sysCmd('/var/www/util/sysutil.sh set-timezone ' . $_SESSION['w_queueargs']);

@@ -156,9 +156,10 @@ else if ($selectedCoeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
 	$selectedCoeff = null;
 // Update to latest sample configs
 } else if (isset($_POST['install_sample_configs']) && $_POST['install_sample_configs'] == '1') {
-	submitJob('camilladsp_sample_configs','','Sample configs updated', 'Restart required');
+	$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='camilladsp' AND type='sample-configs'", sqlConnect());
+	submitJob('install_plugin','camilladsp,' . $result[0]['plugin'],'Sample configs updated', 'Restart required');
 } else if ($selectedCoeff && isset($_POST['info']) && $_POST['info'] == '1') {
-	// no implementation required, just a placeholder
+	// Placeholder, no implementation required
 }
 
 // camillagui status toggle

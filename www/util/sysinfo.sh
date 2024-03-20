@@ -629,7 +629,7 @@ dlnaname=${arr[7]}
 [[ "${arr[9]}" = "1" ]] && upnpsvc="On" || upnpsvc="Off"
 [[ "${arr[10]}" = "1" ]] && dlnasvc="On" || dlnasvc="Off"
 [[ "${arr[11]}" = "plughw" ]] && alsa_output_mode="Default (plughw)" || alsa_output_mode="Direct (hw)"
-res_plugin_args=${arr[12]}
+RESERVED_13=${arr[12]}
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
 if [[ -f "/opt/RoonBridge/start.sh" ]]; then
 	[[ "${arr[14]}" = "1" ]] && rbsvc="On" || rbsvc="Off"

@@ -1,263 +1,10 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Mar 20 09:29:03 2024
+-- File generated with SQLiteStudio v3.1.0 on Wed Mar 20 10:11:10 2024
 --
 -- Text encoding used: UTF-8
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
-
--- Table: cfg_sl
-CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64));
-INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
-INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '_audioout');
-INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
-INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
-INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
-INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
-INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
-
--- Table: cfg_source
-CREATE TABLE cfg_source (
-id INTEGER PRIMARY KEY,
-name CHAR(25),
-type CHAR(8),
-address CHAR(15),
-remotedir CHAR(30),
-username CHAR(30),
-password CHAR(60),
-charset CHAR(15),
-rsize INT(4),
-wsize INT(4)
-, options CHAR(60), error CHAR(150));
-
--- Table: cfg_upnp
-CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'lossless');
-INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '6');
-INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'checkcontentformat', '1');
-INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'upnpav', '1');
-INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'openhome', '0');
-
--- Table: cfg_spotify
-CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '320');
-INSERT INTO cfg_spotify (id, param, value) VALUES (2, 'initial_volume', '0');
-INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'log');
-INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'No');
-INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '0');
-INSERT INTO cfg_spotify (id, param, value) VALUES (6, 'autoplay', 'No');
-INSERT INTO cfg_spotify (id, param, value) VALUES (7, 'normalization_method', 'dynamic');
-INSERT INTO cfg_spotify (id, param, value) VALUES (8, 'normalization_gain_type', 'auto');
-INSERT INTO cfg_spotify (id, param, value) VALUES (9, 'normalization_threshold', '-2');
-INSERT INTO cfg_spotify (id, param, value) VALUES (10, 'normalization_attack', '5');
-INSERT INTO cfg_spotify (id, param, value) VALUES (11, 'normalization_release', '100');
-INSERT INTO cfg_spotify (id, param, value) VALUES (12, 'normalization_knee', '1');
-INSERT INTO cfg_spotify (id, param, value) VALUES (13, 'format', 'S16');
-INSERT INTO cfg_spotify (id, param, value) VALUES (14, 'dither', '');
-INSERT INTO cfg_spotify (id, param, value) VALUES (15, 'volume_range', '60');
-
--- Table: cfg_system
-CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_system (id, param, value) VALUES (1, 'sessionid', 'ho7vk67sqrjua8sme0pqhsjgdq');
-INSERT INTO cfg_system (id, param, value) VALUES (2, 'timezone', 'America/Detroit');
-INSERT INTO cfg_system (id, param, value) VALUES (3, 'i2sdevice', 'None');
-INSERT INTO cfg_system (id, param, value) VALUES (4, 'hostname', 'moode');
-INSERT INTO cfg_system (id, param, value) VALUES (5, 'browsertitle', 'moOde Player');
-INSERT INTO cfg_system (id, param, value) VALUES (6, 'airplayname', 'Moode AirPlay');
-INSERT INTO cfg_system (id, param, value) VALUES (7, 'upnpname', 'Moode UPNP');
-INSERT INTO cfg_system (id, param, value) VALUES (8, 'dlnaname', 'Moode DLNA');
-INSERT INTO cfg_system (id, param, value) VALUES (9, 'airplaysvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (10, 'upnpsvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (11, 'dlnasvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (12, 'alsa_output_mode', 'plughw');
-INSERT INTO cfg_system (id, param, value) VALUES (13, 'res_plugin_args', '');
-INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (16, 'res_plugin_upd_url', 'https://raw.githubusercontent.com/moode-player/plugins/main');
-INSERT INTO cfg_system (id, param, value) VALUES (17, 'rbactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (18, 'adevname', 'Pi HDMI 1');
-INSERT INTO cfg_system (id, param, value) VALUES (19, 'clkradio_mode', 'Disabled');
-INSERT INTO cfg_system (id, param, value) VALUES (20, 'clkradio_item', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (21, 'clkradio_name', '');
-INSERT INTO cfg_system (id, param, value) VALUES (22, 'clkradio_start', '06,00,AM,0,0,0,0,0,0,0');
-INSERT INTO cfg_system (id, param, value) VALUES (23, 'clkradio_stop', '07,00,AM,0,0,0,0,0,0,0');
-INSERT INTO cfg_system (id, param, value) VALUES (24, 'clkradio_volume', '10');
-INSERT INTO cfg_system (id, param, value) VALUES (25, 'clkradio_action', 'None');
-INSERT INTO cfg_system (id, param, value) VALUES (26, 'playhist', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (27, 'phistsong', '');
-INSERT INTO cfg_system (id, param, value) VALUES (28, 'library_utf8rep', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (29, 'current_view', 'playback,folder');
-INSERT INTO cfg_system (id, param, value) VALUES (30, 'timecountup', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (31, 'accent_color', 'Carrot');
-INSERT INTO cfg_system (id, param, value) VALUES (32, 'volknob', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (33, 'volmute', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
-INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'HDMI');
-INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
-INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'encoded,output,track,date,composer');
-INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (42, 'extmeta', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
-INSERT INTO cfg_system (id, param, value) VALUES (44, 'folder_pos', '-1');
-INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
-INSERT INTO cfg_system (id, param, value) VALUES (47, 'fs_nfs_options', 'rw,sync,no_subtree_check,no_root_squash');
-INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Show tracks');
-INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
-INSERT INTO cfg_system (id, param, value) VALUES (50, 'aplactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (51, 'ipaddr_timeout', '90');
-INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE''');
-INSERT INTO cfg_system (id, param, value) VALUES (57, 'alsa_loopback', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
-INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
-INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (62, 'ap_network_addr', '172.24.1.1/24');
-INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
-INSERT INTO cfg_system (id, param, value) VALUES (64, 'pairing_agent', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
-INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
-INSERT INTO cfg_system (id, param, value) VALUES (67, 'mpdcrossfade', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (68, 'eth0chk', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (69, 'usb_auto_mounter', 'udisks-glue');
-INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
-INSERT INTO cfg_system (id, param, value) VALUES (72, 'shellinabox', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (73, 'alsaequal', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (74, 'eqfa12p', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (75, 'p3wifi', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (76, 'p3bt', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
-INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '97207');
-INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
-INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (84, 'touchscn', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (85, 'scnblank', '600');
-INSERT INTO cfg_system (id, param, value) VALUES (86, 'scnrotate', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (87, 'scnbrightness', '255');
-INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');
-INSERT INTO cfg_system (id, param, value) VALUES (89, 'res_software_upd_url', 'https://raw.githubusercontent.com/moode-player/updates/main/moode-player');
-INSERT INTO cfg_system (id, param, value) VALUES (90, 'alphablend', '0.75');
-INSERT INTO cfg_system (id, param, value) VALUES (91, 'adaptive', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (92, 'audioout', 'Local');
-INSERT INTO cfg_system (id, param, value) VALUES (93, 'audioin', 'Local');
-INSERT INTO cfg_system (id, param, value) VALUES (94, 'slactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (95, 'rsmaftersl', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (96, 'mpdmixer_local', 'software');
-INSERT INTO cfg_system (id, param, value) VALUES (97, 'wrkready', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (98, 'scnsaver_timeout', 'Never');
-INSERT INTO cfg_system (id, param, value) VALUES (99, 'pixel_aspect_ratio', 'Default');
-INSERT INTO cfg_system (id, param, value) VALUES (100, 'favorites_name', 'Favorites');
-INSERT INTO cfg_system (id, param, value) VALUES (101, 'spotifysvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (102, 'spotifyname', 'Moode Spotify');
-INSERT INTO cfg_system (id, param, value) VALUES (103, 'spotactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (104, 'rsmafterspot', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (105, 'library_covsearchpri', 'Embedded cover');
-INSERT INTO cfg_system (id, param, value) VALUES (106, 'library_hiresthm', '600px,60');
-INSERT INTO cfg_system (id, param, value) VALUES (107, 'library_pixelratio', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (108, 'usb_auto_updatedb', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '5px');
-INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
-INSERT INTO cfg_system (id, param, value) VALUES (112, 'rsmafterrb', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Artist');
-INSERT INTO cfg_system (id, param, value) VALUES (114, 'scnsaver_style', 'Gradient (Linear)');
-INSERT INTO cfg_system (id, param, value) VALUES (115, 'ashuffle_filter', 'None');
-INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (117, 'mpd_httpd_port', '8000');
-INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lame');
-INSERT INTO cfg_system (id, param, value) VALUES (119, 'invert_polarity', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (120, 'inpactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (121, 'rsmafterinp', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (123, 'library_ignore_articles', 'a,an,the');
-INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '-1');
-INSERT INTO cfg_system (id, param, value) VALUES (125, 'volknob_preamp', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (126, 'library_albumview_sort', 'Artist/Year');
-INSERT INTO cfg_system (id, param, value) VALUES (127, 'library_thmgen_scan', 'Default');
-INSERT INTO cfg_system (id, param, value) VALUES (128, 'wake_display', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (129, 'usb_volknob', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (130, 'led_state', '1,1');
-INSERT INTO cfg_system (id, param, value) VALUES (131, 'library_tagview_covers', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (132, 'library_tagview_sort', 'Album/Year');
-INSERT INTO cfg_system (id, param, value) VALUES (133, 'library_ellipsis_limited_text', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (134, 'preferences_modal_state', '1,0,0,0,0');
-INSERT INTO cfg_system (id, param, value) VALUES (135, 'font_size', 'Normal');
-INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '5');
-INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
-INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_columns', '6/2 (Default)');
-INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
-INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
-INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
-INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
-INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'full_lib');
-INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
-INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
-INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not installed');
-INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
-INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
-INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (154, 'recorder_album_tag', 'Recorded YYYY-MM-DD');
-INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Waveform');
-INSERT INTO cfg_system (id, param, value) VALUES (157, 'show_cvpb', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (158, 'multiroom_tx', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Disabled');
-INSERT INTO cfg_system (id, param, value) VALUES (160, 'rxactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (161, 'library_onetouch_radio', 'Play');
-INSERT INTO cfg_system (id, param, value) VALUES (162, 'library_tagview_genre', 'Genre');
-INSERT INTO cfg_system (id, param, value) VALUES (163, 'auto_coverview', '-off');
-INSERT INTO cfg_system (id, param, value) VALUES (164, 'maint_interval', '21600');
-INSERT INTO cfg_system (id, param, value) VALUES (165, 'library_track_play', 'Track');
-INSERT INTO cfg_system (id, param, value) VALUES (166, 'playlist_pos', '-1');
-INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Name,No grouping');
-INSERT INTO cfg_system (id, param, value) VALUES (168, 'fs_smb', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (169, 'fs_nfs', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '');
-INSERT INTO cfg_system (id, param, value) VALUES (171, 'native_lazyload', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'No action');
-INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
-INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
-INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
-
--- Table: cfg_theme
-CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (1, 'Default', 'ddd', '32,32,32', '50, 50, 50, 0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (2, 'Cinnamon', 'ddd', '128,60,38', '140,66,42,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (3, 'Chikory Root', 'ddd', '63,62,60', '71,70,67,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (4, 'Fern', 'ddd', '61,105,56', '67,115,61,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (5, 'Green Tea', '333', '205,216,156', '211,220,167,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (6, 'Lilium', '333', '243,234,187', '245,238,200,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (7, 'Mango', '333', '222,178,102', '225,184,115,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (8, 'Marooned', 'ddd', '96,18,19', '109,20,22,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (9, 'Nightshade', 'ddd', '27,24,48', '33,29,58,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (10, 'Pure Black', 'ddd', '0,0,0', '50, 50, 50, 0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (11, 'Purple Rain', 'ddd', '38,21,63', '45,25,74,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (12, 'Putty', '333', '176,176,176', '184,184,184,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (13, 'Sandstone', 'ddd', '120,106,88', '129,114,94,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (14, 'Serene Sky', 'ddd', '84,109,155', '89,116,165,0.75');
-INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (15, 'Whiteshade', '333', '243,243,243', '251,251,251,0.75');
-
--- Table: cfg_ssid
-CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32));
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));
@@ -513,6 +260,263 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (250, 'https://ice6.somafm.com/tikitime-128-aac', 'Soma FM - Tiki Time', 'r', 'local', 'Tiki, World', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (251, 'https://streaming04.liveboxstream.uk/proxy/davideof?mp=/stream', 'Davide of MIMIC', 'r', 'local', 'Classical', 'Davide of MIMIC Radio', 'English', 'United Kingdom', 'Europe', '320', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
+
+-- Table: cfg_sl
+CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64));
+INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
+INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '_audioout');
+INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
+INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
+INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
+INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
+INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
+
+-- Table: cfg_upnp
+CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'lossless');
+INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '6');
+INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'checkcontentformat', '1');
+INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'upnpav', '1');
+INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'openhome', '0');
+
+-- Table: cfg_source
+CREATE TABLE cfg_source (
+id INTEGER PRIMARY KEY,
+name CHAR(25),
+type CHAR(8),
+address CHAR(15),
+remotedir CHAR(30),
+username CHAR(30),
+password CHAR(60),
+charset CHAR(15),
+rsize INT(4),
+wsize INT(4)
+, options CHAR(60), error CHAR(150));
+
+-- Table: cfg_spotify
+CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '320');
+INSERT INTO cfg_spotify (id, param, value) VALUES (2, 'initial_volume', '0');
+INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'log');
+INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'No');
+INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '0');
+INSERT INTO cfg_spotify (id, param, value) VALUES (6, 'autoplay', 'No');
+INSERT INTO cfg_spotify (id, param, value) VALUES (7, 'normalization_method', 'dynamic');
+INSERT INTO cfg_spotify (id, param, value) VALUES (8, 'normalization_gain_type', 'auto');
+INSERT INTO cfg_spotify (id, param, value) VALUES (9, 'normalization_threshold', '-2');
+INSERT INTO cfg_spotify (id, param, value) VALUES (10, 'normalization_attack', '5');
+INSERT INTO cfg_spotify (id, param, value) VALUES (11, 'normalization_release', '100');
+INSERT INTO cfg_spotify (id, param, value) VALUES (12, 'normalization_knee', '1');
+INSERT INTO cfg_spotify (id, param, value) VALUES (13, 'format', 'S16');
+INSERT INTO cfg_spotify (id, param, value) VALUES (14, 'dither', '');
+INSERT INTO cfg_spotify (id, param, value) VALUES (15, 'volume_range', '60');
+
+-- Table: cfg_theme
+CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (1, 'Default', 'ddd', '32,32,32', '50, 50, 50, 0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (2, 'Cinnamon', 'ddd', '128,60,38', '140,66,42,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (3, 'Chikory Root', 'ddd', '63,62,60', '71,70,67,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (4, 'Fern', 'ddd', '61,105,56', '67,115,61,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (5, 'Green Tea', '333', '205,216,156', '211,220,167,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (6, 'Lilium', '333', '243,234,187', '245,238,200,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (7, 'Mango', '333', '222,178,102', '225,184,115,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (8, 'Marooned', 'ddd', '96,18,19', '109,20,22,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (9, 'Nightshade', 'ddd', '27,24,48', '33,29,58,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (10, 'Pure Black', 'ddd', '0,0,0', '50, 50, 50, 0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (11, 'Purple Rain', 'ddd', '38,21,63', '45,25,74,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (12, 'Putty', '333', '176,176,176', '184,184,184,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (13, 'Sandstone', 'ddd', '120,106,88', '129,114,94,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (14, 'Serene Sky', 'ddd', '84,109,155', '89,116,165,0.75');
+INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (15, 'Whiteshade', '333', '243,243,243', '251,251,251,0.75');
+
+-- Table: cfg_ssid
+CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32));
+
+-- Table: cfg_system
+CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_system (id, param, value) VALUES (1, 'sessionid', 'ho7vk67sqrjua8sme0pqhsjgdq');
+INSERT INTO cfg_system (id, param, value) VALUES (2, 'timezone', 'America/Detroit');
+INSERT INTO cfg_system (id, param, value) VALUES (3, 'i2sdevice', 'None');
+INSERT INTO cfg_system (id, param, value) VALUES (4, 'hostname', 'moode');
+INSERT INTO cfg_system (id, param, value) VALUES (5, 'browsertitle', 'moOde Player');
+INSERT INTO cfg_system (id, param, value) VALUES (6, 'airplayname', 'Moode AirPlay');
+INSERT INTO cfg_system (id, param, value) VALUES (7, 'upnpname', 'Moode UPNP');
+INSERT INTO cfg_system (id, param, value) VALUES (8, 'dlnaname', 'Moode DLNA');
+INSERT INTO cfg_system (id, param, value) VALUES (9, 'airplaysvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (10, 'upnpsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (11, 'dlnasvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (12, 'alsa_output_mode', 'plughw');
+INSERT INTO cfg_system (id, param, value) VALUES (13, 'RESERVED_13', '');
+INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (16, 'res_plugin_upd_url', 'https://raw.githubusercontent.com/moode-player/plugins/main');
+INSERT INTO cfg_system (id, param, value) VALUES (17, 'rbactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (18, 'adevname', 'Pi HDMI 1');
+INSERT INTO cfg_system (id, param, value) VALUES (19, 'clkradio_mode', 'Disabled');
+INSERT INTO cfg_system (id, param, value) VALUES (20, 'clkradio_item', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (21, 'clkradio_name', '');
+INSERT INTO cfg_system (id, param, value) VALUES (22, 'clkradio_start', '06,00,AM,0,0,0,0,0,0,0');
+INSERT INTO cfg_system (id, param, value) VALUES (23, 'clkradio_stop', '07,00,AM,0,0,0,0,0,0,0');
+INSERT INTO cfg_system (id, param, value) VALUES (24, 'clkradio_volume', '10');
+INSERT INTO cfg_system (id, param, value) VALUES (25, 'clkradio_action', 'None');
+INSERT INTO cfg_system (id, param, value) VALUES (26, 'playhist', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (27, 'phistsong', '');
+INSERT INTO cfg_system (id, param, value) VALUES (28, 'library_utf8rep', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (29, 'current_view', 'playback,folder');
+INSERT INTO cfg_system (id, param, value) VALUES (30, 'timecountup', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (31, 'accent_color', 'Carrot');
+INSERT INTO cfg_system (id, param, value) VALUES (32, 'volknob', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (33, 'volmute', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
+INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'HDMI');
+INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
+INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'encoded,output,track,date,composer');
+INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (42, 'extmeta', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
+INSERT INTO cfg_system (id, param, value) VALUES (44, 'folder_pos', '-1');
+INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
+INSERT INTO cfg_system (id, param, value) VALUES (47, 'fs_nfs_options', 'rw,sync,no_subtree_check,no_root_squash');
+INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Show tracks');
+INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
+INSERT INTO cfg_system (id, param, value) VALUES (50, 'aplactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (51, 'ipaddr_timeout', '90');
+INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');
+INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE''');
+INSERT INTO cfg_system (id, param, value) VALUES (57, 'alsa_loopback', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
+INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
+INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (62, 'ap_network_addr', '172.24.1.1/24');
+INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
+INSERT INTO cfg_system (id, param, value) VALUES (64, 'pairing_agent', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
+INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
+INSERT INTO cfg_system (id, param, value) VALUES (67, 'mpdcrossfade', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (68, 'eth0chk', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (69, 'usb_auto_mounter', 'udisks-glue');
+INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
+INSERT INTO cfg_system (id, param, value) VALUES (72, 'shellinabox', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (73, 'alsaequal', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (74, 'eqfa12p', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (75, 'p3wifi', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (76, 'p3bt', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
+INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
+INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '97207');
+INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
+INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (84, 'touchscn', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (85, 'scnblank', '600');
+INSERT INTO cfg_system (id, param, value) VALUES (86, 'scnrotate', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (87, 'scnbrightness', '255');
+INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');
+INSERT INTO cfg_system (id, param, value) VALUES (89, 'res_software_upd_url', 'https://raw.githubusercontent.com/moode-player/updates/main/moode-player');
+INSERT INTO cfg_system (id, param, value) VALUES (90, 'alphablend', '0.75');
+INSERT INTO cfg_system (id, param, value) VALUES (91, 'adaptive', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (92, 'audioout', 'Local');
+INSERT INTO cfg_system (id, param, value) VALUES (93, 'audioin', 'Local');
+INSERT INTO cfg_system (id, param, value) VALUES (94, 'slactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (95, 'rsmaftersl', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (96, 'mpdmixer_local', 'software');
+INSERT INTO cfg_system (id, param, value) VALUES (97, 'wrkready', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (98, 'scnsaver_timeout', 'Never');
+INSERT INTO cfg_system (id, param, value) VALUES (99, 'pixel_aspect_ratio', 'Default');
+INSERT INTO cfg_system (id, param, value) VALUES (100, 'favorites_name', 'Favorites');
+INSERT INTO cfg_system (id, param, value) VALUES (101, 'spotifysvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (102, 'spotifyname', 'Moode Spotify');
+INSERT INTO cfg_system (id, param, value) VALUES (103, 'spotactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (104, 'rsmafterspot', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (105, 'library_covsearchpri', 'Embedded cover');
+INSERT INTO cfg_system (id, param, value) VALUES (106, 'library_hiresthm', '600px,60');
+INSERT INTO cfg_system (id, param, value) VALUES (107, 'library_pixelratio', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (108, 'usb_auto_updatedb', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '5px');
+INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
+INSERT INTO cfg_system (id, param, value) VALUES (112, 'rsmafterrb', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Artist');
+INSERT INTO cfg_system (id, param, value) VALUES (114, 'scnsaver_style', 'Gradient (Linear)');
+INSERT INTO cfg_system (id, param, value) VALUES (115, 'ashuffle_filter', 'None');
+INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (117, 'mpd_httpd_port', '8000');
+INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lame');
+INSERT INTO cfg_system (id, param, value) VALUES (119, 'invert_polarity', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (120, 'inpactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (121, 'rsmafterinp', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (123, 'library_ignore_articles', 'a,an,the');
+INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '-1');
+INSERT INTO cfg_system (id, param, value) VALUES (125, 'volknob_preamp', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (126, 'library_albumview_sort', 'Artist/Year');
+INSERT INTO cfg_system (id, param, value) VALUES (127, 'library_thmgen_scan', 'Default');
+INSERT INTO cfg_system (id, param, value) VALUES (128, 'wake_display', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (129, 'usb_volknob', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (130, 'led_state', '1,1');
+INSERT INTO cfg_system (id, param, value) VALUES (131, 'library_tagview_covers', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (132, 'library_tagview_sort', 'Album/Year');
+INSERT INTO cfg_system (id, param, value) VALUES (133, 'library_ellipsis_limited_text', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (134, 'preferences_modal_state', '1,0,0,0,0');
+INSERT INTO cfg_system (id, param, value) VALUES (135, 'font_size', 'Normal');
+INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '5');
+INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
+INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_columns', '6/2 (Default)');
+INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
+INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
+INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
+INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
+INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'full_lib');
+INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
+INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
+INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not installed');
+INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
+INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
+INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (154, 'recorder_album_tag', 'Recorded YYYY-MM-DD');
+INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Waveform');
+INSERT INTO cfg_system (id, param, value) VALUES (157, 'show_cvpb', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (158, 'multiroom_tx', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Disabled');
+INSERT INTO cfg_system (id, param, value) VALUES (160, 'rxactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (161, 'library_onetouch_radio', 'Play');
+INSERT INTO cfg_system (id, param, value) VALUES (162, 'library_tagview_genre', 'Genre');
+INSERT INTO cfg_system (id, param, value) VALUES (163, 'auto_coverview', '-off');
+INSERT INTO cfg_system (id, param, value) VALUES (164, 'maint_interval', '21600');
+INSERT INTO cfg_system (id, param, value) VALUES (165, 'library_track_play', 'Track');
+INSERT INTO cfg_system (id, param, value) VALUES (166, 'playlist_pos', '-1');
+INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Name,No grouping');
+INSERT INTO cfg_system (id, param, value) VALUES (168, 'fs_smb', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (169, 'fs_nfs', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '');
+INSERT INTO cfg_system (id, param, value) VALUES (171, 'native_lazyload', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'No action');
+INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
+INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
+INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
+
+-- Table: cfg_plugin
+CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32));
+INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (1, 'camilladsp', 'sample-configs', 'v2-sample-configs');
 
 -- Table: cfg_airplay
 CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
