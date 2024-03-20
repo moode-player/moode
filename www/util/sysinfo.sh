@@ -476,14 +476,6 @@ UPTIME="$(uptime -p)"
 
 [[ $(cat /proc/cpuinfo | grep 'Revision' | cut -f 2 -d " ") == 2* ]] && WARRANTY=void || WARRANTY=OK
 
-# Replaced by led_state from cfg_system
-#grep -q "[actpwr]" /sys/class/leds/ACT/trigger && LED0="on" || LED0="off"
-#if [ $(ls /sys/class/leds | grep PWR) ]; then
-#	grep -q "[actpwr]" /sys/class/leds/PWR/trigger && LED1="on" || LED1="off"
-#else
-#	LED1="not accessible"
-#fi
-
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
 THROTTLED_BITMASK=`vcgencmd get_throttled | cut -d"=" -f2`
 THROTTLED_TEXT=""
@@ -637,7 +629,7 @@ dlnaname=${arr[7]}
 [[ "${arr[9]}" = "1" ]] && upnpsvc="On" || upnpsvc="Off"
 [[ "${arr[10]}" = "1" ]] && dlnasvc="On" || dlnasvc="Off"
 [[ "${arr[11]}" = "plughw" ]] && alsa_output_mode="Default (plughw)" || alsa_output_mode="Direct (hw)"
-[[ "${arr[12]}" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
+res_plugin_args=${arr[12]}
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
 if [[ -f "/opt/RoonBridge/start.sh" ]]; then
 	[[ "${arr[14]}" = "1" ]] && rbsvc="On" || rbsvc="Off"
@@ -839,6 +831,8 @@ library_onetouch_pl=${arr[171]}
 scnsaver_mode=${arr[172]}
 scnsaver_layout=${arr[173]}
 scnsaver_xmeta=${arr[174]}
+value=$(moodeutl -d -gv rotaryenc)
+[[ "$value" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

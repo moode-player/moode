@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Mar 19 18:56:21 2024
+-- File generated with SQLiteStudio v3.1.0 on Wed Mar 20 09:29:03 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -74,7 +74,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (9, 'airplaysvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (10, 'upnpsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (11, 'dlnasvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (12, 'alsa_output_mode', 'plughw');
-INSERT INTO cfg_system (id, param, value) VALUES (13, 'rotaryenc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (13, 'res_plugin_args', '');
 INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (16, 'res_plugin_upd_url', 'https://raw.githubusercontent.com/moode-player/plugins/main');

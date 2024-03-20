@@ -1113,6 +1113,9 @@ if (!isset($_SESSION['toggle_coverview'])) {
 }
 
 // Start rotary encoder
+if (!isset($_SESSION['rotaryenc'])) {
+	$_SESSION['rotaryenc'] = '0';
+}
 if ($_SESSION['rotaryenc'] == '1') {
 	sysCmd('systemctl start rotenc');
 }
