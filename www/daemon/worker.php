@@ -381,22 +381,20 @@ if ($piModel == '3') { // 3B, B+, A+
 workerLog('worker: HDMI ports(s): on');
 
 // LED states
-if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
-	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
-	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
-	workerLog('worker: Sys LED1: sysclass does not exist');
-} else if ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
+if ($piModel == '1' || str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
+	// Pi boards w/o a sysclass entry for LED1
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: sysclass does not exist');
 } else if ($piModel == '5') {
+	// Pi-5 dual-color (red/green) power/activity LED
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0: ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1: on');
 } else {
+	// All other Pi boards have 2 LED's (power and activity)
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	$led1Brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
@@ -405,7 +403,7 @@ if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 	workerLog('worker: Sys LED1: ' . ($led1Brightness == '0' ? 'off' : 'on'));
 }
 
-// Pi-5 POWER_OFF_ON_HALT
+// Pi-5 POWER_OFF_ON_HALT (shutdown wattage)
 if (!isset($_SESSION['reduce_power'])) {
 	$_SESSION['reduce_power'] = 'n/a';
 }
