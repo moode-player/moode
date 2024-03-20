@@ -133,6 +133,7 @@ if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-
 	fi
 fi
 
+# TODO: review this section
 if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/alternatives.log --size 0
 	truncate /var/log/apt/history.log --size 0
