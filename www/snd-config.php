@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/alsa.php';
+require_once __DIR__ . '/inc/audio.php';
 require_once __DIR__ . '/inc/cdsp.php';
 require_once __DIR__ . '/inc/eqp.php';
 require_once __DIR__ . '/inc/mpd.php';
@@ -29,21 +30,27 @@ require_once __DIR__ . '/inc/sql.php';
 phpSession('open');
 $dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+$deviceNames = getAlsaDeviceNames();
 
 // AUDIO OUTPUT
 
 // Output device
 if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSION['cardnum']) {
-	 // AirPlay & Spotify restarted if device (cardnum) changed
-	$deviceChange = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0;
-	// 0 = no mixer change
-	$mixerChange = 0;
+	// Update ALSA config
+	phpSession('write', 'cardnum', $_POST['output_device']);
+	phpSession('write', 'adevname', $deviceNames[$_POST['output_device']]);
+	phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
+    phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
+	$mode = getConfiguredAudioOutput() == AO_HDMI ? 'iec958' : 'plughw';
+	phpSession('write', 'alsa_output_mode', $mode);
 
-	phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
+	// Update MPD config
 	sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
-	$queueArgs = $deviceChange . ',' . $mixerChange;
+	phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
+	$queueArgs = '1,0'; // Device change,MPD mixer change
 	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
+
 // Volume type
 if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mpdmixer']) {
 	$mixerTypeSelected = $_POST['mixer_type'];
@@ -55,7 +62,7 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 		$mixerChange = 'fixed';
 		$camillaDspVolumeSync = 'off';
 	} else {
-		// hardware or software
+		// Hardware or software
 		$mixerChange = $_POST['mixer_type'];
 		$camillaDspVolumeSync = 'off';
 	}
@@ -63,8 +70,7 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 	phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
 	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $_POST['mixer_type']);
 
-	$deviceChange = 0;
-	$queueArgs = $deviceChange . ',' . $mixerChange;
+	$queueArgs = '0,' . $mixerChange; // Device change,MPD mixer change
 	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
 // CamillaDSP volume range
@@ -78,27 +84,21 @@ if (isset($_POST['update_camilladsp_volume_range']) && $_POST['camilladsp_volume
 // I2S AUDIO DEVICE
 
 // Flag that controls what is displayed in the Output device field after changing I2S device or overlay
-$rebootRequired = 0;
+$i2sReboot = false;
 // Named device
 if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice']) && $_POST['i2sdevice'] != $_SESSION['i2sdevice']) {
+		$i2sReboot = true;
 		phpSession('write', 'i2sdevice', $_POST['i2sdevice']);
-		$msg = $_POST['i2sdevice'] == 'None' ?
-			'<b>Restart required</b><br>After restart select an Output device.' :
-			'<b>Restart required</b><br>After restart edit chip and/or driver options.';
-		$rebootRequired = 1;
-		submitJob('i2sdevice', $_POST['i2sdevice'], 'Settings updated', $msg, 300);
+		submitJob('i2sdevice', '', 'Settings updated', 'Restart required');
 	}
 }
 // Device overlay
 if (isset($_POST['update_i2s_overlay'])) {
 	if (isset($_POST['i2soverlay']) && $_POST['i2soverlay'] != $_SESSION['i2soverlay']) {
+		$i2sReboot = true;
 		phpSession('write', 'i2soverlay', $_POST['i2soverlay']);
-		$msg = $_POST['i2soverlay'] == 'None' ?
-			'<b>Restart required</b><br>After restart select Output device.' :
-			'<b>Restart required</b>';
-		$rebootRequired = 1;
-		submitJob('i2sdevice', 'None', 'Settings updated', $msg, 300);
+		submitJob('i2sdevice', '', 'Settings updated', 'Restart required');
 	}
 }
 // Driver options
@@ -331,14 +331,24 @@ foreach ($result as $row) {
 // AUDIO OUTPUT
 
 // Output device
-// Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device
-$devNames = $rebootRequired == true ? array('********') : getAlsaDeviceNames();
-if ($devNames[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($cfgMPD['device'] == '0') ? "selected" : "") . " >$devNames[0]</option>\n";}
-if ($devNames[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($cfgMPD['device'] == '1') ? "selected" : "") . " >$devNames[1]</option>\n";}
-if ($devNames[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($cfgMPD['device'] == '2') ? "selected" : "") . " >$devNames[2]</option>\n";}
-if ($devNames[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD['device'] == '3') ? "selected" : "") . " >$devNames[3]</option>\n";}
-$cards = getAlsaCards();
-$_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$cfgMPD['device']] == 'empty') ? 'Device turned off or disconnected' : '';
+// Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device(s)
+if ($i2sReboot === true) {
+	$_mpd_select['device'] .= "<option value=\"0\" selected>RESTART REQUIRED</option>\n";
+} else {
+	$_mpd_select['device'] .= "<option value=\"0\" " . (($cfgMPD['device'] == '0') ? "selected" : "") . ">0: $deviceNames[0]</option>\n";
+	$_mpd_select['device'] .= "<option value=\"1\" " . (($cfgMPD['device'] == '1') ? "selected" : "") . ">1: $deviceNames[1]</option>\n";
+	$_mpd_select['device'] .= "<option value=\"2\" " . (($cfgMPD['device'] == '2') ? "selected" : "") . ">2: $deviceNames[2]</option>\n";
+	$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD['device'] == '3') ? "selected" : "") . ">3: $deviceNames[3]</option>\n";
+	$_mpd_select['device'] .= "<option value=\"4\" " . (($cfgMPD['device'] == '4') ? "selected" : "") . ">4: $deviceNames[4]</option>\n";
+	$_mpd_select['device'] .= "<option value=\"5\" " . (($cfgMPD['device'] == '5') ? "selected" : "") . ">5: $deviceNames[5]</option>\n";
+	$_mpd_select['device'] .= "<option value=\"6\" " . (($cfgMPD['device'] == '6') ? "selected" : "") . ">6: $deviceNames[6]</option>\n";
+	$_mpd_select['device'] .= "<option value=\"7\" " . (($cfgMPD['device'] == '7') ? "selected" : "") . ">7: $deviceNames[7]</option>\n";
+}
+
+// For USB device
+// ALSA removes the card id after the device is unplugged or turned off
+$_device_error = $deviceNames[$_SESSION['cardnum']] == 'empty' ? 'Device turned off or disconnected' : '';
+
 // Volume type
 // Hardware, Software, Fixed (none), CamillaDSP (null)
 if ($_SESSION['alsavolume'] != 'none') {
@@ -388,7 +398,7 @@ foreach ($overlayList as $overlay) {
 }
 // Driver options
 $result = sqlQuery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
-if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
+if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) {
 	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
 	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
 	$_driveropt_btn_disable = '';
@@ -398,7 +408,9 @@ if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
 }
 
 // Button disables
-if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' || $_SESSION['multiroom_rx'] == 'On') {
+if ($_SESSION['audioout'] == 'Bluetooth' ||
+	$_SESSION['multiroom_tx'] == 'On' ||
+	$_SESSION['multiroom_rx'] == 'On') {
 	$_output_device_btn_disabled = 'disabled';
 	$_volume_type_btn_disabled = 'disabled';
 	$_driveropt_btn_disable = 'disabled';
@@ -407,12 +419,13 @@ if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' ||
 	$_i2sdevice_btn_disable = 'disabled';
 	$_i2soverlay_btn_disable = 'disabled';
 } else {
-	$_output_device_btn_disabled = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? '' : 'disabled';
+	$_output_device_btn_disabled = '';
 	$_volume_type_btn_disabled = '';
 	$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
 	$_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
-	$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'disabled';
-	$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'onclick="return false;"';
+	$_driveropt_btn_disable = $i2sReboot === false ? '' : 'disabled';
+	$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'disabled';
+	$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'onclick="return false;"';
 }
 
 // ALSA OPTIONS

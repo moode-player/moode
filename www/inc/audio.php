@@ -18,52 +18,79 @@
  *
  */
 
+require_once __DIR__ . '/alsa.php';
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/mpd.php';
 require_once __DIR__ . '/renderer.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
-function cfgI2sOverlay($i2sDevice) {
-	// Removes the line after dtparam=audio=off which would be a dtoverlay=audio_overlay line
-	sysCmd('sed -i "/dtparam=audio=off/{n;d}" ' . BOOT_CONFIG_TXT);
-	// Remove the force_eeprom_read=0 line (it will only exist for hifiberry dtoverlays
+function cfgI2SDevice() {
+	// Remove 'dtoverlay=audio_overlay' line after the comment header if it exists
+	$lines = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -A 1 "' . I2S_HEADER . '" | wc -l')[0];
+	if ($lines = 2) {
+		sysCmd('sed -i "/' . I2S_HEADER . '/{n;d}" ' . BOOT_CONFIG_TXT);		
+	}
+
+	// Remove 'force_eeprom_read=0'line (only exists for hifiberry devices)
 	sysCmd('sed -i "/force_eeprom_read=0/d" ' . BOOT_CONFIG_TXT);
 
 	// Add force_eeprom_read=0 for all hifiberry cards
-	$forceEepromRead0 = (stripos($i2sDevice, 'hifiberry') !== false || stripos($_SESSION['i2soverlay'], 'hifiberry') !== false) ?
-		'\nforce_eeprom_read=0' : '';
+	$str = $_SESSION['i2sdevice'] . $_SESSION['i2soverlay'];
+	$eeprom = str_contains($str, 'hifiberry') ? '\nforce_eeprom_read=0\n' : '\n';
 
-	// With VC4 KMS driver + I2S device, card 0 is vc4hdmi1 and card 1 is I2S device but sometimes the order is reversed
-	$cardNum = getAlsaCardNumVC4I2S();
-
-	if ($i2sDevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
-		// Reset to Pi HDMI-1
-		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" ' . BOOT_CONFIG_TXT);
-		# This will trigger an MPD conf update during startup and set all the device params correctly
-		phpSession('write', 'adevname', 'Pi HDMI 1');
-	} else if ($i2sDevice != 'None') {
+	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
+		// Reset to Pi HDMI 1
+		phpSession('write', 'adevname', PI_HDMI1);
+	} else if ($_SESSION['i2sdevice'] != 'None') {
 		// Named I2S device
-		$result = sqlRead('cfg_audiodev', sqlConnect(), $i2sDevice);
-		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . $forceEepromRead0 . '" ' . BOOT_CONFIG_TXT);
-		phpSession('write', 'cardnum', $cardNum);
-		phpSession('write', 'adevname', $result[0]['name']);
-		sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
-		// Reset output mode if needed
-		if ($_SESSION['alsa_output_mode'] == 'iec958') {
-			phpSession('write', 'alsa_output_mode', 'plughw');
-		}
+		$result = sqlRead('cfg_audiodev', sqlConnect(), $_SESSION['i2sdevice']);
+		sysCmd('sed -i s"/' . I2S_HEADER . '/' . I2S_HEADER . '\ndtoverlay=' . $result[0]['driver'] . $eeprom . '/" ' . BOOT_CONFIG_TXT);
 	} else {
 		// DT overlay
-		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $_SESSION['i2soverlay'] . $forceEepromRead0 . '" ' . BOOT_CONFIG_TXT);
-		phpSession('write', 'cardnum', $cardNum);
-		phpSession('write', 'adevname', $_SESSION['i2soverlay']);
-		sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
-		// Reset output mode if needed
-		if ($_SESSION['alsa_output_mode'] == 'iec958') {
-			phpSession('write', 'alsa_output_mode', 'plughw');
-		}
+		sysCmd('sed -i s"/' . I2S_HEADER . '/' . I2S_HEADER . '\ndtoverlay=' . $_SESSION['i2soverlay'] . $eeprom . '/" ' . BOOT_CONFIG_TXT);
 	}
+}
+
+function isI2SDevice($deviceName) {
+	if ($_SESSION['i2sdevice'] != 'None' && $deviceName == $_SESSION['i2sdevice']) {
+		// Named I2S device in cfg_audiodev
+		$isI2SDevice = true;
+	} else if ($_SESSION['i2soverlay'] != 'None') {
+		// Name parsed from aplay -l
+		$aplayName = trim(sysCmd("aplay -l | awk -F'[' '/card " . $_SESSION['cardnum'] . "/{print $2}' | cut -d']' -f1")[0]);
+		if ($aplayName == getAlsaDeviceNames()[$_SESSION['cardnum']]) {
+			$isI2SDevice = true;
+		} else {
+			$isI2SDevice = false;
+			workerLog('isI2SDevice(): Error: aplay name not found for i2soverlay=' . $_SESSION['i2soverlay']);
+		}
+	} else {
+		$isI2SDevice = false;
+	}
+
+	//workerLog('isI2SDevice(' . $deviceName . ')=' . ($isI2SDevice === true ? 'true' : 'false'));
+	return $isI2SDevice;
+}
+
+function getConfiguredAudioOutput() {
+	// Configured device
+	$deviceName = getAlsaDeviceNames()[$_SESSION['cardnum']];
+
+	if ($_SESSION['multiroom_tx'] == 'On') {
+		$configuredOutput = AO_TRXSEND;
+	} else if (isI2SDevice($deviceName)) {
+		$configuredOutput = AO_I2S;
+	} else if ($deviceName == PI_HEADPHONE) {
+		$configuredOutput = AO_HEADPHONE;
+	} else if ($deviceName == PI_HDMI1 || $deviceName == PI_HDMI2) {
+		$configuredOutput = AO_HDMI;
+	} else {
+		$configuredOutput = AO_USB;
+	}
+
+	//workerLog('getConfiguredAudioOutput(): ' . $configuredOutput);
+	return $configuredOutput;
 }
 
 // Set audio source
@@ -181,7 +208,7 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \"invpolarity\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		} else {
 			// No DSP
-			$alsaDevice = getAlsaDevice($cardNum, $outputMode);
+			$alsaDevice = $outputMode == 'iec958' ? ALSA_IEC958_DEVICE . $cardNum : $outputMode . ':' . $cardNum . ',0';
 			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $alsaDevice . "\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $alsaDevice . "\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		}

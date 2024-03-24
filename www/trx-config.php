@@ -204,7 +204,7 @@ $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && 
 if ($_SESSION['multiroom_tx'] == 'Off') {
 	$_multiroom_tx_disable = (
 		$_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true ||
-		($_SESSION['adevname'] != 'Pi HDMI 1' && $_SESSION['adevname'] != 'Pi Headphone jack') ||
+		($_SESSION['adevname'] != PI_HDMI1 && $_SESSION['adevname'] != PI_HEADPHONE) ||
 		$_SESSION['mpdmixer'] != 'hardware') ? 'disabled' : '';
 } else {
 	$_multiroom_tx_disable = '';

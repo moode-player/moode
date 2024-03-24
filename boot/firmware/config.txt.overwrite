@@ -29,5 +29,9 @@ hdmi_group=0
 dtparam=i2c_arm=on
 dtparam=i2s=on
 dtparam=audio=on
-#dtoverlay=disable-wifi
 #dtoverlay=disable-bt
+#dtoverlay=disable-wifi
+
+# I2S audio
+
+# User added

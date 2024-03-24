@@ -38,12 +38,6 @@ const MPD_RESPONSE_OK = 'OK';
 const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
-// Audio outputs
-const AO_PI_HDMI = 1;
-const AO_PI_HPHONE = 2;
-const AO_I2S = 3;
-const AO_USB = 4;
-const AO_TRXSEND = 5;
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
@@ -70,7 +64,11 @@ const SESSION_SAVE_PATH = '/var/local/php';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const BOOT_CONFIG_TXT = '/boot/firmware/config.txt';
-const BOOT_CONFIG_BKP = '/boot/firmware/bootcfg.bkp';
+const BOOT_CONFIG_BKP = '/boot/firmware/config.txt.bkp';
+// Boot config.txt headers
+const I2S_HEADER = '# I2S device';
+const USER_HEADER = '# User added';
+
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
@@ -116,11 +114,28 @@ const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
-// ALSA mode/name, device, format
+// Audio outputs
+const AO_HDMI = 'hdmi';
+const AO_HEADPHONE = 'headphone';
+const AO_I2S = 'i2s';
+const AO_USB = 'usb';
+const AO_TRXSEND = 'txsend';
+
+// Audio device names
+const PI_HDMI1 = 'Pi HDMI 1';
+const PI_HDMI2 = 'Pi HDMI 2';
+const PI_HEADPHONE = 'Pi Headphone jack';
+
+// ALSA max number of cards (4 USB, 3 Integrated, 1 I2S)
+const ALSA_MAX_CARDS = 8;
+// ALSA default mixer name
+const ALSA_DEFAULT_MIXER_NAME = 'Digital';
+// ALSA output mode names
 const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct', 'iec958' => 'IEC958');
+const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
+// ALSA HDMI IEC958
 const ALSA_IEC958_DEVICE = 'default:vc4hdmi';
 const ALSA_IEC958_FORMAT = 'IEC958_SUBFRAME_LE';
-const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
 
 // Source select devices
 const SRC_SELECT_DEVICES = array(

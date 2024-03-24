@@ -31,8 +31,8 @@ $dbh = sqlConnect();
 phpSession('open_ro');
 
 // ALSA Hardware params
-$hwParams = getAlsaHwParams(getAlsaCardNum());
-//workerLog('audioinfo.php: cardnum: ' . print_r(getAlsaCardNum(), true));
+$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
+//workerLog('audioinfo.php: cardnum: ' . print_r(getAlsaCardNumForDevice($_SESSION['adevname']), true));
 //workerLog('audioinfo.php: hwparams: ' . print_r($hwParams, true));
 
 // SQL table cfg_mpd settings

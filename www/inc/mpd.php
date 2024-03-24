@@ -321,15 +321,16 @@ function formatMpdQueryResults($resp) {
 	return $array;
 }
 
-function updMpdConf($i2sDevice) {
+// NOTE: Session vars and cfg_mpd updates are made upstream before this function is called.
+function updMpdConf() {
     $data  = "#########################################\n";
     $data .= "# This file is managed by moOde          \n";
     $data .= "#########################################\n\n";
 
 	$cfgMpd = sqlQuery("SELECT param, value FROM cfg_mpd WHERE value!=''", sqlConnect());
+
 	foreach ($cfgMpd as $cfg) {
 		switch ($cfg['param']) {
-			// Code block or other params
 			case 'device':
 				$cardNum = $cfg['value'];
 				break;
@@ -416,31 +417,18 @@ function updMpdConf($i2sDevice) {
 		}
 	}
 
-	// ALSA card number
-    if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
-        $cardNum = getAlsaCardNumVC4I2S();
-        $result = sqlQuery("UPDATE cfg_mpd SET value='" . $cardNum . "' WHERE param='device'", sqlConnect());
-    }
-	phpSession('write', 'cardnum', $cardNum);
-	// ALSA mixer name
-	phpSession('write', 'amixname', getAlsaMixerName($i2sDevice));
-	// If no hardware volume controller then revert to mixer_type = software
-	phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
-	if ($_SESSION['alsavolume'] == 'none' && $mixerType == 'hardware') {
+    // MPD mixer type
+    $audioOutput = getConfiguredAudioOutput();
+	if ($audioOutput != AO_USB && $_SESSION['alsavolume'] == 'none') {
 		$mixerType = 'software';
 		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
-	// MPD mixer_type: Hardware, Software, Fixed (0dB), or Null
 	phpSession('write', 'mpdmixer', $mixerType);
+
     // Ensure mpdmixer_local = mpdmixer
     if ($_SESSION['audioout'] == 'Local') {
         phpSession('write', 'mpdmixer_local', $mixerType);
     }
-
-	// Audio device friendly name
-	$adevName = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$cardNum] :
-		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
-	phpSession('write', 'adevname', $adevName);
 
 	// Input
 	$data .= "max_connections \"128\"\n";
@@ -488,7 +476,6 @@ function updMpdConf($i2sDevice) {
 	$data .= $mixerType == 'hardware' ?
         "mixer_control \"" . $_SESSION['amixname'] . "\"\n" .
         "mixer_device \"" . ($_SESSION['alsa_output_mode'] == 'iec958' ? ALSA_IEC958_DEVICE . $cardNum : 'hw:' . $cardNum) . "\"\n" .
-        //DELETE:"mixer_device \"" . ('hw:' . $cardNum) . "\"\n" .
         "mixer_index \"0\"\n" :
         '';
 	$data .= "dop \"" . $dop . "\"\n";
@@ -582,7 +569,7 @@ function getMpdOutputs($sock) {
 	return $array;
 }
 
-// Reconfigure MPD volume
+// Change to different MPD mixer type
 function changeMPDMixer($mixer) {
 	$mixerType = $mixer == 'camilladsp' ? 'null' : $mixer;
 
@@ -596,7 +583,7 @@ function changeMPDMixer($mixer) {
         CamillaDSP::setCDSPVolTo0dB();
     }
 
-	updMpdConf($_SESSION['i2sdevice']);
+	updMpdConf();
 }
 
 // Turn MPD HTTP server on/off

@@ -105,7 +105,7 @@ if (empty(getUserID())) {
 }
 
 // Check for Linux startup complete
-workerLog('worker: Wait for Linux startup...');
+workerLog('worker: Wait for Linux startup');
 $maxLoops = 30;
 $sleepTime = 6;
 $linuxStartupComplete = false;
@@ -159,7 +159,7 @@ workerLog('worker: Session loaded');
 
 // Ensure package holds are in effect
 sysCmd('moode-apt-mark hold > /dev/null 2>&1');
-workerLog('worker: Package holds applied');
+workerLog('worker: Package locks applied');
 
 // Ensure certain files exist and with the correct permissions
 if (!file_exists(PLAY_HISTORY_LOG)) {
@@ -212,62 +212,6 @@ if (!isset($_SESSION['debuglog'])) {
 	$_SESSION['debuglog'] = '0';
 }
 workerLog('worker: Debug logging ' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off'));
-
-//----------------------------------------------------------------------------//
-workerLog('worker: --');
-workerLog('worker: -- Audio debug');
-workerLog('worker: --');
-//----------------------------------------------------------------------------//
-
-// Report audio device configuration
-$mpdDevice = sqlQuery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
-$cards = getAlsaCards();
-workerLog('worker: ALSA cards:   0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
-workerLog('worker: MPD config:   ' . $mpdDevice[0]['value'] . ':' . $_SESSION['adevname'] .
-	' | mixer:' . trim($_SESSION['amixname']) . ' | cardnum:' . $mpdDevice[0]['value']);
-// Check for device not found
-if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdDevice[0]['value']] == 'empty') {
-	workerLog('worker: Warning: No device found at MPD configured card ' . $mpdDevice[0]['value']);
-}
-workerLog('worker: ALSA mode:    ' . $_SESSION['alsa_output_mode']);
-// Zero out ALSA volume
-$alsaMixerName = getAlsaMixerName($_SESSION['i2sdevice']);
-if ($alsaMixerName != 'Invalid card number.') {
-	workerLog('worker: Mixer name:   ' . ($alsaMixerName == 'none' ? 'none exists' : '[' . $alsaMixerName . ']'));
-	if ($alsaMixerName != 'none') {
-		sysCmd('amixer sset ' . '"' . $alsaMixerName . '"' . ' on' ); // Ensure state is 'on'
-		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName . '"' . ' 0');
-		$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $alsaMixerName . '"');
-		workerLog('worker: Hdwr volume:  set to ' . $result[0]);
-	} else {
-		phpSession('write', 'alsavolume', 'none');
-		phpSession('write', 'amixname', 'none');
-		workerLog('worker: Hdwr volume:  controller not detected');
-	}
-}
-// Report knob value
-workerLog('worker: Volume knob:  ' . $_SESSION['volknob']);
-
-// Reconfigure certain 3rd party installs
-// RoonBridge
-// NOTE: Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
-if (file_exists('/opt/RoonBridge/start.sh') === true) {
-	$_SESSION['roonbridge_installed'] = 'yes';
-	if (sysCmd('systemctl is-enabled roonbridge')[0] == 'enabled') {
-		sysCmd('systemctl disable roonbridge');
-		sysCmd('systemctl stop roonbridge');
-		workerLog('worker: RoonBridge systemd unit set to disabled');
-	}
-} else {
-	$_SESSION['roonbridge_installed'] = 'no';
-}
-// Allo Boss 2 OLED
-// NOTE: Their installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
-if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
-	sleep(1); // Allow rc.local script time to exit
-	sysCmd('sed -i /boss2/d /etc/rc.local');
-	workerLog('worker: Allo Boss2 rc.local lines removed');
-}
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -457,7 +401,7 @@ if (file_exists('/etc/NetworkManager/system-connections/preconfigured.nmconnecti
 }
 
 // Ethernet
-workerLog('worker: Check ethernet');
+workerLog('worker: Eth0');
 $eth0 = sysCmd('ip addr list | grep eth0');
 if (empty($eth0)) {
 	workerLog('worker: Ethernet: adapter does not exist');
@@ -481,7 +425,7 @@ if (empty($eth0)) {
 }
 
 // Wireless (wlan0)
-workerLog('worker: Check wireless');
+workerLog('worker: Wlan0');
 $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (empty($wlan0)) {
 	workerLog('worker: Wireless: adapter does not exist');
@@ -543,18 +487,6 @@ if (!empty($wlan0Ip)) {
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Software update');
-workerLog('worker: --');
-//----------------------------------------------------------------------------//
-
-if (!isset($_SESSION['updater_auto_check'])) {
-	$_SESSION['updater_auto_check'] = 'Off';
-}
-$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip[0] != '172.24.1.1');
-$_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress); // Logs status
-
-//----------------------------------------------------------------------------//
-workerLog('worker: --');
 workerLog('worker: -- File sharing');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
@@ -585,141 +517,39 @@ workerLog('worker: DLNA file sharing: ' . $status);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Audio config');
+workerLog('worker: -- 3rd party components');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
-
-$updateMpdConf == false;
-if (!file_exists('/etc/mpd.conf')) {
-	$updateMpdConf = true;
-	$mpdConfUpdMsg = 'MPD config:    Warning: file missing, regenerating it';
-} else {
-	switch (audioOutputTarget()) {
-		case AO_TRXSEND:
-			// Skip update otherwise Multiroom Sender ALSA config gets reverted
-			$mpdConfUpdMsg = 'MPD config:    update skipped (Multiroom sender on)';
-			break;
-		case AO_USB:
-			if ($_SESSION['inplace_upd_applied'] == '1') {
-				$mpdConfUpdMsg = 'MPD config:    updated (USB audio device + In-place update applied)';
-				$updateMpdConf = true;
-			} else {
-				// Skip update otherwise USB mixer name is not preserved if device unplugged or turned off
-				$mpdConfUpdMsg = 'MPD config:    update skipped (USB audio device)';
-			}
-			// Reset mode if needed
-			if ($_SESSION['alsa_output_mode'] == 'iec958') {
-				phpSession('write', 'alsa_output_mode', 'plughw');
-			}
-			break;
-		case AO_PI_HDMI:
-			if ($_SESSION['alsa_output_mode'] != 'iec958') {
-				phpSession('write', 'alsa_output_mode', 'iec958');
-			}
-			$updateMpdConf = true;
-			$mpdConfUpdMsg = 'MPD config:    updated';
-			break;
-		case AO_PI_HPHONE:
-		case AO_I2S:
-			if ($_SESSION['alsa_output_mode'] == 'iec958') {
-				phpSession('write', 'alsa_output_mode', 'plughw');
-			}
-			$updateMpdConf = true;
-			$mpdConfUpdMsg = 'MPD config:    updated';
-			break;
-		default:
-			$mpdConfUpdMsg = 'MPD config:    Error: Unknown audio output target';
-			break;
+// Reconfigure certain 3rd party components
+// RoonBridge
+// Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
+if (file_exists('/opt/RoonBridge/start.sh') === true) {
+	$_SESSION['roonbridge_installed'] = 'yes';
+	if (sysCmd('systemctl is-enabled roonbridge')[0] == 'enabled') {
+		sysCmd('systemctl disable roonbridge');
+		sysCmd('systemctl stop roonbridge');
+		workerLog('worker: RoonBridge:      installed');
+		workerLog('worker: RoonBridge:      systemd unit set to disabled');
 	}
-}
-
-if ($updateMpdConf == true) {
-	updMpdConf($_SESSION['i2sdevice']);
-	phpSession('write', 'inplace_upd_applied', '0');
-}
-
-workerLog('worker: ' . $mpdConfUpdMsg);
-
-// Ensure audio output is unmuted for these devices
-if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
-	sysCmd('/var/www/util/sysutil.sh unmute-pi-ampplus');
-	workerLog('worker: IQaudIO:       Pi-AMP+ unmuted');
-} else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
-	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
-	workerLog('worker: IQaudIO:       Pi-DigiAMP+ unmuted');
-}
-
-// Log audio device info
-if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
-	workerLog('worker: Audio device:  ' . getAlsaDeviceNames()[$_SESSION['cardnum']]);
 } else {
-	workerLog('worker: Audio device:  ' . $_SESSION['i2sdevice']);
+	$_SESSION['roonbridge_installed'] = 'no';
+	workerLog('worker: RoonBridge:      not installed');
 }
-if ($cards[$mpdDevice[0]['value']] == 'empty') {
-	workerLog('worker: Warning: No device found at MPD configured card ' . $mpdDevice[0]['value']);
-} else {
-	$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
-	workerLog('worker: Formats:       ' . $_SESSION['audio_formats']);
+// Allo Boss 2 OLED
+// Their installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
+if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
+	sleep(1); // Allow rc.local script time to exit after starting worker.php
+	sysCmd('sed -i /boss2/d /etc/rc.local');
+	workerLog('worker: Allo Boss2 OLED: script was manually installed');
+	workerLog('worker: Allo Boss2 OLED: rc.local lines removed');
 }
+workerLog('worker: Allo Boss2 OLED: using pre-installed script');
 
-// NOTE: Might need this at some point
-$deviceName = getAlsaDeviceNames()[$_SESSION['cardnum']];
-if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
-	$deviceName != 'Headphone jack' && $deviceName != 'HDMI-1' && $deviceName != 'HDMI-2') {
-	$usbAudio = true;
-} else {
-	$usbAudio = false;
-}
-
-// Report MPD mixer name
-$mixerType = ucfirst($_SESSION['mpdmixer']);
-$mixerType = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerType;
-$mixerType = $mixerType == 'None' ? 'Fixed (0dB)' : $mixerType;
-workerLog('worker: Mixer type     ' . $mixerType);
-
-// Ensure mpdmixer_local = mpdmixer
-if ($_SESSION['audioout'] == 'Local') {
-	phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
-}
-
-// Report ALSA mixer name
-workerLog('worker: Mixer name     ' . ($_SESSION['amixname'] == 'none' ? 'none exists' : $_SESSION['amixname']));
-
-// Check for presence of hardware volume controller
-$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-if (substr($result[0], 0, 6 ) == 'amixer') {
-	phpSession('write', 'alsavolume', 'none');
-	workerLog('worker: Hdwr volume:   controller not detected');
-} else {
-	$result[0] = str_replace('%', '', $result[0]);
-	phpSession('write', 'alsavolume', $result[0]); // volume level
-	workerLog('worker: Hdwr volume:   controller detected');
-	workerLog('worker: ALSA max vol:  ' . $_SESSION['alsavolume_max'] . '%');
-}
-
-// Report ALSA cardnum and output mode
-workerLog('worker: ALSA card:     ' . $_SESSION['cardnum']);
-workerLog('worker: ALSA mode:     ' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']]);
-
-// Start ALSA loopback
-if ($_SESSION['alsa_loopback'] == 'On') {
-	sysCmd('modprobe snd-aloop');
-} else {
-	sysCmd('modprobe -r snd-aloop');
-}
-workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
-
-// CamillaDSP
-if (!isset($_SESSION['camilladsp_volume_range'])) {
-	$_SESSION['camilladsp_volume_range'] = '60';
-}
-$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
-$cdsp->selectConfig($_SESSION['camilladsp']);
-if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-}
-unset($cdsp);
-workerLog('worker: CamillaDSP:    ' . rtrim($_SESSION['camilladsp'], '.yml'));
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Audio devices (special setup)');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
 
 // Configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
@@ -731,33 +561,183 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	} else {
 		$outputMode = $subMode[0];
 	}
-	workerLog('worker: Allo Piano:    mode set to ' . $outputMode);
+	workerLog('worker: Allo Piano 2.1:   mode set to ' . $outputMode);
 
 	// Workaround: Send brief inaudible PCM to one of the channels to initialize volume
 	sysCmd('amixer -M -c 0 sset "Master" 0');
 	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
-	workerLog('worker: Allo Piano:    volume initialized');
+	workerLog('worker: Allo Piano 2.1:   volume initialized');
+} else {
+	workerLog('worker: Allo Piano 2.1:   not found');
 }
 
 // Start Allo Boss2 OLED display
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
 	sysCmd('systemctl start boss2oled');
-	workerLog('worker: Allo Boss 2:   OLED started');
+	workerLog('worker: Allo Boss 2:      OLED started');
+} else {
+	workerLog('worker: Allo Boss 2:      not found');
 }
 
-// Reset renderer active flags
-// If any are still 1 then a reboot or power off occured while the renderer was active
-// which would leave ALSA or CamillaDSP volume at 100% so let's reset volume to 0.
+// Ensure audio output is unmuted for these devices
+if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-ampplus');
+	workerLog('worker: IQaudIO AMP+:     unmuted');
+} else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
+	workerLog('worker: IQaudIO DigiAMP+: unmuted');
+} else {
+	workerLog('worker: IQaudIO AMP*:     not found');
+}
+
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Audio renderer check');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
+// Renderers
+// If any flags are 1 then a reboot/poweroff may have occured while the renderer was active
+// In this case ALSA or CamillaDSP volume may be at 100% so let's reset volume to 0.
 $result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'aplactive', 'spotactive',
 	'slactive', 'rbactive', 'inpactive')", $dbh);
 if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['value'] == '1' ||
 	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1') {
-	// Set Knob volume to 0 for vol.sh downstream in this startup section
+	// Set Knob volume to 0 for vol.sh downstream
 	phpSession('write', 'volknob', '0');
+	workerLog('worker: Renderers: one or more active flags are true');
+	workerLog('worker: Renderers: active flags reset to false');
+	workerLog('worker: Renderers: MPD volume set to 0');
+	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
+		OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
 }
-$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
-	OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
-workerLog('worker: Renderers:     active flags reset');
+workerLog('worker: Renderers: active flags are all false');
+workerLog('worker: Renderers: no need to reset flags');
+
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Audio DEBUG');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
+
+// Audio config actual as queried
+$cards = getAlsaCardIDs();
+workerLog('worker: ALSA cards:  0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
+$mixers = array();
+foreach ($cards as $card) {
+	$value = sysCmd('amixer -c ' . $card . ' | awk \'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}\' | awk -F"\'" \'{print "(" $2 ")";}\'');
+	$mixerName = (empty($value[0]) || str_contains($value[0], 'Invalid card number')) ? 'none' : $value[0];
+	array_push($mixers, $mixerName);
+}
+workerLog('worker: ALSA mixers: 0:' . $mixers[0] . ' | 1:' . $mixers[1]. ' | 2:' . $mixers[2]. ' | 3:' . $mixers[3]);
+
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Audio configuration');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
+
+// Check for missing mpd.conf (rare)
+if (!file_exists('/etc/mpd.conf')) {
+	workerLog('worker: MPD config:    Warning: mpd.conf missing, regenerating it');
+	updMpdConf();
+}
+
+// TODO: For AO_TRXSEND, skip MPD update otherwise Multiroom Sender ALSA config gets reverted
+
+// Audio device and output interface
+workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
+$audioOutput = getConfiguredAudioOutput();
+workerLog('worker: Audio output:  ' . $audioOutput);
+
+// Check for ALSA reassigned card number
+$actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
+if ($actualCardNum == $_SESSION['cardnum']) {
+	workerLog('worker: ALSA card:     ' . $_SESSION['cardnum'] . ' (has not changed)');
+} else {
+	phpSession('write', 'cardnum', $actualCardNum);
+	$result = sqlQuery("UPDATE cfg_mpd SET value='" . $actualCardNum . "' WHERE param='device'", sqlConnect());
+	updMpdConf();
+	workerLog('worker: ALSA card:     ' . $_SESSION['cardnum'] . '(has changed, MPD config updated)');
+}
+// ALSA mixer
+$_SESSION['amixname'] = getAlsaMixerName($_SESSION['adevname']);
+workerLog('worker: ALSA mixer     ' . ($_SESSION['amixname'] == 'none' ? 'none exists' : $_SESSION['amixname']));
+// ALSA volume
+$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
+if (substr($result[0], 0, 6 ) == 'amixer') {
+	phpSession('write', 'alsavolume', 'none');
+} else {
+	sysCmd('amixer sset ' . '"' . $_SESSION['amixname'] . '"' . ' on' );
+	$result[0] = str_replace('%', '', $result[0]);
+	phpSession('write', 'alsavolume', $result[0]);
+}
+if ($_SESSION['alsavolume'] != 'none') {
+	if ($_SESSION['mpdmixer'] != 'hardware') {
+		setALSAVolTo0dB($_SESSION['alsavolume_max']);
+	}
+	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
+	workerLog('worker: ALSA volume:   ' . $result[0]);
+} else {
+	workerLog('worker: ALSA volume:   controller not detected');
+}
+// ALSA maxvol
+workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
+// ALSA output
+workerLog('worker: ALSA output:   ' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $_SESSION['alsa_output_mode'] . ')');
+// ALSA loopback
+if ($_SESSION['alsa_loopback'] == 'On') {
+	sysCmd('modprobe snd-aloop');
+} else {
+	sysCmd('modprobe -r snd-aloop');
+}
+workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
+// MPD mixer
+$mixerType = ucfirst($_SESSION['mpdmixer']);
+$mixerType = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerType;
+$mixerType = $mixerType == 'None' ? 'Fixed (0dB)' : $mixerType;
+workerLog('worker: MPD mixer      ' . $mixerType);
+// Ensure mpdmixer_local = mpdmixer
+if ($_SESSION['audioout'] == 'Local') {
+	phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
+}
+// MPD volumes
+// Source select (Analog or S/PDIF) or MPD volume
+if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
+ 	if ($_SESSION['audioin'] == 'Local') {
+		$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	} else {
+		$volKnob = $_SESSION['volknob_preamp'];
+	}
+} else {
+	$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	phpSession('write', 'volknob_mpd', '-1');
+	phpSession('write', 'volknob_preamp', '0');
+}
+sysCmd('/var/www/vol.sh ' . $volKnob);
+workerLog('worker: MPD volume:    ' . $volKnob);
+workerLog('worker: Saved MPD vol: ' . $_SESSION['volknob_mpd']);
+workerLog('worker: Saved SRC vol: ' . $_SESSION['volknob_preamp']);
+// Audio formats
+if ($cards[$_SESSION['cardnum']] == 'empty') {
+	workerLog('worker: Audio formats: Warning: card ' . $_SESSION['cardnum'] . ' is empty');
+} else {
+	$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
+	workerLog('worker: Audio formats: ' . $_SESSION['audio_formats']);
+}
+// CamillaDSP
+if (!isset($_SESSION['camilladsp_volume_range'])) {
+	$_SESSION['camilladsp_volume_range'] = '60';
+}
+$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+$cdsp->selectConfig($_SESSION['camilladsp']);
+if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+}
+unset($cdsp);
+workerLog('worker: CamillaDSP:    ' . rtrim($_SESSION['camilladsp'], '.yml'));
+$result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'");
+workerLog('worker: CDSP volume:   ' . number_format($result[0], 1) . ' dB');
+workerLog('worker: CDSP volrange: ' . $_SESSION['camilladsp_volume_range'] . ' dB');
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -802,7 +782,6 @@ if ($_SESSION['first_use_help'] == 'y,y') {
 }
 // MPD/CamillaDSP volume sync
 workerLog('worker: MPD CDSP volsync:   ' . lcfirst($_SESSION['camilladsp_volume_sync']));
-workerLog('worker: MPD CDSP volrange:  ' . $_SESSION['camilladsp_volume_range'] . ' dB');
 $serviceCmd = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
 sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
 
@@ -845,8 +824,7 @@ workerLog('worker: --');
 if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	$status = 'available';
 	$src = $_SESSION['audioin'] == 'Local' ? 'MPD' : $_SESSION['audioin'];
-	$output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$_SESSION['cardnum']] :
-		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
+	$output = $_SESSION['adevname'];
 	$status .= ', src ' . $src . ', out ' . $output;
 	if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
 		setAudioIn($_SESSION['audioin']);
@@ -1051,44 +1029,6 @@ workerLog('worker: Stream recorder: ' . $status);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Volume levels');
-workerLog('worker: --');
-//----------------------------------------------------------------------------//
-
-// Source select (Analog or S/PDIF) or MPD volume
-if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
- 	if ($_SESSION['audioin'] == 'Local') {
-		$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-	} else {
-		$volKnob = $_SESSION['volknob_preamp'];
-	}
-} else {
-	$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-	phpSession('write', 'volknob_mpd', '-1');
-	phpSession('write', 'volknob_preamp', '0');
-}
-sysCmd('/var/www/vol.sh ' . $volKnob);
-workerLog('worker: Volume knob:   ' . $volKnob);
-workerLog('worker: Saved MPD vol: ' . $_SESSION['volknob_mpd']);
-workerLog('worker: Saved SRC vol: ' . $_SESSION['volknob_preamp']);
-workerLog('worker: Mixer type:    ' . $_SESSION['mpdmixer']);
-// Hardware (ALSA) volume
-if ($_SESSION['alsavolume'] != 'none') {
- 	if ($_SESSION['mpdmixer'] != 'hardware') {
-		// Restore ALSA volume since it was initially set to 0 at the beginning of startup
-		setALSAVolTo0dB($_SESSION['alsavolume_max']);
-	}
-	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	workerLog('worker: Hdwr volume:   ' . $result[0]);
-} else {
-	workerLog('worker: Hdwr volume:   controller not detected');
-}
-// CamillaDSP volume
-$result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'");
-workerLog('worker: CDSP volume:   ' . number_format($result[0], 1) . 'dB');
-
-//----------------------------------------------------------------------------//
-workerLog('worker: --');
 workerLog('worker: -- Peripherals');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
@@ -1135,6 +1075,14 @@ workerLog('worker: --');
 workerLog('worker: -- Miscellaneous');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
+
+// Software update auto-check
+if (!isset($_SESSION['updater_auto_check'])) {
+	$_SESSION['updater_auto_check'] = 'Off';
+}
+$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip[0] != '172.24.1.1');
+// NOTE: updaterAutoCheck() logs status
+$_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
 // Automatic CoverView (Preferences)
 workerLog('worker: Auto-CoverView:    ' . ($_SESSION['auto_coverview'] == '-on' ? 'on' : 'off'));
@@ -1183,6 +1131,9 @@ workerLog('worker: Maintenance task:  ' . ($_SESSION['maint_interval'] / 60) . '
 $view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' . $_SESSION['current_view'] : $_SESSION['current_view'];
 sendEngCmd('reset_view');
 workerLog('worker: Current view:      reset to Playback');
+
+// Reset in-place update flag
+phpSession('write', 'inplace_upd_applied', '0');
 
 //----------------------------------------------------------------------------//
 // Initialize some session vars
@@ -1691,7 +1642,7 @@ function updExtMetaFile() {
 
 	if (!empty($renderer)) {
 		//workerLog('worker: Renderer active');
-		$hwParams = getAlsaHwParams($_SESSION['cardnum']);
+		$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
 
 		if ($hwParams['status'] == 'active') {
 			$hwParamsFormat = 'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, 2ch';
@@ -2021,9 +1972,10 @@ function logNetworkInfo($interface) {
 
 function updaterAutoCheck($validIPAddress) {
 	if ($_SESSION['updater_auto_check'] == 'On') {
-		workerLog('worker: Automatic check: on');
+		workerLog('worker: Software update:   Automatic check on');
+
 		if ($validIPAddress === true) {
-			workerLog('worker: Checking for available update...');
+			workerLog('worker: Software update:   Checking for available update...');
 			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
@@ -2036,37 +1988,17 @@ function updaterAutoCheck($validIPAddress) {
 			} else {
 				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
 			}
-			workerLog('worker: ' . $msg);
+			workerLog('worker: Software update:   ' . $msg);
 		} else {
 			$msg = 'No local IP address or Hotspot is on';
-			workerLog('worker: Unable to check, ' . $msg);
+			workerLog('worker: Software update:   Unable to check, ' . $msg);
 		}
 	} else {
 		$msg = 'Automatic check off';
-		workerLog('worker: ' . $msg);
+		workerLog('worker: Software update:   ' . $msg);
 	}
 
 	return $msg;
-}
-
-function audioOutputTarget() {
-	$integratedDevices = array('Pi HDMI 1', 'Pi HDMI 2', 'Pi Headphone jack');
-
-	if ($_SESSION['multiroom_tx'] != 'Off') {
-		$outputTarget = AO_TRXSEND;
-	} else if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
-		$outputTarget = AO_I2S;
-	} else if (in_array($_SESSION['adevname'], $integratedDevices)) {
-		if ($_SESSION['adevname'] == 'Pi Headphone jack') {
-			$outputTarget = AO_PI_HPHONE;
-		} else {
-			$outputTarget = AO_PI_HDMI;
-		}
-	} else {
-		$outputTarget = AO_USB;
-	}
-
-	return $outputTarget;
 }
 
 // DLNA server
@@ -2187,8 +2119,8 @@ function runQueuedJob() {
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
 
-			// Update config file
-			updMpdConf($_SESSION['i2sdevice']);
+			// Update mpd.conf file
+			updMpdConf();
 
 			// Store audio formats
 			$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
@@ -2212,13 +2144,9 @@ function runQueuedJob() {
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
 
-			// Output device (cardnum) change
-			if ($deviceChange == '1') {
-				sysCmd('/var/www/vol.sh 0');
-			}
 			// Volume type (MPD mixer) change
 			if ($mixerChange == '0') {
-				// 0 = No mixer change. Set by mpd-config.php
+				// No mixer change
 				$startPlay = true;
 			} else {
 				// Mixer change
@@ -2268,13 +2196,9 @@ function runQueuedJob() {
 				'PLAY:' . ((!empty($playing) && $startPlay == true) ? 'yes' : 'no') . ', ' .
 				'DEVCHG:' . ($deviceChange == '0' ? 'no' : 'yes'));
 			break;
-
 		// snd-config jobs
 		case 'i2sdevice':
-			sysCmd('/var/www/vol.sh 0'); // Set knob and MPD/hardware volume to 0
-			phpSession('write', 'autoplay', '0'); // Prevent auto-play before MPD setting applied
-			phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
-			cfgI2sOverlay($_SESSION['w_queueargs']);
+			cfgI2SDevice();
 			break;
 		case 'alsavolume_max':
 			setALSAVolTo0dB($_SESSION['w_queueargs']);
@@ -2347,11 +2271,11 @@ function runQueuedJob() {
 			sysCmd($cmd);
 			break;
 		case 'mpd_httpd_port':
-			updMpdConf($_SESSION['i2sdevice']);
+			updMpdConf();
 			sysCmd('systemctl restart mpd');
 			break;
 		case 'mpd_httpd_encoder':
-			updMpdConf($_SESSION['i2sdevice']);
+			updMpdConf();
 			sysCmd('systemctl restart mpd');
 			break;
 		case 'alsaequal':

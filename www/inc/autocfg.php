@@ -228,12 +228,13 @@ function autoConfigSettings() {
 
 		'I2S Device',
 		['requires' => ['i2soverlay'], 'handler' => function($values) {
-			phpSession('write', 'i2soverlay', $values['i2soverlay']);
+			$value = $values['i2soverlay'] == 'none' ? 'None': $values['i2soverlay'];
+			phpSession('write', 'i2soverlay', $value);
 		}],
 		['requires' => ['i2sdevice'], 'handler' => function($values) {
 			$value = $values['i2sdevice'] == 'none' ? 'None': $values['i2sdevice'];
 			phpSession('write', 'i2sdevice', $value);
-			cfgI2sOverlay($value);
+			cfgI2SDevice();
 		}],
 
 		'ALSA',

@@ -25,8 +25,8 @@
 	<form class="form-horizontal" method="post">
 		<legend>Audio Output</legend>
 		<p class="sub-legend">
-			Audio output devices include the Raspberry Pi integrated HDMI and Headphone audio ports, I2S HAT audio devices and USB audio devices.
-			Note that these settings cannot be changed when MPD audio output is set to "Bluetooth speaker" or when Multiroom Sender or Receiver are On.
+			Select from Pi HDMI/Headphone, I2S or USB audio devices.
+			These settings cannot be changed when outputting to a Bluetooth speaker or when Multiroom Sender or Receiver are On.
 		</p>
 
 		<div class="control-group">
@@ -36,7 +36,10 @@
 					$_mpd_select[device]
                 </select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_output_device" value="novalue" $_output_device_btn_disabled>Set</button>
-				<span class="config-help-static"><i>$_device_error</i></span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-device" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-output-device" class="config-help-info">
+					The list shows the ALSA card number and assigned audio device or "empty" if no audio device exist at the given card number.
+				</span>
 			</div>
 
 			<label class="control-label" for="mixer_type">Volume type</label>
@@ -55,8 +58,7 @@
 					<b>- CamillaDSP: </b>Use CamillaDSP software volume (64 bit float with dither). CamillaDSP must be On for this option to appear.<br>
 				</span>
 				<span class="config-help-static">
-					<b>CAUTION:</b> Set volume to a low level before changing this option.<br>
-					Fixed (0dB) will output 100% volume level. The actual fixed level can be set by adjusting Max ALSA volume.
+					<b>CAUTION:</b> Set volume to a low level before changing this option.
 				</span>
 			</div>
 
@@ -90,10 +92,6 @@
 					$_i2s[i2soverlay]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_overlay" value="novalue" $_i2soverlay_btn_disable>Set</button>
-				<span class="config-help-static">
-					Set both to None to configure a USB audio device, Pi HDMI or Pi Headphone jack.<br>
-					Auto-play will be turned off as part of updating this setting.
-                </span>
 			</div>
 
 			<label class="control-label" for="drvoptions">Driver options</label>

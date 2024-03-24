@@ -18,14 +18,44 @@
  *
  */
 
+require_once __DIR__ . '/alsa.php';
+require_once __DIR__ . '/audio.php';
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/mpd.php';
 require_once __DIR__ . '/sql.php';
 
-function getAlsaMixerName($i2sDevice) {
-	if ($i2sDevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
-		// USB devices, Pi HDMI-1/2 or Headphone jack
+function getAlsaMixerName($deviceName) {
+	if (isI2SDevice($deviceName)) {
+		// I2S devices
+		// Mixer name exceptions
+		if ($deviceName == 'HiFiBerry Amp(Amp+)') {
+			$mixerName = 'Channels';
+		} else if ($deviceName == 'HiFiBerry DAC+ DSP') {
+			$mixerName = 'DSPVolume';
+		} else if ($_SESSION['i2soverlay'] == 'hifiberry-dacplushd') {
+			$mixerName = 'DAC';
+		} else if ($deviceName == 'MERUS(tm) Amp piHAT ZW') {
+			$mixerName = 'A.Mstr Vol';
+		} else if (
+			$deviceName == 'Allo Katana DAC' ||
+			$deviceName == 'Allo Boss 2 DAC' ||
+			$deviceName == 'Allo Piano 2.1 Hi-Fi DAC') {
+			$mixerName = 'Master';
+		} else {
+			// Parse mixer name from amixer output
+			$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
+			if ($result[0] == '') {
+				// Mixer name not found
+				$mixerName = 'none';
+			} else {
+				// Use default I2S mixer name
+				$mixerName = ALSA_DEFAULT_MIXER_NAME;
+			}
+		}
+	} else {
+		// USB devices, Pi HDMI 1/2 or Headphone jack
+		// Parse mixer name from amixer output
 		$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
 		if ($result[0] == '') {
 			// Mixer name not found
@@ -34,31 +64,6 @@ function getAlsaMixerName($i2sDevice) {
 			// Mixer name found, strip off delimiters added by sysutil.sh get-mixername
 			$mixerName = ltrim($result[0], '(');
 			$mixerName = rtrim($mixerName, ')');
-		}
-	} else {
-		// I2S devices
-		if ($i2sDevice == 'HiFiBerry Amp(Amp+)') {
-			$mixerName = 'Channels';
-		} else if ($i2sDevice == 'HiFiBerry DAC+ DSP') {
-			$mixerName = 'DSPVolume';
-		} else if ($_SESSION['i2soverlay'] == 'hifiberry-dacplushd') {
-			$mixerName = 'DAC';
-		} else if ($i2sDevice == 'MERUS(tm) Amp piHAT ZW') {
-			$mixerName = 'A.Mstr Vol';
-		} else if (
-			$i2sDevice == 'Allo Katana DAC' ||
-			$i2sDevice == 'Allo Boss 2 DAC' ||
-			$i2sDevice == 'Allo Piano 2.1 Hi-Fi DAC') {
-			$mixerName = 'Master';
-		} else {
-			$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
-			if ($result[0] == '') {
-				// Mixer name not found
-				$mixerName = 'none';
-			} else {
-				// Mixer name found => assume default mixer name "Digital"
-				$mixerName = 'Digital';
-			}
 		}
 	}
 
@@ -76,38 +81,143 @@ function getAlsaVolume($mixerName) {
 	return $alsaVolume;
 }
 
-// Get device names assigned to each ALSA card
-function getAlsaDeviceNames() {
-	// Pi HDMI 1, HDMI 2 or Headphone jack, or a USB audio device
-	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
-		// Pi HDMI 1, HDMI 2 or Headphone jack, or a USB audio device
-		for ($i = 0; $i < 4; $i++) {
-			$alsaID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-
-			if (empty($alsaID)) {
-				$devices[$i] = $i == $_SESSION['cardnum'] ? $_SESSION['adevname'] : '';
-			} else if ($alsaID != 'Loopback' && $alsaID != 'Dummy') {
-				$aplayDeviceName = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
-				$result = sqlRead('cfg_audiodev', sqlConnect(), $alsaID);
-				if ($result === true) { // Not in table
-					$devices[$i] = $aplayDeviceName;
-				} else {
-					$devices[$i] = $result[0]['alt_name'];
-				}
-			}
-		}
-	} else {
-		// I2S audio device
-		$devices[0] = 'I2S audio device';
+// Get ALSA card ID's
+function getAlsaCardIDs() {
+	$cardIDs = array();
+	$maxCards = ALSA_MAX_CARDS;
+	for ($i = 0; $i < $maxCards; $i++) {
+		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+		$cardIDs[$i] = empty($cardID) ? 'empty' : $cardID;
 	}
-
-	return $devices;
+	//workerLog('getAlsaCardIDs(): ' . print_r($cards, true));
+	return $cardIDs;
 }
 
-function getAlsaDevice($cardNum, $outputMode) {
-	return $outputMode == 'iec958' ?
-		ALSA_IEC958_DEVICE . $cardNum :
-		$outputMode . ':' . $cardNum . ',0';
+// Get device names assigned to each ALSA card
+// Use cfg_audiodev name if it exists, otherwise parse the name from aplay -l
+function getAlsaDeviceNames() {
+	$dbh = sqlConnect();
+	$deviceNames = array();
+	$maxCards = ALSA_MAX_CARDS;
+	for ($i = 0; $i < $maxCards; $i++) {
+		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+
+		if (empty($cardID)) {
+			$deviceNames[$i] = 'empty';
+		} else if ($cardID == 'Loopback' || $cardID == 'Dummy') {
+			$deviceNames[$i] = $cardID;
+		} else {
+			$result = sqlRead('cfg_audiodev', $dbh, $cardID);
+			if ($result === true) {
+				// Not in table, check for I2S device
+				$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
+				if ($result === true) {
+					// Not in table, return aplay device name
+					$deviceNames[$i] = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
+				} else {
+					// In table, return name
+					$deviceNames[$i] = $result[0]['name'];
+				}
+			} else {
+				// In table, return alt name
+				$deviceNames[$i] = $result[0]['alt_name'];
+			}
+		}
+		//workerLog('getAlsaDeviceNames(): ' . $i . ':' . $deviceNames[$i]);
+	}
+
+	return $deviceNames;
+}
+
+// Get ALSA card number assigned to device
+function getAlsaCardNumForDevice($deviceName) {
+	// Array index is the card number
+	$deviceNames = getAlsaDeviceNames();
+
+	if ($_SESSION['multiroom_tx'] == 'On') {
+		// Multiroom sender uses ALSA Dummy device
+		$cardNum = getArrayIndex('Dummy', $deviceNames);
+	} else {
+		// HDMI, I2S or USB device
+		// USB device may not be connected and thus $deviceNames entry will be 'empty'
+		$cardNum = getArrayIndex($deviceName, $deviceNames);
+	}
+
+	return $cardNum;
+}
+
+function getArrayIndex($needle, $haystack) {
+	$numElements = count($haystack);
+	$index = 'empty';
+
+	for ($i = 0; $i < $numElements; $i++) {
+		if ($haystack[$i] == $needle) {
+			$index = $i;
+			break;
+		}
+	}
+
+	return $index;
+}
+
+function setALSAVolTo0dB($alsaVolMax = '100') {
+	sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $alsaVolMax);
+}
+
+// Needs the session to be available for alsaOutputStr() -> getAlsaCardNumForDevice()
+function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
+	if ($mpdState == '') {
+		// Called from command/index.php get_output_format
+		$mpdStatus = getMpdStatus(getMpdSock());
+		$outputStr = alsaOutputStr($mpdStatus['audio_sample_rate']);
+	} else if ($mpdState == 'play') {
+		// Called from enhanceMetadata() in inc/mpd.php
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioout'", sqlConnect());
+		if ($result['value'] == 'Bluetooth') {
+			$outputStr = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
+		} else {
+			$outputStr = alsaOutputStr($mpdAudioSampleRate);
+		}
+	} else {
+		$outputStr = 'Not playing';
+	}
+
+	return $outputStr;
+}
+
+function alsaOutputStr($mpdAudioSampleRate = '') {
+	$maxLoops = 3;
+	$sleepTime = 250000;
+	// Loop when checking hwparams to allow for any latency in the audio pipeline
+	for ($i = 0; $i < $maxLoops; $i++) {
+		$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
+		//workerLog('alsaOutputStr(): ' . ($i + 1) . ' ' . $hwParams['status']);
+		if ($hwParams['status'] == 'active') {
+			$channels = getChannelCount($hwParams['channels']);
+			$outputStr = $hwParams['format'] == 'DSD' ?
+				'DSD ' . $mpdAudioSampleRate . ' MHz, ' . $channels :
+				'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, '. $channels;
+			break;
+		} else {
+			$outputStr = 'Not playing';
+		}
+
+		usleep($sleepTime);
+	}
+
+	return$outputStr;
+}
+
+function getChannelCount($channelStr) {
+	if ($channelStr == 'Mono') {
+		$channelCount = '1';
+	} else if ($channelStr == 'Stereo') {
+		$channelCount = '2';
+	} else {
+		$channelCount = substr($channelStr, 0, 1); // N-Channel or ?-Channel
+	}
+
+	return $channelCount .'ch';
 }
 
 function getAlsaHwParams($cardNum) {
@@ -157,86 +267,4 @@ function getAlsaHwParams($cardNum) {
 	}
 
 	return $array; // rate, format, channels, status, calcrate (Mbps)
-}
-
-// Get ALSA card ID's
-function getAlsaCards() {
-	$cards = array();
-	$maxCards = 4;
-	for ($i = 0; $i < $maxCards; $i++) {
-		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-		$cards[$i] = empty($cardID) ? 'empty' : $cardID;
-	}
-	//workerLog('getAlsaCards(): ' . print_r($cards, true));
-	return $cards;
-}
-
-function getAlsaCardNum() {
-	return $_SESSION['multiroom_tx'] == 'On' ? (array_search('Dummy', getAlsaCards()) - 1) : $_SESSION['cardnum'];
-}
-
-// With VC4 KMS driver + I2S device, card 0 is vc4hdmi1 and card 1 is I2S device but sometimes the order is reversed
-function getAlsaCardNumVC4I2S() {
-	$cards = sysCmd("aplay -l | grep card | awk '{print $3}'");
-	return str_contains($cards[0], 'vc4hdmi') ? '1' : '0';
-}
-
-function setALSAVolTo0dB($alsaVolMax = '100') {
-	sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $alsaVolMax);
-}
-
-// Needs the session to be available for getAlsaCardNum()
-function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
-	if ($mpdState == '') {
-		// Called from command/index.php get_output_format
-		$mpdStatus = getMpdStatus(getMpdSock());
-		$outputStr = alsaOutputStr($mpdStatus['audio_sample_rate']);
-	} else if ($mpdState == 'play') {
-		// Called from enhanceMetadata() in inc/mpd.php
-		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioout'", sqlConnect());
-		if ($result['value'] == 'Bluetooth') {
-			$outputStr = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
-		} else {
-			$outputStr = alsaOutputStr($mpdAudioSampleRate);
-		}
-	} else {
-		$outputStr = 'Not playing';
-	}
-
-	return $outputStr;
-}
-
-function alsaOutputStr($mpdAudioSampleRate = '') {
-	$maxLoops = 3;
-	$sleepTime = 250000;
-	// Loop when checking hwparams to allow for any latency in the audio pipeline
-	for ($i = 0; $i < $maxLoops; $i++) {
-		$hwParams = getAlsaHwParams(getAlsaCardNum());
-		//workerLog('alsaOutputStr(): ' . ($i + 1) . ' ' . $hwParams['status']);
-		if ($hwParams['status'] == 'active') {
-			$channels = getChannelCount($hwParams['channels']);
-			$outputStr = $hwParams['format'] == 'DSD' ?
-				'DSD ' . $mpdAudioSampleRate . ' MHz, ' . $channels :
-				'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, '. $channels;
-			break;
-		} else {
-			$outputStr = 'Not playing';
-		}
-
-		usleep($sleepTime);
-	}
-
-	return$outputStr;
-}
-
-function getChannelCount($channelStr) {
-	if ($channelStr == 'Mono') {
-		$channelCount = '1';
-	} else if ($channelStr == 'Stereo') {
-		$channelCount = '2';
-	} else {
-		$channelCount = substr($channelStr, 0, 1); // N-Channel or ?-Channel
-	}
-
-	return $channelCount .'ch';
 }

@@ -26,5 +26,5 @@ require_once __DIR__ . '/../inc/cdsp.php';
 
 session_id(phpSession('get_sessionid'));
 phpSession('open');
-updMpdConf($_SESSION['i2sdevice']);
+updMpdConf();
 phpSession('close');
