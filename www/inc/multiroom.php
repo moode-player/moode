@@ -76,7 +76,7 @@ function stopMultiroomReceiver() {
 	sendEngCmd('rxactive0');
 }
 
-function updReceiverVol ($volCmd, $masterVolChange = false) {
+function updReceiverVol($volCmd, $masterVolChange = false) {
 	$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
 	$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
 
@@ -93,15 +93,26 @@ function updReceiverVol ($volCmd, $masterVolChange = false) {
 	}
 }
 
-function loadSndDummy () {
+function loadSndDummy() {
 	// Load driver and return card number
-	sysCmd('modprobe snd-dummy');
+	sysCmd('modprobe snd_dummy');
 	$result = sysCmd("cat /proc/asound/Dummy/pcm0p/info | awk -F': ' '/card/{print $2}'");
 	return $result[0];
 }
 
-function unloadSndDummy () {
-	sysCmd('sudo modprobe -r snd-dummy');
+function unloadSndDummy() {
+	$maxLoops = 3;
+
+	for ($i = 0; $i < $maxLoops; $i++) {
+		sysCmd('sudo modprobe -rf snd_dummy');
+		$result = sysCmd('lsmod | grep -e "^snd_dummy"');
+
+		if (empty($result)) {
+			break;
+		}
+
+		usleep(250000);
+	}
 }
 
 // Returns the specified timeout (n.n float format) for use in file_get_contents($URL) calls
