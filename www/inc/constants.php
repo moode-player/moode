@@ -114,20 +114,25 @@ const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
-// Audio outputs
+// Audio output interfaces
 const AO_HDMI = 'hdmi';
 const AO_HEADPHONE = 'headphone';
 const AO_I2S = 'i2s';
 const AO_USB = 'usb';
-const AO_TRXSEND = 'txsend';
+const AO_TRXSEND = 'trxsend';
 
-// Audio device names
+// Audio device names (Pi integrated audio)
 const PI_HDMI1 = 'Pi HDMI 1';
 const PI_HDMI2 = 'Pi HDMI 2';
 const PI_HEADPHONE = 'Pi Headphone jack';
 
 // ALSA max number of cards (4 USB, 3 Integrated, 1 I2S)
 const ALSA_MAX_CARDS = 8;
+// ALSA special device names
+const ALSA_LOOPBACK_DEVICE = 'Loopback';
+const ALSA_DUMMY_DEVICE = 'Dummy';
+// ALSA empty card
+const ALSA_EMPTY_CARD = 'empty';
 // ALSA default mixer name
 const ALSA_DEFAULT_MIXER_NAME = 'Digital';
 // ALSA output mode names
@@ -136,6 +141,9 @@ const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Co
 // ALSA HDMI IEC958
 const ALSA_IEC958_DEVICE = 'default:vc4hdmi';
 const ALSA_IEC958_FORMAT = 'IEC958_SUBFRAME_LE';
+
+// Friendly name to display in Output device field in Audio Config
+const TRX_SENDER_NAME = 'Multiroom sender';
 
 // Source select devices
 const SRC_SELECT_DEVICES = array(

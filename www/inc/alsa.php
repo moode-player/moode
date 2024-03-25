@@ -87,7 +87,7 @@ function getAlsaCardIDs() {
 	$maxCards = ALSA_MAX_CARDS;
 	for ($i = 0; $i < $maxCards; $i++) {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-		$cardIDs[$i] = empty($cardID) ? 'empty' : $cardID;
+		$cardIDs[$i] = empty($cardID) ? ALSA_EMPTY_CARD : $cardID;
 	}
 	//workerLog('getAlsaCardIDs(): ' . print_r($cards, true));
 	return $cardIDs;
@@ -103,8 +103,10 @@ function getAlsaDeviceNames() {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 
 		if (empty($cardID)) {
-			$deviceNames[$i] = 'empty';
-		} else if ($cardID == 'Loopback' || $cardID == 'Dummy') {
+			$deviceNames[$i] = ALSA_EMPTY_CARD;
+		} else if ($cardID == ALSA_LOOPBACK_DEVICE) {
+			$deviceNames[$i] = $cardID;
+		} else if ($cardID == ALSA_DUMMY_DEVICE) {
 			$deviceNames[$i] = $cardID;
 		} else {
 			$result = sqlRead('cfg_audiodev', $dbh, $cardID);
@@ -136,7 +138,7 @@ function getAlsaCardNumForDevice($deviceName) {
 
 	if ($_SESSION['multiroom_tx'] == 'On') {
 		// Multiroom sender uses ALSA Dummy device
-		$cardNum = getArrayIndex('Dummy', $deviceNames);
+		$cardNum = getArrayIndex(ALSA_DUMMY_DEVICE, $deviceNames);
 	} else {
 		// HDMI, I2S or USB device
 		// USB device may not be connected and thus $deviceNames entry will be 'empty'
@@ -148,7 +150,7 @@ function getAlsaCardNumForDevice($deviceName) {
 
 function getArrayIndex($needle, $haystack) {
 	$numElements = count($haystack);
-	$index = 'empty';
+	$index = ALSA_EMPTY_CARD;
 
 	for ($i = 0; $i < $numElements; $i++) {
 		if ($haystack[$i] == $needle) {

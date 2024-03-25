@@ -23,8 +23,9 @@
 	<h1 class="snd-config">Multiroom Audio</h1>
 
 	<p>
-		A moOde multiroom audio system consists of a Sender and Receivers. The Sender should be a dedicated moOde player configured to output to the integrated HDMI port or optionally the Headphone jack but not connected to any speakers or headphones.
-		It functions solely as a Music Server that Sends its audio output to one or more Receivers. For additional information <a href="./setup_multiroom.txt" class="target-blank-link" target="_blank">View multiroom setup guide</a>
+		A multiroom audio system consists of a Sender and one or more Receivers.
+		The Sender should be a dedicated Pi not connected to speakers or headphones.
+		For additional information <a href="./setup_multiroom.txt" class="target-blank-link" target="_blank">View multiroom setup guide</a>
 	</p>
 
 	<form class="form-horizontal" method="post">
@@ -47,7 +48,7 @@
 				</div>
 				<button id="btn-set-alsa-loopback" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 				<span class="config-help-static">
-					Before turning ALSA Loopback ON ensure Audio output is set to HDMI or Headphone and all DSP in Audio Config is OFF.
+					Before turning ALSA Loopback ON ensure all DSP in Audio Config is OFF.
                 </span>
 			</div>
 
@@ -106,8 +107,8 @@
 					<input id="multiroom_tx_rtprio" class="input-small" type="number" maxlength="3" min="1" max="99" name="multiroom_tx_rtprio" value="$_multiroom_tx_rtprio">
 					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_rtprio" value="novalue">Set</button>
 					<span class="config-help-static">
-						Realtime process priority for the Sender daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
-						NOTE: Scheduler policy is FIFO and default priority is 45.
+						Realtime process priority for the Sender daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.
+						Scheduler policy is FIFO and default priority is 45.
 					</span>
 				</div>
 
@@ -162,8 +163,9 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_alsa_output_mode" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_multiroom_rx_alsa_output_mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_multiroom_rx_alsa_output_mode" class="config-help-info">
-					<b>Default (plughw): </b>Perform automatic conversions if needed for example zero-pad the bit depth to a width supported by the audio device.<br>
-					<b>Direct (hw): </b>No automatic conversions are performed. The audio device must support the output format or playback will not occur.<br>
+					<b>Default: </b>ALSA "plughw" plugin which performs format conversions if needed to match audio device requirements.<br>
+					<b>Direct: </b>ALSA "hw" plugin which does not perform format conversions. The audio device must accept the given format.<br>
+					<b>IEC958: </b>ALSA "iec958" plugin which provides IEC958_SUBFRAME_LE format for HDMI audio.<br>
 				</span>
 			</div>
 
@@ -228,7 +230,7 @@
 					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_rtprio" value="novalue">Set</button>
 					<span id="info_multiroom_rx_rtprio" class="config-help-static">
 						Realtime process priority for the Receiver daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.
-						Note that scheduler policy is FIFO and default priority is 45.
+						Scheduler policy is FIFO and default priority is 45.
 					</span>
 				</div>
 			</div>

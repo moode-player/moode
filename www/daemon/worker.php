@@ -540,14 +540,14 @@ if (file_exists('/opt/RoonBridge/start.sh') === true) {
 if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
 	sleep(1); // Allow rc.local script time to exit after starting worker.php
 	sysCmd('sed -i /boss2/d /etc/rc.local');
-	workerLog('worker: Allo Boss2 OLED: script was manually installed');
+	workerLog('worker: Allo Boss2 OLED: detected a manually installed script');
 	workerLog('worker: Allo Boss2 OLED: rc.local lines removed');
 }
-workerLog('worker: Allo Boss2 OLED: using pre-installed script');
+workerLog('worker: Allo Boss2 OLED: pre-installed script ok');
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Audio devices (special setup)');
+workerLog('worker: -- I2S devices (special setup)');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
@@ -568,7 +568,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
 	workerLog('worker: Allo Piano 2.1:   volume initialized');
 } else {
-	workerLog('worker: Allo Piano 2.1:   not found');
+	workerLog('worker: Allo Piano 2.1:   not detected');
 }
 
 // Start Allo Boss2 OLED display
@@ -576,7 +576,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_
 	sysCmd('systemctl start boss2oled');
 	workerLog('worker: Allo Boss 2:      OLED started');
 } else {
-	workerLog('worker: Allo Boss 2:      not found');
+	workerLog('worker: Allo Boss 2:      not detected');
 }
 
 // Ensure audio output is unmuted for these devices
@@ -587,12 +587,12 @@ if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
 	workerLog('worker: IQaudIO DigiAMP+: unmuted');
 } else {
-	workerLog('worker: IQaudIO AMP*:     not found');
+	workerLog('worker: IQaudIO AMP*:     not detected');
 }
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Audio renderer check');
+workerLog('worker: -- Renderer check');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 // Renderers
@@ -604,31 +604,51 @@ if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['valu
 	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1') {
 	// Set Knob volume to 0 for vol.sh downstream
 	phpSession('write', 'volknob', '0');
-	workerLog('worker: Renderers: one or more active flags are true');
-	workerLog('worker: Renderers: active flags reset to false');
-	workerLog('worker: Renderers: MPD volume set to 0');
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
 		OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
+	workerLog('worker: Active status: one or more flags are true');
+	workerLog('worker: Flag reset:    all flags reset to false');
+	workerLog('worker: MPD volume:    set to 0');
 }
-workerLog('worker: Renderers: active flags are all false');
-workerLog('worker: Renderers: no need to reset flags');
+workerLog('worker: Active status: flags are all false');
+workerLog('worker: Flag reset:    skipped');
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Audio DEBUG');
+workerLog('worker: -- ALSA debug');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Audio config actual as queried
+// Loopback driver
+if ($_SESSION['alsa_loopback'] == 'On') {
+	sysCmd('modprobe snd-aloop');
+} else {
+	sysCmd('modprobe -r snd-aloop');
+}
+
+// Dummy PCM driver
+if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
+	if (isset($_SESSION['multiroom_tx']) && $_SESSION['multiroom_tx'] == 'On') {
+		loadSndDummy();
+	}
+}
+
+$pad = 12;
 $cards = getAlsaCardIDs();
-workerLog('worker: ALSA cards:  0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
+foreach($cards as &$card) {
+	$card = str_pad($card, $pad);
+}
+workerLog('worker: Cards:  0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
+workerLog('worker:         4:' . $cards[4] . ' | 5:' . $cards[5]. ' | 6:' . $cards[6]. ' | 7:' . $cards[7]);
+
 $mixers = array();
 foreach ($cards as $card) {
 	$value = sysCmd('amixer -c ' . $card . ' | awk \'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}\' | awk -F"\'" \'{print "(" $2 ")";}\'');
 	$mixerName = (empty($value[0]) || str_contains($value[0], 'Invalid card number')) ? 'none' : $value[0];
-	array_push($mixers, $mixerName);
+	array_push($mixers, str_pad($mixerName, $pad));
 }
-workerLog('worker: ALSA mixers: 0:' . $mixers[0] . ' | 1:' . $mixers[1]. ' | 2:' . $mixers[2]. ' | 3:' . $mixers[3]);
+workerLog('worker: Mixers: 0:' . $mixers[0] . ' | 1:' . $mixers[1] . ' | 2:' . $mixers[2] . ' | 3:' . $mixers[3]);
+workerLog('worker:         4:' . $mixers[4] . ' | 5:' . $mixers[5] . ' | 6:' . $mixers[6] . ' | 7:' . $mixers[7]);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -642,22 +662,28 @@ if (!file_exists('/etc/mpd.conf')) {
 	updMpdConf();
 }
 
-// TODO: For AO_TRXSEND, skip MPD update otherwise Multiroom Sender ALSA config gets reverted
-
 // Audio device and output interface
 workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
 $audioOutput = getConfiguredAudioOutput();
 workerLog('worker: Audio output:  ' . $audioOutput);
 
-// Check for ALSA reassigned card number
+// Check for reassigned card number
 $actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
 if ($actualCardNum == $_SESSION['cardnum']) {
 	workerLog('worker: ALSA card:     ' . $_SESSION['cardnum'] . ' (has not changed)');
+	workerLog('worker: MPD config:    update not needed');
 } else {
+	workerLog('worker: ALSA card:     ' . $actualCardNum . ' (reasigned from ' . $_SESSION['cardnum'] . ')');
+	// Update card number
 	phpSession('write', 'cardnum', $actualCardNum);
 	$result = sqlQuery("UPDATE cfg_mpd SET value='" . $actualCardNum . "' WHERE param='device'", sqlConnect());
-	updMpdConf();
-	workerLog('worker: ALSA card:     ' . $_SESSION['cardnum'] . '(has changed, MPD config updated)');
+	// MPD conf update
+	if ($_SESSION['multiroom_tx'] == 'On') {
+		workerLog('worker: MPD config:    update not needed (trx sender on)');
+	} else {
+		updMpdConf();
+		workerLog('worker: MPD config:    updated');
+	}
 }
 // ALSA mixer
 $_SESSION['amixname'] = getAlsaMixerName($_SESSION['adevname']);
@@ -685,11 +711,6 @@ workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
 // ALSA output
 workerLog('worker: ALSA output:   ' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $_SESSION['alsa_output_mode'] . ')');
 // ALSA loopback
-if ($_SESSION['alsa_loopback'] == 'On') {
-	sysCmd('modprobe snd-aloop');
-} else {
-	sysCmd('modprobe -r snd-aloop');
-}
 workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
 // MPD mixer
 $mixerType = ucfirst($_SESSION['mpdmixer']);
@@ -718,7 +739,7 @@ workerLog('worker: MPD volume:    ' . $volKnob);
 workerLog('worker: Saved MPD vol: ' . $_SESSION['volknob_mpd']);
 workerLog('worker: Saved SRC vol: ' . $_SESSION['volknob_preamp']);
 // Audio formats
-if ($cards[$_SESSION['cardnum']] == 'empty') {
+if ($cards[$_SESSION['cardnum']] == ALSA_EMPTY_CARD) {
 	workerLog('worker: Audio formats: Warning: card ' . $_SESSION['cardnum'] . ' is empty');
 } else {
 	$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
@@ -923,7 +944,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 	// Sender
 	if (isset($_SESSION['multiroom_tx']) && $_SESSION['multiroom_tx'] == 'On') {
 		$statusTx = 'started';
-		loadSndDummy();
 		startMultiroomSender();
 	} else {
 		$statusTx = 'available';
@@ -2501,7 +2521,10 @@ function runQueuedJob() {
 
 		case 'multiroom_tx':
 			if ($_SESSION['multiroom_tx'] == 'On') {
-				$cardNum = loadSndDummy(); // Reconfigure to dummy sound driver
+				$cardNum = loadSndDummy(); // Reconfigure to Dummy sound driver
+				phpSession('write', 'cardnum', $cardNum);
+				phpSession('write', 'adevname', TRX_SENDER_NAME);
+				sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
 
 				updAudioOutAndBtOutConfs($cardNum, 'hw');
 				updDspAndBtInConfs($cardNum, 'hw');
@@ -2510,7 +2533,12 @@ function runQueuedJob() {
 				startMultiroomSender();
 			} else {
 				stopMultiroomSender();
-				unloadSndDummy(); // Reconfigure back to real sound driver
+				unloadSndDummy();
+				// Reset to Pi HDMI 1
+				$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
+				phpSession('write', 'cardnum', $cardNum);
+				phpSession('write', 'adevname', PI_HDMI1);
+				sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
 
 				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);

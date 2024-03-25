@@ -202,13 +202,11 @@ $_feat_multiroom = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && $_SESSION['alsaequal'] == 'Off' &&
 	$_SESSION['camilladsp'] == 'off' && $_SESSION['invert_polarity'] == '0') ? false : true;
 if ($_SESSION['multiroom_tx'] == 'Off') {
-	$_multiroom_tx_disable = (
-		$_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true ||
-		($_SESSION['adevname'] != PI_HDMI1 && $_SESSION['adevname'] != PI_HEADPHONE) ||
-		$_SESSION['mpdmixer'] != 'hardware') ? 'disabled' : '';
+	$_multiroom_tx_disable = ($_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true) ? 'disabled' : '';
 } else {
 	$_multiroom_tx_disable = '';
 }
+
 $_tx_restart_btn_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
 $_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Hide' ? '' : 'hide';
@@ -222,8 +220,8 @@ $_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Hide' ? '' : 'hide';
 $autoClick = " onchange=\"autoClick('#btn-set-multiroom-tx');\" " . $_multiroom_tx_disable;
 $_select['multiroom_tx_on']  .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle-multiroom-tx-1\" value=\"On\" " . (($_SESSION['multiroom_tx'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['multiroom_tx_off'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle-multiroom-tx-2\" value=\"Off\" " . (($_SESSION['multiroom_tx'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
-$autoClick = " onchange=\"autoClick('#btn-set-alsa-loopback');\" " . $_localui_btn_disable;
+$_alsa_loopback_disable= '';
+$autoClick = " onchange=\"autoClick('#btn-set-alsa-loopback');\" " . $_alsa_loopback_disable;
 $_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 if (!isset($_SESSION['rx_hostnames'])) {
@@ -258,6 +256,10 @@ $_select['multiroom_rx_mastervol_opt_in_on'] .= "<input type=\"radio\" name=\"mu
 $_select['multiroom_rx_mastervol_opt_in_off'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-2\" value=\"0\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
+if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && str_contains($_SESSION['adevname'], 'HDMI')) {
+	// Pi-3 or higher and HDMI output set
+	$_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"iec958\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'iec958') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['iec958'] . "</option>\n";
+}
 $_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0], '%');
 if (stripos($_multiroom_rx_alsavol, 'amixer:') === false) {
 	$_multiroom_rx_alsavol_msg = '';

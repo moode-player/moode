@@ -29,7 +29,7 @@ function cfgI2SDevice() {
 	// Remove 'dtoverlay=audio_overlay' line after the comment header if it exists
 	$lines = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -A 1 "' . I2S_HEADER . '" | wc -l')[0];
 	if ($lines = 2) {
-		sysCmd('sed -i "/' . I2S_HEADER . '/{n;d}" ' . BOOT_CONFIG_TXT);		
+		sysCmd('sed -i "/' . I2S_HEADER . '/{n;d}" ' . BOOT_CONFIG_TXT);
 	}
 
 	// Remove 'force_eeprom_read=0'line (only exists for hifiberry devices)
@@ -41,7 +41,10 @@ function cfgI2SDevice() {
 
 	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		// Reset to Pi HDMI 1
+		$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
+		phpSession('write', 'cardnum', $cardNum);
 		phpSession('write', 'adevname', PI_HDMI1);
+		sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
 	} else if ($_SESSION['i2sdevice'] != 'None') {
 		// Named I2S device
 		$result = sqlRead('cfg_audiodev', sqlConnect(), $_SESSION['i2sdevice']);

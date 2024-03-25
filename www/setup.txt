@@ -2,22 +2,23 @@
 #
 #  Setup Guide for moOde audio player
 #
-#  Updated: 2024-03-19
+#  Updated: 2024-03-25
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
 ################################################################################
 
 GENERAL INFORMATION
 
-Access moOde using a Browser and one of the URL's below. After opening moOde
-in the Browser use the IOS or Android "Save to Home Screen" option to create a
-moOde App on your home screen. There is no need to download anything.
-http://moode, http://moode.local or http://IP_ADDRESS
+Access the moOde WebUI using a Browser and one of the URL's below. After the
+WebUI appears in the Browser use the IOS or Android "Save to Home Screen" option
+to create a moOde App on the home screen. There is no need to download anything.
+http://moode | http://moode.local | http://IP_ADDRESS
 
-OPERATING ISTRUCTIONS
+QUICK HELP
 
-Instructions for configuring and operating moOde are contained in Quick help
-which is located on the "m" menu and at the link below.
+Instructions for navigating the moOde WebUI, searching the Library, Preference
+and Configuration settings, Multiroom audio and other important information is
+in "Quick help" which which is located on the "m" menu and at the link below.
 https://github.com/moode-player/docs/blob/main/Quickhelp.pdf
 
 MOODE OS IMAGE
@@ -52,12 +53,12 @@ available in the System Config screen.
 
 WIFI HOTSPOT
 
-To use the Hotspot which is moOde's private 2.4 GHz WiFi network
-refer to the settings below.
+To access the Hotspot which is moOde's private 2.4 GHz WiFi network refer to the
+default settings below.
 
-- IP address    172.24.1.1
 - SSID          Moode
 - Password      As set in Network Config screen
+- URL           http://moode.local | http://172.24.1.1
 
 The Hotspot starts automatically when any of the following are true.
 
@@ -75,170 +76,96 @@ FILE SHARING
   are provided but can be manually overridden. Each USB disk will have an NFS
   export created whose path is /media/disk_label.
 
-WIFI ADAPTERS THAT ARE REPORTED TO SUPPORT Access Point (AP) MODE
-
-- Raspberry Pi integrated WiFi adapter
-- Comfast CF-912AC dual-band WiFi adapter
-- For all other adapters consult the manufacturer
-
 IN-PLACE SOFTWARE UPDATES
 
 - Updates to moOde software are made available periodically and can be downloaded
   and installed by clicking "CHECK for software update" in System Config.
-- Click VIEW to see a list of what is contained in the update package.
-- Click INSTALL to download and install the update package.
-
-IMAGE WRITING UTILITIES
-
-The official Raspberry Pi Imager can be downloaded via the URL below.
-https://www.raspberrypi.org/documentation/installation/installing-images/
 
 PLAYER SETUP AND CONFIGURATON
 
 1. INITIAL SETUP
 
-   a) Insert boot SD card or USB drive
-   b) Connect USB or I2S audio device
-   c) Connect USB storage devices
-   - Ethernet mode
-   a) Insert ethernet cable
+   a) Insert boot SD card
+   b) Insert ethernet cable or alternatively use WiFi SSID defined in Pi Imager
    b) Power on
-   c) http://moode, moode.local or IP_ADDRESS
-   - Access Point (AP) mode
-   a) Insert WiFi adapter that supports AP mode
-   b) Power on
-   c) Join network: SSID = Moode, password = Refer to SECURITY section
-   d) http://172.24.1.1 or http://moode.local
+   c) http://moode | http://moode.local | http://IP_ADDRESS
 
 2. AUDIO DEVICE SETUP
 
    - USB DEVICE
-
+   a) Plug in USB audio device
    a) Menu, Configure, Audio
-   b) Set Named I2S device and DT overlay to "None" if needed and then Restart
-   c) Menu, Configure, Audio
-   d) Set Output device to to the name of the USB audio device
-   e) If the audio device supports hardware volume set Volume type to
-      Hardware otherwise set it to Software, Fixed or Null
-   f) Menu, Power, Restart
+   c) Set Output device to to the name of the USB audio device
 
    - I2S DEVICE
-
    a) Menu, Configure, Audio
    b) Set Named I2S device or DT overlay to the correct device or overlay name
    c) Menu, Power, Restart
    d) Menu, Configure, Audio
-   e) If the audio device supports hardware volume set Volume type to
-      Hardware otherwise set it to Software, Fixed or Null
-
-3. TIME ZONE
-
-   a) Menu, Configure, System
-   b) Set the appropriate timezone
+   c) Set Output device to to the name of the I2S audio device
 
 4. ADD SOURCE(S) CONTAINING MUSIC FILES
 
    - USB STORAGE DEVICES
-
    a) Insert USB storage device
    b) Menu, Update library
    c) Wait for completion (no spinner)
 
    - BOOT SDCARD STORAGE
-
    a) Menu, Update library
    b) Wait for completion (no spinner)
 
    - NAS DEVICE
-
    a) Menu, Configure, Library
    b) CREATE Music source
    c) After SAVE, return to Playback or Library
    d) Menu, Update library
    e) Wait for completion (no spinner)
 
-   - MUSIC DATABASE UTILITIES
-
-   a) Menu, Configure, Library
-   b) Various utilities will be listed in the Music Library section
-
 5. VERIFY AUDIO PLAYBACK
 
-   - Ethernet mode
-
-   a) http://moode, moode.local or IP_ADDRESS
+   a) http://moode | http://moode.local | http://IP_ADDRESS
    b) Play one of the radio stations
-
-   - Hotspot mode
-
-   a) http://172.24.1.1 or http://moode.local
-   b) Switch to Library Folder view
-   c) Navigate to the SDCARD/Stereo Test
-   c) Play the "LR Channel And Phase" track
-
-At this point a FULLY OPERATIONAL PLAYER exists.
+   c) Switch to Library Folder view
+   d) Navigate to the SDCARD/Stereo Test
+   e) Play the "LR Channel And Phase" track
 
 CUSTOM CONFIGURATIONS
 
 Customize the player by using any of the following procedures.
 
-1. CONFIGURE FOR WIFI CONNECTION
+1. CONFIGURE FOR WIFI-ONLY CONNECTION
 
-   - Ethernet mode
-   a) Leave Ethernet cable connected
-   b) Insert WiFi adapter (while Pi running)
-   c) http://moode, moode.local or IP_ADDRESS
-   d) Menu, Configure, Network
-   e) Configure a WiFi connection
-   f) Menu, Power, Shutdown
-   g) Unplug Ethernet cable
-   h) Power on
+   - Ethernet cable connected
+   a) Insert WiFi adapter or use Pi Integrated WiFi
+   b) http://moode | http://moode.local | http://IP_ADDRESS
+   c) Menu, Configure, Network
+   d) Configure a WiFi connection
+   e) Menu, Power, Shutdown
+   f) Unplug Ethernet cable
+   g) Power on
 
    - Hotspot mode
    a) Join Hotspot SSID, password = Refer to SECURITY section
-   b) http://172.24.1.1 or http://moode.local
+   b) http://moode.local | http://172.24.1.1
    c) Menu, Configure, Network
    d) Configure a WiFi connection
    e) Menu, Power, Restart
 
-2. CHANGE HOST AND RENDERER NAMES
+2. SWITCH FROM WIFI-ONLY BACK TO ETHERNET-ONLY
 
-   a) Menu, Configure, System (and Audio)
+      a) Plug in Ethernet cable
+      b) Menu, Configure, Network
+      c) RESET network configuration to defaults
+      d) Menu, Power, Shutdown
+      e) Remove WiFi adapter
+      f) Power on
+
+3. CHANGE HOST AND RENDERER NAMES
+
+   a) Menu, Configure, System (and Renderer)
    b) Click SET after entering an appropriate value in each name field
    c) Restart is required if changing Host name
-
-AFTER PLAYER SETUP
-
-Follow these instructions for making certain types of changes.
-
-1. Switching from a USB to an I2S audio device
-   a) Unplug the USB audio device
-   b) Menu, Power, Shutdown
-   c) Install the I2S audio device
-   d) Power on
-   e) Menu, Configure, Audio
-   b) Set Named I2S device or DT overlay to the correct device or overlay name
-   g) Menu, Power, Restart
-
-2. Switching from an I2S to a USB audio device
-   a) Menu, Configure, Audio
-   b) Set Named I2S device and DT overlay to "None"
-   c) Menu, Power, Shutdown
-   d) Remove the I2S audio device
-   e) Power on
-   f) Menu, Configure, Audio
-   g) Set Output device to to the name of the USB audio device
-   h) If the audio device supports hardware volume set Volume type to
-      Hardware otherwise set it to Software, Fixed or Null
-   i) Menu, Power, Restart
-
-3. Switching from WiFi back to Ethernet
-   a) Plug in Ethernet cable
-   b) Menu, Configure, Network
-   c) RESET network configuration to defaults
-   d) Menu, Power, Shutdown
-   e) Remove WiFi adapter
-   f) Power on
 
 COMMAND AND REST API
 

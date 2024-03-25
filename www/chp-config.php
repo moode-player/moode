@@ -166,7 +166,6 @@ if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchi
 	$_select['digfilter'] .= "<option value=\"Low latency IIR with de-emphasis\" " . (($digfilter == 'Low latency IIR with de-emphasis') ? "selected" : "") . ">Low latency IIR with de-emphasis</option>\n";
 	$_select['digfilter'] .= "<option value=\"Ringing-less low latency FIR\" " . (($digfilter == 'Ringing-less low latency FIR') ? "selected" : "") . ">Ringing-less low latency FIR</option>\n";
 } else {
-	//$_burrbrown_hide = 'dummy'; // For testing the template
 	$_burrbrown_hide = 'hide';
 }
 
@@ -214,7 +213,6 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	// Subwoofer volume
 	$subwvol = str_replace('%', '', $subvol[0]);
 } else {
-	//$_allo_piano_hide = 'dummy';
 	$_allo_piano_hide = 'hide';
 }
 
@@ -242,7 +240,6 @@ if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 	$_select['katana_dop'] .= "<option value=\"on\" " . (($katana_dop == 'on') ? "selected" : "") . ">On</option>\n";
 	$_select['katana_dop'] .= "<option value=\"off\" " . (($katana_dop == 'off') ? "selected" : "") . ">Off</option>\n";
 } else {
-	//$_allo_katana_hide = 'dummy';
 	$_allo_katana_hide = 'hide';
 }
 
@@ -277,7 +274,6 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 	$_select['boss2_hv_enable'] .= "<option value=\"off\" " . (($boss2_hv_enable == 'off') ? "selected" : "") . ">1.7 vrms</option>\n";
 	$_select['boss2_hv_enable'] .= "<option value=\"on\" " . (($boss2_hv_enable == 'on') ? "selected" : "") . ">2.0 vrms</option>\n";
 } else {
-	//$_allo_boss2_hide = 'dummy';
 	$_allo_boss2_hide = 'hide';
 }
 
@@ -306,7 +302,6 @@ if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 	$_select['audiophonics_q2m_input'] .= "<option value=\"I2S\" " . (($audiophonics_q2m_input == 'I2S') ? "selected" : "") . ">I2S</option>\n";
 	$_select['audiophonics_q2m_input'] .= "<option value=\"SPDIF\" " . (($audiophonics_q2m_input == 'SPDIF') ? "selected" : "") . ">S/PDIF</option>\n";
 } else {
-	//$_audiophonics_q2m_hide = 'dummy';
 	$_audiophonics_q2m_hide = 'hide';
 }
 
@@ -321,7 +316,6 @@ if ($_SESSION['i2sdevice'] == 'MERUS(tm) Amp piHAT ZW') {
 	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF3\" " . (($merus_ma12070p_pmp == 'PMF3') ? "selected" : "") . ">PMF3 - LC filter, high efficiency, high audio performance, good EMI, low ripple loss</option>\n";
 	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF4\" " . (($merus_ma12070p_pmp == 'PMF4') ? "selected" : "") . ">PMF4 - No filter, optimized efficiency, active speaker applications</option>\n";
 } else {
-	//$_merus_ma12070p = 'dummy';
 	$_merus_ma12070p = 'hide';
 }
 

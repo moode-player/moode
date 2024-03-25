@@ -36,19 +36,26 @@ $deviceNames = getAlsaDeviceNames();
 
 // Output device
 if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSION['cardnum']) {
-	// Update ALSA config
-	phpSession('write', 'cardnum', $_POST['output_device']);
-	phpSession('write', 'adevname', $deviceNames[$_POST['output_device']]);
-	phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
-    phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
-	$mode = getConfiguredAudioOutput() == AO_HDMI ? 'iec958' : 'plughw';
-	phpSession('write', 'alsa_output_mode', $mode);
+	// Validate
+	$reservedNames = array(ALSA_LOOPBACK_DEVICE, ALSA_DUMMY_DEVICE, ALSA_EMPTY_CARD);
+	if (in_array($deviceNames[$_POST['output_device']], $reservedNames)) {
+		$_SESSION['notify']['title'] = 'This device is reserved or empty';
+		$_SESSION['notify']['msg'] = 'It cannot be set directly';
+	} else {
+		// Update ALSA config
+		phpSession('write', 'cardnum', $_POST['output_device']);
+		phpSession('write', 'adevname', $deviceNames[$_POST['output_device']]);
+		phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
+	    phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
+		$mode = getConfiguredAudioOutput() == AO_HDMI ? 'iec958' : 'plughw';
+		phpSession('write', 'alsa_output_mode', $mode);
 
-	// Update MPD config
-	sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
-	phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
-	$queueArgs = '1,0'; // Device change,MPD mixer change
-	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+		// Update MPD config
+		sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
+		phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
+		$queueArgs = '1,0'; // Device change,MPD mixer change
+		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+	}
 }
 
 // Volume type
@@ -333,21 +340,19 @@ foreach ($result as $row) {
 // Output device
 // Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device(s)
 if ($i2sReboot === true) {
-	$_mpd_select['device'] .= "<option value=\"0\" selected>RESTART REQUIRED</option>\n";
+	$_mpd_select['device'] = "<option value=\"0\" selected>RESTART REQUIRED</option>\n";
 } else {
-	$_mpd_select['device'] .= "<option value=\"0\" " . (($cfgMPD['device'] == '0') ? "selected" : "") . ">0: $deviceNames[0]</option>\n";
-	$_mpd_select['device'] .= "<option value=\"1\" " . (($cfgMPD['device'] == '1') ? "selected" : "") . ">1: $deviceNames[1]</option>\n";
-	$_mpd_select['device'] .= "<option value=\"2\" " . (($cfgMPD['device'] == '2') ? "selected" : "") . ">2: $deviceNames[2]</option>\n";
-	$_mpd_select['device'] .= "<option value=\"3\" " . (($cfgMPD['device'] == '3') ? "selected" : "") . ">3: $deviceNames[3]</option>\n";
-	$_mpd_select['device'] .= "<option value=\"4\" " . (($cfgMPD['device'] == '4') ? "selected" : "") . ">4: $deviceNames[4]</option>\n";
-	$_mpd_select['device'] .= "<option value=\"5\" " . (($cfgMPD['device'] == '5') ? "selected" : "") . ">5: $deviceNames[5]</option>\n";
-	$_mpd_select['device'] .= "<option value=\"6\" " . (($cfgMPD['device'] == '6') ? "selected" : "") . ">6: $deviceNames[6]</option>\n";
-	$_mpd_select['device'] .= "<option value=\"7\" " . (($cfgMPD['device'] == '7') ? "selected" : "") . ">7: $deviceNames[7]</option>\n";
+	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
+		$deviceName = $deviceNames[$i] == ALSA_DUMMY_DEVICE ?
+			$i . ':'  . TRX_SENDER_NAME :
+			$i . ':'  . $deviceNames[$i];
+		$_mpd_select['device'] .= "<option value=\"" . $i . "\" " . (($cfgMPD['device'] == $i) ? "selected" : "") . ">$deviceName</option>\n";
+	}
 }
 
 // For USB device
 // ALSA removes the card id after the device is unplugged or turned off
-$_device_error = $deviceNames[$_SESSION['cardnum']] == 'empty' ? 'Device turned off or disconnected' : '';
+$_device_error = $deviceNames[$_SESSION['cardnum']] == ALSA_EMPTY_CARD ? 'Device turned off or disconnected' : '';
 
 // Volume type
 // Hardware, Software, Fixed (none), CamillaDSP (null)
@@ -454,7 +459,7 @@ if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && str_contains($_SESSION['adevname'
 	$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 }
 // Loopback
-$_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
+$_alsa_loopback_disable = '';
 $autoClick = " onchange=\"autoClick('#btn-set-alsa-loopback');\" " . $_alsa_loopback_disable;
 $_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";

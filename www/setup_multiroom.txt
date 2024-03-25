@@ -6,7 +6,7 @@
 #  Audio system. Additional configuration help is provided within the player
 #  via Menu, Quick help and the (i) information buttons.
 #
-#  Version: 1.3 2024-02-18
+#  Version: 1.3 2024-03-25
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
@@ -21,12 +21,12 @@ Sender and Receiver(s). These features may however appear in future releases.
 
 OVERVIEW
 
-A Multiroom Audio system consists of a Sender and one or more Receivers.
-The Sender should be a dedicated moOde player configured to output to the
-integrated HDMI port or optionally the Headphone jack but not connected to any
-speakers or headphones. It functions solely as a Music Server that sends
-its audio output to one or more Receivers. It can also be configured as a NAS
-to serve audio files from locally attached storage.
+A multiroom audio system consists of a Sender and one or more Receivers. The
+Sender should be a dedicated Pi not connected to speakers or headphones. It can
+also be configured as a NAS to serve audio files from locally attached storage.
+
+The Sender should be a Pi-3A+ or higher and the Receiver should be a Pi-3 or
+higher.
 
 BLOCK DIAGRAM
 
@@ -37,9 +37,9 @@ BLOCK DIAGRAM
              | Ethernet                        |
              |                                 |
          +-------+                             |
-         |       | Pi-3B+ or higher            | Ethernet and/or WiFi 5GHz
-         | Sendr | MPD                         |
-         |       | Spotify, AirPlay            |
+         |       | MPD                         | Ethernet and/or WiFi 5GHz
+         | Sendr | Spotify, AirPlay, Bluetooth |
+         |       | NAS (SMB or NFS)            |
          +-------+                             |
                                                |
                                                |
@@ -47,7 +47,7 @@ BLOCK DIAGRAM
                          +---------------------+---------------------+
                          |                     |                     |
                          |                     |                     |
-                         | Pi-3A+ or higher    |                     |
+                         |                     |                     |
                      +-------+             +-------+             +-------+
                      |       |             |       |             |       |
                      | Rcvr1 |             | Rcvr2 |             | Rcvr3 |
@@ -75,8 +75,8 @@ A) Audio Configuration (Menu, Configure, Audio)
 1. In the Audio Output section
    a. Configure settings appropriate for the audio device being used
    b. Set "Volume type" to "Hardware" to control Receiver volume via the Sender
-     CAUTION: Software or Fixed (0dB) can also be used but volume output will
-     be 0dB (100%) regardless of Sender volume setting
+      CAUTION: Software or Fixed (0dB) can also be used but volume output will
+      be 0dB (100%) regardless of Sender volume setting
 2. In the ALSA options section
    a. Select an ALSA output mode being mindful of the Help text
    b. Set ALSA Loopback to "OFF"
@@ -101,21 +101,17 @@ C) Multiroom Configuration (Menu, Configure, Multiroom)
 
 SENDER CONFIGURATION
 
-The Sender should be a configured to output to the integrated HDMI port or
-optionally the Headphone jack but not connected to any speakers or headphones.
-It functions solely as a Music Server that sends its audio output to one or more
-Receivers. It can also be used as a NAS by turning on SMB or NFS file sharing
-in System Config. Note: there can only be one Sender on the network.
+The Sender should be a dedicated player not connected to speakers or headphones.
+It functions solely to send its audio output to one or more Receivers. It can
+also be used as a NAS by turning on SMB or NFS file sharing in System Config.
+
+Note: there can only be one Sender on the network.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
-1. In the Audio Output section
-   a. Set Output device to "HDMI 1"
-   b. Set Volume type to "Hardware"
-   c. Set ALSA Output mode to "Default (plughw)"
-2. In the ALSA Options section set ALSA Loopback to "ON"
-3. In the MPD Options section EDIT MPD settings set SoX Resampling to "No"
-4. In the Equalizers section set the following DSP's to "Off"
+1. In the ALSA Options section set ALSA Loopback to "ON"
+2. In the MPD Options section EDIT MPD settings set SoX Resampling to "No"
+3. In the Equalizers section set the following DSP's to "Off"
    a. Crossfeed
    b. Polarity inversion
    c. Graphic EQ
