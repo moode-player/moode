@@ -76,21 +76,37 @@ function stopMultiroomReceiver() {
 	sendEngCmd('rxactive0');
 }
 
+// NOTE: The trx-control.php utility checks to see if Receiver opted in for Master volume
 function updReceiverVol($volCmd, $masterVolChange = false) {
 	$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
 	$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
-
 	$trxControlCmd = $masterVolChange ? '-set-mpdvol-from-master' : '-set-mpdvol';
+	$timeout = getStreamTimeout();
 
 	$count = count($rxAddresses);
 	for ($i = 0; $i < $count; $i++) {
-		// NOTE: The trx-control.php utility checks to see if Receiver opted in for Master volume
-		if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-control.php ' . $trxControlCmd . ' ' . $volCmd))) {
-			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-control.php ' . $trxControlCmd . ' ' . $volCmd))) {
-				debugLog('updReceiverVol(): remote volume cmd (' . $volCmd . ') failed: ' . $rxHostNames[$i]);
-			}
+		debugLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i]);
+		if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-control.php ' . $trxControlCmd . ' ' . $volCmd, false, $timeout))) {
+			workerLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i] . ' failed');
+		} else {
+			debugLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i] . ' success');
 		}
 	}
+}
+
+// For use in file_get_contents($URL) calls
+function getStreamTimeout() {
+	$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", sqlConnect());
+	$timeout = $result[0]['value'] . '.0';
+	$options = array(
+		'http' => array(
+			'protocol_version' => (float)'1.1',
+			'timeout' => (float)$timeout
+		)
+	);
+
+	//workerLog(print_r($options, true));
+	return stream_context_create($options);
 }
 
 function loadSndDummy() {
@@ -113,19 +129,4 @@ function unloadSndDummy() {
 
 		usleep(250000);
 	}
-}
-
-// Returns the specified timeout (n.n float format) for use in file_get_contents($URL) calls
-function getStreamTimeout() {
-	$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", sqlConnect());
-	$timeout = $result[0]['value'];
-	$options = array('http' => array('timeout' => $timeout . '.0'));
-
-	// DEBUG
-	/*$options = array('http' => array(
-		'timeout' => $timeout . '.0',
-		'ignore_errors' => true));
-	workerLog(print_r($options, true));*/
-
-	return stream_context_create($options);
 }

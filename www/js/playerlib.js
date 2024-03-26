@@ -205,13 +205,7 @@ var coverView = false; // Coverview shown/hidden to save on more expensive condi
 
 // Detect chromium-browser
 GLOBAL.userAgent = navigator.userAgent;
-if (GLOBAL.userAgent.indexOf('CrOS') != -1) {
-    GLOBAL.chromium = true;
-} else {
-    GLOBAL.chromium = false;
-}
-// DEBUG: Uncomment to show text in Playback view below the cover art
-//$('#debug-text').html(userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false'));
+GLOBAL.userAgent.indexOf('CrOS') != -1 ? GLOBAL.chromium = true : GLOBAL.chromium = false;
 
 function debugLog(msg) {
 	if (SESSION.json['debuglog'] == '1') {
@@ -244,7 +238,15 @@ function sendMpdCmd(cmd, async) {
 // Specifically for volume
 function sendVolCmd(type, cmd, data, async) {
 	if (typeof(data) === 'undefined') {data = '';}
-	if (typeof(async) === 'undefined') {async = false;}
+	if (typeof(async) === 'undefined') {async = true;}
+
+    if (data['event'] == 'mute' || data['event'] == 'unmute') {
+        $('.volume-display').addClass('active');
+    } else if (data['event'] == 'volume_up') {
+        $('#volumeup').addClass('active');
+    } else if (data['event'] == 'volume_down') {
+        $('#volumedn').addClass('active');
+    }
 
 	var obj;
 
@@ -913,6 +915,9 @@ function renderUIVol() {
     			$('.volume-display div, .mpd-volume-level').text(SESSION.json['volknob']);
                 $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-xmark').addClass('fa-volume-off');
     		}
+
+            // Clear active state
+            $('.volume-display, #volumeup, #volumedn').removeClass('active');
     	}
     });
 }
@@ -928,6 +933,11 @@ function renderUI() {
     	} else {
             SESSION.json = data;
         }
+
+        // Debug messages (appear above cover art)
+        // var debugText = userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false');
+        var debugText = SESSION.json['debuglog'] == '1' ? 'Debug logging is on' : '';
+        $('#debug-text').html(debugText);
 
         // Volume type
     	if (SESSION.json['mpdmixer'] == 'none') {
@@ -2330,26 +2340,28 @@ function setVolume(level, event) {
     level = parseInt(level);
 	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
 	level = level < 0 ? 0 : level;
-    //console.log(level, event, SESSION.json['volmute']);
 
-	// Unmuted, set volume (incl 0 vol)
+    var async = true;
+
+    /*console.log('setVolume(): ' + 
+        'level=' + level + ', ' +
+        'event=' + event + ', ' +
+        'mute=' + SESSION.json['volmute'] + ', ' +
+        'ajax=' + (async === true ? 'async' : 'sync'));*/
+
+	// Not muted: Set volume (incl 0 vol)
 	if (SESSION.json['volmute'] == '0') {
-        //console.log('unmute (setvol ' + SESSION.json['volknob'] + ')');
+        //console.log('sendVolCmd(): unmute (volknob ' + SESSION.json['volknob'] + ')');
 		SESSION.json['volknob'] = level.toString();
-        // Use sync AJAX
-		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, false);
+		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
     } else {
         // Muted
 		if (level == 0 && event == 'mute')	{
-            if (SESSION.json['mpdmixer'] == 'hardware') {
-                // Use sync AJAX
-                sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, false);
-            } else {
-                //console.log('mute (setvol 0)');
-                sendMpdCmd('setvol 0');
-            }
+            // Set mute
+            //console.log('sendVolCmd(): mute (volknob 0)');
+            sendVolCmd('POST', 'upd_volume', {'volknob': '0', 'event': 'mute'}, async);
 		} else {
-			// Vol up/dn btns pressed, just store the volume for display
+			// Already muted: Vol up/dn btns pressed, just store volume for subsequent display when unmuted
 			SESSION.json['volknob'] = level.toString();
 		}
 

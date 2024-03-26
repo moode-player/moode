@@ -163,6 +163,11 @@ html {background-color:inherit;}
 #volumeup-2, #volumedn-2 {font-size:3.1vw;}
 #volume-popup .volume-display {font-size:3.5vw;font-weight:500;margin-top:0;}
 #volbtns-2 {z-index:10002;}
+.volume-display.active,
+#volumeup.active,
+#volumedn.active,
+#volumeup-2.active,
+#volumedn-2.active {background:radial-gradient(rgba(128,128,128,.35), transparent);border-radius: 35%;}
 #playbtns, #playbtns .add-item-to-favorites {display:none;}
 #cover-options {display:none;}
 #choose-bgimage,
