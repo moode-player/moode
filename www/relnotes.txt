@@ -24,9 +24,10 @@ New features
 
 Updates
 
-- UPD: HDMI On/Off option removed (not valid on Bookworm)
+- UPD: Improve multiroom command performance
+- UPD: Improve setup guides and quick help
+- UPD: Remove HDMI On/Off option (not valid on Bookworm)
 - UPD: Remove obsolete devices from audio device table
-- UPD: Improve setup guides and (i) help
 
 Bug fixes
 
