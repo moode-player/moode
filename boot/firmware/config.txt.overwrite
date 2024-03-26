@@ -32,6 +32,6 @@ dtparam=audio=on
 #dtoverlay=disable-bt
 #dtoverlay=disable-wifi
 
-# I2S audio
+# I2S device
 
 # User added
