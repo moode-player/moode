@@ -24,6 +24,10 @@
 set_include_path('/var/www/inc');
 error_reporting(E_ERROR);
 
+// Time zone
+$timeZone = sysCmd("timedatectl | awk -F' ' '/Time zone/{print $3}'")[0];
+date_default_timezone_set($timeZone);
+
 // Constants
 require_once __DIR__ . '/constants.php';
 
@@ -37,21 +41,11 @@ function workerLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
-// Auto-config message logger
-function autoCfgLog($msg, $mode = 'a') {
-	$fh = fopen(AUTOCFG_LOG, $mode);
-	fwrite($fh, date('Ymd His ') . $msg . "\n");
-	fclose($fh);
-}
-
 // Debug message logger
 function debugLog($msg, $mode = 'a') {
-	// Logging off
 	if (!isset($_SESSION['debuglog']) || $_SESSION['debuglog'] == '0') {
-		// NOTE: $_SESSION['debuglog'] = not set means the session is not active
 		return;
 	}
-
 	$fh = fopen(MOODE_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
@@ -59,12 +53,17 @@ function debugLog($msg, $mode = 'a') {
 
 // Mountmon message logger
 function mountmonLog($msg, $mode = 'a') {
-	// Logging off
 	if (!isset($_SESSION['debuglog']) || $_SESSION['debuglog'] == '0') {
 		return;
 	}
-
 	$fh = fopen(MOUNTMON_LOG, $mode);
+	fwrite($fh, date('Ymd His ') . $msg . "\n");
+	fclose($fh);
+}
+
+// Auto-config message logger
+function autoCfgLog($msg, $mode = 'a') {
+	$fh = fopen(AUTOCFG_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
 }

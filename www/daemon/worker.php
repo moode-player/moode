@@ -45,8 +45,6 @@ sysCmd('truncate ' . MOODE_LOG . ' --size 0');
 $dbh = sqlConnect();
 $result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", $dbh);
 $moodeSeries = substr(getMoodeRel(), 1, 1); // rNNN format
-$timeZone = sysCmd("timedatectl | awk -F' ' '/Time zone/{print $3}'")[0];
-date_default_timezone_set($timeZone);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -606,12 +604,12 @@ if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['valu
 	phpSession('write', 'volknob', '0');
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
 		OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
-	workerLog('worker: Active status: one or more flags are true');
-	workerLog('worker: Flag reset:    all flags reset to false');
-	workerLog('worker: MPD volume:    set to 0');
+	workerLog('worker: Active flags: at least one true');
+	workerLog('worker: Reset flags:  all reset to false');
+	workerLog('worker: MPD volume:   set to 0');
 }
-workerLog('worker: Active status: flags are all false');
-workerLog('worker: Flag reset:    skipped');
+workerLog('worker: Active flags: all false');
+workerLog('worker: Reset flags:  skipped');
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
