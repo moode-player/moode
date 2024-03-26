@@ -654,12 +654,6 @@ workerLog('worker: -- Audio configuration');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Check for missing mpd.conf (rare)
-if (!file_exists('/etc/mpd.conf')) {
-	workerLog('worker: MPD config:    Warning: mpd.conf missing, regenerating it');
-	updMpdConf();
-}
-
 // Audio device and output interface
 workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
 $audioOutput = getConfiguredAudioOutput();
@@ -763,6 +757,20 @@ workerLog('worker: --');
 workerLog('worker: -- MPD startup');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
+
+// MPD conf checks
+if (!file_exists('/etc/mpd.conf')) {
+	// Missing mpd.conf (rare)
+	workerLog('worker: MPD config:         Warning: mpd.conf missing, creating it');
+	updMpdConf();
+} else {
+	// First boot or mangled file
+	$lines = file(MPD_CONF);
+	if (!str_contains($lines[1], 'This file is managed by moOde')) {
+		workerLog('worker: MPD config:         Creating managed mpd.conf');
+		updMpdConf();
+	}
+}
 
 // Start MPD
 sysCmd("systemctl start mpd");

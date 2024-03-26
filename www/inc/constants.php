@@ -35,6 +35,7 @@ const SLPOWER_LOG = '/var/log/moode_slpower.log';
 // MPD
 const MPD_RESPONSE_ERR = 'ACK';
 const MPD_RESPONSE_OK = 'OK';
+const MPD_CONF = '/etc/mpd.conf';
 const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
