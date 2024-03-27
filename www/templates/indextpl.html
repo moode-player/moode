@@ -1810,7 +1810,7 @@
 		<div class="control-group">
             <label class="control-label" for="new-station-name">Station name</label>
             <div class="controls">
-                <input id="new-station-name" class="input-large" type="text" name="new_station_name" maxlength="200" value="" autofocus>
+                <input id="new-station-name" class="input-large" type="text" name="new_station_name" maxlength="200" pattern="^[^,]+$" value="" autofocus>
             </div>
             <label class="control-label" for="new-station-url">Playable URL</label>
             <div class="controls">
@@ -1957,7 +1957,7 @@
 		<div class="control-group">
             <label class="control-label" for="edit-station-name">Station name</label>
             <div class="controls">
-                <input id="edit-station-name" class="input-large" type="text" name="edit_station_name" maxlength="200" value="" readonly>
+                <input id="edit-station-name" class="input-large" type="text" name="edit_station_name" maxlength="200" pattern="^[^,]+$" value="" readonly>
             </div>
             <label class="control-label" for="edit-station-url">Playable URL</label>
             <div class="controls">
