@@ -159,9 +159,7 @@ $ipAddr = sysCmd("ip addr list eth0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1")
 $_eth0currentip = empty($ipAddr[0]) ? 'Not in use' : $ipAddr[0];
 // Static IP
 $_eth0ipaddr = $cfgNetwork[0]['ipaddr'];
-//$_eth0netmask = $cfgNetwork[0]['netmask'];
-$_eth0netmask .= "<option value=\"24\" " . ($cfgNetwork[0]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
-$_eth0netmask .= "<option value=\"16\" " . ($cfgNetwork[0]['netmask'] == '16' ? 'selected' : '') . " >255.255.0.0</option>\n";
+$_eth0netmask = $cfgNetwork[0]['netmask'];
 $_eth0gateway = $cfgNetwork[0]['gateway'];
 $_eth0pridns = $cfgNetwork[0]['pridns'];
 $_eth0secdns = $cfgNetwork[0]['secdns'];
@@ -239,9 +237,7 @@ foreach ($zoneListSorted as $zone) {
 }
 // Static IP
 $_wlan0ipaddr = $cfgNetwork[1]['ipaddr'];
-//$_wlan0netmask = $cfgNetwork[1]['netmask'];
-$_wlan0netmask .= "<option value=\"24\" " . ($cfgNetwork[1]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
-$_wlan0netmask .= "<option value=\"16\" " . ($cfgNetwork[1]['netmask'] == '16' ? 'selected' : '') . " >255.255.0.0</option>\n";
+$_wlan0netmask = $cfgNetwork[1]['netmask'];
 $_wlan0gateway = $cfgNetwork[1]['gateway'];
 $_wlan0pridns = $cfgNetwork[1]['pridns'];
 $_wlan0secdns = $cfgNetwork[1]['secdns'];
