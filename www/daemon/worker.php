@@ -1106,7 +1106,7 @@ workerLog('worker: --');
 if (!isset($_SESSION['updater_auto_check'])) {
 	$_SESSION['updater_auto_check'] = 'Off';
 }
-$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip[0] != '172.24.1.1');
+$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip[0] != explode('/', $_SESSION['ap_network_addr'])[0]);
 // NOTE: updaterAutoCheck() logs status
 $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
@@ -2647,7 +2647,7 @@ function runQueuedJob() {
 			break;
 		case 'updater_auto_check':
 			$_SESSION['updater_auto_check'] = $_SESSION['w_queueargs'];
-			$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $GLOBALS['wlan0Ip'][0] != '172.24.1.1');
+			$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $GLOBALS['wlan0Ip'][0] != explode('/', $_SESSION['ap_network_addr'])[0]);
 			$_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 			break;
 		case 'worker_responsiveness':
