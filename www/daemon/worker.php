@@ -475,9 +475,9 @@ if (empty($wlan0)) {
 
 // Store IP address (prefer wlan0 address)
 if (!empty($wlan0Ip)) {
-	$_SESSION['ipaddress'] = $wlan0Ip[0];
+	$_SESSION['ipaddress'] = $wlan0Ip;
 } else if (!empty($eth0Ip)) {
-	$_SESSION['ipaddress'] = $eth0Ip[0];
+	$_SESSION['ipaddress'] = $eth0Ip;
 } else {
 	$_SESSION['ipaddress'] = '0.0.0.0';
 	workerLog('worker: No active network interface');
@@ -1106,7 +1106,7 @@ workerLog('worker: --');
 if (!isset($_SESSION['updater_auto_check'])) {
 	$_SESSION['updater_auto_check'] = 'Off';
 }
-$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip[0] != explode('/', $_SESSION['ap_network_addr'])[0]);
+$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip != explode('/', $_SESSION['ap_network_addr'])[0]);
 // NOTE: updaterAutoCheck() logs status
 $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
