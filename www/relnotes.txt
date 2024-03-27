@@ -24,8 +24,10 @@ New features
 
 Updates
 
-- UPD: Improve multiroom command performance
+- UPD: Improve multiroom command response
+- UPD: Improve SMB protocol detection
 - UPD: Improve setup guides and quick help
+- UPD: Allow any netmask to be entered for static IP address
 - UPD: Remove HDMI On/Off option (not valid on Bookworm)
 - UPD: Remove obsolete devices from audio device table
 
