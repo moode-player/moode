@@ -1142,6 +1142,7 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch-pl-sel"><span class="text">No action</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch-pl-sel"><span class="text">Show items</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch-pl-sel"><span class="text">Add</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch-pl-sel"><span class="text">Play</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch-pl-sel"><span class="text">Clear/Play</span></a></li>
@@ -2479,6 +2480,21 @@
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button aria-label="Create" id="btn-create-playlist" class="btn btn-primary" data-dismiss="modal">Create</button>
+	</div>
+</div>
+
+<div id="view-playlist-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="view-playlist-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="view-playlist-modal-label">View playlist</h3>
+	</div>
+	<div class="modal-body">
+		<h4 id="view-playlist-name" class="txtmid"></h4>
+		<div id="view-playlist-items-container">
+			<ul id="view-playlist-items"></ul>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 

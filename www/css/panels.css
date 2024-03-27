@@ -602,31 +602,39 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 /* Saved search selectors added */
 #saved-search-items-container,
 #playlist-items-container,
+#view-playlist-items-container,
 #playlist-names-container {display:block;margin:0 auto 0 auto;width:74%;height:25em;padding:1em 1em 0 1em;overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;background-color:var(--btnshade2);}
 #playlist-names-container {padding-top:0;}
+#view-playlist-items-container {height:auto;min-height:25em;}
 
 #saved-search-items-container ul,
 #playlist-items-container ul,
+#view-playlist-items-container ul,
 #playlist-names-container ul {margin:0;counter-reset:item;list-style-type:none;}
 
 #saved-search-items,
 #playlist-items {margin-top:0;}
+#view-playlist-items {margin-top:0;}
 #playlist-names {margin-top:3em!important;}
 
 #saved-search-items li,
 #playlist-items li,
+#view-playlist-items li,
 #playlist-names li {padding:.5em 0;line-height:1.25em;cursor:pointer;}
 
 #saved-search-items li:before,
 #playlist-items li:before,
+#view-playlist-items li:before,
 #playlist-names li:before {float:left;width:2em;letter-spacing:-1px;text-align:right;counter-increment:item;content:counter(item) " ";margin-right:.75em;}
 
 #saved-search-items li.active,
 #playlist-items li.active,
+#view-playlist-items li.active,
 #playlist-names li.active {background: var(--accentxta);}
 
 #saved-search-items li span {display:block;}
 #playlist-items li span,
+#view-playlist-items li span,
 #playlist-names li {display:block;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 
 #context-menu-saved-search-contents,

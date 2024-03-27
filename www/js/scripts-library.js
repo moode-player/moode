@@ -1513,16 +1513,39 @@ $('#database-playlist').on('click', 'img', function(e) {
     $(this).parents('li').addClass('active');
 
     if (SESSION.json['library_onetouch_pl'] != 'No action') {
-        if (SESSION.json['library_onetouch_pl'] == 'Add' || SESSION.json['library_onetouch_pl'] == 'Add next') {
+        if (SESSION.json['library_onetouch_pl'] == 'Show items') {
+            $.post('command/playlist.php?cmd=get_playlist_contents', {'path': path}, function(data) {
+                $('#view-playlist-name').text(path);
+
+            	// Playlist items
+            	var element = document.getElementById('view-playlist-items');
+            	element.innerHTML = '';
+                var output = '';
+
+                if (data['items'].length > 0) {
+                    UI.dbEntry[4] = data['items'].length;
+                    for (i = 0; i < data['items'].length; i++) {
+                        output += '<li id="view-pl-item-' + (i + 1) + '" class="pl-item">';
+                        output += '<span class="pl-item-line1">' + data['items'][i]['name'] + '</span>';
+                        output += '<span class="pl-item-line2">' + data['items'][i]['line2'] + '</span>';
+            			output += '</li>';
+                    }
+                } else {
+                    output = 'Playlist is empty';
+                }
+
+                element.innerHTML = output;
+
+        		$('#view-playlist-modal').modal();
+            }, 'json');
+        } else if (SESSION.json['library_onetouch_pl'] == 'Add' || SESSION.json['library_onetouch_pl'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_pl'] == 'Add' ? 'add_item' : 'add_item_next';
             sendQueueCmd(queueCmd, path);
             notify(queueCmd);
-        }
-        else if (SESSION.json['library_onetouch_pl'] == 'Play' || SESSION.json['library_onetouch_pl'] == 'Play next') {
+        } else if (SESSION.json['library_onetouch_pl'] == 'Play' || SESSION.json['library_onetouch_pl'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_pl'] == 'Play' ? 'play_item' : 'play_item_next';
             sendQueueCmd(queueCmd, path);
-        }
-        else if (SESSION.json['library_onetouch_pl'] == 'Clear/Play') {
+        } else if (SESSION.json['library_onetouch_pl'] == 'Clear/Play') {
             sendQueueCmd('clear_play_item', path);
             notify('clear_play_item');
         }
