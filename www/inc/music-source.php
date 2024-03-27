@@ -100,8 +100,8 @@ function sourceMount($action, $id = '', $log = '') {
 			if ($mp[0]['type'] == 'cifs') {
 				$options = $mp[0]['options'];
 				if(strpos($options, 'vers=') === false) {
-					$version = detectCifsProtocol($mp[0]['address']);
-					if($version) {
+					$version = detectSMBVersion($mp[0]['address']);
+					if(!empty($version)) {
 						$options = 'vers=' . $version . ',' . $options;
 					}
 				}
@@ -203,28 +203,22 @@ function sourceMount($action, $id = '', $log = '') {
 	return $return;
 }
 
-// Detect highest suported CIFS protocol of source
-function detectCifsProtocol($host) {
+// Detect highest suported SMB protocol version
+function detectSMBVersion($host) {
 	$output = sysCmd("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|");
 	$parts = explode('  ', end($output));
-	$version = NULL;
+
 	if (count($parts) >= 2)  {
 		$version = trim($parts[2]);
-		$CIFVERSIONLUT = Array(
-			"2.02" => "2.0",
-			"2.10" => "2.1",
-			"3.00" => "3.0",
-			"3.02" => "3.0.2",
-			"3.11" => "3.1.1"
-		);
-
-		if (strpos($version, 'SMBv1')) {
+		if (str_contains($version, 'SMBv1')) {
 			$version = '1.0';
-		} else if (array_key_exists($version, $CIFVERSIONLUT)) {
-			$version = $CIFVERSIONLUT[$version];
+		} else if (array_key_exists($version, SMB_VERSIONS)) {
+			$version = SMB_VERSIONS[$version];
 		} else {
-			$version = NULL;
+			$version = '';
 		}
+	} else {
+		$version = '';
 	}
 
 	return $version;

@@ -66,6 +66,20 @@ const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const BOOT_CONFIG_TXT = '/boot/firmware/config.txt';
 const BOOT_CONFIG_BKP = '/boot/firmware/config.txt.bkp';
+// SMB protocol versions
+const SMB_VERSIONS = array(
+    "2.02" => "2.0",
+    "2.10" => "2.1",
+    "3.00" => "3.0",
+    "3.02" => "3.0.2",
+    "3.11" => "3.1.1",
+    "202" => "2.0",
+    "210" => "2.1",
+    "300" => "3.0",
+    "302" => "3.0.2",
+    "311" => "3.1.1"
+);
+
 // Boot config.txt headers
 const I2S_HEADER = '# I2S device';
 const USER_HEADER = '# User added';

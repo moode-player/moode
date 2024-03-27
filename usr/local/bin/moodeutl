@@ -89,10 +89,10 @@ switch ($option) {
 		systemInfo();
 		break;
 	case '-c':
-		detectCIFSHosts();
+		detectSMBHosts();
 		break;
 	case '-C':
-		detectCIFSShares($argv);
+		detectSMBShares($argv);
 		break;
 	case '-N':
 		detectNFSHosts();
@@ -174,10 +174,10 @@ With no OPTION print the help text and exit.
  -l\t\tPrint moode log
  -m\t\tRun system monitor
  -s\t\tPrint system info
- -c\t\tDetect CIFS (SMB) hosts
- -C\t\tDetect CIFS (SMB) shares [host or ip address]
- -N\t\tDetect NFS hosts
- -M\t\tDetect MPD hosts
+ -c\t\tScan for SMB hosts
+ -C\t\tScan for SMB shares [host | IP address]
+ -N\t\tScan for NFS hosts
+ -M\t\tScan for MPD hosts
  -o\t\tList audio overlays
  -q\t\tQuery sql database
  -r\t\tRestart servers
@@ -605,8 +605,8 @@ function printSleepInt() {
 		'gpiobuttons=' . GPIOBUTTONS_SLEEP . "\n";
 }
 
-function detectCIFSHosts() {
-	echo 'Scanning network for CIFS (SMB) hosts...' . "\n";
+function detectSMBHosts() {
+	echo 'Scanning for SMB hosts...' . "\n";
 
 	// Run a few times to pick up as many hosts as possible
 	for ($i = 0; $i < 3; $i++) {
@@ -616,68 +616,55 @@ function detectCIFSHosts() {
 	$line = strtok($output, "\n");
 	while ($line) {
 		$parts = explode(', ', $line);
-		$cifsVersion = detectCIFSVersion($parts[1]);
-		echo $parts[0] . "\t\t" . $parts[1] . "\t\t" . $cifsVersion . "\n";
+		$smbVersion = detectSMBVersion($parts[1]);
+		echo $parts[0] . "\t\t" . $parts[1] . "\t\t" . $smbVersion . "\n";
 
 		$line = strtok("\n");
 	}
 }
 
-function detectCIFSVersion($host) {
-	//if (!isset($argv[2])) {
-	//	echo 'Missing host or IP address' . "\n";
-	//	return;
-	//}
-
-	//echo 'Scanning host...' . "\n";
+// Detect highest suported SMB protocol version
+function detectSMBVersion($host) {
 	$output = trim(shell_exec("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|"));
 	$output = explode("\n", $output);
 	$parts = explode('  ', end($output));
-	//$msg = 'CIFS version could not be detected' . "\n";
-	$msg = 'CIFS version could not be detected';
 
 	if (count($parts) >= 2) {
 		$version = trim($parts[2]);
-		$cifsVersions = array(
-			"2.02" => "2.0",
-			"2.10" => "2.1",
-			"3.00" => "3.0",
-			"3.02" => "3.0.2",
-			"3.11" => "3.1.1"
-		);
-
-		if (strpos($version, 'SMBv1')) {
+		if (str_contains($version, 'SMBv1')) {
 			$version = '1.0';
-		} else if (array_key_exists($version, $cifsVersions)) {
-			$version = $cifsVersions[$version];
+		} else if (array_key_exists($version, SMB_VERSIONS)) {
+			$version = SMB_VERSIONS[$version];
+		} else {
+			$version = $version . ' detected but not in lookup table';
 		}
 
-		//$msg = 'CIFS version: ' . $version . "\n";
-		$msg = 'CIFS version: ' . $version;
+		$msg = 'SMB version: ' . $version;
+	} else {
+		$msg = 'SMB version could not be detected';
 	}
 
-	//echo $msg;
 	return $msg;
 }
 
-function detectCIFSShares($argv) {
+function detectSMBShares($argv) {
 	if (!isset($argv[2])) {
 		echo 'Missing host or IP address' . "\n";
 		return;
 	}
 
-	echo 'Scanning host...' . "\n";
-	$cifsShares = shell_exec("smbclient -N -g -L 2>&1 " . $argv[2] . " | grep Disk | cut -f 2 -d '|'");
+	echo 'Scanning SMB host...' . "\n";
+	$smbShares = shell_exec("smbclient -N -g -L 2>&1 " . $argv[2] . " | grep Disk | cut -f 2 -d '|'");
 
-	if (empty($cifsShares)) {
-		echo 'No CIFS shares found' . "\n";
+	if (empty($smbShares)) {
+		echo 'No SMB shares found' . "\n";
 	} else {
-		echo $cifsShares;
+		echo $smbShares;
 	}
 }
 
 function detectNFSHosts() {
-	echo 'Scanning network for NFSv4 hosts...' . "\n";
+	echo 'Scanning for NFSv4 hosts...' . "\n";
 
 	$thisIpAddr = sysCmd('hostname -I | cut -d " " -f 1')[0];
 	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
@@ -695,7 +682,7 @@ function detectNFSHosts() {
 }
 
 function detectMPDHosts() {
-	echo 'Scanning network for MPD hosts...' . "\n";
+	echo 'Scanning for MPD hosts...' . "\n";
 
 	$thisIpAddr = sysCmd('hostname -I | cut -d " " -f 1')[0];
 	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
