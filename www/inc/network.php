@@ -134,9 +134,12 @@ function activateHotspot() {
 // Wait up to timeout seconds for IP address to be assigned to the interface
 function checkForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
 	$maxLoops = $timeoutSecs / $sleepTime;
+	$ipAddr = '';
+
 	for ($i = 0; $i < $maxLoops; $i++) {
-		$ipAddr = sysCmd('ip addr list ' . $iface . " | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
-		if (!empty($ipAddr[0])) {
+		$result = sysCmd('ip addr list ' . $iface . " | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
+		if (!empty($result)) {
+			$ipAddr = $result[0];
 			break;
 		} else {
 			debugLog('worker: ' . $iface .' check '. ($i + 1) . ' for IP address');
@@ -148,24 +151,24 @@ function checkForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
 }
 
 function getHostIp() {
-	$eth0ip = '';
-	$wlan0ip = '';
+	$eth0Ip = '';
+	$wlan0Ip = '';
 
 	// Check both interfaces
 	$eth0 = sysCmd('ip addr list | grep eth0');
 	if (!empty($eth0)) {
-		$eth0ip = sysCmd("ip addr list eth0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
+		$eth0Ip = sysCmd("ip addr list eth0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 	}
 	$wlan0 = sysCmd('ip addr list | grep wlan0');
 	if (!empty($wlan0)) {
-		$wlan0ip = sysCmd("ip addr list wlan0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
+		$wlan0Ip = sysCmd("ip addr list wlan0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 	}
 
 	// Use Ethernet address if present
-	if (!empty($eth0ip[0])) {
-		$hostIp = $eth0ip[0];
-	} else if (!empty($wlan0ip[0])) {
-		$hostIp = $wlan0ip[0];
+	if (!empty($eth0Ip)) {
+		$hostIp = $eth0Ip[0];
+	} else if (!empty($wlan0Ip)) {
+		$hostIp = $wlan0Ip[0];
 	} else {
 		$hostIp = '127.0.0.1';
 	}
