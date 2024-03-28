@@ -26,10 +26,15 @@ require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
 function cfgI2SDevice() {
-	// Remove 'dtoverlay=audio_overlay' line after the comment header if it exists
-	$lines = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -A 1 "' . I2S_HEADER . '" | wc -l')[0];
+
+	// REDO: check for dtoverlay=disable-wifi
+	// Add I2S dtoverlay after
+
+	// Remove 'dtoverlay=audio_overlay' line if it exists
+	// It would be the next line after 'dtoverlay=disable-wifi'
+	$lines = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -A 1 "' . CFG_DTOVERLAY_DISABLE_WIFI . '" | wc -l')[0];
 	if ($lines = 2) {
-		sysCmd('sed -i "/' . I2S_HEADER . '/{n;d}" ' . BOOT_CONFIG_TXT);
+		sysCmd('sed -i "/' . CFG_DTOVERLAY_DISABLE_WIFI . '/{n;d}" ' . BOOT_CONFIG_TXT);
 	}
 
 	// Remove 'force_eeprom_read=0'line (only exists for hifiberry devices)
@@ -48,10 +53,14 @@ function cfgI2SDevice() {
 	} else if ($_SESSION['i2sdevice'] != 'None') {
 		// Named I2S device
 		$result = sqlRead('cfg_audiodev', sqlConnect(), $_SESSION['i2sdevice']);
-		sysCmd('sed -i s"/' . I2S_HEADER . '/' . I2S_HEADER . '\ndtoverlay=' . $result[0]['driver'] . $eeprom . '/" ' . BOOT_CONFIG_TXT);
+		sysCmd('sed -i s"/' .
+			CFG_DTOVERLAY_DISABLE_WIFI . '/' .
+			CFG_DTOVERLAY_DISABLE_WIFI . '\ndtoverlay=' . $result[0]['driver'] . $eeprom . '/" ' . BOOT_CONFIG_TXT);
 	} else {
 		// DT overlay
-		sysCmd('sed -i s"/' . I2S_HEADER . '/' . I2S_HEADER . '\ndtoverlay=' . $_SESSION['i2soverlay'] . $eeprom . '/" ' . BOOT_CONFIG_TXT);
+		sysCmd('sed -i s"/' .
+			CFG_DTOVERLAY_DISABLE_WIFI . '/' .
+			CFG_DTOVERLAY_DISABLE_WIFI . '\ndtoverlay=' . $_SESSION['i2soverlay'] . $eeprom . '/" ' . BOOT_CONFIG_TXT);
 	}
 }
 

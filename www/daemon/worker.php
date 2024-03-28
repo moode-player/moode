@@ -125,25 +125,41 @@ if ($linuxStartupComplete === true) {
 	exit($logMsg . "\n");
 }
 
-// Import boot config.txt (first boot)
-$lines = file(BOOT_CONFIG_TXT);
-if (str_contains($lines[1], 'This file is managed by moOde')) {
-	workerLog('worker: Boot config is ok');
+// Check boot config.txt
+$lines = file(BOOT_CONFIG_TXT, FILE_IGNORE_NEW_LINES);
+$headerCount = 0;
+if (str_contains($lines[1], CFG_MAIN_FILE_HEADER)) {
+	// Line 1 has the correct header
+	$headerCount++;
+
+	// Check for rest of headers
+	foreach ($lines as $line) {
+		//workerLog($line);
+		if ($line == CFG_DEVICE_FILTERS_SECTION) {
+			$headerCount++;
+		}
+		if ($line == CFG_GENERAL_SETTINGS_SECTION) {
+			$headerCount++;
+		}
+		if ($line == CFG_MANAGED_BY_MOODE_SECTION) {
+			$headerCount++;
+		}
+	}
+
+	// Restore default config if needed
+	if ($headerCount == CFG_HEADERS_REQUIRED) {
+		workerLog('worker: Boot config is ok');
+	} else {
+		sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+		workerLog('worker: Warning: Boot config is missing required header(s)');
+		workerLog('worker: Warning: Default boot config restored');
+		workerLog('worker: Warning: Restart required');
+	}
+
 } else {
+	// First boot import
 	sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
 	sysCmd('reboot');
-}
-
-// Boot file recovery (rare)
-if (file_exists(BOOT_CONFIG_TXT) && count(file(BOOT_CONFIG_TXT)) > 10) {
-	// Backup
-	sysCmd('cp ' . BOOT_CONFIG_TXT . ' ' . BOOT_CONFIG_BKP);
-	workerLog('worker: Boot config backed up');
-} else {
-	// Restore
-	sysCmd('cp ' . BOOT_CONFIG_BKP . ' ' . BOOT_CONFIG_TXT);
-	workerLog('worker: Warning: Boot config restored');
-	workerLog('worker: Warning: Restart required');
 }
 
 // Prune old session vars

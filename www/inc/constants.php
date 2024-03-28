@@ -65,7 +65,6 @@ const SESSION_SAVE_PATH = '/var/local/php';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const BOOT_CONFIG_TXT = '/boot/firmware/config.txt';
-const BOOT_CONFIG_BKP = '/boot/firmware/config.txt.bkp';
 // SMB protocol versions
 const SMB_VERSIONS = array(
     "2.02" => "2.0",
@@ -80,10 +79,13 @@ const SMB_VERSIONS = array(
     "311" => "3.1.1"
 );
 
-// Boot config.txt headers
-const I2S_HEADER = '# I2S device';
-const USER_HEADER = '# User added';
-
+// Boot config.txt managed lines
+const CFG_HEADERS_REQUIRED = 4;
+const CFG_MAIN_FILE_HEADER = '# This file is managed by moOde';
+const CFG_DEVICE_FILTERS_SECTION = '# Device filters';
+const CFG_GENERAL_SETTINGS_SECTION = '# General settings';
+const CFG_MANAGED_BY_MOODE_SECTION = '# Managed by moOde';
+const CFG_DTOVERLAY_DISABLE_WIFI = 'dtoverlay=disable-wifi';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php

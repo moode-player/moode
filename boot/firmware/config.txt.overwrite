@@ -2,6 +2,7 @@
 # This file is managed by moOde
 #########################################
 
+# Device filters
 [cm4]
 otg_mode=1
 
@@ -10,14 +11,13 @@ hdmi_force_hotplug:0=1
 hdmi_force_hotplug:1=1
 
 [all]
-# Bookworm
 dtoverlay=vc4-kms-v3d
 max_framebuffers=2
 display_auto_detect=1
 disable_fw_kms_setup=1
 arm_64bit=1
 
-# General
+# General settings
 arm_boost=0
 disable_splash=1
 disable_overscan=1
@@ -29,9 +29,8 @@ hdmi_group=0
 dtparam=i2c_arm=on
 dtparam=i2s=on
 dtparam=audio=on
+
+# Managed by moOde
+# Do not add or modify any lines in this section
 #dtoverlay=disable-bt
 #dtoverlay=disable-wifi
-
-# I2S device
-
-# User added
