@@ -26,10 +26,6 @@ require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
 function cfgI2SDevice() {
-
-	// REDO: check for dtoverlay=disable-wifi
-	// Add I2S dtoverlay after
-
 	// Remove 'dtoverlay=audio_overlay' line if it exists
 	// It would be the next line after 'dtoverlay=disable-wifi'
 	$lines = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -A 1 "' . CFG_DTOVERLAY_DISABLE_WIFI . '" | wc -l')[0];
