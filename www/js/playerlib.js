@@ -1352,6 +1352,9 @@ function genSearchUrl (artist, title, album) {
 
         // Search engine
     	switch (SESSION.json['search_site']) {
+            case 'Amazon Music':
+                var searchEngine = 'https://music.amazon.com/search/';
+                break;
     		case 'Bing':
     			var searchEngine = 'http://www.bing.com/search?q=';
     			break;
@@ -1377,6 +1380,9 @@ function genSearchUrl (artist, title, album) {
                     searchStr = 'tag-lookup.artist=' + artist + '&tag-lookup.release=' + album;
                 }
     			break;
+            case 'Spotify':
+                var searchEngine = 'https://open.spotify.com/search/';
+                break;
             case 'Startpage':
     			var searchEngine = 'http://www.startpage.com/do/search?q=';
     			break;
@@ -2343,7 +2349,7 @@ function setVolume(level, event) {
 
     var async = true;
 
-    /*console.log('setVolume(): ' + 
+    /*console.log('setVolume(): ' +
         'level=' + level + ', ' +
         'event=' + event + ', ' +
         'mute=' + SESSION.json['volmute'] + ', ' +
