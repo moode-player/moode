@@ -27,11 +27,13 @@ Updates
 - UPD: Improve multiroom command response
 - UPD: Improve SMB protocol detection
 - UPD: Improve setup guides and quick help
-- UPD: Allow any netmask to be entered for static IP address
-- UPD: Dont allow comma when entering a new station name
 - UPD: Add "Show items" option to One-touch playlist
+- UPD: Add "Queue info" to ellipsis menu (stats + saved playlist name)
+- UPD: Add Spotify and Amazon Music to Prefs Search sites
 - UPD: Remove HDMI On/Off option (not valid on Bookworm)
-- UPD: Remove obsolete devices from audio device table
+- UPD: Remove redundant or obsolete devices from audio device table
+- UPD: Allow any netmask to be entered for static IP address
+- UPD: Prevent comma when entering a new station name
 
 Bug fixes
 
