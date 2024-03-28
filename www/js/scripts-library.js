@@ -1736,8 +1736,10 @@ $('#context-menu-playback a').click(function(e) {
     		sendMpdCmd('single ' + toggle);
             break;
         case 'clear':
-    		sendMpdCmd('clear');
-            $('#playlist-save-name').val(''); // Clear saved playlist name if any
+            $.post('command/queue.php?cmd=clear_playqueue', function() {
+                $('#playlist-save-name').val('');
+                notify('queue_cleared');
+            });
             break;
         case 'stream_recorder':
     		$('#menu-check-recorder').toggle();

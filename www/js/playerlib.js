@@ -2583,19 +2583,36 @@ $(document).on('click', '.context-menu a', function(e) {
                 }
             });
             break;
-        case 'playqueue_time':
+        case 'playqueue_info':
             var mins = 0;
             var secs = 0;
+            var totalItems = 0
+            var totalTracks = 0;
             $('#playqueue-list .playqueue-action').each(function() {
+                totalItems++;
                 var trackTime = $(this).text().slice(0, -1);
                 if (trackTime.length > 0) {
                     var mmss = trackTime.split(':');
                     mins += parseInt(mmss[0]);
                     secs += parseInt(mmss[1]);
+                    totalTracks++;
                 }
             });
-            var totalPlayTime = formatSongTime((mins * 60) + secs);
-            notify('playqueue_time', '<b>' + totalPlayTime + '</b>', '5_seconds');
+            var totalTrackTime = formatSongTime((mins * 60) + secs);
+
+            // Get most recent playlist added to Queue
+            $.getJSON('command/music-library.php?cmd=get_recent_playlist', function(data) {
+                var playlist = data;
+                // Display notification
+                notify('playqueue_info',
+                    'Items:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + totalItems + '<br>' +
+                    'Tracks:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + totalTracks + '<br>' +
+                    'Track time:&nbsp;' + totalTrackTime + '<br>' +
+                    'Playlist:&nbsp;&nbsp;&nbsp;' + playlist,
+                    'infinite');
+                // Styling (gets automatically reset by pnotify for other notifications)
+                $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
+            });
             break;
         case 'track_info_playback':
             if ($('#currentsong').html() != '') {

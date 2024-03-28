@@ -61,15 +61,21 @@ switch ($_GET['cmd']) {
 		sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
         echo json_encode(parseDelimFile(readMpdResp($sock), ': ')['file']);
 		break;
+    case 'clear_playqueue':
+        workerLog('clear_playqueue');
+		sendMpdCmd($sock, 'clear');
+        $resp = readMpdResp($sock);
+        updLibRecentPlaylistVar('None');
+		break;
 	case 'add_item':
 	case 'add_item_next':
-		 $status = getMpdStatus($sock);
-		 $cmds = array(addItemToQueue($_POST['path']));
-		 if ($_GET['cmd'] == 'add_item_next') {
-			 array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . ($status['song'] + 1));
-		 }
-		 chainMpdCmds($sock, $cmds);
-		 break;
+        $status = getMpdStatus($sock);
+        $cmds = array(addItemToQueue($_POST['path']));
+        if ($_GET['cmd'] == 'add_item_next') {
+         array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . ($status['song'] + 1));
+        }
+        chainMpdCmds($sock, $cmds);
+        break;
 	case 'play_item':
 	case 'play_item_next':
 		// Search the Queue for the item
@@ -97,6 +103,7 @@ switch ($_GET['cmd']) {
 	/*case 'clear_add_item':*/
 	case 'clear_play_item':
 	 	$cmds = array('clear');
+        updLibRecentPlaylistVar('None');
 		array_push($cmds, addItemToQueue($_POST['path']));
 		if ($_GET['cmd'] == 'clear_play_item') {
 			array_push($cmds, 'play');
@@ -224,13 +231,13 @@ function getPlayqueueItemTag($resp, $tag) {
 function addItemToQueue($path) {
 	$ext = getFileExt($path);
 	$pl_extensions = array('m3u', 'pls', 'cue');
-	//workerLog($path . ' (' . $ext . ')');
+	//workerLog('path=' . $path . ', ext=(' . $ext . ')');
 
-	// Use load for saved playlist, cue sheet, radio station
-	if ((in_array($ext, $pl_extensions) && !isCueTrack($path)) || (strpos($path, '/') === false && in_array($path, ROOT_DIRECTORIES) === false)) {
-		// Radio station special case
-		if (strpos($path, 'RADIO') !== false) {
-			// Check for playlist as URL
+	if ((in_array($ext, $pl_extensions) && !isCueTrack($path)) || isSavedPlaylist($path)) {
+        // Use load for saved playlist, cue sheet, radio station
+        //(!str_contains($path, '/') && !in_array($path, ROOT_DIRECTORIES))) { // saved playlist
+		if (str_contains($path, 'RADIO')) {
+            // Radio station special case: Check for playlist as URL
 			$pls = file_get_contents(MPD_MUSICROOT . $path);
 			$url = parseDelimFile($pls, '=')['File1'];
 			$ext = substr($url, -4);
@@ -239,13 +246,29 @@ function addItemToQueue($path) {
 			}
 		}
 		$cmd = 'load';
-	}
-	// Use add for song file or directory
-	else {
+	} else {
+        // Use add for song file or directory
 		$cmd = 'add';
 	}
 
 	return $cmd . ' "' . html_entity_decode($path) . '"';
+}
+function isSavedPlaylist($path) {
+    if (!str_contains($path, '/') && !in_array($path, ROOT_DIRECTORIES)) {
+        phpSession('open');
+        $_SESSION['lib_recent_playlist'] = $path;
+        phpSession('close');
+        $isSavedPlaylist = true;
+    } else {
+        $isSavedPlaylist = false;
+    }
+    return $isSavedPlaylist;
+}
+
+function updLibRecentPlaylistVar($value) {
+    phpSession('open');
+    $_SESSION['lib_recent_playlist'] = $value;
+    phpSession('close');
 }
 
 // Add group of song files to the Queue (Tag/Album view)

@@ -79,6 +79,10 @@ switch ($_GET['cmd']) {
 			echo json_encode('worker busy');
 		}
 		break;
+	case 'get_recent_playlist':
+		phpSession('open_ro');
+		echo json_encode($_SESSION['lib_recent_playlist']);
+		break;
 	case 'thumcache_status':
 		if (isset($_SESSION['thmcache_status']) && !empty($_SESSION['thmcache_status'])) {
 			$status = $_SESSION['thmcache_status'];

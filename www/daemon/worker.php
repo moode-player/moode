@@ -1194,12 +1194,14 @@ phpSession('write', 'playlist_pos', '-1');
 if (!isset($_SESSION['lib_scope'])) {
 	$_SESSION['lib_scope'] = 'all';
 }
-
 // Library active search
 if (!isset($_SESSION['lib_active_search'])) {
 	$_SESSION['lib_active_search'] = 'None';
 }
-
+// Library most recent playlist added to Queue
+if (!isset($_SESSION['lib_recent_playlist'])) {
+	$_SESSION['lib_recent_playlist'] = 'Default Playlist';
+}
 // Worker sleep interval
 if (!isset($_SESSION['worker_responsiveness'])) {
 	$_SESSION['worker_responsiveness'] = 'Default';
@@ -1208,7 +1210,6 @@ if (!isset($_SESSION['worker_responsiveness'])) {
 if (!isset($_SESSION['fs_mountmon'])) {
 	$_SESSION['fs_mountmon'] = 'Off';
 }
-
 // MPD radio stream monitor
 if (!isset($_SESSION['mpd_monitor_svc'])) {
 	$_SESSION['mpd_monitor_svc'] = 'Off';

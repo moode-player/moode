@@ -35,7 +35,8 @@ function notify(title, msg, duration = '2_seconds') {
         clear_play_group: 'Playing after Queue cleared',
         queue_item_removed: 'Removed from Queue',
 		queue_item_moved: 'Queue items moved',
-        playqueue_time: 'Total play time',
+        queue_cleared: 'Queue cleared',
+        playqueue_info: 'Queue info',
         // Library
         clear_libcache: 'Library cache cleared',
         update_library: 'Updating library...',
