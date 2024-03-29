@@ -26,6 +26,7 @@ Updates
 
 - UPD: Improve multiroom command response
 - UPD: Improve SMB protocol detection
+- UPD: Improve radio station edit/delete
 - UPD: Improve setup guides and quick help
 - UPD: Add "Show items" option to One-touch playlist
 - UPD: Add "Queue info" to ellipsis menu (stats + saved playlist name)
@@ -42,7 +43,22 @@ Bug fixes
 
 Radio stations
 
+- UPD: ArtSound FM 92.7
+- UPD: JB Radio2 (320K)
 - UPD: Kanal K
+- UPD: Venice Classic Radio Italia
+- UPD: WCRB Boston 99.5 - Classical
+- DEL: Audiophile Baroque
+- DEL: Audiophile Classical
+- DEL: Audiophile Jazz
+- DEL: Audiophile Lounge
+- DEL: Audiophile Rock-Blues
+- DEL: FluxFM - Hot R&B
+- DEL: FluxFM - Pop Radio
+- DEL: Soma FM - BAGeL Radio
+- DEL: Swedish Classic Radio
+- DEL: WRPI 91.5 FM Troy
+- DEL: Eirewave
 
 ################################################################################
 #
