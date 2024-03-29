@@ -895,7 +895,7 @@ jQuery(document).ready(function($) { 'use strict';
         lazyLode('radio');
         $('#database-radio').scrollTo(0, 200);
 		UI.radioPos = -1;
-		storeRadioPos(UI.radioPos)
+		storeRadioPos(UI.radioPos);
         $("#btn-ra-search-reset").hide();
         showSearchResetRa = false;
 	});
@@ -1043,7 +1043,6 @@ jQuery(document).ready(function($) { 'use strict';
                 } else {
                     notify('validation_check', msg, '10_seconds');
                 }
-                $('#btn-ra-refresh').click();
             }, 'json');
 		}
 	});
@@ -1053,7 +1052,10 @@ jQuery(document).ready(function($) { 'use strict';
         deleteRadioStationObject(stationName);
         $.post('command/radio.php?cmd=del_station', {'path': UI.dbEntry[0]}, function() {
             notify('del_station');
-            $('#btn-ra-refresh').click();
+            UI.radioPos = -1;
+    		storeRadioPos(UI.radioPos);
+            renderRadioView();
+            lazyLode('radio');
         });
 	});
 
@@ -1165,7 +1167,6 @@ jQuery(document).ready(function($) { 'use strict';
             notify('updating_playlist');
             $.post('command/playlist.php?cmd=upd_playlist', {'path': path}, function() {
                 notify('upd_playlist');
-                $('#btn-pl-refresh').click();
             }, 'json');
 		}
 	});

@@ -252,17 +252,16 @@ function putStationCover($stName) {
 
 // Delete station file, cover image, session var and SQL row
 function deleteStation($stationName, $stationPls) {
-	// Delete row
-	$result = sqlQuery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($stationName) . "'", sqlConnect());
+	$dbh = sqlConnect();
 
 	// Delete session var
+	$result = sqlQuery("SELECT station FROM cfg_radio WHERE name='" . SQLite3::escapeString($stationName) . "'", $dbh);
 	phpSession('open');
-	foreach ($_SESSION as $key => $value) {
-		if ($value['name'] == $stationName) {
-			unset($_SESSION[$key]);
-		}
-	}
+	unset($_SESSION[$result[0]['station']]);
 	phpSession('close');
+
+	// Delete row
+	$result = sqlQuery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($stationName) . "'", $dbh);
 
 	// Delete pls and logo image files
 	sysCmd('rm "' . MPD_MUSICROOT . $stationPls . '"');
