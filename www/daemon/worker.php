@@ -2187,27 +2187,34 @@ function runQueuedJob() {
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
 
-			// Volume type (MPD mixer) change
-			if ($mixerChange == '0') {
-				// No mixer change
+			// Output device change (cardnum)
+			if ($deviceChange == '0') {
 				$startPlay = true;
 			} else {
-				// Mixer change
+				$startPlay = false;
+				sysCmd('/var/www/vol.sh 0');
+			}
+			// Volume type change (MPD mixer_type))
+			if ($mixerChange == '0') {
+				$startPlay = true;
+			} else {
 				$startPlay = false;
 				if ($mixerChange == 'camilladsp') {
 					sysCmd('/var/www/vol.sh -restore');
 				} else {
-					// hardware, software, fixed
+					// Hardware, software or fixed
 					if ($_SESSION['camilladsp'] != 'off') {
 						CamillaDSP::setCDSPVolTo0dB();
 					}
-					sysCmd('/var/www/vol.sh -restore');
+					//DELETE:sysCmd('/var/www/vol.sh -restore');
+					sysCmd('/var/www/vol.sh 0');
 				}
-				sendEngCmd('refresh_screen'); // Refresh connected clients
+				 // Refresh connected clients
+				sendEngCmd('refresh_screen');
 			}
 
 			// Start play if was playing
-			if (!empty($playing) && $startPlay == true) {
+			if (!empty($playing) && $startPlay === true) {
 				sysCmd('mpc play');
 			}
 
