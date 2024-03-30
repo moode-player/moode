@@ -344,8 +344,8 @@ if ($i2sReboot === true) {
 } else {
 	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$deviceName = $deviceNames[$i] == ALSA_DUMMY_DEVICE ?
-			$i . ':'  . TRX_SENDER_NAME :
-			$i . ':'  . $deviceNames[$i];
+			$i . ': '  . TRX_SENDER_NAME :
+			$i . ': '  . $deviceNames[$i];
 		$_mpd_select['device'] .= "<option value=\"" . $i . "\" " . (($cfgMPD['device'] == $i) ? "selected" : "") . ">$deviceName</option>\n";
 	}
 }
