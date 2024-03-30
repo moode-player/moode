@@ -21,15 +21,12 @@
 /**
  * Contains all functionality related the auto-configure settings implementation.
  * (C) 2020 @bitlab (@bitkeeper Git)
- */
-
-/**
+ *
  * NOTE: The Session must be opened by caller prior to calling
  * - autoConfigSettings()
  * - autoConfigExtract()
  * - autoConfig()
  */
-
 
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/audio.php';
@@ -39,43 +36,36 @@ require_once __DIR__ . '/network.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
-/**
- * Returns the settings for reading/writing the autoConfig file.
- * Is used by import and export of the auto-configure settings.
- *
- * Mainly it returns an array with:
- * - Which settings are supported
- * - A read handler for import
- * - A write handler for export
- */
+// Returns an array of settings and handlers for reading/writing the autoConfig file
+// - the settings that are supported
+// - a read handler for import
+// - a write handler for export
 function autoConfigSettings() {
 	$debug = true;
-
-	// Handler for setting just the session var
-	function setSessionVarOnly($values) {
+	// Helper functions
+	// Set just the session var
+	function setSessVarOnly($values) {
 		$_SESSION[array_key_first($values)] = $values[array_key_first($values)];
 	}
-
-	// Handler for seting the session var and sql value
-	function setphpSession($values) {
+	// Set session var and sql value
+	function setSessVarSql($values) {
 		phpSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
-
-	// Handler for seting the session var, sql value and a syscmd call to sysutil.sh
-	function setphpSessionAndSysCmd($values, $cmd) {
+	// Set session var, sql value and run a sysCmd call to sysutil.sh
+	function setSessVarSqlSysCmd($values, $cmd) {
 		sysCmd('/var/www/util/sysutil.sh '. sprintf($cmd, $values[array_key_first($values)]) );
 		phpSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
-
-	function setCfgMpd($values) {
+	// Set cfg_mpd params
+	function setCfgMpdParams($values) {
 		$dbh = sqlConnect();
 		foreach ($values as $key => $value) {
 			$query = sprintf("update cfg_mpd set value='%s' where param='%s'", $value, $key);
 			$result = sqlQuery($query, $dbh);
 		}
 	}
-
-	function getCfgMpd($values) {
+	// Get cfg_mpd params
+	function getCfgMpdParams($values) {
 		$dbh = sqlConnect();
 		$str = '';
 		foreach ($values as $key) {
@@ -85,18 +75,16 @@ function autoConfigSettings() {
 		}
 		return $str;
 	}
-
-	// Can not be directly called as handler, but as shorthand within handler
-	function setDbParams($table, $values, $prefix = '') {
+	// Set table params: Can not be directly called as handler, but as shorthand within handler
+	function setCfgTableParams($table, $values, $prefix = '') {
 		$dbh = sqlConnect();
 		foreach ($values as $key => $value) {
 			$param =  strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key ;
 			$result = sqlUpdate($table, $dbh, $param, $value);
 		}
 	}
-
-	// Can not be directly called as handler, but as shorthand with in handler
-	function getDbParams($table, $values, $prefix = '') {
+	// Get table params: Can not be directly called as handler, but as shorthand with in handler
+	function getCfgTableParams($table, $values, $prefix = '') {
 		$dbh = sqlConnect();
 		$str ='';
 		foreach ($values as $key) {
@@ -110,18 +98,17 @@ function autoConfigSettings() {
 		return $str;
 	}
 
-	// Configuration of the autoconfig item handling
-	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
-	//              most item only have 1 autoconfig item, but network setting requires multiple to be present
-	// - handler for setting the config item
-	// - command - argument for sysutil.sh when setphpSessionAndSysCmd handler is used
+	// Settings array
+	// 'requires' array of autoconfig items that should ALL be present before the handler is executed
+	// 'handler'  function for setting the config item
+	// 'cmd'      special arg for sysutil.sh when setSessVarSqlSysCmd handler is used
 	$configurationHandlers = [
 		'Names',
-		['requires' => ['browsertitle'], 'handler' => setphpSession],
-		['requires' => ['hostname'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'chg-name host "' . $_SESSION['hostname'] . '" "%s"'],
-		['requires' => ['btname'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'chg-name bluetooth "' . $_SESSION['btname'] . '" "%s"'],
-		['requires' => ['airplayname'], 'handler' => setphpSession],
-		['requires' => ['spotifyname'], 'handler' => setphpSession],
+		['requires' => ['browsertitle'], 'handler' => 'setSessVarSql'],
+		['requires' => ['hostname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name host "' . $_SESSION['hostname'] . '" "%s"'],
+		['requires' => ['btname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name bluetooth "' . $_SESSION['btname'] . '" "%s"'],
+		['requires' => ['airplayname'], 'handler' => 'setSessVarSql'],
+		['requires' => ['spotifyname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['squeezelitename'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			$currentName= sqlQuery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
@@ -131,13 +118,13 @@ function autoConfigSettings() {
 			$result = sqlQuery("select value from cfg_sl where param='PLAYERNAME'", sqlConnect());
 			return "squeezelitename = \"" . $result[0]['value'] . "\"\n";
 		}],
-		['requires' => ['upnpname'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'chg-name upnp "' . $_SESSION['upnpname'] . '" "%s"'],
-		['requires' => ['dlnaname'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'chg-name dlna "' . $_SESSION['dlnaname'] . '" "%s"'],
+		['requires' => ['upnpname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name upnp "' . $_SESSION['upnpname'] . '" "%s"'],
+		['requires' => ['dlnaname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name dlna "' . $_SESSION['dlnaname'] . '" "%s"'],
 
 		'System',
-		['requires' => ['updater_auto_check'], 'handler' => setSessionVarOnly],
-		['requires' => ['timezone'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
-		['requires' => ['keyboard'], 'handler' => setphpSessionAndSysCmd, 'cmd' => 'set-keyboard %s'],
+		['requires' => ['updater_auto_check'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['timezone'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'set-timezone %s'],
+		['requires' => ['keyboard'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'set-keyboard %s'],
 		['requires' => ['worker_responsiveness'], 'handler' => function($values) {
 			$_SESSION['worker_responsiveness'] = $values['worker_responsiveness'];
 			if ($values['worker_responsiveness'] == 'Default') {
@@ -176,22 +163,22 @@ function autoConfigSettings() {
 			ctlBt($values['p3bt']);
 			phpSession('write', 'p3bt', $values['p3bt']);
 		}],
-		['requires' => ['led_state'], 'handler' => setphpSession],
-		['requires' => ['ipaddr_timeout'], 'handler' => setphpSession],
-		['requires' => ['eth0chk'], 'handler' => setphpSession],
+		['requires' => ['led_state'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ipaddr_timeout'], 'handler' => 'setSessVarSql'],
+		['requires' => ['eth0chk'], 'handler' => 'setSessVarSql'],
 
 		'Local Display',
-		['requires' => ['localui'], 'handler' => setphpSession],
+		['requires' => ['localui'], 'handler' => 'setSessVarSql'],
 
 		'File Sharing',
-		['requires' => ['fs_smb'], 'handler' => setphpSession],
-		['requires' => ['fs_nfs'], 'handler' => setphpSession],
-		['requires' => ['fs_nfs_access'], 'handler' => setphpSession],
-		['requires' => ['fs_nfs_options'], 'handler' => setphpSession],
-		['requires' => ['lcdup'], 'handler' => setphpSession],
+		['requires' => ['fs_smb'], 'handler' => 'setSessVarSql'],
+		['requires' => ['fs_nfs'], 'handler' => 'setSessVarSql'],
+		['requires' => ['fs_nfs_access'], 'handler' => 'setSessVarSql'],
+		['requires' => ['fs_nfs_options'], 'handler' => 'setSessVarSql'],
+		['requires' => ['lcdup'], 'handler' => 'setSessVarSql'],
 
 		'GPIO Buttons',
-		['requires' => ['gpio_svc'], 'handler' => setphpSession],
+		['requires' => ['gpio_svc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['gpio_button'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			// Buttons: id 1 - 8
@@ -224,7 +211,7 @@ function autoConfigSettings() {
 		}],
 
 		'Security',
-		['requires' => ['shellinabox'], 'handler' => setphpSession],
+		['requires' => ['shellinabox'], 'handler' => 'setSessVarSql'],
 
 		'I2S Device',
 		['requires' => ['i2soverlay'], 'handler' => function($values) {
@@ -238,7 +225,7 @@ function autoConfigSettings() {
 		}],
 
 		'ALSA',
-		['requires' => ['alsa_output_mode'], 'handler' => setphpSession],
+		['requires' => ['alsa_output_mode'], 'handler' => 'setSessVarSql'],
 		['requires' => ['alsa_loopback'], 'handler' => function($values) {
 			phpSession('write', 'alsa_loopback', $values['alsa_loopback']);
 			$values['alsa_loopback'] == 'On' ? sysCmd("sed -i '0,/_audioout__ {/s//_audioout {/' /etc/alsa/conf.d/_sndaloop.conf") :
@@ -246,66 +233,66 @@ function autoConfigSettings() {
 		}],
 
 		'Multiroom',
-		['requires' => ['multiroom_tx'], 'handler' => setphpSession],
-		['requires' => ['multiroom_rx'], 'handler' => setphpSession],
+		['requires' => ['multiroom_tx'], 'handler' => 'setSessVarSql'],
+		['requires' => ['multiroom_rx'], 'handler' => 'setSessVarSql'],
 		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels', 'multiroom_tx_frame_size', 'multiroom_tx_bitrate',
 					    'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port',  'multiroom_rx_jitter_bfr', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_initial_volume'],
          'optionals' => ['multiroom_tx_rtprio', 'multiroom_tx_query_timeout', 'multiroom_rx_frame_size', 'multiroom_rx_rtprio', 'multiroom_rx_alsa_output_mode', 'multiroom_rx_mastervol_opt_in', 'multiroom_initial_volume'],
 			'handler' => function($values, $optionals) {
 				$mergedValues = array_merge($values, $optionals);
-				setDbParams('cfg_multiroom', $mergedValues, 'multiroom_');
+				setCfgTableParams('cfg_multiroom', $mergedValues, 'multiroom_');
 			}, 'custom_write' => function($values) {
-				return getDbParams('cfg_multiroom', $values, 'multiroom_');
+				return getCfgTableParams('cfg_multiroom', $values, 'multiroom_');
 		}],
 
 		'MPD Config',
-		['requires' => ['mixer_type'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['device'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['audio_output_format'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['selective_resample_mode'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['sox_quality'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['sox_multithreading'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['mixer_type'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['device'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['audio_output_format'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['selective_resample_mode'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['sox_quality'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['sox_multithreading'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
 		['requires' => ['sox_precision', 'sox_phase_response', 'sox_passband_end', 'sox_stopband_begin', 'sox_attenuation', 'sox_flags'],
-			'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['dop'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['replaygain'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['replaygain_preamp'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['volume_normalization'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['audio_buffer_size'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['max_output_buffer_size'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['max_playlist_length'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['input_cache'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['log_level'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['stop_dsd_silence'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => ['thesycon_dsd_workaround'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+			'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['dop'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['replaygain'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['replaygain_preamp'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['volume_normalization'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['audio_buffer_size'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['max_output_buffer_size'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['max_playlist_length'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['input_cache'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['log_level'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['stop_dsd_silence'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['thesycon_dsd_workaround'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
 
 		'MPD Options',
-		['requires' => ['autoplay'], 'handler' => setphpSession],
-		['requires' => ['mpdcrossfade'], 'handler' => setphpSession],
-		['requires' => ['crossfeed'], 'handler' => setphpSession],
-		['requires' => ['invert_polarity'], 'handler' => setphpSession],
-		['requires' => ['volume_step_limit'], 'handler' => setphpSession],
-		['requires' => ['volume_mpd_max'], 'handler' => setphpSession],
-		['requires' => ['volume_db_display'], 'handler' => setphpSession],
-		['requires' => ['ashufflesvc'], 'handler' => setphpSession],
-		['requires' => ['ashuffle_mode'], 'handler' => setphpSession],
-		['requires' => ['ashuffle_filter'], 'handler' => setphpSession],
+		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
+		['requires' => ['mpdcrossfade'], 'handler' => 'setSessVarSql'],
+		['requires' => ['crossfeed'], 'handler' => 'setSessVarSql'],
+		['requires' => ['invert_polarity'], 'handler' => 'setSessVarSql'],
+		['requires' => ['volume_step_limit'], 'handler' => 'setSessVarSql'],
+		['requires' => ['volume_mpd_max'], 'handler' => 'setSessVarSql'],
+		['requires' => ['volume_db_display'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ashufflesvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ashuffle_mode'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ashuffle_filter'], 'handler' => 'setSessVarSql'],
 		['requires' => ['mpd_httpd'], 'handler' => function($values) {
 			$cmd = $values['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
 			sysCmd($cmd);
 			phpSession('write', 'mpd_httpd', $values['mpd_httpd']);
 		}],
-		['requires' => ['mpd_httpd_port'], 'handler' => setphpSession],
-		['requires' => ['mpd_httpd_encoder'], 'handler' => setphpSession],
+		['requires' => ['mpd_httpd_port'], 'handler' => 'setSessVarSql'],
+		['requires' => ['mpd_httpd_encoder'], 'handler' => 'setSessVarSql'],
 
 		'CamillaDSP',
-		['requires' => ['camilladsp'], 'handler' => setphpSession],
-		['requires' => ['camilladsp_volume_sync'], 'handler' => setphpSession],
-		['requires' => ['camilladsp_quickconv'], 'handler' => setphpSession],
-		['requires' => ['cdsp_fix_playback'], 'handler' => setphpSession],
+		['requires' => ['camilladsp'], 'handler' => 'setSessVarSql'],
+		['requires' => ['camilladsp_volume_sync'], 'handler' => 'setSessVarSql'],
+		['requires' => ['camilladsp_quickconv'], 'handler' => 'setSessVarSql'],
+		['requires' => ['cdsp_fix_playback'], 'handler' => 'setSessVarSql'],
 
 		'Parametric EQ',
-		['requires' => ['eqfa12p'], 'handler' => setphpSession],
+		['requires' => ['eqfa12p'], 'handler' => 'setSessVarSql'],
 		['requires' => ['eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {
 			require_once __DIR__ . '/eqp.php';
 			$eqp = Eqp12(sqlConnect());
@@ -318,7 +305,7 @@ function autoConfigSettings() {
 		}],
 
 		'Graphic EQ',
-		['requires' => ['alsaequal'], 'handler' => setphpSession],
+		['requires' => ['alsaequal'], 'handler' => 'setSessVarSql'],
 		['requires' => ['eqg_curve_name', 'eqg_curve_values'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			$result = sqlQuery('delete from cfg_eqalsa', $dbh);
@@ -341,35 +328,33 @@ function autoConfigSettings() {
 		}],
 
 		'Renderers',
-		['requires' => ['btsvc'], 'handler' => setphpSession],
-		['requires' => ['rsmafterbt'], 'handler' => setphpSession],
-		['requires' => ['airplaysvc'], 'handler' => setphpSession],
-		['requires' => ['rsmafterapl'], 'handler' => setphpSession],
-		['requires' => ['spotifysvc'], 'handler' => setphpSession],
-		['requires' => ['rsmafterspot'], 'handler' => setphpSession],
-		['requires' => ['slsvc'], 'handler' => setphpSession],
-		['requires' => ['rsmaftersl'], 'handler' => setphpSession],
-		['requires' => ['rbsvc'], 'handler' => setphpSession],
-		['requires' => ['rsmafterrb'], 'handler' => setphpSession],
+		['requires' => ['btsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterbt'], 'handler' => 'setSessVarSql'],
+		['requires' => ['airplaysvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterapl'], 'handler' => 'setSessVarSql'],
+		['requires' => ['spotifysvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
+		['requires' => ['slsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmaftersl'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rbsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterrb'], 'handler' => 'setSessVarSql'],
 
 		'Bluetooth',
-		['requires' => ['pairing_agent'], 'handler' => setphpSession],
-		 // NOTE: The btmulti var was removed in 8.2.3 because the sharing feature became obsolete
-		['requires' => ['btmulti'], 'handler' => setphpSession],
+		['requires' => ['pairing_agent'], 'handler' => 'setSessVarSql'],
 		['requires' => ['bluez_pcm_buffer'], 'handler' => function($values) {
 			phpSession('write', 'bluez_pcm_buffer', $values['bluez_pcm_buffer']);
 			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
 		}],
-		['requires' => ['audioout'], 'handler' => setphpSession],
-		['requires' => ['bt_alsa_output_mode'], 'handler' => setSessionVarOnly],
+		['requires' => ['audioout'], 'handler' => 'setSessVarSql'],
+		['requires' => ['bt_alsa_output_mode'], 'handler' => 'setSessVarOnly'],
 
 		'AirPlay',
 		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption',
 			'airplay_session_timeout', 'airplay_audio_backend_latency_offset_in_seconds', 'airplay_audio_backend_buffer_desired_length_in_seconds'],
 			'handler' => function($values) {
-				setDbParams('cfg_airplay', $values, 'airplay_');
+				setCfgTableParams('cfg_airplay', $values, 'airplay_');
 			}, 'custom_write' => function($values) {
-				return getDbParams('cfg_airplay', $values, 'airplay_');
+				return getCfgTableParams('cfg_airplay', $values, 'airplay_');
 		}],
 
 		'Spotify',
@@ -379,37 +364,37 @@ function autoConfigSettings() {
 			'spotify_normalization_release', 'spotify_normalization_knee', 'spotify_format', 'spotify_dither', 'spotify_volume_range'],
 			'handler' => function($values, $optionals) {
 				$mergedValues = array_merge($values, $optionals);
-				setDbParams('cfg_spotify', $mergedValues, 'spotify_');
+				setCfgTableParams('cfg_spotify', $mergedValues, 'spotify_');
 			}, 'custom_write' => function($values) {
-				return getDbParams('cfg_spotify', $values, 'spotify_');
+				return getCfgTableParams('cfg_spotify', $values, 'spotify_');
 		}],
 
 		'Squeezelite',
 		['requires' => ['squeezelite_PLAYERNAME', 'squeezelite_AUDIODEVICE', 'squeezelite_ALSAPARAMS', 'squeezelite_OUTPUTBUFFERS',
 			'squeezelite_TASKPRIORITY', 'squeezelite_CODECS', 'squeezelite_OTHEROPTIONS'],
 			'handler' => function($values) {
-				setDbParams('cfg_sl', $values, 'squeezelite_');
+				setCfgTableParams('cfg_sl', $values, 'squeezelite_');
 			}, 'custom_write' => function($values) {
-				return getDbParams('cfg_sl', $values, 'squeezelite_');
+				return getCfgTableParams('cfg_sl', $values, 'squeezelite_');
 		}],
 
 		'UPnP/DLNA',
-		['requires' => ['upnpsvc'], 'handler' => setphpSession],
-		['requires' => ['dlnasvc'], 'handler' => setphpSession],
+		['requires' => ['upnpsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['dlnasvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['upnpav'], 'handler' => function($values) {
-			setDbParams('cfg_upnp', $values);
+			setCfgTableParams('cfg_upnp', $values);
 		}, 'custom_write' => function($values) {
-			return getDbParams('cfg_upnp', $values);
+			return getCfgTableParams('cfg_upnp', $values);
 		}],
 		['requires' => ['openhome'], 'handler' => function($values) {
-			setDbParams('cfg_upnp', $values);
+			setCfgTableParams('cfg_upnp', $values);
 		}, 'custom_write' => function($values) {
-			return getDbParams('cfg_upnp', $values);
+			return getCfgTableParams('cfg_upnp', $values);
 		}],
 		['requires' => ['checkcontentformat'], 'handler' => function($values) {
-			setDbParams('cfg_upnp', $values);
+			setCfgTableParams('cfg_upnp', $values);
 		}, 'custom_write' => function($values) {
-			return getDbParams('cfg_upnp', $values);
+			return getCfgTableParams('cfg_upnp', $values);
 		}],
 
 		'Network (eth0)',
@@ -514,19 +499,19 @@ function autoConfigSettings() {
 
 		// Preferences
 		'Appearance',
-		['requires' => ['themename'], 'handler' => setphpSession],
-		['requires' => ['accent_color'], 'handler' => setphpSession],
-		['requires' => ['alphablend'], 'handler' => setphpSession],
-		['requires' => ['adaptive'], 'handler' => setphpSession],
-		['requires' => ['cover_backdrop'], 'handler' => setphpSession],
-		['requires' => ['cover_blur'], 'handler' => setphpSession],
-		['requires' => ['cover_scale'], 'handler' => setphpSession],
-		['requires' => ['font_size'], 'handler' => setphpSession],
+		['requires' => ['themename'], 'handler' => 'setSessVarSql'],
+		['requires' => ['accent_color'], 'handler' => 'setSessVarSql'],
+		['requires' => ['alphablend'], 'handler' => 'setSessVarSql'],
+		['requires' => ['adaptive'], 'handler' => 'setSessVarSql'],
+		['requires' => ['cover_backdrop'], 'handler' => 'setSessVarSql'],
+		['requires' => ['cover_blur'], 'handler' => 'setSessVarSql'],
+		['requires' => ['cover_scale'], 'handler' => 'setSessVarSql'],
+		['requires' => ['font_size'], 'handler' => 'setSessVarSql'],
 
 		'Playback',
-		['requires' => ['playlist_art'], 'handler' => setphpSession],
-		['requires' => ['extra_tags'], 'handler' => setphpSession],
-		['requires' => ['playhist'], 'handler' => setphpSession],
+		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
+		['requires' => ['extra_tags'], 'handler' => 'setSessVarSql'],
+		['requires' => ['playhist'], 'handler' => 'setSessVarSql'],
 		['requires' => ['show_npicon'], 'handler' => function($values) {
 			if ($values['show_npicon'] == 'Yes') {
 				$value = 'Waveform';
@@ -537,21 +522,21 @@ function autoConfigSettings() {
 			}
 			phpSession('write', 'show_npicon', $value);
 		}],
-		['requires' => ['show_cvpb'], 'handler' => setphpSession],
+		['requires' => ['show_cvpb'], 'handler' => 'setSessVarSql'],
 
 		'Library',
-		['requires' => ['library_onetouch_album'], 'handler' => setphpSession],
-		['requires' => ['library_onetouch_radio'], 'handler' => setphpSession],
-		['requires' => ['library_onetouch_pl'], 'handler' => setphpSession],
-		['requires' => ['library_albumview_sort'], 'handler' => setphpSession],
-		['requires' => ['library_tagview_sort'], 'handler' => setphpSession],
-		['requires' => ['library_track_play'], 'handler' => setphpSession],
-		['requires' => ['library_recently_added'], 'handler' => setphpSession],
-		['requires' => ['library_encoded_at'], 'handler' => setphpSession],
-		['requires' => ['library_covsearchpri'], 'handler' => setphpSession],
-		['requires' => ['library_thmgen_scan'], 'handler' => setphpSession],
-		['requires' => ['library_hiresthm'], 'handler' => setphpSession],
-		['requires' => ['library_thumbnail_columns'], 'handler' => setphpSession],
+		['requires' => ['library_onetouch_album'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_onetouch_radio'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_onetouch_pl'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_albumview_sort'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_tagview_sort'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_track_play'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_recently_added'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_encoded_at'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_covsearchpri'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_thmgen_scan'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_hiresthm'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_thumbnail_columns'], 'handler' => 'setSessVarSql'],
 
 		'Library (Advanced)',
 		['requires' => ['library_tagview_genre'], 'handler' => function($values) {
@@ -559,22 +544,22 @@ function autoConfigSettings() {
 				($values['library_tagview_genre'] == 'Composers' ? 'Composer' : $values['library_tagview_genre']);
 			phpSession('write', 'library_tagview_genre', $value);
 		}],
-		//['requires' => ['library_tagview_genre'], 'handler' => setphpSession],
-		['requires' => ['library_tagview_artist'], 'handler' => setphpSession],
-		['requires' => ['library_misc_options'], 'handler' => setphpSession],
-		['requires' => ['library_ignore_articles'], 'handler' => setphpSession],
-		['requires' => ['library_show_genres'], 'handler' => setphpSession],
-		['requires' => ['library_tagview_covers'], 'handler' => setphpSession],
-		['requires' => ['library_ellipsis_limited_text'], 'handler' => setphpSession],
-		['requires' => ['library_utf8rep'], 'handler' => setphpSession],
+		//['requires' => ['library_tagview_genre'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_tagview_artist'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_misc_options'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_ignore_articles'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_show_genres'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_tagview_covers'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_ellipsis_limited_text'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_utf8rep'], 'handler' => 'setSessVarSql'],
 
 		'CoverView',
-		['requires' => ['scnsaver_timeout'], 'handler' => setphpSession], // Timed display
-		['requires' => ['auto_coverview'], 'handler' => setphpSession], // Automatic display
-		['requires' => ['scnsaver_style'], 'handler' => setphpSession],
-		['requires' => ['scnsaver_mode'], 'handler' => setphpSession],
-		['requires' => ['scnsaver_layout'], 'handler' => setphpSession],
-		['requires' => ['scnsaver_xmeta'], 'handler' => setphpSession],
+		['requires' => ['scnsaver_timeout'], 'handler' => 'setSessVarSql'],
+		['requires' => ['auto_coverview'], 'handler' => 'setSessVarSql'],
+		['requires' => ['scnsaver_style'], 'handler' => 'setSessVarSql'],
+		['requires' => ['scnsaver_mode'], 'handler' => 'setSessVarSql'],
+		['requires' => ['scnsaver_layout'], 'handler' => 'setSessVarSql'],
+		['requires' => ['scnsaver_xmeta'], 'handler' => 'setSessVarSql'],
 
 		'Internal',
 		['requires' => ['first_use_help'], 'handler' => function($values) {
@@ -585,9 +570,9 @@ function autoConfigSettings() {
 		}],
 
 		'Sources',
-		['requires' => ['fs_mountmon'], 'handler' => setSessionVarOnly],
-		['requires' => ['usb_auto_updatedb'], 'handler' => setphpSession],
-		['requires' => ['cuefiles_ignore'], 'handler' => setphpSession],
+		['requires' => ['fs_mountmon'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['usb_auto_updatedb'], 'handler' => 'setSessVarSql'],
+		['requires' => ['cuefiles_ignore'], 'handler' => 'setSessVarSql'],
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...
 		['requires' => ['source_name', 'source_type', 'source_address', 'source_remotedir', 'source_username', 'source_password',
@@ -627,9 +612,9 @@ function autoConfigSettings() {
 	return $configurationHandlers;
 }
 
-/**
- * Import auto-configure settings
- */
+//
+// Import and apply settings from auto-config file
+//
 function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure initiated');
 
@@ -639,7 +624,7 @@ function autoConfig($cfgfile) {
 		$available_configs = array_keys($autocfg);
 
 		autoCfgLog('autocfg: Configuration file parsed');
-		$configurationHandlers = autoConfigSettings(); // contains supported configuration items
+		$configurationHandlers = autoConfigSettings();
 
 		$section = '';
 		foreach ($configurationHandlers as $config) {
@@ -718,30 +703,27 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure complete');
 }
 
-/**
- * Generates an autoconfig file as string based on the current settings
- */
+//
+// Generates an auto-config file containing the current settings
+//
 function autoConfigExtract($currentSettings) {
 	$autoConfigString = <<<EOT
-	; #########################################
-	; Copy this file to /boot/moodecfg.ini
-	; It will be processed at startup and the
-	; system will automatically Restart.
+	; #############################################
+	; Copy this file to /boot/firmware/moodecfg.ini
 	;
-	; All param = "value" pairs must be present.
-	; Set wlanssid = blank to start AP mode.
-	; Example: wlanssid = ""
+	; It will be applied during startup followed by
+	; an automatic reboot to finalize the settings.
 	;
-	; Moode Release : %s
-	; Create date	: %s
+	; Created: %s
+	; Release: %s
 	;
-	; ##########################################
+	; #############################################
 
 	EOT;
 
-	$autoConfigString = sprintf($autoConfigString, getMoodeRel('verbose'), date('Y-m-d H:i:s'));
+	$autoConfigString = sprintf($autoConfigString, date('Y-m-d H:i:s'), getMoodeRel('verbose'));
 
-	$configurationHandlers = autoConfigSettings(); // Contains supported configuration items
+	$configurationHandlers = autoConfigSettings();
 	foreach ($configurationHandlers as &$config) {
 		$values = array();
 		// Print new section header

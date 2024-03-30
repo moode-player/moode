@@ -41,7 +41,7 @@ if (session_start() === false) {
     session_write_close();
 }
 
-// Load session+sql params
+// Load sql/session params
 $result = sqlRead('cfg_system', sqlConnect());
 $currentSettings = array();
 foreach ($result as $row) {
