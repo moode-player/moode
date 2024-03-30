@@ -85,6 +85,10 @@
 					$_i2s[i2sdevice]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_device" value="novalue" $_i2sdevice_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-i2sdevice" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-i2sdevice" class="config-help-info">
+					After setting a Named device or DT overlay, reboot and then select the devide from the Output device list.
+				</span>
 			</div>
 			<label class="control-label" for="i2soverlay">or DT overlay</label>
 			<div class="controls">
