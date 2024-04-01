@@ -531,10 +531,9 @@ workerLog('worker: DLNA file sharing: ' . $status);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- 3rd party components');
+workerLog('worker: -- Special configs');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
-// Reconfigure certain 3rd party components
 // RoonBridge
 // Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
 if (file_exists('/opt/RoonBridge/start.sh') === true) {
@@ -542,30 +541,15 @@ if (file_exists('/opt/RoonBridge/start.sh') === true) {
 	if (sysCmd('systemctl is-enabled roonbridge')[0] == 'enabled') {
 		sysCmd('systemctl disable roonbridge');
 		sysCmd('systemctl stop roonbridge');
-		workerLog('worker: RoonBridge:      installed');
-		workerLog('worker: RoonBridge:      systemd unit set to disabled');
+		$msg = 'installed, systemd unit set to disabled';
 	}
 } else {
 	$_SESSION['roonbridge_installed'] = 'no';
-	workerLog('worker: RoonBridge:      not installed');
+	$msg = 'not installed';
 }
-// Allo Boss 2 OLED
-// Their installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
-if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
-	sleep(1); // Allow rc.local script time to exit after starting worker.php
-	sysCmd('sed -i /boss2/d /etc/rc.local');
-	workerLog('worker: Allo Boss2 OLED: detected a manually installed script');
-	workerLog('worker: Allo Boss2 OLED: rc.local lines removed');
-}
-workerLog('worker: Allo Boss2 OLED: pre-installed script ok');
+workerLog('worker: RoonBridge:       ' . $msg);
 
-//----------------------------------------------------------------------------//
-workerLog('worker: --');
-workerLog('worker: -- I2S devices (special setup)');
-workerLog('worker: --');
-//----------------------------------------------------------------------------//
-
-// Configure Allo Piano 2.1
+// Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$dualMode = sysCmd('/var/www/util/sysutil.sh get-piano-dualmode');
 	$subMode = sysCmd('/var/www/util/sysutil.sh get-piano-submode');
@@ -575,57 +559,45 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	} else {
 		$outputMode = $subMode[0];
 	}
-	workerLog('worker: Allo Piano 2.1:   mode set to ' . $outputMode);
+	$msg = 'mode set to ' . $outputMode;
 
 	// Workaround: Send brief inaudible PCM to one of the channels to initialize volume
 	sysCmd('amixer -M -c 0 sset "Master" 0');
 	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
 	workerLog('worker: Allo Piano 2.1:   volume initialized');
 } else {
-	workerLog('worker: Allo Piano 2.1:   not detected');
+	$msg = 'not detected';
 }
+workerLog('worker: Allo Piano 2.1:   ' . $msg);
 
-// Start Allo Boss2 OLED display
+// Allo Boss 2 OLED
+// The Allo installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
+if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
+	sleep(1); // Allow rc.local script time to exit after starting worker.php
+	sysCmd('sed -i /boss2/d /etc/rc.local');
+	$scriptMsg = 'manually installed script, rc.local updated';
+} else {
+	$scriptMsg = 'pre-installed script ok';
+}
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
 	sysCmd('systemctl start boss2oled');
-	workerLog('worker: Allo Boss 2:      OLED started');
+	$msg = 'OLED started, ' . $scriptMsg;
 } else {
-	workerLog('worker: Allo Boss 2:      not detected');
+	$msg = 'not detected, ' . $scriptMsg;
 }
+workerLog('worker: Allo Boss 2:      ' . $msg);
 
 // Ensure audio output is unmuted for these devices
 if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 	sysCmd('/var/www/util/sysutil.sh unmute-pi-ampplus');
-	workerLog('worker: IQaudIO AMP+:     unmuted');
+	$msg = 'IQaudIO AMP+:     unmuted';
 } else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
 	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
-	workerLog('worker: IQaudIO DigiAMP+: unmuted');
+	$msg = 'IQaudIO DigiAMP+: unmuted';
 } else {
-	workerLog('worker: IQaudIO AMP*:     not detected');
+	$msg = 'IQaudIO AMP*:     not detected';
 }
-
-//----------------------------------------------------------------------------//
-workerLog('worker: --');
-workerLog('worker: -- Renderer check');
-workerLog('worker: --');
-//----------------------------------------------------------------------------//
-// Renderers
-// If any flags are 1 then a reboot/poweroff may have occured while the renderer was active
-// In this case ALSA or CamillaDSP volume may be at 100% so let's reset volume to 0.
-$result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'aplactive', 'spotactive',
-	'slactive', 'rbactive', 'inpactive')", $dbh);
-if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['value'] == '1' ||
-	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1') {
-	// Set Knob volume to 0 for vol.sh downstream
-	phpSession('write', 'volknob', '0');
-	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
-		OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
-	workerLog('worker: Active flags: at least one true');
-	workerLog('worker: Reset flags:  all reset to false');
-	workerLog('worker: MPD volume:   set to 0');
-}
-workerLog('worker: Active flags: all false');
-workerLog('worker: Reset flags:  skipped');
+workerLog('worker: ' . $msg);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -1183,6 +1155,24 @@ workerLog('worker: Current view:      reset to Playback');
 
 // Reset in-place update flag
 phpSession('write', 'inplace_upd_applied', '0');
+
+// Reset renderer flags
+// If any flags are 1 then a reboot/poweroff may have occured while the renderer was active
+// In this case ALSA or CamillaDSP volume may be at 100% so let's reset volume to 0.
+$result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'aplactive', 'spotactive',
+	'slactive', 'rbactive', 'inpactive')", $dbh);
+if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['value'] == '1' ||
+	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1') {
+	// Set Knob volume to 0 for vol.sh downstream
+	phpSession('write', 'volknob', '0');
+	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
+		OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
+	workerLog('worker: Active flags:      at least one true');
+	workerLog('worker: Reset flags:       all reset to false');
+	workerLog('worker: MPD volume:        set to 0');
+}
+workerLog('worker: Active flags:      all false');
+workerLog('worker: Reset flags:       skipped');
 
 //----------------------------------------------------------------------------//
 // Initialize some session vars
@@ -2256,6 +2246,7 @@ function runQueuedJob() {
 		// snd-config jobs
 		case 'i2sdevice':
 			cfgI2SDevice();
+			updMpdConf($_SESSION['i2sdevice']);
 			break;
 		case 'alsavolume_max':
 			setALSAVolTo0dB($_SESSION['w_queueargs']);
