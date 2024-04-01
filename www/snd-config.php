@@ -111,6 +111,7 @@ if (isset($_POST['update_i2s_overlay'])) {
 // Driver options
 if (isset($_POST['update_drvoptions'])) {
 	if (isset($_POST['drvoptions']) && $_POST['drvoptions'] != 'none') {
+		$i2sReboot = true;
 		$result = sqlQuery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 		$driver = explode(',', $result[0]['driver']);
 		$driverUpd = $_POST['drvoptions'] == 'Enabled' ? $driver[0] . ',' . $result[0]['drvoptions'] : $driver[0];
@@ -356,6 +357,8 @@ $_device_error = $deviceNames[$_SESSION['cardnum']] == ALSA_EMPTY_CARD ? 'Device
 
 // Volume type
 // Hardware, Software, Fixed (none), CamillaDSP (null)
+$_software_and_dsd_warning = $cfgMPD['mixer_type'] == 'software' ?
+	'<br><b>WARNING:</b> DSD format will output at 0dB when using Software volume.' : '';
 if ($_SESSION['alsavolume'] != 'none') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " .
 		($cfgMPD['mixer_type'] == 'hardware' ? "selected" : "") . ">Hardware</option>\n";
