@@ -43,25 +43,28 @@ function getAlsaMixerName($deviceName) {
 			$deviceName == 'Allo Piano 2.1 Hi-Fi DAC') {
 			$mixerName = 'Master';
 		} else {
-			// Parse mixer name from amixer output
+			// Parse mixer names from amixer output
 			$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
-			if ($result[0] == '') {
+			if (empty($result)) {
 				// Mixer name not found
 				$mixerName = 'none';
 			} else {
-				// Use default I2S mixer name
-				$mixerName = ALSA_DEFAULT_MIXER_NAME;
+				if (in_array('(' . ALSA_DEFAULT_MIXER_NAME_I2S . ')', $result)) {
+					$mixerName = ALSA_DEFAULT_MIXER_NAME_I2S;
+				} else {
+					$mixerName = ALSA_DEFAULT_MIXER_NAME_I2S;
+				}
 			}
 		}
 	} else {
 		// USB devices, Pi HDMI 1/2 or Headphone jack
-		// Parse mixer name from amixer output
+		// Parse mixer names from amixer output
 		$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
-		if ($result[0] == '') {
+		if (empty($result)) {
 			// Mixer name not found
 			$mixerName = 'none';
 		} else {
-			// Mixer name found, strip off delimiters added by sysutil.sh get-mixername
+			// Use first if multiple returned, strip off delimiters added by sysutil.sh get-mixername
 			$mixerName = ltrim($result[0], '(');
 			$mixerName = rtrim($mixerName, ')');
 		}
@@ -109,9 +112,13 @@ function getAlsaDeviceNames() {
 		} else if ($cardID == ALSA_DUMMY_DEVICE) {
 			$deviceNames[$i] = $cardID;
 		} else {
+			if ($cardID == ALSA_VC4HDMI_SINGLE_DEVICE) {
+				$cardID .= '0';
+			}
 			$result = sqlRead('cfg_audiodev', $dbh, $cardID);
 			if ($result === true) {
 				// Not in table, check for I2S device
+				// DEBUG: Assumes USB devices not in the table are listed after the I2S device in the card list
 				$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 				if ($result === true) {
 					// Not in table, return aplay device name
@@ -125,7 +132,7 @@ function getAlsaDeviceNames() {
 				$deviceNames[$i] = $result[0]['alt_name'];
 			}
 		}
-		//workerLog('getAlsaDeviceNames(): ' . $i . ':' . $deviceNames[$i]);
+		//workerLog('getAlsaDeviceNames(): ' . $i . ': cardid=' . $cardID . ', name=' . $deviceNames[$i]);
 	}
 
 	return $deviceNames;
@@ -145,6 +152,7 @@ function getAlsaCardNumForDevice($deviceName) {
 		$cardNum = getArrayIndex($deviceName, $deviceNames);
 	}
 
+	workerLog('getAlsaCardNumForDevice(): card=' . $cardNum . ', device=' . $deviceName);
 	return $cardNum;
 }
 
