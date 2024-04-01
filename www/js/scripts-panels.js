@@ -690,7 +690,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (plName) {
 			if (containsBaseFolderName(plName)) {
-				notify('playlist_name_error');
+				notify('playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name');
 			} else {
                 notify('saving_queue');
                 $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + plName, function() {
@@ -712,7 +712,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (favoritesName) {
 			if (containsBaseFolderName(favoritesName)) {
-				notify('playlist_name_error');
+				notify('playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name');
 			} else {
                 notify('setting_favorites_name');
                 $.get('command/playlist.php?cmd=set_favorites_name&name=' + favoritesName, function(){
