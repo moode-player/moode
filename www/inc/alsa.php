@@ -118,7 +118,7 @@ function getAlsaDeviceNames() {
 			$result = sqlRead('cfg_audiodev', $dbh, $cardID);
 			if ($result === true) {
 				// Not in table, check for I2S device
-				// DEBUG: Assumes USB devices not in the table are listed after the I2S device in the card list
+				// DEBUG: Assumes ALSA always assigns USB devices higher card numbers than the I2S device
 				$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 				if ($result === true) {
 					// Not in table, return aplay device name
@@ -152,7 +152,7 @@ function getAlsaCardNumForDevice($deviceName) {
 		$cardNum = getArrayIndex($deviceName, $deviceNames);
 	}
 
-	workerLog('getAlsaCardNumForDevice(): card=' . $cardNum . ', device=' . $deviceName);
+	//workerLog('getAlsaCardNumForDevice(): card=' . $cardNum . ', device=' . $deviceName);
 	return $cardNum;
 }
 
