@@ -27,301 +27,7 @@ require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
-// Scan the network for hosts with open port 6600 (MPD) and return list of IP addresses
-function scanForMPDHosts($retryCount = 2) {
-    $thisIpAddr = getThisIpAddr();
-	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
-	$port = '6600';
-
-	for ($i = 0; $i < $retryCount; $i++) {
-        sysCmd('nmap -Pn -p' . $port . ' --open ' . $subnet . '.0/24 -oG /tmp/mpd_nmap.scan >/dev/null');
-		$ipAddresses = sysCmd('cat /tmp/mpd_nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
-		if (!empty($ipAddresses)) {
-			break;
-		}
-	}
-
-	return $ipAddresses;
-}
-
-// Return MPD socket or exit script
-function getMpdSock() {
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		debugLog('getMpdSock(): Connection to MPD failed');
-		exit(0);
-	} else {
-		return $sock;
-	}
-}
-
-// Low-level MPD socket routines
-function openMpdSock($host, $port) {
-	$retryCount = 6;
-	for ($i = 0; $i < $retryCount; $i++) {
-		if (false === ($sock = @stream_socket_client('tcp://' . $host . ':' . $port, $errorno, $errorstr, 30))) {
-			debugLog('openMpdSock(): Error: connection failed (' . ($i + 1) . ') ' . $errorno . ', ' . $errorstr);
-		} else {
-			$resp = readMpdResp($sock);
-			break;
-		}
-
-		usleep(500000); // .5 secs
-	}
-
-	return $sock;
-}
-function readMpdResp($sock) {
-	$resp = '';
-
-	while (false !== ($str = fgets($sock, 1024)) && !feof($sock)) {
-		if (strncmp(MPD_RESPONSE_OK, $str, strlen(MPD_RESPONSE_OK)) == 0) {
-			$resp = $resp == '' ? $str : $resp;
-			return $resp;
-		}
-
-		if (strncmp(MPD_RESPONSE_ERR, $str, strlen(MPD_RESPONSE_ERR)) == 0) {
-			$msg = 'readMpdResp(): Error: response $str[0]=(' . explode("\n", $str)[0] . ')';
-			debugLog($msg);
-			return $msg;
-		}
-
-		$resp .= $str;
-	}
-
-	if (!feof($sock)) {
-		// Socket timed out or PHP/MPD connection failure
-		debugLog('readMpdResp(): Error: fgets failure (' . explode("\n", $resp)[0] . ')');
-	}
-
-	return $resp;
-}
-function closeMpdSock($sock) {
-	sendMpdCmd($sock, 'close');
-	fclose($sock);
-}
-
-// Send command(s) to MPD
-function sendMpdCmd($sock, $cmd) {
-	fputs($sock, $cmd . "\n");
-}
-function chainMpdCmds($sock, $cmds) {
-    sendMpdCmd($sock, 'command_list_begin');
-    foreach ($cmds as $cmd) {
-        sendMpdCmd($sock, $cmd);
-    }
-    sendMpdCmd($sock, 'command_list_end');
-    $resp = readMpdResp($sock);
-}
-
-// Get MPD status and stats
-function getMpdStatus($sock) {
-	sendMpdCmd($sock, 'status');
-	$resp = readMpdResp($sock);
-	return formatMpdStatus($resp);
-}
-function getMpdStats($sock) {
-	sendMpdCmd($sock, 'stats');
-	$resp = readMpdResp($sock);
-	return parseDelimFile($resp, ': ');
-}
-
-function getCurrentSong($sock) {
-	sendMpdCmd($sock, 'currentsong');
-	$resp = readMpdResp($sock);
-
-	if (is_null($resp)) {
-		debugLog('getCurrentSong(): Returned null');
-		return null;
-	} else {
-		$array = array();
-		$line = strtok($resp, "\n");
-		$artistCount = 0;
-
-		while ($line) {
-			list ($element, $value) = explode(': ', $line, 2);
-
-			// NOTE: Save for future use
-			/*if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
-				// These tags can have multiple occurrences so let's accumulate them as a delimited string
-				$array[$element] .= $value . '; ';
-			} else {
-				// All other tags
-				$array[$element] = $value;
-			}*/
-
-			if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
-				// Return only the first of multiple occurrences of the following tags
-				if (!isset($array[$element])) {
-					$array[$element] = $value;
-				}
-				// Tally the number of "artists"
-				if ($element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
-					$artistCount++;
-				}
-			} else {
-				// All other tags
-				$array[$element] = $value;
-			}
-
-			$line = strtok("\n");
-		}
-
-		// NOTE: Save for future use
-		// Strip off trailing delimiter
-		/*foreach($array as $key => $value) {
-			if ($key == 'Genre' || $key == 'Artist' || $key == 'Conductor' || $key == 'Performer') {
-				$array[$key] = rtrim($array[$key], '; ');
-			}
-		}*/
-
-		$array['artist_count'] = $artistCount;
-		return $array;
-	}
-}
-
-// Format MPD status output
-function formatMpdStatus($resp) {
-	if (is_null($resp)) {
-		debugLog('formatMpdStatus(): Returned null');
-		return null;
-	} else {
-		$status = array();
-		$line = strtok($resp, "\n");
-
-		while ($line) {
-			list($element, $value) = explode(': ', $line, 2);
-			$status[$element] = $value;
-			$line = strtok("\n");
-		}
-
-		// Elapsed time
-		// Radio - time: 293:0, elapsed: 292.501, duration not present
-		// Song  - time: 4:391, elapsed: 4.156, duration: 391.466
-		// Podcast same as song.
-		// If state is stop then time, elapsed and duration are not present
-		// Time x:y where x = elapsed ss, y = duration ss
-		$time = explode(':', $status['time']);
-
-		if ($status['state'] == 'stop') {
-			$percent = '0';
-			$status['elapsed'] = '0';
-			$status['time'] = '0';
-		} else if (!isset($status['duration']) || $status['duration'] == 0) { // @ohinckel https: //github.com/moode-player/moode/pull/13
-			// Radio, UPnP
-			$percent = '0';
-			$status['elapsed'] = $time[0];
-			$status['time'] = $time[1];
-		} else {
-			// Tracks, Podcast
-			if ($time[0] != '0') {
-				$percent = round(($time[0] * 100) / $time[1]);
-				$status['elapsed'] = $time[0];
-				$status['time'] = $time[1];
-			} else {
-				$percent = '0';
-				$status['elapsed'] = $time[0];
-				$status['time'] = $time[1];
-			}
-		}
-
-		$status['song_percent'] = $percent;
-		$status['elapsed'] = $time[0];
-		$status['time'] = $time[1];
-
-		// dsd64:2, 44100:24:2
-	 	$audioFormat = explode(':', $status['audio']);
-
-        // Format
-        $status['audio_format'] = strpos($audioFormat[0], 'dsd') !== false ? strtoupper($audioFormat[0]) : 'PCM';
-
-        // Sample rate
-	 	$status['audio_sample_rate'] = formatRate($audioFormat[0]);
-
-		// Bit depth
-		if ($status['audio_format'] != 'PCM') {
-			// DSD
-            $status['audio_sample_depth'] = '1';
-		} else {
-			// Workaround for AAC files that show "f" for bit depth, assume decoded to 24 bit
-		 	$status['audio_sample_depth'] = $audioFormat[1] == 'f' ? '24' : $audioFormat[1];
-		}
-
-	 	// Channels
-	 	if ($status['audio_format'] != 'PCM') {
-            // DSD
-	 		$status['audio_channels'] = formatChannels($audioFormat[1]);
-	 	} else {
-		 	$status['audio_channels'] = formatChannels($audioFormat[2]);
-		}
-
-		// Bitrate
-		if (!isset($status['bitrate']) || trim($status['bitrate']) == '') {
-			$status['bitrate'] = '0 bps';
-		} else {
-			if ($status['bitrate'] == '0') {
-				$status['bitrate'] = '';
-				// For aiff, wav files and some radio stations ex: Czech Radio Classic
-			 	//$status['bitrate'] = number_format((( (float)$audioFormat[0] * (float)$status['audio_sample_depth'] * (float)$audioFormat[2] ) / 1000000), 3, '.', '');
-			} else {
-			 	$status['bitrate'] = strlen($status['bitrate']) < 4 ? $status['bitrate'] : substr($status['bitrate'], 0, 1) . '.' . substr($status['bitrate'], 1, 3) ;
-			 	$status['bitrate'] .= strpos($status['bitrate'], '.') === false ? ' kbps' : ' Mbps';
-			}
-		}
-	}
-	return $status;
-}
-
-function formatMpdQueryResults($resp) {
-	if (is_null($resp)) {
-		debugLog('formatMpdQueryResults(): Returned null');
-		return null;
-	} else {
-		$array = array();
-		$line = strtok($resp,"\n");
-		$idx = -1;
-
-		while ($line) {
-			list ($element, $value) = explode(': ', $line, 2);
-
-			if ($element == 'file') {
-				$idx++;
-				$array[$idx]['file'] = $value;
-				$array[$idx]['fileext'] = getFileExt($value);
-			} else if ($element == 'directory') {
-				$idx++;
-				$dirIdx++; // Save directory index for further processing
-				$array[$idx]['directory'] = $value;
-				$coverHash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
-				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $coverHash  . '_sm.jpg') ? $coverHash : '';
-			} else if ($element == 'playlist') {
-				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
-					$idx++;
-					$array[$idx]['file'] = $value;
-					$array[$idx]['fileext'] = getFileExt($value);
-				} else {
-					$idx++;
-					$array[$idx]['playlist'] = $value;
-				}
-			} else {
-				$array[$idx][$element] = htmlspecialchars($value);
-				$array[$idx]['TimeMMSS'] = formatSongTime($array[$idx]['Time']);
-			}
-
-			$line = strtok("\n");
-		}
-
-		// Put dirs on top
-		if (isset($dirIdx) && isset($array[0]['file']) ) {
-			$files = array_slice($array, 0, -$dirIdx);
-            $dirs = array_slice($array, -$dirIdx);
-            $array = array_merge($dirs, $files);
-		}
-	}
-
-	return $array;
-}
-
-// NOTE: Session vars and cfg_mpd updates are made upstream before this function is called.
+// NOTE: Session vars and cfg_mpd updates should be made upstream before this function is called.
 function updMpdConf() {
     $data  = "#########################################\n";
     $data .= "# This file is managed by moOde          \n";
@@ -528,6 +234,24 @@ function updMpdConf() {
 	updDspAndBtInConfs($cardNum, $_SESSION['alsa_output_mode']);
 }
 
+// Change to different MPD mixer type
+function changeMPDMixer($mixer) {
+    workerLog('changeMPDMixer(): mixer=' . $mixer);
+	$mixerType = $mixer == 'camilladsp' ? 'null' : $mixer;
+
+	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
+	phpSession('write', 'mpdmixer', $mixerType);
+
+	if ($_SESSION['alsavolume'] != 'none' && $mixerType != 'hardware') {
+        setALSAVolTo0dB($_SESSION['alsavolume_max']);
+	}
+    if ($_SESSION['camilladsp'] != 'off' && $mixer != 'camilladsp') {
+        CamillaDSP::setCDSPVolTo0dB();
+    }
+
+	updMpdConf();
+}
+
 // Ensure valid mpd output config
 function configMpdOutput() {
     $mpdOutput = $_SESSION['audioout'] == 'Bluetooth' ? ALSA_BLUETOOTH : ALSA_DEFAULT;
@@ -571,22 +295,297 @@ function getMpdOutputs($sock) {
 	return $array;
 }
 
-// Change to different MPD mixer type
-function changeMPDMixer($mixer) {
-    workerLog('changeMPDMixer(): mixer=' . $mixer);
-	$mixerType = $mixer == 'camilladsp' ? 'null' : $mixer;
+// Scan the network for hosts with open port 6600 (MPD) and return list of IP addresses
+function scanForMPDHosts($retryCount = 2) {
+    $thisIpAddr = getThisIpAddr();
+	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
+	$port = '6600';
 
-	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
-	phpSession('write', 'mpdmixer', $mixerType);
-
-	if ($_SESSION['alsavolume'] != 'none' && $mixerType != 'hardware') {
-        setALSAVolTo0dB($_SESSION['alsavolume_max']);
+	for ($i = 0; $i < $retryCount; $i++) {
+        sysCmd('nmap -Pn -p' . $port . ' --open ' . $subnet . '.0/24 -oG /tmp/mpd_nmap.scan >/dev/null');
+		$ipAddresses = sysCmd('cat /tmp/mpd_nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+		if (!empty($ipAddresses)) {
+			break;
+		}
 	}
-    if ($_SESSION['camilladsp'] != 'off' && $mixer != 'camilladsp') {
-        CamillaDSP::setCDSPVolTo0dB();
-    }
 
-	updMpdConf();
+	return $ipAddresses;
+}
+
+// Low-level MPD socket routines
+function getMpdSock() {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		debugLog('getMpdSock(): Connection to MPD failed');
+		exit(0);
+	} else {
+		return $sock;
+	}
+}
+function openMpdSock($host, $port) {
+	$retryCount = 6;
+	for ($i = 0; $i < $retryCount; $i++) {
+		if (false === ($sock = @stream_socket_client('tcp://' . $host . ':' . $port, $errorno, $errorstr, 30))) {
+			debugLog('openMpdSock(): Error: connection failed (' . ($i + 1) . ') ' . $errorno . ', ' . $errorstr);
+		} else {
+			$resp = readMpdResp($sock);
+			break;
+		}
+
+		usleep(500000); // .5 secs
+	}
+
+	return $sock;
+}
+function readMpdResp($sock) {
+	$resp = '';
+
+	while (false !== ($str = fgets($sock, 1024)) && !feof($sock)) {
+		if (strncmp(MPD_RESPONSE_OK, $str, strlen(MPD_RESPONSE_OK)) == 0) {
+			$resp = $resp == '' ? $str : $resp;
+			return $resp;
+		}
+
+		if (strncmp(MPD_RESPONSE_ERR, $str, strlen(MPD_RESPONSE_ERR)) == 0) {
+			$msg = 'readMpdResp(): Error: response $str[0]=(' . explode("\n", $str)[0] . ')';
+			debugLog($msg);
+			return $msg;
+		}
+
+		$resp .= $str;
+	}
+
+	if (!feof($sock)) {
+		// Socket timed out or PHP/MPD connection failure
+		debugLog('readMpdResp(): Error: fgets failure (' . explode("\n", $resp)[0] . ')');
+	}
+
+	return $resp;
+}
+function closeMpdSock($sock) {
+	sendMpdCmd($sock, 'close');
+	fclose($sock);
+}
+
+// Send command(s) to MPD
+function sendMpdCmd($sock, $cmd) {
+	fputs($sock, $cmd . "\n");
+}
+function chainMpdCmds($sock, $cmds) {
+    sendMpdCmd($sock, 'command_list_begin');
+    foreach ($cmds as $cmd) {
+        sendMpdCmd($sock, $cmd);
+    }
+    sendMpdCmd($sock, 'command_list_end');
+    $resp = readMpdResp($sock);
+}
+
+// Get MPD status and stats
+function getMpdStatus($sock) {
+	sendMpdCmd($sock, 'status');
+	$resp = readMpdResp($sock);
+	return formatMpdStatus($resp);
+}
+function getMpdStats($sock) {
+	sendMpdCmd($sock, 'stats');
+	$resp = readMpdResp($sock);
+	return parseDelimFile($resp, ': ');
+}
+
+// Get MPD currentsong data
+function getCurrentSong($sock) {
+	sendMpdCmd($sock, 'currentsong');
+	$resp = readMpdResp($sock);
+
+	if (is_null($resp)) {
+		debugLog('getCurrentSong(): Returned null');
+		return null;
+	} else {
+		$array = array();
+		$line = strtok($resp, "\n");
+		$artistCount = 0;
+
+		while ($line) {
+			list ($element, $value) = explode(': ', $line, 2);
+
+			// NOTE: Save for future use
+			/*if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+				// These tags can have multiple occurrences so let's accumulate them as a delimited string
+				$array[$element] .= $value . '; ';
+			} else {
+				// All other tags
+				$array[$element] = $value;
+			}*/
+
+			if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
+				// Return only the first of multiple occurrences of the following tags
+				if (!isset($array[$element])) {
+					$array[$element] = $value;
+				}
+				// Tally the number of "artists"
+				if ($element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+					$artistCount++;
+				}
+			} else {
+				// All other tags
+				$array[$element] = $value;
+			}
+
+			$line = strtok("\n");
+		}
+
+		// NOTE: Save for future use
+		// Strip off trailing delimiter
+		/*foreach($array as $key => $value) {
+			if ($key == 'Genre' || $key == 'Artist' || $key == 'Conductor' || $key == 'Performer') {
+				$array[$key] = rtrim($array[$key], '; ');
+			}
+		}*/
+
+		$array['artist_count'] = $artistCount;
+		return $array;
+	}
+}
+
+// Format MPD status output
+function formatMpdStatus($resp) {
+	if (is_null($resp)) {
+		debugLog('formatMpdStatus(): Returned null');
+		return null;
+	} else {
+		$status = array();
+		$line = strtok($resp, "\n");
+
+		while ($line) {
+			list($element, $value) = explode(': ', $line, 2);
+			$status[$element] = $value;
+			$line = strtok("\n");
+		}
+
+		// Elapsed time
+		// Radio - time: 293:0, elapsed: 292.501, duration not present
+		// Song  - time: 4:391, elapsed: 4.156, duration: 391.466
+		// Podcast same as song.
+		// If state is stop then time, elapsed and duration are not present
+		// Time x:y where x = elapsed ss, y = duration ss
+		$time = explode(':', $status['time']);
+
+		if ($status['state'] == 'stop') {
+			$percent = '0';
+			$status['elapsed'] = '0';
+			$status['time'] = '0';
+		} else if (!isset($status['duration']) || $status['duration'] == 0) { // @ohinckel https: //github.com/moode-player/moode/pull/13
+			// Radio, UPnP
+			$percent = '0';
+			$status['elapsed'] = $time[0];
+			$status['time'] = $time[1];
+		} else {
+			// Tracks, Podcast
+			if ($time[0] != '0') {
+				$percent = round(($time[0] * 100) / $time[1]);
+				$status['elapsed'] = $time[0];
+				$status['time'] = $time[1];
+			} else {
+				$percent = '0';
+				$status['elapsed'] = $time[0];
+				$status['time'] = $time[1];
+			}
+		}
+
+		$status['song_percent'] = $percent;
+		$status['elapsed'] = $time[0];
+		$status['time'] = $time[1];
+
+		// dsd64:2, 44100:24:2
+	 	$audioFormat = explode(':', $status['audio']);
+
+        // Format
+        $status['audio_format'] = strpos($audioFormat[0], 'dsd') !== false ? strtoupper($audioFormat[0]) : 'PCM';
+
+        // Sample rate
+	 	$status['audio_sample_rate'] = formatRate($audioFormat[0]);
+
+		// Bit depth
+		if ($status['audio_format'] != 'PCM') {
+			// DSD
+            $status['audio_sample_depth'] = '1';
+		} else {
+			// Workaround for AAC files that show "f" for bit depth, assume decoded to 24 bit
+		 	$status['audio_sample_depth'] = $audioFormat[1] == 'f' ? '24' : $audioFormat[1];
+		}
+
+	 	// Channels
+	 	if ($status['audio_format'] != 'PCM') {
+            // DSD
+	 		$status['audio_channels'] = formatChannels($audioFormat[1]);
+	 	} else {
+		 	$status['audio_channels'] = formatChannels($audioFormat[2]);
+		}
+
+		// Bitrate
+		if (!isset($status['bitrate']) || trim($status['bitrate']) == '') {
+			$status['bitrate'] = '0 bps';
+		} else {
+			if ($status['bitrate'] == '0') {
+				$status['bitrate'] = '';
+				// For aiff, wav files and some radio stations ex: Czech Radio Classic
+			 	//$status['bitrate'] = number_format((( (float)$audioFormat[0] * (float)$status['audio_sample_depth'] * (float)$audioFormat[2] ) / 1000000), 3, '.', '');
+			} else {
+			 	$status['bitrate'] = strlen($status['bitrate']) < 4 ? $status['bitrate'] : substr($status['bitrate'], 0, 1) . '.' . substr($status['bitrate'], 1, 3) ;
+			 	$status['bitrate'] .= strpos($status['bitrate'], '.') === false ? ' kbps' : ' Mbps';
+			}
+		}
+	}
+	return $status;
+}
+
+function formatMpdQueryResults($resp) {
+	if (is_null($resp)) {
+		debugLog('formatMpdQueryResults(): Returned null');
+		return null;
+	} else {
+		$array = array();
+		$line = strtok($resp,"\n");
+		$idx = -1;
+
+		while ($line) {
+			list ($element, $value) = explode(': ', $line, 2);
+
+			if ($element == 'file') {
+				$idx++;
+				$array[$idx]['file'] = $value;
+				$array[$idx]['fileext'] = getFileExt($value);
+			} else if ($element == 'directory') {
+				$idx++;
+				$dirIdx++; // Save directory index for further processing
+				$array[$idx]['directory'] = $value;
+				$coverHash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
+				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $coverHash  . '_sm.jpg') ? $coverHash : '';
+			} else if ($element == 'playlist') {
+				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
+					$idx++;
+					$array[$idx]['file'] = $value;
+					$array[$idx]['fileext'] = getFileExt($value);
+				} else {
+					$idx++;
+					$array[$idx]['playlist'] = $value;
+				}
+			} else {
+				$array[$idx][$element] = htmlspecialchars($value);
+				$array[$idx]['TimeMMSS'] = formatSongTime($array[$idx]['Time']);
+			}
+
+			$line = strtok("\n");
+		}
+
+		// Put dirs on top
+		if (isset($dirIdx) && isset($array[0]['file']) ) {
+			$files = array_slice($array, 0, -$dirIdx);
+            $dirs = array_slice($array, -$dirIdx);
+            $array = array_merge($dirs, $files);
+		}
+	}
+
+	return $array;
 }
 
 // Turn MPD HTTP server on/off
