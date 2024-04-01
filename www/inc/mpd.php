@@ -418,12 +418,14 @@ function updMpdConf() {
 	}
 
     // MPD mixer type
+    workerLog('updMpdConf(): before mixer=' . $mixerType);
     $audioOutput = getConfiguredAudioOutput();
-	if ($audioOutput != AO_USB && $_SESSION['alsavolume'] == 'none') {
+	if ($audioOutput != AO_USB && $_SESSION['alsavolume'] == 'none' && $mixerType != 'null') {
 		$mixerType = 'software';
 		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
 	phpSession('write', 'mpdmixer', $mixerType);
+    workerLog('updMpdConf(): after mixer= ' . $mixerType);
 
     // Ensure mpdmixer_local = mpdmixer
     if ($_SESSION['audioout'] == 'Local') {
@@ -571,6 +573,7 @@ function getMpdOutputs($sock) {
 
 // Change to different MPD mixer type
 function changeMPDMixer($mixer) {
+    workerLog('changeMPDMixer(): mixer=' . $mixer);
 	$mixerType = $mixer == 'camilladsp' ? 'null' : $mixer;
 
 	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
