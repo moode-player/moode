@@ -148,10 +148,12 @@ const ALSA_MAX_CARDS = 8;
 // ALSA special device names
 const ALSA_LOOPBACK_DEVICE = 'Loopback';
 const ALSA_DUMMY_DEVICE = 'Dummy';
+const ALSA_VC4HDMI_SINGLE_DEVICE = 'vc4hdmi';
 // ALSA empty card
 const ALSA_EMPTY_CARD = 'empty';
-// ALSA default mixer name
-const ALSA_DEFAULT_MIXER_NAME = 'Digital';
+// ALSA default mixer names
+const ALSA_DEFAULT_MIXER_NAME_I2S = 'Digital';
+const ALSA_DEFAULT_MIXER_NAME_INTEGRATED = 'PCM';
 // ALSA output mode names
 const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct', 'iec958' => 'IEC958');
 const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
