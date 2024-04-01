@@ -936,7 +936,7 @@ function renderUI() {
 
         // Debug messages (appear above cover art)
         // var debugText = userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false');
-        var debugText = SESSION.json['debuglog'] == '1' ? 'Debug logging is on' : '';
+        var debugText = SESSION.json['debuglog'] == '1' ? '>> Debug logging is on <<' : '';
         $('#debug-text').html(debugText);
 
         // Volume type
