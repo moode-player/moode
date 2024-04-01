@@ -369,8 +369,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .ui-pnotify .alert h4 {color:#333;text-shadow:none;text-align:center;}
 .ui-pnotify .alert h4 {font-size:1em;font-weight:600;text-align:center;}
 .ui-pnotify-text {padding-top:1em;}
-.ui-pnotify-sticker {position:absolute;right:2.35em;}
-.ui-pnotify-closer {position:absolute;right:1em;}
+.ui-pnotify-sticker {position:absolute;right:2.25em;top:.5em;}
+.ui-pnotify-closer {position:absolute;right:1em;top:.5em;}
 .btn-primary {text-transform:uppercase;font-weight:500;}
 i.sx {width:1em;margin-right:.25em;}
 i.dx {width:1em;margin-left:.25em;}
