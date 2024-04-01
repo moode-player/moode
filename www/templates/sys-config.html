@@ -120,31 +120,6 @@
 				</span>
 			</div>
 
-			<label class="control-label" for="usb-auto-mounter">USB auto-mount</label>
-			<div class="controls">
-				<select id="usb-auto-mounter" class="config-select-large" name="usb_auto_mounter">
-					$_select[usb_auto_mounter]
-				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_usb_auto_mounter" value="novalue">Set</button>
-				<span class="config-help-static">
-					Select Devmon for older ARMv6 platforms Pi-1B and Pi-Zero Note that Devmon only supports Ext2/3/4 and Fat32 file systems.
-				</span>
-			</div>
-
-			<div class="$_usbboot_hide">
-				<label class="control-label">USB boot (Pi-3*)</label>
-				<div class="controls">
-					<a href="#enable-usbboot" data-toggle="modal"><button class="btn btn-primary btn-medium config-btn" $_usbboot_btn_disable>Enable</button></a>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-usb-boot" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-					<span id="info-usb-boot" class="config-help-info config-help-no-margin">
-						For Pi-3B, 3B+, and 3A+ this option programs OTP memory to enable booting from USB drive. After OTP is updated the system can boot from either uSD card or USB drive.
-	                </span>
-					<span class="config-help-static">
-						$_usbboot_msg
-					</span>
-				</div>
-			</div>
-
 			<div class="config-horiz-rule"></div>
 
 			<div class="$_reduce_power_hide">

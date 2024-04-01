@@ -142,15 +142,6 @@ if (isset($_POST['update_cpugov'])) {
 	phpSession('write', 'cpugov', $_POST['cpugov']);
 }
 
-if (isset($_POST['update_usb_auto_mounter'])) {
-	submitJob('usb_auto_mounter', $_POST['usb_auto_mounter'], 'Settings updated', 'Restart required');
-	phpSession('write', 'usb_auto_mounter', $_POST['usb_auto_mounter']);
-}
-
-if (isset($_POST['update_usbboot'])) {
-	submitJob('usbboot', '', 'Settings updated', 'Restart required');
-}
-
 if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce_power']) {
 	submitJob('reduce_power', $_POST['reduce_power'], 'Settings updated', 'Restart required');
 	phpSession('write', 'reduce_power', $_POST['reduce_power']);
@@ -387,9 +378,6 @@ $_select['worker_responsiveness'] .= "<option value=\"Boosted\" " . (($_SESSION[
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
 
-$_select['usb_auto_mounter'] .= "<option value=\"udisks-glue\" " . (($_SESSION['usb_auto_mounter'] == 'udisks-glue') ? "selected" : "") . ">Udisks-glue (Default)</option>\n";
-$_select['usb_auto_mounter'] .= "<option value=\"devmon\" " . (($_SESSION['usb_auto_mounter'] == 'devmon') ? "selected" : "") . ">Devmon</option>\n";
-
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 $piName = $_SESSION['hdwrrev'];
 
@@ -449,22 +437,6 @@ $_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_tim
 $autoClick = " onchange=\"autoClick('#btn-set-eth0chk');\"";
 $_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-if ($piModel == '3') { // Pi-3B, B+, A+
-	$_usbboot_hide = '';
-	$result = sysCmd('vcgencmd otp_dump | grep 17:');
-	if ($result[0] == '17:3020000a') {
-		$_usbboot_btn_disable = 'disabled';
-		$_usbboot_msg = 'USB boot is already enabled';
-	} else {
-		$_usbboot_btn_disable = '';
-		$_usbboot_msg = 'USB boot is not enabled yet';
-	}
-} else {
-	// NOTE: USB boot is enabled by default on Pi-4B, Pi-400 (Sep 3 2020 or later boot loader) and Pi-5B.
-	$_usbboot_hide = 'hide';
-}
 
 // FILE SHARING
 

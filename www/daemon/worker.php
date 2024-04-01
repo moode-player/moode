@@ -308,37 +308,12 @@ workerLog('worker: Home folder:   ' . $_SESSION['home_dir']);
 workerLog('worker: Time zone:     ' . $_SESSION['timezone']);
 workerLog('worker: Kbd layout:    ' . $_SESSION['keyboard']);
 
-// USB boot
-$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-if ($piModel == '3') { // 3B, B+, A+
-	$result = sysCmd('vcgencmd otp_dump | grep 17:');
-	if ($result[0] == '17:3020000a') {
-		sysCmd('sed -i /program_usb_boot_mode/d ' . BOOT_CONFIG_TXT);
-		$msg = 'enabled';
-	} else {
-		$msg = 'not enabled yet';
-	}
-	workerLog('worker: USB boot:      ' . $msg);
-} else if ($piModel == '4') { // 4, 400
-	$bootloaderMinDate = new DateTime("Sep 3 2020");
-	$bootloaderActualDate = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1\" \" $2\" \" $3}'")[0]);
-	if ($bootloaderActualDate >= $bootloaderMinDate) {
-		$msg = 'enabled';
-	} else {
-		$msg = 'not enabled yet';
-	}
-	workerLog('worker: USB boot:      ' . $msg);
-} else if ($piModel == '5') { // 5
-	workerLog('worker: USB boot:      enabled');
-} else {
-	workerLog('worker: USB boot:      n/a');
-}
-
 // HDMI port(s)
 // They are always on in Bookworm
 workerLog('worker: HDMI ports(s): on');
 
 // LED states
+$piModel = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModel == '1' || str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
 	// Pi boards w/o a sysclass entry for LED1
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
@@ -814,8 +789,6 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // USB sources
-// USB auto-mounter (udisks-glue (Default) or devmon for < Pi-3)
-workerLog('worker: USB auto-mount: ' . $_SESSION['usb_auto_mounter']);
 $usbDrives = sysCmd('ls /media');
 if (empty($usbDrives)) {
 	workerLog('worker: USB drives:     no drives found');

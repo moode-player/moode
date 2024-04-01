@@ -47,8 +47,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
 	echo -e "\nKernel timer freq\t= $HZ Hz\c"
-	echo -e "\nSDCard freq\t\t= $SDFREQ MHz\c"
-	echo -e "\nUSB boot\t\t= $USBBOOT\c"
 	echo -e "\nWarranty\t\t= $WARRANTY\c"
 	echo -e "\n\c"
 	echo -e "\nRootFS size\t\t= $ROOTSIZE\c"
@@ -63,7 +61,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\n\c"
 	echo -e "\nWorker responsiveness\t= $WORKER_RESPONSIVENESS\c"
 	echo -e "\nCPU governor\t\t= $GOV\c"
-	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
+	echo -e "\nReduce power\t\t= $REDUCE_POWER (Pi-5 only)\c"
 	echo -e "\nPi integrated WiFi\t= $piwifi\c"
 	echo -e "\nPi integrated BT\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
@@ -83,8 +81,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nPHP-FPM version\t\t= $PHPVER\c"
 	echo -e "\nNGINX version\t\t= $NGINXVER\c"
 	echo -e "\nSQLite3 version\t\t= $SQLITEVER\c"
-	echo -e "\nHostapd version\t\t= $HOSTAPDVER\c"
-	#echo -e "\nWiringPi version\t= $WIRINGPI_VER\c"
 	echo -e "\nRPi.GPIO version\t= $RPI_GPIO_VER\n"
 }
 
@@ -438,6 +434,8 @@ MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
 
 WORKER_RESPONSIVENESS=$(moodeutl -d -gv worker_responsiveness)
+TMP=$(moodeutl -d -gv "reduce_power")
+[[ "$TMP" = "on" ]] && REDUCE_POWER="On" || REDUCE_POWER="Off"
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
@@ -489,12 +487,9 @@ if (( ($THROTTLED_BITMASK & 0x20000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Arm
 if (( ($THROTTLED_BITMASK & 0x40000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Throttling has occurred, "; fi
 if (( ($THROTTLED_BITMASK & 0x80000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Soft temperature limit has occurred"; fi
 THROTTLED_TEXT=${THROTTLED_TEXT%, }
-SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/1000000}')
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
-HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
-#WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
 RPI_GPIO_VER=$(dpkg -s python3-rpi.gpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
 
 BLUETOOTH_VER=$(bluetoothd -v)
@@ -695,9 +690,9 @@ rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
 eqfa12p=${arr[73]}
-rev=$(echo $HDWRREV | cut -c 4)
+model=$(echo $HDWRREV | cut -c 4)
 # TODO: Add code for Pi-5
-if [[ $rev = "3" || $rev = "4" || $rev = "Z" ]]; then
+if [[ $model == "3" || $model == "4" || $model == "5" || $model == "Z" ]]; then
 	[[ "${arr[74]}" = "1" ]] && piwifi="On" || piwifi="Off"
 	[[ "${arr[75]}" = "1" ]] && pibt="On" || pibt="Off"
 else
@@ -843,31 +838,6 @@ wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
 apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
 
 # Misc settings
-# TODO: Add section for Pi-5
-PI_MODEL=${HDWRREV:3:1}
-if [ $PI_MODEL = 3 ]; then
-	TMP="$(vcgencmd otp_dump | grep 17:)"
-	if [ "$TMP" = "17:3020000a" ]; then
-		USBBOOT="enabled"
-	else
-		USBBOOT="not enabled"
-	fi
-elif [ $PI_MODEL = 4 ]; then
-	BOOTLOADER_MIN_DATE=20200903
-	TMP=$(vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}')
-	BOOTLOADER_ACTUAL_DATE=$(date -d"$TMP" +%Y%m%d)
-	let DIFF=($(date +%s -d $BOOTLOADER_ACTUAL_DATE)-$(date +%s -d $BOOTLOADER_MIN_DATE))/86400
-	if (("$DIFF" >= "0")); then
-		USBBOOT="enabled"
-	else
-		USBBOOT="not enabled"
-	fi
-elif [ $PI_MODEL = 4 ]; then
-	USBBOOT="enabled"
-else
-	USBBOOT="not available"
-fi
-
 modprobe configs
 test -f /proc/config.gz && {
 	HZ=$(zcat /proc/config.gz | grep "^CONFIG_HZ=" | cut -f 2 -d "=")
