@@ -26,29 +26,31 @@ require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
 function cfgI2SDevice() {
-	// Remove 'dtoverlay=audio_overlay' line if it exists
-	// It would be the next line after 'dtoverlay=disable-wifi'
-	$lines = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -A 1 "' . CFG_DTOVERLAY_DISABLE_WIFI . '" | wc -l')[0];
-	if ($lines = 2) {
-		sysCmd('sed -i "/' . CFG_DTOVERLAY_DISABLE_WIFI . '/{n;d}" ' . BOOT_CONFIG_TXT);
-	}
+	$dbh = sqlConnect();
 
+	// Remove audio overlay line if it exists (next line after 'dtoverlay=disable-wifi')
+	$lines = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -A 1 "' . CFG_DTOVERLAY_DISABLE_WIFI . '" | wc -l')[0];
+	if ($lines >= 2) {
+		sysCmd('sed -i "/' . CFG_DTOVERLAY_DISABLE_WIFI . '/q" ' . BOOT_CONFIG_TXT);
+	}
 	// Remove 'force_eeprom_read=0'line (only exists for hifiberry devices)
 	sysCmd('sed -i "/force_eeprom_read=0/d" ' . BOOT_CONFIG_TXT);
-
-	// Add force_eeprom_read=0 for all hifiberry cards
+	// Add force_eeprom_read=0 if hifiberry device
 	$str = $_SESSION['i2sdevice'] . $_SESSION['i2soverlay'];
-	$eeprom = str_contains($str, 'hifiberry') ? '\nforce_eeprom_read=0\n' : '\n';
+	$eeprom = str_contains($str, 'hifiberry') ? '\nforce_eeprom_read=0' : '';
 
+	// Add the audio overlay
 	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		// Reset to Pi HDMI 1
 		$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
 		phpSession('write', 'cardnum', $cardNum);
 		phpSession('write', 'adevname', PI_HDMI1);
-		sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
+		phpSession('write', 'mpdmixer', 'software'); //
+		sqlUpdate('cfg_mpd', $dbh, 'device', $cardNum);
+		sqlUpdate('cfg_mpd', $dbh, 'mixer_type', 'software'); //
 	} else if ($_SESSION['i2sdevice'] != 'None') {
 		// Named I2S device
-		$result = sqlRead('cfg_audiodev', sqlConnect(), $_SESSION['i2sdevice']);
+		$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 		sysCmd('sed -i s"/' .
 			CFG_DTOVERLAY_DISABLE_WIFI . '/' .
 			CFG_DTOVERLAY_DISABLE_WIFI . '\ndtoverlay=' . $result[0]['driver'] . $eeprom . '/" ' . BOOT_CONFIG_TXT);
