@@ -1039,6 +1039,12 @@ if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';
 }
 workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
+// HDMI enable 4k 60Hz (Pi-4 only)
+if (!isset($_SESSION['hdmi_enable_4kp60'])) {
+	$_SESSION['hdmi_enable_4kp60'] = 'off';
+}
+workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
+
 // Toggle CoverView (System Config)
 if (!isset($_SESSION['toggle_coverview'])) {
 	$_SESSION['toggle_coverview'] = '-off';
@@ -2756,6 +2762,10 @@ function runQueuedJob() {
 				stopLocalUI();
 				startLocalUI();
 			}
+		case 'hdmi_enable_4kp60':
+			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
+			sysCmd('sed -i s"/hdmi_enable_4kp60=.*/hdmi_enable_4kp60=' . $value . '/" ' . BOOT_CONFIG_TXT);
+			break;
 		case 'scnbrightness':
 			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 			break;

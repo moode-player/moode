@@ -105,6 +105,19 @@
 					Restarting clears the chromium browser cache.
 				</span>
 			</div>
+
+			<label class="control-label">HDMI 4K 60Hz</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-2">ON </label>$_select[hdmi_enable_4kp60_on]
+					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-1">OFF</label>$_select[hdmi_enable_4kp60_off]
+				</div>
+                <button id="btn-set-hdmi-enable-4kp60" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_enable_4kp60" value="novalue" $_hdmi_4kp60_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-enable-4kp60" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmi-enable-4kp60" class="config-help-info">
+					By default, when connected to a 4K monitor, the Raspberry Pi 4B, 400 and CM4 will select a 30Hz refresh rate. Use this option to allow selection of 60Hz refresh rates.
+                </span>
+            </div>
 		</div>
 
 		<div class="control-group">

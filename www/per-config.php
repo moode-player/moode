@@ -50,10 +50,23 @@ if (isset($_POST['update_touchscn'])) {
     }
 }
 
+if (isset($_POST['update_on_screen_kbd'])) {
+    if (isset($_POST['on_screen_kbd']) && $_POST['on_screen_kbd'] != $_SESSION['on_screen_kbd']) {
+		phpSession('write', 'on_screen_kbd', $_POST['on_screen_kbd']);
+    }
+}
+
 if (isset($_POST['update_scnblank'])) {
     if (isset($_POST['scnblank']) && $_POST['scnblank'] != $_SESSION['scnblank']) {
         submitJob('scnblank', $_POST['scnblank'], 'Settings updated', 'Local display restarted');
         phpSession('write', 'scnblank', $_POST['scnblank']);
+    }
+}
+
+if (isset($_POST['update_hdmi_enable_4kp60'])) {
+    if (isset($_POST['hdmi_enable_4kp60']) && $_POST['hdmi_enable_4kp60'] != $_SESSION['hdmi_enable_4kp60']) {
+        submitJob('hdmi_enable_4kp60', $_POST['hdmi_enable_4kp60'], 'Settings updated', 'Reboot required');
+        phpSession('write', 'hdmi_enable_4kp60', $_POST['hdmi_enable_4kp60']);
     }
 }
 
@@ -75,12 +88,6 @@ if (isset($_POST['update_scnrotate'])) {
     if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
 		submitJob('scnrotate', $_POST['scnrotate'], 'Settings updated', 'Restart required');
 		phpSession('write', 'scnrotate', $_POST['scnrotate']);
-    }
-}
-
-if (isset($_POST['update_on_screen_kbd'])) {
-    if (isset($_POST['on_screen_kbd']) && $_POST['on_screen_kbd'] != $_SESSION['on_screen_kbd']) {
-		phpSession('write', 'on_screen_kbd', $_POST['on_screen_kbd']);
     }
 }
 
@@ -121,6 +128,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 		$_localui_btn_disable = 'disabled';
 		$_localui_link_disable = 'onclick="return false;"';
 	}
+    $piModel = substr($_SESSION['hdwrrev'], 3, 1);
+    $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disable';
 
 	$autoClick = " onchange=\"autoClick('#btn-set-localui');\"";
 	$_select['localui_on']  .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -134,6 +143,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['touchscn_on']  .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-1\" value=\"1\" " . (($_SESSION['touchscn'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['touchscn_off'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
+    $autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_localui_btn_disable;
+	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
 	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
 	$_select['scnblank'] .= "<option value=\"10\" " . (($_SESSION['scnblank'] == '10') ? "selected" : "") . ">10 Secs</option>\n";
 	$_select['scnblank'] .= "<option value=\"20\" " . (($_SESSION['scnblank'] == '20') ? "selected" : "") . ">20 Secs</option>\n";
@@ -146,6 +159,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['scnblank'] .= "<option value=\"1800\" " . (($_SESSION['scnblank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"3600\" " . (($_SESSION['scnblank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
 
+    $autoClick = " onchange=\"autoClick('#btn-set-hdmi-enable-4kp60');\" " . $_hdmi_4kp60_btn_disable;
+	$_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
 	$_select['scnbrightness'] = $_SESSION['scnbrightness'];
 
 	$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
@@ -153,10 +170,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
 	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
-
-	$autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_localui_btn_disable;
-	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	$_coverview_onoff = $_SESSION['toggle_coverview'] == '-off' ? 'Off' : 'On';
 } else {

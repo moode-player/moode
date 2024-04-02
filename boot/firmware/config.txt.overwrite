@@ -9,6 +9,7 @@ otg_mode=1
 [pi4]
 hdmi_force_hotplug:0=1
 hdmi_force_hotplug:1=1
+hdmi_enable_4kp60=0
 
 [all]
 dtoverlay=vc4-kms-v3d
