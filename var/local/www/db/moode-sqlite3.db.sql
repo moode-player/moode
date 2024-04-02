@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Mar 29 16:40:54 2024
+-- File generated with SQLiteStudio v3.1.0 on Tue Apr 2 11:55:51 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -507,6 +507,25 @@ INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32));
 INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (1, 'camilladsp', 'sample-configs', 'v2-sample-configs');
 
+-- Table: cfg_outputdev
+CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_volume_type CHAR (32), alsa_output_mode CHAR (32), alsa_max_volume CHAR (32));
+
+-- Table: cfg_eqalsa
+CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (1, 'Flat', '60,60,60,60,60,60,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (2, 'Lo Boost', '60,72,60,60,60,60,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (3, 'Lo Boost Plus', '68,78,68,60,60,60,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (4, 'Hi Boost', '60,60,60,60,60,60,60,60,72,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (5, 'Hi Boost Plus', '60,60,60,60,60,60,60,68,78,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (6, 'Hi-Lo Boost', '60,72,60,60,60,60,60,60,72,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (7, 'Hi-Lo Boost Plus', '68,78,68,60,60,60,60,68,78,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (8, 'Midrange Suppress', '60,60,60,60,39,39,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (9, 'Shallow V', '60,68,60,54,44,44,54,60,68,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (10, 'Classic V', '60,72,60,60,39,39,60,60,72,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plus', '68,78,68,60,39,39,60,68,78,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
+
 -- Table: cfg_airplay
 CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_airplay (id, param, value) VALUES (1, 'airplaymeta', 'deprecated');
@@ -587,63 +606,9 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
 
--- Table: cfg_network
-CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlanuuid CHAR (4), wlanpwd CHAR (64), wlanpsk CHAR (64), wlancc CHAR (2));
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'Activate Hotspot', '', '', '', 'US');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', '', '', '');
-
--- Table: cfg_eqalsa
-CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (1, 'Flat', '60,60,60,60,60,60,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (2, 'Lo Boost', '60,72,60,60,60,60,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (3, 'Lo Boost Plus', '68,78,68,60,60,60,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (4, 'Hi Boost', '60,60,60,60,60,60,60,60,72,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (5, 'Hi Boost Plus', '60,60,60,60,60,60,60,68,78,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (6, 'Hi-Lo Boost', '60,72,60,60,60,60,60,60,72,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (7, 'Hi-Lo Boost Plus', '68,78,68,60,60,60,60,68,78,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (8, 'Midrange Suppress', '60,60,60,60,39,39,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (9, 'Shallow V', '60,68,60,54,44,44,54,60,68,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (10, 'Classic V', '60,72,60,60,39,39,60,60,72,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plus', '68,78,68,60,39,39,60,68,78,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
-
 -- Table: cfg_eqp12
 CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
 INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
-
--- Table: cfg_multiroom
-CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '128');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (2, 'tx_host', '239.0.0.1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (3, 'tx_port', '1350');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (4, 'tx_sample_rate', '48000');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (5, 'tx_channels', '2');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (6, 'tx_frame_size', '1920');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (7, 'tx_bitrate', '128');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (8, 'tx_rtprio', '45');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (9, 'RESERVED_9', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'RESERVED_12', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'tx_query_timeout', '1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '128');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_host', '239.0.0.1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_port', '1350');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_sample_rate', '48000');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_channels', '2');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'rx_jitter_bfr', '64');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (20, 'rx_frame_size', '1920');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'rx_rtprio', '45');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'RESERVED_22', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (23, 'RESERVED_23', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (24, 'RESERVED_24', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (25, 'RESERVED_25', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (26, 'RESERVED_26', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (27, 'rx_alsa_output_mode', 'plughw');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (28, 'rx_mastervol_opt_in', '1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (29, 'initial_volume', '0');
 
 -- Table: cfg_gpio
 CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
@@ -656,6 +621,12 @@ INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '
 INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
 INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
 INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
+
+-- Table: cfg_network
+CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlanuuid CHAR (4), wlanpwd CHAR (64), wlanpsk CHAR (64), wlancc CHAR (2));
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'Activate Hotspot', '', '', '', 'US');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', '', '', '');
 
 -- Table: cfg_mpd
 CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
@@ -710,6 +681,38 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (48, 'thesycon_dsd_workaround', 'n
 INSERT INTO cfg_mpd (id, param, value) VALUES (49, 'proxy', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (50, 'proxy_user', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (51, 'proxy_password', '');
+
+-- Table: cfg_multiroom
+CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '128');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (2, 'tx_host', '239.0.0.1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (3, 'tx_port', '1350');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (4, 'tx_sample_rate', '48000');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (5, 'tx_channels', '2');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (6, 'tx_frame_size', '1920');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (7, 'tx_bitrate', '128');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (8, 'tx_rtprio', '45');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (9, 'RESERVED_9', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'RESERVED_12', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'tx_query_timeout', '1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '128');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_host', '239.0.0.1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_port', '1350');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_sample_rate', '48000');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_channels', '2');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'rx_jitter_bfr', '64');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (20, 'rx_frame_size', '1920');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'rx_rtprio', '45');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'RESERVED_22', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (23, 'RESERVED_23', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (24, 'RESERVED_24', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (25, 'RESERVED_25', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (26, 'RESERVED_26', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (27, 'rx_alsa_output_mode', 'plughw');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (28, 'rx_mastervol_opt_in', '1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (29, 'initial_volume', '0');
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
