@@ -21,6 +21,7 @@ New features
 - NEW: HDMI/IEC958 audio format including multichannel
 - NEW: WiFi Hotspot (2.4 GHz WiFi bridged to Ethernet if present)
 - NEW: Option to reduce Pi-5 shutdown wattage to .01W
+- NEW: Option to enable 4K 60Hz for Pi-4 local display
 
 Updates
 
