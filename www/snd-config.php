@@ -39,9 +39,10 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 	// Validate
 	$reservedNames = array(ALSA_LOOPBACK_DEVICE, ALSA_DUMMY_DEVICE, ALSA_EMPTY_CARD);
 	if (in_array($deviceNames[$_POST['output_device']], $reservedNames)) {
-		$_SESSION['notify']['title'] = 'This device is reserved or empty';
+		$_SESSION['notify']['title'] = 'Device is reserved';
 		$_SESSION['notify']['msg'] = 'It cannot be set directly';
 	} else {
+		// TODO: Implement cfg_outputdev cached settings
 		// Update ALSA config
 		phpSession('write', 'cardnum', $_POST['output_device']);
 		phpSession('write', 'adevname', $deviceNames[$_POST['output_device']]);
@@ -49,7 +50,6 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 	    phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
 		$mode = getConfiguredAudioOutput() == AO_HDMI ? 'iec958' : 'plughw';
 		phpSession('write', 'alsa_output_mode', $mode);
-
 		// Update MPD config
 		sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
 		phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
