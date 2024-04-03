@@ -232,7 +232,7 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 	}
 }
 
-// Update ALSA DSP and BT in confs
+// Update ALSA DSP and Bluetooth in confs
 function updDspAndBtInConfs($cardNum, $newOutputMode, $oldOutputMode = '') {
 	// NOTE: This is done because the function can be called to change either the cardnum or the output mode
 	$oldOutputMode = empty($oldOutputMode) ? $_SESSION['alsa_output_mode'] : $oldOutputMode;
@@ -250,4 +250,46 @@ function updDspAndBtInConfs($cardNum, $newOutputMode, $oldOutputMode = '') {
 
 	// Bluetooth confs (incoming connections)
 	// NOTE: bluealsaaplay.conf AUDIODEV=_audioout or plughw depending on Bluetooth Config, ALSA output mode
+}
+
+// Read output device cache
+function readOutputDeviceCache($deviceName) {
+	$dbh = sqlConnect();
+
+    $result = sqlRead('cfg_outputdev', $dbh, $deviceName);
+    if ($result === true) {
+    	// Not in table
+		$values = 'device not found';
+    } else {
+		// In table
+		$values = array(
+			'device_name' => $result[0]['device_name'],
+			'mpd_volume_type' => $result[0]['mpd_volume_type'],
+			'alsa_output_mode' => $result[0]['alsa_output_mode'],
+			'alsa_max_volume' => $result[0]['alsa_max_volume']);
+    }
+
+	return $values;
+}
+
+// Update output device cache
+function updOutputDeviceCache($deviceName) {
+	$dbh = sqlConnect();
+
+    $result = sqlRead('cfg_outputdev', $dbh, $deviceName);
+    if ($result === true) {
+    	// Not in table so add new
+    	$values =
+			'"' . $deviceName . '",' .
+			'"' . $_SESSION['mpdmixer'] . '",' .
+			'"' . $_SESSION['alsa_output_mode'] . '",' .
+			'"' . $_SESSION['alsavolume_max'] . '"';
+    	$result = sqlInsert('cfg_outputdev', $dbh, $values);
+    } else {
+		$value = array(
+			'mpd_volume_type' => $_SESSION['mpdmixer'],
+			'alsa_output_mode' => $_SESSION['alsa_output_mode'],
+			'alsa_max_volume' => $_SESSION['alsavolume_max']);
+		$result = sqlUpdate('cfg_outputdev', $dbh, $deviceName, $value);
+    }
 }

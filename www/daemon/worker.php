@@ -664,10 +664,11 @@ if ($_SESSION['alsavolume'] != 'none') {
 		setALSAVolTo0dB($_SESSION['alsavolume_max']);
 	}
 	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	workerLog('worker: ALSA volume:   ' . $result[0]);
+	$msg = $result[0];
 } else {
-	workerLog('worker: ALSA volume:   controller not detected');
+	$msg = 'controller not detected';
 }
+workerLog('worker: ALSA volume:   ' . $msg);
 // ALSA maxvol
 workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
 // ALSA output
@@ -2171,9 +2172,7 @@ function runQueuedJob() {
 				sysCmd('/var/www/vol.sh 0');
 			}
 			// Volume type change (MPD mixer_type))
-			if ($mixerChange == '0') {
-				$startPlay = true;
-			} else {
+			if ($mixerChange != '0') {
 				$startPlay = false;
 				if ($mixerChange == 'camilladsp') {
 					sysCmd('/var/www/vol.sh -restore');
@@ -2182,7 +2181,6 @@ function runQueuedJob() {
 					if ($_SESSION['camilladsp'] != 'off') {
 						CamillaDSP::setCDSPVolTo0dB();
 					}
-					//DELETE:sysCmd('/var/www/vol.sh -restore');
 					sysCmd('/var/www/vol.sh 0');
 				}
 				 // Refresh connected clients
@@ -2228,7 +2226,11 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 			break;
 		case 'alsavolume_max':
-			setALSAVolTo0dB($_SESSION['w_queueargs']);
+			if ($_SESSION['alsavolume'] != 'none' && $_SESSION['mpdmixer'] != 'hardware') {
+				setALSAVolTo0dB($_SESSION['w_queueargs']);
+			}
+			// Update output device cache
+			updOutputDeviceCache($_SESSION['adevname']);
 			break;
 		case 'alsa_output_mode':
 		case 'alsa_loopback':
@@ -2236,10 +2238,12 @@ function runQueuedJob() {
 			sysCmd('mpc stop');
 
 			if ($_SESSION['w_queue'] == 'alsa_output_mode') {
-				// Update ALSA and BT confs
+				// Update ALSA and Bluetooth confs
 				// NOTE: w_queueargs contains $old_output_mode or ''
 				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode'], $_SESSION['w_queueargs']);
+				// Update output device cache
+				updOutputDeviceCache($_SESSION['adevname']);
 			} else {
 				// ALSA loopback
 				if ($_SESSION['w_queueargs'] == 'On') {

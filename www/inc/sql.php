@@ -42,6 +42,8 @@ function sqlRead($table, $dbh, $param = '', $id = '') {
 	} else if ($table == 'cfg_audiodev') {
 		$filter = $param == 'all' ? ' WHERE list="yes"' : ' WHERE name="' . $param . '" AND list="yes"';
 		$queryStr = 'SELECT name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
+	} else if ($table == 'cfg_outputdev') {
+		$queryStr = 'SELECT * FROM ' . $table . ' WHERE device_name="' . $param . '"';;
 	} else if ($table == 'cfg_theme') {
 		$queryStr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	} else if ($table == 'cfg_radio') {
@@ -57,10 +59,14 @@ function sqlRead($table, $dbh, $param = '', $id = '') {
 function sqlUpdate($table, $dbh, $key = '', $value) {
 	switch ($table) {
 		case 'cfg_system':
-			$queryStr = "UPDATE " . $table . " SET value='" . SQLite3::escapeString($value) . "' WHERE param='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET value='" . SQLite3::escapeString($value) .
+				"' WHERE param='" . $key . "'";
 			break;
 		case 'cfg_mpd':
-			$queryStr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET value='" . $value .
+				"' WHERE param='" . $key . "'";
 			break;
 		case 'cfg_network':
 			$queryStr = "UPDATE " . $table .
@@ -76,32 +82,58 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', wlanpsk='" . $value['wlanpsk'] .
 				"', wlancc='" . $value['wlancc'] .
 				"' WHERE iface='" . $key . "'";
-			//workerLog('sqlUpdate: ' . $queryStr);
 			break;
 		case 'cfg_source':
-			$queryStr = "UPDATE " . $table . " SET name='" . $value['name'] . "', type='" . $value['type'] . "', address='" .
-				$value['address'] . "', remotedir='" . $value['remotedir'] . "', username='" . $value['username'] .
-				"', password='" . $value['password'] . "', charset='" . $value['charset'] . "', rsize='" . $value['rsize'] .
-				"', wsize='" . $value['wsize'] . "', options='" . $value['options'] . "', error='" . $value['error'] .
+			$queryStr = "UPDATE " . $table .
+				" SET name='" . $value['name'] .
+				"', type='" . $value['type'] .
+				"', address='" . $value['address'] .
+				"', remotedir='" . $value['remotedir'] .
+				"', username='" . $value['username'] .
+				"', password='" . $value['password'] .
+				"', charset='" . $value['charset'] .
+				"', rsize='" . $value['rsize'] .
+				"', wsize='" . $value['wsize'] .
+				"', options='" . $value['options'] .
+				"', error='" . $value['error'] .
 				"' WHERE id=" . $value['id'];
 			break;
 		case 'cfg_audiodev':
-			$queryStr = "UPDATE " . $table . " SET chipoptions='" . $value . "' WHERE name='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET chipoptions='" . $value .
+				"' WHERE name='" . $key . "'";
+			break;
+		case 'cfg_outputdev':
+			$queryStr = "UPDATE " . $table .
+				" SET mpd_volume_type='" . $value['mpd_volume_type'] .
+				"', alsa_output_mode='" . $value['alsa_output_mode'] .
+				"', alsa_max_volume='" . $value['alsa_max_volume'] .
+				"' WHERE device_name='" . $key . "'";
 			break;
 		case 'cfg_radio':
-			$queryStr = "UPDATE " . $table . " SET station='" . $value . "' WHERE name='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET station='" . $value .
+				"' WHERE name='" . $key . "'";
 			break;
 		case 'cfg_sl':
-			$queryStr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET value='" . $value .
+				"' WHERE param='" . $key . "'";
 			break;
 		case 'cfg_airplay':
-			$queryStr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET value='" . $value .
+				"' WHERE param='" . $key . "'";
 			break;
 		case 'cfg_spotify':
-			$queryStr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET value='" . $value .
+				"' WHERE param='" . $key . "'";
 			break;
 		case 'cfg_upnp':
-			$queryStr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
+			$queryStr = "UPDATE " . $table .
+				" SET value='" . $value .
+				"' WHERE param='" . $key . "'";
 			break;
 		case 'cfg_gpio':
 			$queryStr = "UPDATE " . $table .
@@ -111,7 +143,6 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', param='" . $value['param'] .
 				"', value='" . $value['value'] .
 				"' WHERE id='" . $key . "'";
-			//workerLog('sqlUpdate: ' . $queryStr);
 			break;
 	}
 

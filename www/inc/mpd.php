@@ -27,7 +27,7 @@ require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
-// NOTE: Session vars and cfg_mpd updates should be made upstream before this function is called.
+// NOTE: Session vars and cfg_mpd updates should be made upstream before this function is called
 function updMpdConf() {
     $data  = "#########################################\n";
     $data .= "# This file is managed by moOde          \n";
@@ -124,14 +124,12 @@ function updMpdConf() {
 	}
 
     // MPD mixer type
-    //workerLog('updMpdConf(): before mixer=' . $mixerType);
     $audioOutput = getConfiguredAudioOutput();
 	if ($audioOutput != AO_USB && $_SESSION['alsavolume'] == 'none' && $mixerType != 'null') {
 		$mixerType = 'software';
 		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
 	phpSession('write', 'mpdmixer', $mixerType);
-    //workerLog('updMpdConf(): after mixer= ' . $mixerType);
 
     // Ensure mpdmixer_local = mpdmixer
     if ($_SESSION['audioout'] == 'Local') {
@@ -229,14 +227,16 @@ function updMpdConf() {
 		fclose($fh);
 	}
 
-	// Update ALSA and BT confs
+	// Update ALSA and Bluetooth confs
 	updAudioOutAndBtOutConfs($cardNum, $_SESSION['alsa_output_mode']);
 	updDspAndBtInConfs($cardNum, $_SESSION['alsa_output_mode']);
+    // Update output device cache
+    updOutputDeviceCache($_SESSION['adevname']);
 }
 
 // Change to different MPD mixer type
 function changeMPDMixer($mixer) {
-    workerLog('changeMPDMixer(): mixer=' . $mixer);
+    //workerLog('changeMPDMixer(): mixer=' . $mixer);
 	$mixerType = $mixer == 'camilladsp' ? 'null' : $mixer;
 
 	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);

@@ -149,8 +149,9 @@ const ALSA_MAX_CARDS = 8;
 const ALSA_LOOPBACK_DEVICE = 'Loopback';
 const ALSA_DUMMY_DEVICE = 'Dummy';
 const ALSA_VC4HDMI_SINGLE_DEVICE = 'vc4hdmi';
-// ALSA empty card
 const ALSA_EMPTY_CARD = 'empty';
+// ALSA names that can't be set directly in Audio Config
+const ALSA_RESERVED_NAMES = array(ALSA_LOOPBACK_DEVICE, ALSA_DUMMY_DEVICE, ALSA_EMPTY_CARD);
 // ALSA default mixer names
 const ALSA_DEFAULT_MIXER_NAME_I2S = 'Digital';
 const ALSA_DEFAULT_MIXER_NAME_INTEGRATED = 'PCM';

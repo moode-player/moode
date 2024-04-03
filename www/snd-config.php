@@ -35,23 +35,41 @@ $deviceNames = getAlsaDeviceNames();
 // AUDIO OUTPUT
 
 // Output device
-if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSION['cardnum']) {
+if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != $_SESSION['cardnum']) {
+	$deviceName = $deviceNames[$_POST['output_device_cardnum']];
 	// Validate
-	$reservedNames = array(ALSA_LOOPBACK_DEVICE, ALSA_DUMMY_DEVICE, ALSA_EMPTY_CARD);
-	if (in_array($deviceNames[$_POST['output_device']], $reservedNames)) {
-		$_SESSION['notify']['title'] = 'Device is reserved';
+	if (in_array($deviceName, ALSA_RESERVED_NAMES)) {
+		$_SESSION['notify']['title'] = 'Device is reserved'; // Loopback, Dummy, empty
 		$_SESSION['notify']['msg'] = 'It cannot be set directly';
 	} else {
-		// TODO: Implement cfg_outputdev cached settings
+		// Load values from output device cache
+		$result = readOutputDeviceCache($deviceName);
+		if ($result != 'device not found') {
+			// MPD volume type
+			if ($_SESSION['camilladsp'] == 'off') {
+				if ($result['mpd_volume_type'] == 'null') {
+					$volumeType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
+				} else {
+					$volumeType = $result['mpd_volume_type'];
+				}
+			} else {
+				$volumeType = 'null';
+			}
+			sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $volumeType);
+			// ALSA
+			phpSession('write', 'alsavolume_max', $result['alsa_max_volume']);
+			$alsaOutputMode = $result['alsa_output_mode'];
+		} else {
+			$alsaOutputMode = getConfiguredAudioOutput() == AO_HDMI ? 'iec958' : 'plughw';
+		}
 		// Update ALSA config
-		phpSession('write', 'cardnum', $_POST['output_device']);
-		phpSession('write', 'adevname', $deviceNames[$_POST['output_device']]);
+		phpSession('write', 'cardnum', $_POST['output_device_cardnum']);
+		phpSession('write', 'adevname', $deviceName);
 		phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
 	    phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
-		$mode = getConfiguredAudioOutput() == AO_HDMI ? 'iec958' : 'plughw';
-		phpSession('write', 'alsa_output_mode', $mode);
+		phpSession('write', 'alsa_output_mode', $alsaOutputMode);
 		// Update MPD config
-		sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
+		sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device_cardnum']);
 		phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
 		$queueArgs = '1,0'; // Device change,MPD mixer change
 		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
