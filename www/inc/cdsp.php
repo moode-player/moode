@@ -611,7 +611,8 @@ class CamillaDsp {
             sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
 
             sendEngCmd('cdsp_updating_config' . $notifyMsg);
-            usleep(500000);
+            sleep(2); // So notification stays up for a while
+
             submitJob('camilladsp', $newMode . $queueArg1);
         } else {
             // Switching between configs
