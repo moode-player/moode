@@ -135,6 +135,9 @@ body {
 	#playqueue-search input,
 	#ra-search input {font-size:1.25em;}
 
+	/* Renderer active overlays: Text and button */
+	#inpsrc-indicator {font-size:3.5em;}
+
 	/* Library */
 	#lib-artist-header,
 	#lib-artist {left:50%;width:50%;}
