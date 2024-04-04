@@ -629,7 +629,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		} else if ($ext == 'dsf' || $ext == 'dff') {
 			// DSD: DSF/DFF
 			// DSD rate,h,channels
-			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
+			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
 			//$encodedAt = empty($result[1]) ? 'DSD,h' : formatRate($result[1]) . ' DSD,h,' . $result[2];
 			$encodedAt = empty($result[1]) ? 'DSD,h' : 'DSD ' . formatRate($result[1]) . ',h,' . $result[2];
 		} else if ($ext == 'wv' && strpos($mpdFormatTag[0], 'dsd') !== false) {
@@ -658,7 +658,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		$encodedAt = 'Unknown';
 	} else if ($ext == 'dsf' || $ext == 'dff') {
 		// DSD file
-		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
 		if ($result[1] == '') {
 			$encodedAt = '?';
 		} else {
@@ -702,7 +702,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		}
 		// Mediainfo
 		// NOTE: Mediainfo called via sysCmd() i.e. exec() returns nothing if the file name contains accented chars
-		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
 		//workerLog(print_r($result, true));
 		if ($result[0] == '' || $result[1] == '') {
 			// Empty mediainfo so fallback to MPD lsinfo Format tag rate:bits:channels
