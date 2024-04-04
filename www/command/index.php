@@ -50,6 +50,7 @@ switch ($cmd[0]) {
 	case 'set_volume':			// N | -mute | -up N | -dn N
 	case 'vol.sh': 				// DEPRECATED: used in spotevent, spspost, multiroom.php
 		$result = sysCmd('/var/www/vol.sh' . getArgs($cmd));
+		echo 'OK';
 		break;
 	case 'set_coverview':		// -on | -off
 	case 'coverview.php':		// DEPRECATED: not used via http
@@ -63,8 +64,12 @@ switch ($cmd[0]) {
 		break;
 	case 'upd_library':
 	case 'libupd-submit.php':	// DEPRECATED: not used via http
-		$result = sysCmd('/var/www/libupd-submit.php');
+		$result = sysCmd('/var/www/util/libupd-submit.php');
 		echo 'Library update submitted';
+		break;
+	case 'restart_renderer': 	// --bluetooth | --airplay | --spotify | --squeezelite | --roonbridge
+		$result = sysCmd('/var/www/util/restart-renderer.php ' . getArgs($cmd));
+		echo (empty($result) ? 'OK' : 'Missing or invalid argument');
 		break;
 	default: // MPD commands
 		if (false === ($sock = openMpdSock('localhost', 6600))) {
