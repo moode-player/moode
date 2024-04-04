@@ -32,6 +32,7 @@ Updates
 - UPD: Add "Show items" option to One-touch playlist
 - UPD: Add "Queue info" to ellipsis menu (stats + saved playlist name)
 - UPD: Add Spotify and Amazon Music to Prefs Search sites
+- UPD: Add restart_renderer REST command
 - UPD: Remove HDMI On/Off option (not valid on Bookworm)
 - UPD: Remove redundant or obsolete devices from audio device table
 - UPD: Allow any netmask to be entered for static IP address
