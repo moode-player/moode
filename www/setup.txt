@@ -197,6 +197,10 @@ Arguments: -on | -off
 upd_library
 Submits an "Update library" command.
 
+restart_renderer
+Restarts the specified renderer.
+Arguments: --bluetooth | --airplay | --spotify | --squeezelite | --roonbridge
+
 MPD commands
 See MPD protocol for list of commands.
 https://mpd.readthedocs.io/en/latest/protocol.html
@@ -208,6 +212,7 @@ recommened to update scripts to use the new commands.
 - vol.sh
 - coverview.php
 - libupd-submit.php
+- restart-renderer.php
 
 SSH COMMANDS
 
@@ -225,11 +230,20 @@ To run it type /var/www/vol.sh <options>
 
 libupd-submit.php
 This command submits a "Library update".
-To run it type /var/www/libupd-submit.php
+To run it type /var/www/util/libupd-submit.php
 
 coverview.php
 This command turns the CoverView screen saver on or off.
 To run it type /var/www/util/coverview.php -on | -off
+
+restart-renderer.php
+This command restarts the specified renderer.
+To run it type /var/www/util/restart-renderer.php --renderer
+--bluetooth    Restart bluetooth
+--airplay      Restart airplay
+--spotify      Restart spotify
+--squeezelite  Restart squeezelite
+--roonbridge   Restart roonbridge
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
