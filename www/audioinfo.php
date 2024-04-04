@@ -227,7 +227,6 @@ $_alsa_loopback_class = $_alsa_loopback; // NOTE: 'off' is a class that hides th
 //
 
 // Volume type and range
-$_cdsp_volume_range = 'off'; // Range only applies to mixer CamillaDSP
 if ($_SESSION['mpdmixer'] == 'hardware') {
 	$_volume_mixer = 'Hardware (On-chip)';
 }
@@ -238,8 +237,7 @@ else if ($_SESSION['mpdmixer'] == 'none') {
 	$_volume_mixer = 'Fixed (0dB output)';
 }
 else if ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp_volume_sync'] == 'on') {
-	$_volume_mixer = 'CamillaDSP (64-bit)';
-	$_cdsp_volume_range = $_SESSION['camilladsp_volume_range'] . ' dB';
+	$_volume_mixer = 'CamillaDSP (64-bit), Range ' . $_SESSION['camilladsp_volume_range'] . ' dB';
 }
 elseif ($_SESSION['mpdmixer'] == 'null') {
 	$_volume_mixer = 'Null (External control)';
@@ -247,6 +245,12 @@ elseif ($_SESSION['mpdmixer'] == 'null') {
 else {
 	$_volume_mixer = 'Error: Unknow MPD volume type';
 }
+// Volume levels
+$knobVol = $_SESSION['volknob'];
+$alsaVol = sysCmd('/var/www/util/sysutil.sh get-alsavol "' . $_SESSION['amixname'] . '"')[0];
+$result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'");
+$cdspVol = number_format($result[0], 1) . ' dB';
+$_volume_levels = 'Knob ' . $knobVol . ', ALSA ' . $alsaVol . ', CDSP ' . $cdspVol;
 
 if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == '1' ||
 	$btActive === true || $_SESSION['audioout'] == 'Bluetooth' || $_SESSION['inpactive'] == '1') {
