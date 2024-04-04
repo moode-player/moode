@@ -54,11 +54,11 @@ Moode renderer restarter
 
 With no OPTION print the help text and exit.
 
- --bluetooth\t\tRestart bluetooth
- --airplay\t\tRestart airplay
- --spotify\t\tRestart spotify
+ --bluetooth\tRestart bluetooth
+ --airplay\tRestart airplay
+ --spotify\tRestart spotify
  --squeezelite\tRestart squeezelite
- --roonbridge\t\tRestart roonbridge\n";
+ --roonbridge\tRestart roonbridge\n";
 		break;
 }
 
