@@ -51,7 +51,7 @@ if [[ $INPACTIVE == '1' ]]; then
 fi
 
 # Local
-/var/www/vol.sh -restore
+/var/www/util/vol.sh -restore
 
 if [[ $CDSP_VOLSYNC == "on" ]]; then
 	# Restore CDSP volume

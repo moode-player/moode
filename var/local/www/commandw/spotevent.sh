@@ -86,7 +86,7 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='spotactive'")
 
 	# Local
-	/var/www/vol.sh -restore
+	/var/www/util/vol.sh -restore
 
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
 		# Restore CDSP volume

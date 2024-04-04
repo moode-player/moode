@@ -86,7 +86,7 @@ function stopAirPlay() {
 	sysCmd('systemctl stop nqptp');
 
 	// Local
-	sysCmd('/var/www/vol.sh -restore');
+	sysCmd('/var/www/util/vol.sh -restore');
 	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
 		sysCmd('systemctl restart mpd2cdspvolume');
 	}
@@ -158,7 +158,7 @@ function stopSpotify() {
 	sysCmd('killall librespot');
 
 	// Local
-	sysCmd('/var/www/vol.sh -restore');
+	sysCmd('/var/www/util/vol.sh -restore');
 	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
 		sysCmd('systemctl restart mpd2cdspvolume');
 	}
@@ -185,7 +185,7 @@ function startSqueezeLite() {
 function stopSqueezeLite() {
 	sysCmd('systemctl stop squeezelite');
 
-	sysCmd('/var/www/vol.sh -restore');
+	sysCmd('/var/www/util/vol.sh -restore');
 	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
 		sysCmd('systemctl restart mpd2cdspvolume');
 	}
@@ -215,7 +215,7 @@ function startRoonBridge() {
 
 function stopRoonBridge() {
 	sysCmd('systemctl stop roonbridge');
-	sysCmd('/var/www/vol.sh -restore');
+	sysCmd('/var/www/util/vol.sh -restore');
 	phpSession('write', 'rbactive', '0');
 	$GLOBALS['rbactive'] = '0';
 	sendEngCmd('rbactive0');

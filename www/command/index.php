@@ -44,12 +44,12 @@ switch ($cmd[0]) {
 		echo json_encode(getALSAOutputFormat());
 		break;
 	case 'get_volume':
-		$result = sysCmd('/var/www/vol.sh');
+		$result = sysCmd('/var/www/util/vol.sh');
 		echo $result[0];
 		break;
 	case 'set_volume':			// N | -mute | -up N | -dn N
 	case 'vol.sh': 				// DEPRECATED: used in spotevent, spspost, multiroom.php
-		$result = sysCmd('/var/www/vol.sh' . getArgs($cmd));
+		$result = sysCmd('/var/www/util/vol.sh' . getArgs($cmd));
 		echo 'OK';
 		break;
 	case 'set_coverview':		// -on | -off

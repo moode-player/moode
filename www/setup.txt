@@ -225,8 +225,8 @@ This command can be used to control MPD. For a list of options type mpc help
 
 vol.sh
 This command can be used to get or set MPD volume and update the volume knob.
-For a list of options type /var/www/vol.sh --help
-To run it type /var/www/vol.sh <options>
+For a list of options type /var/www/util/vol.sh --help
+To run it type /var/www/util/vol.sh <options>
 
 libupd-submit.php
 This command submits a "Library update".

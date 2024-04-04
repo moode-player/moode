@@ -120,7 +120,7 @@ function setAudioIn($inputSource) {
 			// Restore saved MPD volume
 			// vol.sh only updates cfg_system 'volknob' so lets also update the SESSION var
 			phpSession('write', 'volknob', $_SESSION['volknob_mpd']);
-			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_mpd']);
+			sysCmd('/var/www/util/vol.sh ' . $_SESSION['volknob_mpd']);
 		}
 
 		sendEngCmd('inpactive0');
@@ -139,7 +139,7 @@ function setAudioIn($inputSource) {
 			// Restore saved Preamp volume
 			// vol.sh only updates cfg_system 'volknob' so lets also update the SESSION var
 			phpSession('write', 'volknob', $_SESSION['volknob_preamp']);
-			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_preamp']);
+			sysCmd('/var/www/util/vol.sh ' . $_SESSION['volknob_preamp']);
 		}
 
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
@@ -156,7 +156,7 @@ function setAudioIn($inputSource) {
 function setAudioOut($output) {
 	if ($output == 'Local') {
 		changeMPDMixer($_SESSION['mpdmixer_local']);
-		sysCmd('/var/www/vol.sh -restore');
+		sysCmd('/var/www/util/vol.sh -restore');
 		sysCmd('mpc stop');
 		sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 	} else if ($output == 'Bluetooth') {
@@ -168,7 +168,7 @@ function setAudioOut($output) {
 
 		phpSession('write', 'btactive', '0');
 		sendEngCmd('btactive0');
-		sysCmd('/var/www/vol.sh -restore');
+		sysCmd('/var/www/util/vol.sh -restore');
 		sysCmd('mpc stop');
 		sysCmd('mpc enable only "' . ALSA_BLUETOOTH .'"');
 	}

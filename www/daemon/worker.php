@@ -697,7 +697,7 @@ if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
 	phpSession('write', 'volknob_mpd', '-1');
 	phpSession('write', 'volknob_preamp', '0');
 }
-sysCmd('/var/www/vol.sh ' . $volKnob);
+sysCmd('/var/www/util/vol.sh ' . $volKnob);
 workerLog('worker: MPD volume:    ' . $volKnob);
 workerLog('worker: Saved MPD vol: ' . $_SESSION['volknob_mpd']);
 workerLog('worker: Saved SRC vol: ' . $_SESSION['volknob_preamp']);
@@ -1487,7 +1487,7 @@ function chkBtActive() {
 			sendEngCmd('btactive0');
 
 			// Local
-			sysCmd('/var/www/vol.sh -restore');
+			sysCmd('/var/www/util/vol.sh -restore');
 
 			// Multiroom receivers
 			if ($_SESSION['multiroom_tx'] == 'On') {
@@ -1588,7 +1588,7 @@ function chkRbActive() {
 				$GLOBALS['rbactive'] = '0';
 				phpSession('write', 'rbactive', '0');
 				sendEngCmd('rbactive0');
-				sysCmd('/var/www/vol.sh -restore');
+				sysCmd('/var/www/util/vol.sh -restore');
 				if ($_SESSION['rsmafterrb'] == 'Yes') {
 					sysCmd('mpc play');
 				}
@@ -1751,7 +1751,7 @@ function chkClockRadio() {
 		closeMpdSock($sock);
 
 		// Set volume
-		sysCmd('/var/www/vol.sh ' . $_SESSION['clkradio_volume']);
+		sysCmd('/var/www/util/vol.sh ' . $_SESSION['clkradio_volume']);
 
 	} else if ($curtime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$curday] == '1') {
 		//workerLog('chkClockRadio(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
@@ -2169,19 +2169,19 @@ function runQueuedJob() {
 				$startPlay = true;
 			} else {
 				$startPlay = false;
-				sysCmd('/var/www/vol.sh 0');
+				sysCmd('/var/www/util/vol.sh 0');
 			}
 			// Volume type change (MPD mixer_type))
 			if ($mixerChange != '0') {
 				$startPlay = false;
 				if ($mixerChange == 'camilladsp') {
-					sysCmd('/var/www/vol.sh -restore');
+					sysCmd('/var/www/util/vol.sh -restore');
 				} else {
 					// Hardware, software or fixed
 					if ($_SESSION['camilladsp'] != 'off') {
 						CamillaDSP::setCDSPVolTo0dB();
 					}
-					sysCmd('/var/www/vol.sh 0');
+					sysCmd('/var/www/util/vol.sh 0');
 				}
 				 // Refresh connected clients
 				sendEngCmd('refresh_screen');
@@ -2362,7 +2362,7 @@ function runQueuedJob() {
 						$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 						closeMpdSock($sock);
 						// Set volume level
-						sysCmd('/var/www/vol.sh -restore' );
+						sysCmd('/var/www/util/vol.sh -restore' );
 					}
 					// Notification
 					sendEngCmd('cdsp_config_updated');
@@ -2433,7 +2433,7 @@ function runQueuedJob() {
 			sysCmd('systemctl stop bluealsa');
 			sysCmd('systemctl stop bluetooth');
 			sysCmd('killall bluealsa-aplay');
-			sysCmd('/var/www/vol.sh -restore');
+			sysCmd('/var/www/util/vol.sh -restore');
 			// Reset to inactive
 			phpSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
@@ -2596,7 +2596,7 @@ function runQueuedJob() {
 			break;
 		case 'multiroom_initvol':
 			$level = $_SESSION['w_queueargs'];
-			sysCmd('/var/www/vol.sh ' . $level); // Sender
+			sysCmd('/var/www/util/vol.sh ' . $level); // Sender
 			updReceiverVol($level); // Receivers
 			break;
 

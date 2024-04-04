@@ -69,7 +69,7 @@ function restartBluetooth() {
 	sysCmd('systemctl stop bluealsa');
 	sysCmd('systemctl stop bluetooth');
 	sysCmd('killall bluealsa-aplay');
-	sysCmd('/var/www/vol.sh -restore');
+	sysCmd('/var/www/util/vol.sh -restore');
 
 	// Reset to inactive
 	phpSession('write', 'btactive', '0');
@@ -77,7 +77,7 @@ function restartBluetooth() {
 	sendEngCmd('btactive0');
 
 	// Restore MPD volume and start bluetooth
-	sysCmd('/var/www/vol.sh -restore');
+	sysCmd('/var/www/util/vol.sh -restore');
 	$status = startBluetooth();
 	if ($status != 'started') {
 		echo $status;
