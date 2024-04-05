@@ -151,7 +151,7 @@ if (str_contains($lines[1], CFG_MAIN_FILE_HEADER)) {
 		workerLog('worker: Boot config is ok');
 	} else {
 		sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
-		workerLog('worker: Warning: Boot config is missing required header(s)');
+		workerLog('worker: Warning: Boot config is missing required header');
 		workerLog('worker: Warning: Default boot config restored');
 		workerLog('worker: Warning: Restart required');
 	}
@@ -595,28 +595,28 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 }
 
 // Cards
-$pad_length = 12;
+$pad_length = 16;
 $cards = getAlsaCardIDs();
 foreach($cards as &$card) {
 	$card = str_pad($card, $pad_length);
 }
-workerLog('worker: Cards:  0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
-workerLog('worker:         4:' . $cards[4] . ' | 5:' . $cards[5]. ' | 6:' . $cards[6]. ' | 7:' . $cards[7]);
+workerLog('worker: Cards:  0:' . $cards[0] . '1:' . $cards[1]. '2:' . $cards[2]. '3:' . $cards[3]);
+workerLog('worker:         4:' . $cards[4] . '5:' . $cards[5]. '6:' . $cards[6]. '7:' . $cards[7]);
 
 // Mixers
 $mixers = array();
 foreach ($cards as $card) {
 	$result = sysCmd('amixer -c ' . $card . ' | awk \'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}\' | awk -F"\'" \'{print "(" $2 ")";}\'');
 	if (in_array('(' . ALSA_DEFAULT_MIXER_NAME_I2S . ')', $result)) {
-		$mixerName = ALSA_DEFAULT_MIXER_NAME_I2S;
+		$mixerName = '(' . ALSA_DEFAULT_MIXER_NAME_I2S . ')';
 	} else {
 		$mixerName = (empty($result) || str_contains($result[0], 'Invalid card number')) ? 'none' : $result[0];
 	}
 
 	array_push($mixers, str_pad($mixerName, $pad_length));
 }
-workerLog('worker: Mixers: 0:' . $mixers[0] . ' | 1:' . $mixers[1] . ' | 2:' . $mixers[2] . ' | 3:' . $mixers[3]);
-workerLog('worker:         4:' . $mixers[4] . ' | 5:' . $mixers[5] . ' | 6:' . $mixers[6] . ' | 7:' . $mixers[7]);
+workerLog('worker: Mixers: 0:' . $mixers[0] . '1:' . $mixers[1] . '2:' . $mixers[2] . '3:' . $mixers[3]);
+workerLog('worker:         4:' . $mixers[4] . '5:' . $mixers[5] . '6:' . $mixers[6] . '7:' . $mixers[7]);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
