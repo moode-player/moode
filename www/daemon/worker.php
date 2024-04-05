@@ -552,7 +552,7 @@ if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
 	sysCmd('sed -i /boss2/d /etc/rc.local');
 	$scriptMsg = 'manually installed script, rc.local updated';
 } else {
-	$scriptMsg = 'pre-installed script ok';
+	$scriptMsg = 'OLED script ok';
 }
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
 	sysCmd('systemctl start boss2oled');
