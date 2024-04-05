@@ -38,8 +38,10 @@ $deviceNames = getAlsaDeviceNames();
 if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != $_SESSION['cardnum']) {
 	$deviceName = $deviceNames[$_POST['output_device_cardnum']];
 	// Validate
-	if (in_array($deviceName, ALSA_RESERVED_NAMES)) {
-		$_SESSION['notify']['title'] = 'Device is reserved'; // Loopback, Dummy, empty
+	if ($deviceName == ALSA_EMPTY_CARD) {
+		$_SESSION['notify']['title'] = 'Card is empty'; // Empty card
+	} else if (in_array($deviceName, ALSA_RESERVED_NAMES)) {
+		$_SESSION['notify']['title'] = 'Device is reserved'; // Loopback, Dummy
 		$_SESSION['notify']['msg'] = 'It cannot be set directly';
 	} else {
 		// Load values from output device cache
