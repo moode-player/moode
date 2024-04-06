@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Apr 6 11:59:58 2024
+-- File generated with SQLiteStudio v3.1.0 on Sat Apr 6 17:22:13 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -338,7 +338,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (8, 'dlnaname', 'Moode DLNA');
 INSERT INTO cfg_system (id, param, value) VALUES (9, 'airplaysvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (10, 'upnpsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (11, 'dlnasvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (12, 'alsa_output_mode', 'plughw');
+INSERT INTO cfg_system (id, param, value) VALUES (12, 'alsa_output_mode', 'iec958');
 INSERT INTO cfg_system (id, param, value) VALUES (13, 'RESERVED_13', '');
 INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
