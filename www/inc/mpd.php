@@ -124,8 +124,8 @@ function updMpdConf() {
 	}
 
     // MPD mixer type
-    $audioOutput = getConfiguredAudioOutput();
-	if ($audioOutput != AO_USB && $_SESSION['alsavolume'] == 'none' && $mixerType != 'null') {
+    $outputIface = getAudioOutputIface($_SESSION['cardnum']);
+	if ($outputIface != AO_USB && $_SESSION['alsavolume'] == 'none' && $mixerType != 'null') {
 		$mixerType = 'software';
 		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
@@ -135,6 +135,9 @@ function updMpdConf() {
     if ($_SESSION['audioout'] == 'Local') {
         phpSession('write', 'mpdmixer_local', $mixerType);
     }
+
+    // Hardware mixer (if any)
+    $hwMixer = $_SESSION['alsa_output_mode'] == 'iec958' ? ALSA_IEC958_DEVICE . $cardNum : 'hw:' . $cardNum;
 
 	// Input
 	$data .= "max_connections \"128\"\n";
@@ -181,7 +184,7 @@ function updMpdConf() {
 	$data .= "mixer_type \"" . $mixerType . "\"\n";
 	$data .= $mixerType == 'hardware' ?
         "mixer_control \"" . $_SESSION['amixname'] . "\"\n" .
-        "mixer_device \"" . ($_SESSION['alsa_output_mode'] == 'iec958' ? ALSA_IEC958_DEVICE . $cardNum : 'hw:' . $cardNum) . "\"\n" .
+        "mixer_device \"" . $hwMixer . "\"\n" .
         "mixer_index \"0\"\n" :
         '';
 	$data .= "dop \"" . $dop . "\"\n";

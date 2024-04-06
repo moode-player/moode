@@ -37,43 +37,29 @@ $deviceNames = getAlsaDeviceNames();
 // Output device
 if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != $_SESSION['cardnum']) {
 	$deviceName = $deviceNames[$_POST['output_device_cardnum']];
+	$cardNum = $_POST['output_device_cardnum'];
+
 	// Validate
 	if ($deviceName == ALSA_EMPTY_CARD) {
 		$_SESSION['notify']['title'] = 'Card is empty'; // Empty card
 	} else if (in_array($deviceName, ALSA_RESERVED_NAMES)) {
-		$_SESSION['notify']['title'] = 'Device is reserved'; // Loopback, Dummy
+		$_SESSION['notify']['title'] = 'Device is reserved'; // Loopback or Dummy
 		$_SESSION['notify']['msg'] = 'It cannot be set directly';
 	} else {
-		// Load values from output device cache
-		$result = readOutputDeviceCache($deviceName);
-		if ($result != 'device not found') {
-			// MPD volume type
-			if ($_SESSION['camilladsp'] == 'off') {
-				if ($result['mpd_volume_type'] == 'null') {
-					$volumeType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
-				} else {
-					$volumeType = $result['mpd_volume_type'];
-				}
-			} else {
-				$volumeType = 'null';
-			}
-			sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $volumeType);
-			// ALSA
-			phpSession('write', 'alsavolume_max', $result['alsa_max_volume']);
-			$alsaOutputMode = $result['alsa_output_mode'];
-		} else {
-			$alsaOutputMode = getConfiguredAudioOutput() == AO_HDMI ? 'iec958' : 'plughw';
-		}
-		// Update ALSA config
-		phpSession('write', 'cardnum', $_POST['output_device_cardnum']);
+		$devCache = checkOutputDeviceCache($deviceName, $cardNum);
+		// Update configuration
+		phpSession('write', 'cardnum', $cardNum);
 		phpSession('write', 'adevname', $deviceName);
 		phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
 	    phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
-		phpSession('write', 'alsa_output_mode', $alsaOutputMode);
-		// Update MPD config
-		sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device_cardnum']);
+		phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
+		phpSession('write', 'alsa_output_mode', $devCache['alsa_output_mode']);
+		sqlUpdate('cfg_mpd', $dbh, 'device', $cardNum);
+		sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
 		phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
-		$queueArgs = '1,0'; // Device change,MPD mixer change
+		$deviceChange = '1';
+		$mixerChange = '0';
+		$queueArgs = $mixerChange . ',' . $mixerChange;
 		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 	}
 }
@@ -97,7 +83,8 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 	phpSession('write', 'camilladsp_volume_sync', $camillaDspVolumeSync);
 	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $_POST['mixer_type']);
 
-	$queueArgs = '0,' . $mixerChange; // Device change,MPD mixer change
+	$deviceChange = '0';
+	$queueArgs = $deviceChange . ',' . $mixerChange;
 	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
 }
 // CamillaDSP volume range
@@ -152,11 +139,8 @@ if (isset($_POST['update_alsavolume_max'])) {
 // Output mode
 if (isset($_POST['update_alsa_output_mode'])) {
 	if (isset($_POST['alsa_output_mode']) && $_POST['alsa_output_mode'] != $_SESSION['alsa_output_mode']) {
-		$oldOutputMode = $_SESSION['alsa_output_mode'];
-		$newOutputMode = $_POST['alsa_output_mode'];
-		// NOTE: Update session first for functions used in job
-		phpSession('write', 'alsa_output_mode', $newOutputMode);
-		submitJob('alsa_output_mode', $oldOutputMode, 'Settings updated');
+		phpSession('write', 'alsa_output_mode', $_POST['alsa_output_mode']);
+		submitJob('alsa_output_mode', $_POST['alsa_output_mode'], 'Settings updated');
 	}
 }
 // Loopback

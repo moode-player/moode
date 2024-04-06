@@ -630,22 +630,32 @@ workerLog('worker: -- Audio configuration');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Audio device and output interface
+// Audio device
 workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
-$audioOutput = getConfiguredAudioOutput();
-workerLog('worker: Audio output:  ' . $audioOutput);
 
-// Check for reassigned card number
+// Check for reassigned or empty card number
 $actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
 if ($actualCardNum == $_SESSION['cardnum']) {
-	workerLog('worker: ALSA card:     ' . $_SESSION['cardnum'] . ' (has not changed)');
+	workerLog('worker: ALSA card:     has not changed');
 	workerLog('worker: MPD config:    update not needed');
+} else if ($actualCardNum == ALSA_EMPTY_CARD) {
+	workerLog('worker: ALSA card:     is empty, reconfigure to HDMI 1');
+	$hdmi1CardNum = getAlsaCardNumForDevice(PI_HDMI1);
+	// Check output device cache
+	$devCache = checkOutputDeviceCache(PI_HDMI1, $hdmi1CardNum);
+	// Update configuration
+	phpSession('write', 'cardnum', $hdmi1CardNum);
+	phpSession('write', 'adevname', PI_HDMI1);
+	phpSession('write', 'alsa_output_mode', $devCache['alsa_output_mode']);
+	phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
+	sqlUpdate('cfg_mpd', $dbh, 'device', $hdmi1CardNum);
+	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
+	updMpdConf();
+	workerLog('worker: MPD config:    updated');
 } else {
-	workerLog('worker: ALSA card:     ' . $actualCardNum . ' (reasigned from ' . $_SESSION['cardnum'] . ')');
-	// Update card number
+	workerLog('worker: ALSA card:     changed to ' . $actualCardNum . ' from ' . $_SESSION['cardnum']);
 	phpSession('write', 'cardnum', $actualCardNum);
-	$result = sqlQuery("UPDATE cfg_mpd SET value='" . $actualCardNum . "' WHERE param='device'", sqlConnect());
-	// MPD conf update
+	sqlUpdate('cfg_mpd', $dbh, 'device', $actualCardNum);
 	if ($_SESSION['multiroom_tx'] == 'On') {
 		workerLog('worker: MPD config:    update not needed (trx sender on)');
 	} else {
@@ -653,6 +663,13 @@ if ($actualCardNum == $_SESSION['cardnum']) {
 		workerLog('worker: MPD config:    updated');
 	}
 }
+
+// Audio output interface
+$audioOutput = getAudioOutputIface($_SESSION['cardnum']);
+workerLog('worker: ALSA output:   ' . strtoupper($audioOutput));
+
+// ALSA output mode
+workerLog('worker: ALSA mode:     ' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $_SESSION['alsa_output_mode'] . ')');
 // ALSA mixer
 $_SESSION['amixname'] = getAlsaMixerName($_SESSION['adevname']);
 workerLog('worker: ALSA mixer     ' . ($_SESSION['amixname'] == 'none' ? 'none exists' : $_SESSION['amixname']));
@@ -677,8 +694,6 @@ if ($_SESSION['alsavolume'] != 'none') {
 workerLog('worker: ALSA volume:   ' . $msg);
 // ALSA maxvol
 workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
-// ALSA output
-workerLog('worker: ALSA output:   ' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $_SESSION['alsa_output_mode'] . ')');
 // ALSA loopback
 workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
 // MPD mixer
@@ -2190,7 +2205,7 @@ function runQueuedJob() {
 					sysCmd('/var/www/util/vol.sh 0');
 				}
 				 // Refresh connected clients
-				sendEngCmd('refresh_screen');
+				//DELETE:sendEngCmd('refresh_screen');
 			}
 
 			// Start play if was playing
@@ -2244,11 +2259,7 @@ function runQueuedJob() {
 			sysCmd('mpc stop');
 
 			if ($_SESSION['w_queue'] == 'alsa_output_mode') {
-				// Update ALSA and Bluetooth confs
-				// NOTE: w_queueargs contains $old_output_mode or ''
-				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode'], $_SESSION['w_queueargs']);
-				// Update output device cache
+				updMpdConf();
 				updOutputDeviceCache($_SESSION['adevname']);
 			} else {
 				// ALSA loopback

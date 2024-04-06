@@ -83,24 +83,23 @@ function isI2SDevice($deviceName) {
 	return $isI2SDevice;
 }
 
-function getConfiguredAudioOutput() {
-	// Configured device
-	$deviceName = getAlsaDeviceNames()[$_SESSION['cardnum']];
+function getAudioOutputIface($cardNum) {
+	$deviceName = getAlsaDeviceNames()[$cardNum];
 
 	if ($_SESSION['multiroom_tx'] == 'On') {
-		$configuredOutput = AO_TRXSEND;
+		$outputIface = AO_TRXSEND;
 	} else if (isI2SDevice($deviceName)) {
-		$configuredOutput = AO_I2S;
+		$outputIface = AO_I2S;
 	} else if ($deviceName == PI_HEADPHONE) {
-		$configuredOutput = AO_HEADPHONE;
+		$outputIface = AO_HEADPHONE;
 	} else if ($deviceName == PI_HDMI1 || $deviceName == PI_HDMI2) {
-		$configuredOutput = AO_HDMI;
+		$outputIface = AO_HDMI;
 	} else {
-		$configuredOutput = AO_USB;
+		$outputIface = AO_USB;
 	}
 
-	//workerLog('getConfiguredAudioOutput(): ' . $configuredOutput);
-	return $configuredOutput;
+	//workerLog('getAudioOutputIface(): ' . $outputIface);
+	return $outputIface;
 }
 
 // Set audio source
@@ -233,19 +232,16 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 }
 
 // Update ALSA DSP and Bluetooth in confs
-function updDspAndBtInConfs($cardNum, $newOutputMode, $oldOutputMode = '') {
-	// NOTE: This is done because the function can be called to change either the cardnum or the output mode
-	$oldOutputMode = empty($oldOutputMode) ? $_SESSION['alsa_output_mode'] : $oldOutputMode;
-
+function updDspAndBtInConfs($cardNum, $outputMode) {
 	// ALSA DSP confs
 	// NOTE: Crossfeed, eqfa12p and alsaequal only work with 'plughw' output mode
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
-	sysCmd("sed -i '/pcm \"" . $oldOutputMode . "/c\pcm \"" . $newOutputMode . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+	sysCmd('sed -i s\'/pcm ".*/pcm "' . $outputMode . ':' . $cardNum . ',0"/\' ' . ALSA_PLUGIN_PATH . '/invpolarity.conf');
 	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $cardNum, $_SESSION['camilladsp_quickconv']);
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-		$cdsp->setPlaybackDevice($cardNum, $newOutputMode);
+		$cdsp->setPlaybackDevice($cardNum, $outputMode);
 	}
 
 	// Bluetooth confs (incoming connections)
@@ -292,4 +288,30 @@ function updOutputDeviceCache($deviceName) {
 			'alsa_max_volume' => $_SESSION['alsavolume_max']);
 		$result = sqlUpdate('cfg_outputdev', $dbh, $deviceName, $value);
     }
+}
+
+function checkOutputDeviceCache($deviceName, $cardNum) {
+	$cachedDev = readOutputDeviceCache($deviceName);
+	if ($cachedDev == 'device not found') {
+		$volumeType = 'software';
+		$alsaOutputMode = getAudioOutputIface($cardNum) == AO_HDMI ? 'iec958' : 'plughw';
+		$alsaMaxVolume = $_SESSION['alsavolume_max'];
+	} else {
+		if ($_SESSION['camilladsp'] == 'off') {
+			if ($cachedDev['mpd_volume_type'] == 'null') {
+				$volumeType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
+			} else {
+				$volumeType = $cachedDev['mpd_volume_type'];
+			}
+		} else {
+			$volumeType = 'null';
+		}
+		$alsaOutputMode = $cachedDev['alsa_output_mode'];
+		$alsaMaxVolume = $cachedDev['alsa_max_volume'];
+	}
+
+	return array(
+		'mpd_volume_type' => $volumeType,
+		'alsa_output_mode' => $alsaOutputMode,
+		'alsa_max_volume' => $alsaMaxVolume,);
 }
