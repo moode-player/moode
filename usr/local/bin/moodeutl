@@ -125,6 +125,9 @@ switch ($option) {
 	case '--btreset':
 		bluetoothReset();
 		break;
+	case '--odcclear':
+		outputDeviceCacheClear();
+		break;
 	case '--mpdlog':
 		printMPDLog();
 		break;
@@ -187,6 +190,7 @@ With no OPTION print the help text and exit.
  -U\t\tCheck station urls, list only unplayable
  --hwparams\tPrint ALSA hardware params
  --btreset\tReset Bluetooth to off
+ --odcclear\tClear output device cache
  --mpdlog\tPrint MPD log
  --updlog\tPrint in-place update log
  --mountmonlog\tPrint mount monitor log
@@ -532,6 +536,11 @@ function bluetoothReset() {
 	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='btsvc'\"");
 	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='pairing_agent'\"");
 	echo 'Bluetooth reset to off, reboot required' . "\n";
+}
+
+function outputDeviceCacheClear() {
+	shell_exec("sqlite3 " .  SQLDB_PATH . " \"DELETE FROM cfg_outputdev\"");
+	echo 'Output device cache cleared' . "\n";
 }
 
 function printHWParams() {
