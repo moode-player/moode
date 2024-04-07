@@ -60,7 +60,7 @@ if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != 
 		$deviceChange = '1';
 		$mixerChange = '0';
 		$queueArgs = $mixerChange . ',' . $mixerChange;
-		submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+		submitJob('mpdcfg', $queueArgs, 'Settings updated');
 	}
 }
 
@@ -85,7 +85,7 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 
 	$deviceChange = '0';
 	$queueArgs = $deviceChange . ',' . $mixerChange;
-	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+	submitJob('mpdcfg', $queueArgs, 'Settings updated');
 }
 // CamillaDSP volume range
 if (isset($_POST['update_camilladsp_volume_range']) && $_POST['camilladsp_volume_range'] != $_SESSION['camilladsp_volume_range']) {
@@ -291,12 +291,12 @@ if (isset($_POST['mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd'])
 // Port
 if (isset($_POST['mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESSION['mpd_httpd_port']) {
 	phpSession('write', 'mpd_httpd_port', $_POST['mpd_httpd_port']);
-	submitJob('mpd_httpd_port', $_POST['mpd_httpd_port'], 'Settings updated', 'MPD restarted');
+	submitJob('mpd_httpd_port', $_POST['mpd_httpd_port'], 'Settings updated');
 }
 // Encoder
 if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSION['mpd_httpd_encoder']) {
 	phpSession('write', 'mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
-	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder'], 'Settings updated', 'MPD restarted');
+	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder'], 'Settings updated');
 }
 
 // EQUALIZERS
@@ -322,7 +322,7 @@ if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $
 	$newActive = intval($_POST['eqfa12p']);
 	$eqfa12p->setActivePresetIndex($newActive);
 	phpSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
-	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Settings updated', 'MPD restarted');
+	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Settings updated');
 }
 unset($eqfa12p);
 // Graphic eq
