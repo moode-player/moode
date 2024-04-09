@@ -55,11 +55,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 	// wlan0
 	$method = $_POST['wlan0ssid'] == 'Activate Hotspot' ? 'dhcp' : $_POST['wlan0method'];
-	if (empty($cfgNetwork[1]['wlanuuid'])) {
-		$uuid = genUUID();
-	} else {
-		$uuid = $cfgNetwork[1]['wlanuuid'];
-	}
+	$uuid = genUUID();
 	if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlanpsk']) {
 		$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
 	} else {
@@ -84,7 +80,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 			$result = sqlQuery("INSERT INTO cfg_ssid VALUES " . '(NULL,' . $values . ')', $dbh);
 		} else {
 			$result = sqlQuery("UPDATE cfg_ssid SET " .
-				//DELETE:"ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
+				"uuid='" . $uuid . "'," .
 				"psk='" . $psk . "' " .
 				"WHERE id='" . $cfgSSID[0]['id'] . "'" , $dbh);
 		}
