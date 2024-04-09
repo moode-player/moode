@@ -55,19 +55,19 @@ function notify(title, msg, duration = '2_seconds') {
 		no_favorite_to_add: 'Nothing to add',
         add_to_playlist: 'Items added',
         select_playlist: 'Select a playlist',
-        // Playlist view
-        creating_playlist: 'Creating new playlist',
-        updating_playlist: 'Updating playlist',
-        new_playlist: 'Playlist created',
-		upd_playlist: 'Playlist updated',
-		del_playlist: 'Playlist deleted',
-        // Radio
-        validation_check: 'Validation check',
-        creating_station: 'Creating new station',
-        updating_station: 'Updating station',
-		new_station: 'Station created',
-		upd_station: 'Station updated',
-		del_station: 'Station deleted',
+        // Playlist view                            // TODO: refactor
+        creating_playlist: 'Creating new playlist', // playlist_create
+        updating_playlist: 'Updating playlist',     // playlist_update
+        new_playlist: 'Playlist created',           // playlist_created
+		upd_playlist: 'Playlist updated',           // playlist_updated
+		del_playlist: 'Playlist deleted',           // playlist_deleted
+        // Radio view
+        validation_check: 'Validation check',       // station_validation
+        creating_station: 'Creating new station',   // station_create
+        updating_station: 'Updating station',       // station_update
+		new_station: 'Station created',             // station_created
+		upd_station: 'Station updated',             // station_updated
+		del_station: 'Station deleted',             // station_deleted
         blank_entries: 'Name or URL is blank',
         // Multiroom
         querying_receivers: 'Querying receivers...',

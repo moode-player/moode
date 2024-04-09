@@ -272,7 +272,7 @@ function deleteStation($stationName, $stationPls) {
 	// Update time stamp on files so MPD picks up the change
 	sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
-	// Update MPD database
+	// Update radio folder
 	$sock = getMpdSock();
 	sendMpdCmd($sock, 'update RADIO');
 	readMpdResp($sock);

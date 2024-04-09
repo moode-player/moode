@@ -1056,6 +1056,7 @@ jQuery(document).ready(function($) { 'use strict';
     		storeRadioPos(UI.radioPos);
             renderRadioView();
             lazyLode('radio');
+            $('.busy-spinner').hide();
         });
 	});
 
