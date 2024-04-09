@@ -60,7 +60,7 @@ function autoConfigSettings() {
 	function setCfgMpdParams($values) {
 		$dbh = sqlConnect();
 		foreach ($values as $key => $value) {
-			$query = sprintf("update cfg_mpd set value='%s' where param='%s'", $value, $key);
+			$query = sprintf("UPDATE cfg_mpd SET value='%s' WHERE param='%s'", $value, $key);
 			$result = sqlQuery($query, $dbh);
 		}
 	}
@@ -69,27 +69,27 @@ function autoConfigSettings() {
 		$dbh = sqlConnect();
 		$str = '';
 		foreach ($values as $key) {
-			$query = "select param, value from cfg_mpd where param='" . $key . "'";
+			$query = "SELECT param, value FROM cfg_mpd WHERE param='" . $key . "'";
 			$result = sqlQuery($query, $dbh);
 			$str .= sprintf("%s = \"%s\"\n", $key, $result[0]['value']);
 		}
 		return $str;
 	}
-	// Set table params: Can not be directly called as handler, but as shorthand within handler
+	// Set table params: Can not be directly called as handler, but as shorthand within a handler
 	function setCfgTableParams($table, $values, $prefix = '') {
 		$dbh = sqlConnect();
 		foreach ($values as $key => $value) {
-			$param =  strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key ;
+			$param = strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key;
 			$result = sqlUpdate($table, $dbh, $param, $value);
 		}
 	}
-	// Get table params: Can not be directly called as handler, but as shorthand with in handler
+	// Get table params: Can not be directly called as handler, but as shorthand within a handler
 	function getCfgTableParams($table, $values, $prefix = '') {
 		$dbh = sqlConnect();
 		$str ='';
 		foreach ($values as $key) {
-			$param =  strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key ;
-			$query = 'select param,value from '. $table .' where param="' . $param . '"';
+			$param =  strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key;
+			$query = 'SELECT param, value FROM ' . $table . ' WHERE param="' . $param . '"';
 			$result = sqlQuery($query, $dbh);
 			if ($result) {
 				$str .= sprintf("%s = \"%s\"\n", $key, $result[0]['value']);
@@ -102,7 +102,10 @@ function autoConfigSettings() {
 	// 'requires' array of autoconfig items that should ALL be present before the handler is executed
 	// 'handler'  function for setting the config item
 	// 'cmd'      special arg for sysutil.sh when setSessVarSqlSysCmd handler is used
-	$configurationHandlers = [
+	$configHandlers = [
+		//
+		// Host and renderer names
+		//
 		'Names',
 		['requires' => ['browsertitle'], 'handler' => 'setSessVarSql'],
 		['requires' => ['hostname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name host "' . $_SESSION['hostname'] . '" "%s"'],
@@ -120,7 +123,9 @@ function autoConfigSettings() {
 		}],
 		['requires' => ['upnpname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name upnp "' . $_SESSION['upnpname'] . '" "%s"'],
 		['requires' => ['dlnaname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name dlna "' . $_SESSION['dlnaname'] . '" "%s"'],
-
+		//
+		// System settings
+		//
 		'System',
 		['requires' => ['updater_auto_check'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['timezone'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'set-timezone %s'],
@@ -141,20 +146,6 @@ function autoConfigSettings() {
 			phpSession('write', 'cpugov', $values['cpugov']);
 			sysCmd('sh -c ' . "'" . 'echo "' . $values['cpugov'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
 		}],
-		['requires' => ['usb_auto_mounter'], 'handler' => function($values) {
-			phpSession('write', 'usb_auto_mounter', $values['usb_auto_mounter']);
-			if ($values['usb_auto_mounter'] == 'udisks-glue') {
-				sysCmd('sed -e "/udisks-glue/ s/^#*//" -i /etc/rc.local');
-				sysCmd('sed -e "/devmon/ s/^#*/#/" -i /etc/rc.local');
-				sysCmd('systemctl enable udisks');
-				sysCmd('systemctl disable udisks2');
-			} else if ($values['usb_auto_mounter'] == 'devmon') {
-				sysCmd('sed -e "/udisks-glue/ s/^#*/#/" -i /etc/rc.local');
-				sysCmd('sed -e "/devmon/ s/^#*//" -i /etc/rc.local');
-				sysCmd('systemctl disable udisks');
-				sysCmd('systemctl enable udisks2');
-			}
-		}],
 		['requires' => ['p3wifi'], 'handler' => function($values) {
 			ctlWifi($values['p3wifi']);
 			phpSession('write', 'p3wifi', $values['p3wifi']);
@@ -166,237 +157,19 @@ function autoConfigSettings() {
 		['requires' => ['led_state'], 'handler' => 'setSessVarSql'],
 		['requires' => ['ipaddr_timeout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['eth0chk'], 'handler' => 'setSessVarSql'],
-
-		'Local Display',
-		['requires' => ['localui'], 'handler' => 'setSessVarSql'],
-
 		'File Sharing',
 		['requires' => ['fs_smb'], 'handler' => 'setSessVarSql'],
 		['requires' => ['fs_nfs'], 'handler' => 'setSessVarSql'],
 		['requires' => ['fs_nfs_access'], 'handler' => 'setSessVarSql'],
 		['requires' => ['fs_nfs_options'], 'handler' => 'setSessVarSql'],
+		'Peripherals',
+		['requires' => ['localui'], 'handler' => 'setSessVarSql'],
 		['requires' => ['lcdup'], 'handler' => 'setSessVarSql'],
-
-		'GPIO Buttons',
-		['requires' => ['gpio_svc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['gpio_button'], 'handler' => function($values) {
-			$dbh = sqlConnect();
-			// Buttons: id 1 - 8
-			for ($i = 1; $i <= 8; $i++) {
-				$val = explode('|', $values['gpio_button'][$i]);
-				$query = "update cfg_gpio set " .
-					"pin='" . $val[0] . "'," .
-					"enabled='" . $val[1] . "'," .
-					"command='" . $val[2] . "'," .
-					"param='" . $val[3] . "'," .
-					"value='" . $val[4] . "' " .
-					"where id='" . $i . "'";
-				$result = sqlQuery($query, $dbh);
-			}
-			// Bounce time: id 99
-			$val = explode('|', $values['gpio_button'][99]);
-			$query = "update cfg_gpio set " .
-				"param='" . $val[3] . "'," .
-				"value='" . $val[4] . "' " .
-				"where id='99'";
-			$result = sqlQuery($query, $dbh);
-		}, 'custom_write' => function($values) {
-			$result = sqlRead('cfg_gpio', sqlConnect());
-			$format = "gpio_button[%s] = \"%s|%s|%s|%s|%s\"\n";
-			$str = '';
-			foreach ($result as $row) {
-				$str .= sprintf($format, $row['id'], $row['pin'], $row['enabled'], $row['command'], $row['param'], $row['value']);
-			}
-			return $str;
-		}],
-
 		'Security',
 		['requires' => ['shellinabox'], 'handler' => 'setSessVarSql'],
-
-		'I2S Device',
-		['requires' => ['i2soverlay'], 'handler' => function($values) {
-			$value = $values['i2soverlay'] == 'none' ? 'None': $values['i2soverlay'];
-			phpSession('write', 'i2soverlay', $value);
-		}],
-		['requires' => ['i2sdevice'], 'handler' => function($values) {
-			$value = $values['i2sdevice'] == 'none' ? 'None': $values['i2sdevice'];
-			phpSession('write', 'i2sdevice', $value);
-			cfgI2SDevice();
-		}],
-
-		'ALSA',
-		['requires' => ['alsa_output_mode'], 'handler' => 'setSessVarSql'],
-		['requires' => ['alsa_loopback'], 'handler' => function($values) {
-			phpSession('write', 'alsa_loopback', $values['alsa_loopback']);
-			$values['alsa_loopback'] == 'On' ? sysCmd("sed -i '0,/_audioout__ {/s//_audioout {/' /etc/alsa/conf.d/_sndaloop.conf") :
-				sysCmd("sed -i '0,/_audioout {/s//_audioout__ {/' /etc/alsa/conf.d/_sndaloop.conf");
-		}],
-
-		'Multiroom',
-		['requires' => ['multiroom_tx'], 'handler' => 'setSessVarSql'],
-		['requires' => ['multiroom_rx'], 'handler' => 'setSessVarSql'],
-		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels', 'multiroom_tx_frame_size', 'multiroom_tx_bitrate',
-					    'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port',  'multiroom_rx_jitter_bfr', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_initial_volume'],
-         'optionals' => ['multiroom_tx_rtprio', 'multiroom_tx_query_timeout', 'multiroom_rx_frame_size', 'multiroom_rx_rtprio', 'multiroom_rx_alsa_output_mode', 'multiroom_rx_mastervol_opt_in', 'multiroom_initial_volume'],
-			'handler' => function($values, $optionals) {
-				$mergedValues = array_merge($values, $optionals);
-				setCfgTableParams('cfg_multiroom', $mergedValues, 'multiroom_');
-			}, 'custom_write' => function($values) {
-				return getCfgTableParams('cfg_multiroom', $values, 'multiroom_');
-		}],
-
-		'MPD Config',
-		['requires' => ['mixer_type'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['device'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['audio_output_format'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['selective_resample_mode'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['sox_quality'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['sox_multithreading'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['sox_precision', 'sox_phase_response', 'sox_passband_end', 'sox_stopband_begin', 'sox_attenuation', 'sox_flags'],
-			'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['dop'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['replaygain'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['replaygain_preamp'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['volume_normalization'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['audio_buffer_size'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['max_output_buffer_size'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['max_playlist_length'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['input_cache'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['log_level'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['stop_dsd_silence'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['thesycon_dsd_workaround'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-
-		'MPD Options',
-		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
-		['requires' => ['mpdcrossfade'], 'handler' => 'setSessVarSql'],
-		['requires' => ['crossfeed'], 'handler' => 'setSessVarSql'],
-		['requires' => ['invert_polarity'], 'handler' => 'setSessVarSql'],
-		['requires' => ['volume_step_limit'], 'handler' => 'setSessVarSql'],
-		['requires' => ['volume_mpd_max'], 'handler' => 'setSessVarSql'],
-		['requires' => ['volume_db_display'], 'handler' => 'setSessVarSql'],
-		['requires' => ['ashufflesvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['ashuffle_mode'], 'handler' => 'setSessVarSql'],
-		['requires' => ['ashuffle_filter'], 'handler' => 'setSessVarSql'],
-		['requires' => ['mpd_httpd'], 'handler' => function($values) {
-			$cmd = $values['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
-			sysCmd($cmd);
-			phpSession('write', 'mpd_httpd', $values['mpd_httpd']);
-		}],
-		['requires' => ['mpd_httpd_port'], 'handler' => 'setSessVarSql'],
-		['requires' => ['mpd_httpd_encoder'], 'handler' => 'setSessVarSql'],
-
-		'CamillaDSP',
-		['requires' => ['camilladsp'], 'handler' => 'setSessVarSql'],
-		['requires' => ['camilladsp_volume_sync'], 'handler' => 'setSessVarSql'],
-		['requires' => ['camilladsp_quickconv'], 'handler' => 'setSessVarSql'],
-		['requires' => ['cdsp_fix_playback'], 'handler' => 'setSessVarSql'],
-
-		'Parametric EQ',
-		['requires' => ['eqfa12p'], 'handler' => 'setSessVarSql'],
-		['requires' => ['eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {
-			require_once __DIR__ . '/eqp.php';
-			$eqp = Eqp12(sqlConnect());
-			$eqp->import($values);
-		}, 'custom_write' => function($values) {
-			require_once __DIR__ . '/eqp.php';
-			$eqp = Eqp12(sqlConnect());
-			$str = $eqp->export();
-			return $str;
-		}],
-
-		'Graphic EQ',
-		['requires' => ['alsaequal'], 'handler' => 'setSessVarSql'],
-		['requires' => ['eqg_curve_name', 'eqg_curve_values'], 'handler' => function($values) {
-			$dbh = sqlConnect();
-			$result = sqlQuery('delete from cfg_eqalsa', $dbh);
-			$count = count($values['eqg_curve_name']);
-			for ($i = 0; $i < $count; $i++) {
-				$curveName = $values['eqg_curve_name'][$i];
-				$curveValues = $values['eqg_curve_values'][$i];
-				$query ="insert into cfg_eqalsa (curve_name, curve_values) values ('" . $curveName . "', '" . $curveValues . "')";
-				$result = sqlQuery($query, $dbh);
-			}
-		}, 'custom_write' => function($values) {
-			$result = sqlRead('cfg_eqalsa', sqlConnect());
-			$format = "eqg_%s[%d] = \"%s\"\n";
-			$str = '';
-			foreach ($result as $i => $row) {
-				$str .= sprintf($format, 'curve_name', $i, $row['curve_name']);
-				$str .= sprintf($format, 'curve_values', $i, $row['curve_values']);
-			}
-			return $str;
-		}],
-
-		'Renderers',
-		['requires' => ['btsvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['rsmafterbt'], 'handler' => 'setSessVarSql'],
-		['requires' => ['airplaysvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['rsmafterapl'], 'handler' => 'setSessVarSql'],
-		['requires' => ['spotifysvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
-		['requires' => ['slsvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['rsmaftersl'], 'handler' => 'setSessVarSql'],
-		['requires' => ['rbsvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['rsmafterrb'], 'handler' => 'setSessVarSql'],
-
-		'Bluetooth',
-		['requires' => ['pairing_agent'], 'handler' => 'setSessVarSql'],
-		['requires' => ['bluez_pcm_buffer'], 'handler' => function($values) {
-			phpSession('write', 'bluez_pcm_buffer', $values['bluez_pcm_buffer']);
-			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
-		}],
-		['requires' => ['audioout'], 'handler' => 'setSessVarSql'],
-		['requires' => ['bt_alsa_output_mode'], 'handler' => 'setSessVarOnly'],
-
-		'AirPlay',
-		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption',
-			'airplay_session_timeout', 'airplay_audio_backend_latency_offset_in_seconds', 'airplay_audio_backend_buffer_desired_length_in_seconds'],
-			'handler' => function($values) {
-				setCfgTableParams('cfg_airplay', $values, 'airplay_');
-			}, 'custom_write' => function($values) {
-				return getCfgTableParams('cfg_airplay', $values, 'airplay_');
-		}],
-
-		'Spotify',
-		['requires' => ['spotify_bitrate', 'spotify_initial_volume', 'spotify_volume_curve', 'spotify_volume_normalization', 'spotify_normalization_pregain',
-			'spotify_autoplay'],
-			'optionals' => ['spotify_normalization_method', 'spotify_normalization_gain_type', 'spotify_normalization_threshold','spotify_normalization_attack',
-			'spotify_normalization_release', 'spotify_normalization_knee', 'spotify_format', 'spotify_dither', 'spotify_volume_range'],
-			'handler' => function($values, $optionals) {
-				$mergedValues = array_merge($values, $optionals);
-				setCfgTableParams('cfg_spotify', $mergedValues, 'spotify_');
-			}, 'custom_write' => function($values) {
-				return getCfgTableParams('cfg_spotify', $values, 'spotify_');
-		}],
-
-		'Squeezelite',
-		['requires' => ['squeezelite_PLAYERNAME', 'squeezelite_AUDIODEVICE', 'squeezelite_ALSAPARAMS', 'squeezelite_OUTPUTBUFFERS',
-			'squeezelite_TASKPRIORITY', 'squeezelite_CODECS', 'squeezelite_OTHEROPTIONS'],
-			'handler' => function($values) {
-				setCfgTableParams('cfg_sl', $values, 'squeezelite_');
-			}, 'custom_write' => function($values) {
-				return getCfgTableParams('cfg_sl', $values, 'squeezelite_');
-		}],
-
-		'UPnP/DLNA',
-		['requires' => ['upnpsvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['dlnasvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['upnpav'], 'handler' => function($values) {
-			setCfgTableParams('cfg_upnp', $values);
-		}, 'custom_write' => function($values) {
-			return getCfgTableParams('cfg_upnp', $values);
-		}],
-		['requires' => ['openhome'], 'handler' => function($values) {
-			setCfgTableParams('cfg_upnp', $values);
-		}, 'custom_write' => function($values) {
-			return getCfgTableParams('cfg_upnp', $values);
-		}],
-		['requires' => ['checkcontentformat'], 'handler' => function($values) {
-			setCfgTableParams('cfg_upnp', $values);
-		}, 'custom_write' => function($values) {
-			return getCfgTableParams('cfg_upnp', $values);
-		}],
-
+		//
+		// Networking
+		//
 		'Network (eth0)',
 		['requires' => ['ethmethod', 'ethipaddr', 'ethnetmask', 'ethgateway', 'ethpridns', 'ethsecdns'], 'handler' => function($values) {
 			$value = array('method' => $values['ethmethod'], 'ipaddr' => $values['ethipaddr'], 'netmask' => $values['ethnetmask'],
@@ -414,7 +187,6 @@ function autoConfigSettings() {
 			$str .= "ethsecdns = \"" . $result[0]['secdns'] . "\"\n";
 			return $str;
 		}],
-
 		'Network (wlan0)',
 		['requires' => ['wlanssid', 'wlanpwd', 'wlanuuid'],
 		'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry', 'wlanpsk'],
@@ -448,21 +220,20 @@ function autoConfigSettings() {
 			$str .= "wlanpridns = \"" . $result[0]['pridns'] . "\"\n";
 			$str .= "wlansecdns = \"" . $result[0]['secdns'] . "\"\n";
 			$str .= "wlanssid = \"" . $result[0]['wlanssid'] . "\"\n";
-			$str .= "wlansec = \"" . $result[0]['wlanuuid'] . "\"\n";
+			$str .= "wlanuuid = \"" . $result[0]['wlanuuid'] . "\"\n";
 			$str .= "wlanpwd = \"" . "" . "\"\n"; // Keep empty
 			$str .= "wlanpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
 			$str .= "wlancountry = \"" . $result[0]['wlancc'] . "\"\n";
 			return $str;
 		}],
-
-		['requires' => ['ssid_ssid', 'ssid_sec', 'ssid_psk'],
+		['requires' => ['ssid_ssid', 'ssid_uuid', 'ssid_psk'],
 		'handler' => function($values) {
 			$dbh = sqlConnect();
 			sqlDelete('cfg_ssid', $dbh);
 			$count = count($values['ssid_ssid']);
 			for ($i = 0; $i < $count; $i++) {
 				$value = "\"" . $values['ssid_ssid'][$i] . "\", \""  .
-					$values['ssid_sec'][$i]	. "\", \"" . $values['ssid_psk'][$i] . "\"";
+					$values['ssid_uuid'][$i]	. "\", \"" . $values['ssid_psk'][$i] . "\"";
 				sqlInsert('cfg_ssid', $dbh, $value);
 			}
 			cfgNetworks();
@@ -472,32 +243,207 @@ function autoConfigSettings() {
 			$str = '';
 			foreach ($result as $i => $row) {
 				$str .= sprintf($format, 'ssid', $i, $row['ssid']);
-				$str .= sprintf($format, 'sec', $i, $row['sec']);
+				$str .= sprintf($format, 'uuid', $i, $row['uuid']);
 				$str .= sprintf($format, 'psk', $i, $row['psk']);
 			}
 			return $str;
 		}],
-
 		'Network (apd0)',
-		['requires' => ['apdssid', 'apdpwd', 'apdchan'],
+		['requires' => ['apdssid', 'apdpwd', 'apduuid'],
 		'optionals' => ['apdpsk'],
 		'handler' => function($values, $optionals) {
 			$psk = (key_exists('apdpsk', $optionals) && !empty($optionals['apdpsk'])) ? $optionals['apdpsk'] :
 				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-				'wlanssid' => $values['apdssid'], 'wlanuuid' => '', 'wlanpwd' => $psk, 'wlanpsk' =>  $psk,
+				'wlanssid' => $values['apdssid'], 'wlanuuid' => $values['apduuid'], 'wlanpwd' => $psk, 'wlanpsk' =>  $psk,
 				'wlancc' => '');
 			sqlUpdate('cfg_network', sqlConnect(), 'apd0', $value);
+			cfgNetworks();
 		}, 'custom_write' => function($values) {
 			$result = sqlQuery("select * from cfg_network where iface='apd0'", sqlConnect());
 			$str = '';
 			$str .= "apdssid = \"" . $result[0]['wlanssid'] . "\"\n";
 			$str .= "apdpwd = \"" . "" . "\"\n"; // Keep empty
+			$str .= "apduuid = \"" . $result[0]['wlanuuid'] . "\"\n";
 			$str .= "apdpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
 			return $str;
 		}],
-
+		//
+		// Audio config
+		//
+		'Audio Device',
+		['requires' => ['adevname'], 'handler' => 'setSessVarSql'],
+		['requires' => ['mpdmixer'], 'handler' => 'setSessVarSql'],
+		['requires' => ['i2soverlay'], 'handler' => function($values) {
+			$value = $values['i2soverlay'] == 'none' ? 'None': $values['i2soverlay'];
+			phpSession('write', 'i2soverlay', $value);
+		}],
+		['requires' => ['i2sdevice'], 'handler' => function($values) {
+			$value = $values['i2sdevice'] == 'none' ? 'None': $values['i2sdevice'];
+			phpSession('write', 'i2sdevice', $value);
+			// NOTE: This resets to Pi_HDMI1 if none/none but passing the 'autocfg' arg prevents this
+			cfgI2SDevice('autocfg');
+		}],
+		'ALSA',
+		['requires' => ['cardnum'], 'handler' => 'setSessVarSql'],
+		['requires' => ['amixname'], 'handler' => 'setSessVarSql'],
+		['requires' => ['alsa_output_mode'], 'handler' => 'setSessVarSql'],
+		['requires' => ['alsavolume_max'], 'handler' => 'setSessVarSql'],
+		['requires' => ['alsa_loopback'], 'handler' => function($values) {
+			phpSession('write', 'alsa_loopback', $values['alsa_loopback']);
+			$values['alsa_loopback'] == 'On' ? sysCmd("sed -i '0,/_audioout__ {/s//_audioout {/' /etc/alsa/conf.d/_sndaloop.conf") :
+				sysCmd("sed -i '0,/_audioout {/s//_audioout__ {/' /etc/alsa/conf.d/_sndaloop.conf");
+		}],
+		'MPD',
+		['requires' => ['device'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['mixer_type'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['audio_output_format'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['selective_resample_mode'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['sox_quality'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['sox_multithreading'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['sox_precision', 'sox_phase_response', 'sox_passband_end', 'sox_stopband_begin', 'sox_attenuation', 'sox_flags'],
+			'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['dop'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['replaygain'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['replaygain_preamp'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['volume_normalization'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['audio_buffer_size'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['max_output_buffer_size'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['max_playlist_length'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['input_cache'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['log_level'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['stop_dsd_silence'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		['requires' => ['thesycon_dsd_workaround'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		'MPD Options',
+		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
+		['requires' => ['mpdcrossfade'], 'handler' => 'setSessVarSql'],
+		['requires' => ['crossfeed'], 'handler' => 'setSessVarSql'],
+		['requires' => ['invert_polarity'], 'handler' => 'setSessVarSql'],
+		['requires' => ['volume_step_limit'], 'handler' => 'setSessVarSql'],
+		['requires' => ['volume_mpd_max'], 'handler' => 'setSessVarSql'],
+		['requires' => ['volume_db_display'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ashufflesvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ashuffle_mode'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ashuffle_filter'], 'handler' => 'setSessVarSql'],
+		['requires' => ['mpd_httpd'], 'handler' => function($values) {
+			$cmd = $values['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
+			sysCmd($cmd);
+			phpSession('write', 'mpd_httpd', $values['mpd_httpd']);
+		}],
+		['requires' => ['mpd_httpd_port'], 'handler' => 'setSessVarSql'],
+		['requires' => ['mpd_httpd_encoder'], 'handler' => 'setSessVarSql'],
+		//
+		// DSP and Equalizers
+		//
+		'CamillaDSP',
+		['requires' => ['camilladsp'], 'handler' => 'setSessVarSql'],
+		['requires' => ['camilladsp_volume_sync'], 'handler' => 'setSessVarSql'],
+		['requires' => ['camilladsp_quickconv'], 'handler' => 'setSessVarSql'],
+		['requires' => ['cdsp_fix_playback'], 'handler' => 'setSessVarSql'],
+		'Parametric EQ',
+		['requires' => ['eqfa12p'], 'handler' => 'setSessVarSql'],
+		['requires' => ['eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {
+			require_once __DIR__ . '/eqp.php';
+			$eqp = Eqp12(sqlConnect());
+			$eqp->import($values);
+		}, 'custom_write' => function($values) {
+			require_once __DIR__ . '/eqp.php';
+			$eqp = Eqp12(sqlConnect());
+			$str = $eqp->export();
+			return $str;
+		}],
+		'Graphic EQ',
+		['requires' => ['alsaequal'], 'handler' => 'setSessVarSql'],
+		['requires' => ['eqg_curve_name', 'eqg_curve_values'], 'handler' => function($values) {
+			$dbh = sqlConnect();
+			$result = sqlQuery('delete from cfg_eqalsa', $dbh);
+			$count = count($values['eqg_curve_name']);
+			for ($i = 0; $i < $count; $i++) {
+				$curveName = $values['eqg_curve_name'][$i];
+				$curveValues = $values['eqg_curve_values'][$i];
+				$query ="INSERT INTO cfg_eqalsa (curve_name, curve_values) VALUES ('" . $curveName . "', '" . $curveValues . "')";
+				$result = sqlQuery($query, $dbh);
+			}
+		}, 'custom_write' => function($values) {
+			$result = sqlRead('cfg_eqalsa', sqlConnect());
+			$format = "eqg_%s[%d] = \"%s\"\n";
+			$str = '';
+			foreach ($result as $i => $row) {
+				$str .= sprintf($format, 'curve_name', $i, $row['curve_name']);
+				$str .= sprintf($format, 'curve_values', $i, $row['curve_values']);
+			}
+			return $str;
+		}],
+		//
+		// Audio renderers
+		//
+		'Renderers',
+		['requires' => ['btsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterbt'], 'handler' => 'setSessVarSql'],
+		['requires' => ['airplaysvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterapl'], 'handler' => 'setSessVarSql'],
+		['requires' => ['spotifysvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
+		['requires' => ['slsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmaftersl'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rbsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterrb'], 'handler' => 'setSessVarSql'],
+		'Bluetooth',
+		['requires' => ['pairing_agent'], 'handler' => 'setSessVarSql'],
+		['requires' => ['bluez_pcm_buffer'], 'handler' => function($values) {
+			phpSession('write', 'bluez_pcm_buffer', $values['bluez_pcm_buffer']);
+			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
+		}],
+		['requires' => ['audioout'], 'handler' => 'setSessVarSql'],
+		['requires' => ['bt_alsa_output_mode'], 'handler' => 'setSessVarOnly'],
+		'AirPlay',
+		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption',
+			'airplay_session_timeout', 'airplay_audio_backend_latency_offset_in_seconds', 'airplay_audio_backend_buffer_desired_length_in_seconds'],
+			'handler' => function($values) {
+				setCfgTableParams('cfg_airplay', $values, 'airplay_');
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_airplay', $values, 'airplay_');
+		}],
+		'Spotify Connect',
+		['requires' => ['spotify_bitrate', 'spotify_initial_volume', 'spotify_volume_curve', 'spotify_volume_normalization', 'spotify_normalization_pregain',
+			'spotify_autoplay'],
+			'optionals' => ['spotify_normalization_method', 'spotify_normalization_gain_type', 'spotify_normalization_threshold','spotify_normalization_attack',
+			'spotify_normalization_release', 'spotify_normalization_knee', 'spotify_format', 'spotify_dither', 'spotify_volume_range'],
+			'handler' => function($values, $optionals) {
+				$mergedValues = array_merge($values, $optionals);
+				setCfgTableParams('cfg_spotify', $mergedValues, 'spotify_');
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_spotify', $values, 'spotify_');
+		}],
+		'Squeezelite',
+		['requires' => ['squeezelite_PLAYERNAME', 'squeezelite_AUDIODEVICE', 'squeezelite_ALSAPARAMS', 'squeezelite_OUTPUTBUFFERS',
+			'squeezelite_TASKPRIORITY', 'squeezelite_CODECS', 'squeezelite_OTHEROPTIONS'],
+			'handler' => function($values) {
+				setCfgTableParams('cfg_sl', $values, 'squeezelite_');
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_sl', $values, 'squeezelite_');
+		}],
+		'UPnP/DLNA',
+		['requires' => ['upnpsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['dlnasvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['upnpav'], 'handler' => function($values) {
+			setCfgTableParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getCfgTableParams('cfg_upnp', $values);
+		}],
+		['requires' => ['openhome'], 'handler' => function($values) {
+			setCfgTableParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getCfgTableParams('cfg_upnp', $values);
+		}],
+		['requires' => ['checkcontentformat'], 'handler' => function($values) {
+			setCfgTableParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getCfgTableParams('cfg_upnp', $values);
+		}],
+		//
 		// Preferences
+		//
 		'Appearance',
 		['requires' => ['themename'], 'handler' => 'setSessVarSql'],
 		['requires' => ['accent_color'], 'handler' => 'setSessVarSql'],
@@ -507,7 +453,6 @@ function autoConfigSettings() {
 		['requires' => ['cover_blur'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cover_scale'], 'handler' => 'setSessVarSql'],
 		['requires' => ['font_size'], 'handler' => 'setSessVarSql'],
-
 		'Playback',
 		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
 		['requires' => ['extra_tags'], 'handler' => 'setSessVarSql'],
@@ -523,7 +468,6 @@ function autoConfigSettings() {
 			phpSession('write', 'show_npicon', $value);
 		}],
 		['requires' => ['show_cvpb'], 'handler' => 'setSessVarSql'],
-
 		'Library',
 		['requires' => ['library_onetouch_album'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_onetouch_radio'], 'handler' => 'setSessVarSql'],
@@ -537,7 +481,6 @@ function autoConfigSettings() {
 		['requires' => ['library_thmgen_scan'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_hiresthm'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_thumbnail_columns'], 'handler' => 'setSessVarSql'],
-
 		'Library (Advanced)',
 		['requires' => ['library_tagview_genre'], 'handler' => function($values) {
 			$value = $values['library_tagview_genre'] == 'Genres' ? 'Genre' :
@@ -552,7 +495,6 @@ function autoConfigSettings() {
 		['requires' => ['library_tagview_covers'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_ellipsis_limited_text'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_utf8rep'], 'handler' => 'setSessVarSql'],
-
 		'CoverView',
 		['requires' => ['scnsaver_timeout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['auto_coverview'], 'handler' => 'setSessVarSql'],
@@ -560,16 +502,57 @@ function autoConfigSettings() {
 		['requires' => ['scnsaver_mode'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_layout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_xmeta'], 'handler' => 'setSessVarSql'],
-
-		'Internal',
-		['requires' => ['first_use_help'], 'handler' => function($values) {
-			phpSession('write', 'first_use_help', ($values['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
-		}, 'custom_write' => function($values) {
-			$value = $_SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
-			return "first_use_help = \"" . $value . "\"\n";
+		//
+		// Multiroom
+		//
+		'Multiroom',
+		['requires' => ['multiroom_tx'], 'handler' => 'setSessVarSql'],
+		['requires' => ['multiroom_rx'], 'handler' => 'setSessVarSql'],
+		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels', 'multiroom_tx_frame_size', 'multiroom_tx_bitrate',
+			'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port',  'multiroom_rx_jitter_bfr', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_initial_volume'],
+         'optionals' => ['multiroom_tx_rtprio', 'multiroom_tx_query_timeout', 'multiroom_rx_frame_size', 'multiroom_rx_rtprio', 'multiroom_rx_alsa_output_mode', 'multiroom_rx_mastervol_opt_in'],
+			'handler' => function($values, $optionals) {
+				$mergedValues = array_merge($values, $optionals);
+				setCfgTableParams('cfg_multiroom', $mergedValues, 'multiroom_');
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_multiroom', $values, 'multiroom_');
 		}],
-
-		'Sources',
+		//
+		// Miscellaneous
+		//
+		'GPIO Buttons',
+		['requires' => ['gpio_svc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['gpio_button'], 'handler' => function($values) {
+			$dbh = sqlConnect();
+			// Buttons: id 1 - 8
+			for ($i = 1; $i <= 8; $i++) {
+				$val = explode('|', $values['gpio_button'][$i]);
+				$query = "update cfg_gpio set " .
+					"pin='" . $val[0] . "'," .
+					"enabled='" . $val[1] . "'," .
+					"command='" . $val[2] . "'," .
+					"param='" . $val[3] . "'," .
+					"value='" . $val[4] . "' " .
+					"where id='" . $i . "'";
+				$result = sqlQuery($query, $dbh);
+			}
+			// Bounce time: id 99
+			$val = explode('|', $values['gpio_button'][99]);
+			$query = "update cfg_gpio set " .
+				"param='" . $val[3] . "'," .
+				"value='" . $val[4] . "' " .
+				"where id='99'";
+			$result = sqlQuery($query, $dbh);
+		}, 'custom_write' => function($values) {
+			$result = sqlRead('cfg_gpio', sqlConnect());
+			$format = "gpio_button[%s] = \"%s|%s|%s|%s|%s\"\n";
+			$str = '';
+			foreach ($result as $row) {
+				$str .= sprintf($format, $row['id'], $row['pin'], $row['enabled'], $row['command'], $row['param'], $row['value']);
+			}
+			return $str;
+		}],
+		'Music Sources',
 		['requires' => ['fs_mountmon'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['usb_auto_updatedb'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cuefiles_ignore'], 'handler' => 'setSessVarSql'],
@@ -609,72 +592,71 @@ function autoConfigSettings() {
 		}]
 	];
 
-	return $configurationHandlers;
+	return $configHandlers;
 }
 
 //
 // Import and apply settings from auto-config file
 //
-function autoConfig($cfgfile) {
+function autoConfig($cfgFile) {
 	autoCfgLog('autocfg: Auto-configure initiated');
 
 	try {
-		$autocfg = parse_ini_file($cfgfile, false);
-
-		$available_configs = array_keys($autocfg);
-
+		$autoCfgIni = parse_ini_file($cfgFile, false);
+		$availableConfigs = array_keys($autoCfgIni);
 		autoCfgLog('autocfg: Configuration file parsed');
-		$configurationHandlers = autoConfigSettings();
 
-		$section = '';
-		foreach ($configurationHandlers as $config) {
-			$values = array();
+		$configHandlers = autoConfigSettings();
+		foreach ($configHandlers as $config) {
+			$requires = array();
+			$optionals = array();
 
-			// Print new section header
 			if (is_string($config)) {
+				// Print new section header
 				autoCfgLog('autocfg: - ' . $config);
-			// Check if all required cfgkeys are present
-			} else if (!array_diff_key(array_flip($config['requires']), $autocfg)) {
+			} else if (!array_diff_key(array_flip($config['requires']), $autoCfgIni)) {
+				// Check if all required keys are present
 				// Create dict key/value of required settings
-				$values = array_intersect_key($autocfg, array_flip($config['requires']));
-				// Only get dict key/value of optionals that are present
-				$optionals = array_intersect_key($autocfg, array_flip($config['optionals']));
-
-				$combiner_requires_optional_keys = array_merge($config['requires'],	array_key_exists('optionals', $config) ? array_keys($optionals) : []);
+				$requires = array_intersect_key($autoCfgIni, array_flip($config['requires']));
+				// Create dict key/value of optionals that are present
+				$optionals = array_key_exists('optionals', $config) ?
+					array_intersect_key($autoCfgIni, array_flip($config['optionals'])) : [];
+				$mergedKeys = array_merge($config['requires'], (array_key_exists('optionals', $config) ?
+					array_keys($optionals) : []));
 				// Copy all key/value sets
-				foreach ($combiner_requires_optional_keys as $config_name) {
-					$value = $autocfg[$config_name];
-					autoCfgLog('autocfg: ' . $config_name . ': ' . $value);
+				foreach ($mergedKeys as $configName) {
+					$value = $autoCfgIni[$configName];
+					autoCfgLog('autocfg: ' . $configName . ': ' . $value);
 					// Remove used autoconfig
-					unset($available_configs[$config_name]);
-					unset($autocfg[$config_name]);
+					unset($availableConfigs[$configName]);
+					unset($autoCfgIni[$configName]);
 				}
 				// Call handler
-				if (!array_key_exists('cmd', $config)) {
-					if (array_key_exists( 'optionals', $config)) {
-						$config['handler'] ($values, $optionals);
-					} else {
-						$config['handler'] ($values);
-					}
+				if (array_key_exists('cmd', $config)) {
+					$config['handler'] ($requires, $config['cmd']);
 				} else {
-					$config['handler'] ($values, $config['cmd']);
+					if (array_key_exists( 'optionals', $config)) {
+						$config['handler'] ($requires, $optionals);
+					} else {
+						$config['handler'] ($requires);
+					}
 				}
 			}
-			// Detect requires with multiple keys which are no all present in provided configs
-			else if (count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $autocfg)) >= 1) {
-				$incompleteset = " [ ";
-				foreach ($config['requires'] as $config_require) {
-					$incompleteset = $incompleteset . " ". $config_require;
+			// Detect requires with multiple keys which are not all present
+			else if (count($config['requires']) >= 2 && count(array_diff_key(array_flip($config['requires']), $autoCfgIni)) >= 1) {
+				$incompleteSet = " [ ";
+				foreach ($config['requires'] as $configRequires) {
+					$incompleteSet = $incompleteSet . " ". $configRequires;
 				}
-				$incompleteset = $incompleteset . " ]";
-				autoCfgLog('autocfg: Warning incomplete set ' . $incompleteset . ' detected.');
+				$incompleteSet = $incompleteSet . " ]";
+				autoCfgLog('autocfg: Warning incomplete set ' . $incompleteSet . ' detected.');
 			}
 		}
 
-		$script_key = 'script';
-		if (array_key_exists($script_key, $autocfg)) {
-			autoCfgLog('autocfg: ' . $script_key . ':' . $script);
-			$script = $autocfg[$script_key];
+		$scriptKey = 'script';
+		if (array_key_exists($scriptKey, $autoCfgIni)) {
+			autoCfgLog('autocfg: ' . $scriptKey . ':' . $script);
+			$script = $autoCfgIni[$scriptKey];
 
 			if (file_exists($script)) {
 				$output = sysCmd($script);
@@ -684,13 +666,13 @@ function autoConfig($cfgfile) {
 			} else {
 				autoCfgLog('autocfg: Error script not found!');
 			}
-			unset($autocfg[$script_key]);
+			unset($autoCfgIni[$scriptKey]);
 		}
 
 		// Check for unused but supplied autocfg settings
-		if (empty($available_configs)) {
-			foreach ($available_configs as $config_name) {
-				autoCfgLog('autocfg: Warning: ' . $config_name . ': is unused, incomplete or wrong name.');
+		if (empty($availableConfigs)) {
+			foreach ($availableConfigs as $configName) {
+				autoCfgLog('autocfg: Warning: ' . $configName . ': is unused, incomplete or wrong name.');
 			}
 		}
 	}
@@ -698,7 +680,7 @@ function autoConfig($cfgfile) {
 		autoCfgLog('autocfg: Caught exception: ' . $e->getMessage());
 	}
 
- 	sysCmd('rm ' . $cfgfile);
+ 	sysCmd('rm ' . $cfgFile);
 	autoCfgLog('autocfg: Configuration file deleted');
 	autoCfgLog('autocfg: Auto-configure complete');
 }
@@ -708,8 +690,8 @@ function autoConfig($cfgfile) {
 //
 function autoConfigExtract($currentSettings) {
 	$autoConfigString = <<<EOT
-	; #############################################
-	; Copy this file to /boot/firmware/moodecfg.ini
+	; ###############################################
+	; Copy this file to /boot/moodecfg.ini
 	;
 	; It will be applied during startup followed by
 	; an automatic reboot to finalize the settings.
@@ -717,15 +699,14 @@ function autoConfigExtract($currentSettings) {
 	; Created: %s
 	; Release: %s
 	;
-	; #############################################
+	; ###############################################
 
 	EOT;
 
 	$autoConfigString = sprintf($autoConfigString, date('Y-m-d H:i:s'), getMoodeRel('verbose'));
 
-	$configurationHandlers = autoConfigSettings();
-	foreach ($configurationHandlers as &$config) {
-		$values = array();
+	$configHandlers = autoConfigSettings();
+	foreach ($configHandlers as &$config) {
 		// Print new section header
 		if (is_string($config)) {
 			$autoConfigString = $autoConfigString . "\n[" . $config. "]\n";

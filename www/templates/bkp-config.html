@@ -185,7 +185,7 @@
 
 			<label class="control-label">Backup file</label>
 			<div class="controls">
-				<label for="restore-backupfile" id="choose-restore-backupfile" class="btn btn-primary btn-medium config-btn">Select</label>
+				<label for="restore-backupfile" id="choose-restore-backupfile" class="btn btn-primary btn-medium config-btn">Upload</label>
 				<input type="file" id="restore-backupfile" accept=".zip" name="restore_backupfile" style="display:none" onchange="$('#btn-import-backupfile').click();">
 				<button id="btn-import-backupfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_backupfile" value="1"  style="display:none"/>
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="reset_options" form="restore" value="1">Reset</button>
@@ -194,15 +194,15 @@
 					$_imported_backupfile
 				</div>
 				<span id="info-backupfile" class="config-help-info">
-					Select: Choose and upload a backup zip file that will be used for the restore process.<br>
-					Reset: Clear the uploaded file from the temp directory and reset the option buttons to No.
+					Upload a backup zip file that will be used for the restore process.
+					The RESET button will remove the uploaded file from the temp directory and set the option buttons to NO.
 				</span>
 			</div>
 
 			<div class="controls">
-				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="restore_start" form="restore" value="1">Restore System</button>
+				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="restore_start" form="restore" value="1" $_restore_disable>Restore System</button>
 				<span class="config-help-static">
-					A reboot is required if Config and Prefs are part of the restore.
+					A restart is required if Config and Prefs are part of the restore.
 				</span>
 			</div>
 		</div>

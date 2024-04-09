@@ -44,11 +44,10 @@ require_once __DIR__ . '/../inc/sql.php';
 sysCmd('truncate ' . MOODE_LOG . ' --size 0');
 $dbh = sqlConnect();
 $result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", $dbh);
-$moodeSeries = substr(getMoodeRel(), 1, 1); // rNNN format
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Start moOde ' . $moodeSeries .  ' series');
+workerLog('worker: -- Start moOde ' . getMoodeSeries() .  ' series');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
@@ -1269,10 +1268,10 @@ phpSessionCheck();
 // Auto restore backup if present
 // Do it just before autocfg so an autocfg always overrules backup settings
 $restoreBackup = false;
-if (file_exists('/boot/moodebackup.zip')) {
+if (file_exists(BOOT_MOODEBACKUP_ZIP)) {
 	$restoreLog = '/var/log/moode_backup_restore.log';
-	sysCmd('/var/www/util/backup_manager.py --restore /boot/moodebackup.zip > ' . $restoreLog);
-	sysCmd('rm /boot/moodebackup.zip');
+	sysCmd('/var/www/util/backup_manager.py --restore ' . BOOT_MOODEBACKUP_ZIP . ' > ' . $restoreLog);
+	sysCmd('rm ' . BOOT_MOODEBACKUP_ZIP);
 	sysCmd('sync');
 	$restoreBackup = true; // Don't reboot here in case autocfg is also present
 }
@@ -1280,11 +1279,11 @@ if (file_exists('/boot/moodebackup.zip')) {
 // NOTE: This is done near the end of startup because autoConfig() uses the wpa_passphrase utility which requires
 // sufficient kernel entropy in order to generate the PSK. If there is not enough entropy, wpa_passphrase returns
 // the input password instead of a PSK.
-if (file_exists('/boot/moodecfg.ini')) {
+if (file_exists(BOOT_MOODECFG_INI)) {
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 
 	phpSession('open');
-	autoConfig('/boot/moodecfg.ini');
+	autoConfig(BOOT_MOODECFG_INI);
 	phpSession('close');
 
 	sysCmd('sync');

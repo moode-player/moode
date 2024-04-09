@@ -89,7 +89,8 @@ a.config-info-toggle {vertical-align:top;}
 
 /* blu-config, sys-status */
 #blu-config-cmd-output,
-#sys-status-log-output {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
+#sys-status-log-output,
+#sys-restore-status {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
 /* net-config, src-config: Show/hide password plaintext */
 a.show-hide-password {vertical-align:top;}
 .show-hide-password i {vertical-align:top;margin-top:5px;font-size:18px;margin-left:var(--config-ctl-margin-bottom);}

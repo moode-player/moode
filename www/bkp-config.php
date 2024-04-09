@@ -30,6 +30,11 @@ const TMP_SCRIPT_FILE = '/tmp/script';
 const BACKUP_FILE_PREFIX = 'backup_';
 const CAMILLADSP_BASE_DIR = '/usr/share/camilladsp/';
 
+$moodeSeries = getMoodeSeries();
+
+//
+// BACKUP
+//
 if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	$backupOptions = '';
 	if (isset($_POST['backup_system']) && $_POST['backup_system'] == '1') {
@@ -80,7 +85,9 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		// Create name for backup file in browser
 		$dt = new DateTime('NOW');
 		phpSession('open');
-		$backupFileName = BACKUP_FILE_PREFIX . $_SESSION['hostname'].'_'. $dt->format('ymd_Hi').'.zip';
+		$backupFileName = BACKUP_FILE_PREFIX .
+			$moodeSeries . '_' .
+			$_SESSION['hostname'] . '_' . $dt->format('ymd_Hi').'.zip';
 		phpSession('close');
 
 		header("Content-Description: File Transfer");
@@ -94,6 +101,10 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		sysCmd('rm ' . TMP_BACKUP_ZIP);
 		exit();
 	}
+
+//
+// RESTORE
+//
 } else if (isset($_POST['restore_start']) && $_POST['restore_start'] == '1') {
 	if (file_exists(TMP_RESTORE_ZIP)) {
 		$restoreOptions = '';
@@ -131,40 +142,40 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 			sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT);
 			sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT . '*.*');
 			sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-
+			// Sleep for a bit to provide a "working" delay in the WebUI
+			sleep(2);
 			// Request reboot if system settings are part of restore
-			$title = 'Restore complete';
-			if(empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1')) {
-				$msg = 'Reboot required<br><br>The system will reboot twice as part of restoring Config and Prefs settings';
-				$duration = 10;
-				//submitJob('reboot', '', 'Restore complete', 'System rebooting...');
+			if (empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1')) {
+				header('location: sys-restored.php');
 			} else {
-				$msg = '';
-				$duration = 5;
+				phpSession('open');
+				$_SESSION['notify']['title'] = 'Restore complete';
+				$_SESSION['notify']['msg'] = 'Restart is not required';
+				$_SESSION['notify']['duration'] = 10;
+				phpSession('close');
 			}
-			phpSession('open');
-			$_SESSION['notify']['title'] = $title;
-			$_SESSION['notify']['msg'] = $msg;
-			$_SESSION['notify']['duration'] = $duration;
-			phpSession('close');
-
-			// DEBUG:
-			// phpSession('open');
-			//$_SESSION['notify']['title'] = 'DEBUG';
-			//$_SESSION['notify']['msg'] = $restoreOptions;
-			//$_SESSION['notify']['duration'] = 10;
-			// phpSession('close');
 		}
 	} else {
-		$_imported_backupfile = 'No file selected';
+		$_imported_backupfile = 'No file uploaded';
 		phpSession('open');
-		$_SESSION['notify']['title'] = 'Select a backup file';
+		$_SESSION['notify']['title'] = 'Upload a backup file';
 		$_SESSION['notify']['duration'] = 3;
 		phpSession('close');
 	}
 } else if (isset($_POST['import_backupfile'])) {
 	$_imported_backupfile = 'Uploaded: <b>' . $_FILES['restore_backupfile']['name'] . '</b>';
-	rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
+	if (strpos($_FILES['restore_backupfile']['name'],
+		BACKUP_FILE_PREFIX . $moodeSeries . '_', 0) !== false) {
+		rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
+		$_restore_disable = '';
+	} else {
+		$_restore_disable = 'disabled';
+		phpSession('open');
+		$_SESSION['notify']['title'] = 'Unsupported backup file';
+		$_SESSION['notify']['msg'] = 'Only moode ' . $moodeSeries . ' series backup files can be used for restore';
+		$_SESSION['notify']['duration'] = 10;
+		phpSession('close');
+	}
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
 	//workerLog('Imported backup: ' . print_r($_FILES['restore_backupfile'], true));
 } else if (isset($_POST['import_scriptfile'])) {
@@ -174,14 +185,14 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	//workerLog('Imported script: ' . print_r($_FILES['backup_scriptfile'], true));
 } else if (isset($_POST['reset_options'])) {
 	sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/script');
-	$_imported_backupfile = 'No file selected';
+	$_imported_backupfile = 'No file uploadad';
 	phpSession('open');
 	$_SESSION['notify']['title'] = 'Options have been reset';
 	$_SESSION['notify']['duration'] = 3;
 	phpSession('close');
 } else {
-	$_imported_backupfile = 'No file selected';
-	$_imported_scriptfile = 'No file selected';
+	$_imported_backupfile = 'No file uploaded';
+	$_imported_scriptfile = 'No file uploaded';
 }
 
  // Helper method to generate html code for toggle button

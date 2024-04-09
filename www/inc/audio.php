@@ -25,7 +25,7 @@ require_once __DIR__ . '/renderer.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
-function cfgI2SDevice() {
+function cfgI2SDevice($caller = '') {
 	$dbh = sqlConnect();
 
 	// Remove audio overlay line if it exists (next line after 'dtoverlay=disable-wifi')
@@ -39,15 +39,17 @@ function cfgI2SDevice() {
 	$str = $_SESSION['i2sdevice'] . $_SESSION['i2soverlay'];
 	$eeprom = str_contains($str, 'hifiberry') ? '\nforce_eeprom_read=0' : '';
 
-	// Add the audio overlay
+	// Add the audio overlay if indicated
 	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
-		// Reset to Pi HDMI 1
-		$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
-		phpSession('write', 'cardnum', $cardNum);
-		phpSession('write', 'adevname', PI_HDMI1);
-		phpSession('write', 'mpdmixer', 'software'); //
-		sqlUpdate('cfg_mpd', $dbh, 'device', $cardNum);
-		sqlUpdate('cfg_mpd', $dbh, 'mixer_type', 'software'); //
+		// Reset to Pi HDMI 1 if caller not 'autocfg'
+		if ($caller != 'autocfg') {
+			$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
+			phpSession('write', 'cardnum', $cardNum);
+			phpSession('write', 'adevname', PI_HDMI1);
+			phpSession('write', 'mpdmixer', 'software'); //
+			sqlUpdate('cfg_mpd', $dbh, 'device', $cardNum);
+			sqlUpdate('cfg_mpd', $dbh, 'mixer_type', 'software');
+		}
 	} else if ($_SESSION['i2sdevice'] != 'None') {
 		// Named I2S device
 		$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);

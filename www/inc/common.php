@@ -346,18 +346,23 @@ function getPkgId () {
 	return 'moode' . $result[0]['value'];
 }
 
-// Get moode release
+// Get release
 function getMoodeRel($options = '') {
 	if ($options === 'verbose') {
-		// Verbose: major.minor.patch yyyy-mm-dd
+		// Verbose: 'major.minor.patch yyyy-mm-dd'
 		$result = sysCmd("moodeutl --mooderel | tr -d '\n'");
 		return $result[0];
 	} else {
-		// Compact: rNNN
+		// Compact: 'rNNN'
 		$result = sysCmd("moodeutl --mooderel | tr -d '\n'");
 		$str = 'r' . str_replace('.', '', explode(' ', $result[0])[0]);
 		return $str;
 	}
+}
+
+// Get major version (series) S in 'rSNN'
+function getMoodeSeries() {
+	return substr(getMoodeRel(), 1, 1);
 }
 
 // Store back link for configs
