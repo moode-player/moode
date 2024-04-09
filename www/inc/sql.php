@@ -58,14 +58,10 @@ function sqlRead($table, $dbh, $param = '', $id = '') {
 
 function sqlUpdate($table, $dbh, $key = '', $value) {
 	switch ($table) {
+		// Special handling
 		case 'cfg_system':
 			$queryStr = "UPDATE " . $table .
 				" SET value='" . SQLite3::escapeString($value) .
-				"' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_mpd':
-			$queryStr = "UPDATE " . $table .
-				" SET value='" . $value .
 				"' WHERE param='" . $key . "'";
 			break;
 		case 'cfg_network':
@@ -115,26 +111,6 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				" SET station='" . $value .
 				"' WHERE name='" . $key . "'";
 			break;
-		case 'cfg_sl':
-			$queryStr = "UPDATE " . $table .
-				" SET value='" . $value .
-				"' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_airplay':
-			$queryStr = "UPDATE " . $table .
-				" SET value='" . $value .
-				"' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_spotify':
-			$queryStr = "UPDATE " . $table .
-				" SET value='" . $value .
-				"' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_upnp':
-			$queryStr = "UPDATE " . $table .
-				" SET value='" . $value .
-				"' WHERE param='" . $key . "'";
-			break;
 		case 'cfg_gpio':
 			$queryStr = "UPDATE " . $table .
 				" SET enabled='" . $value['enabled'] .
@@ -143,6 +119,12 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', param='" . $value['param'] .
 				"', value='" . $value['value'] .
 				"' WHERE id='" . $key . "'";
+			break;
+		// Standard param|value tables
+		default:
+			$queryStr = "UPDATE " . $table .
+				" SET value='" . $value .
+				"' WHERE param='" . $key . "'";
 			break;
 	}
 
