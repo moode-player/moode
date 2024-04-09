@@ -189,8 +189,7 @@ if (!empty($ipAddr[0])) {
 
 // Scanner
 if (isset($_POST['scan']) && $_POST['scan'] == '1') {
-	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'"); // Do twice to improve results
-	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'");
+	$result = sysCmd('nmcli d wifi list | awk \'!(NF && seen[$2]++) {print $2}\'');
 	sort($result, SORT_NATURAL | SORT_FLAG_CASE);
 	$array = array();
 	$array[0] = 'Activate Hotspot';
@@ -198,7 +197,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	foreach ($ssidList as $ssid) {
 		$ssid = trim($ssid);
 		// Additional filtering
-		if (!empty($ssid) && false === strpos($ssid, '\x')) {
+		if (!empty($ssid) && $ssid != '--' && substr_count($ssid, ':') == 0) {
 			$selected = ($cfgNetwork[1]['wlanssid'] == $ssid) ? 'selected' : '';
 			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
 		}
