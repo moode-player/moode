@@ -39,7 +39,7 @@ class Eqp {
     private $dbh = NULL;
     private $band_count = 12;
     private $table = "";
-    private $alsa_file ="";
+    private $alsa_file = "";
 
     function __construct($db, $table, $bands, $configfile) {
         $this->dbh = &$db;
@@ -194,19 +194,19 @@ class Eqp {
         $querystr = 'DELETE FROM '. $this->table . ';';
         $result = sqlQuery($querystr, $this->dbh);
 
-        for($index =0; $index< $curve_count; $index++) {
+        for ($index = 0; $index < $curve_count; $index++) {
             $curve_name = $values['eqp12_curve_name'][$index];
             $curve_settings = $values['eqp12_settings'][$index];
             $curve_active = $values['eqp12_active'][$index];
 
-            $querystr = 'SELECT id from ' . $this->table . ' where curve_name = "' . $curve_name . '" limit 1;';
+            $querystr = 'SELECT id from ' . $this->table . ' WHERE curve_name = "' . $curve_name . '" LIMIT 1;';
             $result = sqlQuery($querystr, $this->dbh);
-            // check if curve if all ready present,in that case an update will be done
-            $curve_curr_id = count($result)==1 ? $result[0]['id']: NULL;
+            // Check if curve is present, in that case an update will be done
+            $curve_curr_id = is_array($result) && count($result) == 1 ? $result[0]['id'] : NULL;
 
             $config = $this->string2config($curve_settings);
             $curve_id = $this->setpreset($curve_curr_id , $curve_name, $config);
-            if( in_array( strtolower($curve_active), ["1", "yes", "true", "on"]) ) {
+            if (in_array(strtolower($curve_active), ["1", "yes", "true", "on"])) {
                 $this->applyConfig($config);
                 $this->setActivePresetIndex($curve_id);
             }
