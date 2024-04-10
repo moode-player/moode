@@ -161,6 +161,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\n\c"
 	echo -e "\nAuto-shuffle\t\t= $ashufflesvc\c"
 	echo -e "\nAshuffle mode\t\t= $ashuffle_mode\c"
+	echo -e "\nAshuffle window\t\t= $ashuffle_window\c"
 	echo -e "\nAshuffle filter\t\t= $ashuffle_filter\c"
 	echo -e "\nAutoplay\t\t= $autoplay\c"
 	echo -e "\nRotary encoder\t\t= $rotaryenc\c"
@@ -747,7 +748,7 @@ cover_scale=${arr[110]}
 rsmafterrb=${arr[111]}
 library_tagview_artist=${arr[112]}
 scnsaver_style=${arr[113]}
-ashuffle_filter=${arr[114]}
+RESERVED_115=${arr[114]}
 [[ "${arr[115]}" = "1" ]] && mpd_httpd="On" || mpd_httpd="Off"
 mpd_httpd_port=${arr[116]}
 mpd_httpd_encoder=${arr[117]}
@@ -784,7 +785,7 @@ elif [[ "${arr[138]}" = "3" ]]; then
 fi
 first_use_help=${arr[139]}
 playlist_art=${arr[140]}
-ashuffle_mode=${arr[141]}
+RESERVED_142=${arr[141]}
 radioview_sort_group=${arr[142]}
 rv_sort_tag=$(awk -F"," '{print $1}' <<< $radioview_sort_group)
 rv_group_method=$(awk -F"," '{print $2}' <<< $radioview_sort_group)
@@ -828,6 +829,9 @@ scnsaver_layout=${arr[173]}
 scnsaver_xmeta=${arr[174]}
 value=$(moodeutl -d -gv rotaryenc)
 [[ "$value" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
+ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
+ashuffle_window=$(moodeutl -d -gv "ashuffle_window")
+ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

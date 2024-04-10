@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Apr 6 17:22:13 2024
+-- File generated with SQLiteStudio v3.1.0 on Wed Apr 10 08:27:04 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -441,7 +441,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
 INSERT INTO cfg_system (id, param, value) VALUES (112, 'rsmafterrb', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Artist');
 INSERT INTO cfg_system (id, param, value) VALUES (114, 'scnsaver_style', 'Gradient (Linear)');
-INSERT INTO cfg_system (id, param, value) VALUES (115, 'ashuffle_filter', 'None');
+INSERT INTO cfg_system (id, param, value) VALUES (115, 'RESERVED_115', '');
 INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (117, 'mpd_httpd_port', '8000');
 INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lame');
@@ -468,7 +468,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_column
 INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
 INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
+INSERT INTO cfg_system (id, param, value) VALUES (142, 'RESERVED_142', '');
 INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
 INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'Yes');

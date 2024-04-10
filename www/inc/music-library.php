@@ -761,9 +761,10 @@ function getMpdFormatTag($file) {
 function startAutoShuffle() {
 	$filter = (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') ?
 		'mpc search ' . $_SESSION['ashuffle_filter'] . ' | ' : '';
-	$file = $filter != '' ? '--file -' : '';
 	$mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album albumartist ' : '';
-	sysCmd($filter . '/usr/bin/ashuffle --queue-buffer 1 ' . $mode . $file . ' > /dev/null 2>&1 &');
+	$window = '--tweak window-size=' . $_SESSION['ashuffle_window'] . ' ';
+	$file = $filter != '' ? '--file - ' : '';
+	sysCmd($filter . '/usr/bin/ashuffle --queue-buffer 1 ' . $mode . $window . $file . '> /dev/null 2>&1 &');
 }
 
 function stopAutoShuffle() {

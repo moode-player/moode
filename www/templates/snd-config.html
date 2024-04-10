@@ -247,6 +247,16 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="ashuffle_window">Window size</label>
+			<div class="controls">
+                <input class="config-input-large" type="number" maxlength="3" min="0" max="1024" id="ashuffle-window" name="ashuffle_window" value="$_ashuffle_window" required>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ashuffle_window" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-ashuffle-window" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-ashuffle-window" class="config-help-info">
+					Sets the size of the "window" used for the shuffle algorithm. Lower numbers mean more frequent repeats, and higher numbers mean less frequent repeats. The default window size is 7.
+                </span>
+			</div>
+
 			<label class="control-label" for="ashuffle_filter">Tag filter</label>
 			<div class="controls">
                 <input class="config-input-large" type="text" id="ashuffle_filter" name="ashuffle_filter" value="$_ashuffle_filter">

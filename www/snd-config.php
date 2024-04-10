@@ -204,7 +204,18 @@ if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashuffle
 }
 // Mode
 if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSION['ashuffle_mode']) {
-	phpSession('write', 'ashuffle_mode', $_POST['ashuffle_mode']);
+	$_SESSION['ashuffle_mode'] = $_POST['ashuffle_mode'];
+	if ($_SESSION['ashuffle'] == '1') {
+		$_SESSION['notify']['title'] = 'Settings updated';
+		$_SESSION['notify']['msg'] = 'Random play turned off';
+		stopAutoShuffle();
+	} else {
+		$_SESSION['notify']['title'] = 'Settings updated';
+	}
+}
+// Window size
+if (isset($_POST['update_ashuffle_window']) && $_POST['ashuffle_window'] != $_SESSION['ashuffle_window']) {
+	$_SESSION['ashuffle_window'] = $_POST['ashuffle_window'];
 	if ($_SESSION['ashuffle'] == '1') {
 		$_SESSION['notify']['title'] = 'Settings updated';
 		$_SESSION['notify']['msg'] = 'Random play turned off';
@@ -216,7 +227,7 @@ if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSIO
 // Filter
 if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SESSION['ashuffle_filter']) {
 	$trim_filter = trim($_POST['ashuffle_filter']);
-	phpSession('write', 'ashuffle_filter', ($trim_filter == '' ? 'None' : $trim_filter));
+	$_SESSION['ashuffle_filter'] = ($trim_filter == '' ? 'None' : $trim_filter);
 	if ($_SESSION['ashuffle'] == '1') {
 		$_SESSION['notify']['title'] = 'Settings updated';
 		$_SESSION['notify']['msg'] = 'Random play turned off';
@@ -489,6 +500,7 @@ $_select['ashufflesvc_on']  .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"
 $_select['ashufflesvc_off'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggle-ashufflesvc-2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['ashuffle_mode'] .= "<option value=\"Track\" " . (($_SESSION['ashuffle_mode'] == 'Track') ? "selected" : "") . ">Track</option>\n";
 $_select['ashuffle_mode'] .= "<option value=\"Album\" " . (($_SESSION['ashuffle_mode'] == 'Album') ? "selected" : "") . ">Album</option>\n";
+$_ashuffle_window = $_SESSION['ashuffle_window'];
 $_ashuffle_filter = str_replace('"', '&quot;', $_SESSION['ashuffle_filter']);
 // Volume step limit
 $_select['volume_step_limit'] .= "<option value=\"2\" " . (($_SESSION['volume_step_limit'] == '2') ? "selected" : "") . ">2</option>\n";

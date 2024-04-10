@@ -1112,6 +1112,15 @@ workerLog('worker: Auto-CoverView:    ' . ($_SESSION['auto_coverview'] == '-on' 
 workerLog('worker: CoverView timeout: ' . $_SESSION['scnsaver_timeout']);
 
 // Auto-shuffle
+if (!isset($_SESSION['ashuffle_mode'])) {
+	$_SESSION['ashuffle_mode'] = 'Track';
+}
+if (!isset($_SESSION['ashuffle_window'])) {
+	$_SESSION['ashuffle_window'] = '7';
+}
+if (!isset($_SESSION['ashuffle_filter'])) {
+	$_SESSION['ashuffle_filter'] = 'None';
+}
 workerLog('worker: Auto-shuffle:      ' . ($_SESSION['ashufflesvc'] == '1' ? 'on' : 'off'));
 
 // Auto-play: start auto-shuffle random play or auto-play last played item
