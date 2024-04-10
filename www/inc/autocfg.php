@@ -42,7 +42,7 @@ require_once __DIR__ . '/sql.php';
 // - a write handler for export
 function autoConfigSettings() {
 	$debug = true;
-	// Helper functions
+
 	// Set just the session var
 	function setSessVarOnly($values) {
 		$_SESSION[array_key_first($values)] = $values[array_key_first($values)];
@@ -323,8 +323,9 @@ function autoConfigSettings() {
 		['requires' => ['volume_mpd_max'], 'handler' => 'setSessVarSql'],
 		['requires' => ['volume_db_display'], 'handler' => 'setSessVarSql'],
 		['requires' => ['ashufflesvc'], 'handler' => 'setSessVarSql'],
-		['requires' => ['ashuffle_mode'], 'handler' => 'setSessVarSql'],
-		['requires' => ['ashuffle_filter'], 'handler' => 'setSessVarSql'],
+		['requires' => ['ashuffle_mode'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['ashuffle_window'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['ashuffle_filter'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['mpd_httpd'], 'handler' => function($values) {
 			$cmd = $values['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
 			sysCmd($cmd);
