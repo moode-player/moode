@@ -48,10 +48,27 @@ foreach ($result as $row) {
     $currentSettings[$row['param']] = $row['value'];
 }
 
-// Add certain session-only params so they are available to autoConfigExtract()
+// Add session-only params so they are available to autoConfigExtract()
+// System
 $currentSettings['updater_auto_check'] = $_SESSION['updater_auto_check'];
 $currentSettings['worker_responsiveness'] = $_SESSION['worker_responsiveness'];
+// MPD options
+$currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
+$currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];
+$currentSettings['ashuffle_filter'] = $_SESSION['ashuffle_filter'];
+// Bluetooth
+$currentSettings['bt_alsa_output_mode'] = $_SESSION['bt_alsa_output_mode'];
+// Library
+$currentSettings['lib_scope'] = $_SESSION['lib_scope'];
+$currentSettings['lib_active_search'] = $_SESSION['lib_active_search'];
+// Radio monitor
+$currentSettings['mpd_monitor_svc'] = $_SESSION['mpd_monitor_svc'];
+$currentSettings['mpd_monitor_opt'] = $_SESSION['mpd_monitor_opt'];
+// Mount monitor
 $currentSettings['fs_mountmon'] = $_SESSION['fs_mountmon'];
+// Miscellaneous
+$currentSettings['auto_coverview'] = $_SESSION['auto_coverview'];
+$currentSettings['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
 
 // Extract to ini file
 print(autoConfigExtract($currentSettings));
