@@ -704,6 +704,7 @@ workerLog('worker: MPD mixer      ' . $mixerType);
 if ($_SESSION['audioout'] == 'Local') {
 	phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
 }
+// TODO: move to after MPD section!
 // MPD volumes
 // Source select (Analog or S/PDIF) or MPD volume
 if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
@@ -856,7 +857,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 		$status = startBluetooth();
 		if ($status == 'started') {
 			if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
-				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+				startPairingAgent();
 				$status .= ', Pairing Agent started';
 			}
 		}
@@ -2468,7 +2469,7 @@ function runQueuedJob() {
 				if ($status == 'started') {
 					if ($_SESSION['pairing_agent'] == '1') {
 						sysCmd('killall -s 9 blu_agent.py');
-						sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+						startPairingAgent();
 					}
 				} else {
 					workerLog('worker: ' . $status);
@@ -2481,8 +2482,12 @@ function runQueuedJob() {
 		case 'pairing_agent':
 			sysCmd('killall -s 9 blu_agent.py');
 			if ($_SESSION['pairing_agent'] == '1') {
-				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+				startPairingAgent();
 			}
+			break;
+		case 'pairing_agent':
+			$cmd = '--pair_mode --timeout 30';
+			ctlPairingAgent($cmd);
 			break;
 		case 'airplaysvc':
 			stopAirPlay();

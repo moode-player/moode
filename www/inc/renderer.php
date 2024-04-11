@@ -45,6 +45,16 @@ function startBluetooth() {
 
 	return $status;
 }
+function startPairingAgent() {
+	// Accept all pairing requests
+	sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+	// TODO: Test this. Need "Turn on PAIRING" button somewhere in the UI
+	// Reject all pairing request but accept commands
+	//sysCmd('/var/www/daemon/blu_agent.py --agent >/dev/null 2>&1 &');
+}
+function ctlPairingAgent($cmd) {
+	sysCmd('/var/www/daemon/blu_agent.py ' . $cmd);
+}
 
 function startAirPlay() {
 	sysCmd('systemctl start nqptp');
