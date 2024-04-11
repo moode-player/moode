@@ -704,24 +704,6 @@ workerLog('worker: MPD mixer      ' . $mixerType);
 if ($_SESSION['audioout'] == 'Local') {
 	phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
 }
-// TODO: move to after MPD section!
-// MPD volumes
-// Source select (Analog or S/PDIF) or MPD volume
-if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
- 	if ($_SESSION['audioin'] == 'Local') {
-		$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-	} else {
-		$volKnob = $_SESSION['volknob_preamp'];
-	}
-} else {
-	$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-	phpSession('write', 'volknob_mpd', '-1');
-	phpSession('write', 'volknob_preamp', '0');
-}
-sysCmd('/var/www/util/vol.sh ' . $volKnob);
-workerLog('worker: MPD volume:    ' . $volKnob);
-workerLog('worker: Saved MPD vol: ' . $_SESSION['volknob_mpd']);
-workerLog('worker: Saved SRC vol: ' . $_SESSION['volknob_preamp']);
 // Audio formats
 if ($cards[$_SESSION['cardnum']] == ALSA_EMPTY_CARD) {
 	workerLog('worker: Audio formats: Warning: card ' . $_SESSION['cardnum'] . ' is empty');
@@ -780,6 +762,23 @@ $mpdOutputs = getMpdOutputs($sock);
 foreach ($mpdOutputs as $mpdOutput) {
 	workerLog('worker: MPD ' . $mpdOutput);
 }
+// MPD volumes
+// Source select (Analog or S/PDIF) or MPD volume
+if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
+ 	if ($_SESSION['audioin'] == 'Local') {
+		$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	} else {
+		$volKnob = $_SESSION['volknob_preamp'];
+	}
+} else {
+	$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	phpSession('write', 'volknob_mpd', '-1');
+	phpSession('write', 'volknob_preamp', '0');
+}
+sysCmd('/var/www/util/vol.sh ' . $volKnob);
+workerLog('worker: MPD volume:         ' . $volKnob);
+workerLog('worker: Saved MPD vol:      ' . $_SESSION['volknob_mpd']);
+workerLog('worker: Saved SRC vol:      ' . $_SESSION['volknob_preamp']);
 // MPD crossfade
 workerLog('worker: MPD crossfade:      ' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs'));
 sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
