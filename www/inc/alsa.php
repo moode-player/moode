@@ -87,8 +87,7 @@ function getAlsaVolume($mixerName) {
 // Get ALSA card ID's
 function getAlsaCardIDs() {
 	$cardIDs = array();
-	$maxCards = ALSA_MAX_CARDS;
-	for ($i = 0; $i < $maxCards; $i++) {
+	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 		$cardIDs[$i] = empty($cardID) ? ALSA_EMPTY_CARD : $cardID;
 	}
@@ -101,9 +100,10 @@ function getAlsaCardIDs() {
 function getAlsaDeviceNames() {
 	$dbh = sqlConnect();
 	$deviceNames = array();
-	$maxCards = ALSA_MAX_CARDS;
-	for ($i = 0; $i < $maxCards; $i++) {
+	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+		$aplayDeviceName = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
+		$isUSBDevice = empty(sysCmd('aplay -l | grep "card ' . $i . '" | grep "USB Audio"')) ? false : true;
 
 		if (empty($cardID)) {
 			$deviceNames[$i] = ALSA_EMPTY_CARD;
@@ -112,23 +112,42 @@ function getAlsaDeviceNames() {
 		} else if ($cardID == ALSA_DUMMY_DEVICE) {
 			$deviceNames[$i] = $cardID;
 		} else {
-			if ($cardID == ALSA_VC4HDMI_SINGLE_DEVICE) {
-				$cardID .= '0';
-			}
+			// Format singleton vc4hdmi0 if indicated
+			$cardID .= ($cardID == ALSA_VC4HDMI_SINGLE_DEVICE ? '0' : '');
+
+			// These card id's are defined in cfg_audiodev and have alternate (friendly) names
+			// b1			Pi HDMI 1
+			// b2			Pi HDMI 2
+			// Headphones	Pi Headphone jack
+			// vc4hdmi0		Pi HDMI 1
+			// vc4hdmi1		Pi HDMI 2
+			// Revolution	Allo Revolution DAC
+			// DAC8STEREO	okto research dac8 Stereo
 			$result = sqlRead('cfg_audiodev', $dbh, $cardID);
+
+			// All queries return the following:
+			// false			Query execution failed (rare)
+			// true				Query successful: no rows contained a match
+			// Array			Query successful: at least one row contained a match
 			if ($result === true) {
-				// Not in table, check for I2S device
-				// DEBUG: Assumes ALSA always assigns USB devices higher card numbers than the I2S device
-				$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
-				if ($result === true) {
-					// Not in table, return aplay device name
-					$deviceNames[$i] = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
+				// Not in table: either USB or I2S device
+				//$result = sysCmd('aplay -l | grep "card ' . $i . '" | grep "USB Audio"');
+				if ($isUSBDevice) {
+					// USB device: assign aplay device name
+					$deviceNames[$i] = $aplayDeviceName;
 				} else {
-					// In table, return name
-					$deviceNames[$i] = $result[0]['name'];
+					// I2S device
+					$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
+					if ($result === true) {
+						// Not in table: assign aplay device name
+						$deviceNames[$i] = $aplayDeviceName;
+					} else {
+						// In table: assign defined name
+						$deviceNames[$i] = $result[0]['name'];
+					}
 				}
 			} else {
-				// In table, return alt name
+				// In table: assign alternate (friendly) name
 				$deviceNames[$i] = $result[0]['alt_name'];
 			}
 		}
