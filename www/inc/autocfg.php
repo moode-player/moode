@@ -102,6 +102,9 @@ function autoConfigSettings() {
 	// 'requires' array of autoconfig items that should ALL be present before the handler is executed
 	// 'handler'  function for setting the config item
 	// 'cmd'      special arg for sysutil.sh when setSessVarSqlSysCmd handler is used
+	//
+	// NOTE: When adding new session-only vars also add them to autocfg-gen.php
+	//
 	$configHandlers = [
 		//
 		// Host and renderer names
@@ -164,6 +167,47 @@ function autoConfigSettings() {
 		['requires' => ['fs_nfs_options'], 'handler' => 'setSessVarSql'],
 		'Peripherals',
 		['requires' => ['localui'], 'handler' => 'setSessVarSql'],
+		['requires' => ['wake_display'], 'handler' => 'setSessVarSql'],
+		['requires' => ['touchscn'], 'handler' => function($values) {
+			$_SESSION['touchscn'] = $values['touchscn'];
+			$param = $values['touchscn'] == '0' ? ' -- -nocursor' : '';
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
+		}],
+		['requires' => ['on_screen_kbd'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['scnblank'], 'handler' => function($values) {
+			phpSession('write', 'scnblank', $values['scnblank']);
+			sysCmd('sed -i "/xset s/c\xset s ' . $values['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+		}],
+		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
+			$_SESSION['hdmi_enable_4kp60'] = $values['hdmi_enable_4kp60'];
+			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';
+			sysCmd('sed -i s"/hdmi_enable_4kp60=.*/hdmi_enable_4kp60=' . $value . '/" ' . BOOT_CONFIG_TXT);
+		}],
+		['requires' => ['scnbrightness'], 'handler' => function($values) {
+			phpSession('write', 'scnbrightness', $values['scnbrightness']);
+			sysCmd('/bin/su -c "echo '. $values['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+		}],
+
+		// TODO: This >> code needs to be updated for new config.txt reqts
+		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
+			phpSession('write', 'pixel_aspect_ratio', $values['pixel_aspect_ratio']);
+			if ($_SESSION['w_queueargs'] == 'Square') {
+				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT); // Remove first to prevent any chance of duplicate adds
+				sysCmd('echo framebuffer_width=800 >> ' . BOOT_CONFIG_TXT);
+				sysCmd('echo framebuffer_height=444 >> ' . BOOT_CONFIG_TXT);
+				sysCmd('echo framebuffer_aspect=-1 >> ' . BOOT_CONFIG_TXT);
+			} else {
+				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT);
+			}
+		}],
+		['requires' => ['scnrotate'], 'handler' => function($values) {
+			phpSession('write', 'scnrotate', $values['scnrotate']);
+			sysCmd('sed -i /lcd_rotate/d ' . BOOT_CONFIG_TXT);
+			if ($_SESSION['w_queueargs'] == '180') {
+				sysCmd('echo lcd_rotate=2 >> ' . BOOT_CONFIG_TXT);
+			}
+		}],
+
 		['requires' => ['lcdup'], 'handler' => 'setSessVarSql'],
 		'Security',
 		['requires' => ['shellinabox'], 'handler' => 'setSessVarSql'],
@@ -249,15 +293,17 @@ function autoConfigSettings() {
 			return $str;
 		}],
 		'Network (apd0)',
-		['requires' => ['apdssid', 'apdpwd', 'apduuid'],
+		['requires' => ['apdssid', 'apdpwd', 'apduuid', 'apdaddr'],
 		'optionals' => ['apdpsk'],
 		'handler' => function($values, $optionals) {
+			$dbh = sqlConnect();
 			$psk = (key_exists('apdpsk', $optionals) && !empty($optionals['apdpsk'])) ? $optionals['apdpsk'] :
 				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 				'wlanssid' => $values['apdssid'], 'wlanuuid' => $values['apduuid'], 'wlanpwd' => $psk, 'wlanpsk' =>  $psk,
 				'wlancc' => '');
-			sqlUpdate('cfg_network', sqlConnect(), 'apd0', $value);
+			sqlUpdate('cfg_network', $dbh, 'apd0', $value);
+			sqlUpdate('cfg_system', $dbh, $values['apdaddr']);
 			cfgNetworks();
 		}, 'custom_write' => function($values) {
 			$result = sqlQuery("select * from cfg_network where iface='apd0'", sqlConnect());
@@ -266,6 +312,8 @@ function autoConfigSettings() {
 			$str .= "apdpwd = \"" . "" . "\"\n"; // Keep empty
 			$str .= "apduuid = \"" . $result[0]['wlanuuid'] . "\"\n";
 			$str .= "apdpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
+			$result = sqlQuery("SELECT value FROM cfg_system WHERE param='ap_network_addr'", sqlConnect());
+			$str .= "apdaddr = \"" . $result[0]['value'] . "\"\n";
 			return $str;
 		}],
 		//
@@ -390,7 +438,9 @@ function autoConfigSettings() {
 		['requires' => ['rbsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmafterrb'], 'handler' => 'setSessVarSql'],
 		'Bluetooth',
-		['requires' => ['pairing_agent'], 'handler' => 'setSessVarSql'],
+		['requires' => ['bt_pin_code'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['alsavolume_max_bt'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['cdspvolume_max_bt'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['bluez_pcm_buffer'], 'handler' => function($values) {
 			phpSession('write', 'bluez_pcm_buffer', $values['bluez_pcm_buffer']);
 			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
