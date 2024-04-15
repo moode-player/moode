@@ -52,7 +52,8 @@ if (isset($_POST['update_touchscn'])) {
 
 if (isset($_POST['update_on_screen_kbd'])) {
     if (isset($_POST['on_screen_kbd']) && $_POST['on_screen_kbd'] != $_SESSION['on_screen_kbd']) {
-		phpSession('write', 'on_screen_kbd', $_POST['on_screen_kbd']);
+		$_SESSION['on_screen_kbd'] = $_POST['on_screen_kbd'];
+        $_SESSION['notify']['title'] = 'Settings updated';
     }
 }
 
@@ -65,8 +66,8 @@ if (isset($_POST['update_scnblank'])) {
 
 if (isset($_POST['update_hdmi_enable_4kp60'])) {
     if (isset($_POST['hdmi_enable_4kp60']) && $_POST['hdmi_enable_4kp60'] != $_SESSION['hdmi_enable_4kp60']) {
+        $_SESSION['hdmi_enable_4kp60'] = $_POST['hdmi_enable_4kp60'];
         submitJob('hdmi_enable_4kp60', $_POST['hdmi_enable_4kp60'], 'Settings updated', 'Reboot required');
-        phpSession('write', 'hdmi_enable_4kp60', $_POST['hdmi_enable_4kp60']);
     }
 }
 
