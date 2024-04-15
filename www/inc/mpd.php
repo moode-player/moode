@@ -219,6 +219,7 @@ function updMpdConf() {
 		include '/var/www/inc/recorder-mpd.php';
 	}
 
+    // Developer tweak for maintaining custom mpd.conf settings
 	if ($_SESSION['feat_bitmask'] & FEAT_DEVTWEAKS) {
 		$fh = fopen('/etc/mpd.moode.conf', 'w');
 		fwrite($fh, $data);
@@ -233,6 +234,7 @@ function updMpdConf() {
 	// Update ALSA and Bluetooth confs
 	updAudioOutAndBtOutConfs($cardNum, $_SESSION['alsa_output_mode']);
 	updDspAndBtInConfs($cardNum, $_SESSION['alsa_output_mode']);
+
     // Update output device cache
     updOutputDeviceCache($_SESSION['adevname']);
 }
@@ -244,7 +246,6 @@ function changeMPDMixer($mixer) {
 
 	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
 	phpSession('write', 'mpdmixer', $mixerType);
-
 	if ($_SESSION['alsavolume'] != 'none' && $mixerType != 'hardware') {
         setALSAVolTo0dB($_SESSION['alsavolume_max']);
 	}
