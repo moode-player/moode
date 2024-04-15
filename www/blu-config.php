@@ -49,21 +49,18 @@ if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
 		$cmd = '-H';
 	}
 }
-
 // Pair with device
 if (isset($_POST['pairwith_device']) && $_POST['pairwith_device'] == '1') {
 	sysCmd('/var/www/util/blu-control.sh -P ' . '"' . $_POST['scanned_device'] . '"');
 	$cmd = '-p';
 	sleep(1);
 }
-
 // Remove pairing
 if (isset($_POST['rm_paired_device']) && $_POST['rm_paired_device'] == '1') {
 	sysCmd('/var/www/util/blu-control.sh -r ' . '"' . $_POST['paired_device'] . '"');
 	$cmd = '-p';
 	sleep(1);
 }
-
 // Connect to device
 if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	if ($_POST['audioout'] == 'Bluetooth') { // Update MAC address
@@ -76,7 +73,7 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	setAudioOut($_POST['audioout']);
 }
 
-// Change audio destination
+// Change audio routing
 if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		// Change to Bluetooth out, update MAC address
@@ -143,12 +140,6 @@ $_hide_ctl['paired_device'] = 'hide';
 $_hide_ctl['connected_device'] = 'hide';
 $_hide_ctl['scanned_device'] = 'hide';
 $_bt_disabled = $_SESSION['btsvc'] == '1' ? '' : 'disabled';
-
-if ($cmd == '-p' || $cmd == '-c') {
-	$_audioout_msg = '<br>Changing from Bluetooth speaker to Local audio will automatically disconnect from the speaker.';
-} else {
-	$_audioout_msg = '';
-}
 
 // Run the cmd
 $result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);

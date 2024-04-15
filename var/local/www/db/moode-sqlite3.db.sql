@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Apr 10 08:27:04 2024
+-- File generated with SQLiteStudio v3.1.0 on Sun Apr 14 07:18:59 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -390,7 +390,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
 INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (62, 'ap_network_addr', '172.24.1.1/24');
 INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
-INSERT INTO cfg_system (id, param, value) VALUES (64, 'pairing_agent', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (64, 'RESERVED_64', '');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
 INSERT INTO cfg_system (id, param, value) VALUES (67, 'mpdcrossfade', '0');

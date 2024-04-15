@@ -1,0 +1,14 @@
+[Unit]
+Description=Bluetooth Authorization Agent
+After=bluetooth.service
+PartOf=bluetooth.service
+
+[Service]
+Type=simple
+KillSignal=SIGINT
+ExecStart=/usr/bin/bt-agent -c NoInputNoOutput
+ExecStartPost=/bin/sleep 1
+ExecStartPost=/bin/hciconfig hci0 sspmode 1
+
+[Install]
+WantedBy=bluetooth.target

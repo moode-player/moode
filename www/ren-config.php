@@ -46,12 +46,23 @@ if (isset($_POST['update_bt_settings'])) {
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('btsvc', '', 'Bluetooth controller restarted');
 }
-if (isset($_POST['update_pairing_agent'])) {
-	phpSession('write', 'pairing_agent', $_POST['pairing_agent']);
-	submitJob('pairing_agent', $_POST['pairing_agent'], 'Settings updated');
+if (isset($_POST['update_bt_pin_code'])) {
+	$pinCode = empty($_POST['bt_pin_code']) ? 'None' : $_POST['bt_pin_code'];
+	if ($pinCode == 'None' || (is_numeric($pinCode) && strlen($pinCode) == 6)) {
+		$_SESSION['bt_pin_code'] = $pinCode;
+		submitJob('bt_pin_code', $pinCode, 'Settings updated', 'Pairing agent restarted');
+	} else {
+		$_SESSION['notify']['title'] = 'Invalid PIN code';
+		$_SESSION['notify']['msg'] = 'Must be 6 digit (numeric) or "None"';
+	}
 }
-if (isset($_POST['parestart']) && $_POST['parestart'] == 1 && $_SESSION['btsvc'] == '1') {
-	submitJob('pairing_agent', '', 'Pairing agent restarted');
+if (isset($_POST['update_alsavolume_max_bt'])) {
+	$_SESSION['alsavolume_max_bt'] = $_POST['alsavolume_max_bt'];
+	$_SESSION['notify']['title'] = 'Settings updated';
+}
+if (isset($_POST['update_cdspvolume_max_bt'])) {
+	$_SESSION['cdspvolume_max_bt'] = $_POST['cdspvolume_max_bt'];
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['update_rsmafterbt'])) {
 	phpSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
@@ -170,15 +181,23 @@ phpSession('close');
 $_feat_bluetooth = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? '' : 'hide';
 $_SESSION['btsvc'] == '1' ? $_bt_btn_disable = '' : $_bt_btn_disable = 'disabled';
 $_SESSION['btsvc'] == '1' ? $_bt_link_disable = '' : $_bt_link_disable = 'onclick="return false;"';
-$_SESSION['pairing_agent'] == '1' ? $_pa_btn_disable = '' : $_pa_btn_disable = 'disabled';
-$_SESSION['pairing_agent'] == '1' ? $_pa_link_disable = '' : $_pa_link_disable = 'onclick="return false;"';
 $autoClick = " onchange=\"autoClick('#btn-set-btsvc');\"";
 $_select['btsvc_on']  .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-1\" value=\"1\" " . (($_SESSION['btsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['btsvc_off'] .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-2\" value=\"0\" " . (($_SESSION['btsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['btname'] = $_SESSION['btname'];
-$autoClick = " onchange=\"autoClick('#btn-set-pairing-agent');\" " . $_bt_btn_disable;
-$_select['pairing_agent_on']  .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent-1\" value=\"1\" " . (($_SESSION['pairing_agent'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['pairing_agent_off'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent-2\" value=\"0\" " . (($_SESSION['pairing_agent'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_bt_pin_code = $_SESSION['bt_pin_code'];
+if ($_SESSION['alsavolume'] == 'none') {
+	$_alsavolume_max_bt = '';
+	$_alsavolume_max_bt_readonly = 'readonly';
+	$_alsavolume_max_bt_disable = 'disabled';
+	$_alsavolume_max_bt_msg = '<span class="config-msg-static"><i>Hardware volume controller not detected</i></span>';
+} else {
+	$_alsavolume_max_bt = $_SESSION['alsavolume_max_bt'];
+	$_alsavolume_max_bt_readonly = '';
+	$_alsavolume_max_bt_disable = '';
+	$_alsavolume_max_bt_msg = '';
+}
+$_cdspvolume_max_bt = $_SESSION['cdspvolume_max_bt'];
 $autoClick = " onchange=\"autoClick('#btn-set-rsmafterbt');\" " . $_bt_btn_disable;
 $_select['rsmafterbt_on'] .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-1\" value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmafterbt_off']  .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-2\" value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -209,7 +228,6 @@ $_select['rsmafterspot_off']  .= "<input type=\"radio\" name=\"rsmafterspot\" id
 
 // Squeezelite
 $_feat_squeezelite = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? '' : 'hide';
-//DELETE $_SESSION['slsvc'] == '1' ? $_rb_svcbtn_disable = 'disabled' : $_rb_svcbtn_disable = '';
 $_SESSION['slsvc'] == '1' ? $_sl_btn_disable = '' : $_sl_btn_disable = 'disabled';
 $_SESSION['slsvc'] == '1' ? $_sl_link_disable = '' : $_sl_link_disable = 'onclick="return false;"';
 $autoClick = " onchange=\"autoClick('#btn-set-slsvc');\"";
@@ -222,7 +240,6 @@ $_select['rsmaftersl_off']  .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"t
 // RoonBridge
 if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) && $_SESSION['roonbridge_installed'] == 'yes') {
 	$_feat_roonbridge = '';
-	//DELETE $_SESSION['rbsvc'] == '1' ? $_sl_svcbtn_disable = 'disabled' : $_sl_svcbtn_disable = '';
 	$_SESSION['rbsvc'] == '1' ? $_rb_btn_disable = '' : $_rb_btn_disable = 'disabled';
 	$_SESSION['rbsvc'] == '1' ? $_rb_link_disable = '' : $_rb_link_disable = 'onclick="return false;"';
 	$autoClick = " onchange=\"autoClick('#btn-set-rbsvc');\"";

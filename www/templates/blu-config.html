@@ -67,19 +67,18 @@
 					Select a device to pair with.
 	            </span>
 			</div>
+		</div>
 
-			<legend>Audio routing</legend>
+		<div class="control-group">
+			<legend>Options</legend>
 			<select id="audioout" class="config-select-large" name="audioout">
 				$_select[audioout]
 			</select>
 			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="chg_audioout" value="1">Set</button>
 			<span class="config-help-static">
-				<b>Local audio: </b>Route connected client output to the Local audio device.<br>
-				<b>Bluetooth speaker: </b>Route MPD output to a remote Bluetooth speaker.
-				$_audioout_msg
+				Output to the Local audio device or a Bluetooth speaker.
             </span>
 
-			<legend>Latency and bandwidth</legend>
 			<select id="pcm-buffer" class="config-select-large" name="pcm_buffer">
 				$_select[pcm_buffer]
 			</select>
@@ -93,7 +92,7 @@
 			</select>
 			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_sbc_quality" value="1">Set</button>
 			<span class="config-help-static">
-				When the SBC encoder is in use the selected quality mode will be used. Lower quality settings consume less bandwidth but may reduce audio quality.<br>
+				Specify the quality mode when the SBC encoder is in use.
 				<!--b>Low:</b> Mono 114 kbps, Stereo 213 kbps<br>
 				<b>Medium:</b> Mono 132 kbps, Stereo 237 kbps<br>
 				<b>High:</b> Mono 198 kbps, Stereo 345 kbps<br>
@@ -101,14 +100,13 @@
 				<b>XQ+:</b> SBC Dual Channel HD 551 kbps-->
 	        </span>
 
-			<legend>ALSA output mode</legend>
 			<select id="bt-alsa-output-mode" class="config-select-large" name="bt_alsa_output_mode">
 				$_select[bt_alsa_output_mode]
 			</select>
 			<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_alsa_output_mode" value="1">Set</button>
 			<span class="config-help-static">
-				<b>Default: </b>Use the "Output mode" setting from Audio Config. This enables DSP to be used.<br>
-				<b>Compatibility: </b>This mode provides improved device compatibility but does not support DSP.
+				Default: Use the "Output mode" setting from Audio Config. This enables DSP to be used.<br>
+				Compatibility: This mode provides improved device compatibility but does not support DSP.
             </span>
 		</div>
 	</form>

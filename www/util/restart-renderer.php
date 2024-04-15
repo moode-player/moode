@@ -65,18 +65,14 @@ With no OPTION print the help text and exit.
 phpSession('close');
 
 function restartBluetooth() {
-	// Stop bluetooth
-	sysCmd('systemctl stop bluealsa');
-	sysCmd('systemctl stop bluetooth');
-	sysCmd('killall bluealsa-aplay');
+	stopBluetooth()
 	sysCmd('/var/www/util/vol.sh -restore');
-
 	// Reset to inactive
 	phpSession('write', 'btactive', '0');
 	// Dismiss active screen
 	sendEngCmd('btactive0');
 
-	// Restore MPD volume and start bluetooth
+	// Restore MPD volume and start Bluetooth
 	sysCmd('/var/www/util/vol.sh -restore');
 	$status = startBluetooth();
 	if ($status != 'started') {

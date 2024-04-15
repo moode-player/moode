@@ -31,15 +31,12 @@
 			<p class="sub-legend">A Bluetooth adapter must be present and enabled otherwise Bluetooth will not start.</p>
 			<label class="control-label">Controller</label>
 			<div class="controls">
-				<!-- Radio button -->
 				<div class="toggle">
 					<label class="toggle-radio toggle-btsvc" for="toggle-btsvc-2">ON </label>$_select[btsvc_on]
 					<label class="toggle-radio toggle-btsvc" for="toggle-btsvc-1">OFF</label>$_select[btsvc_off]
 				</div>
-				<!-- Set button + (i)-->
 				<button id="btn-set-btsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_settings" value="novalue">Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-btsvc" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<!-- Help (i) -->
 				<span id="info-btsvc" class="config-help-info">
 					Bluetooth by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa).
                 </span>
@@ -51,17 +48,35 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_settings" value="novalue">Set</button>
 			</div>
 
-			<label class="control-label">Pairing agent</label>
+			<label class="control-label" for="bt-pin-code">PIN code</label>
 			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-pairing-agent" for="toggle-pairing-agent-2">ON </label>$_select[pairing_agent_on]
-					<label class="toggle-radio toggle-pairing-agent" for="toggle-pairing-agent-1">OFF</label>$_select[pairing_agent_off]
-				</div>
-				<button id="btn-set-pairing-agent" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pairing_agent" value="novalue" $_bt_btn_disable>Set</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-pairing-agent" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
-				<span id="info-pairing-agent" class="config-help-info">
-					Automatically accept incoming pairing and connect requests without having to perform a Bluetooth scan.
-                </span>
+				<input class="config-input-large" type="text" pattern="[A-Za-z0-9]{4,6}" id="bt-pin-code" name="bt_pin_code" value="$_bt_pin_code" placeholder="None">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_pin_code" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-bt-pin-code" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-bt-pin-code" class="config-help-info">
+					Set a 6 digit numeric PIN code (or "None") that clients are required to enter before the initial connection request is accepted. Subsequent connection requests are then verified and accepted without needing to re-enter the PIN code.
+				</span>
+			</div>
+
+			<label class="control-label" for="alsavolume-max-bt">ALSA maxvol (%)</label>
+			<div class="controls">
+				<input class="config-input-large" $_alsavolume_max_bt_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume-max-bt" name="alsavolume_max_bt" value="$_alsavolume_max_bt">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit status-msg" type="submit" name="update_alsavolume_max_bt" value="novalue" $_alsavolume_max_bt_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsavolume-max-bt" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				$_alsavolume_max_bt_msg
+				<span id="info-alsavolume-max-bt" class="config-help-info">
+					Establish the maximum ALSA volume level. This setting takes effect the next time a client connects.
+				</span>
+			</div>
+
+			<label class="control-label" for="cdspvolume-max-bt">CDSP maxvol (dB)</label>
+			<div class="controls">
+				<input class="config-input-large" type="number" pattern="^([-+,0-9.]+)" maxlength="4" min="-120" max="0" id="cdspvolume-max-bt" name="cdspvolume_max_bt" value="$_cdspvolume_max_bt">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cdspvolume_max_bt" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdspvolume-max-bt" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-cdspvolume-max-bt" class="config-help-info">
+					Establish the maximum CamillaDSP volume level. This setting takes effect the next time a client connects.
+				</span>
 			</div>
 
 			<label class="control-label">Resume MPD</label>
@@ -75,11 +90,6 @@
 				<span id="info-rsmafterbt" class="config-help-info">
 					Resume MPD playback after the Bluetooth client disconnects.
                 </span>
-			</div>
-			<!-- Buttons + text -->
-			<div class="controls">
-				<a data-toggle="modal" href="#pa-restart" $_pa_link_disable><button class="btn btn-medium btn-primary config-btn" $_pa_btn_disable>Restart</button></a>
-				<span class="config-btn-after">Agent</span>
 			</div>
 
 			<div class="controls">

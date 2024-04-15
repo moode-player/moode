@@ -218,6 +218,10 @@ sysCmd('chmod 0666 ' . SPSEVENT_LOG);
 sysCmd('chmod 0666 ' . SLPOWER_LOG);
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
+if (!file_exists('/etc/machine-info')) {
+	sysCmd('cp /usr/share/moode-player/etc/machine-info /etc/');
+	workerLog('worker: File check created default machine-info');
+}
 workerLog('worker: File check complete');
 
 // Debug logging
@@ -691,7 +695,7 @@ if ($_SESSION['alsavolume'] != 'none') {
 	$msg = 'controller not detected';
 }
 workerLog('worker: ALSA volume:   ' . $msg);
-// ALSA maxvol
+// ALSA max volume
 workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
 // ALSA loopback
 workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
@@ -839,9 +843,9 @@ workerLog('worker: --');
 // Configure input select
 if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	$status = 'available';
-	$src = $_SESSION['audioin'] == 'Local' ? 'MPD' : $_SESSION['audioin'];
+	$source = $_SESSION['audioin'] == 'Local' ? 'MPD' : $_SESSION['audioin'];
 	$output = $_SESSION['adevname'];
-	$status .= ', src ' . $src . ', out ' . $output;
+	$status .= ', Source: ' . $source . ', Output: ' . $output;
 	if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
 		setAudioIn($_SESSION['audioin']);
 	}
@@ -850,31 +854,38 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 }
 workerLog('worker: Input select:    ' . $status);
 
-// Start bluetooth controller and pairing agent
+// Start bluetooth controller (and pairing agent)
 if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
 		$status = startBluetooth();
-		if ($status == 'started') {
-			if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
-				startPairingAgent();
-				$status .= ', Pairing Agent started';
-			}
-		}
 	} else {
 		$status = 'available';
 	}
 } else {
 	$status = 'n/a';
 }
+// Pairing agent PIN code
+if (!isset($_SESSION['bt_pin_code'])) {
+	$_SESSION['bt_pin_code'] = 'None';
+}
+$status .= ', PIN: ' . ($_SESSION['bt_pin_code'] == 'None' ? 'None' : 'Set');
+// ALSA/CDSP max volumes
+if (!isset($_SESSION['alsavolume_max_bt'])) {
+	$_SESSION['alsavolume_max_bt'] = $_SESSION['alsavolume_max'];
+}
+if (!isset($_SESSION['cdspvolume_max_bt'])) {
+	$_SESSION['cdspvolume_max_bt'] = '0';
+}
+$status .= ', ALSA/CDSP maxvol: ' . $_SESSION['alsavolume_max_bt'] . '%|' . $_SESSION['cdspvolume_max_bt'] . 'dB';
 // Bluetooth SBC quality
 if (!isset($_SESSION['bluez_sbc_quality'])) {
 	$_SESSION['bluez_sbc_quality'] = 'xq+';
 }
-// Bluetooth ALSA output mode
+// ALSA output mode
 if (!isset($_SESSION['bt_alsa_output_mode'])) {
 	$_SESSION['bt_alsa_output_mode'] = '_audioout';
 }
-$status .= ', ALSA mode ' . BT_ALSA_OUTPUT_MODE_NAME[$_SESSION['bt_alsa_output_mode']];
+$status .= ', ALSA outmode: ' . BT_ALSA_OUTPUT_MODE_NAME[$_SESSION['bt_alsa_output_mode']];
 workerLog('worker: Bluetooth:       ' . $status);
 
 // Start airplay renderer
@@ -1488,12 +1499,12 @@ function chkBtActive() {
 			sysCmd('mpc stop'); // For added robustness
 			sendEngCmd('btactive1');
 
-			// Local
+			// Local (Attenuate for Bluetooth volume)
 			if ($_SESSION['alsavolume'] != 'none') {
-		        setALSAVolTo0dB($_SESSION['alsavolume_max']);
+		        setALSAVolTo0dB($_SESSION['alsavolume_max_bt']);
 			}
 	        if ($_SESSION['camilladsp'] != 'off') {
-	            CamillaDSP::setCDSPVolTo0dB('-6.0'); // Attenuate a bit for Bluetooth volume
+	            CamillaDSP::setCDSPVolTo0dB($_SESSION['cdspvolume_max_bt'] . '.0');
 	        }
 
 			// Multiroom receivers
@@ -2233,11 +2244,6 @@ function runQueuedJob() {
 					sysCmd('killall librespot');
 					startSpotify();
 				}
-				if ($_SESSION['slsvc'] == 1) {
-					sysCmd('killall squeezelite');
-					cfgSqueezelite();
-					startSqueezelite();
-				}
 			}
 
 			// DEBUG:
@@ -2455,38 +2461,28 @@ function runQueuedJob() {
 			break;
 		case 'btsvc':
 			sysCmd('/var/www/util/sysutil.sh chg-name bluetooth ' . $_SESSION['w_queueargs']);
-			sysCmd('systemctl stop bluealsa');
-			sysCmd('systemctl stop bluetooth');
-			sysCmd('killall bluealsa-aplay');
+			stopBluetooth();
 			sysCmd('/var/www/util/vol.sh -restore');
-			// Reset to inactive
 			phpSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
-
 			if ($_SESSION['btsvc'] == 1) {
 				$status = startBluetooth();
-				if ($status == 'started') {
-					if ($_SESSION['pairing_agent'] == '1') {
-						sysCmd('killall -s 9 blu_agent.py');
-						startPairingAgent();
-					}
-				} else {
+				if ($status != 'started') {
 					workerLog('worker: ' . $status);
 				}
+			}
+			break;
+		case 'bt_pin_code':
+			if ($_SESSION['w_queueargs'] == 'None') {
+				sysCmd("sed -i s'|ExecStart=/usr/bin/bt-agent.*|ExecStart=/usr/bin/bt-agent -c NoInputNoOutput|' /etc/systemd/system/bt-agent.service");
+				sysCmd("sed -i s'|ExecStartPost=/bin/hciconfig.*|ExecStartPost=/bin/hciconfig hci0 sspmode 1|' /etc/systemd/system/bt-agent.service");
 			} else {
-				sysCmd('killall -s 9 blu_agent.py');
-				phpSession('write', 'pairing_agent', '0');
+				sysCmd('echo "* ' . $_SESSION['w_queueargs'] . '" > /etc/bluetooth/pin.conf');
+				sysCmd("sed -i s'|ExecStart=/usr/bin/bt-agent.*|ExecStart=/usr/bin/bt-agent -c NoInputNoOutput -p /etc/bluetooth/pin.conf|' /etc/systemd/system/bt-agent.service");
+				sysCmd("sed -i s'|ExecStartPost=/bin/hciconfig.*|ExecStartPost=/bin/hciconfig hci0 sspmode 0|' /etc/systemd/system/bt-agent.service");
 			}
-			break;
-		case 'pairing_agent':
-			sysCmd('killall -s 9 blu_agent.py');
-			if ($_SESSION['pairing_agent'] == '1') {
-				startPairingAgent();
-			}
-			break;
-		case 'pairing_agent':
-			$cmd = '--pair_mode --timeout 30';
-			ctlPairingAgent($cmd);
+			sysCmd('systemctl daemon-reload');
+			sysCmd('systemctl restart bt-agent');
 			break;
 		case 'airplaysvc':
 			stopAirPlay();
@@ -2717,10 +2713,6 @@ function runQueuedJob() {
 				sysCmd('systemctl enable udisks2');
 			}
 			break;
-		case 'usbboot':
-			sysCmd('sed -i /program_usb_boot_mode/d ' . BOOT_CONFIG_TXT); // Remove first to prevent duplicate adds
-			sysCmd('echo program_usb_boot_mode=1 >> ' . BOOT_CONFIG_TXT);
-			break;
 		case 'p3wifi':
 			ctlWifi($_SESSION['w_queueargs']);
 			break;
@@ -2782,7 +2774,7 @@ function runQueuedJob() {
 			break;
 		case 'touchscn':
 			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
-			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' .$param . '" /lib/systemd/system/localui.service');
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
 			if ($_SESSION['localui'] == '1') {
 				sysCmd('systemctl daemon-reload');
 				stopLocalUI();

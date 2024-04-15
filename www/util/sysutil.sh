@@ -62,10 +62,8 @@ if [[ $1 = "chg-name" ]]; then
 	fi
 
 	if [[ $2 = "bluetooth" ]]; then
-		# bluez 5.43, 5.49
-		sed -i "s/PRETTY_HOSTNAME=$3/PRETTY_HOSTNAME=$4/" /etc/machine-info
-		# bluez 5.49
 		sed -i "s/Name = $3/Name = $4/" /etc/bluetooth/main.conf
+		sed -i "s/PRETTY_HOSTNAME=$3/PRETTY_HOSTNAME=$4/" /etc/machine-info
 	fi
 
 	exit

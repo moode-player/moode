@@ -43,6 +43,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWLAN MAC\t\t= $WLAN0MAC\c"
 	echo -e "\nWLAN country\t\t= $wlancountry\c"
 	echo -e "\nWLAN AP SSID\t\t= $apdssid\c"
+	echo -e "\nWLAN AP addr\t\t= $ap_network_addr\c"
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
@@ -131,7 +132,6 @@ AUDIO_PARAMETERS() {
 	echo -e "\n\c"
 	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
 		echo -e "\nBluetooth controller\t= $btsvc\c"
-		echo -e "\nPairing agent\t\t= $pairing_agent\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		echo -e "\nAirPlay receiver\t= $airplaysvc\c"
@@ -297,8 +297,10 @@ RENDERER_SETTINGS() {
 		echo -e "B L U E T O O T H   S E T T I N G S"
 		echo -e "\nVersion\t\t\t= $BLUETOOTH_VER\c"
 		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
-		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER\c"
 		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
+		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER (bluez-tools)\c"
+		echo -e "\nPIN code\t\t= $BT_PIN_CODE\c"
+		echo -e "\nALSA max volume\t\t= $ALSAVOLUME_MAX_BT%\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
 		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\c"
 		echo -e "\nALSA output mode\t= $BT_ALSA_OUTPUT_MODE\n"
@@ -369,9 +371,11 @@ RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_LOCALUI)) -ne 0 ]; then
 		echo -e "L O C A L   D I S P L A Y   S E T T I N G S"
 		echo -e "\nLocal UI display\t= $localui\c"
-		echo -e "\nMouse cursor\t\t= $touchscn\c"
-		echo -e "\nScreen blank\t\t= $scnblank Secs\c"
 		echo -e "\nWake display on play\t= $wake_display\c"
+		echo -e "\nMouse cursor\t\t= $touchscn\c"
+		echo -e "\nOn screen keyboard\t= $on_screen_kbd\c"
+		echo -e "\nScreen blank\t\t= $scnblank Secs\c"
+		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
 		echo -e "\nBrightness\t\t= $scnbrightness\c"
 		echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
 		echo -e "\nRotate screen\t\t= $scnrotate Deg\n"
@@ -495,10 +499,13 @@ RPI_GPIO_VER=$(dpkg -s python3-rpi.gpio 2>&1| grep Version| sed -r 's/^Version[:
 
 BLUETOOTH_VER=$(bluetoothd -v)
 BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
-PARING_AGENT_VER="1.0.0"
+PARING_AGENT_VER=$(dpkg -l | grep bluez-tools | awk '{print $3}' | cut -d"~" -f1)
 PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
 output_mode=$(moodeutl -d -gv bt_alsa_output_mode)
 [[ $output_mode = "_audioout" ]] && BT_ALSA_OUTPUT_MODE="Default (_audioout)" || BT_ALSA_OUTPUT_MODE="Compatibility (plughw)"
+TMP=$(moodeutl -d -gv bt_pin_code)
+[[ "$TMP" = "None" ]] && BT_PIN_CODE="None" || BT_PIN_CODE="******"
+ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)
 
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
@@ -678,9 +685,9 @@ keyboard=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
 toggle_songid=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
-RESERVED_62=${arr[61]}
+ap_network_addr=${arr[61]}
 cpugov=${arr[62]}
-[[ "${arr[63]}" = "1" ]] && pairing_agent="On" || pairing_agent="Off"
+RESERVED_64=${arr[63]}
 pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
@@ -832,6 +839,8 @@ value=$(moodeutl -d -gv rotaryenc)
 ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
 ashuffle_window=$(moodeutl -d -gv "ashuffle_window")
 ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
+on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
+hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

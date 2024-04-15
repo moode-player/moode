@@ -26,7 +26,7 @@ require_once __DIR__ . '/sql.php';
 
 // Bluetooth
 function startBluetooth() {
-	sysCmd('systemctl start hciuart');
+	sysCmd('systemctl start hciuart'); // TODO: Needed ?
 	sysCmd('systemctl start bluetooth');
 
 	$result = sysCmd('pgrep bluetoothd');
@@ -38,6 +38,7 @@ function startBluetooth() {
 			$status = 'Error: No MAC address found for Bluetooth controller';
 		} else {
 			sysCmd('systemctl start bluealsa');
+			syscmd('systemctl start bt-agent');
 			sysCmd('/var/www/util/blu-control.sh -i');
 			$status = 'started';
 		}
@@ -45,15 +46,11 @@ function startBluetooth() {
 
 	return $status;
 }
-function startPairingAgent() {
-	// Accept all pairing requests
-	sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
-	// TODO: Test this. Need "Turn on PAIRING" button somewhere in the UI
-	// Reject all pairing request but accept commands
-	//sysCmd('/var/www/daemon/blu_agent.py --agent >/dev/null 2>&1 &');
-}
-function ctlPairingAgent($cmd) {
-	sysCmd('/var/www/daemon/blu_agent.py ' . $cmd);
+function stopBluetooth() {
+	sysCmd('systemctl stop bt-agent');
+	sysCmd('systemctl stop bluealsa');
+	sysCmd('systemctl stop bluetooth');
+	sysCmd('killall -s 9 bluealsa-aplay');
 }
 
 function startAirPlay() {
@@ -206,8 +203,7 @@ function stopSqueezeLite() {
 }
 
 function cfgSqueezelite() {
-	$dbh = sqlConnect();
-	$result = sqlRead('cfg_sl', $dbh);
+	$result = sqlRead('cfg_sl', sqlConnect());
 
 	foreach ($result as $row) {
 		$data .= $row['param'] . '=' . $row['value'] . "\n";
