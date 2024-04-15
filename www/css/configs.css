@@ -45,10 +45,10 @@ h1 {font-size:2.5rem;font-weight:200;margin:0 0 .5em 0;}
 legend {font-size:1.5rem;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
 .legend-config {margin:0 0 .25em .5em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:12px;font-weight:normal;}
-.sub-legend {margin:-1em 0 1.5em 0;color:var(--config-help-color);font-size:12px;}
+.sub-legend {margin:-1em 0 1.5em 0;color:var(--config-help-color);font-size:1em;}
 
 /* Form controls */
-.control-label {font-size:12px;padding-top:.2em!important;}
+.control-label {font-size:1em;padding-top:.2em!important;}
 .toggle {margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom-toggle) 0;}
 
 .toggle,
