@@ -55,7 +55,7 @@ $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh
 if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_file = 'Bluetooth stream';
 	$_encoded_at = 'Unknown';
-	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo'; // Maybe also 48K ?
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($aplActive == '1') {
 	$_file = 'AirPlay stream';
