@@ -154,7 +154,6 @@ if (str_contains($lines[1], CFG_MAIN_FILE_HEADER)) {
 		workerLog('worker: Warning: Default boot config restored');
 		workerLog('worker: Warning: Restart required');
 	}
-
 } else {
 	// First boot import
 	sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
@@ -1885,7 +1884,7 @@ function updPlayHistory() {
 	$song = getCurrentSong($sock);
 	closeMpdSock($sock);
 
-	if (isset($song['Name']) && getFileExt($song['file']) == 'm4a') {
+	if (isset($song['Name']) && getSongFileExt($song['file']) == 'm4a') {
 		// iTunes aac file
 		$artist = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 		$title = $song['Name'];

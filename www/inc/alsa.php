@@ -23,6 +23,7 @@ require_once __DIR__ . '/audio.php';
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/cdsp.php';
 require_once __DIR__ . '/mpd.php';
+require_once __DIR__ . '/music-library.php';
 require_once __DIR__ . '/sql.php';
 
 function getAlsaMixerName($deviceName) {

@@ -192,7 +192,7 @@ function getPlayqueue($resp) {
 				$queue[$idx]['file'] = $value;
                 $level = stripos(dirname($value), '.cue', -4) === false ? 1 : 2;
                 $queue[$idx]['cover_hash'] = substr($value, 0, 4) == 'http' ? '' : md5(dirname($value, $level));
-				$queue[$idx]['fileext'] = getFileExt($value);
+				$queue[$idx]['fileext'] = getSongFileExt($value);
 				$queue[$idx]['TimeMMSS'] = formatSongTime($queue[$idx]['Time']);
 			} else {
 				if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
@@ -229,7 +229,7 @@ function getPlayqueueItemTag($resp, $tag) {
 
 // Add one item (song file, playlist, radio station, directory) to the Queue
 function addItemToQueue($path) {
-	$ext = getFileExt($path);
+	$ext = getSongFileExt($path);
 	$pl_extensions = array('m3u', 'pls', 'cue');
 	//workerLog('path=' . $path . ', ext=(' . $ext . ')');
 
@@ -253,6 +253,7 @@ function addItemToQueue($path) {
 
 	return $cmd . ' "' . html_entity_decode($path) . '"';
 }
+
 function isSavedPlaylist($path) {
     if (!str_contains($path, '/') && !in_array($path, ROOT_DIRECTORIES)) {
         phpSession('open');

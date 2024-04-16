@@ -24,6 +24,7 @@
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/alsa.php';
 require_once __DIR__ . '/cdsp.php';
+require_once __DIR__ . '/music-library.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
@@ -557,18 +558,18 @@ function formatMpdQueryResults($resp) {
 			if ($element == 'file') {
 				$idx++;
 				$array[$idx]['file'] = $value;
-				$array[$idx]['fileext'] = getFileExt($value);
+				$array[$idx]['fileext'] = getSongFileExt($value);
 			} else if ($element == 'directory') {
 				$idx++;
 				$dirIdx++; // Save directory index for further processing
 				$array[$idx]['directory'] = $value;
-				$coverHash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
+				$coverHash = getSongFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
 				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $coverHash  . '_sm.jpg') ? $coverHash : '';
 			} else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
 					$idx++;
 					$array[$idx]['file'] = $value;
-					$array[$idx]['fileext'] = getFileExt($value);
+					$array[$idx]['fileext'] = getSongFileExt($value);
 				} else {
 					$idx++;
 					$array[$idx]['playlist'] = $value;
@@ -587,6 +588,19 @@ function formatMpdQueryResults($resp) {
             $dirs = array_slice($array, -$dirIdx);
             $array = array_merge($dirs, $files);
 		}
+	}
+
+	return $array;
+}
+
+function parseMpdRespAsJSON($resp) {
+	$array = array();
+	$line = strtok($resp, "\n");
+
+	while ($line) {
+		list($param, $value) = explode(': ', $line, 2);
+		array_push($array, $line);
+		$line = strtok("\n");
 	}
 
 	return $array;
@@ -666,7 +680,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		}
 
 		// File extension
-		$ext = getFileExt($song['file']);
+		$ext = getSongFileExt($song['file']);
 
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
 			// iTunes aac or aiff file
@@ -815,7 +829,7 @@ function getMappedDbVol() {
 }
 
 function getCoverHash($file) {
-	$ext = getFileExt($file);
+	$ext = getSongFileExt($file);
 
 	phpSession('open_ro');
 	$searchPriority = $_SESSION['library_covsearchpri'];

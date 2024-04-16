@@ -214,7 +214,7 @@ function genLibrary($flat) {
 
 	foreach ($flat as $flatData) {
 		// M4A probe for ALAC when filtering by Lossless/Lossy
-		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getFileExt($flatData['file']) == 'm4a') {
+		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getSongFileExt($flatData['file']) == 'm4a') {
 			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
 			$alacFound = strpos(fread($fh, 512), 'alac');
 			fclose($fh);
@@ -413,7 +413,7 @@ function genLibraryUTF8Rep($flat) {
 
 	foreach ($flat as $flatData) {
 		// M4A probe for ALAC when filtering by Lossless/Lossy
-		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getFileExt($flatData['file']) == 'm4a') {
+		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getSongFileExt($flatData['file']) == 'm4a') {
 			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
 			$alacFound = strpos(fread($fh, 512), 'alac');
 			fclose($fh);
@@ -571,6 +571,47 @@ function getAlbumYear($trackData) {
 	return $albumYear;
 }
 
+function formatSongTime($sec) {
+	$mins = sprintf('%02d', floor($sec / 60));
+	$secs = sprintf(':%02d', (int) $sec % 60);
+	return $mins . $secs;
+}
+
+function formatRate ($rate) {
+	$rates = array(
+		'*' => '*',
+		'22050' => '22.05', '44100' => '44.1', '88200' => '88.2', '176400' => '176.4', '352800' => '352.8', '705600' => '705.6',
+		'32000' => '32', '48000' => '48', '96000' => '96', '192000' => '192', '384000' => '384', '768000' => '768',
+		'2822400' => '2.822', '5644800' => '5.644', '11289600' => '11.288', '22579200' => '22.576', 45158400 => 45.152,
+		'dsd64' => '2.822', 'dsd128' => '5.644', 'dsd256' => '11.288', 'dsd512' => '22.576', 'dsd1024' => '45.152'
+	);
+	return $rates[$rate];
+}
+
+function formatChannels($channels) {
+	if ($channels == '1') {
+	 	$str = 'Mono';
+	} else if ($channels == '2' || $channels == '*') {
+	 	$str = 'Stereo';
+	} else if ($channels > 2) {
+	 	$str = $channels . '-Channel';
+	} else {
+		$str = '?-Channel';
+	}
+ 	return $str;
+}
+
+function formatDoP($DSDFormat) {
+	$DoPFormats = array(
+		'DSD64' => array('decoded_to' => 'DoP 24 bit 176.4 kHz, Stereo', 'decode_rate' => '8.467 Mbps'),
+		'DSD128' => array('decoded_to' => 'DoP 24 bit 352.8 kHz, Stereo', 'decode_rate' => '16.934 Mbps'),
+		'DSD256' => array('decoded_to' => 'DoP 24 bit 705.6 kHz, Stereo', 'decode_rate' => '33.868 Mbps'),
+		'DSD512' => array('decoded_to' => 'DoP 24 bit 1.411 MHz, Stereo', 'decode_rate' => '67.736 Mbps'),
+		'DSD1024' => array('decoded_to' => 'DoP 24 bit 2.822 MHz, Stereo', 'decode_rate' => '135.472 Mbps')
+	);
+	return $DoPFormats[$DSDFormat];
+}
+
 function clearLibCacheAll() {
 	sysCmd('truncate ' . LIBCACHE_BASE . '_* --size 0');
 	sqlUpdate('cfg_system', sqlConnect(), 'lib_pos','-1,-1,-1');
@@ -617,7 +658,7 @@ function getSavedSearches() {
 function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 	$encodedAt = '';
 	$songData['file'] = ensureAudioFile($songData['file']);
-	$ext = getFileExt($songData['file']);
+	$ext = getSongFileExt($songData['file']);
 	$mpdFormatTag = explode(':', $songData['Format']); // MPD lsinfo: rate:bits:channels
 
 	// Special section for calls from genLibrary() to populate the "encoded_at" element
@@ -755,6 +796,65 @@ function getMpdFormatTag($file) {
 	$trackData = parseDelimFile(readMpdResp($sock), ': ');
 
 	return $trackData['Format'];
+}
+
+// CUE support
+function ensureAudioFile($path) {
+	$normalized = false;
+	$track = 'ANY';
+
+	if (isCueTrack($path)) { // e.g. "/a/path/to/a/cue/filename.cue/track0001"
+		$track = (int)str_replace('track', '', pathinfo($path, PATHINFO_BASENAME)); // e.g. "0001"
+		$path = pathinfo($path, PATHINFO_DIRNAME); // e.g. "/a/path/to/a/cue/filename.cue"
+	}
+
+	if ('cue' == strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
+		if (!str_starts_with($path, MPD_MUSICROOT)) { // If not included, add the absolute mpd music path
+			$path = MPD_MUSICROOT . $path;
+			$normalized = true;
+		}
+
+		if (file_exists($path)) {
+			$lastFile = '';
+			$cueSheetLines = file($path);
+			$totLines = count($cueSheetLines);
+			$lineNdx = 0;
+
+			while ($lineNdx < $totLines) { // Searching FILE "<filename.ext>" WAVE
+				$line = trim($cueSheetLines[$lineNdx]);
+				if (str_starts_with($line, 'FILE ') &&  str_ends_with($line, ' WAVE')) {
+					$lastFile = pathinfo($path, PATHINFO_DIRNAME) . '/' . str_replace('"', '', str_replace('FILE ', '', str_replace(' WAVE', '', $line)));
+				} else if (str_starts_with($line, 'TRACK ')) { // Searching TRACK xx AUDIO
+					$trackdata = explode(' ', $line, 3);
+					$tracknumber = (int)$trackdata[1];
+
+					if (('ANY' == $track) || ($track == $tracknumber)) {
+						$path = $lastFile;
+						$lineNdx = $totLines;
+					}
+				}
+				$lineNdx++;
+			}
+		}
+
+		if ($normalized && str_starts_with($path, MPD_MUSICROOT)) {
+			$path = str_replace(MPD_MUSICROOT, '', $path);  // If added by us, remove the absolute mpd music path
+		}
+	}
+
+	return $path;
+}
+
+function getSongFileExt($file) {
+	if (isCueTrack($file)) {
+		// If this is a cue track index, strip it from the file in order to be able to get its extension
+		$file = pathinfo($file, PATHINFO_DIRNAME);
+	}
+	return substr($file, 0, 4) == 'http' ? '' : strtolower(pathinfo($file, PATHINFO_EXTENSION));
+}
+
+function isCueTrack($path) {
+	return str_contains($path, '.cue/track');
 }
 
 // Auto-shuffle random play
