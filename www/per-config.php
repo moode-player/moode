@@ -130,7 +130,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 		$_localui_link_disable = 'onclick="return false;"';
 	}
     $piModel = substr($_SESSION['hdwrrev'], 3, 1);
-    $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disable';
+    $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
 
 	$autoClick = " onchange=\"autoClick('#btn-set-localui');\"";
 	$_select['localui_on']  .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
