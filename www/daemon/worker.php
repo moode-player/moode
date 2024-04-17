@@ -1263,15 +1263,14 @@ phpSessionCheck();
 // Auto-config section
 //----------------------------------------------------------------------------//
 
-// Auto restore backup if present
+// Auto restore from backup.zip if present
 // Do it just before autocfg so an autocfg always overrules backup settings
-$restoreBackup = false;
+$restoreFromBackupZip = false;
 if (file_exists(BOOT_MOODEBACKUP_ZIP)) {
-	$restoreLog = '/var/log/moode_backup_restore.log';
-	sysCmd('/var/www/util/backup_manager.py --restore ' . BOOT_MOODEBACKUP_ZIP . ' > ' . $restoreLog);
+	sysCmd('/var/www/util/backup_manager.py --restore ' . BOOT_MOODEBACKUP_ZIP . ' > ' . AUTORESTORE_LOG);
 	sysCmd('rm ' . BOOT_MOODEBACKUP_ZIP);
 	sysCmd('sync');
-	$restoreBackup = true; // Don't reboot here in case autocfg is also present
+	$restoreFromBackupZip = true; // Don't reboot here in case autocfg is also present
 }
 // Auto-configure if indicated
 // NOTE: This is done near the end of startup because autoConfig() uses the wpa_passphrase utility which requires
@@ -1287,7 +1286,7 @@ if (file_exists(BOOT_MOODECFG_INI)) {
 	sysCmd('sync');
 	autoCfgLog('autocfg: System restarted');
 	sysCmd('reboot');
-} else if ($restoreBackup) {
+} else if ($restoreFromBackupZip) {
 	sysCmd('reboot');
 }
 

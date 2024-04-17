@@ -24,6 +24,7 @@ const PHP_VER = '8.2';
 // Log files
 const MOODE_LOG = '/var/log/moode.log';
 const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
+const AUTORESTORE_LOG = '/var/log/moode_autorestore.log';
 const UPDATER_LOG = '/var/log/moode_update.log';
 const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
 const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
