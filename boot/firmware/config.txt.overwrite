@@ -5,12 +5,10 @@
 # Device filters
 [cm4]
 otg_mode=1
-
 [pi4]
 hdmi_force_hotplug:0=1
 hdmi_force_hotplug:1=1
 hdmi_enable_4kp60=0
-
 [all]
 dtoverlay=vc4-kms-v3d
 max_framebuffers=2
@@ -31,7 +29,15 @@ dtparam=i2c_arm=on
 dtparam=i2s=on
 dtparam=audio=on
 
-# Managed by moOde
-# Do not add or modify any lines in this section
+# Do not alter this section
+# Integrated adapters
 #dtoverlay=disable-bt
 #dtoverlay=disable-wifi
+# Audio overlays
+#dtoverlay=none
+#dtoverlay=force_eeprom_read=0
+# Square pixels
+#framebuffer_width=800
+#framebuffer_height=444
+#framebuffer_aspect=-1
+#lcd_rotate=2

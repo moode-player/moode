@@ -195,14 +195,12 @@ function genUUID() {
 
 // Pi integrated WiFi adapter enable/disable
 function ctlWifi($ctl) {
-	$cmd = $ctl == '0' ? 'sed -i /disable-wifi/c\dtoverlay=disable-wifi ' . BOOT_CONFIG_TXT :
-		'sed -i /disable-wifi/c\#dtoverlay=disable-wifi ' . BOOT_CONFIG_TXT;
-	sysCmd($cmd);
+	$value = $ctl == '0' ? '' : '#';
+	updBootConfigTxt('upd_disable_wifi', $value);
 }
 
 // Pi integrated Bluetooth adapter enable/disable
 function ctlBt($ctl) {
-	$cmd = $ctl == '0' ? 'sed -i /disable-bt/c\dtoverlay=disable-bt ' . BOOT_CONFIG_TXT :
-		'sed -i /disable-bt/c\#dtoverlay=disable-bt ' . BOOT_CONFIG_TXT;
-	sysCmd($cmd);
+	$value = $ctl == '0' ? '' : '#';
+	updBootConfigTxt('upd_disable_bt', $value);
 }

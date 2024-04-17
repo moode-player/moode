@@ -83,12 +83,20 @@ const SMB_VERSIONS = array(
 );
 
 // Boot config.txt managed lines
-const CFG_HEADERS_REQUIRED = 4;
+const CFG_HEADERS_REQUIRED = 5;
 const CFG_MAIN_FILE_HEADER = '# This file is managed by moOde';
-const CFG_DEVICE_FILTERS_SECTION = '# Device filters';
-const CFG_GENERAL_SETTINGS_SECTION = '# General settings';
-const CFG_MANAGED_BY_MOODE_SECTION = '# Managed by moOde';
-const CFG_DTOVERLAY_DISABLE_WIFI = 'dtoverlay=disable-wifi';
+const CFG_DEVICE_FILTERS_HEADER = '# Device filters';
+const CFG_GENERAL_SETTINGS_HEADER = '# General settings';
+const CFG_DO_NOT_ALTER_HEADER = '# Do not alter this section';
+const CFG_AUDIO_OVERLAYS_HEADER = '# Audio overlays';
+const CFG_FORCE_EEPROM_READ = 'force_eeprom_read=0';
+const CFG_FRAMEBUFFER_WIDTH = 'framebuffer_width=800';
+const CFG_FRAMEBUFFER_HEIGHT = 'framebuffer_height=444';
+const CFG_FRAMEBUFFER_ASPECT = 'framebuffer_aspect=-1';
+const CFG_LCD_ROTATE = 'lcd_rotate=2';
+const CFG_HDMI_ENABLE_4KP60 = 'hdmi_enable_4kp60';
+const CFG_DISABLE_BT = 'disable-bt';
+const CFG_DISABLE_WIFI = 'disable-wifi';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php

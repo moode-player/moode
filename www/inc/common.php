@@ -327,3 +327,81 @@ function parseDelimFile($data, $delim) {
 
 	return $array;
 }
+
+function chkBootConfigTxt() {
+	$lines = file(BOOT_CONFIG_TXT, FILE_IGNORE_NEW_LINES);
+	$headerCount = 0;
+	if (str_contains($lines[1], CFG_MAIN_FILE_HEADER)) {
+		// Line 1 has the correct header
+		$headerCount++;
+
+		// Check for rest of headers
+		foreach ($lines as $line) {
+			//workerLog($line);
+			if ($line == CFG_DEVICE_FILTERS_HEADER) {
+				$headerCount++;
+			}
+			if ($line == CFG_GENERAL_SETTINGS_HEADER) {
+				$headerCount++;
+			}
+			if ($line == CFG_DO_NOT_ALTER_HEADER) {
+				$headerCount++;
+			}
+			if ($line == CFG_AUDIO_OVERLAYS_HEADER) {
+				$headerCount++;
+			}
+		}
+
+		// Restore default config if needed
+		if ($headerCount == CFG_HEADERS_REQUIRED) {
+			$status = 'Required headers present';
+		} else {
+			$status = 'Required header missing';
+		}
+	} else {
+		$status = 'Main header missing';
+	}
+
+	return $status;
+}
+function updBootConfigTxt($action, $value) {
+	switch ($action) {
+		case 'upd_audio_overlay':
+			// $value: #dtoverlay=none or dtoverlay=actual_overlay
+			// Remove the line after CFG_AUDIO_OVERLAYS_HEADER which would be a dtoverlay=audio_overlay line
+			sysCmd('sed -i "/' . CFG_AUDIO_OVERLAYS_HEADER . '/{n;d}" ' . BOOT_CONFIG_TXT);
+			// Replace the section header and include the audio overlay below it
+			sysCmd('sed -i s"/' .
+				CFG_AUDIO_OVERLAYS_HEADER . '/' .
+				CFG_AUDIO_OVERLAYS_HEADER . '\n' . $value . '/" ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_force_eeprom_read':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_FORCE_EEPROM_READ . "/c\\" . $value . 'dtoverlay=' . CFG_FORCE_EEPROM_READ . ' ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_framebuffer_settings':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_FRAMEBUFFER_WIDTH  . "/c\\" . $value . CFG_FRAMEBUFFER_WIDTH  . ' ' . BOOT_CONFIG_TXT);
+			sysCmd('sed -i /' . CFG_FRAMEBUFFER_HEIGHT . "/c\\" . $value . CFG_FRAMEBUFFER_HEIGHT . ' ' . BOOT_CONFIG_TXT);
+			sysCmd('sed -i /' . CFG_FRAMEBUFFER_ASPECT . "/c\\" . $value . CFG_FRAMEBUFFER_ASPECT . ' ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_lcd_rotate':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_LCD_ROTATE . "/c\\" . $value . CFG_LCD_ROTATE . ' ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_hdmi_enable_4kp60':
+			// $value: '0' or '1'
+			sysCmd('sed -i s"/' .
+				CFG_HDMI_ENABLE_4KP60 . '=.*/' .
+				CFG_HDMI_ENABLE_4KP60 . '=' . $value . '/" ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_disable_bt':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_DISABLE_BT . "/c\\" . $value . 'dtoverlay=' . CFG_DISABLE_BT . ' ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_disable_wifi':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_DISABLE_WIFI . "/c\\" . $value . 'dtoverlay=' . CFG_DISABLE_WIFI . ' ' . BOOT_CONFIG_TXT);
+			break;
+	}
+}

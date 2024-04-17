@@ -150,12 +150,14 @@ function autoConfigSettings() {
 			sysCmd('sh -c ' . "'" . 'echo "' . $values['cpugov'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
 		}],
 		['requires' => ['p3wifi'], 'handler' => function($values) {
-			ctlWifi($values['p3wifi']);
 			phpSession('write', 'p3wifi', $values['p3wifi']);
+			$value = $values['p3wifi'] == '0' ? '' : '#';
+			updBootConfigTxt('upd_disable_wifi', $value);
 		}],
 		['requires' => ['p3bt'], 'handler' => function($values) {
-			ctlBt($values['p3bt']);
 			phpSession('write', 'p3bt', $values['p3bt']);
+			$value = $values['p3bt'] == '0' ? '' : '#';
+			updBootConfigTxt('upd_disable_bt', $value);
 		}],
 		['requires' => ['led_state'], 'handler' => 'setSessVarSql'],
 		['requires' => ['ipaddr_timeout'], 'handler' => 'setSessVarSql'],
@@ -181,31 +183,21 @@ function autoConfigSettings() {
 		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
 			$_SESSION['hdmi_enable_4kp60'] = $values['hdmi_enable_4kp60'];
 			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';
-			sysCmd('sed -i s"/hdmi_enable_4kp60=.*/hdmi_enable_4kp60=' . $value . '/" ' . BOOT_CONFIG_TXT);
+			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 		}],
 		['requires' => ['scnbrightness'], 'handler' => function($values) {
 			phpSession('write', 'scnbrightness', $values['scnbrightness']);
 			sysCmd('/bin/su -c "echo '. $values['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 		}],
-
-		// TODO: This >> code needs to be updated for new config.txt reqts
 		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
 			phpSession('write', 'pixel_aspect_ratio', $values['pixel_aspect_ratio']);
-			if ($_SESSION['w_queueargs'] == 'Square') {
-				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT); // Remove first to prevent any chance of duplicate adds
-				sysCmd('echo framebuffer_width=800 >> ' . BOOT_CONFIG_TXT);
-				sysCmd('echo framebuffer_height=444 >> ' . BOOT_CONFIG_TXT);
-				sysCmd('echo framebuffer_aspect=-1 >> ' . BOOT_CONFIG_TXT);
-			} else {
-				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT);
-			}
+			$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
+			updBootConfigTxt('upd_framebuffer_settings', $value);
 		}],
 		['requires' => ['scnrotate'], 'handler' => function($values) {
 			phpSession('write', 'scnrotate', $values['scnrotate']);
-			sysCmd('sed -i /lcd_rotate/d ' . BOOT_CONFIG_TXT);
-			if ($_SESSION['w_queueargs'] == '180') {
-				sysCmd('echo lcd_rotate=2 >> ' . BOOT_CONFIG_TXT);
-			}
+			$value = $values['scnrotate'] == '180' ? '' : '#';
+			updBootConfigTxt('upd_lcd_rotate', $value);
 		}],
 
 		['requires' => ['lcdup'], 'handler' => 'setSessVarSql'],

@@ -125,36 +125,15 @@ if ($linuxStartupComplete === true) {
 }
 
 // Check boot config.txt
-$lines = file(BOOT_CONFIG_TXT, FILE_IGNORE_NEW_LINES);
-$headerCount = 0;
-if (str_contains($lines[1], CFG_MAIN_FILE_HEADER)) {
-	// Line 1 has the correct header
-	$headerCount++;
-
-	// Check for rest of headers
-	foreach ($lines as $line) {
-		//workerLog($line);
-		if ($line == CFG_DEVICE_FILTERS_SECTION) {
-			$headerCount++;
-		}
-		if ($line == CFG_GENERAL_SETTINGS_SECTION) {
-			$headerCount++;
-		}
-		if ($line == CFG_MANAGED_BY_MOODE_SECTION) {
-			$headerCount++;
-		}
-	}
-
-	// Restore default config if needed
-	if ($headerCount == CFG_HEADERS_REQUIRED) {
-		workerLog('worker: Boot config is ok');
-	} else {
-		sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
-		workerLog('worker: Warning: Boot config is missing required header');
-		workerLog('worker: Warning: Default boot config restored');
-		workerLog('worker: Warning: Restart required');
-	}
-} else {
+$status = chkBootConfigTxt();
+if ($status == 'Required headers present') {
+	workerLog('worker: Boot config is ok');
+} else if ($status == 'Required header missing') {
+	sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+	workerLog('worker: Warning: Boot config is missing required headers');
+	workerLog('worker: Warning: Default boot config restored');
+	workerLog('worker: Warning: Restart required');
+} else if ($status == 'Main header missing') {
 	// First boot import
 	sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
 	sysCmd('reboot');
@@ -875,7 +854,7 @@ if (!isset($_SESSION['alsavolume_max_bt'])) {
 if (!isset($_SESSION['cdspvolume_max_bt'])) {
 	$_SESSION['cdspvolume_max_bt'] = '0';
 }
-$status .= ', ALSA/CDSP maxvol: ' . $_SESSION['alsavolume_max_bt'] . '%|' . $_SESSION['cdspvolume_max_bt'] . 'dB';
+$status .= ', ALSA/CDSP maxvol: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SESSION['cdspvolume_max_bt'] . 'dB';
 // Bluetooth SBC quality
 if (!isset($_SESSION['bluez_sbc_quality'])) {
 	$_SESSION['bluez_sbc_quality'] = 'xq+';
@@ -2788,26 +2767,18 @@ function runQueuedJob() {
 			}
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
-			sysCmd('sed -i s"/hdmi_enable_4kp60=.*/hdmi_enable_4kp60=' . $value . '/" ' . BOOT_CONFIG_TXT);
+			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 			break;
 		case 'scnbrightness':
 			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 			break;
 		case 'pixel_aspect_ratio':
-			if ($_SESSION['w_queueargs'] == 'Square') {
-				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT); // Remove first to prevent any chance of duplicate adds
-				sysCmd('echo framebuffer_width=800 >> ' . BOOT_CONFIG_TXT);
-				sysCmd('echo framebuffer_height=444 >> ' . BOOT_CONFIG_TXT);
-				sysCmd('echo framebuffer_aspect=-1 >> ' . BOOT_CONFIG_TXT);
-			} else {
-				sysCmd('sed -i /framebuffer_/d ' . BOOT_CONFIG_TXT);
-			}
+			$value = $_SESSION['w_queueargs'] == 'Square' ? '' : '#';
+			updBootConfigTxt('upd_framebuffer_settings', $value);
 			break;
 		case 'scnrotate':
-			sysCmd('sed -i /lcd_rotate/d ' . BOOT_CONFIG_TXT);
-			if ($_SESSION['w_queueargs'] == '180') {
-				sysCmd('echo lcd_rotate=2 >> ' . BOOT_CONFIG_TXT);
-			}
+			$value = $_SESSION['w_queueargs'] == '180' ? '' : '#';
+			updBootConfigTxt('upd_lcd_rotate', $value);
 			break;
 		case 'clearbrcache':
 			sysCmd('/var/www/util/sysutil.sh clearbrcache');
