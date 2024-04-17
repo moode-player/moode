@@ -295,7 +295,7 @@ function autoConfigSettings() {
 				'wlanssid' => $values['apdssid'], 'wlanuuid' => $values['apduuid'], 'wlanpwd' => $psk, 'wlanpsk' =>  $psk,
 				'wlancc' => '');
 			sqlUpdate('cfg_network', $dbh, 'apd0', $value);
-			sqlUpdate('cfg_system', $dbh, $values['apdaddr']);
+			sqlUpdate('cfg_system', $dbh, 'ap_network_addr', $values['apdaddr']);
 			cfgNetworks();
 		}, 'custom_write' => function($values) {
 			$result = sqlQuery("select * from cfg_network where iface='apd0'", sqlConnect());
