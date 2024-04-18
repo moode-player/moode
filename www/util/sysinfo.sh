@@ -301,7 +301,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER (bluez-tools)\c"
 		echo -e "\nPIN code\t\t= $BT_PIN_CODE\c"
 		echo -e "\nALSA max volume\t\t= $ALSAVOLUME_MAX_BT%\c"
-		# Add cdspvolume_max_bt
+		echo -e "\nCDSP max volume\t\t= $CDSPVOLUME_MAX_BT dB\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
 		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\c"
 		echo -e "\nALSA output mode\t= $ALSA_OUTPUT_MODE_BT\n"
@@ -507,6 +507,7 @@ output_mode=$(moodeutl -d -gv alsa_output_mode_bt)
 TMP=$(moodeutl -d -gv bt_pin_code)
 [[ "$TMP" = "None" ]] && BT_PIN_CODE="None" || BT_PIN_CODE="******"
 ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)
+CDSPVOLUME_MAX_BT=$(moodeutl -d -gv cdspvolume_max_bt)
 
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
