@@ -484,6 +484,21 @@ function autoConfigSettings() {
 		}, 'custom_write' => function($values) {
 			return getCfgTableParams('cfg_upnp', $values);
 		}],
+		['requires' => ['qobuzuser'], 'handler' => function($values) {
+			setCfgTableParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getCfgTableParams('cfg_upnp', $values);
+		}],
+		['requires' => ['qobuzpass'], 'handler' => function($values) {
+			setCfgTableParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getCfgTableParams('cfg_upnp', $values);
+		}],
+		['requires' => ['qobuzformatid'], 'handler' => function($values) {
+			setCfgTableParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getCfgTableParams('cfg_upnp', $values);
+		}],
 		//
 		// Preferences
 		//
