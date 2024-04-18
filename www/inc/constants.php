@@ -68,6 +68,7 @@ const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const BOOT_CONFIG_TXT = '/boot/firmware/config.txt';
 const BOOT_MOODEBACKUP_ZIP = '/boot/moodebackup.zip';
 const BOOT_MOODECFG_INI = '/boot/moodecfg.ini';
+const ETC_MACHINE_INFO = '/etc/machine-info';
 
 // SMB protocol versions
 const SMB_VERSIONS = array(

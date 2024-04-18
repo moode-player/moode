@@ -196,9 +196,9 @@ sysCmd('chmod 0666 ' . SPSEVENT_LOG);
 sysCmd('chmod 0666 ' . SLPOWER_LOG);
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
-if (!file_exists('/etc/machine-info')) {
-	sysCmd('cp /usr/share/moode-player/etc/machine-info /etc/');
-	workerLog('worker: File check created default machine-info');
+if (!file_exists(ETC_MACHINE_INFO)) {
+	sysCmd('cp /usr/share/moode-player' . ETC_MACHINE_INFO . ' /etc/');
+	workerLog('worker: File check created default /etc/machine-info');
 }
 workerLog('worker: File check complete');
 
