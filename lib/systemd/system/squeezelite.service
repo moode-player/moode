@@ -3,39 +3,6 @@ Description=Squeezelite renderer
 After=network.target
 
 [Service]
-# Real-time / Low latency params
-# ps -e -o class,rtprio,pri,nice,cmd
-# for real-time scheduling policies the "nice" param is ignored and the pri column is not relevant
-
-# for squeezelite output thread
-LimitRTPRIO=99
-LimitMEMLOCK=infinity
-
-# scheduling policy
-# real-time
-# - fifo, first in first out
-# - rr, round robin
-# static
-# - other, the standard round-robin time-sharing (ts) policy
-# - batch, for "batch" style execution of processes
-# - idle, for running very low priority background jobs
-CPUSchedulingPolicy=other
-
-# scheduling priority
-# 1 = lowest, 99 = highest
-CPUSchedulingPriority=44
-
-# scheduling priority adjustment
-# applies only to static scheduling policies
-# 0 = default, -20 = highest, 19 = lowest
-Nice=-10
-
-# processor affinity bit mask
-# - empty string = reset bit mask
-# - cpu index list or dash separated range
-#CPUAffinity=0,1
-
-# Launch params
 EnvironmentFile=-/etc/squeezelite.conf
 ExecStart=/usr/bin/squeezelite -n ${PLAYERNAME} -o $AUDIODEVICE -a ${ALSAPARAMS} -b ${OUTPUTBUFFERS} -p $TASKPRIORITY -c $CODECS $OTHEROPTIONS
 
