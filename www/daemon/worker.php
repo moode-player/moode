@@ -860,10 +860,10 @@ if (!isset($_SESSION['bluez_sbc_quality'])) {
 	$_SESSION['bluez_sbc_quality'] = 'xq+';
 }
 // ALSA output mode
-if (!isset($_SESSION['bt_alsa_output_mode'])) {
-	$_SESSION['bt_alsa_output_mode'] = '_audioout';
+if (!isset($_SESSION['alsa_output_mode_bt'])) {
+	$_SESSION['alsa_output_mode_bt'] = '_audioout';
 }
-$status .= ', ALSA outmode: ' . BT_ALSA_OUTPUT_MODE_NAME[$_SESSION['bt_alsa_output_mode']];
+$status .= ', ALSA outmode: ' . ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
 workerLog('worker: Bluetooth:       ' . $status);
 
 // Start airplay renderer

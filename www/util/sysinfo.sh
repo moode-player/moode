@@ -301,9 +301,10 @@ RENDERER_SETTINGS() {
 		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER (bluez-tools)\c"
 		echo -e "\nPIN code\t\t= $BT_PIN_CODE\c"
 		echo -e "\nALSA max volume\t\t= $ALSAVOLUME_MAX_BT%\c"
+		# Add cdspvolume_max_bt
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
 		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\c"
-		echo -e "\nALSA output mode\t= $BT_ALSA_OUTPUT_MODE\n"
+		echo -e "\nALSA output mode\t= $ALSA_OUTPUT_MODE_BT\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
@@ -501,8 +502,8 @@ BLUETOOTH_VER=$(bluetoothd -v)
 BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
 PARING_AGENT_VER=$(dpkg -l | grep bluez-tools | awk '{print $3}' | cut -d"~" -f1)
 PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
-output_mode=$(moodeutl -d -gv bt_alsa_output_mode)
-[[ $output_mode = "_audioout" ]] && BT_ALSA_OUTPUT_MODE="Default (_audioout)" || BT_ALSA_OUTPUT_MODE="Compatibility (plughw)"
+output_mode=$(moodeutl -d -gv alsa_output_mode_bt)
+[[ $output_mode = "_audioout" ]] && ALSA_OUTPUT_MODE_BT="Default (_audioout)" || ALSA_OUTPUT_MODE_BT="Compatibility (plughw)"
 TMP=$(moodeutl -d -gv bt_pin_code)
 [[ "$TMP" = "None" ]] && BT_PIN_CODE="None" || BT_PIN_CODE="******"
 ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)

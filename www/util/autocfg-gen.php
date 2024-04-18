@@ -57,7 +57,7 @@ $currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
 $currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];
 $currentSettings['ashuffle_filter'] = $_SESSION['ashuffle_filter'];
 // Bluetooth
-$currentSettings['bt_alsa_output_mode'] = $_SESSION['bt_alsa_output_mode'];
+$currentSettings['alsa_output_mode_bt'] = $_SESSION['alsa_output_mode_bt'];
 // Library
 $currentSettings['lib_scope'] = $_SESSION['lib_scope'];
 $currentSettings['lib_active_search'] = $_SESSION['lib_active_search'];

@@ -117,9 +117,9 @@ if (isset($_POST['update_sbc_quality']) && $_POST['update_sbc_quality'] == '1') 
 }
 
 // ALSA output mode
-if (isset($_POST['update_bt_alsa_output_mode']) && $_POST['update_bt_alsa_output_mode'] == '1') {
-	$_SESSION['bt_alsa_output_mode'] = $_POST['bt_alsa_output_mode'];
-	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_POST['bt_alsa_output_mode'] . "' /etc/bluealsaaplay.conf");
+if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mode_bt'] == '1') {
+	$_SESSION['alsa_output_mode_bt'] = $_POST['alsa_output_mode_bt'];
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_POST['alsa_output_mode_bt'] . "' /etc/bluealsaaplay.conf");
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
@@ -207,8 +207,8 @@ $_select['sbc_quality'] .= "<option value=\"xq\" " . (($_SESSION['bluez_sbc_qual
 $_select['sbc_quality'] .= "<option value=\"xq+\" " . (($_SESSION['bluez_sbc_quality'] == 'xq+') ? "selected" : "") . ">XQ+ (551 kbps)</option>\n";
 
 // ALSA output mode
-$_select['bt_alsa_output_mode'] .= "<option value=\"_audioout\" " . (($_SESSION['bt_alsa_output_mode'] == '_audioout') ? "selected" : "") . ">Default</option>\n";
-$_select['bt_alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['bt_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Compatibility</option>\n";
+$_select['alsa_output_mode_bt'] .= "<option value=\"_audioout\" " . (($_SESSION['alsa_output_mode_bt'] == '_audioout') ? "selected" : "") . ">Default</option>\n";
+$_select['alsa_output_mode_bt'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode_bt'] == 'plughw') ? "selected" : "") . ">Compatibility</option>\n";
 
 waitWorker('blu-config');
 

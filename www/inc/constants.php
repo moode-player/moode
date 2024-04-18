@@ -170,7 +170,7 @@ const ALSA_DEFAULT_MIXER_NAME_I2S = 'Digital';
 const ALSA_DEFAULT_MIXER_NAME_INTEGRATED = 'PCM';
 // ALSA output mode names
 const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct', 'iec958' => 'IEC958');
-const BT_ALSA_OUTPUT_MODE_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
+const ALSA_OUTPUT_MODE_BT_NAME = array('_audioout' => 'Default', 'plughw' => 'Compatibility');
 // ALSA HDMI IEC958
 const ALSA_IEC958_DEVICE = 'default:vc4hdmi';
 const ALSA_IEC958_FORMAT = 'IEC958_SUBFRAME_LE';
