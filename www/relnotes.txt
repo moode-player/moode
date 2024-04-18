@@ -38,6 +38,7 @@ Updates
 - UPD: Remove redundant or obsolete devices from audio device table
 - UPD: Allow any netmask to be entered for static IP address
 - UPD: Prevent comma when entering a new station name
+- UPD: Add missing settings to Backup/Restore
 
 Bug fixes
 
