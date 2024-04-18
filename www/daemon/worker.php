@@ -1201,6 +1201,10 @@ if (!isset($_SESSION['lib_recent_playlist'])) {
 if (!isset($_SESSION['worker_responsiveness'])) {
 	$_SESSION['worker_responsiveness'] = 'Default';
 }
+// PCI express
+if (!isset($_SESSION['pci_express'])) {
+	$_SESSION['pci_express'] = 'off';
+}
 // Mount monitor
 if (!isset($_SESSION['fs_mountmon'])) {
 	$_SESSION['fs_mountmon'] = 'Off';
@@ -2673,6 +2677,10 @@ function runQueuedJob() {
 			sysCmd('rpi-eeprom-config --out /tmp/boot.conf > /dev/null 2>&1');
 			sysCmd('sed -i s/^POWER_OFF_ON_HALT=.*/POWER_OFF_ON_HALT=' . $value . '/ /tmp/boot.conf > /dev/null 2>&1');
 			sysCmd('rpi-eeprom-config --apply /tmp/boot.conf > /dev/null 2>&1');
+			break;
+		case 'pci_express':
+			$value = $_SESSION['w_queueargs'];
+			updBootConfigTxt('pci_express', $value);
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");

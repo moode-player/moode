@@ -120,6 +120,19 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="pci-express">PCI express</label>
+			<div class="controls">
+				<select id="pci-express" class="config-select-large" name="pci_express">
+					$_select[pci_express]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pci_express" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-pci-express" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<span id="info-pci-express" class="config-help-info">
+					<b>Gen 2.0:</b> Pi 5 PCIe feature is certified for up to 5 GT/sec.<br>
+					<b>Gen 3.0:</b> Force Gen 3.0 speeds up to 10 GT/sec. Warning Pi 5 is not certified for Gen 3.0 speeds and connections may be unstable.
+				</span>
+			</div>
+
 			<div class="config-horiz-rule"></div>
 
 			<div class="$_reduce_power_hide">

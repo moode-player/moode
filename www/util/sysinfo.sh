@@ -61,7 +61,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nThrottled text\t\t= $THROTTLED_TEXT\c"
 	echo -e "\n\c"
 	echo -e "\nWorker responsiveness\t= $WORKER_RESPONSIVENESS\c"
-	echo -e "\nCPU governor\t\t= $GOV\c"
+	echo -e "\nCPU governor\t\t= $CPUGOV\c"
+	echo -e "\nPCI express\t\t= $PCI_EXPRESS\c"
 	echo -e "\nReduce power\t\t= $REDUCE_POWER (Pi-5 only)\c"
 	echo -e "\nPi integrated WiFi\t= $piwifi\c"
 	echo -e "\nPi integrated BT\t= $pibt\c"
@@ -440,13 +441,15 @@ MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
 
 WORKER_RESPONSIVENESS=$(moodeutl -d -gv worker_responsiveness)
+TMP=$(moodeutl -d -gv "pci_express")
+[[ "$TMP" = "off" ]] && PCI_EXPRESS="Off" || PCI_EXPRESS="$TMP"
 TMP=$(moodeutl -d -gv "reduce_power")
 [[ "$TMP" = "on" ]] && REDUCE_POWER="On" || REDUCE_POWER="Off"
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
-	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
+	CPUGOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
 else
-	GOV="NA - disabled in kernel"
+	CPUGOV="NA - disabled in kernel"
 fi
 
 ETH0IP="$(ip addr list eth0 2>&1 | grep "inet " |cut -d' ' -f6|cut -d/ -f1)"

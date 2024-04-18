@@ -149,6 +149,11 @@ function autoConfigSettings() {
 			phpSession('write', 'cpugov', $values['cpugov']);
 			sysCmd('sh -c ' . "'" . 'echo "' . $values['cpugov'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
 		}],
+		['requires' => ['pci_express'], 'handler' => function($values) {
+			$_SESSION['pci_express'] = $values['pci_express'];
+			$value = $values['pci_express'];
+			updBootConfigTxt('pci_express', $value);
+		}],
 		['requires' => ['p3wifi'], 'handler' => function($values) {
 			phpSession('write', 'p3wifi', $values['p3wifi']);
 			$value = $values['p3wifi'] == '0' ? '' : '#';

@@ -142,6 +142,11 @@ if (isset($_POST['update_cpugov'])) {
 	phpSession('write', 'cpugov', $_POST['cpugov']);
 }
 
+if (isset($_POST['update_pci_express'])) {
+	$_SESSION['pci_express'] = $_POST['pci_express'];
+	submitJob('pci_express', $_POST['pci_express'], 'Settings updated');
+}
+
 if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce_power']) {
 	submitJob('reduce_power', $_POST['reduce_power'], 'Settings updated', 'Restart required');
 	phpSession('write', 'reduce_power', $_POST['reduce_power']);
@@ -387,8 +392,13 @@ if ($piModel == '5') {
 	$autoClick = " onchange=\"autoClick('#btn-set-reduce-power');\"";
 	$_select['reduce_power_on']  .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-1\" value=\"on\" " . (($_SESSION['reduce_power'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['reduce_power_off'] .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-2\" value=\"off\" " . (($_SESSION['reduce_power'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_pci_express_hide = '';
+	$_select['pci_express'] .= "<option value=\"off\" " . (($_SESSION['pci_express'] == 'off') ? "selected" : "") . ">Off</option>\n";
+	$_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
+	$_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
 } else {
 	$_reduce_power_hide = 'hide';
+	$_pci_express_hide = 'hide';
 }
 
 // Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B

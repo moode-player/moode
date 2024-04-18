@@ -97,6 +97,8 @@ const CFG_FRAMEBUFFER_HEIGHT = 'framebuffer_height=444';
 const CFG_FRAMEBUFFER_ASPECT = 'framebuffer_aspect=-1';
 const CFG_LCD_ROTATE = 'lcd_rotate=2';
 const CFG_HDMI_ENABLE_4KP60 = 'hdmi_enable_4kp60';
+const CFG_PCI_EXPRESS = 'pciex1';
+const CFG_PCI_EXPRESS_GEN3 = 'pciex1_gen=3';
 const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
 

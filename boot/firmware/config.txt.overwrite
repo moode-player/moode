@@ -41,3 +41,6 @@ dtparam=audio=on
 #framebuffer_height=444
 #framebuffer_aspect=-1
 #lcd_rotate=2
+# PCI Express
+#dtparam=pciex1
+#dtparam=pciex1_gen=3
