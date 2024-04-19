@@ -32,12 +32,12 @@ function cfgI2SDevice($caller = '') {
 		// No overlay
 		updBootConfigTxt('upd_audio_overlay', '#dtoverlay=none');
 		updBootConfigTxt('upd_force_eeprom_read', '#');
-		// Reset to Pi HDMI 1 if caller not 'autocfg'
 		if ($caller != 'autocfg') {
+			// Reset to Pi HDMI 1 when called from WebUI
 			$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
 			phpSession('write', 'cardnum', $cardNum);
 			phpSession('write', 'adevname', PI_HDMI1);
-			phpSession('write', 'mpdmixer', 'software'); //
+			phpSession('write', 'mpdmixer', 'software');
 			sqlUpdate('cfg_mpd', $dbh, 'device', $cardNum);
 			sqlUpdate('cfg_mpd', $dbh, 'mixer_type', 'software');
 		}

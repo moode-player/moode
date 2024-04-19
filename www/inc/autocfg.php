@@ -319,15 +319,12 @@ function autoConfigSettings() {
 		'Audio Device',
 		['requires' => ['adevname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['mpdmixer'], 'handler' => 'setSessVarSql'],
-		['requires' => ['i2soverlay'], 'handler' => function($values) {
-			$value = $values['i2soverlay'] == 'none' ? 'None': $values['i2soverlay'];
-			phpSession('write', 'i2soverlay', $value);
-		}],
+		['requires' => ['i2soverlay'], 'handler' => 'setSessVarSql'],
 		['requires' => ['i2sdevice'], 'handler' => function($values) {
-			$value = $values['i2sdevice'] == 'none' ? 'None': $values['i2sdevice'];
-			phpSession('write', 'i2sdevice', $value);
-			// NOTE: This resets to Pi_HDMI1 if none/none but passing the 'autocfg' arg prevents this
-			cfgI2SDevice('autocfg');
+			phpSession('write', 'i2sdevice', $values['i2sdevice']);
+			// NOTE: Passing arg = 'autocfg' prevents reset to PI_HDMI1 in cfgI2SDevice()
+			$arg = ($values['i2soverlay'] == 'None' && $values['i2sdevice'] == 'None') ? 'autocfg' : '';
+			cfgI2SDevice($arg);
 		}],
 		'ALSA',
 		['requires' => ['cardnum'], 'handler' => 'setSessVarSql'],
