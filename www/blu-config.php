@@ -207,7 +207,7 @@ $_select['sbc_quality'] .= "<option value=\"xq\" " . (($_SESSION['bluez_sbc_qual
 $_select['sbc_quality'] .= "<option value=\"xq+\" " . (($_SESSION['bluez_sbc_quality'] == 'xq+') ? "selected" : "") . ">XQ+ (551 kbps)</option>\n";
 
 // ALSA output mode
-$_select['alsa_output_mode_bt'] .= "<option value=\"_audioout\" " . (($_SESSION['alsa_output_mode_bt'] == '_audioout') ? "selected" : "") . ">Default</option>\n";
+$_select['alsa_output_mode_bt'] .= "<option value=\"_audioout\" " . (($_SESSION['alsa_output_mode_bt'] == '_audioout') ? "selected" : "") . ">Standard</option>\n";
 $_select['alsa_output_mode_bt'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode_bt'] == 'plughw') ? "selected" : "") . ">Compatibility</option>\n";
 
 waitWorker('blu-config');

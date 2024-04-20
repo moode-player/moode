@@ -192,10 +192,11 @@ if ($_SESSION['invert_polarity'] == '1') {
 if ($btActive === true) {
 	if ($_SESSION['alsa_output_mode'] == 'iec958') {
 		$outputModeName = ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']];
-	} else if ($_SESSION['alsa_output_mode_bt'] == 'plughw') { // Instead of _audioout
-		$dsp = '';
-		$outputMode = 'plughw';
-		$outputModeName = ALSA_OUTPUT_MODE_BT_NAME['plughw'];
+	} else {
+		$outputModeName = ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
+		$outputMode = $_SESSION['alsa_output_mode_bt'] == '_audioout' ?
+			$_SESSION['alsa_output_mode'] :
+			'plughw';
 	}
 } else {
 	$outputModeName = ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']];
