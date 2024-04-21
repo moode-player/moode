@@ -143,7 +143,7 @@ function updMpdConf() {
     }
 
     // Hardware mixer (if any)
-    $hwMixer = $_SESSION['alsa_output_mode'] == 'iec958' ? ALSA_IEC958_DEVICE . $cardNum : 'hw:' . $cardNum;
+    $hwMixer = $_SESSION['alsa_output_mode'] == 'iec958' ? getAlsaIEC958Device() : 'hw:' . $cardNum;
 
 	// Input
 	$data .= "max_connections \"128\"\n";

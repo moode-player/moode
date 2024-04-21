@@ -54,8 +54,7 @@ function startMultiroomReceiver() {
 	}
 
 	$outputDevice = $cfgMultiroom['rx_alsa_output_mode'] == 'iec958' ?
-		ALSA_IEC958_DEVICE . $_SESSION['cardnum'] :
-		$cfgMultiroom['rx_alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+		getAlsaIEC958Device() : $cfgMultiroom['rx_alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 
 	$cmd = 'trx-rx' .
 		' -d ' . $outputDevice .

@@ -373,7 +373,7 @@ $_device_error = $deviceNames[$_SESSION['cardnum']] == ALSA_EMPTY_CARD ? 'Device
 // Volume type
 // Hardware, Software, Fixed (none), CamillaDSP (null)
 $_software_and_dsd_warning = $cfgMPD['mixer_type'] == 'software' ?
-	'<br><b>WARNING:</b> DSD format will output at 0dB when using Software volume.' : '';
+	'<br><b>WARNING:</b> DSD format will output 0dB when using Software volume.' : '';
 if ($_SESSION['alsavolume'] != 'none') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " .
 		($cfgMPD['mixer_type'] == 'hardware' ? "selected" : "") . ">Hardware</option>\n";

@@ -95,6 +95,20 @@ function getAudioOutputIface($cardNum) {
 	return $outputIface;
 }
 
+function getAlsaIEC958Device() {
+	$piModel = substr($_SESSION['hdwrrev'], 3, 1);
+
+	if ($piModel < '4') {
+		// Only 1 HDMI port, omit the card number
+		$device = ALSA_IEC958_DEVICE;
+	} else {
+		// 2 HDMI ports
+		$device = $_SESSION['adevname'] == PI_HDMI1 ? ALSA_IEC958_DEVICE . '0' : ALSA_IEC958_DEVICE . '1';
+	}
+
+	return $device;
+}
+
 // Set audio source
 function setAudioIn($inputSource) {
 	sysCmd('mpc stop');
@@ -210,7 +224,7 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \"invpolarity\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		} else {
 			// No DSP
-			$alsaDevice = $outputMode == 'iec958' ? ALSA_IEC958_DEVICE . $cardNum : $outputMode . ':' . $cardNum . ',0';
+			$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
 			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $alsaDevice . "\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $alsaDevice . "\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		}
