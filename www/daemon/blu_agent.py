@@ -15,6 +15,10 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+#
+# DEPRECATED: Replaced in moode 9 by bt-agent from the bluez-tools package.
+#
+
 from __future__ import absolute_import, print_function, unicode_literals
 
 from optparse import OptionParser

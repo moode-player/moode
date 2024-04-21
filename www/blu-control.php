@@ -210,9 +210,9 @@ $_select['sbc_quality'] .= "<option value=\"xq+\" " . (($_SESSION['bluez_sbc_qua
 $_select['alsa_output_mode_bt'] .= "<option value=\"_audioout\" " . (($_SESSION['alsa_output_mode_bt'] == '_audioout') ? "selected" : "") . ">Standard</option>\n";
 $_select['alsa_output_mode_bt'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode_bt'] == 'plughw') ? "selected" : "") . ">Compatibility</option>\n";
 
-waitWorker('blu-config');
+waitWorker('blu-control');
 
-$tpl = "blu-config.html";
+$tpl = "blu-control.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 

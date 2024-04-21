@@ -512,7 +512,7 @@ function engineCmd() {
                 case 'btactive0':
                     inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
-                        '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
+                        '<a class="btn configure-renderer" href="blu-control.php">Bluetooth Control</a>' +
                         receiversBtn() +
                         audioInfoBtn());
                     break;
@@ -1252,7 +1252,7 @@ function renderUI() {
     	if (SESSION.json['btactive'] == '1') {
     		inpSrcIndicator('btactive1',
             '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
-            '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
+            '<a class="btn configure-renderer" href="blu-control.php">Bluetooth Control</a>' +
             receiversBtn() +
             audioInfoBtn());
      	}

@@ -87,8 +87,8 @@ a.config-info-toggle {vertical-align:top;}
 .config-help-info {display:none;}
 .config-help-no-margin {margin-bottom:0;}
 
-/* blu-config, sys-status */
-#blu-config-cmd-output,
+/* blu-control, sys-status */
+#blu-control-cmd-output,
 #sys-status-log-output,
 #sys-restore-status {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
 /* net-config, src-config: Show/hide password plaintext */

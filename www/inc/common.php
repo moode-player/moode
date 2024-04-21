@@ -266,7 +266,7 @@ function storeBackLink($section, $tpl) {
 
 	if (array_key_exists($tpl, $tplConfigs)) {
 		$_SESSION['config_back_link'] = $tplConfigs[$tpl];
-	} else if ($tpl == 'blu-config.html' && $refererLink == '/ren-config.php') {
+	} else if ($tpl == 'blu-control.html' && $refererLink == '/ren-config.php') {
 		$_SESSION['config_back_link'] = '/ren-config.php#bluetooth';
 	} else if ($tpl == 'mpd-config.html' && $refererLink == '/snd-config.php') {
 		$_SESSION['config_back_link'] = '/snd-config.php#mpd-options';

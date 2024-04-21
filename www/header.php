@@ -222,7 +222,7 @@
                     <li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i> Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fa-solid fa-sharp fa-edit sx"></i> Preferences</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fa-solid fa-sharp fa-sync sx"></i> Update library</a></li>
-					<li id="bluetooth-hide"><a href="blu-config.php"><i class="fa-light fa-brands fa-bluetooth sx"></i> Bluetooth</a></li>
+					<li id="bluetooth-hide"><a href="blu-control.php"><i class="fa-light fa-brands fa-bluetooth sx"></i> Bluetooth</a></li>
 					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-forward sx"></i> Players</a></li>
                     <li><a href="javascript:audioInfoPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fa-solid fa-sharp fa-book sx"></i> Play history</a></li>
