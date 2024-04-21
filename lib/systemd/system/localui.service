@@ -6,9 +6,8 @@ After=nginx.service php8.2-fpm.service mpd.service
 Type=simple
 
 # Start xserver
-ExecStart=/usr/bin/xinit
-
 User=pi
+ExecStart=/usr/bin/xinit
 
 [Install]
 WantedBy=multi-user.target
