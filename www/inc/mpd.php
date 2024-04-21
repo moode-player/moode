@@ -126,9 +126,14 @@ function updMpdConf() {
 
     // MPD mixer type
     $outputIface = getAudioOutputIface($_SESSION['cardnum']);
-	if ($outputIface != AO_USB && $_SESSION['alsavolume'] == 'none' && $mixerType != 'null') {
-		$mixerType = 'software';
-		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
+	if ($_SESSION['alsavolume'] == 'none') {
+        if ($outputIface == AO_USB || $outputIface == AO_HDMI || $mixerType == 'null') {
+            // NOP: Leave mixer type as-is
+        } else {
+            // Revert to software mixer
+    		$mixerType = 'software';
+    		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
+        }
 	}
 	phpSession('write', 'mpdmixer', $mixerType);
 
