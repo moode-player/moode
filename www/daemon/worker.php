@@ -619,7 +619,12 @@ workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
 $actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
 if ($actualCardNum == $_SESSION['cardnum']) {
 	workerLog('worker: ALSA card:     has not changed');
-	workerLog('worker: MPD config:    update not needed');
+	if ($_SESSION['alsa_output_mode'] == 'iec958') {
+		workerLog('worker: MPD config:    updated (iec958 device)');
+		updMpdConf();
+	} else {
+		workerLog('worker: MPD config:    update not needed');
+	}
 } else if ($actualCardNum == ALSA_EMPTY_CARD) {
 	workerLog('worker: ALSA card:     is empty, reconfigure to HDMI 1');
 	$hdmi1CardNum = getAlsaCardNumForDevice(PI_HDMI1);
@@ -653,27 +658,28 @@ workerLog('worker: ALSA output:   ' . strtoupper($audioOutput));
 // ALSA output mode
 workerLog('worker: ALSA mode:     ' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $_SESSION['alsa_output_mode'] . ')');
 // ALSA mixer
-$_SESSION['amixname'] = getAlsaMixerName($_SESSION['adevname']);
+phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
 workerLog('worker: ALSA mixer     ' . ($_SESSION['amixname'] == 'none' ? 'none exists' : $_SESSION['amixname']));
 // ALSA volume
-$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-if (substr($result[0], 0, 6 ) == 'amixer') {
+$result = getAlsaVolume($_SESSION['amixname']);
+if ($result == 'none') {
 	phpSession('write', 'alsavolume', 'none');
 } else {
 	sysCmd('amixer sset ' . '"' . $_SESSION['amixname'] . '"' . ' on' );
-	$result[0] = str_replace('%', '', $result[0]);
-	phpSession('write', 'alsavolume', $result[0]);
+	phpSession('write', 'alsavolume', $result);
 }
 if ($_SESSION['alsavolume'] != 'none') {
 	if ($_SESSION['mpdmixer'] != 'hardware') {
 		setALSAVolTo0dB($_SESSION['alsavolume_max']);
 	}
-	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	$msg = $result[0];
+	$result = getAlsaVolume($_SESSION['amixname']);
+	$alsaVolStr = $result . '%';
+	$result = getAlsaVolumeDb($_SESSION['amixname']);
+	$alsaVolStr .= ' (' . $result . ')';
 } else {
-	$msg = 'controller not detected';
+	$alsaVolStr = 'controller not detected';
 }
-workerLog('worker: ALSA volume:   ' . $msg);
+workerLog('worker: ALSA volume:   ' . $alsaVolStr);
 // ALSA max volume
 workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
 // ALSA loopback
@@ -705,9 +711,8 @@ if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 }
 unset($cdsp);
 workerLog('worker: CamillaDSP:    ' . rtrim($_SESSION['camilladsp'], '.yml'));
-$result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'");
-workerLog('worker: CDSP volume:   ' . number_format($result[0], 1) . ' dB');
-workerLog('worker: CDSP volrange: ' . $_SESSION['camilladsp_volume_range'] . ' dB');
+workerLog('worker: CDSP volume:   ' . CamillaDSP::getCDSPVol() . 'dB');
+workerLog('worker: CDSP volrange: ' . $_SESSION['camilladsp_volume_range'] . 'dB');
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -2330,6 +2335,8 @@ function runQueuedJob() {
 			// Save play state
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
+			// Get ALSA device
+			$alsaDevice = $_SESSION['alsa_output_mode'] == 'iec958' ? getAlsaIEC958Device() : $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 			// Switch to selected DSP
 			switch ($_SESSION['w_queue']) {
 				case 'alsaequal':
@@ -2341,13 +2348,14 @@ function runQueuedJob() {
 							sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
 						}
 					}
-					$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
+
+					$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"" . $alsaDevice . "\"";
 					sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 					sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 					break;
 				case 'camilladsp':
 					$queueArgs = explode(',', $_SESSION['w_queueargs']);
-					$output = $queueArgs[0] != 'off' ? "\"camilladsp\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
+					$output = $queueArgs[0] != 'off' ? "\"camilladsp\"" : "\"" . $alsaDevice . "\"";
 					sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 					sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 					if (!empty($queueArgs[1])) {
@@ -2381,7 +2389,7 @@ function runQueuedJob() {
 					sendEngCmd('cdsp_config_updated');
 					break;
 				case 'crossfeed':
-					$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
+					$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"" . $alsaDevice . "\"";
 					sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 					sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 					if ($_SESSION['w_queueargs'] != 'Off') {
@@ -2397,12 +2405,12 @@ function runQueuedJob() {
 						$eqfa12p->applyConfig($config);
 						unset($eqfa12p);
 					}
-					$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
+					$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"" . $alsaDevice . "\"";
 					sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 					sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 					break;
 				case 'invpolarity':
-					$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
+					$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"" . $alsaDevice . "\"";
 					sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 					sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 					break;

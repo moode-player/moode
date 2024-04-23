@@ -46,13 +46,13 @@ class CamillaDsp {
         'quick convolution filter' => 'Use the selection in "Quick convolution filter" below to provide basic convolution with gain.',
     	'__quick_convolution__.yml' => 'Use the selection in "Quick convolution filter" below to provide basic convolution with gain.'
     );
-    private $device = NULL;
+    private $cardNum = NULL;
     private $configfile = NULL;
     private $quickConvolutionConfig = ";;;";
 
-    function __construct ($configfile, $device = NULL, $quickconvfg) {
+    function __construct ($configfile, $cardNum = NULL, $quickconvfg) {
         $this->configfile =$configfile;
-        $this->device = $device;
+        $this->device = $cardNum;
         $this->quickConvolutionConfig = $this->stringToQuickConvolutionConfig($quickconvfg);
 
         // Little bit dirty trick:
@@ -65,9 +65,10 @@ class CamillaDsp {
     /**
      * Set in camilladsp config file the playback device to use
      */
-    function setPlaybackDevice($device, $deviceType = "plughw") {
+    function setPlaybackDevice($cardNum, $outputMode = "plughw") {
         if( $this->configfile != NULL && $this->configfile != 'off' && $this->configfile != 'custom') {
-            $this->device = $device;
+            $this->device = $cardNum;
+            $alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
             $supportedFormats = $this->detectSupportedSoundFormats();
             $useFormat = count($supportedFormats) >= 1 ?  $supportedFormats[0] : 'S32LE';
 
@@ -78,7 +79,7 @@ class CamillaDsp {
                                                     'format' => $useFormat);
             $yml_cfg['devices']['playback'] = Array( 'type' => 'Alsa',
                                                 'channels' => 2,
-                                                'device' => $deviceType . ":" . $device . ",0",
+                                                'device' => $alsaDevice,
                                                 'format' => $useFormat);
 
             // patch issue where yaml parser to an empty [], which would break the cdsp config
@@ -623,6 +624,15 @@ class CamillaDsp {
 
     static function isMPD2CamillaDSPVolSyncEnabled() {
     	return ($_SESSION['mpdmixer'] == 'null' && $_SESSION['camilladsp'] !='off' && $_SESSION['camilladsp_volume_sync'] != 'off');
+    }
+
+    static function getCDSPVol() {
+        if (file_exists('/var/lib/cdsp/statefile.yml')) {
+            $result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'")[0];
+        } else {
+            $result = '0.0';
+        }
+        return $result;
     }
 
     static function setCDSPVolTo0dB ($vol = '0.0') {

@@ -236,20 +236,36 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 }
 
 // Update ALSA DSP and Bluetooth in confs
+// $outputMode:
+// plughw	Default
+// hw		Direct
+// iec958	IEC958
 function updDspAndBtInConfs($cardNum, $outputMode) {
-	// ALSA DSP confs
-	// NOTE: Crossfeed, eqfa12p and alsaequal only work with 'plughw' output mode
-	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
-	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
-	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardNum . ",0\"' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
-	sysCmd('sed -i s\'/pcm ".*/pcm "' . $outputMode . ':' . $cardNum . ',0"/\' ' . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+	// DSP configs
+	// Plughw is required for crossfeed, eqfa12p and alsaequal when not HDMI device
+	$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $cardNum . ',0';
+	sysCmd("sed -i '/#device/c\slave.pcm \"" . $alsaDevice . "\" #device' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
+	sysCmd("sed -i '/#device/c\slave.pcm \"" . $alsaDevice . "\" #device' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
+	sysCmd("sed -i '/#device/c\slave.pcm \"" . $alsaDevice . "\" #device' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
+
+	// Invpolarity: can use any ALSA output mode
+	$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
+	sysCmd("sed -i '/#device/c\pcm \"" . $alsaDevice . "\" #device' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+
+	// CamillaDSP: can use any ALSA output mode, getAlsaIEC958Device() is called in function setPlaybackDevice()
 	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $cardNum, $_SESSION['camilladsp_quickconv']);
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($cardNum, $outputMode);
 	}
 
-	// Bluetooth confs (incoming connections)
+	// Bluetooth config (inbound)
 	// NOTE: bluealsaaplay.conf AUDIODEV=_audioout or plughw depending on Bluetooth Config, ALSA output mode
+	if ($_SESSION['alsa_output_mode_bt'] == 'plughw') {
+		$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $cardNum . ',0';
+	} else {
+		$alsaDevice = $_SESSION['alsa_output_mode_bt']; // _audioout
+	}
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $alsaDevice . "' /etc/bluealsaaplay.conf");
 }
 
 // Read output device cache

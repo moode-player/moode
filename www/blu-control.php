@@ -118,8 +118,14 @@ if (isset($_POST['update_sbc_quality']) && $_POST['update_sbc_quality'] == '1') 
 
 // ALSA output mode
 if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mode_bt'] == '1') {
+	// Either _audioout (Standard) or plughw (Compatibility)
 	$_SESSION['alsa_output_mode_bt'] = $_POST['alsa_output_mode_bt'];
-	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_POST['alsa_output_mode_bt'] . "' /etc/bluealsaaplay.conf");
+	if ($_POST['alsa_output_mode_bt'] == 'plughw') {
+		$alsaDevice = $_SESSION['alsa_output_mode'] == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $_SESSION['cardnum'] . ',0';
+	} else {
+		$alsaDevice = $_POST['alsa_output_mode_bt']; // _audioout
+	}
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $alsaDevice . "' /etc/bluealsaaplay.conf");
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 

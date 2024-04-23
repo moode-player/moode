@@ -58,16 +58,21 @@ function getAlsaMixerName($deviceName) {
 			}
 		}
 	} else {
-		// USB devices, Pi HDMI 1/2 or Headphone jack
-		// Parse mixer names from amixer output
-		$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
-		if (empty($result)) {
-			// Mixer name not found
-			$mixerName = 'none';
+		// Pi HDMI 1/2, Headphone jack or USB devices
+		if ($deviceName == PI_HDMI1 || $deviceName == PI_HDMI2) {
+			// No need to query since the HDMI port may not be connected
+			$mixerName = 'PCM';
 		} else {
-			// Use first if multiple returned, strip off delimiters added by sysutil.sh get-mixername
-			$mixerName = ltrim($result[0], '(');
-			$mixerName = rtrim($mixerName, ')');
+			// Parse mixer name from amixer output
+			$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
+			if (empty($result)) {
+				// Mixer name not found
+				$mixerName = 'none';
+			} else {
+				// Use first if multiple returned, strip off delimiters added by get-mixername
+				$mixerName = ltrim($result[0], '(');
+				$mixerName = rtrim($mixerName, ')');
+			}
 		}
 	}
 
@@ -80,6 +85,17 @@ function getAlsaVolume($mixerName) {
 		$alsaVolume = 'none';
 	} else {
 		$alsaVolume = str_replace('%', '', $result[0]);
+	}
+
+	return $alsaVolume;
+}
+
+function getAlsaVolumeDb($mixerName) {
+	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol-db ' . '"' . $mixerName . '"');
+	if (substr($result[0], 0, 6 ) == 'amixer') {
+		$alsaVolume = 'none';
+	} else {
+		$alsaVolume = $result[0];
 	}
 
 	return $alsaVolume;

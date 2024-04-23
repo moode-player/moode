@@ -248,9 +248,8 @@ else {
 }
 // Volume levels
 $knobVol = $_SESSION['volknob'];
-$alsaVol = sysCmd('/var/www/util/sysutil.sh get-alsavol "' . $_SESSION['amixname'] . '"')[0];
-$result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'");
-$cdspVol = number_format($result[0], 1) . ' dB';
+$alsaVol = getAlsaVolumeDb($_SESSION['amixname']);
+$cdspVol = CamillaDSP::getCDSPVol() . 'dB';
 $_volume_levels = 'Knob ' . $knobVol . ', ALSA ' . $alsaVol . ', CDSP ' . $cdspVol;
 
 if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == '1' ||

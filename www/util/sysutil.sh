@@ -70,13 +70,16 @@ if [[ $1 = "chg-name" ]]; then
 fi
 
 # NOTE: i2s device is always at card 0, otherwise 0:HDMI-1 | [1:Headphones | 2:USB] or 1:HDMI-2 [2:Headphones | 3:USB]
-if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
+if [[ $1 = "get-alsavol" || $1 = "get-alsavol-db" || $1 = "set-alsavol" ]]; then
 	# Use configured card number
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 
 	if [[ $1 = "get-alsavol" ]]; then
 		# Enclose $2 in quotes so mixer names with embedded spaces are parsed
 		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "$2")
+		exit
+	elif [[ $1 = "get-alsavol-db" ]]; then
+		awk -F"[][]" '/%/ {print $4; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "$2")
 		exit
 	else
 		# Set-alsavol (Note: % is appended to LEVEL)
