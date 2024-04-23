@@ -74,14 +74,26 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
 		if ($cfgSSID === true) {
 			$values =
-				"'"	. SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
-				"'" . $uuid . "'," .
-				"'" . $psk . "'";
+				"'"	. SQLite3::escapeString($_POST['wlan0ssid']) . "', " .
+				"'" . $uuid . "', " .
+				"'" . $psk . "', " .
+				"'" . $method . "', " .
+				"'" . $_POST['wlan0ipaddr'] . "', " .
+				"'" . $_POST['wlan0netmask'] . "', " .
+				"'" . $_POST['wlan0gateway'] . "', " .
+				"'" . $_POST['wlan0pridns'] . "', " .
+				"'" . $_POST['wlan0secdns'] . "'";
 			$result = sqlQuery("INSERT INTO cfg_ssid VALUES " . '(NULL,' . $values . ')', $dbh);
 		} else {
 			$result = sqlQuery("UPDATE cfg_ssid SET " .
-				"uuid='" . $uuid . "'," .
-				"psk='" . $psk . "' " .
+				"uuid='" .    $uuid . "', " .
+				"psk='" .     $psk . "', " .
+				"method='" .  $method . "', " .
+				"ipaddr='" .  $_POST['wlan0ipaddr'] . "', " .
+				"netmask='" . $_POST['wlan0netmask'] . "', " .
+				"gateway='" . $_POST['wlan0gateway'] . "', " .
+				"pridns='" .  $_POST['wlan0pridns'] . "', " .
+				"secdns='" .  $_POST['wlan0secdns'] . "' " .
 				"WHERE id='" . $cfgSSID[0]['id'] . "'" , $dbh);
 		}
 	}
@@ -117,7 +129,7 @@ if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] ==
 		}
 
 		if ($itemDeleted) {
-			submitJob('netcfg', '', 'Settigs updated', 'Restart required');
+			submitJob('netcfg', '', 'Settings updated', 'Restart required');
 		}
 	}
 }
@@ -155,7 +167,9 @@ $ipAddr = sysCmd("ip addr list eth0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1")
 $_eth0currentip = empty($ipAddr[0]) ? 'Not in use' : $ipAddr[0];
 // Static IP
 $_eth0ipaddr = $cfgNetwork[0]['ipaddr'];
-$_eth0netmask = $cfgNetwork[0]['netmask'];
+foreach(array_keys(CIDR_TABLE) as $netmask) {
+	$_eth0netmask .= "<option value=\"" . $netmask . "\" " . ($cfgNetwork[0]['netmask'] == $netmask ? 'selected' : '') . " >" . $netmask . "</option>\n";
+}
 $_eth0gateway = $cfgNetwork[0]['gateway'];
 $_eth0pridns = $cfgNetwork[0]['pridns'];
 $_eth0secdns = $cfgNetwork[0]['secdns'];
@@ -215,7 +229,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	}
 }
 // Password (PSK)
-$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
+$_wlan0pwd = empty($_POST['wlan0otherssid']) ? $cfgNetwork[1]['wlanpwd'] : '';
 // Country code
 $zoneList = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
 $zoneListSorted = array();
@@ -232,7 +246,9 @@ foreach ($zoneListSorted as $zone) {
 }
 // Static IP
 $_wlan0ipaddr = $cfgNetwork[1]['ipaddr'];
-$_wlan0netmask = $cfgNetwork[1]['netmask'];
+foreach(array_keys(CIDR_TABLE) as $netmask) {
+	$_wlan0netmask .= "<option value=\"" . $netmask . "\" " . ($cfgNetwork[1]['netmask'] == $netmask ? 'selected' : '') . " >" . $netmask . "</option>\n";
+}
 $_wlan0gateway = $cfgNetwork[1]['gateway'];
 $_wlan0pridns = $cfgNetwork[1]['pridns'];
 $_wlan0secdns = $cfgNetwork[1]['secdns'];

@@ -385,7 +385,7 @@ if (empty($eth0)) {
 		$eth0Ip = checkForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
 	} else {
 		workerLog('worker: Ethernet: timeout off');
-		$eth0Ip = sysCmd("ip addr list eth0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
+		$eth0Ip = sysCmd("ip addr list eth0 | grep \"inet \" | cut -d' ' -f6 | cut -d/ -f1");
 	}
 
 	if (empty($eth0Ip)) {
@@ -448,9 +448,9 @@ if (empty($wlan0)) {
 
 // Store IP address (prefer wlan0 address)
 if (!empty($wlan0Ip)) {
-	$_SESSION['ipaddress'] = $wlan0Ip;
+	$_SESSION['ipaddress'] = $wlan0Ip[0];
 } else if (!empty($eth0Ip)) {
-	$_SESSION['ipaddress'] = $eth0Ip;
+	$_SESSION['ipaddress'] = $eth0Ip[0];
 } else {
 	$_SESSION['ipaddress'] = '0.0.0.0';
 	workerLog('worker: No active network interface');

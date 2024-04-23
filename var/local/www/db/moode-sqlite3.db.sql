@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun Apr 14 07:18:59 2024
+-- File generated with SQLiteStudio v3.1.0 on Tue Apr 23 16:55:12 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -323,7 +323,7 @@ INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (14
 INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (15, 'Whiteshade', '333', '243,243,243', '251,251,251,0.75');
 
 -- Table: cfg_ssid
-CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32));
+CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32), method CHAR (32), ipaddr CHAR (32), netmask CHAR (32), gateway CHAR (32), pridns CHAR (32), secdns CHAR (32));
 
 -- Table: cfg_system
 CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
