@@ -207,8 +207,8 @@ body {
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.config-select-large:not([class*=span]) {width:37vw;}
 	.config-input-large {width:34vw;}
-	.config-info-toggle,
-	.config-help-static {display:none;}
+	/*DELETE:.config-info-toggle,
+	.config-help-static {display:none;}*/
 	#config-home {left:4em;}
 	#config-home i {top:.25em;}
 	#config-tabs span {display:none!important;}
