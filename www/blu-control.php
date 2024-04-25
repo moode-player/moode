@@ -74,18 +74,21 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 }
 
 // Change audio routing
-if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
+if (isset($_POST['change_audioout_bt']) && $_POST['audioout'] != $_SESSION['audioout']) {
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		// Change to Bluetooth out, update MAC address
 		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
 		sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+
 		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
 	} else {
 		// Change to local out, disconnect device
 		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
-		sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
+		if (isset($_POST['connected_device'])) {
+			sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
+		}
 		$cmd = '-p';
 		sleep(1);
 	}

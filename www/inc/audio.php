@@ -160,10 +160,10 @@ function setAudioIn($inputSource) {
 
 // Set MPD and renderer audio output
 function setAudioOut($output) {
+	sysCmd('mpc stop');
+
 	if ($output == 'Local') {
 		changeMPDMixer($_SESSION['mpdmixer_local']);
-		sysCmd('/var/www/util/vol.sh -restore');
-		sysCmd('mpc stop');
 		sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 	} else if ($output == 'Bluetooth') {
 		// Save if not Software
@@ -171,11 +171,8 @@ function setAudioOut($output) {
 			phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
 			changeMPDMixer('software');
 		}
-
 		phpSession('write', 'btactive', '0');
 		sendEngCmd('btactive0');
-		sysCmd('/var/www/util/vol.sh -restore');
-		sysCmd('mpc stop');
 		sysCmd('mpc enable only "' . ALSA_BLUETOOTH .'"');
 	}
 
@@ -197,6 +194,12 @@ function setAudioOut($output) {
 
 	// Restart MPD
 	sysCmd('systemctl restart mpd');
+	// Ensure its fully started and accepting connections
+	$sock = openMpdSock('localhost', 6600);
+	closeMpdSock($sock);
+
+	// Set volume
+	sysCmd('/var/www/util/vol.sh -restore');
 }
 
 // Update ALSA audio out and BT out confs
