@@ -58,6 +58,14 @@ switch ($_GET['cmd']) {
 			'wlancc' => $row['wlancc']);
 		}
 		$data['cfg_network'] = $cfgNetwork;
+		// Saved SSID's
+		$result = sqlRead('cfg_ssid', $dbh);
+		$cfgSSID = array();
+		foreach ($result as $row) {
+			$cfgSSID[$row['ssid']] = array('uuid' => $row['uuid'], 'psk' => $row['psk'], 'method' => $row['method'], 'ipaddr' => $row['ipaddr'], 'netmask' => $row['netmask'],
+			'gateway' => $row['gateway'], 'pridns' => $row['pridns'], 'secdns' => $row['secdns']);
+		}
+		$data['cfg_ssid'] = $cfgSSID;
 
 		// Radio stations
 		if ($_GET['cmd'] == 'get_cfg_tables') {

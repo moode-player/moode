@@ -47,6 +47,7 @@ jQuery(document).ready(function($){ 'use strict';
     	SESSION.json = data['cfg_system'];
     	THEME.json = data['cfg_theme'];
         NETWORK.json = data['cfg_network'];
+        SSID.json = data['cfg_ssid'];
 
         $('#config-back, #config-home').show();
     	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
@@ -156,61 +157,62 @@ jQuery(document).ready(function($){ 'use strict';
     	}
     });
     $('#new-curvename').on('shown.bs.modal', function() {
-		$('#new-curvename-input').focus();
+        setTimeout(function() {
+            $('#new-curvename-input').focus();
+        }, DEFAULT_TIMEOUT);
 	});
 
-	// Network config show static on page load/reload
-	if ($('#eth0-method').length && $('#eth0-method').val() == 'static') {
-		$('#eth0-static').show();
+	// Network config
+    // Ethernet
+	if ($('#eth0method').length && $('#eth0method').val() == 'static') {
+		$('#eth0-static-section').show();
 	}
-	if ($('#wlan0-method').length && $('#wlan0-method').val() == 'static') {
-		$('#wlan0-static').show();
+	if ($('#wlan0method').length && $('#wlan0method').val() == 'static') {
+		$('#wlan0-static-section').show();
 	}
-	// Show/hide static
-	$('#eth0-method').change(function() {
+	$('#eth0method').change(function() {
 		if ($(this).val() == 'static') {
-			$('#eth0-static').show();
-			//$('#wlan0-method').val('dhcp').change(); // prevent both from being set to 'static'
+			$('#eth0-static-section').show();
 		} else {
-			$('#eth0-static').hide();
+			$('#eth0-static-section').hide();
 		}
 	});
-	$('#wlan0-method').change(function() {
+    // Wireless
+	$('#wlan0method').change(function() {
 		if ($(this).val() == 'static') {
-			if ($('#wlan0ssid').val() != 'Activate Hotspot') {
-			 	$('#wlan0-static').show();
-				//$('#eth0-method').val('dhcp').change(); // prevent both from being set to 'static'
+			if ($('#wlan0ssid').val() == 'None' || $('#wlan0ssid').val() == 'Activate Hotspot') {
+                notify('dhcp_required');
+                $('#wlan0method').val('dhcp').change();
 			} else {
-				notify('needssid');
+                $('#wlan0-static-section').show();
 			}
 		} else {
-            $('#wlan0-static').hide();
+            $('#wlan0-static-section').hide();
         }
 	});
-	// wlan0 SSID
 	$('#manual-ssid').on('shown.bs.modal', function() {
-		$('#wlan0otherssid').focus();
+        setTimeout(function() {
+            $('#wlan0otherssid').focus();
+        }, DEFAULT_TIMEOUT);
 	});
 	$('#wlan0ssid').change(function() {
-        //console.log(NETWORK.json['wlan0']['wlanssid'], NETWORK.json['wlan0']['wlanpsk']);
-        if ($('#wlan0ssid').val() == NETWORK.json['wlan0']['wlanssid']) {
-            $('#wlan0pwd').val(NETWORK.json['wlan0']['wlanpsk']);
+        var ssid = $('#wlan0ssid').val();
+        if (typeof(SSID.json[ssid]) != 'undefined') {
+            // Set to saved SSID values
+            $('#wlan0pwd').val(SSID.json[ssid]['psk']);
+            $('#wlan0method').val(SSID.json[ssid]['method']).change();
+            $('#wlan0ipaddr').val(SSID.json[ssid]['ipaddr']);
+            $('#wlan0netmask').val(SSID.json[ssid]['netmask']);
+            $('#wlan0gateway').val(SSID.json[ssid]['gateway']);
+            $('#wlan0pridns').val(SSID.json[ssid]['pridns']);
+            $('#wlan0secdns').val(SSID.json[ssid]['secdns']);
         } else {
+            // Reset to DHCP and empty password
+            $('#wlan0method').val('dhcp').change();
             $('#wlan0pwd').val('');
         }
-
-		if ($('#wlan0-method').val() == 'static') {
-			if ($(this).val() == '' || $(this).val() == 'Activate Hotspot') {
-                $('#wlan0-static').hide();
-				notify('needdhcp');
-			} else {
-                $('#wlan0-static').show();
-            }
-		}
 	});
-    // apd0 SSID
     $('#apdssid').on('input', function() {
-        //console.log(NETWORK.json['apd0']['wlanssid'], NETWORK.json['apd0']['wlanpsk']);
         if ($('#apdssid').val() == NETWORK.json['apd0']['wlanssid']) {
             $('#apdpwd').val(NETWORK.json['apd0']['wlanpsk']);
         } else {
@@ -254,7 +256,9 @@ jQuery(document).ready(function($){ 'use strict';
 
 	// NAS config pre-load manual server entry
 	$('#manual-server').on('shown.bs.modal', function() {
-		$('#manualserver').focus();
+        setTimeout(function() {
+            $('#manualserver').focus();
+        }, DEFAULT_TIMEOUT);
 	});
 	$('#editserver').click(function(e) {
 		$('#manualserver').val($('#address').val().trim());

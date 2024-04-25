@@ -703,7 +703,9 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
     $('#save-queue-to-playlist-modal').on('shown.bs.modal', function(e) {
-        $('#playlist-save-name').focus();
+        setTimeout(function() {
+            $('#playlist-save-name').focus();
+        }, DEFAULT_TIMEOUT);
     });
 
 	// Set favorites
@@ -724,7 +726,9 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
     $('#set-favorites-playlist-modal').on('shown.bs.modal', function() {
-        $('#playlist-favorites-name').focus();
+        setTimeout(function() {
+            $('#playlist-favorites-name').focus();
+        }, DEFAULT_TIMEOUT);
     });
 	// Add item to favorites
     $('.add-item-to-favorites').click(function(e){
@@ -922,7 +926,9 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#new-station-modal').modal();
 	});
     $('#new-station-modal').on('shown.bs.modal', function() {
-        $('#new-station-name').focus();
+        setTimeout(function() {
+            $('#new-station-name').focus();
+        }, DEFAULT_TIMEOUT);
     });
 	// Radio search
 	$('#ra-filter').keyup(function(e){
@@ -1084,7 +1090,9 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#new-playlist-modal').modal();
 	});
     $('#new-playlist-modal').on('shown.bs.modal', function() {
-        $('#new-playlist-name').focus();
+        setTimeout(function() {
+            $('#new-playlist-name').focus();
+        }, DEFAULT_TIMEOUT);
     });
 	// Playlist search
 	$('#pl-filter').keyup(function(e){
@@ -1235,8 +1243,10 @@ jQuery(document).ready(function($) { 'use strict';
     //
     // Saved Searches (Tag/Album view)
     $('#saved-search-modal').on('shown.bs.modal', function(e) {
-        $('#saved-search-items li').removeClass('active');
-        updateSavedSearchModal();
+        setTimeout(function() {
+            $('#saved-search-items li').removeClass('active');
+            updateSavedSearchModal();
+        }, DEFAULT_TIMEOUT);
 	});
     // Click Subset item
     $('#saved-search-items').on('click', '.saved-search-item', function(e) {
@@ -1395,9 +1405,11 @@ jQuery(document).ready(function($) { 'use strict';
         $('#dbsearch-predefined-filters, #dbsearch-alltags,' + specificTags).val('');
 	});
 	$('#dbsearch-modal').on('shown.bs.modal', function(e) {
-        currentView == 'folder' ? $('#predefined-filters-div').hide() : $('#predefined-filters-div').show();
-		$('#db-search-results').css('font-weight', 'normal');
-		$('.database li').removeClass('active');
+        setTimeout(function() {
+            currentView == 'folder' ? $('#predefined-filters-div').hide() : $('#predefined-filters-div').show();
+    		$('#db-search-results').css('font-weight', 'normal');
+    		$('.database li').removeClass('active');
+        }, DEFAULT_TIMEOUT);
 	});
 
     // Library Tag/Album search
@@ -1705,7 +1717,9 @@ jQuery(document).ready(function($) { 'use strict';
         notify('discovering_players', 'Please wait', 'infinite');
     });
     $('#players-modal').on('shown.bs.modal', function() {
-		$('#players-submit-confirm-msg').text('');
+        setTimeout(function() {
+            $('#players-submit-confirm-msg').text('');
+        }, DEFAULT_TIMEOUT);
 	});
     $(document).on('click', '#btn-players-dropdown', function(e) {
         $('#players-modal-body').css('padding-bottom', '5em');

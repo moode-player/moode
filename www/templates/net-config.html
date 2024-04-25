@@ -31,9 +31,9 @@
 		</p>
 
 		<div class="control-group" >
-			<label class="control-label" for="eth0-method">Address</label>
+			<label class="control-label" for="eth0method">Address</label>
 			<div class="controls">
-				<select id="eth0-method" name="eth0method" class="config-select-large">
+				<select id="eth0method" name="eth0method" class="config-select-large">
 					$_eth0method
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eth0method" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
@@ -45,7 +45,7 @@
                 </span>
 			</div>
 
-			<div id="eth0-static" class="class=control-group hide">
+			<div id="eth0-static-section" class="class=control-group hide">
 				<label class="control-label" for="eth0ip">Address</label>
 				<div class="controls">
 					<input class="config-input-large" type="text" id="eth0ip" name="eth0ipaddr" value="$_eth0ipaddr">
@@ -83,9 +83,9 @@
 		</p>
 
 		<div class="control-group" >
-			<label class="control-label" for="wlan0-method">Address method</label>
+			<label class="control-label" for="wlan0method">Address method</label>
 			<div class="controls">
-				<select id="wlan0-method" name="wlan0method" class="config-select-large">
+				<select id="wlan0method" name="wlan0method" class="config-select-large">
 					$_wlan0method
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0method" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
@@ -141,15 +141,15 @@
 			</div>
 		</div>
 
-		<div id="wlan0-static" class="control-group hide">
-			<label class="control-label" for="wlan0ip">Address</label>
+		<div id="wlan0-static-section" class="control-group hide">
+			<label class="control-label" for="wlan0ipaddr">Address</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" id="wlan0ip" name="wlan0ipaddr" value="$_wlan0ipaddr">
+				<input class="config-input-large" type="text" id="wlan0ipaddr" name="wlan0ipaddr" value="$_wlan0ipaddr">
 			</div>
 
-			<label class="control-label" for="wlan0-netmask">Netmask</label>
+			<label class="control-label" for="wlan0netmask">Netmask</label>
 			<div class="controls">
-				<select id="wlan0-netmask" name="wlan0netmask" class="config-select-large">
+				<select id="wlan0netmask" name="wlan0netmask" class="config-select-large">
 					$_wlan0netmask
 				</select>
 			</div>
@@ -174,10 +174,8 @@
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 		</legend>
 		<p class="sub-legend">
-			The Hotspot provides a 2.4 GHz WiFi network bridged to an Ethernet connection if one is present.
-			Enter one of the URL's below into a Browser to bring up the WebUI.<br>
-			<b>$_ap_network</b><br>
-			<b>$_ap_host</b>
+			The Hotspot provides a 2.4 GHz WiFi network bridged to an Ethernet connection if one is present.<br>
+			Address: <b>$_ap_host</b> or <b>$_ap_network</b>
 		</p>
 
 		<div class="control-group">

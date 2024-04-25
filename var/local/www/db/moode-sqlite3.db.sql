@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Apr 23 16:55:12 2024
+-- File generated with SQLiteStudio v3.1.0 on Wed Apr 24 07:11:27 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -625,7 +625,7 @@ INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL,
 -- Table: cfg_network
 CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlanuuid CHAR (4), wlanpwd CHAR (64), wlanpsk CHAR (64), wlancc CHAR (2));
 INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'Activate Hotspot', '', '', '', 'US');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None', '', '', '', 'US');
 INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlanuuid, wlanpwd, wlanpsk, wlancc) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', '', '', '');
 
 -- Table: cfg_mpd

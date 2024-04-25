@@ -81,8 +81,7 @@ function notify(title, msg, duration = '2_seconds') {
         renderer_disconnect: 'Disconnecting...',
         renderer_turnoff: 'Turning off...',
         // Network config
-		needssid: 'Static IP requres an SSID',
-		needdhcp: 'Blank SSID requires DHCP',
+		dhcp_required: 'DHCP is required',
         // System
         restart: 'Restarting...',
 		shutdown: 'Shutting down...',

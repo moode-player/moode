@@ -37,7 +37,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
 	// wlan0
-	$value['wlanssid'] = 'Activate Hotspot';
+	$value['wlanssid'] = 'None';
 	$value['wlanuuid'] = '';
 	$value['wlancc'] = $cfgNetwork[1]['wlancc']; // Preserve country code
 	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
@@ -47,18 +47,30 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 
 // Update interfaces
 if (isset($_POST['save']) && $_POST['save'] == 1) {
-	// eth0
+	// Ethernet (eth0)
 	$value = array('method' => $_POST['eth0method'], 'ipaddr' => $_POST['eth0ipaddr'], 'netmask' => $_POST['eth0netmask'],
 		'gateway' => $_POST['eth0gateway'], 'pridns' => $_POST['eth0pridns'], 'secdns' => $_POST['eth0secdns'], 'wlanssid' => '',
 		'wlanuuid' => '', 'wlanpwd' => '', 'wlanpsk' => '', 'wlancc' => '');
 	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
-	// wlan0
-	$method = $_POST['wlan0ssid'] == 'Activate Hotspot' ? 'dhcp' : $_POST['wlan0method'];
+	// Wireless (wlan0)
+	// This values may be overridden if saved SSID exists (see $('#wlan0ssid').change in scripts-configs.js)
+	$method = ($_POST['wlan0ssid'] == 'Activate Hotspot' || $_POST['wlan0ssid'] == 'None') ?
+		'dhcp' : $_POST['wlan0method'];
+	// Always generate a new UUID to make things simpler
 	$uuid = genUUID();
+	// Pre-shared key (PSK)
 	if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlanpsk']) {
-		$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
+		// SSID or password changed
+		if (strlen($_POST['wlan0pwd']) < 64) {
+			// Convert plain text password to PSK
+			$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
+		} else {
+			// Use PSK from saved SSID
+			$psk = $_POST['wlan0pwd'];
+		}
 	} else {
+		// Use PSK from configured SSID
 		$psk = $cfgNetwork[1]['wlanpsk'];
 	}
 
@@ -70,7 +82,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
 	// cfg_ssid
-	if ($_POST['wlan0ssid'] != 'Activate Hotspot') {
+	if ($_POST['wlan0ssid'] != 'Activate Hotspot' && $_POST['wlan0ssid'] != 'None') {
 		$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
 		if ($cfgSSID === true) {
 			$values =
@@ -98,7 +110,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		}
 	}
 
-	// apd0
+	// apd0 (Hotspot)
 	if ($_POST['wlan0apdssid'] != $cfgNetwork[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfgNetwork[2]['wlanpsk']) {
 		$uuid = genUUID();
 		$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
@@ -111,7 +123,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		'wlancc' => '');
 	sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 
-	// Generate nmconnect files
+	// Generate .nmconnection files
 	submitJob('netcfg', '', 'Settings updated', 'Restart required');
 }
 
@@ -148,7 +160,7 @@ $cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . SQLite3::escapeSt
 if ($cfgSSID === true) {
 	$_saved_networks = '<p style="text-align:center;">There are no saved networks</p>';
 } else {
-	for ($i=0; $i < count($cfgSSID); $i++) {
+	for ($i = 0; $i < count($cfgSSID); $i++) {
 		$_saved_networks .= '<div class="control-group">';
 		$_saved_networks .= '<label class="control-label">' . $cfgSSID[$i]['ssid'] . '</label>';
 		$_saved_networks .= '<div class="controls">';
@@ -181,7 +193,7 @@ $_wlan0method .= "<option value=\"static\" " . ($cfgNetwork[1]['method'] == 'sta
 $ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 // Get link quality and signal level
 if (!empty($ipAddr[0])) {
-	if ($_SESSION['apactivated'] == true) {
+	if ($_SESSION['apactivated'] === true) {
 		$_wlan0stats = $ipAddr[0] . ' Hotspot active';
 	} else {
 		$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
@@ -198,7 +210,7 @@ if (!empty($ipAddr[0])) {
 			'Quality: ' . $quality . '% level ' . $level;
 	}
 } else {
-	$_wlan0stats = $_SESSION['apactivated'] == true ? 'Unable to activate Hotspot' : 'Not in use';
+	$_wlan0stats = $_SESSION['apactivated'] === true ? 'Unable to activate Hotspot' : 'Not in use';
 }
 
 // Scanner
@@ -206,7 +218,8 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	$result = sysCmd('nmcli d wifi list | awk \'!(NF && seen[$2]++) {print $2}\'');
 	sort($result, SORT_NATURAL | SORT_FLAG_CASE);
 	$array = array();
-	$array[0] = 'Activate Hotspot';
+	$array[0] = 'None';
+	$array[1] = 'Activate Hotspot';
 	$ssidList = array_merge($array, $result);
 	foreach ($ssidList as $ssid) {
 		$ssid = trim($ssid);
@@ -218,17 +231,42 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	}
 // SSID list
 } else {
-	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1' && !empty($_POST['wlan0otherssid'])) {
-		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', '', 'Activate Hotspot');
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
-	} else if ($cfgNetwork[1]['wlanssid'] == 'Activate Hotspot') {
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', $cfgNetwork[1]['wlanssid']);
+	$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid", $dbh);
+	if ($cfgSSID === true) {
+		$cfgSSIDItems = '';
+		$cfgSSIDItemsFiltered = '';
 	} else {
-		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', '', 'Activate Hotspot');
+		foreach($cfgSSID as $row) {
+			$cfgSSIDItems .= sprintf('<option value="%s" %s>%s</option>\n', $row['ssid'], '', htmlentities($row['ssid']));
+		}
+		foreach($cfgSSID as $row) {
+			if ($row['ssid'] != $cfgNetwork[1]['wlanssid']) {
+				$cfgSSIDItemsFiltered .= sprintf('<option value="%s" %s>%s</option>\n', $row['ssid'], '', htmlentities($row['ssid']));
+			}
+		}
+	}
+	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1' && !empty($_POST['wlan0otherssid'])) {
+		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None', '', 'None');
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', '', 'Activate Hotspot');
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
+		$_wlan0ssid .= $cfgSSIDItems;
+	} else if ($cfgNetwork[1]['wlanssid'] == 'None') {
+		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None', 'selected', 'None');
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', '', 'Activate Hotspot');
+		$_wlan0ssid .= $cfgSSIDItems;
+	} else if ($cfgNetwork[1]['wlanssid'] == 'Activate Hotspot') {
+		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None', '', 'None');
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', 'selected', 'Activate Hotspot');
+		$_wlan0ssid .= $cfgSSIDItems;
+	} else {
+		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None', '', 'None');
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', '', 'Activate Hotspot');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', htmlentities($cfgNetwork[1]['wlanssid']));
+		$_wlan0ssid .= $cfgSSIDItemsFiltered;
 	}
 }
 // Password (PSK)
+// TODO: load psk from cfg_ssid
 $_wlan0pwd = empty($_POST['wlan0otherssid']) ? $cfgNetwork[1]['wlanpwd'] : '';
 // Country code
 $zoneList = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");

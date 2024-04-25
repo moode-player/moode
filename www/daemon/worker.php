@@ -404,45 +404,54 @@ if (empty($wlan0)) {
 	$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 	$cfgSSID = sysCmd("moodeutl -q \"SELECT ssid FROM cfg_ssid WHERE ssid NOT IN ('" .
 		$cfgNetwork[1]['wlanssid'] . "', 'Activate Hotspot')\"");
-	$altSSIDList = empty($cfgSSID) ? 'none' : implode(',', $cfgSSID);
+	$altSSIDList = empty($cfgSSID) ? 'None' : implode(',', $cfgSSID);
 	workerLog('worker: Wireless: adapter exists');
 	workerLog('worker: Wireless: country ' . $cfgNetwork[1]['wlancc']);
 	workerLog('worker: Wireless: SSID    ' . $cfgNetwork[1]['wlanssid']);
 	workerLog('worker: Wireless: other   ' . $altSSIDList);
 
-	// Check for wlan0 IP address
-	$wlan0Ip = '';
-	$_SESSION['apactivated'] = false;
-	if ($cfgNetwork[1]['wlanssid'] != 'Activate Hotspot') {
-		workerLog('worker: Wireless: timeout up to ' . $_SESSION['ipaddr_timeout'] . ' secs');
-		$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
-	}
-
-	// Hotspot activation
-	if (empty($wlan0Ip)) {
-		workerLog('worker: Wireless: address not assigned');
-		workerLog('worker: Wireless: Hotspot activating');
-		activateHotspot();
-		workerLog('worker: Wireless: timeout up to ' . $_SESSION['ipaddr_timeout'] . ' secs');
-		$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
-		if (empty($wlan0Ip)) {
-			$_SESSION['apactivated'] = false;
-			workerLog('worker: Wireless: address not assigned');
-		} else {
-			$_SESSION['apactivated'] = true;
-			workerLog('worker: Wireless: Hotspot activated using SSID ' . $cfgNetwork[2]['wlanssid']);
-		}
+	if ($cfgNetwork[1]['wlanssid'] == 'None') {
+		// No SSID
+		$wlan0Ip = '';
 	} else {
-		$result = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
-		workerLog('worker: Wireless: connect to ' . $result[0]);
-	}
-
-	if (!empty($wlan0Ip)) {
-		if ($piModel >= 3 || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-			sysCmd('/sbin/iwconfig wlan0 power off');
-			workerLog('worker: Wireless: pwrsave off');
+		// Hotspot or SSID
+		if ($cfgNetwork[1]['wlanssid'] == 'Activate Hotspot') {
+			$wlan0Ip = '';
+		} else {
+			workerLog('worker: Wireless: timeout up to ' . $_SESSION['ipaddr_timeout'] . ' secs');
+			$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
 		}
-		logNetworkInfo('wlan0');
+
+		// If SSID connect fails then auto-activate Hotspot
+		if (empty($wlan0Ip)) {
+			// Hotspot activation
+			workerLog('worker: Wireless: address not assigned');
+			workerLog('worker: Wireless: Hotspot activating');
+			activateHotspot();
+			workerLog('worker: Wireless: timeout up to ' . $_SESSION['ipaddr_timeout'] . ' secs');
+			$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
+			if (empty($wlan0Ip)) {
+				$_SESSION['apactivated'] = false;
+				workerLog('worker: Wireless: address not assigned');
+			} else {
+				$_SESSION['apactivated'] = true;
+				workerLog('worker: Wireless: Hotspot activated using SSID ' . $cfgNetwork[2]['wlanssid']);
+			}
+		} else {
+			// SSID connected and IP address assigned
+			$_SESSION['apactivated'] = false;
+			$result = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
+			workerLog('worker: Wireless: connect to ' . $result[0]);
+		}
+
+		// Final check for IP address
+		if (!empty($wlan0Ip)) {
+			if ($piModel >= 3 || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') {
+				// Turn power save off for models with integrated adapters
+				sysCmd('/sbin/iwconfig wlan0 power off > /dev/null 2>&1');
+			}
+			logNetworkInfo('wlan0');
+		}
 	}
 }
 

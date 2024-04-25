@@ -123,6 +123,10 @@ var THEME = {
 var NETWORK = {
 	json: 0
 };
+// SSID's (cfg_ssid table)
+var SSID = {
+	json: 0
+};
 
 // TODO: Eventually migrate all global vars here
 var GLOBAL = {
