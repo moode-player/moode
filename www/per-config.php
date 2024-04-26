@@ -123,11 +123,11 @@ phpSession('close');
 if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_feat_localui = '';
 	if ($_SESSION['localui'] == '1') {
-		$_localui_btn_disable = '';
-		$_localui_link_disable = '';
+		$_ctl_disabled = '';
+		$_link_disabled = '';
 	} else {
-		$_localui_btn_disable = 'disabled';
-		$_localui_link_disable = 'onclick="return false;"';
+		$_ctl_disabled = 'disabled';
+		$_link_disabled = 'onclick="return false;"';
 	}
     $piModel = substr($_SESSION['hdwrrev'], 3, 1);
     $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
@@ -136,15 +136,15 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['localui_on']  .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['localui_off'] .= "<input type=\"radio\" name=\"localui\" id=\"toggle-localui-2\" value=\"0\" " . (($_SESSION['localui'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-	$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\" " . $_localui_btn_disable;
+	$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\" " . $_ctl_disabled;
 	$_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['wake_display_off'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-	$autoClick = " onchange=\"autoClick('#btn-set-touchscn');\" " . $_localui_btn_disable;
+	$autoClick = " onchange=\"autoClick('#btn-set-touchscn');\" " . $_ctl_disabled;
 	$_select['touchscn_on']  .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-1\" value=\"1\" " . (($_SESSION['touchscn'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['touchscn_off'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggle-touchscn-2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-    $autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_localui_btn_disable;
+    $autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_ctl_disabled;
 	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 

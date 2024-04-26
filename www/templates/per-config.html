@@ -45,7 +45,7 @@
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-2">ON </label>$_select[wake_display_on]
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
 				</div>
-                <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
+                <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_ctl_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wake-display" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-wake-display" class="config-help-info">
 					Wake the display when audio starts playing.
@@ -58,7 +58,7 @@
 					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-2">ON </label>$_select[touchscn_on]
 					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
 				</div>
-                <button id="btn-set-touchscn" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
+                <button id="btn-set-touchscn" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_ctl_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-touchscn" class="config-help-info">
 					This prevents the cursor from showing on the display or Touch screen
@@ -71,7 +71,7 @@
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
 				</div>
-                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_localui_btn_disable>Set</button>
+                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_ctl_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-on-screen-kbd" class="config-help-info">
 					On-screen popup keyboard by @Nutul.
@@ -80,10 +80,10 @@
 
 			<label class="control-label" for="scnblank">Screen blank</label>
 			<div class="controls">
-				<select id="scnblank" class="config-select-large" name="scnblank">
+				<select id="scnblank" class="config-select-large" name="scnblank" onchange="autoClick('#btn-set-scnblank');" $_ctl_disabled>
 					$_select[scnblank]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_localui_btn_disable>Set</button>
+				<button id="btn-set-scnblank" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_ctl_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scnblank" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-scnblank" class="config-help-info">
 					When playback has stopped the display will be turned off after the specified time period.
@@ -91,7 +91,7 @@
 			</div>
 
 			<div class="controls">
-				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_localui_btn_disable>Toggle</button>
+				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_ctl_disabled>Toggle</button>
 				<span class="config-btn-after">CoverView</span>
 				<span class="config-help-static">
 					Current toggle state: $_coverview_onoff
@@ -99,7 +99,7 @@
 			</div>
 
 			<div class="controls">
-				<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary config-btn" $_localui_btn_disable>Restart</button></a>
+				<a data-toggle="modal" href="#restart-localui" $_link_disabled><button class="btn btn-medium btn-primary config-btn" $_ctl_disabled>Restart</button></a>
 				<span class="config-btn-after">Local Display</span>
 				<span class="config-help-static">
 					Restarting clears the chromium browser cache.
@@ -125,8 +125,8 @@
 
 			<label class="control-label" for="scnbrightness">Brightness</label>
 			<div class="controls">
-            	<input class="config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_localui_btn_disable>Set</button>
+            	<input class="config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]" $_ctl_disabled>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-brightness" class="config-help-info">
 					Backlight brightness for 7" Pi Touch. Values are 0 - 255.
@@ -135,10 +135,10 @@
 
 			<label class="control-label" for="pixel-aspect-ratio">Pixel aspect ratio</label>
 			<div class="controls">
-				<select id="pixel-aspect-ratio" class="config-select-large" name="pixel_aspect_ratio">
+				<select id="pixel-aspect-ratio" class="config-select-large" name="pixel_aspect_ratio" onchange="autoClick('#btn-set-pixel-aspect-ratio');" $_ctl_disabled>
 					$_select[pixel_aspect_ratio]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_localui_btn_disable>Set</button>
+				<button id="btn-set-pixel-aspect-ratio" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_ctl_disabled>Set</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_pixel_aspect_ratio" class="config-help-info">
 					Rectangular (default) or square pixels for 7" Pi Touch.
@@ -147,10 +147,10 @@
 
 			<label class="control-label" for="scnrotate">Rotate screen</label>
 			<div class="controls">
-				<select id="scnrotate" class="config-select-large" name="scnrotate">
+				<select id="scnrotate" class="config-select-large" name="scnrotate" onchange="autoClick('#btn-set-btn-set-scnrotate');" $_ctl_disabled>
 					$_select[scnrotate]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnrotate" value="novalue" $_localui_btn_disable>Set</button>
+				<button id="btn-set-scnrotate" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnrotate" value="novalue" $_ctl_disabled>Set</button>
 			</div>
 		</div>
 

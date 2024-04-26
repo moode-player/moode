@@ -148,7 +148,7 @@ $_cmd['btcmd'] .= "<option value=\"-H\" " . (($cmd == '-H') ? "selected" : "") .
 $_hide_ctl['paired_device'] = 'hide';
 $_hide_ctl['connected_device'] = 'hide';
 $_hide_ctl['scanned_device'] = 'hide';
-$_bt_disabled = $_SESSION['btsvc'] == '1' ? '' : 'disabled';
+$_ctl_disabled = $_SESSION['btsvc'] == '1' ? '' : 'disabled';
 
 // Run the cmd
 $result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
