@@ -31,7 +31,7 @@
 					<label class="toggle-radio toggle-updater-auto-check" for="toggle-updater-auto-check-2">ON</label>$_select[updater_auto_check_on]
 					<label class="toggle-radio toggle-updater-auto-check" for="toggle-updater-auto-check-1">OFF</label>$_select[updater_auto_check_off]
 				</div>
-				<button id="btn-set-updater-auto-check" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_updater_auto_check" value="novalue">Set</button>
+				<button id="btn-set-updater-auto-check" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_updater_auto_check" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-update-updater-auto-check" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-update-updater-auto-check" class="config-help-info">
 					Display a notification badge in Playback view if an available software update was detected during startup.
@@ -65,13 +65,13 @@
 				<select id="timezone" class="config-select-large" name="timezone">
 					$_timezone[timezone]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_time_zone" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_time_zone" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 
             <label class="control-label" for="hostname">Host/player name</label>
             <div class="controls">
                 <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-info">
 					Length 3-63 characters, alphanumeric and hyphen allowed. This is the name that will appear on the network.
 				</span>
@@ -82,13 +82,13 @@
                 <select id="keyboard" class="config-select-large" name="keyboard">
                     $_keyboard[keyboard]
                 </select>
-                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue">Set</button>
+                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
             </div>
 
             <label class="control-label" for="browsertitle">Browser title</label>
             <div class="controls">
                 <input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
             </div>
 		</div>
 
@@ -99,7 +99,7 @@
 				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness">
 					$_select[worker_responsiveness]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-worker-responsiveness" class="config-help-info">
 					<b>Default:</b> Suitable for all Raspberry Pi models.<br>
@@ -112,7 +112,7 @@
 				<select id="cpugov" class="config-select-large" name="cpugov">
 					$_select[cpugov]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cpugov" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cpugov" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-cpugov" class="config-help-info">
 					<b>On-demand:</b> Scale CPU frequency from min to max based on load.<br>
@@ -125,7 +125,7 @@
 				<select id="pci-express" class="config-select-large" name="pci_express">
 					$_select[pci_express]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pci_express" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pci_express" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-pci-express" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-pci-express" class="config-help-info">
 					<b>Gen 2.0:</b> Pi 5 PCIe feature is certified for up to 5 GT/sec.<br>
@@ -142,7 +142,7 @@
 						<label class="toggle-radio toggle-reduce-power" for="toggle-reduce-power-2">ON </label>$_select[reduce_power_on]
 						<label class="toggle-radio toggle-reduce-power" for="toggle-reduce-power-1">OFF</label>$_select[reduce_power_off]
 					</div>
-					<button id="btn-set-reduce-power" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_reduce_power" value="novalue">Set</button>
+					<button id="btn-set-reduce-power" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_reduce_power" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span id="info-reduce-power" class="config-help-static">
 						Pi-5 only. Turn this option ON to reduce shutdown wattage to 0.01W.
 						The default shutdown wattage is around 1 to 1.4W to support some HAT'S that require both the 3V and 5V rails.
@@ -157,7 +157,7 @@
 						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-2">ON </label>$_select[p3wifi_on]
 						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-1">OFF</label>$_select[p3wifi_off]
 					</div>
-					<button id="btn-set-p3wifi" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
+					<button id="btn-set-p3wifi" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-p3wifi" class="config-help-info">
 						The integrated adapter appears on Pi-Zero W and Pi-3B and higher and models.
@@ -170,7 +170,7 @@
 						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-2">ON </label>$_select[p3bt_on]
 						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-1">OFF</label>$_select[p3bt_off]
 					</div>
-					<button id="btn-set-p3bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
+					<button id="btn-set-p3bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-p3bt" class="config-help-info">
 						The integrated adapter appears on Pi-Zero W and Pi-3B and higher and models.
@@ -184,7 +184,7 @@
 					<label class="toggle-radio toggle-actled" for="toggle-actled-2">ON </label>$_select[actled_on]
 					<label class="toggle-radio toggle-actled" for="toggle-actled-1">OFF</label>$_select[actled_off]
 				</div>
-				<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
+				<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-actled" class="config-help-info">
 					Turn the activity LED flashing for SDCard (mmc0) On/Off.
@@ -198,7 +198,7 @@
 						<label class="toggle-radio toggle-pwrled" for="toggle-pwrled-2">ON </label>$_select[pwrled_on]
 						<label class="toggle-radio toggle-pwrled" for="toggle-pwrled-1">OFF</label>$_select[pwrled_off]
 					</div>
-					<button id="btn-set-pwrled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
+					<button id="btn-set-pwrled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pwrled" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-pwrled" class="config-help-info">
 						Turn the Power LED On/Off.
@@ -213,7 +213,7 @@
 				<select id="ipaddr-timeout" class="config-select-large" name="ipaddr_timeout">
 					$_select[ipaddr_timeout]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Wait up to the specified number of seconds for an IP address to be assigned to an adapter during startup.
 				    AP mode will be started if neither WiFi nor Ethernet adapters have been assigned an IP address.
@@ -226,7 +226,7 @@
 					<label class="toggle-radio toggle-eth0chk" for="toggle-eth0chk-2">ON </label>$_select[eth0chk_on]
 					<label class="toggle-radio toggle-eth0chk" for="toggle-eth0chk-1">OFF</label>$_select[eth0chk_off]
 				</div>
-				<button id="btn-set-eth0chk" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
+				<button id="btn-set-eth0chk" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eth0chk" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-eth0chk" class="config-help-info">
 					Wait for up to "Address timeout" seconds for an address to be assigned to the Ethernet adapter.
@@ -247,7 +247,7 @@
 					<label class="toggle-radio toggle-fs-smb" for="toggle-fs-smb-2">ON </label>$_select[fs_smb_on]
 					<label class="toggle-radio toggle-fs-smb" for="toggle-fs-smb-1">OFF</label>$_select[fs_smb_off]
 				</div>
-				<button id="btn-set-fs-smb" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_smb" value="novalue">Set</button>
+				<button id="btn-set-fs-smb" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_smb" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Server Message Block (SMB) allows files to be shared over a network with Windows, Mac and Linux clients.<br>
 					<b>Shares: </b> NAS, SDCard, Playlists and USB shares are automatically created.<br>
@@ -263,7 +263,7 @@
 					<label class="toggle-radio toggle-fs-nfs" for="toggle-fs-nfs-2">ON </label>$_select[fs_nfs_on]
 					<label class="toggle-radio toggle-fs-nfs" for="toggle-fs-nfs-1">OFF</label>$_select[fs_nfs_off]
 				</div>
-				<button id="btn-set-fs-nfs" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs" value="novalue">Set</button>
+				<button id="btn-set-fs-nfs" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Network File Sharing (NFS) allows files to be shared over a network with Linux clients.<br>
 					<b>Exports: </b> USB storage devices mounted to /media are automatically maintained in /etc/exports. Other storage locations must be manualy added.<br>
@@ -274,7 +274,7 @@
 			<label class="control-label" for="fs-nfs-access">Access</label>
 			<div class="controls">
 				<input id="fs-nfs-access" class="input-large config-input-large" type="text" name="fs_nfs_access" value="$_select[fs_nfs_access]" placeholder="IP address or subnet">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_access" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_access" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Specify a client IP or subnet address that is allowed access to NFS exports.<br>
 					Use Classless Inter-Domain Routing (CIDR) notation (/24 for subnet, /32 for IP address).<br>
@@ -285,7 +285,7 @@
 			<label class="control-label" for="fs-nfs-options">Options</label>
 			<div class="controls">
 				<input id="fs-nfs-options" class="input-large config-input-large" type="text" name="fs_nfs_options" value="$_select[fs_nfs_options]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_options" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_options" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					These options determine the permissions granted to connected clients.<br>
 					Default options: rw,sync,no_subtree_check,no_root_squash
@@ -301,7 +301,7 @@
 						<label class="toggle-radio toggle-dlnasvc" for="toggle-dlnasvc-2">ON </label>$_select[dlnasvc_on]
 						<label class="toggle-radio toggle-dlnasvc" for="toggle-dlnasvc-1">OFF</label>$_select[dlnasvc_off]
 					</div>
-					<button id="btn-set-dlnasvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
+					<button id="btn-set-dlnasvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span class="config-help-static">
 						The DLNA media server indexes music sources defined for MPD and makes them available to UPnP control points.
 	                </span>
@@ -310,7 +310,7 @@
 				<label class="control-label" for="dlnaname">Name</label>
 				<div class="controls">
 					<input class="config-input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" required>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				</div>
 
 				<div class="controls">
@@ -333,7 +333,7 @@
 					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-2">ON </label>$_select[shellinabox_on]
 					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
 				</div>
-				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable>Set</button>
+				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-shellinabox" class="config-help-info">
 					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
@@ -354,7 +354,7 @@
 						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-2">ON </label>$_select[nginx_https_only_on]
 						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
 					</div>
-					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue">Set</button>
+					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-https-only" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-nginx-https-only" class="config-help-info">
 						Turn this ON to configure NGINX web server to only accept HTTPS connections.
@@ -371,7 +371,7 @@
 					<select id="nginx-cert-type" class="config-select-large" name="nginx_cert_type">
 						$_select[nginx_cert_type]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span class="config-help-static">
 						<b>Automatic:</b> Automatically generate and install a self-signed certificate into NGINX web server when HTTPS mode is turned ON.<br>
 					    <b>Manual:</b> Click the UPLOAD followed by the INSTALL button for this type of certificate.
@@ -384,7 +384,7 @@
 						<label class="toggle-radio toggle-nginx-hsts-policy" for="toggle-nginx-hsts-policy-2">ON </label>$_select[nginx_hsts_policy_on]
 						<label class="toggle-radio toggle-nginx-hsts-policy" for="toggle-nginx-hsts-policy-1">OFF</label>$_select[nginx_hsts_policy_off]
 					</div>
-					<button id="btn-set-nginx-hsts-policy" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_hsts_policy" value="novalue">Set</button>
+					<button id="btn-set-nginx-hsts-policy" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_hsts_policy" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-hsts-policy" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-nginx-hsts-policy" class="config-help-info">
 						Turn this ON to configure NGINX web server for HTTP Strict Transport Security (HSTS).
@@ -487,7 +487,7 @@
 					<label class="toggle-radio toggle-debuglog" for="toggle-debuglog-2">ON </label>$_select[debuglog_on]
 					<label class="toggle-radio toggle-debuglog" for="toggle-debuglog-1">OFF</label>$_select[debuglog_off]
 				</div>
-				<button id="btn-set-debuglog" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
+				<button id="btn-set-debuglog" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_debuglog" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-debuglog" class="config-help-info">
 					<b>Log files:</b><br>

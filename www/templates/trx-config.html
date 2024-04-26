@@ -37,7 +37,7 @@
 					<label class="toggle-radio toggle-multiroom-tx" for="toggle-multiroom-tx-2">ON </label>$_select[multiroom_tx_on]
 					<label class="toggle-radio toggle-multiroom-tx" for="toggle-multiroom-tx-1">OFF</label>$_select[multiroom_tx_off]
 				</div>
-				<button id="btn-set-multiroom-tx" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx" value="novalue" $_multiroom_tx_disable>Set</button>
+				<button id="btn-set-multiroom-tx" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx" value="novalue" $_multiroom_tx_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 
 			<label class="control-label">Loopback</label>
@@ -46,7 +46,7 @@
 					<label class="toggle-radio toggle-alsa-loopback" for="toggle-alsa-loopback-2">ON </label>$_select[alsa_loopback_on]
 					<label class="toggle-radio toggle-alsa-loopback" for="toggle-alsa-loopback-1">OFF</label>$_select[alsa_loopback_off]
 				</div>
-				<button id="btn-set-alsa-loopback" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
+				<button id="btn-set-alsa-loopback" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Before turning ALSA Loopback ON ensure all DSP in Audio Config is OFF.
                 </span>
@@ -63,7 +63,7 @@
 			<label class="control-label" for="multiroom_initvol">Initial volume</label>
 			<div class="controls">
 				<input id="multiroom_initvol" class="config-input-large" type="number" maxlength="3" min="0" max="100" name="multiroom_initvol" value="$_multiroom_initvol">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_initvol" value="novalue" $_multiroom_initvol_disable>Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_initvol" value="novalue" $_multiroom_initvol_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Sets the initial volume for Sender and Receivers. Note that Receivers must have Master volume opt-in set to Yes.
 				</span>
@@ -85,7 +85,7 @@
 					<select id="multiroom_tx_bfr" class="config-select-large" name="multiroom_tx_bfr">
 						$_select[multiroom_tx_bfr]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_bfr" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_bfr" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span class="config-help-static">
 						Length of the ALSA buffer in milliseconds.
 					</span>
@@ -96,7 +96,7 @@
 					<select id="multiroom_tx_frame_size" class="config-select-large" name="multiroom_tx_frame_size">
 						$_select[multiroom_tx_frame_size]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_frame_size" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_frame_size" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span class="config-help-static">
 						Length of PCM data in milliseconds to be encoded into an Opus frame.
 					</span>
@@ -105,7 +105,7 @@
 				<label class="control-label" for="multiroom_tx_rtprio">Realtime priority</label>
 				<div class="controls">
 					<input id="multiroom_tx_rtprio" class="input-small" type="number" maxlength="3" min="1" max="99" name="multiroom_tx_rtprio" value="$_multiroom_tx_rtprio">
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_rtprio" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_rtprio" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span class="config-help-static">
 						Realtime process priority for the Sender daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.
 						Scheduler policy is FIFO and default priority is 45.
@@ -115,7 +115,7 @@
 				<label class="control-label" for="multiroom_tx_query_timeout">Query timeout</label>
 				<div class="controls">
 					<input id="multiroom_tx_query_timeout" class="input-small" type="number" maxlength="1" min="1" max="3" name="multiroom_tx_query_timeout" value="$_multiroom_tx_query_timeout">
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_query_timeout" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_query_timeout" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span class="config-help-static">
 						Maximum number of seconds to wait per Receiver when querying for Receivers.<br>
 						Range is 1-3 seconds. Default is 1 second.<br>
@@ -131,7 +131,7 @@
 				<select id="multiroom_rx" class="config-select-large" name="multiroom_rx">
 					$_select[multiroom_rx]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx" value="novalue" $_multiroom_rx_disable>Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx" value="novalue" $_multiroom_rx_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_multiroom_rx" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span class="config-help-static">
 					To control Receiver volume via the Sender set "Volume type" to "Hardware" in Audio Config.<br>
@@ -148,7 +148,7 @@
 					<label class="toggle-radio toggle-multiroom-rx-mastervol-opt-in" for="toggle-multiroom-rx-mastervol-opt-in-2">ON </label>$_select[multiroom_rx_mastervol_opt_in_on]
 					<label class="toggle-radio toggle-multiroom-rx-mastervol-opt-in" for="toggle-multiroom-rx-mastervol-opt-in-1">OFF</label>$_select[multiroom_rx_mastervol_opt_in_off]
 				</div>
-				<button id="btn-set-multiroom-rx-mastervol-opt-in" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_mastervol_opt_in" value="novalue">Set</button>
+				<button id="btn-set-multiroom-rx-mastervol-opt-in" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_mastervol_opt_in" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Specify whether the Receiver accepts changes made by the Sender volume control.
 					Note that on the Receivers&nbsp;<i class="fa-solid fa-sharp fa-speakers"></i>&nbsp;screen a volume knob with a checkmark &nbsp;<i class="fa-regular fa-sharp fa-circle-check"></i>&nbsp;will appear for those that have opted in.
@@ -160,7 +160,7 @@
 				<select id="multiroom_rx_alsa_output_mode" class="config-select-large" name="multiroom_rx_alsa_output_mode">
 					$_select[multiroom_rx_alsa_output_mode]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_alsa_output_mode" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_alsa_output_mode" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_multiroom_rx_alsa_output_mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_multiroom_rx_alsa_output_mode" class="config-help-info">
 					<b>Default: </b>ALSA "plughw" plugin which performs format conversions if needed to match audio device requirements.<br>
@@ -172,7 +172,7 @@
 			<label class="control-label" for="multiroom_rx_alsavol">ALSA volume (%)</label>
 			<div class="controls">
 				<input id="multiroom_rx_alsavol" class="config-input-large" type="number" maxlength="3" min="0" max="100" name="multiroom_rx_alsavol" value="$_multiroom_rx_alsavol" $_multiroom_rx_alsavol_disable>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_alsavol" value="novalue" $_multiroom_rx_alsavol_disable>Set</button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_alsavol" value="novalue" $_multiroom_rx_alsavol_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_multiroom_rx_alsavol" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				$_multiroom_rx_alsavol_msg
 				<span id="info_multiroom_rx_alsavol" class="config-help-info">
@@ -196,7 +196,7 @@
 					<select id="multiroom_rx_bfr" class="config-select-large" name="multiroom_rx_bfr">
 						$_select[multiroom_rx_bfr]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_bfr" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_bfr" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span id="info_multiroom_rx_bfr" class="config-help-static">
 						Length of the ALSA buffer in milliseconds.
 					</span>
@@ -207,7 +207,7 @@
 					<select id="multiroom_rx_jitter_bfr" class="config-select-large" name="multiroom_rx_jitter_bfr">
 						$_select[multiroom_rx_jitter_bfr]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_jitter_bfr" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_jitter_bfr" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span id="info_multiroom_rx_jitter_bfr" class="config-help-static">
 						Length of the RTP jitter compensation buffer in milliseconds.
 					</span>
@@ -218,7 +218,7 @@
 					<select id="multiroom_rx_frame_size" class="config-select-large" name="multiroom_rx_frame_size">
 						$_select[multiroom_rx_frame_size]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_frame_size" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_frame_size" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span id="info_multiroom_rx_frame_size" class="config-help-static">
 						Length of PCM data in milliseconds to be decoded from an Opus frame.
 					</span>
@@ -227,7 +227,7 @@
 				<label class="control-label" for="multiroom_rx_rtprio">Realtime priority</label>
 				<div class="controls">
 					<input id="multiroom_rx_rtprio" class="input-small" type="number" maxlength="2" min="1" max="99" name="multiroom_rx_rtprio" value="$_multiroom_rx_rtprio">
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_rtprio" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_rtprio" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span id="info_multiroom_rx_rtprio" class="config-help-static">
 						Realtime process priority for the Receiver daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.
 						Scheduler policy is FIFO and default priority is 45.
