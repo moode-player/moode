@@ -50,7 +50,8 @@ if (isset($_POST['update_bt_pin_code'])) {
 	$pinCode = empty($_POST['bt_pin_code']) ? 'None' : $_POST['bt_pin_code'];
 	if ($pinCode == 'None' || (is_numeric($pinCode) && strlen($pinCode) == 6)) {
 		$_SESSION['bt_pin_code'] = $pinCode;
-		submitJob('bt_pin_code', $pinCode, 'Settings updated', 'Pairing agent restarted');
+		$msg = $_SESSION['btsvc'] == '1' ? 'Pairing agent restarted' : '';
+		submitJob('bt_pin_code', $pinCode, 'Settings updated', $msg);
 	} else {
 		$_SESSION['notify']['title'] = 'Invalid PIN code';
 		$_SESSION['notify']['msg'] = 'Must be 6 digit (numeric) or "None"';
