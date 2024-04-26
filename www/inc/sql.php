@@ -115,6 +115,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 			$queryStr = "UPDATE " . $table .
 				" SET enabled='" . $value['enabled'] .
 				"', pin='" . $value['pin'] .
+				"', pull='" . $value['pull'] .
 				"', command='" . trim($value['command']) .
 				"', param='" . $value['param'] .
 				"', value='" . $value['value'] .

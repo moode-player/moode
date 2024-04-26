@@ -28,107 +28,113 @@
 		</legend>
 
 		<p class="sub-legend">
-			<b>(1)</b> Use a comma to delimit arguments in the command (Cmd) field for example [mpc,load,My Playlist  ]<br>
-			<b>(2)</b> Broadcom SoC pin numbering is used. Refer to the <a href="images/gpio-pinout.jpg" class="target-blank-link" target="_blank">GPIO pinout diagram</a> for GPIO to board pin mapping.<br>
-			<b>(3)</b> GPIO pins are configured as Input/Pull-up and are 3V3. Pins GPIO2 and GPIO3 have fixed pull-up resistors.<br>
-			<b>(4)</b> At power-on pins are set to input mode, GPIO0 - GPIO8 are pull-ups to 3V3, GPIO9 - GPIO27 are pull-downs to 0V.
+			Use a comma to delimit arguments in the command (Cmd) field for example [mpc,load,My Playlist].
+			Broadcom SoC pin numbering is used. Refer to the <a href="images/gpio-pinout.jpg" class="target-blank-link" target="_blank">GPIO pinout diagram</a> for GPIO to board pin mapping.<br>
 		</p>
 
 		<div class="control-group">
-			<label class="control-label" for="sw_1_pin">Button 1</label>
+			<label class="control-label" for="btn_1_pin">Button 1</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-1-onoff" for="toggle-sw-1-onoff-2">ON </label>$_select[sw_1_onoff_on]
-					<label class="toggle-radio toggle-sw-1-onoff" for="toggle-sw-1-onoff-1">OFF</label>$_select[sw_1_onoff_off]
+					<label class="toggle-radio toggle-btn-1-onoff" for="toggle-btn-1-onoff-2">ON </label>$_select[btn_1_onoff_on]
+					<label class="toggle-radio toggle-btn-1-onoff" for="toggle-btn-1-onoff-1">OFF</label>$_select[btn_1_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_1_pin" name="config[1][pin]" value="$_select[sw_1_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_1_pin" name="config[1][pin]" value="$_select[btn_1_pin]">
+				<select class="config-select-gpio" name="config[1][pull]">$_select[btn_1_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_1_cmd" name="config[1][command]" value="$_select[sw_1_cmd]">
+				<input class="config-input-large" type="text" id="btn_1_cmd" name="config[1][command]" value="$_select[btn_1_cmd]">
 			</div>
 
-			<label class="control-label" for="sw_2_pin">Button 2</label>
+			<label class="control-label" for="btn_2_pin">Button 2</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-2-onoff" for="toggle-sw-2-onoff-2">ON </label>$_select[sw_2_onoff_on]
-					<label class="toggle-radio toggle-sw-2-onoff" for="toggle-sw-2-onoff-1">OFF</label>$_select[sw_2_onoff_off]
+					<label class="toggle-radio toggle-btn-2-onoff" for="toggle-btn-2-onoff-2">ON </label>$_select[btn_2_onoff_on]
+					<label class="toggle-radio toggle-btn-2-onoff" for="toggle-btn-2-onoff-1">OFF</label>$_select[btn_2_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_2_pin" name="config[2][pin]" value="$_select[sw_2_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_2_pin" name="config[2][pin]" value="$_select[btn_2_pin]">
+				<select class="config-select-gpio" name="config[2][pull]">$_select[btn_2_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_2_cmd" name="config[2][command]" value="$_select[sw_2_cmd]">
+				<input class="config-input-large" type="text" id="btn_2_cmd" name="config[2][command]" value="$_select[btn_2_cmd]">
 			</div>
 
-			<label class="control-label" for="sw_3_pin">Button 3</label>
+			<label class="control-label" for="btn_3_pin">Button 3</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-3-onoff" for="toggle-sw-3-onoff-2">ON </label>$_select[sw_3_onoff_on]
-					<label class="toggle-radio toggle-sw-3-onoff" for="toggle-sw-3-onoff-1">OFF</label>$_select[sw_3_onoff_off]
+					<label class="toggle-radio toggle-btn-3-onoff" for="toggle-btn-3-onoff-2">ON </label>$_select[btn_3_onoff_on]
+					<label class="toggle-radio toggle-btn-3-onoff" for="toggle-btn-3-onoff-1">OFF</label>$_select[btn_3_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_3_pin" name="config[3][pin]" value="$_select[sw_3_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_3_pin" name="config[3][pin]" value="$_select[btn_3_pin]">
+				<select class="config-select-gpio" name="config[3][pull]">$_select[btn_3_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_3_cmd" name="config[3][command]" value="$_select[sw_3_cmd]">
+				<input class="config-input-large" type="text" id="btn_3_cmd" name="config[3][command]" value="$_select[btn_3_cmd]">
 			</div>
 
-			<label class="control-label" for="sw_4_pin">Button 4</label>
+			<label class="control-label" for="btn_4_pin">Button 4</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-4-onoff" for="toggle-sw-4-onoff-2">ON </label>$_select[sw_4_onoff_on]
-					<label class="toggle-radio toggle-sw-4-onoff" for="toggle-sw-4-onoff-1">OFF</label>$_select[sw_4_onoff_off]
+					<label class="toggle-radio toggle-btn-4-onoff" for="toggle-btn-4-onoff-2">ON </label>$_select[btn_4_onoff_on]
+					<label class="toggle-radio toggle-btn-4-onoff" for="toggle-btn-4-onoff-1">OFF</label>$_select[btn_4_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_4_pin" name="config[4][pin]" value="$_select[sw_4_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_4_pin" name="config[4][pin]" value="$_select[btn_4_pin]">
+				<select class="config-select-gpio" name="config[4][pull]">$_select[btn_4_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_4_cmd" name="config[4][command]" value="$_select[sw_4_cmd]">
+				<input class="config-input-large" type="text" id="btn_4_cmd" name="config[4][command]" value="$_select[btn_4_cmd]">
 			</div>
 
-			<label class="control-label" for="sw_5_pin">Button 5</label>
+			<label class="control-label" for="btn_5_pin">Button 5</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-5-onoff" for="toggle-sw-5-onoff-2">ON </label>$_select[sw_5_onoff_on]
-					<label class="toggle-radio toggle-sw-5-onoff" for="toggle-sw-5-onoff-1">OFF</label>$_select[sw_5_onoff_off]
+					<label class="toggle-radio toggle-btn-5-onoff" for="toggle-btn-5-onoff-2">ON </label>$_select[btn_5_onoff_on]
+					<label class="toggle-radio toggle-btn-5-onoff" for="toggle-btn-5-onoff-1">OFF</label>$_select[btn_5_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_5_pin" name="config[5][pin]" value="$_select[sw_5_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_5_pin" name="config[5][pin]" value="$_select[btn_5_pin]">
+				<select class="config-select-gpio" name="config[5][pull]">$_select[btn_5_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_5_cmd" name="config[5][command]" value="$_select[sw_5_cmd]">
+				<input class="config-input-large" type="text" id="btn_5_cmd" name="config[5][command]" value="$_select[btn_5_cmd]">
 			</div>
 
-			<label class="control-label" for="sw_6_pin">Button 6</label>
+			<label class="control-label" for="btn_6_pin">Button 6</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-6-onoff" for="toggle-sw-6-onoff-2">ON </label>$_select[sw_6_onoff_on]
-					<label class="toggle-radio toggle-sw-6-onoff" for="toggle-sw-6-onoff-1">OFF</label>$_select[sw_6_onoff_off]
+					<label class="toggle-radio toggle-btn-6-onoff" for="toggle-btn-6-onoff-2">ON </label>$_select[btn_6_onoff_on]
+					<label class="toggle-radio toggle-btn-6-onoff" for="toggle-btn-6-onoff-1">OFF</label>$_select[btn_6_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_6_pin" name="config[6][pin]" value="$_select[sw_6_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_6_pin" name="config[6][pin]" value="$_select[btn_6_pin]">
+				<select class="config-select-gpio" name="config[6][pull]">$_select[btn_6_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_6_cmd" name="config[6][command]" value="$_select[sw_6_cmd]">
+				<input class="config-input-large" type="text" id="btn_6_cmd" name="config[6][command]" value="$_select[btn_6_cmd]">
 			</div>
 
-			<label class="control-label" for="sw_7_pin">Button 7</label>
+			<label class="control-label" for="btn_7_pin">Button 7</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-7-onoff" for="toggle-sw-7-onoff-2">ON </label>$_select[sw_7_onoff_on]
-					<label class="toggle-radio toggle-sw-7-onoff" for="toggle-sw-7-onoff-1">OFF</label>$_select[sw_7_onoff_off]
+					<label class="toggle-radio toggle-btn-7-onoff" for="toggle-btn-7-onoff-2">ON </label>$_select[btn_7_onoff_on]
+					<label class="toggle-radio toggle-btn-7-onoff" for="toggle-btn-7-onoff-1">OFF</label>$_select[btn_7_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_7_pin" name="config[7][pin]" value="$_select[sw_7_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_7_pin" name="config[7][pin]" value="$_select[btn_7_pin]">
+				<select class="config-select-gpio" name="config[7][pull]">$_select[btn_7_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_7_cmd" name="config[7][command]" value="$_select[sw_7_cmd]">
+				<input class="config-input-large" type="text" id="btn_7_cmd" name="config[7][command]" value="$_select[btn_7_cmd]">
 			</div>
 
-			<label class="control-label" for="sw_8_pin">Button 8</label>
+			<label class="control-label" for="btn_8_pin">Button 8</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-sw-8-onoff" for="toggle-sw-8-onoff-2">ON </label>$_select[sw_8_onoff_on]
-					<label class="toggle-radio toggle-sw-8-onoff" for="toggle-sw-8-onoff-1">OFF</label>$_select[sw_8_onoff_off]
+					<label class="toggle-radio toggle-btn-8-onoff" for="toggle-btn-8-onoff-2">ON </label>$_select[btn_8_onoff_on]
+					<label class="toggle-radio toggle-btn-8-onoff" for="toggle-btn-8-onoff-1">OFF</label>$_select[btn_8_onoff_off]
 				</div>
 				<span class="config-input-after">GPIO</span>
-				<input class="config-input-mini" type="number" min="2" max="27" id="sw_8_pin" name="config[8][pin]" value="$_select[sw_8_pin]">
+				<input class="config-input-mini" type="number" min="2" max="27" id="btn_8_pin" name="config[8][pin]" value="$_select[btn_8_pin]">
+				<select class="config-select-gpio" name="config[8][pull]">$_select[btn_8_pull]</select>
 				<span class="config-input-after">Cmd</span>
-				<input class="config-input-large" type="text" id="sw_8_cmd" name="config[8][command]" value="$_select[sw_8_cmd]">
+				<input class="config-input-large" type="text" id="btn_8_cmd" name="config[8][command]" value="$_select[btn_8_cmd]">
 			</div>
 
 			<label class="control-label" for="debounce">Debounce (ms)</label>

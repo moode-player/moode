@@ -69,6 +69,9 @@ input[type=password] {display:inline-block;height:22px;vertical-align:top;margin
 .config-select-xxlarge .dropdown-toggle,
 .config-select-yn .dropdown-toggle {margin-bottom:var(--config-ctl-margin-bottom);}
 .config-modal-input {background-color:rgba(128,128,128,0.35)!important;border:1px solid rgba(128,128,128,0.75)!important}
+/* For GPIO Config, vertical-align:top */
+.config-select-gpio:not([class*=span]) {vertical-align:top;width:8vw;max-width:80px;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
+.config-select-gpio .dropdown-toggle {margin-bottom:var(--config-ctl-margin-bottom);}
 
 .btn-group.bootstrap-select .btn {padding:3px 0;}
 .config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}

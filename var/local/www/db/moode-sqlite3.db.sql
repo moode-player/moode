@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Apr 24 07:11:27 2024
+-- File generated with SQLiteStudio v3.1.0 on Fri Apr 26 08:49:29 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -611,16 +611,16 @@ CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings T
 INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
 
 -- Table: cfg_gpio
-CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
+CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), pull CHAR (32), command CHAR (64), param CHAR (32), value CHAR (32));
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (1, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (2, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (3, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (4, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (5, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (6, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (7, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (8, '2', '0', 'GPIO.PUD_UP', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (99, NULL, NULL, NULL, NULL, 'bounce_time', '1000');
 
 -- Table: cfg_network
 CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlanuuid CHAR (4), wlanpwd CHAR (64), wlanpsk CHAR (64), wlancc CHAR (2));
