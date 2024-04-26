@@ -528,10 +528,10 @@ if ($_SESSION['audioout'] == 'Local' &&
 	$_SESSION['multiroom_tx'] == 'Off' &&
 	$_SESSION['multiroom_rx'] != 'On') {
 	// Only one DSP'can be on
-	$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_alsaequal_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_invpolarity_ctl_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_crossfeed_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_eqfa12p_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_alsaequal_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$piModel = substr($_SESSION['hdwrrev'], 3, 1);
 	$piName = $_SESSION['hdwrrev'];
 	$cmModel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
@@ -542,27 +542,27 @@ if ($_SESSION['audioout'] == 'Local' &&
 		$piName == 'Pi-2B 1.2 1GB' ||
 		$piModel >= 3
 	) {
-		$_camilladsp_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+		$_camilladsp_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
 	} else {
-		$_camilladsp_set_disabled = 'disabled';
+		$_camilladsp_ctl_disabled = 'disabled';
 	}
 } else {
 	// Don't allow any DSP to be set for:
 	// Bluetooth speaker, Multiroom Sender/Receiver On or ALSA output mode "Pure Direct"
-	$_invpolarity_set_disabled = 'disabled';
-	$_crossfeed_set_disabled = 'disabled';
-	$_eqfa12p_set_disabled = 'disabled';
-	$_alsaequal_set_disabled = 'disabled';
-	$_camilladsp_set_disabled = 'disabled';
+	$_invpolarity_ctl_disabled = 'disabled';
+	$_crossfeed_ctl_disabled = 'disabled';
+	$_eqfa12p_ctl_disabled = 'disabled';
+	$_alsaequal_ctl_disabled = 'disabled';
+	$_camilladsp_ctl_disabled = 'disabled';
 }
 
 // Polarity inversion
-$autoClick = " onchange=\"autoClick('#btn-set-invert-polarity');\" " . $_invpolarity_set_disabled;
+$autoClick = " onchange=\"autoClick('#btn-set-invert-polarity');\" " . $_invpolarity_ctl_disabled;
 $_select['invert_polarity_on']  .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['invert_polarity_off'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Crossfeed
 $_select['crossfeed'] .= "<option value=\"Off\" " . (($_SESSION['crossfeed'] == 'Off' OR $_SESSION['crossfeed'] == '') ? "selected" : "") . ">Off</option>\n";
-if ($_crossfeed_set_disabled == '') {
+if ($_crossfeed_ctl_disabled == '') {
 	$_select['crossfeed'] .= "<option value=\"700 3.0\" " . (($_SESSION['crossfeed'] == '700 3.0') ? "selected" : "") . ">700 Hz 3.0 dB</option>\n";
 	$_select['crossfeed'] .= "<option value=\"700 4.5\" " . (($_SESSION['crossfeed'] == '700 4.5') ? "selected" : "") . ">700 Hz 4.5 dB</option>\n";
 	$_select['crossfeed'] .= "<option value=\"800 6.0\" " . (($_SESSION['crossfeed'] == '800 6.0') ? "selected" : "") . ">800 Hz 6.0 dB</option>\n";
@@ -606,7 +606,7 @@ $eqfa12p = Eqp12($dbh);
 $presets = $eqfa12p->getPresets();
 $array = array();
 $array[0] = 'Off';
-$curveList = $_eqfa12p_set_disabled == '' ? array_replace($array, $presets) : $array;
+$curveList = $_eqfa12p_ctl_disabled == '' ? array_replace($array, $presets) : $array;
 $curve_selected_id = $eqfa12p->getActivePresetIndex();
 foreach ($curveList as $key=>$curveName) {
 	$selected = ($key == $curve_selected_id) ? 'selected' : '';
@@ -617,7 +617,7 @@ unset($eqfa12p);
 $result = sqlQuery('SELECT curve_name FROM cfg_eqalsa', $dbh);
 $array = array();
 $array[0]['curve_name'] = 'Off';
-$curveList = $_alsaequal_set_disabled == '' ? array_merge($array, $result) : $array;
+$curveList = $_alsaequal_ctl_disabled == '' ? array_merge($array, $result) : $array;
 foreach ($curveList as $curve) {
 	$curveName = $curve['curve_name'];
 	$selected = ($_SESSION['alsaequal'] == $curve['curve_name']) ? 'selected' : '';

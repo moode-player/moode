@@ -30,24 +30,24 @@
 		</p>
 
 		<div class="control-group">
-			<label class="control-label" for="output_device">Output device</label>
+			<label class="control-label" for="output-device">Output device</label>
 			<div class="controls">
-                <select id="output_device" name="output_device_cardnum" class="config-select-large">
+                <select id="output-device" name="output_device_cardnum" class="config-select-large" onchange="autoClick('#btn-set-output-device');" $_output_device_btn_disabled>
 					$_mpd_select[device]
                 </select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_output_device" value="novalue" $_output_device_btn_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-output-device" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_output_device" value="novalue" $_output_device_btn_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="nop" value="novalue" $_output_device_btn_disabled><i class="fa-regular fa-sharp fa-redo"></i></button>
 				<span class="config-help-static">
 					The list shows the ALSA card number and assigned audio device or "empty" if no audio device exist at the given card.
 				</span>
 			</div>
 
-			<label class="control-label" for="mixer_type">Volume type</label>
+			<label class="control-label" for="mixer-type">Volume type</label>
             <div class="controls">
-                <select id="mixer_type" name="mixer_type" class="config-select-large">
+                <select id="mixer-type" name="mixer_type" class="config-select-large" onchange="autoClick('#btn-set-mixer-type');" $_volume_type_btn_disabled>
 					$_mpd_select[mixer_type]
                 </select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_type" value="novalue" $_volume_type_btn_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-mixer-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_type" value="novalue" $_volume_type_btn_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-mixer-type" class="config-help-info">
 					Volume type used by MPD.<br>
@@ -65,10 +65,10 @@
 			<div class="$_camilladsp_volume_range_hide">
 				<label class="control-label" for="camilladsp-volume-range">Volume range</label>
 				<div class="controls">
-					<select id="camilladsp-volume-range" class="config-select-large" name="camilladsp_volume_range">
+					<select id="camilladsp-volume-range" class="config-select-large" name="camilladsp_volume_range" onchange="autoClick('#btn-set-camilladsp-volume-range');">
 						$_select[camilladsp_volume_range]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_camilladsp_volume_range" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+					<button id="btn-set-camilladsp-volume-range" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_camilladsp_volume_range" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-camilladsp-volume-range" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 					<span id="info-camilladsp-volume-range" class="config-help-info">
 						This value represents the difference between the maximum loudness and background noise level.
@@ -81,17 +81,17 @@
 
 			<label class="control-label" for="i2sdevice">Named I2S device</label>
 			<div class="controls">
-				<select id="i2sdevice" class="config-select-large" name="i2sdevice">
+				<select id="i2sdevice" class="config-select-large" name="i2sdevice" onchange="autoClick('#btn-set-i2sdevice');">
 					$_i2s[i2sdevice]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_device" value="novalue" $_i2sdevice_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-i2sdevice" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_device" value="novalue" $_i2sdevice_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 			<label class="control-label" for="i2soverlay">or DT overlay</label>
 			<div class="controls">
-				<select id="i2soverlay" class="config-select-large" name="i2soverlay">
+				<select id="i2soverlay" class="config-select-large" name="i2soverlay" onchange="autoClick('#btn-set-i2soverlay');">
 					$_i2s[i2soverlay]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_overlay" value="novalue" $_i2soverlay_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-i2soverlay" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_overlay" value="novalue" $_i2soverlay_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					After setting a device or overlay, reboot and then select the device from the Output device list.
 				</span>
@@ -99,10 +99,10 @@
 
 			<label class="control-label" for="drvoptions">Driver options</label>
 			<div class="controls">
-				<select id="drvoptions" class="config-select-large" name="drvoptions">
+				<select id="drvoptions" class="config-select-large" name="drvoptions" onchange="autoClick('#btn-set-drvoptions');">
 					$_select[drvoptions]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_drvoptions" value="novalue" $_driveropt_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-drvoptions" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_drvoptions" value="novalue" $_driveropt_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-drvoptions" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-drvoptions" class="config-help-info">
 					<b>slave:</b> If enabled, Boss and MiniBOSS DAC operate in slave mode required by Kali reclocker.<br>
@@ -132,12 +132,12 @@
 				</span>
 			</div>
 
-			<label class="control-label" for="alsa_output_mode">Output mode</label>
+			<label class="control-label" for="alsa-output-mode">Output mode</label>
 			<div class="controls">
-				<select id="alsa_output_mode" class="config-select-large" name="alsa_output_mode">
+				<select id="alsa-output-mode" class="config-select-large" name="alsa_output_mode" onchange="autoClick('#btn-set-alsa-output-mode');">
 					$_select[alsa_output_mode]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-alsa-output-mode" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					ALSA: $_alsa_plugin_and_cardnum
 				</span>
@@ -235,12 +235,12 @@
                 </span>
 			</div>
 
-			<label class="control-label" for="ashuffle_mode">Mode</label>
+			<label class="control-label" for="ashuffle-mode">Mode</label>
 			<div class="controls">
-				<select id="ashuffle_mode" class="config-select-large" name="ashuffle_mode">
+				<select id="ashuffle-mode" class="config-select-large" name="ashuffle_mode" onchange="autoClick('#btn-set-ashuffle-mode');">
 					$_select[ashuffle_mode]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ashuffle_mode" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-ashuffle-mode" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ashuffle_mode" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_ashuffle_mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_ashuffle_mode" class="config-help-info">
 					Play randomly selected track or whole album.
@@ -273,12 +273,12 @@
 
 		<div class="config-horiz-rule">Volume options</div>
 		<div class="control-group">
-			<label class="control-label" for="volume_step_limit">Volume step limit</label>
+			<label class="control-label" for="volume-step-limit">Volume step limit</label>
 			<div class="controls">
-				<select id="volume_step_limit" class="config-select-large" name="volume_step_limit">
+				<select id="volume-step-limit" class="config-select-large" name="volume_step_limit" onchange="autoClick('#btn-set-volume-step-limit');">
 					$_select[volume_step_limit]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_step_limit" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-volume-step-limit" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_step_limit" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_volume_step_limit" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_volume_step_limit" class="config-help-info">
 					Sets the maximum amount the volume knob will advance when it's clicked ahead of its current position.
@@ -370,10 +370,10 @@
 
 			<label class="control-label" for="crossfeed">Crossfeed</label>
 			<div class="controls">
-				<select id="crossfeed" class="config-select-large" name="crossfeed">
+				<select id="crossfeed" class="config-select-large" name="crossfeed" onchange="autoClick('#btn-set-crossfeed');" $_crossfeed_ctl_disabled>
 					$_select[crossfeed]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_crossfeed" value="novalue" $_crossfeed_set_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-crossfeed'" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_crossfeed" value="novalue" $_crossfeed_ctl_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-crossfeed" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-crossfeed" class="config-help-info">
 					<b>700 Hz, 3.0 dB - Linkwitz</b><br>
@@ -393,7 +393,7 @@
 					<label class="toggle-radio toggle-invert-polarity" for="toggle-invert-polarity-2">ON </label>$_select[invert_polarity_on]
 					<label class="toggle-radio toggle-invert-polarity" for="toggle-invert-polarity-1">OFF</label>$_select[invert_polarity_off]
 				</div>
-				<button id="btn-set-invert-polarity" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_invert_polarity" value="novalue" $_invpolarity_set_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-invert-polarity" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_invert_polarity" value="novalue" $_invpolarity_ctl_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_invert_polarity" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_invert_polarity" class="config-help-info">
 					Change the waveform on each channel from +/- to -/+.<br>
@@ -428,10 +428,10 @@
 
 			<label class="control-label" for="mpd-httpd-encoder">Encoder</label>
 			<div class="controls">
-				<select id="mpd-httpd-encoder" class="config-select-large" name="mpd_httpd_encoder">
+				<select id="mpd-httpd-encoder" class="config-select-large" name="mpd_httpd_encoder" onchange="autoClick('#btn-set-mpd-httpd-encoder');">
 					$_select[mpd_httpd_encoder]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpd_httpd_encoder" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-mpd-httpd-encoder" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpd_httpd_encoder" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mpd-httpd-encoder" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-mpd-httpd-encoder" class="config-help-info">
 					Encode the stream using either FLAC at compression level 0 (fastest, least compression) or LAME (MP3) at 320 kbps.
@@ -448,10 +448,10 @@
 		<div class="control-group">
 			<label class="control-label" for="cdsp-mode">CamillaDSP</label>
 			<div class="controls">
-				<select id="cdsp-mode" class="config-select-large" name="cdsp_mode">
+				<select id="cdsp-mode" class="config-select-large" name="cdsp_mode" onchange="autoClick('#btn-set-cdsp-mode');" $_cdsp_mode_ctl_disabled>
 					$_select[cdsp_mode]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cdsp_mode" value="novalue" $_cdsp_mode_set_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-cdsp-mode" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cdsp_mode" value="novalue" $_cdsp_mode_ctl_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdsp-mode" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="cdsp-config-description" class="config-help-static">
 					$_config_description
@@ -474,16 +474,16 @@
 			</div>
 
 			<div class="controls">
-				<a href="cdsp-config.php"><button class="btn btn-medium btn-primary config-btn" $_cdsp_mode_set_disabled>Edit</button></a>
+				<a href="cdsp-config.php"><button class="btn btn-medium btn-primary config-btn" $_cdsp_mode_ctl_disabled>Edit</button></a>
 				<span class="config-btn-after">CamillaDSP settings</span>
 			</div>
 
 			<label class="control-label" for="eqfa12p">Parametric EQ</label>
 			<div class="controls">
-				<select id="eqfa12p" class="config-select-large" name="eqfa12p">
+				<select id="eqfa12p" class="config-select-large" name="eqfa12p" onchange="autoClick('#btn-set-eqfa12p');" $_eqfa12p_ctl_disabled>
 					$_select[eqfa12p]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eqfa12p" value="novalue" $_eqfa12p_set_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-eqfa12p" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eqfa12p" value="novalue" $_eqfa12p_ctl_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eqp" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-eqp" class="config-help-info">
 					Three x Four Mitra-Regalia peaking equaliser filters in series; a vector arithmetic re-implementation of Fons Adriaensens "Parametric1" equaliser[fafil] with minor differences. Parallelisation of the serial filter organisation causes the output to lag by three samples. This EQ uses the @bitlab custom eqfa12p component of the CAPS suite of DSP programs written by Tim Goetze<br>
@@ -498,10 +498,10 @@
 
 			<label class="control-label" for="alsaequal">Graphic EQ</label>
 			<div class="controls">
-				<select id="alsaequal" class="config-select-large" name="alsaequal">
+				<select id="alsaequal" class="config-select-large" name="alsaequal" onchange="autoClick('#btn-set-alsaequal');" $_alsaequal_ctl_disabled>
 					$_select[alsaequal]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsaequal" value="novalue" $_alsaequal_set_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-alsaequal" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsaequal" value="novalue" $_alsaequal_ctl_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsaequal" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-alsaequal" class="config-help-info">
 					A classic octave-band, constant-Q, second-order filter design. Frequency bands centered above Nyquist are automatically disabled. This EQ uses the Eq10X2 component of the CAPS suite of DSP programs written by Tim Goetze.<br>

@@ -97,13 +97,6 @@ if (isset($_POST['install_update'])) {
 
 // GENERAL
 
-if (isset($_POST['update_time_zone'])) {
-	if (isset($_POST['timezone']) && $_POST['timezone'] != $_SESSION['timezone']) {
-		submitJob('timezone', $_POST['timezone'], 'Settings updated');
-		phpSession('write', 'timezone', $_POST['timezone']);
-	}
-}
-
 if (isset($_POST['update_host_name'])) {
 	if (isset($_POST['hostname']) && $_POST['hostname'] != $_SESSION['hostname']) {
 		if (preg_match("/[^A-Za-z0-9-]/", $_POST['hostname']) == 1) {
@@ -116,18 +109,25 @@ if (isset($_POST['update_host_name'])) {
 	}
 }
 
-if (isset($_POST['update_keyboard'])) {
-    if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
-        submitJob('keyboard', $_POST['keyboard'], 'Settings updated', 'Restart required');
-        phpSession('write', 'keyboard', $_POST['keyboard']);
-    }
-}
-
 if (isset($_POST['update_browser_title'])) {
 	if (isset($_POST['browsertitle']) && $_POST['browsertitle'] != $_SESSION['browsertitle']) {
 		phpSession('write', 'browsertitle', $_POST['browsertitle']);
 		$_SESSION['notify']['title'] = 'Settings updated';
 	}
+}
+
+if (isset($_POST['update_time_zone'])) {
+	if (isset($_POST['timezone']) && $_POST['timezone'] != $_SESSION['timezone']) {
+		submitJob('timezone', $_POST['timezone'], 'Settings updated');
+		phpSession('write', 'timezone', $_POST['timezone']);
+	}
+}
+
+if (isset($_POST['update_keyboard'])) {
+    if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
+        submitJob('keyboard', $_POST['keyboard'], 'Settings updated', 'Restart required');
+        phpSession('write', 'keyboard', $_POST['keyboard']);
+    }
 }
 
 // STARTUP OPTIONS
@@ -370,10 +370,10 @@ $_select['updater_auto_check_off'] .= "<input type=\"radio\" name=\"updater_auto
 
 // GENERAL
 
-$_timezone['timezone'] = buildTimezoneSelect($_SESSION['timezone']);
 $_select['hostname'] = $_SESSION['hostname'];
-$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
 $_select['browsertitle'] = $_SESSION['browsertitle'];
+$_timezone['timezone'] = buildTimezoneSelect($_SESSION['timezone']);
+$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
 
 // STARTUP OPTIONS
 

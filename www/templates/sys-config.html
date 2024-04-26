@@ -60,15 +60,7 @@
 
 		<div class="control-group">
 			<legend>General</legend>
-			<label class="control-label" for="timezone">Timezone</label>
-			<div class="controls">
-				<select id="timezone" class="config-select-large" name="timezone">
-					$_timezone[timezone]
-				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_time_zone" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
-			</div>
-
-            <label class="control-label" for="hostname">Host/player name</label>
+			<label class="control-label" for="hostname">Host/player name</label>
             <div class="controls">
                 <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
@@ -77,18 +69,26 @@
 				</span>
             </div>
 
-            <label class="control-label" for="keyboard">Keyboard layout</label>
-            <div class="controls">
-                <select id="keyboard" class="config-select-large" name="keyboard">
-                    $_keyboard[keyboard]
-                </select>
-                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
-            </div>
-
             <label class="control-label" for="browsertitle">Browser title</label>
             <div class="controls">
                 <input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+            </div>
+
+			<label class="control-label" for="timezone">Timezone</label>
+			<div class="controls">
+				<select id="timezone" class="config-select-large" name="timezone" onchange="autoClick('#btn-set-timezone');">
+					$_timezone[timezone]
+				</select>
+				<button id="btn-set-timezone" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_time_zone" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+			</div>
+
+            <label class="control-label" for="keyboard">Keyboard layout</label>
+            <div class="controls">
+                <select id="keyboard" class="config-select-large" name="keyboard" onchange="autoClick('#btn-set-keyboard');">
+                    $_keyboard[keyboard]
+                </select>
+                <button id="btn-set-keyboard" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
             </div>
 		</div>
 
@@ -96,10 +96,10 @@
 			<legend>Startup options</legend>
 			<label class="control-label" for="worker-responsiveness">Worker response</label>
 			<div class="controls">
-				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness">
+				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness" onchange="autoClick('#btn-set-worker-responsiveness');">
 					$_select[worker_responsiveness]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-worker-responsiveness" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-worker-responsiveness" class="config-help-info">
 					<b>Default:</b> Suitable for all Raspberry Pi models.<br>
@@ -109,10 +109,10 @@
 
 			<label class="control-label" for="cpugov">CPU governor</label>
 			<div class="controls">
-				<select id="cpugov" class="config-select-large" name="cpugov">
+				<select id="cpugov" class="config-select-large" name="cpugov" onchange="autoClick('#btn-set-cpugov');">
 					$_select[cpugov]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cpugov" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-cpugov" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cpugov" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-cpugov" class="config-help-info">
 					<b>On-demand:</b> Scale CPU frequency from min to max based on load.<br>
@@ -122,10 +122,10 @@
 
 			<label class="control-label" for="pci-express">PCI express</label>
 			<div class="controls">
-				<select id="pci-express" class="config-select-large" name="pci_express">
+				<select id="pci-express" class="config-select-large" name="pci_express" onchange="autoClick('#btn-set-pci-express');">
 					$_select[pci_express]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pci_express" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-pci-express" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pci_express" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-pci-express" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info-pci-express" class="config-help-info">
 					<b>Gen 2.0:</b> Pi 5 PCIe feature is certified for up to 5 GT/sec.<br>
@@ -210,10 +210,10 @@
 
 			<label class="control-label" for="ipaddr-timeout">Address timeout</label>
 			<div class="controls">
-				<select id="ipaddr-timeout" class="config-select-large" name="ipaddr_timeout">
+				<select id="ipaddr-timeout" class="config-select-large" name="ipaddr_timeout" onchange="autoClick('#btn-set-ipaddr-timeout');">
 					$_select[ipaddr_timeout]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-ipaddr-timeout" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Wait up to the specified number of seconds for an IP address to be assigned to an adapter during startup.
 				    AP mode will be started if neither WiFi nor Ethernet adapters have been assigned an IP address.
@@ -368,10 +368,10 @@
 
 				<label class="control-label" for="nginx-cert-type">Certificate type</label>
 				<div class="controls">
-					<select id="nginx-cert-type" class="config-select-large" name="nginx_cert_type">
+					<select id="nginx-cert-type" class="config-select-large" name="nginx_cert_type" onchange="autoClick('#btn-set-nginx-cert-type');">
 						$_select[nginx_cert_type]
 					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+					<button id="btn-set-nginx-cert-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 					<span class="config-help-static">
 						<b>Automatic:</b> Automatically generate and install a self-signed certificate into NGINX web server when HTTPS mode is turned ON.<br>
 					    <b>Manual:</b> Click the UPLOAD followed by the INSTALL button for this type of certificate.
