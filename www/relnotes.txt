@@ -33,6 +33,7 @@ Updates
 - UPD: Improve setup guides and quick help
 - UPD: Add "Show items" option to One-touch playlist
 - UPD: Add "Queue info" to ellipsis menu (stats + saved playlist name)
+- UPD: Add Pull-up/down option for each pin in GPIO Config
 - UPD: Add Spotify and Amazon Music to Prefs Search sites
 - UPD: Add window-size (randomness) option for auto-shuffle
 - UPD: Add restart_renderer REST command
