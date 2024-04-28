@@ -300,7 +300,7 @@ jQuery(document).ready(function($){ 'use strict';
 
     // Sysinfo notification
     $('#sysinfo-menu-item').click(function(e) {
-        notify('gathering_info', '', '3_seconds');
+        notify('gathering_info');
     });
 
     // Multiroom adv options show/hide

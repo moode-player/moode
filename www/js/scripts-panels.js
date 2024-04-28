@@ -77,7 +77,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         // DEBUG: Display viewport size and pixel ratio by re-using the pkgid_suffix param
         if (SESSION.json['pkgid_suffix'] == 'viewport') {
-            notify('viewport', window.innerWidth + 'x' + window.innerHeight + ', P/R=' + window.devicePixelRatio,'10_seconds');
+            notify(NOTIFY_TITLE_INFO, 'viewport', window.innerWidth + 'x' + window.innerHeight + ', P/R=' + window.devicePixelRatio, NOTIFY_DURATION_MEDIUM);
         }
 
     	// Set currentView global
@@ -307,8 +307,8 @@ jQuery(document).ready(function($) { 'use strict';
         }
         $('#updater-notification').click(function(e) {
             if (SESSION.json['updater_available_update'].substring(0, 7) == 'Release') {
-                var msg = SESSION.json['updater_available_update'] + '<br><br>This notification can be turned off in System Config';
-                notify('updater', msg, 'infinite');
+                var msg = SESSION.json['updater_available_update'] + 'This notification can be turned off in System Config';
+                notify(NOTIFY_TITLE_INFO, 'updater', msg, NOTIFY_DURATION_MEDIUM);
             } else {
                 $('#updater-notification').hide();
             }
@@ -384,10 +384,10 @@ jQuery(document).ready(function($) { 'use strict';
     	}
 
         // CoverView auto-display
-        //notify('debug', GLOBAL.userAgent, '10_seconds');
+        //notify('debug', GLOBAL.userAgent, NOTIFY_DURATION_MEDIUM);
         if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['auto_coverview'] == '-on') {
             var duration = 8000;
-            notify('auto_coverview', 'Activating in ' + (duration / 1000) + ' seconds', duration);
+            notify(NOTIFY_TITLE_INFO, 'auto_coverview', 'will be activating in ' + (duration / 1000) + ' seconds.', duration);
             setTimeout(function() {
                 screenSaver('scnactive1');
             }, duration);
@@ -690,16 +690,16 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (plName) {
 			if (containsBaseFolderName(plName)) {
-				notify('playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name');
+				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name.');
 			} else {
-                notify('saving_queue');
+                notify(NOTIFY_TITLE_INFO, 'saving_queue', NOTIFY_DURATION_SHORT);
                 $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + plName, function() {
-    				notify('queue_saved');
+    				notify(NOTIFY_TITLE_INFO, 'queue_saved', NOTIFY_DURATION_SHORT);
                     $('#btn-pl-refresh').click();
                 });
 			}
 		} else {
-			notify('playlist_name_needed');
+			notify(NOTIFY_TITLE_ALERT, 'playlist_name_needed');
 		}
     });
     $('#save-queue-to-playlist-modal').on('shown.bs.modal', function(e) {
@@ -714,15 +714,15 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (favoritesName) {
 			if (containsBaseFolderName(favoritesName)) {
-				notify('playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name');
+				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name.');
 			} else {
-                notify('setting_favorites_name');
+                notify(NOTIFY_TITLE_INFO, 'setting_favorites_name', NOTIFY_DURATION_SHORT);
                 $.get('command/playlist.php?cmd=set_favorites_name&name=' + favoritesName, function(){
-                    notify('favorites_name_set');
+                    notify(NOTIFY_TITLE_INFO, 'favorites_name_set', NOTIFY_DURATION_SHORT);
                 });
 			}
 		} else {
-			notify('playlist_name_needed');
+			notify(NOTIFY_TITLE_ALERT, 'playlist_name_needed');
 		}
     });
     $('#set-favorites-playlist-modal').on('shown.bs.modal', function() {
@@ -740,12 +740,12 @@ jQuery(document).ready(function($) { 'use strict';
 
 		// Add current pl item to favorites playlist
 		if (MPD.json['file'] != null) {
-            notify('adding_favorite');
+            notify(NOTIFY_TITLE_INFO, 'adding_favorite', NOTIFY_DURATION_SHORT);
             $.get('command/playlist.php?cmd=add_item_to_favorites&item=' + encodeURIComponent(MPD.json['file']), function() {
-                notify('favorite_added');
+                notify(NOTIFY_TITLE_INFO, 'favorite_added', NOTIFY_DURATION_SHORT);
             });
 		} else {
-			notify('no_favorite_to_add');
+			notify(NOTIFY_TITLE_ALERT, 'no_favorite_to_add');
 		}
     });
 
@@ -878,15 +878,15 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#db-search-results').css('font-weight', 'normal');
 	    if ($(this).data('cmd') == 'add_group') {
 	        sendQueueCmd('add_group', dbFilterResults);
-	        notify($(this).data('cmd'));
+	        notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
 		}
 	    if ($(this).data('cmd') == 'play_group') {
 	        sendQueueCmd('play_group', dbFilterResults);
-	        notify($(this).data('cmd'));
+	        notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
 		}
 	    if ($(this).data('cmd') == 'clear_play_group') {
 	        sendQueueCmd('clear_play_group', dbFilterResults);
-	        notify($(this).data('cmd'));
+	        notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
 		}
 	});
 
@@ -985,7 +985,7 @@ jQuery(document).ready(function($) { 'use strict';
     // Create new station
     $('#btn-create-station').click(function(e){
 		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
-			notify('blank_entries', 'Station not created', '10_seconds');
+			notify(NOTIFY_TITLE_ALERT, 'blank_entries', 'Station not created.');
 		} else {
             var path = {
                 'name': $('#new-station-name').val().trim(),
@@ -1003,15 +1003,15 @@ jQuery(document).ready(function($) { 'use strict';
                 'home_page': $('#new-station-home-page').val().trim(),
                 'monitor': $('#new-station-mpd-monitor span').text()
             };
-            notify('creating_station');
+            notify(NOTIFY_TITLE_INFO, 'creating_station');
             $.post('command/radio.php?cmd=new_station', {'path': path}, function(msg) {
                 if (msg == 'OK') {
                     RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo'],
                     'bitrate': path['bitrate'], 'format': path['format'], 'home_page': path['home_page'],
                     'monitor': path['monitor']};
-                    notify('new_station');
+                    notify(NOTIFY_TITLE_INFO, 'new_station', NOTIFY_DURATION_SHORT);
                 } else {
-                    notify('validation_check', msg, '10_seconds');
+                    notify(NOTIFY_TITLE_ALERT, 'validation_check', msg + '.', NOTIFY_DURATION_MEDIUM);
                 }
                 $('#btn-ra-refresh').click();
             }, 'json');
@@ -1020,7 +1020,7 @@ jQuery(document).ready(function($) { 'use strict';
     // Update station
 	$('#btn-update-station').click(function(e){
 		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
-			notify('blank_entries', 'Station not updated', '10_seconds');
+			notify(NOTIFY_TITLE_ALERT, 'blank_entries', 'Station not updated.');
 		} else {
             var path = {
                 'id': GLOBAL.editStationId,
@@ -1039,15 +1039,15 @@ jQuery(document).ready(function($) { 'use strict';
                 'home_page': $('#edit-station-home-page').val().trim(),
                 'monitor': $('#edit-station-mpd-monitor span').text()
             };
-            notify('updating_station');
+            notify(NOTIFY_TITLE_INFO, 'updating_station');
             $.post('command/radio.php?cmd=upd_station', {'path': path}, function(msg) {
                 if (msg == 'OK') {
                     RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo'],
                     'bitrate': path['bitrate'], 'format': path['format'], 'home_page': path['home_page'],
                     'monitor': path['monitor']};
-                    notify('upd_station');
+                    notify(NOTIFY_TITLE_INFO, 'upd_station', NOTIFY_DURATION_SHORT);
                 } else {
-                    notify('validation_check', msg, '10_seconds');
+                    notify(NOTIFY_TITLE_ALERT, 'validation_check', msg + '.');
                 }
             }, 'json');
 		}
@@ -1057,7 +1057,7 @@ jQuery(document).ready(function($) { 'use strict';
         var stationName = UI.dbEntry[0].slice(0,UI.dbEntry[0].lastIndexOf('.')).substr(6); // Trim RADIO/ and .pls
         deleteRadioStationObject(stationName);
         $.post('command/radio.php?cmd=del_station', {'path': UI.dbEntry[0]}, function() {
-            notify('del_station');
+            notify(NOTIFY_TITLE_INFO, 'del_station', NOTIFY_DURATION_SHORT);
             UI.radioPos = -1;
     		storeRadioPos(UI.radioPos);
             renderRadioView();
@@ -1149,12 +1149,12 @@ jQuery(document).ready(function($) { 'use strict';
     // Create new playlist
     $('#btn-create-playlist').click(function(e){
 		if ($('#new-playlist-name').val().trim() == '') {
-			notify('blank_entries', 'Playlist not created');
+			notify(NOTIFY_TITLE_ALERT, 'blank_entries', 'Playlist not created.');
 		} else {
             var path = {'name': $('#new-playlist-name').val().trim(), 'genre': $('#new-playlist-genre').val().trim()};
-            notify('creating_playlist');
+            notify(NOTIFY_TITLE_INFO, 'creating_playlist');
             $.post('command/playlist.php?cmd=new_playlist', {'path': path}, function() {
-                notify('new_playlist');
+                notify(NOTIFY_TITLE_INFO, 'new_playlist', NOTIFY_DURATION_SHORT);
                 $('#btn-pl-refresh').click();
             }, 'json');
 		}
@@ -1162,7 +1162,7 @@ jQuery(document).ready(function($) { 'use strict';
     // Update playlist
 	$('#btn-update-playlist').click(function(e){
 		if ($('#edit-playlist-name').val().trim() == '') {
-			notify('blank_entries', 'Playlist not updated');
+			notify(NOTIFY_TITLE_ALERT, 'blank_entries', 'Playlist not updated.');
 		} else {
             var items = [];
             $('#playlist-items li').each(function() {
@@ -1173,16 +1173,16 @@ jQuery(document).ready(function($) { 'use strict';
                 'genre': $('#edit-playlist-genre').val().trim(),
                 'items': items
             };
-            notify('updating_playlist');
+            notify(NOTIFY_TITLE_INFO, 'updating_playlist');
             $.post('command/playlist.php?cmd=upd_playlist', {'path': path}, function() {
-                notify('upd_playlist');
+                notify(NOTIFY_TITLE_INFO, 'upd_playlist', NOTIFY_DURATION_SHORT);
             }, 'json');
 		}
 	});
     // Delete playlist
 	$('#btn-del-playlist').click(function(e){
         $.post('command/playlist.php?cmd=del_playlist', {'path': UI.dbEntry[0]}, function() {
-            notify('del_playlist');
+            notify(NOTIFY_TITLE_INFO, 'del_playlist', NOTIFY_DURATION_SHORT);
             $('#btn-pl-refresh').click();
         });
 	});
@@ -1283,7 +1283,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#btn-save-search').click(function(e) {
         var name = $('#saved-search-name').val().trim();
         if (name == '') {
-            notify('search_name_blank');
+            notify(NOTIFY_TITLE_ALERT, 'search_name_blank');
         } else {
             e.stopImmediatePropagation();
             $.post('command/music-library.php?cmd=create_saved_search', {'name': name});
@@ -1366,7 +1366,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 
         if (searchType == '' && searchStr == '') {
-            notify('search_fields_empty', 'Search not performed', '5_seconds');
+            notify(NOTIFY_TITLE_ALERT, 'search_fields_empty', 'Search not performed.');
         } else {
             if (currentView == 'folder') {
                 clearActiveSearch();
@@ -1390,7 +1390,7 @@ jQuery(document).ready(function($) { 'use strict';
                         clearActiveSearch();
                         applyLibFilter(searchType, searchStr);
                     } else {
-                        notify('predefined_filter_invalid', 'Search not performed', '5_seconds');
+                        notify(NOTIFY_TITLE_ALERT, 'predefined_filter_invalid', 'Search not performed');
                     }
                 }
             }
@@ -1548,7 +1548,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         $.post('command/queue.php?cmd=' + cmd);
-        notify('queue_item_removed');
+        notify(NOTIFY_TITLE_INFO, 'queue_item_removed', NOTIFY_DURATION_SHORT);
 	});
 	// Speed btns on delete modal
 	$('#btn-delete-setpos-top').click(function(e){
@@ -1574,7 +1574,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         $.post('command/queue.php?cmd=' + cmd);
-        notify('queue_item_moved');
+        notify(NOTIFY_TITLE_INFO, 'queue_item_moved', NOTIFY_DURATION_SHORT);
 	});
 	// Speed btns on move modal
 	$('#btn-move-setpos-top').click(function(e){
@@ -1633,12 +1633,12 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Disconnect active renderer
     $(document).on('click', '.disconnect-renderer', function(e) {
-		notify('renderer_disconnect', '', '3_seconds');
+		notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
         $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
     // Turn off active renderer
     $(document).on('click', '.turnoff-renderer', function(e) {
-		notify('renderer_turnoff', '', '3_seconds');
+		notify(NOTIFY_TITLE_INFO, 'renderer_turnoff');
         $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
 
@@ -1714,7 +1714,7 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Players >>
     $('#players-menu-item').click(function(e) {
-        notify('discovering_players', 'Please wait', 'infinite');
+        notify(NOTIFY_TITLE_INFO, 'discovering_players', 'Please wait.', NOTIFY_DURATION_INFINITE);
     });
     $('#players-modal').on('shown.bs.modal', function() {
         setTimeout(function() {
@@ -1742,7 +1742,7 @@ jQuery(document).ready(function($) { 'use strict';
                 $('#players-submit-confirm-msg').text('Click again to confirm');
             } else {
                 $('#players-modal').modal('toggle');
-                notify('players_action_submit', cmd);
+                notify(NOTIFY_TITLE_INFO, 'players_action_submit', cmd);
                 $.post('players.php?cmd=' + cmd, {'ipaddr': ipaddr});
             }
         }

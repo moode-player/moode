@@ -44,9 +44,11 @@ const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Information';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
-const NOTIFY_DURATION_DEFAULT = 5; // Seconds
+const NOTIFY_DURATION_SHORT = 2; // Seconds
+const NOTIFY_DURATION_DEFAULT = 5;
 const NOTIFY_DURATION_MEDIUM = 10;
 const NOTIFY_DURATION_LONG = 30;
+const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
 
 // Timeouts in milliseconds
 const DEFAULT_TIMEOUT   = 250;
@@ -344,22 +346,22 @@ function engineMpd() {
                     var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
                     // These particular errors occur when front-end is simply trying to reconnect
                     if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
-                        MPD.json['error']['message'] == 'Unexpected end of JSON input') {
+                        MPD.json['error']['message'] == 'Unexpected end of JSON data returned from engine-mpd.php.') {
                         if (!GLOBAL.reconnecting) {
-                            notify('reconnect', '', 'infinite');
+                            notify(NOTIFY_TITLE_INFO, 'reconnect', NOTIFY_DURATION_INFINITE);
                             GLOBAL.reconnecting = true;
                         }
                     } else {
-                        notify('mpderror', MPD.json['error']['message'] + errorCode);
+                        notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
                     }
 				}
 				// MPD output -> Bluetooth but no actual BT connection
 				else if (MPD.json['error'] == 'Failed to open "ALSA bluetooth" (alsa); Failed to open ALSA device "btstream": No such device') {
-					notify('mpderror', 'Failed to open ALSA bluetooth output, no such device or connection');
+					notify(NOTIFY_TITLE_ALERT, 'mpd_error', 'Failed to open ALSA bluetooth output, no such device or connection.');
 				}
 				// Client connects before MPD started by worker ?
 				else if (MPD.json['error'] == 'SyntaxError: JSON Parse error: Unexpected EOF') {
-					notify('mpderror', 'JSON Parse error: Unexpected EOF');
+					notify(NOTIFY_TITLE_ALERT, 'mpd_error', 'JSON Parse error: Unexpected EOF.');
 				}
 				// MPD bug may have been fixed in 0.20.20 ?
 				else if (MPD.json['error'] == 'Not seekable') {
@@ -370,11 +372,11 @@ function engineMpd() {
                     if (MPD.json['error'].includes('Unknown error 524') && MPD.json['error'].includes('Failed to open ALSA device')) {
                         // VC4 HDMI port not connected to an audio device
                         // 'Failed to open "ALSA Default" (alsa); Failed to open ALSA device "_audioout": Unknown error 524'
-                        var msg = 'There is no audio device connected to the HDMI port';
+                        var msg = 'An audio device was not detected on the HDMI port.';
                     } else {
                         var msg = MPD.json['error']
                     }
-					notify('mpderror', msg);
+					notify(NOTIFY_TITLE_ALERT, 'mpd_error', msg);
 				}
 
 				renderUI();
@@ -460,13 +462,13 @@ function engineMpdLite() {
                         var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
                         // These particular errors occur when front-end is simply trying to reconnect
                         if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
-                            MPD.json['error']['message'] == 'Unexpected end of JSON input') {
+                            MPD.json['error']['message'] == 'Unexpected end of JSON data returned from engine-mpd.php.') {
                             if (!GLOBAL.reconnecting) {
-                                notify('reconnect', '', 'infinite');
+                                notify(NOTIFY_TITLE_INFO, 'reconnect', NOTIFY_DURATION_INFINITE);
                                 GLOBAL.reconnecting = true;
                             }
                         } else {
-                            notify('mpderror', MPD.json['error']['message'] + errorCode);
+                            notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
                         }
     				}
 
@@ -580,23 +582,23 @@ function engineCmd() {
     				$('.busy-spinner').hide();
                     break;
                 case 'cdsp_updating_config':
-                    var msg = cmd[1] == 'no_mixer_change' ? '' : cmd[1];
-                    notify('cdsp_updating_config', msg, 'infinite');
+                    var msg = cmd[1] == 'no_mixer_change' ? '' : '<br>' + cmd[1];
+                    notify(NOTIFY_TITLE_INFO, 'cdsp_updating_config', msg, NOTIFY_DURATION_INFINITE);
                     break;
                 case 'cdsp_config_updated':
-                    notify('cdsp_config_updated');
+                    notify(NOTIFY_TITLE_INFO, 'cdsp_config_updated');
                     if (typeof(cmd[1]) != 'undefined') {
                         SESSION.json['camilladsp'] = cmd[1];
                     }
                     break;
                 case 'cdsp_config_update_failed':
-                    notify('cdsp_config_update_failed', '', '10_seconds');
+                    notify(NOTIFY_TITLE_ALERT, 'cdsp_config_update_failed');
                     break;
                 case 'recorder_tagged':
-                    notify('recorder_tagged', cmd[1] + ' files tagged, updating library...', '10_seconds');
+                    notify(NOTIFY_TITLE_INFO, 'recorder_tagged', cmd[1] + ' files tagged, updating library...', NOTIFY_DURATION_MEDIUM);
                     break;
                 case 'recorder_nofiles':
-                    notify('recorder_nofiles', '', '5_seconds');
+                    notify(NOTIFY_TITLE_ALERT, 'recorder_nofiles');
                     break;
                 case 'reset_view':
                 case 'refresh_screen':
@@ -648,14 +650,14 @@ function engineCmdLite() {
                     loadLibrary();
                     break;
                 case 'cdsp_updating_config':
-                    var msg = cmd[1] == 'no_mixer_change' ? '' : cmd[1];
-                    notify('cdsp_updating_config', msg, 'infinite');
+                    var msg = cmd[1] == 'no_mixer_change' ? '' : '<br>' + cmd[1];
+                    notify(NOTIFY_TITLE_INFO, 'cdsp_updating_config', msg, NOTIFY_DURATION_INFINITE);
                     break;
                 case 'cdsp_config_updated':
                     $('.ui-pnotify-closer').click();
                     break;
                 case 'cdsp_config_update_failed':
-                    notify('cdsp_config_update_failed', '', '10_seconds');
+                    notify(NOTIFY_TITLE_ALERT, 'cdsp_config_update_failed', NOTIFY_DURATION_MEDIUM);
                     break;
                 case 'reset_view':
                 case 'refresh_screen':
@@ -2562,7 +2564,7 @@ $(document).on('click', '.context-menu a', function(e) {
             }
 
             if ($(this).data('cmd').includes('add_')) {
-                notify($(this).data('cmd'));
+                notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             }
 
             // If its a playlist, preload the playlist name
@@ -2615,12 +2617,12 @@ $(document).on('click', '.context-menu a', function(e) {
             $.getJSON('command/music-library.php?cmd=get_recent_playlist', function(data) {
                 var playlist = data;
                 // Display notification
-                notify('playqueue_info',
+                notify(NOTIFY_TITLE_INFO, 'playqueue_info',
                     'Items:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + totalItems + '<br>' +
                     'Tracks:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + totalTracks + '<br>' +
                     'Track time:&nbsp;' + totalTrackTime + '<br>' +
                     'Playlist:&nbsp;&nbsp;&nbsp;' + playlist,
-                    'infinite');
+                    NOTIFY_DURATION_INFINITE);
                 // Styling (gets automatically reset by pnotify for other notifications)
                 $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
             });
@@ -2747,9 +2749,9 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'favorite_playqueue_item':
             $.getJSON('command/queue.php?cmd=get_playqueue_item&songpos=' + path, function(data) {
-                notify('adding_favorite');
+                notify(NOTIFY_TITLE_INFO, 'adding_favorite', NOTIFY_DURATION_SHORT);
                 $.get('command/playlist.php?cmd=add_item_to_favorites&item=' + encodeURIComponent(data), function() {
-                    notify('favorite_added');
+                    notify(NOTIFY_TITLE_INFO, 'favorite_added', NOTIFY_DURATION_SHORT);
                 });
             });
             break;
@@ -2807,9 +2809,9 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'multiroom_rx_modal':
         case 'multiroom_rx_modal_limited':
             if (SESSION.json['rx_hostnames'] == 'No receivers found') {
-                notify('no_receivers_found');
+                notify(NOTIFY_TITLE_ALERT, 'no_receivers_found');
             } else {
-                notify('querying_receivers', '', 'infinite');
+                notify(NOTIFY_TITLE_INFO, 'querying_receivers', NOTIFY_DURATION_INFINITE);
 
                 var modalType = $(this).data('cmd') == 'multiroom_rx_modal' ? 'full' : 'limited';
                 $.getJSON('command/multiroom.php?cmd=get_rx_status', function(data) {
@@ -2817,9 +2819,9 @@ $(document).on('click', '.context-menu a', function(e) {
                     $('.ui-pnotify-closer').click();
 
                     if (data == 'Discovery has not been run') {
-                        notify('run_receiver_discovery');
+                        notify(NOTIFY_TITLE_ALERT, 'run_receiver_discovery');
                     } else if (data == 'No receivers found') {
-                        notify('no_receivers_found');
+                        notify(NOTIFY_TITLE_ALERT, 'no_receivers_found');
                     } else {
                         var output = '';
                         var rxStatus = data.split(':');
@@ -2910,7 +2912,7 @@ $(document).on('click', '.context-menu a', function(e) {
                         '<span id="menu-check-cdsp"><i class="fa-solid fa-sharp fa-check"></i></span>');
     			},
     			error: function() {
-                    notify('cdsp_config_update_failed', selectedConfig, '10_seconds');
+                    notify(NOTIFY_TITLE_ALERT, 'cdsp_config_update_failed', selectedConfig, NOTIFY_DURATION_MEDIUM);
     			}
     		});
             break;
@@ -3109,7 +3111,7 @@ $('#btn-clockradio-update').click(function(e){
         updateClockRadioCfgSys();
     }
 
-    notify('upd_clock_radio');
+    notify(NOTIFY_TITLE_INFO, 'upd_clock_radio');
 });
 function updateClockRadioCfgSys() {
     // Update database
@@ -3400,7 +3402,7 @@ $('#btn-preferences-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
-                notify('settings_updated', 'Auto-refresh in 2 seconds');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -3408,9 +3410,9 @@ $('#btn-preferences-update').click(function(e){
                 $('#btn-ra-refresh').click();
                 loadLibrary();
             } else if (regenThumbsReqd) {
-                notify('regen_thumbs', 'Thumbnails must be regenerated after changing this setting', '5_seconds');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' Thumbnails must be regenerated after changing this setting.');
             } else {
-                notify('settings_updated');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated');
             }
         }
     );
@@ -3588,13 +3590,13 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
 
 $('#system-restart').click(function(e) {
 	UI.restart = 'restart';
-	notify('restart', '', '5_seconds');
+	notify(NOTIFY_TITLE_INFO, 'restart',);
     $.post('command/system.php?cmd=reboot');
 });
 
 $('#system-shutdown').click(function(e) {
 	UI.restart = 'shutdown';
-    notify('shutdown', '', '5_seconds');
+    notify(NOTIFY_TITLE_INFO, 'shutdown');
     $.post('command/system.php?cmd=poweroff');
 });
 
@@ -4565,10 +4567,10 @@ function submitLibraryUpdate (path = '') {
         $.getJSON('command/music-library.php?cmd=update_library', {'path': path}, function(data) {
             //console.log(data);
         });
-        notify('update_library', path);
+        notify(NOTIFY_TITLE_INFO, 'update_library', (path == '' ? '' : '<br>' + path));
     }
     else {
-        notify('library_updating');
+        notify(NOTIFY_TITLE_ALERT, 'library_updating');
     }
 }
 

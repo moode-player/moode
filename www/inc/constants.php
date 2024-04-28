@@ -77,9 +77,11 @@ const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to ta
 const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
 const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
-const NOTIFY_DURATION_DEFAULT = 5; // Seconds
+const NOTIFY_DURATION_SHORT = 2; // Seconds
+const NOTIFY_DURATION_DEFAULT = 5;
 const NOTIFY_DURATION_MEDIUM = 10;
 const NOTIFY_DURATION_LONG = 30;
+const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
 // Component names
 const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';
