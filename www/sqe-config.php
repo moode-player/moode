@@ -30,8 +30,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		sqlUpdate('cfg_sl', $dbh, $key, SQLite3::escapeString($value));
 	}
-
-	submitJob('slcfgupdate', '', 'Settings updated', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
+	$notify = $_SESSION['slsvc'] == '1' ?
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_SQUEEZELITE . NOTIFY_MSG_SVC_RESTARTED) :
+		array('title' => '', 'msg' => '');
+	submitJob('slcfgupdate', '', $notify['title'], $notify['msg']);
 }
 
 phpSession('close');

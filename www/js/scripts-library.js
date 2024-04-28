@@ -1419,7 +1419,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                             if (msgKey == 'recorder_installed') {
                                 $('#stream-recorder-options, #context-menu-stream-recorder').show();
                                 $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
-                                notify(msgKey, 'Reboot required', '10_seconds');
+                                notify(msgKey, 'Restart required', '10_seconds');
                             } else {
                                 notify(msgKey);
                             }

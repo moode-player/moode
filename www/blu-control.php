@@ -108,7 +108,6 @@ if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 	phpSession('write', 'bluez_pcm_buffer', $_POST['pcm_buffer']);
 	sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $_POST['pcm_buffer'] . "' /etc/bluealsaaplay.conf");
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // SBC encoder mode
@@ -116,7 +115,6 @@ if (isset($_POST['update_sbc_quality']) && $_POST['update_sbc_quality'] == '1') 
 	$_SESSION['bluez_sbc_quality'] = $_POST['sbc_quality'];
 	sysCmd("sed -i 's/--sbc-quality.*/--sbc-quality=" . $_POST['sbc_quality'] . "/' /etc/systemd/system/bluealsa.service");
 	sysCmd('systemctl daemon-reload');
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // ALSA output mode
@@ -129,7 +127,6 @@ if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mo
 		$alsaDevice = $_POST['alsa_output_mode_bt']; // _audioout
 	}
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $alsaDevice . "' /etc/bluealsaaplay.conf");
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 phpSession('close');

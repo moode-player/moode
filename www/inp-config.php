@@ -25,23 +25,22 @@ phpSession('open');
 
 if (isset($_POST['update_audio_input']) && $_POST['audio_input'] != $_SESSION['audioin']) {
 	if ($_POST['audio_input'] != 'Local' && $_SESSION['mpdmixer'] != 'hardware' && $_SESSION['mpdmixer'] != 'none') {
-		$_SESSION['notify']['title'] = 'Volume type must first be set to Hardware or Fixed (0dB)';
-		$_SESSION['notify']['duration'] = 6;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Volume type must first be set to Hardware or Fixed (0dB).';
+		$_SESSION['notify']['duration'] = NOTIFY_DURATION_MEDIUM;
 	} else {
 		phpSession('write', 'audioin', $_POST['audio_input']);
-		submitJob('audioin', $_POST['audio_input'],
-			'Source set to ' . ($_POST['audio_input'] == 'Local' ? 'MPD' : $_POST['audio_input']));
+		submitJob('audioin', $_POST['audio_input']);
 	}
 }
 
 if (isset($_POST['update_resume_mpd']) && $_POST['resume_mpd'] != $_SESSION['rsmafterinp']) {
 	phpSession('write', 'rsmafterinp', $_POST['resume_mpd']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 if (isset($_POST['update_audio_output']) && $_POST['audio_output'] != $_SESSION['audioout']) {
 	phpSession('write', 'audioout', $_POST['audio_output']);
-	submitJob('audioout', $_POST['audio_output'], 'Output set to ' . $_POST['audio_output']);
+	submitJob('audioout', $_POST['audio_output']);
 }
 
 phpSession('close');

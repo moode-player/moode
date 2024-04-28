@@ -31,7 +31,7 @@ phpSession('open');
 
 if (isset($_POST['update_localui'])) {
     if (isset($_POST['localui']) && $_POST['localui'] != $_SESSION['localui']) {
-        submitJob('localui', $_POST['localui'], 'Settings updated', 'Restart may be required');
+        submitJob('localui', $_POST['localui']);
         phpSession('write', 'localui', $_POST['localui']);
     }
 }
@@ -39,13 +39,12 @@ if (isset($_POST['update_localui'])) {
 if (isset($_POST['update_wake_display'])) {
     if (isset($_POST['wake_display']) && $_POST['wake_display'] != $_SESSION['wake_display']) {
         phpSession('write', 'wake_display', $_POST['wake_display']);
-		$_SESSION['notify']['title'] = 'Settings updated';
     }
 }
 
 if (isset($_POST['update_touchscn'])) {
     if (isset($_POST['touchscn']) && $_POST['touchscn'] != $_SESSION['touchscn']) {
-        submitJob('touchscn', $_POST['touchscn'], 'Settings updated', 'Local display restarted');
+        submitJob('touchscn', $_POST['touchscn'], NOTIFY_TITLE_INFO, NAME_LOCAL_DISPLAY . NOTIFY_MSG_SVC_RESTARTED);
         phpSession('write', 'touchscn', $_POST['touchscn']);
     }
 }
@@ -53,13 +52,12 @@ if (isset($_POST['update_touchscn'])) {
 if (isset($_POST['update_on_screen_kbd'])) {
     if (isset($_POST['on_screen_kbd']) && $_POST['on_screen_kbd'] != $_SESSION['on_screen_kbd']) {
 		$_SESSION['on_screen_kbd'] = $_POST['on_screen_kbd'];
-        $_SESSION['notify']['title'] = 'Settings updated';
     }
 }
 
 if (isset($_POST['update_scnblank'])) {
     if (isset($_POST['scnblank']) && $_POST['scnblank'] != $_SESSION['scnblank']) {
-        submitJob('scnblank', $_POST['scnblank'], 'Settings updated', 'Local display restarted');
+        submitJob('scnblank', $_POST['scnblank'], NOTIFY_TITLE_INFO, NAME_LOCAL_DISPLAY . NOTIFY_MSG_SVC_RESTARTED);
         phpSession('write', 'scnblank', $_POST['scnblank']);
     }
 }
@@ -67,27 +65,27 @@ if (isset($_POST['update_scnblank'])) {
 if (isset($_POST['update_hdmi_enable_4kp60'])) {
     if (isset($_POST['hdmi_enable_4kp60']) && $_POST['hdmi_enable_4kp60'] != $_SESSION['hdmi_enable_4kp60']) {
         $_SESSION['hdmi_enable_4kp60'] = $_POST['hdmi_enable_4kp60'];
-        submitJob('hdmi_enable_4kp60', $_POST['hdmi_enable_4kp60'], 'Settings updated', 'Reboot required');
+        submitJob('hdmi_enable_4kp60', $_POST['hdmi_enable_4kp60'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
     }
 }
 
 if (isset($_POST['update_scnbrightness'])) {
     if (isset($_POST['scnbrightness']) && $_POST['scnbrightness'] != $_SESSION['scnbrightness']) {
-		submitJob('scnbrightness', $_POST['scnbrightness'], 'Settings updated');
+		submitJob('scnbrightness', $_POST['scnbrightness']);
 		phpSession('write', 'scnbrightness', $_POST['scnbrightness']);
     }
 }
 
 if (isset($_POST['update_pixel_aspect_ratio'])) {
     if (isset($_POST['pixel_aspect_ratio']) && $_POST['pixel_aspect_ratio'] != $_SESSION['pixel_aspect_ratio']) {
-		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], 'Settings updated', 'Restart required');
+		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 		phpSession('write', 'pixel_aspect_ratio', $_POST['pixel_aspect_ratio']);
     }
 }
 
 if (isset($_POST['update_scnrotate'])) {
     if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
-		submitJob('scnrotate', $_POST['scnrotate'], 'Settings updated', 'Restart required');
+		submitJob('scnrotate', $_POST['scnrotate'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 		phpSession('write', 'scnrotate', $_POST['scnrotate']);
     }
 }
@@ -98,19 +96,19 @@ if (isset($_POST['update_toggle_coverview'])) {
 }
 
 if (isset($_POST['update_restart_localui'])) {
-	submitJob('localui_restart', '', 'Local display restarted');
+	submitJob('localui_restart', '', NOTIFY_TITLE_INFO, NAME_LOCAL_DISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // OTHER PERIPHERALS
 
 if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_svc']) {
 	phpSession('write', 'gpio_svc', $_POST['gpio_svc']);
-	submitJob('gpio_svc', $_POST['gpio_svc'], 'Settings updated');
+	submitJob('gpio_svc', $_POST['gpio_svc']);
 }
 
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
-		submitJob('lcdup', $_POST['lcdup'], 'Settings updated');
+		submitJob('lcdup', $_POST['lcdup']);
 		phpSession('write', 'lcdup', $_POST['lcdup']);
 		phpSession('write', 'extmeta', '1'); // Turn on external metadata generation
 	}

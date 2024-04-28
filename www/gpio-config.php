@@ -29,7 +29,11 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach (array_keys($_POST['config']) as $key) {
 		sqlUpdate('cfg_gpio', $dbh, $key, $_POST['config'][$key]);
 	}
-	submitJob('gpio_svc', $_SESSION['gpio_svc'], 'Settings updated', ($_SESSION['gpio_svc'] == '1' ? 'GPIO controller restarted' : ''));
+	$notify = $_SESSION['airplaysvc'] == '1' ?
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_GPIO . NOTIFY_MSG_SVC_RESTARTED) :
+		array('title' => '', 'msg' => '');
+	submitJob('gpio_svc', $_SESSION['gpio_svc'], $notify['title'], $notify['msg']);
+
 }
 
 $result = sqlRead('cfg_gpio', $dbh);

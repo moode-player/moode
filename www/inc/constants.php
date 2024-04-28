@@ -70,6 +70,27 @@ const BOOT_MOODEBACKUP_ZIP = '/boot/moodebackup.zip';
 const BOOT_MOODECFG_INI = '/boot/moodecfg.ini';
 const BT_PINCODE_CONF = '/etc/bluetooth/pin.conf';
 const ETC_MACHINE_INFO = '/etc/machine-info';
+// Notifications
+const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Information';
+const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
+const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
+const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
+const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
+const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
+const NOTIFY_DURATION_DEFAULT = 5; // Seconds
+const NOTIFY_DURATION_MEDIUM = 10;
+const NOTIFY_DURATION_LONG = 30;
+// Component names
+const NAME_AIRPLAY = 'AirPlay';
+const NAME_BLUETOOTH = 'Bluetooth Controller';
+const NAME_BLUETOOTH_PAIRING_AGENT = 'Pairing Agent';
+const NAME_SPOTIFY = 'Spotify Connect';
+const NAME_SQUEEZELITE = 'Squeezelite';
+const NAME_ROONBRIDGE = 'RoonBridge';
+const NAME_UPNP = 'UPnP';
+const NAME_DLNA = 'DLNA';
+const NAME_GPIO = 'GPIO Controller';
+const NAME_LOCAL_DISPLAY = 'Local Display';
 
 // SMB protocol versions
 const SMB_VERSIONS = array(

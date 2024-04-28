@@ -86,7 +86,7 @@ a.config-info-toggle {vertical-align:top;}
 .config-info-toggle i {vertical-align:top;margin-top:5px;font-size:18px;}
 .config-help-info,
 .config-help-static,
-.config-msg-static {display:block;font-size:12px;color:var(--config-help-color);margin-top:var(--config-help-margin-top);margin-bottom:var(--config-ctl-margin-bottom);}
+.config-msg-static {display:block;font-size:1em;color:var(--config-help-color);margin-top:var(--config-help-margin-top);margin-bottom:var(--config-ctl-margin-bottom);}
 .config-help-info {display:none;}
 .config-help-no-margin {margin-bottom:0;}
 

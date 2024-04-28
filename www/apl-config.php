@@ -34,8 +34,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . ";' /etc/shairport-sync.conf"); // 3.3.y
 		}
 	}
-
-	submitJob('airplaysvc', '', 'Setings updated', ($_SESSION['airplaysvc'] == '1' ? 'AirPlay restarted' : ''));
+	$notify = $_SESSION['airplaysvc'] == '1' ?
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_AIRPLAY . NOTIFY_MSG_SVC_RESTARTED) :
+		array('title' => '', 'msg' => '');
+	submitJob('airplaysvc', '', $notify['title'], $notify['msg']);
 }
 
 phpSession('close');

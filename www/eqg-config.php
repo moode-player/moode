@@ -38,11 +38,13 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$newID = sqlQuery('SELECT MAX(id)+1 FROM cfg_eqalsa', $dbh);
 		$result = sqlQuery("INSERT INTO cfg_eqalsa VALUES ('" . $newID[0][0] . "','" . $_POST['curve_name'] . "','" . $curveValues . "')", $dbh);
 		$_GET['curve'] = $_POST['curve_name'];
-		$_SESSION['notify']['title'] = 'New curve added';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'New curve added.';
 	} else {
 		// Update
 		$result = sqlQuery("UPDATE cfg_eqalsa SET curve_values='" . $curveValues . "' WHERE curve_name='" . $_POST['curve_name'] . "'" , $dbh);
-		$_SESSION['notify']['title'] = 'Curve updated';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Curve updated.';
 	}
 }
 
@@ -62,7 +64,8 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 	closeMpdSock($sock);
 
 	phpSession('write', 'alsaequal', $_POST['curve_name']);
-	$_SESSION['notify']['title'] = 'Playing curve';
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Playing curve.';
 }
 
 if (isset($_POST['new_curve'])) {
@@ -70,7 +73,8 @@ if (isset($_POST['new_curve'])) {
 } else if (isset($_POST['remove_curve'])) {
 	$result = sqlQuery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
 	$searchCurve = 'Flat';
-	$_SESSION['notify']['title'] = 'Curve removed';
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Curve removed.';
 } else if (isset($_GET['curve'])) {
 	$searchCurve = $_GET['curve'];
 } else {

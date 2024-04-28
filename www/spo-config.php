@@ -29,8 +29,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		sqlUpdate('cfg_spotify', $dbh, $key, $value);
 	}
-
-	submitJob('spotifysvc', '', 'Settings updated', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
+	$notify = $_SESSION['spotifysvc'] == '1' ?
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_SPOTIFY . NOTIFY_MSG_SVC_RESTARTED) :
+		array('title' => '', 'msg' => '');
+	submitJob('spotifysvc', '', $notify['title'], $notify['msg']);
 }
 
 phpSession('close');

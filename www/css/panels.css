@@ -364,13 +364,15 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .ui-pnotify {font-size:1.1rem;top:33%;left:50%;transform:translate(-50%, -50%);box-shadow:0px 2px 10px rgba(50, 50, 50, 0.5)}
 .ui-pnotify .ui-pnotify-shadow {-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
 .ui-pnotify-container {background-position:0 0;padding:2em;backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);height: 100%;margin: 0;border-radius:.75em;}
+
 .ui-pnotify .alert {background-color:rgba(240,240,240,0.8);border:0;border-radius:.4em;backdrop-filter: blur(4px);-webkit-backdrop-filter: blur(4px);padding:1.5em;}
 .ui-pnotify .alert,
-.ui-pnotify .alert h4 {color:#333;text-shadow:none;text-align:center;}
-.ui-pnotify .alert h4 {font-size:1em;font-weight:600;text-align:center;}
+.ui-pnotify .alert h4 {color:#333;text-shadow:none;text-align:left;}
+.ui-pnotify .alert h4 {font-size:1em;font-weight:600;text-align:left;}
 .ui-pnotify-text {padding-top:1em;}
-.ui-pnotify-sticker {position:absolute;right:2.25em;top:.5em;}
-.ui-pnotify-closer {position:absolute;right:1em;top:.5em;}
+.ui-pnotify-sticker {position:absolute;right:2.5em;/*top:1em;*/}
+.ui-pnotify-closer {position:absolute;right:1.25em;/*top:1em;*/}
+
 .btn-primary {text-transform:uppercase;font-weight:500;}
 i.sx {width:1em;margin-right:.25em;}
 i.dx {width:1em;margin-left:.25em;}

@@ -65,11 +65,11 @@ else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
 	$selectedConfigLabel = str_replace('.yml', '', $cdsp->getConfigLabel($selectedConfig));
 
 	if($checkResult['valid'] == true) {
-		$_SESSION['notify']['title'] = 'Configuration is valid';
-		$_SESSION['notify']['msg'] = $selectedConfigLabel;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Configuration is valid.';
 	} else {
-		$_SESSION['notify']['title'] = 'Configuration is not valid';
-		$_SESSION['notify']['msg'] = $selectedConfigLabel;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Configuration has errors.';
 	}
 }
 // Import (Upload)
@@ -87,8 +87,8 @@ else if (isset($_FILES['pipeline_config']) && isset($_POST['import']) && $_POST[
 		$cdsp->patchRelConvPath($configFileBaseName);
 	}
 	$selectedConfig = $configFileBaseName;
-	$_SESSION['notify']['title'] = 'Upload completed';
-	$_SESSION['notify']['msg'] = $configFileBaseName;
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Upload completed.';
 }
 // Export (Download)
 else if ($selectedConfig && isset($_POST['export']) && $_POST['export'] == '1') {
@@ -106,11 +106,12 @@ else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') 
 	if ($_SESSION['camilladsp'] != $selectedConfig . '.yml') { // Can't remove active config
 		$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig . '.yml';
 		unlink($configFileName);
-		$_SESSION['notify']['title'] = 'Configuration removed';
-		$_SESSION['notify']['msg'] = $selectedConfig;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Configuration removed.';
 		$selectedConfig = null;
 	} else {
-		$_SESSION['notify']['title'] = 'Cannot remove active configuration';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Cannot remove active configuration.';
 	}
 }
 
@@ -118,22 +119,22 @@ else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') 
 else if (isset($_POST['create_new_pipeline']) && $_POST['create_new_pipeline'] == '1') {
 	$cdsp->newConfig($_POST['new_pipeline_name'] . '.yml');
 	$selectedConfig = $_POST['new_pipeline_name'] . '.yml';
-	$_SESSION['notify']['title'] = 'Configuration created';
-	$_SESSION['notify']['msg'] = $_POST['new_pipeline_name'];
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Configuration created.';
 }
 // Copy pipeline
 else if ($selectedConfig && isset($_POST['copy_pipeline']) && $_POST['copy_pipeline'] == '1') {
 	$cdsp->copyConfig($selectedConfig . '.yml', $_POST['copyto_pipeline_name'] . '.yml');
 	$selectedConfig = $_POST['copyto_pipeline_name'] . '.yml';
-	$_SESSION['notify']['title'] = 'Configuration copied to';
-	$_SESSION['notify']['msg'] = $_POST['copyto_pipeline_name'];
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Configuration copied.';
 }
 // Coeffs import (Upload)
 else if (isset($_FILES['coeffs_file']) && isset($_POST['import']) && $_POST['import'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffs_file"]["name"];
 	move_uploaded_file($_FILES["coeffs_file"]["tmp_name"], $configFileName);
-	$_SESSION['notify']['title'] = 'Upload complete';
-	$_SESSION['notify']['msg'] = $_FILES["coeffs_file"]["name"];
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Upload complete.';
 	$selectedCoeff = $_FILES["coeffs_file"]["name"];
 }
 // Coeffs export (Download)
@@ -151,8 +152,8 @@ else if ($selectedCoeff && isset($_POST['export']) && $_POST['export'] == '1') {
 else if ($selectedCoeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $selectedCoeff;
 	unlink($configFileName);
-	$_SESSION['notify']['title'] = 'Configuration removed';
-	$_SESSION['notify']['msg'] = $selectedCoeff;
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Configuration removed';
 	$selectedCoeff = null;
 // Update to latest sample configs
 } else if (isset($_POST['install_sample_configs']) && $_POST['install_sample_configs'] == '1') {

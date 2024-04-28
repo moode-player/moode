@@ -42,7 +42,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	$value['wlancc'] = $cfgNetwork[1]['wlancc']; // Preserve country code
 	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
-	submitJob('netcfg', '', 'Network config reset', 'Restart required');
+	submitJob('netcfg', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
 
 // Update interfaces
@@ -124,7 +124,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 
 	// Generate .nmconnection files
-	submitJob('netcfg', '', 'Settings updated', 'Restart required');
+	submitJob('netcfg', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
 
 // Update saved networks
@@ -141,7 +141,7 @@ if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] ==
 		}
 
 		if ($itemDeleted) {
-			submitJob('netcfg', '', 'Settings updated', 'Restart required');
+			submitJob('netcfg', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 		}
 	}
 }
@@ -299,9 +299,8 @@ $_ap_network = 'http://' . explode('/', $_SESSION['ap_network_addr'])[0];
 $_ap_host = 'http://' . $_wlan0apdssid . '.local';
 if (empty($_wlan0apdpwd)) {
 	phpSession('open');
-	$_SESSION['notify']['title'] = 'Notice';
-	$_SESSION['notify']['msg'] = 'A Hotspot password needs to be entered';
-	$_SESSION['notify']['duration'] = 10;
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+	$_SESSION['notify']['msg'] = 'A Hotspot password needs to be entered. This is to ensure moOde can be accessed when Ethernet and WiFi are not available.';
 	phpSession('close');
 }
 

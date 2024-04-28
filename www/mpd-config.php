@@ -51,7 +51,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$deviceChange = 0;
 	$mixerChange = 0;
 	$queueArgs = $deviceChange . ',' . $mixerChange;
-	submitJob('mpdcfg', $queueArgs, 'Settings updated', 'MPD restarted');
+	submitJob('mpdcfg', $queueArgs, NOTIFY_TITLE_INFO, 'MPD' . NOTIFY_MSG_SVC_RESTARTED);
 }
 
 // Load settings

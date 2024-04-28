@@ -159,7 +159,7 @@ function uiNotify($notify) {
 }
 
 // Submit job to worker.php
-function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 3) {
+function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = NOTIFY_DURATION_DEFAULT) {
 	if ($_SESSION['w_lock'] != 1 && $_SESSION['w_queue'] == '') {
 		if (phpSession('get_status') != PHP_SESSION_ACTIVE) {
 			phpSession('open');

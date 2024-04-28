@@ -41,6 +41,13 @@ const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
 //						  97207
 
+// Notifications
+const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Information';
+const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
+const NOTIFY_DURATION_DEFAULT = 5; // Seconds
+const NOTIFY_DURATION_MEDIUM = 10;
+const NOTIFY_DURATION_LONG = 30;
+
 // Timeouts in milliseconds
 const DEFAULT_TIMEOUT   = 250;
 const CLRPLAY_TIMEOUT   = 500;

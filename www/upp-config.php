@@ -31,7 +31,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	foreach ($_POST['config'] as $key => $value) {
 		sqlUpdate('cfg_upnp', $dbh, $key, $value);
-
 		if ($value != '') {
 			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
 		}
@@ -39,8 +38,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . '#' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
 		}
 	}
-
-	submitJob('upnpsvc', '', 'Settings updated', ($_SESSION['upnpsvc'] == '1' ? 'UPnP restarted' : ''));
+	$notify = $_SESSION['upnpsvc'] == '1' ?
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_UPNP . NOTIFY_MSG_SVC_RESTARTED) :
+		array('title' => '', 'msg' => '');
+	submitJob('upnpsvc', '', $notify['title'], $notify['msg']);
 }
 
 phpSession('close');

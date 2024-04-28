@@ -29,151 +29,146 @@ if (isset($_POST['update_bt_settings'])) {
 	$currentBtName = $_SESSION['btname'];
 
 	if (isset($_POST['btname']) && $_POST['btname'] != $_SESSION['btname']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'btname', $_POST['btname']);
 	}
 	if (isset($_POST['btsvc']) && $_POST['btsvc'] != $_SESSION['btsvc']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'btsvc', $_POST['btsvc']);
 		if ($_POST['btsvc'] == '0') {
 			phpSession('write', 'pairing_agent', '0');
 		}
 	}
-	if (isset($title)) {
-		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"', $title);
+	if (isset($update)) {
+		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"');
 	}
 }
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
-	submitJob('btsvc', '', 'Bluetooth controller restarted');
+	submitJob('btsvc', '', NOTIFY_TITLE_INFO, NAME_BLUETOOTH . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 if (isset($_POST['update_bt_pin_code'])) {
 	$pinCode = empty($_POST['bt_pin_code']) ? 'None' : $_POST['bt_pin_code'];
 	if ($pinCode == 'None' || (is_numeric($pinCode) && strlen($pinCode) == 6)) {
 		$_SESSION['bt_pin_code'] = $pinCode;
-		$msg = $_SESSION['btsvc'] == '1' ? 'Pairing agent restarted' : '';
-		submitJob('bt_pin_code', $pinCode, 'Settings updated', $msg);
+		$notify = $_SESSION['btsvc'] == '1' ?
+			array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_BLUETOOTH_PAIRING_AGENT . NOTIFY_MSG_SVC_RESTARTED) :
+			array('title' => '', 'msg' => '');
+		submitJob('bt_pin_code', $pinCode, $notify['title'], $notify['msg']);
 	} else {
-		$_SESSION['notify']['title'] = 'Invalid PIN code';
-		$_SESSION['notify']['msg'] = 'Must be 6 digit (numeric) or "None"';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'The PIN code must be a 6 digit value or "None"';
 	}
 }
 if (isset($_POST['update_alsavolume_max_bt'])) {
 	$_SESSION['alsavolume_max_bt'] = $_POST['alsavolume_max_bt'];
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['update_cdspvolume_max_bt'])) {
 	$_SESSION['cdspvolume_max_bt'] = $_POST['cdspvolume_max_bt'];
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['update_rsmafterbt'])) {
 	phpSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // AirPlay
 if (isset($_POST['update_airplay_settings'])) {
 	if (isset($_POST['airplayname']) && $_POST['airplayname'] != $_SESSION['airplayname']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'airplayname', $_POST['airplayname']);
 	}
 	if (isset($_POST['airplaysvc']) && $_POST['airplaysvc'] != $_SESSION['airplaysvc']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'airplaysvc', $_POST['airplaysvc']);
 	}
-	if (isset($title)) {
-		submitJob('airplaysvc', '', $title);
+	if (isset($update)) {
+		submitJob('airplaysvc');
 	}
 }
 if (isset($_POST['update_rsmafterapl'])) {
 	phpSession('write', 'rsmafterapl', $_POST['rsmafterapl']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSION['airplaysvc'] == '1') {
-	submitJob('airplaysvc', '', 'AirPlay restarted');
+	submitJob('airplaysvc', '', NOTIFY_TITLE_INFO, NAME_AIRPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // Spotify Connect
 if (isset($_POST['update_spotify_settings'])) {
 	if (isset($_POST['spotifyname']) && $_POST['spotifyname'] != $_SESSION['spotifyname']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'spotifyname', $_POST['spotifyname']);
 	}
 	if (isset($_POST['spotifysvc']) && $_POST['spotifysvc'] != $_SESSION['spotifysvc']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'spotifysvc', $_POST['spotifysvc']);
 	}
-	if (isset($title)) {
-		submitJob('spotifysvc', '', $title);
+	if (isset($update)) {
+		submitJob('spotifysvc');
 	}
 }
 if (isset($_POST['update_rsmafterspot'])) {
 	phpSession('write', 'rsmafterspot', $_POST['rsmafterspot']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['spotifyrestart']) && $_POST['spotifyrestart'] == 1 && $_SESSION['spotifysvc'] == '1') {
-	submitJob('spotifysvc', '', 'Spotify connect restarted');
+	submitJob('spotifysvc', '', NOTIFY_TITLE_INFO, NAME_SPOTIFY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credentials'] == 1) {
-	submitJob('spotify_clear_credentials', '', 'Credential cache cleared');
+	submitJob('spotify_clear_credentials', '', NOTIFY_TITLE_INFO, 'Credential cache cleared');
 }
 
 // Squeezelite
 if (isset($_POST['update_sl_settings'])) {
 	if (isset($_POST['slsvc']) && $_POST['slsvc'] != $_SESSION['slsvc']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'slsvc', $_POST['slsvc']);
 	}
-	if (isset($title)) {
+	if (isset($update)) {
 		if ($_POST['slsvc'] == 0) {
 			phpSession('write', 'rsmaftersl', 'No');
 		}
-		submitJob('slsvc', '', $title);
+		submitJob('slsvc');
 	}
 }
 if (isset($_POST['update_rsmaftersl'])) {
 	phpSession('write', 'rsmaftersl', $_POST['rsmaftersl']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
 	phpSession('write', 'rsmaftersl', 'No');
-	submitJob('slrestart', '', 'Squeezelite restarted');
+	submitJob('slrestart', '', NOTIFY_TITLE_INFO, NAME_SQUEEZELITE . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // RoonBridge
 if (isset($_POST['update_rb_settings'])) {
 	if (isset($_POST['rbsvc']) && $_POST['rbsvc'] != $_SESSION['rbsvc']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'rbsvc', $_POST['rbsvc']);
 	}
-	if (isset($title)) {
-		submitJob('rbsvc', '', $title);
+	if (isset($update)) {
+		submitJob('rbsvc');
 	}
 }
 if (isset($_POST['update_rsmafterrb'])) {
 	phpSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
-	submitJob('rbrestart', '', 'RoonBridge restarted');
+	submitJob('rbrestart', '', NOTIFY_TITLE_INFO, NAME_ROONBRIDGE . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // UPnP client for MPD
 if (isset($_POST['update_upnp_settings'])) {
 	$currentUpnpName = $_SESSION['upnpname'];
 	if (isset($_POST['upnpname']) && $_POST['upnpname'] != $_SESSION['upnpname']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'upnpname', $_POST['upnpname']);
 	}
 	if (isset($_POST['upnpsvc']) && $_POST['upnpsvc'] != $_SESSION['upnpsvc']) {
-		$title = 'Settings updated';
+		$update = true;
 		phpSession('write', 'upnpsvc', $_POST['upnpsvc']);
 	}
-	if (isset($title)) {
-		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"', $title);
+	if (isset($update)) {
+		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"');
 	}
 }
 if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upnpsvc'] == '1') {
-	submitJob('upnpsvc', '', 'UPnP renderer restarted');
+	submitJob('upnpsvc', '', NOTIFY_TITLE_INFO, NAME_UPNP . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 phpSession('close');

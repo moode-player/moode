@@ -40,52 +40,54 @@ $initiateLibraryUpd = false;
 if (isset($_POST['remount_sources'])) {
 	$result = sqlRead('cfg_source', $dbh);
 	if ($result === true) {
-		$_SESSION['notify']['title'] = 'No music sources configured';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'No music sources configured.';
 	} else {
 		$resultUnmount = sourceMount('unmountall');
 		$resultMount = sourceMount('mountall');
-		$_SESSION['notify']['title'] = 'Re-mounting music sources...';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Re-mounting music sources...';
 	}
 }
 // Mount monitor
 if (isset($_POST['update_fs_mountmon'])) {
 	if (isset($_POST['fs_mountmon']) && $_POST['fs_mountmon'] != $_SESSION['fs_mountmon']) {
 		$_SESSION['fs_mountmon'] = $_POST['fs_mountmon'];
-		submitJob('fs_mountmon', $_POST['fs_mountmon'], 'Settings updated');
+		submitJob('fs_mountmon', $_POST['fs_mountmon']);
 	}
 }
 // Regenerate MPD database
 if (isset($_POST['regen_library'])) {
-	submitJob('regen_library', '', 'Regenerating library...', 'Stay on this screen until the progress spinner is cleared');
+	submitJob('regen_library', '', NOTIFY_TITLE_INFO, 'Regenerating the library... Stay on this screen until the progress spinner is cleared', NOTIFY_DURATION_MEDIUM);
 }
 // Clear library cache
 if (isset($_POST['clear_libcache'])) {
 	clearLibCacheAll();
-	$_SESSION['notify']['title'] = 'Library tag cache cleared';
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Library tag cache cleared.';
 }
 // Auto-update MPD database on USB insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
 	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
-		$_SESSION['notify']['title'] = 'Settings updated';
 		phpSession('write', 'usb_auto_updatedb', $_POST['usb_auto_updatedb']);
 	}
 }
 // Scan or ignore .cue files by adding or removing *.cue from /var/lib/mpd/music/.mpdignore
 if (isset($_POST['update_cuefiles_ignore'])) {
 	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
-		$_SESSION['notify']['title'] = 'Settings updated';
 		phpSession('write', 'cuefiles_ignore', $_POST['cuefiles_ignore']);
-		submitJob('cuefiles_ignore', $_POST['cuefiles_ignore'], 'Settings updated', 'MPD restarted');
+		submitJob('cuefiles_ignore', $_POST['cuefiles_ignore'], NOTIFY_TITLE_INFO, 'MPD' . NOTIFY_MSG_SVC_RESTARTED);
 	}
 }
 // Regenerate thumbnail cache
 if (isset($_POST['regen_thmcache'])) {
 	$result = sysCmd('pgrep -l thumb-gen.php');
 	if (strpos($result[0], 'thumb-gen.php') !== false) {
-		$_SESSION['notify']['title'] = 'Process is currently running';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'The Thumbnail Generator is currently running.';
 	} else {
 		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
-		submitJob('regen_thmcache', '', 'Regenerating thumbnail cache...');
+		submitJob('regen_thmcache', '', NOTIFY_TITLE_INFO, 'Regenerating the thumbnail cache...');
 	}
 }
 
@@ -108,20 +110,20 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	$_POST['mount']['remotedir'] = $address[1];
 
 	if (empty(trim($_POST['mount']['address']))) {
-		$_SESSION['notify']['title'] = 'Path cannot be blank';
-		$_SESSION['notify']['duration'] = 5;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Path cannot be blank.';
 	} else if (empty(trim($_POST['mount']['remotedir']))) {
-		$_SESSION['notify']['title'] = 'Share cannot be blank';
-		$_SESSION['notify']['duration'] = 5;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Share cannot be blank.';
 	} else if ($_POST['mount']['type'] == 'cifs' && empty(trim($_POST['mount']['username']))) {
-		$_SESSION['notify']['title'] = 'Userid cannot be blank';
-		$_SESSION['notify']['duration'] = 5;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Userid cannot be blank.';
 	} else if ($_POST['mount']['action'] == 'add' && !empty($id[0])) {
-		$_SESSION['notify']['title'] = 'Name already exists';
-		$_SESSION['notify']['duration'] = 5;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name already exists.';
 	} else if (empty(trim($_POST['mount']['name']))) {
-		$_SESSION['notify']['title'] = 'Name cannot be blank';
-		$_SESSION['notify']['duration'] = 5;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
 	} else {
 		$initiateLibraryUpd = true;
 		// CIFS and NFS defaults if blank
@@ -205,8 +207,9 @@ waitWorker('lib-config');
 
 if ($initiateLibraryUpd == true) {
 	phpSession('open');
-	$_SESSION['notify']['title'] = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
-	$_SESSION['notify']['msg'] = 'Library update required';
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = isset($_POST['save']) ? 'Music source saved.' : 'Music source removed.';
+	$_SESSION['notify']['msg'] .= ' Update or regenerate the Library.';
 	phpSession('close');
 	unset($_GET['cmd']);
 }

@@ -81,14 +81,14 @@
 
 			<label class="control-label" for="i2sdevice">Named I2S device</label>
 			<div class="controls">
-				<select id="i2sdevice" class="config-select-large" name="i2sdevice" onchange="autoClick('#btn-set-i2sdevice');">
+				<select id="i2sdevice" class="config-select-large" name="i2sdevice" onchange="autoClick('#btn-set-i2sdevice');" $_i2sdevice_btn_disable>
 					$_i2s[i2sdevice]
 				</select>
 				<button id="btn-set-i2sdevice" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_device" value="novalue" $_i2sdevice_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 			<label class="control-label" for="i2soverlay">or DT overlay</label>
 			<div class="controls">
-				<select id="i2soverlay" class="config-select-large" name="i2soverlay" onchange="autoClick('#btn-set-i2soverlay');">
+				<select id="i2soverlay" class="config-select-large" name="i2soverlay" onchange="autoClick('#btn-set-i2soverlay');" $_i2soverlay_btn_disable>
 					$_i2s[i2soverlay]
 				</select>
 				<button id="btn-set-i2soverlay" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_i2s_overlay" value="novalue" $_i2soverlay_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
@@ -99,7 +99,7 @@
 
 			<label class="control-label" for="drvoptions">Driver options</label>
 			<div class="controls">
-				<select id="drvoptions" class="config-select-large" name="drvoptions" onchange="autoClick('#btn-set-drvoptions');">
+				<select id="drvoptions" class="config-select-large" name="drvoptions" onchange="autoClick('#btn-set-drvoptions');" $_driveropt_btn_disable>
 					$_select[drvoptions]
 				</select>
 				<button id="btn-set-drvoptions" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_drvoptions" value="novalue" $_driveropt_btn_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
@@ -134,7 +134,7 @@
 
 			<label class="control-label" for="alsa-output-mode">Output mode</label>
 			<div class="controls">
-				<select id="alsa-output-mode" class="config-select-large" name="alsa_output_mode" onchange="autoClick('#btn-set-alsa-output-mode');">
+				<select id="alsa-output-mode" class="config-select-large" name="alsa_output_mode" onchange="autoClick('#btn-set-alsa-output-mode');" $_alsa_output_mode_disable>
 					$_select[alsa_output_mode]
 				</select>
 				<button id="btn-set-alsa-output-mode" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
@@ -158,8 +158,8 @@
 				<button id="btn-set-alsa-loopback" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					The Loopback device provides a copy of the PCM output stream that can be accessed by reading "hw:Loopback,1,0".<br>
-					<b>(1)</b> Loopback is only supported in Default (plughw) mode.<br>
-					<b>(2)</b> Loopback requires a sample rate greater than 44.1K for Pi HDMI or Headphone outputs. This requirement does not apply if Multiroom Sender is ON.
+					<b>1)</b> Loopback is only supported in Default (plughw) mode.<br>
+					<b>2)</b> Loopback requires a sample rate greater than 44.1K for Pi HDMI or Headphone outputs. This requirement does not apply if Multiroom Sender is ON.
                 </span>
 			</div>
 
@@ -168,7 +168,7 @@
 				<div class="controls">
 					<a href="trx-config.php"><button class="btn btn-primary btn-medium config-btn">Configure</button></a>
 					<span class="config-help-static">
-						Set up multiroom audio sender and receivers. Requires Loopback to be ON.
+						Set up multiroom audio sender and receivers. Requires Loopback to be on.
 		            </span>
 				</div>
 			</div>

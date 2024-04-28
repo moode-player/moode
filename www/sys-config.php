@@ -41,7 +41,7 @@ $dbh = sqlConnect();
 if (isset($_POST['update_updater_auto_check'])) {
 	if (isset($_POST['updater_auto_check']) && $_POST['updater_auto_check'] != $_SESSION['updater_auto_check']) {
 		$_SESSION['updater_auto_check'] = $_POST['updater_auto_check'];
-		submitJob('updater_auto_check', $_POST['updater_auto_check'], 'Settings updated');
+		submitJob('updater_auto_check', $_POST['updater_auto_check']);
 	}
 }
 
@@ -77,17 +77,17 @@ if (isset($_POST['install_update'])) {
 		$space = sysCmd("df | grep /dev/root | awk '{print $4}'");
 		# Check for invalid configs
 		if ($mount[0] != '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && ($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
-			$_SESSION['notify']['title'] = 'Invalid configuration';
-			$_SESSION['notify']['msg'] = "Cannot find compressed file system";
-			$_SESSION['notify']['duration'] = 20;
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] = 'Invalid configuration. Cannot find compressed file system.';
+			$_SESSION['notify']['duration'] = NOTIFY_DURATION_LONG;
 		} else if ($mount[0] == '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && !($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
-			$_SESSION['notify']['title'] = 'Invalid configuration';
-			$_SESSION['notify']['msg'] = "File system is compressed and read-only";
-			$_SESSION['notify']['duration'] = 20;
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] = 'Invalid configuration. File system is compressed and read-only.';
+			$_SESSION['notify']['duration'] = NOTIFY_DURATION_LONG;
 		} else if ($space[0] < 512000) {
-			$_SESSION['notify']['title'] = 'Insufficient space';
-			$_SESSION['notify']['msg'] = "Update cannot proceed without at least 500M space";
-			$_SESSION['notify']['duration'] = 20;
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] = 'Insufficient disk space. Update cannot proceed without at least 500M of disk space available.';
+			$_SESSION['notify']['duration'] = NOTIFY_DURATION_LONG;
 		} else {
 			submitJob('install_update');
 			header('location: sys-status.php');
@@ -100,10 +100,10 @@ if (isset($_POST['install_update'])) {
 if (isset($_POST['update_host_name'])) {
 	if (isset($_POST['hostname']) && $_POST['hostname'] != $_SESSION['hostname']) {
 		if (preg_match("/[^A-Za-z0-9-]/", $_POST['hostname']) == 1) {
-			$_SESSION['notify']['title'] = 'Invalid input';
-			$_SESSION['notify']['msg'] = "Host name can only contain A-Z, a-z, 0-9 or hyphen (-).";
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] =  'Invalid input. Host name can only contain A-Z, a-z, 0-9 or hyphen (-).';
 		} else {
-			submitJob('hostname', '"' . $_SESSION['hostname'] . '" ' . '"' . $_POST['hostname'] . '"', 'Settings updated', 'Restart required');
+			submitJob('hostname', '"' . $_SESSION['hostname'] . '" ' . '"' . $_POST['hostname'] . '"', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 			phpSession('write', 'hostname', $_POST['hostname']);
 		}
 	}
@@ -112,20 +112,19 @@ if (isset($_POST['update_host_name'])) {
 if (isset($_POST['update_browser_title'])) {
 	if (isset($_POST['browsertitle']) && $_POST['browsertitle'] != $_SESSION['browsertitle']) {
 		phpSession('write', 'browsertitle', $_POST['browsertitle']);
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
 
 if (isset($_POST['update_time_zone'])) {
 	if (isset($_POST['timezone']) && $_POST['timezone'] != $_SESSION['timezone']) {
-		submitJob('timezone', $_POST['timezone'], 'Settings updated');
+		submitJob('timezone', $_POST['timezone']);
 		phpSession('write', 'timezone', $_POST['timezone']);
 	}
 }
 
 if (isset($_POST['update_keyboard'])) {
     if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
-        submitJob('keyboard', $_POST['keyboard'], 'Settings updated', 'Restart required');
+        submitJob('keyboard', $_POST['keyboard'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
         phpSession('write', 'keyboard', $_POST['keyboard']);
     }
 }
@@ -134,52 +133,50 @@ if (isset($_POST['update_keyboard'])) {
 
 if (isset($_POST['update_worker_responsiveness']) && $_SESSION['worker_responsiveness'] != $_POST['worker_responsiveness']) {
 	$_SESSION['worker_responsiveness'] = $_POST['worker_responsiveness'];
-	submitJob('worker_responsiveness', $_POST['worker_responsiveness'], 'Settings updated', 'Restart required');
+	submitJob('worker_responsiveness', $_POST['worker_responsiveness'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
 
 if (isset($_POST['update_cpugov'])) {
-	submitJob('cpugov', $_POST['cpugov'], 'Settings updated');
+	submitJob('cpugov', $_POST['cpugov']);
 	phpSession('write', 'cpugov', $_POST['cpugov']);
 }
 
 if (isset($_POST['update_pci_express'])) {
 	$_SESSION['pci_express'] = $_POST['pci_express'];
-	submitJob('pci_express', $_POST['pci_express'], 'Settings updated');
+	submitJob('pci_express', $_POST['pci_express'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
 
 if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce_power']) {
-	submitJob('reduce_power', $_POST['reduce_power'], 'Settings updated', 'Restart required');
+	submitJob('reduce_power', $_POST['reduce_power'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	phpSession('write', 'reduce_power', $_POST['reduce_power']);
 }
 
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
-	submitJob('p3wifi', $_POST['p3wifi'], 'Settings updated', 'Restart required');
+	submitJob('p3wifi', $_POST['p3wifi'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	phpSession('write', 'p3wifi', $_POST['p3wifi']);
 }
 
 if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
-	submitJob('p3bt', $_POST['p3bt'], 'Settings updated', 'Restart required');
+	submitJob('p3bt', $_POST['p3bt'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	phpSession('write', 'p3bt', $_POST['p3bt']);
 }
 
 if (isset($_POST['update_actled']) && $_POST['actled'] != explode(',', $_SESSION['led_state'])[0]) {
-	submitJob('actled', $_POST['actled'], 'Settings updated');
+	submitJob('actled', $_POST['actled']);
 	phpSession('write', 'led_state', $_POST['actled'] . ',' . explode(',', $_SESSION['led_state'])[1]);
 }
 
 if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION['led_state'])[1]) {
-	submitJob('pwrled', $_POST['pwrled'], 'Settings updated');
+	submitJob('pwrled', $_POST['pwrled']);
 	phpSession('write', 'led_state', explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled']);
 }
 
 if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESSION['ipaddr_timeout']) {
 	phpSession('write', 'ipaddr_timeout', $_POST['ipaddr_timeout']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	phpSession('write', 'eth0chk', $_POST['eth0chk']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // FILE SHARING
@@ -187,78 +184,71 @@ if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 if (isset($_POST['update_fs_smb'])) {
 	if (isset($_POST['fs_smb']) && $_POST['fs_smb'] != $_SESSION['fs_smb']) {
 		phpSession('write', 'fs_smb', $_POST['fs_smb']);
-		submitJob('fs_smb', $_POST['fs_smb'], 'Settings updated');
+		submitJob('fs_smb', $_POST['fs_smb']);
 	}
 }
 
 if (isset($_POST['update_fs_nfs'])) {
 	if (isset($_POST['fs_nfs']) && $_POST['fs_nfs'] != $_SESSION['fs_nfs']) {
 		phpSession('write', 'fs_nfs', $_POST['fs_nfs']);
-		submitJob('fs_nfs', $_POST['fs_nfs'], 'Settings updated');
+		submitJob('fs_nfs', $_POST['fs_nfs']);
 	}
 }
 if (isset($_POST['update_fs_nfs_access'])) {
 	if (isset($_POST['fs_nfs_access']) && $_POST['fs_nfs_access'] != $_SESSION['fs_nfs_access']) {
 		phpSession('write', 'fs_nfs_access', $_POST['fs_nfs_access']);
-		submitJob('fs_nfs_access', 'restart', 'Settings updated');
+		submitJob('fs_nfs_access', 'restart');
 	}
 }
 if (isset($_POST['update_fs_nfs_options'])) {
 	if (isset($_POST['fs_nfs_options']) && $_POST['fs_nfs_options'] != $_SESSION['fs_nfs_options']) {
 		phpSession('write', 'fs_nfs_options', $_POST['fs_nfs_options']);
-		submitJob('fs_nfs_options', 'restart', 'Settings updated');
+		submitJob('fs_nfs_options', 'restart');
 	}
 }
 
 if (isset($_POST['update_dlna_settings'])) {
 	$currentDlnaName = $_SESSION['dlnaname'];
 	if (isset($_POST['dlnaname']) && $_POST['dlnaname'] != $_SESSION['dlnaname']) {
-		$title = 'Settings updated';
-		$msg = '';
+		$update = true;
+		$msg = NAME_DLNA . NOTIFY_MSG_SVC_RESTARTED;
 		phpSession('write', 'dlnaname', $_POST['dlnaname']);
 	}
 	if (isset($_POST['dlnasvc']) && $_POST['dlnasvc'] != $_SESSION['dlnasvc']) {
-		$title = 'Settings updated';
-		$msg = $_POST['dlnasvc'] == 1 ? 'Database rebuild initiated' : '';
+		$update = true;
+		$msg = $_POST['dlnasvc'] == '0' ?
+			NAME_DLNA . 'DNLA server off. Database has been cleared' :
+			NAME_DLNA . NOTIFY_MSG_SVC_RESTARTED . ' Database rebuild initiated...';
 		phpSession('write', 'dlnasvc', $_POST['dlnasvc']);
 	}
-	if (isset($title)) {
-		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $title, $msg);
+	if (isset($update)) {
+		$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => $msg);
+		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $notify['title'], $notify['msg']);
 	}
 }
 if (isset($_POST['rebuild_dlnadb'])) {
-	if ($_SESSION['dlnasvc'] == 1) {
-		submitJob('dlnarebuild', '', 'Database rebuild initiated...');
-	}
-	else {
-		$_SESSION['notify']['title'] = 'Turn DLNA server on';
-		$_SESSION['notify']['msg'] = 'Database rebuild will initiate';
-	}
+	submitJob('dlnarebuild', '', NOTIFY_TITLE_INFO, 'Database rebuild initiated...');
 }
 
 // SECURITY
 
 if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
 	phpSession('write', 'shellinabox', $_POST['shellinabox']);
-	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated');
+	submitJob('shellinabox', $_POST['shellinabox']);
 }
 
 // HTTPS mode
 if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_SESSION['nginx_https_only']) {
 	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
-	if ($_POST['nginx_https_only'] == '0') {
-		$msg = 'Restart required';
-		$duration = 3;
-	} else {
-		$msg = 'Download the certificate, install it into the OS certificate store then restart';
-		$duration = 30;
-	}
-	submitJob('nginx_https_only', $_POST['nginx_https_only'], 'Settings updated', $msg, $duration);
+	$notify = $_POST['nginx_https_only'] == '0' ?
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => NOTIFY_MSG_SYSTEM_RESTART_REQD) :
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Download the certificate, install it into the OS certificate store then restart.');
+	$duration = $_POST['nginx_https_only'] == '0' ? NOTIFY_DURATION_DEFAULT : 30;
+	submitJob('nginx_https_only', $_POST['nginx_https_only'], $notify['title'], $notify['msg'], $duration);
 }
 // NGINX certificate type
 if (isset($_POST['update_nginx_cert_type']) && $_POST['nginx_cert_type'] != $_SESSION['nginx_cert_type']) {
 	$_SESSION['nginx_cert_type'] = $_POST['nginx_cert_type'];
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 // HTTP Strict Transport Security (HSTS)
 //SAVE:if (isset($_POST['update_nginx_hsts_policy']) && $_POST['nginx_hsts_policy'] != $_SESSION['nginx_hsts_policy']) {
@@ -268,7 +258,6 @@ if (isset($_POST['update_nginx_cert_type']) && $_POST['nginx_cert_type'] != $_SE
 //		's/^#add_header Strict-Transport-Security.*/' . $str . '/' :
 //		's/^add_header Strict-Transport-Security.*/#' . $str . '/';
 //	sysCmd("sed -i '" . $cmd . "' /etc/nginx/ssl.conf");
-//	$_SESSION['notify']['title'] = 'Settings updated';
 //}
 // Download self-signed certificate
 if (isset($_POST['download_self_signed_cert'])) {
@@ -292,16 +281,16 @@ if (isset($_POST['download_self_signed_cert'])) {
 		sysCmd('rm ' . TMP_SELF_SIGNED_CER_FILE);
 		exit();
 	} else {
-		$_SESSION['notify']['title'] = 'Certificate file missing';
-		$_SESSION['msg'] = "Download cancelled";
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['msg'] = "Certificate file missing. Download cancelled.";
 	}
 }
 // Upload manually generated certificate .crt and .key files
 if (isset($_POST['upload_nginx_cert_files'])) {
 	//workerLog(print_r($_FILES, true));
 	if (empty($_FILES['nginx_cert_files']['name'][0]) || empty($_FILES['nginx_cert_files']['name'][1])) {
-		$_SESSION['notify']['title'] = 'Missing certificate file';
-		$_SESSION['msg'] = 'Both the .crt and .key files must be selected and uploaded';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['msg'] = 'Missing certificate file. Both the .crt and .key files must be selected and uploaded.';
 	} else {
 		$file0 = $_FILES['nginx_cert_files']['name'][0];
 		$file1 = $_FILES['nginx_cert_files']['name'][1];
@@ -313,20 +302,21 @@ if (isset($_POST['upload_nginx_cert_files'])) {
 			rename($_FILES['nginx_cert_files']['tmp_name'][1], TMP_NGINX_CRT_FILE);
 			rename($_FILES['nginx_cert_files']['tmp_name'][0], TMP_NGINX_KEY_FILE);
 		} else {
-			$_SESSION['notify']['title'] = 'Missing certificate file';
-			$_SESSION['msg'] = 'Either the .crt or .key file is missing';
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['msg'] = 'Missing certificate file. Either the .crt or .key file is missing.';
 		}
 	}
 }
 // Install manually generated certificate
 if (isset($_POST['nginx_install_cert']) && $_POST['nginx_install_cert'] == 1) {
 	if (!file_exists(TMP_NGINX_CRT_FILE) || !file_exists(TMP_NGINX_KEY_FILE)) {
-		$_SESSION['notify']['title'] = 'Certificate file(s) missing';
-		$_SESSION['msg'] = 'Installation cancelled';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['msg'] = 'Certificate file(s) missing. Installation cancelled.';
 	} else {
 		sysCmd('mv ' . TMP_NGINX_CRT_FILE . ' /etc/ssl/certs/');
 		sysCmd('mv ' . TMP_NGINX_KEY_FILE . ' /etc/ssl/private/');
-		$_SESSION['notify']['title'] = 'Certificate installed';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['msg'] = 'Certificate installed.';
 	}
 }
 
@@ -345,16 +335,15 @@ if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
 }
 
 if (isset($_POST['update_clear_syslogs'])) {
-	submitJob('clearsyslogs', '', 'System logs cleared');
+	submitJob('clearsyslogs', '', NOTIFY_TITLE_INFO, 'System logs cleared');
 }
 
 if (isset($_POST['update_clear_playhistory'])) {
-	submitJob('clearplayhistory', '', 'Playback history cleared');
+	submitJob('clearplayhistory', '', NOTIFY_TITLE_INFO, 'Playback history cleared');
 }
 
 if (isset($_POST['update_debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 	$_SESSION['debuglog'] = $_POST['debuglog'];
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 phpSession('close');
@@ -463,6 +452,7 @@ $ipAddrParts = explode('.', $_SESSION['ipaddress']);
 $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
 
 $_feat_minidlna = $_SESSION['feat_bitmask'] & FEAT_MINIDLNA ? '' : 'hide';
+$_dlna_btn_disable = $_SESSION['dlnasvc'] == '1' ? '' : 'disabled';
 $autoClick = " onchange=\"autoClick('#btn-set-dlnasvc');\"";
 $_select['dlnasvc_on']  .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-1\" value=\"1\" " . (($_SESSION['dlnasvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['dlnasvc_off'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-2\" value=\"0\" " . (($_SESSION['dlnasvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";

@@ -41,10 +41,12 @@ if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != 
 
 	// Validate
 	if ($deviceName == ALSA_EMPTY_CARD) {
-		$_SESSION['notify']['title'] = 'Card is empty'; // Empty card
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Card is empty.';
 	} else if (in_array($deviceName, ALSA_RESERVED_NAMES)) {
-		$_SESSION['notify']['title'] = 'Device is reserved'; // Loopback or Dummy
-		$_SESSION['notify']['msg'] = 'It cannot be set directly';
+		// Loopback or Dummy
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Device is reserved and cannot be selected for output.';
 	} else {
 		$devCache = checkOutputDeviceCache($deviceName, $cardNum);
 		// Update configuration
@@ -60,7 +62,7 @@ if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != 
 		$deviceChange = '1';
 		$mixerChange = '0';
 		$queueArgs = $mixerChange . ',' . $mixerChange;
-		submitJob('mpdcfg', $queueArgs, 'Settings updated');
+		submitJob('mpdcfg', $queueArgs);
 	}
 }
 
@@ -85,14 +87,13 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 
 	$deviceChange = '0';
 	$queueArgs = $deviceChange . ',' . $mixerChange;
-	submitJob('mpdcfg', $queueArgs, 'Settings updated');
+	submitJob('mpdcfg', $queueArgs);
 }
 // CamillaDSP volume range
 if (isset($_POST['update_camilladsp_volume_range']) && $_POST['camilladsp_volume_range'] != $_SESSION['camilladsp_volume_range']) {
 	$_SESSION['camilladsp_volume_range'] = $_POST['camilladsp_volume_range'];
 	sysCmd("sed -i '/dynamic_range/c\dynamic_range = " . $_SESSION['camilladsp_volume_range'] . "' /etc/mpd2cdspvolume.config");
 	sysCmd('systemctl restart mpd2cdspvolume');
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // I2S AUDIO DEVICE
@@ -104,7 +105,7 @@ if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice']) && $_POST['i2sdevice'] != $_SESSION['i2sdevice']) {
 		$i2sReboot = true;
 		phpSession('write', 'i2sdevice', $_POST['i2sdevice']);
-		submitJob('i2sdevice', '', 'Settings updated', 'Restart required');
+		submitJob('i2sdevice', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	}
 }
 // Device overlay
@@ -112,7 +113,7 @@ if (isset($_POST['update_i2s_overlay'])) {
 	if (isset($_POST['i2soverlay']) && $_POST['i2soverlay'] != $_SESSION['i2soverlay']) {
 		$i2sReboot = true;
 		phpSession('write', 'i2soverlay', $_POST['i2soverlay']);
-		submitJob('i2sdevice', '', 'Settings updated', 'Restart required');
+		submitJob('i2sdevice', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	}
 }
 // Driver options
@@ -123,7 +124,7 @@ if (isset($_POST['update_drvoptions'])) {
 		$driver = explode(',', $result[0]['driver']);
 		$driverUpd = $_POST['drvoptions'] == 'Enabled' ? $driver[0] . ',' . $result[0]['drvoptions'] : $driver[0];
 		$result = sqlQuery("UPDATE cfg_audiodev SET driver='" . $driverUpd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
-		submitJob('i2sdevice', $_SESSION['i2sdevice'], 'Settings updated', 'Restart required');
+		submitJob('i2sdevice', $_SESSION['i2sdevice'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	}
 }
 
@@ -132,7 +133,7 @@ if (isset($_POST['update_drvoptions'])) {
 // Max volume
 if (isset($_POST['update_alsavolume_max'])) {
 	if (isset($_POST['alsavolume_max'])) {
-		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Settings updated');
+		submitJob('alsavolume_max', $_POST['alsavolume_max']);
 		phpSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
 	}
 }
@@ -140,7 +141,7 @@ if (isset($_POST['update_alsavolume_max'])) {
 if (isset($_POST['update_alsa_output_mode'])) {
 	if (isset($_POST['alsa_output_mode']) && $_POST['alsa_output_mode'] != $_SESSION['alsa_output_mode']) {
 		phpSession('write', 'alsa_output_mode', $_POST['alsa_output_mode']);
-		submitJob('alsa_output_mode', $_POST['alsa_output_mode'], 'Settings updated');
+		submitJob('alsa_output_mode', $_POST['alsa_output_mode']);
 	}
 }
 // Loopback
@@ -150,15 +151,14 @@ if (isset($_POST['update_alsa_loopback'])) {
 		if ($_POST['alsa_loopback'] == 'Off') {
 			$result = sysCmd('sudo modprobe -r snd-aloop');
 			if (!empty($result)) {
-				$_SESSION['notify']['title'] = 'Unable to turn off';
-				$_SESSION['notify']['msg'] = 'Loopback is in use';
-				$_SESSION['notify']['duration'] = 5;
+				$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+				$_SESSION['notify']['msg'] = NOTIFY_MSG_LOOPBACK_ACTIVE;
 			} else {
-				submitJob('alsa_loopback', 'Off', 'Settings updated');
+				submitJob('alsa_loopback', 'Off');
 				phpSession('write', 'alsa_loopback', 'Off');
 			}
 		} else {
-			submitJob('alsa_loopback', 'On', 'Settings updated');
+			submitJob('alsa_loopback', 'On');
 			phpSession('write', 'alsa_loopback', 'On');
 		}
 	}
@@ -170,25 +170,22 @@ if (isset($_POST['update_alsa_loopback'])) {
 
 // Restart mpd
 if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
-	submitJob('mpdrestart', '', 'MPD restarted');
+	submitJob('mpdrestart', '', NOTIFY_TITLE_INFO, 'MPD has been restarted.');
 }
 // Autoplay last played item after reboot/powerup
 if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
-	$_SESSION['notify']['title'] = 'Settings updated';
 	phpSession('write', 'autoplay', $_POST['autoplay']);
 }
 
 // Metadata file
 if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
 	phpSession('write', 'extmeta', $_POST['extmeta']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // Auto-shuffle
 
 // Service
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
-	$_SESSION['notify']['title'] = 'Settings updated';
 	phpSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
 	// Turn off MPD random play so no conflict
 	$sock = openMpdSock('localhost', 6600);
@@ -206,22 +203,18 @@ if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashuffle
 if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSION['ashuffle_mode']) {
 	$_SESSION['ashuffle_mode'] = $_POST['ashuffle_mode'];
 	if ($_SESSION['ashuffle'] == '1') {
-		$_SESSION['notify']['title'] = 'Settings updated';
-		$_SESSION['notify']['msg'] = 'Random play turned off';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Setting updated. Turn Random play back on to make this setting effective.';
 		stopAutoShuffle();
-	} else {
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
 // Window size
 if (isset($_POST['update_ashuffle_window']) && $_POST['ashuffle_window'] != $_SESSION['ashuffle_window']) {
 	$_SESSION['ashuffle_window'] = $_POST['ashuffle_window'];
 	if ($_SESSION['ashuffle'] == '1') {
-		$_SESSION['notify']['title'] = 'Settings updated';
-		$_SESSION['notify']['msg'] = 'Random play turned off';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Setting updated. Turn Random play back on to make this setting effective.';
 		stopAutoShuffle();
-	} else {
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
 // Filter
@@ -229,11 +222,9 @@ if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SE
 	$trim_filter = trim($_POST['ashuffle_filter']);
 	$_SESSION['ashuffle_filter'] = ($trim_filter == '' ? 'None' : $trim_filter);
 	if ($_SESSION['ashuffle'] == '1') {
-		$_SESSION['notify']['title'] = 'Settings updated';
-		$_SESSION['notify']['msg'] = 'Random play turned off';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Setting updated. Turn Random play back on to make this setting effective.';
 		stopAutoShuffle();
-	} else {
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
 
@@ -242,35 +233,32 @@ if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SE
 // Volume step limit
 if (isset($_POST['volume_step_limit']) && $_POST['volume_step_limit'] != $_SESSION['volume_step_limit']) {
 	phpSession('write', 'volume_step_limit', $_POST['volume_step_limit']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 // Volume MPD mmax
 if (isset($_POST['volume_mpd_max']) && $_POST['volume_mpd_max'] != $_SESSION['volume_mpd_max']) {
 	phpSession('write', 'volume_mpd_max', $_POST['volume_mpd_max']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 // Display dB volume
 if (isset($_POST['update_volume_db_display']) && $_POST['volume_db_display'] != $_SESSION['volume_db_display']) {
 	phpSession('write', 'volume_db_display', $_POST['volume_db_display']);
-	$_SESSION['notify']['title'] = 'Settings updated';
 }
 // USB volume knob
 if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
-	submitJob('usb_volknob', $_POST['usb_volknob'], 'Settings updated');
+	submitJob('usb_volknob', $_POST['usb_volknob']);
 	phpSession('write', 'usb_volknob', $_POST['usb_volknob']);
 }
 // Rotary encoder service
 if (isset($_POST['update_rotenc'])) {
 	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
 		phpSession('write', 'rotaryenc', $_POST['rotaryenc']);
-		submitJob('rotaryenc', $_POST['rotaryenc'], 'Settings updated');
+		submitJob('rotaryenc', $_POST['rotaryenc']);
 	}
 }
 // Rotary encoder settings
 if (isset($_POST['update_rotenc_params'])) {
 	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
 		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
-		submitJob('rotaryenc', $_POST['rotaryenc'], 'Settings updated');
+		submitJob('rotaryenc', $_POST['rotaryenc']);
 	}
 }
 
@@ -278,17 +266,17 @@ if (isset($_POST['update_rotenc_params'])) {
 
 // Crossfade
 if (isset($_POST['mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION['mpdcrossfade']) {
-	submitJob('mpdcrossfade', $_POST['mpdcrossfade'], 'Settings updated');
+	submitJob('mpdcrossfade', $_POST['mpdcrossfade']);
 	phpSession('write', 'mpdcrossfade', $_POST['mpdcrossfade']);
 }
 // Crossfeed
 if (isset($_POST['crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed']) {
 	phpSession('write', 'crossfeed', $_POST['crossfeed']);
-	submitJob('crossfeed', $_POST['crossfeed'], 'Settings updated');
+	submitJob('crossfeed', $_POST['crossfeed']);
 }
 // Polarity inversion
 if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
-	submitJob('invpolarity', $_POST['invert_polarity'], 'Settings updated');
+	submitJob('invpolarity', $_POST['invert_polarity']);
 	phpSession('write', 'invert_polarity', $_POST['invert_polarity']);
 }
 
@@ -296,18 +284,18 @@ if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SE
 
 // Server
 if (isset($_POST['mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
-	submitJob('mpd_httpd', $_POST['mpd_httpd'], 'Settings updated');
+	submitJob('mpd_httpd', $_POST['mpd_httpd']);
 	phpSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
 }
 // Port
 if (isset($_POST['mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESSION['mpd_httpd_port']) {
 	phpSession('write', 'mpd_httpd_port', $_POST['mpd_httpd_port']);
-	submitJob('mpd_httpd_port', $_POST['mpd_httpd_port'], 'Settings updated');
+	submitJob('mpd_httpd_port', $_POST['mpd_httpd_port']);
 }
 // Encoder
 if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSION['mpd_httpd_encoder']) {
 	phpSession('write', 'mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
-	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder'], 'Settings updated');
+	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
 }
 
 // EQUALIZERS
@@ -333,14 +321,14 @@ if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $
 	$newActive = intval($_POST['eqfa12p']);
 	$eqfa12p->setActivePresetIndex($newActive);
 	phpSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
-	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Settings updated');
+	submitJob('eqfa12p', $currentActive . ',' . $newActive);
 }
 unset($eqfa12p);
 // Graphic eq
 if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
 	// Pass old,new curve name to worker job
 	phpSession('write', 'alsaequal', $_POST['alsaequal']);
-	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Settings updated');
+	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal']);
 }
 
 phpSession('close');

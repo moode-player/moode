@@ -32,36 +32,36 @@
 		</p>
 
 		<div class="control-group">
-			<label class="control-label" for="audio_input">Source</label>
+			<label class="control-label" for="audio-input">Source</label>
 			<div class="controls">
-				<select id="audio_input" class="config-select-large" name="audio_input">
+				<select id="audio-input" class="config-select-large" name="audio_input" onchange="autoClick('#btn-set-audio-input');">
 					$_select[audio_input]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_audio_input" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-audio-input" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_audio_input" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_audio_input" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_audio_input" class="config-help-info">
 					Select which input source provides audio.
 	            </span>
 			</div>
 
-			<label class="control-label" for="resume_mpd">Resume MPD</label>
+			<label class="control-label" for="resume-mpd">Resume MPD</label>
 			<div class="controls">
-				<select id="resume_mpd" class="config-select-large" name="resume_mpd">
+				<select id="resume-mpd" class="config-select-large" name="resume_mpd" onchange="autoClick('#btn-set-resume-mpd');">
 					$_select[resume_mpd]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_resume_mpd" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-resume-mpd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_resume_mpd" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_resume_mpd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_resume_mpd" class="config-help-info">
 					Resume MPD playback after changing input source to Local (MPD).
                 </span>
 			</div>
 
-			<label class="control-label" for="audio_output">Output</label>
+			<label class="control-label" for="audio-output">Output</label>
 			<div class="controls">
-				<select id="audio_output" class="config-select-large" name="audio_output" readonly>
+				<select id="audio-output" class="config-select-large" name="audio_output" onchange="autoClick('#btn-set-audio-output');">
 					$_select[audio_output]
 				</select>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_audio_output" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<button id="btn-set-audio-output" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_audio_output" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_audio_output" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
 				<span id="info_audio_output" class="config-help-info">
 					Select which device will receive audio from the selected input source.

@@ -58,7 +58,8 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 
 	if (empty($backupOptions)) {
 		phpSession('open');
-		$_SESSION['notify']['title'] = 'Specify at least one item to backup';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Specify at least one item to backup.';
 		phpSession('close');
 	} else {
 		$userID = getUserID();
@@ -130,7 +131,8 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 
 		if (empty($restoreOptions)) {
 			phpSession('open');
-			$_SESSION['notify']['title'] = 'Specify at least one item to restore';
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] = 'Specify at least one item to restore.';
 			phpSession('close');
 		} else {
 			$restoreOptions = '--what ' . $restoreOptions . ' ' .
@@ -149,17 +151,17 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 				header('location: sys-restored.php');
 			} else {
 				phpSession('open');
-				$_SESSION['notify']['title'] = 'Restore complete';
-				$_SESSION['notify']['msg'] = 'Restart is not required';
-				$_SESSION['notify']['duration'] = 10;
+				$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+				$_SESSION['notify']['msg'] = 'Restore complete. Restart is not required.';
+				$_SESSION['notify']['duration'] = NOTIFY_DURATION_MEDIUM;
 				phpSession('close');
 			}
 		}
 	} else {
 		$_imported_backupfile = 'No file uploaded';
 		phpSession('open');
-		$_SESSION['notify']['title'] = 'Upload a backup file';
-		$_SESSION['notify']['duration'] = 3;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Upload a backup file.';
 		phpSession('close');
 	}
 } else if (isset($_POST['import_backupfile'])) {
@@ -171,9 +173,9 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	} else {
 		$_restore_disable = 'disabled';
 		phpSession('open');
-		$_SESSION['notify']['title'] = 'Unsupported backup file';
-		$_SESSION['notify']['msg'] = 'Only moode ' . $moodeSeries . ' series backup files can be used for restore';
-		$_SESSION['notify']['duration'] = 10;
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Unsupported backup file. Only moode ' . $moodeSeries . ' series backup files can be used for restore.';
+		$_SESSION['notify']['duration'] = NOTIFY_DURATION_MEDIUM;
 		phpSession('close');
 	}
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
@@ -187,8 +189,8 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/script');
 	$_imported_backupfile = 'No file uploadad';
 	phpSession('open');
-	$_SESSION['notify']['title'] = 'Options have been reset';
-	$_SESSION['notify']['duration'] = 3;
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Options have been reset.';
 	phpSession('close');
 } else {
 	$_imported_backupfile = 'No file uploaded';
@@ -243,7 +245,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 
 waitWorker('bkp-config');
 
-$tpl = $msg == 'Reboot required' ? "sys-config.html" : "bkp-config.html";
+$tpl = $msg == 'Restart required' ? "sys-config.html" : "bkp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 

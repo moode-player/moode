@@ -47,7 +47,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 		// Update chip options
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Settings updated';
 
 		// Allo Piano 2.1 Hi-Fi DAC device settings
 		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
@@ -59,9 +58,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 				sysCmd('/var/www/util/sysutil.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
 				sysCmd('/var/www/util/sysutil.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
 			}
-			$_SESSION['notify']['title'] = 'Settings updated';
-			$_SESSION['notify']['msg'] = 'Restart required';
-			$_SESSION['notify']['duration'] = 10;
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+			$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
+			$_SESSION['notify']['duration'] = NOTIFY_DURATION_MEDIUM;
 		}
 	}
 
@@ -81,7 +80,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 
 	// Allo Boss 2 Cirrus Logic CS43198 chip
@@ -108,7 +106,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		//sysCmd('amixer -c 0 sset Digital ' . $_POST['config']['boss2_dop_volume'] . '%');
 
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 
 	// Audiophonics ES9028/38 Q2M chip
@@ -127,7 +124,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 
 	// MERUS Amp HAT ZW chip
@@ -138,7 +134,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		cfgChipOptions($chipoptions, $chiptype);
 
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
 

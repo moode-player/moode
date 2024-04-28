@@ -20,6 +20,8 @@
  *
  */
 
+// TODO: Update for new notification style
+
 function notify(title, msg, duration = '2_seconds') {
     msg = msg || '';
 

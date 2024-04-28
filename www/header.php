@@ -130,7 +130,7 @@
 			uiNotify($_SESSION['notify']);
 			$_SESSION['notify']['title'] = '';
 			$_SESSION['notify']['msg'] = '';
-			$_SESSION['notify']['duration'] = '3';
+			$_SESSION['notify']['duration'] = NOTIFY_DURATION_DEFAULT;
 		}
 	?>
 	<!--endRemoveIf(GENINDEXDEV)-->
@@ -220,7 +220,7 @@
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 				<?php if ($section == 'index') { ?>
                     <li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i> Configure</a></li>
-					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fa-solid fa-sharp fa-edit sx"></i> Preferences</a></li>
+					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fa-solid fa-sharp fa-pen sx"></i> Preferences</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fa-solid fa-sharp fa-sync sx"></i> Update library</a></li>
 					<li id="bluetooth-hide"><a href="blu-control.php"><i class="fa-light fa-brands fa-bluetooth sx"></i> Bluetooth</a></li>
 					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-forward sx"></i> Players</a></li>
