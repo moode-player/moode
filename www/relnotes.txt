@@ -42,6 +42,7 @@ Updates
 - UPD: Remove HDMI On/Off option (not valid on Bookworm)
 - UPD: Remove redundant or obsolete devices from audio device table
 - UPD: Allow any netmask to be entered for static IP address
+- UPD: Saved SSID's appear for selection in the main SSID dropdown
 - UPD: Prevent comma when entering a new station name
 - UPD: Add missing settings to Backup/Restore
 
