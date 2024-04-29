@@ -118,7 +118,7 @@ function loadLibrary() {
 
 	var loading = setTimeout(function(){
 	    if (currentView == 'tag' || currentView == 'album') {
-	        notify('library_loading');
+	        notify(NOTIFY_TITLE_INFO, 'library_loading');
 	    }
 	}, 2000);
 
@@ -1204,7 +1204,7 @@ $('#albumcovers').on('click', 'img', function(e) {
         if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
             sendQueueCmd(queueCmd, files);
-            notify(queueCmd);
+            notify(NOTIFY_TITLE_INFO, queueCmd, NOTIFY_DURATION_SHORT);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Play' ? 'play_group' : 'play_group_next';
@@ -1212,7 +1212,7 @@ $('#albumcovers').on('click', 'img', function(e) {
         }
         else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
             sendQueueCmd('clear_play_group', files);
-            notify('clear_play_group');
+            notify(NOTIFY_TITLE_INFO, 'clear_play_group', NOTIFY_DURATION_SHORT);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Show tracks') {
             showHideTracks(posChange);
@@ -1250,7 +1250,7 @@ $('.ralbum').click(function(e) {
         if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
             sendQueueCmd(queueCmd, files);
-            notify(queueCmd);
+            notify(NOTIFY_TITLE_INFO, queueCmd, NOTIFY_DURATION_SHORT);
         }
         // NOTE: Show tracks for Album view = Play for this button
         else if (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Play next' ||
@@ -1287,7 +1287,7 @@ $('#database-radio').on('click', 'img', function(e) {
         if (SESSION.json['library_onetouch_radio'] == 'Add' || SESSION.json['library_onetouch_radio'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_radio'] == 'Add' ? 'add_item' : 'add_item_next';
             sendQueueCmd(queueCmd, path);
-            notify(queueCmd);
+            notify(NOTIFY_TITLE_INFO, queueCmd, NOTIFY_DURATION_SHORT);
         }
         else if (SESSION.json['library_onetouch_radio'] == 'Play' || SESSION.json['library_onetouch_radio'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_radio'] == 'Play' ? 'play_item' : 'play_item_next';
@@ -1295,7 +1295,7 @@ $('#database-radio').on('click', 'img', function(e) {
         }
         else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
             sendQueueCmd('clear_play_item', path);
-            notify('clear_play_item');
+            notify(NOTIFY_TITLE_INFO, 'clear_play_item', NOTIFY_DURATION_SHORT);
         }
     }
 
@@ -1408,7 +1408,7 @@ $('#btn-upd-radio-manager').click(function(e) {
             if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
                 // Stream recorder
                 if (recorderStatus == 'Install recorder') {
-                    notify('installing_plugin', '', 'infinite');
+                    notify(NOTIFY_TITLE_INFO, 'installing_plugin', '', NOTIFY_DURATION_INFINITE);
                     $.ajax({
                 		type: 'GET',
                 		url: 'command/recorder-cmd.php?cmd=recorder_install',
@@ -1419,27 +1419,27 @@ $('#btn-upd-radio-manager').click(function(e) {
                             if (msgKey == 'recorder_installed') {
                                 $('#stream-recorder-options, #context-menu-stream-recorder').show();
                                 $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
-                                notify(msgKey, 'Restart required', '10_seconds');
+                                notify(NOTIFY_TITLE_INFO, msgKey, 'Restart the system to make the changes effective.', NOTIFY_DURATION_MEDIUM);
                             } else {
-                                notify(msgKey);
+                                notify(NOTIFY_TITLE_INFO, msgKey);
                             }
                 		},
                 		error: function() {
                             // A 404 on recorder-cmd.php so we revert to 'not installed'
                             SESSION.json['recorder_status'] = 'Not installed';
                             $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_status': 'Not installed'});
-                            notify('recorder_plugin_na');
+                            notify(NOTIFY_TITLE_ALERT, 'recorder_plugin_na');
                 		}
                 	});
                 } else if (recorderStatus == 'Uninstall recorder') {
                     $.post('command/recorder-cmd.php?cmd=recorder_uninstall');
                     $('#stream-recorder-options, #context-menu-stream-recorder').hide();
-                    notify('recorder_uninstalled', '', '5_seconds');
+                    notify(NOTIFY_TITLE_INFO, 'recorder_uninstalled');
                 } else if (recorderStorageChange === true) {
                     $.post('command/recorder-cmd.php?cmd=recorder_storage_change');
                     $('.playback-context-menu i').removeClass('recorder-on');
                     $('#menu-check-recorder').css('display', 'none');
-                    notify('settings_updated');
+                    notify(NOTIFY_TITLE_INFO, 'settings_updated', NOTIFY_DURATION_SHORT);
                 } else if (recorderStatusChange && (recorderStatus == 'On' || recorderStatus == 'Off')) {
                     $.post('command/recorder-cmd.php?cmd=recorder_on_off');
                     if (recorderStatus == 'On') {
@@ -1450,16 +1450,16 @@ $('#btn-upd-radio-manager').click(function(e) {
                         $('.playback-context-menu i').removeClass('recorder-on');
                         $('#menu-check-recorder').css('display', 'none');
                     }
-                    notify('settings_updated', 'Recoder ' + recorderStatus);
+                    notify(NOTIFY_TITLE_INFO, 'settings_updated', 'Recorder ' + recorderStatus, NOTIFY_DURATION_SHORT);
                 } else if ($('#tag-recordings span').text() == 'Yes') {
                     // NOTE: Completion message sent from back-end via sendEngCmd()
-                    notify('recorder_tagging', 'Wait until completion message appears', 'infinite');
+                    notify(NOTIFY_TITLE_INFO, 'recorder_tagging', 'Wait until completion message appears.', NOTIFY_DURATION_INFINITE);
                     $('#tag-recordings span').text('No');
                     $.post('command/recorder-cmd.php?cmd=recorder_tag_files');
                 } else if ($('#delete-recordings span').text() != 'No') {
                     var fileName = $('#delete-recordings span').text();
                     $.post('command/recorder-cmd.php?cmd=recorder_delete_files', {'file_name': fileName}, function() {
-                        notify('recorder_deleted', 'Updating library...', '5_seconds');
+                        notify(NOTIFY_TITLE_INFO, 'recorder_deleted', 'Updating library...');
                     });
                     $('#delete-recordings span').text('No'); // Reset
                 // Rest of radio manager (dup of below)
@@ -1467,13 +1467,13 @@ $('#btn-upd-radio-manager').click(function(e) {
                     $.post('command/radio.php?cmd=mpd_monitor_svc',
                         {'svc': SESSION.json['mpd_monitor_svc'], 'opt': SESSION.json['mpd_monitor_opt']},
                         function() {
-                            var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] :
-                            (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted' : '');
-                            notify('settings_updated', msg);
+                            var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] + '.' :
+                            (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted.' : '');
+                            notify(NOTIFY_TITLE_INFO, 'settings_updated', msg, NOTIFY_DURATION_SHORT);
                         }
                     );
                 } else {
-                    notify('settings_updated');
+                    notify(NOTIFY_TITLE_INFO, 'settings_updated', NOTIFY_DURATION_SHORT);
                 }
             } else {
                 // Rest of radio manager
@@ -1481,13 +1481,13 @@ $('#btn-upd-radio-manager').click(function(e) {
                     $.post('command/radio.php?cmd=mpd_monitor_svc',
                         {'svc': SESSION.json['mpd_monitor_svc'], 'opt': SESSION.json['mpd_monitor_opt']},
                         function() {
-                            var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] :
-                            (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted' : '');
-                            notify('settings_updated', msg);
+                            var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] + '.' :
+                            (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted.' : '');
+                            notify(NOTIFY_TITLE_INFO, 'settings_updated', msg, NOTIFY_DURATION_SHORT);
                         }
                     );
                 } else {
-                    notify('settings_updated');
+                    notify(NOTIFY_TITLE_INFO, 'settings_updated', NOTIFY_DURATION_SHORT);
                 }
             }
 
@@ -1541,13 +1541,13 @@ $('#database-playlist').on('click', 'img', function(e) {
         } else if (SESSION.json['library_onetouch_pl'] == 'Add' || SESSION.json['library_onetouch_pl'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_pl'] == 'Add' ? 'add_item' : 'add_item_next';
             sendQueueCmd(queueCmd, path);
-            notify(queueCmd);
+            notify(NOTIFY_TITLE_INFO, queueCmd, NOTIFY_DURATION_SHORT);
         } else if (SESSION.json['library_onetouch_pl'] == 'Play' || SESSION.json['library_onetouch_pl'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_pl'] == 'Play' ? 'play_item' : 'play_item_next';
             sendQueueCmd(queueCmd, path);
         } else if (SESSION.json['library_onetouch_pl'] == 'Clear/Play') {
             sendQueueCmd('clear_play_item', path);
-            notify('clear_play_item');
+            notify(NOTIFY_TITLE_INFO, 'clear_play_item', NOTIFY_DURATION_SHORT);
         }
     }
 
@@ -1571,7 +1571,7 @@ $('#btn-upd-playlist-manager').click(function(e) {
     $.post('command/cfg-table.php?cmd=upd_cfg_system', {
         'plview_sort_group': SESSION.json['plview_sort_group']
         }, function() {
-            notify('settings_updated');
+            notify(NOTIFY_TITLE_INFO, 'settings_updated', NOTIFY_DURATION_SHORT);
             setTimeout(function() {
                 $('#btn-pl-refresh').click();
             }, DEFAULT_TIMEOUT);
@@ -1691,12 +1691,12 @@ $('#btn-add-to-playlist').click(function(e){
     }
 
     if (playlist == '') {
-        notify('select_playlist');
+        notify(NOTIFY_TITLE_ALERT, 'select_playlist');
     } else {
         var path = {'playlist': playlist, 'items': UI.dbEntry[4]};
-        notify('updating_playlist');
+        notify(NOTIFY_TITLE_INFO, 'updating_playlist', NOTIFY_DURATION_SHORT);
         $.post('command/playlist.php?cmd=add_to_playlist', {'path': path}, function() {
-            notify('add_to_playlist');
+            notify(NOTIFY_TITLE_INFO, 'add_to_playlist', NOTIFY_DURATION_SHORT);
             $('#btn-pl-refresh').click();
         }, 'json');
         $('#playlist-names li').removeClass('active');
@@ -1738,7 +1738,7 @@ $('#context-menu-playback a').click(function(e) {
         case 'clear':
             $.post('command/queue.php?cmd=clear_playqueue', function() {
                 $('#playlist-save-name').val('');
-                notify('queue_cleared');
+                notify(NOTIFY_TITLE_INFO, 'queue_cleared', NOTIFY_DURATION_SHORT);
             });
             break;
         case 'stream_recorder':
@@ -1767,7 +1767,7 @@ $('#context-menu-lib-item a').click(function(e) {
         case 'add_item':
         case 'add_item_next':
     		sendQueueCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
-    		notify('add_item');
+    		notify(NOTIFY_TITLE_INFO, 'add_item', NOTIFY_DURATION_SHORT);
             break;
         case 'play_item':
         case 'play_item_next':
@@ -1788,7 +1788,7 @@ $('#context-menu-lib-item a').click(function(e) {
             break;
         /*case 'clear_add_item':
     		sendQueueCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
-    		notify('clear_add_item');
+    		notify(NOTIFY_TITLE_INFO, 'clear_add_item', NOTIFY_DURATION_SHORT);
     		$('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
         }*/
@@ -1807,7 +1807,7 @@ $('#context-menu-lib-item a').click(function(e) {
                 }
             }
     		sendQueueCmd(cmd, files);
-    		notify(cmd);
+    		notify(NOTIFY_TITLE_INFO, cmd, NOTIFY_DURATION_SHORT);
     		$('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
         case 'track_info_lib':
@@ -1845,7 +1845,7 @@ $('#context-menu-lib-album a').click(function(e) {
         case 'add_group':
         case 'add_group_next':
     		sendQueueCmd($(this).data('cmd'), files);
-    		notify($(this).data('cmd'));
+    		notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'play_group':
         case 'play_group_next':
@@ -1853,12 +1853,12 @@ $('#context-menu-lib-album a').click(function(e) {
               break;
         /*case 'clear_add_group':
         	sendQueueCmd('clear_add_group', files);
-        	notify($(this).data('cmd'));
+        	notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         }*/
         case 'clear_play_group':
     		sendQueueCmd('clear_play_group', files);
-    		notify($(this).data('cmd'));
+            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'tracklist':
             showHideTracks(false);
@@ -1885,14 +1885,14 @@ $('#context-menu-lib-disc a').click(function(e) {
     switch ($(this).data('cmd')) {
         case 'add_group':
     		sendQueueCmd('add_group', files);
-    		notify($(this).data('cmd'));
+            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'play_group':
             sendQueueCmd('play_group', files);
             break;
         case 'clear_play_group':
     		sendQueueCmd('clear_play_group', files);
-    		notify($(this).data('cmd'));
+            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'get_playlist_names':
             renderPlaylistNames({'name': filteredSongsDisc[0].album, 'files': files});
@@ -1915,14 +1915,14 @@ $('#context-menu-lib-album-heading a').click(function(e) {
     switch ($(this).data('cmd')) {
         case 'add_group':
     		sendQueueCmd('add_group', files);
-    		notify($(this).data('cmd'));
+            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'play_group':
             sendQueueCmd('play_group', files);
             break;
         case 'clear_play_group':
     		sendQueueCmd('clear_play_group', files);
-    		notify($(this).data('cmd'));
+            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'get_playlist_names':
             renderPlaylistNames({'name': filteredSongsAlbum[0].album, 'files': files});
