@@ -144,17 +144,11 @@ function uiNotify($notify) {
 	$script .= "$.pnotify({";
 	$script .= "title: '" . $notify['title'] . "',";
 	$script .= "text: '" . $notify['msg'] . "',";
-	//$script .= "icon: 'icon-ok',";
 	$script .= "icon: '',";
-	if (isset($notify['duration'])) {
-		$script .= "delay: " . strval($notify['duration'] * 1000) . ",";
-	} else {
-		$script .= "delay: '3000',";
-	}
+	$script .= "delay: " . (isset($notify['duration']) ? strval($notify['duration'] * 1000) : NOTIFY_DURATION_DEFAULT) . ",";
 	$script .= "opacity: 1.0});\n";
 	$script .= "}\n";
 	$script .= "</script>\n";
-
 	echo $script;
 }
 

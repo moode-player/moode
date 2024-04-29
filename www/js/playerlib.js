@@ -42,7 +42,7 @@ const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						  97207
 
 // Notifications
-const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Information';
+const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
 const NOTIFY_DURATION_SHORT = 2; // Seconds
 const NOTIFY_DURATION_DEFAULT = 5;
@@ -346,7 +346,7 @@ function engineMpd() {
                     var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
                     // These particular errors occur when front-end is simply trying to reconnect
                     if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
-                        MPD.json['error']['message'] == 'Unexpected end of JSON data returned from engine-mpd.php.') {
+                        MPD.json['error']['message'] == 'Unexpected end of JSON input') {
                         if (!GLOBAL.reconnecting) {
                             notify(NOTIFY_TITLE_INFO, 'reconnect', NOTIFY_DURATION_INFINITE);
                             GLOBAL.reconnecting = true;
@@ -357,7 +357,7 @@ function engineMpd() {
 				}
 				// MPD output -> Bluetooth but no actual BT connection
 				else if (MPD.json['error'] == 'Failed to open "ALSA bluetooth" (alsa); Failed to open ALSA device "btstream": No such device') {
-					notify(NOTIFY_TITLE_ALERT, 'mpd_error', 'Failed to open ALSA bluetooth output, no such device or connection.');
+                    notify(NOTIFY_TITLE_ALERT, 'mpd_error', 'Output is set to Bluetooth speaker but there is no connection or configured device.');
 				}
 				// Client connects before MPD started by worker ?
 				else if (MPD.json['error'] == 'SyntaxError: JSON Parse error: Unexpected EOF') {
@@ -370,13 +370,12 @@ function engineMpd() {
 				// Other MPD or network errors
 				else {
                     if (MPD.json['error'].includes('Unknown error 524') && MPD.json['error'].includes('Failed to open ALSA device')) {
-                        // VC4 HDMI port not connected to an audio device
                         // 'Failed to open "ALSA Default" (alsa); Failed to open ALSA device "_audioout": Unknown error 524'
-                        var msg = 'An audio device was not detected on the HDMI port.';
+                        var msg = 'Output is set to HDMI but no audio device was detected on the HDMI port.';
                     } else {
-                        var msg = MPD.json['error']
+                        var msg = MPD.json['error'];
                     }
-					notify(NOTIFY_TITLE_ALERT, 'mpd_error', msg);
+                    notify(NOTIFY_TITLE_ALERT, 'mpd_error', msg);
 				}
 
 				renderUI();
@@ -462,7 +461,7 @@ function engineMpdLite() {
                         var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
                         // These particular errors occur when front-end is simply trying to reconnect
                         if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
-                            MPD.json['error']['message'] == 'Unexpected end of JSON data returned from engine-mpd.php.') {
+                            MPD.json['error']['message'] == 'Unexpected end of JSON input') {
                             if (!GLOBAL.reconnecting) {
                                 notify(NOTIFY_TITLE_INFO, 'reconnect', NOTIFY_DURATION_INFINITE);
                                 GLOBAL.reconnecting = true;
@@ -2808,7 +2807,9 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'multiroom_rx_modal':
         case 'multiroom_rx_modal_limited':
-            if (SESSION.json['rx_hostnames'] == 'No receivers found') {
+            if (SESSION.json['rx_hostnames'] == null) {
+                notify(NOTIFY_TITLE_ALERT, 'run_receiver_discovery');
+            } else if (SESSION.json['rx_hostnames'] == 'No receivers found') {
                 notify(NOTIFY_TITLE_ALERT, 'no_receivers_found');
             } else {
                 notify(NOTIFY_TITLE_INFO, 'querying_receivers', NOTIFY_DURATION_INFINITE);
@@ -3402,7 +3403,7 @@ $('#btn-preferences-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
-                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.', NOTIFY_DURATION_SHORT);
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -3412,7 +3413,7 @@ $('#btn-preferences-update').click(function(e){
             } else if (regenThumbsReqd) {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated', ' Thumbnails must be regenerated after changing this setting.');
             } else {
-                notify(NOTIFY_TITLE_INFO, 'settings_updated');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated', NOTIFY_DURATION_SHORT);
             }
         }
     );

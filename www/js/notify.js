@@ -20,70 +20,61 @@
  *
  */
 
-// TODO: Update for new notification style
-
-// NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Information';
-// NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
-// NOTIFY_DURATION_SHORT = 2; // Seconds
-// NOTIFY_DURATION_DEFAULT = 5;
-// NOTIFY_DURATION_MEDIUM = 10;
-// NOTIFY_DURATION_LONG = 30;
-// NOTIFY_DURATION_INFINITE = 8640000; // 100 days
-
-// arg3: duration or extra message text with optional arg4 duration.
+// arg3: duration or extra message text
+// arg4: optional duration if arg3 (extra message text) present
 function notify(title, message, arg3, arg4 = '') {
+    //console.log('title=' + title + ', message=' + message + ', arg3=' + arg3 + ', arg4=' + arg4);
+    var msgQueueAdd = 'Selected items have been added to the Queue. ';
+    var msgQueueClearAdd = 'Selected items have been added after clearing the Queue. ';
+
     var messages = {
         // Queue
-		add_item: 'Added to the Queue. ',
-        add_item_next: 'Added to the Queue. ',
-        add_group: 'Added to the Queue. ',
-        add_group_next: 'Added to the Queue. ',
-        clear_add_item: 'Added after Queue cleared. ',
-        clear_add_group: 'Added after Queue cleared. ',
-		clear_play_item: 'Playing after Queue cleared. ',
-        clear_play_group: 'Playing after Queue cleared. ',
-        queue_item_removed: 'Removed from the Queue. ',
-		queue_item_moved: 'Queue items moved. ',
-        queue_cleared: 'Queue cleared. ',
+		add_item: msgQueueAdd,
+        add_item_next: msgQueueAdd,
+        add_group: msgQueueAdd,
+        add_group_next: msgQueueAdd,
+        clear_add_item: msgQueueClearAdd,
+        clear_add_group: msgQueueClearAdd,
+        queue_item_removed: 'Selected items have been removed. ',
+		queue_item_moved: 'Selected items have been moved. ',
+        queue_cleared: 'Queue has been cleared. ',
         playqueue_info: 'Queue statistics.<br>',
         // Library
-        clear_libcache: 'Library cache cleared. ',
         update_library: 'Updating library... ',
         library_updating: 'Library update is already in progress. ',
         library_loading: 'Library loading... ',
-        //DELETE:regen_thumbs: 'Regenerate thumbnails. ',
         // Playlist/Queue
         saving_queue: 'Saving Queue. ',
         queue_saved: 'Queue saved. ',
 		playlist_name_needed: 'Playlist name is empty. ',
 		playlist_name_error: 'Invalid playlist name. ',
-        setting_favorites_name: 'Setting Favorites name. ',
+        setting_favorites_name: 'Setting Favorites name... ',
         favorites_name_set: 'Favorites name set. ',
-        adding_favorite: 'Adding favorite. ',
+        adding_favorite: 'Adding favorite... ',
         favorite_added: 'Favorite added. ',
 		no_favorite_to_add: 'Nothing to add. ',
         add_to_playlist: 'Items added. ',
         select_playlist: 'Select a playlist. ',
         // Playlist view                            // TODO: refactor
-        creating_playlist: 'Creating new playlist. ', // playlist_create
-        updating_playlist: 'Updating playlist. ',     // playlist_update
+        creating_playlist: 'Creating new playlist... ', // playlist_create
+        updating_playlist: 'Updating playlist... ',     // playlist_update
         new_playlist: 'Playlist created. ',           // playlist_created
 		upd_playlist: 'Playlist updated. ',           // playlist_updated
 		del_playlist: 'Playlist deleted. ',           // playlist_deleted
         // Radio view
         validation_check: 'Validation check. ',       // station_validation
-        creating_station: 'Creating new station. ',   // station_create
-        updating_station: 'Updating station. ',       // station_update
+        creating_station: 'Creating new station... ',   // station_create
+        updating_station: 'Updating station... ',       // station_update
 		new_station: 'Station created. ',             // station_created
 		upd_station: 'Station updated. ',             // station_updated
 		del_station: 'Station deleted. ',             // station_deleted
         blank_entries: 'Name or URL is blank. ',
         // Multiroom
         querying_receivers: 'Querying receivers... ',
-        no_receivers_found: 'No receivers found. ',
+        no_receivers_found: 'No receivers found. Run receiver Discovery. ',
         run_receiver_discovery: 'Run receiver Discovery. ',
         // CamillaDSP
-        cdsp_updating_config: 'Updating configuration. ',
+        cdsp_updating_config: 'Updating configuration... ',
         cdsp_config_updated: 'Configuration updated. ',
         cdsp_config_update_failed: 'Configuraton update failed. ',
         // Renderers
@@ -95,7 +86,7 @@ function notify(title, message, arg3, arg4 = '') {
         restart: 'Restarting... ',
 		shutdown: 'Shutting down... ',
         reconnect: 'Reconnecting... ',
-        mpd_error: 'MPD error: ',
+        mpd_error: '',
         updater: 'An update is available.<br>',
         viewport: 'VIEWPORT<br>',
         debug: 'DEBUG<br>',
@@ -140,13 +131,18 @@ function notify(title, message, arg3, arg4 = '') {
         var extraMessageText = '';
     }
 
-    // Close previous notification if any
-    $('.ui-pnotify-closer').click();
+    // Check for unknown message (coding error)
+    if (typeof(messages[message]) == 'undefined') {
+        messageText = 'Unknown message. Check the source code!'
+    } else {
+        messageText = messages[message];
+    }
 
-    // Display new notification
+    // Display new notification after closing any previous one
+    $('.ui-pnotify-closer').click();
     $.pnotify({
         title: title,
-        text: messages[message] + extraMessageText,
+        text: messageText + extraMessageText,
         icon: '',
         delay: (duration * 1000),
         opacity: 1.0,

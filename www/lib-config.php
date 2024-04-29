@@ -41,7 +41,7 @@ if (isset($_POST['remount_sources'])) {
 	$result = sqlRead('cfg_source', $dbh);
 	if ($result === true) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['notify']['msg'] = 'No music sources configured.';
+		$_SESSION['notify']['msg'] = 'No music sources have been configured.';
 	} else {
 		$resultUnmount = sourceMount('unmountall');
 		$resultMount = sourceMount('mountall');
@@ -58,13 +58,13 @@ if (isset($_POST['update_fs_mountmon'])) {
 }
 // Regenerate MPD database
 if (isset($_POST['regen_library'])) {
-	submitJob('regen_library', '', NOTIFY_TITLE_INFO, 'Regenerating the library... Stay on this screen until the progress spinner is cleared', NOTIFY_DURATION_MEDIUM);
+	submitJob('regen_library', '', NOTIFY_TITLE_INFO, 'Regenerating the database. Stay on this screen until the progress spinner is cleared', NOTIFY_DURATION_INFINITE);
 }
 // Clear library cache
 if (isset($_POST['clear_libcache'])) {
 	clearLibCacheAll();
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
-	$_SESSION['notify']['msg'] = 'Library tag cache cleared.';
+	$_SESSION['notify']['msg'] = 'Library tag cache has been cleared. It will be created when returning to Playback or Library view.';
 }
 // Auto-update MPD database on USB insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
@@ -86,8 +86,8 @@ if (isset($_POST['regen_thmcache'])) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'The Thumbnail Generator is currently running.';
 	} else {
-		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
-		submitJob('regen_thmcache', '', NOTIFY_TITLE_INFO, 'Regenerating the thumbnail cache...');
+		$_SESSION['thmcache_status'] = 'Regenerating the thumbnail cache...';
+		submitJob('regen_thmcache', '', NOTIFY_TITLE_INFO, 'Regenerating the thumbnail cache. Click the VIEW STATUS button for progress.');
 	}
 }
 
@@ -208,7 +208,7 @@ waitWorker('lib-config');
 if ($initiateLibraryUpd == true) {
 	phpSession('open');
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
-	$_SESSION['notify']['msg'] = isset($_POST['save']) ? 'Music source saved.' : 'Music source removed.';
+	$_SESSION['notify']['msg'] = isset($_POST['save']) ? 'Music source has been saved.' : 'Music source has been removed.';
 	$_SESSION['notify']['msg'] .= ' Update or regenerate the Library.';
 	phpSession('close');
 	unset($_GET['cmd']);

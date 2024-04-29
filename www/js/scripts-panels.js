@@ -882,11 +882,9 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	    if ($(this).data('cmd') == 'play_group') {
 	        sendQueueCmd('play_group', dbFilterResults);
-	        notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
 		}
 	    if ($(this).data('cmd') == 'clear_play_group') {
 	        sendQueueCmd('clear_play_group', dbFilterResults);
-	        notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
 		}
 	});
 

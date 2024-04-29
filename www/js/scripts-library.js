@@ -1212,7 +1212,6 @@ $('#albumcovers').on('click', 'img', function(e) {
         }
         else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
             sendQueueCmd('clear_play_group', files);
-            notify(NOTIFY_TITLE_INFO, 'clear_play_group', NOTIFY_DURATION_SHORT);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Show tracks') {
             showHideTracks(posChange);
@@ -1547,7 +1546,6 @@ $('#database-playlist').on('click', 'img', function(e) {
             sendQueueCmd(queueCmd, path);
         } else if (SESSION.json['library_onetouch_pl'] == 'Clear/Play') {
             sendQueueCmd('clear_play_item', path);
-            notify(NOTIFY_TITLE_INFO, 'clear_play_item', NOTIFY_DURATION_SHORT);
         }
     }
 
@@ -1807,7 +1805,6 @@ $('#context-menu-lib-item a').click(function(e) {
                 }
             }
     		sendQueueCmd(cmd, files);
-    		notify(NOTIFY_TITLE_INFO, cmd, NOTIFY_DURATION_SHORT);
     		$('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
         case 'track_info_lib':
@@ -1858,7 +1855,6 @@ $('#context-menu-lib-album a').click(function(e) {
         }*/
         case 'clear_play_group':
     		sendQueueCmd('clear_play_group', files);
-            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'tracklist':
             showHideTracks(false);
@@ -1892,7 +1888,6 @@ $('#context-menu-lib-disc a').click(function(e) {
             break;
         case 'clear_play_group':
     		sendQueueCmd('clear_play_group', files);
-            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'get_playlist_names':
             renderPlaylistNames({'name': filteredSongsDisc[0].album, 'files': files});
@@ -1922,7 +1917,6 @@ $('#context-menu-lib-album-heading a').click(function(e) {
             break;
         case 'clear_play_group':
     		sendQueueCmd('clear_play_group', files);
-            notify(NOTIFY_TITLE_INFO, $(this).data('cmd'), NOTIFY_DURATION_SHORT);
             break;
         case 'get_playlist_names':
             renderPlaylistNames({'name': filteredSongsAlbum[0].album, 'files': files});

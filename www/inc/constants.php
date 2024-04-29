@@ -71,7 +71,7 @@ const BOOT_MOODECFG_INI = '/boot/moodecfg.ini';
 const BT_PINCODE_CONF = '/etc/bluetooth/pin.conf';
 const ETC_MACHINE_INFO = '/etc/machine-info';
 // Notifications
-const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Information';
+const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
 const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
 const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
