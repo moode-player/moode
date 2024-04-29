@@ -30,6 +30,7 @@ Updates
 - UPD: Improve multiroom command response
 - UPD: Improve SMB protocol detection
 - UPD: Improve radio station edit/delete
+- UPD: Improve notification messages
 - UPD: Improve setup guides and quick help
 - UPD: Add autoclick for dropdown controls on the configs
 - UPD: Add "Show items" option to One-touch playlist
