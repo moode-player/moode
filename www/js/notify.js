@@ -42,50 +42,50 @@ function notify(title, message, arg3, arg4 = '') {
         // Library
         update_library: 'Updating library... ',
         library_updating: 'Library update is already in progress. ',
-        library_loading: 'Library loading... ',
+        library_loading: 'Library is loading... ',
         // Playlist/Queue
         saving_queue: 'Saving Queue. ',
-        queue_saved: 'Queue saved. ',
+        queue_saved: 'Queue has been saved. ',
 		playlist_name_needed: 'Playlist name is empty. ',
 		playlist_name_error: 'Invalid playlist name. ',
         setting_favorites_name: 'Setting Favorites name... ',
-        favorites_name_set: 'Favorites name set. ',
+        favorites_name_set: 'Favorites name has been set. ',
         adding_favorite: 'Adding favorite... ',
-        favorite_added: 'Favorite added. ',
+        favorite_added: 'Favorite has been added. ',
 		no_favorite_to_add: 'Nothing to add. ',
-        add_to_playlist: 'Items added. ',
+        add_to_playlist: 'Items have been added. ',
         select_playlist: 'Select a playlist. ',
-        // Playlist view                            // TODO: refactor
-        creating_playlist: 'Creating new playlist... ', // playlist_create
-        updating_playlist: 'Updating playlist... ',     // playlist_update
-        new_playlist: 'Playlist created. ',           // playlist_created
-		upd_playlist: 'Playlist updated. ',           // playlist_updated
-		del_playlist: 'Playlist deleted. ',           // playlist_deleted
+        // Playlist view
+        creating_playlist: 'Creating new playlist... ',
+        updating_playlist: 'Updating playlist... ',
+        new_playlist: 'Playlist has been created. ',
+		upd_playlist: 'Playlist has been updated. ',
+		del_playlist: 'Playlist has been deleted. ',
         // Radio view
-        validation_check: 'Validation check. ',       // station_validation
-        creating_station: 'Creating new station... ',   // station_create
-        updating_station: 'Updating station... ',       // station_update
-		new_station: 'Station created. ',             // station_created
-		upd_station: 'Station updated. ',             // station_updated
-		del_station: 'Station deleted. ',             // station_deleted
+        validation_check: 'Validation check. ',
+        creating_station: 'Creating new station... ',
+        updating_station: 'Updating station... ',
+		new_station: 'Station has been created. ',
+		upd_station: 'Station has been updated. ',
+		del_station: 'Station has been deleted. ',
         blank_entries: 'Name or URL is blank. ',
         // Multiroom
         querying_receivers: 'Querying receivers... ',
-        no_receivers_found: 'No receivers found. Run receiver Discovery. ',
+        no_receivers_found: 'No receivers were found. Run receiver Discovery. ',
         run_receiver_discovery: 'Run receiver Discovery. ',
         // CamillaDSP
         cdsp_updating_config: 'Updating configuration... ',
-        cdsp_config_updated: 'Configuration updated. ',
-        cdsp_config_update_failed: 'Configuraton update failed. ',
+        cdsp_config_updated: 'Configuration has been updated. ',
+        cdsp_config_update_failed: 'Configuraton update has failed. ',
         // Renderers
-        renderer_disconnect: 'Disconnecting... ',
-        renderer_turnoff: 'Turning off... ',
+        renderer_disconnect: 'Disconnecting from renderer... ',
+        renderer_turnoff: 'Turning off renderer... ',
         // Network config
 		dhcp_required: 'DHCP is required. ',
         // System
-        restart: 'Restarting... ',
-		shutdown: 'Shutting down... ',
-        reconnect: 'Reconnecting... ',
+        restart: 'System is restarting... ',
+		shutdown: 'System is shutting down... ',
+        reconnect: 'Connection is being reestablished... ',
         mpd_error: '',
         updater: 'An update is available.<br>',
         viewport: 'VIEWPORT<br>',
@@ -95,22 +95,22 @@ function notify(title, message, arg3, arg4 = '') {
         players_action_submit: 'Action submitted: ',
         // Advanced search
         search_fields_empty: 'Search fields are empty. ',
-        predefined_filter_invalid: 'Predefined filter invalid. ',
+        predefined_filter_invalid: 'Predefined filter is invalid. ',
         // Library saved searches
         search_name_blank: 'Name is blank. ',
         // Miscellaneous
-        upd_clock_radio: 'Clock radio updated. ',
-		settings_updated: 'Settings updated. ',
+        upd_clock_radio: 'Clock radio has been updated. ',
+		settings_updated: 'Settings have been updated. ',
 		gathering_info: 'Gathering info... ',
         installing_plugin: 'Installing plugin... ',
         auto_coverview: 'Auto-CoverView ',
         // Recorder plugin
-        recorder_installed: 'Recorder installed. ',
-        recorder_uninstalled: 'Recorder uninstalled. ',
-        recorder_plugin_na: 'Recorder plugin n/a. ',
-        recorder_deleted: 'Raw recordings deleted. ',
-        recorder_tagging: 'Recordings being tagged... ',
-        recorder_tagged: 'Tagging complete.<br>',
+        recorder_installed: 'Recorder has been installed. ',
+        recorder_uninstalled: 'Recorder has been uninstalled. ',
+        recorder_plugin_na: 'Recorder plugin is n/a. ',
+        recorder_deleted: 'Raw recordings have been deleted. ',
+        recorder_tagging: 'Recordings are being tagged... ',
+        recorder_tagged: 'Tagging is complete.<br>',
         recorder_nofiles: 'No files to tag. '
     };
 
@@ -133,9 +133,9 @@ function notify(title, message, arg3, arg4 = '') {
 
     // Check for unknown message (coding error)
     if (typeof(messages[message]) == 'undefined') {
-        messageText = 'Unknown message. Check the source code!'
+        var messageText = 'Unknown message. Check the source code!'
     } else {
-        messageText = messages[message];
+        var messageText = messages[message];
     }
 
     // Display new notification after closing any previous one
