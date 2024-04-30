@@ -271,6 +271,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList .album-year, #albumsList .album-comment {margin-left:0;margin-left:.3em;}
 #library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
 #library-panel.limited .lib-entry span, #radio-panel.limited .station-name span, #playlist-panel.limited .playlist-name span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+#searchResetLib {padding:.75rem .25em;position:relative;transform:translate(0, -50%);line-height:normal;}
 .database .active {background-color:var(--btnshade);}
 .playqueue .active .pll1, .cv-playqueue .active .pll1 {color:var(--accentxts);font-weight:700;}
 .playqueue li.active:before, .cv-playqueue li.active:before, .lib-track-npicon {color:transparent!important;background:var(--npicon) no-repeat right;background-size:1.25em;}
@@ -330,27 +331,27 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #radio-panel,
 #playlist-panel {animation: fadeIn var(--fadein-rate);width:100%;height:100vh;position:fixed;top:0;overflow:hidden;}
 #library-panel {animation: fadeIn var(--fadein-rate);height:100vh;}
-
 .btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {margin:0;line-height:normal;height:2.5rem;width:2.5rem;font-size:1.1rem;border-radius:0;float:left;display:inline-block;padding:.25rem .5rem;border-right: 1px solid var(--btnshade);}
 #db-back {font-size:1.5rem;}
-#reconnect, #restart, #shutdown {position:fixed;top:0;left:0;margin:0;padding:0;text-align:center;width:100%;height:100%;z-index:9999;}
-.reconnect-bg {position:absolute;top:0;left:0;margin:0;padding:0;text-align:center;background-color:var(--modalbkdr);width:100%;height:100%;z-index:9999;}
-.reconnect-btn {position:fixed;padding:.75rem;transform: translate(-50%,-50%);top: 50%;left: 50%;width: 10em;text-transform:uppercase;z-index:9999;font-size:1.25em;cursor:pointer;border-radius:5rem;color:var(--themetext);background-color:rgba(128, 128, 128, 0.35);}
-.reconnect-btn:hover {background-color:rgba(128, 128, 128, 0.35);} /* Mask hover effect */
-.reconnect-msg {transform: translate(-50%,-50%);position: absolute;top: 50%;margin: 3em 0 0 0;text-transform: uppercase;transform: translate(-50%,-50%);position: absolute;top: 50%;margin: 3em 0 0 0;z-index: 9999;text-transform: uppercase;}
-.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:1rem;transform:none;}
 
+#reconnect,
+#restart,
+#shutdown {position:fixed;top:0;left:0;margin:0;padding:0;text-align:center;width:100%;height:100%;z-index:9999;}
+.reconnect-bg {position:absolute;top:0;left:0;margin:0;padding:0;text-align:center;background-color:var(--modalbkdr);width:100%;height:100%;z-index:9999;}
+.reconnect-container {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-transform:uppercase;color:var(--themetext);z-index:9999;}
+.reconnect-btn {position:relative;font-size:1.25em;width:11em;padding:.75em;border-radius:5em;background-color:rgba(128, 128, 128, 0.35);cursor:pointer;}
+.reconnect-btn:hover {background-color:rgba(128, 128, 128, 0.35);} /* Mask hover effect */
+.reconnect-msg {position:relative;font-size:1em;margin-top:1em;}
+
+.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:1rem;transform:none;}
 #viewswitch-search {height:2.25rem;padding:1.5rem 0 1.5rem 1rem !important;display:none;}
 #viewswitch .view-all, #viewswitch .view-recents {display:none;}
-
 #viewswitch.va .view-all, #viewswitch.va .view-recents, #viewswitch.va .adv-searchbtn, #viewswitch.va #viewswitch-search, #viewswitch.va .album-view-btn .pane {display:block;}
 #viewswitch.vt .view-all, #viewswitch.vt .view-recents, #viewswitch.vt .adv-searchbtn, #viewswitch.vt #viewswitch-search, #viewswitch.vt .tag-view-btn .pane {display:block;}
 #viewswitch.vr .radio-view-btn .pane {display:block;}
 #viewswitch.vp .playlist-view-btn .pane {display:block;}
 #viewswitch.vf .folder-view-btn .pane {display:block;}
-
 #viewswitch span {float:right;display:none;}
-#searchResetLib {padding:.75rem .25em;position:relative;transform:translate(0, -50%);line-height:normal;}
 #viewswitch a {color:inherit;}
 .viewswitch div {display:flex;color:var(--adapttext);}
 #viewswitch .btn {width:100%;}

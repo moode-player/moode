@@ -160,19 +160,26 @@
 <!-- RECONNECT/RESTART/SHUTDOWN -->
 <div id="reconnect" class="hide">
 	<div class="reconnect-bg"></div>
-	<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
+	<div class="reconnect-container">
+		<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
+		<div class="reconnect-msg">Checking connection</div>
+	</div>
 </div>
 
 <div id="restart" class="hide">
 	<div class="reconnect-bg"></div>
-	<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
-	<span class="reconnect-msg">System restarted</span>
+	<div class="reconnect-container">
+		<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
+		<div class="reconnect-msg">System was restarted</div>
+	</div>
 </div>
 
 <div id="shutdown" class="hide">
 	<div class="reconnect-bg"></div>
-	<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
-	<span class="reconnect-msg">System shut down</span>
+	<div class="reconnect-container">
+		<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
+		<div class="reconnect-msg">System was shut down</div>
+	</div>
 </div>
 
 <?php

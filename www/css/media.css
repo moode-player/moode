@@ -138,6 +138,10 @@ body {
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:3.5em;}
 
+	/* Shutdown, Restart, Reconnect */
+	.reconnect-btn {font-size:2em;}
+	.reconnect-msg {font-size:1.35em;}
+
 	/* Library */
 	#lib-artist-header,
 	#lib-artist {left:50%;width:50%;}
