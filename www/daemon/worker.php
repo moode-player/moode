@@ -609,12 +609,6 @@ foreach ($cards as $card) {
 workerLog('worker: Mixers: 0:' . $mixers[0] . '1:' . $mixers[1] . '2:' . $mixers[2] . '3:' . $mixers[3]);
 workerLog('worker:         4:' . $mixers[4] . '5:' . $mixers[5] . '6:' . $mixers[6] . '7:' . $mixers[7]);
 
-// TEMPORARY WORKAROUND
-// Copy in default compile of alsa_cdsp to enable CamillaDSP to work on Pi-5.
-// This binary does not work on Pi-4 or Pi-3 for some reason not known yet.
-sysCmd('cp -f /var/www/inc/libasound_module_pcm_cdsp.so /usr/lib/aarch64-linux-gnu/alsa-lib/');
-workerLog('worker: CDSP:   Test version of alsa_cdsp for Pi-5 installed');
-
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- Audio configuration');
