@@ -23,7 +23,8 @@
 
 body {
 	--config-text-color: #ddd;
-	--config-bg-color: #151515;
+	--config-btn-bg-color: #333;
+	--config-panel-bg-color: #151515;
 	--config-menu-bg-color: rgba(50,50,50,0.95);
 	--config-toggleoff-bg-color: rgba(128,128,128,0.2);
 	--config-toggleoff-color: #888;
@@ -32,12 +33,12 @@ body {
 	--config-ctl-margin-right: 12px;
 	--config-ctl-margin-bottom: 16px;
 	--config-ctl-margin-bottom-toggle: 12px;
-	background-color:var(--config-bg-color)!important;
+	background-color:var(--config-panel-bg-color)!important;
 }
 
 /* Main template div's */
 #container {position:fixed;top:2.75rem;height:90%;width:100%;overflow-y:scroll;-webkit-overflow-scrolling:touch;}
-.container {position:relative;padding:1em 2em 0 2em;background-color:var(--config-bg-color);font-size:var(--pbfont);width:unset;height:auto;}
+.container {position:relative;padding:1em 2em 0 2em;background-color:var(--config-panel-bg-color);font-size:var(--pbfont);width:unset;height:auto;}
 .container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;}
 
 /* Title and legend */

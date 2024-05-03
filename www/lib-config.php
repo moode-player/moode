@@ -208,8 +208,9 @@ waitWorker('lib-config');
 if ($initiateLibraryUpd == true) {
 	phpSession('open');
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
-	$_SESSION['notify']['msg'] = isset($_POST['save']) ? 'Music source has been saved.' : 'Music source has been removed.';
-	$_SESSION['notify']['msg'] .= ' Update or regenerate the Library.';
+	$_SESSION['notify']['msg'] = isset($_POST['save']) ?
+		'Music source has been saved. Update or regenerate the Library if the source mount was successful.' :
+		'Music source has been removed. Update or regenerate the Library.';
 	phpSession('close');
 	unset($_GET['cmd']);
 }
@@ -222,7 +223,8 @@ if (!isset($_GET['cmd'])) {
 	// Display list of music sources if any
 	$mounts = sqlRead('cfg_source', $dbh);
 	foreach ($mounts as $mp) {
-		$icon = mountExists($mp['name']) ? "<i class='fa-solid fa-sharp fa-check green sx'></i>" : "<i class='fa-solid fa-sharp fa-times red sx'></i>";
+
+		$icon = mountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
 		$_mounts .= "<a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a>";
 	}
 
@@ -283,6 +285,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				if (empty($_error)) {
 					$_hide_error = 'hide';
 				} else {
+					$_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
 					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
 				}
 			}

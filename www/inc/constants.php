@@ -55,6 +55,8 @@ const LOGO_ROOT_DIR = 'imagesw/radio-logos/';
 const TMP_IMAGE_PREFIX = '__tmp__';
 const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
 const STATION_EXPORT_DIR = '/var/local/www/imagesw';
+const LIB_MOUNT_OK = '<i class="fa-solid fa-sharp fa-check sx" style="color:#27ae60;"></i>';
+const LIB_MOUNT_FAILED = '<i class="fa-solid fa-sharp fa-times sx" style="color:#e74c3c;"></i>';
 // Thumbnail generator
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const THM_SM_W = 80; // Small thumbs
