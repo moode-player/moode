@@ -598,22 +598,21 @@ class CamillaDsp {
             // Switching to/from Off
             if ($newMode == 'off') {
                 $mixerType = $_SESSION['alsavolume'] != 'none' ? 'hardware' : 'software';
-                $notifyMsg = ',Volume type changed to:<br>' . ucfirst($mixerType);
+                $notifyMsg = ucfirst($mixerType) . ' volume.';
                 $queueArg1 = ',change_mixer_to_default';
             } else {
                 $mixerType = 'null';
-                $notifyMsg = ',Volume type changed to:<br>CamillaDSP';
+                $notifyMsg = 'CamillaDSP volume.';
                 $queueArg1 = ',change_mixer_to_camilladsp';
             }
 
-            // We update it here so the "Volume type" field gets refreshed when the
-            // page returns after the CamillaDSP config is changed in the Equalizers
-            // section of Audio Config
+            // Update cfg_mpd here so "Volume type" gets refreshed when the page returns
+            // after the config is changed in the Equalizers section of Audio Config
             sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
 
-            sendEngCmd('cdsp_updating_config' . $notifyMsg);
-            sleep(2); // So notification stays up for a while
-
+            sendEngCmd('cdsp_update_config' . ',' . $notifyMsg);
+            // So notification stays up for a bit.
+            sleep(2);
             submitJob('camilladsp', $newMode . $queueArg1);
         } else {
             // Switching between configs

@@ -571,21 +571,19 @@ function engineCmd() {
     				screenSaver(cmd[0]);
                     break;
                 case 'libupd_done':
-    				$('.busy-spinner').hide();
+                    $('.busy-spinner').hide();
                     loadLibrary();
                     break;
                 case 'set_cover_image1':
                     $('.busy-spinner').show();
                     break;
                 case 'set_cover_image0':
-    				$('.busy-spinner').hide();
+                    $('.busy-spinner').hide();
                     break;
-                case 'cdsp_updating_config':
-                    var msg = cmd[1] == 'no_mixer_change' ? '' : '<br>' + cmd[1];
-                    notify(NOTIFY_TITLE_INFO, 'cdsp_updating_config', msg, NOTIFY_DURATION_INFINITE);
+                case 'cdsp_update_config':
+                    notify(NOTIFY_TITLE_INFO, 'cdsp_update_config', cmd[1], NOTIFY_DURATION_DEFAULT);
                     break;
                 case 'cdsp_config_updated':
-                    notify(NOTIFY_TITLE_INFO, 'cdsp_config_updated');
                     if (typeof(cmd[1]) != 'undefined') {
                         SESSION.json['camilladsp'] = cmd[1];
                     }
@@ -648,12 +646,11 @@ function engineCmdLite() {
                     $('.busy-spinner').hide();
                     loadLibrary();
                     break;
-                case 'cdsp_updating_config':
-                    var msg = cmd[1] == 'no_mixer_change' ? '' : '<br>' + cmd[1];
-                    notify(NOTIFY_TITLE_INFO, 'cdsp_updating_config', msg, NOTIFY_DURATION_INFINITE);
+                case 'cdsp_update_config':
+                    notify(NOTIFY_TITLE_INFO, 'cdsp_update_config', cmd[1], NOTIFY_DURATION_INFINITE);
                     break;
                 case 'cdsp_config_updated':
-                    $('.ui-pnotify-closer').click();
+                    // NOP
                     break;
                 case 'cdsp_config_update_failed':
                     notify(NOTIFY_TITLE_ALERT, 'cdsp_config_update_failed', NOTIFY_DURATION_MEDIUM);

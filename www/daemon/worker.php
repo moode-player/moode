@@ -1216,7 +1216,7 @@ if (!isset($_SESSION['pci_express'])) {
 }
 // Mount monitor
 if (!isset($_SESSION['fs_mountmon'])) {
-	$_SESSION['fs_mountmon'] = 'Off';
+	$_SESSION['fs_mountmon'] = 'On';
 }
 // MPD radio stream monitor
 if (!isset($_SESSION['mpd_monitor_svc'])) {
@@ -2388,8 +2388,6 @@ function runQueuedJob() {
 						// Set volume level
 						sysCmd('/var/www/util/vol.sh -restore' );
 					}
-					// Notification
-					sendEngCmd('cdsp_config_updated');
 					break;
 				case 'crossfeed':
 					$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"" . $alsaDevice . "\"";

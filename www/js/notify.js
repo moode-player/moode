@@ -40,7 +40,7 @@ function notify(title, message, arg3, arg4 = '') {
         queue_cleared: 'Queue has been cleared. ',
         playqueue_info: 'Queue statistics.<br>',
         // Library
-        update_library: 'Updating library... ',
+        update_library: 'Library is being updated... ',
         library_updating: 'Library update is already in progress. ',
         library_loading: 'Library is loading... ',
         // Playlist/Queue
@@ -74,8 +74,7 @@ function notify(title, message, arg3, arg4 = '') {
         no_receivers_found: 'No receivers were found. Run receiver Discovery. ',
         run_receiver_discovery: 'Run receiver Discovery. ',
         // CamillaDSP
-        cdsp_updating_config: 'Updating configuration... ',
-        cdsp_config_updated: 'Configuration has been updated. ',
+        cdsp_update_config: 'Switching to ',
         cdsp_config_update_failed: 'Configuraton update has failed. ',
         // Renderers
         renderer_disconnect: 'Disconnecting from renderer... ',
@@ -115,16 +114,15 @@ function notify(title, message, arg3, arg4 = '') {
     };
 
     // Parse the args
-    // TODO: redo this logic!
     if (typeof(arg3) == 'number') {
         var duration = arg3;
         var extraMessageText = '';
     } else if (typeof(arg3) == 'string') {
         var extraMessageText = arg3;
-        if (arg4 != '' ) {
-            var duration = arg4;
-        } else {
+        if (arg4 == '' ) {
             var duration = NOTIFY_DURATION_DEFAULT;
+        } else {
+            var duration = arg4;
         }
     } else if (typeof(arg3) == 'undefined') {
         var duration = NOTIFY_DURATION_DEFAULT;

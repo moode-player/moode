@@ -213,10 +213,10 @@ html {background-color:inherit;}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
 #menu-cdsp {font-size:1.25rem;}
 #dropdown-cdsp-btn {right:4.6rem!important;top:env(safe-area-inset-top)!important;}
-#dropdown-cdsp-menu {max-height:calc(100vh - 12rem);overflow:scroll;min-width:20rem!important;padding-top:.5em;}
+#dropdown-cdsp-menu {max-height:calc(100vh - 12rem);overflow:scroll;/*DELETE:min-width:20rem!important;*/padding-top:.5em;}
 .cdsp-menu-background {background-image:url(../images/camilladsp.svg);background-repeat:no-repeat;background-position-y:top;background-position-x:50%;background-blend-mode:difference;background-size:5em;background-origin:content-box;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
-.dropdown-cdsp-line {padding-left:1em;}
+.dropdown-cdsp-line {padding:0 2.25em 0 1em;}
 #panel-footer {bottom:0;width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 #panel-footer ul {display:flex;margin:0;width:100%;}
 #updater-notification {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;color:var(--adapttext);}
