@@ -175,7 +175,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 .clockradio-off {display:none;}
 .clockradio-on-m {color:#dddddd;font-size:16.5px;}
 .clockradio-off-m {color:#7f8c8d;font-size:16.5px;}
-a.info-toggle {vertical-align:top;}
+a.info-toggle {vertical-align:top;color:var(--textvariant);}
+a.info-toggle:hover,
+a.info-toggle:visited {color:var(--textvariant);}
 .info-toggle i {vertical-align:top;margin-top:6px;font-size:1.1em;}
 #quickhelp-icon-list ul {list-style:none;margin-left:0;}
 #quickhelp-icon-list p {margin-left:1.5em;}

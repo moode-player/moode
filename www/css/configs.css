@@ -29,6 +29,7 @@ body {
 	--config-toggleoff-bg-color: rgba(128,128,128,0.2);
 	--config-toggleoff-color: #888;
 	--config-help-color: #888;
+	--config-help-icon-color: #666;
 	--config-help-margin-top: -10px;
 	--config-ctl-margin-right: 12px;
 	--config-ctl-margin-bottom: 16px;
@@ -83,7 +84,9 @@ input[type=password] {display:inline-block;height:22px;vertical-align:top;margin
 .config-toggle-after {display:inline-block;vertical-align:top;color: var(--config-text-color);margin-top:5px;margin-right:var(--config-ctl-margin-right);}
 
 /* Help text */
-a.config-info-toggle {vertical-align:top;}
+a.config-info-toggle {vertical-align:top;color:var(--config-help-icon-color);}
+a.config-info-toggle:hover,
+a.config-info-toggle:visited {color:var(--config-help-icon-color);}
 .config-info-toggle i {vertical-align:top;margin-top:5px;font-size:18px;}
 .config-help-info,
 .config-help-static,
@@ -96,7 +99,9 @@ a.config-info-toggle {vertical-align:top;}
 #sys-status-log-output,
 #sys-restore-status {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
 /* net-config, src-config: Show/hide password plaintext */
-a.show-hide-password {vertical-align:top;}
+a.show-hide-password {vertical-align:top;color:var(--config-help-icon-color);}
+a.show-hide-password:hover,
+a.show-hide-password:visited {color:var(--config-help-icon-color);}
 .show-hide-password i {vertical-align:top;margin-top:5px;font-size:18px;margin-left:var(--config-ctl-margin-bottom);}
 .left-margin-0 i {margin-left:0;}
 /* cdsp-configurator: Pipeline editor */

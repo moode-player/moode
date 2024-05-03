@@ -40,7 +40,7 @@
 				<label for="backup-scriptfile" id="choose-backup-scriptfile" class="btn btn-primary btn-medium config-btn">Select</label>
 				<input type="file" id="backup-scriptfile" accept=".sh,.py" name="backup_scriptfile" style="display:none" onchange="$('#btn-import-scriptfile').click();">
 				<button id="btn-import-scriptfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_scriptfile" value="1"  style="display:none"></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-scriptfile" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-scriptfile" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span class="config-help-static">
 					$_imported_scriptfile
 				</span>
@@ -101,7 +101,7 @@
 			label class="control-label" for="wlan0pwd">WiFi password</label>
 			<div class="controls">
 				<input class="config-input-large" type="password" pattern=".{8,64}" id="backup-wlan0pwd" name="backup_wlan0pwd" value="$_wlan0pwd" >
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-wlan0pwd" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backup-wlan0pwd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<a class="show-hide-password" href="#notarget" data-id="backup_wlan0pwd"><i class="fa-regular fa-sharp fa-eye"></i></a>
 				<span id="info-backup-wlan0pwd" class="config-help-info">
 					Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.
@@ -189,7 +189,7 @@
 				<input type="file" id="restore-backupfile" accept=".zip" name="restore_backupfile" style="display:none" onchange="$('#btn-import-backupfile').click();">
 				<button id="btn-import-backupfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_backupfile" value="1"  style="display:none"/>
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="reset_options" form="restore" value="1">Reset</button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fa-solid fa-sharp fa-info-circle"></i></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<div class="config-help-static">
 					$_imported_backupfile
 				</div>
