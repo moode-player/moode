@@ -191,7 +191,7 @@ body {
 	#context-menu-playback .dropdown-menu {min-width:15rem;}
 	.dropdown-menu>li>a {font-size:1.3rem;line-height:3.75rem;}
 	.viewswitch .btn {font-size:1em;}
-	#dropdown-cdsp-menu {max-height:calc(100vh - 20rem);}
+	#dropdown-cdsp-menu {max-height:calc(100vh - 20rem);min-width:24rem!important;}
 
 	/* Modals */
 	.modal {min-width:100vw;font-size:1.2rem;}
