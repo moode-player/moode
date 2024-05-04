@@ -455,7 +455,7 @@ if ($_SESSION['alsavolume'] == 'none') {
 }
 // Output mode
 $_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
-if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && str_contains($_SESSION['adevname'], 'HDMI')) {
+if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'])) {
 	// Pi-3 or higher and HDMI output set
 	$_select['alsa_output_mode'] .= "<option value=\"iec958\" " . (($_SESSION['alsa_output_mode'] == 'iec958') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['iec958'] . "</option>\n";
 	$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'];

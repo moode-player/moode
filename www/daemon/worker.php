@@ -622,23 +622,25 @@ workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
 $actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
 if ($actualCardNum == $_SESSION['cardnum']) {
 	workerLog('worker: ALSA card:     has not changed');
-	if ($_SESSION['alsa_output_mode'] == 'iec958') {
-		workerLog('worker: MPD config:    updated (iec958 device)');
+	//DELETE:if ($_SESSION['alsa_output_mode'] == 'iec958') {
+	if (isHDMIDevice($_SESSION['adevname'])) {
+		phpSession('write', 'alsa_output_mode', 'iec958');
 		updMpdConf();
+		workerLog('worker: MPD config:    updated (iec958 device)');
 	} else {
 		workerLog('worker: MPD config:    update not needed');
 	}
 } else if ($actualCardNum == ALSA_EMPTY_CARD) {
 	workerLog('worker: ALSA card:     is empty, reconfigure to HDMI 1');
 	$hdmi1CardNum = getAlsaCardNumForDevice(PI_HDMI1);
-	// Check output device cache
 	$devCache = checkOutputDeviceCache(PI_HDMI1, $hdmi1CardNum);
 	// Update configuration
-	phpSession('write', 'cardnum', $hdmi1CardNum);
 	phpSession('write', 'adevname', PI_HDMI1);
-	phpSession('write', 'alsa_output_mode', $devCache['alsa_output_mode']);
-	phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
+	phpSession('write', 'cardnum', $hdmi1CardNum);
 	sqlUpdate('cfg_mpd', $dbh, 'device', $hdmi1CardNum);
+	//DELETE:phpSession('write', 'alsa_output_mode', $devCache['alsa_output_mode']);
+	phpSession('write', 'alsa_output_mode', 'iec958');
+	phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
 	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
 	updMpdConf();
 	workerLog('worker: MPD config:    updated');

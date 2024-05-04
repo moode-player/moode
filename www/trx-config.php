@@ -267,7 +267,7 @@ $_select['multiroom_rx'] .= "<option value=\"Off\" " . (($_SESSION['multiroom_rx
 $autoClick = " onchange=\"autoClick('#btn-set-multiroom-rx-mastervol-opt-in');\" " . $_localui_btn_disable;
 $_select['multiroom_rx_mastervol_opt_in_on'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-1\" value=\"1\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['multiroom_rx_mastervol_opt_in_off'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle-multiroom-rx-mastervol-opt-in-2\" value=\"0\" " . (($cfgMultiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && str_contains($_SESSION['adevname'], 'HDMI')) {
+if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'])) {
 	$_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"iec958\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'iec958') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['iec958'] . "</option>\n";
 }
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";

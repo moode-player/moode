@@ -76,6 +76,10 @@ function isI2SDevice($deviceName) {
 	return $isI2SDevice;
 }
 
+function isHDMIDevice($deviceName) {
+	return ($deviceName == PI_HDMI1 || $deviceName == PI_HDMI2);
+}
+
 function getAudioOutputIface($cardNum) {
 	$deviceName = getAlsaDeviceNames()[$cardNum];
 

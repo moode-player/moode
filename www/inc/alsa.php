@@ -80,11 +80,21 @@ function getAlsaMixerName($deviceName) {
 }
 
 function getAlsaVolume($mixerName) {
-	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $mixerName . '"');
-	if (substr($result[0], 0, 6 ) == 'amixer') {
-		$alsaVolume = 'none';
-	} else {
+	$maxLoops = 3;
+	$sleepTime = 1;
+	for ($i = 0; $i < $maxLoops; $i++) {
+		$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $mixerName . '"');
+		if (substr($result[0], 0, 6 ) != 'amixer') {
+			break;
+		}
+
+		sleep($sleepTime);
+	}
+
+	if (substr($result[0], 0, 6 ) != 'amixer') {
 		$alsaVolume = str_replace('%', '', $result[0]);
+	} else {
+		$alsaVolume = 'none';
 	}
 
 	return $alsaVolume;
