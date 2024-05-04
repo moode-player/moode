@@ -26,6 +26,8 @@ New features
 
 Updates
 
+- UPD: Bump to Linux kernel 6.6.28
+- UPD: Bump to alsa-cdsp 1.2.0-1moode2
 - UPD: Improve Bluetooth (add volume and pin options)
 - UPD: Improve multiroom command response
 - UPD: Improve SMB protocol detection
