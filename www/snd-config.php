@@ -456,13 +456,12 @@ if ($_SESSION['alsavolume'] == 'none') {
 // Output mode
 $_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
 if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'])) {
-	// Pi-3 or higher and HDMI output set
 	$_select['alsa_output_mode'] .= "<option value=\"iec958\" " . (($_SESSION['alsa_output_mode'] == 'iec958') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['iec958'] . "</option>\n";
-	$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'];
+	$_alsa_output_mode = $_SESSION['alsa_output_mode'];
 } else {
 	$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
 	$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
-	$_alsa_plugin_and_cardnum = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+	$_alsa_output_mode = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 }
 // Loopback
 $_alsa_loopback_disable = '';
