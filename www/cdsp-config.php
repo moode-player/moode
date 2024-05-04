@@ -19,6 +19,7 @@
  */
 
 require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/audio.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/cdsp.php';
 
@@ -234,7 +235,13 @@ $_select['version'] = str_replace('CamillaDSP', '', $cdsp->version());
 
 $_select['cdsp_use_default_device_on'] .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 $_select['cdsp_use_default_device_off']  .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
-$_alsa_plugin_and_cardnum = $_SESSION['cdsp_fix_playback'] == 'No' ? '(Defined in Pipeline editor)' : $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+if ($_SESSION['cdsp_fix_playback'] == 'No') {
+	$_alsa_output_mode = '(Defined in Pipeline editor)';
+} else if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'])) {
+	$_alsa_output_mode = $_SESSION['alsa_output_mode'];
+} else {
+	$_alsa_output_mode = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
+}
 
 if ($_SESSION['camilladsp_quickconv']) {
 	$quickConvConfig =$cdsp->stringToQuickConvolutionConfig($_SESSION['camilladsp_quickconv']);
