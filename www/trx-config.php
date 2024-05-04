@@ -19,6 +19,7 @@
  */
 
 require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/audio.php';
 require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/multiroom.php';
 require_once __DIR__ . '/inc/session.php';
