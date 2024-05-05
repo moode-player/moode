@@ -36,9 +36,11 @@
 					$_mpd_select[device]
                 </select>
 				<button id="btn-set-output-device" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_output_device" value="novalue" $_output_device_btn_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="nop" value="novalue" $_output_device_btn_disabled><i class="fa-regular fa-sharp fa-redo"></i></button>
-				<span class="config-help-static">
-					The list shows the ALSA card number and assigned audio device or "empty" if no audio device exist at the given card.
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="nop" value="novalue" $_output_device_btn_disabled>Scan</i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-device" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-output-device" class="config-help-info">
+					The list shows the ALSA card number and assigned audio device or "empty".
+					The SCAN button refreshes the list to pick up newly connected USB audio devices.
 				</span>
 			</div>
 
@@ -51,10 +53,10 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-mixer-type" class="config-help-info">
 					Volume type used by MPD.<br>
-					<b>- Hardware: </b>Use audio device on-chip volume controller.<br>
-					<b>- Software: </b>Use MPD software volume (32 bit float with dither).<br>
-					<b>- Fixed (0dB): </b>Output 100% volume. Assumes a downstream volume control is used.<br>
-					<b>- CamillaDSP: </b>Use CamillaDSP software volume (64 bit float with dither). CamillaDSP must be On for this option to appear.<br>
+					<b>- Hardware:</b> Audio device on-chip volume controller.<br>
+					<b>- Software:</b> MPD software volume (32 bit float with dither).<br>
+					<b>- Fixed (0dB):</b> Output 100% volume. Assumes a downstream volume control is used.<br>
+					<b>- CamillaDSP:</b> CamillaDSP software volume (64 bit float with dither).
 				</span>
 				<span class="config-help-static">
 					Set volume to a low level before changing these options.
@@ -122,12 +124,12 @@
 		</p>
 
 		<div class="control-group">
-			<label class="control-label" for="alsavolume_max">Max volume (%)</label>
+			<label class="control-label" for="alsavolume-max">Max volume (%)</label>
 			<div class="controls">
-				<input class="config-input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit status-msg" type="submit" name="update_alsavolume_max" value="novalue" $_alsavolume_max_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
-				<span id="info-alsavolume_max" class="config-help-static">
-					$_alsavolume_max_msg
+				<input class="config-input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="1" max="100" id="alsavolume-max" name="alsavolume_max" value="$_alsavolume_max" required onchange="autoClick('#btn-set-alsavolume-max');" $_alsavolume_max_disable>
+				<button id="btn-set-alsavolume-max" class="hide btn btn-primary btn-small config-btn-set btn-submit status-msg" type="submit" name="update_alsavolume_max" value="novalue" $_alsavolume_max_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsavolume-max" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-alsavolume-max" class="config-help-info">
 					Establish ALSA 0dB level when volume type is set to Software, Fixed or CamillaDSP, or when any Renderers are active.
 				</span>
 			</div>
@@ -138,10 +140,11 @@
 					$_select[alsa_output_mode]
 				</select>
 				<button id="btn-set-alsa-output-mode" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-output-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span class="config-help-static">
 					ALSA: $_alsa_output_mode
 				</span>
-				<span class="config-help-static">
+				<span id="info-alsa-output-mode" class="config-help-info">
 					<b>Default: </b>ALSA "plughw" plugin which performs format conversions if needed to match audio device requirements.<br>
 					<b>Direct: </b>ALSA "hw" plugin which does not perform format conversions. The audio device must accept the given format.<br>
 					<b>IEC958: </b>ALSA "iec958" plugin which provides IEC958_SUBFRAME_LE format for HDMI audio.<br>
@@ -156,7 +159,8 @@
 					<label class="toggle-radio toggle-alsa-loopback" for="toggle-alsa-loopback-1">OFF</label>$_select[alsa_loopback_off]
 				</div>
 				<button id="btn-set-alsa-loopback" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
-				<span class="config-help-static">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-loopback" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-alsa-loopback" class="config-help-info">
 					The Loopback device provides a copy of the PCM output stream that can be accessed by reading "hw:Loopback,1,0".<br>
 					<b>1)</b> Loopback is only supported in Default (plughw) mode.<br>
 					<b>2)</b> Loopback requires a sample rate greater than 44.1K for Pi HDMI or Headphone outputs. This requirement does not apply if Multiroom Sender is ON.
@@ -247,20 +251,22 @@
 				</span>
 			</div>
 
-			<label class="control-label" for="ashuffle_window">Window size</label>
+			<label class="control-label" for="ashuffle-window">Window size</label>
 			<div class="controls">
-                <input class="config-input-large" type="number" maxlength="3" min="0" max="1024" id="ashuffle-window" name="ashuffle_window" value="$_ashuffle_window" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ashuffle_window" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+                <input class="config-input-large" type="number" maxlength="3" min="1" max="1024" id="ashuffle-window" name="ashuffle_window" value="$_ashuffle_window" required onchange="autoClick('#btn-set-ashuffle-window');">
+				<button id="btn-set-ashuffle-window" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ashuffle_window" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-ashuffle-window" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-ashuffle-window" class="config-help-info">
-					Sets the size of the "window" used for the shuffle algorithm. Lower numbers mean more frequent repeats, and higher numbers mean less frequent repeats. The default window size is 7.
+					Sets the size of the "window" used for the shuffle algorithm.
+					Lower numbers mean more frequent repeats, and higher numbers mean less frequent repeats.
+					The default window size is 7.
                 </span>
 			</div>
 
-			<label class="control-label" for="ashuffle_filter">Tag filter</label>
+			<label class="control-label" for="ashuffle-filter">Tag filter</label>
 			<div class="controls">
-                <input class="config-input-large" type="text" id="ashuffle_filter" name="ashuffle_filter" value="$_ashuffle_filter">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ashuffle_filter" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+                <input class="config-input-large" type="text" id="ashuffle-filter" name="ashuffle_filter" value="$_ashuffle_filter" onchange="autoClick('#btn-set-ashuffle-filter');">
+				<button id="btn-set-ashuffle-filter" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ashuffle_filter" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_ashuffle_filter" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info_ashuffle_filter" class="config-help-info">
 					String of TAG VALUE pairs that Auto-shuffle uses to select the tracks being shuffled.
@@ -285,13 +291,13 @@
 				</span>
 			</div>
 
-			<label class="control-label" for="volume_mpd_max">Max MPD volume</label>
+			<label class="control-label" for="volume-mpd-max">Max MPD volume</label>
 			<div class="controls">
-                <input class="config-input-large" type="number" maxlength="2" min="0" max="100" id="volume_mpd_max" name="volume_mpd_max" value="$_volume_mpd_max" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_mpd_max" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+                <input class="config-input-large" type="number" maxlength="3" min="1" max="100" id="volume-mpd-max" name="volume_mpd_max" value="$_volume_mpd_max" required onchange="autoClick('#btn-set-volume-mpd-max');">
+				<button id="btn-set-volume-mpd-max" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_mpd_max" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_volume_mpd_max" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info_volume_mpd_max" class="config-help-info">
-					Establishes the highest level that can be set by the Volume Knob and via vol.sh and rotvol.sh.
+					Establishes the highest Volume Knob level that can be set.
                 </span>
 			</div>
 
@@ -337,8 +343,8 @@
 
 			<label class="control-label" for="rotenc-params">Encoder settings</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" id="rotenc-params" name="rotenc_params" value="$_select[rotenc_params]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rotenc_params" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" type="text" id="rotenc-params" name="rotenc_params" value="$_select[rotenc_params]" required onchange="autoClick('#btn-set-rotenc-params');">
+				<button id="btn-set-rotenc-params" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rotenc_params" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rotaryenc-params" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-rotaryenc-params" class="config-help-info">
 					Encoder settings (positional)<br>
@@ -358,13 +364,11 @@
 		<div class="control-group">
 			<label class="control-label" for="mpdcrossfade">Crossfade (secs)</label>
 			<div class="controls">
-                <input class="config-input-large" type="number" maxlength="2" min="0" max="15" id="mpdcrossfade" name="mpdcrossfade" value="$_mpdcrossfade" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpdcrossfade" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+                <input class="config-input-large" type="number" maxlength="2" min="0" max="15" id="mpdcrossfade" name="mpdcrossfade" value="$_mpdcrossfade" required onchange="autoClick('#btn-set-mpdcrossfade');">
+				<button id="btn-set-mpdcrossfade" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpdcrossfade" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mpdcrossfade" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-mpdcrossfade" class="config-help-info">
-					MPD uses its audio buffer for crossfading thus there must be enough buffer space available to perform the requested
-					number of seconds of crossfade for a given audio format.<br>
-					NOTE: Set to 0 to disable crossfade.
+					The MPD Audio buffer must be large enough to perform the requested number of seconds of crossfade for a given audio format. Set to 0 to disable crossfade.
                 </span>
 			</div>
 
@@ -418,8 +422,8 @@
 
 			<label class="control-label" for="mpd-httpd-port">Port</label>
 			<div class="controls">
-                <input class="config-input-large" type="number" maxlength="4" min="8000" max="9000" id="mpd-httpd-port" name="mpd_httpd_port" value="$_mpd_httpd_port" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpd-httpd_port" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+                <input class="config-input-large" type="number" maxlength="4" min="8000" max="9000" id="mpd-httpd-port" name="mpd_httpd_port" value="$_mpd_httpd_port" required onchange="autoClick('#btn-set-mpd-httpd-port');">
+				<button id="btn-set-mpd-httpd-port" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpd-httpd_port" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mpd-httpd-port" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-mpd-httpd-port" class="config-help-info">
 					Default port is 8000. Port number range is 8000 - 9000.

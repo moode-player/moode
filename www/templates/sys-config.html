@@ -62,8 +62,8 @@
 			<legend>General</legend>
 			<label class="control-label" for="hostname">Host/player name</label>
             <div class="controls">
-                <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+                <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required onchange="autoClick('#btn-set-hostname');">
+				<button id="btn-set-hostname" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-info">
 					Length 3-63 characters, alphanumeric and hyphen allowed. This is the name that will appear on the network.
 				</span>
@@ -71,8 +71,8 @@
 
             <label class="control-label" for="browsertitle">Browser title</label>
             <div class="controls">
-                <input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+                <input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required onchange="autoClick('#btn-set-browsertitle');">
+				<button id="btn-set-browsertitle" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
             </div>
 
 			<label class="control-label" for="timezone">Timezone</label>
@@ -274,8 +274,8 @@
 
 			<label class="control-label" for="fs-nfs-access">Access</label>
 			<div class="controls">
-				<input id="fs-nfs-access" class="input-large config-input-large" type="text" name="fs_nfs_access" value="$_select[fs_nfs_access]" placeholder="IP address or subnet">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_access" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input id="fs-nfs-access" class="input-large config-input-large" type="text" name="fs_nfs_access" value="$_select[fs_nfs_access]" placeholder="IP address or subnet" onchange="autoClick('#btn-set-fs-nfs-access');">
+				<button id="btn-set-fs-nfs-access" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_access" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					Specify a client IP or subnet address that is allowed access to NFS exports.<br>
 					Use Classless Inter-Domain Routing (CIDR) notation (/24 for subnet, /32 for IP address).<br>
@@ -285,8 +285,8 @@
 
 			<label class="control-label" for="fs-nfs-options">Options</label>
 			<div class="controls">
-				<input id="fs-nfs-options" class="input-large config-input-large" type="text" name="fs_nfs_options" value="$_select[fs_nfs_options]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_options" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input id="fs-nfs-options" class="input-large config-input-large" type="text" name="fs_nfs_options" value="$_select[fs_nfs_options]" required onchange="autoClick('#btn-set-fs-nfs-options');">
+				<button id="btn-set-fs-nfs-options" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_nfs_options" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<span class="config-help-static">
 					These options determine the permissions granted to connected clients.<br>
 					Default options: rw,sync,no_subtree_check,no_root_squash
@@ -310,8 +310,8 @@
 
 				<label class="control-label" for="dlnaname">Name</label>
 				<div class="controls">
-					<input class="config-input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" required>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+					<input class="config-input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" required onchange="autoClick('#btn-set-dlnaname');">
+					<button id="btn-set-dlnaname" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				</div>
 
 				<div class="controls">

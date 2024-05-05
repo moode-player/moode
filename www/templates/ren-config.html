@@ -44,14 +44,14 @@
 
 			<label class="control-label" for="btname">Name</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" id="btname" name="btname" value="$_select[btname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" type="text" id="btname" name="btname" value="$_select[btname]" required onchange="autoClick('#btn-set-btname');">
+				<button id="btn-set-btname" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 
 			<label class="control-label" for="bt-pin-code">PIN code</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" pattern="[A-Za-z0-9]{4,6}" id="bt-pin-code" name="bt_pin_code" value="$_bt_pin_code" placeholder="None">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_pin_code" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" type="text" pattern="[A-Za-z0-9]{4,6}" id="bt-pin-code" name="bt_pin_code" value="$_bt_pin_code" placeholder="None" onchange="autoClick('#btn-set-bt-pin-code');">
+				<button id="btn-set-bt-pin-code" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_pin_code" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-bt-pin-code" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-bt-pin-code" class="config-help-info">
 					Set a 6 digit numeric PIN code (or "None") that clients are required to enter before the initial connection request is accepted. Subsequent connection requests are then verified and accepted without needing to re-enter the PIN code.
@@ -60,8 +60,8 @@
 
 			<label class="control-label" for="alsavolume-max-bt">ALSA maxvol (%)</label>
 			<div class="controls">
-				<input class="config-input-large" $_alsavolume_max_bt_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume-max-bt" name="alsavolume_max_bt" value="$_alsavolume_max_bt">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit status-msg" type="submit" name="update_alsavolume_max_bt" value="novalue" $_alsavolume_max_bt_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" $_alsavolume_max_bt_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume-max-bt" name="alsavolume_max_bt" value="$_alsavolume_max_bt" onchange="autoClick('#btn-set-alsavolume-max-bt');" $_alsavolume_max_bt_disable>
+				<button id="btn-set-alsavolume-max-bt" class="hide btn btn-primary btn-small config-btn-set btn-submit status-msg" type="submit" name="update_alsavolume_max_bt" value="novalue" $_alsavolume_max_bt_disable><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsavolume-max-bt" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				$_alsavolume_max_bt_msg
 				<span id="info-alsavolume-max-bt" class="config-help-info">
@@ -71,8 +71,8 @@
 
 			<label class="control-label" for="cdspvolume-max-bt">CDSP maxvol (dB)</label>
 			<div class="controls">
-				<input class="config-input-large" type="number" pattern="^([-+,0-9.]+)" maxlength="4" min="-120" max="0" id="cdspvolume-max-bt" name="cdspvolume_max_bt" value="$_cdspvolume_max_bt">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cdspvolume_max_bt" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" type="number" pattern="^([-+,0-9.]+)" maxlength="4" min="-120" max="0" id="cdspvolume-max-bt" name="cdspvolume_max_bt" value="$_cdspvolume_max_bt" onchange="autoClick('#btn-set-cdspvolume-max-bt');">
+				<button id="btn-set-cdspvolume-max-bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_cdspvolume_max_bt" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cdspvolume-max-bt" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-cdspvolume-max-bt" class="config-help-info">
 					Establish the maximum CamillaDSP volume level. This setting takes effect the next time a client connects.
@@ -120,8 +120,8 @@
 
 			<label class="control-label" for="airplayname">Name</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" id="airplayname" name="airplayname" value="$_select[airplayname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_airplay_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" type="text" id="airplayname" name="airplayname" value="$_select[airplayname]" required onchange="autoClick('#btn-set-airplayname');">
+				<button id="btn-set-airplayname" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_airplay_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 			<label class="control-label">Resume MPD</label>
 			<div class="controls">
@@ -165,8 +165,8 @@
 
 			<label class="control-label" for="spotifyname">Name</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" id="spotifyname" name="spotifyname" value="$_select[spotifyname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_spotify_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" type="text" id="spotifyname" name="spotifyname" value="$_select[spotifyname]" required onchange="autoClick('#btn-set-spotifyname');">
+				<button id="btn-set-spotifyname" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_spotify_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 
 			<label class="control-label">Resume MPD</label>
@@ -300,10 +300,10 @@
                 </span>
 			</div>
 
-			<label class="control-label" for="btname">Name</label>
+			<label class="control-label" for="upnpname">Name</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" id="upnpname" name="upnpname" value="$_select[upnpname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_upnp_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+				<input class="config-input-large" type="text" id="upnpname" name="upnpname" value="$_select[upnpname]" required onchange="autoClick('#btn-set-upnpname');">
+				<button id="btn-set-upnpname" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_upnp_settings" value="novalue"><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 			</div>
 
 			<div class="controls">

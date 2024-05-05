@@ -125,8 +125,8 @@
 
 			<label class="control-label" for="scnbrightness">Brightness</label>
 			<div class="controls">
-            	<input class="config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]" $_ctl_disabled>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_ctl_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
+            	<input class="config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]" $_ctl_disabled onchange="autoClick('#btn-set-scnbrightness');">
+				<button id="btn-set-scnbrightness" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_ctl_disabled><i class="fa fa-regular fa-sharp fa-pen-to-square"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-brightness" class="config-help-info">
 					Backlight brightness for 7" Pi Touch. Values are 0 - 255.
