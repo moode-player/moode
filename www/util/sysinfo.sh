@@ -25,7 +25,7 @@
 
 SYSTEM_PARAMETERS() {
 	echo -e "\n\c"
-	echo -e "S Y S T E M   P A R A M E T E R S"
+	echo -e "H A R D W A R E   A N D   O S"
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
 	echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
 	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
@@ -108,7 +108,7 @@ AUDIO_PARAMETERS() {
 	[[ $alsavolume = "none" ]] && hwvol="No" || hwvol="Yes"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
 
-	echo -e "A U D I O   P A R A M E T E R S"
+	echo -e "A U D I O   C O N F I G U R A T I O N"
 	echo -e "\nAudio device\t\t= $adevname\c"
 	echo -e "\nInterface\t\t= $iface\c"
 	echo -e "\nMixer name\t\t= $volmixer\c"
@@ -242,7 +242,7 @@ APPEARANCE_SETTINGS() {
 }
 
 RADIO_MANAGER_SETTINGS() {
-	echo -e "R A D I O   M A N A G E R   S E T T I N G S"
+	echo -e "R A D I O   M A N A G E R"
 	echo -e "\nSort tag\t\t= $rv_sort_tag\c"
 	echo -e "\nGroup method\t\t= $rv_group_method\c"
 	echo -e "\nShow moOde stations\t= $rv_show_moode\c"
@@ -258,13 +258,13 @@ RADIO_MANAGER_SETTINGS() {
 }
 
 PLAYLIST_MANAGER_SETTINGS() {
-	echo -e "P L A Y L I S T   M A N A G E R   S E T T I N G S"
+	echo -e "P L A Y L I S T   M A N A G E R"
 	echo -e "\nSort tag\t\t= $plv_sort_tag\c"
 	echo -e "\nGroup method\t\t= $plv_group_method\n"
 }
 
 MPD_SETTINGS() {
-	echo -e "M P D   S E T T I N G S"
+	echo -e "M P D"
 	echo -e "\nVersion\t\t\t= $(mpd -V | grep 'Music Player Daemon' | awk '{print $4}')\c"
 	echo -e "\nVolume type\t\t= $mixer_type\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
@@ -295,7 +295,7 @@ MPD_SETTINGS() {
 }
 RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
-		echo -e "B L U E T O O T H   S E T T I N G S"
+		echo -e "B L U E T O O T H"
 		echo -e "\nVersion\t\t\t= $BLUETOOTH_VER\c"
 		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
 		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
@@ -310,7 +310,7 @@ RENDERER_SETTINGS() {
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		SPSVER="$(shairport-sync -V | cut -f 1 -d '-')"
-		echo -e "A I R P L A Y   S E T T I N G S"
+		echo -e "A I R P L A Y"
 		echo -e "\nVersion\t\t\t= $SPSVER\c"
 		echo -e "\nFriendly name\t\t= $airplayname\c"
 		echo -e "\nInterpolation\t\t= $interpolation\c"
@@ -325,7 +325,7 @@ RENDERER_SETTINGS() {
 
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
 		SPOTVER="$(librespot --version | awk -F" " '{print $2}')"
-		echo -e "S P O T I F Y   S E T T I N G S"
+		echo -e "S P O T I F Y   C O N N E C T"
 		echo -e "\nVersion\t\t\t= $SPOTVER\c"
 		echo -e "\nFriendly name\t\t= $spotifyname\c"
 		echo -e "\nBitrate (kbps)\t\t= $spot_bitrate\c"
@@ -349,7 +349,7 @@ RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		SL=`squeezelite -? | grep "Squeezelite" | cut -f 2 -d "v" | cut -f 1 -d ","`
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
-		echo -e "S Q U E E Z E L I T E   S E T T I N G S"
+		echo -e "S Q U E E Z E L I T E"
 		echo -e "\nVersion\t\t\t= $SL $SLT\c"
 		echo -e "\nFriendly name\t\t= $PLAYERNAME\c"
 		echo -e "\nALSA device\t\t= $AUDIODEVICE\c"
@@ -364,14 +364,14 @@ RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_ROONBRIDGE)) -ne 0 ]; then
 		if [[ -f /opt/RoonBridge/start.sh ]]; then
 			RBVER="$(awk 'FNR==2 {print $0}' /opt/RoonBridge/Bridge/VERSION)"
-			echo -e "R O O N B R D G E   S E T T I N G S"
+			echo -e "R O O N B R D G E"
 			echo -e "\nVersion\t\t\t= $RBVER\c"
  	 		echo -e "\nResume MPD\t\t= $rsmafterrb\n"
 		fi
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_LOCALUI)) -ne 0 ]; then
-		echo -e "L O C A L   D I S P L A Y   S E T T I N G S"
+		echo -e "L O C A L   D I S P L A Y"
 		echo -e "\nLocal UI display\t= $localui\c"
 		echo -e "\nWake display on play\t= $wake_display\c"
 		echo -e "\nMouse cursor\t\t= $touchscn\c"
