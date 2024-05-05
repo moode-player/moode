@@ -57,7 +57,7 @@ if (isset($_POST['update_alsa_loopback'])) {
 }
 if (isset($_POST['update_multiroom_initvol'])) {
 	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", $dbh);
-	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], 'Volume levels initialized', '');
+	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], NOTIFY_TITLE_INFO, 'Volume levels initialized.');
 }
 if (isset($_POST['multiroom_tx_restart'])) {
 	submitJob('multiroom_tx_restart', '', NOTIFY_TITLE_INFO, 'Sender restarted.');
@@ -227,7 +227,7 @@ $_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Hide' ? '' : 'hide';
 $_multiroom_rx_disable = ($_SESSION['mpdmixer'] == 'null') ? 'disabled' : ''; // Don't allow CamillaDSP Volume
 $_rx_restart_btn_disable = $_SESSION['multiroom_rx'] != 'On' ? 'disabled' : '';
 $_rx_restart_link_disable = $_SESSION['multiroom_rx'] != 'On' ? 'onclick="return false;"' : '';
-$_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
+$_multiroom_initvol_disable = (!isset($_SESSION['rx_hostnames']) || empty($_SESSION['rx_hostnames'])) ? 'disabled' : '';
 $_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Hide' ? '' : 'hide';
 
 // Sender

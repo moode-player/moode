@@ -173,8 +173,8 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 		return true;
 	} else {
 		//echo json_encode('worker busy');
-		$_SESSION['notify']['title'] = 'System is busy';
-		$_SESSION['notify']['msg'] = 'Try again';
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'System is busy, try again';
 		return false;
 	}
 }

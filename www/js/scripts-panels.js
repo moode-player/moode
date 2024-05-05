@@ -384,7 +384,7 @@ jQuery(document).ready(function($) { 'use strict';
     	}
 
         // CoverView auto-display
-        //notify('debug', GLOBAL.userAgent, NOTIFY_DURATION_MEDIUM);
+        //notify(NOTIFY_TITLE_INFO, 'debug', GLOBAL.userAgent, NOTIFY_DURATION_MEDIUM);
         if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['auto_coverview'] == '-on') {
             var duration = 8000;
             notify(NOTIFY_TITLE_INFO, 'auto_coverview', 'will be activating in ' + (duration / 1000) + ' seconds.', duration);

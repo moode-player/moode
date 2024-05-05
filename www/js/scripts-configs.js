@@ -181,7 +181,7 @@ jQuery(document).ready(function($){ 'use strict';
 	$('#wlan0method').change(function() {
 		if ($(this).val() == 'static') {
 			if ($('#wlan0ssid').val() == 'None' || $('#wlan0ssid').val() == 'Activate Hotspot') {
-                notify('dhcp_required');
+                notify(NOTIFY_TITLE_ALERT, 'dhcp_required');
                 $('#wlan0method').val('dhcp').change();
 			} else {
                 $('#wlan0-static-section').show();
@@ -300,7 +300,7 @@ jQuery(document).ready(function($){ 'use strict';
 
     // Sysinfo notification
     $('#sysinfo-menu-item').click(function(e) {
-        notify('gathering_info');
+        notify(NOTIFY_TITLE_INFO, 'gathering_info', NOTIFY_DURATION_SHORT);
     });
 
     // Multiroom adv options show/hide

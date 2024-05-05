@@ -1810,7 +1810,7 @@ function chkClockRadio() {
 				sysCmd('/var/local/www/commandw/restart.sh poweroff');
 			} else if ($_SESSION['clkradio_action'] == 'Update Library') {
 				workerLog('update library');
-				submitJob('update_library', '', '', '');
+				submitJob('update_library');
 			}
 		}
 	}
@@ -1860,7 +1860,7 @@ function chkSleepTimer() {
 				sysCmd('/var/local/www/commandw/restart.sh poweroff');
 			} else if ($_SESSION['clkradio_action'] == 'Update Library') {
 				workerLog('update library');
-				submitJob('update_library', '', '', '');
+				submitJob('update_library');
 			}
 		}
 	}

@@ -73,7 +73,7 @@ switch ($_GET['cmd']) {
 		phpSession('close');
 		break;
 	case 'create_saved_search':
-		if (submitJob('create_saved_search', $_POST['name'], '', '')) {
+		if (submitJob('create_saved_search', $_POST['name'])) {
 			echo json_encode('job submitted');
 		} else {
 			echo json_encode('worker busy');
