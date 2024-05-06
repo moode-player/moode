@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Apr 26 08:49:29 2024
+-- File generated with SQLiteStudio v3.1.0 on Mon May 6 17:45:10 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -262,15 +262,22 @@ INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E
 
 -- Table: cfg_upnp
 CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'lossless');
-INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '6');
-INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'checkcontentformat', '1');
-INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'upnpav', '1');
-INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'openhome', '0');
+INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'upnpav', '1');
+INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'openhome', '0');
+INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'checkcontentformat', '1');
+INSERT INTO cfg_upnp (id, param, value) VALUES (10, 'qobuzuser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (11, 'qobuzpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (12, 'qobuzformatid', '6');
+INSERT INTO cfg_upnp (id, param, value) VALUES (20, 'tidalenablepkce', '0');
+INSERT INTO cfg_upnp (id, param, value) VALUES (21, 'tidaltokentype', 'Bearer');
+INSERT INTO cfg_upnp (id, param, value) VALUES (22, 'tidalaccesstoken', 'your_oauth2_access_token');
+INSERT INTO cfg_upnp (id, param, value) VALUES (23, 'tidalrefreshtoken', 'your_oauth2_refresh_token');
+INSERT INTO cfg_upnp (id, param, value) VALUES (24, 'tidalexpirytime', '1697143990.40669');
+INSERT INTO cfg_upnp (id, param, value) VALUES (25, 'tidalpkcetokentype', 'Bearer');
+INSERT INTO cfg_upnp (id, param, value) VALUES (26, 'tidalpkceaccesstoken', 'your_pkce_access_token');
+INSERT INTO cfg_upnp (id, param, value) VALUES (27, 'tidalpkcerefreshtoken', 'your_pkce_refresh_token');
+INSERT INTO cfg_upnp (id, param, value) VALUES (28, 'tidalpkcesessionid', 'your_pkce_session_id');
+INSERT INTO cfg_upnp (id, param, value) VALUES (29, 'tidalaudioquality', 'LOSSLESS');
 
 -- Table: cfg_source
 CREATE TABLE cfg_source (
