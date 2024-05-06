@@ -283,7 +283,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_advanced_options_hide = '';
 				$_rw_size_hide = $mp['type'] == 'nfs' ? 'hide' : '';
 				if (empty($_error)) {
-					$_hide_error = 'hide';
+					$_hide_error = 'style="display:none;"';
 				} else {
 					$_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
 					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
@@ -300,7 +300,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	} else if ($_GET['cmd'] == 'add') {
 		// Create
 		$_hide_remove = 'hide';
-		$_hide_error = 'hide';
+		$_hide_error = 'style="display:none;"';
 
 		//workerLog(print_r($_POST, true));
 
