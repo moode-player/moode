@@ -28,13 +28,14 @@ Updates
 
 - UPD: Bump to Linux kernel 6.6.28
 - UPD: Bump to alsa-cdsp 1.2.0-1moode2
+- UPD: Bump to upmpdcli 1.8.10
 - UPD: Improve Bluetooth (add volume and pin options)
 - UPD: Improve multiroom command response
 - UPD: Improve SMB protocol detection
 - UPD: Improve radio station edit/delete
 - UPD: Improve notification messages
 - UPD: Improve setup guides and quick help
-- UPD: Add autoclick for dropdown and imput controls on the configs
+- UPD: Add autoclick for dropdown controls on the configs
 - UPD: Add "Show items" option to One-touch playlist
 - UPD: Add "Queue info" to ellipsis menu (stats + saved playlist name)
 - UPD: Add Pull-up/down option for each pin in GPIO Config
