@@ -1,24 +1,11 @@
 <?php
 /**
- * moOde audio player (C) 2014 Tim Curtis
- * http://moodeaudio.org
- *
- * Cover art extractor
- * Copyright (C) 2015 Andreas Goetz <cpuidle@gmx.de>
- *
- * This Program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- *
- * This Program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+ * Copyright 2015 Andreas Goetz <cpuidle@gmx.de>
+*/
+
+/*
  * - Embedded cover art: flac, mp3, m4a or dsf files
  * - Cover image files: Folder/folder, Cover/cover gif/jpg/jpeg/png/tif/tiff files, or any other image file.
  * - Call via /coverart.php/some/local/file/name
