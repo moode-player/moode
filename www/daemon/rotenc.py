@@ -1,18 +1,9 @@
 #!/usr/bin/python3
 #
-# This Program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either program_versionsion 3, or (at your option)
-# any later program_versionsion.
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2014 The moOde audio player project / Tim Curtis
 #
-# This Program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+
 # Usage:
 # rotenc_py <poll_interval in ms> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug>
 # rotenc_py 100 2 3 23 24 1 (print_debug is optional)
