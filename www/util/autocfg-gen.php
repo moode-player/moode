@@ -1,12 +1,12 @@
 #!/usr/bin/php
 <?php
-/**
+/*
  * SPDX-License-Identifier: GPL-3.0-or-later
  * Copyright 2014 The moOde audio player project / Tim Curtis
  * Copyright 2020 @bitlab (@bitkeeper Git)
 */
 
-/**
+/*
   * autocfg-gen exports the supported autoconfig settings to the screen.
   * Don't use this file directly but instead use the command "sudo moodeutl -e" otherwise the
   * session_id() function will not be able to access the PHP session
