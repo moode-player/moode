@@ -1,24 +1,16 @@
 "use strict";
+/*!
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+ * Copyright 2022 @Nutul (albertonarduzzi@gmail.com)
+*/
 
 // On-screen keyboard for use on devices whose OS does not provide one,
 // or the installation of one would require too many resources, such as
 // moOde, for which it was developed.
 // It automatically installs itself if it is being run under X11, in Chrome
 // for Linux for ARM architecture.
-// (C) 2022 @Nutul (albertonarduzzi@gmail.com)
 //
-// This Program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 3, or (at your option)
-// any later version.
-//
-// This Program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* TODO: Refactor CSS names to hyphen-delimited */
 

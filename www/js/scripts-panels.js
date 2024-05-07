@@ -1,24 +1,9 @@
 /*!
- * moOde audio player (C) 2014 Tim Curtis
- * http://moodeaudio.org
- *
- * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
- * http://www.tsunamp.com
- *
- * This Program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- *
- * This Program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+ * Copyright 2013 The tsunamp player ui / Andrea Coiutti & Simone De Gregori
+*/
+
 jQuery(document).ready(function($) { 'use strict';
     // Call $.pnotify if created by backend
     if( window.ui_notify != undefined ) {
