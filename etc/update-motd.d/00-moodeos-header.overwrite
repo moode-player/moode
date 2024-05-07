@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2014 The moOde audio player project / Tim Curtis
+#
 
 SQLDB="/var/local/www/db/moode-sqlite3.db"
 HOST_NAME=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='hostname'")
