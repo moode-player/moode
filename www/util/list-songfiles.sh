@@ -1,27 +1,17 @@
 #!/bin/bash
 #
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2014 The moOde audio player project / Tim Curtis
+# Copyright 2020 Kent Reed (@TheOldPresbyope)
+#
+
+#
 # Return list of music files in /mnt and /media directories
-# (C) 2020 Kent Reed (@TheOldPresbyope)
 #
-# This Program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
-#
-# This Program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-# NOTES:
 # 1. 'find base ... -printf %P' returns file paths relative to the given base directory.
 # 2. To match MPD listings, results for /media are prepended with "USB/".
 # 3. A music file must match one of the extensions listed below obtained from decoder-plugin values via MPD -V.
 #
-# moOde audio player (C) 2024 Tim Curtis
 # Option to scan for "Default" or "All" audio formats: $_SESSION['library_thmgen_scan']
 # NOTE: Including image file formats in the REGEX allows the thumbnail generator to create thumbs for
 # parent folders of the Album folder.

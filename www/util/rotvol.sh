@@ -1,5 +1,8 @@
 #!/bin/bash
-# moOde audio player (C) 2014 Tim Curtis, GPLv3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2014 The moOde audio player project / Tim Curtis
+#
 RESULT=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param IN ('volknob', 'mpdmixer', 'volume_mpd_max')")
 if [[ $RESULT = "" ]]; then	exit 1; fi
 readarray -t arr <<<"$RESULT"

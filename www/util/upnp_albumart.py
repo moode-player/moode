@@ -1,14 +1,20 @@
 #!/usr/bin/python3
-# Copyright (C) 2021 J.F.Dockes. License: MIT
+#
+# SPDX-License-Identifier: MIT-Modern-Variant
+# Copyright 2021 J.F.Dockes
+# Copyright 2021 The moOde audio player project / Tim Curtis
+# Copyright 2021 @bitlab (@bitkeeper Git)
+#
 
 #
 # Retrieve the album art URI from an openhome or UPnP/AV renderer.
 #
-# 2021-01-16 Tim Curtis:
-# - Change 0S._exit() to sys.exit()
-# 2021-04-11 Marcel van de Weert
-# - Escape album art url path
-# - To speedup lookup provide type of system with mode(auto|upnpav|openhome) cmd arg
+# 2021 Tim Curtis:
+# Change 0S._exit() to sys.exit()
+# 2021 @bitlab:
+# Escape album art url path
+# To speedup lookup provide type of system with mode(auto|upnpav|openhome) cmd arg
+#
 
 import sys
 import os
@@ -78,4 +84,3 @@ if mode == "auto" or mode == 'upnpav':
         artFromAVTransport(service)
 
 sys.exit(0)
-
