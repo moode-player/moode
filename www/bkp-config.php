@@ -12,10 +12,11 @@ const TMP_BACKUP_ZIP = '/tmp/backup.zip';
 const TMP_MOODECFG_INI = '/tmp/moodecfg.ini';
 const TMP_RESTORE_ZIP = '/tmp/restore.zip';
 const TMP_SCRIPT_FILE = '/tmp/script';
-const BACKUP_FILE_PREFIX = 'backup_';
+const BACKUP_FILE_PREFIX = 'backup';
 const CAMILLADSP_BASE_DIR = '/usr/share/camilladsp/';
 
 $moodeSeries = getMoodeSeries();
+$backupFileNameBase = BACKUP_FILE_PREFIX . $moodeSeries . '_';
 
 //
 // BACKUP
@@ -71,9 +72,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		// Create name for backup file in browser
 		$dt = new DateTime('NOW');
 		phpSession('open');
-		$backupFileName = BACKUP_FILE_PREFIX .
-			$moodeSeries . '_' .
-			$_SESSION['hostname'] . '_' . $dt->format('ymd_Hi').'.zip';
+		$backupFileName = $backupFileNameBase . $_SESSION['hostname'] . '_' . $dt->format('ymd_Hi').'.zip';
 		phpSession('close');
 
 		header("Content-Description: File Transfer");
@@ -151,8 +150,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	}
 } else if (isset($_POST['import_backupfile'])) {
 	$_imported_backupfile = 'Uploaded: <b>' . $_FILES['restore_backupfile']['name'] . '</b>';
-	if (strpos($_FILES['restore_backupfile']['name'],
-		BACKUP_FILE_PREFIX . $moodeSeries . '_', 0) !== false) {
+	if (str_contains($_FILES['restore_backupfile']['name'], $backupFileNameBase)) {
 		rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
 		$_restore_disable = '';
 	} else {
