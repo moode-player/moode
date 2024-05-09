@@ -111,6 +111,7 @@ const CFG_LCD_ROTATE = 'lcd_rotate=2';
 const CFG_HDMI_ENABLE_4KP60 = 'hdmi_enable_4kp60';
 const CFG_PCI_EXPRESS = 'pciex1';
 const CFG_PCI_EXPRESS_GEN3 = 'pciex1_gen=3';
+const CFG_PI_AUDIO_DRIVER = 'vc4-kms-v3d';
 const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
 
@@ -169,6 +170,10 @@ const AO_TRXSEND = 'trxsend';
 const PI_HDMI1 = 'Pi HDMI 1';
 const PI_HDMI2 = 'Pi HDMI 2';
 const PI_HEADPHONE = 'Pi Headphone jack';
+
+// Audio drivers (Pi integrated audio)
+const PI_VC4_KMS_V3D = 'vc4-kms-v3d';
+const PI_SND_BCM2835 = 'snd-bcm2835';
 
 // ALSA max number of cards (4 USB, 3 Integrated, 1 I2S)
 const ALSA_MAX_CARDS = 8;

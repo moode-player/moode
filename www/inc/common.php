@@ -373,6 +373,10 @@ function updBootConfigTxt($action, $value) {
 				CFG_HDMI_ENABLE_4KP60 . '=.*/' .
 				CFG_HDMI_ENABLE_4KP60 . '=' . $value . '/" ' . BOOT_CONFIG_TXT);
 			break;
+		case 'upd_pi_audio_driver':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_PI_AUDIO_DRIVER . "/c\\" . $value . 'dtoverlay=' . CFG_PI_AUDIO_DRIVER . ' ' . BOOT_CONFIG_TXT);
+			break;
 		case 'pci_express':
 			// $value: 'off' or 'gen2' or 'gen3'
 			$prefix1 = $value == 'off' ? '#' : '';

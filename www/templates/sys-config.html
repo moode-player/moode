@@ -106,6 +106,21 @@
 				</span>
 			</div>
 
+			<div class="$_pi_audio_driver_hide">
+				<label class="control-label" for="pi-audio-driver">Integrated audio</label>
+				<div class="controls">
+					<select id="pi-audio-driver" class="config-select-large" name="pi_audio_driver" onchange="autoClick('#btn-set-pi-audio-driver');">
+						$_select[pi_audio_driver]
+					</select>
+					<button id="btn-set-pi-audio-driver" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pi_audio_driver" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pi-audio-driver" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-pi-audio-driver" class="config-help-info">
+						<b>Kernel mode:</b> Default vc4-kms-v3d driver for advanced Pi HDMI capabilities.<br>
+						<b>Firmware mode:</b> Legacy snd-bcm2835 driver to support Pi Headphone only configuration.
+					</span>
+				</div>
+			</div>
+
 			<div class="$_pci_express_hide">
 				<label class="control-label" for="pci-express">PCI express</label>
 				<div class="controls">

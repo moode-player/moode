@@ -317,6 +317,12 @@ workerLog('worker: Reduce power:  ' . $_SESSION['reduce_power']);
 // CPU governor
 workerLog('worker: CPU governor:  ' . $_SESSION['cpugov']);
 
+// Pi integrated audio driver
+if (!isset($_SESSION['pi_audio_driver'])) {
+	$_SESSION['pi_audio_driver'] = PI_VC4_KMS_V3D;
+}
+workerLog('worker: Integ audio:   ' . $_SESSION['pi_audio_driver']);
+
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- Network');
@@ -2674,12 +2680,16 @@ function runQueuedJob() {
 			sysCmd('sed -i s/^POWER_OFF_ON_HALT=.*/POWER_OFF_ON_HALT=' . $value . '/ /tmp/boot.conf > /dev/null 2>&1');
 			sysCmd('rpi-eeprom-config --apply /tmp/boot.conf > /dev/null 2>&1');
 			break;
+		case 'cpugov':
+			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
+			break;
+		case 'pi_audio_driver':
+			$value = $_SESSION['w_queueargs'];
+			updBootConfigTxt('upd_pi_audio_driver', $value);
+			break;
 		case 'pci_express':
 			$value = $_SESSION['w_queueargs'];
 			updBootConfigTxt('pci_express', $value);
-			break;
-		case 'cpugov':
-			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
 			break;
 		case 'usb_auto_mounter':
 			if ($_SESSION['w_queueargs'] == 'udisks-glue') {

@@ -89,7 +89,7 @@ function autoConfigSettings() {
 	// 'handler'  function for setting the config item
 	// 'cmd'      special arg for sysutil.sh when setSessVarSqlSysCmd handler is used
 	//
-	// NOTE: When adding new session-only vars also add them to autocfg-gen.php
+	// NOTE: When adding new session-only vars also add them to util/autocfg-gen.php
 	//
 	$configHandlers = [
 		//
@@ -134,6 +134,11 @@ function autoConfigSettings() {
 		['requires' => ['cpugov'], 'handler' => function($values) {
 			phpSession('write', 'cpugov', $values['cpugov']);
 			sysCmd('sh -c ' . "'" . 'echo "' . $values['cpugov'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
+		}],
+		['requires' => ['pi_audio_driver'], 'handler' => function($values) {
+			$_SESSION['pi_audio_driver'] = $values['pi_audio_driver'];
+			$value = $values['pi_audio_driver'] == PI_VC4_KMS_V3D ? '' : '#';
+			updBootConfigTxt('pi_audio_driver', $value);
 		}],
 		['requires' => ['pci_express'], 'handler' => function($values) {
 			$_SESSION['pci_express'] = $values['pci_express'];

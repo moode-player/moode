@@ -125,6 +125,12 @@ if (isset($_POST['update_cpugov'])) {
 	phpSession('write', 'cpugov', $_POST['cpugov']);
 }
 
+if (isset($_POST['update_pi_audio_driver'])) {
+	$_SESSION['pi_audio_driver'] = $_POST['pi_audio_driver'];
+	$queueArgs = $_POST['pi_audio_driver'] == PI_VC4_KMS_V3D ? '' : '#';
+	submitJob('pi_audio_driver', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+}
+
 if (isset($_POST['update_pci_express'])) {
 	$_SESSION['pci_express'] = $_POST['pci_express'];
 	submitJob('pci_express', $_POST['pci_express'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
@@ -369,9 +375,13 @@ if ($piModel == '5') {
 	$_select['pci_express'] .= "<option value=\"off\" " . (($_SESSION['pci_express'] == 'off') ? "selected" : "") . ">Off</option>\n";
 	$_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
 	$_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
+	$_pi_audio_driver_hide = 'hide';
 } else {
 	$_reduce_power_hide = 'hide';
 	$_pci_express_hide = 'hide';
+	$_pi_audio_driver_hide = '';
+	$_select['pi_audio_driver'] .= "<option value=\"" . PI_VC4_KMS_V3D . "\" " . (($_SESSION['pi_audio_driver'] == PI_VC4_KMS_V3D) ? "selected" : "") . ">Kernel mode (Default)</option>\n";
+	$_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($_SESSION['pi_audio_driver'] == PI_SND_BCM2835) ? "selected" : "") . ">Firmware mode (Legacy)</option>\n";
 }
 
 // Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B
