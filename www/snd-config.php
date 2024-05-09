@@ -450,7 +450,7 @@ if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'
 	$_alsa_output_mode = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 }
 // Loopback
-$_alsa_loopback_disable = '';
+$_alsa_loopback_disable = $_SESSION['camilladsp'] != 'off' ? 'disabled' : '';
 $autoClick = " onchange=\"autoClick('#btn-set-alsa-loopback');\" " . $_alsa_loopback_disable;
 $_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
