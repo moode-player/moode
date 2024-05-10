@@ -148,7 +148,7 @@
 					<button id="btn-set-reduce-power" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_reduce_power" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-reduce-power" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-reduce-power" class="config-help-info">
-						Turn this option ON to reduce shutdown wattage to 0.01W.
+						Turn this option on to reduce shutdown wattage to 0.01W.
 						The default shutdown wattage is around 1 to 1.4W to support some HAT'S that require both the 3V and 5V rails.
                     </span>
 				</div>
@@ -191,7 +191,7 @@
 				<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-actled" class="config-help-info">
-					Turn the activity LED flashing for SDCard (mmc0) On/Off.
+					Turn the activity LED flashing for SDCard (mmc0) on/off.
                 </span>
 			</div>
 
@@ -205,7 +205,7 @@
 					<button id="btn-set-pwrled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pwrled" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-pwrled" class="config-help-info">
-						Turn the Power LED On/Off.
+						Turn the Power LED on/off.
                     </span>
 				</div>
 			</div>
@@ -219,8 +219,8 @@
 				</select>
 				<button id="btn-set-ipaddr-timeout" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<span class="config-help-static">
-					Wait up to the specified number of seconds for an IP address to be assigned to an adapter during startup.
-				    AP mode will be started if neither WiFi nor Ethernet adapters have been assigned an IP address.
+					Wait up to the specified time period for an IP address to be assigned to an adapter during startup.
+				    If no adapter has received an IP address the WiFi Hotspot will be started to ensure that moOde can be accessed.
 				</span>
 			</div>
 
@@ -361,7 +361,7 @@
 					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-https-only" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-nginx-https-only" class="config-help-info">
-						Turn this ON to configure NGINX web server to only accept HTTPS connections.
+						Turn this on to configure NGINX web server to only accept HTTPS connections.
 					</span>
 					<span class="config-help-static">
 						<b>Experimental feature: </b> Enable secure communication between the Browser and moOde.<br>
@@ -377,7 +377,7 @@
 					</select>
 					<button id="btn-set-nginx-cert-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<span class="config-help-static">
-						<b>Automatic:</b> Automatically generate and install a self-signed certificate into NGINX web server when HTTPS mode is turned ON.<br>
+						<b>Automatic:</b> Automatically generate and install a self-signed certificate into NGINX web server when HTTPS mode is turned on.<br>
 					    <b>Manual:</b> Click the UPLOAD followed by the INSTALL button for this type of certificate.
 					</span>
 				</div>
@@ -391,10 +391,10 @@
 					<button id="btn-set-nginx-hsts-policy" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_hsts_policy" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-hsts-policy" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-nginx-hsts-policy" class="config-help-info">
-						Turn this ON to configure NGINX web server for HTTP Strict Transport Security (HSTS).
+						Turn this on to configure NGINX web server for HTTP Strict Transport Security (HSTS).
 					</span>
 					<span class="config-help-static">
-						<b>Caution:</b> Turning this ON sets a Browser policy that forces HTTPS even after turning HTTPS mode OFF.
+						<b>Caution:</b> Turning this on sets a Browser policy that forces HTTPS even after turning HTTPS mode OFF.
 					</span>
 				</div-->
 

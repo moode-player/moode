@@ -374,7 +374,7 @@ Bug fixes
 
 - FIX: Worker startup fails on Pi-Zero due to incomplete "is-system-running" test
 - FIX: Haveged daemon fails to start on Pi-Zero (arm6 platforms)
-- FIX: Power and activity LED ON/OFF options not working
+- FIX: Power and activity LED on/off options not working
 - FIX: Clicking on context menu check mark icon displays default moOde cover
 
 ################################################################################
@@ -571,7 +571,7 @@ Radio stations
 
 Bug fixes
 
-- FIX: SMB server ON/OFF setting not working
+- FIX: SMB server on/off setting not working
 - FIX: Top border of Playbar is visible
 - FIX: Startup hangs if Bluetooth on but no adapter is present
 - FIX: Space bar not working in On-Screen Keyboard

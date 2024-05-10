@@ -39,7 +39,7 @@ importing the cert into the OS certificate store vary depending on the OS.
 
 a. Open System Config and scroll to the Security section
 b. Set the Certificate type to "Automatic"
-c. Turn HTTPS mode ON
+c. Turn HTTPS mode on
 d. DOWNLOAD the cert
 e. Install the downloaded cert into the OS certificate store and set its trust
    policy to "Always trust"
@@ -56,7 +56,7 @@ e. A non-secure HTTP connection should be established
 
 3. Changing the host name
 
-If the host name is changed via System Config while HTTPS mode is ON and the
+If the host name is changed via System Config while HTTPS mode is on and the
 Certificate type was set to "Automatic" a new self-signed cert will be generated
 automatically and installed into NGINX web server during startup after reboot.
 

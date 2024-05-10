@@ -67,7 +67,7 @@ and the other Audio Renderers and thus the Receiver configuration should be
 dedicated although it's not absolutely required. A Receiver can have Bluetooth,
 AirPlay and Spotify Connect renderers running in the background but there is no
 coordination between them and the Receiver player. Initiating a Bluetooth,
-Spotify Connect or AirPlay connection while the Receiver player is ON will
+Spotify Connect or AirPlay connection while the Receiver player is on will
 result in audio output conflicts and errors.
 
 A) Audio Configuration (Menu, Configure, Audio)
@@ -95,8 +95,8 @@ B) Renderer Configuration (Menu, Configure, Renderers)
 
 C) Multiroom Configuration (Menu, Configure, Multiroom)
 
-1. Set the Receiver daemon to ON
-2. Set Master volume opt-in to YES. This allows Receiver volume to be controlled
+1. Turn the Receiver daemon on
+2. Set Master volume opt-in to "yes". This allows Receiver volume to be controlled
    by the volume knob in Playback or Playbar view of the Sender.
 
 SENDER CONFIGURATION
@@ -109,7 +109,7 @@ Note: there can only be one Sender on the network.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
-1. In the ALSA Options section set ALSA Loopback to "ON"
+1. In the ALSA Options section turn ALSA Loopback on
 2. In the MPD Options section EDIT MPD settings set SoX Resampling to "No"
 3. In the Equalizers section set the following DSP's to "Off"
    a. Crossfeed
@@ -120,25 +120,25 @@ A) Audio Configuration (Menu, Configure, Audio)
 
 B) Renderer Configuration (Menu, Configure, Renderers)
 
-1. Set the following Audio Renderers to "Off"
+1. Turn the following Audio Renderers off
    a. Squeezelite
    b. RoonBridge
 2. Optionally turn on Bluetooth, AirPlay and/or Spotify Connect renderers
-3. Set DLNA server to "Off"
+3. Turn the DLNA server off
 
 B) Sender Configuration (Menu, Configure, Multiroom)
 
 1. DISCOVER Receivers. This is necessary to generate the list of Receiver hosts
    and their IP addresses. This must be done initially and whenever hosts are
    added or removed from the configuration.
-2. Set Sender daemon to "ON"
+2. Turn the Sender daemon on
 3. Optionally set Initial volume for the Receivers. This action simply sets
    each Receiver's volume to an initial level for convenience.
 4. In Playback view the Receivers icon will appear at the top middle. Click this
-   icon to open the Receivers panel which lists each Receiver, its On/Off state,
+   icon to open the Receivers panel which lists each Receiver, its on/off state,
    volume and mute state. Receiver volume can be adjusted via the slider
-   followed by clicking on the volume button. Mute state can be toggled by
-   clicking on the mute button.
+   followed by clicking the volume button. Mute state can be toggled by
+   clicking the mute button.
 
 NETWORKING AND AUDIO FORMAT
 
