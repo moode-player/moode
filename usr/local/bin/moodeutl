@@ -538,7 +538,7 @@ function printHWParams() {
 		$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));
 		$adevName = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='adevname'\""));
 	}
-	echo 'card: ' . $cardNum . ':' . $adevName . "\n";
+	echo 'card ' . $cardNum . ': ' . $adevName . "\n";
 	echo shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
 }
 
