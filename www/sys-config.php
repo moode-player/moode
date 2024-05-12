@@ -443,7 +443,7 @@ $_select['fs_nfs_off'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-
 $_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
 $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
 // Subnet
-$iface = !empty(sysCmd('ip addr list | grep eth0')) ? 'eth0' : 'wlan0';
+$iface = !empty(sysCmd('ip addr list | grep eth0 | grep inet')) ? 'eth0' : 'wlan0';
 $netMask = sysCmd("ifconfig " . $iface . " | awk 'NR==2{print $4}'")[0];
 $ipAddrParts = explode('.', $_SESSION['ipaddress']);
 $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/' . CIDR_TABLE[$netMask];
