@@ -70,13 +70,25 @@ function updReceiverVol($volCmd, $masterVolChange = false) {
 
 	$count = count($rxAddresses);
 	for ($i = 0; $i < $count; $i++) {
-		debugLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i]);
-		if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-control.php ' . $trxControlCmd . ' ' . $volCmd, false, $timeout))) {
+		if (false === sendTrxControlCmd($rxAddresses[$i], $trxControlCmd . ' ' . $volCmd)) {
 			workerLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i] . ' failed');
 		} else {
 			debugLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i] . ' success');
 		}
 	}
+}
+
+function sendTrxControlCmd($ipAddress, $cmd) {
+	$maxLoops = 3;
+	$timeout = getStreamTimeout();
+
+	for ($i = 0; $i < $maxLoops; $i++) {
+		if (false !== ($result = file_get_contents('http://' . $ipAddress . '/command/?cmd=' . rawurlencode('trx-control.php ' . $cmd), false, $timeout))) {
+			break;
+		}
+	}
+
+	return $result;
 }
 
 // For use in file_get_contents($URL) calls

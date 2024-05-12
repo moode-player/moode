@@ -27,8 +27,7 @@ switch ($_GET['cmd']) {
 
     		$count = count($rxAddresses);
     		for ($i = 0; $i < $count; $i++) {
-				debugLog('multiroom.php: get_rx_status: ' . $rxHostNames[$i]);
-    			if (false === ($status = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('trx-control.php -rx'), false, $timeout))) {
+				if (false === ($status = sendTrxControlCmd($rxAddresses[$i], '-rx'))) {
     				$rxStatus .= 'rx,Unknown,?,?,?,' . $rxHostNames[$i] . ':';
     				workerLog('multiroom.php: get_rx_status: ' . $rxHostNames[$i] . ' failed');
     			} else {
@@ -49,15 +48,15 @@ switch ($_GET['cmd']) {
     	$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
 
     	if (isset($_POST['onoff'])) {
-			if (false === ($result = file_get_contents('http://' . $rxAddresses[$item] . '/command/?cmd=' . rawurlencode('trx-control.php -rx ' . $_POST['onoff']), false, $timeout))) {
+			if (false === sendTrxControlCmd($rxAddresses[$item], '-rx ' . $_POST['onoff'])) {
 				workerLog('multiroom.php: set_rx_status onoff failed: ' . $rxHostNames[$item]);
 			}
     	} else if (isset($_POST['volume'])) {
-			if (false === ($result = file_get_contents('http://' . $rxAddresses[$item] . '/command/?cmd=' . rawurlencode('trx-control.php -set-mpdvol ' . $_POST['volume']), false, $timeout))) {
+			if (false === sendTrxControlCmd($rxAddresses[$item], '-set-mpdvol ' . $_POST['volume'])) {
 				workerLog('multiroom.php: set_rx_status volume failed: ' . $rxHostNames[$item]);
 			}
     	} else if (isset($_POST['mute'])) { // Toggle mute
-			if (false === ($result = file_get_contents('http://' . $rxAddresses[$item] . '/command/?cmd=' . rawurlencode('vol.sh  -mute'), false, $timeout))) {
+			if (false === sendTrxControlCmd($rxAddresses[$item], 'vol.sh  -mute')) {
 				workerLog('multiroom.php: set_rx_status mute failed: ' . $rxHostNames[$item]);
 			}
     	}

@@ -111,7 +111,10 @@ function updMpdConf() {
     // MPD mixer type
     $outputIface = getAudioOutputIface($_SESSION['cardnum']);
 	if ($_SESSION['alsavolume'] == 'none') {
-        if ($outputIface == AO_USB || $outputIface == AO_HDMI || $mixerType == 'null') {
+        if ($outputIface == AO_USB ||
+            $outputIface == AO_HDMI ||
+            $outputIface == AO_TRXSEND ||
+            $mixerType == 'null') {
             // NOP: Leave mixer type as-is
         } else {
             // Revert to software mixer
@@ -127,7 +130,11 @@ function updMpdConf() {
     }
 
     // Hardware mixer (if any)
-    $hwMixer = $_SESSION['alsa_output_mode'] == 'iec958' ? getAlsaIEC958Device() : 'hw:' . $cardNum;
+    if ($outputIface == AO_TRXSEND || $_SESSION['alsa_output_mode'] != 'iec958') {
+        $hwMixer = 'hw:' . $cardNum;
+    } else {
+        $hwMixer = getAlsaIEC958Device();
+    }
 
 	// Input
 	$data .= "max_connections \"128\"\n";

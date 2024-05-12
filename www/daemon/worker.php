@@ -375,7 +375,7 @@ if (empty($eth0)) {
 		$eth0Ip = checkForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
 	} else {
 		workerLog('worker: Ethernet: timeout off');
-		$eth0Ip = sysCmd("ip addr list eth0 | grep \"inet \" | cut -d' ' -f6 | cut -d/ -f1");
+		$eth0Ip = sysCmd("ip addr list eth0 | grep \"inet \" | cut -d' ' -f6 | cut -d/ -f1")[0];
 	}
 
 	if (empty($eth0Ip)) {
@@ -447,9 +447,9 @@ if (empty($wlan0)) {
 
 // Store IP address (prefer wlan0 address)
 if (!empty($wlan0Ip)) {
-	$_SESSION['ipaddress'] = $wlan0Ip[0];
+	$_SESSION['ipaddress'] = $wlan0Ip;
 } else if (!empty($eth0Ip)) {
-	$_SESSION['ipaddress'] = $eth0Ip[0];
+	$_SESSION['ipaddress'] = $eth0Ip;
 } else {
 	$_SESSION['ipaddress'] = '0.0.0.0';
 	workerLog('worker: No active network interface');
@@ -612,7 +612,6 @@ workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
 $actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
 if ($actualCardNum == $_SESSION['cardnum']) {
 	workerLog('worker: ALSA card:     has not changed');
-	//DELETE:if ($_SESSION['alsa_output_mode'] == 'iec958') {
 	if (isHDMIDevice($_SESSION['adevname'])) {
 		phpSession('write', 'alsa_output_mode', 'iec958');
 		updMpdConf();
@@ -628,7 +627,6 @@ if ($actualCardNum == $_SESSION['cardnum']) {
 	phpSession('write', 'adevname', PI_HDMI1);
 	phpSession('write', 'cardnum', $hdmi1CardNum);
 	sqlUpdate('cfg_mpd', $dbh, 'device', $hdmi1CardNum);
-	//DELETE:phpSession('write', 'alsa_output_mode', $devCache['alsa_output_mode']);
 	phpSession('write', 'alsa_output_mode', 'iec958');
 	phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
 	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
@@ -1494,11 +1492,9 @@ function chkBtActive() {
 				$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
 				$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
 				for ($i = 0; $i < count($rxAddresses); $i++) {
-					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max'])))) {
-		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('trx-control.php -set-alsavol ' . $_SESSION['alsavolume_max'])))) {
-		    				workerLog("worker: chkBtActive(): send 'set-alsavol alsavolume_max' failed: " . $rxHostNames[$i]);
-		    			}
-		    		}
+					if (false === sendTrxControlCmd($rxAddresses[$i], '-set-alsavol ' . $_SESSION['alsavolume_max'])) {
+						workerLog("worker: chkBtActive(): send 'set-alsavol alsavolume_max' failed: " . $rxHostNames[$i]);
+					}
 				}
 			}
 		}
@@ -2540,10 +2536,13 @@ function runQueuedJob() {
 
 		case 'multiroom_tx':
 			if ($_SESSION['multiroom_tx'] == 'On') {
-				$cardNum = loadSndDummy(); // Reconfigure to Dummy sound driver
+				// Reconfigure to Dummy sound driver
+				$cardNum = loadSndDummy();
 				phpSession('write', 'cardnum', $cardNum);
 				phpSession('write', 'adevname', TRX_SENDER_NAME);
+				phpSession('write', 'amixname', 'Master');
 				sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
+				changeMPDMixer('hardware');
 
 				updAudioOutAndBtOutConfs($cardNum, 'hw');
 				updDspAndBtInConfs($cardNum, 'hw');
@@ -2552,16 +2551,17 @@ function runQueuedJob() {
 				startMultiroomSender();
 			} else {
 				stopMultiroomSender();
+				// Reconfigure to Pi HDMI 1
 				unloadSndDummy();
-				// Reset to Pi HDMI 1
 				$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
 				phpSession('write', 'cardnum', $cardNum);
 				phpSession('write', 'adevname', PI_HDMI1);
+				phpSession('write', 'amixname', 'none');
 				sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
+				changeMPDMixer('software');
 
 				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-
 				sysCmd('systemctl restart mpd');
 			}
 

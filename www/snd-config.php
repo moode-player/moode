@@ -348,7 +348,7 @@ $_device_error = $deviceNames[$_SESSION['cardnum']] == ALSA_EMPTY_CARD ? 'Device
 // Hardware, Software, Fixed (none), CamillaDSP (null)
 $_software_and_dsd_warning = $cfgMPD['mixer_type'] == 'software' ?
 	'<br><b>WARNING:</b> DSD format will output 0dB when using Software volume.' : '';
-if ($_SESSION['alsavolume'] != 'none') {
+if ($_SESSION['alsavolume'] != 'none' || $_SESSION['adevname'] == TRX_SENDER_NAME) {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " .
 		($cfgMPD['mixer_type'] == 'hardware' ? "selected" : "") . ">Hardware</option>\n";
 }
@@ -404,7 +404,7 @@ if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2
 	$_driveropt_btn_disable = 'disabled';
 }
 
-// Button disables
+// Various button disables
 if ($_SESSION['audioout'] == 'Bluetooth' ||
 	$_SESSION['multiroom_tx'] == 'On' ||
 	$_SESSION['multiroom_rx'] == 'On') {
@@ -440,10 +440,13 @@ if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max_msg = '';
 }
 // Output mode
-$_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
+$_alsa_output_mode_disable = ($_SESSION['alsa_loopback'] == 'On' || isHDMIDevice($_SESSION['adevname'])) ? 'disabled' : '';
 if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'])) {
 	$_select['alsa_output_mode'] .= "<option value=\"iec958\" " . (($_SESSION['alsa_output_mode'] == 'iec958') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['iec958'] . "</option>\n";
 	$_alsa_output_mode = $_SESSION['alsa_output_mode'];
+} else if ($_SESSION['adevname'] == TRX_SENDER_NAME) {
+	$_select['alsa_output_mode'] .= "<option value=\"hw\" " . "selected" . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
+	$_alsa_output_mode = 'hw:' . $_SESSION['cardnum'] . ',0';
 } else {
 	$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
 	$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
@@ -515,9 +518,9 @@ if ($_SESSION['audioout'] == 'Local' &&
 		$piName == 'Pi-2B 1.2 1GB' ||
 		$piModel >= 3
 	) {
-		$_camilladsp_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+		$_cdsp_mode_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
 	} else {
-		$_camilladsp_ctl_disabled = 'disabled';
+		$_cdsp_mode_ctl_disabled = 'disabled';
 	}
 } else {
 	// Don't allow any DSP to be set for:
@@ -526,7 +529,7 @@ if ($_SESSION['audioout'] == 'Local' &&
 	$_crossfeed_ctl_disabled = 'disabled';
 	$_eqfa12p_ctl_disabled = 'disabled';
 	$_alsaequal_ctl_disabled = 'disabled';
-	$_camilladsp_ctl_disabled = 'disabled';
+	$_cdsp_mode_ctl_disabled = 'disabled';
 }
 
 // Polarity inversion
