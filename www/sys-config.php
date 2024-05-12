@@ -442,8 +442,11 @@ $_select['fs_nfs_on']  .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-
 $_select['fs_nfs_off'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-2\" value=\"Off\" " . (($_SESSION['fs_nfs'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
 $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
+// Subnet
+$iface = !empty(sysCmd('ip addr list | grep eth0')) ? 'eth0' : 'wlan0';
+$netMask = sysCmd("ifconfig " . $iface . " | awk 'NR==2{print $4}'")[0];
 $ipAddrParts = explode('.', $_SESSION['ipaddress']);
-$_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
+$_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/' . CIDR_TABLE[$netMask];
 
 $_feat_minidlna = $_SESSION['feat_bitmask'] & FEAT_MINIDLNA ? '' : 'hide';
 $_dlna_btn_disable = $_SESSION['dlnasvc'] == '1' ? '' : 'disabled';
