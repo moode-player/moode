@@ -57,6 +57,7 @@ function notify(title, message, arg3, arg4 = '') {
         querying_receivers: 'Querying receivers... ',
         no_receivers_found: 'No receivers were found. Run receiver Discovery. ',
         run_receiver_discovery: 'Run receiver Discovery. ',
+        receiver_turnoff: 'Turning off receiver... ',
         // CamillaDSP
         cdsp_update_config: 'Switching to ',
         cdsp_config_update_failed: 'Configuraton update has failed. ',

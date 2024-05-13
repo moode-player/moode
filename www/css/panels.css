@@ -100,12 +100,14 @@ html {background-color:inherit;}
 .audioinfo-renderer,
 .configure-renderer,
 .disconnect-renderer,
-.turnoff-renderer {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
+.turnoff-renderer,
+.turnoff-receiver {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
  /* Mask hover effect */
 .audioinfo-renderer:hover,
 .configure-renderer:hover,
 .disconnect-renderer:hover,
-.turnoff-renderer:hover {background-color:var(--btnshade4);}
+.turnoff-renderer:hover,
+.turnoff-receiver:hover {background-color:var(--btnshade4);}
 
 /* main ui */
 #currentsong, #currentalbum, #currentartist, #format-bitrate, #elapsed, #countdown-display {display:block;}

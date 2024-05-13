@@ -546,7 +546,7 @@ function engineCmd() {
                 case 'rxactive0':
                     inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
-                        '<button class="btn turnoff-renderer" data-job="multiroom_rx">Turn off</button>' +
+                        '<button class="btn turnoff-receiver" data-job="multiroom_rx">Turn off</button>' +
                         '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>' +
                         audioInfoBtn());
                     break;
@@ -1283,7 +1283,7 @@ function renderUI() {
     	if (SESSION.json['rxactive'] == '1') {
             inpSrcIndicator('rxactive1',
                 '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
-                '<button class="btn turnoff-renderer" data-job="multiroom_rx">Turn off</button>' +
+                '<button class="btn turnoff-receiver" data-job="multiroom_rx">Turn off</button>' +
                 '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>' +
                 audioInfoBtn());
     	}

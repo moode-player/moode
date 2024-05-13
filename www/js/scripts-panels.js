@@ -1614,14 +1614,19 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
 
-	// Disconnect active renderer
+	// Disconnect renderer
     $(document).on('click', '.disconnect-renderer', function(e) {
 		notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
         $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
-    // Turn off active renderer
+    // Turn off renderer
     $(document).on('click', '.turnoff-renderer', function(e) {
 		notify(NOTIFY_TITLE_INFO, 'renderer_turnoff');
+        $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+	});
+    // Turn off multiroom receiver
+    $(document).on('click', '.turnoff-receiver', function(e) {
+		notify(NOTIFY_TITLE_INFO, 'receiver_turnoff');
         $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
 
