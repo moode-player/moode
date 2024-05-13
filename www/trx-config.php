@@ -241,8 +241,8 @@ $_select['multiroom_tx_bfr'] .= "<option value=\"256\" " . (($cfgMultiroom['tx_b
 $_select['multiroom_tx_frame_size'] .= "<option value=\"120\" " . (($cfgMultiroom['tx_frame_size'] == '120') ? "selected" : "") . ">2.5</option>\n";
 $_select['multiroom_tx_frame_size'] .= "<option value=\"240\" " . (($cfgMultiroom['tx_frame_size'] == '240') ? "selected" : "") . ">7.5</option>\n";
 $_select['multiroom_tx_frame_size'] .= "<option value=\"480\" " . (($cfgMultiroom['tx_frame_size'] == '480') ? "selected" : "") . ">10</option>\n";
-$_select['multiroom_tx_frame_size'] .= "<option value=\"960\" " . (($cfgMultiroom['tx_frame_size'] == '960') ? "selected" : "") . ">20</option>\n";
-$_select['multiroom_tx_frame_size'] .= "<option value=\"1920\" " . (($cfgMultiroom['tx_frame_size'] == '1920') ? "selected" : "") . ">40 (Default)</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"960\" " . (($cfgMultiroom['tx_frame_size'] == '960') ? "selected" : "") . ">20 (Default)</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"1920\" " . (($cfgMultiroom['tx_frame_size'] == '1920') ? "selected" : "") . ">40</option>\n";
 //$_select['multiroom_tx_frame_size'] .= "<option value=\"2880\" " . (($cfgMultiroom['tx_frame_size'] == '2880') ? "selected" : "") . ">60</option>\n";
 $_multiroom_tx_rtprio = $cfgMultiroom['tx_rtprio'];
 $_multiroom_tx_query_timeout = $cfgMultiroom['tx_query_timeout'];
@@ -284,8 +284,8 @@ $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"128\" " . (($cfgMultiroo
 $_select['multiroom_rx_frame_size'] .= "<option value=\"120\" " . (($cfgMultiroom['rx_frame_size'] == '120') ? "selected" : "") . ">2.5</option>\n";
 $_select['multiroom_rx_frame_size'] .= "<option value=\"240\" " . (($cfgMultiroom['rx_frame_size'] == '240') ? "selected" : "") . ">7.5</option>\n";
 $_select['multiroom_rx_frame_size'] .= "<option value=\"480\" " . (($cfgMultiroom['rx_frame_size'] == '480') ? "selected" : "") . ">10</option>\n";
-$_select['multiroom_rx_frame_size'] .= "<option value=\"960\" " . (($cfgMultiroom['rx_frame_size'] == '960') ? "selected" : "") . ">20</option>\n";
-$_select['multiroom_rx_frame_size'] .= "<option value=\"1920\" " . (($cfgMultiroom['rx_frame_size'] == '1920') ? "selected" : "") . ">40 (Default)</option>\n";
+$_select['multiroom_rx_frame_size'] .= "<option value=\"960\" " . (($cfgMultiroom['rx_frame_size'] == '960') ? "selected" : "") . ">20 (Default)</option>\n";
+$_select['multiroom_rx_frame_size'] .= "<option value=\"1920\" " . (($cfgMultiroom['rx_frame_size'] == '1920') ? "selected" : "") . ">40</option>\n";
 //$_select['multiroom_rx_frame_size'] .= "<option value=\"2880\" " . (($cfgMultiroom['rx_frame_size'] == '2880') ? "selected" : "") . ">60</option>\n";
 $_multiroom_rx_rtprio = $cfgMultiroom['rx_rtprio'];
 
