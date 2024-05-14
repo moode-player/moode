@@ -44,6 +44,7 @@ Updates
 - UPD: Add window-size (randomness) option for auto-shuffle
 - UPD: Add time options up to 5 mins for IP address timeout
 - UPD: Add restart_renderer REST command
+- UPD: Add ALSA max volume option to Receiver Config
 - UPD: Remove HDMI On/Off option (not valid on Bookworm)
 - UPD: Remove redundant or obsolete devices from audio device table
 - UPD: Allow any netmask to be entered for static IP address
