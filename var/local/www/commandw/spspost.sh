@@ -48,11 +48,11 @@ fi
 # Multiroom receivers
 if [[ $MULTIROOM_TX == "On" ]]; then
 	for IP_ADDR in $RX_ADDRESSES; do
-		RESULT=$(curl -G -S -s --data-urlencode "cmd=vol.sh -restore" http://$IP_ADDR/command/)
+		RESULT=$(curl -G -S -s --data-urlencode "cmd=set_volume -restore" http://$IP_ADDR/command/)
 		if [[ $RESULT != "" ]]; then
-			RESULT=$(curl -G -S -s --data-urlencode "cmd=vol.sh -restore" http://$IP_ADDR/command/)
+			RESULT=$(curl -G -S -s --data-urlencode "cmd=set_volume -restore" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				echo $(date +'%Y%m%d %H%M%S') "Event: vol.sh -restore failed: $IP_ADDR" >> $LOGFILE
+				echo $(date +'%Y%m%d %H%M%S') "Event: set_volume -restore failed: $IP_ADDR" >> $LOGFILE
 			fi
 		fi
 	done

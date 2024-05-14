@@ -1492,8 +1492,8 @@ function chkBtActive() {
 				$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
 				$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
 				for ($i = 0; $i < count($rxAddresses); $i++) {
-					if (false === sendTrxControlCmd($rxAddresses[$i], '-set-alsavol ' . $_SESSION['alsavolume_max'])) {
-						workerLog("worker: chkBtActive(): send 'set-alsavol alsavolume_max' failed: " . $rxHostNames[$i]);
+					if (false === sendTrxControlCmd($rxAddresses[$i], '-set-alsavol')) {
+						workerLog("worker: chkBtActive(): send 'set-alsavol' failed: " . $rxHostNames[$i]);
 					}
 				}
 			}
@@ -1512,11 +1512,9 @@ function chkBtActive() {
 				$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
 				$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
 				for ($i = 0; $i < count($rxAddresses); $i++) {
-					if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('vol.sh -restore')))) {
-		    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i] . '/command/?cmd=' . rawurlencode('vol.sh -restore')))) {
-		    				workerLog("worker: chkBtActive(): send 'vol.sh -restore' failed: " . $rxHostNames[$i]);
-		    			}
-		    		}
+					if (false === sendTrxControlCmd($rxAddresses[$i], '-set-mpdvol -restore')) {
+						workerLog("worker: chkBtActive(): send '-set-mpdvol -restore' failed: " . $rxHostNames[$i]);
+					}
 				}
 			}
 
@@ -2552,7 +2550,6 @@ function runQueuedJob() {
 			} else {
 				stopMultiroomSender();
 				// Reconfigure to Pi HDMI 1
-				unloadSndDummy();
 				$cardNum = getAlsaCardNumForDevice(PI_HDMI1);
 				phpSession('write', 'cardnum', $cardNum);
 				phpSession('write', 'adevname', PI_HDMI1);
@@ -2563,6 +2560,7 @@ function runQueuedJob() {
 				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				sysCmd('systemctl restart mpd');
+				unloadSndDummy();
 			}
 
 			// Restart renderers

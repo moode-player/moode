@@ -36,7 +36,6 @@ $_players_action_div_hide = '';
 $timeout = getStreamTimeout();
 foreach ($port6600Hosts as $ipAddr) {
 	if ($ipAddr != $thisIpAddr) {
-		//DELETE*if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=' . rawurlencode('trx-control.php -rx'), false, $timeout))) {
 		if (false === ($status = sendTrxControlCmd($ipAddr, '-rx'))) {
 			debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
 		} else {

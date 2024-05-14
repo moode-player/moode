@@ -56,7 +56,7 @@ switch ($_GET['cmd']) {
 				workerLog('multiroom.php: set_rx_status volume failed: ' . $rxHostNames[$item]);
 			}
     	} else if (isset($_POST['mute'])) { // Toggle mute
-			if (false === sendTrxControlCmd($rxAddresses[$item], 'vol.sh  -mute')) {
+			if (false === sendTrxControlCmd($rxAddresses[$item], '-set-mpdmute')) {
 				workerLog('multiroom.php: set_rx_status mute failed: ' . $rxHostNames[$item]);
 			}
     	}

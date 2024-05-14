@@ -155,14 +155,15 @@
 				</span>
 			</div>
 
-			<label class="control-label" for="multiroom-rx-alsavol">ALSA volume (%)</label>
+			<label class="control-label" for="multiroom-rx-alsavol">ALSA max volume</label>
 			<div class="controls">
-				<input id="multiroom-rx-alsavol" class="config-input-large" type="number" maxlength="3" min="0" max="100" name="multiroom_rx_alsavol" value="$_multiroom_rx_alsavol" $_multiroom_rx_alsavol_disable>
+				<input id="multiroom-rx-alsavol" class="config-input-large" type="number" maxlength="3" min="1" max="100" name="multiroom_rx_alsavol" value="$_multiroom_rx_alsavol_max" $_multiroom_rx_alsavol_disable>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_alsavol" value="novalue" $_multiroom_rx_alsavol_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-multiroom-rx-alsavol" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				$_multiroom_rx_alsavol_msg
 				<span id="info-multiroom-rx-alsavol" class="config-help-info">
-					ALSA volume should indicate 100% (0dB) when AirPlay or Spotify renderer is playing on the Sender.
+					This establishes the ALSA 0dB level for this receiver when Spotify, Airplay or Bluetooth clients connect to the Sender.
+					Alsamixer volume units (1 to 100) are used.
 				</span>
 			</div>
 

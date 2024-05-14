@@ -48,16 +48,26 @@ switch ($option) {
 			$status = 'Master volume opt-in is No';
 		}
 		break;
+	case '-set-mpdmute':
+		sysCmd('/var/www/util/vol.sh -mute');
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volknob'", sqlConnect());
+		$status = 'Volume ' . $result[0]['value'];
+		break;
 	// This is used to set rx to 0dB when AirPlay or Spotify connects to Sender
 	case '-set-alsavol':
-		if (isset($argv[2])) {
+		$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_alsa_volume_max'", sqlConnect());
+		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $result[0]['value']);
+		$status = '';
+
+		/*DELETE:if (isset($argv[2])) {
+			sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $argv[2]);
 			if ($_SESSION['multiroom_rx'] == 'On') {
 				sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $argv[2]);
 			}
 			$status = '';
 		} else {
 			$status = 'Missing option';
-		}
+		}*/
 		break;
 	default:
 		$status = 'Missing option';

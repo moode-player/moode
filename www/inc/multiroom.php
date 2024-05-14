@@ -83,7 +83,7 @@ function sendTrxControlCmd($ipAddress, $cmd) {
 	$timeout = getStreamTimeout();
 
 	for ($i = 0; $i < $maxLoops; $i++) {
-		if (false !== ($result = file_get_contents('http://' . $ipAddress . '/command/?cmd=' . rawurlencode('trx-control.php ' . $cmd), false, $timeout))) {
+		if (false !== ($result = file_get_contents('http://' . $ipAddress . '/command/?cmd=' . rawurlencode('trx_control ' . $cmd), false, $timeout))) {
 			break;
 		}
 	}
@@ -117,13 +117,16 @@ function unloadSndDummy() {
 	$maxLoops = 3;
 
 	for ($i = 0; $i < $maxLoops; $i++) {
-		sysCmd('sudo modprobe -rf snd_dummy');
+		$result = sysCmd('modprobe -r -f snd_dummy');
+		debugLog('unloadSndDummy(): ' . ($i + 1) . ': ' . $result[0]);
+
 		$result = sysCmd('lsmod | grep -e "^snd_dummy"');
 
 		if (empty($result)) {
+			debugLog('unloadSndDummy(): Successfully unloaded');
 			break;
 		}
 
-		usleep(250000);
+		sleep(1);
 	}
 }

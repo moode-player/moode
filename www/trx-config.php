@@ -147,7 +147,8 @@ if (isset($_POST['update_multiroom_rx_alsa_output_mode'])) {
 }
 if (isset($_POST['update_multiroom_rx_alsavol'])) {
 	if (isset($_POST['multiroom_rx_alsavol'])) {
-		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . $_SESSION['amixname'] . ' ' . $_POST['multiroom_rx_alsavol']);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_alsavol'] . "' " . "WHERE param='rx_alsa_volume_max'", $dbh);
+		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $_POST['multiroom_rx_alsavol']);
 	}
 }
 if (isset($_POST['multiroom_rx_restart'])) {
@@ -259,9 +260,10 @@ if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'
 }
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
-$_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0], '%');
-if (stripos($_multiroom_rx_alsavol, 'amixer:') === false) {
-	$_multiroom_rx_alsavol_msg = '';
+$_multiroom_rx_alsavol_max = $cfgMultiroom['rx_alsa_volume_max'];;
+$_multiroom_rx_alsavol_pct = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
+if (stripos($_multiroom_rx_alsavol_percent, 'amixer:') === false) {
+	$_multiroom_rx_alsavol_msg = '<span class="config-msg-static">Current ALSA volume: ' . $_multiroom_rx_alsavol_pct . '</span>';
 	$_multiroom_rx_alsavol_disable = '';
 } else {
 	$_multiroom_rx_alsavol_msg = '<span class="config-msg-static"><i>Hardware volume controller not detected</i></span>';
