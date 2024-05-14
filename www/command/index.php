@@ -32,22 +32,18 @@ switch ($cmd[0]) {
 		echo $result[0];
 		break;
 	case 'set_volume':			// N | -mute | -up N | -dn N
-	case 'vol.sh': 				// DEPRECATED: used in spotevent, spspost, multiroom.php
 		$result = sysCmd('/var/www/util/vol.sh' . getArgs($cmd));
 		echo 'OK';
 		break;
 	case 'set_coverview':		// -on | -off
-	case 'coverview.php':		// DEPRECATED: not used via http
 		$result = sysCmd('/var/www/util/coverview.php' . getArgs($cmd));
 		echo $result[0];
 		break;
 	case 'trx_control':			// Up to 3 args
-	case 'trx-control.php':		// DEPRECATED: used in: spotevent, spspre, multiroom.php, players.php, trx-config.php
 		$result = sysCmd('/var/www/util/trx-control.php' . getArgs($cmd));
 		echo $result[0];
 		break;
 	case 'upd_library':
-	case 'libupd-submit.php':	// DEPRECATED: not used via http
 		$result = sysCmd('/var/www/util/libupd-submit.php');
 		echo 'Library update submitted';
 		break;
