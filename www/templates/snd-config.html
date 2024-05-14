@@ -110,13 +110,15 @@
 		</p>
 
 		<div class="control-group">
-			<label class="control-label" for="alsavolume-max">Max volume (%)</label>
+			<label class="control-label" for="alsavolume-max">Max volume</label>
 			<div class="controls">
 				<input class="config-input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="1" max="100" id="alsavolume-max" name="alsavolume_max" value="$_alsavolume_max" required $_alsavolume_max_disable>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit status-msg" type="submit" name="update_alsavolume_max" value="novalue" $_alsavolume_max_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsavolume-max" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				$_alsavolume_max_pct
 				<span id="info-alsavolume-max" class="config-help-info">
-					Establish ALSA 0dB level when volume type is set to Software, Fixed or CamillaDSP, or when any Renderers are active.
+					This establishes the ALSA 0dB level when volume type is set to Software, Fixed or CamillaDSP, or when any Renderers are active.
+					Alsamixer volume units (1 to 100) are used.
 				</span>
 			</div>
 
