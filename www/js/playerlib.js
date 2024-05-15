@@ -545,7 +545,7 @@ function engineCmd() {
                 case 'rxactive1':
                 case 'rxactive0':
                     inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
+                        '<span id="inpsrc-msg-text">Multiroom Receiver On</span>' +
                         '<button class="btn turnoff-receiver" data-job="multiroom_rx">Turn off</button>' +
                         '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>' +
                         audioInfoBtn());
@@ -639,11 +639,14 @@ function engineCmdLite() {
                 case 'cdsp_config_update_failed':
                     notify(NOTIFY_TITLE_ALERT, 'cdsp_config_update_failed', NOTIFY_DURATION_MEDIUM);
                     break;
-                case 'trx_config_sender':
-                    notify(NOTIFY_TITLE_INFO, 'trx_config_sender', NOTIFY_DURATION_MEDIUM);
+                case 'trx_discovering_receivers':
+                    notify(NOTIFY_TITLE_INFO, 'trx_discovering_receivers', NOTIFY_DURATION_INFINITE);
                     break;
-                case 'trx_config_mpd':
-                    notify(NOTIFY_TITLE_INFO, 'trx_config_mpd', NOTIFY_DURATION_DEFAULT);
+                case 'trx_configuring_sender':
+                    notify(NOTIFY_TITLE_INFO, 'trx_configuring_sender', NOTIFY_DURATION_MEDIUM);
+                    break;
+                case 'trx_configuring_mpd':
+                    notify(NOTIFY_TITLE_INFO, 'trx_configuring_mpd', NOTIFY_DURATION_DEFAULT);
                     break;
                 case 'reset_view':
                 case 'refresh_screen':
@@ -1288,7 +1291,7 @@ function renderUI() {
         // Multiroom receiver
     	if (SESSION.json['rxactive'] == '1') {
             inpSrcIndicator('rxactive1',
-                '<span id="inpsrc-msg-text">Multiroom Receiver Active</span>' +
+                '<span id="inpsrc-msg-text">Multiroom Receiver On</span>' +
                 '<button class="btn turnoff-receiver" data-job="multiroom_rx">Turn off</button>' +
                 '<br><a class="btn configure-renderer" href="trx-config.php">Configure</a>' +
                 audioInfoBtn());
@@ -2795,11 +2798,11 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'multiroom_rx_modal':
         case 'multiroom_rx_modal_limited':
             if (SESSION.json['rx_hostnames'] == null) {
-                notify(NOTIFY_TITLE_ALERT, 'run_receiver_discovery');
+                notify(NOTIFY_TITLE_ALERT, 'trx_run_receiver_discovery');
             } else if (SESSION.json['rx_hostnames'] == 'No receivers found') {
-                notify(NOTIFY_TITLE_ALERT, 'no_receivers_found');
+                notify(NOTIFY_TITLE_ALERT, 'trx_no_receivers_found');
             } else {
-                notify(NOTIFY_TITLE_INFO, 'querying_receivers', NOTIFY_DURATION_INFINITE);
+                notify(NOTIFY_TITLE_INFO, 'trx_querying_receivers', NOTIFY_DURATION_INFINITE);
 
                 var modalType = $(this).data('cmd') == 'multiroom_rx_modal' ? 'full' : 'limited';
                 $.getJSON('command/multiroom.php?cmd=get_rx_status', function(data) {
@@ -2807,9 +2810,9 @@ $(document).on('click', '.context-menu a', function(e) {
                     $('.ui-pnotify-closer').click();
 
                     if (data == 'Discovery has not been run') {
-                        notify(NOTIFY_TITLE_ALERT, 'run_receiver_discovery');
+                        notify(NOTIFY_TITLE_ALERT, 'trx_run_receiver_discovery');
                     } else if (data == 'No receivers found') {
-                        notify(NOTIFY_TITLE_ALERT, 'no_receivers_found');
+                        notify(NOTIFY_TITLE_ALERT, 'trx_no_receivers_found');
                     } else {
                         var output = '';
                         var rxStatus = data.split(':');

@@ -1626,7 +1626,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
     // Turn off multiroom receiver
     $(document).on('click', '.turnoff-receiver', function(e) {
-		notify(NOTIFY_TITLE_INFO, 'receiver_turnoff');
+		notify(NOTIFY_TITLE_INFO, 'trx_turning_receiver_off');
         $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
 

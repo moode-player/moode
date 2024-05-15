@@ -54,19 +54,19 @@ function notify(title, message, arg3, arg4 = '') {
 		del_station: 'Station has been deleted. ',
         blank_entries: 'Name or URL is blank. ',
         // Multiroom
-        querying_receivers: 'Querying receivers... ',
-        no_receivers_found: 'No receivers were found. Run receiver Discovery. ',
-        run_receiver_discovery: 'Run receiver Discovery. ',
-        receiver_turnoff: 'Turning off receiver... ',
+        trx_querying_receivers: 'Querying receivers... ',
+        trx_no_receivers_found: 'No receivers were found. Run receiver Discovery. ',
+        trx_run_receiver_discovery: 'Run receiver Discovery. ',
+        trx_turning_receiver_off: 'Turning off receiver... ',
+        trx_discovering_receivers: 'Discovering receivers... ',
+        trx_configuring_sender: 'Configuring Sender daemon...',
+        trx_configuring_mpd: 'Switching back to MPD...',
         // CamillaDSP
         cdsp_update_config: 'Switching to ',
         cdsp_config_update_failed: 'Configuraton update has failed. ',
         // Renderers
         renderer_disconnect: 'Disconnecting from renderer... ',
         renderer_turnoff: 'Turning off renderer... ',
-        // Multiroom
-        trx_config_sender: 'Configuring Sender daemon<br>Please wait...',
-        trx_config_mpd: 'Switching back to MPD...',
         // Network config
 		dhcp_required: 'DHCP is required. ',
         // System
