@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed May 15 11:03:37 2024
+-- File generated with SQLiteStudio v3.1.0 on Wed May 15 17:49:21 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -691,7 +691,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (51, 'proxy_password', '');
 
 -- Table: cfg_multiroom
 CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '128');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '64');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (2, 'tx_host', '239.0.0.1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (3, 'tx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (4, 'tx_sample_rate', '48000');
@@ -704,7 +704,7 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'RESERVED_12', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'tx_query_timeout', '1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '96');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '64');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_host', '239.0.0.1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_sample_rate', '48000');
