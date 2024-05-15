@@ -16,6 +16,7 @@ FPM_MIN_LIMIT=32
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x mpd)
+TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 message_log () {
@@ -49,11 +50,20 @@ while true; do
 		systemctl start mpd
 	fi
 
+	# Multiroom receiver
+	MULTIROOM_RX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_rx'")
+	if [[ $MULTIROOM_RX = "On" ]]; then
+		if [[ $TRX_RX_RUNNING = 0 ]]; then
+			message_log "Error: Multiroom Receiver restarted"
+			/var/www/util/trx-control.php -rx On
+		fi
+	fi
+
 	# Wake local display on play
 	MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx'")
 	if [[ $MULTIROOM_TX = "On" ]]; then
-		LOOPBACK_HW_PARAMS=$(cat /proc/asound/card2/pcm0p/sub0/hw_params)
-		if [[ $LOOPBACK_HW_PARAMS = "closed" ]]; then
+		DUMMY_HW_PARAMS=$(cat /proc/asound/card2/pcm0p/sub0/hw_params)
+		if [[ $DUMMY_HW_PARAMS = "closed" ]]; then
 			MSG="Info: Multiroom sender is not transmitting"
 		else
 			MSG="Info: Multiroom sender is transmitting"
@@ -76,5 +86,6 @@ while true; do
 	sleep $WATCHDOG_SLEEP
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 	MPD_RUNNING=$(pgrep -c -x mpd)
+	TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
 
 done > /dev/null 2>&1 &
