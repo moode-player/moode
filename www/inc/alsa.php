@@ -48,6 +48,9 @@ function getAlsaMixerName($deviceName) {
 		if ($deviceName == PI_HDMI1 || $deviceName == PI_HDMI2) {
 			// No need to query since the HDMI port may not be connected
 			$mixerName = 'PCM';
+		} else if ($deviceName == TRX_SENDER_NAME) {
+			// The mixer name for the Dummy PCM device
+			$mixerName = 'Master';
 		} else {
 			// Parse mixer name from amixer output
 			$result = sysCmd('/var/www/util/sysutil.sh get-mixername');

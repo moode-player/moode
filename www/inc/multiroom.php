@@ -71,9 +71,9 @@ function updReceiverVol($volCmd, $masterVolChange = false) {
 	$count = count($rxAddresses);
 	for ($i = 0; $i < $count; $i++) {
 		if (false === sendTrxControlCmd($rxAddresses[$i], $trxControlCmd . ' ' . $volCmd)) {
-			workerLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i] . ' failed');
+			workerLog('updReceiverVol(): ' .  $trxControlCmd . ' ' . $volCmd . ': ' . $rxHostNames[$i] . ' failed');
 		} else {
-			debugLog('updReceiverVol(): ' . $volCmd . ': ' . $rxHostNames[$i] . ' success');
+			debugLog('updReceiverVol(): ' .  $trxControlCmd . ' ' . $volCmd . ': ' . $rxHostNames[$i] . ' success');
 		}
 	}
 }

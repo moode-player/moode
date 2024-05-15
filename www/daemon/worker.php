@@ -2538,6 +2538,7 @@ function runQueuedJob() {
 				$cardNum = loadSndDummy();
 				phpSession('write', 'cardnum', $cardNum);
 				phpSession('write', 'adevname', TRX_SENDER_NAME);
+				// TODO: Investigate why this is getting reset to 'none'
 				phpSession('write', 'amixname', 'Master');
 				sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
 				changeMPDMixer('hardware');
