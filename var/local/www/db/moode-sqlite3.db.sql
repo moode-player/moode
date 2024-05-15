@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon May 13 08:42:44 2024
+-- File generated with SQLiteStudio v3.1.0 on Wed May 15 11:03:37 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -704,7 +704,7 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'RESERVED_12', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'tx_query_timeout', '1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '128');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '96');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_host', '239.0.0.1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_sample_rate', '48000');
@@ -716,7 +716,7 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'RESERVED_22', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (23, 'RESERVED_23', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (24, 'RESERVED_24', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (25, 'RESERVED_25', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (26, 'RESERVED_26', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (26, 'rx_alsa_volume_max', '100');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (27, 'rx_alsa_output_mode', 'plughw');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (28, 'rx_mastervol_opt_in', '1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (29, 'initial_volume', '0');

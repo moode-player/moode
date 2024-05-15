@@ -278,8 +278,8 @@ $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($cfgMultiroom['rx_bf
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($cfgMultiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"48\" " . (($cfgMultiroom['rx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"64\" " . (($cfgMultiroom['rx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
-$_select['multiroom_rx_bfr'] .= "<option value=\"96\" " . (($cfgMultiroom['rx_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
-$_select['multiroom_rx_bfr'] .= "<option value=\"128\" " . (($cfgMultiroom['rx_bfr'] == '128') ? "selected" : "") . ">128 (Default)</option>\n";
+$_select['multiroom_rx_bfr'] .= "<option value=\"96\" " . (($cfgMultiroom['rx_bfr'] == '96') ? "selected" : "") . ">96 (Default)</option>\n";
+$_select['multiroom_rx_bfr'] .= "<option value=\"128\" " . (($cfgMultiroom['rx_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"256\" " . (($cfgMultiroom['rx_bfr'] == '256') ? "selected" : "") . ">256</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"16\" " . (($cfgMultiroom['rx_jitter_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"32\" " . (($cfgMultiroom['rx_jitter_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
