@@ -21,6 +21,8 @@ if (isset($_POST['update_multiroom_tx'])) {
 	if (isset($_POST['multiroom_tx']) && $_POST['multiroom_tx'] != $_SESSION['multiroom_tx']) {
 		phpSession('write', 'multiroom_tx', $_POST['multiroom_tx']);
 		submitJob('multiroom_tx');
+		$notifyMsg = $_POST['multiroom_tx'] == 'On' ? 'trx_config_sender' : 'trx_config_mpd';
+		sendEngCmd($notifyMsg);
 	}
 }
 if (isset($_POST['update_alsa_loopback'])) {

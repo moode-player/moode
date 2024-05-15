@@ -639,6 +639,12 @@ function engineCmdLite() {
                 case 'cdsp_config_update_failed':
                     notify(NOTIFY_TITLE_ALERT, 'cdsp_config_update_failed', NOTIFY_DURATION_MEDIUM);
                     break;
+                case 'trx_config_sender':
+                    notify(NOTIFY_TITLE_INFO, 'trx_config_sender', NOTIFY_DURATION_MEDIUM);
+                    break;
+                case 'trx_config_mpd':
+                    notify(NOTIFY_TITLE_INFO, 'trx_config_mpd', NOTIFY_DURATION_DEFAULT);
+                    break;
                 case 'reset_view':
                 case 'refresh_screen':
                     if (cmd[0] == 'reset_view') {

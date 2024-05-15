@@ -64,6 +64,9 @@ function notify(title, message, arg3, arg4 = '') {
         // Renderers
         renderer_disconnect: 'Disconnecting from renderer... ',
         renderer_turnoff: 'Turning off renderer... ',
+        // Multiroom
+        trx_config_sender: 'Configuring Sender daemon<br>Please wait...',
+        trx_config_mpd: 'Switching back to MPD...',
         // Network config
 		dhcp_required: 'DHCP is required. ',
         // System
