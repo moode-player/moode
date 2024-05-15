@@ -2,11 +2,10 @@
 #
 #  Setup Guide for moOde Multiroom Audio
 #
-#  These instructions are designed for an initial configuration of a Multiroom
-#  Audio system. Additional configuration help is provided within the player
-#  via Menu, Quick help and the (i) information buttons.
+#  These instructions are for an initial configuration of Multiroom Audio. For
+#  additional information view Quick Help and the (i) information buttons.
 #
-#  Version: 1.3 2024-03-25
+#  Version: 1.4 2024-05-15
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
@@ -17,7 +16,7 @@ PREFACE
 This release of Multiroom Audio is designed for listening in a casual or
 background setting. There is no support for audiophile features for example
 uncompressed PCM format, rates greater than 48K, DSP or clock sync between
-Sender and Receiver(s). These features may however appear in future releases.
+Sender and Receivers. These features may however appear in future releases.
 
 OVERVIEW
 
@@ -25,8 +24,8 @@ A multiroom audio system consists of a Sender and one or more Receivers. The
 Sender should be a dedicated Pi not connected to speakers or headphones. It can
 also be configured as a NAS to serve audio files from locally attached storage.
 
-The Sender should be a Pi-3A+ or higher and the Receiver should be a Pi-3 or
-higher.
+The Sender and Receivers should be a Pi-3A+ or higher and use the integrated Pi
+WiFi adapter for consistent WiFi performance.
 
 BLOCK DIAGRAM
 
@@ -96,8 +95,8 @@ B) Renderer Configuration (Menu, Configure, Renderers)
 C) Multiroom Configuration (Menu, Configure, Multiroom)
 
 1. Turn the Receiver daemon on
-2. Set Master volume opt-in to "yes". This allows Receiver volume to be controlled
-   by the volume knob in Playback or Playbar view of the Sender.
+2. Master volume opt-in should default to "yes". This allows Receiver volume to
+   be controlled by the volume knob in Playback or Playbar view of the Sender.
 
 SENDER CONFIGURATION
 
@@ -105,7 +104,7 @@ The Sender should be a dedicated player not connected to speakers or headphones.
 It functions solely to send its audio output to one or more Receivers. It can
 also be used as a NAS by turning on SMB or NFS file sharing in System Config.
 
-Note: there can only be one Sender on the network.
+NOTE: there can only be one Sender on the network.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
@@ -145,35 +144,37 @@ NETWORKING AND AUDIO FORMAT
 A) Networking
 
 The performance of the system depends on having low latency, high throughput
-networking and hosts. If any hosts are connected via WiFi then interference
-in the WiFi band can result in degraded performance and audio dropouts.
+networking and hosts. For hosts connected via WiFi it's important that they all
+use the same WiFi adapter, preferably the Pi integrated adapter, to ensure
+consistent WiFi performance.
 
-1. Discovery of Receivers relies on Multicast DNS (mDNS)
-2. Addressing for the audio distribution protocol relies on IP Multicast using
-   a default address of 239.0.0.1 and port 1350. Many residential Routers
-   support Multicast by performing Multicast to Unicast (M-to-U) conversion but
-   in some cases both IP Multicast and IGMP Snooping need to be explicitly
-   enabled in the Router.
+1. Discovery of Receivers relies on Multicast DNS (mDNS).
+2. The audio distribution protocol uses IP Multicast addressing and a default
+   address of 239.0.0.1, port 1350. Most residential Routers support Multicast
+   by performing Multicast to Unicast (M-to-U) conversion but in some cases both
+   IP Multicast and IGMP Snooping need to be explicitly enabled in the Router.
 
 B) Audio format
 
 1. Audio is converted to 16 bit 48 kHz PCM format and encoded using the Opus
-   CODEC. Resampling if needed is handled by ALSA using the Speex converter.
-   For playback via MPD the SoX resampler can be used instead. Set Bit depth to
-   to "Any" and Sample rate to 48. This may provide higher quality resampling
-   than ALSA/Speex.
+   CODEC. Resampling if needed is automatically handled by ALSA using the Speex
+   converter. For playback via MPD the SoX resampler can be used instead. Set
+   Bit depth to "Any" and Sample rate to 48. This may provide higher quality
+   resampling than ALSA/Speex.
 2. Encoded Opus frames are transmitted over the network using RTP over UDP
 
 BLUETOOTH, SPOTIFY CONNECT AND AIRPLAY
 
 Playing Bluetooth, Spotify or AirPlay through the Sender sets the Receiver
-volume to 100% (0dB). Overall volume is controlled by the Bluetooth, Spotify or
-AirPlay client app. Receiver volume is restored after the client disconnects.
+volume to a level specified by the "ALSA Max volume" setting in Multiroom
+Config. Overall volume is controlled by Bluetooth, Spotify or AirPlay client
+applications. After the client disconnects, Receiver volume is restored to the
+value specified by the Sender.
 
 USAGE NOTES
 
-1. The 2.4 GHz WiFi band which is crowded and prone to interference should be
-   avoided. Use the 5GHz band for best results.
+1. The 2.4 GHz WiFi band is typically crowded and prone to interference and thus
+   should be avoided. Use the 5GHz band for best results.
 2. ARM6 single-core Pi's including Pi-1B and Pi-Zero have not been tested as
    either Sender or Receiver and so YMMV.
 3. The SQL table cfg_multiroom contains the configuration parameters for the
