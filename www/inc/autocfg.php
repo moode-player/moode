@@ -138,12 +138,12 @@ function autoConfigSettings() {
 		['requires' => ['pi_audio_driver'], 'handler' => function($values) {
 			$_SESSION['pi_audio_driver'] = $values['pi_audio_driver'];
 			$value = $values['pi_audio_driver'] == PI_VC4_KMS_V3D ? '' : '#';
-			updBootConfigTxt('pi_audio_driver', $value);
+			updBootConfigTxt('upd_pi_audio_driver', $value);
 		}],
 		['requires' => ['pci_express'], 'handler' => function($values) {
 			$_SESSION['pci_express'] = $values['pci_express'];
 			$value = $values['pci_express'];
-			updBootConfigTxt('pci_express', $value);
+			updBootConfigTxt('upd_pci_express', $value);
 		}],
 		['requires' => ['p3wifi'], 'handler' => function($values) {
 			phpSession('write', 'p3wifi', $values['p3wifi']);
