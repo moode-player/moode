@@ -119,7 +119,7 @@ function setAudioIn($inputSource) {
 			sysCmd('/var/www/util/vol.sh ' . $_SESSION['volknob_mpd']);
 		}
 
-		sendEngCmd('inpactive0');
+		sendFECmd('inpactive0');
 
 		if ($_SESSION['rsmafterinp'] == 'Yes') {
 			sysCmd('mpc play');
@@ -144,7 +144,7 @@ function setAudioIn($inputSource) {
 			sysCmd('amixer -c 0 sset "I2S/SPDIF Select" SPDIF');
 		}
 
-		sendEngCmd('inpactive1');
+		sendFECmd('inpactive1');
 	}
 }
 
@@ -162,7 +162,7 @@ function setAudioOut($output) {
 			changeMPDMixer('software');
 		}
 		phpSession('write', 'btactive', '0');
-		sendEngCmd('btactive0');
+		sendFECmd('btactive0');
 		sysCmd('mpc enable only "' . ALSA_BLUETOOTH .'"');
 	}
 

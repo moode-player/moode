@@ -596,14 +596,14 @@ class CamillaDsp {
             // after the config is changed in the Equalizers section of Audio Config
             sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixerType);
 
-            sendEngCmd('cdsp_update_config' . ',' . $notifyMsg);
+            sendFECmd('cdsp_update_config' . ',' . $notifyMsg);
             // So notification stays up for a bit.
             sleep(2);
             submitJob('camilladsp', $newMode . $queueArg1);
         } else {
             // Switching between configs
             $cdsp->reloadConfig();
-            sendEngCmd('cdsp_config_updated' . ',' . $newMode);
+            sendFECmd('cdsp_config_updated' . ',' . $newMode);
         }
     }
 

@@ -28,7 +28,7 @@ switch ($_GET['cmd']) {
 			$cdsp->updCDSPConfig($newMode, $currentMode, $cdsp);
 			unset($cdsp);
 		} else {
-			sendEngCmd('cdsp_config_update_failed');
+			sendFECmd('cdsp_config_update_failed');
 			workerLog('camilla.php: Error: $_POST[cdspconfig] missing or empty');
 		}
 		break;

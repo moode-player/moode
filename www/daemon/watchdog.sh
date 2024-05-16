@@ -36,7 +36,7 @@ while true; do
 	# PHP-FPM
 	if (( FPM_CNT > FPM_MIN_LIMIT )); then
 		#message_log "Info: Reducing PHP-FPM worker pool"
-		/var/www/util/send-engcmd.php reduce_fpm_pool
+		/var/www/util/send-fecmd.php reduce_fpm_pool
 	fi
 
 	if (( FPM_CNT > FPM_MAX_LIMIT )); then

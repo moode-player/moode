@@ -56,7 +56,7 @@ function restartBluetooth() {
 	// Reset to inactive
 	phpSession('write', 'btactive', '0');
 	// Dismiss active screen
-	sendEngCmd('btactive0');
+	sendFECmd('btactive0');
 
 	// Restore MPD volume and start Bluetooth
 	sysCmd('/var/www/util/vol.sh -restore');

@@ -22,11 +22,11 @@ With no OPTION print the help text and exit.
  --help\t\tPrint this help text\n";
 		break;
 	case '-on':
-		sendEngCmd('scnactive1');
+		sendFECmd('scnactive1');
 		echo "CoverView on\n";
 		break;
 	case '-off':
-		sendEngCmd('scnactive0');
+		sendFECmd('scnactive0');
 		echo "CoverView off\n";
 		break;
 	default:

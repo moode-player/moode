@@ -1147,7 +1147,7 @@ workerLog('worker: Maintenance task:  ' . ($_SESSION['maint_interval'] / 60) . '
 
 // Reset view to Playback (assumes the WebUI is up and connected)
 $view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' . $_SESSION['current_view'] : $_SESSION['current_view'];
-sendEngCmd('reset_view');
+sendFECmd('reset_view');
 workerLog('worker: Current view:      reset to Playback');
 
 // Reset in-place update flag
@@ -1418,7 +1418,7 @@ function chkScnSaver() {
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
 				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
 				$GLOBALS['scnactive'] = '1';
-				sendEngCmd('scnactive1');
+				sendFECmd('scnactive1');
 			}
 		}
 	}
@@ -1477,7 +1477,7 @@ function chkBtActive() {
 			phpSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sysCmd('mpc stop'); // For added robustness
-			sendEngCmd('btactive1');
+			sendFECmd('btactive1');
 
 			// Local (Attenuate for Bluetooth volume)
 			if ($_SESSION['alsavolume'] != 'none') {
@@ -1502,7 +1502,7 @@ function chkBtActive() {
 		// Do this section only once
 		if ($_SESSION['btactive'] == '1') {
 			phpSession('write', 'btactive', '0');
-			sendEngCmd('btactive0');
+			sendFECmd('btactive0');
 
 			// Local
 			sysCmd('/var/www/util/vol.sh -restore');
@@ -1533,13 +1533,13 @@ function chkAplActive() {
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendEngCmd('aplactive1');
+			sendFECmd('aplactive1');
 		}
 	} else {
 		// Do this section only once
 		if ($GLOBALS['aplactive'] == '1') {
 			$GLOBALS['aplactive'] = '0';
-			sendEngCmd('aplactive0');
+			sendFECmd('aplactive0');
 		}
 	}
 }
@@ -1552,13 +1552,13 @@ function chkSpotActive() {
 		if ($GLOBALS['spotactive'] == '0') {
 			$GLOBALS['spotactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendEngCmd('spotactive1');
+			sendFECmd('spotactive1');
 		}
 	} else {
 		// Do this section only once
 		if ($GLOBALS['spotactive'] == '1') {
 			$GLOBALS['spotactive'] = '0';
-			sendEngCmd('spotactive0');
+			sendFECmd('spotactive0');
 		}
 	}
 }
@@ -1571,13 +1571,13 @@ function chkSlActive() {
 		if ($GLOBALS['slactive'] == '0') {
 			$GLOBALS['slactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendEngCmd('slactive1');
+			sendFECmd('slactive1');
 		}
 	} else {
 		// Do this section only once
 		if ($GLOBALS['slactive'] == '1') {
 			$GLOBALS['slactive'] = '0';
-			sendEngCmd('slactive0');
+			sendFECmd('slactive0');
 		}
 	}
 }
@@ -1596,14 +1596,14 @@ function chkRbActive() {
 				$GLOBALS['rbactive'] = '1';
 				phpSession('write', 'rbactive', '1');
 				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-				sendEngCmd('rbactive1');
+				sendFECmd('rbactive1');
 			}
 		} else {
 			// Do this section only once
 			if ($GLOBALS['rbactive'] == '1') {
 				$GLOBALS['rbactive'] = '0';
 				phpSession('write', 'rbactive', '0');
-				sendEngCmd('rbactive0');
+				sendFECmd('rbactive0');
 				sysCmd('/var/www/util/vol.sh -restore');
 				if ($_SESSION['rsmafterrb'] == 'Yes') {
 					sysCmd('mpc play');
@@ -1621,7 +1621,7 @@ function chkRxActive() {
 		if ($_SESSION['rxactive'] == '0') {
 			phpSession('write', 'rxactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendEngCmd('rxactive1');
+			sendFECmd('rxactive1');
 		}
 	}
 }
@@ -1635,14 +1635,14 @@ function chkInpActive() {
 			phpSession('write', 'inpactive', '1');
 			$GLOBALS['inpactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendEngCmd('inpactive1');
+			sendFECmd('inpactive1');
 		}
 	} else {
 		// Do this section only once
 		if ($GLOBALS['inpactive'] == '1') {
 			phpSession('write', 'inpactive', '0');
 			$GLOBALS['inpactive'] = '0';
-			sendEngCmd('inpactive0');
+			sendFECmd('inpactive0');
 		}
 	}
 }
@@ -1949,7 +1949,7 @@ function chkLibraryUpdate() {
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
-		sendEngCmd('libupd_done');
+		sendFECmd('libupd_done');
 		$GLOBALS['check_library_update'] = '0';
 		workerLog('mpdindex: Done: indexed ' . $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs');
 		workerLog('worker: Job update_library done');
@@ -1964,7 +1964,7 @@ function chkLibraryRegen() {
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
-		sendEngCmd('libregen_done');
+		sendFECmd('libregen_done');
 		$GLOBALS['check_library_regen'] = '0';
 		workerLog('worker: Job regen_library done');
 	}
@@ -2200,7 +2200,7 @@ function runQueuedJob() {
 					sysCmd('/var/www/util/vol.sh 0');
 				}
 				 // Refresh connected clients
-				//DELETE:sendEngCmd('refresh_screen');
+				//DELETE:sendFECmd('refresh_screen');
 			}
 
 			// Start play if was playing
@@ -2441,7 +2441,7 @@ function runQueuedJob() {
 			stopBluetooth();
 			sysCmd('/var/www/util/vol.sh -restore');
 			phpSession('write', 'btactive', '0');
-			sendEngCmd('btactive0');
+			sendFECmd('btactive0');
 			if ($_SESSION['btsvc'] == 1) {
 				$status = startBluetooth();
 				if ($status != 'started') {
@@ -2688,7 +2688,7 @@ function runQueuedJob() {
 			break;
 		case 'pci_express':
 			$value = $_SESSION['w_queueargs'];
-			updBootConfigTxt('pci_express', $value);
+			updBootConfigTxt('upd_pci_express', $value);
 			break;
 		case 'usb_auto_mounter':
 			if ($_SESSION['w_queueargs'] == 'udisks-glue') {

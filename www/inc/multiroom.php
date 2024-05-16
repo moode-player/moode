@@ -58,7 +58,7 @@ function startMultiroomReceiver() {
 function stopMultiroomReceiver() {
 	sysCmd('killall trx-rx');
 	phpSession('write', 'rxactive', '0');
-	sendEngCmd('rxactive0');
+	sendFECmd('rxactive0');
 }
 
 // NOTE: The trx-control.php utility checks to see if Receiver opted in for Master volume

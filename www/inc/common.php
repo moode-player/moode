@@ -68,10 +68,10 @@ function echoTemplate($template) {
 }
 
 // Send command to front-end via engine-cmd.php
-function sendEngCmd ($cmd) {
+function sendFECmd ($cmd) {
 	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
 		// This case is ok and occurs if UI has never been started
-		debugLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
+		debugLog('sendFECmd(): File open failed, UI has never been opened in Browser');
 	} else {
 		// Retry until UI connects or retry limit reached
 		$retry_limit = 4;
@@ -94,7 +94,7 @@ function sendEngCmd ($cmd) {
 					sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
 				}
 			} else {
-				workerLog('sendEngCmd(): Socket create failed');
+				workerLog('sendFECmd(): Socket create failed');
 			}
 		}
 	}
@@ -377,7 +377,7 @@ function updBootConfigTxt($action, $value) {
 			// $value: '#' or ''
 			sysCmd('sed -i /' . CFG_PI_AUDIO_DRIVER . "/c\\" . $value . 'dtoverlay=' . CFG_PI_AUDIO_DRIVER . ' ' . BOOT_CONFIG_TXT);
 			break;
-		case 'pci_express':
+		case 'upd_pci_express':
 			// $value: 'off' or 'gen2' or 'gen3'
 			$prefix1 = $value == 'off' ? '#' : '';
 			$prefix2 = $value == 'off' ? '#' : ($value == 'gen2' ? '#' : '');

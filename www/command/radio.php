@@ -220,7 +220,7 @@ function putStationCover($stName) {
 	$stCoverImageThmSm = RADIO_LOGOS_ROOT . 'thumbs/' .  $stName . '_sm.jpg';
 
 	$defaultImage = '/var/www/images/notfound.jpg';
-	sendEngCmd('set_cover_image1'); // Show spinner
+	sendFECmd('set_cover_image1'); // Show spinner
 	sleep(3); // Allow time for set_ralogo_image job to create __tmp__ image file
 
 	if (file_exists($stTmpImage)) {
@@ -233,7 +233,7 @@ function putStationCover($stName) {
 		sysCmd('cp "' . $defaultImage . '" "' . $stCoverImageThmSm . '"');
 	}
 
-	sendEngCmd('set_cover_image0'); // Hide spinner
+	sendFECmd('set_cover_image0'); // Hide spinner
 }
 
 // Delete station file, cover image, session var and SQL row

@@ -293,7 +293,7 @@ function putPlaylistCover($plName) {
 	$plCoverImage = PLAYLIST_COVERS_ROOT . $plName . '.jpg';
 	$defaultImage = '/var/www/images/pldefault.jpg';
 
-	sendEngCmd('set_cover_image1'); // Show spinner
+	sendFECmd('set_cover_image1'); // Show spinner
 	sleep(3); // Allow time for set_plcover_image job to create __tmp__ image file
 
 	if (file_exists($plTmpImage)) {
@@ -305,7 +305,7 @@ function putPlaylistCover($plName) {
 		sysCmd('sed -i s/#EXTIMG:local/#EXTIMG:default/ "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
 	}
 
-	sendEngCmd('set_cover_image0'); // Hide spinner
+	sendFECmd('set_cover_image0'); // Hide spinner
 }
 
 // Return contents of playlist (Folder view)

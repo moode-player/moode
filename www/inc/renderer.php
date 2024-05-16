@@ -90,7 +90,7 @@ function stopAirPlay() {
 
 	phpSession('write', 'aplactive', '0');
 	$GLOBALS['aplactive'] = '0';
-	sendEngCmd('aplactive0');
+	sendFECmd('aplactive0');
 }
 
 function startSpotify() {
@@ -162,7 +162,7 @@ function stopSpotify() {
 
 	phpSession('write', 'spotactive', '0');
 	$GLOBALS['spotactive'] = '0';
-	sendEngCmd('spotactive0');
+	sendFECmd('spotactive0');
 }
 
 function startSqueezeLite() {
@@ -185,7 +185,7 @@ function stopSqueezeLite() {
 
 	phpSession('write', 'slactive', '0');
 	$GLOBALS['slactive'] = '0';
-	sendEngCmd('slactive0');
+	sendFECmd('slactive0');
 }
 
 function cfgSqueezelite() {
@@ -210,7 +210,7 @@ function stopRoonBridge() {
 	sysCmd('/var/www/util/vol.sh -restore');
 	phpSession('write', 'rbactive', '0');
 	$GLOBALS['rbactive'] = '0';
-	sendEngCmd('rbactive0');
+	sendFECmd('rbactive0');
 }
 
 function startUPnP() {

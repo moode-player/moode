@@ -11,8 +11,8 @@ $option = isset($argv[1]) ? $argv[1] : '';
 
 if ($option == '') {
 	echo
-"Usage: send-engcmd.php [command]
-Send command to front-end\n";
+"Usage: send-fecmd.php [command]
+Send a command to the front-end\n";
 } else {
-	sendEngCmd($argv[1]);
+	sendFECmd($argv[1]);
 }

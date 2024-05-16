@@ -66,7 +66,7 @@ if (empty(trim($_players))) {
 }
 
 // Close the "Discovering players..." notification
-sendEngCmd('close_notification');
+sendFECmd('close_notification');
 
 $tpl = 'players.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');

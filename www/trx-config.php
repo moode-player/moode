@@ -22,7 +22,7 @@ if (isset($_POST['update_multiroom_tx'])) {
 		phpSession('write', 'multiroom_tx', $_POST['multiroom_tx']);
 		submitJob('multiroom_tx');
 		$notifyMsg = $_POST['multiroom_tx'] == 'On' ? 'trx_configuring_sender' : 'trx_configuring_mpd';
-		sendEngCmd($notifyMsg);
+		sendFECmd($notifyMsg);
 	}
 }
 if (isset($_POST['update_alsa_loopback'])) {
@@ -51,7 +51,7 @@ if (isset($_POST['multiroom_tx_restart'])) {
 	submitJob('multiroom_tx_restart', '', NOTIFY_TITLE_INFO, 'Sender restarted.');
 }
 if (isset($_POST['multiroom_tx_discover'])) {
-	sendEngCmd('trx_discovering_receivers');
+	sendFECmd('trx_discovering_receivers');
 
 	// Scan the network for hosts with open port 6600 (MPD)
 	$port6600Hosts = scanForMPDHosts();
