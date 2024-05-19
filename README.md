@@ -70,7 +70,8 @@ Please use this and our other repositories only for developer related activities
 Release and other announcements are made on the following social sites.
 1. The [Announcements](https://moodeaudio.org/forum/forumdisplay.php?fid=17) section in our [Forum](https://moodeaudio.org/forum)
 2. Our [Mastodon](https://fosstodon.org/@moodeaudio) feed
-3. The [moOde thread](https://www.diyaudio.com/community/forums/pc-based.120/) in the diyAudio Forum
+3. The [moOde thread](https://www.diyaudio.com/community/threads/moode-audio-player-for-raspberry-pi.271811/) in the diyAudio Forum
+4. The [moOde thread](https://www.audiosciencereview.com/forum/index.php?threads/moode-audio-player-for-raspberry-pi.52246/) in the ASR Forum
 
 ### Developer Resources
 
