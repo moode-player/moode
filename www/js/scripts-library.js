@@ -1274,7 +1274,6 @@ $('#database-radio').on('click', 'img', function(e) {
         }
         else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
             sendQueueCmd('clear_play_item', path);
-            notify(NOTIFY_TITLE_INFO, 'clear_play_item', NOTIFY_DURATION_SHORT);
         }
     }
 
