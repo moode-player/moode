@@ -22,7 +22,7 @@
 		</p>
 		<h5>Release Information</h5>
 		<ul>
-			<li>Release: 9.0.0 2024-05-17</li> <!-- NOTE: getMoodeRel() parses this  -->
+			<li>Release: 9.0.1 2024-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
 			<li>Maintainer: Tim Curtis &copy; 2014</li>
 			<li>Documentation: <a class="moode-about-link target-blank-link" href="./relnotes.txt" target="_blank">View release notes,</a>&nbsp<a class="moode-about-link target-blank-link" href="./setup.txt" target="_blank">View setup guide</a></li>
 			<li>Contributors:  <a class="moode-about-link target-blank-link" href="./CONTRIBS.html" target="_blank">View contributors</a></li>

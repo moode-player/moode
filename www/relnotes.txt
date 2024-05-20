@@ -11,6 +11,19 @@
 
 ################################################################################
 #
+# 2024-MM-DD moOde 9.0.1 (Bookworm)
+#
+################################################################################
+
+Bug fixes
+
+- FIX: Fixed (0dB) reverts to Software vol for DAC's w/o Hardware volume 
+- FIX: Clear/Play action for One touch radio displays an unknown notification
+- FIX: CoverView automatic display notification stays up indefinitely
+- FIX: Rotary encoder systemd unit file is marked as executable
+
+################################################################################
+#
 # 2024-05-17 moOde 9.0.0 (Bookworm)
 #
 ################################################################################
