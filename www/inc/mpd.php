@@ -114,7 +114,8 @@ function updMpdConf() {
         if ($outputIface == AO_USB ||
             $outputIface == AO_HDMI ||
             $outputIface == AO_TRXSEND ||
-            $mixerType == 'null') {
+            $mixerType == 'null' || // CamillaDSP
+            $mixerType == 'none') { // Fixed (0dB)
             // NOP: Leave mixer type as-is
         } else {
             // Revert to software mixer
