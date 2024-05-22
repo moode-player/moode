@@ -606,12 +606,12 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Audio device
-workerLog('worker: Audio device:  ' . $_SESSION['adevname']);
+workerLog('worker: Audio device:  ' . $_SESSION['cardnum'] . ':' . $_SESSION['adevname']);
 
 // Check for reassigned or empty card number
 $actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
 if ($actualCardNum == $_SESSION['cardnum']) {
-	workerLog('worker: ALSA card:     has not changed');
+	workerLog('worker: ALSA card:     has not been reassigned');
 	if (isHDMIDevice($_SESSION['adevname'])) {
 		phpSession('write', 'alsa_output_mode', 'iec958');
 		updMpdConf();
@@ -633,7 +633,7 @@ if ($actualCardNum == $_SESSION['cardnum']) {
 	updMpdConf();
 	workerLog('worker: MPD config:    updated');
 } else {
-	workerLog('worker: ALSA card:     changed to ' . $actualCardNum . ' from ' . $_SESSION['cardnum']);
+	workerLog('worker: ALSA card:     has been reassigned to ' . $actualCardNum . ' from ' . $_SESSION['cardnum']);
 	phpSession('write', 'cardnum', $actualCardNum);
 	sqlUpdate('cfg_mpd', $dbh, 'device', $actualCardNum);
 	if ($_SESSION['multiroom_tx'] == 'On') {
