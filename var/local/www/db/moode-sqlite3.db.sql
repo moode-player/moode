@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon May 20 18:23:57 2024
+-- File generated with SQLiteStudio v3.1.0 on Tue May 21 16:48:34 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -619,14 +619,14 @@ INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Defa
 
 -- Table: cfg_gpio
 CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), pull CHAR (32), command CHAR (64), param CHAR (32), value CHAR (32));
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (1, '2', '0', 'GPIO.PUD_UP', '', '', '');
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (2, '2', '0', 'GPIO.PUD_UP', '', '', '');
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (3, '2', '0', 'GPIO.PUD_UP', '', '', '');
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (4, '2', '0', 'GPIO.PUD_UP', '', '', '');
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (5, '2', '0', 'GPIO.PUD_UP', '', '', '');
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (6, '2', '0', 'GPIO.PUD_UP', '', '', '');
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (7, '2', '0', 'GPIO.PUD_UP', '', '', '');
-INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (8, '2', '0', 'GPIO.PUD_UP', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (1, '2', '0', '22', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (2, '2', '0', '22', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (3, '2', '0', '22', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (4, '2', '0', '22', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (5, '2', '0', '22', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (6, '2', '0', '22', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (7, '2', '0', '22', '', '', '');
+INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (8, '2', '0', '22', '', '', '');
 INSERT INTO cfg_gpio (id, pin, enabled, pull, command, param, value) VALUES (99, '', '', '', '', 'bounce_time', '1000');
 
 -- Table: cfg_network

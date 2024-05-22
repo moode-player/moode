@@ -4,6 +4,7 @@
 # Copyright 2014 The moOde audio player project / Tim Curtis
 #
 
+#
 #	Inspired by the script posted in moOde Forum by @Cyanoazimin
 #
 
@@ -34,150 +35,84 @@ cursor = db.cursor()
 cursor.execute("SELECT value FROM cfg_gpio WHERE param='bounce_time'")
 row = cursor.fetchone()
 bounce_time = int(row['value'])
-print(str(datetime.datetime.now())[:19] + ' bounce_time=' + str(bounce_time))
+print('bounce=' + str(bounce_time) + 'ms')
 
 # Configure the pins
 cursor.execute("SELECT * FROM cfg_gpio")
 for row in cursor:
+    pin_enabled = 'y' if row['enabled'] == '1' else 'n'
+    pin_pull = 'up' if row['pull'] == '22' else 'dn'
     if row['id'] != 99:
-        print(str(datetime.datetime.now())[:19] +
-            ' row' + str(row['id']) + ', pin' + str(row['pin']) + ', enabled=' + row['enabled'] + ', pull=' + row['pull'] + ', command=' + row['command'])
+        print('btn' + str(row['id']) +
+            ', enabled ' + pin_enabled +
+            ', gpio ' + str(row['pin'].rjust(2, '0')) +
+            ', pull-' + pin_pull +
+            ', cmd=' + row['command'])
+
     if str(row['id']) == '1' and row['enabled'] == '1':
-        btn_1_pin = int(row['pin'])
-        btn_1_pull = row['pull']
-        btn_1_cmd = row['command'].split(',')
-        btn_1_cmd = [x.strip() for x in btn_1_cmd]
-        GPIO.setup(btn_1_pin, GPIO.IN, pull_up_down=btn_1_pull)
-
+        if row['pin'] not in ('2','3'): # Pins 2,3 have fixed pull-up resistors
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_1_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
-            if GPIO.input(channel) == 1:
-                subprocess.call(btn_1_cmd)
-
-        GPIO.add_event_detect(btn_1_pin, GPIO.RISING, callback=btn_1_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_1: pin=' +
-            str(btn_1_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+            time.sleep(0.005) # Edge debounce of 5 ms
+            if GPIO.input(channel) == 1: # Only deal with valid edges
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_1_event, bouncetime=bounce_time)
     elif str(row['id']) == '2' and row['enabled'] == '1':
-        btn_2_pin = int(row['pin'])
-        btn_2_pull = row['pull']
-        btn_2_cmd = row['command'].split(',')
-        btn_2_cmd = [x.strip() for x in btn_2_cmd]
-        GPIO.setup(btn_2_pin, GPIO.IN, pull_up_down=btn_2_pull)
-
+        if row['pin'] not in ('2','3'):
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_2_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
+            time.sleep(0.005)
             if GPIO.input(channel) == 1:
-                subprocess.call(btn_2_cmd)
-
-        GPIO.add_event_detect(btn_2_pin, GPIO.RISING, callback=btn_2_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_2: pin=' +
-            str(btn_2_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_2_event, bouncetime=bounce_time)
     elif str(row['id']) == '3' and row['enabled'] == '1':
-        btn_3_pin = int(row['pin'])
-        btn_3_pull = row['pull']
-        btn_3_cmd = row['command'].split(',')
-        btn_3_cmd = [x.strip() for x in btn_3_cmd]
-        GPIO.setup(btn_3_pin, GPIO.IN, pull_up_down=btn_3_pull)
-
+        if row['pin'] not in ('2','3'):
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_3_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
+            time.sleep(0.005)
             if GPIO.input(channel) == 1:
-                subprocess.call(btn_3_cmd)
-
-        GPIO.add_event_detect(btn_3_pin, GPIO.RISING, callback=btn_3_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_3: pin=' +
-            str(btn_3_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_3_event, bouncetime=bounce_time)
     elif str(row['id']) == '4' and row['enabled'] == '1':
-        btn_4_pin = int(row['pin'])
-        btn_4_pull = row['pull']
-        btn_4_cmd = row['command'].split(',')
-        btn_4_cmd = [x.strip() for x in btn_4_cmd]
-        GPIO.setup(btn_4_pin, GPIO.IN, pull_up_down=btn_4_pull)
-
+        if row['pin'] not in ('2','3'):
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_4_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
+            time.sleep(0.005)
             if GPIO.input(channel) == 1:
-                subprocess.call(btn_4_cmd)
-
-        GPIO.add_event_detect(btn_4_pin, GPIO.RISING, callback=btn_4_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_4: pin=' +
-            str(btn_4_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_4_event, bouncetime=bounce_time)
     elif str(row['id']) == '5' and row['enabled'] == '1':
-        btn_5_pin = int(row['pin'])
-        btn_5_pull = row['pull']
-        btn_5_cmd = row['command'].split(',')
-        btn_5_cmd = [x.strip() for x in btn_5_cmd]
-        GPIO.setup(btn_5_pin, GPIO.IN, pull_up_down=btn_5_pull)
-
+        if row['pin'] not in ('2','3'):
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_5_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
+            time.sleep(0.005)
             if GPIO.input(channel) == 1:
-                subprocess.call(btn_5_cmd)
-
-        GPIO.add_event_detect(btn_5_pin, GPIO.RISING, callback=btn_5_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_5: pin=' +
-            str(btn_5_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_5_event, bouncetime=bounce_time)
     elif str(row['id']) == '6' and row['enabled'] == '1':
-        btn_6_pin = int(row['pin'])
-        btn_6_pull = row['pull']
-        btn_6_cmd = row['command'].split(',')
-        btn_6_cmd = [x.strip() for x in btn_6_cmd]
-        GPIO.setup(btn_6_pin, GPIO.IN, pull_up_down=btn_6_pull)
-
+        if row['pin'] not in ('2','3'):
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_6_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
+            time.sleep(0.005)
             if GPIO.input(channel) == 1:
-                subprocess.call(btn_6_cmd)
-
-        GPIO.add_event_detect(btn_6_pin, GPIO.RISING, callback=btn_6_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_6: pin=' +
-            str(btn_6_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_6_event, bouncetime=bounce_time)
     elif str(row['id']) == '7' and row['enabled'] == '1':
-        btn_7_pin = int(row['pin'])
-        btn_7_pull = row['pull']
-        btn_7_cmd = row['command'].split(',')
-        btn_7_cmd = [x.strip() for x in btn_7_cmd]
-        GPIO.setup(btn_7_pin, GPIO.IN, pull_up_down=btn_7_pull)
-
+        if row['pin'] not in ('2','3'):
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_7_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
+            time.sleep(0.005)
             if GPIO.input(channel) == 1:
-                subprocess.call(btn_7_cmd)
-
-        GPIO.add_event_detect(btn_7_pin, GPIO.RISING, callback=btn_7_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_7: pin=' +
-            str(btn_7_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_7_event, bouncetime=bounce_time)
     elif str(row['id']) == '8' and row['enabled'] == '1':
-        btn_8_pin = int(row['pin'])
-        btn_8_pull = row['pull']
-        btn_8_cmd = row['command'].split(',')
-        btn_8_cmd = [x.strip() for x in btn_8_cmd]
-        GPIO.setup(btn_8_pin, GPIO.IN, pull_up_down=btn_8_pull)
-
+        if row['pin'] not in ('2','3'):
+            GPIO.setup(int(row['pin']), GPIO.IN, pull_up_down=int(row['pull']))
         def btn_8_event(channel):
-            time.sleep(0.005) # edge debounce of 5 ms
-            # only deal with valid edges
+            time.sleep(0.005)
             if GPIO.input(channel) == 1:
-                subprocess.call(btn_8_cmd)
-
-        GPIO.add_event_detect(btn_8_pin, GPIO.RISING, callback=btn_8_event, bouncetime=bounce_time)
-        print(str(datetime.datetime.now())[:19] + ' btn_8: pin=' +
-            str(btn_8_pin) + ', enabled=' + row['enabled'] + ', pull=' + str(row['pull']) +
-            ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
+                subprocess.call([x.strip() for x in row['command'].split(',')])
+        GPIO.add_event_detect(int(row['pin']), GPIO.RISING, callback=btn_8_event, bouncetime=bounce_time)
 
 # Main
 while True:
