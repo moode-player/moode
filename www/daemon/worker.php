@@ -1987,11 +1987,9 @@ function getHdwrRev() {
 }
 
 // Log info for the active interface (eth0 or wlan0)
-function logNetworkInfo($interface) {
-	$ifaceName = $interface == 'eth0' ? 'Ethernet: ' : 'Wireless: ';
-
-	$result = sqlQuery("SELECT iface, method FROM cfg_network WHERE iface!='apd0'", $GLOBALS['dbh']);
-	$method = $result[0]['iface'] == $interface ? $result[0]['method'] : $result[0]['method'];
+function logNetworkInfo($iFace) {
+	$ifaceName = $iFace == 'eth0' ? 'Ethernet: ' : 'Wireless: ';
+	$method = sqlQuery("SELECT method FROM cfg_network WHERE iface='" . $iFace . "'", $GLOBALS['dbh'])[0]['method'];
 
 	$domainName = sysCmd("cat /etc/resolv.conf | awk '/^search/ {print $2; exit}'")[0]; // First entry of possibly many
 	$primaryDns = sysCmd("cat /etc/resolv.conf | awk '/^nameserver/ {print $2; exit}'")[0]; // First entry of possibly many
@@ -1999,8 +1997,8 @@ function logNetworkInfo($interface) {
 	$domainName = !empty($domainName) ? $domainName : 'none found';
 
 	workerLog('worker: ' . $ifaceName . 'method  ' . $method);
- 	workerLog('worker: ' . $ifaceName . 'address ' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $2}'")[0]);
-	workerLog('worker: ' . $ifaceName . 'netmask ' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $4}'")[0]);
+ 	workerLog('worker: ' . $ifaceName . 'address ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $2}'")[0]);
+	workerLog('worker: ' . $ifaceName . 'netmask ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $4}'")[0]);
 	workerLog('worker: ' . $ifaceName . 'gateway ' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0]);
 	workerLog('worker: ' . $ifaceName . 'pri DNS ' . $primaryDns);
 	workerLog('worker: ' . $ifaceName . 'domain  ' . $domainName);
