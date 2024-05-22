@@ -147,7 +147,6 @@ function getAlsaDeviceNames() {
 			// Array			Query successful: at least one row contained a match
 			if ($result === true) {
 				// Not in table: either USB or I2S device
-				//$result = sysCmd('aplay -l | grep "card ' . $i . '" | grep "USB Audio"');
 				if ($isUSBDevice) {
 					// USB device: assign aplay device name
 					$deviceNames[$i] = $aplayDeviceName;
