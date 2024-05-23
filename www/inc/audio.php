@@ -66,6 +66,10 @@ function isHDMIDevice($deviceName) {
 	return ($deviceName == PI_HDMI1 || $deviceName == PI_HDMI2);
 }
 
+function isUSBDevice($cardNum) {
+	return file_exists('/proc/asound/card' . $cardNum . '/usbid');
+}
+
 function getAudioOutputIface($cardNum) {
 	$deviceName = getAlsaDeviceNames()[$cardNum];
 

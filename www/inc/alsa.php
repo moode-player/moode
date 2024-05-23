@@ -119,7 +119,6 @@ function getAlsaDeviceNames() {
 	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 		$aplayDeviceName = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
-		$isUSBDevice = empty(sysCmd('aplay -l | grep "card ' . $i . '" | grep "USB Audio"')) ? false : true;
 
 		if (empty($cardID)) {
 			$deviceNames[$i] = ALSA_EMPTY_CARD;
@@ -142,12 +141,12 @@ function getAlsaDeviceNames() {
 			$result = sqlRead('cfg_audiodev', $dbh, $cardID);
 
 			// All queries return the following:
-			// false			Query execution failed (rare)
-			// true				Query successful: no rows contained a match
-			// Array			Query successful: at least one row contained a match
+			// false	Query execution failed (rare)
+			// true		Query successful: no rows contained a match
+			// Array	Query successful: at least one row contained a match
 			if ($result === true) {
 				// Not in table: either USB or I2S device
-				if ($isUSBDevice) {
+				if (isUSBDevice($i)) {
 					// USB device: assign aplay device name
 					$deviceNames[$i] = $aplayDeviceName;
 				} else {
@@ -195,7 +194,7 @@ function getArrayIndex($needle, $haystack) {
 	$index = ALSA_EMPTY_CARD;
 
 	for ($i = 0; $i < $numElements; $i++) {
-		debugLog('getArrayIndex(): needle="' . $needle . '", haystack[' . $i . ']="' . $haystack[$i] . '"');
+		//workerLog('getArrayIndex(): needle="' . $needle . '", haystack[' . $i . ']="' . $haystack[$i] . '"');
 		if ($needle == $haystack[$i]) {
 			$index = $i;
 			break;
