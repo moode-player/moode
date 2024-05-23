@@ -615,9 +615,9 @@ class CamillaDsp {
         if (file_exists('/var/lib/cdsp/statefile.yml')) {
             $result = sysCmd("cat /var/lib/cdsp/statefile.yml | grep 'volume' -A1 | grep -e '- ' | awk '/- /{print $2}'")[0];
         } else {
-            $result = '0.0';
+            $result = '0.00';
         }
-        return $result;
+        return (intval($result * 100) / 100);
     }
 
     static function setCDSPVolTo0dB ($vol = '0.0') {
