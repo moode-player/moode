@@ -195,7 +195,8 @@ function getArrayIndex($needle, $haystack) {
 	$index = ALSA_EMPTY_CARD;
 
 	for ($i = 0; $i < $numElements; $i++) {
-		if ($haystack[$i] == $needle) {
+		debugLog('getArrayIndex(): needle="' . $needle . '", haystack[' . $i . ']="' . $haystack[$i] . '"');
+		if ($needle == $haystack[$i]) {
 			$index = $i;
 			break;
 		}
