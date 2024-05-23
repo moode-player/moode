@@ -17,7 +17,8 @@
 
 Bug fixes
 
-- FIX: GPIO buttons driver crashes due to null values in cfg_gpio table
+- FIX: Worker log reports method: dhcp even when static addr is set
+- FIX: GPIO buttons driver crashes due to bad values in cfg_gpio table
 - FIX: Fixed (0dB) reverts to Software vol for DAC's w/o Hardware volume
 - FIX: Clear/Play action for One touch radio displays an unknown notification
 - FIX: CoverView automatic display notification stays up indefinitely
