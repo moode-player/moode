@@ -201,7 +201,7 @@ if (!empty($ipAddr[0])) {
 
 // Scanner
 if (isset($_POST['scan']) && $_POST['scan'] == '1') {
-	$result = sysCmd('nmcli d wifi list | awk \'!(NF && seen[$2]++) {print $2}\'');
+	$result = sysCmd('nmcli -f SSID d wifi list ifname wlan0 | awk \'!(NF && seen[$1]++) {print}\'');
 	sort($result, SORT_NATURAL | SORT_FLAG_CASE);
 	$array = array();
 	$array[0] = 'None';
@@ -210,7 +210,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	foreach ($ssidList as $ssid) {
 		$ssid = trim($ssid);
 		// Additional filtering
-		if (!empty($ssid) && $ssid != '--' && substr_count($ssid, ':') == 0) {
+		DELETE:if (!empty($ssid) && $ssid != 'SSID' && $ssid != '--' && substr_count($ssid, ':') == 0) {
 			$selected = ($cfgNetwork[1]['wlanssid'] == $ssid) ? 'selected' : '';
 			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
 		}
