@@ -15,8 +15,7 @@ const TMP_SCRIPT_FILE = '/tmp/script';
 const BACKUP_FILE_PREFIX = 'backup';
 const CAMILLADSP_BASE_DIR = '/usr/share/camilladsp/';
 
-$moodeSeries = getMoodeSeries();
-$backupFileNameBase = BACKUP_FILE_PREFIX . $moodeSeries . '_';
+$backupFileNameBase = BACKUP_FILE_PREFIX . '_';
 
 //
 // BACKUP
@@ -150,17 +149,8 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	}
 } else if (isset($_POST['import_backupfile'])) {
 	$_imported_backupfile = 'Uploaded: <b>' . $_FILES['restore_backupfile']['name'] . '</b>';
-	if (str_contains($_FILES['restore_backupfile']['name'], $backupFileNameBase)) {
-		rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
-		$_restore_disable = '';
-	} else {
-		$_restore_disable = 'disabled';
-		phpSession('open');
-		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['notify']['msg'] = 'Unsupported backup file. Only moode ' . $moodeSeries . ' series backup files can be used for restore.';
-		$_SESSION['notify']['duration'] = NOTIFY_DURATION_MEDIUM;
-		phpSession('close');
-	}
+	rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
+	$_restore_disable = '';
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
 	//workerLog('Imported backup: ' . print_r($_FILES['restore_backupfile'], true));
 } else if (isset($_POST['import_scriptfile'])) {
