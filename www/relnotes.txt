@@ -18,6 +18,7 @@
 Updates
 
 - UPD: Allow backup zips from moode 8 to be restored
+- UPD: Show 255.255.255.0 (Default) as the default netmask
 
 Bug fixes
 
