@@ -15,6 +15,10 @@
 #
 ################################################################################
 
+Updates
+
+- UPD: Allow backup zips from moode 8 to be restored
+
 Bug fixes
 
 - FIX: Network scan list is incorrectly parsed and incomplete
