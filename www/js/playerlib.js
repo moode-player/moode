@@ -3393,10 +3393,10 @@ $('#btn-preferences-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
-                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.', NOTIFY_DURATION_SHORT);
+                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {
                     location.reload(true);
-                }, 2000);
+                }, (NOTIFY_DURATION_DEFAULT * 1000));
             } else if (reloadLibrary) {
                 $('#btn-ra-refresh').click();
                 loadLibrary();
