@@ -166,7 +166,9 @@ $_eth0currentip = empty($ipAddr[0]) ? 'Not in use' : $ipAddr[0];
 // Static IP
 $_eth0ipaddr = $cfgNetwork[0]['ipaddr'];
 foreach(array_keys(CIDR_TABLE) as $netmask) {
-	$_eth0netmask .= "<option value=\"" . $netmask . "\" " . ($cfgNetwork[0]['netmask'] == $netmask ? 'selected' : '') . " >" . $netmask . "</option>\n";
+	$netmaskText = $netmask == '255.255.255.0' ? '255.255.255.0 (Default)' : $netmask;
+	$selected = (($netmask == '255.255.255.0' && $cfgNetwork[0]['netmask'] == '') || $netmask == $cfgNetwork[0]['netmask']) ? 'selected' : '';
+	$_eth0netmask .= "<option value=\"" . $netmask . "\" " . $selected . " >" . $netmaskText . "</option>\n";
 }
 $_eth0gateway = $cfgNetwork[0]['gateway'];
 $_eth0pridns = $cfgNetwork[0]['pridns'];
@@ -271,7 +273,9 @@ foreach ($zoneListSorted as $zone) {
 // Static IP
 $_wlan0ipaddr = $cfgNetwork[1]['ipaddr'];
 foreach(array_keys(CIDR_TABLE) as $netmask) {
-	$_wlan0netmask .= "<option value=\"" . $netmask . "\" " . ($cfgNetwork[1]['netmask'] == $netmask ? 'selected' : '') . " >" . $netmask . "</option>\n";
+	$netmaskText = $netmask == '255.255.255.0' ? '255.255.255.0 (Default)' : $netmask;
+	$selected = (($netmask == '255.255.255.0' && $cfgNetwork[1]['netmask'] == '') || $netmask == $cfgNetwork[1]['netmask']) ? 'selected' : '';
+	$_wlan0netmask .= "<option value=\"" . $netmask . "\" " . $selected . " >" . $netmaskText . "</option>\n";
 }
 $_wlan0gateway = $cfgNetwork[1]['gateway'];
 $_wlan0pridns = $cfgNetwork[1]['pridns'];
