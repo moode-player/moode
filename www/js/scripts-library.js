@@ -1201,7 +1201,7 @@ $('#albumcovers').on('click', 'img', function(e) {
 
 // Random album instant play button on Playback
 $('.ralbum').click(function(e) {
-    if (SESSION.json['library_onetouch_album'] != 'No action') {
+    if (SESSION.json['library_onetouch_ralbum'] != 'No action') {
 		$('#albumsList .lib-entry').eq(UI.libPos[0]).removeClass('active');
 		$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 
@@ -1226,19 +1226,17 @@ $('.ralbum').click(function(e) {
     		files.push(filteredSongs[i].file);
     	}
 
-        if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
-            var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
+        if (SESSION.json['library_onetouch_ralbum'] == 'Add' || SESSION.json['library_onetouch_ralbum'] == 'Add next') {
+            var queueCmd = SESSION.json['library_onetouch_ralbum'] == 'Add' ? 'add_group' : 'add_group_next';
             sendQueueCmd(queueCmd, files);
             notify(NOTIFY_TITLE_INFO, queueCmd, NOTIFY_DURATION_SHORT);
         }
-        // NOTE: Show tracks for Album view = Play for this button
-        else if (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Play next' ||
-            SESSION.json['library_onetouch_album'] == 'Show tracks') {
-            var queueCmd = (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Show tracks') ?
+        else if (SESSION.json['library_onetouch_ralbum'] == 'Play' || SESSION.json['library_onetouch_ralbum'] == 'Play next') {
+            var queueCmd = SESSION.json['library_onetouch_ralbum'] == 'Play' ?
                 'play_group' : 'play_group_next';
             sendQueueCmd(queueCmd, files);
         }
-        else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
+        else if (SESSION.json['library_onetouch_ralbum'] == 'Clear/Play') {
             sendQueueCmd('clear_play_group', files);
         }
 

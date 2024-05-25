@@ -706,7 +706,9 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 @keyframes pulse {0% {transform:scale(1);} 50% {transform:scale(1.15);}	100% {transform:scale(1);}}
 .pulse {display: inline-block;	color: var(--accentxts);animation: pulse 1s;}
 /* spin animation for fancy ralbum */
-.ralbum svg {fill:var(--adapttext);	height:.9rem;width:.9rem;margin-top:5px;}
+.ralbum svg {fill:var(--adapttext);height:.9rem;width:.9rem;margin-top:5px;}
+.ralbum-in-help-text svg {fill:var(--adapttext);height:.8rem;width:.8rem;}
+.ralbum-in-quickhelp svg {fill:var(--adapttext);height:1em;width:1em}
 /* was new ui */
 #playback-panel.cv #songsang {position:absolute;width:100vw;left:50%;transform:translate(-50%);}
 #playback-panel.cv #container-playqueue {height:75%;margin:-.5rem 0 0 3%;}

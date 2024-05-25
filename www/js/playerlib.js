@@ -2978,21 +2978,23 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#onetouch_album span').text(SESSION.json['library_onetouch_album']);
                 $('#onetouch_radio span').text(SESSION.json['library_onetouch_radio']);
                 $('#onetouch-pl span').text(SESSION.json['library_onetouch_pl']);
+                $('#onetouch-ralbum span').text(SESSION.json['library_onetouch_ralbum']);
+
                 $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
                 $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
+                $('#show-genres-column span').text(SESSION.json['library_show_genres']);
+                $('#tag-view-genre span').text(SESSION.json['library_tagview_genre']);
+                $('#tag-view-artist span').text(SESSION.json['library_tagview_artist']);
+
                 $('#track-play span').text(SESSION.json['library_track_play']);
                 $('#recently-added span').text(getKeyOrValue('key', SESSION.json['library_recently_added']));
                 $('#show-encoded-at span').text(getKeyOrValue('key', SESSION.json['library_encoded_at']));
+                $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
                 $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
 
-                // Library (Advanced)
-                $('#tag-view-genre span').text(SESSION.json['library_tagview_genre']);
-                $('#tag-view-artist span').text(SESSION.json['library_tagview_artist']);
                 $('#library-album-key span').text(miscLibOptions[1]);
                 $('#library-inc-comment-tag span').text(miscLibOptions[0]);
                 $('#ignore-articles').val(SESSION.json['library_ignore_articles']);
-                $('#show-genres-column span').text(SESSION.json['library_show_genres']);
-                $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
                 $('#utf8-char-filter span').text(SESSION.json['library_utf8rep']);
 
         		// CoverView
@@ -3186,6 +3188,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_onetouch_album'] != $('#onetouch_album span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_onetouch_radio'] != $('#onetouch_radio span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_onetouch_pl'] != $('#onetouch-pl span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_onetouch_ralbum'] != $('#onetouch-ralbum span').text()) {libraryOptionsChange = true;}
 
     if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
     if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
@@ -3246,9 +3249,10 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_onetouch_album'] = $('#onetouch_album span').text();
     SESSION.json['library_onetouch_radio'] = $('#onetouch_radio span').text();
     SESSION.json['library_onetouch_pl'] = $('#onetouch-pl span').text();
+    SESSION.json['library_onetouch_ralbum'] = $('#onetouch-ralbum span').text();
+
     SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
     SESSION.json['library_tagview_sort'] = $('#tagview-sort-order span').text().replace('by ', '');
-
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
     SESSION.json['library_tagview_genre'] = $('#tag-view-genre span').text();
     SESSION.json['library_tagview_artist'] = $('#tag-view-artist span').text();
@@ -3258,6 +3262,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_encoded_at'] = getKeyOrValue('value', $('#show-encoded-at span').text());
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
+
     SESSION.json['library_misc_options'] = $('#library-inc-comment-tag span').text() + ',' + $('#library-album-key span').text();
     SESSION.json['library_ignore_articles'] = $('#ignore-articles').val().trim();
     SESSION.json['library_utf8rep'] = $('#utf8-char-filter span').text();
@@ -3361,6 +3366,7 @@ $('#btn-preferences-update').click(function(e){
             'library_onetouch_album': SESSION.json['library_onetouch_album'],
             'library_onetouch_radio': SESSION.json['library_onetouch_radio'],
             'library_onetouch_pl': SESSION.json['library_onetouch_pl'],
+            'library_onetouch_ralbum': SESSION.json['library_onetouch_ralbum'],
 
             'library_albumview_sort': SESSION.json['library_albumview_sort'],
             'library_tagview_sort': SESSION.json['library_tagview_sort'],
@@ -3373,6 +3379,7 @@ $('#btn-preferences-update').click(function(e){
             'library_encoded_at': SESSION.json['library_encoded_at'],
             'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
             'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
+            
             'library_misc_options': SESSION.json['library_misc_options'],
             'library_ignore_articles': SESSION.json['library_ignore_articles'],
             'library_utf8rep': SESSION.json['library_utf8rep'],
