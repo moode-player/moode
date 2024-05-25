@@ -197,7 +197,7 @@ function checkForUpd($path) {
 // Return the update package id (default 'moode') plus an optional suffix for testing
 function getPkgId () {
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='pkgid_suffix'", sqlConnect());
-	return 'moode' . $result[0]['value'];
+	return 'moode' . getMoodeSeries() . $result[0]['value'];
 }
 
 // Get release

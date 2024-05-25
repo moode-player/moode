@@ -5,8 +5,12 @@
 #
 
 # Arg $1 = package id to be updated.
-# It is set by function getPkgId()in module inc/commpn.php and is also
-# used to name the update zip and txt files ex: update-moode.zip
+# It's set by function getPkgId()in module inc/common.php and is
+# used to name the update zip and txt files.
+#
+# Package id's are:
+# moode		8 series releases
+# moode9	9 series releases
 #
 
 MOODE_LOG="/var/log/moode.log"
