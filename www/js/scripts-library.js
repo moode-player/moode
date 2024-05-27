@@ -1327,10 +1327,10 @@ $('#btn-ra-manager').click(function(e) {
             output += '<li class="modal-dropdown-text">' +
                 '<a href="#notarget" data-cmd="delete-recordings-sel">' +
                 '<span class="text">' + (count == '0' ? '' : 'All') + '</span></a></li>';
-            for (i = 0; i < recorderUntaggedFiles['files'].length; i++) {
+            for (i = 0; i < recorderUntaggedFiles['file_names'].length; i++) {
                 output += '<li class="modal-dropdown-text">' +
                     '<a href="#notarget" data-cmd="delete-recordings-sel">' +
-                    '<span class="text">' + recorderUntaggedFiles['files'][i] + '</span></a></li>';
+                    '<span class="text">' + recorderUntaggedFiles['file_names'][i] + '</span></a></li>';
             }
             $('#delete-recordings span').text('No');
         	var element = document.getElementById('recorder-untagged-files');
