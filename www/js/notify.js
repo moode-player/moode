@@ -96,7 +96,7 @@ function notify(title, message, arg3, arg4 = '') {
         recorder_uninstalled: 'Recorder has been uninstalled. ',
         recorder_plugin_na: 'Recorder plugin is n/a. ',
         recorder_deleted: 'Raw recordings have been deleted. ',
-        recorder_tagging: 'Recordings are being tagged... ',
+        recorder_tagging: 'Recordings are being tagged...<br>',
         recorder_tagged: 'Tagging is complete.<br>',
         recorder_nofiles: 'No files to tag. '
     };
