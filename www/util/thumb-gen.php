@@ -49,18 +49,15 @@ if ($hiresThm == 'Auto') {
 	if ($pixelRatio == 2) {
 		$thmW = 200;
 		$thmQ = 75;
-	}
-	elseif ($pixelRatio >= 3) {
+	} else if ($pixelRatio >= 3) {
 		$thmW = 400;
 		$thmQ = 50;
-	}
-	else {
+	} else {
 		$thmW = 100;
 		$thmQ = 75;
 	}
-}
-// Manual: Use the specified resolution and quality factor.
-else {
+} else {
+	// Manual: Use the specified resolution and quality factor.
 	$hiresThmWQ = explode(',', $hiresThm);
 	$thmW = substr($hiresThmWQ[0], 0, 3); // The numeric part ex: "400" from "400px"
 	$thmQ = $hiresThmWQ[1];
@@ -120,8 +117,7 @@ while ($line) {
 
 		if (!file_exists(THMCACHE_DIR . md5($dirA) . '.jpg')) {
 			createThumb($fileA, $dirA, $searchPri, $thmW, $thmQ);
-		}
-		else {
+		} else {
 			$cachedThms++;
 		}
 	}
@@ -166,8 +162,7 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 	if (strlen($imgStr) < 512) {
 		//workerLog('thumb-gen: Image file: ' . $imgStr);
 		$imgStr = file_get_contents($imgStr);
-	}
-	else {
+	} else {
 		//workerLog('thumb-gen: Embedded image: ' . $file);
 	}
 
@@ -194,8 +189,7 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 		$resample = false;
 		$thmH = $imgH;
 		$thmW = $imgW;
-	}
-	else {
+	} else {
 		$resample = true;
 	}
 
@@ -210,8 +204,7 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 			workerLog('thumb-gen: Error: imagecopyresampled(thumb): ' . $file);
 			return;
 		}
-	}
-	else {
+	} else {
 		//workerLog('thumb-gen: Copy: '. $file);
 		if (imagecopy($thumb, $image, 0, 0, 0, 0, $imgW, $imgH) === false) {
 			workerLog('thumb-gen: Error: imagecopy(thumb): ' . $file);
@@ -221,8 +214,7 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thmQ) === false) {
 		workerLog('thumb-gen: Error: imagejpeg(thumb): ' . $file);
 		return;
-	}
-	else {
+	} else {
 		$GLOBALS['newThms']++;
 	}
 	if (imagedestroy($thumb) === false) {
@@ -321,8 +313,7 @@ function getImage($path, $file = '') {
 					//workerLog('thmcache; mp3: id3v2: apic->imageData: length: ' . strlen($id3v2->apic->imageData));
 					$image = outImage($id3v2->apic->mimeType, $id3v2->apic->imageData);
 				}
-			}
-			catch (Zend_Media_Id3_Exception $e) {
+			} catch (Zend_Media_Id3_Exception $e) {
 				workerLog('thumb-gen: Error: ' . $e->getMessage() . ': ' . $file);
 			}
 			break;
@@ -336,8 +327,7 @@ function getImage($path, $file = '') {
 					$picture = $flac->getPicture();
 					$image = outImage($picture->getMimeType(), $picture->getData());
 				}
-			}
-			catch (Zend_Media_Flac_Exception $e) {
+			} catch (Zend_Media_Flac_Exception $e) {
 				workerLog('thumb-gen: Error: ' . $e->getMessage() . ': ' . $file);
 			}
 			break;
@@ -357,8 +347,7 @@ function getImage($path, $file = '') {
                 if ($mime) {
                     $image = outImage($mime, $picture->getValue());
                 }
-            }
-            catch (Zend_Media_Iso14496_Exception $e) {
+            } catch (Zend_Media_Iso14496_Exception $e) {
 				workerLog('thumb-gen: Error: ' . $e->getMessage() . ': ' . $file);
             }
             break;
