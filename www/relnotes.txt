@@ -23,6 +23,7 @@ Updates
 
 Bug fixes
 
+- FIX: Thumbnail generator crashes (see commit 4d16640)
 - FIX: Network scan list is incorrectly parsed and incomplete
 - FIX: Library update REST API not working due to incorrect include path
 - FIX: Worker log reports method: dhcp even when static addr is set
