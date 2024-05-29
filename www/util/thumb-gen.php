@@ -160,8 +160,14 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 
 	// Image file path, convert image to string
 	if (strlen($imgStr) < 512) {
-		//workerLog('thumb-gen: Image file: ' . $imgStr);
-		$imgStr = file_get_contents($imgStr);
+		// Check for valid file path (it could be nulls, empty or other binary data)
+		if (file_exists($imgStr)) {
+			//workerLog('thumb-gen: Image file: ' . $imgStr);
+			$imgStr = file_get_contents($imgStr);
+		} else {
+			workerLog('thumb-gen: Image file: Not a valid file path');
+			$imgStr = NOT_FOUND_JPG;
+		}
 	} else {
 		//workerLog('thumb-gen: Embedded image: ' . $file);
 	}

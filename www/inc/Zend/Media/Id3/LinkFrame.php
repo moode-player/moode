@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Media
  * @subpackage ID3
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: LinkFrame.php 177 2010-03-09 13:13:34Z svollbehr $
  */
@@ -32,7 +32,7 @@ require_once 'Zend/Media/Id3/Frame.php';
  * @subpackage ID3
  * @author     Sven Vollbehr <sven@vollbehr.eu>
  * @author     Ryan Butterfield <buttza@gmail.com>
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: LinkFrame.php 177 2010-03-09 13:13:34Z svollbehr $
  */
@@ -53,9 +53,8 @@ abstract class Zend_Media_Id3_LinkFrame extends Zend_Media_Id3_Frame
         parent::__construct($reader, $options);
 
         if ($this->_reader !== null) {
-            $this->_link = implode
-                ($this->_explodeString8
-                 ($this->_reader->read($this->_reader->getSize()), 1), '');
+            $this->_link = implode('', $this->_explodeString8(
+                $this->_reader->read($this->_reader->getSize()), 1));
         }
     }
 
@@ -64,9 +63,9 @@ abstract class Zend_Media_Id3_LinkFrame extends Zend_Media_Id3_Frame
      *
      * @return string
      */
-    public function getLink() 
+    public function getLink()
     {
-         return $this->_link; 
+         return $this->_link;
     }
 
     /**
@@ -74,9 +73,9 @@ abstract class Zend_Media_Id3_LinkFrame extends Zend_Media_Id3_Frame
      *
      * @param string $link The link.
      */
-    public function setLink($link) 
+    public function setLink($link)
     {
-         $this->_link = $link; 
+         $this->_link = $link;
     }
 
     /**
