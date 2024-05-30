@@ -13,6 +13,7 @@
 # moode9	9 series releases
 #
 
+MOODE_SERIES=$(moodeutl -d -gv "moode_release" | cut -c 2)
 MOODE_LOG="/var/log/moode.log"
 UPDATER_LOG="/var/log/moode_update.log"
 
@@ -46,22 +47,22 @@ else
 fi
 
 # Install update
-chmod -R 0755 update
-update/install.sh
+chmod -R 0755 update$MOODE_SERIES
+update$MOODE_SERIES/install.sh
 
 # Report status
 # NOTE: The "inplace_upd_applied" var is checked and reset in daemon/worker.php
 if [ $? -ne 0 ] ; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='inplace_upd_applied'")
 	message_log "Install failed, update cancelled"
-	rm -rf update
+	rm -rf update$MOODE_SERIES
 	exit 1
 else
 	# Download update-$1.txt to mark successful update
 	wget -q $UPD_URL/update-$1.txt -O update-$1.txt
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='inplace_upd_applied'")
 	message_log "Update installed, restart required"
-	rm -rf update
+	rm -rf update$MOODE_SERIES
 	exit 0
 fi
 
