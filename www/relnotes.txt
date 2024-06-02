@@ -11,6 +11,22 @@
 
 ################################################################################
 #
+# 2024-MM-DD moOde 9.0.2 (Bookworm)
+#
+################################################################################
+
+Updates
+
+- UPD:
+
+Bug fixes
+
+- FIX: Wrong PSK written to nmconnect file for saved SSID's
+- FIX: Library HD badge routine causing script crash under certain conditions
+- FIX: RoonBridge feature visibility and help text
+
+################################################################################
+#
 # 2024-05-30 moOde 9.0.1 (Bookworm)
 #
 ################################################################################
