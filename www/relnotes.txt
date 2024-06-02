@@ -15,10 +15,6 @@
 #
 ################################################################################
 
-Updates
-
-- UPD:
-
 Bug fixes
 
 - FIX: Wrong PSK written to nmconnect file for saved SSID's
