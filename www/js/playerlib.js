@@ -3379,7 +3379,7 @@ $('#btn-preferences-update').click(function(e){
             'library_encoded_at': SESSION.json['library_encoded_at'],
             'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
             'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
-            
+
             'library_misc_options': SESSION.json['library_misc_options'],
             'library_ignore_articles': SESSION.json['library_ignore_articles'],
             'library_utf8rep': SESSION.json['library_utf8rep'],
@@ -4775,6 +4775,7 @@ function autoClick(selector) {
 
 // Return HD badge text for Library and Playback views
 function albumHDBadge(format) {
+    format = typeof(format) == 'undefined' ? '???' : format;
     return format.slice(0, 3) == 'DSD' ? format : ALBUM_HD_BADGE_TEXT;
 }
 

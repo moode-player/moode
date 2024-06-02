@@ -627,21 +627,21 @@ var renderAlbums = function() {
             filteredAlbumCovers[i].comment ? albumViewComment = filteredAlbumCovers[i].comment : albumViewComment = '';
         }
 
-        // encoded_at:
-        // [0] bits/rate format
+        // encoded_at: FLAC 16/44.1,s,2
+        // [0] format bits/rate
         // [1] flag: "l" lossy, "s" standard def or "h" high def
         // [2] channels
         if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
             var encodedAt = filteredAlbums[i].encoded_at.split(',');
             var tagViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
-                '<div class="lib-encoded-at-hdonly-tagview">' + albumHDBadge(encodedAt[0].split(' ')[1]) + '</div>' : '';
+                '<div class="lib-encoded-at-hdonly-tagview">' + albumHDBadge(encodedAt[0].split(' ')[0]) + '</div>' : '';
             var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
             // Album view
             var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
             var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
             var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
-                '<div class="lib-encoded-at-hdonly">' + albumHDBadge(encodedAt[0].split(' ')[1]) + '</div>' : '';
+                '<div class="lib-encoded-at-hdonly">' + albumHDBadge(encodedAt[0].split(' ')[0]) + '</div>' : '';
             var albumViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + encodedAt[0] + '</div>' : '';
             var albumViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + encodedAt[0] + '</div>' : '';
         }
