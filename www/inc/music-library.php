@@ -658,16 +658,14 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			// DSD: DSF/DFF
 			// DSD rate,h,channels
 			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
-			//$encodedAt = empty($result[1]) ? 'DSD,h' : formatRate($result[1]) . ' DSD,h,' . $result[2];
 			$encodedAt = empty($result[1]) ? 'DSD,h' : 'DSD ' . formatRate($result[1]) . ',h,' . $result[2];
 		} else if ($ext == 'wv' && strpos($mpdFormatTag[0], 'dsd') !== false) {
 			// DSD: WavPack (format dsd64:2)
 			// DSD rate,h,channels
-			//$encodedAt = formatRate($mpdFormatTag[0]) . ' DSD,h,' . $mpdFormatTag[1];
 			$encodedAt = 'DSD ' . formatRate($mpdFormatTag[0]) . ',h,' . $mpdFormatTag[1];
 		} else {
 			// PCM or Multichannel PCM
-			// bits/rate format,[h|s],channels
+			// format bits/rate,[h|s],channels
 			// NOTE: Assume 24 bit for m4a reporting 32 bit and any format with bits = f (float)
 			$bits = ($ext == 'm4a' && $mpdFormatTag[1] == '32') ? '24' : $mpdFormatTag[1];
 			$hiDef = ($bits == 'f' || $bits > ALBUM_BIT_DEPTH_THRESHOLD ||
@@ -691,11 +689,9 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			$encodedAt = '?';
 		} else {
 			if ($displayFormat == 'default') {
-				//$encodedAt = formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch DSD';
 				$encodedAt = 'DSD ' . formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch';
 			} else {
 				// 'verbose'
-				//$encodedAt = '1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]) . ' DSD';
 				$encodedAt = ' DSD 1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]);
 			}
 		}
@@ -703,21 +699,17 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		if (strpos($mpdFormatTag[0], 'dsd') !== false) {
 			// WavPack DSD file
 			if ($displayFormat == 'default') {
-				//$encodedAt = formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch DSD';
 				$encodedAt = 'DSD ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . $mpdFormatTag[1] . 'ch';
 			} else {
 				// 'verbose'
-				//$encodedAt = '1 bit ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]) . ' DSD';
 				$encodedAt = 'DSD 1 bit ' . formatRate($mpdFormatTag[0]) . ' MHz, ' . formatChannels($mpdFormatTag[1]);
 			}
 		} else {
 			// WavPack PCM file
 			if ($displayFormat == 'default') {
-				//$encodedAt = $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch WavPack';
 				$encodedAt = 'WavPack ' . $mpdFormatTag[1] . '/' . formatRate($mpdFormatTag[0]) . ' kHz, ' . $mpdFormatTag[2] . 'ch';
 			} else {
 				// 'verbose'
-				//$encodedAt = $mpdFormatTag[1] . ' bit ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]) . ' WavPack';
 				$encodedAt = 'WavPack ' . $mpdFormatTag[1] . ' bit ' . formatRate($mpdFormatTag[0]) . ' kHz, ' . formatChannels($mpdFormatTag[2]);
 			}
 		}
