@@ -86,7 +86,7 @@ function cfgNetworks() {
 		$data .= "hidden=false\n";
 		$data .= "[wifi-security]\n";
 		$data .= "key-mgmt=wpa-psk\n";
-		$data .= "psk=" . $row['ssid'] . "\n";
+		$data .= "psk=" . $row['psk'] . "\n";
 		$data .= "[ipv4]\n";
 		// TODO: Allow static ip address
 		// Use same param names as in cfg_network
