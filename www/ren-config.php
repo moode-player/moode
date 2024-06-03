@@ -121,23 +121,6 @@ if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
 	submitJob('slrestart', '', NOTIFY_TITLE_INFO, NAME_SQUEEZELITE . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
-// RoonBridge
-if (isset($_POST['update_rb_settings'])) {
-	if (isset($_POST['rbsvc']) && $_POST['rbsvc'] != $_SESSION['rbsvc']) {
-		$update = true;
-		phpSession('write', 'rbsvc', $_POST['rbsvc']);
-	}
-	if (isset($update)) {
-		submitJob('rbsvc');
-	}
-}
-if (isset($_POST['update_rsmafterrb'])) {
-	phpSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
-}
-if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
-	submitJob('rbrestart', '', NOTIFY_TITLE_INFO, NAME_ROONBRIDGE . NOTIFY_MSG_SVC_MANUAL_RESTART);
-}
-
 // UPnP client for MPD
 if (isset($_POST['update_upnp_settings'])) {
 	$currentUpnpName = $_SESSION['upnpname'];
@@ -155,6 +138,40 @@ if (isset($_POST['update_upnp_settings'])) {
 }
 if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upnpsvc'] == '1') {
 	submitJob('upnpsvc', '', NOTIFY_TITLE_INFO, NAME_UPNP . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+
+// Plexamp
+if (isset($_POST['update_pa_settings'])) {
+	if (isset($_POST['pasvc']) && $_POST['pasvc'] != $_SESSION['pasvc']) {
+		$update = true;
+		phpSession('write', 'pasvc', $_POST['pasvc']);
+	}
+	if (isset($update)) {
+		submitJob('pasvc');
+	}
+}
+if (isset($_POST['update_rsmafterpa'])) {
+	phpSession('write', 'rsmafterpa', $_POST['rsmafterpa']);
+}
+if (isset($_POST['parestart']) && $_POST['parestart'] == 1) {
+	submitJob('parestart', '', NOTIFY_TITLE_INFO, NAME_ROONBRIDGE . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+
+// RoonBridge
+if (isset($_POST['update_rb_settings'])) {
+	if (isset($_POST['rbsvc']) && $_POST['rbsvc'] != $_SESSION['rbsvc']) {
+		$update = true;
+		phpSession('write', 'rbsvc', $_POST['rbsvc']);
+	}
+	if (isset($update)) {
+		submitJob('rbsvc');
+	}
+}
+if (isset($_POST['update_rsmafterrb'])) {
+	phpSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
+}
+if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
+	submitJob('rbrestart', '', NOTIFY_TITLE_INFO, NAME_ROONBRIDGE . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 phpSession('close');
@@ -219,8 +236,34 @@ $autoClick = " onchange=\"autoClick('#btn-set-rsmaftersl');\" " . $_sl_btn_disab
 $_select['rsmaftersl_on'] .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-1\" value=\"Yes\" " . (($_SESSION['rsmaftersl'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmaftersl_off']  .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-2\" value=\"No\" " . (($_SESSION['rsmaftersl'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
+// UPnP client for MPD
+$_feat_upmpdcli = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? '' : 'hide';
+$_SESSION['upnpsvc'] == '1' ? $_upnp_btn_disable = '' : $_upnp_btn_disable = 'disabled';
+$_SESSION['upnpsvc'] == '1' ? $_upnp_link_disable = '' : $_upnp_link_disable = 'onclick="return false;"';
+$_SESSION['dlnasvc'] == '1' ? $_dlna_btn_disable = '' : $_dlna_btn_disable = 'disabled';
+$_SESSION['dlnasvc'] == '1' ? $_dlna_link_disable = '' : $_dlna_link_disable = 'onclick="return false;"';
+$autoClick = " onchange=\"autoClick('#btn-set-upnpsvc');\"";
+$_select['upnpsvc_on']  .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-1\" value=\"1\" " . (($_SESSION['upnpsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['upnpsvc_off'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-2\" value=\"0\" " . (($_SESSION['upnpsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['upnpname'] = $_SESSION['upnpname'];
+
+// Plexamp
+if (($_SESSION['feat_bitmask'] & FEAT_PLEXAMP)) {
+	$_feat_plexamp = '';
+	$_SESSION['plexamp_installed'] == 'yes' ? $_pa_svcbtn_disable = '' : $_pa_svcbtn_disable = 'disabled';
+	$_SESSION['pasvc'] == '1' ? $_pa_btn_disable = '' : $_pa_btn_disable = 'disabled';
+	$_SESSION['pasvc'] == '1' ? $_pa_link_disable = '' : $_pa_link_disable = 'onclick="return false;"';
+	$autoClick = " onchange=\"autoClick('#btn-set-pasvc');\" " . $_pa_svcbtn_disable;
+	$_select['pasvc_on']  .= "<input type=\"radio\" name=\"pasvc\" id=\"toggle-pasvc-1\" value=\"1\" " . (($_SESSION['pasvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['pasvc_off'] .= "<input type=\"radio\" name=\"pasvc\" id=\"toggle-pasvc-2\" value=\"0\" " . (($_SESSION['pasvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$autoClick = " onchange=\"autoClick('#btn-set-rsmafterpa');\" " . $_pa_btn_disable;
+	$_select['rsmafterpa_on'] .= "<input type=\"radio\" name=\"rsmafterpa\" id=\"toggle-rsmafterpa-1\" value=\"Yes\" " . (($_SESSION['rsmafterpa'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['rsmafterpa_off']  .= "<input type=\"radio\" name=\"rsmafterpa\" id=\"toggle-rsmafterpa-2\" value=\"No\" " . (($_SESSION['rsmafterpa'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+} else {
+	$_feat_plexamp = 'hide';
+}
+
 // RoonBridge
-//DELETE:if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) && $_SESSION['roonbridge_installed'] == 'yes') {
 if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE)) {
 	$_feat_roonbridge = '';
 	$_SESSION['roonbridge_installed'] == 'yes' ? $_rb_svcbtn_disable = '' : $_rb_svcbtn_disable = 'disabled';
@@ -235,17 +278,6 @@ if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE)) {
 } else {
 	$_feat_roonbridge = 'hide';
 }
-
-// UPnP client for MPD
-$_feat_upmpdcli = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? '' : 'hide';
-$_SESSION['upnpsvc'] == '1' ? $_upnp_btn_disable = '' : $_upnp_btn_disable = 'disabled';
-$_SESSION['upnpsvc'] == '1' ? $_upnp_link_disable = '' : $_upnp_link_disable = 'onclick="return false;"';
-$_SESSION['dlnasvc'] == '1' ? $_dlna_btn_disable = '' : $_dlna_btn_disable = 'disabled';
-$_SESSION['dlnasvc'] == '1' ? $_dlna_link_disable = '' : $_dlna_link_disable = 'onclick="return false;"';
-$autoClick = " onchange=\"autoClick('#btn-set-upnpsvc');\"";
-$_select['upnpsvc_on']  .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-1\" value=\"1\" " . (($_SESSION['upnpsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['upnpsvc_off'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-2\" value=\"0\" " . (($_SESSION['upnpsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['upnpname'] = $_SESSION['upnpname'];
 
 waitWorker('ren-config');
 

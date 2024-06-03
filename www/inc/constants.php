@@ -70,15 +70,16 @@ const NOTIFY_DURATION_DEFAULT = 5;
 const NOTIFY_DURATION_MEDIUM = 10;
 const NOTIFY_DURATION_LONG = 30;
 const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
-// Component names
+// Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';
 const NAME_BLUETOOTH_PAIRING_AGENT = 'Pairing Agent';
 const NAME_SPOTIFY = 'Spotify Connect';
 const NAME_SQUEEZELITE = 'Squeezelite';
-const NAME_ROONBRIDGE = 'RoonBridge';
 const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
+const NAME_PLEXAMP = 'Plexamp';
+const NAME_ROONBRIDGE = 'RoonBridge';
 const NAME_GPIO = 'GPIO Controller';
 const NAME_LOCAL_DISPLAY = 'Local Display';
 
@@ -117,8 +118,8 @@ const CFG_DISABLE_WIFI = 'disable-wifi';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
-// sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97206' WHERE param='feat_bitmask'"
+// moodeutl -q "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
+// moodeutl -q "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
 const FEAT_HTTPS		= 1;		// y HTTPS mode
 const FEAT_AIRPLAY		= 2;		// y AirPlay renderer
 const FEAT_MINIDLNA 	= 4;		// y DLNA server
@@ -132,7 +133,7 @@ const FEAT_INPSOURCE	= 512;		// y Input source select
 const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
 const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
 const FEAT_GPIO 		= 4096;		// y GPIO button handler
-const FEAT_RESERVED		= 8192;		// y Reserved for future use
+const FEAT_PLEXAMP		= 8192;		// y Plexamp renderer
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio

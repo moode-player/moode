@@ -227,44 +227,6 @@
 			</div>
 		</div>
 
-		<div class="control-group $_feat_roonbridge">
-			<legend>RoonBridge</legend>
-			<p class="sub-legend">
-				This component must be manually installed. Visit the manufacturer website for more information on installation and updating.<br>
-				<b>CAUTION:</b> 100% volume at start of playback has occurred when Roon endpoint volume is set to "Device volume".
-			</p>
-			<label class="control-label">Service</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-rbsvc" for="toggle-rbsvc-2">ON </label>$_select[rbsvc_on]
-					<label class="toggle-radio toggle-rbsvc" for="toggle-rbsvc-1">OFF</label>$_select[rbsvc_off]
-				</div>
-				<button id="btn-set-rbsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rb_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rbsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-rbsvc" class="config-help-info">
-					RoonBridge by Roon Lab.
-                </span>
-			</div>
-
-			<label class="control-label">Resume MPD</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-rsmafterrb" for="toggle-rsmafterrb-2">ON </label>$_select[rsmafterrb_on]
-					<label class="toggle-radio toggle-rsmafterrb" for="toggle-rsmafterrb-1">OFF</label>$_select[rsmafterrb_off]
-				</div>
-				<button id="btn-set-rsmafterrb" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rsmafterrb" value="novalue" $_rb_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rsmafterrb" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-rsmafterrb" class="config-help-info">
-					Resume MPD playback after RoonBridge is disconnected.
-                </span>
-			</div>
-
-			<div class="controls">
-				<a data-toggle="modal" href="#rb-restart" $_sl_link_disable><button class="btn btn-medium btn-primary config-btn" $_rb_btn_disable>Restart</button></a>
-				<span class="config-btn-after">RoonBridge</span>
-			</div>
-		</div>
-
 		<div class="control-group $_feat_upmpdcli">
 			<legend>UPnP Client for MPD</legend>
 			<p class="sub-legend">This service functions as a UPnP media renderer that uses MPD for playback.</p>
@@ -295,6 +257,80 @@
 			<div class="controls">
 				<a href="upp-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
 				<span class="config-btn-after">UPnP settings</span>
+			</div>
+		</div>
+
+		<div class="control-group $_feat_plexamp">
+			<legend>Plexamp</legend>
+			<p class="sub-legend">
+				 This component is not bundled with moOde. Visit the manufacturer website for information on installation and configuration.
+			</p>
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-pasvc" for="toggle-pasvc-2">ON </label>$_select[pasvc_on]
+					<label class="toggle-radio toggle-pasvc" for="toggle-pasvc-1">OFF</label>$_select[pasvc_off]
+				</div>
+				<button id="btn-set-pasvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pa_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-pasvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-pasvc" class="config-help-info">
+					Plexamp by Plex.
+                </span>
+			</div>
+
+			<label class="control-label">Resume MPD</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-rsmafterpa" for="toggle-rsmafterpa-2">ON </label>$_select[rsmafterpa_on]
+					<label class="toggle-radio toggle-rsmafterpa" for="toggle-rsmafterpa-1">OFF</label>$_select[rsmafterpa_off]
+				</div>
+				<button id="btn-set-rsmafterpa" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rsmafterpa" value="novalue" $_pa_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rsmafterpa" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-rsmafterpa" class="config-help-info">
+					Resume MPD playback after Plexamp has been stopped or disconnected.
+                </span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#pa-restart" $_pa_link_disable><button class="btn btn-medium btn-primary config-btn" $_pa_btn_disable>Restart</button></a>
+				<span class="config-btn-after">Plexamp</span>
+			</div>
+		</div>
+
+		<div class="control-group $_feat_roonbridge">
+			<legend>RoonBridge</legend>
+			<p class="sub-legend">
+				This component is not bundled with moOde. Visit the manufacturer website for information on installation and configuration.
+			</p>
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-rbsvc" for="toggle-rbsvc-2">ON </label>$_select[rbsvc_on]
+					<label class="toggle-radio toggle-rbsvc" for="toggle-rbsvc-1">OFF</label>$_select[rbsvc_off]
+				</div>
+				<button id="btn-set-rbsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rb_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rbsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-rbsvc" class="config-help-info">
+					RoonBridge by Roon Lab.
+                </span>
+			</div>
+
+			<label class="control-label">Resume MPD</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-rsmafterrb" for="toggle-rsmafterrb-2">ON </label>$_select[rsmafterrb_on]
+					<label class="toggle-radio toggle-rsmafterrb" for="toggle-rsmafterrb-1">OFF</label>$_select[rsmafterrb_off]
+				</div>
+				<button id="btn-set-rsmafterrb" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rsmafterrb" value="novalue" $_rb_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rsmafterrb" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-rsmafterrb" class="config-help-info">
+					Resume MPD playback after RoonBridge has been disconnected.
+                </span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#rb-restart" $_rb_link_disable><button class="btn btn-medium btn-primary config-btn" $_rb_btn_disable>Restart</button></a>
+				<span class="config-btn-after">RoonBridge</span>
 			</div>
 		</div>
 	</form>
@@ -380,19 +416,6 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="rb-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="rb-restart-label" aria-hidden="true">
-		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Restart RoonBridge renderer?</h3>
-		</div>
-		<div class="modal-body"></div>
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="rbrestart" value="1">Yes</button>
-		</div>
-	</div>
-</form>
-
-<form class="form-horizontal" method="post">
 	<div id="upnp-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="upnp-restart-label" aria-hidden="true">
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Restart UPnP renderer?</h3>
@@ -414,6 +437,32 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="rebuild_dlnadb" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="pa-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="pa-restart-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Restart Plexamp renderer?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="parestart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="rb-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="rb-restart-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Restart RoonBridge renderer?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="rbrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat May 25 14:17:33 2024
+-- File generated with SQLiteStudio v3.1.0 on Mon Jun 3 18:16:08 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -397,7 +397,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
 INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (62, 'ap_network_addr', '172.24.1.1/24');
 INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
-INSERT INTO cfg_system (id, param, value) VALUES (64, 'RESERVED_64', '');
+INSERT INTO cfg_system (id, param, value) VALUES (64, 'pasvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
 INSERT INTO cfg_system (id, param, value) VALUES (67, 'mpdcrossfade', '0');
@@ -448,7 +448,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
 INSERT INTO cfg_system (id, param, value) VALUES (112, 'rsmafterrb', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Artist');
 INSERT INTO cfg_system (id, param, value) VALUES (114, 'scnsaver_style', 'Gradient (Linear)');
-INSERT INTO cfg_system (id, param, value) VALUES (115, 'RESERVED_115', '');
+INSERT INTO cfg_system (id, param, value) VALUES (115, 'rsmafterpa', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (117, 'mpd_httpd_port', '8000');
 INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lame');

@@ -490,6 +490,15 @@ workerLog('worker: --');
 workerLog('worker: -- Special configs');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
+// Plexamp: TBD
+if (file_exists('somefile') === true) {
+	$_SESSION['plexamp_installed'] = 'yes';
+} else {
+	$_SESSION['plexamp_installed'] = 'no';
+	$msg = 'not installed';
+}
+workerLog('worker: Plexamp:          ' . $msg);
+
 // RoonBridge
 // Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
 if (file_exists('/opt/RoonBridge/start.sh') === true) {

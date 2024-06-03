@@ -39,6 +39,7 @@ function stopBluetooth() {
 	sysCmd('killall -s 9 bluealsa-aplay');
 }
 
+// AirPlay
 function startAirPlay() {
 	sysCmd('systemctl start nqptp');
 
@@ -63,7 +64,6 @@ function startAirPlay() {
 	debugLog('startAirPlay(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
-
 function stopAirPlay() {
 	$maxRetries = 3;
 	for ($i = 0; $i < $maxRetries; $i++) {
@@ -93,6 +93,7 @@ function stopAirPlay() {
 	sendFECmd('aplactive0');
 }
 
+// Spotify Connect
 function startSpotify() {
 	$result = sqlRead('cfg_spotify', sqlConnect());
 	$cfgSpotify = array();
@@ -146,7 +147,6 @@ function startSpotify() {
 	debugLog('startSpotify(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
-
 function stopSpotify() {
 	sysCmd('killall librespot');
 
@@ -165,6 +165,7 @@ function stopSpotify() {
 	sendFECmd('spotactive0');
 }
 
+// Squeezelite
 function startSqueezeLite() {
 	sysCmd('mpc stop');
 
@@ -174,7 +175,6 @@ function startSqueezeLite() {
 
 	sysCmd('systemctl start squeezelite');
 }
-
 function stopSqueezeLite() {
 	sysCmd('systemctl stop squeezelite');
 
@@ -187,7 +187,6 @@ function stopSqueezeLite() {
 	$GLOBALS['slactive'] = '0';
 	sendFECmd('slactive0');
 }
-
 function cfgSqueezelite() {
 	$result = sqlRead('cfg_sl', sqlConnect());
 
@@ -200,19 +199,35 @@ function cfgSqueezelite() {
 	fclose($fh);
 }
 
+// UPnP
+function startUPnP() {
+	sysCmd('systemctl start upmpdcli');
+}
+
+// Plexamp
+function startPlexamp() {
+	sysCmd('mpc stop');
+	sysCmd('systemctl start nodejs');
+	sysCmd('systemctl start plexamp');
+}
+function stopPlexamp() {
+	sysCmd('systemctl stop plexamp');
+	sysCmd('systemctl stop nodejs');
+	sysCmd('/var/www/util/vol.sh -restore');
+	phpSession('write', 'paactive', '0');
+	$GLOBALS['paactive'] = '0';
+	sendFECmd('paactive0');
+}
+
+// RoonBridge
 function startRoonBridge() {
 	sysCmd('mpc stop');
 	sysCmd('systemctl start roonbridge');
 }
-
 function stopRoonBridge() {
 	sysCmd('systemctl stop roonbridge');
 	sysCmd('/var/www/util/vol.sh -restore');
 	phpSession('write', 'rbactive', '0');
 	$GLOBALS['rbactive'] = '0';
 	sendFECmd('rbactive0');
-}
-
-function startUPnP() {
-	sysCmd('systemctl start upmpdcli');
 }

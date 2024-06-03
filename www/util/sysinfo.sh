@@ -128,14 +128,17 @@ AUDIO_PARAMETERS() {
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\nSqueezelite\t\t= $slsvc\c"
 	fi
-	if [ $(($feat_bitmask & $FEAT_ROONBRIDGE)) -ne 0 ]; then
-		echo -e "\nRoonBridge\t\t= $rbsvc\c"
-	fi
 	if [ $(($feat_bitmask & $FEAT_UPMPDCLI)) -ne 0 ]; then
 		echo -e "\nUPnP client\t\t= $upnpsvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_MINIDLNA)) -ne 0 ]; then
 		echo -e "\nDLNA server\t\t= $dlnasvc\c"
+	fi
+	if [ $(($feat_bitmask & $FEAT_PLEXAMP)) -ne 0 ]; then
+		echo -e "\nPlexamp\t\t\t= $pasvc\c"
+	fi
+	if [ $(($feat_bitmask & $FEAT_ROONBRIDGE)) -ne 0 ]; then
+		echo -e "\nRoonBridge\t\t= $rbsvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_GPIO)) -ne 0 ]; then
 		echo -e "\nGPIO button handler\t= $gpio_svc\c"
@@ -346,6 +349,15 @@ RENDERER_SETTINGS() {
 		echo -e "Resume MPD\t\t= $rsmaftersl\n"
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_PLEXAMP)) -ne 0 ]; then
+		if [[ -f somefile ]]; then
+			PAVER="Version unknown"
+			echo -e "P L E X A M P"
+			echo -e "\nVersion\t\t\t= $PAVER\c"
+ 	 		echo -e "\nResume MPD\t\t= $rsmafterpa\n"
+		fi
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_ROONBRIDGE)) -ne 0 ]; then
 		if [[ -f /opt/RoonBridge/start.sh ]]; then
 			RBVER="$(awk 'FNR==2 {print $0}' /opt/RoonBridge/Bridge/VERSION)"
@@ -393,7 +405,7 @@ FEAT_ROONBRIDGE=128
 FEAT_LOCALUI=256
 FEAT_SPOTIFY=2048
 FEAT_GPIO=4096
-FEAT_RESERVED=8192
+FEAT_PLEXAMP=8192
 FEAT_BLUETOOTH=16384
 FEAT_MULTIROOM=65536
 
@@ -677,7 +689,11 @@ toggle_songid=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
 ap_network_addr=${arr[61]}
 cpugov=${arr[62]}
-RESERVED_64=${arr[63]}
+if [[ -f "somefile" ]]; then
+	[[ "${arr[63]}" = "1" ]] && pasvc="On" || pasvc="Off"
+else
+	pasvc="Not installed"
+fi
 pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
@@ -745,7 +761,7 @@ cover_scale=${arr[110]}
 rsmafterrb=${arr[111]}
 library_tagview_artist=${arr[112]}
 scnsaver_style=${arr[113]}
-RESERVED_115=${arr[114]}
+rsmafterpa=${arr[114]}
 [[ "${arr[115]}" = "1" ]] && mpd_httpd="On" || mpd_httpd="Off"
 mpd_httpd_port=${arr[116]}
 mpd_httpd_encoder=${arr[117]}

@@ -30,8 +30,11 @@ switch ($option) {
 	case '--squeezelite':
 		restartSqueezelite();
 		break;
+	case '--plexamp':
+		restartPlexamp();
+		break;
 	case '--roonbridge':
-		restartRoonbridge();
+		restartRoonBridge();
 		break;
 	default:
 		echo
@@ -40,11 +43,12 @@ Moode renderer restarter
 
 With no OPTION print the help text and exit.
 
- --bluetooth\tRestart bluetooth
- --airplay\tRestart airplay
- --spotify\tRestart spotify
- --squeezelite\tRestart squeezelite
- --roonbridge\tRestart roonbridge\n";
+ --bluetooth\tRestart Bluetooth
+ --airplay\tRestart AirPlay
+ --spotify\tRestart Spotify Connect
+ --squeezelite\tRestart Squeezelite
+ --plexamp\tRestart Plexamp
+ --roonbridge\tRestart RoonBridge\n";
 		break;
 }
 
@@ -82,7 +86,12 @@ function restartSqueezelite() {
 	startSqueezelite();
 }
 
-function restartRoonbridge() {
+function restartPlexamp() {
+	stopPlexamp();
+	startPlexamp();
+}
+
+function restartRoonBridge() {
 	stopRoonBridge();
 	startRoonBridge();
 }

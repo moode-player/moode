@@ -239,11 +239,12 @@ To run it type /var/www/util/coverview.php -on | -off
 restart-renderer.php
 This command restarts the specified renderer.
 To run it type /var/www/util/restart-renderer.php --renderer
---bluetooth    Restart bluetooth
---airplay      Restart airplay
---spotify      Restart spotify
---squeezelite  Restart squeezelite
---roonbridge   Restart roonbridge
+--bluetooth    Restart Bluetooth
+--airplay      Restart AirPlay
+--spotify      Restart Spotify Connect
+--squeezelite  Restart Squeezelite
+--plexamp      Restart Plexamp
+--roonbridge   Restart RoonBridge
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
