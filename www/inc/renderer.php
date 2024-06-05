@@ -207,12 +207,10 @@ function startUPnP() {
 // Plexamp
 function startPlexamp() {
 	sysCmd('mpc stop');
-	sysCmd('systemctl start nodejs');
 	sysCmd('systemctl start plexamp');
 }
 function stopPlexamp() {
 	sysCmd('systemctl stop plexamp');
-	sysCmd('systemctl stop nodejs');
 	sysCmd('/var/www/util/vol.sh -restore');
 	phpSession('write', 'paactive', '0');
 	$GLOBALS['paactive'] = '0';

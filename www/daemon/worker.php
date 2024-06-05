@@ -914,7 +914,37 @@ if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
 }
 workerLog('worker: Squeezelite:     ' . $status);
 
-// Start RroonBridge renderer
+// Start UPnP renderer
+if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
+	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
+		$status = 'started';
+		startUPnP();
+	} else {
+		$status = 'available';
+	}
+} else {
+	$status = 'n/a';
+}
+workerLog('worker: UPnP client:     ' . $status);
+
+// Start Plexamp renderer
+if ($_SESSION['feat_bitmask'] & FEAT_PLEXAMP) {
+	if ($_SESSION['plexamp_installed'] == 'yes') {
+		if (isset($_SESSION['pasvc']) && $_SESSION['pasvc'] == 1) {
+			$status = 'started';
+			startPlexamp();
+		} else {
+			$status = 'available';
+		}
+	} else {
+		$status = 'not installed';
+	}
+} else {
+	$status = 'n/a';
+}
+workerLog('worker: Plexamp:         ' . $status);
+
+// Start RoonBridge renderer
 if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
 	if ($_SESSION['roonbridge_installed'] == 'yes') {
 		if (isset($_SESSION['rbsvc']) && $_SESSION['rbsvc'] == 1) {
@@ -962,19 +992,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 	$status = 'n/a';
 }
 workerLog('worker: Multiroom:       ' . $status);
-
-// Start UPnP renderer
-if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
-	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
-		$status = 'started';
-		startUPnP();
-	} else {
-		$status = 'available';
-	}
-} else {
-	$status = 'n/a';
-}
-workerLog('worker: UPnP client:     ' . $status);
 
 // Start GPIO button handler
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
@@ -1238,6 +1255,7 @@ $clkradio_stop_days = explode(',', substr($_SESSION['clkradio_stop'], 9));
 $aplactive = '0';
 $spotactive = '0';
 $slactive = '0';
+$paactive = '0';
 $rbactive = '0';
 $inpactive = '0';
 
@@ -1368,6 +1386,9 @@ while (true) {
 	}
 	if ($_SESSION['slsvc'] == '1') {
 		chkSlActive();
+	}
+	if ($_SESSION['pasvc'] == '1') {
+		chkPaActive();
 	}
 	if ($_SESSION['rbsvc'] == '1') {
 		chkRbActive();
@@ -1587,6 +1608,29 @@ function chkSlActive() {
 		if ($GLOBALS['slactive'] == '1') {
 			$GLOBALS['slactive'] = '0';
 			sendFECmd('slactive0');
+		}
+	}
+}
+
+function chkPaActive() {
+	$result = sysCmd('pgrep -a node | grep plexamp');
+	if (!empty($result)) {
+		// Do this section only once
+		if ($GLOBALS['paactive'] == '0') {
+			$GLOBALS['paactive'] = '1';
+			phpSession('write', 'paactive', '1');
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
+			sendFECmd('paactive1');
+		}
+		// Do this section only once
+		if ($GLOBALS['paactive'] == '1') {
+			$GLOBALS['paactive'] = '0';
+			phpSession('write', 'paactive', '0');
+			sendFECmd('paactive0');
+			sysCmd('/var/www/util/vol.sh -restore');
+			if ($_SESSION['rsmafterpa'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 		}
 	}
 }
@@ -2520,15 +2564,28 @@ function runQueuedJob() {
 				startSqueezeLite();
 			}
 			break;
+		case 'pasvc':
+			if ($_SESSION['pasvc'] == '1') {
+				startPlexamp();
+			} else {
+				stopPlexamp();
+			}
+			break;
+		case 'parestart':
+			sysCmd('mpc stop');
+			stopPlexamp();
+			if ($_SESSION['pasvc'] == '1') {
+				startPlexamp();
+				if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterpa'] == 'Yes') {
+					sysCmd('mpc play');
+				}
+			}
+			break;
 		case 'rbsvc':
 			if ($_SESSION['rbsvc'] == '1') {
 				startRoonBridge();
 			} else {
 				stopRoonBridge();
-			}
-
-			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterrb'] == 'Yes') {
-				sysCmd('mpc play');
 			}
 			break;
 		case 'rbrestart':
@@ -2536,6 +2593,9 @@ function runQueuedJob() {
 			stopRoonBridge();
 			if ($_SESSION['rbsvc'] == '1') {
 				startRoonBridge();
+				if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterrb'] == 'Yes') {
+					sysCmd('mpc play');
+				}
 			}
 			break;
 

@@ -420,6 +420,8 @@ function autoConfigSettings() {
 		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
 		['requires' => ['slsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmaftersl'], 'handler' => 'setSessVarSql'],
+		['requires' => ['pasvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterpa'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rbsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmafterrb'], 'handler' => 'setSessVarSql'],
 		'Bluetooth',

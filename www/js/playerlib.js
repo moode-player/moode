@@ -535,6 +535,13 @@ function engineCmd() {
                         '<button class="btn turnoff-renderer" data-job="slsvc">Turn off</button>' +
                         audioInfoBtn());
                     break;
+                case 'paactive1':
+                case 'paactive0':
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Plexamp Active</span>' +
+                        '<button class="btn disconnect-renderer" data-job="parestart">Disconnect</button>' +
+                        audioInfoBtn());
+                    break;
                 case 'rbactive1':
                 case 'rbactive0':
     				inpSrcIndicator(cmd[0],
@@ -888,7 +895,7 @@ function renderUIVol() {
             // If sync is enabled update knob volume for apps that set volume via MPD instead of vol.sh
     		if (SESSION.json['feat_bitmask'] & FEAT_UPNPSYNC) {
     			if (SESSION.json['btactive'] == '0' && SESSION.json['aplactive'] == '0' && SESSION.json['spotactive'] == '0'
-                    && SESSION.json['slsvc'] == '0' && SESSION.json['rbsvc'] == '0') {
+                    && SESSION.json['slsvc'] == '0' && SESSION.json['paactive'] == '0' && SESSION.json['rbactive'] == '0') {
     				if ((SESSION.json['volknob'] != MPD.json['volume']) && SESSION.json['volmute'] == '0') {
     					SESSION.json['volknob'] = MPD.json['volume']
                         $.post('command/cfg-table.php?cmd=upd_cfg_system', {'volknob': SESSION.json['volknob']});

@@ -68,7 +68,9 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nPHP-FPM version\t\t= $PHPVER\c"
 	echo -e "\nNGINX version\t\t= $NGINXVER\c"
 	echo -e "\nSQLite3 version\t\t= $SQLITEVER\c"
-	echo -e "\nRPi.GPIO version\t= $RPI_GPIO_VER\n"
+	echo -e "\nPython version\t\t= $PYTHON_VER\c"
+	echo -e "\nNodejs version\t\t= $NODEJS_VER\c"
+	echo -e "\nPyLGPIO version\t\t= $PYTHON_LGPIO_VER\n"
 }
 
 AUDIO_PARAMETERS() {
@@ -496,7 +498,9 @@ THROTTLED_TEXT=${THROTTLED_TEXT%, }
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
-RPI_GPIO_VER=$(dpkg -s python3-rpi.gpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
+PYTHON_LGPIO_VER=$(dpkg -s python3-lgpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
+PYTHON_VER=$(python --version | awk '{ print  $2 }')
+NODEJS_VER=$(node -v | cut -d'v' -f2)
 
 BLUETOOTH_VER=$(bluetoothd -v)
 BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
@@ -634,7 +638,7 @@ dlnaname=${arr[7]}
 [[ "${arr[9]}" = "1" ]] && upnpsvc="On" || upnpsvc="Off"
 [[ "${arr[10]}" = "1" ]] && dlnasvc="On" || dlnasvc="Off"
 [[ "${arr[11]}" = "plughw" ]] && alsa_output_mode="Default (plughw)" || alsa_output_mode="Direct (hw)"
-RESERVED_13=${arr[12]}
+paactive=${arr[12]}
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
 if [[ -f "/opt/RoonBridge/start.sh" ]]; then
 	[[ "${arr[14]}" = "1" ]] && rbsvc="On" || rbsvc="Off"

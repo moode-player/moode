@@ -20,7 +20,7 @@ switch ($_GET['cmd']) {
 	 	}
 		phpSession('close');
 
-	 	// AirPlay, Spotify and RoonBridge are session based and so they can simply be restarted to effect a disconnect
+	 	// AirPlay, Spotify, Plexamp and RoonBridge are session based and so they can simply be restarted to effect a disconnect
 	 	// NOTE: 'disconnect_renderer' is passed as a job queue arg and tested for in worker so that MPD play can be resumed if indicated
 	 	if (submitJob($_POST['job'], $_GET['cmd'])) {
 	 		echo json_encode('job submitted');
