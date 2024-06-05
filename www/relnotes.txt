@@ -24,6 +24,7 @@ Bug fixes
 - FIX: Wrong PSK written to nmconnect file for saved SSID's
 - FIX: Library HD badge routine causing script crash under certain conditions
 - FIX: RoonBridge feature visibility and help text
+- FIX: Incorrect notification message when restoring radio stations
 
 ################################################################################
 #
