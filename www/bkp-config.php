@@ -129,9 +129,18 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 			sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
 			// Sleep for a bit to provide a "working" delay in the WebUI
 			sleep(2);
-			// Request reboot if system settings are part of restore
-			if (empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1')) {
+			// Request reboot if system settings or radio stations are part of restore
+			if (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') {
 				header('location: sys-restored.php');
+			} else if (
+				(isset($_POST['restore_radiostations_moode']) && $_POST['restore_radiostations_moode'] == '1') ||
+				(isset($_POST['restore_radiostations_other']) && $_POST['restore_radiostations_other'] == '1')
+			) {
+				phpSession('open');
+				$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+				$_SESSION['notify']['msg'] = 'Restore complete. Restart required.';
+				$_SESSION['notify']['duration'] = NOTIFY_DURATION_MEDIUM;
+				phpSession('close');
 			} else {
 				phpSession('open');
 				$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
