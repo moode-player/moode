@@ -352,8 +352,8 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_PLEXAMP)) -ne 0 ]; then
-		if [[ -f somefile ]]; then
-			PAVER="Version unknown"
+		if [[ -f "/home/$HOME_DIR/plexamp/js/index.js" ]]; then
+			PAVER="4.10.1"
 			echo -e "P L E X A M P"
 			echo -e "\nVersion\t\t\t= $PAVER\c"
  	 		echo -e "\nResume MPD\t\t= $rsmafterpa\n"
@@ -693,7 +693,7 @@ toggle_songid=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
 ap_network_addr=${arr[61]}
 cpugov=${arr[62]}
-if [[ -f "somefile" ]]; then
+if [[ -f "/home/$HOME_DIR/plexamp/js/index.js" ]]; then
 	[[ "${arr[63]}" = "1" ]] && pasvc="On" || pasvc="Off"
 else
 	pasvc="Not installed"

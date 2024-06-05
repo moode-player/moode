@@ -1,0 +1,14 @@
+[Unit]
+Description=Plexamp
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/plexamp
+ExecStart=/usr/bin/node /home/pi/plexamp/js/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

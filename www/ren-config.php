@@ -154,7 +154,7 @@ if (isset($_POST['update_rsmafterpa'])) {
 	phpSession('write', 'rsmafterpa', $_POST['rsmafterpa']);
 }
 if (isset($_POST['parestart']) && $_POST['parestart'] == 1) {
-	submitJob('parestart', '', NOTIFY_TITLE_INFO, NAME_ROONBRIDGE . NOTIFY_MSG_SVC_MANUAL_RESTART);
+	submitJob('parestart', '', NOTIFY_TITLE_INFO, NAME_PLEXAMP . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // RoonBridge

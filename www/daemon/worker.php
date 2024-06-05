@@ -491,7 +491,7 @@ workerLog('worker: -- Special configs');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 // Plexamp: TBD
-if (file_exists('somefile') === true) {
+if (file_exists('/home/' . $_SESSION['user_id'] . '/plexamp/js/index.js') === true) {
 	$_SESSION['plexamp_installed'] = 'yes';
 } else {
 	$_SESSION['plexamp_installed'] = 'no';
@@ -930,6 +930,9 @@ workerLog('worker: UPnP client:     ' . $status);
 // Start Plexamp renderer
 if ($_SESSION['feat_bitmask'] & FEAT_PLEXAMP) {
 	if ($_SESSION['plexamp_installed'] == 'yes') {
+		sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /etc/systemd/system/plexamp.service");
+		sysCmd("sed -i '/WorkingDirectory=/c \WorkingDirectory=/home/" . $_SESSION['user_id'] . "/plexamp' /etc/systemd/system/plexamp.service");
+		sysCmd("sed -i '/ExecStart=/c \ExecStart=/usr/bin/node /home/" . $_SESSION['user_id'] . "/plexamp/js/index.js' /etc/systemd/system/plexamp.service");
 		if (isset($_SESSION['pasvc']) && $_SESSION['pasvc'] == 1) {
 			$status = 'started';
 			startPlexamp();
