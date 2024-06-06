@@ -33,7 +33,7 @@ function cfgNetworks() {
 	$data .= getIPv4AddressBlock($cfgNetwork[0]);
 	$data .= "[ipv6]\n";
 	$data .= "addr-gen-mode=default\n";
-	$data .= "method=" . ($cfgNetwork[0]['method'] == 'dhcp' ? 'auto' : 'disabled') . "\n";
+	$data .= "method=auto\n";
 	fwrite($fh, $data);
 	fclose($fh);
 
@@ -61,7 +61,7 @@ function cfgNetworks() {
 	$data .= getIPv4AddressBlock($cfgNetwork[1]);
 	$data .= "[ipv6]\n";
 	$data .= "addr-gen-mode=default\n";
-	$data .= "method=" . ($cfgNetwork[1]['method'] == 'dhcp' ? 'auto' : 'disabled') . "\n";
+	$data .= "method=auto\n";
 	fwrite($fh, $data);
 	fclose($fh);
 
@@ -88,10 +88,12 @@ function cfgNetworks() {
 		$data .= "key-mgmt=wpa-psk\n";
 		$data .= "psk=" . $row['psk'] . "\n";
 		$data .= "[ipv4]\n";
-		$data .= "method=auto\n"; // TODO: Allow static ip address: Use same param names as in cfg_network
+		// TODO: Allow static ip address
+		// Use same param names as in cfg_network
+		$data .= "method=auto\n";
 		$data .= "[ipv6]\n";
 		$data .= "addr-gen-mode=default\n";
-		$data .= "method=auto\n"; // TODO: If static then 'disabled'
+		$data .= "method=auto\n";
 		fwrite($fh, $data);
 		fclose($fh);
 	}
