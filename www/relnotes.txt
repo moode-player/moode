@@ -18,6 +18,7 @@
 Updates
 
 - UPD: Add framework for managing Plexamp as a renderer
+- UPD: Disable ipv6 address acquisition if ipv4 static address is configured
 
 Bug fixes
 
