@@ -1,0 +1,75 @@
+################################################################################
+#
+#  Setup Guide for Plexamp 3rd party component
+#
+#  Version: 1.0 2024-06-06
+#
+#  (C) 2024 Tim Curtis http://moodeaudio.org
+#  (C) 2024 @vinnn for Plexamp setup
+#  https://moodeaudio.org/forum/showthread.php?tid=6541&pid=55010#pid55010
+#
+################################################################################
+
+OVERVIEW
+
+This guide provides information on installing and configuring the 3rd party
+Plexamp component. Plexamp is a headless music server developed and supported
+by Plex. Visit https://www.plex.tv/plexamp/ for information and support.
+
+SECTION 1: Download and install Plexamp (done using an SSH terminal)
+
+1. Open a Web Browser and login to your Plex account at http://plex.tv
+2. Login to your Pi with your moode userid/password via SSH or via Moode's built-in Web SSH client in the Security section of System Config.
+3. Install Nodejs 20 by running the two commands below.
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
+sudo apt-get install -y nodejs
+
+4. Install Plexamp Headless 4.10.1 by running the two commands below.
+
+wget https://plexamp.plex.tv/headless/Plexamp-Linux-headless-v4.10.1.tar.bz2
+tar xjf Plexamp-Linux-headless-v4.10.1.tar.bz2
+
+5. Run Plexamp Headless and authenticate with Plex
+
+node plexamp/js/index.js
+
+a. You will be prompted to enter a claim code.
+b. In your Web Browser navigate to https://plex.tv/claim and copy the claim code that is shown.
+c. Paste the claim code at the prompt
+d. Press the Enter key then enter a name for your Plexamp player.
+e. The next response should be "Plexamp is now signed in and ready!"
+f. Plexamp exits the prompt at this point.
+g. Restart the system
+
+SECTION 2: Turn on Plexamp and configure audio settings (done in a Web Browser)
+
+1. Open the Renderer Config page in moOde
+2. Turn on the Plexamp service
+3. Configure Plexamp audio settings using its WebUI
+http://moode.local:32500
+
+a. Settings > Playback > Audio Output
+   - Audio Device: Set the output device
+   - Sample Rate Matching: Smart
+b. Settings > Playback
+   - Loudness Leveling: Off
+   - Sweet Fades: Off
+   - Limiter: Off
+
+4. Finished
+
+The audio output sample rate matching is important as this will ensure that
+Plexamp will let go of the audio device when playback has stopped, allowing
+Moode's MPD and other renderers to play when Plexamp isn't playing.
+
+The other settings ensure that native PCM is being sent to your DAC without
+any DSP being applied.
+
+You will now be able to use moOde as usual and also see your Raspberry Pi as a
+Plexamp player in a Plex or Plexamp client/app where you can play your Plex
+or Tidal library.
+
+################################################################################
+#  Post questions regarding this guide to http://moodeaudio.org/forum
+################################################################################

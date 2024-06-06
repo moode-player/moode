@@ -1,0 +1,32 @@
+################################################################################
+#
+#  Setup Guide for RoonBridge 3rd party component
+#
+#  Version: 1.0 2024-06-06
+#
+#  (C) 2024 Tim Curtis http://moodeaudio.org
+#
+################################################################################
+
+
+OVERVIEW
+
+This guide provides information on installing and configuring the 3rd party
+RoonBridge component. RoonBridge is an audio renderer endpoint for your Roon
+system. Visit https://help.roonlabs.com/portal/en/kb/articles/roonbridge for
+more information.
+
+INSTALLATION
+
+Visit https://help.roonlabs.com/portal/en/kb/articles/linux-install#Overview for
+instructions on downloading and installing RoonBridge. Run the commands in the
+"Easy installer" Roon Bridge armv8 section. Once its installed, restart your
+system and Turn on RoonBridge in moOde Renderer Config.
+
+CONFIGURATION
+
+This is done in your Roon application.
+
+################################################################################
+#  Post questions regarding this guide to http://moodeaudio.org/forum
+################################################################################
