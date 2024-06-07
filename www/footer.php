@@ -8,7 +8,7 @@
 <!-- ABOUT -->
 <div id="about-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<p id="moode-logo-text">m<span id="moode-logo-text-oo">oO</span>de<span id="moode-logo-text-tm">™</span></p>
+		<p id="moode-logotype"><img src="images/moode-r900-logotype-clear-cropped.png"></p>
 	</div>
 	<div class="modal-body">
 		<h5>Overview</h5>

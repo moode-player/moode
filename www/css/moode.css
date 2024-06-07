@@ -102,9 +102,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* VIEW modal in System config */
 .updater-relnotes {list-style-type:none;margin-left:0;}
 /* About modal */
-#moode-logo-text {text-align:center;font-size:40px;font-weight:500;letter-spacing:-2px;margin-top:2px;}
-#moode-logo-text-oo {color:#d35400;line-height:12px;}
-#moode-logo-text-tm {font-size:12px;position:relative;top:-15px;left:-3px;}
+#moode-logotype {width:14em;margin:auto;}
 
 /* stuff */
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
