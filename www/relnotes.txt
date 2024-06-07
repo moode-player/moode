@@ -18,7 +18,7 @@
 Updates
 
 - UPD: Add framework for managing Plexamp as a renderer
-- UPD: Disable ipv6 address acquisition if ipv4 static address is configured
+- UPD: Set static IP address input fields to required except for Sec DNS
 
 Bug fixes
 
