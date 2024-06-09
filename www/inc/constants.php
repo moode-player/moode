@@ -32,9 +32,12 @@ const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 // Library/Playback
 const LIBCACHE_BASE = '/var/local/www/libcache';
 const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
-const DEF_RADIO_TITLE = 'Radio station';
-const DEF_RADIO_COVER = 'images/default-cover-v6.svg';
-const DEF_COVER = 'images/default-cover-v6.svg';
+const DEFAULT_RADIO_TITLE = 'Radio station';
+const DEFAULT_RADIO_COVER = 'images/default-album-cover.png';
+const DEFAULT_ALBUM_COVER = 'images/default-album-cover.png';
+const DEFAULT_UPNP_COVER = 'images/default-upnp-cover.jpg';
+const DEFAULT_PLAYLIST_COVER = '/var/www/images/default-playlist-cover.jpg';
+const DEFAULT_NOTFOUND_COVER = '/var/www/images/default-notfound-cover.jpg';
 const PLAYLIST_COVERS_ROOT = '/var/local/www/imagesw/playlist-covers/';
 const RADIO_LOGOS_ROOT = '/var/local/www/imagesw/radio-logos/';
 const LOGO_ROOT_DIR = 'imagesw/radio-logos/';

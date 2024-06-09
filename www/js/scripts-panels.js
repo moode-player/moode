@@ -414,7 +414,7 @@ jQuery(document).ready(function($) { 'use strict';
 		else if (UI.libPos[0] == -3) { // Lib search performed
 		    $('#albumsList .lib-entry').removeClass('active');
 			$('#lib-album').scrollTo(0, 0);
-			$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
+			$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' + '<img class="lib-coverart" ' + 'src="' + DEFAULT_ALBUM_COVER + '"></a>');
             $('#lib-collection-stats, #songsList').html('');
 			UI.libPos[0] = -1;
 			storeLibPos(UI.libPos);

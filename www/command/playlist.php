@@ -291,7 +291,7 @@ function putPlaylistMetadata($plName, $plMeta) {
 function putPlaylistCover($plName) {
 	$plTmpImage = PLAYLIST_COVERS_ROOT . TMP_IMAGE_PREFIX . $plName . '.jpg';
 	$plCoverImage = PLAYLIST_COVERS_ROOT . $plName . '.jpg';
-	$defaultImage = '/var/www/images/pldefault.jpg';
+	$defaultImage = DEFAULT_PLAYLIST_COVER;
 
 	sendFECmd('set_cover_image1'); // Show spinner
 	sleep(3); // Allow time for set_plcover_image job to create __tmp__ image file

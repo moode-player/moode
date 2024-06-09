@@ -264,7 +264,7 @@ function groupLib(fullLib) {
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})), // NOTE: @Atair: albumArtist is always defined due to provisions in inc/music-library php so it is not necessary to evaluate artist
 			album_artist: getAlbumArtist(albumTracks),
-			imgurl: md5 != 0 ? '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg' : '/images/notfound.jpg',
+			imgurl: md5 != 0 ? '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg' : DEFAULT_ALBUM_COVER,
 			encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
 			comment: findAlbumProp(albumTracks, 'comment')
 		};

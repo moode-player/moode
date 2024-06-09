@@ -56,8 +56,13 @@ const STATION_EXPORT_DIR = '/'; // var/www
 // Library saved searches
 const LIB_FULL_LIBRARY = 'Full Library (Default)';
 
-// Radio stations
-const DEF_RADIO_TITLE = 'Radio station';
+// Default titles and covers
+const DEFAULT_RADIO_TITLE = 'Radio station';
+const DEFAULT_RADIO_COVER = 'images/default-album-cover.png';
+const DEFAULT_ALBUM_COVER = 'images/default-album-cover.png';
+const DEFAULT_UPNP_COVER = 'images/default-upnp-cover.jpg';
+const DEFAULT_PLAYLIST_COVER = '/var/www/images/default-playlist-cover.jpg';
+const DEFAULT_NOTFOUND_COVER = '/var/www/images/default-notfound-cover.jpg';
 
 var UI = {
     knob: null,
@@ -66,7 +71,7 @@ var UI = {
 	currentFile: 'blank',
 	currentHash: 'blank',
 	currentSongId: 'blank',
-	defCover: 'images/default-cover-v6.svg',
+	//DELETE:defCover: 'images/default-cover-v6.svg',
 	knobPainted: false,
 	chipOptions: '',
 	hideReconnect: false,
@@ -694,7 +699,7 @@ function inpSrcIndicator(cmd, msgText) {
 
     // Set custom backdrop (if any)
     if (SESSION.json['renderer_backdrop'] == 'Yes') {
-        if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
+        if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1) {
             $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
             $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
             $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
@@ -1018,12 +1023,12 @@ function renderUI() {
                     '/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             } else {
-	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + '" data-adaptive-background="1" alt="Cover art not found"' + '>');
-                $('#playbar-cover').html('<img src="images/default-cover-v6.svg">');
+	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + DEFAULT_ALBUM_COVER + '" data-adaptive-background="1" alt="Cover art not found"' + '>');
+                $('#playbar-cover').html('<img src="' + DEFAULT_ALBUM_COVER + '">');
             }
     		// Cover backdrop or bgimage
     		if (SESSION.json['cover_backdrop'] == 'Yes') {
-                var backDropHTML = MPD.json['coverurl'].indexOf('default-cover-v6') === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
+                var backDropHTML = MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
     			$('#cover-backdrop').html(backDropHTML);
     			$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
     			$('#cover-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
@@ -1039,7 +1044,7 @@ function renderUI() {
     		}
 
     		// Adaptive UI theme engine
-    		if (MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
+    		if (MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1) {
     			$.adaptiveBackground.run();
     		} else {
     			setColors();
@@ -1334,11 +1339,11 @@ function genSearchUrl (artist, title, album) {
         var returnStr = title;
     }
     // Title has no searchable info or mobile
-    else if (MPD.json['coverurl'] === UI.defCover || UI.mobile) {
+    else if (MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
         var returnStr = MPD.json['title'];
     }
     // Station does not transmit title
-    else if (title == DEF_RADIO_TITLE) {
+    else if (title == DEFAULT_RADIO_TITLE) {
         if (RADIO.json[MPD.json['file']]['home_page'] != '') {
             var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + RADIO.json[MPD.json['file']]['home_page'] + '"' + ' target="_blank">'+ title + '</a>';
         }
@@ -1432,12 +1437,12 @@ function updateActivePlayqueueItem() {
                             data[i].Title.substring(0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
                             data[i].Title.trim() == '') {
                             // Use default title
-    						$('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(DEF_RADIO_TITLE);
+    						$('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(DEFAULT_RADIO_TITLE);
     					} else {
                             // Use station supplied title
                             $('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(data[i].Title);
     						if (i == parseInt(MPD.json['song'])) { // active
-    							if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
+    							if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
                                     // Update in case MPD did not get Title tag at initial play
     								$('#currentsong').html(data[i].Title);
     							} else {
@@ -1498,7 +1503,7 @@ function renderPlayqueue(state) {
 					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
 				} else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
                     // Radio station
-                    var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"images/notfound.jpg"' : '"imagesw/radio-logos/thumbs/' +
+                    var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"' + DEFAULT_RADIO_COVER + '"' : '"imagesw/radio-logos/thumbs/' +
                         encodeURIComponent(RADIO.json[data[i].file]['name']) + '_sm.jpg"';
 					output += showPlayqueueThumb && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
                         '<span class="playqueue-thumb">' + playqueueLazy + logoThumb + '></span>' : '';
@@ -1510,13 +1515,13 @@ function renderPlayqueue(state) {
                         data[i].Title.trim() == '') {
                         // Use default title
 						output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
-						output += '<span class="pll1">' + DEF_RADIO_TITLE + '</span>';
+						output += '<span class="pll1">' + DEFAULT_RADIO_TITLE + '</span>';
 					} else {
                         // Use station supplied title
 						output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 						output += '<span class="pll1">' + data[i].Title + '</span>';
 						if (i == parseInt(MPD.json['song'])) { // active
-							if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
+							if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
                                 // Update in case MPD did not get Title tag at initial play
 								$('#currentsong').html(data[i].Title);
 							} else {
@@ -1547,7 +1552,7 @@ function renderPlayqueue(state) {
 				} else {
                     // Song file or upnp url
 					var thumb = (data[i].file.substring(0, 4) == 'http') ?
-                        'images/default-cover-v6-upnp.png' :
+                        DEFAULT_UPNP_COVER :
                         'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg';
 					output += showPlayqueueThumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
 	                // Line 1 title
@@ -3315,7 +3320,7 @@ $('#btn-preferences-update').click(function(e){
 		tempcolor = (THEME.json[SESSION.json['themename']]['mbg_color']).split(",");
 		themeMback = 'rgba(' + tempcolor[0] + ',' + tempcolor[1] + ',' + tempcolor[2] + ',' + themeOp + ')';
 
-		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
+		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1) {
 			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
 			$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
 			$('#cover-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
@@ -4715,7 +4720,7 @@ function itemInfoModal(id, data) {
         var key = Object.keys(data[i]);
         if (typeof(data[i][key]) != 'undefined') {
             if (key == 'Covers') { // Note: data[i]['Covers'] is the md5 hash or ''
-                var coverUrl = data[i][key] = '' ? '/var/www/images/notfound.jpg' : '/imagesw/thmcache/' + encodeURIComponent(data[i][key]) + '.jpg';
+                var coverUrl = data[i][key] = '' ? DEFAULT_ALBUM_COVER : '/imagesw/thmcache/' + encodeURIComponent(data[i][key]) + '.jpg';
                 lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + coverUrl + '" style="width:60px;"' + '</span></li>';
             } else if (key == 'Logo') {
                 lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + data[i][key] + '" style="width:60px;"' + '</span></li>';

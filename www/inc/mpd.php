@@ -660,7 +660,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['title'] = '';
 		$current['album'] = '';
 		$current['comment'] = '';
-		$current['coverurl'] = DEF_COVER;
+		$current['coverurl'] = DEFAULT_ALBUM_COVER;
 		debugLog('enhanceMetadata(): error: currentsong file is NULL');
 	} else {
 		// Only do this code block once for a given file
@@ -695,7 +695,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
                 trim($song['Title']) == '-' || // NTS can return just a dash in its Title tag
                 substr($song['Title'], 0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
                 trim($song['Title']) == '') {
-				$current['title'] = DEF_RADIO_TITLE;
+				$current['title'] = DEFAULT_RADIO_TITLE;
 			} else {
 				// Use custom name for certain stations if needed
 				// EX: $current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
@@ -723,7 +723,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			} else {
 				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
-				$current['coverurl'] = DEF_RADIO_COVER;
+				$current['coverurl'] = DEFAULT_RADIO_COVER;
                 $current['bitrate'] = '';
 			}
             //workerLog(print_r($song, true));

@@ -219,7 +219,7 @@ function putStationCover($stName) {
 	$stCoverImageThm = RADIO_LOGOS_ROOT . 'thumbs/' .  $stName . '.jpg';
 	$stCoverImageThmSm = RADIO_LOGOS_ROOT . 'thumbs/' .  $stName . '_sm.jpg';
 
-	$defaultImage = '/var/www/images/notfound.jpg';
+	$defaultImage = DEFAULT_NOTFOUND_COVER;
 	sendFECmd('set_cover_image1'); // Show spinner
 	sleep(3); // Allow time for set_ralogo_image job to create __tmp__ image file
 

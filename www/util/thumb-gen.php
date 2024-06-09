@@ -10,9 +10,6 @@ require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
-// Image to use when no cover found
-const NOT_FOUND_JPG = '/var/www/images/notfound.jpg';
-
 //
 // MAIN
 //
@@ -154,7 +151,7 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 
 		if ($imgStr === false) {
 			// Nothing found
-			$imgStr = NOT_FOUND_JPG;
+			$imgStr = DEFAULT_NOTFOUND_COVER;
 		}
 	}
 
@@ -166,7 +163,7 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 			$imgStr = file_get_contents($imgStr);
 		} else {
 			workerLog('thumb-gen: Image file: Not a valid file path');
-			$imgStr = NOT_FOUND_JPG;
+			$imgStr = DEFAULT_NOTFOUND_COVER;
 		}
 	} else {
 		//workerLog('thumb-gen: Embedded image: ' . $file);
@@ -177,9 +174,9 @@ function createThumb($file, $dir, $searchPri, $thmW, $thmQ) {
 		workerLog('thumb-gen: Error: imagecreatefromstring() failed: ' . $file);
 
 		// Use default moOde cover
-		$imgStr = file_get_contents(NOT_FOUND_JPG);
+		$imgStr = file_get_contents(DEFAULT_NOTFOUND_COVER);
 		if (false === ($image = imagecreatefromstring($imgStr))) {
-			workerLog('thumb-gen: Error: imagecreatefromstring() failed: ' . NOT_FOUND_JPG);
+			workerLog('thumb-gen: Error: imagecreatefromstring() failed: ' . DEFAULT_NOTFOUND_COVER);
 			return;
 		}
 	}

@@ -103,7 +103,7 @@
                     }
                     $("<img />")
 						.one("error", function() { // r43k
-							$self.attr("src", "images/default-cover-v6.svg");
+							$self.attr("src", DEFAULT_ALBUM_COVER);
 						})
                         .one("load", function() {
                             var original = $self.attr("data-" + settings.data_attribute);
