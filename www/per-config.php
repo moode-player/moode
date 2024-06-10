@@ -60,12 +60,13 @@ if (isset($_POST['update_scnbrightness'])) {
     }
 }
 
-if (isset($_POST['update_pixel_aspect_ratio'])) {
+// No solution with KMS driver as of r902
+/*if (isset($_POST['update_pixel_aspect_ratio'])) {
     if (isset($_POST['pixel_aspect_ratio']) && $_POST['pixel_aspect_ratio'] != $_SESSION['pixel_aspect_ratio']) {
 		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 		phpSession('write', 'pixel_aspect_ratio', $_POST['pixel_aspect_ratio']);
     }
-}
+}*/
 
 if (isset($_POST['update_scnrotate'])) {
     if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
@@ -148,8 +149,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 
 	$_select['scnbrightness'] = $_SESSION['scnbrightness'];
 
-	$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
-	$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
+    // No solution with KMS driver as of r902
+	//$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
+	//$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
 
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
 	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";

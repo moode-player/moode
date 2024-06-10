@@ -357,15 +357,17 @@ function updBootConfigTxt($action, $value) {
 			// $value: '#' or ''
 			sysCmd('sed -i /' . CFG_FORCE_EEPROM_READ . "/c\\" . $value . 'dtoverlay=' . CFG_FORCE_EEPROM_READ . ' ' . BOOT_CONFIG_TXT);
 			break;
-		case 'upd_framebuffer_settings':
-			// $value: '#' or ''
-			sysCmd('sed -i /' . CFG_FRAMEBUFFER_WIDTH  . "/c\\" . $value . CFG_FRAMEBUFFER_WIDTH  . ' ' . BOOT_CONFIG_TXT);
-			sysCmd('sed -i /' . CFG_FRAMEBUFFER_HEIGHT . "/c\\" . $value . CFG_FRAMEBUFFER_HEIGHT . ' ' . BOOT_CONFIG_TXT);
-			sysCmd('sed -i /' . CFG_FRAMEBUFFER_ASPECT . "/c\\" . $value . CFG_FRAMEBUFFER_ASPECT . ' ' . BOOT_CONFIG_TXT);
-			break;
-		case 'upd_lcd_rotate':
-			// $value: '#' or ''
-			sysCmd('sed -i /' . CFG_LCD_ROTATE . "/c\\" . $value . CFG_LCD_ROTATE . ' ' . BOOT_CONFIG_TXT);
+		case 'upd_rotate_screen':
+			// $value: '0' or '180'
+			if ($value == '0') {
+				sysCmd('sed -i /' . CFG_PITOUCH_INVERTXY . "/c\\" . '#' . 'dtoverlay=' . CFG_PITOUCH_INVERTXY . ' ' . BOOT_CONFIG_TXT);
+				sysCmd('sed -i /' . CFG_DISPLAY_AUTODETECT . "/c\\" . '' . CFG_DISPLAY_AUTODETECT . ' ' . BOOT_CONFIG_TXT);
+				sysCmd('sed -i "s/ ' . CFG_PITOUCH_ROTATE_180 . '//"' . ' ' . BOOT_CMDLINE_TXT);
+			} else {
+				sysCmd('sed -i /' . CFG_PITOUCH_INVERTXY . "/c\\" . '' . 'dtoverlay=' . CFG_PITOUCH_INVERTXY . ' ' . BOOT_CONFIG_TXT);
+				sysCmd('sed -i /' . CFG_DISPLAY_AUTODETECT . "/c\\" . '#' . CFG_DISPLAY_AUTODETECT . ' ' . BOOT_CONFIG_TXT);
+				sysCmd('sed -i "s/$/ ' . CFG_PITOUCH_ROTATE_180 . '/"' . ' ' . BOOT_CMDLINE_TXT);
+			}
 			break;
 		case 'upd_hdmi_enable_4kp60':
 			// $value: '0' or '1'

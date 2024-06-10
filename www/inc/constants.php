@@ -57,6 +57,7 @@ const SESSION_SAVE_PATH = '/var/local/php';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const BOOT_CONFIG_TXT = '/boot/firmware/config.txt';
+const BOOT_CMDLINE_TXT = '/boot/firmware/cmdline.txt';
 const BOOT_MOODEBACKUP_ZIP = '/boot/moodebackup.zip';
 const BOOT_MOODECFG_INI = '/boot/moodecfg.ini';
 const BT_PINCODE_CONF = '/etc/bluetooth/pin.conf';
@@ -108,16 +109,16 @@ const CFG_GENERAL_SETTINGS_HEADER = '# General settings';
 const CFG_DO_NOT_ALTER_HEADER = '# Do not alter this section';
 const CFG_AUDIO_OVERLAYS_HEADER = '# Audio overlays';
 const CFG_FORCE_EEPROM_READ = 'force_eeprom_read=0';
-const CFG_FRAMEBUFFER_WIDTH = 'framebuffer_width=800';
-const CFG_FRAMEBUFFER_HEIGHT = 'framebuffer_height=444';
-const CFG_FRAMEBUFFER_ASPECT = 'framebuffer_aspect=-1';
-const CFG_LCD_ROTATE = 'lcd_rotate=2';
 const CFG_HDMI_ENABLE_4KP60 = 'hdmi_enable_4kp60';
 const CFG_PCI_EXPRESS = 'pciex1';
 const CFG_PCI_EXPRESS_GEN3 = 'pciex1_gen=3';
 const CFG_PI_AUDIO_DRIVER = 'vc4-kms-v3d';
 const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
+const CFG_DISPLAY_AUTODETECT = 'display_auto_detect=1';
+const CFG_PITOUCH_INVERTXY = 'vc4-kms-dsi-7inch,invx,invy';
+// Boot cmdline.txt managed params
+const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php

@@ -36,11 +36,9 @@ dtparam=audio=on
 # Audio overlays
 #dtoverlay=none
 #dtoverlay=force_eeprom_read=0
-# Square pixels
-#framebuffer_width=800
-#framebuffer_height=444
-#framebuffer_aspect=-1
-#lcd_rotate=2
 # PCI Express
 #dtparam=pciex1
 #dtparam=pciex1_gen=3
+# Pi Touch
+dtoverlay=rpi-backlight
+#dtoverlay=vc4-kms-dsi-7inch,invx,invy

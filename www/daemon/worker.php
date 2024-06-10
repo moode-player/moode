@@ -2855,12 +2855,11 @@ function runQueuedJob() {
 			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 			break;
 		case 'pixel_aspect_ratio':
-			$value = $_SESSION['w_queueargs'] == 'Square' ? '' : '#';
-			updBootConfigTxt('upd_framebuffer_settings', $value);
+			// No solution with KMS driver
 			break;
 		case 'scnrotate':
-			$value = $_SESSION['w_queueargs'] == '180' ? '' : '#';
-			updBootConfigTxt('upd_lcd_rotate', $value);
+			$value = $_SESSION['w_queueargs']; // 0 or 180
+			updBootConfigTxt('upd_rotate_screen', $value);
 			break;
 		case 'clearbrcache':
 			sysCmd('/var/www/util/sysutil.sh clearbrcache');
