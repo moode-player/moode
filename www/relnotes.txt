@@ -18,7 +18,7 @@
 Updates
 
 - UPD: Add framework for managing Plexamp as a renderer
-- UPD: Set static IP address input fields to required except for Sec DNS
+- UPD: Set static IP address input fields to required except for Secondary DNS
 - UPD: Bump max URL length to 2048 for New/Edit station
 
 Bug fixes
