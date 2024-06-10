@@ -200,4 +200,4 @@ if (is_dir($path)) {
 }
 
 // Nothing found: default cover
-header('Location: ' . DEFAULT_ALBUM_COVER);
+header('Location: /' . DEFAULT_ALBUM_COVER);
