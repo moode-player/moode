@@ -22,6 +22,7 @@ Updates
 
 Bug fixes
 
+- FIX: Pi touch brightness and rotate options
 - FIX: Wrong PSK written to nmconnect file for saved SSID's
 - FIX: Library HD badge routine causing script crash under certain conditions
 - FIX: RoonBridge feature visibility and help text
