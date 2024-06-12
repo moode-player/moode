@@ -11,12 +11,13 @@
 
 ################################################################################
 #
-# 2024-06-11 moOde 9.0.2 (Bookworm)
+# 2024-06-12 moOde 9.0.2 (Bookworm)
 #
 ################################################################################
 
 Updates
 
+- UPD: Bump to Linux kernel 6.6.31 (ISO image only)
 - UPD: Add framework for managing Plexamp as a renderer
 - UPD: Set static IP address input fields to required except for Secondary DNS
 - UPD: Bump max URL length to 2048 for New/Edit station
