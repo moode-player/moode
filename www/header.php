@@ -203,7 +203,7 @@
 			<a aria-label="Menu" class="dropdown-toggle btn target-blank-link" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget"><div id="mblur">mm</div><div id="mbrand">m</div></a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 				<?php if ($section == 'index') { ?>
-                    <li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i> Configure</a></li>
+                    <li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i>Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fa-solid fa-sharp fa-pen sx"></i>Preferences</a></li>
                     <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fa-solid fa-sharp fa-sync sx"></i>Update library</a></li>
                     <?php if ($_SESSION['camilladsp'] != "off") {?>
@@ -211,7 +211,7 @@
                     <?php } ?>
 					<li id="bluetooth-hide"><a href="blu-control.php"><i class="fa-light fa-brands fa-bluetooth sx"></i>Bluetooth</a></li>
 					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-forward sx"></i>Players</a></li>
-                    <li><a href="javascript:audioInfoPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i> Audio info</a></li>
+                    <li><a href="javascript:audioInfoPlayback()"><i class="fa-solid fa-sharp fa-music sx"></i>Audio info</a></li>
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fa-solid fa-sharp fa-book sx"></i>Play history</a></li>
 					<li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fa-solid fa-sharp fa-info sx"></i>Quick help</a></li>
 					<li class="menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fa-solid fa-sharp fa-redo sx"></i>Refresh</a></li>
