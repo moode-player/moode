@@ -17,7 +17,8 @@
 
 Updates
 
--UPD:
+- UPD: Bump to shairport-sync 4.3.3
+- UPD: Bump to upmpdcli, upmpdcli-qobuz 1.8.12
 
 Bug fixes
 
