@@ -342,7 +342,7 @@ class CamillaDsp {
         if($ch)
             $mediaInfo['channels'] = intval($ch);
         if($siz != NULL)
-            $mediaInfo['size'] = $raw ? intval(siz) : sprintf('%.1f kB', $siz/1024.0) ;
+            $mediaInfo['size'] = $raw ? intval($siz) : sprintf('%.1f kB', $siz/1024.0) ;
 
         return $mediaInfo;
     }
