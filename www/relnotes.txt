@@ -18,11 +18,12 @@
 Updates
 
 - UPD: Bump to shairport-sync 4.3.3
-- UPD: Bump to upmpdcli, upmpdcli-qobuz 1.8.12
+- UPD: Bump to upmpdcli, upmpdcli-qobuz, upmpd-tidal 1.8.12
 
 Bug fixes
 
 - FIX: Misaligned main menu items (Configure and Audio Info)
+- FIX: CamillaDSP Quick Convolution not working
 
 ################################################################################
 #
