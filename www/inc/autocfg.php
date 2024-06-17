@@ -264,8 +264,12 @@ function autoConfigSettings() {
 			sqlDelete('cfg_ssid', $dbh);
 			$count = count($values['ssid_ssid']);
 			for ($i = 0; $i < $count; $i++) {
-				$value = "\"" . $values['ssid_ssid'][$i] . "\", \""  .
-					$values['ssid_uuid'][$i]	. "\", \"" . $values['ssid_psk'][$i] . "\"";
+				$value = "\"" .
+					$values['ssid_ssid'][$i] . "\", \"" .
+					$values['ssid_uuid'][$i] . "\", \"" .
+					$values['ssid_psk'][$i] . "\", " .
+					// method, ipaddr, netmask, gateway, pridns, secdns
+					"\"\", \"\", \"\", \"\", \"\", \"\"";
 				sqlInsert('cfg_ssid', $dbh, $value);
 			}
 			cfgNetworks();
@@ -277,6 +281,7 @@ function autoConfigSettings() {
 				$str .= sprintf($format, 'ssid', $i, $row['ssid']);
 				$str .= sprintf($format, 'uuid', $i, $row['uuid']);
 				$str .= sprintf($format, 'psk', $i, $row['psk']);
+				// TODO: Add method, ipaddr, netmask, gateway, pridns, secdns
 			}
 			return $str;
 		}],
