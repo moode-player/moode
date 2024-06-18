@@ -19,9 +19,8 @@ more information.
 INSTALLATION
 
 Visit https://help.roonlabs.com/portal/en/kb/articles/linux-install#Overview for
-instructions on downloading and installing RoonBridge. Run the commands in the
-"Easy installer" Roon Bridge armv8 section. Once its installed, restart your
-system and Turn on RoonBridge in moOde Renderer Config.
+instructions on downloading and installing RoonBridge. Restart you system after
+installation completes and then Turn on RoonBridge in moOde Renderer Config.
 
 CONFIGURATION
 
