@@ -26,6 +26,8 @@ Bug fixes
 - FIX: Misaligned main menu items (Configure and Audio Info)
 - FIX: CamillaDSP Quick Convolution not working
 - FIX: Restore fails when processing cfg_ssid table
+- FIX: Pi model parsing in SSH header
+- FIX: HDMI device name assignment for Pi-Zero 2 W
 
 ################################################################################
 #
