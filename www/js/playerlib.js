@@ -2485,12 +2485,9 @@ function customScroll(list, itemNum, speed) {
 // Scroll to current song if title is clicked
 $('#currentsong').click(function(e) {
 	if (UI.mobile) {
-	    var itemnum = parseInt(MPD.json['song']);
-		var centerHeight, scrollTop, scrollCalc, scrollOffset, itemPos;
-		itemPos = $('#playqueue ul li:nth-child(' + (itemnum + 1) + ')').position().top;
-		centerHeight = parseInt($('#playqueue').height()/3); // Place in upper third instead of middle
-	    scrollTop = $('#playqueue').scrollTop();
-		scrollCalc = (itemPos + 200);
+	    var itemNum = parseInt(MPD.json['song']);
+		var itemPos = $('#playqueue ul li:nth-child(' + (itemNum + 1) + ')').position().top;
+		var scrollCalc = (itemPos + 200);
 	    $('html, body').animate({ scrollTop: scrollCalc }, 'fast');
 	}
 });
@@ -2596,6 +2593,25 @@ $(document).on('click', '.context-menu a', function(e) {
                     audioInfo(cmd, data);
                 }
             });
+            break;
+        // NOTE: playqueue and cv-playqueue
+        case 'playqueue_top':
+            if (UI.mobile) {
+        		itemPos = $('#playqueue ul li:nth-child(1)').position().top;
+        		scrollCalc = (itemPos + 200);
+        	    $('html, body').animate({ scrollTop: scrollCalc }, 'slow');
+            } else {
+                customScroll('playqueue', 0, 0);
+            }
+            break;
+        case 'playqueue_bottom':
+            if (UI.mobile) {
+                itemPos = $('#playqueue ul li:nth-child(' + MPD.json['playlistlength'] + ')').position().top;
+        		scrollCalc = (itemPos + 200);
+        	    $('html, body').animate({ scrollTop: scrollCalc }, 'slow');
+            } else {
+                customScroll('playqueue', parseInt(MPD.json['playlistlength']), 0);
+            }
             break;
         case 'playqueue_info':
             var mins = 0;
