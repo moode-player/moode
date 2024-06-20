@@ -199,7 +199,7 @@ Submits an "Update library" command.
 
 restart_renderer
 Restarts the specified renderer.
-Arguments: --bluetooth | --airplay | --spotify | --squeezelite | --roonbridge
+Arguments: --bluetooth | --airplay | --spotify | --squeezelite | --plexamp | --roonbridge
 
 MPD commands
 See MPD protocol for list of commands.
