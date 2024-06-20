@@ -20,6 +20,7 @@ Updates
 - UPD: Bump to shairport-sync 4.3.3
 - UPD: Bump to upmpdcli, upmpdcli-qobuz, upmpd-tidal 1.8.12
 - UPD: Overlay names for Hifiberry Amp2/4, DAC+ and DAC+ Pro
+- UPD: Add Queue top/bottom to context menu
 
 Bug fixes
 
