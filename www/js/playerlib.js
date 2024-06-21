@@ -2601,7 +2601,7 @@ $(document).on('click', '.context-menu a', function(e) {
         		scrollCalc = (itemPos + 200);
         	    $('html, body').animate({ scrollTop: scrollCalc }, 'slow');
             } else {
-                customScroll('playqueue', 0, 0);
+                customScroll('playqueue', 0, 600);
             }
             break;
         case 'playqueue_bottom':
@@ -2610,7 +2610,7 @@ $(document).on('click', '.context-menu a', function(e) {
         		scrollCalc = (itemPos + 200);
         	    $('html, body').animate({ scrollTop: scrollCalc }, 'slow');
             } else {
-                customScroll('playqueue', parseInt(MPD.json['playlistlength']), 0);
+                customScroll('playqueue', parseInt(MPD.json['playlistlength']), 600);
             }
             break;
         case 'playqueue_info':
