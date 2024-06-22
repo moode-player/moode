@@ -8,6 +8,7 @@
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/session.php';
+require_once __DIR__ . '/../inc/cdsp.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 if (!isset($_GET['cmd']) || empty($_GET['cmd'])) {
@@ -31,15 +32,48 @@ switch ($cmd[0]) {
 		$result = sysCmd('/var/www/util/vol.sh');
 		echo $result[0];
 		break;
-	case 'set_volume':			// N | -mute | -up N | -dn N
+	case 'set_volume': // N | -mute | -up N | -dn N
 		$result = sysCmd('/var/www/util/vol.sh' . getArgs($cmd));
 		echo 'OK';
 		break;
-	case 'set_coverview':		// -on | -off
+	case 'get_cdsp_config':
+		phpSession('open_ro');
+		echo $_SESSION['camilladsp'];
+		break;
+	case 'set_cdsp_config':
+		$newConfig = trim(getArgs($cmd));
+		if (!empty($newConfig)) {
+			phpSession('open');
+			$currentConfig = $_SESSION['camilladsp'];
+			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+			// Validate arg
+			$validConfigName = false;
+			$configs = $cdsp->getAvailableConfigs();
+			foreach ($configs as $configFile => $configName) {
+				if ($newConfig == $configName) {
+					$validConfigName = true;
+					break;
+				}
+			}
+			if ($validConfigName) {
+				$newConfig = strtolower($newConfig) == 'off' ? 'off' : $newConfig . '.yml';
+				phpSession('write', 'camilladsp', $newConfig);
+				$cdsp->selectConfig($newConfig);
+				$cdsp->updCDSPConfig($newConfig, $currentConfig, $cdsp);
+				phpSession('close');
+				echo 'OK';
+			} else {
+				echo 'Invalid Configuration name';
+			}
+		} else {
+			echo 'Argument missing: Configuration name';
+		}
+		break;
+	case 'set_coverview': // -on | -off
 		$result = sysCmd('/var/www/util/coverview.php' . getArgs($cmd));
 		echo $result[0];
 		break;
-	case 'trx_control':			// Up to 3 args
+	case 'trx_control': // Up to 3 args
 		$result = sysCmd('/var/www/util/trx-control.php' . getArgs($cmd));
 		echo $result[0];
 		break;
@@ -47,8 +81,8 @@ switch ($cmd[0]) {
 		$result = sysCmd('/var/www/util/libupd-submit.php');
 		echo 'Library update submitted';
 		break;
-	case 'restart_renderer': 	// --bluetooth | --airplay | --spotify | --squeezelite | --roonbridge
-		$result = sysCmd('/var/www/util/restart-renderer.php ' . getArgs($cmd));
+	case 'restart_renderer': // --bluetooth | --airplay | --spotify | --squeezelite | --roonbridge
+		$result = sysCmd('/var/www/util/restart-renderer.php' . getArgs($cmd));
 		echo (empty($result) ? 'OK' : 'Missing or invalid argument');
 		break;
 	default: // MPD commands
@@ -65,7 +99,7 @@ switch ($cmd[0]) {
 function getArgs($cmd) {
 	$argCount = count($cmd);
 	if ($argCount > 1) {
-		for($i = 0; $i < $argCount; $i++) {
+		for ($i = 0; $i < $argCount; $i++) {
 			$args .= ' ' . $cmd[$i + 1];
 		}
 	} else {

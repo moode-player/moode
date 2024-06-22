@@ -190,6 +190,13 @@ set_volume
 Sets the knob volume to value N, up or down N or mute toggle.
 Arguments: N | -up N | -dn N | -mute
 
+get_cdsp_config
+Returns the current CamillaDSP config name
+
+set_cdsp_config
+Sets CamillaDSP to the specified config name.
+Arguments: A config name from the list of available configs including 'Off'.
+
 set_coverview
 Turns CoverView screen saver on or off.
 Arguments: -on | -off
