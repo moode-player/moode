@@ -21,6 +21,7 @@ Updates
 - UPD: Bump to upmpdcli, upmpdcli-qobuz, upmpd-tidal 1.8.12
 - UPD: Overlay names for Hifiberry Amp2/4, DAC+ and DAC+ Pro
 - UPD: Add Queue top/bottom to context menu
+- UPD: Add get_cdsp_config, set_cdsp_config REST API's
 
 Bug fixes
 
