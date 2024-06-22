@@ -55,7 +55,7 @@ With no OPTION print the help text and exit.
 phpSession('close');
 
 function restartBluetooth() {
-	stopBluetooth()
+	stopBluetooth();
 	sysCmd('/var/www/util/vol.sh -restore');
 	// Reset to inactive
 	phpSession('write', 'btactive', '0');
