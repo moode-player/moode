@@ -30,6 +30,7 @@ Bug fixes
 - FIX: Restore fails when processing cfg_ssid table
 - FIX: Pi model parsing in SSH header
 - FIX: HDMI device name assignment for Pi-Zero 2 W
+- FIX: Restart-render.php script crashes due to missing statement terminator
 
 ################################################################################
 #
