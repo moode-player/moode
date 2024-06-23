@@ -23,6 +23,7 @@ Updates
 - UPD: Add get_cdsp_config, set_cdsp_config REST API's
 - UPD: Update Overlay names for Hifiberry Amp2/4, DAC+ and DAC+ Pro
 - UPD: Remove Lib Config option "Auto-update database" (several issues)
+- UPD: Playable URL for Bayern 2 radio station
 
 Bug fixes
 
