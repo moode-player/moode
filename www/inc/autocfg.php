@@ -612,7 +612,6 @@ function autoConfigSettings() {
 		}],
 		'Music Sources',
 		['requires' => ['fs_mountmon'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['usb_auto_updatedb'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cuefiles_ignore'], 'handler' => 'setSessVarSql'],
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...

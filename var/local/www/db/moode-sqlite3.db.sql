@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Jun 17 18:19:19 2024
+-- File generated with SQLiteStudio v3.1.0 on Sun Jun 23 07:09:21 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -441,7 +441,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (104, 'rsmafterspot', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (105, 'library_covsearchpri', 'Embedded cover');
 INSERT INTO cfg_system (id, param, value) VALUES (106, 'library_hiresthm', '600px,60');
 INSERT INTO cfg_system (id, param, value) VALUES (107, 'library_pixelratio', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (108, 'usb_auto_updatedb', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (108, 'RESERVED_108', '');
 INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '5px');
 INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');

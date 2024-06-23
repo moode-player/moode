@@ -758,7 +758,7 @@ rsmafterspot=${arr[103]}
 library_covsearchpri=${arr[104]}
 library_hiresthm=${arr[105]}
 library_pixelratio=${arr[106]}
-[[ "${arr[107]}" = "1" ]] && usb_auto_updatedb="On" || usb_auto_updatedb="Off"
+RESERVED_108=${arr[107]}
 cover_backdrop=${arr[108]}
 cover_blur=${arr[109]}
 cover_scale=${arr[110]}

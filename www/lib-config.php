@@ -50,12 +50,6 @@ if (isset($_POST['clear_libcache'])) {
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 	$_SESSION['notify']['msg'] = 'Library tag cache has been cleared. It will be created when returning to Playback or Library view.';
 }
-// Auto-update MPD database on USB insert or remove
-if (isset($_POST['update_usb_auto_updatedb'])) {
-	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
-		phpSession('write', 'usb_auto_updatedb', $_POST['usb_auto_updatedb']);
-	}
-}
 // Scan or ignore .cue files by adding or removing *.cue from /var/lib/mpd/music/.mpdignore
 if (isset($_POST['update_cuefiles_ignore'])) {
 	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
@@ -223,11 +217,6 @@ if (!isset($_GET['cmd'])) {
 	$autoClick = " onchange=\"autoClick('#btn-set-fs-mountmon');\"";
 	$_select['fs_mountmon_on']  .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-1\" value=\"On\" " . (($_SESSION['fs_mountmon'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['fs_mountmon_off'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-2\" value=\"Off\" " . (($_SESSION['fs_mountmon'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-	// Auto-update MPD database on USB insert/remove
-	$autoClick = " onchange=\"autoClick('#btn-set-usb-auto-updatedb');\"";
-	$_select['usb_auto_updatedb_on'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-1\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['usb_auto_updatedb_off'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle-usb-auto-updatedb-2\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Ignore .cue files
 	$autoClick = " onchange=\"autoClick('#btn-set-cuefiles-ignore');\"";

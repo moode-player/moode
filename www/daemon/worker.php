@@ -124,8 +124,7 @@ if ($status == 'Required headers present') {
 }
 
 // Prune old session vars
-// Example command
-//sysCmd('moodeutl -D session_var_name');
+sysCmd('moodeutl -D usb_auto_updatedb');
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');

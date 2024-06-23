@@ -20,13 +20,6 @@ function restart_nfs_if_on () {
 		systemctl restart nfs-kernel-server
 	fi
 }
-function usb_auto_mpd_update_if_on () {
-	RESULT=$(sqlite3 ${1} "SELECT value FROM cfg_system WHERE param='usb_auto_updatedb'")
-	if [[ $RESULT = "1" ]]; then
-		mpc update USB
-		truncate /var/local/www/libcache_* --size 0
-	fi
-}
 
 # Udisks-glue add/remove mount
 # $2 = mount point (/media/DISK_LABEL)
