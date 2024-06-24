@@ -2,7 +2,7 @@
 #
 #  Setup Guide for RoonBridge 3rd party component
 #
-#  Version: 1.0 2024-06-06
+#  Version: 1.1 2024-06-24
 #
 #  (C) 2024 Tim Curtis http://moodeaudio.org
 #
@@ -19,8 +19,8 @@ more information.
 INSTALLATION
 
 Visit https://help.roonlabs.com/portal/en/kb/articles/linux-install#Overview for
-instructions on downloading and installing RoonBridge. Restart you system after
-installation completes and then Turn on RoonBridge in moOde Renderer Config.
+instructions on downloading and installing RoonBridge. Restart your system after
+installation completes and then turn on RoonBridge in moOde Renderer Config.
 
 CONFIGURATION
 
