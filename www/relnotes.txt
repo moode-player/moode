@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD: New Setup Guide in Markdown format
+- UPD: New Setup Guide in Markdown format with Pi Imager tutorial
 
 Bug fixes
 
