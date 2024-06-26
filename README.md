@@ -36,9 +36,9 @@ moOde audio player software and other materials in this repository are distribut
 This means that the user of this software is responsible for any damage resulting from its use.
 It does not matter if the damage is caused by incorrect usage or a bug in the software.
 
-[Release notes: ./www/relnotes.txt](./www/relnotes.txt)<br/>
-[Setup guide: ./www/setup.txt](./www/setup.txt)<br/>
-[Contributors: ./www/CONTRIBS.html](./www/CONTRIBS.html)
+[Release notes](./www/relnotes.txt)<br/>
+[Setup guide](https://github.com/moode-player/docs/blob/main/setup_guide.md#setup-guide-)<br/>
+[Contributors](./www/CONTRIBS.html)
 
 ### Help support the project
 
