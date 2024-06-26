@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD:
+- UPD: New Setup Guide in Markdown format
 
 Bug fixes
 
