@@ -500,7 +500,13 @@ NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
 PYTHON_LGPIO_VER=$(dpkg -s python3-lgpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
 PYTHON_VER=$(python --version | awk '{ print  $2 }')
-NODEJS_VER=$(node -v | cut -d'v' -f2)
+which node
+if [[ $? -gt 0 ]]; then
+	NODEJS_VER="Not installed"
+else
+	NODEJS_VER=$(node -v | cut -d'v' -f2)
+fi
+
 
 BLUETOOTH_VER=$(bluetoothd -v)
 BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
