@@ -17,11 +17,12 @@
 
 Updates
 
-- UPD: New Setup Guide in Markdown format with Pi Imager tutorial
 - UPD: Add support for multiple Multiroom Senders on the network
+- UPD: Updated Setup Guide in Markdown format with Pi Imager tutorial
 
 Bug fixes
 
+- FIX: System info query for nodejs version
 - FIX: Typos in roonbridge setup guide
 
 ################################################################################
