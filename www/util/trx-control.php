@@ -38,7 +38,7 @@ switch ($option) {
 		break;
 	case '-set-mpdvol-from-master':
 		$rxStatusParts = explode(',', rxStatus());
-		// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname
+		// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
 		if ($rxStatusParts[4] == '1') { // Master volume opt in?
 			sysCmd('/var/www/util/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
 			$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volknob'", sqlConnect());
@@ -104,13 +104,15 @@ function rxStatus() {
 	// null			?
 	$volume = $_SESSION['mpdmixer'] == 'hardware' ? $_SESSION['volknob'] :
 		(($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') ? '0dB' : '?');
+	$ipAddr = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_host'", $dbh);
 	return
 		'rx' . ',' . 						// Receiver
 		$_SESSION['multiroom_rx'] . ',' . 	// Status: On/Off/Disabled/Unknown
 		$volume . ',' .						// Volume
 		$volMute[0]['value'] . ',' . 		// Mute state: 1/0
 		$mvOptIn[0]['value'] . ',' . 		// Master volume opt-in: 1/0
-		$_SESSION['hostname'];				// Hostname from System Config entry
+		$_SESSION['hostname'] . ',' .		// Hostname from System Config entry
+		$ipAddr[0]['value'];				// Multicast address
 }
 
 function txStatus() {

@@ -39,12 +39,11 @@ foreach ($port6600Hosts as $ipAddr) {
 		if (false === ($status = sendTrxControlCmd($ipAddr, '-rx'))) {
 			debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
 		} else {
-			if ($status != 'Unknown command') {  // r740 or higher host
+			if ($status != 'Unknown command') {
 				$rxStatus = explode(',', $status);
-				// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname
+				// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
 				$rxIndicator = $rxStatus[1] == 'On' ? '<i class="players-rx-indicator fa-solid fa-sharp fa-speaker"></i>' : '';
-				// NOTE: r800 status will have a 6th element (hostname) otherwise use ip address
-				$host = count($rxStatus) > 5 ? $rxStatus[5] : $ipAddr;
+				$host = $rxStatus[5];
 			} else {
 				$rxIndicator = '';
 				$host = $ipAddr;

@@ -2854,6 +2854,7 @@ $(document).on('click', '.context-menu a', function(e) {
                             // 3: volume,mute_1/0
                             // 4: mastervol_opt_in_1/0
                             // 5: hostname
+                            // 6: multicast_addr
 
                             if (rxStatusParts[1] == 'Unknown' || rxStatusParts[1] == 'Disabled') {
                                 output += '<div class="control-group" style="margin-bottom:3em;">';

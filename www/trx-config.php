@@ -14,6 +14,11 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+$params = sqlRead('cfg_multiroom', $dbh);
+foreach ($params as $row) {
+    $cfgMultiroom[$row['param']] = $row['value'];
+}
+
 //
 // SENDER
 //
@@ -47,6 +52,10 @@ if (isset($_POST['update_multiroom_initvol'])) {
 	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", $dbh);
 	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], NOTIFY_TITLE_INFO, 'Volume levels initialized.');
 }
+if (isset($_POST['update_multiroom_tx_host'])) {
+	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_host'] . "' " . "WHERE param='tx_host'", $dbh);
+	submitJob('multiroom_tx_restart', '', NOTIFY_TITLE_INFO, 'Sender restarted.');
+}
 if (isset($_POST['multiroom_tx_restart'])) {
 	submitJob('multiroom_tx_restart', '', NOTIFY_TITLE_INFO, 'Sender restarted.');
 }
@@ -56,6 +65,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	// Scan the network for hosts with open port 6600 (MPD)
 	$port6600Hosts = scanForMPDHosts();
 	$thisIpAddr = getThisIpAddr();
+	$thisTxHost = $cfgMultiroom['tx_host']; // Multicast address
 
 	// Parse the results
 	$_SESSION['rx_hostnames'] = '';
@@ -66,13 +76,12 @@ if (isset($_POST['multiroom_tx_discover'])) {
 			if (false === ($status = sendTrxControlCmd($ipAddr, '-rx'))) {
 				debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
 			} else {
-				if ($status != 'Unknown command') { // r740 or higher host
+				if ($status != 'Unknown command') {
 					$rxStatus = explode(',', $status);
-					// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname
-					// NOTE: Only include hosts with status = On/Off
-					if ($rxStatus[1] == 'On' || $rxStatus[1] == 'Off') {
-						// r800 status will have a 6th element (hostname) otherwise sub in ip address
-						$_SESSION['rx_hostnames'] .= (count($rxStatus) > 5 ? $rxStatus[5] : $ipAddr) . ', ';
+					// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
+					// NOTE: Only include hosts with status = On/Off and matching multicast address
+					if (($rxStatus[1] == 'On' || $rxStatus[1] == 'Off') && $rxStatus[6] == $thisTxHost) {
+						$_SESSION['rx_hostnames'] .= $rxStatus[5] . ', ';
 						$_SESSION['rx_addresses'] .= $ipAddr . ' ';
 					}
 				}
@@ -155,6 +164,10 @@ if (isset($_POST['update_multiroom_rx_alsavol'])) {
 		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $_POST['multiroom_rx_alsavol']);
 	}
 }
+if (isset($_POST['update_multiroom_rx_host'])) {
+	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_host'] . "' " . "WHERE param='rx_host'", $dbh);
+	submitJob('multiroom_rx_restart', '', NOTIFY_TITLE_INFO, 'Receiver restarted.');
+}
 if (isset($_POST['multiroom_rx_restart'])) {
 	submitJob('multiroom_rx_restart', '', NOTIFY_TITLE_INFO, 'Receiver restarted.');
 }
@@ -197,11 +210,6 @@ if (isset($_POST['update_multiroom_rx_rtprio'])) {
 
 phpSession('close');
 
-$params = sqlRead('cfg_multiroom', $dbh);
-foreach ($params as $row) {
-    $cfgMultiroom[$row['param']] = $row['value'];
-}
-
 // Feature and button states
 $_feat_multiroom = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && $_SESSION['alsaequal'] == 'Off' &&
@@ -235,6 +243,7 @@ if (!isset($_SESSION['rx_hostnames'])) {
 	$_rx_hostnames = $_SESSION['rx_hostnames'] == 'No receivers found' ? $_SESSION['rx_hostnames'] : 'Found: ' . $_SESSION['rx_hostnames'];
 }
 $_multiroom_initvol = $cfgMultiroom['initial_volume'];
+$_multiroom_tx_host = $cfgMultiroom['tx_host'];
 // Advanced options
 $_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($cfgMultiroom['tx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"32\" " . (($cfgMultiroom['tx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
@@ -273,6 +282,7 @@ if (stripos($_multiroom_rx_alsavol_percent, 'amixer:') === false) {
 	$_multiroom_rx_alsavol_msg = '<span class="config-msg-static"><i>Hardware volume controller not detected</i></span>';
 	$_multiroom_rx_alsavol_disable = 'disabled';
 }
+$_multiroom_rx_host = $cfgMultiroom['rx_host'];
 // Advanced options
 $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($cfgMultiroom['rx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($cfgMultiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";

@@ -55,6 +55,15 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="multiroom-tx-host">Multicast address</label>
+			<div class="controls">
+				<input id="multiroom-tx-host" class="config-input-large" type="text" name="multiroom_tx_host" value="$_multiroom_tx_host">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_tx_host" value="novalue"e><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-help-static">
+					Specify the multicast IP address that will be used for sending the audio stream.
+				</span>
+			</div>
+
 			<div class="controls">
 				<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary config-btn" $_tx_restart_btn_disable>Restart</button></a>
 				<span class="config-btn-after">Sender</span>
@@ -164,6 +173,15 @@
 				<span id="info-multiroom-rx-alsavol" class="config-help-info">
 					This establishes the ALSA 0dB level for this receiver when Spotify, Airplay or Bluetooth clients connect to the Sender.
 					Alsamixer volume units (1 to 100) are used.
+				</span>
+			</div>
+
+			<label class="control-label" for="multiroom-rx-host">Multicast address</label>
+			<div class="controls">
+				<input id="multiroom-rx-host" class="config-input-large" type="text" name="multiroom_rx_host" value="$_multiroom_rx_host">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx_host" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-help-static">
+					Specify the multicast IP address that will be used for receiving the audio stream.
 				</span>
 			</div>
 

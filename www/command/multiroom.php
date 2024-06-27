@@ -31,7 +31,7 @@ switch ($_GET['cmd']) {
     				$rxStatus .= 'rx,Unknown,?,?,?,' . $rxHostNames[$i] . ':';
     				workerLog('multiroom.php: get_rx_status: ' . $rxHostNames[$i] . ' failed');
     			} else {
-    				// rx, On/Off/Disabled/Unknown, volume, mute_1/0, mastervol_opt_in_1/0, hostname
+    				// rx, On/Off/Disabled/Unknown, volume, mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
 					$rxStatus .= $status . ':';
 					debugLog('multiroom.php: get_rx_status: ' . $rxHostNames[$i] . ' ' . $status);
     			}

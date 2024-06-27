@@ -5,7 +5,7 @@
 #  These instructions are for an initial configuration of Multiroom Audio. For
 #  additional information view Quick Help and the (i) information buttons.
 #
-#  Version: 1.4 2024-05-15
+#  Version: 1.5 2024-06-27
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
@@ -102,9 +102,13 @@ SENDER CONFIGURATION
 
 The Sender should be a dedicated player not connected to speakers or headphones.
 It functions solely to send its audio output to one or more Receivers. It can
-also be used as a NAS by turning on SMB or NFS file sharing in System Config.
+also be conveniently used as a File Server (NAS) by turning on SMB, NFS or DLNA
+file sharing in System Config.
 
-NOTE: there can only be one Sender on the network.
+Multiple Senders can be running on the network, each sending audio to their
+designated Receivers as long as each Sender and corresponding Receivers use
+their own unique multicast address. This configuration enables sending different
+audio programs to designated rooms.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
