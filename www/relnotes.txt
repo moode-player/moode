@@ -18,6 +18,7 @@
 Updates
 
 - UPD: New Setup Guide in Markdown format with Pi Imager tutorial
+- UPD: Add support for multiple Multiroom Senders on the network
 
 Bug fixes
 
