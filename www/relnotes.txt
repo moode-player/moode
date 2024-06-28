@@ -17,8 +17,9 @@
 
 Updates
 
-- UPD: Add support for multiple Multiroom Senders on the network
-- UPD: Updated Setup Guide in Markdown format with Pi Imager tutorial
+- UPD: Add support for multiple Multiroom Senders
+- UPD: Enable swap file and use default size
+- UPD: Updated Setup Guide with Pi Imager tutorial
 
 Bug fixes
 
