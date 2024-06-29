@@ -18,10 +18,10 @@
 Updates
 
 - UPD: Add support for multiple Multiroom Senders
+- UPD: Add swap file and use default size
 - UPD: Improve CoverView screen saver toggle
+- UPD: Improve Setup Guide and include Pi Imager tutorial
 - UPD: Remove rtl88xxau driver (fails on kernel 6.6.31)
-- UPD: Enable swap file and use default size
-- UPD: Updated Setup Guide with Pi Imager tutorial
 
 Bug fixes
 
