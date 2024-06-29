@@ -623,6 +623,7 @@ if ($actualCardNum == $_SESSION['cardnum']) {
 	if (isHDMIDevice($_SESSION['adevname'])) {
 		phpSession('write', 'alsa_output_mode', 'iec958');
 		updMpdConf();
+		sysCmd('systemctl restart mpd');
 		workerLog('worker: MPD config:    updated (iec958 device)');
 	} else {
 		workerLog('worker: MPD config:    update not needed');
@@ -639,6 +640,7 @@ if ($actualCardNum == $_SESSION['cardnum']) {
 	phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
 	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
 	updMpdConf();
+	sysCmd('systemctl restart mpd');
 	workerLog('worker: MPD config:    updated');
 } else {
 	workerLog('worker: ALSA card:     has been reassigned to ' . $actualCardNum . ' from ' . $_SESSION['cardnum']);
@@ -648,6 +650,7 @@ if ($actualCardNum == $_SESSION['cardnum']) {
 		workerLog('worker: MPD config:    update not needed (trx sender on)');
 	} else {
 		updMpdConf();
+		sysCmd('systemctl restart mpd');
 		workerLog('worker: MPD config:    updated');
 	}
 }
