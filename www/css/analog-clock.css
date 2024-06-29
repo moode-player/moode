@@ -11,7 +11,7 @@
     --faceRadius: calc((75vh - 6.4rem) / 2);
     --faceWidth: calc(var(--faceRadius) * 2);
     --faceHeight: calc(var(--faceRadius) * 2);
-    --fore_color: var(--textvariant);
+    --fore_color: #ddd;/*var(--textvariant);*/
     --seconds_color: rgba(192, 57, 43, .85);
 
     --hand_hm_t: 3px;

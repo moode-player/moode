@@ -3,6 +3,14 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  /*src: local('Lato Thin'), local('Lato-Thin'), url(../fonts/Lato-Thin.tff) format('truetype');*/
+  src: local('Lato Thin'), local('Lato-Thin');
+}
+
 body {background-color:var(--themebg);}
 a:focus {color:var(--accentxts);} /* Fixes blue outline on control after closing modal */
 .btn:focus, a:focus {outline:0 !important;box-shadow:none !important;}

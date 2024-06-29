@@ -1671,7 +1671,6 @@ jQuery(document).ready(function($) { 'use strict';
                 $('body').removeClass('cvpb');
             }
 
-			coverView = false;
             setColors();
             if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'].includes('Analog clock')) {
 				hideSSClock();
@@ -1682,10 +1681,10 @@ jQuery(document).ready(function($) { 'use strict';
             $('#cv-playqueue').hide();
             $('#lib-coverart-img').show();
 
-            // TEST: Fixes Queue sometimes not being visable after returning from CoverView
+            // TEST: Fixes Queue sometimes not being visible after returning from CoverView
             UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
             setTimeout(function() {
-                $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
+                $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visible
             }, DEFAULT_TIMEOUT);
             if (SESSION.json['playlist_art'] == 'Yes') {
                 lazyLode('playqueue');
@@ -1693,7 +1692,9 @@ jQuery(document).ready(function($) { 'use strict';
             customScroll('playqueue', parseInt(MPD.json['song']));
         }
 
-        // Reset screen saver timeout global
+        // Reset state
+        coverView = false;
+        //DELETE:$.post('command/playback.php?cmd=upd_toggle_coverview', {'toggle_value': '-off'});
         if (SESSION.json['scnsaver_timeout'] != 'Never') {
             $.post('command/playback.php?cmd=reset_screen_saver');
         }

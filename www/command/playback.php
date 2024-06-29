@@ -71,6 +71,11 @@ switch ($_GET['cmd']) {
 			echo json_encode('worker busy');
 		}
 		break;
+	case 'upd_toggle_coverview':
+		phpSession('open');
+		$_SESSION['toggle_coverview'] = $_POST['toggle_value'];
+		phpSession('close');
+		break;
 	case 'upd_clock_radio':
 		if (submitJob($_GET['cmd'])) {
 			echo json_encode('job submitted');

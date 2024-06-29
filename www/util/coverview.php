@@ -17,16 +17,16 @@ CoverView screen saver
 
 With no OPTION print the help text and exit.
 
- -on\t\tShow CoverView screen saver
- -off\t\tHide CoverView screen saver
+ -on\t\tShow CoverView on local display
+ -off\t\tHide CoverView on local display
  --help\t\tPrint this help text\n";
 		break;
 	case '-on':
-		sendFECmd('scnactive1');
+		sendFECmd('toggle_coverview1');
 		echo "CoverView on\n";
 		break;
 	case '-off':
-		sendFECmd('scnactive0');
+		sendFECmd('toggle_coverview0');
 		echo "CoverView off\n";
 		break;
 	default:

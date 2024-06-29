@@ -566,6 +566,12 @@ function engineCmd() {
                 case 'scnactive0':
     				screenSaver(cmd[0]);
                     break;
+                case 'toggle_coverview1':
+                case 'toggle_coverview0':
+                    if (GLOBAL.chromium) {
+                        screenSaver(cmd[0]);
+                    }
+                    break;
                 case 'libupd_done':
                     $('.busy-spinner').hide();
                     loadLibrary();
@@ -733,8 +739,10 @@ function screenSaver(cmd) {
 		return;
 	} else if (cmd.slice(-1) == '1') {
         // Show CoverView
-        coverView = true; // NOTE: This is set to false in the screen saver reset click() handler
-		//$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+        coverView = true; // Reset in scripts-panels $('#screen-saver
+        if (GLOBAL.chromium) {
+            $.post('command/playback.php?cmd=upd_toggle_coverview', {'toggle_value': '-on'});
+        }
         $('#ss-coverart-url').html($('#coverart-url').html());
         $('body').addClass('cv')
         if (SESSION.json['show_cvpb'] == 'Yes') {
@@ -756,6 +764,9 @@ function screenSaver(cmd) {
         }
 	} else if (cmd.slice(-1) == '0') {
         // Hide CoverView
+        if (GLOBAL.chromium) {
+            $.post('command/playback.php?cmd=upd_toggle_coverview', {'toggle_value': '-off'});
+        }
         $('#screen-saver').click();
     }
 }
@@ -3314,8 +3325,11 @@ $('#btn-preferences-update').click(function(e){
         $.post('command/playback.php?cmd=reset_screen_saver');
 	}
 
-    if (autoCoverViewChange == true) {
-        $.post('command/system.php?cmd=restart_localui');
+    if (autoCoverViewChange || scnSaverStyleChange || scnSaverModeChange ||
+        scnSaverLayoutChange || extraTagsChange) {
+        if (SESSION.json['localui'] == '1') {
+            $.post('command/system.php?cmd=restart_localui');
+        }
 	}
 
     if (clearLibcacheAllReqd == true) {

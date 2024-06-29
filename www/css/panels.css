@@ -454,7 +454,13 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #ss-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:none;transform:translateZ(0);}
 #ss-clock, #ss-extra-metadata, #ss-extra-metadata-output-format {display:none;}
-.ss-clock {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;color:var(--textvariant);font-size:6em;font-weight:200;}
+.ss-clock {
+	position:absolute;
+	top:50%;left:50%;
+	transform:translate(-50%,-50%);
+	width:80%;
+	color:var(--textvariant);
+	font-family:"Lato";font-weight:300;font-size:7em;}
 #ss-coverart-url img {width:75vh;}
 #ss-currentsong {font-weight:600;}
 #ss-currentsong, #ss-currentalbum-div, #ss-extra-metadata {margin-top:1em;}
