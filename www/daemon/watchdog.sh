@@ -62,8 +62,10 @@ while true; do
 	# Wake local display on play
 	MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx'")
 	if [[ $MULTIROOM_TX = "On" ]]; then
-		DUMMY_HW_PARAMS=$(cat /proc/asound/card2/pcm0p/sub0/hw_params)
-		if [[ $DUMMY_HW_PARAMS = "closed" ]]; then
+		# Card2 will be Loopback or Dummy depending on whether there are 1 or 2 HDMI ports
+		TX_CARD_NUM="card2"
+		HW_PARAMS=$(cat /proc/asound/$TX_CARD_NUM/pcm0p/sub0/hw_params)
+		if [[ $HW_PARAMS = "closed" ]]; then
 			MSG="Info: Multiroom sender is not transmitting"
 		else
 			MSG="Info: Multiroom sender is transmitting"
@@ -71,8 +73,8 @@ while true; do
 		fi
 	else
 		LOCAL_CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
-		LOCAL_HW_PARAMS=$(cat /proc/asound/card$LOCAL_CARD_NUM/pcm0p/sub0/hw_params)
-		if [[ $LOCAL_HW_PARAMS = "closed" || $LOCAL_HW_PARAMS = "" ]]; then
+		HW_PARAMS=$(cat /proc/asound/card$LOCAL_CARD_NUM/pcm0p/sub0/hw_params)
+		if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
 			MSG="Info: Local audio output is closed or audio device is disconnected"
 		else
 			MSG="Info: Local audio output is active"
