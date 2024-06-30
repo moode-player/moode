@@ -1664,7 +1664,7 @@ jQuery(document).ready(function($) { 'use strict';
             return;
         }
 
-        if (coverView) {
+        if (GLOBAL.coverViewActive) {
 			$('body').removeClass('cv');
             $('body').removeClass('cvwide');
             if (SESSION.json['show_cvpb'] == 'Yes') {
@@ -1693,7 +1693,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         // Reset state
-        coverView = false;
+        GLOBAL.coverViewActive = false;
         //DELETE:$.post('command/playback.php?cmd=upd_toggle_coverview', {'toggle_value': '-off'});
         if (SESSION.json['scnsaver_timeout'] != 'Never') {
             $.post('command/playback.php?cmd=reset_screen_saver');

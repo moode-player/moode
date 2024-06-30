@@ -158,6 +158,7 @@ var GLOBAL = {
     searchTags: ['genre', 'artist', 'album', 'title', 'albumartist', 'date',
         'composer', 'conductor', 'performer', 'work', 'comment', 'file'],
     npIcon: '',
+    coverViewActive: false,
     userAgent: ''
 };
 
@@ -203,7 +204,6 @@ var toggleSongId = 'blank';
 var currentView = 'playback';
 var alphabitsFilter;
 var lastYIQ = ''; // Last yiq value from setColors
-var coverView = false; // Coverview shown/hidden to save on more expensive conditional in interval timer
 
 // Detect chromium-browser
 GLOBAL.userAgent = navigator.userAgent;
@@ -739,7 +739,7 @@ function screenSaver(cmd) {
 		return;
 	} else if (cmd.slice(-1) == '1') {
         // Show CoverView
-        coverView = true; // Reset in scripts-panels $('#screen-saver
+        GLOBAL.coverViewActive = true; // Reset in scripts-panels $('#screen-saver
         if (GLOBAL.chromium) {
             $.post('command/playback.php?cmd=upd_toggle_coverview', {'toggle_value': '-on'});
         }
@@ -889,6 +889,7 @@ function resetPlayCtls() {
     $('#extra-tags-display, #ss-extra-metadata').text('Not playing');
     $('#countdown-sample-rate, #songsand-sample-rate').text('');
     $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
+    $('#ss-countdown').text('');
 }
 
 function renderUIVol() {
@@ -1016,8 +1017,8 @@ function renderUI() {
     	$('#total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#m-total, #playbar-total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + formatKnobTotal(MPD.json['time']));
-        $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #m-countdown, #playbar-total, #m-total').addClass('long-time') :
-            $('#playbar-countdown, #m-countdown, #playbar-total, #m-total').removeClass('long-time');
+        $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #m-countdown, #playbar-total, #m-total, #ss-countdown').addClass('long-time') :
+            $('#playbar-countdown, #m-countdown, #playbar-total, #m-total, #ss-countdown').removeClass('long-time');
 
     	//console.log('CUR: ' + UI.currentHash);
     	//console.log('NEW: ' + MPD.json['cover_art_hash']);
@@ -1050,7 +1051,7 @@ function renderUI() {
     		}
     		// Screen saver
     		$('#ss-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
-    		if (coverView) {
+    		if (GLOBAL.coverViewActive) {
     			$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
     		}
 
@@ -2235,6 +2236,7 @@ function updKnobStartFrom(startFrom, state) {
 function updKnobAndTimeTrack() {
 	var delta;
     window.clearInterval(UI.knob)
+    $('#ss-countdown').css('display', 'block');
     GLOBAL.initTime = parseInt(MPD.json['song_percent']);
     delta = parseInt(MPD.json['time']) / 1000;
 	if (UI.mobile) {
@@ -2259,10 +2261,13 @@ function updKnobAndTimeTrack() {
             $('#playbar-total, #playbar-countdown, #countdown-display').html('00:00');
             $('#playbar-timeline').css('display', 'none');
             $('#playbar-title').css('padding-bottom', '0');
+            $('#ss-countdown').text('');
         }
 	}
 	// Radio station (never has a duration)
 	else if (MPD.json['artist'] == 'Radio station' && typeof(MPD.json['duration']) === 'undefined') {
+        $('#ss-countdown').css('display', 'none');
+
 		if (UI.mobile) {
             $('#timeline').hide();
 		}
@@ -2279,7 +2284,7 @@ function updKnobAndTimeTrack() {
 		}
 		else {
 			$('#playbar-timeline').show();
-            $('#playbar-countdown').text($('#countdown-display').text());
+            $('#playbar-countdown, #ss-countdown').text($('#countdown-display').text());
             $('#playbar-title').css('padding-bottom', '1rem');
 		}
 	}
@@ -2290,7 +2295,7 @@ function updKnobAndTimeTrack() {
 		var ti = $('#time');
 
         UI.knob = setInterval(function() {
-			if (UI.mobile || $('#panel-footer').css('display') == 'flex') {
+			if (UI.mobile || $('#panel-footer').css('display') == 'flex' || GLOBAL.coverViewActive) {
 				if (!timeSliderMove) {
 
 					syncTimers();
@@ -4194,7 +4199,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 // Switch to Playback
 $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
     //console.log('click playbar');
-    if (coverView) {
+    if (GLOBAL.coverViewActive) {
         return;
     }
 	if (SESSION.json['playlist_art'] == 'Yes') lazyLode('playqueue');
@@ -4302,8 +4307,8 @@ function syncTimers() {
         if (UI.mobile) { // Only change when needed to save work
             $('#m-countdown, #playbar-mcount').text(a);
         }
-        else if (coverView || currentView.indexOf('playback') == -1) {
-            $('#playbar-countdown').text(a);
+        else if (GLOBAL.coverViewActive || currentView.indexOf('playback') == -1) {
+            $('#playbar-countdown, #ss-countdown').text(a);
             GLOBAL.initTime < 50 ? g = GLOBAL.initTime + 1 : g = GLOBAL.initTime - 1; // Adjust for thumb
             $('#playbar-timetrack').val(GLOBAL.initTime * 10); // min = 0, max = 1000
             $('#playbar-timeline .timeline-progress').css('width', g + '%');
