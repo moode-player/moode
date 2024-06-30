@@ -61,6 +61,12 @@ switch ($_GET['cmd']) {
 		phpSession('close');
 		$_POST['toggle_value'] == '1' ? startAutoShuffle() : stopAutoShuffle();
 		break;
+	case 'toggle_coverview':
+		phpSession('open');
+		$_SESSION['toggle_coverview'] = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
+		phpSession('close');
+		$result = sysCmd('/var/www/util/coverview.php ' . $_SESSION['toggle_coverview']);
+		break;
 	case 'get_mpd_status':
 		echo json_encode(getMpdStatus($sock));
 		break;

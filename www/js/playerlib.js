@@ -2932,6 +2932,9 @@ $(document).on('click', '.context-menu a', function(e) {
                 });
             }
             break;
+        case 'toggle_coverview':
+            $.post('command/playback.php?cmd=toggle_coverview');
+            break;
         case 'camilladsp_config':
     		var selectedConfig = $(this).data('cdspconfig');
 

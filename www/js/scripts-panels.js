@@ -284,6 +284,11 @@ jQuery(document).ready(function($) { 'use strict';
             $('#updater-notification').css('left', '54%');
         }
 
+        // CoverView toggle
+        if (SESSION.json['localui'] == '1') {
+            $('#context-menu-coverview-toggle').show();
+        }
+
         // Software update
         if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].substring(0, 7) == 'Release') {
             if (currentView.indexOf('playback') != -1) {
