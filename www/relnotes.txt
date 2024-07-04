@@ -19,6 +19,7 @@ Updates
 
 - UPD: Add support for multiple Multiroom Senders
 - UPD: Add swap file and use default size
+- UPD: Add 'Any' to SoX Channels in MPD Config
 - UPD: Improve CoverView screen saver
 - UPD: Improve Library regen by including thumbnail regen
 - UPD: Improve Setup Guide and include Pi Imager tutorial
