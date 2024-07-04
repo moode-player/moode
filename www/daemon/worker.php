@@ -2178,12 +2178,18 @@ function runQueuedJob() {
 			}
 			break;
 		case 'regen_library':
+			// Clear libcache then regen MPD database
+			workerLog('worker: Clear Library tag cache');
 			clearLibCacheAll();
+			workerLog('worker: Start MPD database regen');
 			$sock = openMpdSock('localhost', 6600);
 			sendMpdCmd($sock, 'rescan');
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			// Launch thumbcache updater
+			// Clear thmcache then regen thumbnails
+			workerLog('worker: Clear thumbnail cache');
+			sysCmd('rm -rf ' . THMCACHE_DIR);
+			sysCmd('mkdir ' . THMCACHE_DIR);
 			$result = sysCmd('pgrep -l thumb-gen.php');
 			if (strpos($result[0], 'thumb-gen.php') === false) {
 				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
