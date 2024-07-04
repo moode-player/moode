@@ -20,11 +20,13 @@ Updates
 - UPD: Add support for multiple Multiroom Senders
 - UPD: Add swap file and use default size
 - UPD: Improve CoverView screen saver
+- UPD: Improve Library regen by including thumbnail regen
 - UPD: Improve Setup Guide and include Pi Imager tutorial
 - UPD: Remove rtl88xxau driver (fails on kernel 6.6.31)
 
 Bug fixes
 
+- FIX: Audio info decode/output bit depth when DSD -> PCM over HDMI
 - FIX: System info query for nodejs version
 - FIX: Typos in roonbridge setup guide
 
