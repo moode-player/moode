@@ -242,7 +242,7 @@ if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == 
 	$btActive === true || $_SESSION['audioout'] == 'Bluetooth' || $_SESSION['inpactive'] == '1') {
 	// Renderer active
 	// NOTE: Class 'off' hides the item
-	$_resample_rate = '';
+	$_resample_format = '';
 	$_resample_quality = 'off';
 	$_polarity_inv = 'off';
 	$_crossfade = 'off';
@@ -263,11 +263,14 @@ if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == 
 	// MPD
 	// Resampling
 	if ($cfgMPD['audio_output_format'] == 'disabled') {
-		$_resample_rate = 'Off';
+		$_resample_format = 'Off';
 		$_selective_resample = 'Off';
 		$_resample_quality = 'Off';
 	} else {
-		$_resample_rate = $cfgMPD['audio_output_depth'] . ' bit, ' . $cfgMPD['audio_output_rate'] . ' kHz, ' . $cfgMPD['audio_output_channels'];
+		$_resample_format =
+			$cfgMPD['audio_output_depth'] . 'Bit, ' .
+			$cfgMPD['audio_output_rate'] . 'kHz, ' .
+			$cfgMPD['audio_output_channels'];
 		$resample_modes = array('0' => 'disabled',
 			SOX_UPSAMPLE_ALL => 'Source < target rate',
 			SOX_UPSAMPLE_ONLY_41K => 'Only 44.1K source rate',

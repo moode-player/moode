@@ -87,6 +87,7 @@ $_mpd_select['sox_sample_rate'] .= "<option value=\"384000\" " . (($cfgMPD['audi
 $_mpd_select['sox_sample_rate'] .= "<option value=\"705600\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '705600') ? "selected" : "") . " >705.6</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"768000\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[0] == '768000') ? "selected" : "") . " >768</option>\n";
 // Channels
+$_mpd_select['sox_channels'] .= "<option value=\"*\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[2] == '*') ? "selected" : "") . " >Any</option>\n";
 $_mpd_select['sox_channels'] .= "<option value=\"2\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[2] == '2') ? "selected" : "") . " >Stereo</option>\n";
 $_mpd_select['sox_channels'] .= "<option value=\"1\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[2] == '1') ? "selected" : "") . " >Mono</option>\n";
 

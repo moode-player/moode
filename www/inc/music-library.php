@@ -576,14 +576,16 @@ function formatRate ($rate) {
 }
 
 function formatChannels($channels) {
-	if ($channels == '1') {
+	if ($channels == '*') {
+	 	$str = '*Ch';
+	} else if ($channels == '1') {
 	 	$str = 'Mono';
-	} else if ($channels == '2' || $channels == '*') {
+	} else if ($channels == '2') {
 	 	$str = 'Stereo';
 	} else if ($channels > 2) {
-	 	$str = $channels . '-Channel';
+	 	$str = $channels . 'Ch';
 	} else {
-		$str = '?-Channel';
+		$str = '?Ch';
 	}
  	return $str;
 }
