@@ -285,13 +285,15 @@ function getAlsaHwParams($cardNum) {
 	 	$floatRate = (float)$rate;
 
 		if (substr($array['format'], 0, 3) == 'DSD') {
-			// Formats: 'DSD_U16_BE' or 'DSD_U32_BE'
+			// Native DSD: 'DSD_U16_BE', 'DSD_U32_BE' format designators
 			$floatBits = (float)substr($array['format'], 5, 2);
 			$array['format'] = 'DSD';
 		} else {
-			// Formats: 'S16_LE' etc or IEC958_SUBFRAME_LE (Pi-5 HDMI with KMS driver)
+			// PCM: 'S16_LE', etc or 'IEC958_SUBFRAME_LE' format designators
 			if ($array['format'] == ALSA_IEC958_FORMAT) {
-				$array['format'] = getMpdStatus(getMpdSock())['audio_sample_depth'];
+				$status['audio_sample_depth'] = getMpdStatus(getMpdSock())['audio_sample_depth'];
+				// NOTE: audio_sample_depth = 1 in this section means DSD -> PCM so lets assume 24 bit
+				$array['format'] = $status['audio_sample_depth'] == '1' ? '24' : $status['audio_sample_depth'];
 			} else {
 				$array['format'] = substr($array['format'], 1, 2);
 			}
