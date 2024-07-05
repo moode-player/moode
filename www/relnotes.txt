@@ -17,6 +17,7 @@
 
 Updates
 
+- UPD: Bump to bluez-alsa 4.2.0
 - UPD: Add support for multiple Multiroom Senders
 - UPD: Add swap file and use default size
 - UPD: Add 'Any' to SoX Channels in MPD Config
