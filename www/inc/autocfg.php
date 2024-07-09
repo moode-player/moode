@@ -185,10 +185,11 @@ function autoConfigSettings() {
 			phpSession('write', 'scnbrightness', $values['scnbrightness']);
 			sysCmd('/bin/su -c "echo '. $values['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 		}],
+		// NOTE: There is no solution yet with the KMS driver
 		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
 			phpSession('write', 'pixel_aspect_ratio', $values['pixel_aspect_ratio']);
-			$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
-			updBootConfigTxt('upd_framebuffer_settings', $value);
+			//$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
+			//updBootConfigTxt('upd_framebuffer_settings', $value);
 		}],
 		['requires' => ['scnrotate'], 'handler' => function($values) {
 			phpSession('write', 'scnrotate', $values['scnrotate']);
