@@ -489,7 +489,7 @@ workerLog('worker: --');
 workerLog('worker: -- Special configs');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
-// Plexamp: TBD
+// Plexamp
 if (file_exists('/home/' . $_SESSION['user_id'] . '/plexamp/js/index.js') === true) {
 	$_SESSION['plexamp_installed'] = 'yes';
 } else {
@@ -1068,13 +1068,23 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Start local display
+// Reapply service file and xinitrc updates. This is needed if user_id is 'pi' because
+// during in-place update the moode-player package installs the default /home/pi/.xinitrc file
+// - UserID
 sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localui.service");
+// - Cursor
+$param = $_SESSION['touchscn'] == '0' ? ' -- -nocursor' : '';
+sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
+// - Screen blank interval
+sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+// - Backlight brightness
+sysCmd('/bin/su -c "echo '. $_SESSION['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 sysCmd('systemctl daemon-reload');
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
 }
 workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'off'));
-// On-screen keyboard (Enable is text on the button)
+// On-screen keyboard ('Enable' is the text on the button)
 if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';
 }
