@@ -281,7 +281,15 @@ function setAltBackLink() {
 	phpSession('close');
 }
 
+// Assumes only one dir under /home, the one corresponding to the userid
+// entered into the Raspberry Pi Imager when prepping the image.
 function getUserID() {
+	// Check for and delete '/home/pi' if it has no userid. This dir is created
+	// by the moode-player package install during in-place update.
+	if (file_exists('/home/pi/') && empty(sysCmd('grep "pi" /etc/passwd'))) {
+		sysCmd('rm -rf /home/pi/');
+	}
+
 	$result = sysCmd('ls /home/');
 	return $result[0];
 }
