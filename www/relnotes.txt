@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD:
+- UPD: Add HDMI-CEC support to Local Display feature
 
 Bug fixes
 
