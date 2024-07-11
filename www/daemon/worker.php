@@ -276,6 +276,11 @@ workerLog('worker: Kbd layout:    ' . $_SESSION['keyboard']);
 // HDMI port(s)
 // They are always on in Bookworm
 workerLog('worker: HDMI ports(s): on');
+// HDMI CEC control
+if (!isset($_SESSION['hdmi_cec'])) {
+	$_SESSION['hdmi_cec'] = 'off';
+}
+workerLog('worker: HDMI-CEC:      ' . $_SESSION['hdmi_cec']);
 
 // LED states
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
@@ -1067,7 +1072,7 @@ workerLog('worker: -- Peripherals');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Start local display
+// Local display
 // Reapply service file and xinitrc updates. This is needed if user_id is 'pi' because
 // during in-place update the moode-player package installs the default /home/pi/.xinitrc file
 // - UserID
@@ -1080,21 +1085,21 @@ sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scnblank'] . '" ' . $_SESSION['h
 // - Backlight brightness
 sysCmd('/bin/su -c "echo '. $_SESSION['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 sysCmd('systemctl daemon-reload');
+// Start local display
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
 }
 workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'off'));
-// On-screen keyboard ('Enable' is the text on the button)
-if (!isset($_SESSION['on_screen_kbd'])) {
-	$_SESSION['on_screen_kbd'] = 'Enable';
-}
-workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
 // HDMI enable 4k 60Hz (Pi-4 only)
 if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 	$_SESSION['hdmi_enable_4kp60'] = 'off';
 }
 workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
-
+// On-screen keyboard ('Enable' is the text on the button)
+if (!isset($_SESSION['on_screen_kbd'])) {
+	$_SESSION['on_screen_kbd'] = 'Enable';
+}
+workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
 // Toggle CoverView (System Config)
 if (!isset($_SESSION['toggle_coverview'])) {
 	$_SESSION['toggle_coverview'] = '-off';
@@ -1340,6 +1345,27 @@ workerLog('worker: --');
 workerLog('worker: -- Startup complete ');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
+
+// Turn display on
+if ($_SESSION['hdmi_cec'] == 'on' && $_SESSION['localui'] == '1') {
+	if (file_exists('/sys/class/drm/card0-HDMI-A-1/edid')) {
+		$drmCardID = 'card0-HDMI-A-1';
+	} else if (file_exists('/sys/class/drm/card1-HDMI-A-1/edid')) {
+		$drmCardID = 'card1-HDMI-A-1';
+	} else {
+		$drmCardID = 'undefined';
+	}
+
+	if ($drmCardID != 'undefined') {
+		sysCmd('cec-ctl --device=0 --playback "--phys-addr-from-edid=/sys/class/drm/' . $drmCardID . '/edid"');
+		$cecSourceAddress = trim(sysCmd('cec-ctl --skip-info --show-topology | grep ": Playback" | cut -d":" -f1')[0]);
+		sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecSourceAddress);
+		sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on');
+		workerLog('worker: HDMI display:     drm-card=' . $drmCardID . ', cec-source-addr=' . $cecSourceAddress);
+	} else {
+		workerLog('worker: HDMI display:     drm-card=' . $drmCardID);
+	}
+}
 
 // Start mount monitor
 sysCmd('killall -s 9 mountmon.php');
@@ -2865,6 +2891,11 @@ function runQueuedJob() {
 				stopLocalUI();
 				startLocalUI();
 			}
+		/*DELETE:case 'hdmi_cec':
+			if ($_SESSION['localui'] == '1') {
+				stopLocalUI();
+				startLocalUI();
+			}*/
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
@@ -3061,9 +3092,25 @@ function runQueuedJob() {
 		// Other jobs
 		case 'reboot':
 		case 'poweroff':
-			$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", sqlConnect());
-			sourceMount('unmountall');
-			workerLog('worker: NAS sources unmounted');
+			$dbh = sqlConnect();
+			// Reset worker ready flag
+			$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", $dbh);
+			workerLog('worker: Ready flag reset');
+			// Unmount NAS sources
+			$result = sqlQuery("SELECT count() FROM cfg_source", $dbh);
+			if ($result[0]['count()'] != '0') {
+				sourceMount('unmountall');
+				workerLog('worker: NAS sources unmounted');
+			}
+			// Turn display off
+			if ($_SESSION['w_queue'] == 'poweroff' && $_SESSION['localui'] == '1') {
+				$cecSourceAddress = trim(sysCmd('cec-ctl --skip-info --show-topology | grep ": Playback" | cut -d":" -f1')[0]);
+				sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecSourceAddress);
+				sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --standby');
+				workerLog('worker: Display turned off');
+			}
+			// Run shutdown script
+			workerLog('worker: Running shutdown script');
 			sysCmd('/var/local/www/commandw/restart.sh ' . $_SESSION['w_queue']);
 			break;
 		case 'upd_clock_radio':

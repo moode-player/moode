@@ -27,6 +27,7 @@ message_log () {
 wake_display () {
 	WAKE_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='wake_display'")
 	if [[ $WAKE_DISPLAY = "1" ]]; then
+		cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on
 		export DISPLAY=:0
 		xset s reset > /dev/null 2>&1
 	fi

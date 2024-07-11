@@ -376,6 +376,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nMouse cursor\t\t= $touchscn\c"
 		echo -e "\nOn screen keyboard\t= $on_screen_kbd\c"
 		echo -e "\nScreen blank\t\t= $scnblank Secs\c"
+		echo -e "\nHDMI CEC\t\t= $hdmi_cec\c"
 		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
 		echo -e "\nBrightness\t\t= $scnbrightness\c"
 		echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
@@ -856,6 +857,7 @@ ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
 ashuffle_window=$(moodeutl -d -gv "ashuffle_window")
 ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
+hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 
 # Network settings

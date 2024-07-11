@@ -59,6 +59,7 @@ $currentSettings['fs_mountmon'] = $_SESSION['fs_mountmon'];
 // Miscellaneous
 $currentSettings['auto_coverview'] = $_SESSION['auto_coverview'];
 $currentSettings['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
+$currentSettings['hdmi_cec'] = $_SESSION['hdmi_cec'];
 $currentSettings['hdmi_enable_4kp60'] = $_SESSION['hdmi_enable_4kp60'];
 
 // Extract to ini file

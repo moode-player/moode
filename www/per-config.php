@@ -53,6 +53,15 @@ if (isset($_POST['update_hdmi_enable_4kp60'])) {
     }
 }
 
+if (isset($_POST['update_hdmi_cec'])) {
+    if (isset($_POST['hdmi_cec']) && $_POST['hdmi_cec'] != $_SESSION['hdmi_cec']) {
+        //DELETE:submitJob('hdmi_cec', $_POST['hdmi_cec'], NOTIFY_TITLE_INFO, NAME_LOCAL_DISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+        phpSession('write', 'hdmi_cec', $_POST['hdmi_cec']);
+        $_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+        $_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
+    }
+}
+
 if (isset($_POST['update_scnbrightness'])) {
     if (isset($_POST['scnbrightness']) && $_POST['scnbrightness'] != $_SESSION['scnbrightness']) {
 		submitJob('scnbrightness', $_POST['scnbrightness']);
@@ -142,6 +151,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['scnblank'] .= "<option value=\"1200\" " . (($_SESSION['scnblank'] == '1200') ? "selected" : "") . ">20 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"1800\" " . (($_SESSION['scnblank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"3600\" " . (($_SESSION['scnblank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
+
+    $autoClick = " onchange=\"autoClick('#btn-set-hdmi-cec');\" " . $_hdmi_cec_btn_disable;
+	$_select['hdmi_cec_on']  .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-1\" value=\"on\" " . (($_SESSION['hdmi_cec'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['hdmi_cec_off'] .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-2\" value=\"off\" " . (($_SESSION['hdmi_cec'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
     $autoClick = " onchange=\"autoClick('#btn-set-hdmi-enable-4kp60');\" " . $_hdmi_4kp60_btn_disable;
 	$_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";

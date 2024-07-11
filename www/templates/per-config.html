@@ -89,6 +89,19 @@
 				<span class="config-btn-after">Local Display</span>
 			</div>
 
+			<label class="control-label">HDMI CEC control</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-2">ON </label>$_select[hdmi_cec_on]
+					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-1">OFF</label>$_select[hdmi_cec_off]
+				</div>
+                <button id="btn-set-hdmi-cec" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_cec" value="novalue" $_hdmi_cec_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-cec" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmi-cec" class="config-help-info">
+					Automatically turn the display on when moOde starts or when wake on play is initiated. Turn the display off when moOde is shutdown.
+                </span>
+            </div>
+
 			<label class="control-label">HDMI 4K 60Hz</label>
 			<div class="controls">
 				<div class="toggle">

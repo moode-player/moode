@@ -176,6 +176,7 @@ function autoConfigSettings() {
 			phpSession('write', 'scnblank', $values['scnblank']);
 			sysCmd('sed -i "/xset s/c\xset s ' . $values['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
 		}],
+		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
 			$_SESSION['hdmi_enable_4kp60'] = $values['hdmi_enable_4kp60'];
 			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';
