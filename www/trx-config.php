@@ -210,6 +210,12 @@ if (isset($_POST['update_multiroom_rx_rtprio'])) {
 
 phpSession('close');
 
+// Re-read to catch any updates
+$params = sqlRead('cfg_multiroom', $dbh);
+foreach ($params as $row) {
+    $cfgMultiroom[$row['param']] = $row['value'];
+}
+
 // Feature and button states
 $_feat_multiroom = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && $_SESSION['alsaequal'] == 'Off' &&
