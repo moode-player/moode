@@ -21,6 +21,7 @@ Updates
 
 Bug fixes
 
+- FIX: Multiroom Config advanced options don't get refreshed after updating
 - FIX: LocalUI fails to start after in-place update when userid is not 'pi'
 - FIX: LocalUI settings revert to default after in-place update when userid is 'pi'
 
