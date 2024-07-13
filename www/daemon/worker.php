@@ -1687,13 +1687,12 @@ function chkPaActive() {
 function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
-		// TODO: Refactor these vars
-		$rnd_not_playing = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
+		$rendererNotActive = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
 			&& $GLOBALS['slactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
-		$mpd_not_playing = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
-		$alsa_out_active = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
-		//workerLog('rnp:' . ($rnd_not_playing ? 'T' : 'F') . '|' . 'mnp:' . ($mpd_not_playing ? 'T' : 'F') . '|' . 'aoa:' . ($alsa_out_active ? 'T' : 'F'));
-		if ($rnd_not_playing && $mpd_not_playing && $alsa_out_active) {
+		$mpdNotPlaying = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
+		$alsaOutputActive = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
+		//workerLog('rnp:' . ($rendererNotActive ? 'T' : 'F') . '|' . 'mnp:' . ($mpdNotPlaying ? 'T' : 'F') . '|' . 'aoa:' . ($alsaOutputActive ? 'T' : 'F'));
+		if ($rendererNotActive && $mpdNotPlaying && $alsaOutputActive) {
 			// Do this section only once
 			if ($GLOBALS['rbactive'] == '0') {
 				$GLOBALS['rbactive'] = '1';
