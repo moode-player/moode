@@ -32,6 +32,7 @@ $btActive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 $aplActive = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $dbh)[0]['value'];
 $spotActive = sqlQuery("SELECT value FROM cfg_system WHERE param='spotactive'", $dbh)[0]['value'];
 $slActive = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $dbh)[0]['value'];
+$paActive = sqlQuery("SELECT value FROM cfg_system WHERE param='paactive'", $dbh)[0]['value'];
 $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh)[0]['value'];
 
 //
@@ -55,6 +56,11 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_decode_rate = '';
 } else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';
+	$_encoded_at = 'Unknown';
+	$_decoded_to = 'Unknown';
+	$_decode_rate = '';
+} else if ($paActive == '1') {
+	$_file = 'Plexamp stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = 'Unknown';
 	$_decode_rate = '';
@@ -147,6 +153,8 @@ if ($btActive === true) {
 	$renderer = 'Spotify';
 } else if ($slActive == '1') {
 	$renderer = 'Squeezelite';
+} else if ($paActive == '1') {
+	$renderer = 'Plexamp';
 } else if ($rbActive == '1') {
 	$renderer = 'Roonbridge';
 } else {

@@ -952,6 +952,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_PLEXAMP) {
 } else {
 	$status = 'n/a';
 }
+if (!isset($_SESSION['alsavolume_max_pa'])) {
+	$_SESSION['alsavolume_max_pa'] = $_SESSION['alsavolume_max'];
+}
+$status .= ', ALSA maxvol: ' . $_SESSION['alsavolume_max_pa'] . '%';
 workerLog('worker: Plexamp:         ' . $status);
 
 // Start RoonBridge renderer
@@ -1662,7 +1666,11 @@ function chkPaActive() {
 			phpSession('write', 'paactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sendFECmd('paactive1');
+			if ($_SESSION['alsavolume'] != 'none') {
+		        setALSAVolTo0dB($_SESSION['alsavolume_max_pa']);
+			}
 		}
+	} else {
 		// Do this section only once
 		if ($GLOBALS['paactive'] == '1') {
 			$GLOBALS['paactive'] = '0';
@@ -1679,6 +1687,7 @@ function chkPaActive() {
 function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
+		// TODO: Refactor these vars
 		$rnd_not_playing = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
 			&& $GLOBALS['slactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
 		$mpd_not_playing = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
@@ -2593,7 +2602,6 @@ function runQueuedJob() {
 			} else {
 				stopSqueezeLite();
 			}
-
 			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmaftersl'] == 'Yes') {
 				sysCmd('mpc play');
 			}
@@ -2617,15 +2625,14 @@ function runQueuedJob() {
 			} else {
 				stopPlexamp();
 			}
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterpa'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 			break;
 		case 'parestart':
-			sysCmd('mpc stop');
-			stopPlexamp();
 			if ($_SESSION['pasvc'] == '1') {
+				stopPlexamp();
 				startPlexamp();
-				if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterpa'] == 'Yes') {
-					sysCmd('mpc play');
-				}
 			}
 			break;
 		case 'rbsvc':

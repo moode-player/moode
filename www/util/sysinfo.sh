@@ -356,6 +356,7 @@ RENDERER_SETTINGS() {
 			PAVER="4.10.1"
 			echo -e "P L E X A M P"
 			echo -e "\nVersion\t\t\t= $PAVER\c"
+			echo -e "\nALSA max volume\t\t= $ALSAVOLUME_MAX_PA%\c"
  	 		echo -e "\nResume MPD\t\t= $rsmafterpa\n"
 		fi
 	fi
@@ -508,7 +509,7 @@ else
 	NODEJS_VER=$(node -v | cut -d'v' -f2)
 fi
 
-
+# Bluetooth
 BLUETOOTH_VER=$(bluetoothd -v)
 BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
 PARING_AGENT_VER=$(dpkg -l | grep bluez-tools | awk '{print $3}' | cut -d"~" -f1)
@@ -519,6 +520,9 @@ TMP=$(moodeutl -d -gv bt_pin_code)
 [[ "$TMP" = "None" ]] && BT_PIN_CODE="None" || BT_PIN_CODE="******"
 ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)
 CDSPVOLUME_MAX_BT=$(moodeutl -d -gv cdspvolume_max_bt)
+
+# Plexamp
+ALSAVOLUME_MAX_PA=$(moodeutl -d -gv alsavolume_max_pa)
 
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"

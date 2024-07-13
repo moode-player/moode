@@ -48,6 +48,8 @@ $currentSettings['ashuffle_filter'] = $_SESSION['ashuffle_filter'];
 $currentSettings['alsa_output_mode_bt'] = $_SESSION['alsa_output_mode_bt'];
 $currentSettings['alsavolume_max_bt'] = $_SESSION['alsavolume_max_bt'];
 $currentSettings['cdspvolume_max_bt'] = $_SESSION['cdspvolume_max_bt'];
+// Plexamp
+$currentSettings['alsavolume_max_pa'] = $_SESSION['alsavolume_max_pa'];
 // Library
 $currentSettings['lib_scope'] = $_SESSION['lib_scope'];
 $currentSettings['lib_active_search'] = $_SESSION['lib_active_search'];

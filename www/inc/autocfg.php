@@ -468,6 +468,8 @@ function autoConfigSettings() {
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_sl', $values, 'squeezelite_');
 		}],
+		'Plexamp',
+		['requires' => ['alsavolume_max_pa'], 'handler' => 'setSessVarOnly'],
 		'UPnP/DLNA',
 		['requires' => ['upnpsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['dlnasvc'], 'handler' => 'setSessVarSql'],

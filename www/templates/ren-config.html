@@ -278,6 +278,17 @@
                 </span>
 			</div>
 
+			<label class="control-label" for="alsavolume-max-pa">ALSA maxvol (%)</label>
+			<div class="controls">
+				<input class="config-input-large" $_alsavolume_max_pa_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume-max-pa" name="alsavolume_max_pa" value="$_alsavolume_max_pa" $_alsavolume_max_pa_disable>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit status-msg" type="submit" name="update_alsavolume_max_pa" value="novalue" $_alsavolume_max_pa_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsavolume-max-pa" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				$_alsavolume_max_pa_msg
+				<span id="info-alsavolume-max-pa" class="config-help-info">
+					Establish the maximum ALSA volume level. This setting takes effect the next time the Plexamp client initiates playback after stopping and releasing the audio output.
+				</span>
+			</div>
+
 			<label class="control-label">Resume MPD</label>
 			<div class="controls">
 				<div class="toggle">

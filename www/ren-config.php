@@ -150,6 +150,9 @@ if (isset($_POST['update_pa_settings'])) {
 		submitJob('pasvc');
 	}
 }
+if (isset($_POST['update_alsavolume_max_pa'])) {
+	$_SESSION['alsavolume_max_pa'] = $_POST['alsavolume_max_pa'];
+}
 if (isset($_POST['update_rsmafterpa'])) {
 	phpSession('write', 'rsmafterpa', $_POST['rsmafterpa']);
 }
@@ -256,6 +259,17 @@ if (($_SESSION['feat_bitmask'] & FEAT_PLEXAMP)) {
 	$autoClick = " onchange=\"autoClick('#btn-set-pasvc');\" " . $_pa_svcbtn_disable;
 	$_select['pasvc_on']  .= "<input type=\"radio\" name=\"pasvc\" id=\"toggle-pasvc-1\" value=\"1\" " . (($_SESSION['pasvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['pasvc_off'] .= "<input type=\"radio\" name=\"pasvc\" id=\"toggle-pasvc-2\" value=\"0\" " . (($_SESSION['pasvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	if ($_SESSION['alsavolume'] == 'none') {
+		$_alsavolume_max_pa = '';
+		$_alsavolume_max_pa_readonly = 'readonly';
+		$_alsavolume_max_pa_disable = 'disabled';
+		$_alsavolume_max_pa_msg = '<span class="config-msg-static"><i>Hardware volume controller not detected</i></span>';
+	} else {
+		$_alsavolume_max_pa = $_SESSION['alsavolume_max_pa'];
+		$_alsavolume_max_pa_readonly = '';
+		$_alsavolume_max_pa_disable = '';
+		$_alsavolume_max_pa_msg = '';
+	}
 	$autoClick = " onchange=\"autoClick('#btn-set-rsmafterpa');\" " . $_pa_btn_disable;
 	$_select['rsmafterpa_on'] .= "<input type=\"radio\" name=\"rsmafterpa\" id=\"toggle-rsmafterpa-1\" value=\"Yes\" " . (($_SESSION['rsmafterpa'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['rsmafterpa_off']  .= "<input type=\"radio\" name=\"rsmafterpa\" id=\"toggle-rsmafterpa-2\" value=\"No\" " . (($_SESSION['rsmafterpa'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";

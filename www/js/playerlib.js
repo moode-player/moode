@@ -544,7 +544,7 @@ function engineCmd() {
                 case 'paactive0':
     				inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">Plexamp Active</span>' +
-                        '<button class="btn disconnect-renderer" data-job="parestart">Disconnect</button>' +
+                        '<button class="btn turnoff-renderer" data-job="pasvc">Turn off</button>' +
                         audioInfoBtn());
                     break;
                 case 'rbactive1':
@@ -1302,7 +1302,14 @@ function renderUI() {
     	if (SESSION.json['slactive'] == '1') {
     		inpSrcIndicator('slactive1',
             '<span id="inpsrc-msg-text">Squeezelite Active</span>' +
-            '<button class="btn disconnect-renderer" data-job="slsvc">Turn off</button>' +
+            '<button class="btn turnoff-renderer" data-job="slsvc">Turn off</button>' +
+            audioInfoBtn());
+    	}
+        // Plexamp renderer
+    	if (SESSION.json['paactive'] == '1') {
+    		inpSrcIndicator('paactive1',
+            '<span id="inpsrc-msg-text">Plexamp Active</span>' +
+            '<button class="btn turnoff-renderer" data-job="pasvc">Turn off</button>' +
             audioInfoBtn());
     	}
         // RoonBridge renderer

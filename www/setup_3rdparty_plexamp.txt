@@ -2,7 +2,7 @@
 #
 #  Setup Guide for Plexamp 3rd party component
 #
-#  Version: 1.0 2024-06-06
+#  Version: 1.1 2024-07-13
 #
 #  (C) 2024 Tim Curtis http://moodeaudio.org
 #  (C) 2024 @vinnn for Plexamp setup
@@ -46,8 +46,7 @@ SECTION 2: Turn on Plexamp and configure audio settings (done in a Web Browser)
 
 1. Open the Renderer Config page in moOde
 2. Turn on the Plexamp service
-3. Configure Plexamp audio settings using its WebUI
-http://moode.local:32500
+3. Open the Plexamp WebUI at http://moode.local:32500
 
 a. Settings > Playback > Audio Output
    - Audio Device: Set the output device
@@ -59,11 +58,7 @@ b. Settings > Playback
 
 4. Finished
 
-The audio output sample rate matching is important as this will ensure that
-Plexamp will let go of the audio device when playback has stopped, allowing
-Moode's MPD and other renderers to play when Plexamp isn't playing.
-
-The other settings ensure that native PCM is being sent to your DAC without
+These settings ensure that native PCM is being sent to your DAC without
 any DSP being applied.
 
 You will now be able to use moOde as usual and also see your Raspberry Pi as a
