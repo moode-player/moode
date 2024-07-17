@@ -125,6 +125,8 @@ if ($status == 'Required headers present') {
 
 // Prune old session vars
 sysCmd('moodeutl -D usb_auto_updatedb');
+sysCmd('moodeutl -D src_action');
+sysCmd('moodeutl -D src_mpid');
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
@@ -806,25 +808,34 @@ workerLog('worker: -- Music sources');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// USB sources
+// USB drives
 $usbDrives = sysCmd('ls /media');
 if (empty($usbDrives)) {
-	workerLog('worker: USB drives:     no drives found');
+	workerLog('worker: USB drives:     none');
 } else {
 	foreach ($usbDrives as $usbDrive) {
 		workerLog('worker: USB drive:      ' . $usbDrive);
 	}
 }
-// NAS sources
-$mounts = sqlRead('cfg_source', $dbh);
+// NVMe drives
+$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = 'nvme'", $dbh);
 if ($mounts === true) { // Empty result
-	workerLog('worker: NAS sources:    no music sources defined');
+	workerLog('worker: NVMe drives:    none');
 } else {
 	foreach ($mounts as $mp) {
-		workerLog('worker: NAS source:     ' . $mp['name']);
+		workerLog('worker: NVMe drive:     ' . $mp['name']);
 	}
-	$result = sourceMount('mountall');
-	workerLog('worker: NAS mount:      ' . lcfirst($result));
+	$result = nvmeSourceMount('mountall');
+}
+// NAS sources
+$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('nfs', 'smb')", $dbh);
+if ($mounts === true) { // Empty result
+	workerLog('worker: NAS sources:    none');
+} else {
+	foreach ($mounts as $mp) {
+		workerLog('worker: NAS source:     ' . $mp['name'] . ' (' . $mp['type'] . ')');
+	}
+	$result = nasSourceMount('mountall');
 }
 
 //----------------------------------------------------------------------------//
@@ -1218,6 +1229,7 @@ if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['valu
 	workerLog('worker: Reset flags:       all reset to false');
 	workerLog('worker: MPD volume:        set to 0');
 }
+// TODO: there should be an else here
 workerLog('worker: Active flags:      all false');
 workerLog('worker: Reset flags:       skipped');
 
@@ -2211,9 +2223,13 @@ function runQueuedJob() {
 			break;
 
 		// lib-config jobs
-		case 'sourcecfg':
+		case 'nas_source_cfg':
 			clearLibCacheAll();
-			sourceCfg($_SESSION['w_queueargs']);
+			nasSourceCfg($_SESSION['w_queueargs']);
+			break;
+		case 'nvme_source_cfg':
+			clearLibCacheAll();
+			nvmeSourceCfg($_SESSION['w_queueargs']);
 			break;
 		case 'fs_mountmon':
 			sysCmd('killall -s 9 mountmon.php');
@@ -3105,7 +3121,7 @@ function runQueuedJob() {
 			// Unmount NAS sources
 			$result = sqlQuery("SELECT count() FROM cfg_source", $dbh);
 			if ($result[0]['count()'] != '0') {
-				sourceMount('unmountall');
+				nasSourceMount('unmountall');
 				workerLog('worker: NAS sources unmounted');
 			}
 			// Turn display off

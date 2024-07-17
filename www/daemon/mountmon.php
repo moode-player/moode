@@ -53,15 +53,15 @@ while (true) {
 						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] . ' 2>&1 | grep "Host is down\|Stale file handle"');
 						if (!empty($result)) {
 							mountmonLog('- Re-mounting ' . $mp['name'] . ' (stale file handle)');
-							sourceMount('unmount', $mp['id']);
-							sourceMount('mount', $mp['id'], 'mountmonlog');
+							nasSourceMount('unmount', $mp['id']);
+							nasSourceMount('mount', $mp['id'], 'mountmonlog');
 						} else {
 							mountmonLog('- Mount appears to be OK');
 						}
 					}
 				} else {
 					mountmonLog('- Re-mounting ' . $mp['name'] . ' (mount dir did not exist)');
-					sourceMount('mount', $mp['id'], 'mountmonlog');
+					nasSourceMount('mount', $mp['id'], 'mountmonlog');
 				}
 			} else {
 				mountmonLog('- Warning: Remote host for ' . $mp['name'] . ' is unreachable');

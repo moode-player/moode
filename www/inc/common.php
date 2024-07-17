@@ -235,7 +235,8 @@ function storeBackLink($section, $tpl) {
 		'gpio-config.html'	=> '/per-config.php',
 		'spo-config.html' 	=> '/ren-config.php',
 		'sqe-config.html'	=> '/ren-config.php',
-		'src-config.html'	=> '/lib-config.php',
+		'lib-nas-config.html' => '/lib-config.php',
+		'lib-nvme-config.html' => '/lib-config.php',
 		'sys-status.html'	=> '/sys-config.php',
 		'upp-config.html' 	=> '/ren-config.php'
 	);

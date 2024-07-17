@@ -31,7 +31,7 @@ const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 // Library/Playback
 const LIBCACHE_BASE = '/var/local/www/libcache';
-const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
+const ROOT_DIRECTORIES = array('NAS', 'NVME', 'SDCARD', 'USB');
 const DEFAULT_RADIO_TITLE = 'Radio station';
 const DEFAULT_RADIO_COVER = 'images/default-album-cover.png';
 const DEFAULT_ALBUM_COVER = 'images/default-album-cover.png';

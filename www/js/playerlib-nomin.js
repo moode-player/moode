@@ -6,8 +6,7 @@
 
 // NOTE: This file exists because "for of" statements fail YUV compressor minification
 
-// 2022-08-07
-// TODO: Gulp minification works for this file so it should be merged into one of the other scripts, probably during refactoring
+// TODO: Gulp minification works for this file so it should be merged into one of the other scripts
 
 function formatExtraTagsString () {
     //var elementDisplay = '';
@@ -57,7 +56,7 @@ function getKeyOrValue (type, item) {
         // Players >> group actions
         ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library'],
         // Root folder icons
-        ['NAS','fa-server'],['RADIO','fa-microphone'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
+        ['NAS','fa-server'],['NVME','fa-memory'],['RADIO','fa-microphone'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
         // Now-playing icon
         ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer'],
         // View -> Item position

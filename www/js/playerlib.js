@@ -1697,13 +1697,16 @@ s
 	element.innerHTML = '';
 
 	for (i = 0; i < data.length; i++) {
-		// chosing to have MPD ignore CUE parsing means that the folder contents will include them, so here we must ignore them too.
+		// MPD ignoring CUE parsing means that the folder contents will include them, so here we must ignore them too.
 		if (SESSION.json['cuefiles_ignore'] == '1' && data[i].file && data[i].file.endsWith('.cue')) {
 			continue;
 		}
     	if (data[i].directory) {
             var rootFolderIcon = 'fa-circle-question';
-            if (data[i].directory == 'NAS' || data[i].directory == 'SDCARD' || data[i].directory == 'USB') {
+            if (data[i].directory == 'NAS' ||
+                data[i].directory == 'NVME' ||
+                data[i].directory == 'SDCARD' ||
+                data[i].directory == 'USB') {
                 rootFolderIcon = getKeyOrValue('value', data[i].directory);
             }
             var cueVirtualDir = false;
@@ -4369,6 +4372,7 @@ function makeActive (vswitch, panel, view) {
 			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .add-item-to-favorites').show();
             $('#random-album, .adv-search-btn, .saved-search-btn').hide();
+            $('#db-refresh').click();
 			break;
         case 'tag':
 			$('#viewswitch').addClass('vt');
@@ -4839,5 +4843,5 @@ function albumHDBadge(format) {
 
 // Base folder names
 function containsBaseFolderName(name) {
-    return (~name.indexOf('NAS') || ~name.indexOf('RADIO') || ~name.indexOf('SDCARD') || ~name.indexOf('USB'));
+    return (~name.indexOf('NAS') || ~name.indexOf('NVME') || ~name.indexOf('RADIO') || ~name.indexOf('SDCARD') || ~name.indexOf('USB'));
 }

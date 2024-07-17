@@ -627,11 +627,11 @@ function autoConfigSettings() {
 			$count = count($values['source_name']);
 			$keys = array_keys($values);
 			for ($i = 0; $i < $count; $i++) {
-				$mount = ['mount' => ['action' => 'add']];
+				$mount = ['mount' => ['action' => 'add_nas_source']];
 				foreach ($keys as $key) {
 					$mount['mount'][substr($key, 7)] = $values[$key][$i];
 				}
-				sourceCfg($mount);
+				nasSourceCfg($mount);
 			}
 		}, 'custom_write' => function($values) {
 			$result = sqlRead('cfg_source', sqlConnect());

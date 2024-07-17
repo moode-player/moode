@@ -1,0 +1,102 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="lib-config">Local NVMe drives</h1>
+	<p>
+		Select an NVMe drive to mount from the list.
+		After saving or removing a drive, return to Playback or Library and select "Update library" from the Menu.
+	</p>
+
+	<form class="form-horizontal" action="lib-config.php" method="post">
+		<legend>NVMe source
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save_nvme_source" value="1">Save</button>
+			<a href="#remove-nvme-mount" data-toggle="modal" class="$_hide_remove_nvme_source"><button class="legend-config btn btn-medium btn-primary">Remove</button></a>
+		</legend>
+
+		<a data-toggle="modal" href="#moode-log" $_hide_nvme_mount_error>
+			<button class="btn btn-medium btn-primary config-btn">
+				$_nvme_mount_error_msg
+			</button>
+		</a>
+
+		<div class="control-group">
+			<label class="control-label" for="type">Drives</label>
+			<div class="controls">
+				<select id="type" name="mount[drive]" class="config-select-large">
+					$_nvme_drives
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-nvme-drives" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-nvme-drives" class="config-help-info">
+					Text goes here
+                </span>
+			</div>
+
+			<label class="control-label" for="nvme-name">Name</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{1,25}" id="nvme-name" name="mount[name]" value="$_name">
+				<input type="hidden" name="mount[id]" value="$_id">
+				<input type="hidden" name="mount[action]" value="$_action">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-nvme-name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-nvme-name" class="config-help-info">
+					Friendly name (alias) for this NVMe drive. The name will appear in Library Folder view under the NVME folder.
+					Format is 1-25 characters, alphanumeric, hyphen allowed.
+                </span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="remove-nvme-mount" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-nvme-mount-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove NVMe mount: $_name?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="remove_nvme_source" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<div id="moode-log" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="moode-log-label" aria-hidden="true">
+	<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Moode Log</h3>
+	</div>
+	<div class="modal-body">
+		<pre>
+			$_moode_log
+		</pre>
+	</div>
+	<div class="modal-footer">
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="manual-server" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="manual-server-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Manual path entry</h3>
+		</div>
+		<div class="modal-body">
+			<label class="control-label" for="manualserver">Path</label>
+			<div class="controls">
+				<input id="manualserver" class="config-input-xlarge config-modal-input" type="text" pattern="^[A-Za-z0-9]{1,1}.*$" name="nas_manualserver" value="" autofocus>
+				<input id="mounttype" type="hidden" name="mounttype" value="">
+				<div id="info-manualserver" class="help-block" style="margin-top:5px;">
+					Format is Host/Share or IPaddr/Share. Up to 64 chars, leading slash / not allowed.
+                </div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="manualentry" value="1">Ok</button>
+		</div>
+	</div>
+</form>
