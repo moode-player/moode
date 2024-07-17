@@ -36,8 +36,6 @@ if [[ $1 = "add_mount_udisks" ]]; then
 		sed -i "$ a/srv/nfs/$(basename "$2")\t$ACCESS($OPTIONS)\n" /etc/exports
 		restart_nfs_if_on ${SQLDB}
 	fi
-	# MPD auto update
-	usb_auto_mpd_update_if_on ${SQLDB}
 	exit
 fi
 if [[ $1 = "remove_mount_udisks" ]]; then
@@ -48,8 +46,6 @@ if [[ $1 = "remove_mount_udisks" ]]; then
 	sed -i "/$(basename "$2")/ d" /etc/exports
 	sed -i '/^$/d' /etc/exports
 	restart_nfs_if_on ${SQLDB}
-	# MPD auto update
-	usb_auto_mpd_update_if_on ${SQLDB}
     exit
 fi
 
@@ -69,8 +65,6 @@ if [[ $1 = "add_mount_devmon" ]]; then
 		sed -i "$ a# $3\n/srv/nfs/$(basename "$2")\t$ACCESS($OPTIONS)\n# end" /etc/exports
 		restart_nfs_if_on ${SQLDB}
 	fi
-	# MPD auto update
-	usb_auto_mpd_update_if_on ${SQLDB}
 	exit
 fi
 
@@ -83,7 +77,5 @@ if [[ $1 = "remove_mount_devmon" ]]; then
 	sed -i "\|$2|,\|end| d" /etc/exports
 	sed -i '/^$/d' /etc/exports
 	restart_nfs_if_on ${SQLDB}
-	# MPD auto update
-	usb_auto_mpd_update_if_on ${SQLDB}
     exit
 fi
