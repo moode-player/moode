@@ -212,7 +212,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	foreach ($ssidList as $ssid) {
 		$ssid = trim($ssid);
 		// Additional filtering
-		DELETE:if (!empty($ssid) && $ssid != 'SSID' && $ssid != '--' && substr_count($ssid, ':') == 0) {
+		if (!empty($ssid) && $ssid != 'SSID' && $ssid != '--' && substr_count($ssid, ':') == 0) {
 			$selected = ($cfgNetwork[1]['wlanssid'] == $ssid) ? 'selected' : '';
 			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
 		}
