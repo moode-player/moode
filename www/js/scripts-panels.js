@@ -1699,7 +1699,6 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Reset state
         GLOBAL.coverViewActive = false;
-        //DELETE:$.post('command/playback.php?cmd=upd_toggle_coverview', {'toggle_value': '-off'});
         if (SESSION.json['scnsaver_timeout'] != 'Never') {
             $.post('command/playback.php?cmd=reset_screen_saver');
         }

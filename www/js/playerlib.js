@@ -71,7 +71,6 @@ var UI = {
 	currentFile: 'blank',
 	currentHash: 'blank',
 	currentSongId: 'blank',
-	//DELETE:defCover: 'images/default-cover-v6.svg',
 	knobPainted: false,
 	chipOptions: '',
 	hideReconnect: false,

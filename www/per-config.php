@@ -55,7 +55,6 @@ if (isset($_POST['update_hdmi_enable_4kp60'])) {
 
 if (isset($_POST['update_hdmi_cec'])) {
     if (isset($_POST['hdmi_cec']) && $_POST['hdmi_cec'] != $_SESSION['hdmi_cec']) {
-        //DELETE:submitJob('hdmi_cec', $_POST['hdmi_cec'], NOTIFY_TITLE_INFO, NAME_LOCAL_DISPLAY . NOTIFY_MSG_SVC_RESTARTED);
         phpSession('write', 'hdmi_cec', $_POST['hdmi_cec']);
         $_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
         $_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;

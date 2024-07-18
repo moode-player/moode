@@ -58,16 +58,6 @@ switch ($option) {
 		$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_alsa_volume_max'", sqlConnect());
 		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $result[0]['value']);
 		$status = '';
-
-		/*DELETE:if (isset($argv[2])) {
-			sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $argv[2]);
-			if ($_SESSION['multiroom_rx'] == 'On') {
-				sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $argv[2]);
-			}
-			$status = '';
-		} else {
-			$status = 'Missing option';
-		}*/
 		break;
 	default:
 		$status = 'Missing option';

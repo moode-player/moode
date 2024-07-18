@@ -2920,11 +2920,6 @@ function runQueuedJob() {
 				stopLocalUI();
 				startLocalUI();
 			}
-		/*DELETE:case 'hdmi_cec':
-			if ($_SESSION['localui'] == '1') {
-				stopLocalUI();
-				startLocalUI();
-			}*/
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
