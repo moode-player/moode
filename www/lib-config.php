@@ -219,7 +219,7 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 		$array['mount']['charset'] = '';
 		$array['mount']['rsize'] = '';
 		$array['mount']['wsize'] = '';
-		$array['mount']['options'] = '';
+		$array['mount']['options'] = 'noexec,nodev,noatime,nodiratime';
 
 		submitJob('nvme_source_cfg', $array);
 	}

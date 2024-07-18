@@ -125,7 +125,6 @@ function nasSourceMount($action, $id = '', $log = '') {
 					$mp[0]['error'] = '';
 					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 				}
-
 				$return = true;
 			} else {
 				// Empty check to ensure /mnt/NAS/ itself is never deleted
@@ -143,7 +142,6 @@ function nasSourceMount($action, $id = '', $log = '') {
 					mountmonLog('- Err (' . implode("\n", $result) . ')');
 				}
 				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
-
 				$return = false;
 			}
 
@@ -292,11 +290,11 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			// Construct the mount string
-			$mountStr = "mount -t nfs -o " .
-			$mp[0]['options'] . " \"" .
-			$mp[0]['address'] . ":/" .
-			$mp[0]['remotedir'] . "\" \"/mnt/NAS/" .
-			$mp[0]['name'] . "\"";
+			$mountStr = 'mount -t ext4 -o ' .
+			$mp[0]['options'] . ' ' .
+			explode(',', $mp[0]['address'])[0] . ' ' .
+			'"/mnt/NVME/' .
+			$mp[0]['name'] . '"';
 
 			// Attempt the mount
 			sysCmd('mkdir "/mnt/NVME/' . $mp[0]['name'] . '"');
@@ -307,25 +305,16 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 					$mp[0]['error'] = '';
 					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 				}
-
 				$return = true;
 			} else {
-				// Empty check to ensure /mnt/NAS/ itself is never deleted
+				// Empty check to ensure /mnt/NVME/ itself is never deleted
 				if (!empty($mp[0]['name'])) {
 					sysCmd('rmdir "/mnt/NVME/' . $mp[0]['name'] . '"');
 				}
 				$mp[0]['error'] = 'Mount error';
-				if ($log == '') {
-					// Mounts performed by Library or Music Source Config
-					workerLog('worker: Try (' . $mountStr . ')');
-					workerLog('worker: Err (' . implode("\n", $result) . ')');
-				} else {
-					// Mounts performed by the monitor daemon ($log = 'mountmonlog')
-					//mountmonLog('- Try (' . $mountStr . ')');
-					//mountmonLog('- Err (' . implode("\n", $result) . ')');
-				}
+				workerLog('worker: Try (' . $mountStr . ')');
+				workerLog('worker: Err (' . implode("\n", $result) . ')');
 				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
-
 				$return = false;
 			}
 

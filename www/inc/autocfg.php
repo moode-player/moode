@@ -627,11 +627,18 @@ function autoConfigSettings() {
 			$count = count($values['source_name']);
 			$keys = array_keys($values);
 			for ($i = 0; $i < $count; $i++) {
-				$mount = ['mount' => ['action' => 'add_nas_source']];
 				foreach ($keys as $key) {
 					$mount['mount'][substr($key, 7)] = $values[$key][$i];
+					if ($key == 'type') {
+						$action = $values[$key][$i] == 'nvme' ? 'add_nvme_source' : 'add_nas_source';
+						$mount = ['mount' => ['action' => $action]];
+					}
 				}
-				nasSourceCfg($mount);
+				if ($action == 'add_nvme_source') {
+					nvmeSourceCfg($mount);
+				} else {
+					nasSourceCfg($mount);
+				}
 			}
 		}, 'custom_write' => function($values) {
 			$result = sqlRead('cfg_source', sqlConnect());
