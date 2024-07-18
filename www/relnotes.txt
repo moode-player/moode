@@ -29,7 +29,8 @@ Bug fixes
 - FIX: Left margin for metadata in CoverView wide mode on Ultrawide displays
 - FIX: LocalUI fails to start after in-place update when userid is not 'pi'
 - FIX: LocalUI settings revert to default after in-place update when userid 'pi'
-- FIX: Folder view not being auto-refreshed
+- FIX: Folder view not being auto-refreshed when its the current view
+- FIX: Boot config.txt dtoverlay=rpi-backlight causing journal log errors
 
 ################################################################################
 #
