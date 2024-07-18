@@ -762,8 +762,8 @@ foreach ($mpdOutputs as $mpdOutput) {
 	workerLog('worker: MPD ' . $mpdOutput);
 }
 // MPD volumes
-// Source select (Analog or S/PDIF) or MPD volume
-if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
+// Input select (Analog or S/PDIF) or MPD volume
+if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
  	if ($_SESSION['audioin'] == 'Local') {
 		$volKnob = $_SESSION['volknob_mpd'] != '-1' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 	} else {
@@ -850,7 +850,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	$source = $_SESSION['audioin'] == 'Local' ? 'MPD' : $_SESSION['audioin'];
 	$output = $_SESSION['adevname'];
 	$status .= ', Source: ' . $source . ', Output: ' . $output;
-	if (in_array($_SESSION['i2sdevice'], SRC_SELECT_DEVICES)) {
+	if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
 		setAudioIn($_SESSION['audioin']);
 	}
 } else {
@@ -1453,7 +1453,7 @@ while (true) {
 	if ($_SESSION['multiroom_rx'] == 'On') {
 		chkRxActive();
 	}
-	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
+	if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
 		chkInpActive();
 	}
 	if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {

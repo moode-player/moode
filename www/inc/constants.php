@@ -202,8 +202,8 @@ const ALSA_IEC958_FORMAT = 'IEC958_SUBFRAME_LE';
 // Friendly name to display in Output device field in Audio Config
 const TRX_SENDER_NAME = 'Multiroom sender';
 
-// Source select devices
-const SRC_SELECT_DEVICES = array(
+// Input select devices
+const INP_SELECT_DEVICES = array(
     'HiFiBerry DAC+ ADC',
     'Audiophonics ES9028/9038 DAC'
 );
