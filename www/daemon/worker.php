@@ -2170,9 +2170,12 @@ function startGpioBtnHandler() {
 
 // LocalUI display
 function startLocalUI() {
+	updBootConfigTxt('upd_rpi_backlight', '');
 	sysCmd('systemctl start localui');
+
 }
 function stopLocalUI() {
+	updBootConfigTxt('upd_rpi_backlight', '#');
 	sysCmd('systemctl stop localui');
 }
 

@@ -110,6 +110,7 @@ const CFG_DO_NOT_ALTER_HEADER = '# Do not alter this section';
 const CFG_AUDIO_OVERLAYS_HEADER = '# Audio overlays';
 const CFG_FORCE_EEPROM_READ = 'force_eeprom_read=0';
 const CFG_HDMI_ENABLE_4KP60 = 'hdmi_enable_4kp60';
+const CFG_RPI_BACKLIGHT = 'rpi-backlight';
 const CFG_PCI_EXPRESS = 'pciex1';
 const CFG_PCI_EXPRESS_GEN3 = 'pciex1_gen=3';
 const CFG_PI_AUDIO_DRIVER = 'vc4-kms-v3d';

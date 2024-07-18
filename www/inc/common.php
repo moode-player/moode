@@ -384,6 +384,10 @@ function updBootConfigTxt($action, $value) {
 				CFG_HDMI_ENABLE_4KP60 . '=.*/' .
 				CFG_HDMI_ENABLE_4KP60 . '=' . $value . '/" ' . BOOT_CONFIG_TXT);
 			break;
+		case 'upd_rpi_backlight':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_RPI_BACKLIGHT . "/c\\" . $value . 'dtoverlay=' . CFG_RPI_BACKLIGHT . ' ' . BOOT_CONFIG_TXT);
+			break;
 		case 'upd_pi_audio_driver':
 			// $value: '#' or ''
 			sysCmd('sed -i /' . CFG_PI_AUDIO_DRIVER . "/c\\" . $value . 'dtoverlay=' . CFG_PI_AUDIO_DRIVER . ' ' . BOOT_CONFIG_TXT);
