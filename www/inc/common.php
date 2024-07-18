@@ -287,7 +287,7 @@ function setAltBackLink() {
 function getUserID() {
 	// Check for and delete '/home/pi' if it has no userid. This dir is created
 	// by the moode-player package install during in-place update.
-	if (file_exists('/home/pi/') && empty(sysCmd('grep "pi" /etc/passwd'))) {
+	if (file_exists('/home/pi/') && empty(sysCmd('grep ":/home/pi:" /etc/passwd'))) {
 		sysCmd('rm -rf /home/pi/');
 	}
 
