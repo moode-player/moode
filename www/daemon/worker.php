@@ -1228,10 +1228,10 @@ if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['valu
 	workerLog('worker: Active flags:      at least one true');
 	workerLog('worker: Reset flags:       all reset to false');
 	workerLog('worker: MPD volume:        set to 0');
+} else {
+	workerLog('worker: Active flags:      all false');
+	workerLog('worker: Reset flags:       skipped');
 }
-// TODO: there should be an else here
-workerLog('worker: Active flags:      all false');
-workerLog('worker: Reset flags:       skipped');
 
 //----------------------------------------------------------------------------//
 // Initialize some session vars
