@@ -64,7 +64,6 @@
     <script src="js/bootstrap-select.js" defer></script>
     <script src="js/jquery.pnotify.js" defer></script>
     <script src="js/notify.js" defer></script>
-    <script src="js/playerlib-nomin.js" defer></script>
     <script src="js/playerlib.js" defer></script>
     <script src="js/links.js" defer></script>
     <script src="js/osk.js" defer></script>
