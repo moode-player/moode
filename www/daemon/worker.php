@@ -1218,13 +1218,15 @@ phpSession('write', 'inplace_upd_applied', '0');
 // If any flags are 1 then a reboot/poweroff may have occured while the renderer was active
 // In this case ALSA or CamillaDSP volume may be at 100% so let's reset volume to 0.
 $result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'aplactive', 'spotactive',
-	'slactive', 'rbactive', 'inpactive')", $dbh);
+	'slactive', 'paactive', 'rbactive', 'inpactive')", $dbh);
 if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['value'] == '1' ||
-	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1') {
+	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1' ||
+	$result[6]['value'] == '1') {
 	// Set Knob volume to 0 for vol.sh downstream
 	phpSession('write', 'volknob', '0');
-	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
-		OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
+	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive' OR
+		param='spotactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
+		param='inpactive'", $dbh);
 	workerLog('worker: Active flags:      at least one true');
 	workerLog('worker: Reset flags:       all reset to false');
 	workerLog('worker: MPD volume:        set to 0');
@@ -1498,8 +1500,9 @@ function chkScnSaver() {
 	}
 
 	if ($GLOBALS['scnsaver_timeout'] != 'Never' && $_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0'
-		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0'
-		&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0' && $mpdState != 'play') {
+		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0'  && $GLOBALS['paactive'] == '0'
+		&& $GLOBALS['rbactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0'
+		&& $mpdState != 'play') {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
@@ -1700,7 +1703,8 @@ function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
 		$rendererNotActive = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
-			&& $GLOBALS['slactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
+			&& $GLOBALS['slactive'] == '0' && $_SESSION['paactive'] && $_SESSION['rxactive'] == '0'
+			&& $GLOBALS['inpactive'] == '0');
 		$mpdNotPlaying = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
 		$alsaOutputActive = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
 		//workerLog('rnp:' . ($rendererNotActive ? 'T' : 'F') . '|' . 'mnp:' . ($mpdNotPlaying ? 'T' : 'F') . '|' . 'aoa:' . ($alsaOutputActive ? 'T' : 'F'));

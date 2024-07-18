@@ -246,7 +246,7 @@ $alsaVol = getAlsaVolumeDb($_SESSION['amixname']);
 $cdspVol = CamillaDSP::getCDSPVol() . 'dB';
 $_volume_levels = 'Knob ' . $knobVol . ', ALSA ' . $alsaVol . ', CDSP ' . $cdspVol;
 
-if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $rbActive == '1' ||
+if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $paActive == '1' || $rbActive == '1' ||
 	$btActive === true || $_SESSION['audioout'] == 'Bluetooth' || $_SESSION['inpactive'] == '1') {
 	// Renderer active
 	// NOTE: Class 'off' hides the item
