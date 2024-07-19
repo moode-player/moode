@@ -771,20 +771,20 @@ function screenSaver(cmd) {
 }
 
 // Screen saver clock
-function showSSDigitalClock() {
+function showSSDigitalClock(isAMPM = true) {
     var date = new Date();
     var h = date.getHours(); // 0 - 23
     var m = date.getMinutes(); // 0 - 59
     var s = date.getSeconds(); // 0 - 59
 
-    var ampm = "AM";
-    if (SESSION.json['scnsaver_24clock'] == 'Yes') {
+    var ampm = " AM";
+    if (!isAMPM) {
         ampm = "";
     } else {
-    if (h == 0) {
-        h = 12;
-    } else if (h > 12) {
-        h = h - 12;
+        if (h == 0) {
+            h = 12;
+        } else if (h > 12) {
+            h = h - 12;
             ampm = " PM";
         }
     }
@@ -801,7 +801,9 @@ function showSSDigitalClock() {
 function showSSClock() {
 	switch (SESSION.json['scnsaver_mode']) {
 		case 'Digital clock':
-			showSSDigitalClock();
+		case 'Digital clock (24-hour)':
+            var showAMPM = SESSION.json['scnsaver_mode'] != 'Digital clock (24-hour)' ? true : false;
+			showSSDigitalClock(showAMPM);
 			GLOBAL.ssClockIntervalID = setInterval(showSSDigitalClock, 1000);
 			break;
 
@@ -3066,7 +3068,6 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#scnsaver-layout span').text(SESSION.json['scnsaver_layout']);
                 $('#show-cvpb span').text(SESSION.json['show_cvpb']);
                 $('#scnsaver-xmeta span').text(SESSION.json['scnsaver_xmeta']);
-                $('#scnsaver-24clock span').text(SESSION.json['scnsaver_24clock']);
 
                 $('#preferences-modal').modal();
             });
@@ -3201,7 +3202,6 @@ $('#btn-preferences-update').click(function(e){
 	var scnSaverStyleChange = false;
     var scnSaverModeChange = false;
     var scnSaverLayoutChange = false;
-    var scnSaver24clockChange = false;
     var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
@@ -3282,7 +3282,6 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['scnsaver_mode'] != $('#scnsaver-mode span').text()) {scnSaverModeChange = true;}
     if (SESSION.json['scnsaver_layout'] != $('#scnsaver-layout span').text()) {scnSaverLayoutChange = true;}
     if (SESSION.json['scnsaver_xmeta'] != $('#scnsaver-xmeta span').text()) {extraTagsChange = true;}
-    if (SESSION.json['scnsaver_24clock'] != $('#scnsaver-24clock span').text()) {scnSaver24clockChange = true;}
 
 	// Appearance
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -3339,7 +3338,6 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['scnsaver_layout'] = $('#scnsaver-layout span').text();
     SESSION.json['show_cvpb'] = $('#show-cvpb span').text();
     SESSION.json['scnsaver_xmeta'] = $('#scnsaver-xmeta span').text();
-    SESSION.json['scnsaver_24clock'] = $('#scnsaver-24clock span').text();
 
 	if (fontSizeChange == true) {
 		setFontSize();
@@ -3351,7 +3349,7 @@ $('#btn-preferences-update').click(function(e){
 	}
 
     if (autoCoverViewChange || scnSaverStyleChange || scnSaverModeChange ||
-        scnSaverLayoutChange || extraTagsChange || scnSaver24clockChange) {
+        scnSaverLayoutChange || extraTagsChange) {
         if (SESSION.json['localui'] == '1') {
             $.post('command/system.php?cmd=restart_localui');
         }
@@ -3460,14 +3458,13 @@ $('#btn-preferences-update').click(function(e){
             'scnsaver_layout': SESSION.json['scnsaver_layout'],
             'show_cvpb': SESSION.json['show_cvpb'],
             'scnsaver_xmeta': SESSION.json['scnsaver_xmeta'],
-            'scnsaver_24clock': SESSION.json['scnsaver_24clock'],
 
             // Internal
             'preferences_modal_state': SESSION.json['preferences_modal_state']
         },
         function() {
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
-                playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange || scnSaver24clockChange ||
+                playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {

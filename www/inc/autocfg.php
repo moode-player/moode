@@ -564,7 +564,6 @@ function autoConfigSettings() {
 		['requires' => ['scnsaver_mode'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_layout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_xmeta'], 'handler' => 'setSessVarSql'],
-		['requires' => ['scnsaver_24clock'], 'handler' => 'setSessVarSql'],
 		//
 		// Multiroom
 		//

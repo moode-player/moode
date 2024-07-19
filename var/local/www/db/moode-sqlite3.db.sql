@@ -509,7 +509,6 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'S
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (176, 'scnsaver_24clock', 'No');
 
 -- Table: cfg_plugin
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32));
