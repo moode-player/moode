@@ -756,7 +756,9 @@ function screenSaver(cmd) {
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
 
-        if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'].includes('Analog clock')) {
+        if (SESSION.json['scnsaver_mode'] == 'Digital clock' || 
+            SESSION.json['scnsaver_mode'] == 'Digital clock (24-hour)' || 
+            SESSION.json['scnsaver_mode'].includes('Analog clock')) {
             $('#ss-coverart').css('display', 'none');
             $('#ss-clock').css('display', 'block');
             showSSClock();
@@ -820,7 +822,8 @@ function showSSClock() {
 function hideSSClock() {
 	switch (SESSION.json['scnsaver_mode']) {
 		case 'Digital clock':
-			clearInterval(GLOBAL.ssClockIntervalID);
+        case 'Digital clock (24-hour)':
+                clearInterval(GLOBAL.ssClockIntervalID);
 			$('#ss-clock').text('');
 			break;
 
