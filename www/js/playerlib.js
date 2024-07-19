@@ -806,7 +806,7 @@ function showSSClock() {
 		case 'Digital clock (24-hour)':
             var showAMPM = SESSION.json['scnsaver_mode'] != 'Digital clock (24-hour)' ? true : false;
 			showSSDigitalClock(showAMPM);
-			GLOBAL.ssClockIntervalID = setInterval(showSSDigitalClock, 1000);
+			GLOBAL.ssClockIntervalID = setInterval(showSSDigitalClock(showAMPM), 1000);
 			break;
 
 		case 'Analog clock':
