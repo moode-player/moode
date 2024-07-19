@@ -627,14 +627,14 @@ function autoConfigSettings() {
 			$count = count($values['source_name']);
 			$keys = array_keys($values);
 			for ($i = 0; $i < $count; $i++) {
+				$mount['mount']['id'] = '';
 				foreach ($keys as $key) {
 					$mount['mount'][substr($key, 7)] = $values[$key][$i];
-					if ($key == 'type') {
-						$action = $values[$key][$i] == LIB_MOUNT_TYPE_NVME ? 'add_nvme_source' : 'add_nas_source';
-						$mount = ['mount' => ['action' => $action]];
+					if (substr($key, 7) == 'type') {
+						$mount['mount']['action'] = $values[$key][$i] == LIB_MOUNT_TYPE_NVME ? 'add_nvme_source' : 'add_nas_source';
 					}
 				}
-				if ($action == 'add_nvme_source') {
+				if ($mount['mount']['action'] == 'add_nvme_source') {
 					nvmeSourceCfg($mount);
 				} else {
 					nasSourceCfg($mount);
