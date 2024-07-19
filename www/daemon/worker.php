@@ -818,7 +818,7 @@ if (empty($usbDrives)) {
 	}
 }
 // NVMe drives
-$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = 'nvme'", $dbh);
+$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_NVME . "'", $dbh);
 if ($mounts === true) { // Empty result
 	workerLog('worker: NVMe drives:    none');
 } else {
@@ -828,7 +828,7 @@ if ($mounts === true) { // Empty result
 	$result = nvmeSourceMount('mountall');
 }
 // NAS sources
-$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('nfs', 'smb')", $dbh);
+$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 if ($mounts === true) { // Empty result
 	workerLog('worker: NAS sources:    none');
 } else {

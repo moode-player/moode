@@ -228,7 +228,7 @@ jQuery(document).ready(function($){ 'use strict';
             $('#options').val('ro,noserverino,dir_mode=0777,file_mode=0777');
             //$('#info-mount-flags').html('vers=2.0 or 3.0 may be needed and/or sec=ntlm/ntlmssp removed depending on what the NAS requires.');
 		}
-		else if ($(this).val() == 'nfs') {
+		else if ($(this).val() == LIB_MOUNT_TYPE_NFS) {
 			$('#userid-password').hide();
 			//$('#scan-btn').hide();
 			$('#edit-server').show();

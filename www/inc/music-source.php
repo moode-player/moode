@@ -40,7 +40,7 @@ function nasSourceCfg($queueArgs) {
 			sqlUpdate('cfg_source', $dbh, '', $queueArgs['mount']);
 
 			// Unmount
-			if ($mp[0]['type'] == 'cifs') {
+			if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
 				// Lazy umount
 				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"');
 			}
@@ -62,7 +62,7 @@ function nasSourceCfg($queueArgs) {
 			$mp = sqlRead('cfg_source', $dbh, '', $queueArgs['mount']['id']);
 
 			// Unmount
-			if ($mp[0]['type'] == 'cifs') {
+			if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
 				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"');
 			}
 			else {
@@ -81,7 +81,7 @@ function nasSourceCfg($queueArgs) {
 	return $result;
 }
 
-// NAS source mount using CIFS (SMB) and NFS protocols
+// NAS source mount using SMB and NFS protocols
 function nasSourceMount($action, $id = '', $log = '') {
 	$dbh = sqlConnect();
 
@@ -90,7 +90,7 @@ function nasSourceMount($action, $id = '', $log = '') {
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			// Construct the mount string
-			if ($mp[0]['type'] == 'cifs') {
+			if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
 				$options = $mp[0]['options'];
 				if(strpos($options, 'vers=') === false) {
 					$version = detectSMBVersion($mp[0]['address']);
@@ -154,7 +154,7 @@ function nasSourceMount($action, $id = '', $log = '') {
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			if (nasMountExists($mp[0]['name'])) {
-				if ($mp[0]['type'] == 'cifs') {
+				if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
 					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // -l (lazy) -f (force)
 				} else {
 					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"');
@@ -164,7 +164,7 @@ function nasSourceMount($action, $id = '', $log = '') {
 			$return = true;
 			break;
 		case 'mountall':
-			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('nfs', 'smb')", $dbh);
+			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 
 			foreach ($mounts as $mp) {
 				if (!nasMountExists($mp['name'])) {
@@ -175,11 +175,11 @@ function nasSourceMount($action, $id = '', $log = '') {
 			$return = $mounts === true ? 'None configured' : ($mounts === false ? 'sqlRead() failed' : 'Mount all submitted');
 			break;
 		case 'unmountall':
-			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('nfs', 'smb')", $dbh);
+			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 
 			foreach ($mounts as $mp) {
 				if (nasMountExists($mp['name'])) {
-					if ($mp['type'] == 'cifs') {
+					if ($mp['type'] == LIB_MOUNT_TYPE_SMB) {
 						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
 					} else {
 						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
@@ -333,7 +333,7 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 			$return = true;
 			break;
 		case 'mountall':
-			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = 'nvme'", $dbh);
+			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_NVME . "'", $dbh);
 
 			foreach ($mounts as $mp) {
 				if (!nvmeMountExists($mp['name'])) {
@@ -344,7 +344,7 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 			$return = $mounts === true ? 'None configured' : ($mounts === false ? 'sqlRead() failed' : 'Mount all submitted');
 			break;
 		case 'unmountall':
-			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = 'nvme'", $dbh);
+			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_NVME . "'", $dbh);
 
 			foreach ($mounts as $mp) {
 				if (nvmeMountExists($mp['name'])) {

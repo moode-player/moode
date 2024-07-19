@@ -96,7 +96,7 @@ if (isset($_POST['save_nas_source']) && $_POST['save_nas_source'] == 1) {
 	} else if (empty(trim($_POST['mount']['remotedir']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Share cannot be blank.';
-	} else if ($_POST['mount']['type'] == 'cifs' && empty(trim($_POST['mount']['username']))) {
+	} else if ($_POST['mount']['type'] == LIB_MOUNT_TYPE_SMB && empty(trim($_POST['mount']['username']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Userid cannot be blank.';
 	} else if ($_POST['mount']['action'] == 'add_nas_source' && !empty($id[0])) {
@@ -107,13 +107,13 @@ if (isset($_POST['save_nas_source']) && $_POST['save_nas_source'] == 1) {
 		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
 	} else {
 		$initiateLibraryUpd = true;
-		// CIFS and NFS defaults if blank
+		// SMB and NFS defaults if blank
 		if (empty(trim($_POST['mount']['rsize']))) {$_POST['mount']['rsize'] = 61440;}
 		if (empty(trim($_POST['mount']['wsize']))) {$_POST['mount']['wsize'] = 65536;}
 		if (empty(trim($_POST['mount']['options']))) {
-			if ($_POST['mount']['type'] == 'cifs') {
+			if ($_POST['mount']['type'] == LIB_MOUNT_TYPE_SMB) {
 				$_POST['mount']['options'] = "vers=1.0,ro,noserverino,cache=none,dir_mode=0777,file_mode=0777";
-			} else if ($_POST['mount']['type'] == 'nfs') {
+			} else if ($_POST['mount']['type'] == LIB_MOUNT_TYPE_NFS) {
 				$_POST['mount']['options'] = "soft,timeo=10,retrans=1,ro,nolock";
 			}
 		}
@@ -141,7 +141,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 	$_GET['cmd'] = $_SESSION['nas_src_action'];
 	$_GET['id'] = $_SESSION['nas_src_mpid'];
 	// SMB (Samba)
-	if ($_POST['mount']['type'] == 'cifs') {
+	if ($_POST['mount']['type'] == LIB_MOUNT_TYPE_SMB) {
 		$nmbLookupResult = sysCmd("nmblookup -S -T '*' | grep '*<00>' | cut -f 1 -d '*'");
 		sort($nmbLookupResult, SORT_NATURAL | SORT_FLAG_CASE);
 
@@ -157,7 +157,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 		}
 	}
 	// NFS
-	if ($_POST['mount']['type'] == 'nfs') {
+	if ($_POST['mount']['type'] == LIB_MOUNT_TYPE_NFS) {
 		$thisIpAddr = getThisIpAddr();
 		$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
 		$port = '2049'; // NFSv4
@@ -211,7 +211,7 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 		$array['mount']['action'] = $_POST['mount']['action'];
 		$array['mount']['id'] = $_POST['mount']['id'];
 		$array['mount']['name'] = $_POST['mount']['name'];
-		$array['mount']['type'] = 'nvme';
+		$array['mount']['type'] = LIB_MOUNT_TYPE_NVME;
 		$array['mount']['address'] = $_POST['mount']['drive']; // device,label
 		$array['mount']['remotedir'] = '';
 		$array['mount']['username'] = '';
@@ -254,10 +254,10 @@ if (!isset($_GET['cmd'])) {
 	$tpl = "lib-config.html";
 
 	// NAS mounts
-	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('nfs', 'smb')", $dbh);
+	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 	foreach ($mounts as $mp) {
 		$icon = nasMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
-		$_nas_mounts .= "<a href=\"lib-config.php?cmd=edit_nas_source&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a>";
+		$_nas_mounts .= "<a href=\"lib-config.php?cmd=edit_nas_source&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ", " . $mp['type'] . ") </a>";
 	}
 	if ($mounts === true) {
 		$_nas_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
@@ -270,7 +270,7 @@ if (!isset($_GET['cmd'])) {
 	$_select['fs_mountmon_off'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor-2\" value=\"Off\" " . (($_SESSION['fs_mountmon'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// NVMe mounts
-	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = 'nvme'", $dbh);
+	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_NVME . "'", $dbh);
 	foreach ($mounts as $mp) {
 		$icon = nvmeMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
 		$_nvme_mounts .= "<a href=\"lib-config.php?cmd=edit_nvme_source&id=" . $mp['id'] .
@@ -300,11 +300,11 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 		// Edit
 		$_action = 'edit_nas_source';
 		$_id = $_GET['id'];
-		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('nfs', 'smb')", $dbh);
+		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 
 		foreach ($mounts as $mp) {
 			if ($mp['id'] == $_id) {
-				$_protocol = "<option value=\"" . ($mp['type'] == 'cifs' ? "cifs\">SMB (Samba)</option>" : "nfs\">NFS</option>");
+				$_protocol = "<option value=\"" . ($mp['type'] == LIB_MOUNT_TYPE_SMB ? LIB_MOUNT_TYPE_SMB . "\">SMB (Samba)</option>" : "nfs\">NFS</option>");
 				$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : $mp['address'] . '/' . $mp['remotedir'];
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);
 				$_username = $mp['username'];
@@ -317,12 +317,13 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 				$_error = $mp['error'];
 				$_scan_btn_hide = '';
 				$_edit_server_hide = '';
-				$_userid_pwd_hide = $mp['type'] == 'nfs' ? 'hide' : '';
+				$_userid_pwd_hide = $mp['type'] == LIB_MOUNT_TYPE_NFS ? 'hide' : '';
 				$_advanced_options_hide = '';
-				$_rw_size_hide = $mp['type'] == 'nfs' ? 'hide' : '';
+				$_rw_size_hide = $mp['type'] == LIB_MOUNT_TYPE_NFS ? 'hide' : '';
 				if (empty($_error)) {
 					$_hide_nas_mount_error = 'style="display:none;"';
 				} else {
+					$_hide_nas_mount_error = '';
 					$_nas_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
 					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
 				}
@@ -341,8 +342,8 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 
 		// Manual server entry/edit or scanner
 		if (isset($_POST['nas_manualserver']) || isset($_POST['scan'])) {
-			if ($_POST['mounttype'] == 'cifs' || $_POST['mount']['type'] == 'cifs') {
-				$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
+			if ($_POST['mounttype'] == LIB_MOUNT_TYPE_SMB || $_POST['mount']['type'] == LIB_MOUNT_TYPE_SMB) {
+				$_protocol = "<option value=\"" . LIB_MOUNT_TYPE_SMB . "\" selected>SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\">NFS</option>\n";
 				$_scan_btn_hide = '';
 				$_edit_server_hide = '';
@@ -350,7 +351,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 				$_advanced_options_hide = '';
 				$_rw_size_hide = '';
 				$_options = 'ro,noserverino,cache=none,dir_mode=0777,file_mode=0777';
-			} else if ($_POST['mounttype'] == 'nfs' || $_POST['mount']['type'] == 'nfs') {
+			} else if ($_POST['mounttype'] == LIB_MOUNT_TYPE_NFS || $_POST['mount']['type'] == LIB_MOUNT_TYPE_NFS) {
 				$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\" selected>NFS</option>\n";
 				$_scan_btn_hide = '';
@@ -387,7 +388,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nvme_source' || $_GET['cmd'] =
 		// Edit
 		$_action = 'edit_nvme_source';
 		$_id = $_GET['id'];
-		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = 'nvme'", $dbh);
+		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_NVME . "'", $dbh);
 
 		foreach ($mounts as $mp) {
 			if ($mp['id'] == $_id) {
@@ -399,6 +400,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nvme_source' || $_GET['cmd'] =
 				if (empty($_error)) {
 					$_hide_nvme_mount_error = 'style="display:none;"';
 				} else {
+					$_hide_nvme_mount_error = '';
 					$_nvme_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
 					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
 				}

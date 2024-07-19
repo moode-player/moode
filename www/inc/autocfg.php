@@ -630,7 +630,7 @@ function autoConfigSettings() {
 				foreach ($keys as $key) {
 					$mount['mount'][substr($key, 7)] = $values[$key][$i];
 					if ($key == 'type') {
-						$action = $values[$key][$i] == 'nvme' ? 'add_nvme_source' : 'add_nas_source';
+						$action = $values[$key][$i] == LIB_MOUNT_TYPE_NVME ? 'add_nvme_source' : 'add_nas_source';
 						$mount = ['mount' => ['action' => $action]];
 					}
 				}

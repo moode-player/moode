@@ -17,9 +17,9 @@ while (true) {
 	phpSession('open_ro'); // Needed for mountmonLog() which checks $_SESSION['debuglog']
 
 	sleep(MOUNTMON_SLEEP);
-	$mounts = sqlRead('cfg_source', $dbh);
+	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 	if ($mounts !== true) {
-		mountmonLog('mountmon: Checking mount points');
+		mountmonLog('mountmon: Checking NAS mounts');
 		foreach ($mounts as $mp) {
 			// See if host is up
 			//mountmonLog('- Checking host ' . $mp['address'] . ' for mount ' . $mp['name']); // DEBUG
@@ -29,12 +29,12 @@ while (true) {
 				// See if mount dir exists. It may not since umount/rmdir is done at shutdown/reboot
 				if (file_exists('/mnt/NAS/' . $mp['name'])) {
 					// See if file sharing service is accessible on the host
-					if ($mp['type'] == 'cifs') {
+					if ($mp['type'] == LIB_MOUNT_TYPE_SMB) {
 						//mountmonLog('- Checking SMB mount'); // DEBUG
 						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] .' 2>&1 | grep "Host is down\|Stale file handle"');
 						$fileSharingAccessible = !empty($result) ? false : true;
 					}
-					if ($mp['type'] == 'nfs') {
+					if ($mp['type'] == LIB_MOUNT_TYPE_NFS) {
 						//mountmonLog('- Checking NFS mount'); // DEBUG
 						$port = '2049';
 						sysCmd('nmap -Pn -p ' . $port . ' ' . $mp['address'] . ' -oG /tmp/nfs_nmap.scan >/dev/null');
@@ -68,6 +68,6 @@ while (true) {
 			}
 		}
 	} else {
-		mountmonLog('mountmon: No mount points exist');
+		mountmonLog('mountmon: No NAS mounts exist');
 	}
 }

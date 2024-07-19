@@ -56,6 +56,11 @@ const STATION_EXPORT_DIR = '/'; // var/www
 // Library saved searches
 const LIB_FULL_LIBRARY = 'Full Library (Default)';
 
+// Library mount types
+const LIB_MOUNT_TYPE_SMB = 'cifs';
+const LIB_MOUNT_TYPE_NFS = 'nfs';
+const LIB_MOUNT_TYPE_NVME = 'nvme';
+
 // Default titles and covers
 const DEFAULT_RADIO_TITLE = 'Radio station';
 const DEFAULT_RADIO_COVER = 'images/default-album-cover.png';

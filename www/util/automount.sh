@@ -33,7 +33,7 @@ if [[ $1 = "add_mount_udisks" ]]; then
 	if [[ $(grep -w -c $(basename "$2") /etc/exports) = 0 ]]; then
 		ACCESS=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='fs_nfs_access'")
 		OPTIONS=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='fs_nfs_options'")
-		sed -i "$ a/srv/nfs/$(basename "$2")\t$ACCESS($OPTIONS)\n" /etc/exports
+		sed -i "$ a/srv/nfs/usb/$(basename "$2")\t$ACCESS($OPTIONS)\n" /etc/exports
 		restart_nfs_if_on ${SQLDB}
 	fi
 	exit
@@ -62,7 +62,7 @@ if [[ $1 = "add_mount_devmon" ]]; then
 	if [[ $(grep -w -c $(basename "$2") /etc/exports) = 0 ]]; then
 		ACCESS=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='fs_nfs_access'")
 		OPTIONS=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='fs_nfs_options'")
-		sed -i "$ a# $3\n/srv/nfs/$(basename "$2")\t$ACCESS($OPTIONS)\n# end" /etc/exports
+		sed -i "$ a# $3\n/srv/nfs/usb/$(basename "$2")\t$ACCESS($OPTIONS)\n# end" /etc/exports
 		restart_nfs_if_on ${SQLDB}
 	fi
 	exit

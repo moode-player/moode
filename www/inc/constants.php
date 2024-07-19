@@ -46,6 +46,9 @@ const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
 const STATION_EXPORT_DIR = '/var/local/www/imagesw';
 const LIB_MOUNT_OK = '<i class="fa-solid fa-sharp fa-check sx" style="color:#27ae60;"></i>';
 const LIB_MOUNT_FAILED = '<i class="fa-solid fa-sharp fa-times sx" style="color:#e74c3c;"></i>';
+const LIB_MOUNT_TYPE_SMB = 'cifs';
+const LIB_MOUNT_TYPE_NFS = 'nfs';
+const LIB_MOUNT_TYPE_NVME = 'nvme';
 // Thumbnail generator
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const THM_SM_W = 80; // Small thumbs
