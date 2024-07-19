@@ -778,18 +778,22 @@ function showSSDigitalClock() {
     var s = date.getSeconds(); // 0 - 59
 
     var ampm = "AM";
+    if (SESSION.json['scnsaver_24clock'] == 'Yes') {
+        ampm = "";
+    } else {
     if (h == 0) {
         h = 12;
     } else if (h > 12) {
         h = h - 12;
-        var ampm = "PM";
+            ampm = " PM";
+        }
     }
 
     h = (h < 10) ? "0" + h : h;
     m = (m < 10) ? "0" + m : m;
     s = (s < 10) ? "0" + s : s;
 
-    var time = h + ':' + m + ':' + s + ' ' + ampm;
+    var time = h + ':' + m + ':' + s + ampm;
     $('#ss-clock').text(time);
     //console.log(time);
 }
@@ -3062,6 +3066,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#scnsaver-layout span').text(SESSION.json['scnsaver_layout']);
                 $('#show-cvpb span').text(SESSION.json['show_cvpb']);
                 $('#scnsaver-xmeta span').text(SESSION.json['scnsaver_xmeta']);
+                $('#scnsaver-24clock span').text(SESSION.json['scnsaver_24clock']);
 
                 $('#preferences-modal').modal();
             });
@@ -3196,6 +3201,7 @@ $('#btn-preferences-update').click(function(e){
 	var scnSaverStyleChange = false;
     var scnSaverModeChange = false;
     var scnSaverLayoutChange = false;
+    var scnSaver24clockChange = false;
     var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
@@ -3276,6 +3282,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['scnsaver_mode'] != $('#scnsaver-mode span').text()) {scnSaverModeChange = true;}
     if (SESSION.json['scnsaver_layout'] != $('#scnsaver-layout span').text()) {scnSaverLayoutChange = true;}
     if (SESSION.json['scnsaver_xmeta'] != $('#scnsaver-xmeta span').text()) {extraTagsChange = true;}
+    if (SESSION.json['scnsaver_24clock'] != $('#scnsaver-24clock span').text()) {scnSaver24clockChange = true;}
 
 	// Appearance
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -3332,6 +3339,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['scnsaver_layout'] = $('#scnsaver-layout span').text();
     SESSION.json['show_cvpb'] = $('#show-cvpb span').text();
     SESSION.json['scnsaver_xmeta'] = $('#scnsaver-xmeta span').text();
+    SESSION.json['scnsaver_24clock'] = $('#scnsaver-24clock span').text();
 
 	if (fontSizeChange == true) {
 		setFontSize();
@@ -3343,7 +3351,7 @@ $('#btn-preferences-update').click(function(e){
 	}
 
     if (autoCoverViewChange || scnSaverStyleChange || scnSaverModeChange ||
-        scnSaverLayoutChange || extraTagsChange) {
+        scnSaverLayoutChange || extraTagsChange || scnSaver24clockChange) {
         if (SESSION.json['localui'] == '1') {
             $.post('command/system.php?cmd=restart_localui');
         }
@@ -3452,13 +3460,14 @@ $('#btn-preferences-update').click(function(e){
             'scnsaver_layout': SESSION.json['scnsaver_layout'],
             'show_cvpb': SESSION.json['show_cvpb'],
             'scnsaver_xmeta': SESSION.json['scnsaver_xmeta'],
+            'scnsaver_24clock': SESSION.json['scnsaver_24clock'],
 
             // Internal
             'preferences_modal_state': SESSION.json['preferences_modal_state']
         },
         function() {
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
-                playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
+                playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange || scnSaver24clockChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {

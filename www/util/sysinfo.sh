@@ -229,6 +229,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
 	echo -e "\nLayout\t\t\t= $scnsaver_layout\c"
 	echo -e "\nExtra metadata\t\t= $scnsaver_xmeta\n"
+	echo -e "\n24-hour clock\t\t= $scnsaver_24clock\c"
 }
 
 RADIO_MANAGER_SETTINGS() {
@@ -855,6 +856,7 @@ library_onetouch_pl=${arr[171]}
 scnsaver_mode=${arr[172]}
 scnsaver_layout=${arr[173]}
 scnsaver_xmeta=${arr[174]}
+scnsaver_24clock=${arr[175]}
 value=$(moodeutl -d -gv rotaryenc)
 [[ "$value" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
 ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
