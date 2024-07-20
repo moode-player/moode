@@ -20,6 +20,7 @@ Updates
 - UPD: Add HDMI-CEC support to Local Display feature
 - UPD: Add NVMe drive mount to Library Config
 - UPD: Add max ALSA volume option to Plexamp renderer settings
+- UPD: Add 24 hour option for CoverView Digital Clock
 - UPD: Improve Plexamp and RoonBridge setup guides
 
 Bug fixes
