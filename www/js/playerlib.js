@@ -761,8 +761,7 @@ function screenSaver(cmd) {
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
 
-        if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'] == 'Digital clock (24-hour)' ||
-            SESSION.json['scnsaver_mode'].includes('Analog clock')) {
+        if (SESSION.json['scnsaver_mode'].includes('clock')) {
             $('#ss-coverart').css('display', 'none');
             $('#ss-clock').css('display', 'block');
             showSSClock();
@@ -776,15 +775,51 @@ function screenSaver(cmd) {
     }
 }
 
-// Screen saver clock
-function showSSDigitalClock(isAMPM = true) {
+function showSSClock() {
+	switch (SESSION.json['scnsaver_mode']) {
+		case 'Digital clock':
+        case 'Digital clock (24-hour)':
+            var showAMPM = SESSION.json['scnsaver_mode'] == 'Digital clock (24-hour)' ? false : true;
+			showSSDigitalClock(showAMPM);
+			GLOBAL.ssClockIntervalID = setInterval(showSSDigitalClock, 1000, showAMPM);
+			break;
+        // Analog clock functions are in analog-clock.js
+		case 'Analog clock':
+        case 'Analog clock (Sweep)':
+            var showSweepSecondHand = SESSION.json['scnsaver_mode'] == 'Analog clock (Sweep)' ? true : false;
+			showAnalogClock("ss-clock", ANALOGCLOCK_REFRESH_INTERVAL_SMOOTH, showSweepSecondHand);
+			break;
+
+		default: break;
+	}
+}
+
+function hideSSClock() {
+	switch (SESSION.json['scnsaver_mode']) {
+		case 'Digital clock':
+        case 'Digital clock (24-hour)':
+			clearInterval(GLOBAL.ssClockIntervalID);
+			$('#ss-clock').text('');
+			break;
+        // Analog clock functions are in analog-clock.js
+		case 'Analog clock':
+        case 'Analog clock (Sweep)':
+			hideAnalogClock();
+			break;
+
+		default: break;
+	}
+}
+
+// CoverView digital clock
+function showSSDigitalClock(showAMPM = true) {
     var date = new Date();
     var h = date.getHours(); // 0 - 23
     var m = date.getMinutes(); // 0 - 59
     var s = date.getSeconds(); // 0 - 59
 
     var ampm = " AM";
-    if (!isAMPM) {
+    if (!showAMPM) {
         ampm = "";
     } else {
         if (h == 0) {
@@ -802,42 +837,6 @@ function showSSDigitalClock(isAMPM = true) {
     var time = h + ':' + m + ':' + s + ampm;
     $('#ss-clock').text(time);
     //console.log(time);
-}
-
-function showSSClock() {
-	switch (SESSION.json['scnsaver_mode']) {
-		case 'Digital clock':
-        case 'Digital clock (24-hour)':
-            var showAMPM = SESSION.json['scnsaver_mode'] != 'Digital clock (24-hour)' ? true : false;
-			showSSDigitalClock(showAMPM);
-			GLOBAL.ssClockIntervalID = setInterval(showSSDigitalClock(showAMPM), 1000);
-			break;
-
-		case 'Analog clock':
-        case 'Analog clock (Sweep)':
-            var showSweepSecondHand = SESSION.json['scnsaver_mode'] == 'Analog clock (Sweep)' ? true : false;
-			showAnalogClock("ss-clock", ANALOGCLOCK_REFRESH_INTERVAL_SMOOTH, showSweepSecondHand);
-			break;
-
-		default: break;
-	}
-}
-
-function hideSSClock() {
-	switch (SESSION.json['scnsaver_mode']) {
-		case 'Digital clock':
-        case 'Digital clock (24-hour)':    
-			clearInterval(GLOBAL.ssClockIntervalID);
-			$('#ss-clock').text('');
-			break;
-
-		case 'Analog clock':
-        case 'Analog clock (Sweep)':
-			hideAnalogClock();
-			break;
-
-		default: break;
-	}
 }
 
 // Reconnect/reboot/restart
