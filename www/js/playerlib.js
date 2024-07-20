@@ -781,7 +781,7 @@ function showSSClock() {
         case 'Digital clock (24-hour)':
             var showAMPM = SESSION.json['scnsaver_mode'] == 'Digital clock (24-hour)' ? false : true;
 			showSSDigitalClock(showAMPM);
-			GLOBAL.ssClockIntervalID = setInterval(showSSDigitalClock, 1000, showAMPM);
+			GLOBAL.ssClockIntervalID = setInterval(function () {showSSDigitalClock(showAMPM);}, 1000);
 			break;
         // Analog clock functions are in analog-clock.js
 		case 'Analog clock':
