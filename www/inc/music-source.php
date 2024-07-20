@@ -377,8 +377,5 @@ function nvmeListDrives() {
 		}
 	}
 
-	//return $drives;
-
-	// NOTE: Simulate for testing
-	return array('/dev/nvme0n1' => 'Crucial P3 M.2 SSD');
+	return $drives;
 }
