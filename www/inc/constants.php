@@ -49,6 +49,9 @@ const LIB_MOUNT_FAILED = '<i class="fa-solid fa-sharp fa-times sx" style="color:
 const LIB_MOUNT_TYPE_SMB = 'cifs';
 const LIB_MOUNT_TYPE_NFS = 'nfs';
 const LIB_MOUNT_TYPE_NVME = 'nvme';
+const LIB_NVME_UNFORMATTED = 'Unformatted';
+const LIB_NVME_NOT_EXT4 = 'Not ext4';
+const LIB_NVME_NO_LABEL = 'Not labeled';
 // Thumbnail generator
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const THM_SM_W = 80; // Small thumbs

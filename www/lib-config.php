@@ -194,12 +194,22 @@ if (isset($_POST['remove_nvme_source']) && $_POST['remove_nvme_source'] == 1) {
 if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 	// Validate
 	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
-	if ($_POST['mount']['drive'] == 'none') {
+	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
+	if ($driveStatus == 'none') {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'No drive was selected.';
 	} else if ($_POST['mount']['action'] == 'add_nvme_source' && !empty($id[0])) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name already exists.';
+	} else if ($driveStatus == LIB_NVME_UNFORMATTED) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Drive must be formatted first.';
+	} else if ($driveStatus == LIB_NVME_NOT_EXT4) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Drive must be ext4 format.';
+	} else if ($driveStatus == LIB_NVME_NO_LABEL) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Drive must have a label.';
 	} else if (empty(trim($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
@@ -212,7 +222,7 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 		$array['mount']['id'] = $_POST['mount']['id'];
 		$array['mount']['name'] = $_POST['mount']['name'];
 		$array['mount']['type'] = LIB_MOUNT_TYPE_NVME;
-		$array['mount']['address'] = $_POST['mount']['drive']; // device,label
+		$array['mount']['address'] = $_POST['mount']['drive']; // device,label or device,status
 		$array['mount']['remotedir'] = '';
 		$array['mount']['username'] = '';
 		$array['mount']['password'] = '';
@@ -419,12 +429,12 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nvme_source' || $_GET['cmd'] =
 		// NVMe drives
 		$drives = nvmeListDrives();
 		if (empty($drives)) {
-			$_nvme_drives = sprintf('<option value="%s" %s>%s</option>\n', 'none', 'selected', 'None');
+			$_nvme_drives = sprintf('<option value="%s" %s>%s</option>\n', 'none,none', 'selected', 'None');
 		} else {
-			foreach ($drives as $device => $label) {
+			foreach ($drives as $device => $status) {
 				$selected = '';
 				$_nvme_drives .= sprintf('<option value="%s" %s>%s</option>\n',
-					$device . ',' . $label, $selected, $device . ' (' . $label . ')');
+					$device . ',' . $status, $selected, $device . ' (' . $status . ')');
 			}
 		}
 

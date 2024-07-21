@@ -371,9 +371,25 @@ function nvmeListDrives() {
 	$devices = sysCmd('ls -1 /dev/');
 
 	foreach ($devices as $device) {
-		if (str_contains($device, 'nvme')) {
-			$label = trim(sysCmd('blkid /dev/' . $device . " | awk '/LABEL/ {print $3}' | cut -d '=' -f 2")[0], '"');
-			$drives['/dev/' . $device] = empty($label) ? 'No disk label' : $label;
+		// Check for /dev/nvme0n1 and similar
+		if (str_contains($device, 'nvme') && strlen($device) > 5) {
+			// Check for ext4 format
+			$format = sysCmd('blkid /dev/' . $device . " | awk -F'TYPE=' '{print $2}' | awk -F'\"' '{print $2}'");
+			if (empty($format)) {
+				$status = LIB_NVME_UNFORMATTED;
+			} else if ($format[0] != 'ext4') {
+				$status = LIB_NVME_NOT_EXT4;
+			} else {
+				// Get drive label
+				$label = sysCmd('blkid /dev/' . $device . " | awk -F'LABEL=' '{print $2}' | awk -F'\"' '{print $2}'");
+				if (empty($label)) {
+					$status = LIB_NVME_NO_LABEL;
+				} else {
+					$status = $label[0];
+				}
+			}
+
+			$drives['/dev/' . $device] = $status;
 		}
 	}
 
