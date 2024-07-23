@@ -8,7 +8,7 @@
 <div class="container">
 	<h1 class="lib-config">Local NVMe drives</h1>
 	<p>
-		Select an EXT4 formatted NVMe drive to mount from the list. 
+		Select an EXT4 formatted NVMe drive from the list to mount.
 		After saving or removing a drive, return to Playback or Library and select "Update library" from the Menu.
 	</p>
 
@@ -25,14 +25,14 @@
 		</a>
 
 		<div class="control-group">
-			<label class="control-label" for="type">Drives</label>
+			<label class="control-label" for="nvme-drive">Drives</label>
 			<div class="controls">
-				<select id="type" name="mount[drive]" class="config-select-large">
+				<select id="nvme-drive" name="mount[drive]" class="config-select-large">
 					$_nvme_drives
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-nvme-drives" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-nvme-drives" class="config-help-info">
-					Text goes here
+					List of NVMe drives showing the device ID and in parenthesis its volume label or a status for example "Unformatted" or "No label".
                 </span>
 			</div>
 
@@ -78,25 +78,3 @@
 		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
-
-<form class="form-horizontal" method="post">
-	<div id="manual-server" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="manual-server-label" aria-hidden="true">
-		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Manual path entry</h3>
-		</div>
-		<div class="modal-body">
-			<label class="control-label" for="manualserver">Path</label>
-			<div class="controls">
-				<input id="manualserver" class="config-input-xlarge config-modal-input" type="text" pattern="^[A-Za-z0-9]{1,1}.*$" name="nas_manualserver" value="" autofocus>
-				<input id="mounttype" type="hidden" name="mounttype" value="">
-				<div id="info-manualserver" class="help-block" style="margin-top:5px;">
-					Format is Host/Share or IPaddr/Share. Up to 64 chars, leading slash / not allowed.
-                </div>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="manualentry" value="1">Ok</button>
-		</div>
-	</div>
-</form>

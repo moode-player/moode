@@ -652,6 +652,9 @@ function engineCmdLite() {
                     $('.busy-spinner').hide();
                     loadLibrary();
                     break;
+                case 'nvme_formatting_drive':
+                    notify(NOTIFY_TITLE_INFO, 'nvme_formatting_drive', NOTIFY_DURATION_INFINITE);
+                    break;
                 case 'cdsp_update_config':
                     notify(NOTIFY_TITLE_INFO, 'cdsp_update_config', cmd[1], NOTIFY_DURATION_INFINITE);
                     break;

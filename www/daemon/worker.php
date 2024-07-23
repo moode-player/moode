@@ -809,12 +809,14 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // USB drives
-$usbDrives = sysCmd('ls /media');
-if (empty($usbDrives)) {
+$mounts = sysCmd('ls -1 /media');
+if (empty($mounts)) {
 	workerLog('worker: USB drives:     none');
 } else {
-	foreach ($usbDrives as $usbDrive) {
-		workerLog('worker: USB drive:      ' . $usbDrive);
+	foreach ($mounts as $mp) {
+		$device = sysCmd('mount | grep "/media/' . $mp . '" | cut -d " " -f 1')[0];
+		$format = getDriveFormat($device);
+		workerLog('worker: USB drive:      ' . $mp . ' (' . $format . ')');
 	}
 }
 // NVMe drives
@@ -823,7 +825,9 @@ if ($mounts === true) { // Empty result
 	workerLog('worker: NVMe drives:    none');
 } else {
 	foreach ($mounts as $mp) {
-		workerLog('worker: NVMe drive:     ' . $mp['name']);
+		$device = explode(',', $mp['address'])[0];
+		$format = getDriveFormat($device);
+		workerLog('worker: NVMe drive:     ' . $mp['name'] . ' (' . $format . ')');
 	}
 	$result = nvmeSourceMount('mountall');
 }
@@ -2237,6 +2241,17 @@ function runQueuedJob() {
 		case 'nvme_source_cfg':
 			clearLibCacheAll();
 			nvmeSourceCfg($_SESSION['w_queueargs']);
+			break;
+		case 'nvme_format_drive':
+			$parts = explode(',', $_SESSION['w_queueargs']);
+			$device = $parts[0];
+			$status = $parts[1]; // Could be existing label or status (Unformatted, Not ext4, Not labeled)
+			$newLabel = $parts[2];
+			sendFECmd('nvme_formatting_drive');
+			// TEST:
+			workerLog('queueargs: (' . $_SESSION['w_queueargs'] . ')');
+			sleep(6);
+			//PROD:nvmeFormatDrive($device, $newLabel);
 			break;
 		case 'fs_mountmon':
 			sysCmd('killall -s 9 mountmon.php');

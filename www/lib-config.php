@@ -22,7 +22,7 @@ $initiateLibraryUpd = false;
 // Library Config
 //----------------------------------------------------------------------------//
 
-// Re-mount NAS sources
+// NAS source re-mount
 if (isset($_POST['remount_nas_sources'])) {
 	$result = sqlRead('cfg_source', $dbh);
 	if ($result === true) {
@@ -35,7 +35,7 @@ if (isset($_POST['remount_nas_sources'])) {
 		$_SESSION['notify']['msg'] = 'Re-mounting NAS sources...';
 	}
 }
-// Mount monitor
+// NAS source mount monitor
 if (isset($_POST['update_fs_mountmon'])) {
 	if (isset($_POST['fs_mountmon']) && $_POST['fs_mountmon'] != $_SESSION['fs_mountmon']) {
 		$_SESSION['fs_mountmon'] = $_POST['fs_mountmon'];
@@ -209,7 +209,7 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 		$_SESSION['notify']['msg'] = 'Drive must be ext4 format.';
 	} else if ($driveStatus == LIB_NVME_NO_LABEL) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['notify']['msg'] = 'Drive must have a label.';
+		$_SESSION['notify']['msg'] = 'Drive must have a volume label.';
 	} else if (empty(trim($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
@@ -232,6 +232,24 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 		$array['mount']['options'] = 'noexec,nodev,noatime,nodiratime';
 
 		submitJob('nvme_source_cfg', $array);
+	}
+}
+
+//----------------------------------------------------------------------------//
+// NVMe format drive
+//----------------------------------------------------------------------------//
+
+if (isset($_POST['nvme_format_drive'])) {
+	if (empty(trim($_POST['nvme_drive_label']))) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Volume label cannot be blank.';
+	} else {
+		$_nvme_drive = $_POST['nvme_drive'];
+		$_nvme_drive_label = $_POST['nvme_drive_label'];
+		submitJob('nvme_format_drive', $_POST['nvme_drive'] . ',' . $_POST['nvme_drive_label'],
+			NOTIFY_TITLE_INFO,
+			'Drive format complete. Return to Library Config, restart the system then mount the drive.',
+			NOTIFY_DURATION_MEDIUM);
 	}
 }
 
@@ -285,7 +303,7 @@ if (!isset($_GET['cmd'])) {
 		$icon = nvmeMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
 		$_nvme_mounts .= "<a href=\"lib-config.php?cmd=edit_nvme_source&id=" . $mp['id'] .
 			"\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " .
-			$mp['name'] . ' (' . explode(',', $mp['address'])[0] . ')' . "</a>";
+			$mp['name'] . ' (' . explode(',', $mp['address'])[0] . ', ext4)' . "</a>";
 	}
 	if ($mounts === true) {
 		$_nvme_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
@@ -442,6 +460,22 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nvme_source' || $_GET['cmd'] =
 		$_SESSION['nvme_src_action'] = $_action;
 		$_SESSION['nvme_src_mpid'] = $_id;
 		phpSession('close');
+	}
+}
+// NVME FORMAT DRIVE
+if (isset($_GET['cmd']) && $_GET['cmd'] == 'format_nvme_drive') {
+	$tpl = 'lib-nvme-format.html';
+
+	// NVMe drives
+	$drives = nvmeListDrives();
+	if (empty($drives)) {
+		$_nvme_drives = sprintf('<option value="%s" %s>%s</option>\n', 'none,none', 'selected', 'None');
+	} else {
+		foreach ($drives as $device => $status) {
+			$selected = '';
+			$_nvme_drives .= sprintf('<option value="%s" %s>%s</option>\n',
+				$device . ',' . $status, $selected, $device . ' (' . $status . ')');
+		}
 	}
 }
 

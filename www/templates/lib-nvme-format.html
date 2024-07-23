@@ -1,0 +1,62 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="lib-config">Format Local NVMe drive</h1>
+	<p>
+		Select an NVMe drive from the list to format.
+		The drive will be formatted as a single EXT4 partition (volume).
+		Since formatting will erase all data on the drive a confirmation dialog will appear after clicking on the FORMAT button.
+	</p>
+
+	<form class="form-horizontal" action="lib-config.php" method="post">
+		<legend>NVMe drive
+			<a href="#format-nvme-drive-modal" data-toggle="modal"><button id="btn-format-nvme-drive" class="legend-config btn btn-medium btn-primary">Format</button></a>
+		</legend>
+
+		<div class="control-group">
+			<label class="control-label" for="nvme-drive">Drives</label>
+			<div class="controls">
+				<select id="nvme-drive" name="nvme_drive" class="config-select-large">
+					$_nvme_drives
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-nvme-drives" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-nvme-drives" class="config-help-info">
+					List of NVMe drives showing the device ID and in parenthesis its volume label or a status for example "Unformatted" or "No label".
+                </span>
+			</div>
+
+			<label class="control-label" for="nvme-drive-label">Volume label</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" pattern="[A-Za-z0-9\-_ ]{1,25}" id="nvme-drive-label" name="nvme_drive_label" value="$_nvme_drive_label">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-nvme-drive-label" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-nvme-drive-label" class="config-help-info">
+					Volume label for this NVMe drive. The label will be shown when the drive is subsequently selected for mounting.
+                </span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="format-nvme-drive-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="format-nvme-drive-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Format NVMe drive?</h3>
+		</div>
+		<div class="modal-body txtmid">
+			Formatting will erase all data on the drive.
+			<div id="modal-nvme-drive-txt"></div>
+			<input id="modal-nvme-drive" type="hidden" name="nvme_drive" value="$_nvme_drive">
+			<input id="modal-nvme-drive-label" type="hidden" name="nvme_drive_label" value="$_nvme_drive_label">
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button id="btn-format-nvme-drive-submit" class="btn btn-primary btn-submit" type="submit" name="nvme_format_drive" value="1">Yes</button>
+		</div>
+	</div>
+</form>

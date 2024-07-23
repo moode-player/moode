@@ -317,6 +317,18 @@ jQuery(document).ready(function($){ 'use strict';
         });
     });
 
+    // Format NVMe drive screen
+    $('#btn-format-nvme-drive').click(function(e) {
+        var parts = $('#nvme-drive').val().split(',');
+        $('#modal-nvme-drive-txt').text(parts[0]);
+        $('#modal-nvme-drive').val($('#nvme-drive').val());
+        $('#modal-nvme-drive-label').val($('#nvme-drive-label').val());
+    });
+    // Format NVMe drive submit (close modal)
+    $('#btn-format-nvme-drive-submit').click(function(e) {
+        $('#format-nvme-drive-modal').modal('toggle');
+    });
+
     // Info button (i) show/hide toggle
     $('.config-info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');

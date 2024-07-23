@@ -374,18 +374,18 @@ function nvmeListDrives() {
 		// Check for /dev/nvme0n1 and similar
 		if (str_contains($device, 'nvme') && strlen($device) > 5) {
 			// Check for ext4 format
-			$format = sysCmd('blkid /dev/' . $device . " | awk -F'TYPE=' '{print $2}' | awk -F'\"' '{print $2}'");
+			$format = getDriveFormat($device);
 			if (empty($format)) {
 				$status = LIB_NVME_UNFORMATTED;
-			} else if ($format[0] != 'ext4') {
+			} else if ($format != 'ext4') {
 				$status = LIB_NVME_NOT_EXT4;
 			} else {
 				// Get drive label
-				$label = sysCmd('blkid /dev/' . $device . " | awk -F'LABEL=' '{print $2}' | awk -F'\"' '{print $2}'");
+				$label = getDrivelabel($device);
 				if (empty($label)) {
 					$status = LIB_NVME_NO_LABEL;
 				} else {
-					$status = $label[0];
+					$status = $label;
 				}
 			}
 
@@ -393,5 +393,27 @@ function nvmeListDrives() {
 		}
 	}
 
+	// TEST:
+	$drives['/dev/nvme0n1'] = 'Some volume label';
+	$drives['/dev/nvme1n1'] = 'Unformatted';
+	$drives['/dev/nvme2n1'] = 'Not ext4';
+	$drives['/dev/nvme3n1'] = 'No label';
 	return $drives;
+}
+
+function getDriveFormat($device) {
+	$format = sysCmd('blkid ' . $device . " | awk -F'TYPE=' '{print $2}' | awk -F'\"' '{print $2}'");
+	return empty($format) ? '' : $format[0];
+}
+
+function getDriveLabel($device) {
+	$label = sysCmd('blkid ' . $device . " | awk -F'LABEL=' '{print $2}' | awk -F'\"' '{print $2}'");
+	return empty($label) ? '' : $label[0];
+}
+
+function nvmeFormatDrive($device, $label) {
+	// TEST:
+	workerLog('nvmeFormatDrive(): ' . $device . '|' . $label);
+	//sysCmd('mkfs -t ext4 ' . $device);
+	//sysCmd('e2label ' . $device . ' ' . $label); // Need quotes around the label?
 }

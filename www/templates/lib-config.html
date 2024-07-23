@@ -55,7 +55,15 @@
 		<div class="control-group">
 			<a href="lib-config.php?cmd=add_nvme_source"><button class="btn btn-medium btn-primary config-btn">Mount</button></a>
 			<span class="config-btn-after">Local NVMe drive</span>
+
 			<div>$_nvme_mounts</div>
+
+			<a href="lib-config.php?cmd=format_nvme_drive"><button class="btn btn-medium btn-primary config-btn">Format</button></a>
+			<span class="config-btn-after">Local NVMe drive</span>
+			<a aria-label="Help" class="config-info-toggle" data-cmd="info-format-nvme-drive" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+			<span id="info-format-nvme-drive" class="config-help-info">
+				A List of NVMe drives will be presented showing the device ID and in parenthesis its volume label or a status for example "Unformatted" or "No label".
+			</span>
 		</div>
 
 		<legend>Local USB Drives</legend>
