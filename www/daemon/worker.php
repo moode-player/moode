@@ -2248,10 +2248,9 @@ function runQueuedJob() {
 			$status = $parts[1]; // Could be existing label or status (Unformatted, Not ext4, Not labeled)
 			$newLabel = $parts[2];
 			sendFECmd('nvme_formatting_drive');
-			// TEST:
-			workerLog('queueargs: (' . $_SESSION['w_queueargs'] . ')');
-			sleep(6);
-			//PROD:nvmeFormatDrive($device, $newLabel);
+			workerLog('worker: Formatting: ' . $device . ', label: ' . $newLabel);
+			nvmeFormatDrive($device, $newLabel);
+			workerLog('worker: Format complete');
 			break;
 		case 'fs_mountmon':
 			sysCmd('killall -s 9 mountmon.php');

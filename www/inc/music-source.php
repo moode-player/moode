@@ -374,14 +374,14 @@ function nvmeListDrives() {
 		// Check for /dev/nvme0n1 and similar
 		if (str_contains($device, 'nvme') && strlen($device) > 5) {
 			// Check for ext4 format
-			$format = getDriveFormat($device);
+			$format = getDriveFormat('/dev/' . $device);
 			if (empty($format)) {
 				$status = LIB_NVME_UNFORMATTED;
 			} else if ($format != 'ext4') {
 				$status = LIB_NVME_NOT_EXT4;
 			} else {
 				// Get drive label
-				$label = getDrivelabel($device);
+				$label = getDrivelabel('/dev/' . $device);
 				if (empty($label)) {
 					$status = LIB_NVME_NO_LABEL;
 				} else {
@@ -393,11 +393,6 @@ function nvmeListDrives() {
 		}
 	}
 
-	// TEST:
-	$drives['/dev/nvme0n1'] = 'Some volume label';
-	$drives['/dev/nvme1n1'] = 'Unformatted';
-	$drives['/dev/nvme2n1'] = 'Not ext4';
-	$drives['/dev/nvme3n1'] = 'No label';
 	return $drives;
 }
 
@@ -412,8 +407,6 @@ function getDriveLabel($device) {
 }
 
 function nvmeFormatDrive($device, $label) {
-	// TEST:
-	workerLog('nvmeFormatDrive(): ' . $device . '|' . $label);
-	//sysCmd('mkfs -t ext4 ' . $device);
-	//sysCmd('e2label ' . $device . ' ' . $label); // Need quotes around the label?
+	sysCmd('mkfs -t ext4 ' . $device);
+	sysCmd('e2label ' . $device . ' "' . $label . '"');
 }
