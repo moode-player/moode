@@ -11,6 +11,22 @@
 
 ################################################################################
 #
+# 2024-MM-DD moOde 9.0.6 (Bookworm)
+#
+################################################################################
+
+Updates
+
+- UPD:
+
+Bug fixes
+
+- FIX: Permissions for specific service and etc files
+- FIX: NFS /etc/exports not being updated for NVMe drive mounts
+- FIX: NVMe format not checking for already mounted
+
+################################################################################
+#
 # 2024-07-24 moOde 9.0.5 (Bookworm)
 #
 ################################################################################
