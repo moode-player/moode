@@ -243,6 +243,9 @@ if (isset($_POST['nvme_format_drive'])) {
 	if (empty(trim($_POST['nvme_drive_label']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Volume label cannot be blank.';
+	} else if (!empty(sysCmd('mount | grep -ow "' . explode(',', $_POST['nvme_drive'])[0] . '"'))) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Drive must be un-mounted first.';
 	} else {
 		$_nvme_drive = $_POST['nvme_drive'];
 		$_nvme_drive_label = $_POST['nvme_drive_label'];
