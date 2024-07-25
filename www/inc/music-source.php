@@ -245,6 +245,7 @@ function nvmeSourceCfg($queueArgs) {
 			$newMountId = $dbh->lastInsertId();
 
 			$result = nvmeSourceMount('mount', $newMountId);
+			nvmeUpdNFSExports($queueArgs['mount']['name'], $action);
 			break;
 		case 'edit_nvme_source':
 			$dbh = sqlConnect();
@@ -262,6 +263,8 @@ function nvmeSourceCfg($queueArgs) {
 			}
 
 			$result = nvmeSourceMount('mount', $queueArgs['mount']['id']);
+			nvmeUpdNFSExports($mp[0]['name'], 'remove_nvme_source');
+			nvmeUpdNFSExports($queueArgs['mount']['name'], 'add_nvme_source');
 			break;
 		case 'remove_nvme_source':
 			$dbh = sqlConnect();
@@ -276,6 +279,7 @@ function nvmeSourceCfg($queueArgs) {
 			}
 
 			$result = (sqlDelete('cfg_source', $dbh, $queueArgs['mount']['id'])) ? true : false;
+			nvmeUpdNFSExports($mp[0]['name'], $action);
 			break;
 	}
 
@@ -364,6 +368,28 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 function nvmeMountExists($mountName) {
 	$result = sysCmd('mount | grep -ow ' . '"/mnt/NVME/' . $mountName .'"');
 	return empty($result) ? false : true;
+}
+
+function nvmeUpdNFSExports($mountName, $action) {
+	$dbh = sqlConnect();
+
+	switch ($action) {
+		case 'add_nvme_source':
+			// Example: /srv/nfs/nvme/Music	192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
+			$access = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_access'", $dbh)[0]['value'];
+			$options = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_options'", $dbh)[0]['value'];
+			sysCmd("sed -i '$ a/srv/nfs/nvme/" . $mountName . "\t" . $access . '(' . $options . ")\n' /etc/exports");
+			break;
+		case 'remove_nvme_source':
+			sysCmd('sed -i "/' . $mountName . '/ d" /etc/exports');
+			sysCmd('sed -i "/^$/d" /etc/exports'); // Remove any trailing blank lines
+			break;
+	}
+
+	$fsNFS = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs'", $dbh)[0]['value'];
+	if ($fsNFS == 'On') {
+		sysCmd('systemctl restart nfs-kernel-server');
+	}
 }
 
 function nvmeListDrives() {
