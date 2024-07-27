@@ -13,7 +13,7 @@
 	<div class="modal-body">
 		<h5>Overview</h5>
 		<p>
-			moOde audio player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori under the Tsunamp project and subsequently enhanced by early efforts from the RaspyFi/Volumio projects. Refer to the Contributors link below more information.
+			moOde audio player is a derivative of the wonderful WebUI audio player for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori under the Tsunamp project and subsequently enhanced by early efforts from the RaspyFi/Volumio projects. Refer to the Contributors link below more information.
 		</p>
 
 		<h5>Your Privacy</h5>
