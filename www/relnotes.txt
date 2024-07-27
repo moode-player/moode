@@ -15,15 +15,12 @@
 #
 ################################################################################
 
-Updates
-
-- UPD:
-
 Bug fixes
 
 - FIX: NFS /etc/exports not being updated for NVMe drive mounts
 - FIX: NVMe format not checking for already mounted
 - FIX: Permissions for specific service and etc files
+- FIX: Context menu spacing for "Receivers" line
 
 ################################################################################
 #
