@@ -202,11 +202,23 @@ final class Zend_Media_Id3v2 extends Zend_Media_Id3_Object
             }
 
             $this->_reader->setOffset($offset);
-            if (@fopen($file = 'Zend/Media/Id3/Frame/' .
+            $file = 'Zend/Media/Id3/Frame/' .
+                ucfirst(strtolower($identifier)) . '.php';
+            if (file_exists('/var/www/inc/' . $file)) {
+                if (@fopen($file, 'r', true) !== false) {
+                    require_once($file);
+                }
+            } else {
+                $fileName = ltrim($this->_filename, '/var/lib/mpd/music/');
+                workerLog('thumb-gen: Error: Zend bad Frame ID (' . $identifier . ') in file: ' . $fileName);
+            }
+            // Original code
+            /*DELETE:if (@fopen($file = 'Zend/Media/Id3/Frame/' .
                        ucfirst(strtolower($identifier)) . '.php', 'r',
                        true) !== false) {
                 require_once($file);
-            }
+            }*/
+
             if (class_exists
                 ($classname = 'Zend_Media_Id3_Frame_' .
                      ucfirst(strtolower($identifier)))) {
