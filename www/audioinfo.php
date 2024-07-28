@@ -198,15 +198,15 @@ if ($btActive === true) {
 
 // Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {
-	$_audio_output_chain = 'MPD -> Bluetooth stream -> Bluetooth speaker';
+	$_audio_output_chain = 'MPD &rarr; Bluetooth stream &rarr; Bluetooth speaker';
 } else if ($_SESSION['multiroom_tx'] == 'On') {
-	$_audio_output_chain = $renderer . ' -> Multiroom Sender';
+	$_audio_output_chain = $renderer . ' &rarr; Multiroom Sender';
 } else if ($_SESSION['multiroom_rx'] == 'On') {
-	$_audio_output_chain = 'Multiroom Receiver -> Device';
+	$_audio_output_chain = 'Multiroom Receiver &rarr; Device';
 } else if ($dsp != '') {
-	$_audio_output_chain = $renderer . ' -> ' . $dsp . ' -> ' . $outputMode . ' -> Device';
+	$_audio_output_chain = $renderer . ' &rarr; ' . $dsp . ' &rarr; ' . $outputMode . ' &rarr; Device';
 } else {
-	$_audio_output_chain = $renderer . ' -> ' . $outputMode . ' -> Device';
+	$_audio_output_chain = $renderer . ' &rarr; ' . $outputMode . ' &rarr; Device';
 }
 
 // ALSA Output mode and Loopback
