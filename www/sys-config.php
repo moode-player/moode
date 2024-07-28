@@ -50,8 +50,8 @@ if (isset($_POST['checkfor_update'])) {
 		$_pkg_description = $available['Description'];
 		$_pkg_relnotes = $available['Relnotes'];
 	}
-
-	$_available_upd = '<span class="config-msg-static">' . $_available_upd . '</span>';
+	$marginClass = str_contains($_available_upd, 'button') ? 'config-help-no-margin' : '';
+	$_available_upd = '<span class="config-msg-static ' . $marginClass  . '">' . $_available_upd . '</span>';
 }
 
 // Install software update
