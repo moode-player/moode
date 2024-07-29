@@ -44,16 +44,19 @@ if (isset($_POST['update_fs_mountmon'])) {
 }
 // Regenerate MPD database
 if (isset($_POST['regen_library'])) {
+	unset($_GET['cmd']);
 	submitJob('regen_library', '', NOTIFY_TITLE_INFO, 'Regenerating the database. Stay on this screen until the progress spinner is cleared', NOTIFY_DURATION_INFINITE);
 }
 // Clear library cache
 if (isset($_POST['clear_libcache'])) {
+	unset($_GET['cmd']);
 	clearLibCacheAll();
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 	$_SESSION['notify']['msg'] = 'Library tag cache has been cleared. It will be created when returning to Playback or Library view.';
 }
 // Scan or ignore .cue files by adding or removing *.cue from /var/lib/mpd/music/.mpdignore
 if (isset($_POST['update_cuefiles_ignore'])) {
+	unset($_GET['cmd']);
 	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
 		phpSession('write', 'cuefiles_ignore', $_POST['cuefiles_ignore']);
 		submitJob('cuefiles_ignore', $_POST['cuefiles_ignore'], NOTIFY_TITLE_INFO, 'MPD' . NOTIFY_MSG_SVC_RESTARTED);
@@ -61,6 +64,7 @@ if (isset($_POST['update_cuefiles_ignore'])) {
 }
 // Regenerate thumbnail cache
 if (isset($_POST['regen_thmcache'])) {
+	unset($_GET['cmd']);
 	$result = sysCmd('pgrep -l thumb-gen.php');
 	if (strpos($result[0], 'thumb-gen.php') !== false) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
