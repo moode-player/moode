@@ -347,7 +347,7 @@ if (file_exists('/etc/NetworkManager/system-connections/preconfigured.nmconnecti
 	} else {
 		// Update wlan0 SSID, UUID, PSK and Country
 		sqlQuery('UPDATE cfg_network SET ' .
-			"wlanssid='" . $ssid[0] . "', " .
+			"wlanssid='" . SQLite3::escapeString($ssid[0]) . "', " .
 			"wlanuuid='" . $uuid[0] . "', " .
 			"wlanpwd='" . $psk[0] . "', " .
 			"wlanpsk='" . $psk[0] . "', " .
@@ -399,7 +399,7 @@ if (empty($wlan0)) {
 } else {
 	$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 	$cfgSSID = sysCmd("moodeutl -q \"SELECT ssid FROM cfg_ssid WHERE ssid NOT IN ('" .
-		$cfgNetwork[1]['wlanssid'] . "', 'Activate Hotspot')\"");
+		SQLite3::escapeString($cfgNetwork[1]['wlanssid']) . "', 'Activate Hotspot')\"");
 	$altSSIDList = empty($cfgSSID) ? 'None' : implode(',', $cfgSSID);
 	workerLog('worker: Wireless: adapter exists');
 	workerLog('worker: Wireless: country ' . $cfgNetwork[1]['wlancc']);
