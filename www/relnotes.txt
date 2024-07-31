@@ -23,6 +23,7 @@ Bug fixes
 - FIX: Permissions for specific service and etc files
 - FIX: Context menu spacing for "Receivers" line
 - FIX: Lato-Thin @font-face definition and various other font defs
+- FIX: Imported Pi Imager SSID not being SQL escaped
 
 ################################################################################
 #
