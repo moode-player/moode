@@ -7,8 +7,7 @@
   font-family: 'Lato';
   font-style: normal;
   font-weight: 300;
-  /*src: local('Lato Thin'), local('Lato-Thin'), url(../fonts/Lato-Thin.tff) format('truetype');*/
-  src: local('Lato Thin'), local('Lato-Thin');
+  src: local('Lato Thin'), local('Lato-Thin'), url('../fonts/Lato-Thin.woff') format('woff');
 }
 
 body {background-color:var(--themebg);}
@@ -77,7 +76,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* dropdown menus */
 #panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
 #current-tab, #library-header {font-size:1em;}
-.dropdown-menu > li > a, .viewswitch .btn {text-align:left;line-height:2.75rem;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1em;font-family:system-ui, "Avenir Next", "Lato";white-space:nowrap;border-radius:0;}
+.dropdown-menu > li > a, .viewswitch .btn {text-align:left;line-height:2.75rem;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1em;
+    font-family:'Lato',sans-serif;white-space:nowrap;border-radius:0;}
 .dropdown-menu > li:last-child a, .viewswitch .btn:last-child {padding-bottom:.35em;}
 .dropdown-menu > li:first-child a, .viewswitch .btn:first-child {padding-top:.35em;}
 .dropdown-menu {float:right;position:absolute;min-width:13.5rem;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;white-space:normal;padding:0;}
@@ -135,7 +135,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .saved-ssid-modal-delete {margin-right:1em!important;}
 
 /* update package txt ol */
-#update-pkg-ol {font-family:courier new;}
+#update-pkg-ol {font-family:monospace;}
 #update-pkg-ol li {line-height:1em;}
 
 #playback-panel.cv #playback-cover, #playback-panel.cv #coverart-url, #playback-panel.cv img.coverart {width:70vh;max-height:70vh;margin:0 auto;}

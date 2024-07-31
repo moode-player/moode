@@ -10,7 +10,7 @@ body {
 	background-size: cover;
 	height: 100%;
 	color: #ddd;
-	font-family: "Avenir Next", "Lato";
+	font-family: 'Lato',sans-serif;
 	font-size: calc(0.45em + 1vmin);
 	padding: 0;
 	cursor: default;
@@ -136,7 +136,7 @@ html {background-color:inherit;}
 .volume-display-db {position:absolute;top:51%;left:64%;z-index:0;font-size:.8em;transform:translate(0, -50%);}
 #volpad .volume-display-db {left:68%;font-size:1.1em;}
 #volume, #volume-2 {display:none;} /* Using .volume-display to overlay this element so it can be used as a mute toggle */
-#volzone, #timezone, #volbtns-2 {font-family:'SF Mono', 'Roboto Mono', monospace;} /* 'Letter Gothic Std', */
+#volzone, #timezone, #volbtns-2 {font-family:monospace;}
 #volbtns, #volbtns-2 {display:flex;position:absolute;transform:translate(-50%,-50%);top:50%;left:50%;height:70%;margin:0 auto;flex-direction:column;}
 #volumedn, #volumedn-2, #volumeup, #volumeup-2 {font-size:2.5vw;font-weight:400;margin:0 auto;padding:.25rem 1rem;height:33%;color:var(--adapttext);}
 #songsand {width:98%;margin:0 auto;}
@@ -460,7 +460,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 	transform:translate(-50%,-50%);
 	width:80%;
 	color:var(--textvariant);
-	font-family:"Lato";font-weight:300;font-size:7em;}
+	font-family:'Lato',sans-serif;font-weight:300;font-size:7em;}
 #ss-coverart-url img {width:75vh;}
 #ss-currentsong {font-weight:600;}
 #ss-currentsong, #ss-currentalbum-div, #ss-extra-metadata {margin-top:1em;}
@@ -510,7 +510,7 @@ body.cvwide #playback-controls {display:none!important;}
 #btn-ra-search-reset, #btn-pl-search-reset {display:none;}
 #db-search-reset {margin-right:0;}
 #splash {height:100vh;width:100vw;z-index:11111;position:fixed;background:rgba(32,32,32,0.95);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;}
-#splash div {position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);font-size:10vw;font-weight:200;letter-spacing:-.06em;opacity:0;transition:1s;}
+#splash div {position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);font-size:10vw;font-weight:300;letter-spacing:-.06em;opacity:0;transition:1s;}
 .cover-menu {position:absolute;float:right;height:5rem;width:5rem;background-size:2rem 2rem;background-repeat:no-repeat;background-position:.75rem 2.4rem;transform:translate(.75rem, -5.5rem);background-image:url('../images/dots.png')}
 body.no-touch .cover-menu {opacity:0;}
 #radio-covers li:hover .cover-menu, #playlist-covers li:hover .cover-menu, #albumcovers li:hover .cover-menu {opacity:1;}
@@ -527,7 +527,7 @@ body.no-touch .cover-menu {opacity:0;}
 #equalizer {background-color:#333;padding:1em 1em 1em .5em;text-align:center;}
 #eqp-input-ctls {opacity:.5;font-size:.9em}
 #master-gain {margin-bottom:1em;}
-#master-gain-up, #master-gain-dn {display:inline-block;margin-bottom:0;font-size:1.25em;font-family:'SF Mono','Roboto Mono',monospace;}
+#master-gain-up, #master-gain-dn {display:inline-block;margin-bottom:0;font-size:1.25em;font-family:monospace;}
 input[type='range'].hslide2 {width:12em;height:2em;appearance:auto;margin:.5em 0;}
 input[type='range'].hslide2::-webkit-slider-thumb {background:#fff;background-image:'';height:1.25em;width:1.25em;}
 /* 10-band Graphic EQ */
@@ -767,7 +767,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 #playbar-hd-badge,
 #ss-hd-badge,
 .playback-hd-badge {display:none;position:relative;filter:brightness(85%);color:gold;background:#000;border:1px solid gold;
-	border-radius:8%;font-size:.6em;font-family:sans-serif;font-style:normal;font-weight:600;
+	border-radius:8%;font-size:.6em;font-family:'Lato',sans-serif;font-style:normal;font-weight:600;
 	margin-right:.5em;padding:0 .5em;bottom:.16rem;}
 #ss-hd-badge {bottom:.3rem;}
 /* Radio manager */

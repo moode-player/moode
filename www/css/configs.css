@@ -29,8 +29,8 @@ body {
 .container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;}
 
 /* Title and legend */
-h1 {font-size:2.5rem;font-weight:200;margin:0 0 .5em 0;}
-legend {font-size:1.5rem;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
+h1 {font-size:2.5rem;font-weight:300;margin:0 0 .5em 0;}
+legend {font-size:1.5rem;font-weight:300;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
 .legend-config {margin:0 0 .25em .5em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:12px;font-weight:normal;}
 .sub-legend {margin:-1em 0 1.5em 0;color:var(--config-help-color);font-size:1em;}
@@ -83,7 +83,8 @@ a.config-info-toggle:visited {color:var(--config-help-icon-color);}
 /* blu-control, sys-status */
 #blu-control-cmd-output,
 #sys-status-log-output,
-#sys-restore-status {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
+#sys-restore-status {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;
+	font-family:monospace;};
 /* net-config, src-config: Show/hide password plaintext */
 a.show-hide-password {vertical-align:top;color:var(--config-help-icon-color);}
 a.show-hide-password:hover,
