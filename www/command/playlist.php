@@ -35,6 +35,7 @@ switch ($_GET['cmd']) {
 		break;
 	case 'add_to_playlist':
 		$plName = html_entity_decode($_POST['path']['playlist']);
+
 		// Get metadata (may not exist so defaults will be returned)
 		$plMeta = getPlaylistMetadata($plName);
 
@@ -43,6 +44,14 @@ switch ($_GET['cmd']) {
 			$stName = substr($_POST['path']['items'][0], 6, -4); // Trim RADIO/ and .pls
 			$result = sqlQuery("SELECT station FROM cfg_radio WHERE name='" . SQLite3::escapeString($stName) . "'", sqlConnect());
 			$_POST['path']['items'][0] = $result[0]['station']; // URL
+		}
+
+		// File may not exist yet (User enters new playlist name)
+		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
+		if (!file_exists($plFile)) {
+			sysCmd('touch "' . $plFile . '"');
+			sysCmd('chmod 0777 "' . $plFile . '"');
+			sysCmd('chown root:root "' . $plFile . '"');
 		}
 
 		// Write metadata tags, contents and cover image
