@@ -11,7 +11,7 @@ xset -dpms
 xset s 600
 
 # Capture screen size
-SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
+SCREENSIZE="$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')"
 
 # Clear browser cache
 $(/var/www/util/sysutil.sh clearbrcache)
