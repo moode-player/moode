@@ -4654,9 +4654,23 @@ function getThumbHW() {
 	var divM = Math.round(2 * convertRem(1.5)); // 1.5rem l/r margin for div
 	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
 	UI.thumbHW = columnW - (divM / 2);
-	$("body").get(0).style.setProperty("--thumbimagesize", UI.thumbHW + 'px');
-	$("body").get(0).style.setProperty("--thumbmargin", ((columnW - UI.thumbHW) / 2) + 'px');
-	$("body").get(0).style.setProperty("--thumbcols", columnW + 'px');
+	$('body').get(0).style.setProperty('--thumbimagesize', UI.thumbHW + 'px');
+	$('body').get(0).style.setProperty('--thumbmargin', ((columnW - UI.thumbHW) / 2) + 'px');
+	$('body').get(0).style.setProperty('--thumbcols', columnW + 'px');
+    // Mobile:  2, 3, 4 cols
+    // Desktop: 6, 7, >=8 cols
+    if (cols == 2) {
+        var fontSize = '1.5rem';
+    } else if (cols == 3) {
+        var fontSize = '1.25rem';
+    } else if (cols == 4 || cols >= 8) {
+        var fontSize = '1rem';
+    } else if (cols == 6) {
+        var fontSize = '1.35rem';
+    } else if (cols = 7) {
+        var fontSize = '1.15rem';
+    }
+    $('body').get(0).style.setProperty('--thumbtextcoverfontsize', fontSize);
 }
 
 function convertRem(value) {
