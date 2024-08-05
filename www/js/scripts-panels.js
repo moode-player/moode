@@ -960,6 +960,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.database-radio').on('click', '.cover-menu', function(e) {
         var pos = $(this).parents('li').index();
         var path = $(this).parents('li').data('path');
+        //console.log('click .cover-menu: pos|path: ' + pos + '|' + path);
 
         UI.dbEntry[0] = path;
         UI.radioPos = pos;
@@ -1543,7 +1544,7 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('#btn-delete-setpos-bot').click(function(e){
-		$('#delete-playqueue-item-endpos').val(UI.dbEntry[4]);
+		$('#delete-playqueue-item-endpos').val(GLOBAL.playQueueLength);
 		return false;
 	});
 	$('.btn-move-playqueue-item').click(function(e){
@@ -1569,7 +1570,7 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('#btn-move-setpos-bot').click(function(e){
-		$('#move-playqueue-item-endpos').val(UI.dbEntry[4]);
+		$('#move-playqueue-item-endpos').val(GLOBAL.playQueueLength);
 		return false;
 	});
 	$('#btn-move-setnewpos-top').click(function(e){
@@ -1577,11 +1578,11 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('#btn-move-setnewpos-bot').click(function(e){
-		$('#move-playqueue-item-newpos').val(UI.dbEntry[4]);
+		$('#move-playqueue-item-newpos').val(GLOBAL.playQueueLength);
 		return false;
 	});
 
-	// Speed buttons on plaback history log
+	// Speed buttons on playback history log
 	$('#ph-first-page').click(function(e){
 		$('#container-playhistory').scrollTo(0 , 200);
 	});
@@ -1677,7 +1678,7 @@ jQuery(document).ready(function($) { 'use strict';
             }
 
             setColors();
-            if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'] == 'Digital clock (24-hour)' || 
+            if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'] == 'Digital clock (24-hour)' ||
                 SESSION.json['scnsaver_mode'].includes('Analog clock')) {
 				hideSSClock();
             }

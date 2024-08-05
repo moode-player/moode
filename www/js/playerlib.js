@@ -146,7 +146,8 @@ var GLOBAL = {
     lastTimeCount: 0,
     editStationId: '',
     nativeLazyLoad: false,
-    playqueueChanged: false,
+    playQueueChanged: false,
+    playQueueLength: 0,
 	initTime: 0,
     searchOperators: ['==', '!=', '=~', '!~'],
     oneArgFilters: ['full_lib', 'hdonly', 'lossless', 'lossy'],
@@ -1272,7 +1273,7 @@ function renderUI() {
         if (typeof(MPD.json['idle_timeout_event']) == 'undefined' ||
             // Page load/reload, Queue changed (items added/removed)
             MPD.json['idle_timeout_event'] == 'changed: playlist' ||
-            GLOBAL.playqueueChanged == true) {
+            GLOBAL.playQueueChanged == true) {
             renderPlayqueue(MPD.json['state']);
         } else {
             updateActivePlayqueueItem();
@@ -1511,7 +1512,7 @@ function renderPlayqueue(state) {
         var noNpIconClass = SESSION.json['show_npicon'] != 'None' ? '' : ' no-npicon';
 
         // Save for use in delete/move modals
-        UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
+        GLOBAL.playQueueLength = typeof(data.length) === 'undefined' ? 0 : data.length;
 		var showPlayqueueThumb = SESSION.json['playlist_art'] == 'Yes' ? true : false;
 
 		// Format playlist items
@@ -1639,13 +1640,13 @@ function renderPlayqueue(state) {
         }
 
         // Reset
-        GLOBAL.playqueueChanged = false;
+        GLOBAL.playQueueChanged = false;
     });
 }
 
 // Handle Queue commands
 function sendQueueCmd(cmd, path) {
-    GLOBAL.playqueueChanged = true;
+    GLOBAL.playQueueChanged = true;
     $.post('command/queue.php?cmd=' + cmd, {'path': path});
 }
 
@@ -2194,6 +2195,7 @@ function renderPlaylistView () {
 function renderPlaylistNames (path) {
     $('#item-to-add').text(path.name);
     UI.dbEntry[4] = path.files;
+    //console.log('renderPlaylistNames(): UI.dbEntry[4]: ' + UI.dbEntry[4]);
 
     var playlists = '';
     $.getJSON('command/playlist.php?cmd=get_playlists', function(playlists) {
@@ -2572,7 +2574,7 @@ $('.view-recents').click(function(e) {
 // Context and Main menus
 $(document).on('click', '.context-menu a', function(e) {
     var path = UI.dbEntry[0]; // File path or item num
-    //console.log($(this).data('cmd'));
+    //console.log('click .context-menu a: cmd|path: ' + $(this).data('cmd') + '|' + path);
 
     switch ($(this).data('cmd')) {
         //
