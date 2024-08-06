@@ -1669,6 +1669,8 @@ $('#btn-add-to-playlist').click(function(e){
         notify(NOTIFY_TITLE_ALERT, 'select_playlist');
     } else {
         var path = {'playlist': playlist, 'items': UI.dbEntry[4]};
+        // DEBUG:
+        //console.log('btn-add-to-playlist: playlist|item: ' + playlist + '|' + UI.dbEntry[4]);
         notify(NOTIFY_TITLE_INFO, 'updating_playlist', NOTIFY_DURATION_SHORT);
         $.post('command/playlist.php?cmd=add_to_playlist', {'path': path}, function() {
             notify(NOTIFY_TITLE_INFO, 'add_to_playlist', NOTIFY_DURATION_SHORT);

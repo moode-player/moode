@@ -960,6 +960,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.database-radio').on('click', '.cover-menu', function(e) {
         var pos = $(this).parents('li').index();
         var path = $(this).parents('li').data('path');
+        // DEBUG:
         //console.log('click .cover-menu: pos|path: ' + pos + '|' + path);
 
         UI.dbEntry[0] = path;

@@ -34,6 +34,8 @@ switch ($_GET['cmd']) {
 		putPlaylistCover($plName);
 		break;
 	case 'add_to_playlist':
+		// DEBUG:
+		//workerLog("playlist.php: add_to_playlist\n" . print_r($_POST, true));
 		$plName = html_entity_decode($_POST['path']['playlist']);
 
 		// Get metadata (may not exist so defaults will be returned)

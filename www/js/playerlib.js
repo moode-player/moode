@@ -1501,6 +1501,9 @@ function updateActivePlayqueueItem() {
     }
 }
 
+// DEBUG:
+//var seqNum = 0;
+
 // Render the Queue
 function renderPlayqueue(state) {
 	//console.log('renderPlayqueue()');
@@ -1513,6 +1516,8 @@ function renderPlayqueue(state) {
 
         // Save for use in delete/move modals
         GLOBAL.playQueueLength = typeof(data.length) === 'undefined' ? 0 : data.length;
+        // DEBUG:
+        //console.log('renderPlayqueue(' + seqNum++ + '): GLOBAL.playQueueLength: ' + GLOBAL.playQueueLength);
 		var showPlayqueueThumb = SESSION.json['playlist_art'] == 'Yes' ? true : false;
 
 		// Format playlist items
@@ -2195,6 +2200,7 @@ function renderPlaylistView () {
 function renderPlaylistNames (path) {
     $('#item-to-add').text(path.name);
     UI.dbEntry[4] = path.files;
+    // DEBUG:
     //console.log('renderPlaylistNames(): UI.dbEntry[4]: ' + UI.dbEntry[4]);
 
     var playlists = '';
@@ -2574,6 +2580,7 @@ $('.view-recents').click(function(e) {
 // Context and Main menus
 $(document).on('click', '.context-menu a', function(e) {
     var path = UI.dbEntry[0]; // File path or item num
+    // DEBUG:
     //console.log('click .context-menu a: cmd|path: ' + $(this).data('cmd') + '|' + path);
 
     switch ($(this).data('cmd')) {
