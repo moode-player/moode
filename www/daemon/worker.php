@@ -1499,14 +1499,10 @@ function chkScnSaver() {
 	$sock = openMpdSock('localhost', 6600);
 	$mpdState = getMpdStatus($sock)['state'];
 	closeMpdSock($sock);
-	if ($mpdState == 'play') {
-		$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-	}
 
 	if ($GLOBALS['scnsaver_timeout'] != 'Never' && $_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0'
 		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0'  && $GLOBALS['paactive'] == '0'
-		&& $GLOBALS['rbactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0'
-		&& $mpdState != 'play') {
+		&& $GLOBALS['rbactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0') {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
