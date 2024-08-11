@@ -180,9 +180,8 @@ fi
 
 # Unmute IQaudIO Pi-AMP+, Pi-DigiAMP+
 if [[ $1 = "unmute-pi-ampplus" || $1 = "unmute-pi-digiampplus" ]]; then
-	echo "22" >/sys/class/gpio/export
-	echo "out" >/sys/class/gpio/gpio22/direction
-	echo "1" >/sys/class/gpio/gpio22/value
+	CHIP=$(gpiodetect | awk '/pinctrl/ {print $1}')
+	gpioset $CHIP 22=1
 	exit
 fi
 
