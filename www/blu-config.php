@@ -206,7 +206,7 @@ $_select['alsa_output_mode_bt'] .= "<option value=\"plughw\" " . (($_SESSION['al
 
 waitWorker('blu-control');
 
-$tpl = "blu-control.html";
+$tpl = "blu-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
