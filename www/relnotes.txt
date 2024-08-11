@@ -25,7 +25,8 @@ Radio stations
 
 Bug fixes
 
-- FIX: Bluetooth Control footer include not working
+- FIX: IQaudIO Pi-Amp+/DigiAmp+ unmute during startup
+- FIX: Footer include not being minified for Bluetooth Control
 - FIX: Several lowercase sysCmd() calls in worker.php and renderer.php
 - FIX: Add-to-playlist path variable getting overwritten causing script crash
 - FIX: Replace CRLF with LF in moode-sqlite3.db.sql file
