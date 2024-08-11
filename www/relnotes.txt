@@ -15,8 +15,18 @@
 #
 ################################################################################
 
+Security
+
+- UPD: Filter GET/POST and other variables for unwanted characters and commands
+
+Radio stations
+
+- UPD: NPO Radio 4 changed to NPO Klassiek
+
 Bug fixes
 
+- FIX: Bluetooth Control footer include not working
+- FIX: Several lowercase sysCmd() calls in worker.php and renderer.php
 - FIX: Add-to-playlist path variable getting overwritten causing script crash
 - FIX: Replace CRLF with LF in moode-sqlite3.db.sql file
 
