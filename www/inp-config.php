@@ -9,6 +9,8 @@ require_once __DIR__ . '/inc/session.php';
 
 phpSession('open');
 
+chkVariables($_POST);
+
 if (isset($_POST['update_audio_input']) && $_POST['audio_input'] != $_SESSION['audioin']) {
 	if ($_POST['audio_input'] != 'Local' && $_SESSION['mpdmixer'] != 'hardware' && $_SESSION['mpdmixer'] != 'none') {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;

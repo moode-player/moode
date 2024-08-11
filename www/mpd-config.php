@@ -12,6 +12,8 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open_ro');
 
+chkVariables($_POST);
+
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Add audio_output_format

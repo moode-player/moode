@@ -12,6 +12,9 @@ require_once __DIR__ . '/../inc/sql.php';
 
 const NUMBER_EXT_TAGS = 2;
 
+chkVariables($_GET);
+chkVariables($_POST);
+
 switch ($_GET['cmd']) {
 	case 'set_plcover_image':
 		if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {

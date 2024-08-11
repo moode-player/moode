@@ -14,6 +14,8 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+chkVariables($_POST);
+
 $params = sqlRead('cfg_multiroom', $dbh);
 foreach ($params as $row) {
     $cfgMultiroom[$row['param']] = $row['value'];

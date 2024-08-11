@@ -11,6 +11,8 @@ require_once __DIR__ . '/inc/sql.php';
 
 phpSession('open');
 
+chkVariables($_POST);
+
 // LOCAL DISPLAY
 
 if (isset($_POST['update_localui'])) {

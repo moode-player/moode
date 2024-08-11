@@ -11,6 +11,8 @@ require_once __DIR__ . '/../inc/sql.php';
 session_id(phpSession('get_sessionid'));
 phpSession('open');
 
+chkVariables($_GET);
+
 switch ($_GET['cmd']) {
 	case 'reboot':
 	case 'poweroff':

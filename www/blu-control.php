@@ -14,6 +14,8 @@ require_once __DIR__ . '/inc/cdsp.php';
 
 phpSession('open');
 
+chkVariables($_POST);
+
 // Controller commands
 if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
 	$cmd = $_POST['btcmd'];

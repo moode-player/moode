@@ -10,6 +10,9 @@ require_once __DIR__ . '/../inc/sql.php';
 
 $dbh = sqlConnect();
 
+chkVariables($_GET);
+chkVariables($_POST);
+
 switch ($_GET['cmd']) {
 	case 'get_cfg_tables':
 	case 'get_cfg_tables_no_radio':

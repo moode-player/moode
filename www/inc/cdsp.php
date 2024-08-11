@@ -136,9 +136,9 @@ class CamillaDsp {
      *
      */
     function stringToQuickConvolutionConfig($quickConvConfig) {
-        $config= ";;;";
+        $config= ",,,";
         if($quickConvConfig) {
-            $parts = explode(';', $quickConvConfig);
+            $parts = explode(',', $quickConvConfig);
             if( count($parts) == 4 ) {
                 $config = array( "gain" => $parts[0],
                                 "irl" => $parts[1],

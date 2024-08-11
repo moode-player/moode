@@ -13,6 +13,8 @@ $sock = getMpdSock();
 $dbh = sqlConnect();
 phpSession('open');
 
+chkVariables($_POST);
+
 // Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);

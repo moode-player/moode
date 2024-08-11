@@ -16,6 +16,10 @@ require_once __DIR__ . '/../inc/sql.php';
 // NOTE: The Bluetooth Active overlay provides a 'Bluetooth Control' button which opens the
 // Bluetooth Control screen where the client can be disconnected.
 //
+
+chkVariables($_GET);
+chkVariables($_POST);
+
 switch ($_GET['cmd']) {
 	case 'disconnect_renderer':
 		// Squeezelite, Plexamp and trx-rx hog the audio output so need to be turned off in order to released it

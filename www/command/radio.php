@@ -9,6 +9,9 @@ require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
+chkVariables($_GET);
+chkVariables($_POST);
+
 switch ($_GET['cmd']) {
 	case 'set_ralogo_image':
 		if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {

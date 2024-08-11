@@ -12,6 +12,8 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+chkVariables($_POST);
+
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	for($i = 0; $i < 9; $i++) {
 		$curveValues .= $_POST['freq' . ($i + 1)] . ',';

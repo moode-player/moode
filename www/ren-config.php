@@ -10,6 +10,8 @@ require_once __DIR__ . '/inc/session.php';
 
 phpSession('open');
 
+chkVariables($_POST);
+
 // Bluetooth
 if (isset($_POST['update_bt_settings'])) {
 	$currentBtName = $_SESSION['btname'];

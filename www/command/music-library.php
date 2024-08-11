@@ -13,6 +13,9 @@ require_once __DIR__ . '/../inc/sql.php';
 $sock = getMpdSock();
 phpSession('open_ro');
 
+chkVariables($_GET);
+chkVariables($_POST);
+
 switch ($_GET['cmd']) {
 	case 'update_library':
 		$queueArgs = (isset($_GET['path']) && $_GET['path'] != '') ? $_GET['path'] : '';

@@ -13,6 +13,7 @@ phpSession('open');
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
+		chkValue($value);
 		sqlUpdate('cfg_spotify', $dbh, $key, $value);
 	}
 	$notify = $_SESSION['spotifysvc'] == '1' ?

@@ -12,6 +12,8 @@ require_once __DIR__ . '/inc/cdsp.php';
 
 phpSession('open');
 
+chkVariables($_POST);
+
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $selectedConfig = isset($_POST['cdsp_config']) ? $_POST['cdsp_config'] : null;
 $selectedCoeff = isset($_POST['cdsp_coeffs']) ? $_POST['cdsp_coeffs'] : null;
@@ -32,7 +34,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$convL = $_POST['cdsp_qc_ir_left'];
 		$convR = $_POST['cdsp_qc_ir_right'];
 		$convT = $_POST['cdsp_qc_ir_type'];
-		$cfg = $gain . ';' . $convL . ';' . $convR . ';' . $convT;
+		$cfg = $gain . ',' . $convL . ',' . $convR . ',' . $convT;
 		$cdsp->setQuickConvolutionConfig($cdsp->stringToQuickConvolutionConfig($cfg));
 		phpSession('write', 'camilladsp_quickconv', $cfg);
 	}

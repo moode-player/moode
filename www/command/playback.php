@@ -14,6 +14,9 @@ require_once __DIR__ . '/../inc/sql.php';
 $dbh = sqlConnect();
 $sock = getMpdSock();
 
+chkVariables($_GET);
+chkVariables($_POST);
+
 switch ($_GET['cmd']) {
 	 // Called from function setVolume() in playelib.js
 	case 'upd_volume':

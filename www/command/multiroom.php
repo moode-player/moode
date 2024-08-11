@@ -13,6 +13,9 @@ require_once __DIR__ . '/../inc/sql.php';
 phpSession('open_ro');
 $timeout = getStreamTimeout();
 
+chkVariables($_GET);
+chkVariables($_POST);
+
 switch ($_GET['cmd']) {
 	case 'get_rx_status':
         // NOTE: This is called from playerlib.js: multiroom-rx-modal

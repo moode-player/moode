@@ -13,6 +13,8 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+chkVariables($_POST);
+
 $eqp12 = Eqp12($dbh);
 
 $curveConfig = null;

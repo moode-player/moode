@@ -24,7 +24,7 @@ function startBluetooth() {
 			$status = 'Error: No MAC address found for Bluetooth controller';
 		} else {
 			sysCmd('systemctl start bluealsa');
-			syscmd('systemctl start bt-agent');
+			sysCmd('systemctl start bt-agent');
 			sysCmd('/var/www/util/blu-control.sh -i');
 			$status = 'started';
 		}

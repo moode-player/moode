@@ -17,6 +17,8 @@ const CAMILLADSP_BASE_DIR = '/usr/share/camilladsp/';
 
 $backupFileNameBase = BACKUP_FILE_PREFIX . '_';
 
+chkVariables($_POST);
+
 //
 // BACKUP
 //

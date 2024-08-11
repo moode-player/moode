@@ -14,6 +14,7 @@ phpSession('open');
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
+		chkValue($value);
 		sqlUpdate('cfg_sl', $dbh, $key, SQLite3::escapeString($value));
 	}
 	$notify = $_SESSION['slsvc'] == '1' ?

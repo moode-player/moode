@@ -52,6 +52,59 @@ function autoCfgLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
+// Validate get/post form variables
+function chkVariables($variables, $excludedKeys = array()) {
+	foreach($variables as $key => $value) {
+		if (is_array($value)) {
+			foreach($value as $key2 => $value2) {
+				if (!in_array($key2, $excludedKeys)) {
+					chkValue($value2);
+				}
+			}
+		} else if (!in_array($key, $excludedKeys)) {
+			chkValue($value);
+		}
+	}
+}
+// Check for unwanted characters and shell commands
+function chkValue($value) {
+	$valid = true;
+	$msg = '';
+	$shellCmds = array('base64', 'bash', 'sudo');
+
+	// Only allow empty or valid characters
+	if (empty($value) || preg_match('|^[A-Za-z0-9 /@=()+:_.,-]+$|', $value)) {
+		// Check for directory traversal: ../
+		if (substr_count($value, '..') > 0) {
+			$valid = false;
+			$msg = 'Directory traversal detected';
+		} else {
+			// Check for some dangerous shell commands
+			foreach ($shellCmds as $cmd) {
+				if (str_contains($value, $cmd)) {
+					$valid = false;
+					$msg = 'Shell command detected';
+				}
+			}
+		}
+	} else {
+		$valid = false;
+		$msg = 'Invalid characters detected';
+	}
+
+	if ($valid === false) {
+		// Write log entry
+		workerLog('chkValue(): ' . $msg);
+		workerLog('chkValue(): ' . $value);
+		// Redirect to '400 Bad request' page and then exit
+		http_response_code(400);
+		header('Location: /response400.html');
+		exit(1);
+	} else {
+		debugLog('chkValue(): ' . (empty($value) ? 'Value was blank' : $value));
+	}
+}
+
 // Execute shell command
 function sysCmd($cmd) {
 	exec('sudo ' . $cmd . " 2>&1", $output);
@@ -163,22 +216,22 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 	}
 }
 
-// Wait for worker to process job
-// NOTE: Called from cfg scripts
+// Wait for worker to process job (Called from cfg scripts)
 function waitWorker($caller) {
-	debugLog('waitWorker(): Start ' . $caller . ', w_active=' . $_SESSION['w_active']);
+	// DEBUG:
+	//debugLog('waitWorker(): Start ' . $caller . ', w_active=' . $_SESSION['w_active']);
 	$loopCnt = 0;
 
 	if ($_SESSION['w_active'] == 1) {
 		do {
 			usleep(WAITWORKER_SLEEP);
-			debugLog('waitWorker(): Wait  ' . ++$loopCnt);
+			debugLog('waitWorker(): Wait ' . ++$loopCnt . ' for ' . $caller);
 
 			phpSession('open_ro');
 		} while ($_SESSION['w_active'] != 0);
 	}
-
-	debugLog('waitWorker(): End   ' . $caller . ', w_active=' . $_SESSION['w_active']);
+	// DEBUG:
+	//debugLog('waitWorker(): End   ' . $caller . ', w_active=' . $_SESSION['w_active']);
 }
 
 // $path

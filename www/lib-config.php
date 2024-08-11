@@ -15,6 +15,10 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+$excludedKeys = array('wlan0ssid', 'wlan0pwd', 'wlan0apdpwd', 'password');
+chkVariables($_POST, $excludedKeys);
+chkVariables($_GET);
+
 // For save, remove actions
 $initiateLibraryUpd = false;
 

@@ -19,6 +19,8 @@ const TMP_SELF_SIGNED_CER_FILE = '/tmp/moode.cer';
 phpSession('open');
 $dbh = sqlConnect();
 
+chkVariables($_POST);
+
 // SOFTWARE UPDATE
 
 // Auto check for update
