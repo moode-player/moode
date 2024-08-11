@@ -1548,7 +1548,7 @@ function chkMaintenance() {
 		foreach ($files as $file) {
 			if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $_SESSION['sessionid']) {
 				debugLog('worker: Maintenance: Purged spurious session file (' . $file . ')');
-				syscmd('rm ' . $dir . $file);
+				sysCmd('rm ' . $dir . $file);
 			}
 		}
 
@@ -2777,12 +2777,12 @@ function runQueuedJob() {
 			if ($_SESSION['dlnasvc'] == 1) {
 				startMiniDlna();
 			} else {
-				syscmd('rm -rf /var/cache/minidlna/* > /dev/null');
+				sysCmd('rm -rf /var/cache/minidlna/* > /dev/null');
 			}
 			break;
 		case 'dlnarebuild':
 			sysCmd('systemctl stop minidlna');
-			syscmd('rm -rf /var/cache/minidlna/* > /dev/null');
+			sysCmd('rm -rf /var/cache/minidlna/* > /dev/null');
 			sleep(2);
 			startMiniDlna();
 			break;
