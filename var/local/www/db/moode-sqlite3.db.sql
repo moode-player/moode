@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun Jun 23 09:20:46 2024
+-- File generated with SQLiteStudio v3.1.0 on Fri Aug 9 08:06:28 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -254,7 +254,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 ');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (123, 'http://icecast.omroep.nl/radio2-bb-aac', 'NPO Radio 2', 'r', 'local', 'Pop, Dance, Oldies, Rock', 'NPO', 'Dutch', 'Netherlands', 'Europe', '64', 'AAC', 'No', '', 'No
 ');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (124, 'http://icecast.omroep.nl/radio4-bb-aac', 'NPO Radio 4', 'r', 'local', 'Classical', 'NPO', 'Dutch', 'Netherlands', 'Europe', '64', 'AAC', 'No', '', 'No
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (124, 'http://icecast.omroep.nl/radio4-bb-mp3', 'NPO Klassiek', 'r', 'local', 'Classical', 'NPO', 'Dutch', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No
 ');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (125, 'http://stream-relay-geo.ntslive.net/stream2', 'NTS Live International', 'r', 'local', 'Alternative, Underground, Club, Live', 'NTS', 'English', 'United States', 'North America', '256', 'MP3', 'No', '', 'No
 ');
@@ -629,7 +629,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');
 INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE''');
+INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0,Sennheiser_HD800S_L_44100Hz_32b.raw,Sennheiser_HD800S_R_44100Hz_32b.raw,S32LE');
 INSERT INTO cfg_system (id, param, value) VALUES (57, 'alsa_loopback', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
 INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
