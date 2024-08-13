@@ -25,6 +25,7 @@ Radio stations
 
 Bug fixes
 
+- FIX: Receiver vol and mute buttons not disabled when renderer playing
 - FIX: No tracks displayed for CUE files when Prefs "Album key" set to Folder Path
 - FIX: IQaudIO Pi-Amp+/DigiAmp+ unmute during startup
 - FIX: Footer include not being minified for Bluetooth Control
