@@ -73,7 +73,7 @@ function chkValue($value) {
 	$shellCmds = array('base64', 'bash', 'sudo');
 
 	// Only allow empty or valid characters
-	if (empty($value) || preg_match('|^[A-Za-z0-9 /@=()+:_.,-]+$|', $value)) {
+	if (empty($value) || preg_match('|^[A-Za-z0-9 /*@=()+:_.,-]+$|', $value)) {
 		// Check for directory traversal: ../
 		if (substr_count($value, '..') > 0) {
 			$valid = false;
