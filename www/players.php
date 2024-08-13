@@ -9,13 +9,12 @@ require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/multiroom.php'; // For getStreamTimeout()
 require_once __DIR__ . '/inc/sql.php';
 
-chkValue($_GET['cmd']);
-chkValue($_POST['ipaddr']);
-
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
+	chkValue($_GET['cmd']);
 	if (!isset($_POST['ipaddr'])) {
 		workerLog('players.php: No destination IP addresses for command ' . $_GET['cmd']);
 	} else {
+		chkVariables($_POST);
 		$count = count($_POST['ipaddr']);
 		for ($i = 0; $i < $count; $i++) {
 			if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .

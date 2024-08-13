@@ -11,9 +11,10 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open_ro');
 
+chkVariables($_POST['config']);
+
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach (array_keys($_POST['config']) as $key) {
-		chkValue($_POST['config'][$key]);
 		if ($_POST['config'][$key]['pin'] <= '3') {
 			$_POST['config'][$key]['pull'] = '22'; // Pins 2,3 have fixed pull-up resistors
 		}
