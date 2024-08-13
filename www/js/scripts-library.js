@@ -70,6 +70,7 @@ function isCUE(audioEntry) {
 
 function getParentDirectory(audioEntry) {
 	let audioEntryParent = audioEntry.substring(0, audioEntry.lastIndexOf('/'));
+
 	if (isTrackIndex(audioEntry)) {
 		if (isCUE(audioEntryParent)) {
 			audioEntryParent = audioEntryParent.substring(0, audioEntryParent.lastIndexOf('/'));
@@ -491,14 +492,12 @@ function keyAlbum(obj) {
     if (miscLibOptions[2] == 'Yes') { // Folder path albumkey
         // Use folder path
         if (typeof(obj.file) != 'undefined') {
-            var md5 = $.md5(obj.file.substring(0,obj.file.lastIndexOf('/')));
-        }
-        else if (typeof(obj.imgurl) != 'undefined') {
+            var md5 = $.md5(getParentDirectory(obj.file));
+        } else if (typeof(obj.imgurl) != 'undefined') {
             var md5 = obj.imgurl.substring(obj.imgurl.lastIndexOf('/') + 1, obj.imgurl.indexOf('.jpg'));
         }
         return obj.album.toLowerCase() + '@' + md5 + '@' + obj.mb_albumid;
-    }
-    else {
+    } else {
         // Use album_artist || artist
         return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
     }
@@ -1020,7 +1019,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	var albumobj = filteredAlbums[pos];
 	var album = filteredAlbums[pos].album;
 	// Store the active state before it gets set below
-    var alreadyActive = this.className.includes('active')
+    var alreadyActive = this.className.includes('active');
 	storeLibPos(UI.libPos);
 	$('#albumsList .lib-entry').removeClass('active');
 	$('#albumsList .lib-entry').eq(pos).addClass('active');
