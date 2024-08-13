@@ -2931,7 +2931,11 @@ $(document).on('click', '.context-menu a', function(e) {
 
                                 if (modalType == 'full') {
                                     // Volume
-                                    var volDisabled = (rxStatusParts[2] == '0dB' || rxStatusParts[2] == '?') ? ' disabled' : '';
+                                    var volDisabled = (
+                                        rxStatusParts[2] == '0dB' ||
+                                        rxStatusParts[2] == '?' ||
+                                        (SESSION.json['btactive'] + SESSION.json['aplactive'] + SESSION.json['spotactive'] > 0)
+                                    ) ? ' disabled' : '';
                                     output += '<div class="modal-button-style multiroom-modal-btn">';
                                     output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item +
                                         '"' + volDisabled + '>' + (rxStatusParts[2] == '?' ? 'n/a' : rxStatusParts[2]) + '</button>';
