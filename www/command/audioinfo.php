@@ -11,7 +11,8 @@ require_once __DIR__ . '/../inc/music-library.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
-chkVariables($_GET);
+$excludedKeys = array('path');
+chkVariables($_GET, $excludedKeys);
 
 switch ($_GET['cmd']) {
 	case 'station_info':

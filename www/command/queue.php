@@ -13,8 +13,9 @@ require_once __DIR__ . '/../inc/sql.php';
 $sock = getMpdSock();
 phpSession('open_ro');
 
+$excludedKeys = array('path');
+chkVariables($_POST, $excludedKeys);
 chkVariables($_GET);
-chkVariables($_POST);
 
 // Turn off auto-shuffle and consume mode before Queue is updated
 $queueCmds = array(

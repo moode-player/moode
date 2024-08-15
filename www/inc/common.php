@@ -54,20 +54,29 @@ function autoCfgLog($msg, $mode = 'a') {
 
 // Validate get/post form variables
 function chkVariables($variables, $excludedKeys = array()) {
+	// For 907 patch
+	return;
+
+	//workerLog("chkVariables():\n" . print_r($variables, true));
 	foreach($variables as $key => $value) {
-		if (is_array($value)) {
-			foreach($value as $key2 => $value2) {
-				if (!in_array($key2, $excludedKeys)) {
-					chkValue($value2);
+		if (!in_array($key, $excludedKeys)) {
+			if (is_array($value)) {
+				foreach($value as $key2 => $value2) {
+					if (!in_array($key2, $excludedKeys)) {
+						chkValue($value2);
+					}
 				}
+			} else {
+				chkValue($value);
 			}
-		} else if (!in_array($key, $excludedKeys)) {
-			chkValue($value);
 		}
 	}
 }
 // Check for unwanted characters and shell commands
 function chkValue($value) {
+	// For 907 patch
+	return;
+
 	$valid = true;
 	$msg = '';
 	$shellCmds = array('base64', 'bash', 'sudo');

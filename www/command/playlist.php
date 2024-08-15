@@ -12,8 +12,9 @@ require_once __DIR__ . '/../inc/sql.php';
 
 const NUMBER_EXT_TAGS = 2;
 
+$excludedKeys = array('path');
+chkVariables($_POST, $excludedKeys);
 chkVariables($_GET);
-chkVariables($_POST);
 
 switch ($_GET['cmd']) {
 	case 'set_plcover_image':
