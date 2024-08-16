@@ -12,8 +12,7 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
-$excludedKeys = array('wlan0ssid', 'wlan0pwd', 'wlan0apdpwd');
-chkVariables($_POST, $excludedKeys);
+chkVariables($_POST, array('wlan0ssid', 'wlan0pwd', 'wlan0apdpwd'));
 
 // Get current settings: [0] = eth0, [1] = wlan0, [2] = apd0
 $cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);

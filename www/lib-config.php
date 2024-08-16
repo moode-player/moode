@@ -15,9 +15,8 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
-$excludedKeys = array('password');
-chkVariables($_POST, $excludedKeys);
 chkVariables($_GET);
+chkVariables($_POST, array('password'));
 
 // For save, remove actions
 $initiateLibraryUpd = false;

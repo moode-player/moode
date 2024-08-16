@@ -147,7 +147,7 @@ function nasSourceMount($action, $id = '', $log = '') {
 
 			// Log the mount string if debug logging on and mount appeared to be successful
 			if ($return === true) {
-				debugLog('worker: Mount (' . $mountStr . ')');
+				debugLog('Mount (' . $mountStr . ')');
 			}
 			break;
 		case 'unmount':
@@ -324,7 +324,7 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 
 			// Log the mount string if debug logging on and mount appeared to be successful
 			if ($return === true) {
-				debugLog('worker: Mount (' . $mountStr . ')');
+				debugLog('Mount (' . $mountStr . ')');
 			}
 			break;
 		case 'unmount':

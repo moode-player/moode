@@ -335,7 +335,8 @@ if (isset($_POST['update_clear_playhistory'])) {
 }
 
 if (isset($_POST['update_debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
-	$_SESSION['debuglog'] = $_POST['debuglog'];
+	//DELETE:$_SESSION['debuglog'] = $_POST['debuglog'];
+	phpSession('write', 'debuglog', $_POST['debuglog']);
 }
 
 phpSession('close');

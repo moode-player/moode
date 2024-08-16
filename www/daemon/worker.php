@@ -96,7 +96,7 @@ for ($i = 0; $i < $maxLoops; $i++) {
 		$linuxStartupComplete = true;
 		break;
 	} else {
-		debugLog('worker: Wait ' . ($i + 1) . ' for Linux startup');
+		debugLog('Wait ' . ($i + 1) . ' for Linux startup');
 		sleep($sleepTime);
 	}
 }
@@ -190,7 +190,9 @@ workerLog('worker: File check complete');
 
 // Debug logging
 if (!isset($_SESSION['debuglog'])) {
-	$_SESSION['debuglog'] = '0';
+	//DELETE:$_SESSION['debuglog'] = '0';
+	phpSession('write', 'debuglog', '0');
+
 }
 workerLog('worker: Debug logging ' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off'));
 
@@ -1411,7 +1413,7 @@ workerLog('worker: Watchdog monitor: started');
 
 // Sleep intervals
 workerLog('worker: Responsiveness:   ' . $_SESSION['worker_responsiveness']);
-debugLog('worker: Sleep intervals:  ' .
+debugLog('Sleep intervals:  ' .
 	'worker=' . WORKER_SLEEP / 1000000 . ', ' .
 	'waitworker=' . WAITWORKER_SLEEP / 1000000 . ', ' .
 	'watchdog=' . WATCHDOG_SLEEP . ', ' .
@@ -1547,14 +1549,14 @@ function chkMaintenance() {
 		$files = scandir($dir);
 		foreach ($files as $file) {
 			if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $_SESSION['sessionid']) {
-				debugLog('worker: Maintenance: Purged spurious session file (' . $file . ')');
+				debugLog('Maintenance: Purged spurious session file (' . $file . ')');
 				sysCmd('rm ' . $dir . $file);
 			}
 		}
 
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 
-		debugLog('worker: Maintenance completed');
+		debugLog('Maintenance completed');
 	}
 }
 
@@ -2366,7 +2368,7 @@ function runQueuedJob() {
 			}
 
 			// DEBUG:
-			debugLog('worker: Job mpdcfg: ' .
+			debugLog('Job mpdcfg: ' .
 				'MIXER:' . $mixerChange . ', ' .
 				'KNOB:' . $_SESSION['volknob'] . ', ' .
 				'CAMILLADSP:' . ($_SESSION['camilladsp'] != 'off' ? 'on' : 'off') . ', ' .
@@ -2569,7 +2571,7 @@ function runQueuedJob() {
 			// Reenable HTTP server
 			setMpdHttpd();
 
-			debugLog('worker: Job ' . $_SESSION['w_queue'] . ': ' .
+			debugLog('Job ' . $_SESSION['w_queue'] . ': ' .
 				'CAMILLA:' . ($_SESSION['camilladsp'] != 'off' ? 'on' : 'off') . ', ' .
 				'CFG_MPD:' . $cfgMPD['mixer_type'] . ', ' .
 				'SESSION:' . $_SESSION['mpdmixer']

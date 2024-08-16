@@ -13,6 +13,7 @@ require_once __DIR__ . '/../inc/sql.php';
 session_id(phpSession('get_sessionid'));
 phpSession('open');
 
+chkVariables($argv);
 $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {

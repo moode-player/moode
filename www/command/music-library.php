@@ -13,9 +13,8 @@ require_once __DIR__ . '/../inc/sql.php';
 $sock = getMpdSock();
 phpSession('open_ro');
 
-$excludedKeys = array('path', 'name', 'query', 'tagname');
-chkVariables($_GET, $excludedKeys);
-chkVariables($_POST, $excludedKeys);
+chkVariables($_GET, array('path', 'query', 'tagname'));
+chkVariables($_POST, array('name'));
 
 switch ($_GET['cmd']) {
 	case 'update_library':

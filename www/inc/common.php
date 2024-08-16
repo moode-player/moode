@@ -27,11 +27,12 @@ function workerLog($msg, $mode = 'a') {
 
 // Debug message logger
 function debugLog($msg, $mode = 'a') {
-	if (!isset($_SESSION['debuglog']) || $_SESSION['debuglog'] == '0') {
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'debuglog'", sqlConnect());
+	if ($result[0]['value'] == '0') {
 		return;
 	}
 	$fh = fopen(MOODE_LOG, $mode);
-	fwrite($fh, date('Ymd His ') . $msg . "\n");
+	fwrite($fh, date('Ymd His ') . 'DEBUG: ' . $msg . "\n");
 	fclose($fh);
 }
 
@@ -52,65 +53,79 @@ function autoCfgLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
-// Validate get/post form variables
+// Validate get/post variables and other args
+// Post data can be 3 arrays levels deep for example $_POST['path']['items'][0]...[N]
 function chkVariables($variables, $excludedKeys = array()) {
-	// For 907 patch
-	return;
-
-	//workerLog("chkVariables():\n" . print_r($variables, true));
+	// DEBUG:
+	//workerLog("chkVariables(): EXCLUDED\n" . print_r($excludedKeys, true));
+	//workerLog("chkVariables(): VARIABLE\n" . print_r($variables, true));
 	foreach($variables as $key => $value) {
+		// DEBUG
+		//workerLog("ARRAYKEY\n" . print_r($key, true));
+		//workerLog("EXCLUDED\n" . print_r($excludedKeys, true));
 		if (!in_array($key, $excludedKeys)) {
 			if (is_array($value)) {
 				foreach($value as $key2 => $value2) {
-					if (!in_array($key2, $excludedKeys)) {
-						chkValue($value2);
+					if (is_array($value2)) {
+						foreach($value2 as $key3 => $value3) {
+							if (!in_array($key3, $excludedKeys)) {
+								chkValue($value3);
+							} else {
+								debugLog('chkVariables(): Excluded key: ' . $key3);
+							}
+						}
+					} else {
+						if (!in_array($key2, $excludedKeys)) {
+							chkValue($value2);
+						} else {
+							debugLog('chkVariables(): Excluded key: ' . $key2);
+						}
 					}
 				}
 			} else {
 				chkValue($value);
 			}
+		} else {
+			debugLog('chkVariables(): Excluded key: ' . $key);
 		}
 	}
 }
 // Check for unwanted characters and shell commands
 function chkValue($value) {
-	// For 907 patch
-	return;
-
 	$valid = true;
 	$msg = '';
-	$shellCmds = array('base64', 'bash', 'sudo');
+	$shellCmds = array('base64');
 
-	// Only allow empty or valid characters
-	if (empty($value) || preg_match('|^[A-Za-z0-9 /*@=()+:_.,-]+$|', $value)) {
+	// Allow empty and other than these shell characters $ | ; ` < >
+	if (!empty($value) && preg_match('/(\$|`|\||\;|<|>)/', $value)) {
+		$valid = false;
+		$msg = 'Invalid characters detected, transaction blocked';
+	} else {
 		// Check for directory traversal: ../
 		if (substr_count($value, '..') > 0) {
 			$valid = false;
-			$msg = 'Directory traversal detected';
+			$msg = 'Directory traversal detected, transaction blocked';
 		} else {
 			// Check for some dangerous shell commands
 			foreach ($shellCmds as $cmd) {
 				if (str_contains($value, $cmd)) {
 					$valid = false;
-					$msg = 'Shell command detected';
+					$msg = 'Shell command detected, transaction blocked';
 				}
 			}
 		}
-	} else {
-		$valid = false;
-		$msg = 'Invalid characters detected';
 	}
 
 	if ($valid === false) {
 		// Write log entry
-		workerLog('chkValue(): ' . $msg);
-		workerLog('chkValue(): ' . $value);
+		workerLog('SECCHK: ' . $msg);
+		workerLog('SECCHK: ' . $value);
 		// Redirect to '400 Bad request' page and then exit
 		http_response_code(400);
 		header('Location: /response400.html');
 		exit(1);
 	} else {
-		debugLog('chkValue(): ' . (empty($value) ? 'Value was blank' : $value));
+		debugLog('chkValue(): ' . (empty($value) ? 'Value is blank' : $value));
 	}
 }
 

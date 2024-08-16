@@ -167,7 +167,7 @@ function checkForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
 			$ipAddr = $result[0];
 			break;
 		} else {
-			debugLog('worker: ' . $iface .' check '. ($i + 1) . ' for IP address');
+			debugLog($iface .' check '. ($i + 1) . ' for IP address');
 			sleep($sleepTime);
 		}
 	}
