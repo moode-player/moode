@@ -11,9 +11,36 @@
 
 ################################################################################
 #
+# 2024-MM-DD moOde 9.0.8 (Bookworm)
+#
+################################################################################
+
+Security
+
+- UPD: Filter GET/POST and other variables for unwanted characters and commands
+- UPD: Improve debug logging
+
+Radio stations
+
+- UPD: NPO Radio 4 changed to NPO Klassiek
+
+Bug fixes
+
+- FIX: Receiver vol and mute buttons not disabled when renderer playing
+- FIX: No tracks displayed for CUE files when Prefs "Album key" set to Folder Path
+- FIX: IQaudIO Pi-Amp+/DigiAmp+ unmute during startup
+- FIX: Footer include not being minified for Bluetooth Control
+- FIX: Several lowercase sysCmd() calls in worker.php and renderer.php
+- FIX: Add-to-playlist path variable getting overwritten causing script crash
+- FIX: Replace CRLF with LF in moode-sqlite3.db.sql file
+
+################################################################################
+#
 # 2024-08-13 moOde 9.0.7 (Bookworm)
 #
 ################################################################################
+
+NOTE: This release was removerd due to a serious bug in the new security filter
 
 Security
 
