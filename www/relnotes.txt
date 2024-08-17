@@ -24,6 +24,12 @@ Radio stations
 
 - UPD: NPO Radio 4 changed to NPO Klassiek
 
+Audio devices
+
+- Pi2Design AES
+- Pi2Design AES-Lite
+- Pi2Design Mercury
+
 Bug fixes
 
 - FIX: Receiver vol and mute buttons not disabled when renderer playing
