@@ -18,7 +18,6 @@
 Security
 
 - UPD: Filter GET/POST and other variables for unwanted characters and commands
-- UPD: Improve debug logging
 
 Radio stations
 
@@ -39,6 +38,7 @@ Bug fixes
 - FIX: Several lowercase sysCmd() calls in worker.php and renderer.php
 - FIX: Add-to-playlist path variable getting overwritten causing script crash
 - FIX: Replace CRLF with LF in moode-sqlite3.db.sql file
+- FIX: Debug logger using session var instead of SQL param
 
 ################################################################################
 #
