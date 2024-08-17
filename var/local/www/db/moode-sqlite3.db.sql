@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Aug 13 07:42:52 2024
+-- File generated with SQLiteStudio v3.1.0 on Sat Aug 17 10:02:23 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -441,7 +441,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (104, 'rsmafterspot', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (105, 'library_covsearchpri', 'Embedded cover');
 INSERT INTO cfg_system (id, param, value) VALUES (106, 'library_hiresthm', '600px,60');
 INSERT INTO cfg_system (id, param, value) VALUES (107, 'library_pixelratio', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (108, 'RESERVED_108', '');
+INSERT INTO cfg_system (id, param, value) VALUES (108, 'debuglog', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '5px');
 INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
@@ -597,14 +597,17 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (48, 'Pi2Design 502DAC', '', 'Burr Brown PCM5122, Wolfson WM8804', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (49, 'Pi2Design 502DAC PRO', '', 'Burr Brown PCM1792, Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (50, 'Pi2Design 503HTA Hybrid Tube Amp', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (51, 'ProtoDAC TDA1387 X8', '', 'Philips TDA1387 (8 chip module)', '', 'I2S', 'yes', 'i2s-dac', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (52, 'ProtoDAC TDA1387 X8 (FifoPiMa)', '', 'Philips TDA1387 (8 chip module)', '', 'I2S', 'yes', 'hifiberry-dacplus', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (53, 'Raspberry Pi Codec Zero', '', 'Dialog Semiconductor DA7212', '', 'I2S', 'yes', 'rpi-codeczero', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (54, 'Raspberry Pi DAC Pro', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-dacpro', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (55, 'Raspberry Pi DAC+', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-dacplus', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (56, 'Raspberry Pi DigiAMP+', '', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-digiampplus', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (57, 'Soekris DAM', '', 'FPGA based', '', 'I2S', 'yes', 'i2s-dac', '');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (58, 'Suptronics x400', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (51, 'Pi2Design AES', '', 'Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (52, 'Pi2Design AES-Lite', '', 'Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (53, 'Pi2Design Mercury', '', 'Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (54, 'ProtoDAC TDA1387 X8', '', 'Philips TDA1387 (8 chip module)', '', 'I2S', 'yes', 'i2s-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (55, 'ProtoDAC TDA1387 X8 (FifoPiMa)', '', 'Philips TDA1387 (8 chip module)', '', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (56, 'Raspberry Pi Codec Zero', '', 'Dialog Semiconductor DA7212', '', 'I2S', 'yes', 'rpi-codeczero', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (57, 'Raspberry Pi DAC Pro', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-dacpro', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (58, 'Raspberry Pi DAC+', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (59, 'Raspberry Pi DigiAMP+', '', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'rpi-digiampplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (60, 'Soekris DAM', '', 'FPGA based', '', 'I2S', 'yes', 'i2s-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (61, 'Suptronics x400', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (200, 'b1', 'Pi HDMI 1', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (201, 'b2', 'Pi HDMI 2', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
