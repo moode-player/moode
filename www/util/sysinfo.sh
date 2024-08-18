@@ -198,6 +198,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nOne touch album\t\t= $library_onetouch_album\c"
 	echo -e "\nOne touch radio\t\t= $library_onetouch_radio\c"
 	echo -e "\nOne touch playlist\t= $library_onetouch_pl\c"
+	echo -e "\nOne touch ralbum\t= $library_onetouch_ralbum\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
 	echo -e "\nTrack play\t\t= $library_track_play\c"
@@ -769,7 +770,7 @@ rsmafterspot=${arr[103]}
 library_covsearchpri=${arr[104]}
 library_hiresthm=${arr[105]}
 library_pixelratio=${arr[106]}
-RESERVED_108=${arr[107]}
+debuglog=${arr[107]}
 cover_backdrop=${arr[108]}
 cover_blur=${arr[109]}
 cover_scale=${arr[110]}
@@ -813,7 +814,7 @@ elif [[ "${arr[138]}" = "3" ]]; then
 fi
 first_use_help=${arr[139]}
 playlist_art=${arr[140]}
-RESERVED_142=${arr[141]}
+library_onetouch_ralbum=${arr[141]}
 radioview_sort_group=${arr[142]}
 rv_sort_tag=$(awk -F"," '{print $1}' <<< $radioview_sort_group)
 rv_group_method=$(awk -F"," '{print $2}' <<< $radioview_sort_group)
