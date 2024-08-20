@@ -752,6 +752,13 @@ if (!file_exists('/etc/mpd.conf')) {
 		workerLog('worker: MPD config:         Creating managed mpd.conf');
 		updMpdConf();
 	}
+	// Device mismatch (can happen after backup restored)
+	$alsaDev = sysCmd('awk -F"\"" ' . "'/slave.pcm/ {print $2}'" . ' /etc/alsa/conf.d/_audioout.conf');
+	debugLog('MPD|ALSA devnum:    ' . $alsaDev[0] . '|' . $audioOutput);
+	if (str_contains($alsaDev[0], ALSA_IEC958_DEVICE) && $audioOutput != AO_HDMI) {
+		workerLog('worker: MPD config:         Updated (ALSA conf device mismatch)');
+		updMpdConf();
+	}
 }
 
 // Start MPD
