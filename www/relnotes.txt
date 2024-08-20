@@ -39,6 +39,7 @@ Bug fixes
 - FIX: Add-to-playlist path variable getting overwritten causing script crash
 - FIX: Replace CRLF with LF in moode-sqlite3.db.sql file
 - FIX: Debug logger using session var instead of SQL param
+- FIX: ALSA conf device mismatch after restore under certain circumstances
 
 ################################################################################
 #
