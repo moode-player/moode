@@ -471,7 +471,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (134, 'preferences_modal_state'
 INSERT INTO cfg_system (id, param, value) VALUES (135, 'font_size', 'Normal');
 INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '5');
 INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
-INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_columns', '6/2 (Default)');
+INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_columns', '7/3 (Default)');
 INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
 INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
