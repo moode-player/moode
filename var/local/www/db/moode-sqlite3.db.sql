@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Aug 22 17:30:43 2024
+-- File generated with SQLiteStudio v3.4.4 on Fri Aug 23 07:23:57 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -345,7 +345,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (121, 'http://listen-nme.sharp-stream.com/nme2high.mp3', 'NME 2 - New & Upfront Indie Alt', 'r', 'local', 'Indie', 'NME', 'English', 'United Kingdom', 'Europe', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (122, 'http://icecast.omroep.nl/radio1-bb-aac', 'NPO Radio 1', 'r', 'local', 'News', 'NPO', 'Dutch', 'Netherlands', 'Europe', '64', 'AAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (123, 'http://icecast.omroep.nl/radio2-bb-aac', 'NPO Radio 2', 'r', 'local', 'Pop, Dance, Oldies, Rock', 'NPO', 'Dutch', 'Netherlands', 'Europe', '64', 'AAC', 'No', '', 'No');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (124, 'http://icecast.omroep.nl/radio4-bb-mp3', 'NPO Klassiek', 'r', 'local', 'Classical', 'NPO', 'Dutch', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (124, 'http://icecast.omroep.nl/radio4-bb-mp3', 'NPO Klassiek', 'r', 'local', 'Classical', 'NPO', 'Dutch', 'Netherlands', 'Europe', '192', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (125, 'http://stream-relay-geo.ntslive.net/stream2', 'NTS Live International', 'r', 'local', 'Alternative, Underground, Club, Live', 'NTS', 'English', 'United States', 'North America', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (126, 'http://stream-relay-geo.ntslive.net/stream', 'NTS Live London - Don''t Assume', 'r', 'local', 'Alternative, Underground, Club, Live', 'NTS', 'English', 'United Kingdom', 'Europe', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (127, 'https://d3isaxd2t6q8zm.cloudfront.net/icecast/omroepzeeland/omroepzeeland_radio', 'Omroep Zeeland', 'r', 'local', 'Pop', 'Omroep Zeeland', 'Dutch', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
