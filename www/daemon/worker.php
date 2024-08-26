@@ -508,6 +508,7 @@ workerLog('worker: --');
 // Plexamp
 if (file_exists('/home/' . $_SESSION['user_id'] . '/plexamp/js/index.js') === true) {
 	$_SESSION['plexamp_installed'] = 'yes';
+	$msg = 'installed';
 } else {
 	$_SESSION['plexamp_installed'] = 'no';
 	$msg = 'not installed';
@@ -517,11 +518,12 @@ workerLog('worker: Plexamp:          ' . $msg);
 // RoonBridge
 // Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
 if (file_exists('/opt/RoonBridge/start.sh') === true) {
+	$msg = 'installed';
 	$_SESSION['roonbridge_installed'] = 'yes';
 	if (sysCmd('systemctl is-enabled roonbridge')[0] == 'enabled') {
 		sysCmd('systemctl disable roonbridge');
 		sysCmd('systemctl stop roonbridge');
-		$msg = 'installed, systemd unit set to disabled';
+		$msg .= ', systemd unit set to disabled';
 	}
 } else {
 	$_SESSION['roonbridge_installed'] = 'no';
