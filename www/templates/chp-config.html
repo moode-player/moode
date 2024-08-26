@@ -221,7 +221,7 @@
 				<span class="config-help-static">
                 	The filter is applied to PCM samples at the oversampling stage.
 					Playback is automatically restarted to make filter change effective.
-					The default is "Apodizing Fast Roll-off".
+					The default filter is "brick wall".
                 </span>
 			</div>
 
@@ -233,6 +233,26 @@
 				</select>
 				<span class="config-help-static">
 					The default is "I2S".
+                </span>
+			</div>
+		</div>
+
+		<!-- IanCanada (MonitorPi Pro with ESS DAC) -->
+		<div class="control-group $_iancanada_q2m_hide">
+			<legend>IanCanada (MonitorPi Pro with ESS DAC)
+				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			</legend>
+			<p class=sub-legend>These options are for the ESS Sabre DAC.</p>
+
+			<label class="control-label" for="iancanada-q2m-osf">Oversampling filter</label>
+			<div class="controls">
+				<select id="iancanada-q2m-osf" class="config-select-large" name="config[iancanada_q2m_osf]">
+					$_select[iancanada_q2m_osf]
+				</select>
+				<span class="config-help-static">
+                	The filter is applied to PCM samples at the oversampling stage.
+					Playback is automatically restarted to make filter change effective.
+					The default filter is "brick wall".
                 </span>
 			</div>
 		</div>

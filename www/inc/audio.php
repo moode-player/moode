@@ -113,7 +113,7 @@ function setAudioIn($inputSource) {
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 			sysCmd('killall -s 9 alsaloop');
 		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
-			sysCmd('amixer -c 0 sset "I2S/SPDIF Select" I2S');
+			sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "I2S/SPDIF Select" I2S');
 		}
 		if ($_SESSION['mpdmixer'] == 'hardware') {
 			// Save Preamp volume
@@ -146,7 +146,7 @@ function setAudioIn($inputSource) {
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 			sysCmd('alsaloop > /dev/null 2>&1 &');
 		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
-			sysCmd('amixer -c 0 sset "I2S/SPDIF Select" SPDIF');
+			sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "I2S/SPDIF Select" SPDIF');
 		}
 
 		sendFECmd('inpactive1');

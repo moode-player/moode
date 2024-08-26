@@ -91,7 +91,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// NOTE: This volume is automatically sync'd with master volume in worker.php event loop
 		// Update DoP volume
-		//sysCmd('amixer -c 0 sset Digital ' . $_POST['config']['boss2_dop_volume'] . '%');
+		//sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset Digital ' . $_POST['config']['boss2_dop_volume'] . '%');
 
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 	}
@@ -104,6 +104,24 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		cfgChipOptions($chipoptions, $chiptype);
 
 		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['audiophonics_q2m_osf']) {
+			$status = getMpdStatus($sock);
+
+			if ($status['state'] === 'play') {
+				chainMpdCmds($sock, array('pause', 'play'));
+			}
+		}
+
+		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+	}
+
+	// IanCanada (MonitorPi Pro with ESS DAC)
+	if ($_SESSION['i2sdevice'] == 'IanCanada (MonitorPi Pro with ESS DAC)') {
+		$chipoptions = $_POST['config']['iancanada_q2m_osf'];
+		$chiptype = 'ess_sabre_iancanada_q2m';
+
+		cfgChipOptions($chipoptions, $chiptype);
+
+		if ($result[0]['chipoptions'] != $_POST['config']['iancanada_q2m_osf']) {
 			$status = getMpdStatus($sock);
 
 			if ($status['state'] === 'play') {
@@ -128,15 +146,15 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 phpSession('close');
 
 $result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
-$array = explode(',', $result[0]['chipoptions']);
+$optionsArray = explode(',', $result[0]['chipoptions']);
 
 // Burr Brown PCM/5 and TAS chips
 if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
 	$_burrbrown_hide = '';
 	// Analog volume, analog volume boost, digital interpolation filter
-	$analoggain = $array[0];
-	$analogboost = $array[1];
-	$digfilter = $array[2];
+	$analoggain = $optionsArray[0];
+	$analogboost = $optionsArray[1];
+	$digfilter = $optionsArray[2];
 	// Analog volume
 	$_select['analoggain'] .= "<option value=\"100\" " . (($analoggain == '100') ? "selected" : "") . ">0 dB (2-Vrms)</option>\n";
 	$_select['analoggain'] .= "<option value=\"0\" " . (($analoggain == '0') ? "selected" : "") . ">-6 dB (1-Vrms)</option>\n";
@@ -203,9 +221,9 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 	$_allo_katana_hide = '';
 	// Oversampling filter, de-emphasis, DoP
-	$katana_osf = $array[0];
-	$katana_deemphasis = $array[1];
-	$katana_dop = $array[2];
+	$katana_osf = $optionsArray[0];
+	$katana_deemphasis = $optionsArray[1];
+	$katana_dop = $optionsArray[2];
 	// Oversampling filter
 	$_select['katana_osf'] .= "<option value=\"Apodizing Fast Roll-off Filter\" " . (($katana_osf == 'Apodizing Fast Roll-off Filter') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
 	$_select['katana_osf'] .= "<option value=\"Brick Wall Filter\" " . (($katana_osf == 'Brick Wall Filter') ? "selected" : "") . ">Brick Wall Filter</option>\n";
@@ -230,12 +248,12 @@ if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 	$_allo_boss2_hide = '';
 	// Chip options
-	$boss2_deemphasis_filter = $array[0];
-	$boss2_filter_speed = $array[1];
-	$boss2_highpass_filter = $array[2];
-	$boss2_nonosf_emulate = $array[3];
-	$boss2_phase_compensation = $array[4];
-	$boss2_hv_enable = $array[5];
+	$boss2_deemphasis_filter = $optionsArray[0];
+	$boss2_filter_speed = $optionsArray[1];
+	$boss2_highpass_filter = $optionsArray[2];
+	$boss2_nonosf_emulate = $optionsArray[3];
+	$boss2_phase_compensation = $optionsArray[4];
+	$boss2_hv_enable = $optionsArray[5];
 	// NOTE: this volume is automatically sync'd with master volume in worker.php event loop
 	//$boss2_dop_volume = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol Digital')[0], '%');
 	// De-emphasis filter
@@ -264,8 +282,8 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 	$_audiophonics_q2m_hide = '';
 	// Oversampling filter, input select
-	$audiophonics_q2m_osf = $array[0];
-	$audiophonics_q2m_input = $array[1];
+	$audiophonics_q2m_osf = $optionsArray[0];
+	$audiophonics_q2m_input = $optionsArray[1];
 	// Oversampling filter
 	if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 		$_select['audiophonics_q2m_osf'] .= "<option value=\"apodizing fast\" " . (($audiophonics_q2m_osf == 'apodizing fast') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
@@ -288,10 +306,27 @@ if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 	$_audiophonics_q2m_hide = 'hide';
 }
 
+// IanCanada (MonitorPi Pro with ESS DAC)
+if ($_SESSION['i2sdevice'] == 'IanCanada (MonitorPi Pro with ESS DAC)') {
+	$_iancanada_q2m_hide = '';
+	// Oversampling filter, input select
+	$iancanada_q2m_osf = $optionsArray[0];
+	// Oversampling filter
+	$_select['iancanada_q2m_osf'] .= "<option value=\"apodizing fast\" " . (($iancanada_q2m_osf == 'apodizing fast') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
+	$_select['iancanada_q2m_osf'] .= "<option value=\"brick wall\" " . (($iancanada_q2m_osf == 'brick wall') ? "selected" : "") . ">Brick Wall Filter</option>\n";
+	$_select['iancanada_q2m_osf'] .= "<option value=\"corrected minimum phase fast\" " . (($iancanada_q2m_osf == 'corrected minimum phase fast') ? "selected" : "") . ">Corrected Minimum Phase Fast Roll-off Filter</option>\n";
+	$_select['iancanada_q2m_osf'] .= "<option value=\"linear phase fast\" " . (($iancanada_q2m_osf == 'linear phase fast') ? "selected" : "") . ">Linear Phase Fast Roll-off Filter</option>\n";
+	$_select['iancanada_q2m_osf'] .= "<option value=\"linear phase slow\" " . (($iancanada_q2m_osf == 'linear phase slow') ? "selected" : "") . ">Linear Phase Slow Roll-off Filter</option>\n";
+	$_select['iancanada_q2m_osf'] .= "<option value=\"minimum phase fast\" " . (($iancanada_q2m_osf == 'minimum phase fast') ? "selected" : "") . ">Minimum Phase Fast Roll-off Filter</option>\n";
+	$_select['iancanada_q2m_osf'] .= "<option value=\"minimum phase slow\" " . (($iancanada_q2m_osf == 'minimum phase slow') ? "selected" : "") . ">Minimum Phase slow Roll-off Filter</option>\n";
+} else {
+	$_iancanada_q2m_hide = 'hide';
+}
+
 // MERUS Amp HAT ZW
 if ($_SESSION['i2sdevice'] == 'MERUS(tm) Amp piHAT ZW') {
 	$_merus_ma12070p = '';
-	$merus_ma12070p_pmp = $array[0];
+	$merus_ma12070p_pmp = $optionsArray[0];
 	// Power mode profiles
 	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF0\" " . (($merus_ma12070p_pmp == 'PMF0') ? "selected" : "") . ">PMF0 - No filter, optimized efficiency, default applications</option>\n";
 	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF1\" " . (($merus_ma12070p_pmp == 'PMF1') ? "selected" : "") . ">PMF1 - No filter, optimized audio performance, active speaker applications</option>\n";
@@ -314,32 +349,35 @@ include('footer.php');
 
 // Configure chip options
 function cfgChipOptions($options, $type) {
-	$array = explode(',', $options);
+	$optionsArray = explode(',', $options);
 
 	if ($type == 'burr_brown_pcm5') {
 		// Burr Brows PCM5: Analog volume, analog volume boost, digital interpolation filter
-		sysCmd('amixer -c 0 sset "Analogue" ' . $array[0]);
-		sysCmd('amixer -c 0 sset "Analogue Playback Boost" ' . $array[1]);
-		sysCmd('amixer -c 0 sset "DSP Program" ' . '"' . $array[2] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Analogue" ' . $optionsArray[0]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Analogue Playback Boost" ' . $optionsArray[1]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DSP Program" ' . '"' . $optionsArray[2] . '"');
 	} else if ($type == 'ess_sabre_katana') {
 		// Allo Katana: Oversampling filter, de-emphasis, DoP
-		sysCmd('amixer -c 0 sset "DSP Program" ' . '"' . $array[0] . '"');
-		sysCmd('amixer -c 0 sset "Deemphasis" ' . $array[1]);
-		sysCmd('amixer -c 0 sset "DoP" ' . $array[2]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DSP Program" ' . '"' . $optionsArray[0] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Deemphasis" ' . $optionsArray[1]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DoP" ' . $optionsArray[2]);
 	} else if ($type == 'cirrus_logic_cS43198_boss2') {
 		// Allo Boss 2
-		sysCmd('amixer -c 0 sset "PCM De-emphasis Filter" ' . $array[0]);
-		sysCmd('amixer -c 0 sset "PCM Filter Speed" ' . $array[1]);
-		sysCmd('amixer -c 0 sset "PCM High-pass Filter" ' . $array[2]);
-		sysCmd('amixer -c 0 sset "PCM Nonoversample Emulate" ' . $array[3]);
-		sysCmd('amixer -c 0 sset "PCM Phase Compensation" ' . $array[4]);
-		sysCmd('amixer -c 0 sset "HV_Enable" ' . $array[5]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM De-emphasis Filter" ' . $optionsArray[0]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Filter Speed" ' . $optionsArray[1]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM High-pass Filter" ' . $optionsArray[2]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Nonoversample Emulate" ' . $optionsArray[3]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Phase Compensation" ' . $optionsArray[4]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "HV_Enable" ' . $optionsArray[5]);
 	} else if ($type == 'ess_sabre_audiophonics_q2m') {
 		// Audiophonics ES9028/9038 Q2M: Oversampling filter, input select
-		sysCmd('amixer -c 0 sset "FIR Filter Type" ' . '"' . $array[0] . '"');
-		sysCmd('amixer -c 0 sset "I2S/SPDIF Select" ' . '"' . $array[1] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "FIR Filter Type" ' . '"' . $optionsArray[0] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "I2S/SPDIF Select" ' . '"' . $optionsArray[1] . '"');
+	} else if ($type == 'ess_sabre_iancanada_q2m') {
+		// IanCanada (MonitorPi Pro with ESS DAC): Oversampling filter
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "FIR Filter Type" ' . '"' . $optionsArray[0] . '"');
 	} else if ($type == 'merus_ma12070p') {
 		// MERUS Amp HAT ZW Power mode profile
-		sysCmd('amixer -c 0 sset "Q.PM Prof" ' . '"' . $array[0] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Q.PM Prof" ' . '"' . $optionsArray[0] . '"');
 	}
 }

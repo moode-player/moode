@@ -363,6 +363,9 @@ if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchi
 	$audiophonicsQ2mOsf = $array[0];
 	$audiophonicsQ2mInput = $array[1];
 	$_chip_options = 'Filter=' . $audiophonicsQ2mOsf . ', Input=' . $audiophonicsQ2mInput;
+} else if ($_SESSION['i2sdevice'] == 'IanCanada (MonitorPi Pro with ESS DAC)') {
+	$iancanadaQ2mOsf = $array[0];
+	$_chip_options = 'Filter=' . $iancanadaQ2mOsf;
 } else {
 	$_chip_options = 'None';
 }
