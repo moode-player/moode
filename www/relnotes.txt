@@ -26,7 +26,7 @@ Audio devices
 
 Bug fixes
 
-- FIX:
+- FIX: Cardnum 0 always used in chip options config
 
 ################################################################################
 #
