@@ -17,7 +17,13 @@
 
 Security
 
-- UPD: TBD Filter SQL variables for unwanted characters
+- UPD: Filter SQL variables for unwanted characters and commands
+
+Updates
+
+- UPD: Improve spacing on the alphabet index to avoid scrollbar highlight
+- UPD: Add Bluetooth CODEC to Source format line in Audio Info
+- UPD: Improve debug logger
 
 Audio devices
 
@@ -27,6 +33,7 @@ Audio devices
 Bug fixes
 
 - FIX: Cardnum 0 always used in chip options config
+- FIX: Unnecessary query for 'inpactive' in chkBtActive()
 
 ################################################################################
 #
