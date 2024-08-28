@@ -1577,9 +1577,11 @@ function chkMaintenance() {
 }
 
 function chkBtActive() {
-	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='inpactive'", $GLOBALS['dbh']);
-	if ($result[0]['value'] == '1') {
-		return; // Bail if Input is active
+	if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='inpactive'", $GLOBALS['dbh']);
+		if ($result[0]['value'] == '1') {
+			return; // Exit if Input is active
+		}
 	}
 
 	$result = sysCmd('pgrep -l bluealsa-aplay');
