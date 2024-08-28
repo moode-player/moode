@@ -4665,7 +4665,8 @@ function getThumbHW() {
     var colArray = SESSION.json['library_thumbnail_columns'].split('/');
     var cols = UI.mobile ? colArray[1].slice(0,1) : colArray[0]; // Need slice to handle "6/2 (Default)"
 	var divM = Math.round(2 * convertRem(1.5)); // 1.5rem l/r margin for div
-	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
+    // NOTE: 5 is a fudge factor to allow for the bump in right position of the alphabits index
+	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols) - 5;
 	UI.thumbHW = columnW - (divM / 2);
 	$('body').get(0).style.setProperty('--thumbimagesize', UI.thumbHW + 'px');
 	$('body').get(0).style.setProperty('--thumbmargin', ((columnW - UI.thumbHW) / 2) + 'px');
