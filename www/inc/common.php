@@ -27,10 +27,16 @@ function workerLog($msg, $mode = 'a') {
 
 // Debug message logger
 function debugLog($msg, $mode = 'a') {
-	$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'debuglog'", sqlConnect());
-	if ($result[0]['value'] == '0') {
-		return;
+	if (isset($_SESSION['debuglog'])) {
+		if ($_SESSION['debuglog'] == '0') {
+			return;
+		}
+	} else {
+		if (sqlQuery("SELECT value FROM cfg_system WHERE param='debuglog'", sqlConnect())[0]['value'] == '0') {
+			return;
+		}
 	}
+
 	$fh = fopen(MOODE_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . 'DEBUG: ' . $msg . "\n");
 	fclose($fh);
@@ -57,12 +63,12 @@ function autoCfgLog($msg, $mode = 'a') {
 // Post data can be 3 arrays levels deep for example $_POST['path']['items'][0]...[N]
 function chkVariables($variables, $excludedKeys = array()) {
 	// DEBUG:
-	//workerLog("chkVariables(): EXCLUDED\n" . print_r($excludedKeys, true));
-	//workerLog("chkVariables(): VARIABLE\n" . print_r($variables, true));
+	//workerLog("DBG: chkVariables(): EXCLUDED\n" . print_r($excludedKeys, true));
+	//workerLog("DBG: chkVariables(): VARIABLE\n" . print_r($variables, true));
 	foreach($variables as $key => $value) {
 		// DEBUG
-		//workerLog("ARRAYKEY\n" . print_r($key, true));
-		//workerLog("EXCLUDED\n" . print_r($excludedKeys, true));
+		//workerLog("DBG: ARRAYKEY\n" . print_r($key, true));
+		//workerLog("DBG: EXCLUDED\n" . print_r($excludedKeys, true));
 		if (!in_array($key, $excludedKeys)) {
 			if (is_array($value)) {
 				foreach($value as $key2 => $value2) {
@@ -96,21 +102,21 @@ function chkValue($value) {
 	$msg = '';
 	$shellCmds = array('base64');
 
-	// Allow empty and other than these shell characters $ | ; ` < >
+	// Allow empty and other than these shell characters: $ ` | ; < >
 	if (!empty($value) && preg_match('/(\$|`|\||\;|<|>)/', $value)) {
 		$valid = false;
-		$msg = 'Invalid characters detected, transaction blocked';
+		$msg = 'Invalid shell characters detected, request denied';
 	} else {
 		// Check for directory traversal: ../
 		if (substr_count($value, '..') > 0) {
 			$valid = false;
-			$msg = 'Directory traversal detected, transaction blocked';
+			$msg = 'Directory traversal detected, request denied';
 		} else {
-			// Check for some dangerous shell commands
+			// Check for embedded shell commands
 			foreach ($shellCmds as $cmd) {
 				if (str_contains($value, $cmd)) {
 					$valid = false;
-					$msg = 'Shell command detected, transaction blocked';
+					$msg = 'Embedded shell command detected, request denied';
 				}
 			}
 		}
@@ -126,6 +132,40 @@ function chkValue($value) {
 		exit(1);
 	} else {
 		debugLog('chkValue(): ' . (empty($value) ? 'Value is blank' : $value));
+	}
+}
+// Check for SQL injection
+function chkSQL($sql) {
+	// DEBUG:
+	//workerLog('DBG: chkSQL(): ' . (empty($sql) ? 'SQL is blank' : $sql));
+	$valid = true;
+	$msg = '';
+	$sqlCmds = array('delete', 'select', 'union', 'update');
+
+	// Allow empty and other than these SQL characters: " --
+	if (!empty($sql) && preg_match('/(\"|\--)/', $sql)) {
+		$valid = false;
+		$msg = 'Invalid SQL characters detected, request denied';
+	} else {
+		// Check for embedded SQL commands
+		foreach ($sqlCmds as $cmd) {
+			if (str_contains($sql, $cmd)) {
+				$valid = false;
+				$msg = 'Embedded SQL command detected, request denied';
+			}
+		}
+	}
+
+	if ($valid === false) {
+		// Write log entry
+		workerLog('SECCHK: ' . $msg);
+		workerLog('SECCHK: ' . $sql);
+		// Redirect to '400 Bad request' page and then exit
+		http_response_code(400);
+		header('Location: /response400.html');
+		exit(1);
+	} else {
+		debugLog('chkSQL(): ' . (empty($sql) ? 'SQL is blank' : $sql));
 	}
 }
 

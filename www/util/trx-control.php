@@ -33,7 +33,7 @@ switch ($option) {
 		break;
 	case '-set-mpdvol':
 		sysCmd('/var/www/util/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
-		$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volknob'", sqlConnect());
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", sqlConnect());
 		$_SESSION['volknob'] = $result[0]['value'];
 		$status = 'Volume ' . $result[0]['value'];
 		break;
@@ -42,7 +42,7 @@ switch ($option) {
 		// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
 		if ($rxStatusParts[4] == '1') { // Master volume opt in?
 			sysCmd('/var/www/util/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
-			$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volknob'", sqlConnect());
+			$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", sqlConnect());
 			$_SESSION['volknob'] = $result[0]['value'];
 			$status = 'Volume ' . $result[0]['value'];
 		} else {
@@ -51,12 +51,12 @@ switch ($option) {
 		break;
 	case '-set-mpdmute':
 		sysCmd('/var/www/util/vol.sh -mute');
-		$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volknob'", sqlConnect());
+		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", sqlConnect());
 		$status = 'Volume ' . $result[0]['value'];
 		break;
 	// This is used to set rx to 0dB when AirPlay or Spotify connects to Sender
 	case '-set-alsavol':
-		$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_alsa_volume_max'", sqlConnect());
+		$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='rx_alsa_volume_max'", sqlConnect());
 		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $result[0]['value']);
 		$status = '';
 		break;
@@ -87,15 +87,15 @@ function rxOnOff($onoff) {
 
 function rxStatus() {
 	$dbh = sqlConnect();
-	$mvOptIn = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", $dbh);
-	$volMute = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volmute'", $dbh);
+	$mvOptIn = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='rx_mastervol_opt_in'", $dbh);
+	$volMute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh);
 	// hardware		$_SESSION['volknob']
 	// software		0dB
 	// none			0dB
 	// null			?
 	$volume = $_SESSION['mpdmixer'] == 'hardware' ? $_SESSION['volknob'] :
 		(($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') ? '0dB' : '?');
-	$ipAddr = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_host'", $dbh);
+	$ipAddr = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='rx_host'", $dbh);
 	return
 		'rx' . ',' . 						// Receiver
 		$_SESSION['multiroom_rx'] . ',' . 	// Status: On/Off/Disabled/Unknown

@@ -75,7 +75,7 @@ function autoConfigSettings() {
 		$str ='';
 		foreach ($values as $key) {
 			$param =  strlen($prefix) > 0 ? str_replace($prefix, '', $key) : $key;
-			$query = 'SELECT param, value FROM ' . $table . ' WHERE param="' . $param . '"';
+			$query = 'SELECT param, value FROM ' . $table . " WHERE param='" . $param . "'";
 			$result = sqlQuery($query, $dbh);
 			if ($result) {
 				$str .= sprintf("%s = \"%s\"\n", $key, $result[0]['value']);

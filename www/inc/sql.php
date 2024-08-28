@@ -24,17 +24,17 @@ function sqlRead($table, $dbh, $param = '', $id = '') {
 	} else if ($param == 'mpdconf') {
 		$queryStr = "SELECT param, value FROM cfg_mpd WHERE value!=''";
 	} else if ($table == 'cfg_audiodev') {
-		$filter = $param == 'all' ? ' WHERE list="yes"' : ' WHERE name="' . $param . '" AND list="yes"';
+		$filter = $param == 'all' ? " WHERE list='yes'" : " WHERE name='" . $param . "' AND list='yes'";
 		$queryStr = 'SELECT name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
 	} else if ($table == 'cfg_outputdev') {
-		$queryStr = 'SELECT * FROM ' . $table . ' WHERE device_name="' . $param . '"';;
+		$queryStr = 'SELECT * FROM ' . $table . " WHERE device_name='" . $param . "'";
 	} else if ($table == 'cfg_theme') {
-		$queryStr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
+		$queryStr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . " WHERE theme_name='" . $param . "'";
 	} else if ($table == 'cfg_radio') {
-		$queryStr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("OFFLINE", "zx reserved 499")' :
-			'SELECT station, name, logo, home_page FROM ' . $table . ' WHERE station="' . $param . '"';
+		$queryStr = $param == 'all' ? 'SELECT * FROM ' . $table . " WHERE station not in ('OFFLINE', 'zx reserved 499')" :
+			'SELECT station, name, logo, home_page FROM ' . $table . " WHERE station='" . $param . "'";
 	} else {
-		$queryStr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
+		$queryStr = 'SELECT value FROM ' . $table . " WHERE param='" . $param . "'";
 	}
 
 	return sqlQuery($queryStr, $dbh);
@@ -126,13 +126,22 @@ function sqlDelete($table, $dbh, $id = '') {
 	if (empty($id)) {
 		$queryStr = "DELETE FROM " . $table;
 	} else {
-		$queryStr = "DELETE FROM " . $table . " WHERE id=" . $id;
+		$queryStr = "DELETE FROM " . $table . " WHERE id='" . $id . "'";
 	}
 
 	return sqlQuery($queryStr, $dbh);
 }
 
 function sqlQuery($queryStr, $dbh) {
+	$whereClause = (false !== ($pos = stripos($queryStr, 'where'))) ? substr($queryStr, $pos + 6) : 'No WHERE clause';
+	// DEBUG
+	//workerLog('DBG: sqlQuery(): ' . $queryStr);
+	//workerLog('DBG: sqlQuery(): ' . (empty($whereClause) ? 'No where clause' : $whereClause));
+	// Avoid log spam
+	if ($whereClause != "param='debuglog'") {
+		chkSQL($whereClause);
+	}
+
 	$query = $dbh->prepare($queryStr);
 
 	if ($query->execute()) {
@@ -152,8 +161,8 @@ function sqlQuery($queryStr, $dbh) {
 		}
 	} else {
 		// Query execution failed (should never happen)
-		debugLog('sqlQuery(): ' . $queryStr);
-		debugLog('sqlQuery(): Query execution failed');
+		workerLog('DBG: sqlQuery(): Query execution failed');
+		workerLog('DBG: sqlQuery(): ' . $queryStr);
 		return false;
 	}
 }
