@@ -41,7 +41,7 @@ $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh
 
 if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_file = 'Bluetooth stream';
-	$_encoded_at = 'Unknown';
+	$_encoded_at = sysCmd("bluealsa-cli -v list-pcms | awk -F\": \" '/Selected codec/ {print $2}' | cut -d\":\" -f1")[0];
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($aplActive == '1') {
