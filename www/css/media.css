@@ -514,7 +514,8 @@ body {
 // Ultra-wide screens
 */
 @media (max-height:549px) and (width:1919px),
-       (max-height:599px) and (width:1599px) {
+	(max-height:599px) and (width:1599px),
+	(max-height:719px) and (width:1559px) {
 	/* Hide the volume knob */
 	#volzone {display:none;}
 
@@ -575,8 +576,11 @@ body {
 	.total-radio {top:65%!important}
 
 	/* Play and toggle buttons under the time knob */
-	#playbtns .btn {font-size:2vw;padding:1.25rem 2rem;}
-	#playbtns .play {font-size:2.25vw;}
+	#playbtns .btn {font-size:2.75vw;padding:1.25rem 2rem;}
+	#playbtns .play {font-size:3vw;}
+	#togglebtns {padding-top:1rem;}
+	.mpd-volume-level {font-size:1.5rem;}
+
 	#togglebtns .btn-group .btn {font-size:1.5em;}
 	#togglebtns .ralbum {display:none;}
 	#togglebtns .volume-popup-btn {display:inline-block;}
