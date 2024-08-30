@@ -21,9 +21,9 @@ Security
 
 Updates
 
-- UPD: Improve spacing on the alphabet index to avoid scrollbar highlight
 - UPD: Add Bluetooth CODEC to Source format line in Audio Info
-- UPD: Improve debug logger
+- UPD: Add CSS media query for 1560 x 720 display resolution
+- UPD: Improve spacing on the alphabet index to avoid scrollbar highlight
 
 Audio devices
 
