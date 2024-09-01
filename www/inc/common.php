@@ -140,7 +140,7 @@ function chkSQL($sql) {
 	//workerLog('DBG: chkSQL(): ' . (empty($sql) ? 'SQL is blank' : $sql));
 	$valid = true;
 	$msg = '';
-	$sqlCmds = array('delete', 'select', 'union', 'update');
+	$sqlCmds = array('delete ', 'select ', 'union ', 'update ');
 
 	// Allow empty and other than these SQL characters: " --
 	if (!empty($sql) && preg_match('/(\"|\--)/', $sql)) {
