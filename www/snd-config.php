@@ -230,25 +230,6 @@ if (isset($_POST['volume_mpd_max']) && $_POST['volume_mpd_max'] != $_SESSION['vo
 if (isset($_POST['update_volume_db_display']) && $_POST['volume_db_display'] != $_SESSION['volume_db_display']) {
 	phpSession('write', 'volume_db_display', $_POST['volume_db_display']);
 }
-// USB volume knob
-if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
-	submitJob('usb_volknob', $_POST['usb_volknob']);
-	phpSession('write', 'usb_volknob', $_POST['usb_volknob']);
-}
-// Rotary encoder service
-if (isset($_POST['update_rotenc'])) {
-	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
-		phpSession('write', 'rotaryenc', $_POST['rotaryenc']);
-		submitJob('rotaryenc', $_POST['rotaryenc']);
-	}
-}
-// Rotary encoder settings
-if (isset($_POST['update_rotenc_params'])) {
-	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
-		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
-		submitJob('rotaryenc', $_POST['rotaryenc']);
-	}
-}
 
 // DSP options
 
@@ -493,15 +474,6 @@ $_volume_mpd_max = $_SESSION['volume_mpd_max'];
 $autoClick = " onchange=\"autoClick('#btn-set-volume-db-display');\"";
 $_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-// USB volume knob
-$autoClick = " onchange=\"autoClick('#btn-set-usb-volknob');\"";
-$_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-// Rotary encoder
-$autoClick = " onchange=\"autoClick('#btn-set-rotaryenc');\"";
-$_select['rotaryenc_on']  .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['rotaryenc_off'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['rotenc_params'] = $_SESSION['rotenc_params'];
 // Crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
 // Configure DSP buttons

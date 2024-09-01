@@ -301,47 +301,6 @@
 					Display dB volume next to the 0-100 level in the volume knob.
                 </span>
 			</div>
-
-			<label class="control-label">USB volume knob</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-usb-volknob" for="toggle-usb-volknob-2">ON </label>$_select[usb_volknob_on]
-					<label class="toggle-radio toggle-usb-volknob" for="toggle-usb-volknob-1">OFF</label>$_select[usb_volknob_off]
-				</div>
-				<button id="btn-set-usb-volknob" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_usb_volknob" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_usb_volknob" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info_usb_volknob" class="config-help-info">
-					Activates the triggerhappy key mapping daemon for USB volume knobs.<br>
-					Refer to /etc/triggerhappy/triggers.d/media.conf for key/event mappings.
-                </span>
-			</div>
-
-			<label class="control-label">Rotary encoder</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-rotaryenc" for="toggle-rotaryenc-2">ON </label>$_select[rotaryenc_on]
-					<label class="toggle-radio toggle-rotaryenc" for="toggle-rotaryenc-1">OFF</label>$_select[rotaryenc_off]
-				</div>
-				<button id="btn-set-rotaryenc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rotenc" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rotaryenc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-rotaryenc" class="config-help-info">
-					Enable a rotary encoder device to control MPD volume.
-                </span>
-			</div>
-
-			<label class="control-label" for="rotenc-params">Encoder settings</label>
-			<div class="controls">
-				<input class="config-input-large" type="text" id="rotenc-params" name="rotenc_params" value="$_select[rotenc_params]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rotenc_params" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rotaryenc-params" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-rotaryenc-params" class="config-help-info">
-					Encoder settings (positional)<br>
-					- <b>Poll interval:</b> Number of ms sleep for the volume update polling loop. Default = 100.<br>
-					- <b>Speed factor:</b> Threshold (diff betw last/current enc pos) to determine whether to use 1 step or volume_step steps. Default = 2.<br>
-					- <b>Volume_step:</b> Number of steps to use when knob turns at fast rate. Default = 3.<br>
-					- <b>Pin_A Pin_B:</b> Broadcom SoC pin numbers. Default = 23 24.
-                </span>
-			</div>
 		</div>
 
 		<div class="config-horiz-rule">DSP options</div>

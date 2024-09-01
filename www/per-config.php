@@ -96,11 +96,31 @@ if (isset($_POST['update_restart_localui'])) {
 
 // OTHER PERIPHERALS
 
+// USB volume knob
+if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
+	submitJob('usb_volknob', $_POST['usb_volknob']);
+	phpSession('write', 'usb_volknob', $_POST['usb_volknob']);
+}
+// Rotary encoder service
+if (isset($_POST['update_rotenc'])) {
+	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
+		$_SESSION['rotaryenc'] = $_POST['rotaryenc'];
+		submitJob('rotaryenc', $_POST['rotaryenc']);
+	}
+}
+// Rotary encoder settings
+if (isset($_POST['update_rotenc_params'])) {
+	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
+		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
+		submitJob('rotaryenc', $_POST['rotaryenc']);
+	}
+}
+// GPIO buttons
 if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_svc']) {
 	phpSession('write', 'gpio_svc', $_POST['gpio_svc']);
 	submitJob('gpio_svc', $_POST['gpio_svc']);
 }
-
+// LCD updater
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
 		submitJob('lcdup', $_POST['lcdup']);
@@ -177,7 +197,18 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 
 // OTHER PERIPHERALS
 
-// GPIO BUTTONS
+// USB volume knob
+$autoClick = " onchange=\"autoClick('#btn-set-usb-volknob');\"";
+$_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// Rotary encoder
+$autoClick = " onchange=\"autoClick('#btn-set-rotaryenc');\"";
+$_select['rotaryenc_on']  .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rotaryenc_off'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rotenc_params'] = $_SESSION['rotenc_params'];
+
+// GPIO buttons
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	$_feat_gpio = '';
 	$autoClick = " onchange=\"autoClick('#btn-set-gpio-svc');\"";
@@ -187,7 +218,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	$_feat_gpio = 'hide';
 }
 
-// LCD UPDATER
+// LCD updater
 $autoClick = " onchange=\"autoClick('#btn-set-lcdup');\"";
 $_select['lcdup_on']  .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['lcdup_off'] .= "<input type=\"radio\" name=\"lcdup\" id=\"toggle-lcdup-2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
