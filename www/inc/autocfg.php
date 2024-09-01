@@ -113,7 +113,7 @@ function autoConfigSettings() {
 		['requires' => ['upnpname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name upnp "' . $_SESSION['upnpname'] . '" "%s"'],
 		['requires' => ['dlnaname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name dlna "' . $_SESSION['dlnaname'] . '" "%s"'],
 		//
-		// System settings
+		// System and Startup options
 		//
 		'System',
 		['requires' => ['updater_auto_check'], 'handler' => 'setSessVarOnly'],
@@ -158,47 +158,17 @@ function autoConfigSettings() {
 		['requires' => ['led_state'], 'handler' => 'setSessVarSql'],
 		['requires' => ['ipaddr_timeout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['eth0chk'], 'handler' => 'setSessVarSql'],
-		'File Sharing',
+		//
+		// File sharing
+		//
+		'File sharing',
 		['requires' => ['fs_smb'], 'handler' => 'setSessVarSql'],
 		['requires' => ['fs_nfs'], 'handler' => 'setSessVarSql'],
 		['requires' => ['fs_nfs_access'], 'handler' => 'setSessVarSql'],
 		['requires' => ['fs_nfs_options'], 'handler' => 'setSessVarSql'],
-		'Peripherals',
-		['requires' => ['localui'], 'handler' => 'setSessVarSql'],
-		['requires' => ['wake_display'], 'handler' => 'setSessVarSql'],
-		['requires' => ['touchscn'], 'handler' => function($values) {
-			$_SESSION['touchscn'] = $values['touchscn'];
-			$param = $values['touchscn'] == '0' ? ' -- -nocursor' : '';
-			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
-		}],
-		['requires' => ['on_screen_kbd'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['scnblank'], 'handler' => function($values) {
-			phpSession('write', 'scnblank', $values['scnblank']);
-			sysCmd('sed -i "/xset s/c\xset s ' . $values['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
-		}],
-		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
-			$_SESSION['hdmi_enable_4kp60'] = $values['hdmi_enable_4kp60'];
-			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';
-			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
-		}],
-		['requires' => ['scnbrightness'], 'handler' => function($values) {
-			phpSession('write', 'scnbrightness', $values['scnbrightness']);
-			sysCmd('/bin/su -c "echo '. $values['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
-		}],
-		// NOTE: There is no solution yet with the KMS driver
-		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
-			phpSession('write', 'pixel_aspect_ratio', $values['pixel_aspect_ratio']);
-			//$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
-			//updBootConfigTxt('upd_framebuffer_settings', $value);
-		}],
-		['requires' => ['scnrotate'], 'handler' => function($values) {
-			phpSession('write', 'scnrotate', $values['scnrotate']);
-			$value = $values['scnrotate'] == '180' ? '' : '#';
-			updBootConfigTxt('upd_lcd_rotate', $value);
-		}],
-
-		['requires' => ['lcdup'], 'handler' => 'setSessVarSql'],
+		//
+		// Security
+		//
 		'Security',
 		['requires' => ['shellinabox'], 'handler' => 'setSessVarSql'],
 		//
@@ -374,7 +344,7 @@ function autoConfigSettings() {
 		['requires' => ['mpd_httpd_port'], 'handler' => 'setSessVarSql'],
 		['requires' => ['mpd_httpd_encoder'], 'handler' => 'setSessVarSql'],
 		//
-		// DSP and Equalizers
+		// Equalizers
 		//
 		'CamillaDSP',
 		['requires' => ['camilladsp'], 'handler' => 'setSessVarSql'],
@@ -580,8 +550,51 @@ function autoConfigSettings() {
 				return getCfgTableParams('cfg_multiroom', $values, 'multiroom_');
 		}],
 		//
-		// Miscellaneous
+		// Peripherals
 		//
+		'Local display',
+		['requires' => ['localui'], 'handler' => 'setSessVarSql'],
+		['requires' => ['wake_display'], 'handler' => 'setSessVarSql'],
+		['requires' => ['touchscn'], 'handler' => function($values) {
+			$_SESSION['touchscn'] = $values['touchscn'];
+			$param = $values['touchscn'] == '0' ? ' -- -nocursor' : '';
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
+		}],
+		['requires' => ['on_screen_kbd'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['scnblank'], 'handler' => function($values) {
+			phpSession('write', 'scnblank', $values['scnblank']);
+			sysCmd('sed -i "/xset s/c\xset s ' . $values['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+		}],
+		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
+			$_SESSION['hdmi_enable_4kp60'] = $values['hdmi_enable_4kp60'];
+			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';
+			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
+		}],
+		'Pi 7inch touch',
+		['requires' => ['scnbrightness'], 'handler' => function($values) {
+			phpSession('write', 'scnbrightness', $values['scnbrightness']);
+			sysCmd('/bin/su -c "echo '. $values['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+		}],
+		// NOTE: There is no solution yet with the KMS driver
+		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
+			phpSession('write', 'pixel_aspect_ratio', $values['pixel_aspect_ratio']);
+			//$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
+			//updBootConfigTxt('upd_framebuffer_settings', $value);
+		}],
+		['requires' => ['scnrotate'], 'handler' => function($values) {
+			phpSession('write', 'scnrotate', $values['scnrotate']);
+			$value = $values['scnrotate'] == '180' ? '' : '#';
+			updBootConfigTxt('upd_lcd_rotate', $value);
+		}],
+		'USB volume knob',
+		['requires' => ['usb_volknob'], 'handler' => 'setSessVarSql'],
+		'Rotary encoder',
+		['requires' => ['rotaryenc'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['rotenc_params'], 'handler' => function($values) {
+			phpSession('write', 'rotenc_params', $values['rotenc_params']);
+			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $values['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
+		}],
 		'GPIO Buttons',
 		['requires' => ['gpio_svc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['gpio_button'], 'handler' => function($values) {
@@ -614,6 +627,11 @@ function autoConfigSettings() {
 			}
 			return $str;
 		}],
+		'LCD updater',
+		['requires' => ['lcdup'], 'handler' => 'setSessVarSql'],
+		//
+		// NAS and NVME sources
+		//
 		'Music Sources',
 		['requires' => ['fs_mountmon'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['cuefiles_ignore'], 'handler' => 'setSessVarSql'],
