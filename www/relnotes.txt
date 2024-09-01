@@ -24,6 +24,7 @@ Updates
 - UPD: Add Bluetooth CODEC to Source format line in Audio Info
 - UPD: Add CSS media query for 1560 x 720 resolution to ultrawide section
 - UPD: Improve spacing on the alphabet index to avoid scrollbar highlight
+- UPD: Move USB volume knob and Rotary encoder settings to Peripheral Config
 
 Audio devices
 
@@ -34,6 +35,7 @@ Bug fixes
 
 - FIX: Cardnum 0 always used in chip options config
 - FIX: Unnecessary query for 'inpactive' in chkBtActive()
+- FIX: USB volume knob and Rotary encoder settings missing from backup/restore
 
 ################################################################################
 #
