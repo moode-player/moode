@@ -104,7 +104,7 @@ class Eqp {
             }
             $result = sqlQuery($querystr, $this->dbh);
 
-            $querystr = 'SELECT id from ' . $this->table . ' where curve_name = "' . $name . '" limit 1;';
+            $querystr = 'SELECT id from ' . $this->table . " where curve_name = '" . $name . "' limit 1;";
             $result = sqlQuery($querystr, $this->dbh);
             return (is_array($result) and count($result)==1) ? $result[0]['id']: NULL;
         }
@@ -184,7 +184,7 @@ class Eqp {
             $curve_settings = $values['eqp12_settings'][$index];
             $curve_active = $values['eqp12_active'][$index];
 
-            $querystr = 'SELECT id from ' . $this->table . ' WHERE curve_name = "' . $curve_name . '" LIMIT 1;';
+            $querystr = 'SELECT id from ' . $this->table . " WHERE curve_name = '" . $curve_name . "' LIMIT 1;";
             $result = sqlQuery($querystr, $this->dbh);
             // Check if curve is present, in that case an update will be done
             $curve_curr_id = is_array($result) && count($result) == 1 ? $result[0]['id'] : NULL;
