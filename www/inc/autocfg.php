@@ -349,7 +349,11 @@ function autoConfigSettings() {
 		'CamillaDSP',
 		['requires' => ['camilladsp'], 'handler' => 'setSessVarSql'],
 		['requires' => ['camilladsp_volume_sync'], 'handler' => 'setSessVarSql'],
-		['requires' => ['camilladsp_quickconv'], 'handler' => 'setSessVarSql'],
+		['requires' => ['camilladsp_quickconv'], 'handler' => function($values) {
+			// Convert string to comma delimited and trim any leading or trailing single quotes
+			$values['camilladsp_quickconv'] = trim(str_replace(';', ',', $values['camilladsp_quickconv']), "'");
+			phpSession('write', 'camilladsp_quickconv', $values['camilladsp_quickconv']);
+		}],
 		['requires' => ['cdsp_fix_playback'], 'handler' => 'setSessVarSql'],
 		'Parametric EQ',
 		['requires' => ['eqfa12p'], 'handler' => 'setSessVarSql'],
@@ -372,7 +376,7 @@ function autoConfigSettings() {
 			for ($i = 0; $i < $count; $i++) {
 				$curveName = $values['eqg_curve_name'][$i];
 				$curveValues = $values['eqg_curve_values'][$i];
-				$query ="INSERT INTO cfg_eqalsa (curve_name, curve_values) VALUES ('" . $curveName . "', '" . $curveValues . "')";
+				$query = "INSERT INTO cfg_eqalsa (curve_name, curve_values) VALUES ('" . $curveName . "', '" . $curveValues . "')";
 				$result = sqlQuery($query, $dbh);
 			}
 		}, 'custom_write' => function($values) {

@@ -34,7 +34,7 @@ class CamillaDsp {
     );
     private $cardNum = NULL;
     private $configfile = NULL;
-    private $quickConvolutionConfig = ";;;";
+    private $quickConvolutionConfig = ",,,";
 
     function __construct ($configfile, $cardNum = NULL, $quickconvfg) {
         $this->configfile =$configfile;
