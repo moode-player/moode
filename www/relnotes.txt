@@ -36,6 +36,7 @@ Bug fixes
 - FIX: Cardnum 0 always used in chip options config
 - FIX: Unnecessary query for 'inpactive' in chkBtActive()
 - FIX: USB volume knob and Rotary encoder settings missing from backup/restore
+- FIX: CamillaDSP quick convolution crashing due to invalid ';' delimiter
 
 ################################################################################
 #
