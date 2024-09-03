@@ -3263,7 +3263,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
 
     // Cover Art
-    if (SESSION.json['library_covsearchpri'] != getKeyOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
+    if (SESSION.json['library_covsearchpri'] != getKeyOrValue('value', $('#cover-search-priority span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['library_thmgen_scan'] != $('#thumbgen-scan span').text()) {regenThumbsReqd = true;}
     if (SESSION.json['library_hiresthm'] != getKeyOrValue('value', $('#hires-thumbnails span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['playlist_art'] != $('#playqueue-art-enabled span').text()) {playqueueArtChange = true;}
