@@ -294,10 +294,10 @@ function updOutputDeviceCache($deviceName) {
     if ($result === true) {
     	// Not in table so add new
     	$values =
-			'"' . $deviceName . '",' .
-			'"' . $_SESSION['mpdmixer'] . '",' .
-			'"' . $_SESSION['alsa_output_mode'] . '",' .
-			'"' . $_SESSION['alsavolume_max'] . '"';
+			"'" . $deviceName . "'," .
+			"'" . $_SESSION['mpdmixer'] . "'," .
+			"'" . $_SESSION['alsa_output_mode'] . "'," .
+			"'" . $_SESSION['alsavolume_max'] . "'";
     	$result = sqlInsert('cfg_outputdev', $dbh, $values);
     } else {
 		$value = array(
