@@ -107,7 +107,7 @@ function startSpotify() {
 
 	// Access point port
 	// NOTE: This is to force AP fallback by specifying a random port number other than 80, 443 or 4070.
-	$ap_port = ' --ap-port 13561 ';
+	$ap_port = $cfgSpotify['ap_fallback'] == 'Yes' ? ' --ap-port 13561 ' : '';
 
 	// Options
 	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . $cfgSpotify['dither'];
