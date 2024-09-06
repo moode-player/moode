@@ -65,10 +65,10 @@
 
 			<label class="control-label" for="initial-volume">Initial volume</label>
 			<div class="controls">
-				<input class="config-input-large" type="number" min="-1" max="100" id="initial-volume" name="config[initial_volume]" value="$_select[initial_volume]" required>
+				<input class="config-input-large" type="number" min="5" max="100" id="initial-volume" name="config[initial_volume]" value="$_select[initial_volume]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-initial-volume" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-initial-volume" class="config-help-info">
-					Initial volume in % from 0-100. Set to -1 to use the cached volume or if none exists then default to 50.
+					Initial volume in % from 5 - 100.
                 </span>
 			</div>
 
@@ -164,7 +164,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-ap-fallback" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-ap-fallback" class="config-help-info">
-					Select "Yes" to configure Spotify Connect to use fallback server access points rather than default access points.
+					This should be set to "Yes" for Spotify Connect version 4 and "No" for version 5
 				</span>
 			</div>
 		</div>

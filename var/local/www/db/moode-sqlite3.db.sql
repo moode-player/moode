@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Sep 4 11:21:02 2024
+-- File generated with SQLiteStudio v3.4.4 on Fri Sep 6 15:18:17 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -497,7 +497,7 @@ wsize INT(4)
 -- Table: cfg_spotify
 CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '320');
-INSERT INTO cfg_spotify (id, param, value) VALUES (2, 'initial_volume', '0');
+INSERT INTO cfg_spotify (id, param, value) VALUES (2, 'initial_volume', '5');
 INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'log');
 INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'No');
 INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '0');

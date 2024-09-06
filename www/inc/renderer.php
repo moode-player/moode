@@ -106,12 +106,12 @@ function startSpotify() {
 	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
 
 	// Access point port
-	// NOTE: This is to force AP fallback by specifying a random port number other than 80, 443 or 4070.
+	// v0.4.x: Force AP fallback for by specifying a random port number other than 80, 443 or 4070
+	// v0.5.x: This should be '' otherwise librespot crashes
 	$ap_port = $cfgSpotify['ap_fallback'] == 'Yes' ? ' --ap-port 13561 ' : '';
 
 	// Options
 	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . $cfgSpotify['dither'];
-	$initial_volume = $cfgSpotify['initial_volume'] == "-1" ? '' : ' --initial-volume ' . $cfgSpotify['initial_volume'];
 	$volume_normalization = $cfgSpotify['volume_normalization'] == 'Yes' ?
 		' --enable-volume-normalisation ' .
 		' --normalisation-method ' . $cfgSpotify['normalization_method'] .
@@ -135,7 +135,7 @@ function startSpotify() {
 		$ap_port .
 		$dither .
 		' --mixer softvol' .
-		$initial_volume .
+		' --initial-volume ' . $cfgSpotify['initial_volume'] .
 		' --volume-ctrl ' . $cfgSpotify['volume_curve'] .
 		' --volume-range ' . $cfgSpotify['volume_range'] .
 		$volume_normalization .
