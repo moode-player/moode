@@ -1244,8 +1244,9 @@ $result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'ap
 if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['value'] == '1' ||
 	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1' ||
 	$result[6]['value'] == '1') {
-	// Set Knob volume to 0 for vol.sh downstream
+	// Set Knob volume to 0
 	phpSession('write', 'volknob', '0');
+	sysCmd('/var/www/util/vol.sh 0');
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive' OR
 		param='spotactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
 		param='inpactive'", $dbh);
