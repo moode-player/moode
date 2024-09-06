@@ -19,6 +19,10 @@ Security
 
 - UPD: Filter SQL variables for unwanted characters and commands
 
+Packages
+
+- Bump to camillagui 2.1.0-1moode1
+
 Updates
 
 - UPD: Add Bluetooth CODEC to Source format line in Audio Info
@@ -26,6 +30,7 @@ Updates
 - UPD: Add AP fallback option to Spotify Config
 - UPD: Move USB volknob and Rotary encoder settings to Peripheral Config
 - UPD: Improve spacing on alphabet index to avoid scrollbar highlight
+- UPD: Update Spotify Connect initial_volume to min 5 (from 0)
 
 Audio devices
 
@@ -39,6 +44,7 @@ Bug fixes
 - FIX: USB volume knob and Rotary encoder settings missing from backup/restore
 - FIX: CamillaDSP quick convolution crashing due to invalid ';' delimiter
 - FIX: CamillaDSP crashing due to empty 'mixers' array in config
+- FIX: Volume 0 not being set for renderer active reset during startup
 
 ################################################################################
 #
