@@ -16,9 +16,23 @@ debug_log () {
 	echo "$TIME $1" >> $LOGFILE
 }
 
-debug_log "Event: "$PLAYER_EVENT
+PLAYER_EVENTS=(
+started
+stopped
+session_connected
+)
 
-if [[ $PLAYER_EVENT != "started" ]] && [[ $PLAYER_EVENT != "stopped" ]]; then
+MATCH=0
+for EVENT in "${PLAYER_EVENTS[@]}"
+do
+	if [[ $PLAYER_EVENT == $EVENT ]]; then
+		MATCH=1
+		debug_log "Event: "$PLAYER_EVENT": Processed"
+	fi
+done
+# Exit if not a matching player event
+if [[ $MATCH == 0 ]]; then
+	debug_log "Event: "$PLAYER_EVENT": Skipped"
 	exit 0
 fi
 
@@ -41,7 +55,8 @@ if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
-if [[ $PLAYER_EVENT == "started" ]]; then
+# v042 uses "started", v050 uses "session_connected"
+if [[ $PLAYER_EVENT == "started" ]] || [[ $PLAYER_EVENT == "session_connected" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='spotactive'")
 	/usr/bin/mpc stop > /dev/null
 	sleep 1
@@ -69,6 +84,7 @@ if [[ $PLAYER_EVENT == "started" ]]; then
 	fi
 fi
 
+# v042 and v050 both use "stopped", v050 also follows with "session_disconnected"
 if [[ $PLAYER_EVENT == "stopped" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='spotactive'")
 
