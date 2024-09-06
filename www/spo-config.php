@@ -73,8 +73,8 @@ $_select['normalization_knee'] = $cfgSpotify['normalization_knee'];
 $_select['autoplay'] .= "<option value=\"Yes\" " . (($cfgSpotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['autoplay'] .= "<option value=\"No\" " . (($cfgSpotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";
 
-$_select['ap_fallback'] .= "<option value=\"Yes\" " . (($cfgSpotify['ap_fallback'] == 'Yes') ? "selected" : "") . ">Yes (Default)</option>\n";
-$_select['ap_fallback'] .= "<option value=\"No\" " . (($cfgSpotify['ap_fallback'] == 'No') ? "selected" : "") . ">No</option>\n";
+$_select['ap_fallback'] .= "<option value=\"Yes\" " . (($cfgSpotify['ap_fallback'] == 'Yes') ? "selected" : "") . ">Yes (For version 4)</option>\n";
+$_select['ap_fallback'] .= "<option value=\"No\" " . (($cfgSpotify['ap_fallback'] == 'No') ? "selected" : "") . ">No (For version 5)</option>\n";
 
 waitWorker('spo_config');
 
