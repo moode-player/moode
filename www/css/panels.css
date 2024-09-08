@@ -775,7 +775,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 .playback-hd-badge {display:none;position:relative;filter:brightness(85%);color:gold;background:#000;border:1px solid gold;
 	border-radius:8%;font-size:.6em;font-family:'Lato',sans-serif;font-style:normal;font-weight:600;
 	margin-right:.5em;padding:0 .5em;bottom:.16rem;}
-#ss-hd-badge {bottom:.3rem;}
+#ss-hd-badge {bottom:.16rem;}
 /* Radio manager */
 .modal-button-style {display:inline-block;margin:0 10px 10px 0;color:inherit!important;}
 /* Radio view, Playlist view */
