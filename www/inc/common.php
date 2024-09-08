@@ -18,6 +18,10 @@ require_once __DIR__ . '/constants.php';
 // Daemon loop sleep intervals
 require_once __DIR__ .  '/sleep-interval.php';
 
+//----------------------------------------------------------------------------//
+// LOGGING
+//----------------------------------------------------------------------------//
+
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
 	$fh = fopen(MOODE_LOG, $mode);
@@ -59,6 +63,10 @@ function autoCfgLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
+//----------------------------------------------------------------------------//
+// SECURITY
+//----------------------------------------------------------------------------//
+
 // Validate get/post variables and other args
 // Post data can be 3 arrays levels deep for example $_POST['path']['items'][0]...[N]
 function chkVariables($variables, $excludedKeys = array()) {
@@ -96,11 +104,11 @@ function chkVariables($variables, $excludedKeys = array()) {
 		}
 	}
 }
+
 // Check for unwanted characters and shell commands
 function chkValue($value) {
 	$valid = true;
 	$msg = '';
-	$shellCmds = array('base64');
 
 	// Allow empty and other than these shell characters: $ ` | ; < >
 	if (!empty($value) && preg_match('/(\$|`|\||\;|<|>)/', $value)) {
@@ -113,7 +121,7 @@ function chkValue($value) {
 			$msg = 'Directory traversal detected, request denied';
 		} else {
 			// Check for embedded shell commands
-			foreach ($shellCmds as $cmd) {
+			foreach (SHL_CMDS as $cmd) {
 				if (str_contains($value, $cmd)) {
 					$valid = false;
 					$msg = 'Embedded shell command detected, request denied';
@@ -134,13 +142,13 @@ function chkValue($value) {
 		debugLog('chkValue(): ' . (empty($value) ? 'Value is blank' : $value));
 	}
 }
+
 // Check for SQL injection
 function chkSQL($sql) {
 	// DEBUG:
 	//workerLog('DBG: chkSQL(): ' . (empty($sql) ? 'SQL is blank' : $sql));
 	$valid = true;
 	$msg = '';
-	$sqlCmds = array('delete ', 'select ', 'union ', 'update ');
 
 	// Allow empty and other than these SQL characters: " --
 	if (!empty($sql) && preg_match('/(\"|\--)/', $sql)) {
@@ -148,7 +156,7 @@ function chkSQL($sql) {
 		$msg = 'Invalid SQL characters detected, request denied';
 	} else {
 		// Check for embedded SQL commands
-		foreach ($sqlCmds as $cmd) {
+		foreach (SQL_CMDS as $cmd) {
 			if (str_contains($sql, $cmd)) {
 				$valid = false;
 				$msg = 'Embedded SQL command detected, request denied';
@@ -169,152 +177,71 @@ function chkSQL($sql) {
 	}
 }
 
+// Check for stored Cross-Site Scripting
+function chkXSS($data) {
+	// DEBUG:
+	//workerLog('DBG: chkXSS(): ' . (empty($data) ? 'Data is blank' : $data));
+	$valid = true;
+	$msg = '';
+
+	// Allow empty and other than these characters: < > = //
+	if (!empty($data) && preg_match('/(\<|\>|\=|\/\/)/', $data)) {
+		$valid = false;
+		$msg = 'XSS characters detected, request denied';
+	} else {
+		// Check for embedded XSS commands
+		foreach (XSS_CMDS as $cmd) {
+			if (str_contains($data, $cmd)) {
+				$valid = false;
+				$msg = 'XSS command detected, request denied';
+			}
+		}
+	}
+
+	if ($valid === false) {
+		// Write log entry
+		workerLog('SECCHK: ' . $msg);
+		workerLog('SECCHK: ' . $data);
+		$data = '????';
+	} else {
+		debugLog('chkXSS(): ' . (empty($data) ? 'Data is blank' : $data));
+	}
+
+	return $data;
+}
+
+//----------------------------------------------------------------------------//
+// SYSTEM
+//----------------------------------------------------------------------------//
+
 // Execute shell command
 function sysCmd($cmd) {
 	exec('sudo ' . $cmd . " 2>&1", $output);
 	return $output;
 }
 
-// Used in template scripts
-// eval("echoTemplate(\"" . php ev("templates/$tpl") . "\");");
-function getTemplate($template) {
-	return str_replace("\"", "\\\"", implode("", file($template)));
-}
-function echoTemplate($template) {
-	echo $template;
+// Get major version (series) S in 'rSNN'
+function getMoodeSeries() {
+	return substr(getMoodeRel(), 1, 1);
 }
 
-// Send command to front-end via engine-cmd.php
-function sendFECmd ($cmd) {
-	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
-		// This case is ok and occurs if UI has never been started
-		debugLog('sendFECmd(): File open failed, UI has never been opened in Browser');
-	} else {
-		// Retry until UI connects or retry limit reached
-		$retry_limit = 4;
-		$retry_count = 0;
-		while (count($ports) === 0) {
-			++$retry_count;
-			$ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-			sleep (1);
-			if (--$retry_limit == 0) {
-				break;
-			}
-		}
-
-		foreach ($ports as $port) {
-			if (false !== ($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP))) {
-				if (false !== ($result = socket_connect($sock, '127.0.0.1', $port))) {
-					sockWrite($sock, $cmd);
-					socket_close($sock);
-				} else {
-					sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
-				}
-			} else {
-				workerLog('sendFECmd(): Socket create failed');
-			}
-		}
-	}
-}
-
-function sockWrite($sock, $msg) {
-    $length = strlen($msg);
-	$retryCount = 4;
-	for ($i = 0; $i < $retryCount; $i++) {
-        if (false === ($sent = socket_write($sock, $msg, $length))) {
-			workerLog('sockWrite(): Socket write failed (' . $i . ')');
-            return false;
-        }
-
-        if ($sent < $length) {
-            $msg = substr($msg, $sent);
-            $length -= $sent;
-        } else {
-            return true;
-        }
-    }
-	// We only get here if $i = $retryCount
-	workerLog('sockWrite(): Socket write failed after ' . $retryCount . ' tries');
-    return false;
-}
-
-function uiNotify($notify) {
-	$script .= "<script>\n";
-	$script .= "function ui_notify() {\n";
-	$script .= "$.pnotify.defaults.history = false;\n";
-	$script .= "$.pnotify({";
-	$script .= "title: '" . $notify['title'] . "',";
-	$script .= "text: '" . $notify['msg'] . "',";
-	$script .= "icon: '',";
-	$script .= "delay: " . (isset($notify['duration']) ? strval($notify['duration'] * 1000) : NOTIFY_DURATION_DEFAULT) . ",";
-	$script .= "opacity: 1.0});\n";
-	$script .= "}\n";
-	$script .= "</script>\n";
-	echo $script;
-}
-
-// Submit job to worker.php
-function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = NOTIFY_DURATION_DEFAULT) {
-	if ($_SESSION['w_lock'] != 1 && $_SESSION['w_queue'] == '') {
-		if (phpSession('get_status') != PHP_SESSION_ACTIVE) {
-			phpSession('open');
-		}
-		// For worker.php
-		$_SESSION['w_queue'] = $jobName;
-		$_SESSION['w_active'] = 1;
-		$_SESSION['w_queueargs'] = $jobArgs;
-
-		// For footer.php
-		$_SESSION['notify']['title'] = $title;
-		$_SESSION['notify']['msg'] = $msg;
-		$_SESSION['notify']['duration'] = $duration;
-
-		// NOTE: Session will be closed by caller script
-
-		return true;
-	} else {
-		//echo json_encode('worker busy');
-		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
-		$_SESSION['notify']['msg'] = 'System is busy, try again';
-		return false;
-	}
-}
-
-// Wait for worker to process job (Called from cfg scripts)
-function waitWorker($caller) {
-	// DEBUG:
-	//debugLog('waitWorker(): Start ' . $caller . ', w_active=' . $_SESSION['w_active']);
-	$loopCnt = 0;
-
-	if ($_SESSION['w_active'] == 1) {
-		do {
-			usleep(WAITWORKER_SLEEP);
-			debugLog('waitWorker(): Wait ' . ++$loopCnt . ' for ' . $caller);
-
-			phpSession('open_ro');
-		} while ($_SESSION['w_active'] != 0);
-	}
-	// DEBUG:
-	//debugLog('waitWorker(): End   ' . $caller . ', w_active=' . $_SESSION['w_active']);
-}
-
-// $path
-// - Remote: cfg_system 'res_software_upd_url'
-// - Local:  /var/local/www/
-function checkForUpd($path) {
-	if (false === ($contents = file_get_contents($path . 'update-' . getPkgId() . '.txt'))) {
-		$result['Date'] = 'None';
-	} else {
-		$result = parseDelimFile($contents, ': ');
+// Assumes only one dir under /home, the one corresponding to the userid
+// entered into the Raspberry Pi Imager when prepping the image.
+function getUserID() {
+	// Check for and delete '/home/pi' if it has no userid. This dir is created
+	// by the moode-player package install during in-place update.
+	if (file_exists('/home/pi/') && empty(sysCmd('grep ":/home/pi:" /etc/passwd'))) {
+		sysCmd('rm -rf /home/pi/');
 	}
 
-	return $result;
+	$result = sysCmd('ls /home/');
+	return $result[0];
 }
 
-// Return the update package id (default 'moode') plus an optional suffix for testing
-function getPkgId () {
-	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='pkgid_suffix'", sqlConnect());
-	return 'moode' . getMoodeSeries() . $result[0]['value'];
+// hostname -I = 192.168.1.121 fd87:f129:9943:4934:1192:907d:d9b6:e98d
+// hostname -I | cut -d " " -f 1 = 192.168.1.121
+function getThisIpAddr() {
+	return sysCmd('hostname -I | cut -d " " -f 1')[0];
 }
 
 // Get release
@@ -331,9 +258,46 @@ function getMoodeRel($options = '') {
 	}
 }
 
-// Get major version (series) S in 'rSNN'
-function getMoodeSeries() {
-	return substr(getMoodeRel(), 1, 1);
+// Generic delimited file parser
+function parseDelimFile($data, $delim) {
+	$array = array();
+	$line = strtok($data, "\n");
+
+	while ($line) {
+		list($param, $value) = explode($delim, $line, 2);
+		$array[$param] = $value;
+		$line = strtok("\n");
+	}
+
+	return $array;
+}
+
+//----------------------------------------------------------------------------//
+// PHP TEMPLATING
+//----------------------------------------------------------------------------//
+
+// Used in template scripts
+// eval("echoTemplate(\"" . php ev("templates/$tpl") . "\");");
+function getTemplate($template) {
+	return str_replace("\"", "\\\"", implode("", file($template)));
+}
+function echoTemplate($template) {
+	echo $template;
+}
+
+function uiNotify($notify) {
+	$script .= "<script>\n";
+	$script .= "function ui_notify() {\n";
+	$script .= "$.pnotify.defaults.history = false;\n";
+	$script .= "$.pnotify({";
+	$script .= "title: '" . $notify['title'] . "',";
+	$script .= "text: '" . $notify['msg'] . "',";
+	$script .= "icon: '',";
+	$script .= "delay: " . (isset($notify['duration']) ? strval($notify['duration'] * 1000) : NOTIFY_DURATION_DEFAULT) . ",";
+	$script .= "opacity: 1.0});\n";
+	$script .= "}\n";
+	$script .= "</script>\n";
+	echo $script;
 }
 
 // Store back link for configs
@@ -400,38 +364,139 @@ function setAltBackLink() {
 	phpSession('close');
 }
 
-// Assumes only one dir under /home, the one corresponding to the userid
-// entered into the Raspberry Pi Imager when prepping the image.
-function getUserID() {
-	// Check for and delete '/home/pi' if it has no userid. This dir is created
-	// by the moode-player package install during in-place update.
-	if (file_exists('/home/pi/') && empty(sysCmd('grep ":/home/pi:" /etc/passwd'))) {
-		sysCmd('rm -rf /home/pi/');
+//----------------------------------------------------------------------------//
+// FRONT-END MESSAGING
+//----------------------------------------------------------------------------//
+
+// Send command to front-end via engine-cmd.php
+function sendFECmd ($cmd) {
+	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
+		// This case is ok and occurs if UI has never been started
+		debugLog('sendFECmd(): File open failed, UI has never been opened in Browser');
+	} else {
+		// Retry until UI connects or retry limit reached
+		$retry_limit = 4;
+		$retry_count = 0;
+		while (count($ports) === 0) {
+			++$retry_count;
+			$ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+			sleep (1);
+			if (--$retry_limit == 0) {
+				break;
+			}
+		}
+
+		foreach ($ports as $port) {
+			if (false !== ($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP))) {
+				if (false !== ($result = socket_connect($sock, '127.0.0.1', $port))) {
+					sockWrite($sock, $cmd);
+					socket_close($sock);
+				} else {
+					sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
+				}
+			} else {
+				workerLog('sendFECmd(): Socket create failed');
+			}
+		}
+	}
+}
+
+function sockWrite($sock, $msg) {
+    $length = strlen($msg);
+	$retryCount = 4;
+	for ($i = 0; $i < $retryCount; $i++) {
+        if (false === ($sent = socket_write($sock, $msg, $length))) {
+			workerLog('sockWrite(): Socket write failed (' . $i . ')');
+            return false;
+        }
+
+        if ($sent < $length) {
+            $msg = substr($msg, $sent);
+            $length -= $sent;
+        } else {
+            return true;
+        }
+    }
+	// We only get here if $i = $retryCount
+	workerLog('sockWrite(): Socket write failed after ' . $retryCount . ' tries');
+    return false;
+}
+
+//----------------------------------------------------------------------------//
+// WORKER DAEMON
+//----------------------------------------------------------------------------//
+
+// Submit job to worker.php
+function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = NOTIFY_DURATION_DEFAULT) {
+	if ($_SESSION['w_lock'] != 1 && $_SESSION['w_queue'] == '') {
+		if (phpSession('get_status') != PHP_SESSION_ACTIVE) {
+			phpSession('open');
+		}
+		// For worker.php
+		$_SESSION['w_queue'] = $jobName;
+		$_SESSION['w_active'] = 1;
+		$_SESSION['w_queueargs'] = $jobArgs;
+
+		// For footer.php
+		$_SESSION['notify']['title'] = $title;
+		$_SESSION['notify']['msg'] = $msg;
+		$_SESSION['notify']['duration'] = $duration;
+
+		// NOTE: Session will be closed by caller script
+
+		return true;
+	} else {
+		//echo json_encode('worker busy');
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'System is busy, try again';
+		return false;
+	}
+}
+
+// Wait for worker to process job (Called from cfg scripts)
+function waitWorker($caller) {
+	// DEBUG:
+	//debugLog('waitWorker(): Start ' . $caller . ', w_active=' . $_SESSION['w_active']);
+	$loopCnt = 0;
+
+	if ($_SESSION['w_active'] == 1) {
+		do {
+			usleep(WAITWORKER_SLEEP);
+			debugLog('waitWorker(): Wait ' . ++$loopCnt . ' for ' . $caller);
+
+			phpSession('open_ro');
+		} while ($_SESSION['w_active'] != 0);
+	}
+	// DEBUG:
+	//debugLog('waitWorker(): End   ' . $caller . ', w_active=' . $_SESSION['w_active']);
+}
+
+//----------------------------------------------------------------------------//
+// SYSTEM UPDATER
+//----------------------------------------------------------------------------//
+
+// $path
+// - Remote: cfg_system 'res_software_upd_url'
+// - Local:  /var/local/www/
+function checkForUpd($path) {
+	if (false === ($contents = file_get_contents($path . 'update-' . getPkgId() . '.txt'))) {
+		$result['Date'] = 'None';
+	} else {
+		$result = parseDelimFile($contents, ': ');
 	}
 
-	$result = sysCmd('ls /home/');
-	return $result[0];
+	return $result;
 }
 
-// NOTE:
-// hostname -I = 192.168.1.121 fd87:f129:9943:4934:1192:907d:d9b6:e98d
-// hostname -I | cut -d " " -f 1 = 192.168.1.121
-function getThisIpAddr() {
-	return sysCmd('hostname -I | cut -d " " -f 1')[0];
+// Return the update package id (default 'moode') plus an optional suffix for testing
+function getPkgId () {
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='pkgid_suffix'", sqlConnect());
+	return 'moode' . getMoodeSeries() . $result[0]['value'];
 }
 
-function parseDelimFile($data, $delim) {
-	$array = array();
-	$line = strtok($data, "\n");
-
-	while ($line) {
-		list($param, $value) = explode($delim, $line, 2);
-		$array[$param] = $value;
-		$line = strtok("\n");
-	}
-
-	return $array;
-}
+//----------------------------------------------------------------------------//
+// BOOT CONFIG.TXT MANAGEMENT
+//----------------------------------------------------------------------------//
 
 function chkBootConfigTxt() {
 	$lines = file(BOOT_CONFIG_TXT, FILE_IGNORE_NEW_LINES);
@@ -469,6 +534,7 @@ function chkBootConfigTxt() {
 
 	return $status;
 }
+
 function updBootConfigTxt($action, $value) {
 	switch ($action) {
 		case 'upd_audio_overlay':

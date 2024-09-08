@@ -272,6 +272,11 @@ const CIDR_TABLE = array(
     "0.0.0.0" => '0'
 );
 
+// Security chk functions use these
+const SHL_CMDS = array('base64');
+const SQL_CMDS = array('delete ', 'select ', 'union ', 'update ');
+const XSS_CMDS = array('script', 'http');
+
 // Recorder plugin (currently n/a)
 const RECORDER_RECORDINGS_DIR 	 = '/Recordings';
 const RECORDER_DEFAULT_COVER	 = 'Recorded Radio.jpg';
