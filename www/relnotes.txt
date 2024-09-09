@@ -33,6 +33,8 @@ Updates
 - UPD: Move USB volknob and Rotary encoder settings to Peripheral Config
 - UPD: Improve spacing on alphabet index to avoid scrollbar highlight
 - UPD: Update Spotify Connect initial_volume to min 5 (from 0)
+- UPD: Update Radio station 200px thumbs to native resolution of main image
+- UPD: Default to 600px for Radio and Playlist view thumbs
 
 Audio devices
 
@@ -47,6 +49,7 @@ Bug fixes
 - FIX: CamillaDSP quick convolution crashing due to invalid ';' delimiter
 - FIX: CamillaDSP crashing due to empty 'mixers' array in config
 - FIX: Volume 0 not being set for renderer active reset during startup
+- FIX: Secchk not excluding qobuzpass variable
 
 ################################################################################
 #
