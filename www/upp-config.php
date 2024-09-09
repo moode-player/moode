@@ -16,7 +16,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$_POST['config']['openhome'] = $_POST['config']['svctype'] == 'openhome' ? '1' : '0';
 
 	foreach ($_POST['config'] as $key => $value) {
-		chkValue($value);
+		if ($key != 'qobuzpass') {
+			chkValue($value);
+		}
 		sqlUpdate('cfg_upnp', $dbh, $key, $value);
 		if ($value != '') {
 			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
