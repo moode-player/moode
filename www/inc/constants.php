@@ -57,6 +57,9 @@ const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const THM_SM_W = 80; // Small thumbs
 const THM_SM_H = 80;
 const THM_SM_Q = 75;
+// Radio and Playlist thumbs
+const THM_DEFAULT_W = 600;
+const THM_DEFAULT_Q = 75;
 // System files
 const PORT_FILE = '/tmp/moode_portfile'; // Command engine
 const SESSION_SAVE_PATH = '/var/local/php';

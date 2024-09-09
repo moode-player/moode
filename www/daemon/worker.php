@@ -3068,55 +3068,74 @@ function runQueuedJob() {
 		case 'set_plcover_image':
 			$job = $_SESSION['w_queue'];
 			$queueArgs = explode(',', $_SESSION['w_queueargs'], 2);
-			$img_name = $queueArgs[0];
-			$img_data = base64_decode($queueArgs[1], true);
+			$imgName = $queueArgs[0];
+			$imgData = base64_decode($queueArgs[1], true);
 
 			if ($job == 'set_ralogo_image') {
-				$img_dir = RADIO_LOGOS_ROOT;
-				$thm_dir = 'thumbs/';
+				$imgDir = RADIO_LOGOS_ROOT;
+				$thmDir = 'thumbs/';
 			} else {
- 				$img_dir = PLAYLIST_COVERS_ROOT;
-				$thm_dir = '';
+ 				$imgDir = PLAYLIST_COVERS_ROOT;
+				$thmDir = '';
 			}
 
-			if ($img_data === false) {
+			if ($imgData === false) {
 				workerLog('worker: '. $job .': base64_decode failed');
 			} else {
 				// Imported image
-				$file = $img_dir . TMP_IMAGE_PREFIX . $img_name . '.jpg';
+				$file = $imgDir . TMP_IMAGE_PREFIX . $imgName . '.jpg';
 				$fh = fopen($file, 'w');
-				fwrite($fh, $img_data);
+				fwrite($fh, $imgData);
 				fclose($fh);
 				sysCmd('chmod 0777 "' . $file . '"');
 
 				// Thumbnail
-				$img_str = file_get_contents($file);
-				$image = imagecreatefromstring($img_str);
-				$thm_w = 200;
-				$thm_q = 75;
+				$imgStr = file_get_contents($file);
+				$image = imagecreatefromstring($imgStr);
+				// Default to 600px
+				$thmW = THM_DEFAULT_W;
+				$thmQ = THM_DEFAULT_Q;
 
 				// Image h/w
-				$img_w = imagesx($image);
-				$img_h = imagesy($image);
+				$imgW = imagesx($image);
+				$imgH = imagesy($image);
 				// Thumbnail height
-				$thm_h = ($img_h / $img_w) * $thm_w;
+				$thmH = round(($imgH / $imgW) * $thmW);
+
+				// Copy or resample
+				if ($imgW * $imgH <= $thmW * $thmH) {
+					$resample = false;
+					$thmH = $imgH;
+					$thmW = $imgW;
+				} else {
+					$resample = true;
+				}
 
 				// Standard thumbnail
-				if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-					workerLog('worker: '. $job .': error 1a: imagecreatetruecolor() ' . $file);
-					break;
+				if (($thumb = imagecreatetruecolor($thmW, $thmH)) === false) {
+					workerLog('thumb-gen: Error: imagecreatetruecolor(thumb): ' . $file);
+					return;
 				}
-				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-					workerLog('worker: '. $job .': error 2a: imagecopyresampled() ' . $file);
-					break;
+				if ($resample === true) {
+					if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thmW, $thmH, $imgW, $imgH) === false) {
+						workerLog('thumb-gen: Error: imagecopyresampled(thumb): ' . $file);
+						return;
+					}
+				} else {
+					if (imagecopy($thumb, $image, 0, 0, 0, 0, $imgW, $imgH) === false) {
+						workerLog('thumb-gen: Error: imagecopy(thumb): ' . $file);
+						return;
+					}
 				}
-				if (imagejpeg($thumb, $img_dir . $thm_dir . TMP_IMAGE_PREFIX . $img_name . '.jpg', $thm_q) === false) {
-					workerLog('worker: '. $job .': error 4a: imagejpeg() ' . $file);
-					break;
+				if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thmQ) === false) {
+					workerLog('thumb-gen: Error: imagejpeg(thumb): ' . $file);
+					return;
+				} else {
+					$GLOBALS['newThms']++;
 				}
 				if (imagedestroy($thumb) === false) {
-					workerLog('worker: '. $job .': error 5a: imagedestroy() ' . $file);
-					break;
+					workerLog('thumb-gen: Error: imagedestroy(thumb): ' . $file);
+					return;
 				}
 
 				if ($job == 'set_ralogo_image') {
@@ -3125,7 +3144,7 @@ function runQueuedJob() {
 						workerLog('worker: '. $job .': error 1b: imagecreatetruecolor() ' . $file);
 						break;
 					}
-					if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
+					if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $imgW, $imgH) === false) {
 						workerLog('worker: '. $job .': error 2b: imagecopyresampled() ' . $file);
 						break;
 					}
@@ -3133,7 +3152,7 @@ function runQueuedJob() {
 						workerLog('worker: '. $job .': error 3b: imagedestroy() ' . $file);
 						break;
 					}
-					if (imagejpeg($thumb, $img_dir . $thm_dir . TMP_IMAGE_PREFIX . $img_name . '_sm.jpg', THM_SM_Q) === false) {
+					if (imagejpeg($thumb, $imgDir . $thmDir . TMP_IMAGE_PREFIX . $imgName . '_sm.jpg', THM_SM_Q) === false) {
 						workerLog('worker: '. $job .': error 4b: imagejpeg() ' . $file);
 						break;
 					}
@@ -3144,7 +3163,7 @@ function runQueuedJob() {
 				}
 			}
 
-			sysCmd('chmod 0777 "' . $img_dir . $thm_dir . TMP_IMAGE_PREFIX . '"*');
+			sysCmd('chmod 0777 "' . $imgDir . $thmDir . TMP_IMAGE_PREFIX . '"*');
 
 			break;
 
