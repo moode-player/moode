@@ -30,11 +30,12 @@ Updates
 - UPD: Add Bluetooth CODEC to Source format line in Audio Info
 - UPD: Add CSS media query for 1560x720 ultrawide resolution
 - UPD: Add AP fallback option to Spotify Config
-- UPD: Move USB volknob and Rotary encoder settings to Peripheral Config
+- UPD: Add webp mime type to Coverart extractor and Thumbnail generator
+- UPD: Change Spotify Connect initial_volume to min 5 (from 0)
+- UPD: Change Radio station 200px thumbs to native resolution of main image
+- UPD: Change to 600px default for Radio and Playlist view thumbs
 - UPD: Improve spacing on alphabet index to avoid scrollbar highlight
-- UPD: Update Spotify Connect initial_volume to min 5 (from 0)
-- UPD: Update Radio station 200px thumbs to native resolution of main image
-- UPD: Default to 600px for Radio and Playlist view thumbs
+- UPD: Move USB volknob and Rotary encoder settings to Peripheral Config
 
 Audio devices
 
