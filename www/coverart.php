@@ -27,6 +27,7 @@ function outImage($mime, $data) {
 		case "image/png":
 		case "image/tif":
 		case "image/tiff":
+		case "image/webp":
 			header("Content-Type: " . $mime);
 			echo $data;
 			exit(0);
@@ -52,6 +53,7 @@ function getImage($path) {
 		case 'png':
 		case 'tif':
 		case 'tiff':
+		case 'webp':
 			$mimeType = 'image/'.$ext;
 			$fileSize = filesize($path);
 			$fh = fopen($path, 'rb');

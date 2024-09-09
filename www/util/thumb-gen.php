@@ -263,6 +263,7 @@ function outImage($mime, $data) {
 		case "image/png":
 		case "image/tif":
 		case "image/tiff":
+		case 'image/webp':
 			header("Content-Type: " . $mime);
 			return $data;
 		default :
@@ -289,6 +290,7 @@ function getImage($path, $file = '') {
 		case 'png':
 		case 'tif':
 		case 'tiff':
+		case 'webp':
 			header('Location: ' . $path);
 			$image = $path;
 			break;
