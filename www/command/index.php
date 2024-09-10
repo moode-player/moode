@@ -7,6 +7,7 @@
 
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
+require_once __DIR__ . '/../inc/multiroom.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/cdsp.php';
 require_once __DIR__ . '/../inc/sql.php';
@@ -35,8 +36,27 @@ switch ($cmd[0]) {
 		echo $result[0];
 		break;
 	case 'set_volume': // N | -mute | -up N | -dn N
-		$result = sysCmd('/var/www/util/vol.sh' . getArgs($cmd));
-		echo 'OK';
+		$rendererActive = chkRendererActive();
+		if ($rendererActive === true) {
+			echo 'Volume cannot be changed while a renderer is active';
+		} else {
+			$volCmd = getArgs($cmd);
+			$result = sysCmd('/var/www/util/vol.sh' . $volCmd);
+			// Receiver(s) volume
+			phpSession('open_ro');
+			if ($_SESSION['multiroom_tx'] == 'On') {
+				if ($volCmd == ' -mute') {
+					$rxVolCmd = '-mute';
+				} else if (str_contains($volCmd, '-')) {
+					$rxVolCmd = trim($volCmd); // -up N | -dn N
+				} else {
+					$volDiff = $_SESSION['volknob'] - trim($volCmd); // N
+					$rxVolCmd = $volDiff < 0 ? '-up ' . abs($volDiff) : '-dn ' . $volDiff;
+				}
+				updReceiverVol($rxVolCmd, true); // True = Master volume change
+			}
+			echo 'OK';
+		}
 		break;
 	case 'get_cdsp_config':
 		phpSession('open_ro');
