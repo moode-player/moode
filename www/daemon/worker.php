@@ -1239,11 +1239,7 @@ phpSession('write', 'inplace_upd_applied', '0');
 // Reset renderer flags
 // If any flags are 1 then a reboot/poweroff may have occured while the renderer was active
 // In this case ALSA or CamillaDSP volume may be at 100% so let's reset volume to 0.
-$result = sqlQuery("SELECT value from cfg_system WHERE param in ('btactive', 'aplactive', 'spotactive',
-	'slactive', 'paactive', 'rbactive', 'inpactive')", $dbh);
-if ($result[0]['value'] == '1' || $result[1]['value'] == '1' || $result[2]['value'] == '1' ||
-	$result[3]['value'] == '1' || $result[4]['value'] == '1' || $result[5]['value'] == '1' ||
-	$result[6]['value'] == '1') {
+if (chkRendererActive() === true) {
 	// Set Knob volume to 0
 	phpSession('write', 'volknob', '0');
 	sysCmd('/var/www/util/vol.sh 0');
@@ -1522,9 +1518,9 @@ function chkScnSaver() {
 		$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 	}
 
-	if ($GLOBALS['scnsaver_timeout'] != 'Never' && $_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0'
-		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0'  && $GLOBALS['paactive'] == '0'
-		&& $GLOBALS['rbactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0'
+	if ($GLOBALS['scnsaver_timeout'] != 'Never'
+		&& chkRendererActive() === false
+		&& $_SESSION['rxactive'] == '0'
 		&& $mpdState != 'play') {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
