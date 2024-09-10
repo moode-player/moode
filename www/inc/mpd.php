@@ -828,11 +828,11 @@ function getMappedDbVol() {
 function getCoverHash($file) {
 	$ext = getSongFileExt($file);
 
-	phpSession('open_ro');
-	$searchPriority = $_SESSION['library_covsearchpri'];
-
 	if (substr($file, 0, 4) != 'http' &&  $ext != 'dsf' && $ext != 'dff') {
-		// PCM song files only
+        // PCM song files only
+    	phpSession('open_ro');
+    	$searchPriority = $_SESSION['library_covsearchpri'];
+
 		$path = MPD_MUSICROOT . $file;
 		$path = ensureAudioFile($path);
 		$hash = false;
@@ -865,7 +865,8 @@ function getCoverHash($file) {
 			}
 		}
 	} else {
-		$hash = rand();
+        // This is so the front-end detects a change in the cover hash
+        $hash = rand();
 	}
 
 	return $hash;
