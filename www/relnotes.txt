@@ -35,6 +35,7 @@ Updates
 - UPD: Change Radio station 200px thumbs to native resolution of main image
 - UPD: Change to 600px default for Radio and Playlist view thumbs
 - UPD: Improve spacing on alphabet index to avoid scrollbar highlight
+- UPD: Improve set_volume REST API to include Multiroom receivers
 - UPD: Move USB volknob and Rotary encoder settings to Peripheral Config
 
 Audio devices
