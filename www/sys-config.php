@@ -224,6 +224,7 @@ if (isset($_POST['rebuild_dlnadb'])) {
 
 // SECURITY
 
+// Shellinabox WebSSH
 if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
 	phpSession('write', 'shellinabox', $_POST['shellinabox']);
 	submitJob('shellinabox', $_POST['shellinabox']);
@@ -312,6 +313,10 @@ if (isset($_POST['nginx_install_cert']) && $_POST['nginx_install_cert'] == 1) {
 	}
 }
 
+if (isset($_POST['update_xss_detect']) && $_POST['xss_detect'] != $_SESSION['xss_detect']) {
+	$_SESSION['xss_detect'] = $_POST['xss_detect'];
+}
+
 // LOGS
 
 if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
@@ -335,7 +340,6 @@ if (isset($_POST['update_clear_playhistory'])) {
 }
 
 if (isset($_POST['update_debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
-	//DELETE:$_SESSION['debuglog'] = $_POST['debuglog'];
 	phpSession('write', 'debuglog', $_POST['debuglog']);
 }
 
@@ -462,6 +466,7 @@ $_select['hostip'] = getHostIp();
 
 // SECURITY
 
+// Shellinabox Web SSH
 $autoClick = " onchange=\"autoClick('#btn-set-shellinabox');\"";
 $_select['shellinabox_on']  .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['shellinabox_off'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggle-shellinabox-2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -497,6 +502,12 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 } else {
 	$_feat_https = 'hide';
 }
+
+// XSS detection
+$autoClick = " onchange=\"autoClick('#btn-set-xss-detect');\"";
+$_select['xss_detect_on']  .= "<input type=\"radio\" name=\"xss_detect\" id=\"toggle-xss-detect-1\" value=\"on\" " . (($_SESSION['xss_detect'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['xss_detect_off'] .= "<input type=\"radio\" name=\"xss_detect\" id=\"toggle-xss-detect-2\" value=\"off\" " . (($_SESSION['xss_detect'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
 
 // LOGS
 

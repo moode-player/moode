@@ -409,6 +409,8 @@ function getCurrentSong($sock) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
+            $value = htmlspecialchars($value);
+
 			// NOTE: Save for future use
 			/*if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
 				// These tags can have multiple occurrences so let's accumulate them as a delimited string
@@ -552,6 +554,8 @@ function formatMpdQueryResults($resp) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
+            $value = htmlspecialchars($value);
+
 			if ($element == 'file') {
 				$idx++;
 				$array[$idx]['file'] = $value;
@@ -572,7 +576,7 @@ function formatMpdQueryResults($resp) {
 					$array[$idx]['playlist'] = $value;
 				}
 			} else {
-				$array[$idx][$element] = htmlspecialchars($value);
+                $array[$idx][$element] = $value;
 				$array[$idx]['TimeMMSS'] = formatSongTime($array[$idx]['Time']);
 			}
 

@@ -22,6 +22,9 @@ function loadLibrary($sock) {
 	if (filesize(libcacheFile()) != 0) {
 		return file_get_contents(libcacheFile());
 	} else {
+		workerLog('worker: loadLibrary(): Start libcache generation');
+		workerLog('worker: loadLibrary(): XSS detection ' . $_SESSION['xss_detect']);
+
 		$flat = genFlatList($sock);
 
 		if ($_SESSION['library_utf8rep'] == 'No') {
@@ -29,6 +32,8 @@ function loadLibrary($sock) {
 		} else {
 			$jsonLib = genLibraryUTF8Rep($flat);
 		}
+
+		workerLog('worker: loadLibrary(): End libcache generation');
 
 		return $jsonLib;
 	}
@@ -122,54 +127,59 @@ function genFlatList($sock) {
 		for ($i = 0; $i < $lineCount; $i++) {
 			list($element, $value) = explode(': ', $lines[$i], 2);
 
-			if ($element == 'OK') {
-				// NOTE: Skip any ACK's
-			} else if ($element == 'file') {
+			// NOTE: @Atair: Add performers and conductors to artists
+			if ($element == 'file') {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
-			} else if ($element == 'Genre') {
-				if ($_SESSION['library_tagview_genre'] == 'Genre') {
-					if ($flat[$item]['Genre']) {
-						array_push($flat[$item]['Genre'], $value);
-					} else {
-						$flat[$item]['Genre'] = array($value);
-					}
-				}
-			} else if ($element == 'Composer') {
- 				if ($_SESSION['library_tagview_genre'] == 'Composer') {
-					if ($flat[$item]['Genre']) {
-						array_push($flat[$item]['Genre'], $value);
-					} else {
-						$flat[$item]['Genre'] = array($value);
-					}
-				}
-				 // NOTE: Uncomment this line if Composer is included in output of GenLibrary()
-				$flat[$item][$element] = $value;
-			} else if ($element == 'Artist') {
-				if ($flat[$item]['Artist']) {
-					array_push($flat[$item]['Artist'], $value);
-				} else {
-					$flat[$item]['Artist'] = array($value);
-				}
-			 // @Atair: Add performers and conductors to artists
-			} else if ($element == 'Performer' && $_SESSION['library_tagview_artist'] != 'Artist (Strict)') {
-				if ($flat[$item]['Artist']) {
-					array_push($flat[$item]['Artist'], $value);
-				} else {
-					$flat[$item]['Artist'] = array($value);
-				}
-				// NOTE: Uncomment this line if Performer is included in output of GenLibrary()
-				//$flat[$item][$element] = $value;
-			} else if ($element == 'Conductor' && $_SESSION['library_tagview_artist'] != 'Artist (Strict)') {
-				if ($flat[$item]['Artist']) {
-					array_push($flat[$item]['Artist'], $value);
-				} else {
-					$flat[$item]['Artist'] = array($value);
-				}
-				// NOTE: Uncomment this line if Conductor is included in output of GenLibrary()
-				//$flat[$item][$element] = $value;
 			} else {
-				$flat[$item][$element] = $value;
+				// Check for embedded XSS
+				if ($_SESSION['xss_detect'] == 'on') {
+					chkXSS($flat[$item]['file'], $element, $value);
+				}
+
+				$value = htmlspecialchars($value);
+
+				if ($element == 'Genre') {
+					if ($_SESSION['library_tagview_genre'] == 'Genre') {
+						if ($flat[$item]['Genre']) {
+							array_push($flat[$item]['Genre'], $value);
+						} else {
+							$flat[$item]['Genre'] = array($value);
+						}
+					}
+				} else if ($element == 'Composer') {
+	 				if ($_SESSION['library_tagview_genre'] == 'Composer') {
+						if ($flat[$item]['Genre']) {
+							array_push($flat[$item]['Genre'], $value);
+						} else {
+							$flat[$item]['Genre'] = array($value);
+						}
+					}
+					$flat[$item][$element] = $value; // Comment out if Composer is not included in GenLibrary()
+				} else if ($element == 'Artist') {
+					if ($flat[$item]['Artist']) {
+						array_push($flat[$item]['Artist'], $value);
+					} else {
+						$flat[$item]['Artist'] = array($value);
+					}
+				} else if ($element == 'Performer' && $_SESSION['library_tagview_artist'] != 'Artist (Strict)') {
+					if ($flat[$item]['Artist']) {
+						array_push($flat[$item]['Artist'], $value);
+					} else {
+						$flat[$item]['Artist'] = array($value);
+					}
+					//$flat[$item][$element] = $value; // Comment out if Performer is not included in GenLibrary()
+				} else if ($element == 'Conductor' && $_SESSION['library_tagview_artist'] != 'Artist (Strict)') {
+					if ($flat[$item]['Artist']) {
+						array_push($flat[$item]['Artist'], $value);
+					} else {
+						$flat[$item]['Artist'] = array($value);
+					}
+					//$flat[$item][$element] = $value; // Comment out if Conductor is not included in GenLibrary()
+				} else if ($element != 'OK') {
+					// Remaining tags, skip MPD ACK 'OK'
+					$flat[$item][$element] = $value;
+				}
 			}
 		}
 

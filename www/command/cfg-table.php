@@ -143,6 +143,7 @@ switch ($_GET['cmd']) {
 
 function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['debuglog'] = $_SESSION['debuglog'];
+	$cfgSystem['xss_detect'] = $_SESSION['xss_detect'];
 	$cfgSystem['hdwrrev'] = $_SESSION['hdwrrev'];
 	$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
 	$cfgSystem['kernelver'] = $_SESSION['kernelver'];

@@ -197,9 +197,7 @@ workerLog('worker: File check complete');
 
 // Debug logging
 if (!isset($_SESSION['debuglog'])) {
-	//DELETE:$_SESSION['debuglog'] = '0';
 	phpSession('write', 'debuglog', '0');
-
 }
 workerLog('worker: Debug logging ' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off'));
 
@@ -1223,7 +1221,13 @@ if ($_SESSION['autoplay'] == '1') {
 if ($_SESSION['shellinabox'] == '1') {
 	sysCmd('systemctl start shellinabox');
 }
-workerLog('worker: Web SSH server:    ' .($_SESSION['shellinabox'] == '1' ? 'on' : 'off'));
+workerLog('worker: Web SSH server:    ' . ($_SESSION['shellinabox'] == '1' ? 'on' : 'off'));
+
+// XSS detection
+if (!isset($_SESSION['xss_detect'])) {
+	$_SESSION['xss_detect'] = 'off';
+}
+workerLog('worker: XSS detection:     ' . $_SESSION['xss_detect']);
 
 // Maintenance task
 workerLog('worker: Maintenance task:  ' . ($_SESSION['maint_interval'] / 60) . ' mins');

@@ -278,7 +278,7 @@ const CIDR_TABLE = array(
 // Security chk functions use these
 const SHL_CMDS = array('base64');
 const SQL_CMDS = array('delete ', 'select ', 'union ', 'update ');
-const XSS_CMDS = array('script', 'http');
+const XSS_CMDS = array('script', 'href', 'img src');
 
 // Recorder plugin (currently n/a)
 const RECORDER_RECORDINGS_DIR 	 = '/Recordings';

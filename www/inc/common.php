@@ -110,7 +110,7 @@ function chkValue($value) {
 	$valid = true;
 	$msg = '';
 
-	// Allow empty and other than these shell characters: $ ` | ; < >
+	// Check for these shell characters: $ ` | ; < >
 	if (!empty($value) && preg_match('/(\$|`|\||\;|<|>)/', $value)) {
 		$valid = false;
 		$msg = 'Invalid shell characters detected, request denied';
@@ -150,7 +150,7 @@ function chkSQL($sql) {
 	$valid = true;
 	$msg = '';
 
-	// Allow empty and other than these SQL characters: " --
+	// Check for characters used in SQL injection: " --
 	if (!empty($sql) && preg_match('/(\"|\--)/', $sql)) {
 		$valid = false;
 		$msg = 'Invalid SQL characters detected, request denied';
@@ -178,36 +178,36 @@ function chkSQL($sql) {
 }
 
 // Check for stored Cross-Site Scripting
-function chkXSS($data) {
+function chkXSS($file, $element, $value) {
 	// DEBUG:
-	//workerLog('DBG: chkXSS(): ' . (empty($data) ? 'Data is blank' : $data));
+	//workerLog('DBG: chkXSS(): ' . (empty($value) ? 'Data is blank' : $value));
 	$valid = true;
 	$msg = '';
 
-	// Allow empty and other than these characters: < > = //
-	if (!empty($data) && preg_match('/(\<|\>|\=|\/\/)/', $data)) {
-		$valid = false;
-		$msg = 'XSS characters detected, request denied';
-	} else {
+	if (!empty($value)) {
 		// Check for embedded XSS commands
 		foreach (XSS_CMDS as $cmd) {
-			if (str_contains($data, $cmd)) {
+			if (str_contains($value, $cmd)) {
 				$valid = false;
-				$msg = 'XSS command detected, request denied';
+				$msg = 'XSS command detected: tag|value: ' . $element . '|' . $value;
 			}
+		}
+		// Check for characters used in XSS code
+		if ($valid === true && preg_match('/(\<|\>|\=)/', $value)) {
+			$valid = false;
+			$msg = 'XSS character detected: tag|value: ' . $element . '|' . $value;
 		}
 	}
 
 	if ($valid === false) {
 		// Write log entry
 		workerLog('SECCHK: ' . $msg);
-		workerLog('SECCHK: ' . $data);
-		$data = '????';
+		workerLog('SECCHK: File: ' . $file);
+		// DEBUG:
+		//workerLog('SECCHK: tag|value: ' . $element . '|' . htmlspecialchars($value));
 	} else {
-		debugLog('chkXSS(): ' . (empty($data) ? 'Data is blank' : $data));
+		debugLog('chkXSS(): ' . (empty($value) ? 'Value is blank' : $value));
 	}
-
-	return $data;
 }
 
 //----------------------------------------------------------------------------//

@@ -331,6 +331,8 @@
 
 		<div class="control-group">
 			<legend>Security</legend>
+
+			<!-- Shellinabox WebSSH -->
 			<label class="control-label">Web SSH</label>
 			<div class="controls">
 				<div class="toggle">
@@ -338,8 +340,7 @@
 					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
 				</div>
 				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-shellinabox" class="config-help-info">
+				<span class="config-help-static">
 					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
                 </span>
 			</div>
@@ -359,12 +360,8 @@
 						<label class="toggle-radio toggle-nginx-https-only" for="toggle-nginx-https-only-1">OFF</label>$_select[nginx_https_only_off]
 					</div>
 					<button id="btn-set-nginx-https-only" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_https_only" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-https-only" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span id="info-nginx-https-only" class="config-help-info">
-						Turn this on to configure NGINX web server to only accept HTTPS connections.
-					</span>
 					<span class="config-help-static">
-						<b>Experimental feature: </b> Enable secure communication between the Browser and moOde.<br>
+						<b>Experimental:</b> Enable secure communication between the Browser and moOde.<br>
 						View the <a href="./setup_https.txt" class="target-blank-link" target="_blank">Configuration Guide</a>
 						for information on how HTTPS mode works.
 	                </span>
@@ -389,10 +386,6 @@
 						<label class="toggle-radio toggle-nginx-hsts-policy" for="toggle-nginx-hsts-policy-1">OFF</label>$_select[nginx_hsts_policy_off]
 					</div>
 					<button id="btn-set-nginx-hsts-policy" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_hsts_policy" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nginx-hsts-policy" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span id="info-nginx-hsts-policy" class="config-help-info">
-						Turn this on to configure NGINX web server for HTTP Strict Transport Security (HSTS).
-					</span>
 					<span class="config-help-static">
 						<b>Caution:</b> Turning this on sets a Browser policy that forces HTTPS even after turning HTTPS mode OFF.
 					</span>
@@ -429,6 +422,29 @@
 							Install the previously uploaded .crt and .key files into NGINX web server.
 						</span>
 					</div>
+				</div>
+
+				<div class="config-horiz-rule"></div>
+
+				<!-- XSS detection -->
+				<label class="control-label">XSS detection</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-xss-detect" for="toggle-xss-detect-2">ON </label>$_select[xss_detect_on]
+						<label class="toggle-radio toggle-xss-detect" for="toggle-xss-detect-1">OFF</label>$_select[xss_detect_off]
+					</div>
+					<button id="btn-set-xss-detect" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_xss_detect" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-xss-detect" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span class="config-help-static">
+						Detect and report in the moOde log any embedded Cross-site Scripting (XSS) commands or characters found in music file metadata.
+	                </span>
+					<span id="info-xss-detect" class="config-help-info">
+						Detection is performed each time the Library tag cache is generated so only use this when needed.<br>
+						- Clear the Library tag cache.<br>
+						- Switch to Playback or Library view to regenerate it.<br>
+						- View the moOde startup log for a list of suspect files/tags.<br>
+						- Examine the tag value to determine whether its malicious XSS code or just text using < > or =.
+	                </span>
 				</div>
 			</div>
 		</div>
