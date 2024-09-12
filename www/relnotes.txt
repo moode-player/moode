@@ -18,6 +18,7 @@
 Security
 
 - UPD: Filter SQL variables for unwanted characters and commands
+- UPD: Filter music file metadata for unwanted Cross-site scripting (XSS)
 
 Packages
 
