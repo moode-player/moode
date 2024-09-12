@@ -979,7 +979,9 @@ function renderUI() {
         // var debugText = GLOBAL.userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false');
         var debugText = SESSION.json['debuglog'] == '1' ? 'Debug log on' : '';
         debugText += SESSION.json['xss_detect'] == 'on' ? ', XSS detect on' : '';
-        $('#debug-text').html('>> ' + debugText.replace(/^\,\ /, '') + ' <<');
+        if (debugText != '') {
+            $('#debug-text').html('>> ' + debugText.replace(/^\,\ /, '') + ' <<');
+        }
 
         // Volume type
     	if (SESSION.json['mpdmixer'] == 'none') {
