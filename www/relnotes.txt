@@ -25,6 +25,9 @@ Packages
 - Bump to Linux kernel 6.6.47
 - Bump to camillagui 2.1.0
 - Bump to shairport-sync 4.3.4
+- Bump to upmpdcli 1.8.16
+- Bump to upmpdcli-qobuz 1.8.16
+- Bump to upmpdcli-tidal 1.8.16
 
 Updates
 
