@@ -122,7 +122,7 @@ function chkValue($value) {
 		} else {
 			// Check for embedded shell commands
 			foreach (SHL_CMDS as $cmd) {
-				if (str_contains($value, $cmd)) {
+				if (false !== stripos($value, $cmd)) {
 					$valid = false;
 					$msg = 'Embedded shell command detected, request denied';
 				}
@@ -157,7 +157,7 @@ function chkSQL($sql) {
 	} else {
 		// Check for embedded SQL commands
 		foreach (SQL_CMDS as $cmd) {
-			if (str_contains($sql, $cmd)) {
+			if (false !== stripos($sql, $cmd)) {
 				$valid = false;
 				$msg = 'Embedded SQL command detected, request denied';
 			}
@@ -184,19 +184,10 @@ function chkXSS($file, $element, $value) {
 	$valid = true;
 	$msg = '';
 
-	if (!empty($value)) {
-		// Check for embedded XSS commands
-		foreach (XSS_CMDS as $cmd) {
-			if (str_contains($value, $cmd)) {
-				$valid = false;
-				$msg = 'XSS command detected: tag|value: ' . $element . '|' . $value;
-			}
-		}
-		// Check for characters used in XSS code
-		if ($valid === true && preg_match('/(\<|\>|\=)/', $value)) {
-			$valid = false;
-			$msg = 'XSS character detected: tag|value: ' . $element . '|' . $value;
-		}
+	// Check for characters used in XSS code
+	if (!empty($value) && preg_match('/(\<|\>|\=)/', $value)) {
+		$valid = false;
+		$msg = 'XSS character detected: tag|value: ' . $element . '|' . $value;
 	}
 
 	if ($valid === false) {
