@@ -1038,6 +1038,7 @@ jQuery(document).ready(function($) { 'use strict';
                 } else {
                     notify(NOTIFY_TITLE_ALERT, 'validation_check', msg + '.');
                 }
+                $('#btn-ra-refresh').click();
             }, 'json');
 		}
 	});
