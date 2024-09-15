@@ -123,7 +123,8 @@ def decode_new_style_code(code):
             "proc": proc
         }
     else:
-        old_rev = OLD_REVISION_CODES[code&0x17]
+        # Original was code&0x17 but this returned the entry for 0x004 when code = 0x00e
+        old_rev = OLD_REVISION_CODES[code]
         rev_info = {
             "type": old_rev[0],
             "rev": old_rev[1],
