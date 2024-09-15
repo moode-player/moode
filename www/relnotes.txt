@@ -57,6 +57,7 @@ Bug fixes
 - FIX: CamillaDSP crashing due to empty 'mixers' array in config
 - FIX: Volume 0 not being set for renderer active reset during startup
 - FIX: Secchk not excluding qobuzpass variable
+- FIX: Revision code decoding for Pi 1 returns incorrect results
 
 ################################################################################
 #
