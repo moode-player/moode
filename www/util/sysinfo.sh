@@ -80,24 +80,11 @@ AUDIO_PARAMETERS() {
 	BITS="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w format | cut -f 2 -d " ")"
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
-
-	RESULT=$(sqlite3 $SQLDB "select iface from cfg_audiodev where name='$adevname' or alt_name='$adevname'")
-	if [[ $RESULT = "" ]]; then
-		if [[ $i2soverlay = "None" ]]; then
-			iface="USB"
-		else
-			iface="I2S"
-		fi
-	else
-		iface=$RESULT
-	fi
-
 	[[ $alsavolume = "none" ]] && hwvol="No" || hwvol="Yes"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
 
 	echo -e "A U D I O   C O N F I G U R A T I O N"
 	echo -e "\nAudio device\t\t= $adevname\c"
-	echo -e "\nInterface\t\t= $iface\c"
 	echo -e "\nMixer name\t\t= $volmixer\c"
 	echo -e "\nHardware mixer\t\t= $hwvol\c"
 	echo -e "\nSupported formats\t= $supported_formats\c"
