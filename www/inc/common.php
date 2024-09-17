@@ -195,7 +195,7 @@ function chkXSS($file, $element, $value) {
 		workerLog('SECCHK: ' . $msg);
 		workerLog('SECCHK: File: ' . $file);
 		// DEBUG:
-		//workerLog('SECCHK: tag|value: ' . $element . '|' . htmlspecialchars($value));
+		//workerLog('SECCHK: tag|value: ' . $element . '|' . htmlspecialchars($value, ENT_NOQUOTES));
 	} else {
 		debugLog('chkXSS(): ' . (empty($value) ? 'Value is blank' : $value));
 	}

@@ -409,7 +409,7 @@ function getCurrentSong($sock) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
-            $value = htmlspecialchars($value);
+            $value = htmlspecialchars($value, ENT_NOQUOTES);
 
 			// NOTE: Save for future use
 			/*if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
@@ -554,7 +554,7 @@ function formatMpdQueryResults($resp) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
-            $value = htmlspecialchars($value);
+            $value = htmlspecialchars($value, ENT_NOQUOTES);
 
 			if ($element == 'file') {
 				$idx++;
@@ -687,7 +687,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// iTunes aac or aiff file
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
-			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
+			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album'], ENT_NOQUOTES) : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 			$current['thumb_hash'] = md5(dirname($song['file']));
 		} else if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
@@ -735,7 +735,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// Song file, UPnP URL or Podcast
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = isset($song['Title']) ? $song['Title'] : pathinfo(basename($song['file']), PATHINFO_FILENAME);
-			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
+			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album'], ENT_NOQUOTES) : 'Unknown album';
 			$current['disc'] = isset($song['Disc']) ? $song['Disc'] : 'Disc tag missing';
 			if (substr($song['file'], 0, 4) == 'http') {
 				if (isset($_SESSION[$song['file']])) {

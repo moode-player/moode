@@ -137,7 +137,7 @@ function genFlatList($sock) {
 					chkXSS($flat[$item]['file'], $element, $value);
 				}
 
-				$value = htmlspecialchars($value);
+				$value = htmlspecialchars($value, ENT_NOQUOTES);
 
 				if ($element == 'Genre') {
 					if ($_SESSION['library_tagview_genre'] == 'Genre') {
@@ -272,7 +272,7 @@ function genLibrary($flat) {
 				'year' => getTrackYear($flatData),
 				'album_year' => getAlbumYear($flatData),
 				'time' => $flatData['Time'],
-				'album' => ($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album'),
+				'album' => ($flatData['Album'] ? htmlspecialchars($flatData['Album'], ENT_NOQUOTES) : 'Unknown Album'),
 				'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => formatSongTime($flatData['Time']),
 				'last_modified' => $flatData['Last-Modified'],
@@ -470,7 +470,7 @@ function genLibraryUTF8Rep($flat) {
 				'year' => utf8rep(getTrackYear($flatData)),
 				'album_year' => utf8rep(getAlbumYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
-				'album' => utf8rep(($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album')),
+				'album' => utf8rep(($flatData['Album'] ? htmlspecialchars($flatData['Album'], ENT_NOQUOTES) : 'Unknown Album')),
 				'genre' => utf8repArray(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => utf8rep(formatSongTime($flatData['Time'])),
 				'last_modified' => $flatData['Last-Modified'],

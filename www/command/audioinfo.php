@@ -84,7 +84,7 @@ function parseTrackInfo($resp) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
-			$value = htmlspecialchars($value);
+			$value = htmlspecialchars($value, ENT_NOQUOTES);
 
 			switch ($element) {
 				// Not needed for display
