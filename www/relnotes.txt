@@ -17,7 +17,8 @@
 
 Bug fixes
 
-- FIX: Remove broken Interface line in Audio section of System info (not needed)
+- FIX: Quotes not being excluded from htmlspecialchars()
+- FIX: Remove broken Interface line in Audio section of System info
 
 ################################################################################
 #
