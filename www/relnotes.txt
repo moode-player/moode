@@ -17,7 +17,8 @@
 
 Bug fixes
 
-- FIX: Quotes not being excluded from htmlspecialchars()
+- FIX: Currentsong.txt file not being updated correctly for renderers
+- FIX: HTML entities in metadata being displayed as text
 - FIX: Remove broken Interface line in Audio section of System info
 
 ################################################################################
