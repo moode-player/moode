@@ -84,8 +84,6 @@ function parseTrackInfo($resp) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
-			$value = htmlspecialchars($value, ENT_NOQUOTES);
-
 			switch ($element) {
 				// Not needed for display
 				case 'duration':
@@ -118,7 +116,7 @@ function parseTrackInfo($resp) {
 					$genres .= $value . ', ';
 					break;
 				case 'Album':
-					$array[7] = array($element => $value);
+					$array[7] = array($element => htmlspecialchars($value));
 					break;
 				case 'Disc':
 					$array[8] = array($element => $value);

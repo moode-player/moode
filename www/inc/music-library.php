@@ -137,8 +137,6 @@ function genFlatList($sock) {
 					chkXSS($flat[$item]['file'], $element, $value);
 				}
 
-				$value = htmlspecialchars($value, ENT_NOQUOTES);
-
 				if ($element == 'Genre') {
 					if ($_SESSION['library_tagview_genre'] == 'Genre') {
 						if ($flat[$item]['Genre']) {
@@ -272,7 +270,7 @@ function genLibrary($flat) {
 				'year' => getTrackYear($flatData),
 				'album_year' => getAlbumYear($flatData),
 				'time' => $flatData['Time'],
-				'album' => ($flatData['Album'] ? htmlspecialchars($flatData['Album'], ENT_NOQUOTES) : 'Unknown Album'),
+				'album' => ($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album'),
 				'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => formatSongTime($flatData['Time']),
 				'last_modified' => $flatData['Last-Modified'],
