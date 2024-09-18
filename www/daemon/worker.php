@@ -1831,7 +1831,7 @@ function updExtMetaFile() {
 			$hwParamsFormat = 'Not playing';
 		}
 
-		if ($fileData['file'] != $renderer) {
+		if ($fileData['file'] != $renderer || $fileData['outrate'] != $hwParamsFormat) {
 			//workerLog('worker: Update currentsong.txt file (Renderer)');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			$data = 'file=' . $renderer . "\n";
@@ -3113,58 +3113,55 @@ function runQueuedJob() {
 
 				// Standard thumbnail
 				if (($thumb = imagecreatetruecolor($thmW, $thmH)) === false) {
-					workerLog('thumb-gen: Error: imagecreatetruecolor(thumb): ' . $file);
-					return;
+					workerLog('worker: '. $job . ' Error: imagecreatetruecolor() ' . $file);
+					break;
 				}
 				if ($resample === true) {
 					if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thmW, $thmH, $imgW, $imgH) === false) {
-						workerLog('thumb-gen: Error: imagecopyresampled(thumb): ' . $file);
-						return;
+						workerLog('worker: '. $job .' Error: imagecopyresampled() ' . $file);
+						break;
 					}
 				} else {
 					if (imagecopy($thumb, $image, 0, 0, 0, 0, $imgW, $imgH) === false) {
-						workerLog('thumb-gen: Error: imagecopy(thumb): ' . $file);
-						return;
+						workerLog('worker: '. $job .' Error: imagecopy() ' . $file);
+						break;
 					}
 				}
-				if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thmQ) === false) {
-					workerLog('thumb-gen: Error: imagejpeg(thumb): ' . $file);
-					return;
-				} else {
-					$GLOBALS['newThms']++;
+				if (imagejpeg($thumb, $imgDir . $thmDir . TMP_IMAGE_PREFIX . $imgName . '.jpg', $thmQ) === false) {
+					workerLog('worker: '. $job .' Error: imagejpeg() ' . $file);
+					break;
 				}
 				if (imagedestroy($thumb) === false) {
-					workerLog('thumb-gen: Error: imagedestroy(thumb): ' . $file);
-					return;
+					workerLog('worker: '. $job .' Error: imagedestroy() ' . $file);
+					break;
 				}
 
 				if ($job == 'set_ralogo_image') {
 					// Small thumbnail
 					if (($thumb = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
-						workerLog('worker: '. $job .': error 1b: imagecreatetruecolor() ' . $file);
+						workerLog('worker: '. $job .' Error imagecreatetruecolor() ' . $file);
 						break;
 					}
 					if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $imgW, $imgH) === false) {
-						workerLog('worker: '. $job .': error 2b: imagecopyresampled() ' . $file);
+						workerLog('worker: '. $job .' Error: imagecopyresampled() ' . $file);
 						break;
 					}
 					if (imagedestroy($image) === false) {
-						workerLog('worker: '. $job .': error 3b: imagedestroy() ' . $file);
+						workerLog('worker: '. $job .' Error: imagedestroy() ' . $file);
 						break;
 					}
 					if (imagejpeg($thumb, $imgDir . $thmDir . TMP_IMAGE_PREFIX . $imgName . '_sm.jpg', THM_SM_Q) === false) {
-						workerLog('worker: '. $job .': error 4b: imagejpeg() ' . $file);
+						workerLog('worker: '. $job .' Error: imagejpeg() ' . $file);
 						break;
 					}
 					if (imagedestroy($thumb) === false) {
-						workerLog('worker: '. $job .': error 5b: imagedestroy() ' . $file);
+						workerLog('worker: '. $job .' Error: imagedestroy() ' . $file);
 						break;
 					}
 				}
 			}
 
 			sysCmd('chmod 0777 "' . $imgDir . $thmDir . TMP_IMAGE_PREFIX . '"*');
-
 			break;
 
 		// Other jobs
