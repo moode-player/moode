@@ -15,12 +15,17 @@
 #
 ################################################################################
 
+New features
+
+- NEW: Write logs to memory using log2ram
+
 Bug fixes
 
 - FIX: Manually added radio logo thumb saved to wrong directory
 - FIX: Currentsong.txt file not being updated correctly for renderers
 - FIX: HTML entities in metadata being displayed as text
 - FIX: Remove broken Interface line in Audio section of System info
+- FIX: REST API's that use PHP session not working
 
 ################################################################################
 #
