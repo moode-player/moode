@@ -172,6 +172,11 @@ function autoConfigSettings() {
 		'Security',
 		['requires' => ['shellinabox'], 'handler' => 'setSessVarSql'],
 		//
+		// Logs
+		//
+		'Logs',
+		['requires' => ['log2ram'], 'handler' => 'setSessVarOnly'],
+		//
 		// Networking
 		//
 		'Network (eth0)',

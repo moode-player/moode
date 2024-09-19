@@ -319,6 +319,12 @@ if (isset($_POST['update_xss_detect']) && $_POST['xss_detect'] != $_SESSION['xss
 
 // LOGS
 
+if (isset($_POST['update_log2ram']) && $_POST['log2ram'] != $_SESSION['log2ram']) {
+	$_SESSION['log2ram'] = $_POST['log2ram'];
+	$queueArgs = $_POST['log2ram'] == 'on' ? 'enable' : 'disable';
+	submitJob('log2ram', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+}
+
 if (isset($_POST['download_logs']) && $_POST['download_logs'] == '1') {
 	$fileName = 'moode.log';
 	$fileLocation = '/var/log/';
@@ -510,6 +516,9 @@ $_select['xss_detect_off'] .= "<input type=\"radio\" name=\"xss_detect\" id=\"to
 
 
 // LOGS
+$autoClick = " onchange=\"autoClick('#btn-set-log2ram');\"";
+$_select['log2ram_on']  .= "<input type=\"radio\" name=\"log2ram\" id=\"toggle-log2ram-1\" value=\"on\" " . (($_SESSION['log2ram'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['log2ram_off'] .= "<input type=\"radio\" name=\"log2ram\" id=\"toggle-log2ram-2\" value=\"off\" " . (($_SESSION['log2ram'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 $autoClick = " onchange=\"autoClick('#btn-set-debuglog');\"";
 $_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";

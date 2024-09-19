@@ -123,6 +123,7 @@ fi
 
 # TODO: review this section
 if [[ $1 = "clear-syslogs" ]]; then
+	journalctl --vacuum-files=1 2> /dev/null
 	truncate /var/log/alternatives.log --size 0
 	truncate /var/log/apt/history.log --size 0
 	truncate /var/log/apt/term.log --size 0
@@ -153,6 +154,7 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
 	truncate /var/log/Xorg.*.log --size 0
+	truncate /var/log/log2ram.log --size 0
 
 	# Rotated logs from settings in /etc/logrotate.d
 	rm /var/log/*.log.* 2> /dev/null

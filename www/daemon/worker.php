@@ -195,6 +195,12 @@ if (!file_exists(ETC_MACHINE_INFO)) {
 }
 workerLog('worker: File check complete');
 
+// Log to RAM
+if (!isset($_SESSION['log2ram'])) {
+	$_SESSION['log2ram'] = 'on';
+}
+workerLog('worker: Log to RAM    ' . $_SESSION['log2ram']);
+
 // Debug logging
 if (!isset($_SESSION['debuglog'])) {
 	phpSession('write', 'debuglog', '0');
@@ -2450,24 +2456,6 @@ function runQueuedJob() {
 			// Reenable HTTP server
 			setMpdHttpd();
 			break;
-		case 'rotaryenc':
-			sysCmd('systemctl stop rotenc');
-			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
-			sysCmd('systemctl daemon-reload');
-
-			if ($_SESSION['w_queueargs'] == '1') {
-				sysCmd('systemctl start rotenc');
-			}
-			break;
-		case 'usb_volknob':
-			if ($_SESSION['w_queueargs'] == '1') {
-				sysCmd('systemctl enable triggerhappy');
-				sysCmd('systemctl start triggerhappy');
-			} else {
-				sysCmd('systemctl stop triggerhappy');
-				sysCmd('systemctl disable triggerhappy');
-			}
-			break;
 		case 'mpd_httpd':
 			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
 			sysCmd($cmd);
@@ -2929,46 +2917,6 @@ function runQueuedJob() {
 				sysCmd('ln -s /etc/nginx/sites-available/moode-http.conf /etc/nginx/sites-enabled/moode-http.conf');
 			}
 			break;
-		case 'localui':
-			if ($_SESSION['w_queueargs'] == '1') {
-				startLocalUI();
-			} else {
-				stopLocalUI();
-			}
-			break;
-		case 'localui_restart':
-			stopLocalUI();
-			startLocalUI();
-			break;
-		case 'touchscn':
-			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
-			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
-			if ($_SESSION['localui'] == '1') {
-				sysCmd('systemctl daemon-reload');
-				stopLocalUI();
-				startLocalUI();
-			}
-			break;
-		case 'scnblank':
-			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
-			if ($_SESSION['localui'] == '1') {
-				stopLocalUI();
-				startLocalUI();
-			}
-		case 'hdmi_enable_4kp60':
-			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
-			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
-			break;
-		case 'scnbrightness':
-			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
-			break;
-		case 'pixel_aspect_ratio':
-			// No solution with KMS driver
-			break;
-		case 'scnrotate':
-			$value = $_SESSION['w_queueargs']; // 0 or 180
-			updBootConfigTxt('upd_rotate_screen', $value);
-			break;
 		case 'clearbrcache':
 			sysCmd('/var/www/util/sysutil.sh clearbrcache');
 			break;
@@ -3015,25 +2963,15 @@ function runQueuedJob() {
 		case 'keyboard':
 			sysCmd('/var/www/util/sysutil.sh set-keyboard ' . $_SESSION['w_queueargs']);
 			break;
-		case 'lcdup':
-			if ($_SESSION['w_queueargs'] == 1) {
-				startLcdUpdater();
-			} else {
-				sysCmd('killall lcdup.sh > /dev/null 2>&1');
- 				sysCmd('killall inotifywait > /dev/null 2>&1');
-			}
-			break;
-		case 'gpio_svc':
-			sysCmd('killall -s 9 gpio_buttons.py');
-			if ($_SESSION['w_queueargs'] == 1) {
-				startGpioBtnHandler();
-			}
-			break;
 		case 'shellinabox':
 			sysCmd('systemctl stop shellinabox');
 			if ($_SESSION['w_queueargs'] == '1') {
 				sysCmd('systemctl start shellinabox');
 			}
+			break;
+		case 'log2ram':
+			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' log2ram');
+			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' log2ram-daily.timer');
 			break;
 		case 'clearsyslogs':
 			sysCmd('/var/www/util/sysutil.sh clear-syslogs');
@@ -3043,6 +2981,80 @@ function runQueuedJob() {
 			break;
 		case 'compactdb':
 			sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
+			break;
+
+		// per-config jobs
+		case 'localui':
+			if ($_SESSION['w_queueargs'] == '1') {
+				startLocalUI();
+			} else {
+				stopLocalUI();
+			}
+			break;
+		case 'localui_restart':
+			stopLocalUI();
+			startLocalUI();
+			break;
+		case 'touchscn':
+			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
+			if ($_SESSION['localui'] == '1') {
+				sysCmd('systemctl daemon-reload');
+				stopLocalUI();
+				startLocalUI();
+			}
+			break;
+		case 'scnblank':
+			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+			if ($_SESSION['localui'] == '1') {
+				stopLocalUI();
+				startLocalUI();
+			}
+		case 'hdmi_enable_4kp60':
+			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
+			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
+			break;
+		case 'scnbrightness':
+			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+			break;
+		case 'pixel_aspect_ratio':
+			// No solution with KMS driver
+			break;
+		case 'scnrotate':
+			$value = $_SESSION['w_queueargs']; // 0 or 180
+			updBootConfigTxt('upd_rotate_screen', $value);
+			break;
+		case 'gpio_svc':
+			sysCmd('killall -s 9 gpio_buttons.py');
+			if ($_SESSION['w_queueargs'] == 1) {
+				startGpioBtnHandler();
+			}
+			break;
+		case 'rotaryenc':
+			sysCmd('systemctl stop rotenc');
+			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
+			sysCmd('systemctl daemon-reload');
+
+			if ($_SESSION['w_queueargs'] == '1') {
+				sysCmd('systemctl start rotenc');
+			}
+			break;
+		case 'usb_volknob':
+			if ($_SESSION['w_queueargs'] == '1') {
+				sysCmd('systemctl enable triggerhappy');
+				sysCmd('systemctl start triggerhappy');
+			} else {
+				sysCmd('systemctl stop triggerhappy');
+				sysCmd('systemctl disable triggerhappy');
+			}
+			break;
+		case 'lcdup':
+			if ($_SESSION['w_queueargs'] == 1) {
+				startLcdUpdater();
+			} else {
+				sysCmd('killall lcdup.sh > /dev/null 2>&1');
+ 				sysCmd('killall inotifywait > /dev/null 2>&1');
+			}
 			break;
 
 		// inp-config jobs

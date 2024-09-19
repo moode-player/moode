@@ -59,6 +59,7 @@ SYSTEM_PARAMETERS() {
 		echo -e "\nHTTPS mode\t\t= $HTTPS_MODE\c"
 	fi
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
+	echo -e "\nLog to RAM\t\t= $LOG2RAM\c"
 	echo -e "\n\c"
 	echo -e "\nSMB file sharing\t= $fs_smb\c"
 	echo -e "\nNFS file sharing\t= $fs_nfs\c"
@@ -428,6 +429,7 @@ MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
 MEM_TOTAL=$(( $MEM_TOTAL / 1000 ))
 MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
 MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
+LOG2RAM=$(moodeutl -d -gv log2ram)
 
 WORKER_RESPONSIVENESS=$(moodeutl -d -gv worker_responsiveness)
 TMP=$(moodeutl -d -gv "pci_express")
