@@ -28,7 +28,8 @@ switch ($cmd[0]) {
 		echo json_encode(parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "="));
 		break;
 	case 'get_output_format':
-		phpSession('open_ro');
+		//phpSession('open_ro');
+		openSessionReadOnly();
 		echo json_encode(getALSAOutputFormat());
 		break;
 	case 'get_volume':
@@ -43,7 +44,8 @@ switch ($cmd[0]) {
 			$volCmd = getArgs($cmd);
 			$result = sysCmd('/var/www/util/vol.sh' . $volCmd);
 			// Receiver(s) volume
-			phpSession('open_ro');
+			//phpSession('open_ro');
+			openSessionReadOnly();
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				if ($volCmd == ' -mute') {
 					$rxVolCmd = '-mute';
@@ -130,4 +132,11 @@ function getArgs($cmd) {
 	}
 
 	return $args;
+}
+
+function openSessionReadOnly() {
+	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+	session_id($sessionId);
+	session_start();
+	session_write_close();
 }
