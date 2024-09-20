@@ -19,6 +19,10 @@ New features
 
 - NEW: Write logs to memory using log2ram
 
+Radio stations
+
+- DEL: FluxFM - Hard Rock FM (discontinued)
+
 Bug fixes
 
 - FIX: Manually added radio logo thumb saved to wrong directory
