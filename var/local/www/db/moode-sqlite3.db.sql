@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Fri Sep 6 15:18:17 2024
+-- File generated with SQLiteStudio v3.4.4 on Fri Sep 20 07:01:10 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -292,7 +292,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (62, 'https://streams.fluxfm.de/fluxkompensator/mp3-320/streams.fluxfm.de/', 'FluxFM - FluxKompensator', 'r', 'local', 'Various Genres', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (63, 'https://streams.fluxfm.de/lounge/mp3-320/streams.fluxfm.de/', 'FluxFM - FluxLounge', 'r', 'local', 'Lounge, Neo-Soul, Trip-Hop, Jazz', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (64, 'https://streams.fluxfm.de/flux-hamburg/mp3-320/audio/', 'FluxFM - Hamburg', 'r', 'local', 'Pop, Culture', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', 'No');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (65, 'http://streams.fluxfm.de/hardrock/mp3-320/streams.fluxfm.de/', 'FluxFM - Hard Rock FM', 'r', 'local', 'Rock, Hard Rock', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (65, 'OFFLINE', 'FluxFM - Hard Rock FM', 'r', 'local', 'Rock, Hard Rock', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (66, 'https://fluxmusic.api.radiosphere.io/channels/htgp/stream.mp3?quality=4', 'FluxFM - Hippie Trippy Garden Pretty', 'r', 'local', 'Electronica, Soundscape, Atmospheric', 'FluxFM', 'German', 'Germany', 'Europe', '64', 'AAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (67, 'https://streams.fluxfm.de/indiedisco/mp3-320/streams.fluxfm.de/', 'FluxFM - Indie Disco', 'r', 'local', 'Indie, Disco, Dance', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (68, 'http://streams.fluxfm.de/studio56/mp3-320/audio/', 'FluxFM - JaegerMusic Radio', 'r', 'local', 'Various Genres', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', 'No');
