@@ -142,6 +142,44 @@ function chkValue($value) {
 		debugLog('chkValue(): ' . (empty($value) ? 'Value is blank' : $value));
 	}
 }
+// Same as chkValue() except pipe | is excluded
+// For: library_flatlist_filter_str, ashuffle_filter
+function chkValueEx($value) {
+	$valid = true;
+	$msg = '';
+
+	// Check for these shell characters: $ ` ; < >
+	if (!empty($value) && preg_match('/(\$|`|\;|<|>)/', $value)) {
+		$valid = false;
+		$msg = 'Invalid shell characters detected, request denied';
+	} else {
+		// Check for directory traversal: ../
+		if (substr_count($value, '..') > 0) {
+			$valid = false;
+			$msg = 'Directory traversal detected, request denied';
+		} else {
+			// Check for embedded shell commands
+			foreach (SHL_CMDS as $cmd) {
+				if (false !== stripos($value, $cmd)) {
+					$valid = false;
+					$msg = 'Embedded shell command detected, request denied';
+				}
+			}
+		}
+	}
+
+	if ($valid === false) {
+		// Write log entry
+		workerLog('SECCHK: ' . $msg);
+		workerLog('SECCHK: ' . $value);
+		// Redirect to '400 Bad request' page and then exit
+		http_response_code(400);
+		header('Location: /response400.html');
+		exit(1);
+	} else {
+		debugLog('chkValueEx(): ' . (empty($value) ? 'Value is blank' : $value));
+	}
+}
 
 // Check for SQL injection
 function chkSQL($sql) {

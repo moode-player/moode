@@ -18,7 +18,8 @@ $dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $deviceNames = getAlsaDeviceNames();
 
-chkVariables($_POST);
+chkVariables($_POST, array('ashuffle_filter'));
+chkValueEx($_POST['ashuffle_filter']);
 
 // AUDIO OUTPUT
 
