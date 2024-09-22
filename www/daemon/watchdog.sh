@@ -17,6 +17,7 @@ FPM_MIN_LIMIT=32
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x mpd)
 TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
+LIBRESPOT_RUNNING=$(pgrep -c -x librespot)
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 message_log () {
@@ -36,18 +37,18 @@ wake_display () {
 while true; do
 	# PHP-FPM
 	if (( FPM_CNT > FPM_MIN_LIMIT )); then
-		#message_log "Info: Reducing PHP-FPM worker pool"
+		#message_log "Reducing PHP-FPM worker pool to free up resources"
 		/var/www/util/send-fecmd.php reduce_fpm_pool
 	fi
 
 	if (( FPM_CNT > FPM_MAX_LIMIT )); then
-		message_log "Info: Resetting PHP-FPM worker pool"
+		message_log "PHP-FPM was restarted to free up worker pool resources"
 		systemctl restart php$PHP_VER-fpm
 	fi
 
 	# MPD
 	if [[ $MPD_RUNNING = 0 ]]; then
-		message_log "Error: MPD restarted (check syslog for messages)"
+		message_log "MPD crashed and was restarted (check journal for messages)"
 		systemctl start mpd
 	fi
 
@@ -55,8 +56,17 @@ while true; do
 	MULTIROOM_RX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_rx'")
 	if [[ $MULTIROOM_RX = "On" ]]; then
 		if [[ $TRX_RX_RUNNING = 0 ]]; then
-			message_log "Error: Multiroom Receiver restarted"
+			message_log "Multiroom Receiver crashed and was restarted"
 			/var/www/util/trx-control.php -rx On
+		fi
+	fi
+
+	# Spotify Connect
+	SPOTIFY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
+	if [[ $SPOTIFY_SVC = "1" ]]; then
+		if [[ $LIBRESPOT_RUNNING = 0 ]]; then
+			message_log "Spotify Connect crashed and was restarted"
+			moodeutl -R --spotify
 		fi
 	fi
 
@@ -67,18 +77,18 @@ while true; do
 		TX_CARD_NUM="card2"
 		HW_PARAMS=$(cat /proc/asound/$TX_CARD_NUM/pcm0p/sub0/hw_params)
 		if [[ $HW_PARAMS = "closed" ]]; then
-			MSG="Info: Multiroom sender is not transmitting"
+			MSG="Multiroom sender is not transmitting"
 		else
-			MSG="Info: Multiroom sender is transmitting"
+			MSG="Multiroom sender is transmitting"
 			wake_display
 		fi
 	else
 		LOCAL_CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
 		HW_PARAMS=$(cat /proc/asound/card$LOCAL_CARD_NUM/pcm0p/sub0/hw_params)
 		if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
-			MSG="Info: Local audio output is closed or audio device is disconnected"
+			MSG="Local audio output is closed or audio device is disconnected"
 		else
-			MSG="Info: Local audio output is active"
+			MSG="Local audio output is active"
 			wake_display
 		fi
 	fi
@@ -90,5 +100,6 @@ while true; do
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 	MPD_RUNNING=$(pgrep -c -x mpd)
 	TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
+	LIBRESPOT_RUNNING=$(pgrep -c -x librespot)
 
 done > /dev/null 2>&1 &
