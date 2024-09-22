@@ -175,7 +175,7 @@ html {background-color:inherit;}
 #playbtns .prev {font-size:3vw;}
 #playbtns .play.active,
 #playbtns .next.active,
-#playbtns .prev.active {background:radial-gradient(rgba(128,128,128,.35), transparent);border-radius: 35%;}
+#playbtns .prev.active {background:radial-gradient(rgba(128,128,128,.35), transparent);border-radius:35%;color:var(--adapttext);}
 .play {width:2em;}
 .fa-play:before {margin-left:4px;}
 #togglebtns {padding-top:2rem;}
