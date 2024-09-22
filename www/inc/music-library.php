@@ -22,8 +22,10 @@ function loadLibrary($sock) {
 	if (filesize(libcacheFile()) != 0) {
 		return file_get_contents(libcacheFile());
 	} else {
-		workerLog('worker: loadLibrary(): Start libcache generation');
-		workerLog('worker: loadLibrary(): XSS detection ' . $_SESSION['xss_detect']);
+		if ($_SESSION['xss_detect'] == 'on') {
+			workerLog('worker: loadLibrary(): Start libcache generation');
+			workerLog('worker: loadLibrary(): XSS detection on');
+		}
 
 		$flat = genFlatList($sock);
 
@@ -33,7 +35,9 @@ function loadLibrary($sock) {
 			$jsonLib = genLibraryUTF8Rep($flat);
 		}
 
-		workerLog('worker: loadLibrary(): End libcache generation');
+		if ($_SESSION['xss_detect'] == 'on') {
+			workerLog('worker: loadLibrary(): End libcache generation');
+		}
 
 		return $jsonLib;
 	}
@@ -136,6 +140,8 @@ function genFlatList($sock) {
 				if ($_SESSION['xss_detect'] == 'on') {
 					chkXSS($flat[$item]['file'], $element, $value);
 				}
+
+				$value = htmlspecialchars($value, ENT_NOQUOTES);
 
 				if ($element == 'Genre') {
 					if ($_SESSION['library_tagview_genre'] == 'Genre') {
@@ -270,7 +276,7 @@ function genLibrary($flat) {
 				'year' => getTrackYear($flatData),
 				'album_year' => getAlbumYear($flatData),
 				'time' => $flatData['Time'],
-				'album' => ($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album'),
+				'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
 				'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => formatSongTime($flatData['Time']),
 				'last_modified' => $flatData['Last-Modified'],

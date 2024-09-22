@@ -1075,7 +1075,7 @@ function renderUI() {
 
     		// Adaptive UI theme engine
     		if (MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1) {
-    			$.adaptiveBackground.run();
+                $.adaptiveBackground.run();
     		} else {
     			setColors();
     		}
@@ -1161,15 +1161,15 @@ function renderUI() {
             var artist = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
             var dash = (typeof(artist) == 'undefined' || artist == '') ? '' : ' - ';
             // Playbar
- 			$('#playbar-currentsong').text(artist + dash + MPD.json['title']);
+            $('#playbar-currentsong').html(artist + dash + MPD.json['title']);
             $('#playbar-currentalbum').html('<span id="playbar-hd-badge"></span>' + MPD.json['album']);
             // CoverView
             if (SESSION.json['scnsaver_layout'] == 'Default') {
-                $('#ss-currentsong').text(artist + dash + MPD.json['title']);
+                $('#ss-currentsong').html(artist + dash + MPD.json['title']);
                 $('#ss-currentartist').text('');
             } else {
                 // Wide mode
-                $('#ss-currentsong').text(MPD.json['title']);
+                $('#ss-currentsong').html(MPD.json['title']);
                 $('#ss-currentartist').text(artist);
             }
             $('#ss-currentalbum').html('<span id="ss-hd-badge"></span>' + MPD.json['album']);
