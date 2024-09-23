@@ -83,7 +83,6 @@
         <script src="js/jquery.touchSwipe.js" defer></script>
         <script src="js/jquery.lazyload.js" defer></script>
         <script src="js/jquery.md5.js" defer></script>
-        <script src="js/jquery.adaptive-backgrounds.js" defer></script>
         <script src="js/jquery.knob.js" defer></script>
         <script src="js/bootstrap-contextmenu.js" defer></script>
         <script src="js/scripts-library.js" defer></script>

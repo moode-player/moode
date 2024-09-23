@@ -489,7 +489,6 @@ function autoConfigSettings() {
 		['requires' => ['themename'], 'handler' => 'setSessVarSql'],
 		['requires' => ['accent_color'], 'handler' => 'setSessVarSql'],
 		['requires' => ['alphablend'], 'handler' => 'setSessVarSql'],
-		['requires' => ['adaptive'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cover_backdrop'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cover_blur'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cover_scale'], 'handler' => 'setSessVarSql'],

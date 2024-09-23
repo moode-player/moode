@@ -123,10 +123,11 @@ if ($status == 'Required headers present') {
 	sysCmd('reboot');
 }
 
-// Prune old session vars
-sysCmd('moodeutl -D usb_auto_updatedb');
-sysCmd('moodeutl -D src_action');
-sysCmd('moodeutl -D src_mpid');
+// Prune session vars that have been removed
+$sessionVars = array('usb_auto_updatedb', 'src_action', 'src_mpid', 'adaptive');
+foreach($sessionVars as $var) {
+	sysCmd('moodeutl -D ' . $var);
+}
 
 // Bugfix: Clean embedded \r from cfg_radio table
 $result = sqlQuery("SELECT count() FROM cfg_radio WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);

@@ -1044,16 +1044,15 @@ function renderUI() {
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
     		//console.log(MPD.json['coverurl']);
             // Standard cover for Playback
-     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
             // Thumbnail cover for Playbar
             if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs') :
-                    //'/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
                     '/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             } else {
-	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + DEFAULT_ALBUM_COVER + '" data-adaptive-background="1" alt="Cover art not found"' + '>');
+	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + DEFAULT_ALBUM_COVER + '" alt="Cover art not found"' + '>');
                 $('#playbar-cover').html('<img src="' + DEFAULT_ALBUM_COVER + '">');
             }
     		// Cover backdrop or bgimage
@@ -1071,13 +1070,6 @@ function renderUI() {
     		$('#ss-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
     		if (GLOBAL.coverViewActive) {
     			$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
-    		}
-
-    		// Adaptive UI theme engine
-    		if (MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1) {
-                $.adaptiveBackground.run();
-    		} else {
-    			setColors();
     		}
     	}
 
@@ -3023,7 +3015,6 @@ $(document).on('click', '.context-menu a', function(e) {
         		}
         		$('#theme-name-list').html(themelist);
         		$('#alpha-blend span').text(SESSION.json['alphablend']);
-        		$('#adaptive-enabled span').text(SESSION.json['adaptive']);
         		$('#accent-color span').text(SESSION.json['accent_color']);
         		$('#error-bgimage').text('');
         		$.ajax({
@@ -3251,7 +3242,6 @@ $('#btn-preferences-update').click(function(e){
 	if (SESSION.json['themename'] != $('#theme-name span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['accent_color'] != $('#accent-color span').text()) {themeSettingsChange = true; accentColorChange = true;}
 	if (SESSION.json['alphablend'] != $('#alpha-blend span').text()) {themeSettingsChange = true;}
-	if (SESSION.json['adaptive'] != $('#adaptive-enabled span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['cover_backdrop'] != $('#cover-backdrop-enabled span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;}
@@ -3312,7 +3302,6 @@ $('#btn-preferences-update').click(function(e){
 	SESSION.json['themename'] = $('#theme-name span').text();
 	SESSION.json['accent_color'] = $('#accent-color span').text();
 	SESSION.json['alphablend'] = $('#alpha-blend span').text();
-	SESSION.json['adaptive'] = $('#adaptive-enabled span').text();
 	SESSION.json['cover_backdrop'] = $('#cover-backdrop-enabled span').text();
 	SESSION.json['cover_blur'] = $('#cover-blur span').text();
 	SESSION.json['cover_scale'] = $('#cover-scale span').text();
@@ -3432,7 +3421,6 @@ $('#btn-preferences-update').click(function(e){
             'themename': SESSION.json['themename'],
             'accent_color': SESSION.json['accent_color'],
             'alphablend': SESSION.json['alphablend'],
-            'adaptive': SESSION.json['adaptive'],
             'cover_backdrop': SESSION.json['cover_backdrop'],
             'cover_blur': SESSION.json['cover_blur'],
             'cover_scale': SESSION.json['cover_scale'],
@@ -3923,13 +3911,8 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--btnshade4', getYIQ(temp1) > 127 ? 'rgba(32,32,32,0.10)' : 'rgba(208,208,208,0.17)');
 	$('#content').hasClass('visacc') ? op = .95 : op = .9;
 	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, .95, temprgba, temprgb));
-	if ($('#content').hasClass('visacc')) {
-		(currentView.indexOf('playback') == -1 || SESSION.json['adaptive'] == 'No') ? UI.accenta = themeMcolor : UI.accenta = adaptMcolor;
-	}
-    else {
-		var tempa = hexToRgb(accentColor);
-		UI.accenta = rgbaToRgb(.3 - tempx, .75, temprgba, tempa);
-	}
+	var tempa = hexToRgb(accentColor);
+	UI.accenta = rgbaToRgb(.3 - tempx, .75, temprgba, tempa);
 	document.body.style.setProperty('--btnbarback', rgbaToRgb(.90, '.9', temprgba, temprgb));
     document.body.style.setProperty('--config_modal_btn_bg', 'rgba(128,128,128,0.12)');
 }
@@ -3943,19 +3926,19 @@ function setColors() {
 	document.body.style.setProperty('--themebg', themeBack);
 	var yiqBool = getYIQ(themeBack) > 127 ? true : false;
 
-	if (currentView.indexOf('playback') !== -1 && SESSION.json['adaptive'] == 'Yes') {
+	/*DELETEif (currentView.indexOf('playback') !== -1 && SESSION.json['adaptive'] == 'Yes') {
 		yiqBool = getYIQ(adaptBack) > 127 ? true : false;
 		document.body.style.setProperty('--adaptbg', adaptBack);
 		document.body.style.setProperty('--adapttext', adaptMcolor);
 		document.body.style.setProperty('--adaptmbg', adaptMback);
 		btnbarfix(adaptBack, adaptColor);
 	}
-	else {
+	else {*/
 		document.body.style.setProperty('--adaptbg', themeBack);
 		document.body.style.setProperty('--adapttext', themeMcolor);
 		document.body.style.setProperty('--adaptmbg', themeMback);
 		btnbarfix(themeBack, themeColor);
-	}
+	//}
 
 	if (lastYIQ !== yiqBool) {
 		lastYIQ = yiqBool;

@@ -164,7 +164,6 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nTheme\t\t\t= $themename\c"
 	echo -e "\nAccent color\t\t= $accentcolor\c"
 	echo -e "\nAlpha blend\t\t= $alphablend\c"
-	echo -e "\nAdaptive background\t= $adaptive\c"
 	if [ -f //var/local/www/imagesw/bgimage.jpg ]; then bgimage="Yes"; else bgimage="No"; fi
 	echo -e "\nBackground image\t= $bgimage\c"
 	echo -e "\nCover backdrop\t\t= $cover_backdrop\c"
@@ -742,7 +741,7 @@ scnbrightness=${arr[86]}
 themename=${arr[87]}
 res_software_upd_url=${arr[88]}
 alphablend=${arr[89]}
-adaptive=${arr[90]}
+RESERVED_91=${arr[90]}
 audioout=${arr[91]}
 audioin=${arr[92]}
 slactive=${arr[93]}
