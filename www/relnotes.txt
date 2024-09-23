@@ -32,7 +32,7 @@ Bug fixes
 - FIX: Remove broken "Interface" line in Audio section of System info
 - FIX: Adv Search and Auto-shuffle filter cause SECCHK when pipe character
 - FIX: REST API's that use PHP session not working
-- FIX: Play buttons not using adaptive color for class active
+- FIX: Play buttons not using correct color for class active
 
 ################################################################################
 #
