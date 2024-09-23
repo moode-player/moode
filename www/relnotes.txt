@@ -23,7 +23,8 @@ Security
 
 Updates
 - UPD: Add librespot auto-restart to watchdog
-- UPD: Delete FluxFM - Hard Rock FM (discontinued)
+- UPD: Remove Prefs Adaptive coloring (not used/bugs)
+- UPD: Remove FluxFM - Hard Rock FM (discontinued by broadcaster)
 
 Bug fixes
 - FIX: Manually added radio logo thumb saved to wrong directory
@@ -31,7 +32,7 @@ Bug fixes
 - FIX: Remove broken "Interface" line in Audio section of System info
 - FIX: Adv Search and Auto-shuffle filter cause SECCHK when pipe character
 - FIX: REST API's that use PHP session not working
-- FIX: Play buttons not using adaptive color for class active 
+- FIX: Play buttons not using adaptive color for class active
 
 ################################################################################
 #
