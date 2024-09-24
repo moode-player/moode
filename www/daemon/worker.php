@@ -125,7 +125,7 @@ if ($status == 'Required headers present') {
 
 // Prune session vars that have been removed
 $sessionVars = array('usb_auto_updatedb', 'src_action', 'src_mpid', 'adaptive');
-foreach($sessionVars as $var) {
+foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
 }
 
@@ -609,7 +609,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 // Cards
 $pad_length = 16;
 $cards = getAlsaCardIDs();
-foreach($cards as &$card) {
+foreach ($cards as &$card) {
 	$card = str_pad($card, $pad_length);
 }
 workerLog('worker: Cards:  0:' . $cards[0] . '1:' . $cards[1]. '2:' . $cards[2]. '3:' . $cards[3]);
