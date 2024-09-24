@@ -1044,6 +1044,18 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 	$status = 'n/a';
 }
 workerLog('worker: Multiroom:       ' . $status);
+if ($statusTx == 'started') {
+	if (isset($_SESSION['rx_hostnames'])) {
+		if (empty(trim($_SESSION['rx_hostnames']))) {
+			workerLog('worker: Receivers:       no receivers found');
+		} else {
+			workerLog('worker: Receivers:       ' .
+				$_SESSION['rx_hostnames'] . '|' . str_replace(' ', ', ', $_SESSION['rx_addresses']));
+		}
+	} else {
+		workerLog('worker: Receivers:       discovery has not been run');
+	}
+}
 
 // Start GPIO button handler
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
@@ -1058,7 +1070,40 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 }
 workerLog('worker: GPIO buttons:    ' . $status);
 
-// Start HTTPS mode
+// Start stream recorder
+if ($_SESSION['feat_bitmask'] & FEAT_RECORDER) {
+	if ($_SESSION['recorder_status'] == 'Not installed') {
+		$status = 'not installed';
+	} else if ($_SESSION['recorder_status'] == 'On') {
+		$status = 'started';
+		sysCmd('mpc enable "' . STREAM_RECORDER . '"');
+	} else {
+		$status = 'available';
+	}
+} else {
+	$status = 'n/a';
+}
+workerLog('worker: Stream recorder: ' . $status);
+
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Security');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
+
+// Start Web SSH server
+if ($_SESSION['shellinabox'] == '1') {
+	sysCmd('systemctl start shellinabox');
+}
+workerLog('worker: Web SSH server:    ' . ($_SESSION['shellinabox'] == '1' ? 'on' : 'off'));
+
+// XSS detection
+if (!isset($_SESSION['xss_detect'])) {
+	$_SESSION['xss_detect'] = 'off';
+}
+workerLog('worker: XSS detection:     ' . $_SESSION['xss_detect']);
+
+// HTTPS mode
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	if (!isset($_SESSION['nginx_https_only'])) {
 		$_SESSION['nginx_https_only'] = '0';
@@ -1091,22 +1136,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 } else {
 	$status = 'n/a';
 }
-workerLog('worker: HTTPS mode:      ' . $status);
-
-// Start stream recorder
-if ($_SESSION['feat_bitmask'] & FEAT_RECORDER) {
-	if ($_SESSION['recorder_status'] == 'Not installed') {
-		$status = 'not installed';
-	} else if ($_SESSION['recorder_status'] == 'On') {
-		$status = 'started';
-		sysCmd('mpc enable "' . STREAM_RECORDER . '"');
-	} else {
-		$status = 'available';
-	}
-} else {
-	$status = 'n/a';
-}
-workerLog('worker: Stream recorder: ' . $status);
+workerLog('worker: HTTPS mode:        ' . $status);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -1224,17 +1254,6 @@ if ($_SESSION['autoplay'] == '1') {
 		workerLog('worker: Auto-play:         off');
 	}
 }
-// Start Web SSH server
-if ($_SESSION['shellinabox'] == '1') {
-	sysCmd('systemctl start shellinabox');
-}
-workerLog('worker: Web SSH server:    ' . ($_SESSION['shellinabox'] == '1' ? 'on' : 'off'));
-
-// XSS detection
-if (!isset($_SESSION['xss_detect'])) {
-	$_SESSION['xss_detect'] = 'off';
-}
-workerLog('worker: XSS detection:     ' . $_SESSION['xss_detect']);
 
 // Maintenance task
 workerLog('worker: Maintenance task:  ' . ($_SESSION['maint_interval'] / 60) . ' mins');
