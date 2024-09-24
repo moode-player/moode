@@ -340,13 +340,34 @@
 					<label class="toggle-radio toggle-shellinabox" for="toggle-shellinabox-1">OFF</label>$_select[shellinabox_off]
 				</div>
 				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<span class="config-help-static">
+				<span class="config-help-static config-help-less-margin">
 					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
                 </span>
 			</div>
 			<div class="controls">
 				<a href="http://$_select[hostip]:4200" class="btn btn-medium btn-primary config-btn target-blank-link" target="_blank" $_webssh_link_disable $_webssh_open_disable>Open</a>
 				<span class="config-btn-after">SSH terminal</span>
+			</div>
+
+			<!-- XSS detection -->
+			<label class="control-label">XSS detection</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-xss-detect" for="toggle-xss-detect-2">ON </label>$_select[xss_detect_on]
+					<label class="toggle-radio toggle-xss-detect" for="toggle-xss-detect-1">OFF</label>$_select[xss_detect_off]
+				</div>
+				<button id="btn-set-xss-detect" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_xss_detect" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-xss-detect" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span class="config-help-static">
+					Detect and report in the moOde log any embedded Cross-site Scripting (XSS) commands or characters found in music file metadata.
+				</span>
+				<span id="info-xss-detect" class="config-help-info">
+					Detection is performed each time the Library tag cache is generated so only use this when needed.<br>
+					- Clear the Library tag cache.<br>
+					- Switch to Playback or Library view to regenerate it.<br>
+					- View the moOde startup log for a list of suspect files/tags.<br>
+					- Examine the tag value to determine whether its malicious XSS code or just text using < > or =.
+				</span>
 			</div>
 
 			<div class="config-horiz-rule"></div>
@@ -422,29 +443,6 @@
 							Install the previously uploaded .crt and .key files into NGINX web server.
 						</span>
 					</div>
-				</div>
-
-				<div class="config-horiz-rule"></div>
-
-				<!-- XSS detection -->
-				<label class="control-label">XSS detection</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio toggle-xss-detect" for="toggle-xss-detect-2">ON </label>$_select[xss_detect_on]
-						<label class="toggle-radio toggle-xss-detect" for="toggle-xss-detect-1">OFF</label>$_select[xss_detect_off]
-					</div>
-					<button id="btn-set-xss-detect" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_xss_detect" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-xss-detect" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span class="config-help-static">
-						Detect and report in the moOde log any embedded Cross-site Scripting (XSS) commands or characters found in music file metadata.
-	                </span>
-					<span id="info-xss-detect" class="config-help-info">
-						Detection is performed each time the Library tag cache is generated so only use this when needed.<br>
-						- Clear the Library tag cache.<br>
-						- Switch to Playback or Library view to regenerate it.<br>
-						- View the moOde startup log for a list of suspect files/tags.<br>
-						- Examine the tag value to determine whether its malicious XSS code or just text using < > or =.
-	                </span>
 				</div>
 			</div>
 		</div>

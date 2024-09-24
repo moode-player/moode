@@ -79,6 +79,7 @@ a.config-info-toggle:visited {color:var(--config-help-icon-color);}
 .config-msg-static {display:block;font-size:1em;color:var(--config-help-color);margin-top:var(--config-help-margin-top);margin-bottom:var(--config-ctl-margin-bottom);}
 .config-help-info {display:none;}
 .config-help-no-margin {margin-bottom:0;}
+.config-help-less-margin {margin-bottom:.75em;}
 
 /* blu-control, sys-status */
 #blu-control-cmd-output,

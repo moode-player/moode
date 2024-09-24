@@ -230,6 +230,11 @@ if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['s
 	submitJob('shellinabox', $_POST['shellinabox']);
 }
 
+// XSS detection
+if (isset($_POST['update_xss_detect']) && $_POST['xss_detect'] != $_SESSION['xss_detect']) {
+	$_SESSION['xss_detect'] = $_POST['xss_detect'];
+}
+
 // HTTPS mode
 if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_SESSION['nginx_https_only']) {
 	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
@@ -311,10 +316,6 @@ if (isset($_POST['nginx_install_cert']) && $_POST['nginx_install_cert'] == 1) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 		$_SESSION['msg'] = 'Certificate installed.';
 	}
-}
-
-if (isset($_POST['update_xss_detect']) && $_POST['xss_detect'] != $_SESSION['xss_detect']) {
-	$_SESSION['xss_detect'] = $_POST['xss_detect'];
 }
 
 // LOGS
@@ -484,6 +485,12 @@ if ($_SESSION['shellinabox'] == '1') {
 	$_webssh_open_disable = 'disabled';
 	$_webssh_link_disable = 'onclick="return false;"';
 }
+
+// XSS detection
+$autoClick = " onchange=\"autoClick('#btn-set-xss-detect');\"";
+$_select['xss_detect_on']  .= "<input type=\"radio\" name=\"xss_detect\" id=\"toggle-xss-detect-1\" value=\"on\" " . (($_SESSION['xss_detect'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['xss_detect_off'] .= "<input type=\"radio\" name=\"xss_detect\" id=\"toggle-xss-detect-2\" value=\"off\" " . (($_SESSION['xss_detect'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
 // HTTPS mode
 if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 	$_feat_https = '';
@@ -508,12 +515,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 } else {
 	$_feat_https = 'hide';
 }
-
-// XSS detection
-$autoClick = " onchange=\"autoClick('#btn-set-xss-detect');\"";
-$_select['xss_detect_on']  .= "<input type=\"radio\" name=\"xss_detect\" id=\"toggle-xss-detect-1\" value=\"on\" " . (($_SESSION['xss_detect'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['xss_detect_off'] .= "<input type=\"radio\" name=\"xss_detect\" id=\"toggle-xss-detect-2\" value=\"off\" " . (($_SESSION['xss_detect'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
 
 // LOGS
 $autoClick = " onchange=\"autoClick('#btn-set-log2ram');\"";
