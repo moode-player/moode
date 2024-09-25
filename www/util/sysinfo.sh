@@ -779,8 +779,8 @@ volknob_preamp=${arr[124]}
 library_albumview_sort=${arr[125]}
 library_thmgen_scan=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
-[[ "${arr[128]}" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
-led_state=${arr[129]}
+RESERVED_129=${arr[128]}
+RESERVED_130=${arr[129]}
 library_tagview_covers=${arr[130]}
 library_tagview_sort=${arr[131]}
 library_ellipsis_limited_text=${arr[132]}
@@ -844,6 +844,7 @@ library_onetouch_pl=${arr[171]}
 scnsaver_mode=${arr[172]}
 scnsaver_layout=${arr[173]}
 scnsaver_xmeta=${arr[174]}
+# Session only vars
 value=$(moodeutl -d -gv rotaryenc)
 [[ "$value" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
 ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
@@ -852,6 +853,9 @@ ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
+value=$(moodeutl -d -gv usb_volknob)
+[[ "$value" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
+led_state=$(moodeutl -d -gv led_state)
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

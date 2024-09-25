@@ -155,7 +155,7 @@ function autoConfigSettings() {
 			$value = $values['p3bt'] == '0' ? '' : '#';
 			updBootConfigTxt('upd_disable_bt', $value);
 		}],
-		['requires' => ['led_state'], 'handler' => 'setSessVarSql'],
+		['requires' => ['led_state'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['ipaddr_timeout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['eth0chk'], 'handler' => 'setSessVarSql'],
 		//
@@ -596,7 +596,7 @@ function autoConfigSettings() {
 			updBootConfigTxt('upd_lcd_rotate', $value);
 		}],
 		'USB volume knob',
-		['requires' => ['usb_volknob'], 'handler' => 'setSessVarSql'],
+		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],
 		'Rotary encoder',
 		['requires' => ['rotaryenc'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['rotenc_params'], 'handler' => function($values) {

@@ -155,12 +155,12 @@ if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
 
 if (isset($_POST['update_actled']) && $_POST['actled'] != explode(',', $_SESSION['led_state'])[0]) {
 	submitJob('actled', $_POST['actled']);
-	phpSession('write', 'led_state', $_POST['actled'] . ',' . explode(',', $_SESSION['led_state'])[1]);
+	$_SESSION['led_state'] = $_POST['actled'] . ',' . explode(',', $_SESSION['led_state'])[1];
 }
 
 if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION['led_state'])[1]) {
 	submitJob('pwrled', $_POST['pwrled']);
-	phpSession('write', 'led_state', explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled']);
+	$_SESSION['led_state'] = explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled'];
 }
 
 if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESSION['ipaddr_timeout']) {

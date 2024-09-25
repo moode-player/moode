@@ -299,6 +299,9 @@ if (!isset($_SESSION['hdmi_cec'])) {
 workerLog('worker: HDMI-CEC:      ' . $_SESSION['hdmi_cec']);
 
 // LED states
+if (!isset($_SESSION['led_state'])) {
+	$_SESSION['led_state'] = '1,1';
+}
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 if ($piModel == '1' || str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
 	// Pi boards w/o a sysclass entry for LED1
@@ -1189,6 +1192,9 @@ if ($_SESSION['rotaryenc'] == '1') {
 workerLog('worker: Rotary encoder:  ' . ($_SESSION['rotaryenc'] == '1' ? 'on' : 'off'));
 
 // Log USB volume knob on/off state
+if (!isset($_SESSION['usb_volknob'])) {
+	$_SESSION['usb_volknob'] = '0';
+}
 workerLog('worker: USB volume knob: ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
 
 // Start LCD updater engine

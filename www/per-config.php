@@ -99,7 +99,7 @@ if (isset($_POST['update_restart_localui'])) {
 // USB volume knob
 if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
 	submitJob('usb_volknob', $_POST['usb_volknob']);
-	phpSession('write', 'usb_volknob', $_POST['usb_volknob']);
+	$_SESSION['usb_volknob'] = $_POST['usb_volknob'];
 }
 // Rotary encoder service
 if (isset($_POST['update_rotenc'])) {
