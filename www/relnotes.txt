@@ -23,6 +23,7 @@ Security
 
 Updates
 - UPD: Add librespot auto-restart to watchdog
+- UPD: Store Receiver hosts/addresses in cfg_system for robustness
 - UPD: Remove Prefs Adaptive coloring (not used/bugs)
 - UPD: Remove FluxFM - Hard Rock FM (discontinued by broadcaster)
 
