@@ -2905,6 +2905,9 @@ function runQueuedJob() {
 			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
 				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
+			} else if (substr($_SESSION['hdwrrev'], 3, 1) == '5') {
+				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
+				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 			} else {
 				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
 				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
