@@ -70,8 +70,8 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	$thisTxHost = $cfgMultiroom['tx_host']; // Multicast address
 
 	// Parse the results
-	$_SESSION['rx_hostnames'] = '';
-	$_SESSION['rx_addresses'] = '';
+	$rxHostnames = '';
+	$rxAddresses = '';
 	$timeout = getStreamTimeout();
 	foreach ($port6600Hosts as $ipAddr) {
 		if ($ipAddr != $thisIpAddr) {
@@ -83,18 +83,18 @@ if (isset($_POST['multiroom_tx_discover'])) {
 					// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
 					// NOTE: Only include hosts with status = On/Off and matching multicast address
 					if (($rxStatus[1] == 'On' || $rxStatus[1] == 'Off') && $rxStatus[6] == $thisTxHost) {
-						$_SESSION['rx_hostnames'] .= $rxStatus[5] . ', ';
-						$_SESSION['rx_addresses'] .= $ipAddr . ' ';
+						$rxHostnames .= $rxStatus[5] . ', ';
+						$rxAddresses .= $ipAddr . ' ';
 					}
 				}
 			}
 		}
 	}
-	$_SESSION['rx_hostnames'] = rtrim($_SESSION['rx_hostnames'], ', ');
-	$_SESSION['rx_addresses'] = rtrim($_SESSION['rx_addresses'], ' ');
+    phpSession('write', 'rx_hostnames', rtrim($rxHostnames, ', '));
+    phpSession('write', 'rx_addresses', rtrim($rxAddresses, ' '));
 
 	// Check for no receivers found
-	if (empty(trim($_SESSION['rx_hostnames']))) {
+    if (empty(trim($_SESSION['rx_hostnames']))) {
 		$_SESSION['rx_hostnames'] = 'No receivers found';
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = $_SESSION['rx_hostnames'];
@@ -234,7 +234,7 @@ $_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Hide' ? '' : 'hide';
 $_multiroom_rx_disable = ($_SESSION['mpdmixer'] == 'null') ? 'disabled' : ''; // Don't allow CamillaDSP Volume
 $_rx_restart_btn_disable = $_SESSION['multiroom_rx'] != 'On' ? 'disabled' : '';
 $_rx_restart_link_disable = $_SESSION['multiroom_rx'] != 'On' ? 'onclick="return false;"' : '';
-$_multiroom_initvol_disable = (!isset($_SESSION['rx_hostnames']) || empty($_SESSION['rx_hostnames'])) ? 'disabled' : '';
+$_multiroom_initvol_disable = ($_SESSION['rx_hostnames'] == '-1' || empty($_SESSION['rx_hostnames'])) ? 'disabled' : '';
 $_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Hide' ? '' : 'hide';
 
 // Sender
@@ -245,7 +245,7 @@ $_alsa_loopback_disable= '';
 $autoClick = " onchange=\"autoClick('#btn-set-alsa-loopback');\" " . $_alsa_loopback_disable;
 $_select['alsa_loopback_on']  .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['alsa_loopback_off'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle-alsa-loopback-2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-if (!isset($_SESSION['rx_hostnames'])) {
+if ($_SESSION['rx_hostnames'] == '-1') {
 	$_rx_hostnames = 'Discover has not been run yet';
 } else {
 	$_rx_hostnames = $_SESSION['rx_hostnames'] == 'No receivers found' ? $_SESSION['rx_hostnames'] : 'Found: ' . $_SESSION['rx_hostnames'];

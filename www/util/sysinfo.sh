@@ -136,6 +136,8 @@ AUDIO_PARAMETERS() {
 	if [ $(($feat_bitmask & $FEAT_MULTIROOM)) -ne 0 ]; then
 		echo -e "\nMultiroom sender\t= $multiroom_tx\c"
 		echo -e "\nMultiroom receiver\t= $multiroom_rx\c"
+		echo -e "\nReceiver hosts\t\t= $rx_hostnames\c"
+		echo -e "\nReceiver addrs\t\t= $rx_addresses\c"
 	fi
 	echo -e "\n\c"
 	echo -e "\nAuto-shuffle\t\t= $ashufflesvc\c"
@@ -779,8 +781,8 @@ volknob_preamp=${arr[124]}
 library_albumview_sort=${arr[125]}
 library_thmgen_scan=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
-RESERVED_129=${arr[128]}
-RESERVED_130=${arr[129]}
+rx_hostnames=${arr[128]}
+rx_addresses=${arr[129]}
 library_tagview_covers=${arr[130]}
 library_tagview_sort=${arr[131]}
 library_ellipsis_limited_text=${arr[132]}

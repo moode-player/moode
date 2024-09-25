@@ -41,6 +41,8 @@ $currentSettings['worker_responsiveness'] = $_SESSION['worker_responsiveness'];
 $currentSettings['pi_audio_driver'] = $_SESSION['pi_audio_driver'];
 $currentSettings['pci_express'] = $_SESSION['pci_express'];
 $currentSettings['log2ram'] = $_SESSION['log2ram'];
+$currentSettings['usb_volknob'] = $_SESSION['usb_volknob'];
+$currentSettings['led_state'] = $_SESSION['led_state'];
 // MPD options
 $currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
 $currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];

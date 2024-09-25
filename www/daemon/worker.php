@@ -1048,7 +1048,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 }
 workerLog('worker: Multiroom:       ' . $status);
 if ($statusTx == 'started') {
-	if (isset($_SESSION['rx_hostnames'])) {
+	if ($_SESSION['rx_hostnames'] != '-1') {
 		if (empty(trim($_SESSION['rx_hostnames']))) {
 			workerLog('worker: Receivers:       no receivers found');
 		} else {

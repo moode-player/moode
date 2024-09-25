@@ -19,7 +19,7 @@ chkVariables($_POST);
 switch ($_GET['cmd']) {
 	case 'get_rx_status':
         // NOTE: This is called from playerlib.js: multiroom-rx-modal
-        if (!isset($_SESSION['rx_hostnames'])) {
+        if ($_SESSION['rx_hostnames'] == '-1') {
     		$rxStatus = 'Discovery has not been run';
     	} else if ($_SESSION['rx_hostnames'] == 'No receivers found') {
     		$rxStatus = 'No receivers found';

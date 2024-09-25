@@ -557,6 +557,8 @@ function autoConfigSettings() {
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_multiroom', $values, 'multiroom_');
 		}],
+		['requires' => ['rx_hostnames'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rx_addresses'], 'handler' => 'setSessVarSql'],
 		//
 		// Peripherals
 		//

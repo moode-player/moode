@@ -2869,7 +2869,7 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'multiroom_rx_modal':
         case 'multiroom_rx_modal_limited':
-            if (SESSION.json['rx_hostnames'] == null) {
+            if (SESSION.json['rx_hostnames'] == '-1') {
                 notify(NOTIFY_TITLE_ALERT, 'trx_run_receiver_discovery');
             } else if (SESSION.json['rx_hostnames'] == 'No receivers found') {
                 notify(NOTIFY_TITLE_ALERT, 'trx_no_receivers_found');
