@@ -33,6 +33,7 @@ Bug fixes
 - FIX: Adv Search and Auto-shuffle filter cause SECCHK when pipe character
 - FIX: REST API's that use PHP session not working
 - FIX: Play buttons not using correct color for class active
+- FIX: LED control for Pi-5 not working correctly
 
 ################################################################################
 #
