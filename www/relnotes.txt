@@ -16,12 +16,13 @@
 ################################################################################
 
 New features
-- NEW: Write logs to memory using log2ram (default on)
+- NEW: Write logs to memory using log2ram 1.7.2 (default on)
 
 Security
 - UPD: Filter music file metadata for unwanted Cross-site scripting (XSS)
 
 Updates
+- UPD: camillagui 2.1.0-1moode2
 - UPD: Add librespot auto-restart to watchdog
 - UPD: Store Receiver hosts/addresses in cfg_system for robustness
 - UPD: Remove Prefs Adaptive coloring (not used/bugs)
