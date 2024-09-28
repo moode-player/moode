@@ -22,7 +22,7 @@ Security
 - UPD: Filter music file metadata for unwanted Cross-site scripting (XSS)
 
 Updates
-- UPD: camillagui 2.1.0-1moode2
+- UPD: Bump to camillagui 2.1.0-1moode2
 - UPD: Add librespot auto-restart to watchdog
 - UPD: Store Receiver hosts/addresses in cfg_system for robustness
 - UPD: Remove Prefs Adaptive coloring (not used/bugs)
