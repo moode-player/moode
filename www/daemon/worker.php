@@ -863,7 +863,8 @@ if ($mounts === true) { // Empty result
 	workerLog('worker: NAS sources:    none');
 } else {
 	foreach ($mounts as $mp) {
-		workerLog('worker: NAS source:     ' . $mp['name'] . ' (' . $mp['type'] . ')');
+		workerLog('worker: NAS source:     ' . $mp['name'] .
+			' (' . ($mp['type'] == LIB_MOUNT_TYPE_SMB ? 'smb' : $mp['type']) . ')');
 	}
 	$result = nasSourceMount('mountall');
 }
