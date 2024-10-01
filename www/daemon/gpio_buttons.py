@@ -16,7 +16,7 @@ import os
 import subprocess
 import sqlite3
 
-# Use SoC pin numbering
+# Use SoC pin (GPIO channel) numbering
 GPIO.setmode(GPIO.BCM)
 
 # Get sleep time arg
