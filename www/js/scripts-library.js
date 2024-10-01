@@ -85,6 +85,8 @@ function getParentDirectory(audioEntry) {
 function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
+    // DEBUG:
+    //console.log('loadLibrary(): GLOBAL.libLoading: ' + GLOBAL.libLoading);
 
     // miscLibOptions[0] Include comment tag Yes/No
     // miscLibOptions[1] Album key: Album@Artist | Album@Artist@AlbumID | FolderPath | FolderPath@AlbumID
@@ -116,6 +118,8 @@ function loadLibrary() {
 
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
+        // DEBUG:
+        //console.log('loadLibrary(): GLOBAL.libLoading: ' + GLOBAL.libLoading);
 	});
 }
 

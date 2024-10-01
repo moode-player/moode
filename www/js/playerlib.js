@@ -4635,6 +4635,8 @@ function volMuteSwitch() {
 function submitLibraryUpdate (path = '') {
     if (GLOBAL.libLoading == false) {
         GLOBAL.libLoading = true;
+        // DEBUG:
+        //console.log('submitLibraryUpdate(): GLOBAL.libLoading: ' + GLOBAL.libLoading);
         GLOBAL.libRendered = false;
         $.getJSON('command/music-library.php?cmd=update_library', {'path': path}, function(data) {
             //console.log(data);
