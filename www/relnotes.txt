@@ -18,9 +18,10 @@
 Updates
 - UPD: Set default Opus frame size to 20ms for Multiroom
 - UPD: Use higher res thumbnail for Stereo Test track
+- UPD: Improve tracks section for mobile Tag/Album views
 
 Bug fixes
-- FIX:
+- FIX: 
 
 ################################################################################
 #
