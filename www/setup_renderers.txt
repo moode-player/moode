@@ -1,0 +1,26 @@
+################################################################################
+#
+#  Setup Guide for 3rd Party Audio Renderers
+#
+#  These instructions are for an initial configuration of Multiroom Audio. For
+#  additional information view Quick Help and the (i) information buttons.
+#
+#  Version: 1.0 2024-MM-DD
+#
+#  (C) Tim Curtis 2024 http://moodeaudio.org
+#
+################################################################################
+
+OVERVIEW
+
+Text goes here
+
+RENDERER TYPES
+
+Text goes here
+
+
+
+################################################################################
+#  Post questions regarding this guide to http://moodeaudio.org/forum
+################################################################################
