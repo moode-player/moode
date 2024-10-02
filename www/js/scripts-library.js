@@ -1619,6 +1619,12 @@ $('#songsList').on('click', '.lib-album-heading', function(e) {
 	//console.log('filteredSongsAlbum= ' + JSON.stringify(filteredSongsAlbum));
 });
 
+// Click lib metaarea stats line
+$('#lib-coverart-meta-area').on('click', function(e) {
+	$('#songsList li, #songsList .lib-disc a').removeClass('active');
+    $(this).addClass('active');
+});
+
 // Click lib track
 $('#songsList').on('click', '.lib-track', function(e) {
     UI.dbEntry[0] = $('#songsList .lib-track').index(this); // Store pos for use in action menu item click
@@ -1806,7 +1812,7 @@ $('#context-menu-lib-album a').click(function(e) {
 
 	if (!$('.album-view-button').hasClass('active')) {
 		$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
-		$('img.lib-coverart').removeClass('active');
+		$('img.lib-coverart, #lib-coverart-meta-area').removeClass('active');
 	}
 
     // Order the files according the the order of the albums

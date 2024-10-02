@@ -430,6 +430,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 .lib-album-heading {font-size:.9em;opacity:.75;padding:.75em;margin:0;text-transform:uppercase;background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);display:none;}
 #songsList .lib-disc a.active {font-weight:600;color:unset;}
 #songsList .lib-album-heading a.active {font-weight:600;color:unset;}
+#lib-coverart-meta-area.active {background-color:var(--accentxta);}
 #trackscontainer {width:calc(80vw - var(--sbw));float:right;min-height:21em;}
 #m-countdown {padding-right:5px;font-size:10px;}
 #m-total {font-size:10px;padding-left:5px;}

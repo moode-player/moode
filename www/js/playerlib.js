@@ -4284,7 +4284,7 @@ $('#context-backdrop').click(function(e){
     }
     else if (currentView == 'tag') {
         $('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
-        $('img.lib-coverart').removeClass('active');
+        $('img.lib-coverart, #lib-coverart-meta-area').removeClass('active');
         $('#songsList .lib-disc a, #songsList .lib-album-heading a').removeClass('active');
     }
     else if (currentView == 'album') {
