@@ -532,8 +532,8 @@ function outputDeviceCacheClear() {
 function printHWParams() {
 	$trxTx = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='multiroom_tx'\""));
 	if ($trxTx == 'On') {
-		$cardNum = sysCmd("cat /proc/asound/Dummy/pcm0p/info | awk -F': ' '/card/{print $2}'")[0];
-		$adevName = 'Dummy PCM device';
+		$cardNum = sysCmd("cat /proc/asound/Loopback/pcm0p/info | awk -F': ' '/card/{print $2}'")[0];
+		$adevName = 'ALSA Loopback device';
 	} else {
 		$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));
 		$adevName = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='adevname'\""));

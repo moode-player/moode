@@ -177,8 +177,8 @@ function getAlsaCardNumForDevice($deviceName) {
 	$deviceNames = getAlsaDeviceNames();
 
 	if ($_SESSION['multiroom_tx'] == 'On') {
-		// Multiroom sender uses ALSA Dummy device
-		$cardNum = getArrayIndex(ALSA_DUMMY_DEVICE, $deviceNames);
+		// Multiroom sender uses ALSA Loopback device
+		$cardNum = getArrayIndex(ALSA_LOOPBACK_DEVICE, $deviceNames);
 	} else {
 		// HDMI, I2S or USB device
 		// USB device may not be connected and thus $deviceNames entry will be 'empty'
