@@ -1,9 +1,6 @@
 ################################################################################
 #
-#  Setup Guide for 3rd Party Audio Renderers
-#
-#  These instructions are for an initial configuration of Multiroom Audio. For
-#  additional information view Quick Help and the (i) information buttons.
+#  Setup Guide for Audio Renderers
 #
 #  Version: 1.0 2024-MM-DD
 #
@@ -13,11 +10,33 @@
 
 OVERVIEW
 
-Text goes here
+The "Audio Renderers" are 3rd party playback applications that are separate from
+the core playback application in moOde; MPD (Music Player Daemon).
 
-RENDERER TYPES
+Each Audio Renderer receives and plays audio data sent to it from a remote
+client application. The Bluetooth renderer can also play audio data it receives
+from MPD to a remote Bluetooth speaker.
 
-Text goes here
+RENDERERS AND CLIENTS
+
+The following is a list of Audio Renderers and clients/applications that can
+play to them.
+
++-------------------------------------------------------------------------------
+| Bluetooth           | Any client that supports Bluetooth
++-------------------------------------------------------------------------------
+| AirPlay             | Any client or application that supports AirPlay 2
++-------------------------------------------------------------------------------
+| Spotify Connect     | Spotify desktop or Smartphone application
++-------------------------------------------------------------------------------
+| Squeezelite         | Lyrion Media Server (LMS) application
++-------------------------------------------------------------------------------
+| UPnP Client for MPD | Any UPnP Control Point application
++-------------------------------------------------------------------------------
+| Plexamp             | Plex client Web application
++-------------------------------------------------------------------------------
+| RoonBridge          | Roon client application/server
++-------------------------------------------------------------------------------
 
 
 
