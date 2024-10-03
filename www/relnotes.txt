@@ -20,9 +20,6 @@ Updates
 - UPD: Use higher res thumbnail for Stereo Test track
 - UPD: Improve tracks section for mobile Tag/Album views
 
-Bug fixes
-- FIX: 
-
 ################################################################################
 #
 # 2024-09-28 moOde 9.1.2 (Bookworm)
