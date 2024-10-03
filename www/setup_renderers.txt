@@ -38,7 +38,38 @@ play to them.
 | RoonBridge          | Roon client application/server
 +-------------------------------------------------------------------------------
 
+MULTIPLE RENDERERS ON AT SAME TIME
 
+These audio renderers can be ON at the same time waiting for connections from
+clients. Note, there is no mechanism for interrupting an active renderer and
+automatically switching to another renderer. Playback to the active renderer
+must be stopped first and it must release the audio output before another
+renderer can play.
+
+- Bluetooth
+- AirPlay
+- Spotify Connect
+- Squeezelite (as long as -c <timeout> option is supplied)
+- UPnP Client for MPD
+
+These audio renderers try to acquire exclusive access to the audio device
+when they are turned ON and thus no other renderer can be also be ON.
+
+- Plexamp
+- RoonBridge
+
+RENDERER PROTOCOL TYPES
+
+There are two types of communications protocols used by the audio
+renderers. The first is a Connection based protocol and the second is a
+Session based protocol.
+
+Bluetooth uses a Connection based protocol. This means that Bluetooth first
+establishes a physical network connection between the two hosts before any
+audio data can be sent between them.
+
+The other renderers use Session based protocols that run over the existing
+physical Ethernet or WiFi network.
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
