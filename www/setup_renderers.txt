@@ -27,24 +27,24 @@ play to them.
 +-------------------------------------------------------------------------------
 | AirPlay             | Any client or application that supports AirPlay 2
 +-------------------------------------------------------------------------------
-| Spotify Connect     | Spotify desktop or Smartphone application
+| Spotify Connect     | Spotify application (Desktop or Smartphone)
 +-------------------------------------------------------------------------------
 | Squeezelite         | Lyrion Media Server (LMS) application
 +-------------------------------------------------------------------------------
 | UPnP Client for MPD | Any UPnP Control Point application
 +-------------------------------------------------------------------------------
-| Plexamp             | Plex client Web application
+| Plexamp             | Plex Web application
 +-------------------------------------------------------------------------------
-| RoonBridge          | Roon client application/server
+| RoonBridge          | Roon application/server
 +-------------------------------------------------------------------------------
 
-MULTIPLE RENDERERS ON AT SAME TIME
+MULTIPLE RENDERERS ON
 
-These audio renderers can be ON at the same time waiting for connections from
-clients. Note, there is no mechanism for interrupting an active renderer and
-automatically switching to another renderer. Playback to the active renderer
-must be stopped first and it must release the audio output before another
-renderer can play.
+The following audio renderers can be ON at the same time waiting for connections
+from clients. Note, there is no mechanism for interrupting an active renderer
+and automatically switching to another renderer. Playback to the active renderer
+must be stopped first and it must release the audio output before connecting to
+another renderer.
 
 - Bluetooth
 - AirPlay
@@ -64,12 +64,31 @@ There are two types of communications protocols used by the audio
 renderers. The first is a Connection based protocol and the second is a
 Session based protocol.
 
+Connection Based
+
 Bluetooth uses a Connection based protocol. This means that Bluetooth first
-establishes a physical network connection between the two hosts before any
-audio data can be sent between them.
+establishes a physical network connection between two hosts before any audio
+data can be sent between them. This network connection remains active until it
+is manually disconnected. moOde detects the connection and displays the
+"Renderer Active" overlay.
+
+Session Based
 
 The other renderers use Session based protocols that run over the existing
-physical Ethernet or WiFi network.
+physical Ethernet or WiFi network. Since these networks are already present
+this type of renderer operates by establishing a playback session.
+
+Certain renderers for example AirPlay and Squeezelite can automatically end
+their session and release the audio output after playback stops based on a
+configurable timeout value.
+
+RENDERER RECEIVE/SEND
+
+All the renderers except for Bluetooth are receive-only i.e., the renderer can
+only receive audio data sent by clients, it cannot send audio data.
+
+Bluetooth has the capability to send audio data from MPD to a remote Bluetooth
+host (Speaker).
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
