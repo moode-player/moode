@@ -49,7 +49,7 @@ another renderer.
 - Bluetooth
 - AirPlay
 - Spotify Connect
-- Squeezelite (as long as -c <timeout> option is supplied)
+- Squeezelite (providing -c <timeout> option is specified)
 - UPnP Client for MPD
 
 These audio renderers try to acquire exclusive access to the audio device
@@ -76,11 +76,12 @@ Session Based
 
 The other renderers use Session based protocols that run over the existing
 physical Ethernet or WiFi network. Since these networks are already present
-this type of renderer operates by establishing a playback session.
+this type of renderer operates by establishing a playback session. moOde detects
+the session and displays the "Renderer Active" overlay.
 
-Certain renderers for example AirPlay and Squeezelite can automatically end
-their session and release the audio output after playback stops based on a
-configurable timeout value.
+AirPlay and Squeezelite renderers can automatically end their session and
+release the audio output after playback stops based on a configurable timeout
+value.
 
 RENDERER RECEIVE/SEND
 
