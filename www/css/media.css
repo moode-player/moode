@@ -142,13 +142,9 @@ body {
 	#lib-coverart-meta-area img {height:var(--tag-view-cover-size);width:var(--tag-view-cover-size);min-width:var(--tag-view-cover-size);max-width:var(--tag-view-cover-size);left:.25em;top:.25em;}
 	#lib-coverart-meta-area {background-color:rgba(128,128,128,.1);position:unset;float:left;width:100vw;line-height:14px;}
 	#songsList {padding-bottom:12rem;margin:.25em !important;}
-	#lib-file .songname {overflow:hidden;float:left;width:calc(49% - 15px);height:auto;margin-left:5px;}
-	#lib-file .songtime {float:left;width:10%;left:50%;margin-left:5px;}
-	#lib-file .songartist {float:left;width:calc(40% - 25px);overflow:hidden;left:60%;margin-left:5px;}
-	#lib-file .songyear {display:none;}
 	.lib-entry {padding: 0 .25em;}
 	#lib-collection-stats {width:100vw;font-size:.85em;float:left;text-align:left;margin:.5em 0 .5em .5em;}
-	#trackscontainer {width:100%;max-width:100%;}
+	#trackscontainer {width:100vw;}
 	#db-path {display:none;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
 	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
@@ -336,7 +332,7 @@ body {
 	#lib-album-header {font-size:1.1rem;}
 	#bottom-row {left:env(safe-area-inset-left);top:54%;height:35%}
 	#lib-collection-stats {width:100vw;font-size:.75em;float:left;text-align:left;margin:.5em 0 .5em .5em;}
-	#trackscontainer {float:unset;}
+	#trackscontainer {width:100vw;}
 	#trackscontainer span {font-size:1.1rem;}
 	#lib-coverart-img {display:none;}
 	#lib-coverart-meta-area {background-color:rgba(128,128,128,.1);width:100vw;position:relative;}
