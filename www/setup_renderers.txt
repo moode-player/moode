@@ -74,10 +74,10 @@ is manually disconnected. moOde detects the connection and displays the
 
 Session Based
 
-The other renderers use Session based protocols that run over the existing
-physical Ethernet or WiFi network. Since these networks are already present
-this type of renderer operates by establishing a playback session. moOde detects
-the session and displays the "Renderer Active" overlay.
+The other renderers use Session based protocols that run over existing
+Ethernet or WiFi networks. Since these networks are already present this type
+of renderer operates by establishing a playback session. moOde detects the
+session and displays the "Renderer Active" overlay.
 
 AirPlay and Squeezelite renderers can automatically end their session and
 release the audio output after playback stops based on a configurable timeout
