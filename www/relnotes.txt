@@ -16,6 +16,7 @@
 ################################################################################
 
 Updates
+- UPD: Add Backlight on/off option for Pi 7 inch Touch
 - UPD: Set default Opus frame size to 20ms for Multiroom
 - UPD: Use higher res thumbnail for Stereo Test track
 - UPD: Improve tracks section for mobile Tag/Album views
