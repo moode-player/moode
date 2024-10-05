@@ -63,6 +63,13 @@ if (isset($_POST['update_hdmi_cec'])) {
     }
 }
 
+if (isset($_POST['update_rpi_backlight'])) {
+    if (isset($_POST['rpi_backlight']) && $_POST['rpi_backlight'] != $_SESSION['rpi_backlight']) {
+        $_SESSION['rpi_backlight'] = $_POST['rpi_backlight'];
+		submitJob('rpi_backlight', $_POST['rpi_backlight'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+    }
+}
+
 if (isset($_POST['update_scnbrightness'])) {
     if (isset($_POST['scnbrightness']) && $_POST['scnbrightness'] != $_SESSION['scnbrightness']) {
 		submitJob('scnbrightness', $_POST['scnbrightness']);
@@ -180,6 +187,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
     $autoClick = " onchange=\"autoClick('#btn-set-hdmi-enable-4kp60');\" " . $_hdmi_4kp60_btn_disable;
 	$_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+    $autoClick = " onchange=\"autoClick('#btn-set-rpi-backlight');\"";
+	$_select['rpi_backlight_on']  .= "<input type=\"radio\" name=\"rpi_backlight\" id=\"toggle-rpi-backlight-1\" value=\"on\" " . (($_SESSION['rpi_backlight'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['rpi_backlight_off'] .= "<input type=\"radio\" name=\"rpi_backlight\" id=\"toggle-rpi-backlight-2\" value=\"off\" " . (($_SESSION['rpi_backlight'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	$_select['scnbrightness'] = $_SESSION['scnbrightness'];
 

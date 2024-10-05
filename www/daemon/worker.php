@@ -1159,13 +1159,18 @@ sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/syste
 // - Screen blank interval
 sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
 // - Backlight brightness
-sysCmd('/bin/su -c "echo '. $_SESSION['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+if (!isset($_SESSION['rpi_backlight'])) {
+	$_SESSION['rpi_backlight'] = 'off';
+} else if ($_SESSION['rpi_backlight'] == 'on') {
+	sysCmd('/bin/su -c "echo '. $_SESSION['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+}
 sysCmd('systemctl daemon-reload');
 // Start local display
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
 }
 workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'off'));
+workerLog('worker: Rpi backlight:   ' . $_SESSION['rpi_backlight']);
 // HDMI enable 4k 60Hz (Pi-4 only)
 if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 	$_SESSION['hdmi_enable_4kp60'] = 'off';
@@ -2228,12 +2233,10 @@ function startGpioBtnHandler() {
 
 // LocalUI display
 function startLocalUI() {
-	updBootConfigTxt('upd_rpi_backlight', '');
 	sysCmd('systemctl start localui');
 
 }
 function stopLocalUI() {
-	updBootConfigTxt('upd_rpi_backlight', '#');
 	sysCmd('systemctl stop localui');
 }
 
@@ -3043,6 +3046,10 @@ function runQueuedJob() {
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
+			break;
+		case 'rpi_backlight':
+			$value = $_SESSION['w_queueargs'] == 'on' ? '' : '#';
+			updBootConfigTxt('upd_rpi_backlight', $value);
 			break;
 		case 'scnbrightness':
 			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');

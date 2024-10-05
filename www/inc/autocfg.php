@@ -582,6 +582,11 @@ function autoConfigSettings() {
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 		}],
 		'Pi 7inch touch',
+		['requires' => ['rpi_backlight'], 'handler' => function($values) {
+			$_SESSION['rpi_backlight'] = $values['rpi_backlight'];
+			$value = $values['rpi_backlight'] == 'on' ? '' : '#';
+			updBootConfigTxt('upd_rpi_backlight', $value);
+		}],
 		['requires' => ['scnbrightness'], 'handler' => function($values) {
 			phpSession('write', 'scnbrightness', $values['scnbrightness']);
 			sysCmd('/bin/su -c "echo '. $values['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
