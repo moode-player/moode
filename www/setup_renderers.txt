@@ -2,7 +2,7 @@
 #
 #  Setup Guide for Audio Renderers
 #
-#  Version: 1.0 2024-MM-DD
+#  Version: 1.0 2024-10-07
 #
 #  (C) Tim Curtis 2024 http://moodeaudio.org
 #
@@ -87,13 +87,13 @@ a configurable timeout value.
 RECEIVE-ONLY RENDERERS
 
 All the renderers except for Bluetooth are receive-only. They cannot directly
-send audio data from a client to a remote host for playback.
+send audio data to a remote host for playback.
 
 RECEIVE/SEND RENDERERS
 
-Bluetooth can be configured to send audio data it receives to a remote host for
-playback by using the Bluetooth Control screen to change its Audio output from
-"Local audio" to "Bluetooth Speaker".
+Bluetooth can be configured to send audio data it receives from MPD or the
+other audio renderers to a remote host for playback by setting its Audio output
+to "Bluetooth speaker" in the Bluetooth Control screen.
 
 
 ################################################################################
