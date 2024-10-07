@@ -1931,9 +1931,11 @@ function formatLibTotalTime(totalSecs) {
         mmStr = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
 		if (hours > 0) {
             output = minutes > 0 ? hhStr + ' ' + mmStr : hhStr;
-		} else {
+		} else if (minutes > 0) {
 			output = mmStr;
-		}
+		} else {
+            output = totalSecs + ' secs'
+        }
     }
 
     return formatNumCommas(output);
