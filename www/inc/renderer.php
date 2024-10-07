@@ -122,7 +122,10 @@ function startSpotify() {
 		' --normalisation-release ' . $cfgSpotify['normalization_release'] .
 		' --normalisation-knee ' . $cfgSpotify['normalization_knee']
 		: '';
-	$autoplay = $cfgSpotify['autoplay'] == 'Yes' ? ' --autoplay' : '';
+
+	// v0.4.x: Requires just --autoplay
+	// v0.5.x: Requires --autoplay on/off, if not specified, uses the client setting
+	$autoplay = $cfgSpotify['autoplay'] == 'Yes' ? $cfgSpotify['ap_fallback'] == 'Yes' ? ' --autoplay' : ' --autoplay on' : '';
 
 	// Logging
 	$logging = $_SESSION['debuglog'] == '1' ? ' -v > ' . LIBRESPOT_LOG : ' > /dev/null';
