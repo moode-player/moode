@@ -112,7 +112,9 @@ else
 		LEVEL=100
 	fi
 
-	# Update knob level
+	# Update knob level (unmute first)
+	VOLMUTE=0
+	sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='volmute'"
 	sqlite3 $SQLDB "UPDATE cfg_system SET value=$LEVEL WHERE param='volknob'"
 fi
 
