@@ -16,10 +16,16 @@ debug_log () {
 	echo "$TIME $1" >> $LOGFILE
 }
 
+# Note: for session control
+# v04x uses "started" and "stopped"
+# v05x uses "session_connected" and "session_disconnected"
 PLAYER_EVENTS=(
+paused
+playing
 started
 stopped
 session_connected
+session_disconnected
 )
 
 MATCH=0
@@ -55,8 +61,7 @@ if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
-# v042 uses "started", v050 uses "session_connected"
-if [[ $PLAYER_EVENT == "started" ]] || [[ $PLAYER_EVENT == "session_connected" ]]; then
+if [[ $PLAYER_EVENT == "playing" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='spotactive'")
 	/usr/bin/mpc stop > /dev/null
 	sleep 1
@@ -84,8 +89,7 @@ if [[ $PLAYER_EVENT == "started" ]] || [[ $PLAYER_EVENT == "session_connected" ]
 	fi
 fi
 
-# v042 and v050 both use "stopped", v050 also follows with "session_disconnected"
-if [[ $PLAYER_EVENT == "stopped" ]]; then
+if [[ $PLAYER_EVENT == "paused" ]] || [[ $PLAYER_EVENT == "stopped" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='spotactive'")
 
 	# Local
