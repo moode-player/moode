@@ -79,17 +79,22 @@ Ethernet or WiFi networks. Since these networks are already present this type
 of renderer operates by establishing a playback session. moOde detects the
 session and displays the "Renderer Active" overlay.
 
-AirPlay and Squeezelite renderers can automatically end their session and
-release the audio output after playback stops based on a configurable timeout
-value.
+AirPlay, Spotify Connect and Squeezelite renderers can automatically end their
+session and release the audio output after playback stops. Spotify Connect does
+this immediately after playback stops. Airplay and Squeezelite do this based on
+a configurable timeout value.
 
-RENDERER RECEIVE/SEND
+RECEIVE-ONLY RENDERERS
 
-All the renderers except for Bluetooth are receive-only i.e., the renderer can
-only receive audio data sent by clients, it cannot send audio data.
+All the renderers except for Bluetooth are receive-only. They cannot directly
+send audio data from a client to a remote host for playback.
 
-Bluetooth has the capability to send audio data from MPD to a remote Bluetooth
-host (Speaker).
+RECEIVE/SEND RENDERERS
+
+Bluetooth can be configured to send audio data it receives to a remote host for
+playback by using the Bluetooth Control screen to change its Audio output from
+"Local audio" to "Bluetooth Speaker".
+
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
