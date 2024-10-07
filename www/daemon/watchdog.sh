@@ -48,7 +48,7 @@ while true; do
 
 	# MPD
 	if [[ $MPD_RUNNING = 0 ]]; then
-		message_log "MPD crashed and was restarted (check journal for messages)"
+		message_log "MPD was restarted (check journal for messages)"
 		systemctl start mpd
 	fi
 
@@ -56,7 +56,7 @@ while true; do
 	MULTIROOM_RX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_rx'")
 	if [[ $MULTIROOM_RX = "On" ]]; then
 		if [[ $TRX_RX_RUNNING = 0 ]]; then
-			message_log "Multiroom Receiver crashed and was restarted"
+			message_log "Multiroom Receiver was restarted"
 			/var/www/util/trx-control.php -rx On
 		fi
 	fi
@@ -65,7 +65,7 @@ while true; do
 	SPOTIFY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
 	if [[ $SPOTIFY_SVC = "1" ]]; then
 		if [[ $LIBRESPOT_RUNNING = 0 ]]; then
-			message_log "Spotify Connect crashed and was restarted"
+			message_log "Spotify Connect was restarted"
 			moodeutl -R --spotify
 		fi
 	fi
