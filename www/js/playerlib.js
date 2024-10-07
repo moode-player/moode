@@ -3190,8 +3190,8 @@ function updateClockRadioCfgSys() {
     $.post('command/cfg-table.php?cmd=upd_cfg_system',
         {
         'clkradio_mode': SESSION.json['clkradio_mode'],
-        'clkradio_item': SESSION.json['clkradio_item'].replace(/'/g, "''"), // use escaped single quotes for sql i.e., two single quotes,
-        'clkradio_name': SESSION.json['clkradio_name'].replace(/'/g, "''"),
+        'clkradio_item': SESSION.json['clkradio_item'],
+        'clkradio_name': SESSION.json['clkradio_name'],
         'clkradio_start': SESSION.json['clkradio_start'],
         'clkradio_stop': SESSION.json['clkradio_stop'],
         'clkradio_volume': SESSION.json['clkradio_volume'],

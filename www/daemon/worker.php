@@ -1930,20 +1930,21 @@ function chkClockRadio() {
 	if ($curtime == $GLOBALS['clkradio_start_time'] && $GLOBALS['clkradio_start_days'][$curday] == '1') {
 		$GLOBALS['clkradio_start_time'] = ''; // Reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
-
-		// Find playlist item
+		// Check the Queue
 		sendMpdCmd($sock, 'playlistfind file ' . '"' . $_SESSION['clkradio_item'] . '"');
 		$resp = readMpdResp($sock);
-		$array = array();
-		$line = strtok($resp, "\n");
-		while ($line) {
-			list($element, $value) = explode(': ', $line, 2);
-			$array[$element] = $value;
-			$line = strtok("\n");
+		if (rtrim($resp) == 'OK') {
+			// Not in the Queue so add it to the end
+			sendMpdCmd($sock, 'addid ' . '"' . $_SESSION['clkradio_item'] . '"');
+			$resp = readMpdResp($sock);
+			$mpdCmd = 'playid ' . parseMpdRespAsArray($resp)['Id'];
+		} else {
+			// Already in the Queue so get its position
+			$mpdCmd = 'play ' . parseMpdRespAsArray($resp)['Pos'];
 		}
 
 		// Send play cmd
-		sendMpdCmd($sock, 'play ' . $array['Pos']);
+		sendMpdCmd($sock, $mpdCmd);
 		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
 

@@ -600,8 +600,20 @@ function parseMpdRespAsJSON($resp) {
 	$line = strtok($resp, "\n");
 
 	while ($line) {
-		list($param, $value) = explode(': ', $line, 2);
 		array_push($array, $line);
+		$line = strtok("\n");
+	}
+
+	return $array;
+}
+
+function parseMpdRespAsArray($resp) {
+	$array = array();
+	$line = strtok($resp, "\n");
+
+	while ($line) {
+		list($param, $value) = explode(': ', $line, 2);
+		$array[$param] = $value;
 		$line = strtok("\n");
 	}
 

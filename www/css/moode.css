@@ -167,6 +167,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .clockradio-off {display:none;}
 .clockradio-on-m {color:#dddddd;font-size:16.5px;}
 .clockradio-off-m {color:#7f8c8d;font-size:16.5px;}
+#clockradio-playname {width:100%;max-width:384px;}
 a.info-toggle {vertical-align:top;color:var(--textvariant);}
 a.info-toggle:hover,
 a.info-toggle:visited {color:var(--textvariant);}

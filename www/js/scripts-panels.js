@@ -658,9 +658,8 @@ jQuery(document).ready(function($) { 'use strict';
 		else {
 			// Song file
 			var title = $('#pq-' + (UI.dbEntry[0] + 1) + ' .pll1').html().trim();
-			var line2 = $('#pq-' + (UI.dbEntry[0] + 1) + ' .pll2').text(); // Artist - album
-			var artist = line2.substr(0, (line2.indexOf('-') - 1)); // Strip off album
-			UI.dbEntry[5] = title + ', ' + artist;
+            var artist = $('#pq-' + (UI.dbEntry[0] + 1) + ' .pll2').text();
+			UI.dbEntry[5] = title + ' - ' + artist;
 		}
     });
 
