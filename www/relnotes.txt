@@ -15,11 +15,18 @@
 #
 ################################################################################
 
+Packages
+- Bump to Linux kernel 6.6.51
+
 Updates
 - UPD: Add Backlight on/off option for Pi 7 inch Touch
+- UPD: Add link to renderer Setup guide on Renderer Config
 - UPD: Set default Opus frame size to 20ms for Multiroom
 - UPD: Use higher res thumbnail for Stereo Test track
 - UPD: Improve tracks section for mobile Tag/Album views
+- UPD: Improve Spotify Connect event handling
+- UPD: Improve vol.sh to unmute when volume is changed
+- UPD: Improve Clock Radio to add/play item if its not in the Queue
 
 Bug fixes
 - FIX: Audio info output format when Multiroom sender on
