@@ -95,7 +95,6 @@ Bluetooth can be configured to send audio data it receives from MPD or the
 other audio renderers to a remote host for playback by setting its Audio output
 to "Bluetooth speaker" in the Bluetooth Control screen.
 
-
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
 ################################################################################
