@@ -520,6 +520,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_HTTPS) {
 $autoClick = " onchange=\"autoClick('#btn-set-log2ram');\"";
 $_select['log2ram_on']  .= "<input type=\"radio\" name=\"log2ram\" id=\"toggle-log2ram-1\" value=\"on\" " . (($_SESSION['log2ram'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['log2ram_off'] .= "<input type=\"radio\" name=\"log2ram\" id=\"toggle-log2ram-2\" value=\"off\" " . (($_SESSION['log2ram'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+if ($_SESSION['log2ram'] == 'on') {
+	$_log2ram_stats = sysCmd('df -hT | grep log2ram | awk \'{print "Usage: " $6 " | Size: " $3 " | Used: " $4 " | Free: " $5}\'')[0];
+} else {
+	$_log2ram_stats = '';
+}
 
 $autoClick = " onchange=\"autoClick('#btn-set-debuglog');\"";
 $_select['debuglog_on']  .= "<input type=\"radio\" name=\"debuglog\" id=\"toggle-debuglog-1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
