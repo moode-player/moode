@@ -77,6 +77,7 @@ const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" styl
 const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
 const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
 const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
+const NOTIFY_MSG_LOCALUI_STARTING = 'Local display is starting...';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
 const NOTIFY_DURATION_SHORT = 2; // Seconds
 const NOTIFY_DURATION_DEFAULT = 5;

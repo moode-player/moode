@@ -17,7 +17,11 @@ chkVariables($_POST);
 
 if (isset($_POST['update_localui'])) {
     if (isset($_POST['localui']) && $_POST['localui'] != $_SESSION['localui']) {
-        submitJob('localui', $_POST['localui'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+        if ($_POST['localui'] == '1') {
+            submitJob('localui', $_POST['localui'], NOTIFY_TITLE_INFO, NOTIFY_MSG_LOCALUI_STARTING);
+        } else {
+            submitJob('localui', $_POST['localui']);
+        }
         phpSession('write', 'localui', $_POST['localui']);
     }
 }
