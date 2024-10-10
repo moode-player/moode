@@ -32,7 +32,6 @@ Updates
 Bug fixes
 - FIX: Audio info output format when Multiroom sender on
 - FIX: Log2ram memory size 32M not set by in-place update
-- FIX: Knobs sliders hidden due to issue in chromium-browser > v126
 
 ################################################################################
 #
