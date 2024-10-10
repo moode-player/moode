@@ -21,6 +21,7 @@ Packages
 Updates
 - UPD: Add Backlight on/off option for Pi 7 inch Touch
 - UPD: Add link to renderer Setup guide on Renderer Config
+- UPD: Add stats for log2ram option on System Config
 - UPD: Set default Opus frame size to 20ms for Multiroom
 - UPD: Use higher res thumbnail for Stereo Test track
 - UPD: Improve tracks section for mobile Tag/Album views
@@ -31,7 +32,7 @@ Updates
 Bug fixes
 - FIX: Audio info output format when Multiroom sender on
 - FIX: Log2ram memory size not set by in-place update
-- FIX: Knobs sliders hidden due to bug in chromium-browser v120
+- FIX: Knobs sliders hidden due to issue in chromium-browser > v126
 
 ################################################################################
 #
