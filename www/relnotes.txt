@@ -16,7 +16,7 @@
 ################################################################################
 
 Packages
-- Bump to Linux kernel 6.6.51
+- Bump to Linux kernel 6.6.51 (1:6.6.51-1+rpt3)
 
 Updates
 - UPD: Add Backlight on/off option for Pi 7 inch Touch
