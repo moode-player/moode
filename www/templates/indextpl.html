@@ -1180,7 +1180,10 @@
 	                        <b>by Artist: </b>Albums for each artist are sorted alphabetically.<br>
 	                        <b>by Artist/Year: </b>Albums for each artist are sorted chronologically.<br>
 	                        <b>by Year: </b>Albums are sorted chronologically.<br>
-	                        Note that when sorted by year if not all tracks in the album have the same year then the latest year will be used. If no year tag exists or if the year tag is not a number then no year information will be shown for that album.
+	                        <b>Notes:</b><br>
+							 - When sorted by year if not all tracks in the album have the same year then the latest year will be used.<br>
+							 - If no year tag exists or if the year tag is not a number then no year information will be shown for that album.<br>
+							 - The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the the sort order.
 						</span>
 	                </div>
 					<label class="control-label" for="tagview-sort-order">Tag view sort</label>
@@ -1209,7 +1212,10 @@
 	                        <b>by Artist: </b>Albums for each artist are sorted alphabetically.<br>
 							<b>by Artist/Year:</b> Albums for each artist are sorted chronologically.<br>
 	                        <b>by Year: </b>Albums are sorted chronologically.<br>
-	                        Note that when sorted by year if not all tracks in the album have the same year then the latest year will be used. If no year tag exists or if the year tag is not a number then no year information will be shown for that album.
+							<b>Notes:</b><br>
+							 - When sorted by year if not all tracks in the album have the same year then the latest year will be used.<br>
+							 - If no year tag exists or if the year tag is not a number then no year information will be shown for that album.<br>
+							 - The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the the sort order.
 						</span>
 	                </div>
 					<label class="control-label" for="show-genres-column">Show genres</label>
@@ -1447,7 +1453,8 @@
  						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
  						<span id="info-library-inc-comment-tag" class="help-block hide">
 							The comment text is displayed in Tag/Album views after the year in the album title
-							or as an album heading in the track list if "Album key" is set to include @AlbumID.
+							or as an album heading in the track list if "Album key" is set to include @AlbumID.<br>
+							The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the Album year sort order for Tag and Album views.
  	                    </span>
  	                </div>
 					<label class="control-label" for="ignore-articles">Ignore articles</label>
