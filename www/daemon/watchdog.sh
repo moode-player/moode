@@ -48,16 +48,34 @@ while true; do
 
 	# MPD
 	if [[ $MPD_RUNNING = 0 ]]; then
-		message_log "MPD was restarted (check journal for messages)"
-		systemctl start mpd
+		counter=0
+		while [ $counter -lt 3 ]; do
+			sleep 1
+			MPD_RUNNING=$(pgrep -c -x mpd)
+			if [[ $MPD_RUNNING != 0 ]]; then break; fi
+			((counter++))
+		done
+		if [[ $MPD_RUNNING = 0 ]]; then
+			message_log "Started MPD after crash detected (check system journal)"
+			systemctl start mpd
+		fi
 	fi
 
 	# Multiroom receiver
 	MULTIROOM_RX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_rx'")
 	if [[ $MULTIROOM_RX = "On" ]]; then
 		if [[ $TRX_RX_RUNNING = 0 ]]; then
-			message_log "Multiroom Receiver was restarted"
-			/var/www/util/trx-control.php -rx On
+			counter=0
+			while [ $counter -lt 3 ]; do
+				sleep 1
+				TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
+				if [[ $TRX_RUNNING != 0 ]]; then break; fi
+				((counter++))
+			done
+			if [[ $TRX_RX_RUNNING = 0 ]]; then
+				message_log "Started Multiroom receiver after crash detected"
+				/var/www/util/trx-control.php -rx On
+			fi
 		fi
 	fi
 
@@ -65,8 +83,17 @@ while true; do
 	SPOTIFY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
 	if [[ $SPOTIFY_SVC = "1" ]]; then
 		if [[ $LIBRESPOT_RUNNING = 0 ]]; then
-			message_log "Spotify Connect was restarted"
-			moodeutl -R --spotify
+			counter=0
+			while [ $counter -lt 3 ]; do
+				sleep 1
+				LIBRESPOT_RUNNING=$(pgrep -c -x librespot)
+				if [[ $LIBRESPOT_RUNNING != 0 ]]; then break; fi
+				((counter++))
+			done
+			if [[ $LIBRESPOT_RUNNING = 0 ]]; then
+				message_log "Started Spotify Connect after crash detected"
+				moodeutl -R --spotify
+			fi
 		fi
 	fi
 
