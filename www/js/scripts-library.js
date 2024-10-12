@@ -1432,7 +1432,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                     notify(NOTIFY_TITLE_INFO, 'settings_updated', 'Recorder ' + recorderStatus, NOTIFY_DURATION_SHORT);
                 } else if ($('#tag-recordings span').text() == 'Yes') {
                     // NOTE: Completion message sent from back-end via sendFECmd()
-                    notify(NOTIFY_TITLE_INFO, 'recorder_tagging', 'Wait until completion message appears.', NOTIFY_DURATION_INFINITE);
+                    notify(NOTIFY_TITLE_INFO, 'recorder_tagging', 'Please wait for completion message.', NOTIFY_DURATION_INFINITE);
                     $('#tag-recordings span').text('No');
                     $.post('command/recorder-cmd.php?cmd=recorder_tag_files');
                 } else if ($('#delete-recordings span').text() != 'No') {
