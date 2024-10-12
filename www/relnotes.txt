@@ -20,6 +20,7 @@ Packages
 
 Updates
 - UPD: Add Backlight on/off option for Pi 7 inch Touch
+- UPD: Add option to downgrade chromium-browser
 - UPD: Add link to renderer Setup guide on Renderer Config
 - UPD: Add stats for log2ram option on System Config
 - UPD: Improve tracks section for mobile Tag/Album views
