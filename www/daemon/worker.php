@@ -1170,6 +1170,7 @@ if ($_SESSION['localui'] == '1') {
 	startLocalUI();
 }
 workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'off'));
+workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
 workerLog('worker: Rpi backlight:   ' . $_SESSION['rpi_backlight']);
 // HDMI enable 4k 60Hz (Pi-4 only)
 if (!isset($_SESSION['hdmi_enable_4kp60'])) {
@@ -2624,7 +2625,7 @@ function runQueuedJob() {
 			stopBluetooth();
 			sysCmd('/var/www/util/vol.sh -restore');
 			phpSession('write', 'btactive', '0');
-			sendFECmd('btactive0');
+			('btactive0');
 			if ($_SESSION['btsvc'] == 1) {
 				$status = startBluetooth();
 				if ($status != 'started') {
@@ -3047,6 +3048,10 @@ function runQueuedJob() {
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
+			break;
+		case 'downgrade_chromium':
+			sendFECmd('downgrading_chromium');
+			$result = sysCmd('/var/www/util/chrome-updater.sh "' . CHROME_DOWNGRADE_VER . '"');
 			break;
 		case 'rpi_backlight':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '' : '#';

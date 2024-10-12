@@ -329,6 +329,11 @@ jQuery(document).ready(function($){ 'use strict';
         $('#format-nvme-drive-modal').modal('toggle');
     });
 
+    // Downgrade chromium submit (close modal)
+    $('#btn-downgrade-chromium-submit').click(function(e) {
+        $('#downgrade-chromium-modal').modal('toggle');
+    });
+
     // Info button (i) show/hide toggle
     $('.config-info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');

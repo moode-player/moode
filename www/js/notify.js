@@ -92,6 +92,7 @@ function notify(title, message, arg3, arg4 = '') {
         installing_plugin: 'Installing plugin... ',
         auto_coverview: 'Auto-CoverView ',
         nvme_formatting_drive: "Formatting drive...<br>Please wait for completion message. ",
+        downgrading_chromium: "Downgrading chromium...<br>Please wait for completion message. ",
         // Recorder plugin
         recorder_installed: 'Recorder has been installed. ',
         recorder_uninstalled: 'Recorder has been uninstalled. ',
