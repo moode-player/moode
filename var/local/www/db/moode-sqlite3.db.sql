@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Sep 29 06:54:44 2024
+-- File generated with SQLiteStudio v3.4.4 on Sun Oct 13 16:58:54 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -608,7 +608,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (87, 'scnbrightness', '255');
 INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (89, 'res_software_upd_url', 'https://raw.githubusercontent.com/moode-player/updates/main/moode-player');
 INSERT INTO cfg_system (id, param, value) VALUES (90, 'alphablend', '0.75');
-INSERT INTO cfg_system (id, param, value) VALUES (91, 'RESERVED_91', '');
+INSERT INTO cfg_system (id, param, value) VALUES (91, 'scnsaver_whenplaying', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (92, 'audioout', 'Local');
 INSERT INTO cfg_system (id, param, value) VALUES (93, 'audioin', 'Local');
 INSERT INTO cfg_system (id, param, value) VALUES (94, 'slactive', '0');
