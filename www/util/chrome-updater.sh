@@ -8,15 +8,22 @@
 #
 
 MOODE_LOG="/var/log/moode.log"
+CHROMEUP_LOG="/var/log/moode_chromeup.log"
 
 message_log () {
 	echo "$1"
 	TIME=$(date +'%Y%m%d %H%M%S')
 	echo "$TIME chromeup: $1" >> $MOODE_LOG
+	echo "$TIME chromeup: $1" >> $CHROMEUP_LOG
 }
 
+# Initialize the chromeup log
+rm -f $CHROMEUP_LOG
+touch $CHROMEUP_LOG
+chmod 0666 $CHROMEUP_LOG
+
 if [ -z $1 ]; then
-	message_log "Missing arg: chromium version"
+	message_log "Missing arg: chromium package version"
 	exit 1
 else
 	CHROME_VER=$1
