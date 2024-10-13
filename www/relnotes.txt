@@ -23,6 +23,7 @@ Updates
 - UPD: Add option to downgrade chromium-browser
 - UPD: Add link to renderer Setup guide on Renderer Config
 - UPD: Add stats for log2ram option on System Config
+- UPD: Add Prefs option to enable Timed CoverView when MPD is playing
 - UPD: Improve tracks section for mobile Tag/Album views
 - UPD: Improve Spotify Connect event handling
 - UPD: Improve vol.sh to unmute when volume is changed
