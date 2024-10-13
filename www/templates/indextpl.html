@@ -1518,8 +1518,29 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-timeout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 						<span id="info-scnsaver-timeout" class="help-block hide">
-	                    	Show CoverView on all connected clients after the specified number of minutes when MPD is not playing and no renderers are active.
-							Note that CoverView will not be shown in mobile portrait.
+							Show CoverView on all connected clients after the specified number of minutes unless a renderer
+							is active or MPD is playing and the option "MPD override" option is set to "No".
+						</span>
+	                </div>
+					<label class="control-label" for="auto-coverview">When playing</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="scnsaver-whenplaying" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-whenplaying-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-whenplaying-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-whenplaying" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-scnsaver-whenplaying" class="help-block hide">
+	                    	Set to "Yes" to cause Timed display to show CoverView even if MPD is playing.
 	                    </span>
 	                </div>
 					<label class="control-label" for="auto-coverview">Automatic display</label>

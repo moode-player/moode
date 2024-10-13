@@ -3081,6 +3081,7 @@ $(document).on('click', '.context-menu a', function(e) {
 
         		// CoverView
                 $('#scnsaver-timeout span').text(getKeyOrValue('key', SESSION.json['scnsaver_timeout']));
+                $('#scnsaver-whenplaying span').text(SESSION.json['scnsaver_whenplaying']);
                 $('#auto-coverview span').text(SESSION.json['auto_coverview'] == '-on' ? 'Yes' : 'No');
         		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
                 $('#scnsaver-mode span').text(SESSION.json['scnsaver_mode']);
@@ -3349,6 +3350,7 @@ $('#btn-preferences-update').click(function(e){
 
     // CoverView
     SESSION.json['scnsaver_timeout'] = getKeyOrValue('value', $('#scnsaver-timeout span').text());
+    SESSION.json['scnsaver_whenplaying'] = $('#scnsaver-whenplaying span').text();
     SESSION.json['auto_coverview'] = ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off');
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
     SESSION.json['scnsaver_mode'] = $('#scnsaver-mode span').text();
@@ -3468,6 +3470,7 @@ $('#btn-preferences-update').click(function(e){
 
             // CoverView
             'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
+            'scnsaver_whenplaying' = SESSION.json['scnsaver_whenplaying'],
             'auto_coverview': SESSION.json['auto_coverview'],
             'scnsaver_style': SESSION.json['scnsaver_style'],
             'scnsaver_mode': SESSION.json['scnsaver_mode'],

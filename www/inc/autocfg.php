@@ -537,6 +537,7 @@ function autoConfigSettings() {
 		['requires' => ['library_utf8rep'], 'handler' => 'setSessVarSql'],
 		'CoverView',
 		['requires' => ['scnsaver_timeout'], 'handler' => 'setSessVarSql'],
+		['requires' => ['scnsaver_whenplaying'], 'handler' => 'setSessVarSql'],
 		['requires' => ['auto_coverview'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_style'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_mode'], 'handler' => 'setSessVarSql'],

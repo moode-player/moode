@@ -214,6 +214,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nTimed display\t\t= $scnsaver_timeout\c"
+	echo -e "\nMPD override\t\t= $scnsaver_whenplaying\c"
 	echo -e "\nAutomatic display\t= $auto_coverview\c"
 	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
@@ -745,7 +746,7 @@ scnbrightness=${arr[86]}
 themename=${arr[87]}
 res_software_upd_url=${arr[88]}
 alphablend=${arr[89]}
-RESERVED_91=${arr[90]}
+scnsaver_whenplaying=${arr[90]}
 audioout=${arr[91]}
 audioin=${arr[92]}
 slactive=${arr[93]}

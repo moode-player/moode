@@ -1557,14 +1557,14 @@ function chkScnSaver() {
 	$sock = openMpdSock('localhost', 6600);
 	$mpdState = getMpdStatus($sock)['state'];
 	closeMpdSock($sock);
-	if ($mpdState == 'play') {
+	if ($mpdState == 'play' && $_SESSION['scnsaver_whenplaying'] == 'No') {
 		$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 	}
 
 	if ($GLOBALS['scnsaver_timeout'] != 'Never'
 		&& chkRendererActive() === false
 		&& $_SESSION['rxactive'] == '0'
-		&& $mpdState != 'play') {
+		&& ($mpdState != 'play' || $_SESSION['scnsaver_whenplaying'] == 'Yes')) {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
@@ -1574,7 +1574,7 @@ function chkScnSaver() {
 			}
 		}
 	}
-	//workerLog($mpdState . ', ' . $GLOBALS['scnsaver_timeout'] . ', ' . $GLOBALS['scnactive']);
+	//workerLog($mpdState . ' | ' . $_SESSION['scnsaver_whenplaying'] . ' | ' . $GLOBALS['scnsaver_timeout'] . ' | ' . $GLOBALS['scnactive']);
 }
 
 function chkMaintenance() {
