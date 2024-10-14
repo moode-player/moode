@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2024-MM-DD moOde 9.1.3 (Bookworm)
+# 2024-10-14 moOde 9.1.3 (Bookworm)
 #
 ################################################################################
 
@@ -28,7 +28,7 @@ Updates
 - UPD: Improve Spotify Connect event handling
 - UPD: Improve vol.sh to unmute when volume is changed
 - UPD: Improve Clock Radio to add/play item if its not in the Queue
-- UPD: Improve Prefs help for AlbumDate enhancement for Album year sort
+- UPD: Improve Prefs help for AlbumDate enhancement (Album year sort)
 - UPD: Set default Opus frame size to 20ms for Multiroom
 - UPD: Use higher res thumbnail for Stereo Test track
 
