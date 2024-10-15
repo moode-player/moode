@@ -20,7 +20,7 @@ Packages
 
 Updates
 - UPD: Add Backlight on/off option for Pi 7 inch Touch
-- UPD: Add option to downgrade chromium-browser
+- UPD: Add option to disable GPU for chromium-browser
 - UPD: Add link to renderer Setup guide on Renderer Config
 - UPD: Add stats for log2ram option on System Config
 - UPD: Add Prefs option to enable Timed CoverView when MPD is playing
@@ -35,6 +35,7 @@ Updates
 Bug fixes
 - FIX: Audio info output format when Multiroom sender on
 - FIX: Log2ram memory size 32M not set by in-place update
+- FIX: Knob sliders not visible on < pi4 local display
 
 ################################################################################
 #
