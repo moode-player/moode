@@ -38,32 +38,34 @@ function cfgNetworks() {
 	fclose($fh);
 
 	// Wireless: Configured SSID
-	$fh = fopen('/etc/NetworkManager/system-connections/' . $cfgNetwork[1]['wlanssid'] . '.nmconnection', 'w');
-	$data  = "#########################################\n";
-	$data .= "# This file is managed by moOde          \n";
-	$data .= "# Wireless: Configured SSID              \n";
-	$data .= "#########################################\n\n";
-	$data .= "[connection]\n";
-	$data .= "id=" . $cfgNetwork[1]['wlanssid'] . "\n";
-	$data .= "uuid=" . $cfgNetwork[1]['wlanuuid'] . "\n";
-	$data .= "type=wifi\n";
-	$data .= "interface-name=wlan0\n";
-	$data .= "autoconnect=true\n";
-	$data .= "autoconnect-priority=100\n";
-	$data .= "[wifi]\n";
-	$data .= "mode=infrastructure\n";
-	$data .= "ssid=" . $cfgNetwork[1]['wlanssid'] . "\n";
-	$data .= "hidden=false\n";
-	$data .= "[wifi-security]\n";
-	$data .= "key-mgmt=wpa-psk\n";
-	$data .= "psk=" . $cfgNetwork[1]['wlanpsk'] . "\n";
-	$data .= "[ipv4]\n";
-	$data .= getIPv4AddressBlock($cfgNetwork[1]);
-	$data .= "[ipv6]\n";
-	$data .= "addr-gen-mode=default\n";
-	$data .= "method=auto\n";
-	fwrite($fh, $data);
-	fclose($fh);
+	if (!empty($cfgNetwork[1]['wlanssid']) && $cfgNetwork[1]['wlanssid'] != 'Activate Hotspot') {
+		$fh = fopen('/etc/NetworkManager/system-connections/' . $cfgNetwork[1]['wlanssid'] . '.nmconnection', 'w');
+		$data  = "#########################################\n";
+		$data .= "# This file is managed by moOde          \n";
+		$data .= "# Wireless: Configured SSID              \n";
+		$data .= "#########################################\n\n";
+		$data .= "[connection]\n";
+		$data .= "id=" . $cfgNetwork[1]['wlanssid'] . "\n";
+		$data .= "uuid=" . $cfgNetwork[1]['wlanuuid'] . "\n";
+		$data .= "type=wifi\n";
+		$data .= "interface-name=wlan0\n";
+		$data .= "autoconnect=true\n";
+		$data .= "autoconnect-priority=100\n";
+		$data .= "[wifi]\n";
+		$data .= "mode=infrastructure\n";
+		$data .= "ssid=" . $cfgNetwork[1]['wlanssid'] . "\n";
+		$data .= "hidden=false\n";
+		$data .= "[wifi-security]\n";
+		$data .= "key-mgmt=wpa-psk\n";
+		$data .= "psk=" . $cfgNetwork[1]['wlanpsk'] . "\n";
+		$data .= "[ipv4]\n";
+		$data .= getIPv4AddressBlock($cfgNetwork[1]);
+		$data .= "[ipv6]\n";
+		$data .= "addr-gen-mode=default\n";
+		$data .= "method=auto\n";
+		fwrite($fh, $data);
+		fclose($fh);
+	}
 
 	// Wireless: Saved SSID(s) if any
 	$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . SQLite3::escapeString($cfgNetwork[1]['wlanssid']) . "'", $dbh);
