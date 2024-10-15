@@ -37,6 +37,7 @@ Bug fixes
 - FIX: Audio info output format when Multiroom sender on
 - FIX: Log2ram memory size 32M not set by in-place update
 - FIX: Knob sliders not visible on < pi4 local display
+- FIX: Spurious nmconnect file created when SSID is "Activate Hotspot"
 
 ################################################################################
 #
