@@ -31,6 +31,7 @@ Updates
 - UPD: Improve Prefs help for AlbumDate enhancement (Album year sort)
 - UPD: Set default Opus frame size to 20ms for Multiroom
 - UPD: Use higher res thumbnail for Stereo Test track
+- UPD: Change Scala Radio to Magic Classical
 
 Bug fixes
 - FIX: Audio info output format when Multiroom sender on
