@@ -582,6 +582,7 @@ function autoConfigSettings() {
 			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 		}],
+		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
 		'Pi 7inch touch',
 		['requires' => ['rpi_backlight'], 'handler' => function($values) {
 			$_SESSION['rpi_backlight'] = $values['rpi_backlight'];

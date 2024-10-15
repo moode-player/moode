@@ -370,6 +370,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nScreen blank\t\t= $scnblank Secs\c"
 		echo -e "\nHDMI CEC\t\t= $hdmi_cec\c"
 		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
+		echo -e "\nDisable GPU\t\t= $disable_gpu_chromium\c"
 		echo -e "\nChromium browser\t= $chromium_ver\c"
 		echo -e "\nBacklight\t\t= $rpi_backlight\c"
 		echo -e "\nBrightness\t\t= $scnbrightness\c"
@@ -858,6 +859,7 @@ ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
+disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
 chromium_ver=$(dpkg -l | grep -m 1 "chromium-browser" | awk '{print $3}' | cut -d":" -f 2)
 rpi_backlight=$(moodeutl -d -gv "rpi_backlight")
 value=$(moodeutl -d -gv usb_volknob)

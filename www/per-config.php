@@ -67,11 +67,15 @@ if (isset($_POST['update_hdmi_enable_4kp60'])) {
     }
 }
 
-if (isset($_POST['downgrade_chromium'])) {
-    submitJob('downgrade_chromium', '',
-        NOTIFY_TITLE_INFO,
-        'Downgrade complete.<br>' . NOTIFY_MSG_SYSTEM_RESTART_REQD,
-        NOTIFY_DURATION_MEDIUM);
+if (isset($_POST['update_disable_gpu_chromium'])) {
+    if (isset($_POST['disable_gpu_chromium']) && $_POST['disable_gpu_chromium'] != $_SESSION['disable_gpu_chromium']) {
+        $_SESSION['disable_gpu_chromium'] = $_POST['disable_gpu_chromium'];
+        if ($_SESSION['localui'] == '1') {
+            submitJob('disable_gpu_chromium', $_POST['disable_gpu_chromium'], NOTIFY_TITLE_INFO, NAME_LOCAL_DISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+        } else {
+            submitJob('disable_gpu_chromium', $_POST['disable_gpu_chromium']);
+        }
+    }
 }
 
 if (isset($_POST['update_rpi_backlight'])) {
@@ -199,16 +203,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-    $_installed_chromium_ver = sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0];
-    if (substr($_installed_chromium_ver, 0, 3) > 126) {
-        $_downgrade_ctl_disabled = '';
-        $_downgrade_link_disabled = '';
-        $_downgrade_chromium_ver = CHROME_DOWNGRADE_VER;
-    } else {
-        $_downgrade_ctl_disabled = 'disabled';
-        $_downgrade_link_disabled = 'onclick="return false;"';
-        $_downgrade_chromium_ver = 'Already installed';
-    }
+    $autoClick = " onchange=\"autoClick('#btn-set-disable-gpu-chromium');\"";
+	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
     $autoClick = " onchange=\"autoClick('#btn-set-rpi-backlight');\"";
 	$_select['rpi_backlight_on']  .= "<input type=\"radio\" name=\"rpi_backlight\" id=\"toggle-rpi-backlight-1\" value=\"on\" " . (($_SESSION['rpi_backlight'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";

@@ -115,18 +115,16 @@
                 </span>
             </div>
 
-			<label class="control-label">Chromium browser</label>
+			<label class="control-label">Disable GPU</label>
 			<div class="controls">
-				<a data-toggle="modal" href="#downgrade-chromium-modal" $_downgrade_link_disabled><button class="btn btn-medium btn-primary config-btn" $_downgrade_ctl_disabled>Downgrade</button></a>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-downgrade-chromium" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span class="config-help-static">
-					Installed: $_installed_chromium_ver<br>
-					Downgrade: $_downgrade_chromium_ver
-                </span>
-				<span id="info-downgrade-chromium" class="config-help-info">
-					If the WebUI knob sliders on Pi-2 or 3 are missing try downgrading chromium-browser.<br>
-					<b>Note:</b> This process can take a while and the downgrade may be overridden by future in-place updates and therefore may need to be reapplied.
-					The file <i>/var/log/moode_chromeup.log</i> contains the downgrade process log.
+				<div class="toggle">
+					<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-2">ON </label>$_select[disable_gpu_chromium_on]
+					<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-1">OFF</label>$_select[disable_gpu_chromium_off]
+				</div>
+                <button id="btn-set-disable-gpu-chromium" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_disable_gpu_chromium" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-gpu-chromium" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-disable-gpu-chromium" class="config-help-info">
+					Disable the GPU for Chromium if the WebUI knob sliders on Pi-2 or Pi-3 are missing or there are any other display artifacts.
 				</span>
 			</div>
 		</div>
@@ -278,6 +276,7 @@
 	</div>
 </form>
 
+<!-- DEPRECATE
 <form class="form-horizontal" method="post">
 	<div id="downgrade-chromium-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="downgrade-chromium-label" aria-hidden="true">
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -289,4 +288,4 @@
 			<button id="btn-downgrade-chromium-submit" class="btn btn-primary btn-submit" type="submit" name="downgrade_chromium" value="1">Yes</button>
 		</div>
 	</div>
-</form>
+</form-->

@@ -1177,6 +1177,11 @@ if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 	$_SESSION['hdmi_enable_4kp60'] = 'off';
 }
 workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
+// Disable GPU Chromium
+if (!isset($_SESSION['disable_gpu_chromium'])) {
+	$_SESSION['disable_gpu_chromium'] = 'off';
+}
+workerLog('worker: Disable GPU:     ' . $_SESSION['disable_gpu_chromium']);
 // On-screen keyboard ('Enable' is the text on the button)
 if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';
@@ -3049,9 +3054,13 @@ function runQueuedJob() {
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 			break;
-		case 'downgrade_chromium':
-			sendFECmd('downgrading_chromium');
-			$result = sysCmd('/var/www/util/chrome-updater.sh "' . CHROME_DOWNGRADE_VER . '"');
+		case 'disable_gpu_chromium':
+			$value = $_SESSION['w_queueargs'] == 'on' ? ' --disable-gpu' : '';
+			sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
+			if ($_SESSION['localui'] == '1') {
+				stopLocalUI();
+				startLocalUI();
+			}
 			break;
 		case 'rpi_backlight':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '' : '#';
