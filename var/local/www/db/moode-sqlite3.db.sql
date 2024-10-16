@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Tue Oct 15 10:49:18 2024
+-- File generated with SQLiteStudio v3.4.4 on Wed Oct 16 07:57:05 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -511,7 +511,7 @@ INSERT INTO cfg_spotify (id, param, value) VALUES (12, 'normalization_knee', '1'
 INSERT INTO cfg_spotify (id, param, value) VALUES (13, 'format', 'S16');
 INSERT INTO cfg_spotify (id, param, value) VALUES (14, 'dither', '');
 INSERT INTO cfg_spotify (id, param, value) VALUES (15, 'volume_range', '60');
-INSERT INTO cfg_spotify (id, param, value) VALUES (16, 'ap_fallback', 'Yes');
+INSERT INTO cfg_spotify (id, param, value) VALUES (16, 'ap_fallback', 'No');
 
 -- Table: cfg_ssid
 CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32), method CHAR (32), ipaddr CHAR (32), netmask CHAR (32), gateway CHAR (32), pridns CHAR (32), secdns CHAR (32));
