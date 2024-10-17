@@ -79,10 +79,9 @@ Ethernet or WiFi networks. Since these networks are already present this type
 of renderer operates by establishing a playback session. moOde detects the
 session and displays the "Renderer Active" overlay.
 
-AirPlay, Spotify Connect and Squeezelite renderers can automatically end their
-session and release the audio output after playback stops. Spotify Connect does
-this immediately after playback stops. Airplay and Squeezelite do this based on
-a configurable timeout value.
+AirPlay and Squeezelite renderers can automatically end their session and
+release the audio output after playback stops based on a configurable timeout
+value.
 
 RECEIVE-ONLY RENDERERS
 
