@@ -16,14 +16,7 @@ debug_log () {
 	echo "$TIME $1" >> $LOGFILE
 }
 
-# Note: for session control
-# v04x uses "started" and "stopped"
-# v05x uses "session_connected" and "session_disconnected"
 PLAYER_EVENTS=(
-paused
-playing
-started
-stopped
 session_connected
 session_disconnected
 )
@@ -33,12 +26,12 @@ for EVENT in "${PLAYER_EVENTS[@]}"
 do
 	if [[ $PLAYER_EVENT == $EVENT ]]; then
 		MATCH=1
-		debug_log "Event: "$PLAYER_EVENT": Processed"
+		debug_log "Process: "$PLAYER_EVENT
 	fi
 done
-# Exit if not a matching player event
+# Exit and log if not a match
 if [[ $MATCH == 0 ]]; then
-	debug_log "Event: "$PLAYER_EVENT": Skipped"
+	debug_log "Logged:  "$PLAYER_EVENT
 	exit 0
 fi
 
@@ -61,7 +54,7 @@ if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
-if [[ $PLAYER_EVENT == "playing" ]]; then
+if [[ $PLAYER_EVENT == "session_connected" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='spotactive'")
 	/usr/bin/mpc stop > /dev/null
 	sleep 1
@@ -89,7 +82,8 @@ if [[ $PLAYER_EVENT == "playing" ]]; then
 	fi
 fi
 
-if [[ $PLAYER_EVENT == "paused" ]] || [[ $PLAYER_EVENT == "stopped" ]]; then
+#if [[ $PLAYER_EVENT == "paused" ]] || [[ $PLAYER_EVENT == "stopped" ]]; then
+if [[ $PLAYER_EVENT == "session_disconnected" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='spotactive'")
 
 	# Local
