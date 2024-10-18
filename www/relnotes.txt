@@ -16,10 +16,10 @@
 ################################################################################
 
 Updates
-- UPD: Renderer Setup Guide
+- UPD: Improve MPD restart process used in Radio stream monitor
 
 Bug fixes
-- FIX: Librespot event handling
+- FIX: Spotify Connect event script not processing session events
 
 ################################################################################
 #
