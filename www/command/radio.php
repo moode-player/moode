@@ -58,6 +58,7 @@ switch ($_GET['cmd']) {
 		sysCmd('killall -s 9 mpdmon.php');
 		//workerLog($_POST['svc'] . '|' . $_POST['opt']);
 		if ($_POST['svc'] == 'On') {
+			sysCmd('truncate ' . MPD_LOG . ' --size 0');
 			sysCmd('/var/www/daemon/mpdmon.php "' . $_POST['opt'] . '" > /dev/null 2>&1 &');
 		}
 		break;

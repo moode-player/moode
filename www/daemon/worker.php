@@ -1462,6 +1462,7 @@ workerLog('worker: Mount monitor:    ' . ($_SESSION['fs_mountmon'] == 'On' ? 'st
 // Start MPD radio stream monitor
 sysCmd('killall -s 9 mpdmon.php');
 if ($_SESSION['mpd_monitor_svc'] == 'On') {
+	sysCmd('truncate ' . MPD_LOG . ' --size 0');
 	sysCmd('/var/www/daemon/mpdmon.php "' . $_SESSION['mpd_monitor_opt'] . '" > /dev/null 2>&1 &');
 }
 workerLog('worker: Radio monitor:    ' . ($_SESSION['mpd_monitor_svc'] == 'On' ? 'started' : 'off'));
