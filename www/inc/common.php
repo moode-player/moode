@@ -139,7 +139,7 @@ function chkValue($value) {
 		header('Location: /response400.html');
 		exit(1);
 	} else {
-		debugLog('chkValue(): ' . (empty($value) ? 'Value is blank' : $value));
+		//debugLog('chkValue(): ' . (empty($value) ? 'Value is blank' : $value));
 	}
 }
 // Same as chkValue() except pipe | is excluded
@@ -177,7 +177,7 @@ function chkValueEx($value) {
 		header('Location: /response400.html');
 		exit(1);
 	} else {
-		debugLog('chkValueEx(): ' . (empty($value) ? 'Value is blank' : $value));
+		//debugLog('chkValueEx(): ' . (empty($value) ? 'Value is blank' : $value));
 	}
 }
 
@@ -211,7 +211,7 @@ function chkSQL($sql) {
 		header('Location: /response400.html');
 		exit(1);
 	} else {
-		debugLog('chkSQL(): ' . (empty($sql) ? 'SQL is blank' : $sql));
+		//debugLog('chkSQL(): ' . (empty($sql) ? 'SQL is blank' : $sql));
 	}
 }
 
@@ -235,7 +235,7 @@ function chkXSS($file, $element, $value) {
 		// DEBUG:
 		//workerLog('SECCHK: tag|value: ' . $element . '|' . htmlspecialchars($value, ENT_NOQUOTES));
 	} else {
-		debugLog('chkXSS(): ' . (empty($value) ? 'Value is blank' : $value));
+		//debugLog('chkXSS(): ' . (empty($value) ? 'Value is blank' : $value));
 	}
 }
 
