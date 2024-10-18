@@ -59,7 +59,11 @@ while (true) {
 
 				if ($msgCount == $threshold) {
 					$msg = 'mpdmon: MPD restarted';
-					sysCmd('systemctl restart mpd');
+					sysCmd("systemctl restart mpd");
+					$sock = openMpdSock('localhost', 6600); // 6 x .5sec retries
+					workerLog($sock === false ?
+						'mpdmon: MPD port 6600: connection refused' :
+						'mpdmon: MPD port 6600: accepting connections');
 					if ($resumePlay == 'Yes') {
 						$msg .= ', play resumed';
 						sysCmd('mpc play');
