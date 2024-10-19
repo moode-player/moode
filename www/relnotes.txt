@@ -16,10 +16,12 @@
 ################################################################################
 
 Updates
+- UPD: Add current release info to the Software Update section of System Config
+- UPD: Add notification for "Image does not contain a userid" condition
 - UPD: Improve MPD restart process used in Radio stream monitor
 
 Bug fixes
-- FIX: Spotify Connect event script not processing session events
+- FIX: Spotify Connect event script not processing session connect/disconnect
 
 ################################################################################
 #
@@ -38,7 +40,7 @@ Updates
 - UPD: Add stats for log2ram option on System Config
 - UPD: Add Prefs option to enable Timed CoverView when MPD is playing
 - UPD: Improve tracks section for mobile Tag/Album views
-- UPD: Improve Spotify Connect event handling
+- UPD: Improve Spotify Connect event script
 - UPD: Improve vol.sh to unmute when volume is changed
 - UPD: Improve Clock Radio to add/play item if its not in the Queue
 - UPD: Improve Prefs help for AlbumDate enhancement (Album year sort)
