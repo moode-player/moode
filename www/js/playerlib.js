@@ -28,11 +28,17 @@ const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
+const NOTIFY_TITLE_ERROR = '<i class="fa fa-solid fa-sharp fa-do-not-enter" style="color:#e74c3c;"></i> Error';
 const NOTIFY_DURATION_SHORT = 2; // Seconds
 const NOTIFY_DURATION_DEFAULT = 5;
 const NOTIFY_DURATION_MEDIUM = 10;
 const NOTIFY_DURATION_LONG = 30;
 const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
+const NOTIFY_MSG_NO_USERID = 'Without a userid moOde will not function correctly.<br><br>'
+    + 'Follow the '
+    + '<a href="https://github.com/moode-player/docs/blob/main/setup_guide.md#4-imager-tutorial"'
+    + ' class="target-blank-link" target="_blank">Imager Tutorial</a>'
+    + ' to create a new image with a userid, password and SSH enabled.';
 
 // Timeouts in milliseconds
 const DEFAULT_TIMEOUT   = 250;

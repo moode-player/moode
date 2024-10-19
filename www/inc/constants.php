@@ -75,16 +75,22 @@ const CHROME_DOWNGRADE_VER = '126.0.6478.164-rpt1';
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
-const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
-const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
-const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
-const NOTIFY_MSG_LOCALUI_STARTING = 'Local display is starting...';
-const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
+const NOTIFY_TITLE_ERROR = '<i class="fa fa-solid fa-sharp fa-do-not-enter" style="color:#e74c3c;"></i> Error';
 const NOTIFY_DURATION_SHORT = 2; // Seconds
 const NOTIFY_DURATION_DEFAULT = 5;
 const NOTIFY_DURATION_MEDIUM = 10;
 const NOTIFY_DURATION_LONG = 30;
 const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
+const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
+const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
+const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
+const NOTIFY_MSG_LOCALUI_STARTING = 'Local display is starting...';
+const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
+const NOTIFY_MSG_NO_USERID = 'Without a userid moOde will not function correctly.<br><br>'
+    . 'Follow the '
+    . '<a href="https://github.com/moode-player/docs/blob/main/setup_guide.md#4-imager-tutorial"'
+    . ' class="target-blank-link" target="_blank">Imager Tutorial</a>'
+    . ' to create a new image with a userid, password and SSH enabled.';
 // Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';

@@ -35,17 +35,16 @@ workerLog('worker: -- Start moOde ' . getMoodeSeries() .  ' series');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Daemonize ourselves
+// CRITICAL: Daemonize ourselves, Exit on fail
 $lock = fopen('/run/worker.pid', 'c+');
 if (!flock($lock, LOCK_EX | LOCK_NB)) {
-	$logMsg = 'worker: Already running';
+	$logMsg = 'worker: CRITICAL ERROR: Already running';
 	workerLog($logMsg);
 	exit($logMsg . "\n");
 }
-
 switch ($pid = pcntl_fork()) {
 	case -1:
-		$logMsg = 'worker: Unable to fork';
+		$logMsg = 'worker:  CRITICAL ERROR: Unable to fork';
 		workerLog($logMsg);
 		exit($logMsg . "\n");
 	case 0: // Child process
@@ -57,35 +56,24 @@ switch ($pid = pcntl_fork()) {
 		fflush($lock);
 		exit;
 }
-
 if (posix_setsid() === -1) {
-	$logMsg = 'worker: Could not setsid';
+	$logMsg = 'worker:  CRITICAL ERROR: Could not setsid';
 	workerLog($logMsg);
 	exit($logMsg . "\n");
 }
-
 fclose(STDIN);
 fclose(STDOUT);
 fclose(STDERR);
-
 $stdIn = fopen('/dev/null', 'r'); // Set fd/0
 $stdOut = fopen('/dev/null', 'w'); // Set fd/1
 $stdErr = fopen('php://stdout', 'w'); // A hack to duplicate fd/1 to 2
-
 pcntl_signal(SIGTSTP, SIG_IGN);
 pcntl_signal(SIGTTOU, SIG_IGN);
 pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
-// Check for login user ID
-if (empty(getUserID())) {
-	$logMsg = 'worker: Error: Login User ID does not exist, unable to continue';
-	workerLog($logMsg);
-	exit($logMsg . "\n");
-}
-
-// Check for Linux startup complete
+// CRITICAL: Check for Linux startup complete, Exit on fail
 workerLog('worker: Wait for Linux startup');
 $maxLoops = 30;
 $sleepTime = 6;
@@ -103,9 +91,14 @@ for ($i = 0; $i < $maxLoops; $i++) {
 if ($linuxStartupComplete === true) {
 	workerLog('worker: Linux startup complete');
 } else {
-	$logMsg = 'worker: Error: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
+	$logMsg = 'worker: CRITICAL ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
 	workerLog($logMsg);
 	exit($logMsg . "\n");
+}
+
+// CRITICAL: Check for userid, WebUI notify on fail
+if (strpos(getUserID(), 'ls: cannot access') !== false) {
+	workerLog('worker: CRITICAL ERROR: Userid does not exist, moOde will not function correctly');
 }
 
 // Check boot config.txt

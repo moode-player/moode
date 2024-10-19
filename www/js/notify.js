@@ -74,6 +74,7 @@ function notify(title, message, arg3, arg4 = '') {
 		shutdown: 'System is shutting down... ',
         reconnect: 'Connection is being reestablished... ',
         mpd_error: '',
+        userid_error: 'The image does not contain a userid.<br><br>',
         updater: 'An update is available.<br>',
         viewport: 'VIEWPORT<br>',
         debug: 'DEBUG<br>',

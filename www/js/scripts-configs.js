@@ -92,6 +92,11 @@ jQuery(document).ready(function($){ 'use strict';
         if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'On') {
              initializeOSK();
         }
+
+        // First boot check for userid
+        if (SESSION.json['user_id'].includes('ls: cannot access')) {
+            notify(NOTIFY_TITLE_ERROR, 'userid_error', NOTIFY_MSG_NO_USERID, NOTIFY_DURATION_INFINITE);
+        }
 });
 	//
 	// EVENT HANDLERS
