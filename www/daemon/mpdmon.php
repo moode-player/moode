@@ -65,7 +65,7 @@ while (true) {
 					workerLog($sock === false ?
 						'mpdmon: MPD port 6600: connection refused' :
 						'mpdmon: MPD port 6600: accepting connections');
-					if ($resumePlay == 'Yes') {
+					if ($sock !== false && $resumePlay == 'Yes') {
 						$msg .= ', play resumed';
 						sysCmd('mpc play');
 					}
