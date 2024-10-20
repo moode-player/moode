@@ -40,6 +40,9 @@ const NOTIFY_MSG_NO_USERID = 'Without a userid moOde will not function correctly
     + ' class="target-blank-link" target="_blank">Imager Tutorial</a>'
     + ' to create a new image with a userid, password and SSH enabled.';
 
+// System
+const NO_USERID_DEFINED = 'userid does not exist';
+
 // Timeouts in milliseconds
 const DEFAULT_TIMEOUT   = 250;
 const CLRPLAY_TIMEOUT   = 500;

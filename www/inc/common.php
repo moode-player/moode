@@ -254,17 +254,28 @@ function getMoodeSeries() {
 	return substr(getMoodeRel(), 1, 1);
 }
 
-// Assumes only one dir under /home, the one corresponding to the userid
-// entered into the Raspberry Pi Imager when prepping the image.
+// Assumes only one dir under /home, the one matching the userid entered into
+// the Raspberry Pi Imager when making the image.
 function getUserID() {
-	// Check for and delete '/home/pi' if it has no userid. This dir is created
-	// by the moode-player package install during in-place update.
+	// Delete '/home/pi' if no corresponding userid exists. The homedir pi is
+	// created by the moode-player package install during in-place update.
 	if (file_exists('/home/pi/') && empty(sysCmd('grep ":/home/pi:" /etc/passwd'))) {
 		sysCmd('rm -rf /home/pi/');
 	}
+	// Return empty string if locked password for userid pi. A locked password
+	// is from the pi-gen build and remains unless a userid is set in Pi Imager.
+	if (sysCmd('cat /etc/shadow | grep pi | cut -d ":" -f 2')[0] == '!') {
+		// No userid set in Pi Imager
+		$result = NO_USERID_DEFINED;
+	} else {
+		// Return userid or empty string if no subdirs under /home/
+		$result = sysCmd('ls /home/')[0];
+		if (strpos($result, 'ls: cannot access') !== false) {
+			$result = NO_USERID_DEFINED;
+		}
+	}
 
-	$result = sysCmd('ls /home/');
-	return $result[0];
+	return $result;
 }
 
 // hostname -I = 192.168.1.121 fd87:f129:9943:4934:1192:907d:d9b6:e98d

@@ -57,7 +57,7 @@ switch ($pid = pcntl_fork()) {
 		exit;
 }
 if (posix_setsid() === -1) {
-	$logMsg = 'worker:  CRITICAL ERROR: Could not setsid';
+	$logMsg = 'worker:  CRITICAL ERROR: Could not setsid()';
 	workerLog($logMsg);
 	exit($logMsg . "\n");
 }
@@ -72,6 +72,11 @@ pcntl_signal(SIGTTOU, SIG_IGN);
 pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
+
+// CRITICAL: Check for userid.  WebUI notify on fail
+if (getUserID() == NO_USERID_DEFINED) {
+	workerLog('worker: CRITICAL ERROR: Userid does not exist, moOde will not function correctly');
+}
 
 // CRITICAL: Check for Linux startup complete, Exit on fail
 workerLog('worker: Wait for Linux startup');
@@ -93,21 +98,15 @@ if ($linuxStartupComplete === true) {
 } else {
 	$logMsg = 'worker: CRITICAL ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
 	workerLog($logMsg);
-	exit($logMsg . "\n");
 }
 
-// CRITICAL: Check for userid, WebUI notify on fail
-if (strpos(getUserID(), 'ls: cannot access') !== false) {
-	workerLog('worker: CRITICAL ERROR: Userid does not exist, moOde will not function correctly');
-}
-
-// Check boot config.txt
+// CRITICAL: Check boot config.txt
 $status = chkBootConfigTxt();
 if ($status == 'Required headers present') {
 	workerLog('worker: Boot config is ok');
 } else if ($status == 'Required header missing') {
 	sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
-	workerLog('worker: Warning: Boot config is missing required headers');
+	workerLog('worker: CRITICAL: Boot config is missing required headers');
 	workerLog('worker: Warning: Default boot config restored');
 	workerLog('worker: Warning: Restart required');
 } else if ($status == 'Main header missing') {
@@ -115,6 +114,8 @@ if ($status == 'Required headers present') {
 	sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
 	sysCmd('reboot');
 }
+
+
 
 // Prune session vars that have been removed
 $sessionVars = array('usb_auto_updatedb', 'src_action', 'src_mpid', 'adaptive');

@@ -60,7 +60,7 @@ const THM_SM_Q = 75;
 // Radio and Playlist thumbs
 const THM_DEFAULT_W = 600;
 const THM_DEFAULT_Q = 75;
-// System files
+// System
 const PORT_FILE = '/tmp/moode_portfile'; // Command engine
 const SESSION_SAVE_PATH = '/var/local/php';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
@@ -72,6 +72,7 @@ const BOOT_MOODECFG_INI = '/boot/moodecfg.ini';
 const BT_PINCODE_CONF = '/etc/bluetooth/pin.conf';
 const ETC_MACHINE_INFO = '/etc/machine-info';
 const CHROME_DOWNGRADE_VER = '126.0.6478.164-rpt1';
+const NO_USERID_DEFINED = 'userid does not exist';
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';

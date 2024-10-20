@@ -94,7 +94,7 @@ jQuery(document).ready(function($){ 'use strict';
         }
 
         // First boot check for userid
-        if (SESSION.json['user_id'].includes('ls: cannot access')) {
+        if (SESSION.json['user_id'] == NO_USERID_DEFINED) {
             notify(NOTIFY_TITLE_ERROR, 'userid_error', NOTIFY_MSG_NO_USERID, NOTIFY_DURATION_INFINITE);
         }
 });
