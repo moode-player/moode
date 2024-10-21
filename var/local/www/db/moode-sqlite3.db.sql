@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Oct 16 07:57:05 2024
+-- File generated with SQLiteStudio v3.4.4 on Mon Oct 21 15:54:45 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -468,6 +468,10 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (238, 'https://www.wwoz.org/listen/hi', 'WWOZ New Orleans FM 90.7 - Various Artists', 'r', 'local', 'Jazz, Blues, Latin, Cajun, Funk', 'WWOZ', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (239, 'http://streams.norbert.de:8000/zappa.aac', 'Zappa Stream Radio', 'r', 'local', 'Progressive Rock, Rock', 'Zappa Stream Radio', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (240, 'https://22653.live.streamtheworld.com/TOPZEN.mp3', 'Zen FM', 'r', 'local', 'Lounge', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (241, 'https://onair22.xdevel.com/proxy/xautocloud_td3e_421?mp=/stream', 'Jazz de Ville - Chill', 'r', 'local', 'Jazz', 'Jazz de Ville', 'English', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (242, 'https://onair22.xdevel.com/proxy/xautocloud_6cqz_422?mp=/stream', 'Jazz de Ville - Dance', 'r', 'local', 'Jazz', 'Jazz de Ville', 'English', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (243, 'https://onair22.xdevel.com/proxy/xautocloud_1kha_423?mp=/stream', 'Jazz de Ville - Groove', 'r', 'local', 'Jazz', 'Jazz de Ville', 'English', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (244, 'https://onair22.xdevel.com/proxy/xautocloud_kkyb_420?mp=/stream', 'Jazz de Ville - Jazz', 'r', 'local', 'Jazz', 'Jazz de Ville', 'English', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
 -- Table: cfg_sl
