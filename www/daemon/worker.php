@@ -73,49 +73,50 @@ pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
-// CRITICAL: Check for userid.  WebUI notify on fail
-if (getUserID() == NO_USERID_DEFINED) {
+// CRITICAL: Check for userid
+$userId = getUserID();
+if ($userId == NO_USERID_DEFINED) {
 	workerLog('worker: CRITICAL ERROR: Userid does not exist, moOde will not function correctly');
 }
 
-// CRITICAL: Check for Linux startup complete, Exit on fail
-workerLog('worker: Wait for Linux startup');
-$maxLoops = 30;
-$sleepTime = 6;
-$linuxStartupComplete = false;
-for ($i = 0; $i < $maxLoops; $i++) {
-	$result = sysCmd('systemctl is-system-running');
-	if ($result[0] == 'running' || $result[0] == 'degraded') {
-		$linuxStartupComplete = true;
-		break;
+// CRITICAL: Check for Linux startup complete
+if ($userId != NO_USERID_DEFINED) {
+	workerLog('worker: Wait for Linux startup');
+	$maxLoops = 30;
+	$sleepTime = 6;
+	$linuxStartupComplete = false;
+	for ($i = 0; $i < $maxLoops; $i++) {
+		$result = sysCmd('systemctl is-system-running');
+		if ($result[0] == 'running' || $result[0] == 'degraded') {
+			$linuxStartupComplete = true;
+			break;
+		} else {
+			debugLog('Wait ' . ($i + 1) . ' for Linux startup');
+			sleep($sleepTime);
+		}
+	}
+	if ($linuxStartupComplete === true) {
+		workerLog('worker: Linux startup complete');
 	} else {
-		debugLog('Wait ' . ($i + 1) . ' for Linux startup');
-		sleep($sleepTime);
+		$logMsg = 'worker: CRITICAL ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
+		workerLog($logMsg);
+	}
+
+	// CRITICAL: Check boot config.txt
+	$status = chkBootConfigTxt();
+	if ($status == 'Required headers present') {
+		workerLog('worker: Boot config is ok');
+	} else if ($status == 'Required header missing') {
+		sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+		workerLog('worker: CRITICAL ERROR: Boot config is missing required headers');
+		workerLog('worker: Warning: Default boot config restored');
+		workerLog('worker: Warning: Restart required');
+	} else if ($status == 'Main header missing') {
+		// First boot import
+		sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+		sysCmd('reboot');
 	}
 }
-if ($linuxStartupComplete === true) {
-	workerLog('worker: Linux startup complete');
-} else {
-	$logMsg = 'worker: CRITICAL ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
-	workerLog($logMsg);
-}
-
-// CRITICAL: Check boot config.txt
-$status = chkBootConfigTxt();
-if ($status == 'Required headers present') {
-	workerLog('worker: Boot config is ok');
-} else if ($status == 'Required header missing') {
-	sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
-	workerLog('worker: CRITICAL: Boot config is missing required headers');
-	workerLog('worker: Warning: Default boot config restored');
-	workerLog('worker: Warning: Restart required');
-} else if ($status == 'Main header missing') {
-	// First boot import
-	sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
-	sysCmd('reboot');
-}
-
-
 
 // Prune session vars that have been removed
 $sessionVars = array('usb_auto_updatedb', 'src_action', 'src_mpid', 'adaptive');
