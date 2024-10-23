@@ -71,7 +71,7 @@ pcntl_signal(SIGTSTP, SIG_IGN);
 pcntl_signal(SIGTTOU, SIG_IGN);
 pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
-workerLog('worker: Successfully daemonized');
+workerLog('worker: Daemonize:     Complete');
 
 // CRITICAL: Check for userid
 $userId = getUserID();
@@ -81,7 +81,6 @@ if ($userId == NO_USERID_DEFINED) {
 
 // CRITICAL: Check for Linux startup complete
 if ($userId != NO_USERID_DEFINED) {
-	workerLog('worker: Wait for Linux startup');
 	$maxLoops = 30;
 	$sleepTime = 6;
 	$linuxStartupComplete = false;
@@ -96,7 +95,7 @@ if ($userId != NO_USERID_DEFINED) {
 		}
 	}
 	if ($linuxStartupComplete === true) {
-		workerLog('worker: Linux startup complete');
+		workerLog('worker: Linux startup: Complete');
 	} else {
 		$logMsg = 'worker: CRITICAL ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
 		workerLog($logMsg);
@@ -105,7 +104,7 @@ if ($userId != NO_USERID_DEFINED) {
 	// CRITICAL: Check boot config.txt
 	$status = chkBootConfigTxt();
 	if ($status == 'Required headers present') {
-		workerLog('worker: Boot config is ok');
+		workerLog('worker: Boot config:   ok');
 	} else if ($status == 'Required header missing') {
 		sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
 		workerLog('worker: CRITICAL ERROR: Boot config is missing required headers');
@@ -128,17 +127,17 @@ foreach ($sessionVars as $var) {
 $result = sqlQuery("SELECT count() FROM cfg_radio WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
 if ($result[0]['count()'] > 0) {
 	sqlQuery("UPDATE cfg_radio SET monitor = 'No' WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
-	workerLog('worker: Cleaned cfg_radio (' . $result[0]['count()'] . ')');
+	workerLog('worker: Radio table:   Cleaned (' . $result[0]['count()'] . ')');
 }
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
 phpSession('load_radio');
-workerLog('worker: Session loaded');
+workerLog('worker: PHP Session:   loaded');
 
 // Ensure package holds are in effect
 sysCmd('moode-apt-mark hold > /dev/null 2>&1');
-workerLog('worker: Package locks applied');
+workerLog('worker: Package locks: applied');
 
 // Ensure certain files exist and with the correct permissions
 if (!file_exists(PLAY_HISTORY_LOG)) {
@@ -189,19 +188,19 @@ if (!file_exists(ETC_MACHINE_INFO)) {
 	sysCmd('cp /usr/share/moode-player' . ETC_MACHINE_INFO . ' /etc/');
 	workerLog('worker: File check created default /etc/machine-info');
 }
-workerLog('worker: File check complete');
+workerLog('worker: File check:    complete');
 
 // Log to RAM
 if (!isset($_SESSION['log2ram'])) {
 	$_SESSION['log2ram'] = 'on';
 }
-workerLog('worker: Log to RAM    ' . $_SESSION['log2ram']);
+workerLog('worker: Log to RAM:    ' . $_SESSION['log2ram']);
 
 // Debug logging
 if (!isset($_SESSION['debuglog'])) {
 	phpSession('write', 'debuglog', '0');
 }
-workerLog('worker: Debug logging ' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off'));
+workerLog('worker: Debug logging: ' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off'));
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -2265,7 +2264,7 @@ function runQueuedJob() {
 			$GLOBALS['scnactive'] = '0';
 			break;
 
-		// Nenu, Update library, Context menu, Update this folder
+		// Menu Update library, Context menu, Update this folder
 		case 'update_library':
 			// Update library
 			clearLibCacheAll();
