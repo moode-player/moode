@@ -341,6 +341,7 @@ function autoConfigSettings() {
 		['requires' => ['ashuffle_mode'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['ashuffle_window'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['ashuffle_filter'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['ashuffle_exclude'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['mpd_httpd'], 'handler' => function($values) {
 			$cmd = $values['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
 			sysCmd($cmd);
@@ -818,7 +819,7 @@ function autoConfigExtract($currentSettings) {
 				foreach ($config['requires'] as $configName) {
 					$configKey = array_key_exists('session_var', $config) ? $config['session_var'] : $configName;
 					if (array_key_exists($configKey, $currentSettings)) {
-						if ($configKey == 'ashuffle_filter') {
+						if ($configKey == 'ashuffle_filter' || $configKey == 'ashuffle_exclude') {
 							$currentSettings[$configKey] = str_replace('"', '\"', $currentSettings[$configKey]);
 						}
 						$autoConfigString = $autoConfigString . $configKey . " = \"" . $currentSettings[$configKey] . "\"\n";

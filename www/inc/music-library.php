@@ -856,10 +856,14 @@ function isCueTrack($path) {
 function startAutoShuffle() {
 	$filter = (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') ?
 		'mpc search ' . $_SESSION['ashuffle_filter'] . ' | ' : '';
+	$exclude = (!empty($_SESSION['ashuffle_exclude']) && $_SESSION['ashuffle_exclude'] != 'None') ?
+		' --exclude ' . $_SESSION['ashuffle_exclude'] . ' ' : '';
 	$mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album albumartist ' : '';
 	$window = '--tweak window-size=' . $_SESSION['ashuffle_window'] . ' ';
 	$file = $filter != '' ? '--file - ' : '';
-	sysCmd($filter . '/usr/bin/ashuffle --queue-buffer 1 ' . $mode . $window . $file . '> /dev/null 2>&1 &');
+	$cmd = $filter . '/usr/bin/ashuffle --queue-buffer 1 ' . $mode . $window . $exclude . $file . '> /dev/null 2>&1 &';
+	sysCmd($cmd);
+	debugLog('DEBUG: ' . $cmd);
 }
 
 function stopAutoShuffle() {

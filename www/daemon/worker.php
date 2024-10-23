@@ -1239,6 +1239,9 @@ if (!isset($_SESSION['ashuffle_window'])) {
 if (!isset($_SESSION['ashuffle_filter'])) {
 	$_SESSION['ashuffle_filter'] = 'None';
 }
+if (!isset($_SESSION['ashuffle_exclude'])) {
+	$_SESSION['ashuffle_exclude'] = 'None';
+}
 workerLog('worker: Auto-shuffle:      ' . ($_SESSION['ashufflesvc'] == '1' ? 'on' : 'off'));
 
 // Auto-play: start auto-shuffle random play or auto-play last played item

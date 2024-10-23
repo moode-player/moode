@@ -144,6 +144,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nAshuffle mode\t\t= $ashuffle_mode\c"
 	echo -e "\nAshuffle window\t\t= $ashuffle_window\c"
 	echo -e "\nAshuffle filter\t\t= $ashuffle_filter\c"
+	echo -e "\nAshuffle exclude\t= $ashuffle_exclude\c"
 	echo -e "\nAutoplay\t\t= $autoplay\c"
 	echo -e "\nRotary encoder\t\t= $rotaryenc\c"
 	echo -e "\nEncoder params\t\t= $rotenc_params\c"
@@ -856,6 +857,7 @@ value=$(moodeutl -d -gv rotaryenc)
 ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
 ashuffle_window=$(moodeutl -d -gv "ashuffle_window")
 ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
+ashuffle_exclude=$(moodeutl -d -gv "ashuffle_exclude")
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")

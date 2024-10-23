@@ -18,8 +18,9 @@ $dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $deviceNames = getAlsaDeviceNames();
 
-chkVariables($_POST, array('ashuffle_filter'));
+chkVariables($_POST, array('ashuffle_filter', 'ashuffle_exclude'));
 chkValueEx($_POST['ashuffle_filter']);
+chkValueEx($_POST['ashuffle_exclude']);
 
 // AUDIO OUTPUT
 
@@ -210,6 +211,17 @@ if (isset($_POST['update_ashuffle_window']) && $_POST['ashuffle_window'] != $_SE
 if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SESSION['ashuffle_filter']) {
 	$trim_filter = trim($_POST['ashuffle_filter']);
 	$_SESSION['ashuffle_filter'] = ($trim_filter == '' ? 'None' : $trim_filter);
+	if ($_SESSION['ashuffle'] == '1') {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Setting updated. Turn Random play back on to make this setting effective.';
+		stopAutoShuffle();
+	}
+}
+
+// Exclude
+if (isset($_POST['update_ashuffle_exclude']) && $_POST['ashuffle_exclude'] != $_SESSION['ashuffle_exclude']) {
+	$trim_exclude = trim($_POST['ashuffle_exclude']);
+	$_SESSION['ashuffle_exclude'] = ($trim_exclude == '' ? 'None' : $trim_exclude);
 	if ($_SESSION['ashuffle'] == '1') {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 		$_SESSION['notify']['msg'] = 'Setting updated. Turn Random play back on to make this setting effective.';
@@ -465,6 +477,7 @@ $_select['ashuffle_mode'] .= "<option value=\"Track\" " . (($_SESSION['ashuffle_
 $_select['ashuffle_mode'] .= "<option value=\"Album\" " . (($_SESSION['ashuffle_mode'] == 'Album') ? "selected" : "") . ">Album</option>\n";
 $_ashuffle_window = $_SESSION['ashuffle_window'];
 $_ashuffle_filter = str_replace('"', '&quot;', $_SESSION['ashuffle_filter']);
+$_ashuffle_exclude = str_replace('"', '&quot;', $_SESSION['ashuffle_exclude']);
 // Volume step limit
 $_select['volume_step_limit'] .= "<option value=\"2\" " . (($_SESSION['volume_step_limit'] == '2') ? "selected" : "") . ">2</option>\n";
 $_select['volume_step_limit'] .= "<option value=\"5\" " . (($_SESSION['volume_step_limit'] == '5') ? "selected" : "") . ">5</option>\n";
