@@ -60,7 +60,8 @@ while (true) {
 
 				if ($msgCount == $threshold) {
 					sysCmd('killall -s 9 watchdog.sh');
-					sysCmd("systemctl restart mpd");
+					sysCmd('killall -s 9 mpd');
+					sysCmd("systemctl start mpd");
 					$msg = 'mpdmon: MPD restarted';
 					$sock = openMpdSock('localhost', 6600); // 6 x .5sec retries
 					$msg .= $sock == false ? ', connection refused' : ', accepting connections';
