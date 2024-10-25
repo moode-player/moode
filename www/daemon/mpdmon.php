@@ -59,14 +59,16 @@ while (true) {
 				}
 
 				if ($msgCount == $threshold) {
-					$msg = 'mpdmon: MPD restarted';
+					sysCmd('killall -s 9 watchdog.sh');
 					sysCmd("systemctl restart mpd");
+					$msg = 'mpdmon: MPD restarted';
 					$sock = openMpdSock('localhost', 6600); // 6 x .5sec retries
 					$msg .= $sock == false ? ', connection refused' : ', accepting connections';
 					if ($sock !== false && $resumePlay == 'Yes') {
 						$msg .= ', play resumed';
 						sysCmd('mpc play');
 					}
+					sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
 					workerLog($msg);
 					$msgCount = 0;
 				}
