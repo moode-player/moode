@@ -71,7 +71,7 @@ pcntl_signal(SIGTSTP, SIG_IGN);
 pcntl_signal(SIGTTOU, SIG_IGN);
 pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
-workerLog('worker: Daemonize:     Complete');
+workerLog('worker: Daemonize:     complete');
 
 // CRITICAL: Check for userid
 $userId = getUserID();
@@ -95,7 +95,7 @@ if ($userId != NO_USERID_DEFINED) {
 		}
 	}
 	if ($linuxStartupComplete === true) {
-		workerLog('worker: Linux startup: Complete');
+		workerLog('worker: Linux startup: complete');
 	} else {
 		$logMsg = 'worker: CRITICAL ERROR: Linux startup failed to complete after waiting ' . ($maxLoops * $sleepTime) . ' seconds';
 		workerLog($logMsg);
@@ -117,23 +117,33 @@ if ($userId != NO_USERID_DEFINED) {
 	}
 }
 
-// Prune session vars that have been removed
+// Delete hidden MacOS dot files from boot partition
+if (file_exists(BOOT_DIR . '/.fseventsd')) {
+	sysCmd('rm -rf ' . BOOT_DIR . '/.fseventsd');
+	sysCmd('rm -rf ' . BOOT_DIR . '/.Spotlight-V100');
+	workerLog('worker: Boot folder:   cleaned');
+} else {
+	workerLog('worker: Boot folder:   ok');
+}
+// Delete embedded \r from cfg_radio table (bugfix)
+$result = sqlQuery("SELECT count() FROM cfg_radio WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
+if ($result[0]['count()'] > 0) {
+	sqlQuery("UPDATE cfg_radio SET monitor = 'No' WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
+	workerLog('worker: Radio table:   cleaned (' . $result[0]['count()'] . ')');
+} else {
+	workerLog('worker: Radio table:   ok');
+}
+// Delete session vars that have been removed
 $sessionVars = array('usb_auto_updatedb', 'src_action', 'src_mpid', 'adaptive');
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
 }
-
-// Bugfix: Clean embedded \r from cfg_radio table
-$result = sqlQuery("SELECT count() FROM cfg_radio WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
-if ($result[0]['count()'] > 0) {
-	sqlQuery("UPDATE cfg_radio SET monitor = 'No' WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
-	workerLog('worker: Radio table:   Cleaned (' . $result[0]['count()'] . ')');
-}
+workerLog('worker: PHP session:   cleaned');
 
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
 phpSession('load_radio');
-workerLog('worker: PHP Session:   loaded');
+workerLog('worker: PHP session:   loaded');
 
 // Ensure package holds are in effect
 sysCmd('moode-apt-mark hold > /dev/null 2>&1');
