@@ -16,9 +16,10 @@
 ################################################################################
 
 Updates
-- UPD: Add WebUI notification for "Image does not contain a userid" condition
-- UPD: Add current release info to the Software Update section of System Config
-- UPD: Add Jazz de Ville radio stations; Chill, Dance, Groove, Jazz
+- UPD: Add WebUI alert notification for missing userid
+- UPD: Add WebUI first use Welcome notification
+- UPD: Add current release info to System Config
+- UPD: Add Jazz de Ville radio stations; Chill/Dance/Groove/Jazz
 - UPD: Add tag/value exclude option to auto-shuffle
 - UPD: Improve MPD restart process used in Radio stream monitor
 
