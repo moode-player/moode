@@ -75,6 +75,7 @@ function notify(title, message, arg3, arg4 = '') {
         reconnect: 'Connection is being reestablished... ',
         mpd_error: '',
         userid_error: 'The image does not contain a userid.<br><br>',
+        firstuse_welcome: 'Welcome to moOde audio player.<br><br>',
         updater: 'An update is available.<br>',
         viewport: 'VIEWPORT<br>',
         debug: 'DEBUG<br>',

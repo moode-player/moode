@@ -378,9 +378,13 @@ jQuery(document).ready(function($) { 'use strict';
             initializeOSK();
         }
 
-        // First boot check for userid
+        // First boot checks
         if (SESSION.json['user_id'] == NO_USERID_DEFINED) {
+             // No userid defined when image was created
             notify(NOTIFY_TITLE_ERROR, 'userid_error', NOTIFY_MSG_NO_USERID, NOTIFY_DURATION_INFINITE);
+        } else if (SESSION.json['first_use_help'].includes('y')) {
+            // First use welcome notification
+            notify(NOTIFY_TITLE_INFO, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
         }
     });
 

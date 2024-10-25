@@ -39,6 +39,14 @@ const NOTIFY_MSG_NO_USERID = 'Without a userid moOde will not function correctly
     + '<a href="https://github.com/moode-player/docs/blob/main/setup_guide.md#4-imager-tutorial"'
     + ' class="target-blank-link" target="_blank">Imager Tutorial</a>'
     + ' to create a new image with a userid, password and SSH enabled.';
+const NOTIFY_MSG_WELCOME = 'View <span class="context-menu">'
+    + ' <a href="#notarget" data-cmd="quickhelp">Quick help </a></span>'
+    + 'for information on using the WebUI, configuring audio devices and setting up the Library.<br>'
+    + 'Quick help is also available on the Main menu which is accessed '
+    + 'via the "m" icon in the upper right.<br><br>'
+    + ' Read the <a href="https://moodeaudio.org/forum/forumdisplay.php?fid=17"'
+    + ' class="target-blank-link" target="_blank">Release Announcement</a>'
+    + ' for any special instructions or patches for this release.';
 
 // System
 const NO_USERID_DEFINED = 'userid does not exist';
