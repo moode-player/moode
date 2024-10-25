@@ -88,11 +88,6 @@ const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effect
 const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
 const NOTIFY_MSG_LOCALUI_STARTING = 'Local display is starting...';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
-const NOTIFY_MSG_NO_USERID = 'Without a userid moOde will not function correctly.<br><br>'
-    . 'Follow the '
-    . '<a href="https://github.com/moode-player/docs/blob/main/setup_guide.md#4-imager-tutorial"'
-    . ' class="target-blank-link" target="_blank">Imager Tutorial</a>'
-    . ' to create a new image with a userid, password and SSH enabled.';
 // Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';
