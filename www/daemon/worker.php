@@ -1162,6 +1162,12 @@ $param = $_SESSION['touchscn'] == '0' ? ' -- -nocursor' : '';
 sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
 // - Screen blank interval
 sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+// - Disable GPU
+if (!isset($_SESSION['disable_gpu_chromium'])) {
+	$_SESSION['disable_gpu_chromium'] = 'off';
+}
+$value = $_SESSION['disable_gpu_chromium'] == 'on' ? ' --disable-gpu' : '';
+sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
 // - Backlight brightness
 if (!isset($_SESSION['rpi_backlight'])) {
 	$_SESSION['rpi_backlight'] = 'off';
@@ -1169,6 +1175,7 @@ if (!isset($_SESSION['rpi_backlight'])) {
 	sysCmd('/bin/su -c "echo '. $_SESSION['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 }
 sysCmd('systemctl daemon-reload');
+
 // Start local display
 if ($_SESSION['localui'] == '1') {
 	startLocalUI();
@@ -1182,9 +1189,6 @@ if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 }
 workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
 // Disable GPU Chromium
-if (!isset($_SESSION['disable_gpu_chromium'])) {
-	$_SESSION['disable_gpu_chromium'] = 'off';
-}
 workerLog('worker: Disable GPU:     ' . $_SESSION['disable_gpu_chromium']);
 // On-screen keyboard ('Enable' is the text on the button)
 if (!isset($_SESSION['on_screen_kbd'])) {
