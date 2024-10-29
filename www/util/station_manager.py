@@ -421,7 +421,7 @@ Version=2"""
     def update_query_station_to_db(self, station, fields_db):
         values = []
         for field in fields_db:
-            if field in station.keys() and field !='type':
+            if field in station.keys() and field !='type' and field !='monitor':
                 values.append("{}='{}'".format( field, self.escape(station[field]) if station[field] != "NULL" else ""))
 
         query = 'UPDATE cfg_radio SET {} WHERE name="{}";'.format(', '.join(values), station['name'] )
@@ -646,7 +646,7 @@ Version=2"""
         settings_differs = []
         for field in fields:
             #TODO: should be handle the content of type better ?
-            if field not in ['id', 'type']:
+            if field not in ['id', 'type', 'monitor']:
                 if data_db[field] != data_bu[field]:
                     settings_differs.append(field)
         return settings_differs
