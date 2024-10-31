@@ -2367,8 +2367,8 @@ function runQueuedJob() {
 			break;
 		// mpd-config jobs
 		case 'mpdrestart':
-			sysCmd('mpc stop');
-			sysCmd('systemctl restart mpd');
+			sysCmd('killall -s 9 mpd');
+			sysCmd('systemctl start mpd');
 			break;
 		case 'mpdcfg':
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
