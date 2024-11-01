@@ -146,7 +146,7 @@ function getIPv4AddressBlock($cfgNetwork) {
 		$data .= "address1=" . $cfgNetwork['ipaddr'] . '/' . CIDR_TABLE[$cfgNetwork['netmask']] . "\n";
 		$data .= "gateway=" . $cfgNetwork['gateway'] . "\n";
 		$data .= "dns=" . $cfgNetwork['pridns'] .
-			(empty($cfgNetwork['secdns']) ? '' : ',' . $cfgNetwork['secdns']) . "\n";
+			(empty($cfgNetwork['secdns']) ? ';' : ';' . $cfgNetwork['secdns']) . ";\n";
 	}
 
 	return $data;
