@@ -18,6 +18,7 @@
 Bug fixes
 - FIX: In-place update removes --disable-gpu in .xinitrc if present
 - FIX: In-place update resets cfg_radio monitor field  to 'No'
+- FIX: Resolv.conf file not being updated when using static IP address
 
 ################################################################################
 #
