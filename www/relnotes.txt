@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+Updates
+- UPD: Bump to librespot 0.6.0
+
 Bug fixes
 - FIX: In-place update removes --disable-gpu in .xinitrc if present
 - FIX: In-place update resets cfg_radio monitor field  to 'No'
