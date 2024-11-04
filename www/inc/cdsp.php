@@ -10,6 +10,7 @@
 */
 
 require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/audio.php';
 
 const CDSP_CHECK_VALID = 1;
 const CDSP_CHECK_INVALID = 0;
