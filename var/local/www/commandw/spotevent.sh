@@ -6,6 +6,7 @@
 
 LOGFILE="/var/log/moode_spotevent.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
+SPOTMETA_FILE="/var/local/www/spotmeta.txt"
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
@@ -19,6 +20,7 @@ debug_log () {
 PLAYER_EVENTS=(
 session_connected
 session_disconnected
+track_changed
 )
 
 MATCH=0
@@ -82,7 +84,6 @@ if [[ $PLAYER_EVENT == "session_connected" ]]; then
 	fi
 fi
 
-#if [[ $PLAYER_EVENT == "paused" ]] || [[ $PLAYER_EVENT == "stopped" ]]; then
 if [[ $PLAYER_EVENT == "session_disconnected" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='spotactive'")
 
@@ -110,4 +111,16 @@ if [[ $PLAYER_EVENT == "session_disconnected" ]]; then
 	if [[ $RSMAFTERSPOT == "Yes" ]]; then
 		/usr/bin/mpc play > /dev/null
 	fi
+fi
+
+if [[ $PLAYER_EVENT == "track_changed" ]]; then
+	COVER=$(echo $COVERS | cut -d " " -f 1)
+	#ARTIST=$(echo $ARTISTS | cut -d " " -f 1) should be \n delimited
+	#ARTISTS=$(echo "$ARTISTS" | tr '\n' ', ') should be \n delimited
+	METADATA=$NAME";"$ARTISTS";"$ALBUM";"$DURATION_MS";"$COVER
+	echo -e $ARTISTS > /home/pi/tim.txt
+	echo -e $ALBUM_ARTISTS >> /home/pi/tim.txt
+	echo -e $COVERS >> /home/pi/tim.txt
+	echo -e $METADATA > $SPOTMETA_FILE
+	/var/www/util/send-fecmd.php "update_spotmeta,$METADATA"
 fi

@@ -553,7 +553,11 @@ function engineCmd() {
                         '<span id="inpsrc-msg-text">Spotify Active</span>' +
                         '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
                         receiversBtn() +
-                        audioInfoBtn());
+                        audioInfoBtn() +
+                        '<span id="spotify-metadata"></span>');
+                    break;
+                case 'update_spotmeta':
+                    updateSpotmeta(cmd[1]);
                     break;
                 case 'slactive1':
                 case 'slactive0':
@@ -758,6 +762,19 @@ function inpSrcIndicator(cmd, msgText) {
 		$('#inpsrc-msg').html('');
 		$('#inpsrc-indicator').css('display', '');
 	}
+}
+
+function updateSpotmeta(data) {
+    // data = title;artists;album;duration;coverurl
+    console.log(data);
+    var metadata = data.split(';');
+    $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + metadata[4] + '">');
+    $('#inpsrc-backdrop').css('filter', 'blur(0px)');
+    $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
+    $('#spotify-metadata').html(
+        metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]) / 1000)) + ')' +
+        '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
+    );
 }
 
 // Show/hide CoverView screen saver
@@ -1326,7 +1343,12 @@ function renderUI() {
             '<span id="inpsrc-msg-text">Spotify Active</span>' +
             '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
             receiversBtn() +
-            audioInfoBtn());
+            audioInfoBtn() +
+            '<span id="spotify-metadata"></span>');
+
+            $.getJSON('command/renderer.php?cmd=get_spotmeta', function(data) {
+                updateSpotmeta(data);
+            });
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {

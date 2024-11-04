@@ -26,6 +26,8 @@ const MPD_CONF = '/etc/mpd.conf';
 const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
+// Spotify Connect
+const SPOTMETA_FILE = '/var/local/www/spotmeta.txt';
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
