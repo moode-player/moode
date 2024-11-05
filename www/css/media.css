@@ -123,6 +123,7 @@ body {
 
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:3.5em;}
+	#inpsrc-spotmeta {margin-bottom:3em;}
 
 	/* Shutdown, Restart, Reconnect */
 	.reconnect-btn {font-size:2em;}

@@ -97,7 +97,7 @@ html {background-color:inherit;}
 /* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 /* Spotify backdrop cover and metadata */
-.inpsrc-spotmeta-backdrop {min-height:100vh;}
+.inpsrc-spotmeta-backdrop {height:100vh;}
 #inpsrc-spotmeta {position:absolute;width:100%;bottom:0;margin-bottom:.5em;display:block;font-size:.75em;font-weight:500;background-color:rgba(64,64,64,.5);}
 #inpsrc-spotmeta span {font-size:.75em;font-weight:400;}
 /* Buttons */
