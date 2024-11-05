@@ -30,6 +30,12 @@
 		<li><span> Artist and Album Artist</span>
 			<p>When the Library is generated it creates a virtual Artist tag that includes Artists, Performers and Conductor, and a virtual Album Artist tag that is set to Album Artist if it exists otherwise to the first element of the virtual Artist tag. The Library section of Preferences contains settings for specifying how to populate the Artist column in Tag view.</p>
 		</li>
+		<li><span> Date tags</span>
+			<p>The date tag that is used is determined by the following priority: OriginalDate, OriginalReleaseDate, Date. The format for the value must be YYYY or YYYYMMDD otherwise any Library sort involving year will not be correct. The year YYYY portion of the date is used for display.</p>
+		</li>
+		<li><span> Special AlbumDate tag</span>
+			<p>The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the the sort order. This is to support correct sort order for multiple Albums released by the same artist within a year.</p>
+		</li>
 	</ul>
 </div>
 <h5>Searching the Library</h5>
