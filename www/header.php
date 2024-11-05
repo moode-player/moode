@@ -143,6 +143,7 @@
     <div id="inpsrc-indicator" class="inpsrc">
         <div id="inpsrc-backdrop"></div>
         <div id="inpsrc-msg"></div>
+        <div id="inpsrc-spotmeta"></div>
     </div>
 
 	<!-- HEADER -->

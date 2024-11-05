@@ -96,9 +96,10 @@ html {background-color:inherit;}
 #inpsrc-msg-text {display:block;font-size:1em;margin-bottom:0.5em;}
 /* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
-/* Spotify metadata */
-#spotify-metadata {display:block;margin-top:.5em;font-size:1em;font-weight:500;background-color:rgba(128,128,128,0.5);}
-#spotify-metadata span {font-size:.75em;font-weight:400;}
+/* Spotify backdrop cover and metadata */
+.inpsrc-spotmeta-backdrop {min-height:100vh;}
+#inpsrc-spotmeta {position:absolute;width:100%;bottom:0;margin-bottom:.5em;display:block;font-size:.75em;font-weight:500;background-color:rgba(64,64,64,.5);}
+#inpsrc-spotmeta span {font-size:.75em;font-weight:400;}
 /* Buttons */
 .audioinfo-renderer,
 .configure-renderer,

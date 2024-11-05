@@ -553,8 +553,8 @@ function engineCmd() {
                         '<span id="inpsrc-msg-text">Spotify Active</span>' +
                         '<button class="btn disconnect-renderer" data-job="spotifysvc">Disconnect</button>' +
                         receiversBtn() +
-                        audioInfoBtn() +
-                        '<span id="spotify-metadata"></span>');
+                        audioInfoBtn());
+                        //'<span id="spotify-metadata"></span>');
                     break;
                 case 'update_spotmeta':
                     updateSpotmeta(cmd[1]);
@@ -766,12 +766,12 @@ function inpSrcIndicator(cmd, msgText) {
 
 function updateSpotmeta(data) {
     // data = title;artists;album;duration;coverurl
-    console.log(data);
+    //DEBUG:console.log(data);
     var metadata = data.split(';');
-    $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + metadata[4] + '">');
+    $('#inpsrc-backdrop').html('<img class="inpsrc-spotmeta-backdrop" ' + 'src="' + metadata[4] + '">');
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
-    $('#spotify-metadata').html(
+    $('#inpsrc-spotmeta').html(
         metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]) / 1000)) + ')' +
         '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
     );
