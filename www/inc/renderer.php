@@ -105,13 +105,6 @@ function startSpotify() {
 	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
 	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
 
-	// Access point port
-	/*DELETE:
-	// v0.4.x: Force AP fallback for by specifying a random port number other than 80, 443 or 4070
-	// v0.5.x: This should be '' otherwise librespot crashes
-	$ap_port = $cfgSpotify['ap_fallback'] == 'Yes' ? ' --ap-port 13561 ' : '';
-	*/
-
 	// Options
 	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . $cfgSpotify['dither'];
 	$volume_normalization = $cfgSpotify['volume_normalization'] == 'Yes' ?
@@ -125,11 +118,6 @@ function startSpotify() {
 		' --normalisation-knee ' . $cfgSpotify['normalization_knee']
 		: '';
 
-	/*DELETE:
-	// v0.4.x: Requires just --autoplay
-	// v0.5.x: Requires --autoplay on/off, if not specified, uses the client setting
-	$autoplay = $cfgSpotify['autoplay'] == 'Yes' ? $cfgSpotify['ap_fallback'] == 'Yes' ? ' --autoplay' : ' --autoplay on' : '';
-	*/
 	$autoplay = $cfgSpotify['autoplay'] == 'Yes' ? ' --autoplay on' : '';
 
 	// Logging
@@ -140,7 +128,6 @@ function startSpotify() {
 		' --name "' . $_SESSION['spotifyname'] . '"' .
 		' --bitrate ' . $cfgSpotify['bitrate'] .
 		' --format ' . $cfgSpotify['format'] .
-		//DELETE:$ap_port .
 		$dither .
 		' --mixer softvol' .
 		' --initial-volume ' . $cfgSpotify['initial_volume'] .
