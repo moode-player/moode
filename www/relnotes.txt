@@ -17,7 +17,9 @@
 
 Updates
 - UPD: Bump to librespot 0.6.0
-- UPD: Display cover art and metadata for Spotify Connect
+- UPD: Add cover art and metadata display for Spotify Connect
+- UPD: Add section to Quick help explaining date tags in the Library
+- UPD: Remove AP fallback option for Spotify Connect (not needed for >= v0.5.x)
 
 Bug fixes
 - FIX: In-place update removes --disable-gpu in .xinitrc if present
