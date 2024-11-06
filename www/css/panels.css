@@ -100,7 +100,17 @@ html {background-color:inherit;}
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 /* Spotify backdrop cover and metadata */
 .inpsrc-spotmeta-backdrop {height:100vh;}
-#inpsrc-spotmeta {position:absolute;width:100%;bottom:0;padding-bottom:.5em;display:block;font-size:.75em;font-weight:500;background-color:rgba(64,64,64,.5);}
+#inpsrc-spotmeta {
+	position:absolute;
+	display:block;
+	width:100%;
+	bottom:0;
+	padding-bottom:.5em;
+	padding-top:.25em;
+	font-size:.75em;
+	font-weight:500;
+	background:linear-gradient(to right, rgba(64,64,64,0.5), rgba(0,0,0,1) 50%, rgba(64,64,64,.5));
+}
 #inpsrc-spotmeta span {font-size:.75em;font-weight:400;}
 /* Buttons */
 .audioinfo-renderer,
