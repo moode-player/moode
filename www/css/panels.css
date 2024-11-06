@@ -108,6 +108,8 @@ html {background-color:inherit;}
 .disconnect-renderer,
 .turnoff-renderer,
 .turnoff-receiver {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
+.spotify-renderer {border-radius:5rem;background-color:transparent;padding:1em 0;font-size:.6em;width:3em;color:inherit;}
+
  /* Mask hover effect */
 .audioinfo-renderer:hover,
 .configure-renderer:hover,
