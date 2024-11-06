@@ -123,10 +123,9 @@ body {
 
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:3.5em;}
-	#inpsrc-msg {top:75%}
+	#inpsrc-msg {top:70%;width:100%}
 	#inpsrc-spotmeta {position:relative;margin-bottom:3em;}
 	.inpsrc-spotmeta-backdrop {height:auto;}
-
 
 	/* Shutdown, Restart, Reconnect */
 	.reconnect-btn {font-size:2em;}

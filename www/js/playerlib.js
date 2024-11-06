@@ -765,6 +765,8 @@ function inpSrcIndicator(cmd, msgText) {
 }
 
 function updateSpotmeta(data) {
+    $('#inpsrc-msg').removeClass('inpsrc-msg-default');
+    $('#inpsrc-msg').addClass('inpsrc-msg-spotify');
     // data = title;artists;album;duration;coverurl
     //DEBUG:console.log(data);
     var metadata = data.split(';');
