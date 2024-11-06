@@ -734,6 +734,9 @@ function engineCmdLite() {
 
 function inpSrcIndicator(cmd, msgText) {
 	UI.currentFile = 'blank';
+    $('#inpsrc-msg').removeClass('inpsrc-msg-spotify');
+    $('#inpsrc-msg').addClass('inpsrc-msg-default');
+    $('#inpsrc-spotmeta').html('');
 
     // Set custom backdrop (if any)
     if (SESSION.json['renderer_backdrop'] == 'Yes') {
