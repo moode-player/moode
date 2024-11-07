@@ -144,6 +144,7 @@
         <div id="inpsrc-backdrop"></div>
         <div id="inpsrc-msg" class="inpsrc-msg-default"></div>
         <div id="inpsrc-spotmeta"></div>
+        <div id="inpsrc-spotify-refresh"></div>
     </div>
 
 	<!-- HEADER -->

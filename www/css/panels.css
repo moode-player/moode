@@ -112,6 +112,8 @@ html {background-color:inherit;}
 	background:linear-gradient(to right, rgba(64,64,64,0.5), rgba(0,0,0,1) 50%, rgba(64,64,64,.5));
 }
 #inpsrc-spotmeta span {font-size:.75em;font-weight:400;}
+#inpsrc-spotify-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;}
+
 /* Buttons */
 .audioinfo-renderer,
 .configure-renderer,

@@ -553,7 +553,8 @@ function engineCmd() {
                         '<span id="inpsrc-msg-text">Spotify Active</span>' +
                         '<button class="btn spotify-renderer disconnect-spotify" data-job="spotifysvc"><i class="fa-solid fa-sharp fa-xmark"></i></button>' +
                         receiversBtn(cmd[0]) +
-                        audioInfoBtn(cmd[0]));
+                        audioInfoBtn(cmd[0])
+                    );
                     break;
                 case 'update_spotmeta':
                     updateSpotmeta(cmd[1]);
@@ -770,16 +771,20 @@ function updateSpotmeta(data) {
     $('#inpsrc-msg').removeClass('inpsrc-msg-default');
     $('#inpsrc-msg').addClass('inpsrc-msg-spotify');
     $('#inpsrc-msg-text').text('');
+
+    $('#inpsrc-backdrop').css('filter', 'blur(0px)');
+    $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
+
     // data = title;artists;album;duration;coverurl
     //DEBUG:console.log(data);
     var metadata = data.split(';');
     $('#inpsrc-backdrop').html('<img class="inpsrc-spotmeta-backdrop" ' + 'src="' + metadata[4] + '">');
-    $('#inpsrc-backdrop').css('filter', 'blur(0px)');
-    $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
     $('#inpsrc-spotmeta').html(
         metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]) / 1000)) + ')' +
         '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
     );
+
+    $('#inpsrc-spotify-refresh').html('<a class="btn spotify-renderer" href="javascript:location.reload(true); void 0"><i class="fa-solid fa-sharp fa-redo"></i></a>');
 }
 
 // Show/hide CoverView screen saver
@@ -1345,11 +1350,11 @@ function renderUI() {
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
             inpSrcIndicator('spotactive1',
-            '<span id="inpsrc-msg-text">Spotify Active</span>' +
-            '<button class="btn spotify-renderer disconnect-spotify" data-job="spotifysvc"><i class="fa-solid fa-sharp fa-xmark"></i></button>' +
-            receiversBtn('spotactive1') +
-            audioInfoBtn('spotactive1') +
-            '<span id="spotify-metadata"></span>');
+                '<span id="inpsrc-msg-text">Spotify Active</span>' +
+                '<button class="btn spotify-renderer disconnect-spotify" data-job="spotifysvc"><i class="fa-solid fa-sharp fa-xmark"></i></button>' +
+                receiversBtn('spotactive1') +
+                audioInfoBtn('spotactive1')
+            );
 
             $.getJSON('command/renderer.php?cmd=get_spotmeta', function(data) {
                 updateSpotmeta(data);
@@ -1402,7 +1407,7 @@ function receiversBtn(rendererActive = '') {
     // - multiroom_rx_modal_limited (just the on/off checkbox)
     if (SESSION.json['multiroom_tx'] == 'On') {
         if (rendererActive == 'spotactive1') {
-            var html = '<span class="context-menu"><a class="btn spotify-renderer" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-solid fa-sharp fa-speakers"></i></a></span>';
+            var html = '<span class="context-menu"><a class="btn spotify-renderer" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
         } else {
             var html = '<br><span class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal">Receivers</a></span>';
         }
@@ -1415,7 +1420,7 @@ function receiversBtn(rendererActive = '') {
 // Audio info
 function audioInfoBtn(rendererActive = '') {
     if (rendererActive == 'spotactive1') {
-        var html = '<span><a class="btn spotify-renderer" href="javascript:audioInfoPlayback()"><i class="fa-solid fa-sharp fa-music"></i></a></span>';
+        var html = '<span><a class="btn spotify-renderer" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else {
         var html = '<br><span><a class="btn audioinfo-renderer" href="javascript:audioInfoPlayback()">Audio info</a></span>';
     }
