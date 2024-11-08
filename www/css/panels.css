@@ -93,8 +93,10 @@ html {background-color:inherit;}
 #inpsrc-msg {animation:fadeIn var(--fadein-rate);}
 .inpsrc-msg-default {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
 .inpsrc-msg-spotify {position:absolute;bottom:0;z-index:9999;}
-#inpsrc-msg a {color:#eee;}
-#inpsrc-msg i {font-size:1.5em;}
+#inpsrc-msg a,
+#inpsrc-spotmeta-refresh a {color:#eee;}
+#inpsrc-msg i,
+#inpsrc-spotmeta-refresh i {font-size:1.5em;}
 #inpsrc-msg-text {display:block;font-size:1em;margin-bottom:0.5em;}
 /* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
@@ -112,7 +114,7 @@ html {background-color:inherit;}
 	background:linear-gradient(to right, rgba(64,64,64,0.5), rgba(0,0,0,1) 50%, rgba(64,64,64,.5));
 }
 #inpsrc-spotmeta span {font-size:.75em;font-weight:400;}
-#inpsrc-spotify-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;}
+#inpsrc-spotmeta-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;}
 
 /* Buttons */
 .audioinfo-renderer,
