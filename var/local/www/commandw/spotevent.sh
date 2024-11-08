@@ -21,8 +21,6 @@ PLAYER_EVENTS=(
 session_connected
 session_disconnected
 track_changed
-playing
-paused
 )
 
 MATCH=0
