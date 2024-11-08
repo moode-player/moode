@@ -769,6 +769,11 @@ function inpSrcIndicator(cmd, msgText) {
 	}
 }
 
+function refreshSpotmeta() {
+    $.getJSON('command/renderer.php?cmd=get_spotmeta', function(data) {
+        updateSpotmeta(data);
+    });
+}
 function updateSpotmeta(data) {
     $('#inpsrc-msg').removeClass('inpsrc-msg-default');
     $('#inpsrc-msg').addClass('inpsrc-msg-spotify');
@@ -787,7 +792,7 @@ function updateSpotmeta(data) {
     );
 
     $('#inpsrc-spotify-refresh').html('');
-    $('#inpsrc-spotmeta-refresh').html('<a class="btn spotify-renderer" href="javascript:location.reload(true); void 0"><i class="fa-regular fa-sharp fa-redo"></i></a>');
+    $('#inpsrc-spotmeta-refresh').html('<a class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>');
 }
 
 // Show/hide CoverView screen saver
@@ -1359,9 +1364,7 @@ function renderUI() {
                 audioInfoBtn('spotactive1')
             );
 
-            $.getJSON('command/renderer.php?cmd=get_spotmeta', function(data) {
-                updateSpotmeta(data);
-            });
+            refreshSpotmeta();
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
