@@ -21,6 +21,8 @@ PLAYER_EVENTS=(
 session_connected
 session_disconnected
 track_changed
+playing
+paused
 )
 
 MATCH=0
@@ -118,11 +120,6 @@ if [[ $PLAYER_EVENT == "track_changed" ]]; then
 	#ARTIST=$(echo $ARTISTS | cut -d " " -f 1) should be \n delimited
 	#ARTISTS=$(echo "$ARTISTS" | tr '\n' ', ') should be \n delimited
 	METADATA=$NAME";"$ARTISTS";"$ALBUM";"$DURATION_MS";"$COVER
-	# DEBUG
-	echo -e $ARTISTS > /home/pi/tim.txt
-	echo -e $ALBUM_ARTISTS >> /home/pi/tim.txt
-	echo -e $COVERS >> /home/pi/tim.txt
-	# DEBUG
 	echo -e $METADATA > $SPOTMETA_FILE
 	/var/www/util/send-fecmd.php "update_spotmeta,$METADATA"
 fi
