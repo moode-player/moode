@@ -68,6 +68,7 @@ $currentSettings['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
 $currentSettings['hdmi_cec'] = $_SESSION['hdmi_cec'];
 $currentSettings['hdmi_enable_4kp60'] = $_SESSION['hdmi_enable_4kp60'];
 $currentSettings['disable_gpu_chromium'] = $_SESSION['disable_gpu_chromium'];
+$currentSettings['rpi_scntype'] = $_SESSION['rpi_scntype'];
 $currentSettings['rpi_backlight'] = $_SESSION['rpi_backlight'];
 $currentSettings['rotaryenc'] = $_SESSION['rotaryenc'];
 

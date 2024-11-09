@@ -42,3 +42,4 @@ dtparam=audio=on
 # Pi Touch
 #dtoverlay=rpi-backlight
 #dtoverlay=vc4-kms-dsi-7inch,invx,invy
+#dtoverlay=vc4-kms-dsi-ili9881-7inch,invx,invy

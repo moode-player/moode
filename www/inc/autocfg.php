@@ -585,6 +585,7 @@ function autoConfigSettings() {
 		}],
 		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
 		'Pi 7inch touch',
+		['requires' => ['rpi_scntype'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['rpi_backlight'], 'handler' => function($values) {
 			$_SESSION['rpi_backlight'] = $values['rpi_backlight'];
 			$value = $values['rpi_backlight'] == 'on' ? '' : '#';

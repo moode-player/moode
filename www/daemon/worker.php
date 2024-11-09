@@ -1168,6 +1168,10 @@ if (!isset($_SESSION['disable_gpu_chromium'])) {
 }
 $value = $_SESSION['disable_gpu_chromium'] == 'on' ? ' --disable-gpu' : '';
 sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
+// Screen type (Pi Touch, Pi Touch 2)
+if (!isset($_SESSION['rpi_scntype'])) {
+	$_SESSION['rpi_scntype'] = '1';
+}
 // - Backlight brightness
 if (!isset($_SESSION['rpi_backlight'])) {
 	$_SESSION['rpi_backlight'] = 'off';
@@ -1182,6 +1186,7 @@ if ($_SESSION['localui'] == '1') {
 }
 workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'off'));
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
+workerLog('worker: Rpi scntype:     ' . $_SESSION['rpi_scntype']);
 workerLog('worker: Rpi backlight:   ' . $_SESSION['rpi_backlight']);
 // HDMI enable 4k 60Hz (Pi-4 only)
 if (!isset($_SESSION['hdmi_enable_4kp60'])) {
@@ -3085,8 +3090,12 @@ function runQueuedJob() {
 			// No solution with KMS driver
 			break;
 		case 'scnrotate':
-			$value = $_SESSION['w_queueargs']; // 0 or 180
-			updBootConfigTxt('upd_rotate_screen', $value);
+			$value = $_SESSION['w_queueargs']; // 0|180 for touch, 0|90|180|270 for touch 2
+			if ($_SESSION['rpi_scntype'] == '1') {
+				updBootConfigTxt('upd_rotate_screen', $value);
+			} else {
+				updBootConfigTxt('upd_rotate_screen2', $value);
+			}
 			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio_buttons.py');

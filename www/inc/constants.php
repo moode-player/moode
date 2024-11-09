@@ -134,8 +134,10 @@ const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
 const CFG_DISPLAY_AUTODETECT = 'display_auto_detect=1';
 const CFG_PITOUCH_INVERTXY = 'vc4-kms-dsi-7inch,invx,invy';
+const CFG_PITOUCH2_INVERTXY = 'vc4-kms-dsi-ili9881-7inch,invx,invy';
 // Boot cmdline.txt managed params
 const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
+const CFG_PITOUCH2_ROTATE_DEG = 'video=DSI-1:1280x720@60,rotate=';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php

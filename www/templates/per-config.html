@@ -130,7 +130,19 @@
 		</div>
 
 		<div class="control-group">
-			<legend>Pi 7 inch Touch</legend>
+			<legend>Pi 7 inch Touch/Touch2</legend>
+
+			<label class="control-label" for="rpi-scntype">Screen type</label>
+			<div class="controls">
+				<select id="rpi-scntype" class="config-select-large" name="rpi_scntype" onchange="autoClick('#btn-set-rpi-scntype');" $_rpi_scntype_disable>
+					$_select[rpi_scntype]
+				</select>
+				<button id="btn-set-rpi-scntype" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rpi_scntype" value="novalue" $_rpi_scntype_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rpi-scntype" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-rpi-scntype" class="config-help-info">
+					To change the screen type set "Rotate screen" to 0.
+                </span>
+			</div>
 
 			<label class="control-label">Backlight</label>
 			<div class="controls">

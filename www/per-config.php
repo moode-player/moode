@@ -78,6 +78,12 @@ if (isset($_POST['update_disable_gpu_chromium'])) {
     }
 }
 
+if (isset($_POST['update_rpi_scntype'])) {
+    if (isset($_POST['rpi_scntype']) && $_POST['rpi_scntype'] != $_SESSION['rpi_scntype']) {
+		$_SESSION['rpi_scntype'] = $_POST['rpi_scntype'];
+    }
+}
+
 if (isset($_POST['update_rpi_backlight'])) {
     if (isset($_POST['rpi_backlight']) && $_POST['rpi_backlight'] != $_SESSION['rpi_backlight']) {
         $_SESSION['rpi_backlight'] = $_POST['rpi_backlight'];
@@ -160,9 +166,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	if ($_SESSION['localui'] == '1') {
 		$_ctl_disabled = '';
 		$_link_disabled = '';
+        $_rpi_scntype_disable = $_SESSION['scnrotate'] == '0' ? '' : 'disabled';
 	} else {
 		$_ctl_disabled = 'disabled';
 		$_link_disabled = 'onclick="return false;"';
+        $_rpi_scntype_disable = 'disabled';
 	}
     $piModel = substr($_SESSION['hdwrrev'], 3, 1);
     $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
@@ -207,6 +215,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
+    $_select['rpi_scntype'] .= "<option value=\"1\" " . (($_SESSION['rpi_scntype'] == '1') ? "selected" : "") . ">Pi Touch</option>\n";
+    $_select['rpi_scntype'] .= "<option value=\"2\" " . (($_SESSION['rpi_scntype'] == '2') ? "selected" : "") . ">Pi Touch 2</option>\n";
+
     $autoClick = " onchange=\"autoClick('#btn-set-rpi-backlight');\"";
 	$_select['rpi_backlight_on']  .= "<input type=\"radio\" name=\"rpi_backlight\" id=\"toggle-rpi-backlight-1\" value=\"on\" " . (($_SESSION['rpi_backlight'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['rpi_backlight_off'] .= "<input type=\"radio\" name=\"rpi_backlight\" id=\"toggle-rpi-backlight-2\" value=\"off\" " . (($_SESSION['rpi_backlight'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -217,8 +228,15 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	//$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
 	//$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
 
-	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
-	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
+    if ($_SESSION['rpi_scntype'] == '1') {
+        $_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
+        $_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
+    } else {
+        $_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
+    	$_select['scnrotate'] .= "<option value=\"90\" " . (($_SESSION['scnrotate'] == '90') ? "selected" : "") . ">90 Deg</option>\n";
+        $_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
+        $_select['scnrotate'] .= "<option value=\"270\" " . (($_SESSION['scnrotate'] == '270') ? "selected" : "") . ">270 Deg</option>\n";
+    }
 
 	$_coverview_onoff = $_SESSION['toggle_coverview'] == '-off' ? 'Off' : 'On';
 } else {
