@@ -11,7 +11,12 @@ xset -dpms
 xset s 600
 
 # Capture screen size
-SCREENSIZE="$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')"
+fgrep "#dtoverlay=vc4-kms-v3d" /boot/firmware/config.txt
+if [ $? -ne 0 ]; then
+    SCREENSIZE="$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')"
+else
+    SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
+fi
 
 # Clear browser cache
 $(/var/www/util/sysutil.sh clearbrcache)
