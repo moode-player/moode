@@ -554,7 +554,7 @@ function engineCmd() {
                         '<button class="btn spotify-renderer disconnect-spotify" data-job="spotifysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                         receiversBtn(cmd[0]) +
                         audioInfoBtn(cmd[0]) +
-                        '<a id="inpsrc-spotify-refresh" class="btn spotify-renderer" href="javascript:location.reload(true); void 0"><i class="fa-regular fa-sharp fa-redo"></i></a>'
+                        '<a id="inpsrc-spotify-refresh" class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
                     );
                     $('#inpsrc-spotmeta-refresh').html('');
                     break;
