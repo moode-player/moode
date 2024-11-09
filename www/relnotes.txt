@@ -19,6 +19,7 @@ Updates
 - UPD: Bump to librespot 0.6.0
 - UPD: Add cover art and metadata display for Spotify Connect
 - UPD: Add section to Quick help explaining date tags in the Library
+- UPD: Add support for Pi 7 inch Touch screen 2
 - UPD: Remove AP fallback option for Spotify Connect (not needed for >= v0.5.x)
 
 Bug fixes
@@ -26,6 +27,7 @@ Bug fixes
 - FIX: In-place update resets cfg_radio monitor field  to 'No'
 - FIX: Resolv.conf file not being updated when using static IP address
 - FIX: Call to getAlsaIEC958Device() in multiroom.php aborts script
+- FIX: Bad screensize reported in xinitrc when using firmware driver
 
 ################################################################################
 #
