@@ -28,6 +28,7 @@ Bug fixes
 - FIX: Resolv.conf file not being updated when using static IP address
 - FIX: Call to getAlsaIEC958Device() in multiroom.php aborts script
 - FIX: Bad screensize reported in xinitrc when using firmware driver
+- FIX: GPIO buttons crashing when GPIO 2 or 3 is used
 
 ################################################################################
 #
