@@ -29,6 +29,7 @@ Bug fixes
 - FIX: Call to getAlsaIEC958Device() in multiroom.php aborts script
 - FIX: Bad screensize reported in xinitrc when using firmware driver
 - FIX: GPIO buttons crashing when GPIO 2 or 3 is used
+- FIX: Wrong ALSA cardnum assigned to Multiroom sender during startup
 
 ################################################################################
 #
