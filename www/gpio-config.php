@@ -13,10 +13,13 @@ phpSession('open_ro');
 
 chkVariables($_POST['config']);
 
+$pinsWithFixedPullUp = array('2', '3');
+
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach (array_keys($_POST['config']) as $key) {
-		if ($_POST['config'][$key]['pin'] <= '3') {
-			$_POST['config'][$key]['pull'] = '22'; // Pins 2,3 have fixed pull-up resistors
+		if (in_array($_POST['config'][$key]['pin'], $pinsWithFixedPullUp)) {
+			// Pins 2,3 have fixed pull-up resistors
+			$_POST['config'][$key]['pull'] = '22';
 		}
 		sqlUpdate('cfg_gpio', $dbh, $key, $_POST['config'][$key]);
 	}
