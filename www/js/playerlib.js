@@ -791,8 +791,12 @@ function updateSpotmeta(data) {
         '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
     );
 
-    $('#inpsrc-spotify-refresh').html('');
-    $('#inpsrc-spotmeta-refresh').html('<a class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>');
+    if (window.matchMedia("(orientation: portrait)").matches) {
+        $('#inpsrc-spotmeta-refresh').html('');
+    } else {
+        $('#inpsrc-spotify-refresh').html('');
+        $('#inpsrc-spotmeta-refresh').html('<a class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>');
+    }
 }
 
 // Show/hide CoverView screen saver
@@ -1361,7 +1365,8 @@ function renderUI() {
                 '<span id="inpsrc-msg-text">Spotify Active</span>' +
                 '<button class="btn spotify-renderer disconnect-spotify" data-job="spotifysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                 receiversBtn('spotactive1') +
-                audioInfoBtn('spotactive1')
+                audioInfoBtn('spotactive1') +
+                '<a id="inpsrc-spotify-refresh" class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
             );
 
             refreshSpotmeta();
