@@ -17,7 +17,8 @@ $dbh = sqlConnect();
 phpSession('open_ro');
 
 // ALSA Hardware params
-$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
+$adevName = $_SESSION['adevname'] == TRX_SENDER_NAME ? ALSA_LOOPBACK_DEVICE : $_SESSION['adevname'];
+$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($adevName));
 //workerLog('audioinfo.php: cardnum: ' . print_r(getAlsaCardNumForDevice($_SESSION['adevname']), true));
 //workerLog('audioinfo.php: hwparams: ' . print_r($hwParams, true));
 
@@ -211,8 +212,7 @@ if ($_SESSION['audioout'] == 'Bluetooth') {
 
 // ALSA Output mode and Loopback
 $_alsa_output_mode = $_SESSION['multiroom_tx'] == 'On' ?
-	'Loopback' :
-	//ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $outputMode . ')';
+	ALSA_LOOPBACK_DEVICE :
 	 $outputModeName . ' (' . $outputMode . ')';
 $_alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback'];
 $_alsa_loopback_class = $_alsa_loopback; // NOTE: 'off' is a class that hides the element
