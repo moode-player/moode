@@ -75,6 +75,11 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_encoded_at = 'Opus 16 bit 48 kHz, Stereo';
 	$_decoded_to = 'PCM 16 bit 48 kHz, Stereo';
 	$_decode_rate = '';
+} else if ($_SESSION['audioin'] == 'Analog' || $_SESSION['audioin'] == 'S/PDIF') {
+	$_file = $_SESSION['audioin'] . ' input';
+	$_encoded_at = 'Unknown';
+	$_decoded_to = 'Unknown';
+	$_decode_rate = '';
 } else {
 	$song = getCurrentSong($sock);
 	$_file = $song['file'];
