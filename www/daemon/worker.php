@@ -1162,6 +1162,11 @@ $param = $_SESSION['touchscn'] == '0' ? ' -- -nocursor' : '';
 sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
 // - Screen blank interval
 sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+// Orientation
+if (!isset($_SESSION['scnorient'])) {
+	$_SESSION['hdmi_scn_orient'] = 'landscape';
+}
+// TODO: code to update .xinitrc and /usr/share/X11/xorg.conf.d/40-libinput.conf
 // - Disable GPU
 if (!isset($_SESSION['disable_gpu_chromium'])) {
 	$_SESSION['disable_gpu_chromium'] = 'off';
@@ -1188,6 +1193,7 @@ workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'o
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
 workerLog('worker: Rpi scntype:     ' . $_SESSION['rpi_scntype']);
 workerLog('worker: Rpi backlight:   ' . $_SESSION['rpi_backlight']);
+workerLog('worker: HDMI orient:     ' . $_SESSION['hdmi_scn_orient']);
 // HDMI enable 4k 60Hz (Pi-4 only)
 if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 	$_SESSION['hdmi_enable_4kp60'] = 'off';
@@ -3067,6 +3073,9 @@ function runQueuedJob() {
 				stopLocalUI();
 				startLocalUI();
 			}
+		case 'hdmi_scn_orient':
+			// TODO: code to update .xinitrc and /usr/share/X11/xorg.conf.d/40-libinput.conf
+			break;
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);

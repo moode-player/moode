@@ -90,6 +90,18 @@
 				<span class="config-btn-after">Local Display</span>
 			</div>
 
+			<label class="control-label" for="hdmi-scn-orient">HDMI Orientation</label>
+			<div class="controls">
+				<select id="hdmi-scn-orient" class="config-select-large" name="hdmi_scn_orient" onchange="autoClick('#btn-set-hdmi-scn-orient');" $_ctl_disabled>
+					$_select[hdmi_scn_orient]
+				</select>
+				<button id="btn-set-hdmi-scn-orient" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_scn_orient" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-scn-orient" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmi-scn-orient" class="config-help-info">
+					Change between Landscape and Portrait orientation. Assumes Landscape is the native orientation of the screen.
+                </span>
+			</div>
+
 			<label class="control-label">HDMI CEC control</label>
 			<div class="controls">
 				<div class="toggle">
