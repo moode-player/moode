@@ -667,6 +667,9 @@ body {
 	#countdown-display {font-size:1.85vw;top:48%;}
 	#total {top:64%;font-size:1vw!important;}
 	.total-radio {top:65%!important}
+
+	/* Play and toggle buttons under the time knob */
+	#togglebtns {padding-top:0;}
 }
 
 /* Specifically for 400 x 1280 */
