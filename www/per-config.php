@@ -167,10 +167,15 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 		$_ctl_disabled = '';
 		$_link_disabled = '';
         $_rpi_scntype_disable = $_SESSION['scnrotate'] == '0' ? '' : 'disabled';
+        $_screen_res = '<span class="config-help-static">Resolution: '
+            . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
+            . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
+            . '</span>';
 	} else {
 		$_ctl_disabled = 'disabled';
 		$_link_disabled = 'onclick="return false;"';
         $_rpi_scntype_disable = 'disabled';
+        $_screen_size = '';
 	}
     $piModel = substr($_SESSION['hdwrrev'], 3, 1);
     $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
