@@ -103,8 +103,8 @@ if (isset($_POST['update_browser_title'])) {
 
 if (isset($_POST['update_time_zone'])) {
 	if (isset($_POST['timezone']) && $_POST['timezone'] != $_SESSION['timezone']) {
+		$_SESSION['timezone'] = $_POST['timezone'];
 		submitJob('timezone', $_POST['timezone']);
-		phpSession('write', 'timezone', $_POST['timezone']);
 	}
 }
 

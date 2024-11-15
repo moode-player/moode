@@ -33,6 +33,11 @@ function autoConfigSettings() {
 	function setSessVarOnly($values) {
 		$_SESSION[array_key_first($values)] = $values[array_key_first($values)];
 	}
+	// Set session session var and run a sysCmd call to sysutil.sh
+	function setSessVarOnlySysCmd($values, $cmd) {
+		sysCmd('/var/www/util/sysutil.sh '. sprintf($cmd, $values[array_key_first($values)]) );
+		$_SESSION[array_key_first($values)] = $values[array_key_first($values)];
+	}
 	// Set session var and sql value
 	function setSessVarSql($values) {
 		phpSession('write', array_key_first($values), $values[array_key_first($values)]);
@@ -117,7 +122,7 @@ function autoConfigSettings() {
 		//
 		'System',
 		['requires' => ['updater_auto_check'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['timezone'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'set-timezone %s'],
+		['requires' => ['timezone'], 'handler' => 'setSessVarOnlySysCmd', 'cmd' => 'set-timezone %s'],
 		['requires' => ['keyboard'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'set-keyboard %s'],
 		['requires' => ['worker_responsiveness'], 'handler' => function($values) {
 			$_SESSION['worker_responsiveness'] = $values['worker_responsiveness'];
@@ -576,6 +581,16 @@ function autoConfigSettings() {
 		['requires' => ['scnblank'], 'handler' => function($values) {
 			phpSession('write', 'scnblank', $values['scnblank']);
 			sysCmd('sed -i "/xset s/c\xset s ' . $values['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+		}],
+		['requires' => ['hdmi_scn_orient'], 'handler' => function($values) {
+			phpSession('write', 'hdmi_scn_orient', $values['hdmi_scn_orient']);
+			sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+			if ($values['hdmi_scn_orient'] == 'portrait') {
+				sysCmd("sed -i 's/touchscreen catchall\"/touchscreen catchall\""
+					. '\n\tOption "CalibrationMatrix" '
+					. "\"0 -1 1 1 0 0 0 0 1\"/' /usr/share/X11/xorg.conf.d/40-libinput.conf"
+				);
+			}
 		}],
 		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {

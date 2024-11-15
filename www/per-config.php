@@ -54,7 +54,7 @@ if (isset($_POST['update_scnblank'])) {
 
 if (isset($_POST['update_hdmi_scn_orient'])) {
     if (isset($_POST['hdmi_scn_orient']) && $_POST['hdmi_scn_orient'] != $_SESSION['hdmi_scn_orient']) {
-        $_SESSION['hdmi_scn_orient'] = $_POST['hdmi_scn_orient'];
+        phpSession('write', 'hdmi_scn_orient', $_POST['hdmi_scn_orient']);
         submitJob('hdmi_scn_orient', $_POST['hdmi_scn_orient'], NOTIFY_TITLE_INFO, NAME_LOCAL_DISPLAY . NOTIFY_MSG_SVC_RESTARTED);
     }
 }

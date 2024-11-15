@@ -267,7 +267,7 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 // Pi Imager: Import time zone and keyboard layout
 $timeZone = sysCmd("timedatectl show | awk -F\"=\" '/Timezone/{print $2;exit;}'");
 $keyboard = sysCmd("cat /etc/default/keyboard | awk -F\"=\" '/XKBLAYOUT/{print $2;exit;}'");
-phpSession('write', 'timezone', $timeZone[0]);
+$_SESSION['timezone'] = $timeZone[0];
 phpSession('write', 'keyboard', trim($keyboard[0], "\""));
 
 // Store platform data
@@ -1162,11 +1162,6 @@ $param = $_SESSION['touchscn'] == '0' ? ' -- -nocursor' : '';
 sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
 // - Screen blank interval
 sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
-// Orientation
-if (!isset($_SESSION['scnorient'])) {
-	$_SESSION['hdmi_scn_orient'] = 'landscape';
-}
-// TODO: code to update .xinitrc and /usr/share/X11/xorg.conf.d/40-libinput.conf
 // - Disable GPU
 if (!isset($_SESSION['disable_gpu_chromium'])) {
 	$_SESSION['disable_gpu_chromium'] = 'off';
@@ -1191,6 +1186,7 @@ if ($_SESSION['localui'] == '1') {
 }
 workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'off'));
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
+workerLog('worker: Screen blank     ' . $_SESSION['scnblank']);
 workerLog('worker: Rpi scntype:     ' . $_SESSION['rpi_scntype']);
 workerLog('worker: Rpi backlight:   ' . $_SESSION['rpi_backlight']);
 workerLog('worker: HDMI orient:     ' . $_SESSION['hdmi_scn_orient']);
@@ -3061,20 +3057,30 @@ function runQueuedJob() {
 		case 'touchscn':
 			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
 			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
-			if ($_SESSION['localui'] == '1') {
-				sysCmd('systemctl daemon-reload');
-				stopLocalUI();
-				startLocalUI();
-			}
+			//DELETE:if ($_SESSION['localui'] == '1') {
+			sysCmd('systemctl daemon-reload');
+			stopLocalUI();
+			startLocalUI();
+			//DELETE:}
 			break;
 		case 'scnblank':
 			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
-			if ($_SESSION['localui'] == '1') {
-				stopLocalUI();
-				startLocalUI();
-			}
+			//DELETE:if ($_SESSION['localui'] == '1') {
+			stopLocalUI();
+			startLocalUI();
+			//DELETE:}
+			break;
 		case 'hdmi_scn_orient':
-			// TODO: code to update .xinitrc and /usr/share/X11/xorg.conf.d/40-libinput.conf
+			if ($_SESSION['w_queueargs'] == 'portrait') {
+				sysCmd("sed -i 's/touchscreen catchall\"/touchscreen catchall\""
+					. '\n\tOption "CalibrationMatrix" '
+					. "\"0 -1 1 1 0 0 0 0 1\"/' /usr/share/X11/xorg.conf.d/40-libinput.conf"
+				);
+			} else if ($_SESSION['w_queueargs'] == 'landscape') {
+				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+			}
+			stopLocalUI();
+			startLocalUI();
 			break;
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';

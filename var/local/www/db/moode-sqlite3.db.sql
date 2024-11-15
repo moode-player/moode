@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Oct 21 15:54:45 2024
+-- File generated with SQLiteStudio v3.4.4 on Fri Nov 15 15:15:39 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -523,7 +523,7 @@ CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), p
 -- Table: cfg_system
 CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_system (id, param, value) VALUES (1, 'sessionid', 'ho7vk67sqrjua8sme0pqhsjgdq');
-INSERT INTO cfg_system (id, param, value) VALUES (2, 'timezone', 'America/Detroit');
+INSERT INTO cfg_system (id, param, value) VALUES (2, 'hdmi_scn_orient', 'landscape');
 INSERT INTO cfg_system (id, param, value) VALUES (3, 'i2sdevice', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (4, 'hostname', 'moode');
 INSERT INTO cfg_system (id, param, value) VALUES (5, 'browsertitle', 'moOde Player');

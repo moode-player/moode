@@ -11,7 +11,6 @@ xset -dpms
 xset s 600
 
 # Capture screen size
-# TODO: check rotation (new session var) and if 270 then return y,x
 fgrep "#dtoverlay=vc4-kms-v3d" /boot/firmware/config.txt
 if [ $? -ne 0 ]; then
     SCREEN_RES="$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')"
@@ -19,8 +18,12 @@ else
     SCREEN_RES="$(fbset -s | awk '$1 == "geometry" {print $2","$3}')"
 fi
 
-# DEBUG:
-echo $SCREEN_RES > /home/pi/screen_res.txt
+# Set HDMI screen orientation
+HDMI_SCN_ORIENT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='hdmi_scn_orient'")
+if [ $HDMI_SCN_ORIENT = "portrait" ]; then
+    SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
+    DISPLAY=:0 xrandr --output HDMI-1 --rotate left
+fi
 
 # Clear browser cache
 $(/var/www/util/sysutil.sh clearbrcache)

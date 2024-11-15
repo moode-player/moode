@@ -368,7 +368,8 @@ RENDERER_SETTINGS() {
 		echo -e "\nWake display on play\t= $wake_display\c"
 		echo -e "\nMouse cursor\t\t= $touchscn\c"
 		echo -e "\nOn screen keyboard\t= $on_screen_kbd\c"
-		echo -e "\nScreen blank\t\t= $scnblank Secs\c"
+		echo -e "\nScreen blank\t\t= $scnblank\c"
+		echo -e "\nHDMI Orient\t\t= $hdmi_scn_orient\c"
 		echo -e "\nHDMI CEC\t\t= $hdmi_cec\c"
 		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
 		echo -e "\nDisable GPU\t\t= $disable_gpu_chromium\c"
@@ -635,7 +636,7 @@ OTHEROPTIONS=${arr[6]}
 RESULT=$(sqlite3 $SQLDB "select value from cfg_system")
 readarray -t arr <<<"$RESULT"
 sessionid=${arr[0]}
-timezone=${arr[1]}
+hdmi_scn_orient=${arr[1]}
 i2sdevice=${arr[2]}
 host=${arr[3]}
 browsertitle=${arr[4]}
@@ -743,7 +744,7 @@ elif [[ "${arr[81]}" = "31536000000" ]]; then
 fi
 btactive=${arr[82]}
 [[ "${arr[83]}" = "1" ]] && touchscn="On" || touchscn="Off"
-scnblank=${arr[84]}
+[[ "${arr[84]}" = "off" ]] && scnblank="Off" || scnblank="${arr[84]} Secs" 
 scnrotate=${arr[85]}
 scnbrightness=${arr[86]}
 themename=${arr[87]}
@@ -853,6 +854,7 @@ scnsaver_mode=${arr[172]}
 scnsaver_layout=${arr[173]}
 scnsaver_xmeta=${arr[174]}
 # Session only vars
+timezone=$(moodeutl -d -gv timezone)
 value=$(moodeutl -d -gv rotaryenc)
 [[ "$value" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
 ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
