@@ -356,7 +356,11 @@ body {
 
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:2.85em;}
-
+	#inpsrc-spotmeta {font-size:.5em;}
+	#inpsrc-msg i,
+	#inpsrc-spotmeta-refresh i {
+		font-size:1.25em;
+	}
 	/* For the configs */
 	#panel-header,
 	.container {margin-left:calc(env(safe-area-inset-left) + 1rem);}

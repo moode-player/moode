@@ -101,14 +101,14 @@ html {background-color:inherit;}
 /* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 /* Spotify backdrop cover and metadata */
-.inpsrc-spotmeta-backdrop {height:88vh;}
+.inpsrc-spotmeta-backdrop {height:calc(88vh - .5rem);}
 #inpsrc-spotmeta {
 	position:absolute;
 	display:block;
+	height: 12vh;
 	width:100%;
 	bottom:0;
-	padding-bottom:.5em;
-	padding-top:.25em;
+	padding-top:.5em;
 	font-size:.75em;
 	font-weight:500;
 	background:linear-gradient(to right, rgba(64,64,64,0.5), rgba(0,0,0,1) 50%, rgba(64,64,64,.5));
