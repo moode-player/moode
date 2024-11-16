@@ -279,7 +279,7 @@ function getUserID() {
 	// Install xinitrc script
 	if ($userId != NO_USERID_DEFINED) {
 		if (file_exists('/tmp/xinitrc')) {
-			sysCmd('cp -f /tmp/xinitrc /home/' . $userId . '/.xinitrc')
+			sysCmd('cp -f /tmp/xinitrc /home/' . $userId . '/.xinitrc');
 		}
 	}
 
