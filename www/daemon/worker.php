@@ -1153,8 +1153,12 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Local display
-// Reapply service file and xinitrc updates. This is needed if user_id is 'pi' because
-// during in-place update the moode-player package installs the default /home/pi/.xinitrc file
+// - Install default xinitrc script
+$xinitrcDefault = '/usr/share/moode-player/home/xinitrc.default';
+if (file_exists($xinitrcDefault)) {
+	sysCmd('cp -f ' . $xinitrcDefault . ' ' . $_SESSION['home_dir'] . '/.xinitrc');
+}
+// Reapply service file and xinitrc user settings
 // - UserID
 sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localui.service");
 // - Cursor
