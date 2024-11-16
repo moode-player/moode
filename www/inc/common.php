@@ -260,22 +260,30 @@ function getUserID() {
 	// Delete '/home/pi' if no corresponding userid exists. The homedir pi is
 	// created by the moode-player package install during in-place update.
 	if (file_exists('/home/pi/') && empty(sysCmd('grep ":/home/pi:" /etc/passwd'))) {
+		sysCmd('cp /home/pi/.xinitrc /tmp/xinitrc');
 		sysCmd('rm -rf /home/pi/');
 	}
 	// Return empty string if locked password for userid pi. A locked password
 	// is from the pi-gen build and remains unless a userid is set in Pi Imager.
 	if (sysCmd('cat /etc/shadow | grep pi | cut -d ":" -f 2')[0] == '!') {
 		// No userid set in Pi Imager
-		$result = NO_USERID_DEFINED;
+		$userId = NO_USERID_DEFINED;
 	} else {
 		// Return userid or empty string if no subdirs under /home/
-		$result = sysCmd('ls /home/')[0];
-		if (strpos($result, 'ls: cannot access') !== false) {
-			$result = NO_USERID_DEFINED;
+		$userId = sysCmd('ls /home/')[0];
+		if (strpos($userId, 'ls: cannot access') !== false) {
+			$userId = NO_USERID_DEFINED;
 		}
 	}
 
-	return $result;
+	// Install xinitrc script
+	if ($result != NO_USERID_DEFINED) {
+		if (file_exists('/tmp/xinitrc')) {
+			sysCmd('cp -f /tmp/xinitrc /home/' . $userId . '/.xinitrc')
+		}
+	}
+
+	return $userId;
 }
 
 // hostname -I = 192.168.1.121 fd87:f129:9943:4934:1192:907d:d9b6:e98d
