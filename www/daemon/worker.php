@@ -1153,12 +1153,6 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Local display
-// - Install default xinitrc script
-$xinitrcDefault = '/usr/share/moode-player/home/xinitrc.default';
-if (file_exists($xinitrcDefault)) {
-	sysCmd('cp -f ' . $xinitrcDefault . ' ' . $_SESSION['home_dir'] . '/.xinitrc');
-	workerLog('worker: Default xinitrc: installed');
-}
 // Reapply service file and xinitrc user settings
 // - UserID
 sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localui.service");
