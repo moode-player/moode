@@ -1157,6 +1157,7 @@ workerLog('worker: --');
 $xinitrcDefault = '/usr/share/moode-player/home/xinitrc.default';
 if (file_exists($xinitrcDefault)) {
 	sysCmd('cp -f ' . $xinitrcDefault . ' ' . $_SESSION['home_dir'] . '/.xinitrc');
+	workerLog('worker: Default xinitrc: installed');
 }
 // Reapply service file and xinitrc user settings
 // - UserID
