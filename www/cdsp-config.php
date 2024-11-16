@@ -62,6 +62,19 @@ else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
 		$_SESSION['notify']['msg'] = 'Configuration has errors.';
 	}
 }
+// Upgrade
+else if ($selectedConfig && isset($_POST['upgrade']) && $_POST['upgrade'] == '1') {
+	$checkResult = $cdsp->upgradeConfigFile($selectedConfig);
+	$selectedConfigLabel = str_replace('.yml', '', $cdsp->getConfigLabel($selectedConfig));
+
+	if($checkResult['valid'] == true) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		$_SESSION['notify']['msg'] = 'Configuration is valid.';
+	} else {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Configuration has errors.';
+	}
+}
 // Import (Upload)
 else if (isset($_FILES['pipeline_config']) && isset($_POST['import']) && $_POST['import'] == '1') {
 	$configFileBaseName = $_FILES["pipeline_config"]["name"];

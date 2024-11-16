@@ -61,9 +61,8 @@ class CamillaDsp {
 
             $ymlCfg = yaml_parse_file($this->getCurrentConfigFileName());
             $ymlCfg['devices']['capture'] = Array(
-                'type' => 'File',
+                'type' => 'Stdin',
                 'channels' => 2,
-                'filename' => '/dev/stdin',
                 'format' => $useFormat);
             $ymlCfg['devices']['playback'] = Array(
                 'type' => 'Alsa',
@@ -264,6 +263,12 @@ class CamillaDsp {
         $result['msg'] = str_replace('Config is', 'Configuration is', $output);
 
         return $result;
+    }
+
+    function upgradeConfigFile($configName) {
+        $configFullPath = $this->CAMILLA_CONFIG_DIR . '/configs/' . $configName;
+        exec("/var/www/util/cdsp_config_update.py ".$configFullPath, $output, $exitcode);
+        return $this->checkConfigFile($configName);
     }
 
     /**
