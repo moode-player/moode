@@ -4638,7 +4638,7 @@ function lazyLode(view) {
         var albumPos = UI.libPos[0];
         var albumCoverPos = UI.libPos[1];
 
-        if (view == 'tag' && UI.libPos[0] >= 0) {
+        if (view == 'tag') {
             if (UI.libPos[2] >= 0) {
                 customScroll('artists', UI.libPos[2], scrollSpeed);
                 $('#artistsList .lib-entry').eq(UI.libPos[2]).addClass('active');
@@ -4663,7 +4663,7 @@ function lazyLode(view) {
             customScroll('playlist', UI.playlistPos, scrollSpeed);
         }
         // DEBUG:
-        //console.log('lazyLode():   UI.rflpPos:', UI.radioPos, UI.folderPos, UI.libPos, UI.playlistPos);
+        //console.log('lazyLode(): UI.rflpPos:', UI.radioPos, UI.folderPos, UI.libPos, UI.playlistPos);
     }, LAZYLOAD_TIMEOUT);
 }
 
