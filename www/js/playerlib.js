@@ -13,7 +13,7 @@ const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD
 const FEAT_SQSHCHK      = 64;       //   Require squashfs for software update
 const FEAT_ROONBRIDGE	= 128;		// y RoonBridge renderer
-const FEAT_LOCALUI      = 256;      // y Local display
+const FEAT_LOCALDISPLAY      = 256;      // y Local display
 const FEAT_INPSOURCE    = 512;      // y Input source select
 const FEAT_UPNPSYNC     = 1024;     //   UPnP volume sync
 const FEAT_SPOTIFY      = 2048;     // y Spotify Connect renderer
@@ -3442,8 +3442,8 @@ $('#btn-preferences-update').click(function(e){
 
     if (autoCoverViewChange || scnSaverStyleChange || scnSaverModeChange ||
         scnSaverLayoutChange || extraTagsChange) {
-        if (SESSION.json['localui'] == '1') {
-            $.post('command/system.php?cmd=restart_localui');
+        if (SESSION.json['local_display'] == '1') {
+            $.post('command/system.php?cmd=restart_local_display');
         }
 	}
 

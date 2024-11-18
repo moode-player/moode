@@ -1,4 +1,4 @@
-#!/bin/bash
+scn_cursor#!/bin/bash
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2014 The moOde audio player project / Tim Curtis
@@ -362,23 +362,23 @@ RENDERER_SETTINGS() {
 		fi
 	fi
 
-	if [ $(($feat_bitmask & $FEAT_LOCALUI)) -ne 0 ]; then
+	if [ $(($feat_bitmask & $FEAT_LOCALDISPLAY)) -ne 0 ]; then
 		echo -e "L O C A L   D I S P L A Y"
-		echo -e "\nLocal UI display\t= $localui\c"
+		echo -e "\nChromium browser\t= $chromium_ver\c"
+		echo -e "\nLocal UI display\t= $local_display\c"
 		echo -e "\nWake display on play\t= $wake_display\c"
-		echo -e "\nMouse cursor\t\t= $touchscn\c"
+		echo -e "\nMouse cursor\t\t= $scn_cursor\c"
 		echo -e "\nOn screen keyboard\t= $on_screen_kbd\c"
-		echo -e "\nScreen blank\t\t= $scnblank\c"
+		echo -e "\nScreen blank\t\t= $scn_blank\c"
+		echo -e "\nDisable GPU\t\t= $disable_gpu_chromium\c"
 		echo -e "\nHDMI Orient\t\t= $hdmi_scn_orient\c"
 		echo -e "\nHDMI CEC\t\t= $hdmi_cec\c"
 		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
-		echo -e "\nDisable GPU\t\t= $disable_gpu_chromium\c"
-		echo -e "\nChromium browser\t= $chromium_ver\c"
-		echo -e "\nScreen type\t\t= $rpi_scntype\c"
-		echo -e "\nBacklight\t\t= $rpi_backlight\c"
-		echo -e "\nBrightness\t\t= $scnbrightness\c"
-		echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
-		echo -e "\nRotate screen\t\t= $scnrotate Deg\n"
+		echo -e "\nDSI Screentype\t\t= $dsi_scn_type\c"
+		echo -e "\nDSI Backlight\t\t= $dsi_backlight\c"
+		echo -e "\nDSI Brightness\t\t= $dsi_scn_brightness\c"
+		#echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
+		echo -e "\nDSI Rotate\t\t= $dsi_scn_rotate Deg\n"
 	fi
 }
 
@@ -403,7 +403,7 @@ FEAT_RECORDER=8
 FEAT_SQUEEZELITE=16
 FEAT_UPMPDCLI=32
 FEAT_ROONBRIDGE=128
-FEAT_LOCALUI=256
+FEAT_LOCALDISPLAY=256
 FEAT_SPOTIFY=2048
 FEAT_GPIO=4096
 FEAT_PLEXAMP=8192
@@ -697,7 +697,7 @@ cdsp_fix_playback=${arr[54]}
 camilladsp_quickconv=${arr[55]}
 alsa_loopback=${arr[56]}
 keyboard=${arr[57]}
-[[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
+[[ "${arr[58]}" = "1" ]] && local_display="On" || local_display="Off"
 toggle_songid=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
 ap_network_addr=${arr[61]}
@@ -743,10 +743,10 @@ elif [[ "${arr[81]}" = "31536000000" ]]; then
 	library_recently_added="1 Year"
 fi
 btactive=${arr[82]}
-[[ "${arr[83]}" = "1" ]] && touchscn="On" || touchscn="Off"
-[[ "${arr[84]}" = "off" ]] && scnblank="Off" || scnblank="${arr[84]} Secs" 
-scnrotate=${arr[85]}
-scnbrightness=${arr[86]}
+RESERVED_84=${arr[83]}
+RESERVED_85=${arr[84]}
+dsi_scn_type=${arr[85]}
+dsi_scn_rotate=${arr[86]}
 themename=${arr[87]}
 res_software_upd_url=${arr[88]}
 alphablend=${arr[89]}
@@ -861,13 +861,16 @@ ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
 ashuffle_window=$(moodeutl -d -gv "ashuffle_window")
 ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
 ashuffle_exclude=$(moodeutl -d -gv "ashuffle_exclude")
+value=$(moodeutl -d -gv "scn_cursor")
+[[ "$value" = "1" ]] && scn_cursor="On" || scn_cursor="Off"
+value=$(moodeutl -d -gv "scn_blank")
+[[ "$value" = "off" ]] && scn_blank="Off" || scn_blank="${arr[84]} Secs"
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
 chromium_ver=$(dpkg -l | grep -m 1 "chromium-browser" | awk '{print $3}' | cut -d":" -f 2)
-rpi_scntype=$(moodeutl -d -gv "rpi_scntype")
-rpi_backlight=$(moodeutl -d -gv "rpi_backlight")
+dsi_backlight=$(moodeutl -d -gv "dsi_backlight")
 value=$(moodeutl -d -gv usb_volknob)
 [[ "$value" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
 led_state=$(moodeutl -d -gv led_state)

@@ -27,7 +27,7 @@ $features = array(
 	FEAT_UPMPDCLI => 'UPnP client for MPD',
 	FEAT_SQSHCHK => 'Require squashfs for software update',
 	FEAT_ROONBRIDGE => 'RoonBridge renderer',
-	FEAT_LOCALUI => 'Local display',
+	FEAT_LOCALDISPLAY => 'Local display',
 	FEAT_INPSOURCE => 'Input source select',
 	FEAT_UPNPSYNC => 'UPnP volume sync',
 	FEAT_SPOTIFY => 'Spotify Connect renderer',
@@ -397,7 +397,7 @@ function restartServers() {
 	exec('sudo systemctl restart php' . PHP_VER . '-fpm');
 	exec('sudo systemctl restart nginx');
 	exec('sudo systemctl stop mpd');
-	exec('sudo systemctl stop localui');
+	exec('sudo systemctl stop localdisplay');
 	exec('sudo /var/www/daemon/worker.php');
 	echo "Servers restarted\n";
 }

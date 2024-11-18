@@ -10,19 +10,28 @@ xset -dpms
 # Screensaver timeout in secs or 'off' for no timeout
 xset s 600
 
-# Capture screen size
+# Capture native screen size
 fgrep "#dtoverlay=vc4-kms-v3d" /boot/firmware/config.txt
 if [ $? -ne 0 ]; then
-    SCREEN_RES="$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')"
+    SCREEN_RES=$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')
 else
-    SCREEN_RES="$(fbset -s | awk '$1 == "geometry" {print $2","$3}')"
+    SCREEN_RES=$(fbset -s | awk '$1 == "geometry" {print $2","$3}')
 fi
 
-# Set HDMI screen orientation
+# Set HDMI/DSI screen orientation
 HDMI_SCN_ORIENT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='hdmi_scn_orient'")
-if [ $HDMI_SCN_ORIENT = "portrait" ]; then
-    SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
-    DISPLAY=:0 xrandr --output HDMI-1 --rotate left
+DSI_SCN_TYPE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_type'")
+DSI_SCN_ROTATE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_rotate'")
+if [ $DSI_SCN_TYPE = 'none' ]; then
+    if [ $HDMI_SCN_ORIENT = "portrait" ]; then
+        SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
+        DISPLAY=:0 xrandr --output HDMI-1 --rotate left
+    fi
+else
+    if [ $DSI_SCN_ROTATE = "270" ]; then
+        SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
+        DISPLAY=:0 xrandr --output DSI-1 --rotate left
+    fi
 fi
 
 # Clear browser cache

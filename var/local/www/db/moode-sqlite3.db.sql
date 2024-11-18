@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Fri Nov 15 15:15:39 2024
+-- File generated with SQLiteStudio v3.4.4 on Mon Nov 18 07:51:01 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -580,7 +580,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes'
 INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0,Sennheiser_HD800S_L_44100Hz_32b.raw,Sennheiser_HD800S_R_44100Hz_32b.raw,S32LE');
 INSERT INTO cfg_system (id, param, value) VALUES (57, 'alsa_loopback', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
-INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (59, 'local_display', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
 INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (62, 'ap_network_addr', '172.24.1.1/24');
@@ -605,10 +605,10 @@ INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 
 INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '97207');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (84, 'touchscn', '1');
-INSERT INTO cfg_system (id, param, value) VALUES (85, 'scnblank', '600');
-INSERT INTO cfg_system (id, param, value) VALUES (86, 'scnrotate', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (87, 'scnbrightness', '255');
+INSERT INTO cfg_system (id, param, value) VALUES (84, 'RESERVED_84', '');
+INSERT INTO cfg_system (id, param, value) VALUES (85, 'RESERVED_85', '');
+INSERT INTO cfg_system (id, param, value) VALUES (86, 'dsi_scn_type', 'none');
+INSERT INTO cfg_system (id, param, value) VALUES (87, 'dsi_scn_rotate', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (89, 'res_software_upd_url', 'https://raw.githubusercontent.com/moode-player/updates/main/moode-player');
 INSERT INTO cfg_system (id, param, value) VALUES (90, 'alphablend', '0.75');

@@ -569,19 +569,21 @@ function autoConfigSettings() {
 		//
 		// Peripherals
 		//
-		'Local display',
-		['requires' => ['localui'], 'handler' => 'setSessVarSql'],
+		'Local display (General)',
+		['requires' => ['local_display'], 'handler' => 'setSessVarSql'],
 		['requires' => ['wake_display'], 'handler' => 'setSessVarSql'],
-		['requires' => ['touchscn'], 'handler' => function($values) {
-			$_SESSION['touchscn'] = $values['touchscn'];
-			$param = $values['touchscn'] == '0' ? ' -- -nocursor' : '';
-			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
+		['requires' => ['scn_cursor'], 'handler' => function($values) {
+			$_SESSION['scn_cursor'] = $values['scn_cursor'];
+			$param = $values['scn_cursor'] == '0' ? ' -- -nocursor' : '';
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
 		}],
 		['requires' => ['on_screen_kbd'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['scnblank'], 'handler' => function($values) {
-			phpSession('write', 'scnblank', $values['scnblank']);
-			sysCmd('sed -i "/xset s/c\xset s ' . $values['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+		['requires' => ['scn_blank'], 'handler' => function($values) {
+			$_SESSION['scn_blank'] = $values['scn_blank'];
+			sysCmd('sed -i "/xset s/c\xset s ' . $values['scn_blank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
 		}],
+		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
+		'HDMI displays',
 		['requires' => ['hdmi_scn_orient'], 'handler' => function($values) {
 			phpSession('write', 'hdmi_scn_orient', $values['hdmi_scn_orient']);
 			sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
@@ -598,17 +600,16 @@ function autoConfigSettings() {
 			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 		}],
-		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
-		'Pi 7inch touch',
-		['requires' => ['rpi_scntype'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['rpi_backlight'], 'handler' => function($values) {
-			$_SESSION['rpi_backlight'] = $values['rpi_backlight'];
-			$value = $values['rpi_backlight'] == 'on' ? '' : '#';
-			updBootConfigTxt('upd_rpi_backlight', $value);
+		'DSI displays',
+		['requires' => ['dsi_scn_type'], 'handler' => 'setSessVarSql'],
+		['requires' => ['dsi_backlight'], 'handler' => function($values) {
+			$_SESSION['dsi_backlight'] = $values['dsi_backlight'];
+			$value = $values['dsi_backlight'] == 'on' ? '' : '#';
+			updBootConfigTxt('upd_dsi_backlight', $value);
 		}],
-		['requires' => ['scnbrightness'], 'handler' => function($values) {
-			phpSession('write', 'scnbrightness', $values['scnbrightness']);
-			sysCmd('/bin/su -c "echo '. $values['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+		['requires' => ['dsi_scn_brightness'], 'handler' => function($values) {
+			$_SESSION['dsi_scn_brightness'] = $values['dsi_scn_brightness'];
+			updDSIScnBrightness($values['dsi_scn_type'], $values['dsi_scn_brightness']);
 		}],
 		// NOTE: There is no solution yet with the KMS driver
 		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
@@ -616,10 +617,10 @@ function autoConfigSettings() {
 			//$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
 			//updBootConfigTxt('upd_framebuffer_settings', $value);
 		}],
-		['requires' => ['scnrotate'], 'handler' => function($values) {
-			phpSession('write', 'scnrotate', $values['scnrotate']);
-			$value = $values['scnrotate'] == '180' ? '' : '#';
-			updBootConfigTxt('upd_lcd_rotate', $value);
+		['requires' => ['dsi_scn_rotate'], 'handler' => function($values) {
+			$_SESSION['upd_dsi_scn_rotate'] = $values['scnrotate'];
+			$value = $values['dsi_scn_rotate'] == '180' ? '' : '#';
+			updBootConfigTxt('upd_dsi_scn_rotate', $value);
 		}],
 		'USB volume knob',
 		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],

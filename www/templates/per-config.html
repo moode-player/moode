@@ -9,19 +9,26 @@
 	<h1 class="per-config">Peripherals</h1>
 
 	<form class="form-horizontal" method="post">
-		<div class="control-group $_feat_localui">
+		<div class="control-group $_feat_localdisplay">
 			<legend>Local Display</legend>
+
+			<p class="sub-legend">
+				Both HDMI and DSI attached displays are supported. There are settings in common between these two
+				types of displays in the Generel settings section. Specific settings for each type are in their respective sections.
+			</p>
+
+ 			<div class="config-horiz-rule">General settings</div>
 
 			<label class="control-label">Display</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-localui" for="toggle-localui-2">ON </label>$_select[localui_on]
-					<label class="toggle-radio toggle-localui" for="toggle-localui-1">OFF</label>$_select[localui_off]
+					<label class="toggle-radio toggle-local-display" for="toggle-local-display-2">ON </label>$_select[local_display_on]
+					<label class="toggle-radio toggle-local-display" for="toggle-local-display-1">OFF</label>$_select[local_display_off]
 				</div>
-                <button id="btn-set-localui" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_localui" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-localui" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+                <button id="btn-set-local-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				$_screen_res
-				<span id="info-localui" class="config-help-info">
+				<span id="info-local-display" class="config-help-info">
 					Display the moOde WebUI on a locally attached display.
                 </span>
             </div>
@@ -32,7 +39,7 @@
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-2">ON </label>$_select[wake_display_on]
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
 				</div>
-                <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+                <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wake-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-wake-display" class="config-help-info">
 					Wake the display when audio starts playing.
@@ -42,12 +49,12 @@
 			<label class="control-label">Mouse cursor</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-2">ON </label>$_select[touchscn_on]
-					<label class="toggle-radio toggle-touchscn" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
+					<label class="toggle-radio toggle-scn-cursor" for="toggle-scn-cursor-2">ON </label>$_select[scn_cursor_on]
+					<label class="toggle-radio toggle-scn-cursor" for="toggle-scn-cursor-1">OFF</label>$_select[scn_cursor_off]
 				</div>
-                <button id="btn-set-touchscn" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-touchscn" class="config-help-info">
+                <button id="btn-set-scn-cursor" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_cursor" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scn-cursor" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-scn-cursor" class="config-help-info">
 					This prevents the cursor from showing on the display or Touch screen
                 </span>
             </div>
@@ -58,27 +65,27 @@
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
 				</div>
-                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-on-screen-kbd" class="config-help-info">
 					On-screen popup keyboard by @Nutul.
                 </span>
             </div>
 
-			<label class="control-label" for="scnblank">Screen blank</label>
+			<label class="control-label" for="scn-blank">Screen blank</label>
 			<div class="controls">
-				<select id="scnblank" class="config-select-large" name="scnblank" onchange="autoClick('#btn-set-scnblank');" $_ctl_disabled>
-					$_select[scnblank]
+				<select id="scn-blank" class="config-select-large" name="scn_blank" onchange="autoClick('#btn-set-scn-blank');" $_ctl_disable>
+					$_select[scn_blank]
 				</select>
-				<button id="btn-set-scnblank" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scnblank" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-scnblank" class="config-help-info">
+				<button id="btn-set-scn-blank" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_blank" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scn-blank" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-scn-blank" class="config-help-info">
 					When playback has stopped the display will be turned off after the specified time period.
                 </span>
 			</div>
 
 			<div class="controls">
-				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_ctl_disabled>Toggle</button>
+				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_ctl_disable>Toggle</button>
 				<span class="config-btn-after">CoverView</span>
 				<span class="config-help-static">
 					Coverview is: $_coverview_onoff
@@ -86,47 +93,9 @@
 			</div>
 
 			<div class="controls">
-				<a data-toggle="modal" href="#restart-localui" $_link_disabled><button class="btn btn-medium btn-primary config-btn" $_ctl_disabled>Restart</button></a>
+				<a data-toggle="modal" href="#restart-local-display" $_link_disable><button class="btn btn-medium btn-primary config-btn" $_ctl_disable>Restart</button></a>
 				<span class="config-btn-after">Local Display</span>
 			</div>
-
-			<label class="control-label" for="hdmi-scn-orient">HDMI Orientation</label>
-			<div class="controls">
-				<select id="hdmi-scn-orient" class="config-select-large" name="hdmi_scn_orient" onchange="autoClick('#btn-set-hdmi-scn-orient');" $_ctl_disabled>
-					$_select[hdmi_scn_orient]
-				</select>
-				<button id="btn-set-hdmi-scn-orient" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_scn_orient" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-scn-orient" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-hdmi-scn-orient" class="config-help-info">
-					Change between Landscape and Portrait orientation. Assumes Landscape is the native orientation of the screen.
-                </span>
-			</div>
-
-			<label class="control-label">HDMI CEC control</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-2">ON </label>$_select[hdmi_cec_on]
-					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-1">OFF</label>$_select[hdmi_cec_off]
-				</div>
-                <button id="btn-set-hdmi-cec" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_cec" value="novalue" $_hdmi_cec_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-cec" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-hdmi-cec" class="config-help-info">
-					Automatically turn the display on when moOde starts or when wake on play is initiated. Turn the display off when moOde is shutdown.
-                </span>
-            </div>
-
-			<label class="control-label">HDMI 4K 60Hz</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-2">ON </label>$_select[hdmi_enable_4kp60_on]
-					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-1">OFF</label>$_select[hdmi_enable_4kp60_off]
-				</div>
-                <button id="btn-set-hdmi-enable-4kp60" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_enable_4kp60" value="novalue" $_hdmi_4kp60_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-enable-4kp60" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-hdmi-enable-4kp60" class="config-help-info">
-					By default, when connected to a 4K monitor, the Raspberry Pi 4B, 400 and CM4 will select a 30Hz refresh rate. Use this option to allow selection of 60Hz refresh rates.
-                </span>
-            </div>
 
 			<label class="control-label">Disable GPU</label>
 			<div class="controls">
@@ -140,19 +109,57 @@
 					Disable the GPU for Chromium if the WebUI knob sliders on Pi-2 or Pi-3 are missing or there are any other display artifacts.
 				</span>
 			</div>
-		</div>
 
-		<div class="control-group">
-			<legend>Pi 7 inch Touch/Touch2</legend>
+			<div class="config-horiz-rule">HDMI displays</div>
 
-			<label class="control-label" for="rpi-scntype">Screen type</label>
+			<label class="control-label" for="hdmi-scn-orient">Screen Orientation</label>
 			<div class="controls">
-				<select id="rpi-scntype" class="config-select-large" name="rpi_scntype" onchange="autoClick('#btn-set-rpi-scntype');" $_rpi_scntype_disable>
-					$_select[rpi_scntype]
+				<select id="hdmi-scn-orient" class="config-select-large" name="hdmi_scn_orient" onchange="autoClick('#btn-set-hdmi-scn-orient');" $_ctl_disable>
+					$_select[hdmi_scn_orient]
 				</select>
-				<button id="btn-set-rpi-scntype" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rpi_scntype" value="novalue" $_rpi_scntype_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rpi-scntype" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-rpi-scntype" class="config-help-info">
+				<button id="btn-set-hdmi-scn-orient" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_scn_orient" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-scn-orient" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmi-scn-orient" class="config-help-info">
+					Change between Landscape and Portrait orientation. Assumes Landscape is the native orientation of the screen.
+                </span>
+			</div>
+
+			<label class="control-label">CEC control</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-2">ON </label>$_select[hdmi_cec_on]
+					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-1">OFF</label>$_select[hdmi_cec_off]
+				</div>
+                <button id="btn-set-hdmi-cec" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_cec" value="novalue" $_hdmi_cec_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-cec" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmi-cec" class="config-help-info">
+					Automatically turn the display on when moOde starts or when wake on play is initiated. Turn the display off when moOde is shutdown.
+                </span>
+            </div>
+
+			<label class="control-label">4K 60Hz rate</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-2">ON </label>$_select[hdmi_enable_4kp60_on]
+					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-1">OFF</label>$_select[hdmi_enable_4kp60_off]
+				</div>
+                <button id="btn-set-hdmi-enable-4kp60" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_enable_4kp60" value="novalue" $_hdmi_4kp60_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-enable-4kp60" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmi-enable-4kp60" class="config-help-info">
+					By default, when connected to a 4K monitor, the Raspberry Pi 4B, 400 and CM4 will select a 30Hz refresh rate. Use this option to allow selection of 60Hz refresh rates.
+                </span>
+            </div>
+
+			<div class="config-horiz-rule">DSI displays (Pi Touch/Touch2)</div>
+
+			<label class="control-label" for="dsi-scn-type">Screen type</label>
+			<div class="controls">
+				<select id="dsi-scn-type" class="config-select-large" name="dsi_scn_type" onchange="autoClick('#btn-set-dsi-scn-type');" $_dsi_scn-type_disable>
+					$_select[dsi_scn_type]
+				</select>
+				<button id="btn-set-dsi-scn-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_type" value="novalue" $_dsi_scn_type_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dsi-scn-type" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-dsi-scn-type" class="config-help-info">
 					To change the screen type set "Rotate screen" to 0.
                 </span>
 			</div>
@@ -160,45 +167,47 @@
 			<label class="control-label">Backlight</label>
 			<div class="controls">
 				<div class="toggle">
-					<label class="toggle-radio toggle-rpi-backlight" for="toggle-rpi-backlight-2">ON </label>$_select[rpi_backlight_on]
-					<label class="toggle-radio toggle-rpi-backlight" for="toggle-rpi-backlight-1">OFF</label>$_select[rpi_backlight_off]
+					<label class="toggle-radio toggle-dsi-backlight" for="toggle-dsi-backlight-2">ON </label>$_select[dsi_backlight_on]
+					<label class="toggle-radio toggle-dsi-backlight" for="toggle-dsi-backlight-1">OFF</label>$_select[dsi_backlight_off]
 				</div>
-                <button id="btn-set-rpi-backlight" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rpi_backlight" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rpi-backlight" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-rpi-backlight" class="config-help-info">
+                <button id="btn-set-dsi-backlight" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_backlight" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dsi-backlight" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-dsi-backlight" class="config-help-info">
 					Loads the rpi-backlight dtoverlay to enable backlight brightness control for the Pi 7 inch Touch.
                 </span>
             </div>
 
-			<label class="control-label" for="scnbrightness">Brightness</label>
+			<label class="control-label" for="dsi-scn-brightness">Brightness</label>
 			<div class="controls">
-            	<input class="config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]" $_ctl_disabled>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-brightness" class="config-help-info">
-					Backlight brightness for the Pi 7 inch Touch. Values are 0 - 255.
+            	<input class="config-input-large" type="number" maxlength="3" min="$_dsi_scn_brightness_min" max="$_dsi_scn_brightness_max" id="dsi-scn-brightness" name="dsi_scn_brightness" value="$_select[dsi_scn_brightness]" $_ctl_disable>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dsi-scn-brightness" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-dsi-scn-brightness" class="config-help-info">
+					Backlight brightness for the Pi 7 inch Touch/Touch 2.<br>
+					Range: 0-255 for Touch<br>
+					Range: 1-31 for Touch 2
                 </span>
 			</div>
 
 			<!-- No solution with KMS driver as of r902 -->
 			<!--label class="control-label" for="pixel-aspect-ratio">Pixel aspect ratio</label>
 			<div class="controls">
-				<select id="pixel-aspect-ratio" class="config-select-large" name="pixel_aspect_ratio" onchange="autoClick('#btn-set-pixel-aspect-ratio');" $_ctl_disabled>
+				<select id="pixel-aspect-ratio" class="config-select-large" name="pixel_aspect_ratio" onchange="autoClick('#btn-set-pixel-aspect-ratio');" $_ctl_disable>
 					$_select[pixel_aspect_ratio]
 				</select>
-				<button id="btn-set-pixel-aspect-ratio" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-pixel-aspect-ratio" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info_pixel_aspect_ratio" class="config-help-info">
 					Rectangular (default) or square pixels for 7" Pi Touch.
                 </span>
 			</div-->
 
-			<label class="control-label" for="scnrotate">Rotate screen</label>
+			<label class="control-label" for="dsi-scn-rotate">Rotate screen</label>
 			<div class="controls">
-				<select id="scnrotate" class="config-select-large" name="scnrotate" onchange="autoClick('#btn-set-scnrotate');" $_ctl_disabled>
-					$_select[scnrotate]
+				<select id="dsi-scn-rotate" class="config-select-large" name="dsi_scn_rotate" onchange="autoClick('#btn-set-dsi-scn-rotate');" $_ctl_disable>
+					$_select[dsi_scn_rotate]
 				</select>
-				<button id="btn-set-scnrotate" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnrotate" value="novalue" $_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-dsi-scn-rotate" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_rotate" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			</div>
 		</div>
 
@@ -289,14 +298,14 @@
 </div>
 
 <form class="form-horizontal" method="post">
-	<div id="restart-localui" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="restart-localui-label" aria-hidden="true">
+	<div id="restart-local-display" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="restart-local-display-label" aria-hidden="true">
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Restart Local Display?</h3>
 		</div>
 		<div class="modal-body"></div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="update_restart_localui" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_restart_local_display" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>

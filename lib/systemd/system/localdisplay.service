@@ -1,5 +1,5 @@
 [Unit]
-Description=Start Chromium Browser
+Description=Start Local Display
 After=nginx.service php8.2-fpm.service mpd.service
 
 [Service]

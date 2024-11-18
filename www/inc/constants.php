@@ -88,7 +88,7 @@ const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
 const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
 const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
 const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
-const NOTIFY_MSG_LOCALUI_STARTING = 'Local display is starting...';
+const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display is starting...';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
 // Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
@@ -101,7 +101,7 @@ const NAME_DLNA = 'DLNA';
 const NAME_PLEXAMP = 'Plexamp';
 const NAME_ROONBRIDGE = 'RoonBridge';
 const NAME_GPIO = 'GPIO Controller';
-const NAME_LOCAL_DISPLAY = 'Local Display';
+const NAME_LOCALDISPLAY = 'Local Display';
 
 // SMB protocol versions
 const SMB_VERSIONS = array(
@@ -126,7 +126,7 @@ const CFG_DO_NOT_ALTER_HEADER = '# Do not alter this section';
 const CFG_AUDIO_OVERLAYS_HEADER = '# Audio overlays';
 const CFG_FORCE_EEPROM_READ = 'force_eeprom_read=0';
 const CFG_HDMI_ENABLE_4KP60 = 'hdmi_enable_4kp60';
-const CFG_RPI_BACKLIGHT = 'rpi-backlight';
+const CFG_DSI_BACKLIGHT = 'rpi-backlight';
 const CFG_PCI_EXPRESS = 'pciex1';
 const CFG_PCI_EXPRESS_GEN3 = 'pciex1_gen=3';
 const CFG_PI_AUDIO_DRIVER = 'vc4-kms-v3d';
@@ -134,10 +134,8 @@ const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
 const CFG_DISPLAY_AUTODETECT = 'display_auto_detect=1';
 const CFG_PITOUCH_INVERTXY = 'vc4-kms-dsi-7inch,invx,invy';
-const CFG_PITOUCH2_INVERTXY = 'vc4-kms-dsi-ili9881-7inch,invx,invy';
 // Boot cmdline.txt managed params
 const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
-const CFG_PITOUCH2_ROTATE_DEG = 'video=DSI-1:1280x720@60,rotate=';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
@@ -151,7 +149,7 @@ const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
 const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
 const FEAT_ROONBRIDGE	= 128;		// y RoonBridge renderer
-const FEAT_LOCALUI		= 256;		// y Local display
+const FEAT_LOCALDISPLAY		= 256;		// y Local display
 const FEAT_INPSOURCE	= 512;		// y Input source select
 const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
 const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer

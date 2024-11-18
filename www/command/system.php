@@ -26,9 +26,9 @@ switch ($_GET['cmd']) {
 	case 'get_client_ip':
 		echo json_encode($_SERVER['REMOTE_ADDR']);
 		break;
-	case 'restart_localui':
-		if ($_SESSION['localui'] == '1') {
-			if (submitJob('localui_restart')) {
+	case 'restart_local_display':
+		if ($_SESSION['local_display'] == '1') {
+			if (submitJob('local_display_restart')) {
 				echo json_encode('job submitted');
 			} else {
 				echo json_encode('worker busy');

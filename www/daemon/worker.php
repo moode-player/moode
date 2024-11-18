@@ -1155,52 +1155,63 @@ workerLog('worker: --');
 // Local display
 // Reapply service file and xinitrc user settings
 // - UserID
-sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localui.service");
+sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localdisplay.service");
 // - Cursor
-$param = $_SESSION['touchscn'] == '0' ? ' -- -nocursor' : '';
-sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
+if (!isset($_SESSION['scn_cursor'])) {
+	$_SESSION['scn_cursor'] = '1';
+}
+$param = $_SESSION['scn_cursor'] == '0' ? ' -- -nocursor' : '';
+sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
 // - Screen blank interval
-sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scnblank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+if (!isset($_SESSION['scn_blank'])) {
+	$_SESSION['scn_blank'] = '600'; // 10 mins
+}
+sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scn_blank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
 // - Disable GPU
 if (!isset($_SESSION['disable_gpu_chromium'])) {
 	$_SESSION['disable_gpu_chromium'] = 'off';
 }
 $value = $_SESSION['disable_gpu_chromium'] == 'on' ? ' --disable-gpu' : '';
 sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
-// Screen type (Pi Touch, Pi Touch 2)
-if (!isset($_SESSION['rpi_scntype'])) {
-	$_SESSION['rpi_scntype'] = '1';
+// - DSI screen type (Pi Touch/Touch2)
+if (!isset($_SESSION['dsi_scn_type'])) {
+	$_SESSION['dsi_scn_type'] = '1';
 }
-// - Backlight brightness
-if (!isset($_SESSION['rpi_backlight'])) {
-	$_SESSION['rpi_backlight'] = 'off';
-} else if ($_SESSION['rpi_backlight'] == 'on') {
-	sysCmd('/bin/su -c "echo '. $_SESSION['scnbrightness'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+// - DSI backlight driver (touch1 only)
+if (!isset($_SESSION['dsi_backlight'])) {
+	$_SESSION['dsi_backlight'] = 'off';
 }
+// - DSI screen brightness
+if (!isset($_SESSION['dsi_scn_brightness'])) {
+	$_SESSION['dsi_scn_brightness'] = '255';
+}
+updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['dsi_scn_brightness']);
 sysCmd('systemctl daemon-reload');
 
 // Start local display
-if ($_SESSION['localui'] == '1') {
-	startLocalUI();
+if ($_SESSION['local_display'] == '1') {
+	startLocalDisplay();
 }
-workerLog('worker: Local display:   ' . ($_SESSION['localui'] == '1' ? 'on' : 'off'));
+workerLog('worker: Local display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
-workerLog('worker: Screen blank     ' . $_SESSION['scnblank']);
-workerLog('worker: Rpi scntype:     ' . $_SESSION['rpi_scntype']);
-workerLog('worker: Rpi backlight:   ' . $_SESSION['rpi_backlight']);
+workerLog('worker: Screen blank     ' . $_SESSION['scn_blank']);
+workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
+workerLog('worker: Disable GPU:     ' . $_SESSION['disable_gpu_chromium']);
 workerLog('worker: HDMI orient:     ' . $_SESSION['hdmi_scn_orient']);
 // HDMI enable 4k 60Hz (Pi-4 only)
 if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 	$_SESSION['hdmi_enable_4kp60'] = 'off';
 }
 workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
-// Disable GPU Chromium
-workerLog('worker: Disable GPU:     ' . $_SESSION['disable_gpu_chromium']);
+// DSI settings
+workerLog('worker: DSI scn type:    ' . $_SESSION['dsi_scn_type']);
+workerLog('worker: DSI backlight:   ' . $_SESSION['dsi_backlight']);
+workerLog('worker: DSI brightness:  ' . $_SESSION['dsi_scn_brightness']);
+workerLog('worker: DSI rotate:      ' . $_SESSION['dsi_scn_rotate']);
 // On-screen keyboard ('Enable' is the text on the button)
 if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';
 }
-workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
 // Toggle CoverView (System Config)
 if (!isset($_SESSION['toggle_coverview'])) {
 	$_SESSION['toggle_coverview'] = '-off';
@@ -1449,7 +1460,7 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Turn display on
-if ($_SESSION['hdmi_cec'] == 'on' && $_SESSION['localui'] == '1') {
+if ($_SESSION['hdmi_cec'] == 'on' && $_SESSION['local_display'] == '1') {
 	if (file_exists('/sys/class/drm/card0-HDMI-A-1/edid')) {
 		$drmCardID = 'card0-HDMI-A-1';
 	} else if (file_exists('/sys/class/drm/card1-HDMI-A-1/edid')) {
@@ -2256,13 +2267,13 @@ function startGpioBtnHandler() {
 	sysCmd('/var/www/daemon/gpio_buttons.py ' . GPIOBUTTONS_SLEEP . ' > /dev/null &');
 }
 
-// LocalUI display
-function startLocalUI() {
-	sysCmd('systemctl start localui');
+// Local display
+function startLocalDisplay() {
+	sysCmd('systemctl start localdisplay');
 
 }
-function stopLocalUI() {
-	sysCmd('systemctl stop localui');
+function stopLocalDisplay() {
+	sysCmd('systemctl stop localdisplay');
 }
 
 //----------------------------------------------------------------------------//
@@ -3042,32 +3053,36 @@ function runQueuedJob() {
 			break;
 
 		// per-config jobs
-		case 'localui':
+		case 'local_display':
 			if ($_SESSION['w_queueargs'] == '1') {
-				startLocalUI();
+				startLocalDisplay();
 			} else {
-				stopLocalUI();
+				stopLocalDisplay();
 			}
 			break;
-		case 'localui_restart':
-			stopLocalUI();
-			startLocalUI();
+		case 'local_display_restart':
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
-		case 'touchscn':
+		case 'scn_cursor':
 			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
-			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localui.service');
-			//DELETE:if ($_SESSION['localui'] == '1') {
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
 			sysCmd('systemctl daemon-reload');
-			stopLocalUI();
-			startLocalUI();
-			//DELETE:}
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
-		case 'scnblank':
+		case 'scn_blank':
 			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
-			//DELETE:if ($_SESSION['localui'] == '1') {
-			stopLocalUI();
-			startLocalUI();
-			//DELETE:}
+			stopLocalDisplay();
+			startLocalDisplay();
+			break;
+		case 'disable_gpu_chromium':
+			$value = $_SESSION['w_queueargs'] == 'on' ? ' --disable-gpu' : '';
+			sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
+			if ($_SESSION['local_display'] == '1') {
+				stopLocalDisplay();
+				startLocalDisplay();
+			}
 			break;
 		case 'hdmi_scn_orient':
 			if ($_SESSION['w_queueargs'] == 'portrait') {
@@ -3078,37 +3093,44 @@ function runQueuedJob() {
 			} else if ($_SESSION['w_queueargs'] == 'landscape') {
 				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
 			}
-			stopLocalUI();
-			startLocalUI();
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
 		case 'hdmi_enable_4kp60':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 			break;
-		case 'disable_gpu_chromium':
-			$value = $_SESSION['w_queueargs'] == 'on' ? ' --disable-gpu' : '';
-			sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
-			if ($_SESSION['localui'] == '1') {
-				stopLocalUI();
-				startLocalUI();
-			}
-			break;
-		case 'rpi_backlight':
+		case 'dsi_backlight':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '' : '#';
-			updBootConfigTxt('upd_rpi_backlight', $value);
+			updBootConfigTxt('upd_dsi_backlight', $value);
 			break;
-		case 'scnbrightness':
-			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+		case 'dsi_scn_brightness':
+			updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['w_queueargs']);
 			break;
 		case 'pixel_aspect_ratio':
 			// No solution with KMS driver
 			break;
-		case 'scnrotate':
-			$value = $_SESSION['w_queueargs']; // 0|180 for touch, 0|90|180|270 for touch 2
-			if ($_SESSION['rpi_scntype'] == '1') {
-				updBootConfigTxt('upd_rotate_screen', $value);
-			} else {
-				updBootConfigTxt('upd_rotate_screen2', $value);
+		case 'dsi_scn_rotate':
+		 	// touch1 value: 0 landscape | 180 inverted
+			// touch2 value  0 portrait  | 270 landscape
+			$value = $_SESSION['w_queueargs'];
+			if ($_SESSION['dsi_scn_type'] == '1') {
+				// Remove Touch2 landscape touch angle setting and update boot config
+				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+				updBootConfigTxt('upd_dsi_scn_rotate', $value);
+			} else if ($_SESSION['dsi_scn_type'] == '2') {
+				if ($value == '0') {
+					// Remove Touch2 landscape touch angle setting
+					sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+				} else if ($value == '270') {
+					// Add Touch2 landscape touch angle setting
+					sysCmd("sed -i 's/touchscreen catchall\"/touchscreen catchall\""
+						. '\n\tOption "CalibrationMatrix" '
+						. "\"0 -1 1 1 0 0 0 0 1\"/' /usr/share/X11/xorg.conf.d/40-libinput.conf"
+					);
+				}
+				stopLocalDisplay();
+				startLocalDisplay();
 			}
 			break;
 		case 'gpio_svc':
@@ -3277,7 +3299,7 @@ function runQueuedJob() {
 				workerLog('worker: NAS sources unmounted');
 			}
 			// Turn display off
-			if ($_SESSION['w_queue'] == 'poweroff' && $_SESSION['localui'] == '1') {
+			if ($_SESSION['w_queue'] == 'poweroff' && $_SESSION['local_display'] == '1') {
 				$cecSourceAddress = trim(sysCmd('cec-ctl --skip-info --show-topology | grep ": Playback" | cut -d":" -f1')[0]);
 				sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecSourceAddress);
 				sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --standby');

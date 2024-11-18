@@ -276,7 +276,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         // CoverView toggle
-        if (SESSION.json['localui'] == '1') {
+        if (SESSION.json['local_display'] == '1') {
             $('#context-menu-coverview-toggle').show();
         }
 
@@ -366,7 +366,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         // CoverView auto-display
         //notify(NOTIFY_TITLE_INFO, 'debug', GLOBAL.userAgent, NOTIFY_DURATION_MEDIUM);
-        if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['auto_coverview'] == '-on') {
+        if (GLOBAL.chromium && SESSION.json['local_display'] == '1' && SESSION.json['auto_coverview'] == '-on') {
             notify(NOTIFY_TITLE_INFO, 'auto_coverview', 'will be activating in ' + NOTIFY_DURATION_DEFAULT + ' seconds.', NOTIFY_DURATION_DEFAULT);
             setTimeout(function() {
                 screenSaver('scnactive1');

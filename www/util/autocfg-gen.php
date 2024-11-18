@@ -62,14 +62,20 @@ $currentSettings['mpd_monitor_svc'] = $_SESSION['mpd_monitor_svc'];
 $currentSettings['mpd_monitor_opt'] = $_SESSION['mpd_monitor_opt'];
 // Mount monitor
 $currentSettings['fs_mountmon'] = $_SESSION['fs_mountmon'];
-// Miscellaneous
-$currentSettings['auto_coverview'] = $_SESSION['auto_coverview'];
+// Local display
+$currentSettings['scn_cursor'] = $_SESSION['scn_cursor'];
 $currentSettings['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
+$currentSettings['scn_blank'] = $_SESSION['scn_blank'];
+$currentSettings['disable_gpu_chromium'] = $_SESSION['disable_gpu_chromium'];
 $currentSettings['hdmi_cec'] = $_SESSION['hdmi_cec'];
 $currentSettings['hdmi_enable_4kp60'] = $_SESSION['hdmi_enable_4kp60'];
-$currentSettings['disable_gpu_chromium'] = $_SESSION['disable_gpu_chromium'];
-$currentSettings['rpi_scntype'] = $_SESSION['rpi_scntype'];
-$currentSettings['rpi_backlight'] = $_SESSION['rpi_backlight'];
+$currentSettings['scn_cursor'] = $_SESSION['scn_cursor'];
+$currentSettings['scn_blank'] = $_SESSION['scn_blank'];
+$currentSettings['dsi_backlight'] = $_SESSION['dsi_backlight'];
+$currentSettings['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
+
+// Miscellaneous
+$currentSettings['auto_coverview'] = $_SESSION['auto_coverview'];
 $currentSettings['rotaryenc'] = $_SESSION['rotaryenc'];
 
 // Extract to ini file

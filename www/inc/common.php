@@ -614,7 +614,17 @@ function updBootConfigTxt($action, $value) {
 			// $value: '#' or ''
 			sysCmd('sed -i /' . CFG_FORCE_EEPROM_READ . "/c\\" . $value . 'dtoverlay=' . CFG_FORCE_EEPROM_READ . ' ' . BOOT_CONFIG_TXT);
 			break;
-		case 'upd_rotate_screen':
+		case 'upd_hdmi_enable_4kp60':
+			// $value: '0' or '1'
+			sysCmd('sed -i s"/' .
+				CFG_HDMI_ENABLE_4KP60 . '=.*/' .
+				CFG_HDMI_ENABLE_4KP60 . '=' . $value . '/" ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_dsi_backlight': // touch1 only
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_DSI_BACKLIGHT . "/c\\" . $value . 'dtoverlay=' . CFG_DSI_BACKLIGHT . ' ' . BOOT_CONFIG_TXT);
+			break;
+		case 'upd_dsi_scn_rotate': // touch1 only
 			// $value: '0 or 180'
 			if ($value == '0') {
 				sysCmd('sed -i /' . CFG_PITOUCH_INVERTXY . "/c\\" . '#' . 'dtoverlay=' . CFG_PITOUCH_INVERTXY . ' ' . BOOT_CONFIG_TXT);
@@ -625,29 +635,6 @@ function updBootConfigTxt($action, $value) {
 				sysCmd('sed -i /' . CFG_DISPLAY_AUTODETECT . "/c\\" . '#' . CFG_DISPLAY_AUTODETECT . ' ' . BOOT_CONFIG_TXT);
 				sysCmd('sed -i "s/$/ ' . CFG_PITOUCH_ROTATE_180 . '/"' . ' ' . BOOT_CMDLINE_TXT);
 			}
-			break;
-		case 'upd_rotate_screen2':
-			// $value: '0, 90, 180, or 270'
-			if ($value == '0') {
-				sysCmd('sed -i /' . CFG_PITOUCH2_INVERTXY . "/c\\" . '#' . 'dtoverlay=' . CFG_PITOUCH2_INVERTXY . ' ' . BOOT_CONFIG_TXT);
-				sysCmd('sed -i /' . CFG_DISPLAY_AUTODETECT . "/c\\" . '' . CFG_DISPLAY_AUTODETECT . ' ' . BOOT_CONFIG_TXT);
-				sysCmd('sed -i "s/ ' . CFG_PITOUCH2_ROTATE_DEG . '.*//"' . ' ' . BOOT_CMDLINE_TXT);
-			} else {
-				sysCmd('sed -i /' . CFG_PITOUCH2_INVERTXY . "/c\\" . '' . 'dtoverlay=' . CFG_PITOUCH2_INVERTXY . ' ' . BOOT_CONFIG_TXT);
-				sysCmd('sed -i /' . CFG_DISPLAY_AUTODETECT . "/c\\" . '#' . CFG_DISPLAY_AUTODETECT . ' ' . BOOT_CONFIG_TXT);
-				sysCmd('sed -i "s/ ' . CFG_PITOUCH2_ROTATE_DEG . '.*//"' . ' ' . BOOT_CMDLINE_TXT);
-				sysCmd('sed -i "s/$/ ' . CFG_PITOUCH2_ROTATE_DEG . $value . '/"' . ' ' . BOOT_CMDLINE_TXT);
-			}
-			break;
-		case 'upd_hdmi_enable_4kp60':
-			// $value: '0' or '1'
-			sysCmd('sed -i s"/' .
-				CFG_HDMI_ENABLE_4KP60 . '=.*/' .
-				CFG_HDMI_ENABLE_4KP60 . '=' . $value . '/" ' . BOOT_CONFIG_TXT);
-			break;
-		case 'upd_rpi_backlight':
-			// $value: '#' or ''
-			sysCmd('sed -i /' . CFG_RPI_BACKLIGHT . "/c\\" . $value . 'dtoverlay=' . CFG_RPI_BACKLIGHT . ' ' . BOOT_CONFIG_TXT);
 			break;
 		case 'upd_pi_audio_driver':
 			// $value: '#' or ''
@@ -668,5 +655,17 @@ function updBootConfigTxt($action, $value) {
 			// $value: '#' or ''
 			sysCmd('sed -i /' . CFG_DISABLE_WIFI . "/c\\" . $value . 'dtoverlay=' . CFG_DISABLE_WIFI . ' ' . BOOT_CONFIG_TXT);
 			break;
+	}
+}
+
+//----------------------------------------------------------------------------//
+// PERIPHERALS
+//----------------------------------------------------------------------------//
+
+function updDSIScnBrightness($screenType, $brightnessValue) {
+	if ($screenType == '1') {
+		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/rpi_backlight/brightness"');
+	} else {
+		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/*-0045/brightness"');
 	}
 }
