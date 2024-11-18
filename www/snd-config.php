@@ -246,13 +246,13 @@ if (isset($_POST['update_volume_db_display']) && $_POST['volume_db_display'] != 
 
 // DSP options
 
-// Crossfade
-if (isset($_POST['mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION['mpdcrossfade']) {
+// MPD Crossfade
+if (isset($_POST['update_mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION['mpdcrossfade']) {
 	submitJob('mpdcrossfade', $_POST['mpdcrossfade']);
 	phpSession('write', 'mpdcrossfade', $_POST['mpdcrossfade']);
 }
 // Crossfeed
-if (isset($_POST['crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed']) {
+if (isset($_POST['update_crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed']) {
 	phpSession('write', 'crossfeed', $_POST['crossfeed']);
 	submitJob('crossfeed', $_POST['crossfeed']);
 }
@@ -265,17 +265,17 @@ if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SE
 // HTTP streaming
 
 // Server
-if (isset($_POST['mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
+if (isset($_POST['update_mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
 	submitJob('mpd_httpd', $_POST['mpd_httpd']);
 	phpSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
 }
 // Port
-if (isset($_POST['mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESSION['mpd_httpd_port']) {
+if (isset($_POST['update_mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESSION['mpd_httpd_port']) {
 	phpSession('write', 'mpd_httpd_port', $_POST['mpd_httpd_port']);
 	submitJob('mpd_httpd_port', $_POST['mpd_httpd_port']);
 }
 // Encoder
-if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSION['mpd_httpd_encoder']) {
+if (isset($_POST['update_mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSION['mpd_httpd_encoder']) {
 	phpSession('write', 'mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
 	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
 }
@@ -297,7 +297,7 @@ if (isset($_POST['update_cdsp_mode']) && $_POST['cdsp_mode'] != $_SESSION['camil
 }
 // Parametric eq
 $eqfa12p = Eqp12($dbh);
-if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] || intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex())) {
+if (isset($_POST['update_eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] || intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex())) {
 	// Pass old,new curve name to worker job
 	$currentActive = $eqfa12p->getActivePresetIndex();
 	$newActive = intval($_POST['eqfa12p']);
@@ -307,7 +307,7 @@ if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $
 }
 unset($eqfa12p);
 // Graphic eq
-if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
+if (isset($_POST['update_alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
 	// Pass old,new curve name to worker job
 	phpSession('write', 'alsaequal', $_POST['alsaequal']);
 	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal']);
@@ -488,8 +488,6 @@ $_volume_mpd_max = $_SESSION['volume_mpd_max'];
 $autoClick = " onchange=\"autoClick('#btn-set-volume-db-display');\"";
 $_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-// Crossfade
-$_mpdcrossfade = $_SESSION['mpdcrossfade'];
 // Configure DSP buttons
 if ($_SESSION['audioout'] == 'Local' &&
 	$_SESSION['multiroom_tx'] == 'Off' &&
@@ -523,10 +521,8 @@ if ($_SESSION['audioout'] == 'Local' &&
 	$_cdsp_mode_ctl_disabled = 'disabled';
 }
 
-// Polarity inversion
-$autoClick = " onchange=\"autoClick('#btn-set-invert-polarity');\" " . $_invpolarity_ctl_disabled;
-$_select['invert_polarity_on']  .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['invert_polarity_off'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+// MPD Crossfade
+$_mpdcrossfade = $_SESSION['mpdcrossfade'];
 // Crossfeed
 $_select['crossfeed'] .= "<option value=\"Off\" " . (($_SESSION['crossfeed'] == 'Off' OR $_SESSION['crossfeed'] == '') ? "selected" : "") . ">Off</option>\n";
 if ($_crossfeed_ctl_disabled == '') {
@@ -535,6 +531,10 @@ if ($_crossfeed_ctl_disabled == '') {
 	$_select['crossfeed'] .= "<option value=\"800 6.0\" " . (($_SESSION['crossfeed'] == '800 6.0') ? "selected" : "") . ">800 Hz 6.0 dB</option>\n";
 	$_select['crossfeed'] .= "<option value=\"650 10.0\" " . (($_SESSION['crossfeed'] == '650 10.0') ? "selected" : "") . ">650 Hz 10.0 dB</option>\n";
 }
+// Polarity inversion
+$autoClick = " onchange=\"autoClick('#btn-set-invert-polarity');\" " . $_invpolarity_ctl_disabled;
+$_select['invert_polarity_on']  .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['invert_polarity_off'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle-invert-polarity-2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // HTTP streaming server
 $autoClick = " onchange=\"autoClick('#btn-set-mpd-httpd');\"";
 $_select['mpd_httpd_on']  .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd-1\" value=\"1\" " . (($_SESSION['mpd_httpd'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
