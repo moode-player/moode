@@ -3116,9 +3116,9 @@ function runQueuedJob() {
 		case 'dsi_scn_brightness':
 			updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['w_queueargs']);
 			break;
-		/* No solution with KMS driver
+		// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
 		case 'pixel_aspect_ratio':
-			break;*/
+			break;
 		case 'dsi_scn_rotate':
 		 	// touch1 value: 0 landscape | 180 inverted
 			// touch2 value  0 portrait  | 90 | 180 | 270 landscape
