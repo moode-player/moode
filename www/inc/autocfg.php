@@ -611,16 +611,35 @@ function autoConfigSettings() {
 			$_SESSION['dsi_scn_brightness'] = $values['dsi_scn_brightness'];
 			updDSIScnBrightness($values['dsi_scn_type'], $values['dsi_scn_brightness']);
 		}],
-		// NOTE: There is no solution yet with the KMS driver
+		// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
 		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
 			phpSession('write', 'pixel_aspect_ratio', $values['pixel_aspect_ratio']);
 			//$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
 			//updBootConfigTxt('upd_framebuffer_settings', $value);
 		}],
 		['requires' => ['dsi_scn_rotate'], 'handler' => function($values) {
-			$_SESSION['upd_dsi_scn_rotate'] = $values['scnrotate'];
-			$value = $values['dsi_scn_rotate'] == '180' ? '' : '#';
-			updBootConfigTxt('upd_dsi_scn_rotate', $value);
+			// touch1 value: 0 landscape | 180 inverted
+			// touch2 value  0 portrait  | 90 | 180 | 270 landscape
+			$degree = $values['dsi_scn_rotate'];
+			if ($values['dsi_scn_type'] == '1') {
+				// Remove touch2 touch angle setting
+				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+				// Update touch1 rotation
+				updBootConfigTxt('upd_dsi_scn_rotate', $degree);
+			} else if ($values['dsi_scn_type'] == '2') {
+				// Only update the touch angle here, xinitrc handles rotation value
+				if ($degree == '0') {
+					// Remove touch2 touch angle setting
+					sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+				} else {
+					$matrix = X11_TOUCH_ANGLE[$degree];
+					// Add touch2 landscape touch angle setting
+					sysCmd("sed -i 's/touchscreen catchall\"/touchscreen catchall\""
+						. '\n\tOption "CalibrationMatrix" '
+						. "\"" . $matrix . "\"/' /usr/share/X11/xorg.conf.d/40-libinput.conf"
+					);
+				}
+			}
 		}],
 		'USB volume knob',
 		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],
