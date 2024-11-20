@@ -21,7 +21,8 @@ Updates
 - UPD: Add section to Quick help explaining date tags in the Library
 - UPD: Add support for Pi 7 inch Touch screen 2
 - UPD: Add HDMI screen orientation option to Peripheral Config
-- UPD: Remove AP fallback option for Spotify Connect (not needed for >= v0.5.x)
+- UPD: Remove AP fallback for Spotify Connect (not needed for >= v0.5.x)
+- UPD: Minor WebUI style improvements
 
 Bug fixes
 - FIX: In-place update removes --disable-gpu in .xinitrc if present
