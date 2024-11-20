@@ -1081,11 +1081,13 @@ textarea,
     position: relative;
     text-align: center;
     z-index: 2;
-    -webkit-transition: 0.25s;
-    -moz-transition: 0.25s;
-    -o-transition: 0.25s;
-    transition: 0.25s;
-    -webkit-backface-visibility: hidden; }
+    -webkit-transition: 0.05s; /* r915 bump transition speed, was .25 */
+    -moz-transition: 0.05s;
+    -o-transition: 0.05s;
+    transition: 0.05s;
+    -webkit-backface-visibility: hidden;
+    font-size: 0; /* r915 add font size 0 and width so ON/OFF text does not show */
+    width: 16px; }
     .toggle .toggle-radio:first-child {
       margin-bottom: -29px;
       left: 0; }

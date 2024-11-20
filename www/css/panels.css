@@ -389,7 +389,20 @@ i.dx {width:1em;margin-left:.25em;}
 .help-block-margin3 {margin-top:0;margin-bottom:5px;}
 .help-block-margin4 {margin-top:-.5em;}
 .help-block2 {width:90%;margin-left:1.2em;margin-bottom:0;text-align:left;}
-input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {cursor:not-allowed;background-color:#f5f5f5;border:2px solid #DCE4EC;color:#34495E;}
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly],
+select[readonly],
+textarea[readonly] {
+	cursor:not-allowed;
+	/*background-color:#f5f5f5;
+	border:2px solid #DCE4EC;
+	color:#34495E;*/
+	background:none!important; /* r915: fix colors and border */
+	border:1px solid rgba(128,128,128,.6)!important;
+	color:#777!important;
+}
 .form-horizontal .dk_container {margin-bottom:0;}
 input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 0 9px 10px;}
 .modal {animation: fadeIn var(--fadein-rate);background-color:rgba(240,240,240,0.9);color:#333;}
@@ -411,7 +424,33 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 .modal .controls input {padding:0px 0px 0 10px;}
 .btn-group>.btn, .btn-group>.dropdown-menu {font-size:1rem;}
 hr {border-color:#333;border-width:1px 0 0;}
-textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {background:inherit;border:1px solid rgba(128,128,128,0.75);color:inherit;padding-top:2px;padding-bottom:2px;margin-bottom:5px;border-radius:4px;-webkit-appearance:none;-moz-appearance:none;font-size:1rem;}
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+	background:inherit;
+	border:1px solid rgba(128,128,128,0.6); /* r915: fix opacity, was .75 */
+	color:inherit;
+	padding-top:2px;
+	padding-bottom:2px;
+	margin-bottom:5px;
+	border-radius:4px;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	font-size:1rem;
+}
 .btn .caret {border-top-color:initial;}
 code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-load {color:#ddd;font-size:18px;font-weight:bold;margin-left:-72px;position:absolute;top:50%;left:50%;}
