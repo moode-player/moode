@@ -27,8 +27,15 @@ if [ $DSI_SCN_TYPE = 'none' ]; then
         SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
         DISPLAY=:0 xrandr --output HDMI-1 --rotate left
     fi
-else
-    if [ $DSI_SCN_ROTATE = "270" ]; then
+elif [ $DSI_SCN_TYPE = '2' ]; then
+    if [ $DSI_SCN_ROTATE = "0" ]; then
+        DISPLAY=:0 xrandr --output DSI-1 --rotate normal
+    elif [ $DSI_SCN_ROTATE = "90" ]; then
+        SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
+        DISPLAY=:0 xrandr --output DSI-1 --rotate right
+    elif [ $DSI_SCN_ROTATE = "180" ]; then
+        DISPLAY=:0 xrandr --output DSI-1 --rotate inverted
+    elif [ $DSI_SCN_ROTATE = "270" ]; then
         SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
         DISPLAY=:0 xrandr --output DSI-1 --rotate left
     fi

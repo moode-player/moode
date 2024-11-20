@@ -3100,33 +3100,45 @@ function runQueuedJob() {
 			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 			break;
-		case 'dsi_backlight':
+		case 'dsi_scn_type':
+			// Enable/disable touch1 backlight overlay
+			$value = $_SESSION['w_queueargs'] == '1' ? '' : '#';
+			updBootConfigTxt('upd_dsi_backlight', $value);
+			// Reset rotation to 0
+			updBootConfigTxt('upd_dsi_scn_rotate', '0'); // touch1
+			// Remove touch2 touch angle setting
+			sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+			break;
+		/*DELETE:case 'dsi_backlight':
 			$value = $_SESSION['w_queueargs'] == 'on' ? '' : '#';
 			updBootConfigTxt('upd_dsi_backlight', $value);
-			break;
+			break;*/
 		case 'dsi_scn_brightness':
 			updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['w_queueargs']);
 			break;
+		/* No solution with KMS driver
 		case 'pixel_aspect_ratio':
-			// No solution with KMS driver
-			break;
+			break;*/
 		case 'dsi_scn_rotate':
 		 	// touch1 value: 0 landscape | 180 inverted
-			// touch2 value  0 portrait  | 270 landscape
-			$value = $_SESSION['w_queueargs'];
+			// touch2 value  0 portrait  | 90 | 180 | 270 landscape
+			$degree = $_SESSION['w_queueargs'];
 			if ($_SESSION['dsi_scn_type'] == '1') {
-				// Remove Touch2 landscape touch angle setting and update boot config
+				// Remove touch2 touch angle setting
 				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
-				updBootConfigTxt('upd_dsi_scn_rotate', $value);
+				// Update touch1 rotation
+				updBootConfigTxt('upd_dsi_scn_rotate', $degree);
 			} else if ($_SESSION['dsi_scn_type'] == '2') {
-				if ($value == '0') {
-					// Remove Touch2 landscape touch angle setting
+				// Only update the touch angle here, xinitrc handles rotation value
+				if ($degree == '0') {
+					// Remove touch2 touch angle setting
 					sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
-				} else if ($value == '270') {
-					// Add Touch2 landscape touch angle setting
+				} else {
+					$matrix = X11_TOUCH_ANGLE[$degree];
+					// Add touch2 landscape touch angle setting
 					sysCmd("sed -i 's/touchscreen catchall\"/touchscreen catchall\""
 						. '\n\tOption "CalibrationMatrix" '
-						. "\"0 -1 1 1 0 0 0 0 1\"/' /usr/share/X11/xorg.conf.d/40-libinput.conf"
+						. "\"" . $matrix . "\"/' /usr/share/X11/xorg.conf.d/40-libinput.conf"
 					);
 				}
 				stopLocalDisplay();
