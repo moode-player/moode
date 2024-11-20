@@ -402,6 +402,7 @@ textarea[readonly] {
 	background:none!important; /* r915: fix colors and border */
 	border:1px solid rgba(128,128,128,.6)!important;
 	color:#777!important;
+	opacity:.65;
 }
 .form-horizontal .dk_container {margin-bottom:0;}
 input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 0 9px 10px;}
