@@ -133,8 +133,20 @@ if ($result[0]['count()'] > 0) {
 } else {
 	workerLog('worker: Radio table:   ok');
 }
-// Delete session vars that have been removed
-$sessionVars = array('usb_auto_updatedb', 'src_action', 'src_mpid', 'adaptive');
+// For this series: Delete session vars that have been removed or renamed
+$sessionVars = array(
+	'usb_auto_updatedb',
+	'src_action',
+	'src_mpid',
+	'adaptive',
+	'localui',
+	'touchscn',
+	'scnblank',
+	'scnrotate',
+	'scnbrightness',
+	'rpi_scntype',
+	'rpi_backlight'
+);
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
 }
