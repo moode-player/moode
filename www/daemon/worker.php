@@ -3121,10 +3121,6 @@ function runQueuedJob() {
 			// Remove touch2 touch angle setting
 			sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
 			break;
-		/*DELETE:case 'dsi_backlight':
-			$value = $_SESSION['w_queueargs'] == 'on' ? '' : '#';
-			updBootConfigTxt('upd_dsi_backlight', $value);
-			break;*/
 		case 'dsi_scn_brightness':
 			updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['w_queueargs']);
 			break;

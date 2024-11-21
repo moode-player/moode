@@ -162,22 +162,7 @@
 					Type can only be changed if Rotate is 0.
                 </span-->
 			</div>
-			<!-- DELETE:
-			<div class="$_dsi_backlight_ctl_hide">
-				<label class="control-label">Backlight</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio toggle-dsi-backlight" for="toggle-dsi-backlight-2">ON </label>$_select[dsi_backlight_on]
-						<label class="toggle-radio toggle-dsi-backlight" for="toggle-dsi-backlight-1">OFF</label>$_select[dsi_backlight_off]
-					</div>
-	                <button id="btn-set-dsi-backlight" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_backlight" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-dsi-backlight" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span id="info-dsi-backlight" class="config-help-info">
-						Loads the rpi-backlight overlay to enable brightness control for Pi Touch 1.
-	                </span>
-	            </div>
-			</div>
-			-->
+
 			<label class="control-label" for="dsi-scn-brightness">Brightness</label>
 			<div class="controls">
             	<input class="config-input-large" type="number" maxlength="3" min="$_dsi_scn_brightness_min" max="$_dsi_scn_brightness_max" id="dsi-scn-brightness" name="dsi_scn_brightness" value="$_select[dsi_scn_brightness]" $_ctl_disable $_dsi_scn_brightness_disable>
