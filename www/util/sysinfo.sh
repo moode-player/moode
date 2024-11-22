@@ -1,4 +1,4 @@
-scn_cursor#!/bin/bash
+#!/bin/bash
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2014 The moOde audio player project / Tim Curtis
@@ -864,13 +864,14 @@ ashuffle_exclude=$(moodeutl -d -gv "ashuffle_exclude")
 value=$(moodeutl -d -gv "scn_cursor")
 [[ "$value" = "1" ]] && scn_cursor="On" || scn_cursor="Off"
 value=$(moodeutl -d -gv "scn_blank")
-[[ "$value" = "off" ]] && scn_blank="Off" || scn_blank="${arr[84]} Secs"
+[[ "$value" = "off" ]] && scn_blank="Off" || scn_blank="$value Secs"
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
 chromium_ver=$(dpkg -l | grep -m 1 "chromium-browser" | awk '{print $3}' | cut -d":" -f 2)
 dsi_backlight=$(moodeutl -d -gv "dsi_backlight")
+dsi_scn_brightness=$(moodeutl -d -gv "dsi_scn_brightness")
 value=$(moodeutl -d -gv usb_volknob)
 [[ "$value" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
 led_state=$(moodeutl -d -gv led_state)
