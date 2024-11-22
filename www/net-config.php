@@ -186,18 +186,23 @@ if (!empty($ipAddr[0])) {
 	if ($_SESSION['apactivated'] === true) {
 		$_wlan0stats = $ipAddr[0] . ' Hotspot active';
 	} else {
+		// Network
 		$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
 		$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3');
+		// Connection
+		$con = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY -t dev wifi')[0]);
+		// Quality
 		$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 		$array = explode('=', $signal[0]);
 		$qual = explode('/', $array[1]);
 		$quality = round((100 * $qual[0]) / $qual[1]);
 		$lev = explode('/', $array[2]);
 		$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
+
 		$_wlan0stats =
 			'Address: ' . $ipAddr[0] . '<br>' .
-			'Network: ' . $ssid[0] . ' (' . $bssid[0] . ')<br>' .
-			'Quality: ' . $quality . '% level ' . $level;
+			'Network: ' . $ssid[0] . ' (' . $bssid[0] . '), ' . $con[2] . '<br>' .
+			'Channel: ' . $con[0] . ', ' . $con[1] . ', qual ' .  $quality . '%, level ' . $level;
 	}
 } else {
 	$_wlan0stats = $_SESSION['apactivated'] === true ? 'Unable to activate Hotspot' : 'Not in use';
