@@ -658,7 +658,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	// NOTE: Any of these might be empty ''
 	$current['genre'] = $song['Genre'];
 	$current['track'] = $song['Track'];
-	$current['date'] = $song['Date'];
+    $current['date'] = getTrackYear($song);
 	$current['composer'] = $song['Composer'];
 	$current['conductor'] = $song['Conductor'];
 	$current['performer'] = $song['Performer'];

@@ -50,7 +50,7 @@ function parseStationInfo($path) {
 }
 
 function parseTrackInfo($resp) {
-	//workerLog('parseTrackInfo(): (' . $resp . ')');
+	workerLog('parseTrackInfo(): (' . $resp . ')');
 	/* Layout
 	0  Cover url
 	1  File path
@@ -64,9 +64,11 @@ function parseTrackInfo($resp) {
 	9  Track
 	10 Title
 	11 Date
-	12 Duration
-	13 Audio format
-	14 Comment
+	12 OriginalDate
+	13 OriginalReleaseDate
+	14 Duration
+	15 Audio format
+	16 Comment
 	*/
 
 	if (is_null($resp)) {
@@ -130,18 +132,21 @@ function parseTrackInfo($resp) {
 					$array[10] = array($element => $value);
 					break;
 				case 'Date':
+				case 'OriginalDate':
+				case 'OriginalReleaseDate':
 					// Format YYYY or YYYYMM
 					$year = substr($value, 0, 4);
 					$month = substr($value, 4, 2);
-					$array[11] = empty($month) ?
+					$idx = $element == 'Date' ? 11 : ($element == 'OriginalDate' ? 12 : 13);
+					$array[$idx] = empty($month) ?
 						array($element => $value) :
 						array($element => MONTH_NAME[$month] . ' ' . $year);
 					break;
 				case 'Time':
-					$array[12] = array('Duration' => formatSongTime($value));
+					$array[14] = array('Duration' => formatSongTime($value));
 					break;
 				case 'Comment':
-					$array[14] = array($element => $value);
+					$array[16] = array($element => $value);
 					break;
 			}
 
@@ -155,8 +160,7 @@ function parseTrackInfo($resp) {
 		$array[6] = !empty(rtrim($genres, ', ')) ? array('Genres' => rtrim($genres, ', ')) : '';
 		// Audio format
 		$encodedAt = getEncodedAt(array('file' => $file, 'Format' => $format), 'verbose');
-
-		$array[13] = $encodedAt == 'Not playing' ? '' : array('Audio format' => $encodedAt);
+		$array[15] = $encodedAt == 'Not playing' ? '' : array('Audio format' => $encodedAt);
 	}
 
 	return $array;
