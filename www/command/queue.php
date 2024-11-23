@@ -176,6 +176,8 @@ function getPlayqueue($resp) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
+            $value = htmlspecialchars($value, ENT_NOQUOTES);
+
 			if ($element == 'file') {
 				$idx++;
 				$queue[$idx]['file'] = $value;
