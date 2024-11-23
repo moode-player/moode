@@ -36,6 +36,7 @@ Bug fixes
 - FIX: Auto-scroll to artist in Tag not working
 - FIX: Crossfeed input field on Audio Config not updating
 - FIX: Queue items not being HTML escaped
+- FIX: Date parsing for Playback view and Audio Info
 
 ################################################################################
 #
