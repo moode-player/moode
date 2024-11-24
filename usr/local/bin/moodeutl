@@ -36,6 +36,7 @@ $features = array(
 	FEAT_BLUETOOTH => 'Bluetooth renderer',
 	FEAT_DEVTWEAKS	=> 'Developer tweaks',
 	FEAT_MULTIROOM	=> 'Multiroom audio'
+	FEAT_DEEZER => 'Deezer Connect renderer'
 );
 
 $featBitmask = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));

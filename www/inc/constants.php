@@ -166,8 +166,10 @@ const FEAT_PLEXAMP      = 8192;		// y Plexamp renderer
 const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
+const FEAT_DEEZER       = 131072;	//   Deezer Connect renderer (placeholder)
 //						-------
 //						  97207
+//						  228279 (with FEAT_DEEZER y)
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate

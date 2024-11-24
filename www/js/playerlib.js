@@ -22,8 +22,10 @@ const FEAT_PLEXAMP      = 8192;     // y Plexamp renderer
 const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
+const FEAT_DEEZER       = 131072;	//   Deezer Connect renderer (placeholder)
 //						-------
 //						  97207
+//						  228279 (with FEAT_DEEZER y)
 
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
