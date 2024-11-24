@@ -49,6 +49,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nCPU governor\t\t= $CPUGOV\c"
 	echo -e "\nPCI express\t\t= $PCI_EXPRESS\c"
 	echo -e "\nReduce power\t\t= $REDUCE_POWER (Pi-5 only)\c"
+	echo -e "\nFan control\t\t= $FAN_CONTROL (Pi-5 only)\c"
 	echo -e "\nPi integrated WiFi\t= $piwifi\c"
 	echo -e "\nPi integrated BT\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
@@ -444,7 +445,7 @@ TMP=$(moodeutl -d -gv "pci_express")
 [[ "$TMP" = "off" ]] && PCI_EXPRESS="Off" || PCI_EXPRESS="$TMP"
 TMP=$(moodeutl -d -gv "reduce_power")
 [[ "$TMP" = "on" ]] && REDUCE_POWER="On" || REDUCE_POWER="Off"
-
+FAN_CONTROL=$(moodeutl -d -gv "fan_temp0")
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	CPUGOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
 else

@@ -150,6 +150,15 @@ function autoConfigSettings() {
 			$value = $values['pci_express'];
 			updBootConfigTxt('upd_pci_express', $value);
 		}],
+		
+		// NOTE: $_SESSION['reduce_power'] is an eeprom config
+		// The setting does not need to be restored
+
+		['requires' => ['fan_temp0'], 'handler' => function($values) {
+			$_SESSION['fan_temp0'] = $values['fan_temp0'];
+			$value = formatFanTemp0Params($values['fan_temp0']);
+			updBootConfigTxt('upd_fan_temp0', $value);
+		}],
 		['requires' => ['p3wifi'], 'handler' => function($values) {
 			phpSession('write', 'p3wifi', $values['p3wifi']);
 			$value = $values['p3wifi'] == '0' ? '' : '#';

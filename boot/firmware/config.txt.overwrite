@@ -39,6 +39,8 @@ dtparam=audio=on
 # PCI Express
 #dtparam=pciex1
 #dtparam=pciex1_gen=3
-# Pi Touch
+# Pi Touch1
 #dtoverlay=rpi-backlight
 #dtoverlay=vc4-kms-dsi-7inch,invx,invy
+# Fan speed
+#dtparam=fan_temp0=50000,fan_temp0_hyst=5000,fan_temp0_speed=75

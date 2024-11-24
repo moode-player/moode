@@ -134,6 +134,29 @@ if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce
 	phpSession('write', 'reduce_power', $_POST['reduce_power']);
 }
 
+if (isset($_POST['fan_temp0']) && $_POST['fan_temp0'] != $_SESSION['fan_temp0']) {
+	// Format is: Threshold 45-55, Target 40-50, Speed 75-125
+	$valid = true;
+	$parts = explode(',', $_POST['fan_temp0']);
+	if ($parts[0] < 45 || $parts[0] > 55) {
+		$valid = false;
+		$msg = 'Threshold must be between 45-55';
+	} else if ($parts[1] < 40 || $parts[1] > 50) {
+		$valid = false;
+		$msg = 'Target must be between 40-50';
+	} else if ($parts[2] < 75 || $parts[2] > 125) {
+		$valid = false;
+		$msg = 'Speed must be between 75-125';
+	}
+	if ($valid == false) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = $msg;
+	} else {
+		submitJob('fan_temp0', formatFanTemp0Params($_POST['fan_temp0']), NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+		phpSession('write', 'fan_temp0', $_POST['fan_temp0']);
+	}
+}
+
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
 	submitJob('p3wifi', $_POST['p3wifi'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	phpSession('write', 'p3wifi', $_POST['p3wifi']);
@@ -271,7 +294,7 @@ if (isset($_POST['download_self_signed_cert'])) {
 		exit();
 	} else {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['msg'] = "Certificate file missing. Download cancelled.";
+		$_SESSION['notify']['msg'] = "Certificate file missing. Download cancelled.";
 	}
 }
 // Upload manually generated certificate .crt and .key files
@@ -279,7 +302,7 @@ if (isset($_POST['upload_nginx_cert_files'])) {
 	//workerLog(print_r($_FILES, true));
 	if (empty($_FILES['nginx_cert_files']['name'][0]) || empty($_FILES['nginx_cert_files']['name'][1])) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['msg'] = 'Missing certificate file. Both the .crt and .key files must be selected and uploaded.';
+		$_SESSION['notify']['msg'] = 'Missing certificate file. Both the .crt and .key files must be selected and uploaded.';
 	} else {
 		$file0 = $_FILES['nginx_cert_files']['name'][0];
 		$file1 = $_FILES['nginx_cert_files']['name'][1];
@@ -292,7 +315,7 @@ if (isset($_POST['upload_nginx_cert_files'])) {
 			rename($_FILES['nginx_cert_files']['tmp_name'][0], TMP_NGINX_KEY_FILE);
 		} else {
 			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-			$_SESSION['msg'] = 'Missing certificate file. Either the .crt or .key file is missing.';
+			$_SESSION['notify']['msg'] = 'Missing certificate file. Either the .crt or .key file is missing.';
 		}
 	}
 }
@@ -300,12 +323,12 @@ if (isset($_POST['upload_nginx_cert_files'])) {
 if (isset($_POST['nginx_install_cert']) && $_POST['nginx_install_cert'] == 1) {
 	if (!file_exists(TMP_NGINX_CRT_FILE) || !file_exists(TMP_NGINX_KEY_FILE)) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['msg'] = 'Certificate file(s) missing. Installation cancelled.';
+		$_SESSION['notify']['msg'] = 'Certificate file(s) missing. Installation cancelled.';
 	} else {
 		sysCmd('mv ' . TMP_NGINX_CRT_FILE . ' /etc/ssl/certs/');
 		sysCmd('mv ' . TMP_NGINX_KEY_FILE . ' /etc/ssl/private/');
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
-		$_SESSION['msg'] = 'Certificate installed.';
+		$_SESSION['notify']['msg'] = 'Certificate installed.';
 	}
 }
 
@@ -381,10 +404,13 @@ if ($piModel == '5') {
 	$_select['pci_express'] .= "<option value=\"off\" " . (($_SESSION['pci_express'] == 'off') ? "selected" : "") . ">Off</option>\n";
 	$_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
 	$_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
+	$_fan_temp0_hide = '';
+	$_select['fan_temp0'] = $_SESSION['fan_temp0'];
 	$_pi_audio_driver_hide = 'hide';
 } else {
 	$_reduce_power_hide = 'hide';
 	$_pci_express_hide = 'hide';
+	$_fan_temp0_hide = 'hide';
 	$_pi_audio_driver_hide = '';
 	$_select['pi_audio_driver'] .= "<option value=\"" . PI_VC4_KMS_V3D . "\" " . (($_SESSION['pi_audio_driver'] == PI_VC4_KMS_V3D) ? "selected" : "") . ">Kernel mode (Default)</option>\n";
 	$_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($_SESSION['pi_audio_driver'] == PI_SND_BCM2835) ? "selected" : "") . ">Firmware mode (Legacy)</option>\n";

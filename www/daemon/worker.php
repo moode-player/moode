@@ -352,6 +352,19 @@ if ($piModel == '5') {
 	$_SESSION['reduce_power'] = 'n/a';
 }
 workerLog('worker: Reduce power:  ' . $_SESSION['reduce_power']);
+// Pi-5 fan control for fan_temp0 dtparam
+if (!isset($_SESSION['fan_temp0'])) {
+	$_SESSION['fan_temp0'] = '50,45,75'; // threshold,target,speed
+}
+if ($piModel == '5') {
+	updBootConfigTxt('upd_fan_temp0', formatFanTemp0Params($_SESSION['fan_temp0']));
+	$parts = explode(',', $_SESSION['fan_temp0']);
+	$fanControlMsg = $parts[0] . 'C, ' . $parts[1] . 'C, ' . $parts[2];
+} else {
+	updBootConfigTxt('upd_fan_temp0', '#');
+	$fanControlMsg = 'n/a';
+}
+workerLog('worker: Fan control:   ' . $fanControlMsg);
 
 // CPU governor
 workerLog('worker: CPU governor:  ' . $_SESSION['cpugov']);
@@ -2917,12 +2930,6 @@ function runQueuedJob() {
 			sysCmd('sed -i "/const WORKER_SLEEP/c\const WORKER_SLEEP = ' . $workerSleep . ';" /var/www/inc/sleep-interval.php');
 			sysCmd('sed -i "/const WAITWORKER_SLEEP/c\const WAITWORKER_SLEEP = ' . $waitworkerSleep . ';" /var/www/inc/sleep-interval.php');
 			break;
-		case 'reduce_power':
-			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
-			sysCmd('rpi-eeprom-config --out /tmp/boot.conf > /dev/null 2>&1');
-			sysCmd('sed -i s/^POWER_OFF_ON_HALT=.*/POWER_OFF_ON_HALT=' . $value . '/ /tmp/boot.conf > /dev/null 2>&1');
-			sysCmd('rpi-eeprom-config --apply /tmp/boot.conf > /dev/null 2>&1');
-			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
 			break;
@@ -2933,6 +2940,16 @@ function runQueuedJob() {
 		case 'pci_express':
 			$value = $_SESSION['w_queueargs'];
 			updBootConfigTxt('upd_pci_express', $value);
+			break;
+		case 'reduce_power':
+			$value = $_SESSION['w_queueargs'] == 'on' ? '1' : '0';
+			sysCmd('rpi-eeprom-config --out /tmp/boot.conf > /dev/null 2>&1');
+			sysCmd('sed -i s/^POWER_OFF_ON_HALT=.*/POWER_OFF_ON_HALT=' . $value . '/ /tmp/boot.conf > /dev/null 2>&1');
+			sysCmd('rpi-eeprom-config --apply /tmp/boot.conf > /dev/null 2>&1');
+			break;
+		case 'fan_temp0':
+			$value = $_SESSION['w_queueargs'];
+			updBootConfigTxt('upd_fan_temp0', $value);
 			break;
 		case 'usb_auto_mounter':
 			if ($_SESSION['w_queueargs'] == 'udisks-glue') {

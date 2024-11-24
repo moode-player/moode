@@ -647,6 +647,14 @@ function updBootConfigTxt($action, $value) {
 			sysCmd('sed -i /' . CFG_PCI_EXPRESS . "$/c\\" . $prefix1 . 'dtparam=' . CFG_PCI_EXPRESS . ' ' . BOOT_CONFIG_TXT);
 			sysCmd('sed -i /' . CFG_PCI_EXPRESS_GEN3 . "/c\\" . $prefix2 . 'dtparam=' . CFG_PCI_EXPRESS_GEN3 . ' ' . BOOT_CONFIG_TXT);
 			break;
+		case 'upd_fan_temp0':
+			// $value: '#' or 'threshold,hysteresis,speed'
+			if ($value == '#') {
+				sysCmd('sed -i s/^dtparam=fan_temp0/#dtparam=fan_temp0/ ' . BOOT_CONFIG_TXT);
+			} else {
+				sysCmd('sed -i s/^dtparam=fan_temp0.*/dtparam=' . $value . '/ ' . BOOT_CONFIG_TXT);
+			}
+			break;
 		case 'upd_disable_bt':
 			// $value: '#' or ''
 			sysCmd('sed -i /' . CFG_DISABLE_BT . "/c\\" . $value . 'dtoverlay=' . CFG_DISABLE_BT . ' ' . BOOT_CONFIG_TXT);
@@ -656,6 +664,15 @@ function updBootConfigTxt($action, $value) {
 			sysCmd('sed -i /' . CFG_DISABLE_WIFI . "/c\\" . $value . 'dtoverlay=' . CFG_DISABLE_WIFI . ' ' . BOOT_CONFIG_TXT);
 			break;
 	}
+}
+
+function formatFanTemp0Params($params) {
+	$params = explode(',', $params);
+	$threshold = 'fan_temp0=' . ($params[0] * 1000) . ',';
+	$hysteresis = 'fan_temp0_hyst=' . (($params[0] - $params[1]) * 1000) . ',';
+	$speed =  'fan_temp0_speed=' . $params[2];
+
+	return $threshold . $hysteresis . $speed;
 }
 
 //----------------------------------------------------------------------------//
