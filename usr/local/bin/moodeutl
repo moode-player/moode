@@ -35,7 +35,7 @@ $features = array(
 	FEAT_PLEXAMP => 'Plexamp renderer',
 	FEAT_BLUETOOTH => 'Bluetooth renderer',
 	FEAT_DEVTWEAKS	=> 'Developer tweaks',
-	FEAT_MULTIROOM	=> 'Multiroom audio'
+	FEAT_MULTIROOM	=> 'Multiroom audio',
 	FEAT_DEEZER => 'Deezer Connect renderer'
 );
 
