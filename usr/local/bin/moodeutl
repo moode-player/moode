@@ -25,7 +25,7 @@ $features = array(
 	FEAT_RECORDER => 'Stream recorder',
 	FEAT_SQUEEZELITE => 'Squeezelite renderer',
 	FEAT_UPMPDCLI => 'UPnP client for MPD',
-	FEAT_SQSHCHK => 'Require squashfs for software update',
+	FEAT_DEEZER => 'Deezer Connect renderer',
 	FEAT_ROONBRIDGE => 'RoonBridge renderer',
 	FEAT_LOCALDISPLAY => 'Local display',
 	FEAT_INPSOURCE => 'Input source select',
@@ -35,8 +35,7 @@ $features = array(
 	FEAT_PLEXAMP => 'Plexamp renderer',
 	FEAT_BLUETOOTH => 'Bluetooth renderer',
 	FEAT_DEVTWEAKS	=> 'Developer tweaks',
-	FEAT_MULTIROOM	=> 'Multiroom audio',
-	FEAT_DEEZER => 'Deezer Connect renderer'
+	FEAT_MULTIROOM	=> 'Multiroom audio'
 );
 
 $featBitmask = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));

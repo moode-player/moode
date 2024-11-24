@@ -59,10 +59,10 @@ if (isset($_POST['checkfor_update'])) {
 // Install software update
 if (isset($_POST['install_update'])) {
 	if ($_POST['install_update'] == 1) {
-		$mount = sysCmd('mount | grep "moode.sqsh"');
+		//DELETE:$mount = sysCmd('mount | grep "moode.sqsh"');
 		$space = sysCmd("df | grep /dev/root | awk '{print $4}'");
 		# Check for invalid configs
-		if ($mount[0] != '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && ($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
+		/*DELETE:if ($mount[0] != '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && ($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
 			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 			$_SESSION['notify']['msg'] = 'Invalid configuration. Cannot find compressed file system.';
 			$_SESSION['notify']['duration'] = NOTIFY_DURATION_LONG;
@@ -70,7 +70,7 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 			$_SESSION['notify']['msg'] = 'Invalid configuration. File system is compressed and read-only.';
 			$_SESSION['notify']['duration'] = NOTIFY_DURATION_LONG;
-		} else if ($space[0] < 512000) {
+		} else*/ if ($space[0] < 512000) {
 			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 			$_SESSION['notify']['msg'] = 'Insufficient disk space. Update cannot proceed without at least 500M of disk space available.';
 			$_SESSION['notify']['duration'] = NOTIFY_DURATION_LONG;
