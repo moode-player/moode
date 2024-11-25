@@ -174,16 +174,16 @@ function getPlayqueue($resp) {
 		$idx = -1;
 
 		while ($line) {
-			list ($element, $value) = explode(': ', $line, 2);
+			list ($element, $origValue) = explode(': ', $line, 2);
 
-            $value = htmlspecialchars($value, ENT_NOQUOTES);
+            $value = htmlspecialchars($origValue, ENT_NOQUOTES);
 
 			if ($element == 'file') {
 				$idx++;
-				$queue[$idx]['file'] = $value;
-                $level = stripos(dirname($value), '.cue', -4) === false ? 1 : 2;
-                $queue[$idx]['cover_hash'] = substr($value, 0, 4) == 'http' ? '' : md5(dirname($value, $level));
-				$queue[$idx]['fileext'] = getSongFileExt($value);
+				$queue[$idx]['file'] = $origValue;
+                $level = stripos(dirname($origValue), '.cue', -4) === false ? 1 : 2;
+                $queue[$idx]['cover_hash'] = substr($origValue, 0, 4) == 'http' ? '' : md5(dirname($origValue, $level));
+				$queue[$idx]['fileext'] = getSongFileExt($origValue);
 				$queue[$idx]['TimeMMSS'] = formatSongTime($queue[$idx]['Time']);
 			} else {
 				if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
@@ -200,7 +200,8 @@ function getPlayqueue($resp) {
 			$line = strtok("\n");
 		}
 	}
-
+    // DEBUG:
+    //workerLog(print_r($queue, true));
 	return $queue;
 }
 
