@@ -4572,7 +4572,7 @@ function setLibMenuAndHeader () {
 		}
 	}
 
-    $('#library-header').text(headerText);
+    $('#library-header').html(headerText);
 }
 
 function lazyLode(view) {
