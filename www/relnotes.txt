@@ -23,6 +23,7 @@ Updates
 - UPD: Add HDMI screen orientation option to Peripheral Config
 - UPD: Add channel/security info to Network Config
 - UPD: Add fan control for temp0 dtparam to System Config
+- UPD: Add optional password for SMB file sharing
 - UPD: Remove AP fallback for Spotify Connect (not needed for >= v0.5.x)
 - UPD: Minor WebUI style improvements
 
