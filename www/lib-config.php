@@ -295,7 +295,8 @@ if (!isset($_GET['cmd'])) {
 	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 	foreach ($mounts as $mp) {
 		$icon = nasMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
-		$_nas_mounts .= "<a href=\"lib-config.php?cmd=edit_nas_source&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ", " . $mp['type'] . ") </a>";
+		$mpType = $mp['type'] == 'cifs' ? 'smb' : $mp['type'];
+		$_nas_mounts .= "<a href=\"lib-config.php?cmd=edit_nas_source&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ", " . $mpType . ") </a>";
 	}
 	if ($mounts === true) {
 		$_nas_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
