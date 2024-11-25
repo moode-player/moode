@@ -140,13 +140,16 @@ if (isset($_POST['fan_temp0']) && $_POST['fan_temp0'] != $_SESSION['fan_temp0'])
 	$parts = explode(',', $_POST['fan_temp0']);
 	if ($parts[0] < 45 || $parts[0] > 55) {
 		$valid = false;
-		$msg = 'Threshold must be between 45-55';
+		$msg = 'Threshold must be between 45-55.';
 	} else if ($parts[1] < 40 || $parts[1] > 50) {
 		$valid = false;
-		$msg = 'Target must be between 40-50';
+		$msg = 'Target must be between 40-50.';
+	} else if ($parts[1] >= $parts[0]) {
+		$valid = false;
+		$msg = 'Target must be less than threshold.';
 	} else if ($parts[2] < 75 || $parts[2] > 125) {
 		$valid = false;
-		$msg = 'Speed must be between 75-125';
+		$msg = 'Speed must be between 75-125.';
 	}
 	if ($valid == false) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
