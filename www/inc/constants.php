@@ -76,6 +76,8 @@ const BT_PINCODE_CONF = '/etc/bluetooth/pin.conf';
 const ETC_MACHINE_INFO = '/etc/machine-info';
 const CHROME_DOWNGRADE_VER = '126.0.6478.164-rpt1';
 const NO_USERID_DEFINED = 'userid does not exist';
+// File sharing
+const FS_SMB_CONF = '/etc/samba/smb.conf';
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';

@@ -163,7 +163,7 @@
 	                <input class="config-input-large" type="text" id="fan-temp0" name="fan_temp0" value="$_select[fan_temp0]" required>
 					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fan_temp0" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<span class="config-help-static">
-						Format is: Threshold 45-55, Target 40-50, Speed 75-125.<br>
+						Format is: Threshold 45-55C, Target 40-50C, Speed 75-125.<br>
 						Default: 50,45,75.
                     </span>
 	            </div>
@@ -270,7 +270,19 @@
 				<span class="config-help-static">
 					Server Message Block (SMB) allows files to be shared over a network with Windows, Mac and Linux clients.<br>
 					<b>Shares: </b> NAS, NVMe, SDCard, Playlists and USB shares are automatically created.<br>
-					<b>Access: </b> Specify "anonymous" access or userid = guest and no password when mounting shares.<br>
+				</span>
+			</div>
+
+			<label class="control-label" for="fs-smb-pwd">Password</label>
+			<div class="controls">
+				<input class="config-input-large" type="password" pattern=".{8,64}" id="fs-smb-pwd" name="fs_smb_pwd" value="$_select[fs_smb_pwd]" placeholder="None">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_smb_pwd" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a class="show-hide-password $_show_hide_password_icon_hide" href="#notarget" data-id="fs-smb-pwd"><i class="fa-regular fa-sharp fa-eye" style="margin-left:0;"></i></a>
+				<span class="config-help-static">
+					Length: 8-63 characters.<br>
+					If password is None specify anonymous access or userid "guest" and no password when mounting shares.<br>
+					If a password is set specify the userid created in the Raspberry Pi Imager and this password when mounting shares.<br>
+                	<b>Warning:</b> To avoid creating a security vulnerability, make sure this password is different from the one entered for the userid created in the Raspberry Pi Imager.
                 </span>
 			</div>
 

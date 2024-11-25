@@ -25,8 +25,14 @@ function restart_nfs_if_on () {
 # $2 = mount point (/media/DISK_LABEL)
 if [[ $1 = "add_mount_udisks" ]]; then
 	# SMB
+	SMB_PWD=$(moodeutl -d -gv fs_smb_pwd)
+	if [[ "$SMB_PWD" = "" ]]; then
+		GUEST_OK="guest ok = Yes"
+	else
+		GUEST_OK="#guest ok = Yes"
+	fi
 	if [[ $(grep -w -c "$2" /etc/samba/smb.conf) = 0 ]]; then
-		sed -i "$ a[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
+		sed -i "$ a[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\n$GUEST_OK" /etc/samba/smb.conf
 		restart_samba_if_on ${SQLDB}
 	fi
 	# NFS

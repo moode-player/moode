@@ -517,6 +517,9 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // SMB
+if (!isset($_SESSION['fs_smb_pwd'])) {
+	$_SESSION['fs_smb_pwd'] = '';
+}
 if ($_SESSION['fs_smb'] == 'On') {
 	sysCmd('systemctl start smbd');
 	sysCmd('systemctl start nmbd');
@@ -537,6 +540,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_MINIDLNA) {
 	$status = 'n/a';
 }
 workerLog('worker: SMB file sharing:  ' . lcfirst($_SESSION['fs_smb']));
+workerLog('worker: SMB password:      ' . (empty($_SESSION['fs_smb_pwd']) ? "none" : 'set'));
 workerLog('worker: NFS file sharing:  ' . lcfirst($_SESSION['fs_nfs']));
 workerLog('worker: DLNA file sharing: ' . $status);
 
@@ -3025,6 +3029,28 @@ function runQueuedJob() {
 			$cmd = $_SESSION['w_queueargs'] == 'On' ? 'start' : 'stop';
 			sysCmd('systemctl ' . $cmd . ' smbd');
 			sysCmd('systemctl ' . $cmd . ' nmbd');
+			break;
+		case 'fs_smb_pwd':
+			if ($_SESSION['w_queueargs'] == '') {
+				// Delete smb userid
+				sysCmd('smbpasswd -x ' . $_SESSION['user_id']);
+				// Update smb.conf
+				sysCmd('sed -i "s/^#map to guest/map to guest/" ' . FS_SMB_CONF);
+				sysCmd('sed -i "s/^#guest account/guest account/" ' . FS_SMB_CONF);
+				sysCmd('sed -i "s/^admin users/#admin users/" ' . FS_SMB_CONF);
+				sysCmd('sed -i "s/^#guest ok/guest ok/" ' . FS_SMB_CONF);
+			} else {
+				// Add smbuserid and password
+				sysCmd('echo -ne "' .
+					$_SESSION['fs_smb_pwd'] . "\n" .
+					$_SESSION['fs_smb_pwd'] . "\n" .
+					'" | smbpasswd -s -a ' . $_SESSION['user_id']);
+				// Update smb.conf
+				sysCmd('sed -i "s/^map to guest/#map to guest/" ' . FS_SMB_CONF);
+				sysCmd('sed -i "s/^guest account/#guest account/" ' . FS_SMB_CONF);
+				sysCmd('sed -i "s/^#admin users/admin users/" ' . FS_SMB_CONF);
+				sysCmd('sed -i "s/^guest ok/#guest ok/" ' . FS_SMB_CONF);
+			}
 			break;
 		case 'fs_nfs':
 			$cmd = $_SESSION['w_queueargs'] == 'On' ? 'start' : 'stop';
