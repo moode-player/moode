@@ -4644,10 +4644,16 @@ function lazyLode(view) {
                 customScroll('artists', UI.libPos[2], scrollSpeed);
                 $('#artistsList .lib-entry').eq(UI.libPos[2]).addClass('active');
                 $('#artistsList .lib-entry').eq(UI.libPos[2]).click();
+            } else {
+                customScroll('artists', 0, scrollSpeed);
             }
-            customScroll('albums', albumPos, scrollSpeed);
-            $('#albumsList .lib-entry').eq(albumPos).addClass('active');
-            $('#albumsList .lib-entry').eq(albumPos).click();
+            if (albumPos >= 0) {
+                customScroll('albums', albumPos, scrollSpeed);
+                $('#albumsList .lib-entry').eq(albumPos).addClass('active');
+                $('#albumsList .lib-entry').eq(albumPos).click();
+            } else {
+                customScroll('albums', 0, scrollSpeed);                
+            }
         } else if (view == 'album') {
             if (UI.libPos[0] >= 0 && albumCoverPos >= 0) {
                 customScroll('albumcovers', albumCoverPos, scrollSpeed);
