@@ -134,29 +134,31 @@ if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce
 	phpSession('write', 'reduce_power', $_POST['reduce_power']);
 }
 
-if (isset($_POST['fan_temp0']) && $_POST['fan_temp0'] != $_SESSION['fan_temp0']) {
-	// Format is: Threshold 45-55, Target 40-50, Speed 75-125
-	$valid = true;
-	$parts = explode(',', $_POST['fan_temp0']);
-	if ($parts[0] < 45 || $parts[0] > 55) {
-		$valid = false;
-		$msg = 'Threshold must be between 45-55.';
-	} else if ($parts[1] < 40 || $parts[1] > 50) {
-		$valid = false;
-		$msg = 'Target must be between 40-50.';
-	} else if ($parts[1] >= $parts[0]) {
-		$valid = false;
-		$msg = 'Target must be less than threshold.';
-	} else if ($parts[2] < 75 || $parts[2] > 125) {
-		$valid = false;
-		$msg = 'Speed must be between 75-125.';
-	}
-	if ($valid == false) {
-		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['notify']['msg'] = $msg;
-	} else {
-		submitJob('fan_temp0', formatFanTemp0Params($_POST['fan_temp0']), NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-		phpSession('write', 'fan_temp0', $_POST['fan_temp0']);
+if (isset($_POST['update_fan_temp0'])) {
+	if (isset($_POST['fan_temp0']) && $_POST['fan_temp0'] != $_SESSION['fan_temp0']) {
+		// Format is: Threshold 45-55, Target 40-50, Speed 75-125
+		$valid = true;
+		$parts = explode(',', $_POST['fan_temp0']);
+		if ($parts[0] < 45 || $parts[0] > 55) {
+			$valid = false;
+			$msg = 'Threshold must be between 45-55.';
+		} else if ($parts[1] < 40 || $parts[1] > 50) {
+			$valid = false;
+			$msg = 'Target must be between 40-50.';
+		} else if ($parts[1] >= $parts[0]) {
+			$valid = false;
+			$msg = 'Target must be less than threshold.';
+		} else if ($parts[2] < 75 || $parts[2] > 125) {
+			$valid = false;
+			$msg = 'Speed must be between 75-125.';
+		}
+		if ($valid == false) {
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] = $msg;
+		} else {
+			submitJob('fan_temp0', formatFanTemp0Params($_POST['fan_temp0']), NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+			phpSession('write', 'fan_temp0', $_POST['fan_temp0']);
+		}
 	}
 }
 

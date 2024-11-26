@@ -652,7 +652,12 @@ function updBootConfigTxt($action, $value) {
 			if ($value == '#') {
 				sysCmd('sed -i s/^dtparam=fan_temp0/#dtparam=fan_temp0/ ' . BOOT_CONFIG_TXT);
 			} else {
-				sysCmd('sed -i s/^dtparam=fan_temp0.*/dtparam=' . $value . '/ ' . BOOT_CONFIG_TXT);
+				$result = sysCmd('cat ' . BOOT_CONFIG_TXT . ' | grep -c -e ^#dtparam=fan_temp0')[0];
+				if ($result == '0') {
+					sysCmd('sed -i s/^dtparam=fan_temp0.*/dtparam=' . $value . '/ ' . BOOT_CONFIG_TXT);
+				} else {
+					sysCmd('sed -i s/^#dtparam=fan_temp0.*/dtparam=' . $value . '/ ' . BOOT_CONFIG_TXT);					
+				}
 			}
 			break;
 		case 'upd_disable_bt':
