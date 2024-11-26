@@ -37,7 +37,7 @@ Bug fixes
 - FIX: Wrong ALSA cardnum assigned to Multiroom sender during startup
 - FIX: Auto-scroll to artist in Tag not working
 - FIX: Crossfeed input field on Audio Config not updating
-- FIX: Queue items not being HTML escaped
+- FIX: Queue items not being HTML escaped correctly
 - FIX: Date parsing for Playback view and Audio Info
 
 ################################################################################
