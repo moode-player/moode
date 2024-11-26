@@ -84,9 +84,9 @@ function parseTrackInfo($resp) {
 		}
 
 		while ($line) {
-			list ($element, $value) = explode(': ', $line, 2);
+			list ($element, $origValue) = explode(': ', $line, 2);
 
-			$value = htmlspecialchars($value, ENT_NOQUOTES);
+			$value = htmlspecialchars($origValue, ENT_NOQUOTES);
 
 			switch ($element) {
 				// Not needed for display
@@ -98,7 +98,7 @@ function parseTrackInfo($resp) {
 					break;
 				// All others
 				case 'file':
-					$file = $value;
+					$file = $origValue;
 					$level = stripos(dirname($file), '.cue', -4) === false ? 1 : 2;
 					$cover_hash = md5(dirname($file, $level));
 					$array[0] = file_exists(THMCACHE_DIR . $cover_hash . '.jpg') ? array('Covers' => $cover_hash) : array('Covers' => '');
