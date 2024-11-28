@@ -1143,7 +1143,7 @@ function renderUI() {
             $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
         } else if (MPD.json['state'] == 'pause') {
             // Track
-            $('#extra-tags-display').text(formatExtraTagsString());
+            $('#extra-tags-display').html(formatExtraTagsString());
             $('#ss-extra-metadata-output-format, #countdown-sample-rate').text('Not playing');
             $('#ss-extra-metadata-output-format').removeClass('ss-npicon');
     	} else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
@@ -1168,7 +1168,7 @@ function renderUI() {
         		$('#extra-tags-display').text(bitRate + ' • ' + MPD.json['output']);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
-                $('#extra-tags-display').text(formatExtraTagsString());
+                $('#extra-tags-display').html(formatExtraTagsString());
                 $('#ss-extra-metadata, #songsand-sample-rate').text(MPD.json['encoded']);
                 $('#countdown-sample-rate').text(
                     (typeof(MPD.json['encoded']) === 'undefined' ? '' : MPD.json['encoded'].split(',')[0])
@@ -4652,7 +4652,7 @@ function lazyLode(view) {
                 $('#albumsList .lib-entry').eq(albumPos).addClass('active');
                 $('#albumsList .lib-entry').eq(albumPos).click();
             } else {
-                customScroll('albums', 0, scrollSpeed);                
+                customScroll('albums', 0, scrollSpeed);
             }
         } else if (view == 'album') {
             if (UI.libPos[0] >= 0 && albumCoverPos >= 0) {
