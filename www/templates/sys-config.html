@@ -162,9 +162,17 @@
 	            <div class="controls">
 	                <input class="config-input-large" type="text" id="fan-temp0" name="fan_temp0" value="$_select[fan_temp0]">
 					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fan_temp0" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-fan-temp0" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span class="config-help-static">
 						Format is: Threshold 45-55C, Target 40-50C, Speed 75-125.<br>
 						Default: 50,45,75.
+                    </span>
+					<span id="info-fan-temp0" class="config-help-info">
+						Adjust fan_temp0 settings. Default temperature map is below.<br>
+						- fan_temp0=50000,fan_temp0_hyst=5000,fan_temp0_speed=75<br>
+					    - fan_temp1=60000,fan_temp1_hyst=5000,fan_temp1_speed=125<br>
+					    - fan_temp2=67500,fan_temp2_hyst=5000,fan_temp2_speed=175<br>
+					    - fan_temp3=75000,fan_temp3_hyst=5000,fan_temp3_speed=250<br>
                     </span>
 	            </div>
 			</div>
