@@ -24,9 +24,9 @@ track_changed
 )
 
 MATCH=0
-for EVENT in "${PLAYER_EVENTS[@]}"
+for MATCH_EVENT in "${PLAYER_EVENTS[@]}"
 do
-	if [[ $PLAYER_EVENT == $EVENT ]]; then
+	if [[ $PLAYER_EVENT == $MATCH_EVENT ]]; then
 		MATCH=1
 		debug_log "Process: "$PLAYER_EVENT
 	fi
