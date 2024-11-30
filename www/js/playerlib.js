@@ -11,7 +11,7 @@ const FEAT_MINIDLNA     = 4;        // y DLNA server
 const FEAT_RECORDER     = 8;        //   Stream recorder
 const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD
-const FEAT_DEEZER       = 64;       //   Deezer Connect renderer (placeholder)
+const FEAT_DEEZER       = 64;       // y Deezer Connect renderer
 const FEAT_ROONBRIDGE   = 128;      // y RoonBridge renderer
 const FEAT_LOCALDISPLAY = 256;      // y Local display
 const FEAT_INPSOURCE    = 512;      // y Input source select
@@ -23,8 +23,7 @@ const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 //						-------
-//						  97207
-//						  97271 (with FEAT_DEEZER y)
+//						  97271
 
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
@@ -562,6 +561,20 @@ function engineCmd() {
                 case 'update_spotmeta':
                     updateSpotmeta(cmd[1]);
                     break;
+                case 'deezactive1':
+                case 'deezactive0':
+    				inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">Deezer Active</span>' +
+                        '<button class="btn deezer-renderer disconnect-deezer" data-job="deezersvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                        receiversBtn(cmd[0]) +
+                        audioInfoBtn(cmd[0]) +
+                        '<a id="inpsrc-deezer-refresh" class="btn deezer-renderer" href="javascript:refreshDeezmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
+                    );
+                    $('#inpsrc-deezmeta-refresh').html('');
+                    break;
+                case 'update_deezmeta':
+                    updateDeezmeta(cmd[1]);
+                    break;
                 case 'slactive1':
                 case 'slactive0':
     				inpSrcIndicator(cmd[0],
@@ -783,7 +796,7 @@ function updateSpotmeta(data) {
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
-    // data = title;artists;album;duration;coverurl
+    // data = title;artists;album;duration;coverurl (note duration is in ms)
     //DEBUG:console.log(data);
     var metadata = data.split(';');
     $('#inpsrc-backdrop').html('<img class="inpsrc-spotmeta-backdrop" ' + 'src="' + metadata[4] + '">');
@@ -797,6 +810,36 @@ function updateSpotmeta(data) {
     } else {
         $('#inpsrc-spotify-refresh').html('');
         $('#inpsrc-spotmeta-refresh').html('<a class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>');
+    }
+}
+
+function refreshDeezmeta() {
+    $.getJSON('command/renderer.php?cmd=get_deezmeta', function(data) {
+        updateDeezmeta(data);
+    });
+}
+function updateDeezmeta(data) {
+    $('#inpsrc-msg').removeClass('inpsrc-msg-default');
+    $('#inpsrc-msg').addClass('inpsrc-msg-spotify');
+    $('#inpsrc-msg-text').text('');
+
+    $('#inpsrc-backdrop').css('filter', 'blur(0px)');
+    $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
+
+    // data = title;artist;album;duration;coverurl (note duration is in secs)
+    //DEBUG:console.log(data);
+    var metadata = data.split(';');
+    $('#inpsrc-backdrop').html('<img class="inpsrc-deezmeta-backdrop" ' + 'src="' + metadata[4] + '">');
+    $('#inpsrc-deezmeta').html(
+        metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]))) + ')' +
+        '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
+    );
+
+    if (window.matchMedia("(orientation: portrait)").matches) {
+        $('#inpsrc-deezmeta-refresh').html('');
+    } else {
+        $('#inpsrc-deezer-refresh').html('');
+        $('#inpsrc-deezmeta-refresh').html('<a class="btn deezer-renderer" href="javascript:refreshDeezmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>');
     }
 }
 
@@ -1360,7 +1403,7 @@ function renderUI() {
             receiversBtn() +
             audioInfoBtn());
     	}
-    	// Spotify renderer
+    	// Spotify Connect renderer
     	if (SESSION.json['spotactive'] == '1') {
             inpSrcIndicator('spotactive1',
                 '<span id="inpsrc-msg-text">Spotify Active</span>' +
@@ -1371,6 +1414,18 @@ function renderUI() {
             );
 
             refreshSpotmeta();
+    	}
+        // Deezer Connect renderer
+    	if (SESSION.json['deezactive'] == '1') {
+            inpSrcIndicator('deezactive1',
+                '<span id="inpsrc-msg-text">Deezer Active</span>' +
+                '<button class="btn deezer-renderer disconnect-deezer" data-job="deezersvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                receiversBtn('deezactive1') +
+                audioInfoBtn('deezactive1') +
+                '<a id="inpsrc-deezer-refresh" class="btn deezer-renderer" href="javascript:refreshDeezmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
+            );
+
+            refreshDeezmeta();
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
@@ -1418,6 +1473,9 @@ function receiversBtn(rendererActive = '') {
         if (rendererActive == 'spotactive1') {
             // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
             var html = '<span class="context-menu"><a class="btn spotify-renderer" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
+        } else if (rendererActive == 'deezactive1') {
+            // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
+            var html = '<span class="context-menu"><a class="btn deezer-renderer" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
         } else {
             var html = '<br><span class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal">Receivers</a></span>';
         }
@@ -1431,6 +1489,8 @@ function receiversBtn(rendererActive = '') {
 function audioInfoBtn(rendererActive = '') {
     if (rendererActive == 'spotactive1') {
         var html = '<span><a class="btn spotify-renderer" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
+    } else if (rendererActive == 'deezactive1') {
+        var html = '<span><a class="btn deezer-renderer" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else {
         var html = '<br><span><a class="btn audioinfo-renderer" href="javascript:audioInfoPlayback()">Audio info</a></span>';
     }

@@ -162,7 +162,7 @@ if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_sv
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
 		submitJob('lcdup', $_POST['lcdup']);
-		phpSession('write', 'lcdup', $_POST['lcdup']);
+		$_SESSION['lcdup'] = $_POST['lcdup'];
 		phpSession('write', 'extmeta', '1'); // Turn on external metadata generation
 	}
 }

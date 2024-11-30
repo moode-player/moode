@@ -1,0 +1,52 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="ren-config">Deezer Connect</h1>
+
+	<!-- TEMPLATE -->
+
+    <form class="form-horizontal" action="" method="post">
+    	<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+		</legend>
+
+		<div class="control-group">
+
+			<div class="config-horiz-rule">Audio format</div>
+
+			<label class="control-label" for="format">Format</label>
+			<div class="controls">
+				<select id="format" class="config-select-large" name="config[format]">
+					$_select[format]
+				</select>
+			</div>
+
+			<div class="config-horiz-rule">Credentials</div>
+
+			<label class="control-label" for="email">Email address</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="email" name="config[email]" value="$_select[email]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-email" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-email" class="config-help-info">
+					Email address used to login to your Deezer account.
+                </span>
+			</div>
+
+			<label class="control-label" for="password">Password</label>
+			<div class="controls">
+				<input class="config-input-large" type="password" id="password" name="config[password]" value="$_select[password]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-password" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<a class="show-hide-password $_show_hide_password_icon_hide" href="#notarget" data-id="password"><i class="fa-regular fa-sharp fa-eye"></i></a>
+				<span id="info-password" class="config-help-info">
+					Password used to login to your Deezer account.
+                </span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>

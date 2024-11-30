@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Nov 18 07:51:01 2024
+-- File generated with SQLiteStudio v3.4.4 on Fri Nov 29 16:31:55 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -94,6 +94,19 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (204, 'vc4hdmi1', 'Pi HDMI 2', 'Broadcom SoC (KMS driver)', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
+
+-- Table: cfg_deezer
+CREATE TABLE cfg_deezer (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_deezer (id, param, value) VALUES (1, 'normalize_volume', 'No');
+INSERT INTO cfg_deezer (id, param, value) VALUES (2, 'no_interruptions', 'No');
+INSERT INTO cfg_deezer (id, param, value) VALUES (3, 'format', 'S16');
+INSERT INTO cfg_deezer (id, param, value) VALUES (4, 'RESERVED_4', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (5, 'RESERVED_4', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (6, 'RESERVED_4', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (7, 'RESERVED_4', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (8, 'RESERVED_4', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (9, 'email', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (10, 'password', '');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
@@ -561,7 +574,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'HDMI');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
 INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'encoded,output,track,date,composer');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (40, 'rsmafterdeez', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (42, 'extmeta', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
@@ -589,7 +602,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (64, 'pasvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
 INSERT INTO cfg_system (id, param, value) VALUES (67, 'mpdcrossfade', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (68, 'eth0chk', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (68, 'deezactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (69, 'usb_auto_mounter', 'udisks-glue');
 INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
@@ -605,8 +618,8 @@ INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 
 INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '97207');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (84, 'RESERVED_84', '');
-INSERT INTO cfg_system (id, param, value) VALUES (85, 'RESERVED_85', '');
+INSERT INTO cfg_system (id, param, value) VALUES (84, 'deezersvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (85, 'deezername', 'Moode Deezer');
 INSERT INTO cfg_system (id, param, value) VALUES (86, 'dsi_scn_type', 'none');
 INSERT INTO cfg_system (id, param, value) VALUES (87, 'dsi_scn_rotate', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');

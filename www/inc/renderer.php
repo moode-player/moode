@@ -160,6 +160,58 @@ function stopSpotify() {
 	sendFECmd('spotactive0');
 }
 
+// Deezer Connect
+function startDeezer() {
+	$result = sqlRead('cfg_deezer', sqlConnect());
+	$cfgDeezer = array();
+	foreach ($result as $row) {
+		$cfgDeezer[$row['param']] = $row['value'];
+	}
+
+	// Output device
+	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
+	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
+
+	// Options
+	$volume_normalization = $cfgDeezer['normalize_volume'] == 'Yes' ? ' --normalize-volume' : '';
+	$interruption = $cfgDeezer['no_interruption'] == 'Yes' ? ' --no_interruption' : '';
+	$rate = '';
+	$format = $cfgDeezer['format'];
+	// Logging
+	$logging = $_SESSION['debuglog'] == '1' ? ' -v > ' . PLEEZER_LOG : ' > /dev/null';
+
+ 	// Command
+	$cmd = 'pleezer' .
+		' --name "' . $_SESSION['deezername'] . '"' .
+		' --device-type "' . 'web' . '"' .
+		' --device "' . 'ALSA|' . $device . '|' . $rate . '|' . $format . '"' .
+		' --secrets-file "' . DEEZ_CREDENTIALS_FILE . '"' .
+		$volume_normalization .
+		$interruption .
+		' --hook /var/local/www/commandw/deezevent.sh' .
+		$logging . ' 2>&1 &';
+
+	debugLog('startDeezer(): (' . $cmd . ')');
+	sysCmd($cmd);
+}
+function stopDeezer() {
+	sysCmd('killall pleezer');
+
+	// Local
+	sysCmd('/var/www/util/vol.sh -restore');
+	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
+		sysCmd('systemctl restart mpd2cdspvolume');
+	}
+	// Multiroom receivers
+	if ($_SESSION['multiroom_tx'] == "On" ) {
+		updReceiverVol('-restore');
+	}
+
+	phpSession('write', 'deezactive', '0');
+	$GLOBALS['deezactive'] = '0';
+	sendFECmd('deezactive0');
+}
+
 // Squeezelite
 function startSqueezeLite() {
 	sysCmd('mpc stop');

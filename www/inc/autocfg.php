@@ -150,7 +150,7 @@ function autoConfigSettings() {
 			$value = $values['pci_express'];
 			updBootConfigTxt('upd_pci_express', $value);
 		}],
-		
+
 		// NOTE: $_SESSION['reduce_power'] is an eeprom config
 		// The setting does not need to be restored
 
@@ -171,7 +171,7 @@ function autoConfigSettings() {
 		}],
 		['requires' => ['led_state'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['ipaddr_timeout'], 'handler' => 'setSessVarSql'],
-		['requires' => ['eth0chk'], 'handler' => 'setSessVarSql'],
+		['requires' => ['eth0chk'], 'handler' => 'setSessVarOnly'],
 		//
 		// File sharing
 		//
@@ -691,7 +691,7 @@ function autoConfigSettings() {
 			return $str;
 		}],
 		'LCD updater',
-		['requires' => ['lcdup'], 'handler' => 'setSessVarSql'],
+		['requires' => ['lcdup'], 'handler' => 'setSessVarOnly'],
 		//
 		// NAS and NVME sources
 		//

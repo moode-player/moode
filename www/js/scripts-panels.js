@@ -1629,6 +1629,10 @@ jQuery(document).ready(function($) { 'use strict';
 		notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
         $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
 	});
+    $(document).on('click', '.disconnect-deezer', function(e) {
+		notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
+        $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+	});
     // Turn off renderer
     $(document).on('click', '.turnoff-renderer', function(e) {
 		notify(NOTIFY_TITLE_INFO, 'renderer_turnoff');

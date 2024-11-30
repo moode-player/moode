@@ -180,7 +180,9 @@ sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
 sysCmd('touch ' . SHAIRPORT_SYNC_LOG);
 sysCmd('touch ' . LIBRESPOT_LOG);
+sysCmd('touch ' . PLEEZER_LOG);
 sysCmd('touch ' . SPOTEVENT_LOG);
+sysCmd('touch ' . DEEZEVENT_LOG);
 sysCmd('touch ' . SPSEVENT_LOG);
 sysCmd('touch ' . SLPOWER_LOG);
 sysCmd('truncate ' . MOUNTMON_LOG . ' --size 0');
@@ -200,7 +202,9 @@ sysCmd('chmod 0666 /var/local/www/currentsong.txt');
 sysCmd('chmod 0666 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . SHAIRPORT_SYNC_LOG);
 sysCmd('chmod 0666 ' . LIBRESPOT_LOG);
+sysCmd('chmod 0666 ' . PLEEZER_LOG);
 sysCmd('chmod 0666 ' . SPOTEVENT_LOG);
+sysCmd('chmod 0666 ' . DEEZEVENT_LOG);
 sysCmd('chmod 0666 ' . SPSEVENT_LOG);
 sysCmd('chmod 0666 ' . SLPOWER_LOG);
 sysCmd('chmod 0666 ' . MOODE_LOG);
@@ -418,6 +422,9 @@ if (file_exists('/etc/NetworkManager/system-connections/preconfigured.nmconnecti
 
 // Ethernet
 workerLog('worker: Eth0');
+if (!isset($_SESSION['eth0chk'])) {
+	$_SESSION['eth0chk'] == '0';
+}
 $eth0 = sysCmd('ip addr list | grep eth0');
 if (empty($eth0)) {
 	workerLog('worker: Ethernet: adapter does not exist');
@@ -972,7 +979,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
 }
 workerLog('worker: AirPlay:         ' . $status);
 
-// Start Spotify renderer
+// Start Spotify Connect renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
 	if (isset($_SESSION['spotifysvc']) && $_SESSION['spotifysvc'] == 1) {
 		$status = 'started';
@@ -984,6 +991,19 @@ if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
 	$status = 'n/a';
 }
 workerLog('worker: Spotify Connect: ' . $status);
+
+// Start Deezer Connect renderer
+if ($_SESSION['feat_bitmask'] & FEAT_DEEZER) {
+	if (isset($_SESSION['deezersvc']) && $_SESSION['deezersvc'] == 1) {
+		$status = 'started';
+		startDeezer();
+	} else {
+		$status = 'available';
+	}
+} else {
+	$status = 'n/a';
+}
+workerLog('worker: Deezer Connect:  ' . $status);
 
 // Start Squeezelite renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
@@ -1267,6 +1287,9 @@ if (!isset($_SESSION['usb_volknob'])) {
 workerLog('worker: USB volume knob: ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
 
 // Start LCD updater engine
+if (!isset($_SESSION['lcdup'])) {
+	$_SESSION['lcdup'] == '0';
+}
 if ($_SESSION['lcdup'] == '1') {
 	startLcdUpdater();
 }
@@ -1352,7 +1375,7 @@ if (chkRendererActive() === true) {
 	phpSession('write', 'volknob', '0');
 	sysCmd('/var/www/util/vol.sh 0');
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive' OR
-		param='spotactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
+		param='spotactive' OR param='deezactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
 		param='inpactive'", $dbh);
 	workerLog('worker: Active flags:      at least one true');
 	workerLog('worker: Reset flags:       all reset to false');
@@ -1419,6 +1442,7 @@ $clkradio_stop_days = explode(',', substr($_SESSION['clkradio_stop'], 9));
 // Renderer active
 $aplactive = '0';
 $spotactive = '0';
+$deezactive = '0';
 $slactive = '0';
 $paactive = '0';
 $rbactive = '0';
@@ -1570,6 +1594,9 @@ while (true) {
 	}
 	if ($_SESSION['spotifysvc'] == '1') {
 		chkSpotActive();
+	}
+	if ($_SESSION['deezersvc'] == '1') {
+		chkDeezActive();
 	}
 	if ($_SESSION['slsvc'] == '1') {
 		chkSlActive();
@@ -1783,6 +1810,25 @@ function chkSpotActive() {
 	}
 }
 
+function chkDeezActive() {
+	// Get directly from sql since external spotevent.sh script does not update the session
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='deezactive'", $GLOBALS['dbh']);
+	if ($result[0]['value'] == '1') {
+		// Do this section only once
+		if ($GLOBALS['deezactive'] == '0') {
+			$GLOBALS['deezactive'] = '1';
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
+			sendFECmd('deezactive1');
+		}
+	} else {
+		// Do this section only once
+		if ($GLOBALS['deezactive'] == '1') {
+			$GLOBALS['deezactive'] = '0';
+			sendFECmd('deezactive0');
+		}
+	}
+}
+
 function chkSlActive() {
 	// Get directly from sql since external slpower.sh script does not update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $GLOBALS['dbh']);
@@ -1833,8 +1879,8 @@ function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
 		$rendererNotActive = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
-			&& $GLOBALS['slactive'] == '0' && $_SESSION['paactive'] && $_SESSION['rxactive'] == '0'
-			&& $GLOBALS['inpactive'] == '0');
+			&& $GLOBALS['deezactive'] == '0' && $GLOBALS['slactive'] == '0' && $_SESSION['paactive']
+			 && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
 		$mpdNotPlaying = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
 		$alsaOutputActive = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
 		//workerLog('rnp:' . ($rendererNotActive ? 'T' : 'F') . '|' . 'mnp:' . ($mpdNotPlaying ? 'T' : 'F') . '|' . 'aoa:' . ($alsaOutputActive ? 'T' : 'F'));
@@ -2488,6 +2534,10 @@ function runQueuedJob() {
 					sysCmd('killall librespot');
 					startSpotify();
 				}
+				if ($_SESSION['deezersvc'] == 1) {
+					sysCmd('killall pleezer');
+					startDeezer();
+				}
 			}
 
 			// DEBUG:
@@ -2545,6 +2595,10 @@ function runQueuedJob() {
 			if ($_SESSION['spotifysvc'] == 1) {
 				stopSpotify();
 				startSpotify();
+			}
+			if ($_SESSION['deezersvc'] == 1) {
+				stopDeezer();
+				startDeezer();
 			}
 			if ($_SESSION['slsvc'] == 1) {
 				stopSqueezelite();
@@ -2673,6 +2727,10 @@ function runQueuedJob() {
 				stopSpotify();
 				startSpotify();
 			}
+			if ($_SESSION['deezersvc'] == 1) {
+				stopDeezer();
+				startDeezer();
+			}
 			// Reenable HTTP server
 			setMpdHttpd();
 
@@ -2736,6 +2794,24 @@ function runQueuedJob() {
 			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {
 				startSpotify();
+			}
+			break;
+		case 'deezersvc':
+			$result = sqlRead('cfg_deezer', $GLOBALS['dbh']);
+			$cfgDeezer = array();
+			foreach ($result as $row) {
+				$cfgDeezer[$row['param']] = $row['value'];
+			}
+			sysCmd('sed -i \'s/email.*/email = "' . $cfgDeezer['email'] . '"/\' ' . DEEZ_CREDENTIALS_FILE);
+			sysCmd('sed -i \'s/password.*/password = "' . $cfgDeezer['password'] . '"/\' ' . DEEZ_CREDENTIALS_FILE);
+
+			stopDeezer();
+			if ($_SESSION['deezersvc'] == 1) {
+				startDeezer();
+			}
+
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterdeez'] == 'Yes') {
+				sysCmd('mpc play');
 			}
 			break;
 		case 'slsvc':
@@ -2837,6 +2913,10 @@ function runQueuedJob() {
 				stopSpotify();
 				startSpotify();
 			}
+			if ($_SESSION['deezersvc'] == 1) {
+				stopDeezer();
+				startDeezer();
+			}
 			break;
 		case 'multiroom_tx_restart':
 			stopMultiroomSender();
@@ -2853,6 +2933,7 @@ function runQueuedJob() {
 				//stopSpotify();
 				//phpSession('write', 'airplaysvc', '0');
 				//phpSession('write', 'spotifysvc', '0');
+				//phpSession('write', 'deezersvc', '0');
 
 				startMultiroomReceiver();
 			} else {

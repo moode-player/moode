@@ -187,7 +187,7 @@ if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESS
 }
 
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
-	phpSession('write', 'eth0chk', $_POST['eth0chk']);
+	$_SESSION['eth0chk'] = $_POST['eth0chk'];
 }
 
 // FILE SHARING

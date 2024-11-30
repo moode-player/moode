@@ -32,6 +32,7 @@ $btActive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 // Other renderer active
 $aplActive = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $dbh)[0]['value'];
 $spotActive = sqlQuery("SELECT value FROM cfg_system WHERE param='spotactive'", $dbh)[0]['value'];
+$deezActive = sqlQuery("SELECT value FROM cfg_system WHERE param='deezactive'", $dbh)[0]['value'];
 $slActive = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $dbh)[0]['value'];
 $paActive = sqlQuery("SELECT value FROM cfg_system WHERE param='paactive'", $dbh)[0]['value'];
 $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh)[0]['value'];
@@ -53,6 +54,11 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 } else if ($spotActive == '1') {
 	$_file = 'Spotify stream';
 	$_encoded_at = 'Ogg/Vorbis or AAC';
+	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
+	$_decode_rate = '';
+} else if ($deezActive == '1') {
+	$_file = 'Deezer stream';
+	$_encoded_at = 'FLAC';
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($slActive == '1') {
@@ -156,7 +162,9 @@ if ($btActive === true) {
 } else if ($aplActive == '1') {
 	$renderer = 'AirPlay';
 } else if ($spotActive == '1') {
-	$renderer = 'Spotify';
+	$renderer = 'Spotify Connect';
+} else if ($deezActive == '1') {
+	$renderer = 'Deezer Connect';
 } else if ($slActive == '1') {
 	$renderer = 'Squeezelite';
 } else if ($paActive == '1') {
@@ -251,7 +259,7 @@ $alsaVol = getAlsaVolumeDb($_SESSION['amixname']);
 $cdspVol = CamillaDSP::getCDSPVol() . 'dB';
 $_volume_levels = 'Knob ' . $knobVol . ', ALSA ' . $alsaVol . ', CDSP ' . $cdspVol;
 
-if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $paActive == '1' || $rbActive == '1' ||
+if ($aplActive == '1' || $spotActive == '1' || $deezActive == '1' || $slActive == '1' || $paActive == '1' || $rbActive == '1' ||
 	$btActive === true || $_SESSION['audioout'] == 'Bluetooth' || $_SESSION['inpactive'] == '1') {
 	// Renderer active
 	// NOTE: Class 'off' hides the item
@@ -263,7 +271,7 @@ if ($aplActive == '1' || $spotActive == '1' || $slActive == '1' || $paActive == 
 	$_replaygain = 'off';
 	$_vol_normalize = 'off';
 
-	if ($aplActive == '1' || $spotActive == '1') {
+	if ($aplActive == '1' || $spotActive == '1' || $deezActive == '1') {
 		$_peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$_geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
         $_camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);

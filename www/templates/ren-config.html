@@ -187,6 +187,52 @@
 			</div>
 		</div>
 
+		<div class="control-group $_feat_deezer">
+			<legend>Deezer Connect</legend>
+			<p class="sub-legend">This service requires a Deezer account.</p>
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-deezersvc" for="toggle-deezersvc-2">ON </label>$_select[deezersvc_on]
+					<label class="toggle-radio toggle-deezersvc" for="toggle-deezersvc-1">OFF</label>$_select[deezersvc_off]
+				</div>
+				<button id="btn-set-deezersvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_deezer_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-deezersvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-deezersvc" class="config-help-info"">
+					pleezer by Roderick Van Domberg.
+                </span>
+			</div>
+
+			<label class="control-label" for="deezername">Name</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="deezername" name="deezername" value="$_select[deezername]" required>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_deezer_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+			</div>
+
+			<label class="control-label">Resume MPD</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-rsmafterdeez" for="toggle-rsmafterdeez-2">ON </label>$_select[rsmafterdeez_on]
+					<label class="toggle-radio toggle-rsmafterdeez" for="toggle-rsmafterdeez-1">OFF</label>$_select[rsmafterdeez_off]
+				</div>
+				<button id="btn-set-rsmafterdeez" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rsmafterdeez" value="novalue" $_deezer_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rsmafterdeez" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-rsmafterdeez" class="config-help-info">
+					Resume MPD playback after Deezer client stops playing or disconnects.
+                </span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#deezer-restart" $_deezer_link_disable><button class="btn btn-medium btn-primary config-btn" $_deezer_btn_disable>Restart</button></a>
+				<span class="config-btn-after">Deezer Connect</span>
+			</div>
+
+			<div class="controls">
+				<a href="dez-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
+				<span class="config-btn-after">Deezer Connect settings</span>
+			</div>
+		</div>
+
 		<div class="control-group $_feat_squeezelite">
 			<legend>Squeezelite</legend>
 			<p class="sub-legend">
@@ -399,6 +445,19 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="spotify_clear_credentials" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="deezer-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="deezer-restart-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Restart Deezer connect renderer?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="deezerrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>

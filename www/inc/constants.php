@@ -16,7 +16,9 @@ const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
 const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
 const SHAIRPORT_SYNC_LOG = '/var/log/moode_shairport-sync.log';
 const LIBRESPOT_LOG = '/var/log/moode_librespot.log';
+const PLEEZER_LOG = '/var/log/moode_pleezer.log';
 const SPOTEVENT_LOG = '/var/log/moode_spotevent.log';
+const DEEZEVENT_LOG = '/var/log/moode_deezevent.log';
 const SPSEVENT_LOG = '/var/log/moode_spsevent.log';
 const SLPOWER_LOG = '/var/log/moode_slpower.log';
 // MPD
@@ -26,8 +28,10 @@ const MPD_CONF = '/etc/mpd.conf';
 const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
-// Spotify Connect
+// Spotify Connect and Deezer Connect
 const SPOTMETA_FILE = '/var/local/www/spotmeta.txt';
+const DEEZMETA_FILE = '/var/local/www/deezmeta.txt';
+const DEEZ_CREDENTIALS_FILE = '/etc/deezer/deezer.toml';
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
@@ -97,6 +101,7 @@ const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';
 const NAME_BLUETOOTH_PAIRING_AGENT = 'Pairing Agent';
 const NAME_SPOTIFY = 'Spotify Connect';
+const NAME_DEEZER = 'Deezer Connect';
 const NAME_SQUEEZELITE = 'Squeezelite';
 const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
@@ -157,7 +162,7 @@ const FEAT_MINIDLNA     = 4;		// y DLNA server
 const FEAT_RECORDER     = 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE  = 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;		// y UPnP client for MPD
-const FEAT_DEEZER       = 64;   	//   Deezer Connect renderer (placeholder)
+const FEAT_DEEZER       = 64;   	// y Deezer Connect renderer
 const FEAT_ROONBRIDGE   = 128;		// y RoonBridge renderer
 const FEAT_LOCALDISPLAY = 256;		// y Local display
 const FEAT_INPSOURCE    = 512;		// y Input source select
@@ -169,8 +174,7 @@ const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 //						-------
-//						  97207
-//						  97271 (with FEAT_DEEZER y)
+//						  97271
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate

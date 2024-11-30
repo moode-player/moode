@@ -114,7 +114,10 @@ AUDIO_PARAMETERS() {
 		echo -e "\nAirPlay receiver\t= $airplaysvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
-		echo -e "\nSpotify receiver\t= $spotifysvc\c"
+		echo -e "\nSpotify Connect\t= $spotifysvc\c"
+	fi
+	if [ $(($feat_bitmask & $FEAT_DEEZER)) -ne 0 ]; then
+		echo -e "\nDeezer Connect\t= $deezersvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\nSqueezelite\t\t= $slsvc\c"
@@ -329,6 +332,14 @@ RENDERER_SETTINGS() {
 		echo -e "\nResume MPD\t\t= $rsmafterspot\n"
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_DEEZER)) -ne 0 ]; then
+		DEEZVER="$(pleezer --version | awk -F" " '{print $2}')"
+		echo -e "D E E Z E R   C O N N E C T"
+		echo -e "\nVersion\t\t\t= $DEEZVER\c"
+		echo -e "\nFriendly name\t\t= $deezername\c"
+		echo -e "\nResume MPD\t\t= $rsmafterdeez\n"
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		SL=`squeezelite -? | grep "Squeezelite" | cut -f 2 -d "v" | cut -f 1 -d ","`
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
@@ -403,6 +414,7 @@ FEAT_MINIDLNA=4
 FEAT_RECORDER=8
 FEAT_SQUEEZELITE=16
 FEAT_UPMPDCLI=32
+FEAT_DEEZER=64
 FEAT_ROONBRIDGE=128
 FEAT_LOCALDISPLAY=256
 FEAT_SPOTIFY=2048
@@ -679,7 +691,7 @@ amixname=${arr[35]}
 mpdmixer=${arr[36]}
 xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
-lcdup=${arr[39]}
+rsmafterdeez=${arr[39]}
 library_show_genres=${arr[40]}
 extmeta=${arr[41]}
 i2soverlay=${arr[42]}
@@ -711,7 +723,7 @@ fi
 pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
-[[ "${arr[67]}" = "1" ]] && eth0chk="Yes" || eth0chk="No"
+deezactive=${arr[67]}
 usb_auto_mounter=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
@@ -744,8 +756,8 @@ elif [[ "${arr[81]}" = "31536000000" ]]; then
 	library_recently_added="1 Year"
 fi
 btactive=${arr[82]}
-RESERVED_84=${arr[83]}
-RESERVED_85=${arr[84]}
+deezersvc=${arr[83]}
+deezername=${arr[84]}
 dsi_scn_type=${arr[85]}
 dsi_scn_rotate=${arr[86]}
 themename=${arr[87]}
@@ -876,6 +888,10 @@ dsi_scn_brightness=$(moodeutl -d -gv "dsi_scn_brightness")
 value=$(moodeutl -d -gv usb_volknob)
 [[ "$value" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
 led_state=$(moodeutl -d -gv led_state)
+value=$(moodeutl -d -gv eth0chk)
+[[ "$value" = "1" ]] && eth0chk="Yes" || eth0chk="No"
+value=$(moodeutl -d -gv lcdup)
+[[ "$value" = "1" ]] && lcdup="Yes" || lcdup="No"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

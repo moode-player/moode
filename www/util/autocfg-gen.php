@@ -44,6 +44,7 @@ $currentSettings['fan_temp0'] = $_SESSION['fan_temp0'];
 $currentSettings['log2ram'] = $_SESSION['log2ram'];
 $currentSettings['usb_volknob'] = $_SESSION['usb_volknob'];
 $currentSettings['led_state'] = $_SESSION['led_state'];
+$currentSettings['eth0chk'] = $_SESSION['eth0chk'];
 // MPD options
 $currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
 $currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];
@@ -74,7 +75,8 @@ $currentSettings['scn_cursor'] = $_SESSION['scn_cursor'];
 $currentSettings['scn_blank'] = $_SESSION['scn_blank'];
 $currentSettings['dsi_backlight'] = $_SESSION['dsi_backlight'];
 $currentSettings['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
-
+// LCD updater
+$currentSettings['lcdup'] = $_SESSION['lcdup'];
 // Miscellaneous
 $currentSettings['auto_coverview'] = $_SESSION['auto_coverview'];
 $currentSettings['rotaryenc'] = $_SESSION['rotaryenc'];

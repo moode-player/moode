@@ -27,6 +27,9 @@ switch ($option) {
 	case '--spotify':
 		restartSpotify();
 		break;
+	case '--deezer':
+		restartDeezer();
+		break;
 	case '--squeezelite':
 		restartSqueezelite();
 		break;
@@ -46,6 +49,7 @@ With no OPTION print the help text and exit.
  --bluetooth\tRestart Bluetooth
  --airplay\tRestart AirPlay
  --spotify\tRestart Spotify Connect
+ --deezer\tRestart Deezer Connect
  --squeezelite\tRestart Squeezelite
  --plexamp\tRestart Plexamp
  --roonbridge\tRestart RoonBridge\n";
@@ -78,6 +82,11 @@ function restartAirPlay() {
 function restartSpotify() {
 	stopSpotify();
 	startSpotify();
+}
+
+function restartDeezer() {
+	stopDeezer();
+	startDeezer();
 }
 
 function restartSqueezelite() {

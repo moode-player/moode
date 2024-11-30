@@ -170,7 +170,7 @@ With no OPTION print the help text and exit.
  -o\t\tList audio overlays
  -q\t\tQuery sql database
  -r\t\tRestart servers
- -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --squeezelite | --plexamp | --roonbridge]
+ -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --deezer | --squeezelite | --plexamp | --roonbridge]
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
@@ -404,7 +404,7 @@ function restartServers() {
 
 function restartRenderer($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
-		'--squeezelite' => 'slsvc', '--plexamp' => 'pasvc', '--roonbridge' => 'rbsvc');
+		'--deezer' => 'deezersvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc', '--roonbridge' => 'rbsvc');
 
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [renderer name]' . "\n";
@@ -420,7 +420,7 @@ function restartRenderer($argv) {
 	}
 	else {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --squeezelite, --plexamp, --roonbridge' . "\n";
 		return;
 	}
 

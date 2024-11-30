@@ -102,6 +102,27 @@ if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credenti
 	submitJob('spotify_clear_credentials', '', NOTIFY_TITLE_INFO, 'Credential cache cleared');
 }
 
+// Deezer Connect
+if (isset($_POST['update_deezer_settings'])) {
+	if (isset($_POST['deezername']) && $_POST['deezername'] != $_SESSION['deezername']) {
+		$update = true;
+		phpSession('write', 'deezername', $_POST['deezername']);
+	}
+	if (isset($_POST['deezersvc']) && $_POST['deezersvc'] != $_SESSION['deezersvc']) {
+		$update = true;
+		phpSession('write', 'deezersvc', $_POST['deezersvc']);
+	}
+	if (isset($update)) {
+		submitJob('deezersvc');
+	}
+}
+if (isset($_POST['update_rsmafterdeez'])) {
+	phpSession('write', 'rsmafterdeez', $_POST['rsmafterdeez']);
+}
+if (isset($_POST['deezerrestart']) && $_POST['deezerrestart'] == 1 && $_SESSION['deezersvc'] == '1') {
+	submitJob('deezersvc', '', NOTIFY_TITLE_INFO, NAME_DEEZER . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+
 // Squeezelite
 if (isset($_POST['update_sl_settings'])) {
 	if (isset($_POST['slsvc']) && $_POST['slsvc'] != $_SESSION['slsvc']) {
@@ -229,6 +250,18 @@ $_select['spotifyname'] = $_SESSION['spotifyname'];
 $autoClick = " onchange=\"autoClick('#btn-set-rsmafterspot');\" " . $_spotify_btn_disable;
 $_select['rsmafterspot_on'] .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-1\" value=\"Yes\" " . (($_SESSION['rsmafterspot'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmafterspot_off']  .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-2\" value=\"No\" " . (($_SESSION['rsmafterspot'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// Deezer Connect
+$_feat_deezer = $_SESSION['feat_bitmask'] & FEAT_DEEZER ? '' : 'hide';
+$_SESSION['deezersvc'] == '1' ? $_deezer_btn_disable = '' : $_deezer_btn_disable = 'disabled';
+$_SESSION['deezersvc'] == '1' ? $_deezer_link_disable = '' : $_deezer_link_disable = 'onclick="return false;"';
+$autoClick = " onchange=\"autoClick('#btn-set-deezersvc');\"";
+$_select['deezersvc_on']  .= "<input type=\"radio\" name=\"deezersvc\" id=\"toggle-deezersvc-1\" value=\"1\" " . (($_SESSION['deezersvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['deezersvc_off'] .= "<input type=\"radio\" name=\"deezersvc\" id=\"toggle-deezersvc-2\" value=\"0\" " . (($_SESSION['deezersvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['deezername'] = $_SESSION['deezername'];
+$autoClick = " onchange=\"autoClick('#btn-set-rsmafterdeez');\" " . $_deezer_btn_disable;
+$_select['rsmafterdeez_on'] .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-1\" value=\"Yes\" " . (($_SESSION['rsmafterdeez'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rsmafterdeez_off']  .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-2\" value=\"No\" " . (($_SESSION['rsmafterdeez'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // Squeezelite
 $_feat_squeezelite = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? '' : 'hide';

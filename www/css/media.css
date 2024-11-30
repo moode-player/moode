@@ -124,8 +124,10 @@ body {
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:3.5em;}
 	#inpsrc-msg {top:70%;width:100%}
-	#inpsrc-spotmeta {position:relative;margin-bottom:3em;}
-	.inpsrc-spotmeta-backdrop {height:auto;}
+	#inpsrc-spotmeta,
+	#inpsrc-deezmeta {position:relative;margin-bottom:3em;}
+	.inpsrc-spotmeta-backdrop,
+	.inpsrc-deezmeta-backdrop {height:auto;}
 
 	/* Shutdown, Restart, Reconnect */
 	.reconnect-btn {font-size:2em;}
@@ -356,11 +358,11 @@ body {
 
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:2.85em;}
-	#inpsrc-spotmeta {font-size:.5em;}
+	#inpsrc-spotmeta,
+	#inpsrc-deezmeta {font-size:.5em;}
 	#inpsrc-msg i,
-	#inpsrc-spotmeta-refresh i {
-		font-size:1.25em;
-	}
+	#inpsrc-spotmeta-refresh i,
+	#inpsrc-deezmeta-refresh i {font-size:1.25em;}
 	/* For the configs */
 	#panel-header,
 	.container {margin-left:calc(env(safe-area-inset-left) + 1rem);}
