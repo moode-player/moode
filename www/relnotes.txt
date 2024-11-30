@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+New features
+- NEW: Deezer Connect renderer with metadata and cover art
+
 Bug fixes
 - FIX: Extra metadata (under main cover) showing raw html entity codes
 
