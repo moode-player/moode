@@ -246,6 +246,7 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	btname			Moode Bluetooth
 	airplayname		Moode AirPlay
 	spotifyname		Moode Spotify
+	deezername		Moode Deezer
 	upnpname		Moode UPNP
 	dlnaname		Moode DLNA
 	squeezelite		Moode		In cfg_sl PLAYERNAME and squeezelite.conf, no session var
@@ -263,6 +264,8 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	phpSession('write', 'airplayname', ucfirst($importedHostName) . ' AirPlay');
 	// Spotify Connect
 	phpSession('write', 'spotifyname', ucfirst($importedHostName) . ' Spotify');
+	// Deezer Connect
+	phpSession('write', 'deezername', ucfirst($importedHostName) . ' Deezer');
 	// Squeezelite
 	$newName = ucfirst($importedHostName);
 	$result = sqlQuery("UPDATE cfg_sl SET value='" . $newName . "' WHERE param='PLAYERNAME'", $dbh);

@@ -2,7 +2,7 @@
 #
 #  Setup Guide for Audio Renderers
 #
-#  Version: 1.0 2024-10-07
+#  Version: 1.1 2024-12-01
 #
 #  (C) Tim Curtis 2024 http://moodeaudio.org
 #
@@ -14,28 +14,33 @@ The "Audio Renderers" are 3rd party playback applications that are separate from
 the core playback application in moOde; MPD (Music Player Daemon).
 
 Each Audio Renderer receives and plays audio data sent to it from a remote
-client application. The Bluetooth renderer can also play audio data it receives
-from MPD to a remote Bluetooth speaker.
+client application. The Bluetooth renderer can also send audio it receives from
+MPD to a remote Bluetooth speaker for playback.
 
 RENDERERS AND CLIENTS
 
-The following is a list of Audio Renderers and clients/applications that can
-play to them.
+The following is a list of Audio Renderers and client apps that can play to
+them, plus an indication of whether moOde displays metadata and cover art sent
+from the client.
 
 +-------------------------------------------------------------------------------
-| Bluetooth           | Any client that supports Bluetooth
+| RENDERER            | CLIENT                              | METADATA/COVERART
 +-------------------------------------------------------------------------------
-| AirPlay             | Any client or application that supports AirPlay 2
+| Bluetooth           | Any client supporting Bluetooth     | No
 +-------------------------------------------------------------------------------
-| Spotify Connect     | Spotify application (Desktop or Smartphone)
+| AirPlay             | Any client supporting AirPlay 2     | No
 +-------------------------------------------------------------------------------
-| Squeezelite         | Lyrion Media Server (LMS) application
+| Spotify Connect     | Spotify app (Desktop or Smartphone) | Yes
 +-------------------------------------------------------------------------------
-| UPnP Client for MPD | Any UPnP Control Point application
+| Deezer Connect      | Deezer app (Smartphone only)        | Yes
 +-------------------------------------------------------------------------------
-| Plexamp             | Plex Web application
+| Squeezelite         | Lyrion Media Server (LMS)           | No
 +-------------------------------------------------------------------------------
-| RoonBridge          | Roon application/server
+| UPnP Client for MPD | Any UPnP Control Point app          | Yes
++-------------------------------------------------------------------------------
+| Plexamp             | Plex Web app                        | No
++-------------------------------------------------------------------------------
+| RoonBridge          | Roon server                         | No
 +-------------------------------------------------------------------------------
 
 MULTIPLE RENDERERS ON
@@ -49,6 +54,7 @@ another renderer.
 - Bluetooth
 - AirPlay
 - Spotify Connect
+- Deezer Connect
 - Squeezelite (providing -c <timeout> option is specified)
 - UPnP Client for MPD
 
@@ -80,7 +86,7 @@ of renderer operates by establishing a playback session. moOde detects the
 session and displays the "Renderer Active" overlay.
 
 AirPlay and Squeezelite renderers can automatically end their session and
-release the audio output after playback stops based on a configurable timeout
+release the audio output after playback ends based on a configurable timeout
 value.
 
 RECEIVE-ONLY RENDERERS

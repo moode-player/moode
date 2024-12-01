@@ -106,6 +106,7 @@ function autoConfigSettings() {
 		['requires' => ['btname'], 'handler' => 'setSessVarSqlSysCmd', 'cmd' => 'chg-name bluetooth "' . $_SESSION['btname'] . '" "%s"'],
 		['requires' => ['airplayname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['spotifyname'], 'handler' => 'setSessVarSql'],
+		['requires' => ['deezername'], 'handler' => 'setSessVarSql'],
 		['requires' => ['squeezelitename'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			$currentName= sqlQuery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
@@ -419,6 +420,8 @@ function autoConfigSettings() {
 		['requires' => ['rsmafterapl'], 'handler' => 'setSessVarSql'],
 		['requires' => ['spotifysvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
+		['requires' => ['deezersvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterdeez'], 'handler' => 'setSessVarSql'],
 		['requires' => ['slsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmaftersl'], 'handler' => 'setSessVarSql'],
 		['requires' => ['pasvc'], 'handler' => 'setSessVarSql'],
@@ -453,6 +456,13 @@ function autoConfigSettings() {
 				setCfgTableParams('cfg_spotify', $mergedValues, 'spotify_');
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_spotify', $values, 'spotify_');
+		}],
+		'Deezer Connect',
+		['requires' => ['deezer_format', 'deezer_email', 'deezer_password'],
+			'handler' => function($values) {
+				setCfgTableParams('cfg_spotify', $values, 'spotify_');
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_deezer', $values, 'deezer_');
 		}],
 		'Squeezelite',
 		['requires' => ['squeezelite_PLAYERNAME', 'squeezelite_AUDIODEVICE', 'squeezelite_ALSAPARAMS', 'squeezelite_OUTPUTBUFFERS',
