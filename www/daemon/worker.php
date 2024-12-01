@@ -214,6 +214,9 @@ if (!file_exists(ETC_MACHINE_INFO)) {
 	sysCmd('cp /usr/share/moode-player' . ETC_MACHINE_INFO . ' /etc/');
 	workerLog('worker: File check created default /etc/machine-info');
 }
+// Set ownership on homedir/.config for chromium
+sysCmd('chown pi:pi ' . $_SESSION['home_dir'] . '/.config/');
+
 // Moode-player package should set these but "file not found" errors occur so lets set them here
 sysCmd('chmod 0644 ' . ETC_MACHINE_INFO);
 sysCmd('chmod 0644 ' . '/etc/systemd/system/bluealsa.service');
