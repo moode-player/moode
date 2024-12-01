@@ -51,6 +51,7 @@ $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfgUPNP['checkcont
 // Music services
 $_select['qobuzuser'] = $cfgUPNP['qobuzuser'];
 $_select['qobuzpass'] = $cfgUPNP['qobuzpass'];
+$_show_hide_password_icon_hide = empty($cfgUPNP['qobuzpass']) ? '' : 'hide';
 $_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfgUPNP['qobuzformatid'] == '5') ? "selected" : "") . ">MP3 320K</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"6\" " . (($cfgUPNP['qobuzformatid'] == '6') ? "selected" : "") . ">FLAC</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfgUPNP['qobuzformatid'] == '7') ? "selected" : "") . ">FLAC 24/96K</option>\n";
