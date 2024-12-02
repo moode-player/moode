@@ -549,13 +549,16 @@ function getTrackYear($trackData) {
 		$trackDate = '';
 	}
 
-	// Strip hyphens from MusicBrainz dates (contrib: general@dlg.xyz)
-	$trackDate = str_replace('-', '', $trackDate);
-
-	// Set month to 00 if not present
-	$trackYear = empty(substr($trackDate, 4, 2)) ?
-		substr($trackDate, 0, 4) . '00' :
-		substr($trackDate, 0, 6);
+	if ($trackDate == '') {
+		$trackYear = '';
+	} else {
+		// Strip hyphens from MusicBrainz dates (contrib: general@dlg.xyz)
+		$trackDate = str_replace('-', '', $trackDate);
+		// Set month to 00 if not present (for sorting in scripts-library.js)
+		$trackYear = empty(substr($trackDate, 4, 2)) ?
+			substr($trackDate, 0, 4) . '00' :
+			substr($trackDate, 0, 6);
+	}
 
     return $trackYear;
 }
