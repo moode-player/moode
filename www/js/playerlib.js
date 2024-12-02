@@ -4940,8 +4940,7 @@ function audioInfo(cmd, path, activeTab = '') {
 // Item metadata: id = div id in audioinfo.html, data = metadata
 function itemInfoModal(id, data) {
     var lines = '';
-
-    for (i = 0; i < data.length; i++) {
+    for (i = 0; i < Object.keys(data).length; i++) {
         var key = Object.keys(data[i]);
         if (typeof(data[i][key]) != 'undefined') {
             if (key == 'Covers') { // Note: data[i]['Covers'] is the md5 hash or ''
