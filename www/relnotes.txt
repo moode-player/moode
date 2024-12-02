@@ -23,6 +23,8 @@ Updates
 
 Bug fixes
 - FIX: Extra metadata under main cover showing raw html entity codes
+- FIX: Audio info shows no info for some tracks
+- FIX: Track year shows '00' if no date tag is present
 
 ################################################################################
 #
