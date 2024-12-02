@@ -50,7 +50,7 @@ function parseStationInfo($path) {
 }
 
 function parseTrackInfo($resp) {
-	workerLog('parseTrackInfo(): (' . $resp . ')');
+	//workerLog('parseTrackInfo(): (' . $resp . ')');
 	/* Layout
 	0  Cover url
 	1  File path
