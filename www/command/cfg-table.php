@@ -12,7 +12,7 @@ $dbh = sqlConnect();
 
 chkVariables($_GET);
 chkVariables($_POST, array('library_flatlist_filter_str'));
-chkValueEx($_POST['library_flatlist_filter_str']);
+chkValueEx('library_flatlist_filter_str', $_POST['library_flatlist_filter_str']);
 
 switch ($_GET['cmd']) {
 	case 'get_cfg_tables':

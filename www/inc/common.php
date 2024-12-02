@@ -83,21 +83,21 @@ function chkVariables($variables, $excludedKeys = array()) {
 					if (is_array($value2)) {
 						foreach($value2 as $key3 => $value3) {
 							if (!in_array($key3, $excludedKeys)) {
-								chkValue($value3);
+								chkValue($key3, $value3);
 							} else {
 								debugLog('chkVariables(): Excluded key: ' . $key3);
 							}
 						}
 					} else {
 						if (!in_array($key2, $excludedKeys)) {
-							chkValue($value2);
+							chkValue($key2, $value2);
 						} else {
 							debugLog('chkVariables(): Excluded key: ' . $key2);
 						}
 					}
 				}
 			} else {
-				chkValue($value);
+				chkValue($key, $value);
 			}
 		} else {
 			debugLog('chkVariables(): Excluded key: ' . $key);
@@ -106,7 +106,7 @@ function chkVariables($variables, $excludedKeys = array()) {
 }
 
 // Check for unwanted characters and shell commands
-function chkValue($value) {
+function chkValue($key = 'nokey', $value) {
 	$valid = true;
 	$msg = '';
 
@@ -133,18 +133,18 @@ function chkValue($value) {
 	if ($valid === false) {
 		// Write log entry
 		workerLog('SECCHK: ' . $msg);
-		workerLog('SECCHK: ' . $value);
+		workerLog('SECCHK: ' . $key . '|' . $value);
 		// Redirect to '400 Bad request' page and then exit
 		http_response_code(400);
 		header('Location: /response400.html');
 		exit(1);
 	} else {
-		//debugLog('chkValue(): ' . (empty($value) ? 'Value is blank' : $value));
+		//debugLog('chkValue(): ' . $key . '|' . (empty($value) ? 'Value is blank' : $value));
 	}
 }
 // Same as chkValue() except pipe | is excluded
 // For: library_flatlist_filter_str, ashuffle_filter
-function chkValueEx($value) {
+function chkValueEx($key = 'nokey', $value) {
 	$valid = true;
 	$msg = '';
 
@@ -171,13 +171,13 @@ function chkValueEx($value) {
 	if ($valid === false) {
 		// Write log entry
 		workerLog('SECCHK: ' . $msg);
-		workerLog('SECCHK: ' . $value);
+		workerLog('SECCHK: ' . $key . '|' . $value);
 		// Redirect to '400 Bad request' page and then exit
 		http_response_code(400);
 		header('Location: /response400.html');
 		exit(1);
 	} else {
-		//debugLog('chkValueEx(): ' . (empty($value) ? 'Value is blank' : $value));
+		//debugLog('chkValueEx(): ' . $key . '|' .  (empty($value) ? 'Value is blank' : $value));
 	}
 }
 
@@ -656,7 +656,7 @@ function updBootConfigTxt($action, $value) {
 				if ($result == '0') {
 					sysCmd('sed -i s/^dtparam=fan_temp0.*/dtparam=' . $value . '/ ' . BOOT_CONFIG_TXT);
 				} else {
-					sysCmd('sed -i s/^#dtparam=fan_temp0.*/dtparam=' . $value . '/ ' . BOOT_CONFIG_TXT);					
+					sysCmd('sed -i s/^#dtparam=fan_temp0.*/dtparam=' . $value . '/ ' . BOOT_CONFIG_TXT);
 				}
 			}
 			break;

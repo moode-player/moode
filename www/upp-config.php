@@ -17,7 +17,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	foreach ($_POST['config'] as $key => $value) {
 		if ($key != 'qobuzpass') {
-			chkValue($value);
+			chkValue($key, $value);
 		}
 		sqlUpdate('cfg_upnp', $dbh, $key, $value);
 		if ($value != '') {

@@ -19,8 +19,8 @@ $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION[
 $deviceNames = getAlsaDeviceNames();
 
 chkVariables($_POST, array('ashuffle_filter', 'ashuffle_exclude'));
-chkValueEx($_POST['ashuffle_filter']);
-chkValueEx($_POST['ashuffle_exclude']);
+chkValueEx('ashuffle_filter', $_POST['ashuffle_filter']);
+chkValueEx('ashuffle_exclude', $_POST['ashuffle_exclude']);
 
 // AUDIO OUTPUT
 

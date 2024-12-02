@@ -13,7 +13,7 @@ phpSession('open');
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
-		chkValue($value);
+		chkValue($key, $value);
 		sqlUpdate('cfg_airplay', $dbh, $key, $value);
 
 		if ($value != 'deprecated') {

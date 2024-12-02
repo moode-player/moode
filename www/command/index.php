@@ -17,7 +17,7 @@ if (!isset($_GET['cmd']) || empty($_GET['cmd'])) {
 	exit(1);
 }
 
-chkValue($_GET['cmd']);
+chkValue('cmd', $_GET['cmd']);
 
 // DEBUG:
 //workerLog('index.php: cmd=' . $_GET['cmd']);
@@ -124,7 +124,7 @@ function getArgs($cmd) {
 	$argCount = count($cmd);
 	if ($argCount > 1) {
 		for ($i = 0; $i < $argCount; $i++) {
-			chkValue($cmd[$i + 1]);
+			chkValue('cmd', $cmd[$i + 1]);
 			$args .= ' ' . $cmd[$i + 1];
 		}
 	} else {

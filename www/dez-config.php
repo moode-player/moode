@@ -14,7 +14,7 @@ phpSession('open');
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		if ($key != 'password') {
-			chkValue($value);
+			chkValue($key, $value);
 		}
 		sqlUpdate('cfg_deezer', $dbh, $key, $value);
 	}
