@@ -1263,6 +1263,7 @@ if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
 // DSI settings
 workerLog('worker: DSI scn type:    ' . $_SESSION['dsi_scn_type']);
+workerLog('worker: DSI port:        ' . $_SESSION['dsi_port']);
 workerLog('worker: DSI backlight:   ' . $_SESSION['dsi_backlight']);
 workerLog('worker: DSI brightness:  ' . $_SESSION['dsi_scn_brightness']);
 workerLog('worker: DSI rotate:      ' . $_SESSION['dsi_scn_rotate']);
@@ -1320,6 +1321,11 @@ workerLog('worker: Auto-CoverView:    ' . ($_SESSION['auto_coverview'] == '-on' 
 
 // CoverView screen saver timeout
 workerLog('worker: CoverView timeout: ' . $_SESSION['scnsaver_timeout']);
+// Play history
+
+if (!isset($_SESSION['phistsong'])) {
+	$_SESSION['phistsong'] = '';
+}
 
 // Auto-shuffle
 if (!isset($_SESSION['ashuffle_mode'])) {
@@ -2229,8 +2235,6 @@ function updPlayHistory() {
 	// Update playback history log
 	if ($title != '' && $title != $_SESSION['phistsong']) {
 		$_SESSION['phistsong'] = $title; // Store title as-is
-		sqlUpdate('cfg_system', $GLOBALS['dbh'], 'phistsong', str_replace("'", "''", $title)); // Use SQL escaped single quotes
-
 		$historyItem = '<li class="playhistory-item"><div>' . date('Y-m-d H:i') . $searchurl . $title . '</div><span>' . $artist . ' - ' . $album . '</span></li>';
         if (false === $fh = fopen(PLAY_HISTORY_LOG, 'a')) {
             workerLog('worker: addPlayHistoryItem(): File open failed on ' . PLAY_HISTORY_LOG);
@@ -3253,6 +3257,10 @@ function runQueuedJob() {
 			updBootConfigTxt('upd_dsi_scn_rotate', '0'); // touch1
 			// Remove touch2 touch angle setting
 			sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
+			break;
+		case 'dsi_port':
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
 		case 'dsi_scn_brightness':
 			updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['w_queueargs']);

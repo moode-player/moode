@@ -21,6 +21,7 @@ fi
 # Set HDMI/DSI screen orientation
 HDMI_SCN_ORIENT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='hdmi_scn_orient'")
 DSI_SCN_TYPE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_type'")
+DSI_PORT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_port'")
 DSI_SCN_ROTATE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_rotate'")
 if [ $DSI_SCN_TYPE = 'none' ]; then
     if [ $HDMI_SCN_ORIENT = "portrait" ]; then
@@ -29,15 +30,15 @@ if [ $DSI_SCN_TYPE = 'none' ]; then
     fi
 elif [ $DSI_SCN_TYPE = '2' ]; then
     if [ $DSI_SCN_ROTATE = "0" ]; then
-        DISPLAY=:0 xrandr --output DSI-1 --rotate normal
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate normal
     elif [ $DSI_SCN_ROTATE = "90" ]; then
         SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
-        DISPLAY=:0 xrandr --output DSI-1 --rotate right
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate right
     elif [ $DSI_SCN_ROTATE = "180" ]; then
-        DISPLAY=:0 xrandr --output DSI-1 --rotate inverted
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate inverted
     elif [ $DSI_SCN_ROTATE = "270" ]; then
         SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
-        DISPLAY=:0 xrandr --output DSI-1 --rotate left
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate left
     fi
 fi
 

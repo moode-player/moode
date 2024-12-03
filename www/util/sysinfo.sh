@@ -387,6 +387,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nHDMI CEC\t\t= $hdmi_cec\c"
 		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
 		echo -e "\nDSI Screentype\t\t= $dsi_scn_type\c"
+		echo -e "\nDSI Port\t\t= $dsi_port\c"
 		echo -e "\nDSI Backlight\t\t= $dsi_backlight\c"
 		echo -e "\nDSI Brightness\t\t= $dsi_scn_brightness\c"
 		#echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
@@ -678,7 +679,7 @@ clkradio_stop=${arr[22]}
 clkradio_volume=${arr[23]}
 clkradio_shutdown=${arr[24]}
 playhist=${arr[25]}
-phistsong=${arr[26]}
+dsi_port=${arr[26]}
 library_utf8rep=${arr[27]}
 current_view=${arr[28]}
 timecountup=${arr[29]}

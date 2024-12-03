@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Dec 1 12:04:50 2024
+-- File generated with SQLiteStudio v3.4.4 on Tue Dec 3 07:04:55 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -561,7 +561,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (23, 'clkradio_stop', '07,00,AM
 INSERT INTO cfg_system (id, param, value) VALUES (24, 'clkradio_volume', '10');
 INSERT INTO cfg_system (id, param, value) VALUES (25, 'clkradio_action', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (26, 'playhist', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (27, 'phistsong', '');
+INSERT INTO cfg_system (id, param, value) VALUES (27, 'dsi_port', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (28, 'library_utf8rep', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (29, 'current_view', 'playback,folder');
 INSERT INTO cfg_system (id, param, value) VALUES (30, 'timecountup', '0');

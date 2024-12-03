@@ -15,6 +15,8 @@ chkVariables($_POST);
 
 // LOCAL DISPLAY
 
+// GENERAL
+
 if (isset($_POST['update_local_display'])) {
     if (isset($_POST['local_display']) && $_POST['local_display'] != $_SESSION['local_display']) {
         if ($_POST['local_display'] == '1') {
@@ -63,6 +65,8 @@ if (isset($_POST['update_disable_gpu_chromium'])) {
     }
 }
 
+// HDMI DISPLAYS
+
 if (isset($_POST['update_hdmi_scn_orient'])) {
     if (isset($_POST['hdmi_scn_orient']) && $_POST['hdmi_scn_orient'] != $_SESSION['hdmi_scn_orient']) {
         phpSession('write', 'hdmi_scn_orient', $_POST['hdmi_scn_orient']);
@@ -85,15 +89,25 @@ if (isset($_POST['update_hdmi_enable_4kp60'])) {
     }
 }
 
+// DSI DISPLAYS (PI TOUCH1/TOUCH2)
+
 if (isset($_POST['update_dsi_scn_type'])) {
     if (isset($_POST['dsi_scn_type']) && $_POST['dsi_scn_type'] != $_SESSION['dsi_scn_type']) {
         phpSession('write', 'dsi_scn_type', $_POST['dsi_scn_type']);
 
-        // Reset brightness and rotation
+        // Reset dsi port, brightness and rotation
+        phpSession('write', 'dsi_port', '1');
         $_SESSION['dsi_scn_brightness'] = ($_POST['dsi_scn_type'] == '1' || $_POST['dsi_scn_type'] == 'none' ? '255' : '31');
         phpSession('write', 'dsi_scn_rotate', '0');
 
         submitJob('dsi_scn_type', $_POST['dsi_scn_type'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+    }
+}
+
+if (isset($_POST['update_dsi_port'])) {
+    if (isset($_POST['dsi_port']) && $_POST['dsi_port'] != $_SESSION['dsi_port']) {
+        phpSession('write', 'dsi_port', $_POST['dsi_port']);
+    	submitJob('dsi_port','', NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
     }
 }
 
@@ -118,7 +132,7 @@ if (isset($_POST['update_dsi_scn_rotate'])) {
         if ($_SESSION['dsi_scn_type'] == '1') {
             submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
         } else if ($_SESSION['dsi_scn_type'] == '2') {
-            submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate']);
+            submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
         }
     }
 }
@@ -171,6 +185,8 @@ phpSession('close');
 
 // LOCAL DISPLAY
 
+// GENERAL
+
 if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_feat_localdisplay = '';
 	if ($_SESSION['local_display'] == '1') {
@@ -221,6 +237,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
+    // HDMI DISPLAYS
+
     $_select['hdmi_scn_orient'] .= "<option value=\"landscape\" " . (($_SESSION['hdmi_scn_orient'] == 'landscape') ? "selected" : "") . ">Landscape</option>\n";
     $_select['hdmi_scn_orient'] .= "<option value=\"portrait\" " . (($_SESSION['hdmi_scn_orient'] == 'portrait') ? "selected" : "") . ">Portrait</option>\n";
 
@@ -232,10 +250,15 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
+    // DSI DISPLAYS (PI TOUCH1/TOUCH2)
+
     // NOTE: The option 'none' is used in xinitrc to determine whether HDMI or DSI configuration is used
     $_select['dsi_scn_type'] .= "<option value=\"none\" " . (($_SESSION['dsi_scn_type'] == 'none') ? "selected" : "") . ">None</option>\n";
     $_select['dsi_scn_type'] .= "<option value=\"1\" " . (($_SESSION['dsi_scn_type'] == '1') ? "selected" : "") . ">Pi Touch 1</option>\n";
     $_select['dsi_scn_type'] .= "<option value=\"2\" " . (($_SESSION['dsi_scn_type'] == '2') ? "selected" : "") . ">Pi Touch 2</option>\n";
+
+    $_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1</option>\n";
+    $_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-2</option>\n";
 
     // NOTE: Touch1 (square pixels): no solution yet with the KMS driver
 	//$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";

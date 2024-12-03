@@ -158,9 +158,14 @@
 					$_select[dsi_scn_type]
 				</select>
 				<button id="btn-set-dsi-scn-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_type" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<!--span class="config-help-static">
-					Type can only be changed if Rotate is 0.
-                </span-->
+			</div>
+
+			<label class="control-label" for="dsi-port">DSI port</label>
+			<div class="controls">
+				<select id="dsi-port" class="config-select-large" name="dsi_port" onchange="autoClick('#btn-set-dsi-port');" $_ctl_disable>
+					$_select[dsi_port]
+				</select>
+				<button id="btn-set-dsi-port" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_port" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			</div>
 
 			<label class="control-label" for="dsi-scn-brightness">Brightness</label>

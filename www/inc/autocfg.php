@@ -621,6 +621,7 @@ function autoConfigSettings() {
 		}],
 		'DSI displays',
 		['requires' => ['dsi_scn_type'], 'handler' => 'setSessVarSql'],
+		['requires' => ['dsi_port'], 'handler' => 'setSessVarSql'],
 		['requires' => ['dsi_backlight'], 'handler' => function($values) {
 			$_SESSION['dsi_backlight'] = $values['dsi_backlight'];
 			$value = $values['dsi_backlight'] == 'on' ? '' : '#';
