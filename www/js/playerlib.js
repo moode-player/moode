@@ -549,31 +549,26 @@ function engineCmd() {
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
-    				inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">Spotify Active</span>' +
-                        '<button class="btn spotify-renderer disconnect-spotify" data-job="spotifysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
-                        receiversBtn(cmd[0]) +
-                        audioInfoBtn(cmd[0]) +
-                        '<a id="inpsrc-spotify-refresh" class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
-                    );
-                    $('#inpsrc-spotmeta-refresh').html('');
-                    break;
-                case 'update_spotmeta':
-                    updateSpotmeta(cmd[1]);
-                    break;
                 case 'deezactive1':
                 case 'deezactive0':
-    				inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">Deezer Active</span>' +
-                        '<button class="btn deezer-renderer disconnect-deezer" data-job="deezersvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                    var rendererName = cmd[0].includes('spot') ? 'spotify' : 'deezer';
+                    inpSrcIndicator(cmd[0],
+                        '<span id="inpsrc-msg-text">' +
+                        rendererName.charAt(0).toUpperCase() + rendererName.slice(1) +
+                        ' Active</span>' +
+                        '<button class="btn renderer-btn disconnect-' +
+                        rendererName +
+                        '" data-job="' +
+                        rendererName + 'svc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                         receiversBtn(cmd[0]) +
                         audioInfoBtn(cmd[0]) +
-                        '<a id="inpsrc-deezer-refresh" class="btn deezer-renderer" href="javascript:refreshDeezmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
+                        rendererRefreshBtn()
                     );
-                    $('#inpsrc-deezmeta-refresh').html('');
+                    $('#inpsrc-metadata-refresh').html('');
                     break;
+                case 'update_spotmeta':
                 case 'update_deezmeta':
-                    updateDeezmeta(cmd[1]);
+                    updateInpsrcMeta(cmd[0], cmd[1]); // cmd[1]: metadata
                     break;
                 case 'slactive1':
                 case 'slactive0':
@@ -750,9 +745,10 @@ function engineCmdLite() {
 
 function inpSrcIndicator(cmd, msgText) {
 	UI.currentFile = 'blank';
-    $('#inpsrc-msg').removeClass('inpsrc-msg-spotify');
+    $('#inpsrc-msg').removeClass('inpsrc-msg-metadata');
     $('#inpsrc-msg').addClass('inpsrc-msg-default');
-    $('#inpsrc-spotmeta').html('');
+    $('#inpsrc-msg').css({width:'100%', top:'50%', bottom:'unset'});
+    $('#inpsrc-metadata').hide();
 
     // Set custom backdrop (if any)
     if (SESSION.json['renderer_backdrop'] == 'Yes') {
@@ -783,64 +779,37 @@ function inpSrcIndicator(cmd, msgText) {
 	}
 }
 
-function refreshSpotmeta() {
-    $.getJSON('command/renderer.php?cmd=get_spotmeta', function(data) {
-        updateSpotmeta(data);
+function refreshInpsrcMeta() {
+    cmd = SESSION.json['spotactive'] == '1' ? 'get_spotmeta' : 'get_deezmeta';
+    $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
+        updateInpsrcMeta(cmd, data);
     });
 }
-function updateSpotmeta(data) {
+function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-msg').removeClass('inpsrc-msg-default');
-    $('#inpsrc-msg').addClass('inpsrc-msg-spotify');
+    $('#inpsrc-msg').addClass('inpsrc-msg-metadata');
     $('#inpsrc-msg-text').text('');
 
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
-    // data = title;artists;album;duration;coverurl (note duration is in ms)
-    //DEBUG:console.log(data);
+    // Spotify: title;artists;album;duration;coverurl (duration is in ms)
+    // Deezer:  title;artist;album;duration;coverurl (duration is in secs)
     var metadata = data.split(';');
-    $('#inpsrc-backdrop').html('<img class="inpsrc-spotmeta-backdrop" ' + 'src="' + metadata[4] + '">');
-    $('#inpsrc-spotmeta').html(
-        metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]) / 1000)) + ')' +
+    var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
+
+    $('#inpsrc-backdrop').html('<img class="inpsrc-metadata-backdrop" ' + 'src="' + metadata[4] + '">');
+    $('#inpsrc-metadata').html(
+        metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]) / timeDivisor)) + ')' +
         '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
     );
 
-    if (window.matchMedia("(orientation: portrait)").matches) {
-        $('#inpsrc-spotmeta-refresh').html('');
-    } else {
-        $('#inpsrc-spotify-refresh').html('');
-        $('#inpsrc-spotmeta-refresh').html('<a class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>');
-    }
-}
+    inpSrcMetaRefreshBtn();
 
-function refreshDeezmeta() {
-    $.getJSON('command/renderer.php?cmd=get_deezmeta', function(data) {
-        updateDeezmeta(data);
-    });
-}
-function updateDeezmeta(data) {
-    $('#inpsrc-msg').removeClass('inpsrc-msg-default');
-    $('#inpsrc-msg').addClass('inpsrc-msg-spotify');
-    $('#inpsrc-msg-text').text('');
-
-    $('#inpsrc-backdrop').css('filter', 'blur(0px)');
-    $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
-
-    // data = title;artist;album;duration;coverurl (note duration is in secs)
-    //DEBUG:console.log(data);
-    var metadata = data.split(';');
-    $('#inpsrc-backdrop').html('<img class="inpsrc-deezmeta-backdrop" ' + 'src="' + metadata[4] + '">');
-    $('#inpsrc-deezmeta').html(
-        metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]))) + ')' +
-        '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
-    );
-
-    if (window.matchMedia("(orientation: portrait)").matches) {
-        $('#inpsrc-deezmeta-refresh').html('');
-    } else {
-        $('#inpsrc-deezer-refresh').html('');
-        $('#inpsrc-deezmeta-refresh').html('<a class="btn deezer-renderer" href="javascript:refreshDeezmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>');
-    }
+    $('#inpsrc-metadata').show();
+    // Add !important ?
+    $('#inpsrc-msg').css({width:'unset', top:'unset', bottom:'0', 'margin-bottom':'calc(.5em + env(safe-area-inset-bottom))'});
+    $('#inpsrc-metadata-refresh').css('padding-bottom', 'calc(.5em + env(safe-area-inset-bottom)');
 }
 
 // Show/hide CoverView screen saver
@@ -1407,13 +1376,13 @@ function renderUI() {
     	if (SESSION.json['spotactive'] == '1') {
             inpSrcIndicator('spotactive1',
                 '<span id="inpsrc-msg-text">Spotify Active</span>' +
-                '<button class="btn spotify-renderer disconnect-spotify" data-job="spotifysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                '<button class="btn renderer-btn disconnect-spotify" data-job="spotifysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                 receiversBtn('spotactive1') +
                 audioInfoBtn('spotactive1') +
-                '<a id="inpsrc-spotify-refresh" class="btn spotify-renderer" href="javascript:refreshSpotmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
+                rendererRefreshBtn()
             );
 
-            refreshSpotmeta();
+            refreshInpsrcMeta();
     	}
         // Deezer Connect renderer
     	if (SESSION.json['deezactive'] == '1') {
@@ -1422,10 +1391,10 @@ function renderUI() {
                 '<button class="btn deezer-renderer disconnect-deezer" data-job="deezersvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                 receiversBtn('deezactive1') +
                 audioInfoBtn('deezactive1') +
-                '<a id="inpsrc-deezer-refresh" class="btn deezer-renderer" href="javascript:refreshDeezmeta()"><i class="fa-regular fa-sharp fa-redo"></i></a>'
+                rendererRefreshBtn()
             );
 
-            refreshDeezmeta();
+            refreshInpsrcMeta();
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
@@ -1472,7 +1441,7 @@ function receiversBtn(rendererActive = '') {
     if (SESSION.json['multiroom_tx'] == 'On') {
         if (rendererActive == 'spotactive1') {
             // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
-            var html = '<span class="context-menu"><a class="btn spotify-renderer" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
+            var html = '<span class="context-menu"><a class="btn renderer-btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
         } else if (rendererActive == 'deezactive1') {
             // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
             var html = '<span class="context-menu"><a class="btn deezer-renderer" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
@@ -1488,7 +1457,7 @@ function receiversBtn(rendererActive = '') {
 // Audio info
 function audioInfoBtn(rendererActive = '') {
     if (rendererActive == 'spotactive1') {
-        var html = '<span><a class="btn spotify-renderer" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
+        var html = '<span><a class="btn renderer-btn" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else if (rendererActive == 'deezactive1') {
         var html = '<span><a class="btn deezer-renderer" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else {
@@ -1496,6 +1465,16 @@ function audioInfoBtn(rendererActive = '') {
     }
 
     return html;
+}
+
+function rendererRefreshBtn() {
+    html = '<span id="renderer-refresh-btn"><a class="btn renderer-btn" href="javascript:refreshInpsrcMeta()"><i class="fa-regular fa-sharp fa-redo"></i></a></span';
+    return html;
+}
+
+function inpSrcMetaRefreshBtn() {
+    $('#renderer-refresh-btn').html('');
+    $('#inpsrc-metadata-refresh').html('<span><a class="btn renderer-btn" href="javascript:refreshInpsrcMeta()"><i class="fa-regular fa-sharp fa-redo"></i></a></span');
 }
 
 // Generate search url

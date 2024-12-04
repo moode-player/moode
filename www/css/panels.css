@@ -90,23 +90,19 @@ html {background-color:inherit;}
 .inpsrc {position:fixed;z-index:9999;backdrop-filter: blur(5px);-webkit-backdrop-filter:blur(5px);overflow:hidden;color:var(--adapttext);background-color:var(--modalbkdr);display:none;}
 #inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;text-align:center;}
 /* Input source name */
-#inpsrc-msg {animation:fadeIn var(--fadein-rate);}
+#inpsrc-msg {animation:fadeIn var(--fadein-rate);padding-bottom:.5em;}
 .inpsrc-msg-default {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
-.inpsrc-msg-spotify {position:absolute;bottom:0;z-index:9999;}
+.inpsrc-msg-metadata {position:absolute;bottom:0;z-index:9999;}
 #inpsrc-msg a,
-#inpsrc-spotmeta-refresh a,
-#inpsrc-deezmeta-refresh a {color:#eee;}
+#inpsrc-metadata-refresh a {color:#eee;}
 #inpsrc-msg i,
-#inpsrc-spotmeta-refresh i,
-#inpsrc-deezmeta-refresh i {font-size:1.5em;}
+#inpsrc-metadata-refresh i {font-size:1.5em;}
 #inpsrc-msg-text {display:block;font-size:1em;margin-bottom:0.5em;}
 /* Volume control */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 /* Spotify backdrop cover and metadata */
-.inpsrc-spotmeta-backdrop,
-.inpsrc-deezmeta-backdrop {height:calc(88vh - .5rem);}
-#inpsrc-spotmeta,
-#inpsrc-deezmeta {
+.inpsrc-metadata-backdrop {height:calc(88vh - .5rem);}
+#inpsrc-metadata {
 	position:absolute;
 	display:block;
 	height: 12vh;
@@ -117,10 +113,8 @@ html {background-color:inherit;}
 	font-weight:500;
 	background:linear-gradient(to right, rgba(64,64,64,0.5), rgba(0,0,0,1) 50%, rgba(64,64,64,.5));
 }
-#inpsrc-spotmeta span,
-#inpsrc-deezmeta span {font-size:.75em;font-weight:400;}
-#inpsrc-spotmeta-refresh,
-#inpsrc-deezmeta-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;}
+#inpsrc-metadata span {font-size:.75em;font-weight:400;}
+#inpsrc-metadata-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;}
 
 /* Buttons */
 .audioinfo-renderer,
@@ -128,8 +122,7 @@ html {background-color:inherit;}
 .disconnect-renderer,
 .turnoff-renderer,
 .turnoff-receiver {border-radius:5rem;background-color:var(--btnshade4);margin:0.2em 1vw;padding:0.5rem 0;font-size:.7em;width:10em;color:inherit;}
-.spotify-renderer,
-.deezer-renderer {border-radius:5rem;background-color:transparent;padding:1em 0;font-size:.6em;width:3em;color:inherit;}
+.renderer-btn {border-radius:5rem;background-color:transparent;padding:1em 0;font-size:.6em;width:3em;color:inherit;}
 
  /* Mask hover effect */
 .audioinfo-renderer:hover,

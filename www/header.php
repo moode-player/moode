@@ -143,10 +143,8 @@
     <div id="inpsrc-indicator" class="inpsrc">
         <div id="inpsrc-backdrop"></div>
         <div id="inpsrc-msg" class="inpsrc-msg-default"></div>
-        <div id="inpsrc-spotmeta"></div>
-        <div id="inpsrc-spotmeta-refresh"></div>
-        <div id="inpsrc-deezmeta"></div>
-        <div id="inpsrc-deezmeta-refresh"></div>
+        <div id="inpsrc-metadata"></div>
+        <div id="inpsrc-metadata-refresh"></div>
     </div>
 
 	<!-- HEADER -->
