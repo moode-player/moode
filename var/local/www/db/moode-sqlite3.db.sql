@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Tue Dec 3 07:04:55 2024
+-- File generated with SQLiteStudio v3.4.4 on Thu Dec 5 07:28:45 2024
 --
 -- Text encoding used: UTF-8
 --
@@ -100,11 +100,11 @@ CREATE TABLE cfg_deezer (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32
 INSERT INTO cfg_deezer (id, param, value) VALUES (1, 'normalize_volume', 'No');
 INSERT INTO cfg_deezer (id, param, value) VALUES (2, 'no_interruptions', 'No');
 INSERT INTO cfg_deezer (id, param, value) VALUES (3, 'format', 'S16');
-INSERT INTO cfg_deezer (id, param, value) VALUES (4, 'RESERVED_4', '');
-INSERT INTO cfg_deezer (id, param, value) VALUES (5, 'RESERVED_4', '');
-INSERT INTO cfg_deezer (id, param, value) VALUES (6, 'RESERVED_4', '');
-INSERT INTO cfg_deezer (id, param, value) VALUES (7, 'RESERVED_4', '');
-INSERT INTO cfg_deezer (id, param, value) VALUES (8, 'RESERVED_4', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (4, 'initial_volume', '5');
+INSERT INTO cfg_deezer (id, param, value) VALUES (5, 'RESERVED_5', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (6, 'RESERVED_6', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (7, 'RESERVED_7', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (8, 'RESERVED_8', '');
 INSERT INTO cfg_deezer (id, param, value) VALUES (9, 'email', '');
 INSERT INTO cfg_deezer (id, param, value) VALUES (10, 'password', '');
 
