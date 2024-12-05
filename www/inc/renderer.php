@@ -102,8 +102,7 @@ function startSpotify() {
 	}
 
 	// Output device
-	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
-	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
+	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
 
 	// Options
 	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . $cfgSpotify['dither'];
