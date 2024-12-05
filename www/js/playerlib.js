@@ -806,12 +806,13 @@ function updateInpsrcMeta(cmd, data) {
 
     inpSrcMetaRefreshBtn();
 
+    var padBottom = (UI.mobile && window.matchMedia("(orientation: portrait)").matches) ? '.5em' : '0px';
     $('#inpsrc-metadata').show();
     $('#inpsrc-msg').css({
         'width':'unset',
         'top':'unset',
         'bottom':'0',
-        'padding-bottom':'calc(.5em + env(safe-area-inset-bottom))'
+        'padding-bottom':'calc(' + padBottom + ' + env(safe-area-inset-bottom))'
     });
 }
 
