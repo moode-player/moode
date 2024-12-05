@@ -20,6 +20,7 @@ New features
 
 Updates
 - UPD: Bump to Linux kernel 6.6.62
+- UPD: Bump to shairport-sync 4.3.5
 - UPD: Add DSI port option to Peripheral Config
 - UPD: Improve layout of renderer metadata display
 
