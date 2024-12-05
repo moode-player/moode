@@ -124,7 +124,8 @@ body {
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:3.5em;}
 	#inpsrc-msg {top:50%;width:100%}
-	#inpsrc-metadata {position:relative;}
+	#inpsrc-metadata {position:relative;font-size:.65em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#inpsrc-metadata-refresh {padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
 	.inpsrc-metadata-backdrop {height:auto;}
 
 	/* Shutdown, Restart, Reconnect */
@@ -356,7 +357,7 @@ body {
 
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:2.85em;}
-	#inpsrc-metadata {font-size:.5em;}
+	#inpsrc-metadata {font-size:.5em;padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
 	#inpsrc-metadata-refresh {padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
 	#inpsrc-metadata-refresh i,
 	#inpsrc-msg i {font-size:1.25em;}

@@ -807,9 +807,13 @@ function updateInpsrcMeta(cmd, data) {
     inpSrcMetaRefreshBtn();
 
     $('#inpsrc-metadata').show();
-    // Add !important ?
-    $('#inpsrc-msg').css({width:'unset', top:'unset', bottom:'0', 'margin-bottom':'calc(.5em + env(safe-area-inset-bottom))'});
-    $('#inpsrc-metadata-refresh').css('padding-bottom', 'calc(.5em + env(safe-area-inset-bottom)');
+    // TODO: Still some issues with the leftmost button bottom margin.
+    $('#inpsrc-msg').css({
+        'width':'unset',
+        'top':'unset',
+        'bottom':'0',
+        'padding-bottom':'calc(.5em + env(safe-area-inset-bottom))'
+    });
 }
 
 // Show/hide CoverView screen saver
