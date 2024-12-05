@@ -21,6 +21,7 @@ New features
 Updates
 - UPD: Bump to Linux kernel 6.6.62
 - UPD: Add DSI port option to Peripheral Config
+- UPD: Improve layout of renderer metadata display
 
 Bug fixes
 - FIX: Extra metadata under main cover showing raw html entity codes
