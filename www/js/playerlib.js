@@ -807,7 +807,6 @@ function updateInpsrcMeta(cmd, data) {
     inpSrcMetaRefreshBtn();
 
     $('#inpsrc-metadata').show();
-    // TODO: Still some issues with the leftmost button bottom margin.
     $('#inpsrc-msg').css({
         'width':'unset',
         'top':'unset',
