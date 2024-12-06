@@ -156,6 +156,24 @@
 					Autoplay similar songs when the playlist ends.
 				</span>
 			</div>
+
+			<label class="control-label" for="zeroconf">Zeroconf</label>
+			<div class="controls">
+				<select id="zeroconf" class="config-select-large" name="config[zeroconf]">
+					$_select[zeroconf]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-zeroconf" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-zeroconf" class="config-help-info">
+					Port advertised over zeroconf.
+				</span>
+			</div>
+
+			<div id="zeroconf-manual-section" class="class=control-group hide">
+				<label class="control-label" for="zeroconf-port">Zeroconf Port</label>
+				<div class="controls">
+					<input class="config-input-large" type="number" min="1" max="65535" id="zeroconf-port" name="config[zeroconf_port]" value="$_select[zeroconf_port]" required>
+				</div>
+			</div>
 		</div>
 	</form>
 </div>

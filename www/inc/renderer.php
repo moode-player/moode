@@ -119,6 +119,7 @@ function startSpotify() {
 		: '';
 
 	$autoplay = $cfgSpotify['autoplay'] == 'Yes' ? ' --autoplay on' : '';
+	$zeroconf = $cfgSpotify['zeroconf'] == 'manual' ? ' --zeroconf-port ' . $cfgSpotify['zeroconf_port'] : '';
 
 	// Logging
 	$logging = $_SESSION['debuglog'] == '1' ? ' -v > ' . LIBRESPOT_LOG : ' > /dev/null';
@@ -135,6 +136,7 @@ function startSpotify() {
 		' --volume-range ' . $cfgSpotify['volume_range'] .
 		$volume_normalization .
 		$autoplay .
+		$zeroconf .
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' .
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		$logging . ' 2>&1 &';

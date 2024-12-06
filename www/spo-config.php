@@ -73,6 +73,10 @@ $_select['normalization_knee'] = $cfgSpotify['normalization_knee'];
 $_select['autoplay'] .= "<option value=\"Yes\" " . (($cfgSpotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['autoplay'] .= "<option value=\"No\" " . (($cfgSpotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";
 
+$_select['zeroconf'] .= "<option value=\"dynamic\" " . (($cfgSpotify['zeroconf'] == 'random') ? "selected" : "") . ">Random (Default)</option>\n";
+$_select['zeroconf'] .= "<option value=\"manual\" " . (($cfgSpotify['zeroconf'] == 'manual') ? "selected" : "") . ">Manual</option>\n";
+$_select['zeroconf_port'] = $cfgSpotify['zeroconf_port'];
+
 waitWorker('spo_config');
 
 $tpl = "spo-config.html";
