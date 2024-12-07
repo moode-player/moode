@@ -21,7 +21,11 @@ New features
 Updates
 - UPD: Bump to Linux kernel 6.6.62
 - UPD: Bump to shairport-sync 4.3.5
+- UPD: Bump to upmpdcli 1.9.0
 - UPD: Add DSI port option to Peripheral Config
+- UPD: Add FluxFM - Livestream (replaces FluxFM)
+- UPD: Add FluxFM - Livestream (128K)
+- UPD: Add FluxFM - 90's (320K)
 - UPD: Improve layout of renderer metadata display
 
 Bug fixes
