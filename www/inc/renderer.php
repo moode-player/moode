@@ -183,6 +183,7 @@ function startDeezer() {
 		' --name "' . $_SESSION['deezername'] . '"' .
 		' --device-type "' . 'web' . '"' .
 		' --device "' . 'ALSA|' . $device . '|' . $rate . '|' . $format . '"' .
+		' --initial-volume "' . $cfgDeezer['initial_volume'] . '"' .
 		' --secrets-file "' . DEEZ_CREDENTIALS_FILE . '"' .
 		$volume_normalization .
 		$interruption .
