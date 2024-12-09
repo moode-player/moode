@@ -96,6 +96,7 @@ a.show-hide-password:visited {color:var(--config-help-icon-color);}
 .cdsp-pipeline-editor {width:100%;height:200vh;border:none;}
 /* lib-config */
 .config-btn-music-source {font-size:1.15em;width:80%;background-color:#333;text-align:left;}
+.config-btn-music-source-none {color:var(--config-help-color);}
 
 /* CamillaDSP Config */
 .cdsp-help-table td {padding:0 0.5em 0 0;}

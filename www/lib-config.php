@@ -356,7 +356,7 @@ if (!isset($_GET['cmd'])) {
 		$_nas_mounts .= "<a href=\"lib-config.php?cmd=edit_nas_source&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ", " . $mpType . ") </a>";
 	}
 	if ($mounts === true) {
-		$_nas_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
+		$_nas_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None configured</span>';
 	} else if ($mounts === false) {
 		$_nas_mounts .= '<span class="btn-large config-btn config-btn-music-source">Query failed</span>';
 	}
@@ -374,7 +374,7 @@ if (!isset($_GET['cmd'])) {
 			$mp['name'] . ' (' . explode(',', $mp['address'])[0] . ', ext4)' . "</a>";
 	}
 	if ($mounts === true) {
-		$_nvme_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
+		$_nvme_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None configured</span>';
 	} else if ($mounts === false) {
 		$_nvme_mounts .= '<span class="btn-large config-btn config-btn-music-source">Query failed</span>';
 	}
@@ -389,7 +389,7 @@ if (!isset($_GET['cmd'])) {
 			$mp['name'] . ' (' . $device . ', ' . getDriveFormat($device) . ')' . "</a>";
 	}
 	if ($mounts === true) {
-		$_sata_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
+		$_sata_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None configured</span>';
 	} else if ($mounts === false) {
 		$_sata_mounts .= '<span class="btn-large config-btn config-btn-music-source">Query failed</span>';
 	}

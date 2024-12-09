@@ -311,15 +311,23 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 				}
 				$return = true;
 			} else {
-				// Empty check to ensure /mnt/NVME/ itself is never deleted
-				if (!empty($mp[0]['name'])) {
-					sysCmd('rmdir "/mnt/NVME/' . $mp[0]['name'] . '"');
+				// Check for already mounted
+				$resultStr = implode("\n", $result);
+				if (str_contains($resultStr, 'already mounted')) {
+					$mp[0]['error'] = '';
+					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+					$return = true;
+				} else {
+					// Empty check to ensure /mnt/NVME/ itself is never deleted
+					if (!empty($mp[0]['name'])) {
+						sysCmd('rmdir "/mnt/NVME/' . $mp[0]['name'] . '"');
+					}
+					$mp[0]['error'] = 'Mount error';
+					workerLog('worker: Try (' . $mountStr . ')');
+					workerLog('worker: Err (' . $resultStr . ')');
+					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+					$return = false;
 				}
-				$mp[0]['error'] = 'Mount error';
-				workerLog('worker: Try (' . $mountStr . ')');
-				workerLog('worker: Err (' . implode("\n", $result) . ')');
-				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
-				$return = false;
 			}
 
 			// Log the mount string if debug logging on and mount appeared to be successful
@@ -517,15 +525,23 @@ function sataSourceMount($action, $id = '', $log = '') {
 				}
 				$return = true;
 			} else {
-				// Empty check to ensure /mnt/SATA/ itself is never deleted
-				if (!empty($mp[0]['name'])) {
-					sysCmd('rmdir "/mnt/SATA/' . $mp[0]['name'] . '"');
+				// Check for already mounted
+				$resultStr = implode("\n", $result);
+				if (str_contains($resultStr, 'already mounted')) {
+					$mp[0]['error'] = '';
+					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+					$return = true;
+				} else {
+					// Empty check to ensure /mnt/NVME/ itself is never deleted
+					if (!empty($mp[0]['name'])) {
+						sysCmd('rmdir "/mnt/SATA/' . $mp[0]['name'] . '"');
+					}
+					$mp[0]['error'] = 'Mount error';
+					workerLog('worker: Try (' . $mountStr . ')');
+					workerLog('worker: Err (' . $resultStr . ')');
+					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+					$return = false;
 				}
-				$mp[0]['error'] = 'Mount error';
-				workerLog('worker: Try (' . $mountStr . ')');
-				workerLog('worker: Err (' . implode("\n", $result) . ')');
-				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
-				$return = false;
 			}
 
 			// Log the mount string if debug logging on and mount appeared to be successful
