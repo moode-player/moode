@@ -1,0 +1,80 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="lib-config">Local SATA drives</h1>
+	<p>
+		Select an already formatted SATA drive from the list to mount.
+		After saving or removing a drive, return to Playback or Library and select "Update library" from the Menu.
+	</p>
+
+	<form class="form-horizontal" action="lib-config.php" method="post">
+		<legend>SATA source
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save_sata_source" value="1">Save</button>
+			<a href="#remove-sata-mount" data-toggle="modal" class="$_hide_remove_sata_source"><button class="legend-config btn btn-medium btn-primary">Remove</button></a>
+		</legend>
+
+		<a data-toggle="modal" href="#moode-log" $_hide_sata_mount_error>
+			<button class="btn btn-medium btn-primary config-btn">
+				$_sata_mount_error_msg
+			</button>
+		</a>
+
+		<div class="control-group">
+			<label class="control-label" for="sata-drive">Drives</label>
+			<div class="controls">
+				<select id="sata-drive" name="mount[drive]" class="config-select-large">
+					$_sata_drives
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-sata-drives" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-sata-drives" class="config-help-info">
+					List of SATA drives showing the device ID and in parenthesis its volume label or a status for example "Unformatted" or "No label".
+                </span>
+			</div>
+
+			<label class="control-label" for="sata-name">Name</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{1,25}" id="sata-name" name="mount[name]" value="$_name">
+				<input type="hidden" name="mount[id]" value="$_id">
+				<input type="hidden" name="mount[action]" value="$_action">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-sata-name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-sata-name" class="config-help-info">
+					Friendly name (alias) for this SATA drive. The name will appear in Library Folder view under the SATA folder.
+					Format is 1-25 characters, alphanumeric, hyphen allowed.
+                </span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="remove-sata-mount" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-sata-mount-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove SATA mount: $_name?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="remove_sata_source" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<div id="moode-log" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="moode-log-label" aria-hidden="true">
+	<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Moode Log</h3>
+	</div>
+	<div class="modal-body">
+		<pre>
+			$_moode_log
+		</pre>
+	</div>
+	<div class="modal-footer">
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>

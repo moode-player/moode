@@ -55,9 +55,10 @@ const LIB_MOUNT_FAILED = '<i class="fa-solid fa-sharp fa-times sx" style="color:
 const LIB_MOUNT_TYPE_SMB = 'cifs';
 const LIB_MOUNT_TYPE_NFS = 'nfs';
 const LIB_MOUNT_TYPE_NVME = 'nvme';
-const LIB_NVME_UNFORMATTED = 'Unformatted';
-const LIB_NVME_NOT_EXT4 = 'Not ext4';
-const LIB_NVME_NO_LABEL = 'No label';
+const LIB_MOUNT_TYPE_SATA = 'sata';
+const LIB_DRIVE_UNFORMATTED = 'Unformatted';
+const LIB_DRIVE_NOT_EXT4 = 'Not ext4';
+const LIB_DRIVE_NO_LABEL = 'No label';
 // Thumbnail generator
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const THM_SM_W = 80; // Small thumbs

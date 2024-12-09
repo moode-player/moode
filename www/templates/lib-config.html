@@ -66,6 +66,20 @@
 			</span>
 		</div>
 
+		<legend>Local SATA Drives</legend>
+		<p class="sub-legend">
+			Local PCIe attached SATA drives must be manually mounted or un-mounted. Click MOUNT to mount a new SATA drive.
+			After mounting or un-mounting the drive select "Update library" from the Menu when in Playback or Library views.
+			Note that SATA drives must be formatted outside of moOde prior to mounting.
+		</p>
+
+		<div class="control-group">
+			<a href="lib-config.php?cmd=add_sata_source"><button class="btn btn-medium btn-primary config-btn">Mount</button></a>
+			<span class="config-btn-after">Local SATA drive</span>
+
+			<div>$_sata_mounts</div>
+		</div>
+
 		<legend>Local USB Drives</legend>
 		<p class="sub-legend">
 			Local USB drives are auto-mounted when they are inserted and auto-unmounted when they are removed.

@@ -208,13 +208,13 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 	} else if ($_POST['mount']['action'] == 'add_nvme_source' && !empty($id[0])) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name already exists.';
-	} else if ($driveStatus == LIB_NVME_UNFORMATTED) {
+	} else if ($driveStatus == LIB_DRIVE_UNFORMATTED) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Drive must be formatted first.';
-	} else if ($driveStatus == LIB_NVME_NOT_EXT4) {
+	} else if ($driveStatus == LIB_DRIVE_NOT_EXT4) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Drive must be ext4 format.';
-	} else if ($driveStatus == LIB_NVME_NO_LABEL) {
+	} else if ($driveStatus == LIB_DRIVE_NO_LABEL) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Drive must have a volume label.';
 	} else if (empty(trim($_POST['mount']['name']))) {
@@ -263,6 +263,59 @@ if (isset($_POST['nvme_format_drive'])) {
 	}
 }
 
+//----------------------------------------------------------------------------//
+// SATA Source Config
+//----------------------------------------------------------------------------//
+
+// Remove SATA source
+if (isset($_POST['remove_sata_source']) && $_POST['remove_sata_source'] == 1) {
+	$initiateLibraryUpd = true;
+	$_POST['mount']['action'] = 'remove_sata_source';
+	$_POST['mount']['id'] = $_SESSION['sata_src_mpid'];
+	submitJob('sata_source_cfg', $_POST);
+}
+// Save SATA source
+if (isset($_POST['save_sata_source']) && $_POST['save_sata_source'] == 1) {
+	// Validate
+	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
+	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
+	if ($driveStatus == 'none') {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'No drive was selected.';
+	} else if ($_POST['mount']['action'] == 'add_sata_source' && !empty($id[0])) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name already exists.';
+	} else if ($driveStatus == LIB_DRIVE_UNFORMATTED) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Drive must be formatted first.';
+	} else if ($driveStatus == LIB_DRIVE_NO_LABEL) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Drive must have a volume label.';
+	} else if (empty(trim($_POST['mount']['name']))) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
+	} else {
+		$initiateLibraryUpd = true;
+		// $array['mount']['key'] must be in column order for subsequent table insert
+		// Table cols = id, name, type, address, remotedir, username, password, charset, rsize, wsize, options, error
+		// New id is auto generated, action = add_sata_source, edit_sata_source, remove_sata_source
+		$array['mount']['action'] = $_POST['mount']['action'];
+		$array['mount']['id'] = $_POST['mount']['id'];
+		$array['mount']['name'] = $_POST['mount']['name'];
+		$array['mount']['type'] = LIB_MOUNT_TYPE_SATA;
+		$array['mount']['address'] = $_POST['mount']['drive']; // device,label or device,status
+		$array['mount']['remotedir'] = '';
+		$array['mount']['username'] = '';
+		$array['mount']['password'] = '';
+		$array['mount']['charset'] = '';
+		$array['mount']['rsize'] = '';
+		$array['mount']['wsize'] = '';
+		$array['mount']['options'] = 'noexec,nodev,noatime,nodiratime';
+
+		submitJob('sata_source_cfg', $array);
+	}
+}
+
 phpSession('close');
 
 waitWorker('lib-config');
@@ -278,6 +331,10 @@ if ($initiateLibraryUpd == true) {
 		$_SESSION['notify']['msg'] = 'NVMe source has been saved. Update or regenerate the Music database if the NVMe mount was successful.';
 	} else if (isset($_POST['remove_nvme_source'])) {
 		$_SESSION['notify']['msg'] = 'NVMe source has been removed. Update or regenerate the Music database.';
+	} else if (isset($_POST['save_sata_source'])) {
+		$_SESSION['notify']['msg'] = 'SATA source has been saved. Update or regenerate the Music database if the SATA mount was successful.';
+	} else if (isset($_POST['remove_sata_source'])) {
+		$_SESSION['notify']['msg'] = 'SATA source has been removed. Update or regenerate the Music database.';
 	}
 	phpSession('close');
 	unset($_GET['cmd']);
@@ -320,6 +377,21 @@ if (!isset($_GET['cmd'])) {
 		$_nvme_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
 	} else if ($mounts === false) {
 		$_nvme_mounts .= '<span class="btn-large config-btn config-btn-music-source">Query failed</span>';
+	}
+
+	// SATA mounts
+	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_SATA . "'", $dbh);
+	foreach ($mounts as $mp) {
+		$icon = sataMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
+		$device = explode(',', $mp[0]['address'])[0];
+		$_sata_mounts .= "<a href=\"lib-config.php?cmd=edit_sata_source&id=" . $mp['id'] .
+			"\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " .
+			$mp['name'] . ' (' . $device . ', ' . getDriveFormat($device) . ')' . "</a>";
+	}
+	if ($mounts === true) {
+		$_sata_mounts .= '<span class="btn-large config-btn config-btn-music-source">None configured</span>';
+	} else if ($mounts === false) {
+		$_sata_mounts .= '<span class="btn-large config-btn config-btn-music-source">Query failed</span>';
 	}
 
 	// Ignore .cue files
@@ -487,6 +559,61 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'format_nvme_drive') {
 			$_nvme_drives .= sprintf('<option value="%s" %s>%s</option>\n',
 				$device . ',' . $status, $selected, $device . ' (' . $status . ')');
 		}
+	}
+}
+
+// SATA SOURCE CONFIG
+if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_sata_source' || $_GET['cmd'] == 'add_sata_source')) {
+	$tpl = 'lib-sata-config.html';
+
+	if (isset($_GET['id']) && !empty($_GET['id'])) {
+		// Edit
+		$_action = 'edit_sata_source';
+		$_id = $_GET['id'];
+		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_SATA . "'", $dbh);
+
+		foreach ($mounts as $mp) {
+			if ($mp['id'] == $_id) {
+				$parts = explode(',', $mp['address']);
+				$selectName = $parts[0] . ' (' . $parts[1] . ')';
+				$_sata_drives .= sprintf('<option value="%s" %s>%s</option>\n', $mp['address'], '', $selectName);
+				$_name = $mp['name'];
+				$_error = $mp['error'];
+				if (empty($_error)) {
+					$_hide_sata_mount_error = 'style="display:none;"';
+				} else {
+					$_hide_sata_mount_error = '';
+					$_sata_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
+					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
+				}
+			}
+		}
+		phpSession('open');
+		$_SESSION['sata_src_action'] = $_action;
+		$_SESSION['sata_src_mpid'] = $_id;
+		phpSession('close');
+	} else if ($_GET['cmd'] == 'add_sata_source') {
+		// Add
+		$_action = 'add_sata_source';
+		$_hide_remove_sata_source = 'hide';
+		$_hide_sata_mount_error = 'style="display:none;"';
+
+		// SATA drives
+		$drives = sataListDrives();
+		if (empty($drives)) {
+			$_sata_drives = sprintf('<option value="%s" %s>%s</option>\n', 'none,none', 'selected', 'None');
+		} else {
+			foreach ($drives as $device => $status) {
+				$selected = '';
+				$_sata_drives .= sprintf('<option value="%s" %s>%s</option>\n',
+					$device . ',' . $status, $selected, $device . ' (' . $status . ')');
+			}
+		}
+
+		phpSession('open');
+		$_SESSION['sata_src_action'] = $_action;
+		$_SESSION['sata_src_mpid'] = $_id;
+		phpSession('close');
 	}
 }
 

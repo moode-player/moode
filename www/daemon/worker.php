@@ -906,6 +906,18 @@ if ($mounts === true) { // Empty result
 	}
 	$result = nvmeSourceMount('mountall');
 }
+// SATA drives
+$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_SATA . "'", $dbh);
+if ($mounts === true) { // Empty result
+	workerLog('worker: SATA drives:    none');
+} else {
+	foreach ($mounts as $mp) {
+		$device = explode(',', $mp['address'])[0];
+		$format = getDriveFormat($device);
+		workerLog('worker: SATA drive:     ' . $mp['name'] . ' (' . $format . ')');
+	}
+	$result = sataSourceMount('mountall');
+}
 // NAS sources
 $mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 if ($mounts === true) { // Empty result
@@ -2432,6 +2444,10 @@ function runQueuedJob() {
 			workerLog('worker: Formatting: ' . $device . ', label: ' . $newLabel);
 			nvmeFormatDrive($device, $newLabel);
 			workerLog('worker: Format complete');
+			break;
+		case 'sata_source_cfg':
+			clearLibCacheAll();
+			sataSourceCfg($_SESSION['w_queueargs']);
 			break;
 		case 'fs_mountmon':
 			sysCmd('killall -s 9 mountmon.php');

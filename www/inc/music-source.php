@@ -402,14 +402,14 @@ function nvmeListDrives() {
 			// Check for ext4 format
 			$format = getDriveFormat('/dev/' . $device);
 			if (empty($format)) {
-				$status = LIB_NVME_UNFORMATTED;
+				$status = LIB_DRIVE_UNFORMATTED;
 			} else if ($format != 'ext4') {
-				$status = LIB_NVME_NOT_EXT4;
+				$status = LIB_DRIVE_NOT_EXT4;
 			} else {
 				// Get drive label
 				$label = getDrivelabel('/dev/' . $device);
 				if (empty($label)) {
-					$status = LIB_NVME_NO_LABEL;
+					$status = LIB_DRIVE_NO_LABEL;
 				} else {
 					$status = $label;
 				}
@@ -422,6 +422,218 @@ function nvmeListDrives() {
 	return $drives;
 }
 
+function nvmeFormatDrive($device, $label) {
+	sysCmd('mkfs -t ext4 ' . $device);
+	sysCmd('e2label ' . $device . ' "' . $label . '"');
+}
+
+//----------------------------------------------------------------------------//
+// SATA SOURCES
+//----------------------------------------------------------------------------//
+
+function sataSourceCfg($queueArgs) {
+	$action = $queueArgs['mount']['action'];
+	unset($queueArgs['mount']['action']);
+
+	switch ($action) {
+		case 'add_sata_source':
+			$dbh = sqlConnect();
+			unset($queueArgs['mount']['id']);
+
+			foreach ($queueArgs['mount'] as $key => $value) {
+				$values .= "'" . SQLite3::escapeString($value) . "',";
+			}
+			// Error column
+			$values .= "''";
+
+			sqlInsert('cfg_source', $dbh, $values);
+			$newMountId = $dbh->lastInsertId();
+
+			$result = sataSourceMount('mount', $newMountId);
+			sataUpdNFSExports($queueArgs['mount']['name'], $action);
+			break;
+		case 'edit_sata_source':
+			$dbh = sqlConnect();
+			$mp = sqlRead('cfg_source', $dbh, '', $queueArgs['mount']['id']);
+			// Save the edits here in case the mount fails
+			sqlUpdate('cfg_source', $dbh, '', $queueArgs['mount']);
+
+			// Unmount
+			sysCmd('umount -f "/mnt/SATA/' . $mp[0]['name'] . '"');
+			// Delete and recreate the mount dir in case the name was changed
+			// Empty check to ensure /mnt/SATA is never deleted
+			if (!empty($mp[0]['name']) && $mp[0]['name'] != $queueArgs['mount']['name']) {
+				sysCmd('rmdir "/mnt/SATA/' . $mp[0]['name'] . '"');
+				sysCmd('mkdir "/mnt/SATA/' . $queueArgs['mount']['name'] . '"');
+			}
+
+			$result = sataSourceMount('mount', $queueArgs['mount']['id']);
+			sataUpdNFSExports($mp[0]['name'], 'remove_sata_source');
+			sataUpdNFSExports($queueArgs['mount']['name'], 'add_sata_source');
+			break;
+		case 'remove_sata_source':
+			$dbh = sqlConnect();
+			$mp = sqlRead('cfg_source', $dbh, '', $queueArgs['mount']['id']);
+
+			// Unmount
+			sysCmd('umount -f "/mnt/SATA/' . $mp[0]['name'] . '"');
+			// Delete the mount dir
+			// Empty check to ensure /mnt/SATA is never deleted
+			if (!empty($mp[0]['name'])) {
+				sysCmd('rmdir "/mnt/SATA/' . $mp[0]['name'] . '"');
+			}
+
+			$result = (sqlDelete('cfg_source', $dbh, $queueArgs['mount']['id'])) ? true : false;
+			sataUpdNFSExports($mp[0]['name'], $action);
+			break;
+	}
+
+	return $result;
+}
+
+function sataSourceMount($action, $id = '', $log = '') {
+	$dbh = sqlConnect();
+
+	switch ($action) {
+		case 'mount':
+			$mp = sqlRead('cfg_source', $dbh, '', $id);
+
+			// Construct the mount string
+			$device = explode(',', $mp[0]['address'])[0];
+			$mountStr = 'mount -t ' . getDriveFormat($device) . ' -o ' .
+			$mp[0]['options'] . ' ' .
+			$device . ' ' .
+			'"/mnt/SATA/' .
+			$mp[0]['name'] . '"';
+
+			// Attempt the mount
+			sysCmd('mkdir "/mnt/SATA/' . $mp[0]['name'] . '"');
+			$result = sysCmd($mountStr);
+
+			if (empty($result)) {
+				if (!empty($mp[0]['error'])) {
+					$mp[0]['error'] = '';
+					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+				}
+				$return = true;
+			} else {
+				// Empty check to ensure /mnt/SATA/ itself is never deleted
+				if (!empty($mp[0]['name'])) {
+					sysCmd('rmdir "/mnt/SATA/' . $mp[0]['name'] . '"');
+				}
+				$mp[0]['error'] = 'Mount error';
+				workerLog('worker: Try (' . $mountStr . ')');
+				workerLog('worker: Err (' . implode("\n", $result) . ')');
+				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+				$return = false;
+			}
+
+			// Log the mount string if debug logging on and mount appeared to be successful
+			if ($return === true) {
+				debugLog('Mount (' . $mountStr . ')');
+			}
+			break;
+		case 'unmount':
+			$mp = sqlRead('cfg_source', $dbh, '', $id);
+
+			if (sataMountExists($mp[0]['name'])) {
+				sysCmd('umount -f "/mnt/SATA/' . $mp[0]['name'] . '"');
+			}
+
+			$return = true;
+			break;
+		case 'mountall':
+			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_SATA . "'", $dbh);
+
+			foreach ($mounts as $mp) {
+				if (!sataMountExists($mp['name'])) {
+					$return = sataSourceMount('mount', $mp['id'], 'workerlog');
+				}
+			}
+			// For logging
+			$return = $mounts === true ? 'None configured' : ($mounts === false ? 'sqlRead() failed' : 'Mount all submitted');
+			break;
+		case 'unmountall':
+			$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_SATA . "'", $dbh);
+
+			foreach ($mounts as $mp) {
+				if (sataMountExists($mp['name'])) {
+					sysCmd('umount -f "/mnt/SATA/' . $mp['name'] . '"');
+				}
+			}
+
+			// For logging
+			$return = $mounts === true ? 'None configured' : ($mounts === false ? 'sqlRead() failed' : 'Unmount all submitted');
+			break;
+	}
+
+	// Returns true/false for 'mount and unmount' or a message for 'mountall' and 'unmountall'
+	return $return;
+}
+
+function sataMountExists($mountName) {
+	$result = sysCmd('mount | grep -ow ' . '"/mnt/SATA/' . $mountName .'"');
+	return empty($result) ? false : true;
+}
+
+function sataUpdNFSExports($mountName, $action) {
+	$dbh = sqlConnect();
+
+	switch ($action) {
+		case 'add_sata_source':
+			// Example: /srv/nfs/sata/Music	192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
+			$access = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_access'", $dbh)[0]['value'];
+			$options = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_options'", $dbh)[0]['value'];
+			sysCmd("sed -i '$ a/srv/nfs/sata/" . $mountName . "\t" . $access . '(' . $options . ")\n' /etc/exports");
+			break;
+		case 'remove_sata_source':
+			sysCmd('sed -i "/' . $mountName . '/ d" /etc/exports');
+			sysCmd('sed -i "/^$/d" /etc/exports'); // Remove any trailing blank lines
+			break;
+	}
+
+	$fsNFS = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs'", $dbh)[0]['value'];
+	if ($fsNFS == 'On') {
+		sysCmd('systemctl restart nfs-kernel-server');
+	}
+}
+
+function sataListDrives() {
+	$drives = array();
+	$devices = sysCmd('ls -1 /dev/');
+
+	foreach ($devices as $device) {
+		// Check for /dev/sda and similar
+		if (str_contains($device, 'sd') && strlen($device) > 3) {
+			// Check for already mounted to /media (USB drive)
+			$mountedToMedia = sysCmd('mount | grep "' . $device . ' on /media"');
+			if (empty($mountedToMedia)) {
+				// Check for formatted
+				$format = getDriveFormat('/dev/' . $device);
+				if (empty($format)) {
+					$status = LIB_DRIVE_UNFORMATTED;
+				} else {
+					// Get drive label
+					$label = getDrivelabel('/dev/' . $device);
+					if (empty($label)) {
+						$status = LIB_DRIVE_NO_LABEL;
+					} else {
+						$status = $label;
+					}
+				}
+
+				$drives['/dev/' . $device] = $status;
+			}
+		}
+	}
+
+	return $drives;
+}
+
+//----------------------------------------------------------------------------//
+// COMMON
+//----------------------------------------------------------------------------//
+
 function getDriveFormat($device) {
 	$format = sysCmd('blkid ' . $device . " | awk -F'TYPE=' '{print $2}' | awk -F'\"' '{print $2}'");
 	return empty($format) ? '' : $format[0];
@@ -430,9 +642,4 @@ function getDriveFormat($device) {
 function getDriveLabel($device) {
 	$label = sysCmd('blkid ' . $device . " | awk -F'LABEL=' '{print $2}' | awk -F'\"' '{print $2}'");
 	return empty($label) ? '' : $label[0];
-}
-
-function nvmeFormatDrive($device, $label) {
-	sysCmd('mkfs -t ext4 ' . $device);
-	sysCmd('e2label ' . $device . ' "' . $label . '"');
 }
