@@ -54,7 +54,7 @@ switch ($option) {
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", sqlConnect());
 		$status = 'Volume ' . $result[0]['value'];
 		break;
-	// This is used to set rx to 0dB when AirPlay or Spotify connects to Sender
+	// This is used to set rx to 0dB when AirPlay, Spotify or Deezer connects to Sender
 	case '-set-alsavol':
 		$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='rx_alsa_volume_max'", sqlConnect());
 		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $result[0]['value']);
