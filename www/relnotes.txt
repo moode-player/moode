@@ -27,6 +27,8 @@ Updates
 - UPD: Add FluxFM - Livestream (replaces FluxFM)
 - UPD: Add FluxFM - Livestream (128K)
 - UPD: Add FluxFM - 90's (320K)
+- UPD: Add REST API commands: playitem | playitem_next
+- UPD: Improve REST API return values for consistent JSON
 - UPD: Improve layout of renderer metadata display
 
 Bug fixes
