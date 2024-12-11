@@ -32,7 +32,6 @@ switch ($cmd[0]) {
 		break;
 	case 'get_output_format':
 		phpSession('open_ro');
-		//openSessionReadOnly();
 		echo json_encode(array('format' => getALSAOutputFormat()), JSON_FORCE_OBJECT);
 		break;
 	case 'get_volume':
@@ -49,11 +48,6 @@ switch ($cmd[0]) {
 			$result = sysCmd('/var/www/util/vol.sh' . $volCmd);
 			// Receiver(s) volume
 			phpSession('open_ro');
-			//openSessionReadOnly();
-
-			// DEBUG:
-			workerLog('index.php: multiroom_tx=' . $_SESSION['multiroom_tx']);
-
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				if ($volCmd == ' -mute') {
 					$rxVolCmd = '-mute';
@@ -75,13 +69,8 @@ switch ($cmd[0]) {
 	case 'playitem_next':
 		$item = trim(getArgs($cmd));
 		$sock = getMpdSock();
-		phpSession('open_ro');
-		//openSessionReadOnly();
-
-		// DEBUG:
-		workerLog('index.php: ashuffle=' . $_SESSION['ashuffle']);
-
 		// Turn off auto-shuffle
+		phpSession('open_ro');
 		if ($_SESSION['ashuffle'] == '1') {
 		    turnOffAutoShuffle($sock);
 		}
@@ -189,11 +178,3 @@ function getArgs($cmd) {
 
 	return $args;
 }
-
-/* DEPRECATE: can be replaced by phpSession('open_ro')
-function openSessionReadOnly() {
-	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-	session_id($sessionId);
-	session_start();
-	session_write_close();
-}*/
