@@ -7,6 +7,7 @@
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/music-library.php';
+require_once __DIR__ . '/../inc/queue.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
@@ -162,7 +163,7 @@ switch ($_GET['cmd']) {
 if (isset($sock) && $sock !== false) {
 	closeMpdSock($sock);
 }
-
+/*DELETE: moved to inc/queue.php
 // Return MPD queue
 function getPlayqueue($resp) {
 	if (is_null($resp)) {
@@ -336,3 +337,4 @@ function putToggleSongId($pos) {
     phpSession('write', 'toggle_songid', $pos);
     phpSession('close');
 }
+*/

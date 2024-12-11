@@ -5,11 +5,12 @@
  * Copyright 2013 The tsunamp player ui / Andrea Coiutti & Simone De Gregori
 */
 
+require_once __DIR__ . '/../inc/cdsp.php';
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/multiroom.php';
+require_once __DIR__ . '/../inc/queue.php';
 require_once __DIR__ . '/../inc/session.php';
-require_once __DIR__ . '/../inc/cdsp.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 if (!isset($_GET['cmd']) || empty($_GET['cmd'])) {
@@ -17,35 +18,42 @@ if (!isset($_GET['cmd']) || empty($_GET['cmd'])) {
 	exit(1);
 }
 
-chkValue('cmd', $_GET['cmd']);
-
 // DEBUG:
-//workerLog('index.php: cmd=' . $_GET['cmd']);
+//workerLog('index.php: $_GET[cmd]=' . $_GET['cmd']);
 
+chkValue('cmd', $_GET['cmd']);
+$dbh = sqlConnect();
 $cmd = explode(' ', $_GET['cmd']);
+
 switch ($cmd[0]) {
+	// REST API commands
 	case 'get_currentsong':
-		echo json_encode(parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "="));
+		echo json_encode(parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "="), JSON_FORCE_OBJECT);
 		break;
 	case 'get_output_format':
-		//phpSession('open_ro');
-		openSessionReadOnly();
-		echo json_encode(getALSAOutputFormat());
+		phpSession('open_ro');
+		//openSessionReadOnly();
+		echo json_encode(array('format' => getALSAOutputFormat()), JSON_FORCE_OBJECT);
 		break;
 	case 'get_volume':
-		$result = sysCmd('/var/www/util/vol.sh');
-		echo $result[0];
+		$volume = sysCmd('/var/www/util/vol.sh')[0];
+		$mute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh)[0]['value'];
+		echo json_encode(array('volume' => $volume, 'muted' => ($mute == '0' ? 'no' : 'yes')));
 		break;
 	case 'set_volume': // N | -mute | -up N | -dn N
 		$rendererActive = chkRendererActive();
 		if ($rendererActive === true) {
-			echo 'Volume cannot be changed while a renderer is active';
+			echo json_encode(array('alert' => 'Volume cannot be changed while a renderer is active'));
 		} else {
 			$volCmd = getArgs($cmd);
 			$result = sysCmd('/var/www/util/vol.sh' . $volCmd);
 			// Receiver(s) volume
-			//phpSession('open_ro');
-			openSessionReadOnly();
+			phpSession('open_ro');
+			//openSessionReadOnly();
+
+			// DEBUG:
+			workerLog('index.php: multiroom_tx=' . $_SESSION['multiroom_tx']);
+
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				if ($volCmd == ' -mute') {
 					$rxVolCmd = '-mute';
@@ -57,12 +65,53 @@ switch ($cmd[0]) {
 				}
 				updReceiverVol($rxVolCmd, true); // True = Master volume change
 			}
-			echo 'OK';
+
+			$volume = sysCmd('/var/www/util/vol.sh')[0];
+			$mute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh)[0]['value'];
+			echo json_encode(array('volume' => $volume, 'muted' => ($mute == '0' ? 'no' : 'yes')));
 		}
+		break;
+	case 'playitem':
+	case 'playitem_next':
+		$item = trim(getArgs($cmd));
+		$sock = getMpdSock();
+		phpSession('open_ro');
+		//openSessionReadOnly();
+
+		// DEBUG:
+		workerLog('index.php: ashuffle=' . $_SESSION['ashuffle']);
+
+		// Turn off auto-shuffle
+		if ($_SESSION['ashuffle'] == '1') {
+		    turnOffAutoShuffle($sock);
+		}
+		// Search the Queue for the item
+		$search = strpos($item, 'RADIO') !== false ? parseDelimFile(file_get_contents(MPD_MUSICROOT . $item), '=')['File1'] : $item;
+		$result = findInQueue($sock, 'file', $search);
+
+		if (isset($result['Pos'])) {
+			// Play already Queued item
+			sendMpdCmd($sock, 'play ' . $result['Pos']);
+			$resp = readMpdResp($sock);
+		} else {
+			// Otherwise play the item after adding it to the Queue
+			$status = getMpdStatus($sock);
+			$cmds = array(addItemToQueue($item));
+			if ($cmd[0] == 'play_item_next') {
+				$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
+				array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . $pos);
+			} else {
+				$pos = $status['playlistlength'];
+			}
+			array_push($cmds, 'play ' . $pos);
+			chainMpdCmds($sock, $cmds);
+		}
+
+		echo json_encode(array('info' => 'OK'));
 		break;
 	case 'get_cdsp_config':
 		phpSession('open_ro');
-		echo $_SESSION['camilladsp'];
+		echo json_encode(array('config' => $_SESSION['camilladsp']));
 		break;
 	case 'set_cdsp_config':
 		$newConfig = trim(getArgs($cmd));
@@ -85,31 +134,37 @@ switch ($cmd[0]) {
 				$cdsp->selectConfig($newConfig);
 				$cdsp->updCDSPConfig($newConfig, $currentConfig, $cdsp);
 				phpSession('close');
-				echo 'OK';
+				echo json_encode(array('config' => $_SESSION['camilladsp']));
 			} else {
-				echo 'Invalid Configuration name';
+				echo json_encode(array('alert' => 'Invalid Configuration name'));
 			}
 		} else {
-			echo 'Argument missing: Configuration name';
+			echo json_encode(array('alert' => 'Argument missing: Configuration name'));
 		}
 		break;
 	case 'set_coverview': // -on | -off
-		$result = sysCmd('/var/www/util/coverview.php' . getArgs($cmd));
-		echo $result[0];
-		break;
-	case 'trx_control': // Up to 3 args
-		$result = sysCmd('/var/www/util/trx-control.php' . getArgs($cmd));
-		echo $result[0];
+		$cvState = sysCmd('/var/www/util/coverview.php' . getArgs($cmd))[0];
+		echo json_encode(array('info' => $cvState));
 		break;
 	case 'upd_library':
 		$result = sysCmd('/var/www/util/libupd-submit.php');
-		echo 'Library update submitted';
+		echo json_encode(array('info' => 'Library update submitted'));
 		break;
-	case 'restart_renderer': // --bluetooth | --airplay | --spotify | --squeezelite | --roonbridge
+	case 'restart_renderer': // --bluetooth | --airplay | --spotify | --pleezer | --squeezelite | --roonbridge
 		$result = sysCmd('/var/www/util/restart-renderer.php' . getArgs($cmd));
-		echo (empty($result) ? 'OK' : 'Missing or invalid argument');
+		echo empty($result) ?
+			json_encode(array('info' => 'Render restart submitted')) :
+			json_encode(array('alert' => 'Missing or invalid argument'));
 		break;
-	default: // MPD commands
+
+	// API commands
+	case 'trx_control': // Up to 3 args, result is status or empty, used by renderer event scripts
+		$result = sysCmd('/var/www/util/trx-control.php' . getArgs($cmd))[0];
+		echo $result;
+		break;
+
+	// MPD commands
+	default:
 		if (false === ($sock = openMpdSock('localhost', 6600))) {
 			debugLog('command/index.php: Connection to MPD failed');
 		} else {
@@ -122,6 +177,7 @@ switch ($cmd[0]) {
 
 function getArgs($cmd) {
 	$argCount = count($cmd);
+
 	if ($argCount > 1) {
 		for ($i = 0; $i < $argCount; $i++) {
 			chkValue('cmd', $cmd[$i + 1]);
@@ -134,9 +190,10 @@ function getArgs($cmd) {
 	return $args;
 }
 
+/* DEPRECATE: can be replaced by phpSession('open_ro')
 function openSessionReadOnly() {
 	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
 	session_id($sessionId);
 	session_start();
 	session_write_close();
-}
+}*/
