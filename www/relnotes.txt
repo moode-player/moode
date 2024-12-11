@@ -22,6 +22,7 @@ Updates
 - UPD: Bump to Linux kernel 6.6.62
 - UPD: Bump to shairport-sync 4.3.5
 - UPD: Bump to upmpdcli 1.9.0
+- UPD: Revert to chromium-browser 126.0.6478.164-rpt1
 - UPD: Add PCIe SATA drive support to Library Config
 - UPD: Add DSI port option to Peripheral Config
 - UPD: Add FluxFM - Livestream (replaces FluxFM)
@@ -35,6 +36,7 @@ Bug fixes
 - FIX: Extra metadata under main cover showing raw html entity codes
 - FIX: Audio info shows no info for some tracks
 - FIX: Track year shows '00' if no date tag is present
+- FIX: Various local display issues by reverting to chromium v126
 
 ################################################################################
 #
