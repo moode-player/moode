@@ -190,7 +190,7 @@ if (!empty($ipAddr[0])) {
 		$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
 		$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3');
 		// Connection
-		$con = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY -t dev wifi')[0]);
+		$con = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY,SSID -t dev wifi | grep "' . $ssid[0] . '"')[0]);
 		// Quality
 		$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 		$array = explode('=', $signal[0]);
