@@ -154,7 +154,7 @@
 
 			<label class="control-label" for="dsi-scn-type">Type</label>
 			<div class="controls">
-				<select id="dsi-scn-type" class="config-select-large" name="dsi_scn_type" onchange="autoClick('#btn-set-dsi-scn-type');" $_ctl_disable>
+				<select id="dsi-scn-type" class="config-select-large" name="dsi_scn_type" onchange="autoClick('#btn-set-dsi-scn-type');">
 					$_select[dsi_scn_type]
 				</select>
 				<button id="btn-set-dsi-scn-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_type" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
@@ -162,16 +162,16 @@
 
 			<label class="control-label" for="dsi-port">DSI port</label>
 			<div class="controls">
-				<select id="dsi-port" class="config-select-large" name="dsi_port" onchange="autoClick('#btn-set-dsi-port');" $_ctl_disable>
+				<select id="dsi-port" class="config-select-large" name="dsi_port" onchange="autoClick('#btn-set-dsi-port');" $_dsi_ctl_disable>
 					$_select[dsi_port]
 				</select>
-				<button id="btn-set-dsi-port" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_port" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-dsi-port" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_port" value="novalue" $_dsi_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			</div>
 
 			<label class="control-label" for="dsi-scn-brightness">Brightness</label>
 			<div class="controls">
-            	<input class="config-input-large" type="number" maxlength="3" min="$_dsi_scn_brightness_min" max="$_dsi_scn_brightness_max" id="dsi-scn-brightness" name="dsi_scn_brightness" value="$_select[dsi_scn_brightness]" $_ctl_disable $_dsi_scn_brightness_disable>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_brightness" value="novalue" $_ctl_disable $_dsi_scn_brightness_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+            	<input class="config-input-large" type="number" maxlength="3" min="$_dsi_scn_brightness_min" max="$_dsi_scn_brightness_max" id="dsi-scn-brightness" name="dsi_scn_brightness" value="$_select[dsi_scn_brightness]" $_dsi_ctl_disable>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_brightness" value="novalue" $_dsi_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<span class="config-help-static">
 					Touch1: 0-255, Touch2: 1-31
                 </span>
@@ -192,10 +192,10 @@
 
 			<label class="control-label" for="dsi-scn-rotate">Rotate</label>
 			<div class="controls">
-				<select id="dsi-scn-rotate" class="config-select-large" name="dsi_scn_rotate" onchange="autoClick('#btn-set-dsi-scn-rotate');" $_ctl_disable $_dsi_scn_rotate_disable>
+				<select id="dsi-scn-rotate" class="config-select-large" name="dsi_scn_rotate" onchange="autoClick('#btn-set-dsi-scn-rotate');" $_dsi_ctl_disable>
 					$_select[dsi_scn_rotate]
 				</select>
-				<button id="btn-set-dsi-scn-rotate" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_rotate" value="novalue" $_ctl_disable $_dsi_scn_rotate_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-dsi-scn-rotate" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_rotate" value="novalue" $_dsi_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			</div>
 		</div>
 

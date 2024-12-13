@@ -252,6 +252,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 
     // DSI DISPLAYS (PI TOUCH1/TOUCH2)
 
+    $_dsi_ctl_disable = $_SESSION['dsi_scn_type'] == 'none' ? 'disabled' : '';
     // NOTE: The option 'none' is used in xinitrc to determine whether HDMI or DSI configuration is used
     $_select['dsi_scn_type'] .= "<option value=\"none\" " . (($_SESSION['dsi_scn_type'] == 'none') ? "selected" : "") . ">None</option>\n";
     $_select['dsi_scn_type'] .= "<option value=\"1\" " . (($_SESSION['dsi_scn_type'] == '1') ? "selected" : "") . ">Pi Touch 1</option>\n";
@@ -264,10 +265,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	//$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
 	//$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
 
-    $_dsi_scn_brightness_disable = $_SESSION['dsi_scn_type'] == 'none' ? 'disabled' : '';
     $_select['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
 
-    $_dsi_scn_rotate_disable = $_SESSION['dsi_scn_type'] == 'none' ? 'disabled' : '';
     if ($_SESSION['dsi_scn_type'] == '1' || $_SESSION['dsi_scn_type'] == 'none') {
         $_dsi_scn_brightness_min = '0';
         $_dsi_scn_brightness_max = '255';
