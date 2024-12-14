@@ -1257,8 +1257,21 @@ updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['dsi_scn_brightness']);
 sysCmd('systemctl daemon-reload');
 
 // Start local display
+$cfgDir = $_SESSION['home_dir'] . '/.config';
+if (file_exists($cfgDir)) {
+	$chownUser = $_SESSION['user_id'] . ':' . $_SESSION['user_id'];
+	$result = sysCmd('stat -c %G":"%U ' . $cfgDir . ' | grep "' . $chownUser .'"');
+	if (empty($result)) {
+		sysCmd('chown '  . $chownUser . ' ' . $cfgDir);
+		$cfgStatus = 'ownership changed to ' . $chownUser;
+	} else {
+		$cfgStatus = 'directory ok';
+	}
+} else {
+	$cfgStatus = 'WARNING: directory ' . $cfgDir . ' does not exist';
+}
 if ($_SESSION['local_display'] == '1') {
-	$cfgStatus = startLocalDisplay();
+	startLocalDisplay();
 }
 workerLog('worker: Local display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
@@ -2368,21 +2381,7 @@ function startGpioBtnHandler() {
 
 // Local display
 function startLocalDisplay() {
-	$cfgDir = $_SESSION['home_dir'] . '/.config';
-	if (file_exists($cfgDir)) {
-		$chownUser = $_SESSION['user_id'] . ':' . $_SESSION['user_id'];
-		$result = sysCmd('stat ' . $cfgDir . ' | grep "' . $_SESSION['user_id'] .'"');
-		if (empty($result)) {
-			sysCmd('chown '  . $chownUser . ' ' . $cfgDir);
-			$cfgStatus = 'ownership changed to ' . $chownUser;
-		} else {
-			$cfgStatus = 'directory ok';
-		}
-	} else {
-		$cfgStatus = 'WARNING: directory ' . $cfgDir . ' does not exist';
-	}
 	sysCmd('systemctl start localdisplay');
-	return $cfgStatus;
 }
 function stopLocalDisplay() {
 	sysCmd('systemctl stop localdisplay');
