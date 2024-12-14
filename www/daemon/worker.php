@@ -3261,6 +3261,10 @@ function runQueuedJob() {
 				startLocalDisplay();
 			}
 			break;
+		case 'downgrade_chromium':
+			sendFECmd('downgrading_chromium');
+			$result = sysCmd('/var/www/util/chromium-updater.sh "' . CHROMIUM_DOWNGRADE_VER . '"');
+			break;
 		case 'hdmi_scn_orient':
 			if ($_SESSION['w_queueargs'] == 'portrait') {
 				sysCmd("sed -i 's/touchscreen catchall\"/touchscreen catchall\""

@@ -65,6 +65,13 @@ if (isset($_POST['update_disable_gpu_chromium'])) {
     }
 }
 
+if (isset($_POST['downgrade_chromium'])) {
+    submitJob('downgrade_chromium', '',
+        NOTIFY_TITLE_INFO,
+        'Update complete.<br>' . NOTIFY_MSG_SYSTEM_RESTART_REQD,
+        NOTIFY_DURATION_INFINITE);
+}
+
 // HDMI DISPLAYS
 
 if (isset($_POST['update_hdmi_scn_orient'])) {
@@ -236,6 +243,21 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
     $autoClick = " onchange=\"autoClick('#btn-set-disable-gpu-chromium');\"";
 	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+    $_installed_chromium_ver = sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0];
+    $downgradeVerMajor = substr(CHROMIUM_DOWNGRADE_VER, 0, 3);
+    if (substr($_installed_chromium_ver, 0, 3) > $downgradeVerMajor) {
+        $_downgrade_ctl_disabled = '';
+        $_downgrade_link_disabled = '';
+        $_downgrade_chromium_msg = 'Downgrading to version ' . $downgradeVerMajor . ' is recommended ' .
+        'to resolve performance issues with recent versions of Chromium.<br>' .
+        '<b>Note:</b> This process can take several minutes to complete.';
+
+    } else {
+        $_downgrade_ctl_disabled = 'disabled';
+        $_downgrade_link_disabled = 'onclick="return false;"';
+        $_downgrade_chromium_msg = 'Downgrade installed';
+    }
 
     // HDMI DISPLAYS
 

@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2014 The moOde audio player project / Tim Curtis
 #
-
 # Arg $1 = chromium-browser version
 #
 
@@ -26,14 +25,14 @@ if [ -z $1 ]; then
 	message_log "Missing arg: chromium package version"
 	exit 1
 else
-	CHROME_VER=$1
+	CHROMIUM_VER=$1
 	message_log "Downgrading chromium"
 fi
 
 # Step 1 - APT update
 message_log "- Updating package list"
 apt update
-if [ $? -ne 0 ] ; then
+if [ $? -ne 0 ]; then
 	message_log "Apt update failed"
 	exit 1
 fi
@@ -41,19 +40,19 @@ fi
 # Step 2 - Remove package holds for current package set
 message_log "- Removing package holds"
 apt-mark unhold chromium chromium-browser chromium-common chromium-sandbox rpi-chromium-mods
-if [ $? -ne 0 ] ; then
-	message_log "APT mark failed"
+if [ $? -ne 0 ]; then
+	message_log "APT unhold failed"
 	exit 1
 fi
 
 # Step 3 - Downgrade
 message_log "- Installing chromium-browser "$CHROMIUM_VER
 apt -y install \
-chromium-browser=$CHROME_VER \
-chromium-browser-l10n=$CHROME_VER \
-chromium-codecs-ffmpeg-extra=$CHROME_VER \
+chromium-browser=$CHROMIUM_VER \
+chromium-browser-l10n=$CHROMIUM_VER \
+chromium-codecs-ffmpeg-extra=$CHROMIUM_VER \
 --allow-downgrades --allow-change-held-packages
-if [ $? -ne 0 ] ; then
+if [ $? -ne 0 ]; then
 	message_log "APT install failed"
 	exit 1
 fi
@@ -65,12 +64,12 @@ chromium \
 chromium-common \
 chromium-sandbox \
 rpi-chromium-mods
-if [ $? -ne 0 ] ; then
+if [ $? -ne 0 ]; then
 	message_log "APT purge failed"
 	exit 1
 fi
 apt -y autoremove
-if [ $? -ne 0 ] ; then
+if [ $? -ne 0 ]; then
 	message_log "APT autoremove failed"
 	exit 1
 fi
