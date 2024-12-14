@@ -214,8 +214,6 @@ if (!file_exists(ETC_MACHINE_INFO)) {
 	sysCmd('cp /usr/share/moode-player' . ETC_MACHINE_INFO . ' /etc/');
 	workerLog('worker: File check created default /etc/machine-info');
 }
-// Set ownership on homedir/.config for chromium
-sysCmd('chown pi:pi ' . $_SESSION['home_dir'] . '/.config/');
 
 // Moode-player package should set these but "file not found" errors occur so lets set them here
 sysCmd('chmod 0644 ' . ETC_MACHINE_INFO);
@@ -1260,10 +1258,11 @@ sysCmd('systemctl daemon-reload');
 
 // Start local display
 if ($_SESSION['local_display'] == '1') {
-	startLocalDisplay();
+	$cfgStatus = startLocalDisplay();
 }
 workerLog('worker: Local display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
+workerLog('worker: Chromium cfg:    ' . $cfgStatus);
 workerLog('worker: Screen blank     ' . $_SESSION['scn_blank']);
 workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
 workerLog('worker: Disable GPU:     ' . $_SESSION['disable_gpu_chromium']);
@@ -2369,8 +2368,21 @@ function startGpioBtnHandler() {
 
 // Local display
 function startLocalDisplay() {
+	$cfgDir = $_SESSION['home_dir'] . '/.config';
+	if (file_exists($cfgDir)) {
+		$chownUser = $_SESSION['user_id'] . ':' . $_SESSION['user_id'];
+		$result = sysCmd('stat ' . $cfgDir . ' | grep "' . $_SESSION['user_id'] .'"');
+		if (empty($result)) {
+			sysCmd('chown '  . $chownUser . ' ' . $cfgDir);
+			$cfgStatus = 'ownership changed to ' . $chownUser;
+		} else {
+			$cfgStatus = 'directory ok';
+		}
+	} else {
+		$cfgStatus = 'WARNING: directory ' . $cfgDir . ' does not exist';
+	}
 	sysCmd('systemctl start localdisplay');
-
+	return $cfgStatus;
 }
 function stopLocalDisplay() {
 	sysCmd('systemctl stop localdisplay');
