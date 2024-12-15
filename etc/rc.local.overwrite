@@ -2,8 +2,9 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-# Unblock WiFi
+# Unblock WiFi and Bluetooth
 /usr/sbin/rfkill unblock wifi > /dev/null 2>&1
+/usr/sbin/rfkill unblock bluetooth > /dev/null 2>&1
 
 # Set cpu govenor
 CPU_GOV=$(sqlite3 $SQLDB "select value from cfg_system where param='cpugov'")
