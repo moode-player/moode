@@ -687,6 +687,7 @@ function formatFanTemp0Params($params) {
 function updDSIScnBrightness($screenType, $brightnessValue) {
 	if ($screenType == '1') {
 		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/rpi_backlight/brightness"');
+		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/*-0045/brightness"');
 	} else {
 		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/*-0045/brightness"');
 	}
