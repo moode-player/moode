@@ -100,6 +100,11 @@ function getAlsaVolumeDb($mixerName) {
 	return $alsaVolume;
 }
 
+function updAlsaVolume($mixerName) {
+	$result = getAlsaVolume($mixerName);
+	phpSession('write', 'alsavolume', $result);
+}
+
 // Get ALSA card ID's
 function getAlsaCardIDs() {
 	$cardIDs = array();

@@ -4,11 +4,13 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
+require_once __DIR__ . '/inc/alsa.php';
 require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/network.php';
 require_once __DIR__ . '/inc/session.php';
 
 phpSession('open');
+updAlsaVolume($_SESSION['amixname']);
 
 chkVariables($_POST);
 
