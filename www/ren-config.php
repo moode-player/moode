@@ -8,7 +8,9 @@ require_once __DIR__ . '/inc/alsa.php';
 require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/network.php';
 require_once __DIR__ . '/inc/session.php';
+require_once __DIR__ . '/inc/sql.php';
 
+$dbh = sqlConnect();
 phpSession('open');
 updAlsaVolume($_SESSION['amixname']);
 
@@ -255,9 +257,22 @@ $_select['rsmafterspot_off']  .= "<input type=\"radio\" name=\"rsmafterspot\" id
 
 // Deezer Connect
 $_feat_deezer = $_SESSION['feat_bitmask'] & FEAT_DEEZER ? '' : 'hide';
-$_SESSION['deezersvc'] == '1' ? $_deezer_btn_disable = '' : $_deezer_btn_disable = 'disabled';
-$_SESSION['deezersvc'] == '1' ? $_deezer_link_disable = '' : $_deezer_link_disable = 'onclick="return false;"';
-$autoClick = " onchange=\"autoClick('#btn-set-deezersvc');\"";
+$result = sqlRead('cfg_deezer', $dbh);
+$cfgDeezer = array();
+foreach ($result as $row) {
+	$cfgDeezer[$row['param']] = $row['value'];
+}
+if ($_SESSION['deezersvc'] == '0') {
+	$_deezer_btn_disable = 'disabled';
+	$_deezer_link_disable = 'disabled';
+} else {
+	$_deezer_btn_disable = '';
+	$_deezer_link_disable = '';
+}
+$_deezer_credentials_msg = (empty($cfgDeezer['email']) || empty($cfgDeezer['password'])) ?
+	'<span class="config-help-static"><em>Credentials have not been entered yet</em></span>' : '';
+$_deezersvc_btn_disable = $_deezer_credentials_msg == '' ? '' : 'disabled';
+$autoClick = " onchange=\"autoClick('#btn-set-deezersvc');\" " . $_deezersvc_btn_disable;
 $_select['deezersvc_on']  .= "<input type=\"radio\" name=\"deezersvc\" id=\"toggle-deezersvc-1\" value=\"1\" " . (($_SESSION['deezersvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['deezersvc_off'] .= "<input type=\"radio\" name=\"deezersvc\" id=\"toggle-deezersvc-2\" value=\"0\" " . (($_SESSION['deezersvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['deezername'] = $_SESSION['deezername'];
