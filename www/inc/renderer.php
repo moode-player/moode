@@ -12,19 +12,31 @@ require_once __DIR__ . '/sql.php';
 
 // Bluetooth
 function startBluetooth() {
-	sysCmd('systemctl start hciuart'); // TODO: Needed ?
+	sysCmd('systemctl start hciuart');
 	sysCmd('systemctl start bluetooth');
 
+	// Check for first run (no MAC addr yet) fail
+	$result = sysCmd('systemctl status bluetooth | grep -i failed');
+	//DEBUG:workerLog(print_r($result, true));
+	if (!empty($result)) {
+		// Stop/start
+		stopBluetooth();
+		sysCmd('systemctl start bluetooth');
+	}
+
+	// Check for successful daemon startup
 	$result = sysCmd('pgrep bluetoothd');
 	if (empty($result)) {
-		$status = 'Error: Unable to start Bluetooth';
+		$status = 'ERROR: Bluetooth startup failed';
 	} else {
+		// Check for controller MAC address
 		$result = sysCmd('ls /var/lib/bluetooth');
 		if (empty($result)) {
-			$status = 'Error: No MAC address found for Bluetooth controller';
+			$status = 'ERROR: Bluetooth MAC address not found';
 		} else {
-			sysCmd('systemctl start bluealsa');
+			// All good
 			sysCmd('systemctl start bt-agent');
+			sysCmd('systemctl start bluealsa');
 			sysCmd('/var/www/util/blu-control.sh -i');
 			$status = 'started';
 		}
