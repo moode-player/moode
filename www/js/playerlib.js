@@ -34,19 +34,24 @@ const NOTIFY_DURATION_DEFAULT = 5;
 const NOTIFY_DURATION_MEDIUM = 10;
 const NOTIFY_DURATION_LONG = 30;
 const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
-const NOTIFY_MSG_NO_USERID = 'Without a userid moOde will not function correctly.<br><br>'
-    + 'Follow the '
-    + '<a href="https://github.com/moode-player/docs/blob/main/setup_guide.md#4-imager-tutorial"'
+const NOTIFY_MSG_NO_USERID =
+      'Without a userid moOde will not function correctly.<br><br>'
+    + 'Follow the'
+    + ' <a href="https://github.com/moode-player/docs/blob/main/setup_guide.md#4-imager-tutorial"'
     + ' class="target-blank-link" target="_blank">Imager Tutorial</a>'
     + ' to create a new image with a userid, password and SSH enabled.';
-const NOTIFY_MSG_WELCOME = 'View <span class="context-menu">'
-    + ' <a href="#notarget" data-cmd="quickhelp">Quick help </a></span>'
-    + 'for information on using the WebUI, configuring audio devices and setting up the Library.<br>'
-    + 'Quick help is also available on the Main menu which is accessed '
-    + 'via the "m" icon in the upper right.<br><br>'
-    + ' Read the <a href="https://moodeaudio.org/forum/forumdisplay.php?fid=17"'
+const NOTIFY_MSG_WELCOME =
+      '<b>View</b> <span class="context-menu">'
+    + ' <a href="#notarget" data-cmd="quickhelp">Quick help</a></span>'
+    + ' for information on using the WebUI, configuring audio devices and setting up the Library.<br>'
+    + 'Quick help is also available on the Main menu which is accessed'
+    + ' via the "m" icon in the upper right.<br><br>'
+    + '<b>Read</b> the <a href="https://moodeaudio.org/forum/forumdisplay.php?fid=17"'
     + ' class="target-blank-link" target="_blank">Release Announcement</a>'
-    + ' for any special instructions or patches for this release.';
+    + ' for any special instructions or patches for this release.<br><br>'
+    + '<b>Remember</b> to always practice Volume Safety and make sure a physical'
+    + ' volume control is downstream and set to a low volume before first use or'
+    + ' whenever changing volume options.';
 
 // System
 const NO_USERID_DEFINED = 'userid does not exist';
