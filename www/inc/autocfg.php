@@ -535,6 +535,7 @@ function autoConfigSettings() {
 		['requires' => ['show_cvpb'], 'handler' => 'setSessVarSql'],
 		'Library',
 		['requires' => ['library_onetouch_album'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_onetouch_ralbum'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_onetouch_radio'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_onetouch_pl'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_albumview_sort'], 'handler' => 'setSessVarSql'],
