@@ -311,7 +311,7 @@ function autoConfigSettings() {
 		['requires' => ['i2sdevice'], 'handler' => function($values) {
 			phpSession('write', 'i2sdevice', $values['i2sdevice']);
 			// NOTE: Passing arg = 'autocfg' prevents reset to PI_HDMI1 in cfgI2SDevice()
-			$arg = ($values['i2soverlay'] == 'None' && $values['i2sdevice'] == 'None') ? 'autocfg' : '';
+			$arg = ($values['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? 'autocfg' : '';
 			cfgI2SDevice($arg);
 		}],
 		'ALSA',
