@@ -620,10 +620,6 @@ function updBootConfigTxt($action, $value) {
 				CFG_HDMI_ENABLE_4KP60 . '=.*/' .
 				CFG_HDMI_ENABLE_4KP60 . '=' . $value . '/" ' . BOOT_CONFIG_TXT);
 			break;
-		case 'upd_dsi_backlight': // touch1 only
-			// $value: '#' or ''
-			sysCmd('sed -i /' . CFG_DSI_BACKLIGHT . "/c\\" . $value . 'dtoverlay=' . CFG_DSI_BACKLIGHT . ' ' . BOOT_CONFIG_TXT);
-			break;
 		case 'upd_dsi_scn_rotate': // touch1 only
 			// $value: '0 or 180'
 			if ($value == '0') {
@@ -685,10 +681,6 @@ function formatFanTemp0Params($params) {
 //----------------------------------------------------------------------------//
 
 function updDSIScnBrightness($screenType, $brightnessValue) {
-	if ($screenType == '1') {
-		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/rpi_backlight/brightness"');
-		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/*-0045/brightness"');
-	} else {
-		sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/*-0045/brightness"');
-	}
+	// Write brightness to i2c bus 10 device 0045 (both Touch1 and Touch2 use this)
+	sysCmd('/bin/su -c "echo '. $brightnessValue . ' > /sys/class/backlight/10-0045/brightness"');
 }

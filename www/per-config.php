@@ -104,7 +104,7 @@ if (isset($_POST['update_dsi_scn_type'])) {
 
         // Reset dsi port, brightness and rotation
         phpSession('write', 'dsi_port', '1');
-        $_SESSION['dsi_scn_brightness'] = ($_POST['dsi_scn_type'] == '1' || $_POST['dsi_scn_type'] == 'none' ? '255' : '31');
+        $_SESSION['dsi_scn_brightness'] = ($_POST['dsi_scn_type'] != '2' ? '255' : '31');
         phpSession('write', 'dsi_scn_rotate', '0');
 
         submitJob('dsi_scn_type', $_POST['dsi_scn_type'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);

@@ -388,7 +388,6 @@ RENDERER_SETTINGS() {
 		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
 		echo -e "\nDSI Screentype\t\t= $dsi_scn_type\c"
 		echo -e "\nDSI Port\t\t= $dsi_port\c"
-		echo -e "\nDSI Backlight\t\t= $dsi_backlight\c"
 		echo -e "\nDSI Brightness\t\t= $dsi_scn_brightness\c"
 		#echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
 		echo -e "\nDSI Rotate\t\t= $dsi_scn_rotate Deg\n"
@@ -884,7 +883,6 @@ hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
 chromium_ver=$(dpkg -l | grep -m 1 "chromium-browser" | awk '{print $3}' | cut -d":" -f 2)
-dsi_backlight=$(moodeutl -d -gv "dsi_backlight")
 dsi_scn_brightness=$(moodeutl -d -gv "dsi_scn_brightness")
 value=$(moodeutl -d -gv usb_volknob)
 [[ "$value" = "1" ]] && usb_volknob="On" || usb_volknob="Off"

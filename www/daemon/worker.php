@@ -145,7 +145,8 @@ $sessionVars = array(
 	'scnrotate',
 	'scnbrightness',
 	'rpi_scntype',
-	'rpi_backlight'
+	'rpi_backlight',
+	'dsi_backlight'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -1243,11 +1244,7 @@ $value = $_SESSION['disable_gpu_chromium'] == 'on' ? ' --disable-gpu' : '';
 sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
 // - DSI screen type (Pi Touch/Touch2)
 if (!isset($_SESSION['dsi_scn_type'])) {
-	$_SESSION['dsi_scn_type'] = '1';
-}
-// - DSI backlight driver (touch1 only)
-if (!isset($_SESSION['dsi_backlight'])) {
-	$_SESSION['dsi_backlight'] = 'off';
+	$_SESSION['dsi_scn_type'] = 'none';
 }
 // - DSI screen brightness
 if (!isset($_SESSION['dsi_scn_brightness'])) {
@@ -1288,7 +1285,6 @@ workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
 // DSI settings
 workerLog('worker: DSI scn type:    ' . $_SESSION['dsi_scn_type']);
 workerLog('worker: DSI port:        ' . $_SESSION['dsi_port']);
-workerLog('worker: DSI backlight:   ' . $_SESSION['dsi_backlight']);
 workerLog('worker: DSI brightness:  ' . $_SESSION['dsi_scn_brightness']);
 workerLog('worker: DSI rotate:      ' . $_SESSION['dsi_scn_rotate']);
 // On-screen keyboard ('Enable' is the text on the button)
@@ -3281,9 +3277,6 @@ function runQueuedJob() {
 			updBootConfigTxt('upd_hdmi_enable_4kp60', $value);
 			break;
 		case 'dsi_scn_type':
-			// Enable/disable touch1 backlight overlay
-			$value = $_SESSION['w_queueargs'] == '1' ? '' : '#';
-			updBootConfigTxt('upd_dsi_backlight', $value);
 			// Reset rotation to 0
 			updBootConfigTxt('upd_dsi_scn_rotate', '0'); // touch1
 			// Remove touch2 touch angle setting
@@ -3296,8 +3289,8 @@ function runQueuedJob() {
 		case 'dsi_scn_brightness':
 			updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['w_queueargs']);
 			break;
-		// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
 		case 'pixel_aspect_ratio':
+			// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
 			break;
 		case 'dsi_scn_rotate':
 		 	// touch1 value: 0 landscape | 180 inverted
