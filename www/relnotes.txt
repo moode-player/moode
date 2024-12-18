@@ -35,6 +35,7 @@ Updates
 
 Bug fixes
 - FIX: Bluetooth start failures due to being RF blocked
+- FIX: Bluealsa-aplay fails to start after first-boot due to blank AUDIODEV
 - FIX: Pi Touch 1 brightness not restored after return from screen blank
 - FIX: Extra metadata under main cover showing raw html entity codes
 - FIX: Audio info shows no info for some tracks
