@@ -26,6 +26,7 @@ Updates
 - UPD: Add "Downgrade chromium" option to Peripheral Config
 - UPD: Add PCIe SATA drive support to Library Config
 - UPD: Add DSI port option to Peripheral Config
+- UPD: Add Zeroconf port to Spotify Config
 - UPD: Add FluxFM - Livestream (replaces FluxFM)
 - UPD: Add FluxFM - Livestream (128K)
 - UPD: Add FluxFM - 90's (320K)
