@@ -329,6 +329,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nRelease (ms)\t\t= $spot_normalization_release\c"
 		echo -e "\nKnee\t\t\t= $spot_normalization_knee\c"
 		echo -e "\nAutoplay\t\t= $spot_autoplay\c"
+		echo -e "\nZeroconf Port\t\t= $spot_zeroconf_port\c"
 		echo -e "\nResume MPD\t\t= $rsmafterspot\n"
 	fi
 
@@ -633,6 +634,7 @@ spot_normalization_knee=${arr[11]}
 spot_format=${arr[12]}
 [[ "${arr[13]}" = "" ]] && spot_dither="Automatic (Default)" || spot_dither=${arr[13]}
 spot_volume_range=${arr[14]}
+[[ "${arr[16]}" = "random" ]] && spot_zeroconf_port="Random" || spot_zeroconf_port=${arr[17]}
 
 # Squeezelite settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_sl")

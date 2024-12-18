@@ -348,4 +348,16 @@ jQuery(document).ready(function($){ 'use strict';
 			$(spanId).css('display', 'none');
 		}
     });
+
+    // Spotify Connect
+    if ($('#zeroconf').length && $('#zeroconf').val() == 'manual') {
+        $('#zeroconf-manual-section').show();
+    }
+    $('#zeroconf').change(function() {
+        if ($(this).val() == 'manual') {
+            $('#zeroconf-manual-section').show();
+        } else {
+            $('#zeroconf-manual-section').hide();
+        }
+    });
 });
