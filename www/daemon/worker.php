@@ -637,6 +637,28 @@ if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 }
 workerLog('worker: ' . $msg);
 
+// Bluetooth audio session vars
+// Pairing agent PIN code
+if (!isset($_SESSION['bt_pin_code'])) {
+	$_SESSION['bt_pin_code'] = 'None';
+}
+// ALSA/CDSP max volumes
+if (!isset($_SESSION['alsavolume_max_bt'])) {
+	$_SESSION['alsavolume_max_bt'] = $_SESSION['alsavolume_max'];
+}
+if (!isset($_SESSION['cdspvolume_max_bt'])) {
+	$_SESSION['cdspvolume_max_bt'] = '0';
+}
+// SBC quality
+if (!isset($_SESSION['bluez_sbc_quality'])) {
+	$_SESSION['bluez_sbc_quality'] = 'xq+';
+}
+// ALSA output mode
+if (!isset($_SESSION['alsa_output_mode_bt'])) {
+	$_SESSION['alsa_output_mode_bt'] = '_audioout';
+}
+workerLog('worker: Bluetooth:        session vars created');
+
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- ALSA debug');
@@ -959,27 +981,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 } else {
 	$status = 'n/a';
 }
-// Pairing agent PIN code
-if (!isset($_SESSION['bt_pin_code'])) {
-	$_SESSION['bt_pin_code'] = 'None';
-}
 $status .= ', PIN: ' . ($_SESSION['bt_pin_code'] == 'None' ? 'None' : 'Set');
-// ALSA/CDSP max volumes
-if (!isset($_SESSION['alsavolume_max_bt'])) {
-	$_SESSION['alsavolume_max_bt'] = $_SESSION['alsavolume_max'];
-}
-if (!isset($_SESSION['cdspvolume_max_bt'])) {
-	$_SESSION['cdspvolume_max_bt'] = '0';
-}
 $status .= ', ALSA/CDSP maxvol: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SESSION['cdspvolume_max_bt'] . 'dB';
-// Bluetooth SBC quality
-if (!isset($_SESSION['bluez_sbc_quality'])) {
-	$_SESSION['bluez_sbc_quality'] = 'xq+';
-}
-// ALSA output mode
-if (!isset($_SESSION['alsa_output_mode_bt'])) {
-	$_SESSION['alsa_output_mode_bt'] = '_audioout';
-}
 $status .= ', ALSA outmode: ' . ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
 workerLog('worker: Bluetooth:       ' . $status);
 
