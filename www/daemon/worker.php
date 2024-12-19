@@ -766,7 +766,12 @@ if ($_SESSION['alsa_output_mode'] == 'iec958') {
 	if ($result == 'none') {
 		sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
 		sysCmd('/var/www/util/vol.sh 0');
-		workerLog('worker: ALSA init:     mixer initialized');
+		$result = getAlsaVolume($_SESSION['amixname']);
+		if ($result == 'none') {
+			workerLog('worker: ALSA init:     no audio device was detected');			
+		} else {
+			workerLog('worker: ALSA init:     mixer initialized');
+		}
 	}
 }
 // ALSA volume
