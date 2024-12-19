@@ -759,7 +759,16 @@ workerLog('worker: ALSA output:   ' . strtoupper($audioOutput));
 workerLog('worker: ALSA mode:     ' . ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']] . ' (' . $_SESSION['alsa_output_mode'] . ')');
 // ALSA mixer
 phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
-workerLog('worker: ALSA mixer     ' . ($_SESSION['amixname'] == 'none' ? 'none exists' : $_SESSION['amixname']));
+workerLog('worker: ALSA mixer:    ' . ($_SESSION['amixname'] == 'none' ? 'none exists' : $_SESSION['amixname']));
+// HDMI mixer initialize (after first boot a test signal needs to be sent to "register" the mixer with ALSA)
+if ($_SESSION['alsa_output_mode'] == 'iec958') {
+	$result = getAlsaVolume($_SESSION['amixname']);
+	if ($result == 'none') {
+		sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
+		sysCmd('/var/www/util/vol.sh 0');
+		workerLog('worker: ALSA init:     mixer initialized');
+	}
+}
 // ALSA volume
 $result = getAlsaVolume($_SESSION['amixname']);
 if ($result == 'none') {
