@@ -114,10 +114,10 @@ AUDIO_PARAMETERS() {
 		echo -e "\nAirPlay receiver\t= $airplaysvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
-		echo -e "\nSpotify Connect\t= $spotifysvc\c"
+		echo -e "\nSpotify Connect\t\t= $spotifysvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_DEEZER)) -ne 0 ]; then
-		echo -e "\nDeezer Connect\t= $deezersvc\c"
+		echo -e "\nDeezer Connect\t\t= $deezersvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\nSqueezelite\t\t= $slsvc\c"
@@ -661,7 +661,15 @@ dlnaname=${arr[7]}
 [[ "${arr[8]}" = "1" ]] && airplaysvc="On" || airplaysvc="Off"
 [[ "${arr[9]}" = "1" ]] && upnpsvc="On" || upnpsvc="Off"
 [[ "${arr[10]}" = "1" ]] && dlnasvc="On" || dlnasvc="Off"
-[[ "${arr[11]}" = "plughw" ]] && alsa_output_mode="Default (plughw)" || alsa_output_mode="Direct (hw)"
+if [[ "${arr[11]}" = "plughw" ]]; then
+	alsa_output_mode="Default (plughw)"
+elif [[ "${arr[11]}" = "hw" ]]; then
+	alsa_output_mode="Direct (hw)"
+elif [[ "${arr[11]}" = "iec958" ]]; then
+	alsa_output_mode="IEC958 (iec958)"
+else
+	alsa_output_mode="Unknown (error)"
+fi
 paactive=${arr[12]}
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
 if [[ -f "/opt/RoonBridge/start.sh" ]]; then
@@ -758,7 +766,7 @@ elif [[ "${arr[81]}" = "31536000000" ]]; then
 	library_recently_added="1 Year"
 fi
 btactive=${arr[82]}
-deezersvc=${arr[83]}
+[[ "${arr[83]}" = "1" ]] && deezersvc="On" || deezersvc="Off"
 deezername=${arr[84]}
 dsi_scn_type=${arr[85]}
 dsi_scn_rotate=${arr[86]}
