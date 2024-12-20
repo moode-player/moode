@@ -768,7 +768,7 @@ if ($_SESSION['alsa_output_mode'] == 'iec958') {
 		sysCmd('/var/www/util/vol.sh 0');
 		$result = getAlsaVolume($_SESSION['amixname']);
 		if ($result == 'none') {
-			workerLog('worker: ALSA init:     no audio device was detected');			
+			workerLog('worker: ALSA init:     no audio device was detected');
 		} else {
 			workerLog('worker: ALSA init:     mixer initialized');
 		}
@@ -1244,7 +1244,7 @@ workerLog('worker: --');
 sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localdisplay.service");
 // - Cursor
 if (!isset($_SESSION['scn_cursor'])) {
-	$_SESSION['scn_cursor'] = '1';
+	$_SESSION['scn_cursor'] = '0'; // Off
 }
 $param = $_SESSION['scn_cursor'] == '0' ? ' -- -nocursor' : '';
 sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
