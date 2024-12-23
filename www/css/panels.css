@@ -90,7 +90,7 @@ html {background-color:inherit;}
 .inpsrc {position:fixed;z-index:9999;backdrop-filter: blur(5px);-webkit-backdrop-filter:blur(5px);overflow:hidden;color:var(--adapttext);background-color:var(--modalbkdr);display:none;}
 #inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;text-align:center;}
 /* Input source name */
-#inpsrc-msg {animation:fadeIn var(--fadein-rate);/*padding-bottom:calc(.5em + env(safe-area-inset-bottom));*/}
+#inpsrc-msg {animation:fadeIn var(--fadein-rate);padding-bottom:.5em;}
 .inpsrc-msg-default {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
 .inpsrc-msg-metadata {position:absolute;bottom:0;z-index:9999;}
 #inpsrc-msg a,
@@ -114,7 +114,7 @@ html {background-color:inherit;}
 	background:linear-gradient(to right, rgba(64,64,64,0.5), rgba(0,0,0,1) 50%, rgba(64,64,64,.5));
 }
 #inpsrc-metadata span {font-size:.75em;font-weight:400;}
-#inpsrc-metadata-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;}
+#inpsrc-metadata-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;padding-bottom:.5em;}
 
 /* Buttons */
 .audioinfo-renderer,
