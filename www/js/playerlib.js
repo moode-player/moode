@@ -1844,6 +1844,7 @@ s
             var rootFolderIcon = 'fa-circle-question';
             if (data[i].directory == 'NAS' ||
                 data[i].directory == 'NVME' ||
+                data[i].directory == 'SATA' ||
                 data[i].directory == 'SDCARD' ||
                 data[i].directory == 'USB') {
                 rootFolderIcon = getKeyOrValue('value', data[i].directory);
@@ -5056,7 +5057,7 @@ function getKeyOrValue (type, item) {
         // Players >> group actions
         ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library'],
         // Root folder icons
-        ['NAS','fa-server'],['NVME','fa-memory'],['RADIO','fa-microphone'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
+        ['NAS','fa-server'],['NVME','fa-memory'],['RADIO','fa-microphone'],['SATA','fa-hard-disk'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
         // Now-playing icon
         ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer'],
         // View -> Item position

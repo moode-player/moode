@@ -353,7 +353,7 @@ if (!isset($_GET['cmd'])) {
 	foreach ($mounts as $mp) {
 		$icon = nasMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
 		$mpType = $mp['type'] == 'cifs' ? 'smb' : $mp['type'];
-		$_nas_mounts .= "<a href=\"lib-config.php?cmd=edit_nas_source&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ", " . $mpType . ") </a>";
+		$_nas_mounts .= "<a href=\"lib-config.php?cmd=edit_nas_source&id=" . $mp['id'] . "\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . " | " . $mpType . ") </a>";
 	}
 	if ($mounts === true) {
 		$_nas_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None configured</span>';
@@ -371,7 +371,7 @@ if (!isset($_GET['cmd'])) {
 		$icon = nvmeMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
 		$_nvme_mounts .= "<a href=\"lib-config.php?cmd=edit_nvme_source&id=" . $mp['id'] .
 			"\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " .
-			$mp['name'] . ' (' . explode(',', $mp['address'])[0] . ', ext4)' . "</a>";
+			$mp['name'] . ' (' . explode(',', $mp['address'])[0] . ' | ext4)' . "</a>";
 	}
 	if ($mounts === true) {
 		$_nvme_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None configured</span>';
@@ -383,15 +383,27 @@ if (!isset($_GET['cmd'])) {
 	$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_SATA . "'", $dbh);
 	foreach ($mounts as $mp) {
 		$icon = sataMountExists($mp['name']) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
-		$device = explode(',', $mp[0]['address'])[0];
+		$device = explode(',', $mp['address'])[0];
 		$_sata_mounts .= "<a href=\"lib-config.php?cmd=edit_sata_source&id=" . $mp['id'] .
 			"\" class='btn-large config-btn config-btn-music-source'> " . $icon . " " .
-			$mp['name'] . ' (' . $device . ', ' . getDriveFormat($device) . ')' . "</a>";
+			$mp['name'] . ' (' . $device . ' | ' . getDriveFormat($device) . ')' . "</a>";
 	}
 	if ($mounts === true) {
 		$_sata_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None configured</span>';
 	} else if ($mounts === false) {
 		$_sata_mounts .= '<span class="btn-large config-btn config-btn-music-source">Query failed</span>';
+	}
+
+	// USB auto-mounts
+	$mounts = sysCmd('ls -1 /media');
+	foreach ($mounts as $mountName) {
+		$icon = usbMountExists($mountName) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
+		$device = sysCmd('mount | grep "/media/' . $mountName . '"' . " | awk '{print $1}'")[0];
+		$_usb_mounts .= '<span class="btn-large config-btn config-btn-music-source" style="color:var(--accentxts);"> ' . $icon . ' ' .
+			$mountName . ' (' . $device . ' | ' . getDriveFormat($device) . ')' . '</span>';
+	}
+	if (empty($mounts)) {
+		$_usb_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None auto-mounted</span>';
 	}
 
 	// Ignore .cue files
