@@ -16,10 +16,10 @@
 ################################################################################
 
 Bug fixes
-- FIX: SATA mount listing missing device and format
+- FIX: SATA mount listing in Library Config missing device and format
 - FIX: SATA root folder icon missing in Folder View
+- FIX: USB mounts missing from listing in Library Config
 - FIX: Clipped renderer metadata icons
-
 
 ################################################################################
 #
