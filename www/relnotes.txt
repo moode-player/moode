@@ -20,6 +20,8 @@ Bug fixes
 - FIX: SATA root folder icon missing in Folder View
 - FIX: USB mounts missing from listing in Library Config
 - FIX: Clipped renderer metadata icons
+- FIX: Raw HTML entities showing up in CoverView artist line
+- FIX: ALSA volmax not restored after Bluetooth disconnect w/CamillaDSP
 
 ################################################################################
 #
