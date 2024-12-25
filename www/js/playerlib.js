@@ -1242,7 +1242,7 @@ function renderUI() {
             } else {
                 // Wide mode
                 $('#ss-currentsong').html(MPD.json['title']);
-                $('#ss-currentartist').text(artist);
+                $('#ss-currentartist').html(artist);
             }
             $('#ss-currentalbum').html('<span id="ss-hd-badge"></span>' + MPD.json['album']);
         }
