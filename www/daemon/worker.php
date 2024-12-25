@@ -1775,7 +1775,7 @@ function chkBtActive() {
 			sysCmd('mpc stop'); // For added robustness
 			sendFECmd('btactive1');
 
-			// Local (Attenuate for Bluetooth volume)
+			// Local volume (set to max)
 			if ($_SESSION['alsavolume'] != 'none') {
 		        setALSAVolTo0dB($_SESSION['alsavolume_max_bt']);
 			}
@@ -1800,8 +1800,13 @@ function chkBtActive() {
 			phpSession('write', 'btactive', '0');
 			sendFECmd('btactive0');
 
-			// Local
-			sysCmd('/var/www/util/vol.sh -restore');
+			// Local volume
+	        if ($_SESSION['camilladsp'] != 'off') {
+				if ($_SESSION['alsavolume'] != 'none') {
+			        setALSAVolTo0dB($_SESSION['alsavolume_max']);
+				}
+	        }
+			sysCmd('/var/www/util/vol.sh -restore'); // Also restores CamillaDSP volume
 
 			// Multiroom receivers
 			if ($_SESSION['multiroom_tx'] == 'On') {
