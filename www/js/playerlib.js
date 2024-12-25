@@ -5057,7 +5057,7 @@ function getKeyOrValue (type, item) {
         // Players >> group actions
         ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library'],
         // Root folder icons
-        ['NAS','fa-server'],['NVME','fa-memory'],['RADIO','fa-microphone'],['SATA','fa-hard-disk'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
+        ['NAS','fa-computer'],['NVME','fa-memory'],['RADIO','fa-microphone'],['SATA','fa-hard-drive'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
         // Now-playing icon
         ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer'],
         // View -> Item position
