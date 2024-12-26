@@ -28,6 +28,8 @@ if [ $DSI_SCN_TYPE = 'none' ]; then
         SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
         DISPLAY=:0 xrandr --output HDMI-1 --rotate left
     fi
+# Rotation for Touch2
+# Note that touch1 rotation is configured in config.txt and cmdline.txt
 elif [ $DSI_SCN_TYPE = '2' ]; then
     if [ $DSI_SCN_ROTATE = "0" ]; then
         DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate normal
