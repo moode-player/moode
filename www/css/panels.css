@@ -562,7 +562,15 @@ body.cvwide #ss-currentalbum {font-size:1.2em}
 body.cvwide-xmeta #ss-extra-metadata,
 body.cvwide-xmeta #ss-extra-metadata-output-format,
 body.cvwide-xmeta #ss-countdown {display:block;color:var(--textvariant);font-size:.85em;margin-top:0;}
-body.cvwide-xmeta #ss-extra-metadata-output-format.ss-npicon:before {content:var(--npicon);display:inline-block;width:1em;margin-right:.25em;}
+body.cvwide-xmeta #ss-extra-metadata-output-format.ss-npicon:before {
+	content:var(--npicon);
+	display: inline-block;
+	width: 1.25em;
+	margin-right: .25em;
+	color: transparent !important;
+	background: var(--npicon) no-repeat 100%;
+	background-size: 1.25em;
+}
 body.cvwide #ss-currentartist {font-size:1.2em;margin-top:1em;}
 body:not(.cvpb) #ss-coverart-url img {margin-top:1.5em;}
 body:not(.cvwide) #ss-metadata {width:98%;margin:0 auto;}
