@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+Updates
+- UPD: Bump to pleezer 0.7.0
+
 Bug fixes
 - FIX: SATA mount listing in Library Config missing device and format
 - FIX: SATA root folder icon missing in Folder View
