@@ -58,7 +58,7 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_decode_rate = '';
 } else if ($deezActive == '1') {
 	$_file = 'Deezer stream';
-	$_encoded_at = 'FLAC';
+	$_encoded_at = 'MP3 or FLAC';
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($slActive == '1') {
