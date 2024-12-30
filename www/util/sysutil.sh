@@ -94,26 +94,27 @@ fi
 
 # Get/Set for Allo Piano 2.1 DAC
 if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-submode" || $1 = "set-piano-submode" || $1 = "get-piano-lowpass" || $1 = "set-piano-lowpass" || $1 = "get-piano-subvol" || $1 = "set-piano-subvol" ]]; then
+	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 	if [[ $1 = "get-piano-dualmode" ]]; then
-		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Dual Mode")
+		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "Dual Mode")
 		exit
 	elif [[ $1 = "set-piano-dualmode" ]]; then
 		amixer -c 0 sset "Dual Mode" "$2" >/dev/null
 		exit
 	elif [[ $1 = "get-piano-submode" ]]; then
-		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Subwoofer mode")
+		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "Subwoofer mode")
 		exit
 	elif [[ $1 = "set-piano-submode" ]]; then
 		amixer -c 0 sset "Subwoofer mode" "$2" >/dev/null
 		exit
 	elif [[ $1 = "get-piano-lowpass" ]]; then
-		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Lowpass")
+		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "Lowpass")
 		exit
 	elif [[ $1 = "set-piano-lowpass" ]]; then
 		amixer -c 0 sset "Lowpass" "$2" >/dev/null
 		exit
 	elif [[ $1 = "get-piano-subvol" ]]; then
-		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Subwoofer")
+		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "Subwoofer")
 		exit
 	elif [[ $1 = "set-piano-subvol" ]]; then
 		amixer -c 0 sset "Subwoofer" "$2%" >/dev/null

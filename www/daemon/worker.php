@@ -587,27 +587,6 @@ if (file_exists('/opt/RoonBridge/start.sh') === true) {
 }
 workerLog('worker: RoonBridge:       ' . $msg);
 
-// Allo Piano 2.1
-if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
-	$dualMode = sysCmd('/var/www/util/sysutil.sh get-piano-dualmode');
-	$subMode = sysCmd('/var/www/util/sysutil.sh get-piano-submode');
-	// Determine output mode
-	if ($dualMode[0] != 'None') {
-		$outputMode = $dualMode[0];
-	} else {
-		$outputMode = $subMode[0];
-	}
-	$msg = 'mode set to ' . $outputMode;
-
-	// Workaround: Send brief inaudible PCM to one of the channels to initialize volume
-	sysCmd('amixer -M -c 0 sset "Master" 0');
-	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
-	workerLog('worker: Allo Piano 2.1:   volume initialized');
-} else {
-	$msg = 'not detected';
-}
-workerLog('worker: Allo Piano 2.1:   ' . $msg);
-
 // Allo Boss 2 OLED
 // The Allo installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
 if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
@@ -625,6 +604,14 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_
 }
 workerLog('worker: Allo Boss 2:      ' . $msg);
 
+// Allo Piano 2.1
+if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
+	$msg = 'detected';
+} else {
+	$msg = 'not detected';
+}
+workerLog('worker: Allo Piano 2.1:   ' . $msg);
+
 // Ensure audio output is unmuted for these devices
 if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 	sysCmd('/var/www/util/sysutil.sh unmute-pi-ampplus');
@@ -639,7 +626,9 @@ workerLog('worker: ' . $msg);
 
 // Bluetooth audio session vars
 // Pairing agent PIN code
+$status = 'session vars ok';
 if (!isset($_SESSION['bt_pin_code'])) {
+	$status = 'session vars created';
 	$_SESSION['bt_pin_code'] = 'None';
 }
 // ALSA/CDSP max volumes
@@ -657,7 +646,7 @@ if (!isset($_SESSION['bluez_sbc_quality'])) {
 if (!isset($_SESSION['alsa_output_mode_bt'])) {
 	$_SESSION['alsa_output_mode_bt'] = '_audioout';
 }
-workerLog('worker: Bluetooth:        session vars created');
+workerLog('worker: Bluetooth:        ' . $status);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -827,6 +816,23 @@ unset($cdsp);
 workerLog('worker: CamillaDSP:    ' . rtrim($_SESSION['camilladsp'], '.yml'));
 workerLog('worker: CDSP volume:   ' . CamillaDSP::getCDSPVol() . 'dB');
 workerLog('worker: CDSP volrange: ' . $_SESSION['camilladsp_volume_range'] . 'dB');
+
+// Allo Piano 2.1 config
+if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
+	$dualMode = sysCmd('/var/www/util/sysutil.sh get-piano-dualmode');
+	$subMode = sysCmd('/var/www/util/sysutil.sh get-piano-submode');
+	// Determine output mode
+	if ($dualMode[0] != 'None') {
+		$outputMode = $dualMode[0];
+	} else {
+		$outputMode = $subMode[0];
+	}
+	workerLog('worker: Allo Piano2.1: mode set to ' . $outputMode);
+	// Workaround: Send brief inaudible signal to initialize volume
+	sysCmd('amixer -M -c ' . $_SESSION['cardnum'] . ' sset "Master" 0');
+	sysCmd('speaker-test -Ddefault:PianoDACPlus -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
+	workerLog('worker: Allo Piano2.1: volume initialized');
+}
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
