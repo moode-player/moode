@@ -25,6 +25,7 @@ Bug fixes
 - FIX: Clipped renderer metadata icons
 - FIX: Raw HTML entities showing up in CoverView artist line
 - FIX: ALSA volmax not restored after Bluetooth disconnect w/CamillaDSP
+- FIX: ALSA card number hard coded to 0 for Piano 2.1 DAC
 
 ################################################################################
 #
