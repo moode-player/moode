@@ -798,9 +798,9 @@ function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
-    // Spotify: title;artists;album;duration;coverurl (duration is in ms)
-    // Deezer:  title;artist;album;duration;coverurl (duration is in secs)
-    var metadata = data.split(';');
+    // Spotify: title;artist;album;duration;coverurl (duration is in ms)
+    // Deezer:  title;artist;album;duration;coverurl;format (duration is in secs)
+    var metadata = data.split('~~~');
     var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
 
     $('#inpsrc-backdrop').html('<img class="inpsrc-metadata-backdrop" ' + 'src="' + metadata[4] + '">');

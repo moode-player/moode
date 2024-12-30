@@ -224,6 +224,10 @@ function stopDeezer() {
 	$GLOBALS['deezactive'] = '0';
 	sendFECmd('deezactive0');
 }
+function getDeezerFormat() {
+	$metadata = explode('~~~', file_get_contents(DEEZMETA_FILE));
+	return $metadata[5];
+}
 
 // Squeezelite
 function startSqueezeLite() {

@@ -14,5 +14,10 @@ if ($option == '') {
 "Usage: send-fecmd.php [command]
 Send a command to the front-end\n";
 } else {
-	sendFECmd($argv[1]);
+	// Preprocess data for certain commands
+	$cmd = (str_contains($argv[1], 'update_deezmeta') || str_contains($argv[1], 'update_spotmeta')) ?
+		htmlspecialchars($argv[1], ENT_NOQUOTES) : $argv[1];
+
+	// Send to front-end
+	sendFECmd($cmd);
 }

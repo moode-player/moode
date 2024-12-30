@@ -115,9 +115,9 @@ fi
 
 if [[ $PLAYER_EVENT == "track_changed" ]]; then
 	COVER=$(echo $COVERS | cut -d " " -f 1)
-	#ARTIST=$(echo $ARTISTS | cut -d " " -f 1) should be \n delimited
-	#ARTISTS=$(echo "$ARTISTS" | tr '\n' ', ') should be \n delimited
-	METADATA=$NAME";"$ARTISTS";"$ALBUM";"$DURATION_MS";"$COVER
-	echo -e $METADATA > $SPOTMETA_FILE
+	#ARTIST=$(echo $ARTISTS | cut -d " " -f 1) should be \n delimited?
+	#ARTISTS=$(echo "$ARTISTS" | tr '\n' ', ') should be \n delimited?
+	METADATA="${NAME}~~~${ARTISTS}~~~${ALBUM}~~~${DURATION_MS}~~~${COVER}"
+	echo -e "$METADATA" > $SPOTMETA_FILE
 	/var/www/util/send-fecmd.php "update_spotmeta,$METADATA"
 fi
