@@ -183,7 +183,7 @@ fi
 
 # Unmute IQaudIO Pi-AMP+, Pi-DigiAMP+
 if [[ $1 = "unmute-pi-ampplus" || $1 = "unmute-pi-digiampplus" ]]; then
-	CHIP=$(gpiodetect | awk '/pinctrl/ {print $1}')
+	CHIP=$(gpiodetect | grep pinctrl | awk 'NR==1 {print}' | cut -d " " -f1)
 	gpioset $CHIP 22=1
 	exit
 fi
