@@ -25,6 +25,7 @@ body {
 // Mobile Portrait
 */
 @media (max-width:479px) and (orientation:portrait) {
+	/* General */
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
 	.no-fluid {flex-direction:column-reverse;}
@@ -32,7 +33,9 @@ body {
 	#playback-panel,
 	#content {position:relative;}
 	.tab-content {height:unset;}
-	.ui-pnotify {font-size:1.25rem;}
+
+	/* Notifications */
+	.ui-pnotify {font-size:1.25rem;top:35%!important;}
 
 	/* Popup volume control */
 	#volpad {width:100%;}
@@ -206,9 +209,6 @@ body {
 
 	/* CoverView */
 	#screen-saver {display:none;}
-
-	/* Miscellaneous */
-	.ui-pnotify {top:35% !important;}
 }
 
 /*
@@ -220,7 +220,9 @@ body {
 
 	/* Hide the volume knob */
 	#volzone {display:none;}
-	.ui-pnotify {font-size:1.25rem;}
+
+	/* Notifications */
+	.ui-pnotify {font-size:1.25rem;top:35%!important;width:50em!important;}
 
 	/* Popup volume control */
 	/*DELETE:#volcontrol-2 {height:22vw;width:22vw;padding:2em;}
@@ -524,6 +526,9 @@ body {
 	/* Hide the volume knob */
 	#volzone {display:none;}
 
+	/* Notifications */
+	.ui-pnotify {font-size:1.25rem;top:35%!important;width:50em!important;}
+
 	/* Popup volume control */
 	#volcontrol-2 {height:18vw;width:18vw;padding: 2em;}
 	#volumedn-2,
@@ -547,6 +552,8 @@ body {
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	#playback-cover {margin-top:-1em;}
 	img.coverart {width:72vh;}
+	#playback-firstuse-help {height:74vh;}
+
 	.cover-menu {background-size:2.5rem 2.5rem;background-position: 0.75rem 2rem;}
 	.album-name,
 	.artyear,
