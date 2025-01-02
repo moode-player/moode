@@ -19,6 +19,7 @@ Bug fixes
 - FIX: IQaudIO Pi-DigiAMP+ not being unmuted during startup
 - FIX: Restore fails when backup zip file size > 75M
 - FIX: Audio info not showing for UPnP files
+- FIX: Welcome notification gets clipped in certain landscape modes
 
 ################################################################################
 #
