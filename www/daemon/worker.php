@@ -902,7 +902,7 @@ $resp = readMpdResp($sock);
 setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 workerLog('worker: MPD ignore CUE:     ' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no'));
 // On first boot update SDCARD dir to pick up Stereo Test file and then clear/load Default Playlist
-if ($_SESSION['first_use_help'] == 'y,y') {
+if ($_SESSION['first_use_help'] == 'y,y,y') {
 	sendMpdCmd($sock, 'update SDCARD');
 	$resp = readMpdResp($sock);
 	workerLog('worker: MPD first boot:     SDCARD scanned');

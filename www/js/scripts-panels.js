@@ -121,9 +121,17 @@ jQuery(document).ready(function($) { 'use strict';
     	setFontSize();
 
         // Show/hide first use help
+        // [0]: Playback coupon, [1]: Playbar coupon, [2]: Welcome notification
         var firstUseHelp = SESSION.json['first_use_help'].split(',');
-        if (firstUseHelp[0] == 'y') {$('#playback-firstuse-help').css('display', 'block');}
-        if (firstUseHelp[1] == 'y') {$('#playbar-firstuse-help').css('display', 'block');}
+        if (firstUseHelp[0] == 'y') {
+            $('#playback-firstuse-help').css('display', 'block');
+        }
+        if (firstUseHelp[1] == 'y') {
+            $('#playbar-firstuse-help').css('display', 'block');
+        }
+        if (firstUseHelp[2] == 'y') {
+            notify(NOTIFY_TITLE_INFO, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
+        }
 
     	// Compile the ignore articles regEx
     	if (SESSION.json['library_ignore_articles'] != 'None') {
@@ -382,9 +390,9 @@ jQuery(document).ready(function($) { 'use strict';
         if (SESSION.json['user_id'] == NO_USERID_DEFINED) {
              // No userid defined when image was created
             notify(NOTIFY_TITLE_ERROR, 'userid_error', NOTIFY_MSG_NO_USERID, NOTIFY_DURATION_INFINITE);
-        } else if (SESSION.json['first_use_help'].includes('y')) {
-            // First use welcome notification
-            notify(NOTIFY_TITLE_INFO, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
+        //} else if (SESSION.json['first_use_help'].includes('y')) {
+        //    // First use welcome notification
+        //    notify(NOTIFY_TITLE_INFO, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
         }
     });
 
@@ -1647,12 +1655,20 @@ jQuery(document).ready(function($) { 'use strict';
     // First use help
     $('#playback-firstuse-help').click(function(e) {
         $('#playback-firstuse-help').css('display', '');
-        SESSION.json['first_use_help'] = 'n,' + SESSION.json['first_use_help'].split(',')[1];
+        var firstUseHelp = SESSION.json['first_use_help'].split(',');
+        SESSION.json['first_use_help'] = 'n,' + firstUseHelp[1] + ',' + firstUseHelp[2];
         $.post('command/cfg-table.php?cmd=upd_cfg_system', {'first_use_help': SESSION.json['first_use_help']});
     });
     $('#playbar-firstuse-help').click(function(e) {
         $('#playbar-firstuse-help').css('display', '');
-        SESSION.json['first_use_help'] = SESSION.json['first_use_help'].split(',')[0] + ',n';
+        var firstUseHelp = SESSION.json['first_use_help'].split(',');
+        SESSION.json['first_use_help'] = firstUseHelp[0] + ',n,' + firstUseHelp[2];
+        $.post('command/cfg-table.php?cmd=upd_cfg_system', {'first_use_help': SESSION.json['first_use_help']});
+    });
+    $(document).on('click', '#welcome-firstuse-help', function(e) {
+        $('.ui-pnotify-closer').click();
+        var firstUseHelp = SESSION.json['first_use_help'].split(',');
+        SESSION.json['first_use_help'] = firstUseHelp[0] + ',' + firstUseHelp[1] + ',n';
         $.post('command/cfg-table.php?cmd=upd_cfg_system', {'first_use_help': SESSION.json['first_use_help']});
     });
 

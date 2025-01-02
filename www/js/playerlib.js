@@ -51,7 +51,8 @@ const NOTIFY_MSG_WELCOME =
     + ' for any special instructions or patches for this release.<br><br>'
     + '<b>Remember</b> to always practice Volume Safety and make sure a physical'
     + ' volume control is downstream and set to a low volume before first use or'
-    + ' whenever changing volume options.';
+    + ' whenever changing volume options.<br><br>'
+    + '<button id="welcome-firstuse-help" aria-label="Close" class="btn btn-primary btn-small modal-button-style">Close</button>';
 
 // System
 const NO_USERID_DEFINED = 'userid does not exist';

@@ -222,7 +222,7 @@ body {
 	#volzone {display:none;}
 
 	/* Notifications */
-	.ui-pnotify {font-size:1.25rem;top:35%!important;width:50em!important;}
+	.ui-pnotify {font-size:1.25rem;top:40%!important;width:50em!important;}
 
 	/* Popup volume control */
 	/*DELETE:#volcontrol-2 {height:22vw;width:22vw;padding:2em;}
@@ -527,7 +527,7 @@ body {
 	#volzone {display:none;}
 
 	/* Notifications */
-	.ui-pnotify {font-size:1.25rem;top:35%!important;width:50em!important;}
+	.ui-pnotify {font-size:1.25rem;top:40%!important;width:50em!important;}
 
 	/* Popup volume control */
 	#volcontrol-2 {height:18vw;width:18vw;padding: 2em;}
