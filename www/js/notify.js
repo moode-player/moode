@@ -128,6 +128,9 @@ function notify(title, message, arg3, arg4 = '') {
         var messageText = messages[message];
     }
 
+    // Show/hide the closer icon
+    showCloser = message == 'firstuse_welcome' ? false : true;
+
     // Display new notification after closing any previous one
     $('.ui-pnotify-closer').click();
     $.pnotify({
@@ -136,6 +139,7 @@ function notify(title, message, arg3, arg4 = '') {
         icon: '',
         delay: (duration * 1000),
         opacity: 1.0,
+        closer: showCloser,
         history: false
     });
 }

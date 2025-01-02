@@ -52,7 +52,7 @@ const NOTIFY_MSG_WELCOME =
     + '<b>Remember</b> to always practice Volume Safety and make sure a physical'
     + ' volume control is downstream and set to a low volume before first use or'
     + ' whenever changing volume options.<br><br>'
-    + '<button id="welcome-firstuse-help" aria-label="Close" class="btn btn-primary btn-small modal-button-style">Close</button>';
+    + '<button id="welcome-firstuse-help" aria-label="Dismiss" class="btn btn-primary btn-small modal-button-style">Dismiss</button>';
 
 // System
 const NO_USERID_DEFINED = 'userid does not exist';
