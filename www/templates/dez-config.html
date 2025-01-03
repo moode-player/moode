@@ -17,13 +17,45 @@
 
 		<div class="control-group">
 
-			<div class="config-horiz-rule">Audio format</div>
+			<div class="config-horiz-rule">General</div>
 
-			<label class="control-label" for="format">Format</label>
+			<label class="control-label" for="format">Audio format</label>
 			<div class="controls">
 				<select id="format" class="config-select-large" name="config[format]">
 					$_select[format]
 				</select>
+			</div>
+
+			<label class="control-label" for="initial-volume">Initial volume</label>
+			<div class="controls">
+				<input class="config-input-large" type="number" min="0" max="100" id="initial-volume" name="config[initial_volume]" value="$_select[initial_volume]" required>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-initial-volume" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-initial-volume" class="config-help-info">
+					Initial volume in % from 0 - 100. The default is 10.
+                </span>
+			</div>
+
+			<label class="control-label" for="normalize-volume">Normalize volume</label>
+			<div class="controls">
+				<select id="normalize-volume" class="config-select-large" name="config[normalize_volume]">
+					$_select[normalize_volume]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalize-volume" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-normalize-volume" class="config-help-info">
+					Adjusts the volume of all songs played so that they sound as though they are of equal loudness.
+					when using normalization, S32 or f32 audio formats are recommended as they preserve more precision in the audio output.
+				</span>
+			</div>
+
+			<label class="control-label" for="no-interruptions">Interrupt session</label>
+			<div class="controls">
+				<select id="no-interruptions" class="config-select-large" name="config[no_interruptions]">
+					$_select[no_interruptions]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-no-interruptions" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-no-interruptions" class="config-help-info">
+					Prevent other clients from taking over the connection after pleezer has connected.
+				</span>
 			</div>
 
 			<div class="config-horiz-rule">Credentials</div>
@@ -33,7 +65,7 @@
 				<input class="config-input-large" type="text" id="email" name="config[email]" value="$_select[email]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-email" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-email" class="config-help-info">
-					Userid (email address) for your Deezer subscription.
+					Userid (email address) for your Deezer Premium subscription.
                 </span>
 			</div>
 
@@ -43,7 +75,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-password" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<a class="show-hide-password $_show_hide_password_icon_hide" href="#notarget" data-id="password"><i class="fa-regular fa-sharp fa-eye"></i></a>
 				<span id="info-password" class="config-help-info">
-					Password for your Deezer subscription.
+					Password for your Deezer Premium subscription.
 				</span>
 			</div>
 		</div>

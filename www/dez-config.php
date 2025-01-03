@@ -36,12 +36,16 @@ foreach ($result as $row) {
 $_select['format'] .= "<option value=\"S16\" " . (($cfgDeezer['format'] == 'S16') ? "selected" : "") . ">S16 (Default)</option>\n";
 $_select['format'] .= "<option value=\"S32\" " . (($cfgDeezer['format'] == 'S32') ? "selected" : "") . ">S32</option>\n";
 $_select['format'] .= "<option value=\"F32\" " . (($cfgDeezer['format'] == 'F32') ? "selected" : "") . ">F32</option>\n";
-
+$_select['initial_volume'] = $cfgDeezer['initial_volume'];
+$_select['normalize_volume'] .= "<option value=\"Yes\" " . (($cfgDeezer['normalize_volume'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['normalize_volume'] .= "<option value=\"No\" "  . (($cfgDeezer['normalize_volume'] == 'No')  ? "selected" : "") . ">No (Default)</option>\n";
+$_select['no_interruptions'] .= "<option value=\"Yes\" " . (($cfgDeezer['no_interruptions'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['no_interruptions'] .= "<option value=\"No\" "  . (($cfgDeezer['no_interruptions'] == 'No')  ? "selected" : "") . ">No (Default)</option>\n";
 $_select['email'] = $cfgDeezer['email'];
 $_select['password'] = $cfgDeezer['password'];
 $_show_hide_password_icon_hide = empty($cfgDeezer['password']) ? '' : 'hide';
 
-waitWorker('spo_config');
+waitWorker('dez_config');
 
 $tpl = "dez-config.html";
 $section = basename(__FILE__, '.php');
