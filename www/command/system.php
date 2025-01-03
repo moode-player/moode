@@ -23,6 +23,9 @@ switch ($_GET['cmd']) {
 			echo json_encode('worker busy');
 		}
 		break;
+	case 'refresh_screen':
+		sendFECmd('refresh_screen');
+		break;
 	case 'get_client_ip':
 		echo json_encode($_SERVER['REMOTE_ADDR']);
 		break;

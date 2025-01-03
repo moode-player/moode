@@ -81,7 +81,7 @@ function notify(title, message, arg3, arg4 = '') {
         debug: 'DEBUG<br>',
         // Players >>
         discovering_players: 'Discovering players...<br>',
-        players_action_submit: 'Action submitted: ',
+        players_action_submit: 'Submitted: ',
         // Advanced search
         search_fields_empty: 'Search fields are empty. ',
         predefined_filter_invalid: 'Predefined filter is invalid. ',

@@ -1741,7 +1741,7 @@ jQuery(document).ready(function($) { 'use strict';
         }, DEFAULT_TIMEOUT);
 	});
     $(document).on('click', '#btn-players-dropdown', function(e) {
-        $('#players-modal-body').css('padding-bottom', '5em');
+        $('#players-modal-body').css('padding-bottom', '6em');
     });
     $(document).on('click', '#players-modal', function(e) {
         if (!$('#players-dropdown').hasClass('open')) {
@@ -1761,7 +1761,7 @@ jQuery(document).ready(function($) { 'use strict';
                 $('#players-submit-confirm-msg').text('Click again to confirm');
             } else {
                 $('#players-modal').modal('toggle');
-                notify(NOTIFY_TITLE_INFO, 'players_action_submit', cmd);
+                notify(NOTIFY_TITLE_INFO, 'players_action_submit', getKeyOrValue('key', cmd));
                 $.post('players.php?cmd=' + cmd, {'ipaddr': ipaddr});
             }
         }
