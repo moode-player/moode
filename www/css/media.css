@@ -36,6 +36,7 @@ body {
 
 	/* Notifications */
 	.ui-pnotify {font-size:1.25rem;}
+	.ui-pnotify-welcome {top:10%!important;}
 
 	/* Popup volume control */
 	#volpad {width:100%;}
@@ -222,7 +223,8 @@ body {
 	#volzone {display:none;}
 
 	/* Notifications */
-	.ui-pnotify {font-size:1.25rem;width:50em!important;}
+	.ui-pnotify {font-size:1.25rem;}
+	.ui-pnotify-welcome {top:10%!important;width:50em!important;}
 
 	/* Popup volume control */
 	/*DELETE:#volcontrol-2 {height:22vw;width:22vw;padding:2em;}
@@ -527,7 +529,8 @@ body {
 	#volzone {display:none;}
 
 	/* Notifications */
-	.ui-pnotify {font-size:1.25rem;width:50em!important;}
+	.ui-pnotify {font-size:1.25rem;}
+	.ui-pnotify-welcome {top:10%!important;width:50em!important;}
 
 	/* Popup volume control */
 	#volcontrol-2 {height:18vw;width:18vw;padding: 2em;}

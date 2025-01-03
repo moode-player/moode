@@ -128,8 +128,16 @@ function notify(title, message, arg3, arg4 = '') {
         var messageText = messages[message];
     }
 
-    // Show/hide the closer icon
-    showCloser = message == 'firstuse_welcome' ? false : true;
+    // Welcome screen configs
+    if (message == 'firstuse_welcome') {
+        showCloser = false;
+        showSticker = false;
+        addClass = 'ui-pnotify-welcome';
+    } else {
+        showCloser = true;
+        showSticker = true;
+        addClass = 'ui-pnotify-default';
+    }
 
     // Display new notification after closing any previous one
     $('.ui-pnotify-closer').click();
@@ -140,6 +148,8 @@ function notify(title, message, arg3, arg4 = '') {
         delay: (duration * 1000),
         opacity: 1.0,
         closer: showCloser,
+        sticker: showSticker,
+        addclass: addClass,
         history: false
     });
 }
