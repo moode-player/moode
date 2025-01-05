@@ -16,7 +16,7 @@
 ################################################################################
 
 Updates
-- UPD: Bump to pleezer 0.x.x
+- UPD: Bump to pleezer 0.8.0
 - UPD: Add new options to Deezer Config
 - UPD: Improve >> Players feature: Add "Refresh screen" and "Rediscover" options
 
