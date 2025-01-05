@@ -1741,7 +1741,9 @@ jQuery(document).ready(function($) { 'use strict';
         }, DEFAULT_TIMEOUT);
 	});
     $(document).on('click', '#btn-players-dropdown', function(e) {
-        $('#players-modal-body').css('padding-bottom', '6em');
+        if ($('#players-ul').height() < $('.dropdown-menu').height()) {
+            $('#players-modal-body').css('padding-bottom', '10em');
+        }
     });
     $(document).on('click', '#players-modal', function(e) {
         if (!$('#players-dropdown').hasClass('open')) {
@@ -1749,20 +1751,27 @@ jQuery(document).ready(function($) { 'use strict';
         }
     });
     $('#btn-players-submit').click(function(e) {
-        var action = $('#players-action span').text();
-        var cmd = getKeyOrValue('value', action);
+        var cmdKey = $('#players-command span').text();
+        var cmdValue = getKeyOrValue('value', cmdKey);
         var ipaddr = [];
         $('#players-ul a').each(function() {
             ipaddr.push($(this).attr('data-ipaddr'));
         });
         //console.log(ipaddr);
-        if (ipaddr.length > 0 && action != 'No action') {
+        if (ipaddr.length > 0 && cmdKey != 'No action') {
             if ($('#players-submit-confirm-msg').text() == '') {
                 $('#players-submit-confirm-msg').text('Click again to confirm');
             } else {
-                $('#players-modal').modal('toggle');
-                notify(NOTIFY_TITLE_INFO, 'players_action_submit', getKeyOrValue('key', cmd));
-                $.post('players.php?cmd=' + cmd, {'ipaddr': ipaddr});
+                if (cmdKey == 'Rediscover') {
+                    $('#players-submit-confirm-msg').text('Discovering players...');
+                    $('#players-modal .modal-body').load('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr}, function() {
+                        $('#players-submit-confirm-msg').text('Discovery complete');
+                    });
+                } else {
+                    $('#players-modal').modal('toggle');
+                    notify(NOTIFY_TITLE_INFO, 'players_command_sumbitted', '<em>' + getKeyOrValue('key', cmdValue) + '</em> submitted');
+                    $.post('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr});
+                }
             }
         }
     });

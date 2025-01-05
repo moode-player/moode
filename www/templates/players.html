@@ -5,30 +5,32 @@
 */
 -->
 <div>
-	<div class="$_players_action_div_hide">
-		<label class="control-label" for="players-dropdown">Action</label>
+	<div class="$_players_command_div_hide">
+		<label class="control-label" for="players-dropdown">Command</label>
 		<div class="controls">
 			<div class="btn-group bootstrap-select select-large">
 				<button id="btn-players-dropdown" type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-					<div id="players-action" class="filter-option pull-left">
+					<div id="players-command" class="filter-option pull-left">
 						<span>No action</span>
 					</div>&nbsp;
 					<div class="caret"></div>
 				</button>
 				<div class="dropdown-menu open">
 					<ul class="dropdown-menu custom-select inner" role="menu">
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-action-sel"><span class="text">No action</span></a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-action-sel"><span class="text">Shutdown</span></a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-action-sel"><span class="text">Restart</span></a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-action-sel"><span class="text">Update library</span></a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-action-sel"><span class="text">Refresh screen</span></a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-command-sel"><span class="text">No action</span></a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-command-sel"><span class="text">Shutdown</span></a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-command-sel"><span class="text">Restart</span></a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-command-sel"><span class="text">Update library</span></a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-command-sel"><span class="text">Refresh screen</span></a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="players-command-sel"><span class="text">Rediscover</span></a></li>
 					</ul>
 				</div>
 			</div>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-players-action" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-			<span id="info-players-action" class="help-block hide">
-				Click an individual player to open it or select an action that can be submitted to all players listed. The Submit button will request a second click for confirmation.
+			<a aria-label="Help" class="info-toggle" data-cmd="info-players-command" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+			<span id="info-players-command" class="help-block hide">
+				Click an individual player to open it or select a command that can be submitted to all players listed. The Submit button will request a second click for confirmation.
 			</span>
+			<span id="players-submit-confirm-msg"></span>
 		</div>
 	</div>
 

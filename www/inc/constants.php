@@ -35,6 +35,8 @@ const DEEZ_CREDENTIALS_FILE = '/etc/deezer/deezer.toml';
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
+// Players >>
+const PLAYERS_CACHE_FILE = '/var/local/www/players.txt';
 // Library/Playback
 const LIBCACHE_BASE = '/var/local/www/libcache';
 const ROOT_DIRECTORIES = array('NAS', 'NVME', 'SDCARD', 'USB');

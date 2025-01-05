@@ -86,7 +86,6 @@
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button aria-label="Submit" class="btn btn-primary" id="btn-players-submit" aria-hidden="true">Submit</button>
-		<span id="players-submit-confirm-msg"></span>
 	</div>
 </div>
 
