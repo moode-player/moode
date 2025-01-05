@@ -18,7 +18,7 @@
 Updates
 - UPD: Bump to pleezer 0.x.x
 - UPD: Add new options to Deezer Config
-- UPD: Add "Refresh screen" to >> Players action menu
+- UPD: Improve >> Players feature: Add "Refresh screen" and "Rediscover" options
 
 Bug fixes
 - FIX: IQaudIO Pi-DigiAMP+ not being unmuted during startup
