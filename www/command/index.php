@@ -31,7 +31,7 @@ switch ($cmd[0]) {
 		echo json_encode(parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "="), JSON_FORCE_OBJECT);
 		break;
 	case 'get_output_format':
-		phpSession('open_ro');
+		_openSessionReadOnly($dbh);
 		echo json_encode(array('format' => getALSAOutputFormat()), JSON_FORCE_OBJECT);
 		break;
 	case 'get_volume':
@@ -47,7 +47,7 @@ switch ($cmd[0]) {
 			$volCmd = getArgs($cmd);
 			$result = sysCmd('/var/www/util/vol.sh' . $volCmd);
 			// Receiver(s) volume
-			phpSession('open_ro');
+			_openSessionReadOnly($dbh);
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				if ($volCmd == ' -mute') {
 					$rxVolCmd = '-mute';
@@ -70,7 +70,7 @@ switch ($cmd[0]) {
 		$item = trim(getArgs($cmd));
 		$sock = getMpdSock();
 		// Turn off auto-shuffle
-		phpSession('open_ro');
+		_openSessionReadOnly($dbh);
 		if ($_SESSION['ashuffle'] == '1') {
 		    turnOffAutoShuffle($sock);
 		}
@@ -99,13 +99,13 @@ switch ($cmd[0]) {
 		echo json_encode(array('info' => 'OK'));
 		break;
 	case 'get_cdsp_config':
-		phpSession('open_ro');
+		_openSessionReadOnly($dbh);
 		echo json_encode(array('config' => $_SESSION['camilladsp']));
 		break;
 	case 'set_cdsp_config':
 		$newConfig = trim(getArgs($cmd));
 		if (!empty($newConfig)) {
-			phpSession('open');
+			_openSession($dbh);
 			$currentConfig = $_SESSION['camilladsp'];
 			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 			// Validate arg
@@ -177,4 +177,20 @@ function getArgs($cmd) {
 	}
 
 	return $args;
+}
+
+// We use these session functions instead of phpSession() because CLI based REST
+// commands sent for example by curl don't send the PHP session cookie containing
+// the sessionid as does a Browser. This results in bogus empty session files
+// being created in /var/local/php/
+function _openSession($dbh) {
+	$sessionID = sqlRead('cfg_system', $dbh, 'sessionid')[0]['value'];
+	session_id($sessionID);
+	session_start();
+}
+function _openSessionReadOnly($dbh) {
+	$sessionID = sqlRead('cfg_system', $dbh, 'sessionid')[0]['value'];
+	session_id($sessionID);
+	session_start();
+	session_write_close();
 }

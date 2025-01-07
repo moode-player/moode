@@ -151,6 +151,7 @@ $sessionVars = array(
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
 }
+purgeSessionFiles();
 workerLog('worker: PHP session:   cleaned');
 
 // Open session and load cfg_system and cfg_radio
@@ -1746,20 +1747,11 @@ function chkMaintenance() {
 		}
 
 		// Purge temp or unwanted resources
-		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
-
-		// Purge spurious session files
-		// These files are created when chromium starts/restarts
-		// The only valid file is the one corresponding to $_SESSION['sessionid']
-		$dir = '/var/local/php/';
-		$files = scandir($dir);
-		foreach ($files as $file) {
-			if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $_SESSION['sessionid']) {
-				debugLog('Maintenance: Purged spurious session file (' . $file . ')');
-				sysCmd('rm ' . $dir . $file);
-			}
-		}
-
+		// - There shouldn't be any symlinks in the web root
+		sysCmd('find /var/www/ -type l -delete');
+		// - The only session file should be the one named sess_$_SESSION['sessionid']
+		purgeSessionFiles();
+		// - Reset maintenance interval
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 
 		debugLog('Maintenance completed');

@@ -123,10 +123,25 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 			break;
 		case 'get_sessionid':
 			$result = sqlRead('cfg_system', sqlConnect(), 'sessionid');
-			return $result['0']['value'];
+			return $result[0]['value'];
 			break;
 		case 'put_sessionid':
 			phpSession('write', 'sessionid', session_id());
 			break;
+	}
+}
+
+// Purge spurious session files
+// - These files are typically created when chromium starts/restarts
+// - The only valid file is sess_sessionid where sessionid is from cfg_system
+function purgeSessionFiles() {
+	$sessionid = sqlRead('cfg_system', sqlConnect(), 'sessionid')[0]['value'];
+	$dir = '/var/local/php/';
+	$files = scandir($dir);
+	foreach ($files as $file) {
+		if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $sessionId) {
+			debugLog('Maintenance: Purged spurious session file (' . $file . ')');
+			sysCmd('rm ' . $dir . $file);
+		}
 	}
 }
