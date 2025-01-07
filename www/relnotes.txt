@@ -18,6 +18,7 @@
 Updates
 - UPD: Bump to pleezer 0.8.0
 - UPD: Add new options to Deezer Config
+- UPD: Improve Deezer metadata layout and add audio format badge
 - UPD: Improve >> Players feature: Add "Refresh screen" and "Rediscover" options
 
 Bug fixes
@@ -25,6 +26,7 @@ Bug fixes
 - FIX: Restore fails when backup zip file size > 75M
 - FIX: Audio info not showing for UPnP files
 - FIX: Welcome notification gets clipped in certain landscape modes
+- FIX: Bogus PHP session created when REST API commands sent via CLI
 
 ################################################################################
 #
