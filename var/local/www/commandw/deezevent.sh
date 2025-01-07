@@ -114,7 +114,6 @@ if [[ $EVENT == "disconnected" ]]; then
 fi
 
 if [[ $EVENT == "track_changed" ]]; then
-	FORMAT="MP3 or FLAC"
 	METADATA="${TITLE}~~~${ARTIST}~~~${ALBUM_TITLE}~~~${DURATION}~~~https://e-cdns-images.dzcdn.net/images/cover/${COVER_ID}/500x500.jpg~~~${FORMAT}"
 	echo -e "$METADATA" > $DEEZMETA_FILE
 	/var/www/util/send-fecmd.php "update_deezmeta,$METADATA"

@@ -799,16 +799,28 @@ function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
-    // Spotify: title;artist;album;duration;coverurl (duration is in ms)
-    // Deezer:  title;artist;album;duration;coverurl;format (duration is in secs)
+    // Spotify: [0]:title [1]:artist [2]:album [3]:duration [4];coverurl (duration is in ms)
+    // Deezer:  [0]:title [1]:artist [2]:album [3]:duration [4];coverurl [5]:format (duration is in secs)
     var metadata = data.split('~~~');
     var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
 
-    $('#inpsrc-backdrop').html('<img class="inpsrc-metadata-backdrop" ' + 'src="' + metadata[4] + '">');
-    $('#inpsrc-metadata').html(
-        metadata[0] + ' (' + formatSongTime(Math.round(parseInt(metadata[3]) / timeDivisor)) + ')' +
-        '<br>' + '<span>' + metadata[1] + '<br>' + metadata[2] + '</span>'
-    );
+    var title = metadata[0];
+    var artist = metadata[1];
+    var album = metadata[2];
+    var duration = formatSongTime(Math.round(parseInt(metadata[3]) / timeDivisor));
+    var coverURL = metadata[4];
+    var format = metadata[5];
+
+    if (title == '' || duration == '') {
+        // Radio station
+        var metadataHTML = artist + '<br><span id="renderer-format-badge">' + format + '</span><br><span>Live</span>';
+    } else {
+        // Song file
+        var metadataHTML = artist + ' - ' + title + '<br><span id="renderer-format-badge">' + format + '</span><br><span>' + album + '</span>';
+    }
+
+    $('#inpsrc-backdrop').html('<img class="inpsrc-metadata-backdrop" ' + 'src="' + coverURL + '">');
+    $('#inpsrc-metadata').html(metadataHTML);
 
     inpSrcMetaRefreshBtn();
 
@@ -819,6 +831,11 @@ function updateInpsrcMeta(cmd, data) {
         'top':'unset',
         'bottom':'0'
     });
+
+    // For robustness
+    setTimeout(function() {
+        refreshInpsrcMeta();
+    }, (NOTIFY_DURATION_DEFAULT));
 }
 
 // Show/hide CoverView screen saver

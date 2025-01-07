@@ -14,10 +14,14 @@ if ($option == '') {
 "Usage: send-fecmd.php [command]
 Send a command to the front-end\n";
 } else {
-	// Preprocess data for certain commands
-	$cmd = (str_contains($argv[1], 'update_deezmeta') || str_contains($argv[1], 'update_spotmeta')) ?
-		htmlspecialchars($argv[1], ENT_NOQUOTES) : $argv[1];
-
-	// Send to front-end
-	sendFECmd($cmd);
+	// Special handling for certain commands
+	if (str_contains($argv[1], 'update_deezmeta') || str_contains($argv[1], 'update_spotmeta')) {
+		// Special handling for certain commands
+		$cmd = htmlspecialchars($argv[1], ENT_NOQUOTES);
+		sendFECmd($cmd);
+	} else {
+		// Standard handling
+		$cmd = $argv[1];
+		sendFECmd($cmd);
+	}
 }
