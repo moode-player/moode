@@ -182,7 +182,7 @@ function getArgs($cmd) {
 // We use these session functions instead of phpSession() because CLI based REST
 // commands sent for example by curl don't send the PHP session cookie containing
 // the sessionid as does a Browser. This results in bogus empty session files
-// being created in /var/local/php/
+// being created in /var/local/php/ and no access to session vars
 function _openSession($dbh) {
 	$sessionID = sqlRead('cfg_system', $dbh, 'sessionid')[0]['value'];
 	session_id($sessionID);
