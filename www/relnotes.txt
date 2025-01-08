@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2025-MM-DD moOde 9.2.2 (Bookworm)
+# 2025-01-08 moOde 9.2.2 (Bookworm)
 #
 ################################################################################
 
@@ -21,7 +21,7 @@ Updates
 - UPD: Add new options to Deezer Config
 - UPD: Add audio format badge to Deezer metadata
 - UPD: Add audio format badge to Spotify metadata
-- UPD: Improve >> Players feature: Add "Refresh screen" and "Rediscover" options
+- UPD: Improve Players feature: Add "Refresh screen" and "Rediscover" options
 - UPD: Increase PHP/NGINX upload/transfer limits from 75M to 128M
 
 Bug fixes
