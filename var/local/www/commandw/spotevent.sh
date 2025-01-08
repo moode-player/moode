@@ -38,6 +38,7 @@ if [[ $MATCH == 0 ]]; then
 fi
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
+# cfg_system
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','mpdmixer','camilladsp_volume_sync','rsmafterspot','inpactive','volknob_mpd','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
@@ -51,6 +52,9 @@ INPACTIVE=${arr[7]}
 VOLKNOB_MPD=${arr[8]}
 MULTIROOM_TX=${arr[9]}
 RX_ADDRESSES=$(sudo moodeutl -d -gv rx_addresses)
+# cfg_spotify
+BITRATE=$(sqlite3 $SQLDB "SELECT value FROM cfg_spotify WHERE param='bitrate'")"K"
+FORMAT="Vorbis "$BITRATE 
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -117,7 +121,7 @@ if [[ $PLAYER_EVENT == "track_changed" ]]; then
 	COVER=$(echo $COVERS | cut -d " " -f 1)
 	#ARTIST=$(echo $ARTISTS | cut -d " " -f 1) should be \n delimited?
 	#ARTISTS=$(echo "$ARTISTS" | tr '\n' ', ') should be \n delimited?
-	METADATA="${NAME}~~~${ARTISTS}~~~${ALBUM}~~~${DURATION_MS}~~~${COVER}"
+	METADATA="${NAME}~~~${ARTISTS}~~~${ALBUM}~~~${DURATION_MS}~~~${COVER}~~~${FORMAT}"
 	echo -e "$METADATA" > $SPOTMETA_FILE
 	/var/www/util/send-fecmd.php "update_spotmeta,$METADATA"
 fi
