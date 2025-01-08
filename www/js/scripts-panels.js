@@ -1759,7 +1759,8 @@ jQuery(document).ready(function($) { 'use strict';
         });
         //console.log(ipaddr);
         if (ipaddr.length > 0 && cmdKey != 'No action') {
-            if ($('#players-submit-confirm-msg').text() == '') {
+            var msgText = $('#players-submit-confirm-msg').text();
+            if (msgText == '' || msgText == 'Discovery complete') {
                 $('#players-submit-confirm-msg').text('Click again to confirm');
             } else {
                 if (cmdKey == 'Rediscover') {
