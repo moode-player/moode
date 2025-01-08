@@ -172,6 +172,10 @@ function stopSpotify() {
 	$GLOBALS['spotactive'] = '0';
 	sendFECmd('spotactive0');
 }
+function getSpotifyFormat() {
+	$metadata = explode('~~~', file_get_contents(SPOTMETA_FILE));
+	return $metadata[5];
+}
 
 // Deezer Connect
 function startDeezer() {

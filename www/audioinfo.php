@@ -53,7 +53,7 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_decode_rate = '';
 } else if ($spotActive == '1') {
 	$_file = 'Spotify stream';
-	$_encoded_at = 'Ogg/Vorbis or AAC';
+	$_encoded_at = getSpotifyFormat();
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($deezActive == '1') {
