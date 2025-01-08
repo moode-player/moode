@@ -19,7 +19,8 @@ Updates
 - UPD: Bump to pleezer 0.8.0
 - UPD: Add support for Deezer live radio and podcasts
 - UPD: Add new options to Deezer Config
-- UPD: Improve Deezer metadata layout and add audio format badge
+- UPD: Add audio format badge to Deezer metadata
+- UPD: Add audio format badge to Spotify metadata
 - UPD: Improve >> Players feature: Add "Refresh screen" and "Rediscover" options
 - UPD: Increase PHP/NGINX upload/transfer limits from 75M to 128M
 
