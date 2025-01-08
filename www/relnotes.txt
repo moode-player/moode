@@ -21,6 +21,7 @@ Updates
 - UPD: Add new options to Deezer Config
 - UPD: Improve Deezer metadata layout and add audio format badge
 - UPD: Improve >> Players feature: Add "Refresh screen" and "Rediscover" options
+- UPD: Increase PHP/NGINX upload/transfer limits from 75M to 128M
 
 Bug fixes
 - FIX: IQaudIO Pi-DigiAMP+ not being unmuted during startup
