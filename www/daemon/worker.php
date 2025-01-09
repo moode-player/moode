@@ -2577,22 +2577,23 @@ function runQueuedJob() {
 				sysCmd('mpc play');
 			}
 
-			// Restart renderers if device (cardnum) changed
-			if ($deviceChange == '1') {
-				// TODO: Bluetooth?
-
-				if ($_SESSION['airplaysvc'] == 1) {
-					sysCmd('killall shairport-sync');
-					startAirPlay();
-				}
-				if ($_SESSION['spotifysvc'] == 1) {
-					sysCmd('killall librespot');
-					startSpotify();
-				}
-				if ($_SESSION['deezersvc'] == 1) {
-					sysCmd('killall pleezer');
-					startDeezer();
-				}
+			// Restart renderers to catch any cardnum changes
+			if ($_SESSION['btsvc'] == 1) {
+				sysCmd('killall shairport-sync');
+				stopBluetooth();
+				startBluetooth();
+			}
+			if ($_SESSION['airplaysvc'] == 1) {
+				sysCmd('killall shairport-sync');
+				startAirPlay();
+			}
+			if ($_SESSION['spotifysvc'] == 1) {
+				sysCmd('killall librespot');
+				startSpotify();
+			}
+			if ($_SESSION['deezersvc'] == 1) {
+				sysCmd('killall pleezer');
+				startDeezer();
 			}
 
 			// DEBUG:
