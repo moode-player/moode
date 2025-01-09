@@ -2579,7 +2579,6 @@ function runQueuedJob() {
 
 			// Restart renderers to catch any cardnum changes
 			if ($_SESSION['btsvc'] == 1) {
-				sysCmd('killall shairport-sync');
 				stopBluetooth();
 				startBluetooth();
 			}
