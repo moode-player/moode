@@ -575,6 +575,9 @@ function engineCmd() {
                 case 'update_spotmeta':
                 case 'update_deezmeta':
                     updateInpsrcMeta(cmd[0], cmd[1]); // cmd[1]: metadata
+                    $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
+                        updateInpsrcMeta(cmd, data);
+                    });
                     break;
                 case 'slactive1':
                 case 'slactive0':
@@ -831,11 +834,6 @@ function updateInpsrcMeta(cmd, data) {
         'top':'unset',
         'bottom':'0'
     });
-
-    // For robustness
-    setTimeout(function() {
-        refreshInpsrcMeta();
-    }, (NOTIFY_DURATION_DEFAULT));
 }
 
 // Show/hide CoverView screen saver
