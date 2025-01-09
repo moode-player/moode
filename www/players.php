@@ -44,6 +44,7 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 	// Parse the results
 	$_players = '';
 	$_players_command_div_hide = '';
+	$playersArray = array();
 	$timeout = getStreamTimeout();
 	foreach ($port6600Hosts as $ipAddr) {
 		if ($ipAddr != $thisIpAddr) {
@@ -60,11 +61,19 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 					$host = $ipAddr;
 				}
 
-				$_players .= sprintf('<li><a href="http://%s" class="btn btn-large target-blank-link" data-ipaddr="%s" target="_blank">'
-					. '<i class="fa-solid fa-sharp fa-sitemap"></i>'
-					. '<br>%s%s</a></li>', $ipAddr, $ipAddr, $host, $rxIndicator);
+				array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxindicator' => $rxIndicator));
 			}
 		}
+	}
+
+	// Sort results
+	sort($playersArray);
+
+	// Output for ul
+	foreach ($playersArray as $player) {
+		$_players .= sprintf('<li><a href="http://%s" class="btn btn-large target-blank-link" data-ipaddr="%s" target="_blank">'
+			. '<i class="fa-solid fa-sharp fa-sitemap"></i>'
+			. '<br>%s%s</a></li>', $player['ipaddr'], $player['ipaddr'], $player['host'], $player['rxindicator']);
 	}
 }
 

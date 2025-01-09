@@ -1741,8 +1741,9 @@ jQuery(document).ready(function($) { 'use strict';
         }, DEFAULT_TIMEOUT);
 	});
     $(document).on('click', '#btn-players-dropdown', function(e) {
-        if ($('#players-ul').height() < $('.dropdown-menu').height()) {
-            $('#players-modal-body').css('padding-bottom', '10em');
+        if ($('#players-modal-body').height() < $('.dropdown-menu').height()) {
+            var padding = $('.dropdown-menu').height() - $('#players-modal-body').height() - $('#players-modal-body .select-large').height();
+            $('#players-modal-body').css('padding-bottom', padding + 'px');
         }
     });
     $(document).on('click', '#players-modal', function(e) {
