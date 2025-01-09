@@ -17,9 +17,11 @@
 
 Updates
 - UPD: Set S32 as default for cfg_deezer format param
+- UPD: Improve Players feature: sort results and more accurate auto padding
 
 Bug fixes
 - FIX: Some Deezer Config settings not restored from backup
+- FIX: Renderer metadata icons not responsive
 - FIX: PHP/NGINX upload/transfer increases not applied during in-place update
 
 ################################################################################
