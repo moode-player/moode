@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Jan 2 12:58:30 2025
+-- File generated with SQLiteStudio v3.4.4 on Thu Jan 9 07:57:04 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -99,7 +99,7 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 CREATE TABLE cfg_deezer (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_deezer (id, param, value) VALUES (1, 'normalize_volume', 'No');
 INSERT INTO cfg_deezer (id, param, value) VALUES (2, 'no_interruptions', 'No');
-INSERT INTO cfg_deezer (id, param, value) VALUES (3, 'format', 'S16');
+INSERT INTO cfg_deezer (id, param, value) VALUES (3, 'format', 'S32');
 INSERT INTO cfg_deezer (id, param, value) VALUES (4, 'initial_volume', '10');
 INSERT INTO cfg_deezer (id, param, value) VALUES (5, 'RESERVED_5', '');
 INSERT INTO cfg_deezer (id, param, value) VALUES (6, 'RESERVED_6', '');

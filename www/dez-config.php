@@ -33,8 +33,8 @@ foreach ($result as $row) {
 	$cfgDeezer[$row['param']] = $row['value'];
 }
 
-$_select['format'] .= "<option value=\"S16\" " . (($cfgDeezer['format'] == 'S16') ? "selected" : "") . ">S16 (Default)</option>\n";
-$_select['format'] .= "<option value=\"S32\" " . (($cfgDeezer['format'] == 'S32') ? "selected" : "") . ">S32</option>\n";
+$_select['format'] .= "<option value=\"S16\" " . (($cfgDeezer['format'] == 'S16') ? "selected" : "") . ">S16</option>\n";
+$_select['format'] .= "<option value=\"S32\" " . (($cfgDeezer['format'] == 'S32') ? "selected" : "") . ">S32 (Default)</option>\n";
 $_select['format'] .= "<option value=\"F32\" " . (($cfgDeezer['format'] == 'F32') ? "selected" : "") . ">F32</option>\n";
 $_select['initial_volume'] = $cfgDeezer['initial_volume'];
 $_select['normalize_volume'] .= "<option value=\"Yes\" " . (($cfgDeezer['normalize_volume'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
