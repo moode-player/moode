@@ -459,8 +459,10 @@ function autoConfigSettings() {
 		}],
 		'Deezer Connect',
 		['requires' => ['deezer_format', 'deezer_email', 'deezer_password'],
-			'handler' => function($values) {
-				setCfgTableParams('cfg_spotify', $values, 'spotify_');
+			'optionals' => ['deezer_initial_volume', 'deezer_normalize_volume', 'deezer_no_interruptions'],
+			'handler' => function($values, $optionals) {
+				$mergedValues = array_merge($values, $optionals);
+				setCfgTableParams('cfg_deezer', $mergedValues, 'deezer_');
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_deezer', $values, 'deezer_');
 		}],
