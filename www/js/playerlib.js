@@ -65,6 +65,8 @@ const SEARCH_TIMEOUT    = 750;
 const RALBUM_TIMEOUT    = 500;
 const ENGINE_TIMEOUT    = 3000;
 const CV_QUEUE_TIMEOUT  = 60000;
+const ONE_SEC_TIMEOUT   = 1000;
+const TWO_SEC_TIMEOUT   = 2000;
 
 // Album and Radio HD parameters
 const ALBUM_HD_BADGE_TEXT           = 'HD';
@@ -574,10 +576,14 @@ function engineCmd() {
                     break;
                 case 'update_spotmeta':
                 case 'update_deezmeta':
+                    // Received from back-end
                     updateInpsrcMeta(cmd[0], cmd[1]); // cmd[1]: metadata
-                    $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
-                        updateInpsrcMeta(cmd, data);
-                    });
+                    // Fetch from back-end for robustness
+                    setTimeout(function() {
+                        $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
+                            updateInpsrcMeta(cmd, data);
+                        });
+                    }, ONE_SEC_TIMEOUT);
                     break;
                 case 'slactive1':
                 case 'slactive0':
@@ -4928,7 +4934,8 @@ function audioInfo(cmd, path, activeTab = '') {
         var className = activeTab == 'playback' ? 'playback' : 'track';
 
         // Display Playback info (no tabs) when launched from configs
-        var value = GLOBAL.scriptSection == 'configs' ? 'none' : 'flex';
+        // or if any renderer is active
+        var value = (GLOBAL.scriptSection == 'configs' || rendererActive()) ? 'none' : 'flex';
         $('#audioinfo-tabs').css('display', value);
 
 	    $.getJSON('command/audioinfo.php?cmd=' + cmd, {'path': path}, function(data) {
@@ -4965,6 +4972,20 @@ function itemInfoModal(id, data) {
     }
 
     document.getElementById(id).innerHTML = lines;
+}
+
+// Renderer active test
+function rendererActive() {
+    return (
+        SESSION.json['aplactive'] == '1' ||
+        SESSION.json['btactive'] == '1' ||
+        SESSION.json['deezactive'] == '1' ||
+        SESSION.json['inpactive'] == '1' ||
+        SESSION.json['paactive'] == '1' ||
+        SESSION.json['rbactive'] == '1' ||
+        SESSION.json['rxactive'] == '1' ||
+        SESSION.json['slactive'] == '1'
+    )
 }
 
 // Now-playing icon
