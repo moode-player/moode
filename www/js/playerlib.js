@@ -808,8 +808,8 @@ function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
-    // Spotify: [0]:title [1]:artist [2]:album [3]:duration [4];coverurl (duration is in ms)
-    // Deezer:  [0]:title [1]:artist [2]:album [3]:duration [4];coverurl [5]:format (duration is in secs)
+    // Spotify: [0]:title [1]:artist [2]:album [3]:duration (in ms)   [4];coverurl [5]:format
+    // Deezer:  [0]:title [1]:artist [2]:album [3]:duration (in secs) [4];coverurl [5]:format
     var metadata = data.split('~~~');
     var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
 
@@ -833,7 +833,6 @@ function updateInpsrcMeta(cmd, data) {
 
     inpSrcMetaRefreshBtn();
 
-    //var padBottom = (UI.mobile && window.matchMedia("(orientation: portrait)").matches) ? '.5em' : '0px';
     $('#inpsrc-metadata').show();
     $('#inpsrc-msg').css({
         'width':'unset',
