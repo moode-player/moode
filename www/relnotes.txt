@@ -23,7 +23,7 @@ Bug fixes
 - FIX: Renderer metadata icons not responsive
 - FIX: Audio info track tab showing when renderer is active
 - FIX: Some Deezer Config settings not restored from backup
-- FIX: PHP/NGINX upload/transfer increases not applied during in-place update
+- FIX: PHP/NGINX upload increases not applied during in-place update
 
 ################################################################################
 #
