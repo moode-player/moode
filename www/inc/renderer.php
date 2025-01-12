@@ -232,6 +232,16 @@ function getDeezerFormat() {
 	$metadata = explode('~~~', file_get_contents(DEEZMETA_FILE));
 	return $metadata[5];
 }
+function updateDeezCredentials($email, $password) {
+	// Truncate the file
+	$fh = fopen(DEEZ_CREDENTIALS_FILE, 'w');
+	ftruncate($fh, 0);
+	// Write new contents
+	$data .= "email = \"" . $email . "\"\n";
+	$data .= "password = \"" . $password . "\"\n";
+	fwrite($fh, $data);
+	fclose($fh);
+}
 
 // Squeezelite
 function startSqueezeLite() {

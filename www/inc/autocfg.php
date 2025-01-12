@@ -19,6 +19,7 @@ require_once __DIR__ . '/audio.php';
 require_once __DIR__ . '/mpd.php';
 require_once __DIR__ . '/music-source.php';
 require_once __DIR__ . '/network.php';
+require_once __DIR__ . '/renderer.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
@@ -463,8 +464,7 @@ function autoConfigSettings() {
 			'handler' => function($values, $optionals) {
 				$mergedValues = array_merge($values, $optionals);
 				setCfgTableParams('cfg_deezer', $mergedValues, 'deezer_');
-				sysCmd('sed -i \'s/email.*/email = "' . $values['deezer_email'] . '"/\' ' . DEEZ_CREDENTIALS_FILE);
-				sysCmd('sed -i \'s/password.*/password = "' . $values['deezer_password'] . '"/\' ' . DEEZ_CREDENTIALS_FILE);
+				updateDeezCredentials($values['deezer_email'], $values['deezer_password']);
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_deezer', $values, 'deezer_');
 		}],

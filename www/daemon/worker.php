@@ -2857,8 +2857,7 @@ function runQueuedJob() {
 			foreach ($result as $row) {
 				$cfgDeezer[$row['param']] = $row['value'];
 			}
-			sysCmd('sed -i \'s/email.*/email = "' . $cfgDeezer['email'] . '"/\' ' . DEEZ_CREDENTIALS_FILE);
-			sysCmd('sed -i \'s/password.*/password = "' . $cfgDeezer['password'] . '"/\' ' . DEEZ_CREDENTIALS_FILE);
+			updateDeezCredentials($cfgDeezer['email'], $cfgDeezer['password']);
 
 			stopDeezer();
 			if ($_SESSION['deezersvc'] == 1) {
