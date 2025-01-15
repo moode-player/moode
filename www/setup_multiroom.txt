@@ -27,6 +27,9 @@ also be configured as a NAS to serve audio files from locally attached storage.
 The Sender and Receivers should be a Pi-3A+ or higher and use the integrated Pi
 WiFi adapter for consistent WiFi performance.
 
+NOTE: moOde 9 series senders cannot discover moOde 8 series Receivers due to a
+change in the discovery protocol.
+
 BLOCK DIAGRAM
 
         +---------+
