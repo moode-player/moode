@@ -19,16 +19,16 @@ AUTOMATICALLY GENERATED (SELF_SIGNED)
 This type of cert is automatically created and installed into NGINX web server
 when HTTPS mode is turned on. The cert can be downloaded via the DOWNLOAD button
 or Browser Export option and then a manual procedure is required to import the
-cert into the Operating System (OS) certificate store. After this is done the
-Browser will be able to establish secure HTTPS communication with moOde.
+cert into the client Operating System (OS) certificate store. After this is done
+the Browser will be able to establish secure HTTPS communication with moOde.
 
 MANUALLY GENERATED
 
 This type of cert is manually created and can be self-signed or signed by a
 local Certificate Authority (CA) then manually installed into NGINX web server
 via the UPLOAD and INSTALL buttons. A second manual procedure is used to import
-the cert into the Operating System (OS) certificate Store. After this is done
-the Browser will be able to establish secure HTTPS communication with moOde.
+the cert into the client Operating System (OS) certificate Store. After this is
+done the Browser will be able to establish secure HTTPS communication with moOde.
 
 BASIC PROCEDURE (Desktop OS)
 
@@ -42,7 +42,7 @@ b. Set the Certificate type to "Automatic"
 c. Turn HTTPS mode on
 d. DOWNLOAD the cert
 e. Install the downloaded cert into the OS certificate store and set its trust
-   policy to "Always trust"
+   policy to "Always trust". This terminology may vary depending on the OS.
 f. Reboot moOde
 g. Refresh the Browser and a secure HTTPS connection should be established
 
@@ -110,11 +110,12 @@ Certificate files:
 Certificate attribute summary:
 Bits            = 2048
 Common name     = $HOSTNAME.local
+Constraints     = critical, CA:FALSE
 Key usage       = digitalSignature, keyEncipherment, nonRepudiation
 Key usage ext   = clientAuth, serverAuth
 DNS.1           = $HOSTNAME.local
 DNS.2           = $HOSTNAME
-IP.1            = 172.24.1.1 (Access point mode)
+IP.1            = 172.24.1.1 (Hotspot default address)
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
