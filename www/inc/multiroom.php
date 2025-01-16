@@ -33,13 +33,13 @@ function stopMultiroomSender() {
 	sysCmd('killall trx-tx');
 }
 
-# TODO: Test using _audioout.conf instead of $_SESSION['cardnum'] . ',0
 function startMultiroomReceiver() {
 	$params = sqlRead('cfg_multiroom', sqlConnect());
 	foreach ($params as $row) {
 	    $cfgMultiroom[$row['param']] = $row['value'];
 	}
 
+	# TODO: Test using _audioout.conf instead of $_SESSION['cardnum'] . ',0
 	$outputDevice = $cfgMultiroom['rx_alsa_output_mode'] == 'iec958' ?
 		getAlsaIEC958Device() : $cfgMultiroom['rx_alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 
