@@ -559,7 +559,13 @@ function engineCmd() {
                 case 'spotactive0':
                 case 'deezactive1':
                 case 'deezactive0':
-                    var rendererName = cmd[0].includes('spot') ? 'spotify' : 'deezer';
+                    if (cmd[0].includes('spot')) {
+                        var rendererName = 'spotify';
+                        SESSION.json['spotactive'] = cmd[0].slice(-1);
+                    } else {
+                        var rendererName = 'deezer';
+                        SESSION.json['deezactive'] = cmd[0].slice(-1);
+                    }
                     inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">' +
                         rendererName.charAt(0).toUpperCase() + rendererName.slice(1) +
@@ -573,16 +579,16 @@ function engineCmd() {
                         rendererRefreshBtn()
                     );
                     $('#inpsrc-metadata-refresh').html('');
+                    // Fetch from back-end for robustness
+                    refreshInpsrcMeta();
                     break;
                 case 'update_spotmeta':
                 case 'update_deezmeta':
                     // Received from back-end
                     updateInpsrcMeta(cmd[0], cmd[1]); // cmd[1]: metadata
-                    // Fetch from back-end for robustness
+                    // Fetch from back-end again for robustness
                     setTimeout(function() {
-                        $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
-                            updateInpsrcMeta(cmd, data);
-                        });
+                        refreshInpsrcMeta();
                     }, ONE_SEC_TIMEOUT);
                     break;
                 case 'slactive1':
