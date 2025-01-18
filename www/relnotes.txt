@@ -16,7 +16,7 @@
 ################################################################################
 
 Updates
-- UPD: Bump to pleezer 0.8.1
+- UPD: Bump to pleezer 0.9.1
 - UPD: Set S32 as default for cfg_deezer format param
 - UPD: Improve Players feature: sort results and more accurate auto padding
 
