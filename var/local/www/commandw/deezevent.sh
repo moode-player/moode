@@ -6,7 +6,13 @@
 
 LOGFILE="/var/log/moode_deezevent.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
+
 DEEZMETA_FILE="/var/local/www/deezmeta.txt"
+DEEZ_BASE_COVERURL_MUSIC="https://e-cdns-images.dzcdn.net/images/cover"
+DEEZ_BASE_COVERURL_TALK="https://cdn-images.dzcdn.net/images/talk"
+DEEZ_TRACK_TYPE_EPISODE="episode"
+DEEZ_TRACK_TYPE_LIVESTREAM="livestream"
+DEEZ_TRACK_TYPE_SONG="song"
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
@@ -114,7 +120,12 @@ if [[ $EVENT == "disconnected" ]]; then
 fi
 
 if [[ $EVENT == "track_changed" ]]; then
-	METADATA="${TITLE}~~~${ARTIST}~~~${ALBUM_TITLE}~~~${DURATION}~~~https://e-cdns-images.dzcdn.net/images/cover/${COVER_ID}/500x500.jpg~~~${FORMAT}"
+	if [[ $TRACK_TYPE == $DEEZ_TRACK_TYPE_EPISODE ]]; then
+		DEEZ_COVERURL=$DEEZ_BASE_COVERURL_TALK
+	else
+		DEEZ_COVERURL=$DEEZ_BASE_COVERURL_MUSIC
+	fi
+	METADATA="${TITLE}~~~${ARTIST}~~~${ALBUM_TITLE}~~~${DURATION}~~~${DEEZ_COVERURL}/${COVER_ID}/500x500.jpg~~~${FORMAT}"
 	echo -e "$METADATA" > $DEEZMETA_FILE
 	/var/www/util/send-fecmd.php "update_deezmeta,$METADATA"
 fi
