@@ -54,7 +54,7 @@ MULTIROOM_TX=${arr[9]}
 RX_ADDRESSES=$(sudo moodeutl -d -gv rx_addresses)
 # cfg_spotify
 BITRATE=$(sqlite3 $SQLDB "SELECT value FROM cfg_spotify WHERE param='bitrate'")"K"
-FORMAT="Vorbis "$BITRATE 
+FORMAT="Vorbis "$BITRATE
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -118,10 +118,9 @@ if [[ $PLAYER_EVENT == "session_disconnected" ]]; then
 fi
 
 if [[ $PLAYER_EVENT == "track_changed" ]]; then
-	COVER=$(echo $COVERS | cut -d " " -f 1)
-	#ARTIST=$(echo $ARTISTS | cut -d " " -f 1) should be \n delimited?
-	#ARTISTS=$(echo "$ARTISTS" | tr '\n' ', ') should be \n delimited?
-	METADATA="${NAME}~~~${ARTISTS}~~~${ALBUM}~~~${DURATION_MS}~~~${COVER}~~~${FORMAT}"
+	#ARTISTS=$(echo -e -n "$ARTISTS" | tr "\n" ";")
+	#COVERS=$(echo -e -n "$COVERS" | tr "\n" ";")
+	METADATA="${NAME}~~~${ARTISTS}~~~${ALBUM}~~~${DURATION_MS}~~~${COVERS}~~~${FORMAT}"
 	echo -e "$METADATA" > $SPOTMETA_FILE
 	/var/www/util/send-fecmd.php "update_spotmeta,$METADATA"
 fi
