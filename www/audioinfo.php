@@ -58,8 +58,8 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_decode_rate = '';
 } else if ($deezActive == '1') {
 	$_file = 'Deezer stream';
-	$_encoded_at = getDeezerFormat();
-	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
+	$_encoded_at = getDeezerInfo('stream_format');
+	$_decoded_to = getDeezerInfo('decoded_to');
 	$_decode_rate = '';
 } else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';

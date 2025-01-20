@@ -228,9 +228,17 @@ function stopDeezer() {
 	$GLOBALS['deezactive'] = '0';
 	sendFECmd('deezactive0');
 }
-function getDeezerFormat() {
+function getDeezerInfo($item) {
+	switch ($item) {
+		case 'stream_format':
+			$itemIndex = 5;
+			break;
+		case 'decoded_to':
+			$itemIndex = 6;
+			break;
+	}
 	$metadata = explode('~~~', file_get_contents(DEEZMETA_FILE));
-	return $metadata[5];
+	return $metadata[$itemIndex];
 }
 function updateDeezCredentials($email, $password) {
 	// Truncate the file

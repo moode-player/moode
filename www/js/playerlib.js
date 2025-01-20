@@ -815,7 +815,7 @@ function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
     // Spotify: [0]:title [1]:artists [2]:album [3]:duration (in ms)   [4];coverurls [5]:format
-    // Deezer:  [0]:title [1]:artist  [2]:album [3]:duration (in secs) [4];coverurl  [5]:format
+    // Deezer:  [0]:title [1]:artist  [2]:album [3]:duration (in secs) [4];coverurl  [5]:format [6]:decoder
     var metadata = data.split('~~~');
     var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
 

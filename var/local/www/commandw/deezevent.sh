@@ -125,7 +125,7 @@ if [[ $EVENT == "track_changed" ]]; then
 	else
 		DEEZ_COVERURL=$DEEZ_BASE_COVERURL_MUSIC
 	fi
-	METADATA="${TITLE}~~~${ARTIST}~~~${ALBUM_TITLE}~~~${DURATION}~~~${DEEZ_COVERURL}/${COVER_ID}/500x500.jpg~~~${FORMAT}"
+	METADATA="${TITLE}~~~${ARTIST}~~~${ALBUM_TITLE}~~~${DURATION}~~~${DEEZ_COVERURL}/${COVER_ID}/500x500.jpg~~~${FORMAT}~~~${DECODER}"
 	echo -e "$METADATA" > $DEEZMETA_FILE
 	/var/www/util/send-fecmd.php "update_deezmeta,$METADATA"
 fi
