@@ -265,7 +265,7 @@ function getUserID() {
 	}
 	// Return empty string if locked password for userid pi. A locked password
 	// is from the pi-gen build and remains unless a userid is set in Pi Imager.
-	if (sysCmd('cat /etc/shadow | grep pi | cut -d ":" -f 2')[0] == '!') {
+	if (sysCmd('cat /etc/shadow | grep "pi:" | cut -d ":" -f 2')[0] == '!') {
 		// No userid set in Pi Imager
 		$userId = NO_USERID_DEFINED;
 	} else {
