@@ -19,6 +19,9 @@ Updates
 - UPD: Update BBC playable URL's with new links
 - UPD: Improve grep for userid pi in function getUserID()
 
+Bug fixes
+- FIX: Time slider position after moving the thumb
+
 ################################################################################
 #
 # 2025-01-21 moOde 9.2.3 (Bookworm)
