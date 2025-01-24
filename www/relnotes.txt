@@ -16,7 +16,8 @@
 ################################################################################
 
 Updates
-- UPD: BBC playable URL's
+- UPD: Update BBC playable URL's with new links
+- UPD: Improve grep for userid pi in function getUserID()
 
 ################################################################################
 #
