@@ -2510,6 +2510,7 @@ $('input[type="range"]').change(function() {
 
 $('#timetrack, #playbar-timetrack').bind('touchstart mousedown', function(e) {
 	timeSliderMove = true;
+    window.clearInterval(UI.knob)
 });
 
 $('#timetrack, #playbar-timetrack').bind('touchend mouseup', function(e) {
