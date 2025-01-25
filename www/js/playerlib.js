@@ -2847,6 +2847,13 @@ $(document).on('click', '.context-menu a', function(e) {
                 audioInfo(cmd, MPD.json['file']);
             }
             break;
+        case 'play_here':
+            if (SESSION.json['mpd_httpd'] != '1' || SESSION.json['mpd_httpd_encoder'] != 'lame') {
+                notify(NOTIFY_TITLE_ALERT, 'play_here_config_error', NOTIFY_DURATION_MEDIUM);
+            } else {
+                window.open('http://' + SESSION.json['ipaddress'] + ':' + SESSION.json['mpd_httpd_port'], '_blank');
+            }
+            break;
         case 'edit_station':
             $.post('command/radio.php?cmd=get_station_contents', {'path': path}, function(data) {
                 GLOBAL.editStationId = data['id']; // This is to pass to the update station routine so it can uniquely identify the row

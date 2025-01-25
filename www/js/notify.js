@@ -39,6 +39,8 @@ function notify(title, message, arg3, arg4 = '') {
 		no_favorite_to_add: 'Nothing to add. ',
         add_to_playlist: 'Items have been added. ',
         select_playlist: 'Select a playlist. ',
+        // Playback
+        play_here_config_error: 'HTTP streaming must be ON and encoder set to LAME (MP3).',
         // Playlist view
         creating_playlist: 'Creating new playlist... ',
         updating_playlist: 'Updating playlist... ',
