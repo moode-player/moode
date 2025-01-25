@@ -24,10 +24,10 @@ def main():
                 del capture['filename']
                 capture['type'] = 'Stdin'
             print(capture)
-    remove_entries = []
+    # remove_entries = []
     for entry in conf['pipeline']:
-        if conf[entry] is None:
-            remove_entries.append(entry)
+        # if conf[entry] is None:
+        #     remove_entries.append(entry)
 
         remove_items = []
         for item in entry:
@@ -45,9 +45,8 @@ def main():
             entry['bypassed'] = False
         print(entry)
 
-    # remove empty nodes
-    for entry in remove_entries:
-        del conf[entry]
+    # for entry in remove_entries:
+    #     del conf[entry]
     with open(f'{pipelinefilename}', 'w') as file:
         yaml.dump(conf, file)
 if __name__ == "__main__":
