@@ -15,8 +15,14 @@
 #
 ################################################################################
 
+New features
+
+- NEW: Play here (Opens new tab/window and plays MPD HTTP server stream)
+
 Updates
-- UPD: Update BBC playable URL's with new links
+- UPD: Bump to CamillaDSP 3.0.0
+- UPD: Update BBC playable URL's
+- UPD: Update JB Radio2 (320K) playable URL
 - UPD: Improve grep for userid pi in function getUserID()
 
 Bug fixes
