@@ -2,21 +2,20 @@ description: M-S (Mid-Side) matrix with side signal reduced.
 devices:
   adjust_period: 10
   capture:
+    type: Stdin
     channels: 2
     extra_samples: null
-    filename: /dev/stdin
     format: S24LE
     read_bytes: null
     skip_bytes: null
-    type: File
   capture_samplerate: null
   chunksize: 4096
   enable_rate_adjust: false
   playback:
+    type: Alsa
     channels: 2
     device: hw:0,0
     format: S24LE
-    type: Alsa
   queuelimit: 1
   rate_measure_interval: 1
   samplerate: 44100
@@ -77,13 +76,15 @@ mixers:
         scale: null
 pipeline:
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
   - pregain
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - pregain
@@ -93,7 +94,8 @@ pipeline:
   name: MS
   type: Mixer
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - Stereo Image

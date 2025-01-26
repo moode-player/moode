@@ -2,21 +2,20 @@ description: Generic example of a 10 band parametric equalizer.
 devices:
   adjust_period: 10
   capture:
+    type: Stdin
     channels: 2
     extra_samples: null
-    filename: /dev/stdin
     format: S24LE
     read_bytes: null
     skip_bytes: null
-    type: File
   capture_samplerate: null
   chunksize: 1024
   enable_rate_adjust: false
   playback:
+    type: Alsa
     channels: 2
     device: hw:0,0
     format: S24LE
-    type: Alsa
   queuelimit: 1
   rate_measure_interval: null
   samplerate: 44100
@@ -143,7 +142,8 @@ pipeline:
   name: stereo
   type: Mixer
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
   - peqgain
@@ -159,7 +159,8 @@ pipeline:
   - band_10
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - peqgain

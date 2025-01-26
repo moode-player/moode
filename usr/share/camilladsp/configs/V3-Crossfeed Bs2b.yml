@@ -2,21 +2,20 @@ description: Bs2b from Wang-Yue which contains 5 setting sets.
 devices:
   adjust_period: 3
   capture:
+    type: Stdin
     channels: 2
     extra_samples: null
-    filename: /dev/stdin
     format: S24LE
     read_bytes: null
     skip_bytes: null
-    type: File
   capture_samplerate: 44100
   chunksize: 4096
   enable_rate_adjust: false
   playback:
+    type: Alsa
     channels: 2
     device: hw:0,0
     format: S24LE
-    type: Alsa
   queuelimit: 1
   rate_measure_interval: null
   samplerate: 44100
@@ -213,27 +212,31 @@ pipeline:
   name: 2to4
   type: Mixer
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
   - cx5_hi
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - cx5_lo
   - cx5_lo_gain
   type: Filter
 - bypassed: null
-  channel: 2
+  channels:
+  - 2
   description: null
   names:
   - cx5_lo
   - cx5_lo_gain
   type: Filter
 - bypassed: null
-  channel: 3
+  channels:
+  - 3
   description: null
   names:
   - cx5_hi

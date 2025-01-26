@@ -1,44 +1,51 @@
-description: Ebert-Hanke implementation of Natural roughly modeled after some publications
-  by Jan Meier.
+description: Mikhail Phonitor Mini (MPM). Mikhail Naganov reverse engineered SPL Phonitor
+  Mini Crossfeed with DSP by Ebert-Hanke.
 devices:
   adjust_period: 3
   capture:
+    type: Stdin
     channels: 2
     extra_samples: null
-    filename: /dev/stdin
     format: S24LE
     read_bytes: null
     skip_bytes: null
-    type: File
   capture_samplerate: 44100
-  chunksize: 4096
+  chunksize: 1024
   enable_rate_adjust: false
   playback:
+    type: Alsa
     channels: 2
     device: hw:0,0
     format: S24LE
-    type: Alsa
   queuelimit: 1
-  rate_measure_interval: 1
+  rate_measure_interval: null
   samplerate: 44100
   silence_threshold: 0
   silence_timeout: 0
-  stop_on_rate_change: false
+  stop_on_rate_change: null
   target_level: 1024
   volume_ramp_time: 150
 filters:
-  XF_Cross_Lowpass:
+  XF_Cross_Highshelf:
     description: null
     parameters:
-      freq: 650
-      q: 0.5
-      type: Lowpass
+      freq: 750
+      gain: -0.3
+      type: HighshelfFO
+    type: Biquad
+  XF_Cross_Peaking_EQ:
+    description: null
+    parameters:
+      freq: 180
+      gain: 0.5
+      q: 0.55
+      type: Peaking
     type: Biquad
   XF_Direct_Highshelf:
     description: null
     parameters:
-      freq: 900
-      gain: 1.5
+      freq: 200
+      gain: 2.3
       type: HighshelfFO
     type: Biquad
 mixers:
@@ -52,7 +59,7 @@ mixers:
       mute: false
       sources:
       - channel: 0
-        gain: -9.5
+        gain: -9.9
         inverted: false
         mute: false
         scale: null
@@ -60,7 +67,7 @@ mixers:
       mute: false
       sources:
       - channel: 0
-        gain: -1.5
+        gain: -2.3
         inverted: false
         mute: false
         scale: null
@@ -68,7 +75,7 @@ mixers:
       mute: false
       sources:
       - channel: 1
-        gain: -1.5
+        gain: -2.3
         inverted: false
         mute: false
         scale: null
@@ -76,7 +83,7 @@ mixers:
       mute: false
       sources:
       - channel: 1
-        gain: -9.5
+        gain: -9.9
         inverted: false
         mute: false
         scale: null
@@ -118,32 +125,38 @@ pipeline:
   name: XF_IN
   type: Mixer
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
-  - XF_Cross_Lowpass
+  - XF_Cross_Highshelf
+  - XF_Cross_Peaking_EQ
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - XF_Direct_Highshelf
   type: Filter
 - bypassed: null
-  channel: 2
+  channels:
+  - 2
   description: null
   names:
   - XF_Direct_Highshelf
   type: Filter
 - bypassed: null
-  channel: 3
+  channels:
+  - 3
   description: null
   names:
-  - XF_Cross_Lowpass
+  - XF_Cross_Highshelf
+  - XF_Cross_Peaking_EQ
   type: Filter
 - bypassed: null
   description: null
   name: XF_OUT
   type: Mixer
 processors: null
-title: Crossfeed Natural
+title: Crossfeed MPM

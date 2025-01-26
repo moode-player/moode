@@ -1,25 +1,23 @@
-description: No signal processing.
+description: Loudness volume curve with 3dB high boost, 6dB low boost and -3dB gain.
 devices:
   adjust_period: null
   capture:
+    type: Stdin
     channels: 2
     extra_samples: null
-    filename: /dev/stdin
     format: S24LE
     read_bytes: null
     skip_bytes: null
-    type: File
   capture_samplerate: null
   chunksize: 4096
   enable_rate_adjust: null
   playback:
+    type: Alsa
     channels: 2
     device: hw:0,0
     format: S24LE
-    type: Alsa
   queuelimit: 1
   rate_measure_interval: null
-  resampler: null
   samplerate: 44100
   silence_threshold: null
   silence_timeout: null
@@ -27,10 +25,19 @@ devices:
   target_level: null
   volume_ramp_time: 150
 filters:
+  Loudness:
+    description: null
+    parameters:
+      attenuate_mid: false
+      fader: Main
+      high_boost: 3
+      low_boost: 6
+      reference_level: -6
+    type: Loudness
   Master gain:
     description: null
     parameters:
-      gain: 0
+      gain: -3
       inverted: false
       mute: false
       scale: dB
@@ -60,16 +67,20 @@ mixers:
         scale: dB
 pipeline:
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
   - Master gain
+  - Loudness
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - Master gain
+  - Loudness
   type: Filter
 processors: null
-title: Flat
+title: Loudness

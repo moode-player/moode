@@ -2,21 +2,20 @@ description: Mikhail Naganov, customize with own IR correction.
 devices:
   adjust_period: 3
   capture:
+    type: Stdin
     channels: 2
     extra_samples: null
-    filename: /dev/stdin
     format: S24LE
     read_bytes: null
     skip_bytes: null
-    type: File
   capture_samplerate: 44100
   chunksize: 4096
   enable_rate_adjust: false
   playback:
+    type: Alsa
     channels: 2
     device: hw:0,0
     format: S24LE
-    type: Alsa
   queuelimit: 1
   rate_measure_interval: 1
   samplerate: 44100
@@ -52,35 +51,35 @@ filters:
     description: null
     parameters:
       channel: 0
-      filename: ../coeffs/V2-Sennheiser_HD800S_HpCF_A.wav
+      filename: ../coeffs/V3-Sennheiser_HD800S_HpCF_A.wav
       type: Wav
     type: Conv
   ir_l_input_l_ear:
     description: null
     parameters:
       channel: 0
-      filename: ../coeffs/V2-BRIR_R02_P1_E0_A-30.wav
+      filename: ../coeffs/V3-BRIR_R02_P1_E0_A-30.wav
       type: Wav
     type: Conv
   ir_l_input_r_ear:
     description: null
     parameters:
       channel: 1
-      filename: ../coeffs/V2-BRIR_R02_P1_E0_A-30.wav
+      filename: ../coeffs/V3-BRIR_R02_P1_E0_A-30.wav
       type: Wav
     type: Conv
   ir_r_input_l_ear:
     description: null
     parameters:
       channel: 0
-      filename: ../coeffs/V2-BRIR_R02_P1_E0_A+30.wav
+      filename: ../coeffs/V3-BRIR_R02_P1_E0_A+30.wav
       type: Wav
     type: Conv
   ir_r_input_r_ear:
     description: null
     parameters:
       channel: 1
-      filename: ../coeffs/V2-BRIR_R02_P1_E0_A+30.wav
+      filename: ../coeffs/V3-BRIR_R02_P1_E0_A+30.wav
       type: Wav
     type: Conv
   mastergain:
@@ -168,7 +167,8 @@ pipeline:
   name: XF_IN
   type: Mixer
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
   - XF_Cross_Highshelf
@@ -176,19 +176,22 @@ pipeline:
   - ir_l_input_r_ear
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - XF_Direct_Highshelf
   type: Filter
 - bypassed: null
-  channel: 2
+  channels:
+  - 2
   description: null
   names:
   - XF_Direct_Highshelf
   type: Filter
 - bypassed: null
-  channel: 3
+  channels:
+  - 3
   description: null
   names:
   - XF_Cross_Highshelf
@@ -200,13 +203,15 @@ pipeline:
   name: XF_OUT
   type: Mixer
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
   - ir_hpcf
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - ir_hpcf

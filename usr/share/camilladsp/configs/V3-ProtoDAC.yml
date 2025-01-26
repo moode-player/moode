@@ -3,21 +3,20 @@ description: ProtoDAC TDA1387 X8 Non-oversampling DAC. Invert +/- signal polarit
 devices:
   adjust_period: null
   capture:
+    type: Stdin
     channels: 2
     extra_samples: null
-    filename: /dev/stdin
     format: S24LE
     read_bytes: null
     skip_bytes: null
-    type: File
   capture_samplerate: null
   chunksize: 4096
   enable_rate_adjust: null
   playback:
+    type: Alsa
     channels: 2
     device: hw:0,0
     format: S24LE
-    type: Alsa
   queuelimit: 1
   rate_measure_interval: null
   samplerate: 44100
@@ -67,14 +66,16 @@ mixers:
         scale: dB
 pipeline:
 - bypassed: null
-  channel: 0
+  channels:
+  - 0
   description: null
   names:
   - Master gain
   - Dither
   type: Filter
 - bypassed: null
-  channel: 1
+  channels:
+  - 1
   description: null
   names:
   - Master gain
