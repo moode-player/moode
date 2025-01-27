@@ -563,7 +563,7 @@ class CamillaDsp {
     function restore($values) {
     }
 
-    // CamillaDSP 2 config description
+    // Config description
     function getConfigDescription($config) {
         $defOptions = $this->DEFAULT_OPTIONS;
         if (key_exists(lcfirst($config), $defOptions)) {
@@ -637,18 +637,30 @@ class CamillaDsp {
         }
         return 20 * log10($y);
     }
+
+    static function checkResultToHtml($checkResult) {
+    	$message = '';
+    	$checkMsgRaw = implode('<br>', $checkResult['msg']);
+    	if ($checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
+    		$message = "<span style='color: red'>&#10007;</span> ". $checkMsgRaw;
+    	} else if ($checkResult['valid'] == CDSP_CHECK_VALID) {
+    		$message = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
+    	} else {
+    		$message = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
+    	}
+    	return $message;
+    }
 }
 
 function test_cdsp() {
-    // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
     $cdsp = New CamillaDsp('flat.yml', "2", "-9;test2.txt;test3.txt;S24_3LE");
+    print_r($cdsp->detectSupportedSoundFormats());
 
-    //$cdsp = New CamillaDsp('flat.yml', "2", "-9;Cor1S44.wav;Cor1S44.wav;WAVE");
-
-
-
+    // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
+    // $cdsp = New CamillaDsp('flat.yml', "2", "-9;Cor1S44.wav;Cor1S44.wav;WAVE");
     // print($cdsp->getCurrentConfigFileName() . "\n");
-//    $cdsp->setPlaybackDevice(4);
+
+    // $cdsp->setPlaybackDevice(4);
     // $cdsp->selectConfig("config_foobar.yml");
     // print("\n");
     // print_r($cdsp->checkConfigFile("config.good.yml"));
@@ -669,64 +681,59 @@ function test_cdsp() {
     //     print("config bad \n");
     // }
     // print($cdsp->version());
-
-   print_r($cdsp->detectSupportedSoundFormats());
-
+    // print_r($cdsp->detectSupportedSoundFormats());
 
     // $cdsp->setPlaybackDevice(7);
 
     // print_r($cdsp->coeffinfo('Sennheiser_HD800S.wav'));
-    //$res = $cdsp->coeffInfo('Sennheiser_HD800S.wav');
-    //print_r($res);
-//    print_r($res->{'media'}->{'track'}[0]->{'Format'});
+    // $res = $cdsp->coeffInfo('Sennheiser_HD800S.wav');
+    // print_r($res);
+    // print_r($res->{'media'}->{'track'}[0]->{'Format'});
 
     // print($res['media']['track'][1]['BitDepth']);
 
     // $res = $cdsp->coeffInfo('test1.txt');
     // print_r($res);
-    //     $cdsp->changeCamillaStatus(0);
-    //     print_r( $cdsp->getCamillaGuiStatus() );
-    //     print("\n");
-    //     $cdsp->changeCamillaStatus(1);
-    //     print_r( $cdsp->getCamillaGuiStatus() );
-    //     print("\n");
+    // $cdsp->changeCamillaStatus(0);
+    // print_r( $cdsp->getCamillaGuiStatus() );
+    // print("\n");
+    // $cdsp->changeCamillaStatus(1);
+    // print_r( $cdsp->getCamillaGuiStatus() );
+    // print("\n");
 
-    //$cdsp->copyConfig('config_hp.yml', 'fliepflap.yml');
+    // $cdsp->copyConfig('config_hp.yml', 'fliepflap.yml');
 
-    //$cdsp->setGuiExpertMode(true);
-    //$cdsp->setGuiExpertMode(false);
+    // $cdsp->setGuiExpertMode(true);
+    // $cdsp->setGuiExpertMode(false);
     // $cdsp->convertWave2Raw('BRIR_R02_P1_E0_A30_L.wav');
-
-
 
     // print_r($cdsp->convertWaveFile('test_samplerate_44100Hz.wav'));
     // print_r($cdsp->convertWaveFile('Sennheiser_HD800S_L.wav'));
     // print_r($cdsp->convertWaveFile('BRIR_R02_P1_E0_A30C_44100Hz_24b.raw'));
-//    $cdsp->setPlaybackDevice(2);
+    // $cdsp->setPlaybackDevice(2);
 
-// $fileIn = "/tmp/flat.in.yml";
-// $fileOut = "/tmp/flat.out.yml";
-// $ymlCfg = yaml_parse_file( $fileIn  );
+    // $fileIn = "/tmp/flat.in.yml";
+    // $fileOut = "/tmp/flat.out.yml";
+    // $ymlCfg = yaml_parse_file( $fileIn  );
 
-// if(key_exists('filters', $ymlCfg) && count(array_keys ($ymlCfg['filters'] ) )==0 ) {
-//     unset($ymlCfg['filters']);
-// }
-// if(key_exists('mixers', $ymlCfg) && count(array_keys ($ymlCfg['mixers'] ) )==0 ) {
-//     unset($ymlCfg['mixers']);
-// }
-// if(key_exists('pipeline', $ymlCfg) && count(array_keys ($ymlCfg['pipeline'] ) )==0 ) {
-//     unset($ymlCfg['mixers']);
-// }
+    // if (key_exists('filters', $ymlCfg) && count(array_keys ($ymlCfg['filters'] ) )==0 ) {
+    //     unset($ymlCfg['filters']);
+    // }
+    // if (key_exists('mixers', $ymlCfg) && count(array_keys ($ymlCfg['mixers'] ) )==0 ) {
+    //     unset($ymlCfg['mixers']);
+    // }
+    // if (key_exists('pipeline', $ymlCfg) && count(array_keys ($ymlCfg['pipeline'] ) )==0 ) {
+    //     unset($ymlCfg['mixers']);
+    // }
 
-// yaml_emit_file($fileOut, $ymlCfg);
+    // yaml_emit_file($fileOut, $ymlCfg);
     // print($cdsp->getLogLevel() );
-    // // $cdsp->setLogLevel('verbose');
+    // $cdsp->setLogLevel('verbose');
     // $cdsp->setLogLevel('default');
 
     // print($cdsp->getLogLevel() );
 
-    //$cdsp->writeQuickConvolutionConfig();
-
+    // $cdsp->writeQuickConvolutionConfig();
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
