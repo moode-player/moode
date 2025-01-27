@@ -7,8 +7,9 @@
 
 require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/audio.php';
-require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/cdsp.php';
+require_once __DIR__ . '/inc/session.php';
+require_once __DIR__ . '/inc/sql.php';
 
 phpSession('open');
 
@@ -326,6 +327,10 @@ $_select['camillaguiexpert_off'] .= "<input type=\"radio\" name=\"camillaguiexpe
 $_open_camillagui_disabled = $camillaGuiStatus == CGUI_CHECK_ACTIVE ? '' : 'disabled';
 $_camillagui_notfound_show = $camillaGuiStatus == CGUI_CHECK_NOTFOUND ? '' : 'hide';
 $_camillagui_status_problems = $camillaGuiStatus == CGUI_CHECK_ACTIVE || $camillaGuiStatus == CGUI_CHECK_INACTIVE || $camillaGuiStatus == CGUI_CHECK_NOTFOUND? 'hide' : '';
+
+// Sample configs plugin version
+$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='camilladsp' AND type='sample-configs'", sqlConnect());
+$_sample_configs_version = $result[0]['plugin'];
 
 // The extension mechanism is intended for dynamic adding function plugins for generating CamillaDSP configurations
 $extensions_config = '/var/local/www/cdsp_extensions.json';

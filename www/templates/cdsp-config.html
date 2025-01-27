@@ -279,10 +279,14 @@
 			<label class="control-label">Sample configurations</label>
 			<div class="controls">
 				<a data-toggle="modal" href="#install-sample-configs"><button class="btn btn-medium btn-primary config-btn">Update</button></a>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-install-sample-configs" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span class="config-help-static">
+					Available: $_sample_configs_version<br>
+					<b>Caution:</b> Files of the same name will be overwritten so be sure to backup your CamillaDSP files before updating.
+				</span>
+				<span id="info-install-sample-configs" class="config-help-info">
 					Update to the latest set of sample Pipeline configuration and coefficient files.
-					The files are prefixed with a version for example "V2" so they can be easily distinguished.
-					<b>Caution:</b> Files of the same name will be overwritten so be sure to first backup your CamillaDSP files before updating.
+					The files are prefixed with a version for example "V3" so they can be easily distinguished.
 				</span>
 			</div>
 		</div>
