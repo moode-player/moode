@@ -15,6 +15,8 @@
 		View the <a class="target-blank-link" href="https://github.com/HEnquist/camilladsp?tab=readme-ov-file#table-of-contents" target="_blank">CamillaDSP documentation</a> for more information.<br>
 	</p>
 
+	<!-- CONFIGURATION -->
+
 	<form class="form-horizontal" action="" method="post" >
 		<legend>Configuration
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Update</button>
@@ -119,6 +121,8 @@
 		</div>
 	</form>
 
+	<!-- PIPELINE EDITOR -->
+
 	<form class="form-horizontal" action="#pipeline-editor" method="post">
 		<a id="pipeline-editor"></a>
 
@@ -161,6 +165,8 @@
 			</div>
 		</div>
 	</form>
+
+	<!-- FILE MANAGEMENT -->
 
 	<legend>File management</legend>
 	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
@@ -248,7 +254,6 @@
 				</span>
 			</div>
 
-			<!-- ids and names aren't correct: (copy of above now)-->
 			<div class="controls">
 				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
 				<button class="btn btn-medium btn-primary config-btn" type="submit" name="export" value="1">Download</button>
@@ -263,14 +268,6 @@
 					<b>Upload:</b> Upload a convolution file. If the file already exists it will be overwritten.
  			    </div>
 			</div>
-		</div>
-	</form>
-
-	<form class="form-horizontal $_cdsp_extensions_show" action="#extensions" method="post" >
-		<a id="extensions"></a>
-		<legend>Extensions</legend>
-		<div class="control-group">
-			$extensions_html
 		</div>
 	</form>
 
@@ -289,6 +286,14 @@
 					The files are prefixed with a version for example "V3" so they can be easily distinguished.
 				</span>
 			</div>
+		</div>
+	</form>
+
+	<form class="form-horizontal $_cdsp_extensions_show" action="#extensions" method="post" >
+		<a id="extensions"></a>
+		<legend>Extensions</legend>
+		<div class="control-group">
+			$extensions_html
 		</div>
 	</form>
 
