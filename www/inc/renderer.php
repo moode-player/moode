@@ -79,7 +79,7 @@ function startAirPlay() {
 function stopAirPlay() {
 	$maxRetries = 3;
 	for ($i = 0; $i < $maxRetries; $i++) {
-		sysCmd('killall shairport-sync');
+		sysCmd('killall -s9 shairport-sync');
 		$result = sysCmd('pgrep shairport-sync');
 		if (empty($result)) {
 			break;
@@ -156,7 +156,7 @@ function startSpotify() {
 	sysCmd($cmd);
 }
 function stopSpotify() {
-	sysCmd('killall librespot');
+	sysCmd('killall -s9 librespot');
 
 	// Local
 	sysCmd('/var/www/util/vol.sh -restore');
@@ -212,7 +212,7 @@ function startDeezer() {
 	sysCmd($cmd);
 }
 function stopDeezer() {
-	sysCmd('killall pleezer');
+	sysCmd('killall -s9 pleezer');
 
 	// Local
 	sysCmd('/var/www/util/vol.sh -restore');
