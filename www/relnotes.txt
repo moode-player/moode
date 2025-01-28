@@ -29,7 +29,7 @@ Updates
 
 Bug fixes
 - FIX: Time slider position after moving the thumb
-- FIX: Players discovery not working in certain circumstances
+- FIX: Players discovery not working in certain cases
 
 ################################################################################
 #
