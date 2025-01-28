@@ -36,7 +36,7 @@ fi
 
 $(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='aplactive'")
 /usr/bin/mpc stop > /dev/null
-sleep 1
+#sleep 1
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
