@@ -13,11 +13,11 @@ $discoverPlayers = false;
 
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	chkValue('cmd', $_GET['cmd']);
-	if (!isset($_POST['ipaddr'])) {
+	if ($_GET['cmd'] == 'rediscover_players') {
+		$discoverPlayers = true;
+	} else if (!isset($_POST['ipaddr'])) {
 		workerLog('players.php: No destination IP addresses for command ' . $_GET['cmd']);
 		exit(0);
-	} else if ($_GET['cmd'] == 'rediscover_players') {
-		$discoverPlayers = true;
 	} else {
 		chkVariables($_POST);
 		$count = count($_POST['ipaddr']);

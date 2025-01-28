@@ -1759,7 +1759,7 @@ jQuery(document).ready(function($) { 'use strict';
             ipaddr.push($(this).attr('data-ipaddr'));
         });
         //console.log(ipaddr);
-        if (ipaddr.length > 0 && cmdKey != 'No action') {
+        if (cmdKey == 'Rediscover' || (ipaddr.length > 0 && cmdKey != 'No action')) {
             var msgText = $('#players-submit-confirm-msg').text();
             if (msgText == '' || msgText == 'Discovery complete') {
                 $('#players-submit-confirm-msg').text('Click again to confirm');
