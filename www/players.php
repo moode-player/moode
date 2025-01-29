@@ -22,11 +22,14 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		chkVariables($_POST);
 		$count = count($_POST['ipaddr']);
 		for ($i = 0; $i < $count; $i++) {
-			if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
-				'/command/system.php?cmd=' . rawurlencode($_GET['cmd'])))) {
-				workerLog('players.php: Error: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i] . ' failed');
-			} else {
-				workerLog('players.php: command ' . $_GET['cmd'] . ' sent to ' . $_POST['ipaddr'][$i]);
+			if (!empty($_POST['ipaddr'][$i])) {
+				if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
+					'/command/system.php?cmd=' . rawurlencode($_GET['cmd'])))) {
+					$result = 'fail';
+				} else {
+					$result = 'sent';
+				}
+				workerLog('players.php: ' . $_GET['cmd'] . ' ' . $result . ' to host: ' . $_POST['host'][$i] . ' (' . $_POST['ipaddr'][$i] . ')');
 			}
 		}
 		exit(0);
@@ -47,31 +50,31 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 	$playersArray = array();
 	$timeout = getStreamTimeout();
 	foreach ($port6600Hosts as $ipAddr) {
-		if ($ipAddr != $thisIpAddr) {
-			if (false === ($status = sendTrxControlCmd($ipAddr, '-all'))) {
-				debugLog('players.php: sendTrxControlCmd -all failed: ' . $ipAddr);
-			} else {
-				if ($status != 'Unknown command') {
-					$allStatus = explode(';', $status);
-					// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
-					// tx, On/Off/Disabled/Unknown, volume, volume_mute
-					$rxStatus = explode(',', $allStatus[0]);
-					$txStatus = explode(',', $allStatus[1]);
-					if ($rxStatus[1] == 'On') {
-						$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-speaker"></i>';
-					} else if ($txStatus[1] == 'On') {
-						$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-play"></i>';
-					} else {
-						$rxtxIndicator = '';
-					}
-					$host = $rxStatus[5];
+		if (false === ($status = sendTrxControlCmd($ipAddr, '-all'))) {
+			debugLog('players.php: sendTrxControlCmd -all failed: ' . $ipAddr);
+		} else {
+			if ($status != 'Unknown command') {
+				$allStatus = explode(';', $status);
+				// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
+				// tx, On/Off/Disabled/Unknown, volume, volume_mute_1/0,                     , hostname, multicast_addr
+				$rxStatus = explode(',', $allStatus[0]);
+				$txStatus = explode(',', $allStatus[1]);
+				if ($rxStatus[1] == 'On') {
+					$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-speaker"></i>';
+				} else if ($txStatus[1] == 'On') {
+					$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-play"></i>';
 				} else {
 					$rxtxIndicator = '';
-					$host = $ipAddr;
 				}
 
-				array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxtxindicator' => $rxtxIndicator));
+				$host = $rxStatus[5]; // Can use rxStatus[5] or txStatus[5]
+
+			} else {
+				$rxtxIndicator = '';
+				$host = $ipAddr;
 			}
+
+			array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxtxindicator' => $rxtxIndicator));
 		}
 	}
 
@@ -80,9 +83,20 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 
 	// Output for ul
 	foreach ($playersArray as $player) {
-		$_players .= sprintf('<li><a href="http://%s" class="btn btn-large target-blank-link" data-ipaddr="%s" target="_blank">'
-			. '<i class="fa-solid fa-sharp fa-sitemap"></i>'
-			. '<br>%s%s</a></li>', $player['ipaddr'], $player['ipaddr'], $player['host'], $player['rxtxindicator']);
+		if ($player['ipaddr'] == $thisIpAddr) {
+			$_players .= sprintf(
+				'<li><a href="%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank" ' .
+				'onclick="return false;" disabled>' .
+				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>%s%s</a></li>',
+				'#notarget', $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator']
+			);
+		} else {
+			$_players .= sprintf(
+				'<li><a href="http://%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank">' .
+				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>%s%s</a></li>',
+				$player['ipaddr'], $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator']
+			);
+		}
 	}
 }
 

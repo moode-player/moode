@@ -1744,7 +1744,9 @@ jQuery(document).ready(function($) { 'use strict';
         var cmdKey = $('#players-command span').text();
         var cmdValue = getKeyOrValue('value', cmdKey);
         var ipaddr = [];
+        var host = [];
         $('#players-ul a').each(function() {
+            host.push($(this).attr('data-host'));
             ipaddr.push($(this).attr('data-ipaddr'));
         });
         //console.log(ipaddr);
@@ -1761,7 +1763,7 @@ jQuery(document).ready(function($) { 'use strict';
                 } else {
                     $('#players-modal').modal('toggle');
                     notify(NOTIFY_TITLE_INFO, 'players_command_sumbitted', '<em>' + getKeyOrValue('key', cmdValue) + '</em> submitted');
-                    $.post('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr});
+                    $.post('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr, 'host': host});
                 }
             }
         }

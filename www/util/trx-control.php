@@ -107,8 +107,17 @@ function rxStatus() {
 }
 
 function txStatus() {
+	$dbh = sqlConnect();
 	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : $_SESSION['volknob'];
-	return 'tx' . ',' . $_SESSION['multiroom_tx'] . ',' . $volume . ',' . $_SESSION['volmute'];
+	$ipAddr = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='tx_host'", $dbh);
+	return
+		'tx' . ',' . 						// Sender
+		$_SESSION['multiroom_tx'] . ',' .	// Status: On/Off/Disabled/Unknown
+		$volume . ',' .						// Volume
+		$_SESSION['volmute'] . ',' . 		// Mute state: 1/0
+		',' . 								// Master volume opt-in: 1/0
+		$_SESSION['hostname'];				// Hostname from System Config entry
+		$ipAddr[0]['value'];				// Multicast address
 }
 
 function allStatus() {
