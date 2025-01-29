@@ -1740,17 +1740,6 @@ jQuery(document).ready(function($) { 'use strict';
             $('#players-submit-confirm-msg').text('');
         }, DEFAULT_TIMEOUT);
 	});
-    $(document).on('click', '#btn-players-dropdown', function(e) {
-        if ($('#players-modal-body').height() < $('.dropdown-menu').height()) {
-            var padding = $('.dropdown-menu').height() - $('#players-modal-body').height() - $('#players-modal-body .select-large').height();
-            $('#players-modal-body').css('padding-bottom', padding + 'px');
-        }
-    });
-    $(document).on('click', '#players-modal', function(e) {
-        if (!$('#players-dropdown').hasClass('open')) {
-            $('#players-modal-body').css('padding-bottom', '0px');
-        }
-    });
     $('#btn-players-submit').click(function(e) {
         var cmdKey = $('#players-command span').text();
         var cmdValue = getKeyOrValue('value', cmdKey);

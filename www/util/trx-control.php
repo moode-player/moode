@@ -112,5 +112,5 @@ function txStatus() {
 }
 
 function allStatus() {
-	return rxStatus() . ',' . txStatus();
+	return rxStatus() . ';' . txStatus();
 }

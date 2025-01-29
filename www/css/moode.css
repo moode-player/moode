@@ -68,11 +68,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 #players ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
 #players ul, #configure ul {margin:0;display:inline-table;}
 #players i, #configure i {font-size:2em;padding:.25em;}
-.players-rx-indicator {font-size:.85em!important;margin-left:.25em;}
+.players-rxtx-indicator {font-size:.85em!important;margin-left:.25em;}
 #players a, #configure a {font-size:1em;width:6em;height:5em;text-transform:capitalize}
 #players-ul {margin:0;}
 #players-no-players-found {font-size:1.25em;font-style:italic;}
 #players-submit-confirm-msg {display:block;font-style:italic;}
+#players-modal-body {height:75vh;}
 /* dropdown menus */
 #panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
 #current-tab, #library-header {font-size:1em;}

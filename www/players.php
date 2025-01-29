@@ -48,20 +48,29 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 	$timeout = getStreamTimeout();
 	foreach ($port6600Hosts as $ipAddr) {
 		if ($ipAddr != $thisIpAddr) {
-			if (false === ($status = sendTrxControlCmd($ipAddr, '-rx'))) {
-				debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
+			if (false === ($status = sendTrxControlCmd($ipAddr, '-all'))) {
+				debugLog('players.php: sendTrxControlCmd -all failed: ' . $ipAddr);
 			} else {
 				if ($status != 'Unknown command') {
-					$rxStatus = explode(',', $status);
+					$allStatus = explode(';', $status);
 					// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname, multicast_addr
-					$rxIndicator = $rxStatus[1] == 'On' ? '<i class="players-rx-indicator fa-solid fa-sharp fa-speaker"></i>' : '';
+					// tx, On/Off/Disabled/Unknown, volume, volume_mute
+					$rxStatus = explode(',', $allStatus[0]);
+					$txStatus = explode(',', $allStatus[1]);
+					if ($rxStatus[1] == 'On') {
+						$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-speaker"></i>';
+					} else if ($txStatus[1] == 'On') {
+						$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-play"></i>';
+					} else {
+						$rxtxIndicator = '';
+					}
 					$host = $rxStatus[5];
 				} else {
-					$rxIndicator = '';
+					$rxtxIndicator = '';
 					$host = $ipAddr;
 				}
 
-				array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxindicator' => $rxIndicator));
+				array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxtxindicator' => $rxtxIndicator));
 			}
 		}
 	}
@@ -73,7 +82,7 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 	foreach ($playersArray as $player) {
 		$_players .= sprintf('<li><a href="http://%s" class="btn btn-large target-blank-link" data-ipaddr="%s" target="_blank">'
 			. '<i class="fa-solid fa-sharp fa-sitemap"></i>'
-			. '<br>%s%s</a></li>', $player['ipaddr'], $player['ipaddr'], $player['host'], $player['rxindicator']);
+			. '<br>%s%s</a></li>', $player['ipaddr'], $player['ipaddr'], $player['host'], $player['rxtxindicator']);
 	}
 }
 
