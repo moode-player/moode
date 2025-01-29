@@ -26,6 +26,7 @@ Updates
 - UPD: Update BBC playable URL's
 - UPD: Update JB Radio2 (320K) playable URL
 - UPD: Improve grep for userid pi in function getUserID()
+- UPD: Improve >> Players feature
 
 Bug fixes
 - FIX: Time slider position after moving the thumb
