@@ -1740,7 +1740,7 @@ jQuery(document).ready(function($) { 'use strict';
             $('#players-submit-confirm-msg').text('');
         }, DEFAULT_TIMEOUT);
 	});
-    $('#btn-players-submit').click(function(e) {
+    $(document).on('click', '#btn-players-submit', function(e) {
         var cmdKey = $('#players-command span').text();
         var cmdValue = getKeyOrValue('value', cmdKey);
         var ipaddr = [];

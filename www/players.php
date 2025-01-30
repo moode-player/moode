@@ -10,6 +10,7 @@ require_once __DIR__ . '/inc/multiroom.php'; // For getStreamTimeout()
 require_once __DIR__ . '/inc/sql.php';
 
 $discoverPlayers = false;
+$thisIpAddr = getThisIpAddr();
 
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	chkValue('cmd', $_GET['cmd']);
@@ -20,9 +21,10 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		exit(0);
 	} else {
 		chkVariables($_POST);
+		workerLog('players.php: command submitted');
 		$count = count($_POST['ipaddr']);
 		for ($i = 0; $i < $count; $i++) {
-			if (!empty($_POST['ipaddr'][$i])) {
+			if (!empty($_POST['ipaddr'][$i]) && $_POST['ipaddr'][$i] != $thisIpAddr) {
 				if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
 					'/command/system.php?cmd=' . rawurlencode($_GET['cmd'])))) {
 					$result = 'fail';
@@ -42,7 +44,6 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 } else {
 	// Scan the network for hosts with open port 6600 (MPD)
 	$port6600Hosts = scanForMPDHosts();
-	$thisIpAddr = getThisIpAddr();
 
 	// Parse the results
 	$_players = '';
