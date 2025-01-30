@@ -848,7 +848,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 	right:1.15rem;
 	color:white;
 	background:rgba(64,64,64,.9);
-	border-radius:10%;
+	border-radius:2%;
 	box-shadow: 0 0 1px 0px white inset, 0 0 1px 0px white;
 	font-size:.65em;
 	font-style:normal;
@@ -865,7 +865,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 	color:gold;
 	background:#000;
 	border:1px solid gold;
-	border-radius:10%;
+	border-radius:2%;
 	box-shadow: 0 0 1px 0px gold inset, 0 0 1px 0px gold;
 	font-size:.65em;
 	font-style:normal;
@@ -881,7 +881,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 	color:gold;
 	background:#000;
 	border:1px solid gold;
-	border-radius:10%;
+	border-radius:2%;
 	box-shadow: 0 0 1px 0px gold inset, 0 0 1px 0px gold;
 	font-size:.39em;
 	font-style:normal;
@@ -896,7 +896,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
 	color:gold;
 	background:#000;
 	border:1px solid gold;
-	border-radius:8%;
+	border-radius:2%;
 	box-shadow: 0 0 1px 0px gold inset, 0 0 1px 0px gold;
 	font-size:.6em;
 	font-family:'Lato',sans-serif;
@@ -919,7 +919,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {background-imag
     font-weight:500!important;
 	background:rgba(64,64,64,.9);
 	border:1px solid white;
-	border-radius:8%;
+	border-radius:2%;
 	box-shadow: 0 0 1px 0px white inset, 0 0 1px 0px white;
 	padding:0 .5em;
 }
