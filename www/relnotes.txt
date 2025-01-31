@@ -23,6 +23,7 @@ Updates
 - UPD: Bump to CamillaDSP 3.0.0
 - UPD: Bump to CamillaDSP V3 configs
 - UPD: Bump to pleezer 0.11.0
+- UPD: Bump to shairport-sync 4.3.6
 - UPD: Update BBC playable URL's
 - UPD: Update JB Radio2 (320K) playable URL
 - UPD: Improve grep for userid pi in function getUserID()
