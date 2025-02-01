@@ -44,7 +44,11 @@ $_select['no_interruptions'] .= "<option value=\"No\" "  . (($cfgDeezer['no_inte
 $_select['email'] = $cfgDeezer['email'];
 $_select['password'] = $cfgDeezer['password'];
 $_show_hide_password_icon_hide = empty($cfgDeezer['password']) ? '' : 'hide';
-
+/* TBD option
+$_select['dns_options'] .= "<option value=\"default\" " . (($cfgDeezer['dns_options'] == 'default') ? "selected" : "") . ">Default</option>\n";
+$_select['dns_options'] .= "<option value=\"timeout-2\" " . (($cfgDeezer['dns_options'] == 'timeout-2') ? "selected" : "") . ">Timeout-2</option>\n";
+$_select['dns_options'] .= "<option value=\"no-quad-a\" " . (($cfgDeezer['dns_options'] == 'no-quad-a') ? "selected" : "") . ">No-quad-A</option>\n";
+*/
 waitWorker('dez_config');
 
 $tpl = "dez-config.html";
