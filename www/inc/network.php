@@ -118,7 +118,7 @@ function cfgNetworks() {
 	$data .= "[wifi-security]\n";
 	$data .= "group=ccmp\n";
 	$data .= "pairwise=ccmp\n";
-	$data .= "proto=rsn\n";
+	$data .= "proto=" . (str_contains($_SESSION['hdwrrev'], 'Pi-3B ') ? 'wpa' : 'rsn') . "\n";
 	$data .= "key-mgmt=wpa-psk\n";
 	$data .= "psk=" . $cfgNetwork[2]['wlanpsk'] . "\n";
 	$data .= "[ipv4]\n";

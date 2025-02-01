@@ -428,6 +428,10 @@ if (file_exists('/etc/NetworkManager/system-connections/preconfigured.nmconnecti
 	}
 }
 
+// NOTE: Fix for Pi-3B Hotspot fail (use wpa instead of rsn protocol)
+$hotspotProto = str_contains($_SESSION['hdwrrev'], 'Pi-3B ') ? 'wpa' : 'rsn';
+sysCmd("sed -i 's/proto=.*/proto=" . $hotspotProto . "/' /etc/NetworkManager/system-connections/Hotspot.nmconnection");
+
 // Ethernet
 workerLog('worker: Eth0');
 if (!isset($_SESSION['eth0chk'])) {
