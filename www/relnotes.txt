@@ -33,6 +33,7 @@ Updates
 Bug fixes
 - FIX: Time slider position after moving the thumb
 - FIX: Players discovery not working in certain cases
+- FIX: Hotspot fail on Pi-3B
 
 ################################################################################
 #
