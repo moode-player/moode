@@ -202,7 +202,7 @@ function startDeezer() {
 		' --device-type "' . 'web' . '"' .
 		' --device "' . 'ALSA|' . $device . '|' . $rate . '|' . $format . '"' .
 		' --initial-volume "' . $cfgDeezer['initial_volume'] . '"' .
-		' --secrets-file "' . DEEZ_CREDENTIALS_FILE . '"' .
+		' --secrets "' . DEEZ_CREDENTIALS_FILE . '"' .
 		$volume_normalization .
 		$interruption .
 		' --hook /var/local/www/commandw/deezevent.sh' .
