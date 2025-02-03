@@ -1485,7 +1485,10 @@ if (!isset($_SESSION['worker_responsiveness'])) {
 }
 // PCI express
 if (!isset($_SESSION['pci_express'])) {
-	$_SESSION['pci_express'] = 'off';
+	$_SESSION['pci_express'] = 'auto';
+} else {
+	// Convert old default value
+	$_SESSION['pci_express'] = ($_SESSION['pci_express'] == 'off' ? 'auto' : $_SESSION['pci_express']);
 }
 // Mount monitor
 if (!isset($_SESSION['fs_mountmon'])) {

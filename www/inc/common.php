@@ -637,9 +637,9 @@ function updBootConfigTxt($action, $value) {
 			sysCmd('sed -i /' . CFG_PI_AUDIO_DRIVER . "/c\\" . $value . 'dtoverlay=' . CFG_PI_AUDIO_DRIVER . ' ' . BOOT_CONFIG_TXT);
 			break;
 		case 'upd_pci_express':
-			// $value: 'off' or 'gen2' or 'gen3'
-			$prefix1 = $value == 'off' ? '#' : '';
-			$prefix2 = $value == 'off' ? '#' : ($value == 'gen2' ? '#' : '');
+			// $value: 'auto' or 'gen2' or 'gen3'
+			$prefix1 = $value == 'auto' ? '#' : '';
+			$prefix2 = $value == 'auto' ? '#' : ($value == 'gen2' ? '#' : '');
 			sysCmd('sed -i /' . CFG_PCI_EXPRESS . "$/c\\" . $prefix1 . 'dtparam=' . CFG_PCI_EXPRESS . ' ' . BOOT_CONFIG_TXT);
 			sysCmd('sed -i /' . CFG_PCI_EXPRESS_GEN3 . "/c\\" . $prefix2 . 'dtparam=' . CFG_PCI_EXPRESS_GEN3 . ' ' . BOOT_CONFIG_TXT);
 			break;

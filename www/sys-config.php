@@ -413,7 +413,7 @@ if ($piModel == '5') {
 	$_select['reduce_power_on']  .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-1\" value=\"on\" " . (($_SESSION['reduce_power'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['reduce_power_off'] .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-2\" value=\"off\" " . (($_SESSION['reduce_power'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_pci_express_hide = '';
-	$_select['pci_express'] .= "<option value=\"off\" " . (($_SESSION['pci_express'] == 'off') ? "selected" : "") . ">Off</option>\n";
+	$_select['pci_express'] .= "<option value=\"auto\" " . (($_SESSION['pci_express'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
 	$_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
 	$_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
 	$_fan_temp0_hide = '';
