@@ -627,7 +627,14 @@ if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
 	$msg = 'IQaudIO DigiAMP+: unmuted';
 } else {
-	$msg = 'IQaudIO AMP*:     not detected';
+	$msg = 'IQaudIO DigiAMP+: not detected';
+}
+workerLog('worker: ' . $msg);
+if ($_SESSION['i2sdevice'] == 'Raspberry Pi DigiAMP+') {
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
+	$msg = 'RPi DigiAMP+:     unmuted';
+} else {
+	$msg = 'RPi DigiAMP+:     not detected';
 }
 workerLog('worker: ' . $msg);
 
