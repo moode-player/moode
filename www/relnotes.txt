@@ -25,11 +25,14 @@ Updates
 - UPD: Bump to CamillaDSP V3 configs
 - UPD: Bump to pleezer 0.12.0
 - UPD: Bump to shairport-sync 4.3.6
+- UPD: Add mDNS option to Networking section of System Config
 - UPD: Update BBC playable URL's
 - UPD: Update JB Radio2 (320K) playable URL
 - UPD: Improve grep for userid pi in function getUserID()
 - UPD: Improve >> Players feature
 - UPD: Improve border style for the badges
+- UPD: Improve Startup options section of System Config
+- UPD: Move "Integrated audio" option from System to Audio Config.
 
 Bug fixes
 - FIX: Time slider position after moving the thumb
