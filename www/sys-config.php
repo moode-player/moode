@@ -41,7 +41,7 @@ if (isset($_POST['checkfor_update'])) {
 	} else if (false === ($thisDate = strtotime($thisReleaseDate))) {
 		$_available_upd = 'Invalid release date: ' . $thisReleaseDate;
 	} else if ($availableDate <= $thisDate) {
-		$_available_upd = 'Software is up to date';
+		$_available_upd = 'moOde ' . getMoodeSeries() . ' series software is up to date';
 	} else if ($available['ImageOnly'] == 'Yes') {
 		$_available_upd = 'A new image-only release of moOde is available. Visit <a href="http://moodeaudio.org" class="moode-about-link target-blank-link" target="_blank">moodeaudio.org</a> for more information.';
 	} else {
