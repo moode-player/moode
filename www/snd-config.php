@@ -118,6 +118,12 @@ if (isset($_POST['update_drvoptions'])) {
 		submitJob('i2sdevice', $_SESSION['i2sdevice'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	}
 }
+// Integrated audio
+if (isset($_POST['update_pi_audio_driver'])) {
+	$_SESSION['pi_audio_driver'] = $_POST['pi_audio_driver'];
+	$queueArgs = $_POST['pi_audio_driver'] == PI_VC4_KMS_V3D ? '' : '#';
+	submitJob('pi_audio_driver', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+}
 
 // ALSA OPTIONS
 
@@ -322,6 +328,27 @@ foreach ($result as $row) {
 	$cfgMPD[$row['param']] = $row['value'];
 }
 
+// Various button disables
+if ($_SESSION['audioout'] == 'Bluetooth' ||
+	$_SESSION['multiroom_tx'] == 'On' ||
+	$_SESSION['multiroom_rx'] == 'On') {
+	$_output_device_btn_disabled = 'disabled';
+	$_volume_type_btn_disabled = 'disabled';
+	$_driveropt_btn_disable = 'disabled';
+	$_chip_btn_disable = 'disabled';
+	$_chip_link_disable = 'onclick="return false;"';
+	$_i2sdevice_btn_disable = 'disabled';
+	$_i2soverlay_btn_disable = 'disabled';
+} else {
+	$_output_device_btn_disabled = '';
+	$_volume_type_btn_disabled = '';
+	$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
+	$_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
+	$_driveropt_btn_disable = $i2sReboot === false ? '' : 'disabled';
+	$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'disabled';
+	$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'onclick="return false;"';
+}
+
 // AUDIO OUTPUT
 
 // Output device
@@ -336,11 +363,9 @@ if ($i2sReboot === true) {
 		$_mpd_select['device'] .= "<option value=\"" . $i . "\" " . (($cfgMPD['device'] == $i) ? "selected" : "") . ">$deviceName</option>\n";
 	}
 }
-
 // For USB device
 // ALSA removes the card id after the device is unplugged or turned off
 $_device_error = $deviceNames[$_SESSION['cardnum']] == ALSA_EMPTY_CARD ? 'Device turned off or disconnected' : '';
-
 // Volume type
 // Hardware, Software, Fixed (none), CamillaDSP (null)
 $_software_and_dsd_warning = $cfgMPD['mixer_type'] == 'software' ?
@@ -400,27 +425,11 @@ if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2
 	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
 	$_driveropt_btn_disable = 'disabled';
 }
-
-// Various button disables
-if ($_SESSION['audioout'] == 'Bluetooth' ||
-	$_SESSION['multiroom_tx'] == 'On' ||
-	$_SESSION['multiroom_rx'] == 'On') {
-	$_output_device_btn_disabled = 'disabled';
-	$_volume_type_btn_disabled = 'disabled';
-	$_driveropt_btn_disable = 'disabled';
-	$_chip_btn_disable = 'disabled';
-	$_chip_link_disable = 'onclick="return false;"';
-	$_i2sdevice_btn_disable = 'disabled';
-	$_i2soverlay_btn_disable = 'disabled';
-} else {
-	$_output_device_btn_disabled = '';
-	$_volume_type_btn_disabled = '';
-	$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
-	$_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
-	$_driveropt_btn_disable = $i2sReboot === false ? '' : 'disabled';
-	$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'disabled';
-	$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'onclick="return false;"';
-}
+// Integrated audio
+$piModel = substr($_SESSION['hdwrrev'], 3, 1);
+$_pi_audio_driver_hide = $piModel == '5' ? 'hide' : '';
+$_select['pi_audio_driver'] .= "<option value=\"" . PI_VC4_KMS_V3D . "\" " . (($_SESSION['pi_audio_driver'] == PI_VC4_KMS_V3D) ? "selected" : "") . ">Kernel mode (Default)</option>\n";
+$_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($_SESSION['pi_audio_driver'] == PI_SND_BCM2835) ? "selected" : "") . ">Firmware mode (Legacy)</option>\n";
 
 // ALSA OPTIONS
 

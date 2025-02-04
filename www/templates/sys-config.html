@@ -83,6 +83,9 @@
 
 		<div class="control-group">
 			<legend>Startup options</legend>
+
+			<div class="config-horiz-rule">Performance</div>
+
 			<label class="control-label" for="worker-responsiveness">Worker response</label>
 			<div class="controls">
 				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness" onchange="autoClick('#btn-set-worker-responsiveness');">
@@ -109,21 +112,6 @@
 				</span>
 			</div>
 
-			<div class="$_pi_audio_driver_hide">
-				<label class="control-label" for="pi-audio-driver">Integrated audio</label>
-				<div class="controls">
-					<select id="pi-audio-driver" class="config-select-large" name="pi_audio_driver" onchange="autoClick('#btn-set-pi-audio-driver');">
-						$_select[pi_audio_driver]
-					</select>
-					<button id="btn-set-pi-audio-driver" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pi_audio_driver" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pi-audio-driver" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span id="info-pi-audio-driver" class="config-help-info">
-						<b>Kernel mode:</b> Default vc4-kms-v3d driver for advanced Pi HDMI capabilities.<br>
-						<b>Firmware mode:</b> Legacy snd-bcm2835 driver to support Pi Headphone only configuration. No other audio, video or system features are supported.
-					</span>
-				</div>
-			</div>
-
 			<div class="$_pci_express_hide">
 				<label class="control-label" for="pci-express">PCI express</label>
 				<div class="controls">
@@ -140,7 +128,7 @@
 				</div>
 			</div>
 
-			<div class="config-horiz-rule"></div>
+			<div class="config-horiz-rule">Power management</div>
 
 			<div class="$_reduce_power_hide">
 				<label class="control-label">Reduce power</label>
@@ -178,34 +166,6 @@
 	            </div>
 			</div>
 
-			<div class="$_wifibt_hide">
-				<label class="control-label">WiFi</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-2">ON </label>$_select[p3wifi_on]
-						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-1">OFF</label>$_select[p3wifi_off]
-					</div>
-					<button id="btn-set-p3wifi" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span id="info-p3wifi" class="config-help-info">
-						The integrated adapter appears on Pi-Zero W and Pi-3B and higher and models.
-                    </span>
-				</div>
-
-				<label class="control-label">Bluetooth</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-2">ON </label>$_select[p3bt_on]
-						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-1">OFF</label>$_select[p3bt_off]
-					</div>
-					<button id="btn-set-p3bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span id="info-p3bt" class="config-help-info">
-						The integrated adapter appears on Pi-Zero W and Pi-3B and higher and models.
-                    </span>
-				</div>
-			</div>
-
 			<label class="control-label">LED0 (Activity)</label>
 			<div class="controls">
 				<div class="toggle">
@@ -234,7 +194,35 @@
 				</div>
 			</div>
 
-			<div class="config-horiz-rule"></div>
+			<div class="config-horiz-rule">Networking</div>
+
+			<div class="$_wifibt_hide">
+				<label class="control-label">WiFi</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-2">ON </label>$_select[p3wifi_on]
+						<label class="toggle-radio toggle-p3wifi" for="toggle-p3wifi-1">OFF</label>$_select[p3wifi_off]
+					</div>
+					<button id="btn-set-p3wifi" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3wifi" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-p3wifi" class="config-help-info">
+						The integrated adapter appears on Pi-Zero W and Pi-3B and higher and models.
+                    </span>
+				</div>
+
+				<label class="control-label">Bluetooth</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-2">ON </label>$_select[p3bt_on]
+						<label class="toggle-radio toggle-p3bt" for="toggle-p3bt-1">OFF</label>$_select[p3bt_off]
+					</div>
+					<button id="btn-set-p3bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_p3bt" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-p3bt" class="config-help-info">
+						The integrated adapter appears on Pi-Zero W and Pi-3B and higher and models.
+                    </span>
+				</div>
+			</div>
 
 			<label class="control-label" for="ipaddr-timeout">Address timeout</label>
 			<div class="controls">

@@ -107,33 +107,24 @@ if (isset($_POST['update_keyboard'])) {
 }
 
 // STARTUP OPTIONS
-
+// Performance
 if (isset($_POST['update_worker_responsiveness']) && $_SESSION['worker_responsiveness'] != $_POST['worker_responsiveness']) {
 	$_SESSION['worker_responsiveness'] = $_POST['worker_responsiveness'];
 	submitJob('worker_responsiveness', $_POST['worker_responsiveness'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
-
 if (isset($_POST['update_cpugov'])) {
 	submitJob('cpugov', $_POST['cpugov']);
 	phpSession('write', 'cpugov', $_POST['cpugov']);
 }
-
-if (isset($_POST['update_pi_audio_driver'])) {
-	$_SESSION['pi_audio_driver'] = $_POST['pi_audio_driver'];
-	$queueArgs = $_POST['pi_audio_driver'] == PI_VC4_KMS_V3D ? '' : '#';
-	submitJob('pi_audio_driver', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-}
-
 if (isset($_POST['update_pci_express'])) {
 	$_SESSION['pci_express'] = $_POST['pci_express'];
 	submitJob('pci_express', $_POST['pci_express'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
-
+// Power management
 if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce_power']) {
 	submitJob('reduce_power', $_POST['reduce_power'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	phpSession('write', 'reduce_power', $_POST['reduce_power']);
 }
-
 if (isset($_POST['update_fan_temp0'])) {
 	if (isset($_POST['fan_temp0']) && $_POST['fan_temp0'] != $_SESSION['fan_temp0']) {
 		// Format is: Threshold 45-55, Target 40-50, Speed 75-125
@@ -161,31 +152,26 @@ if (isset($_POST['update_fan_temp0'])) {
 		}
 	}
 }
-
-if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
-	submitJob('p3wifi', $_POST['p3wifi'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-	phpSession('write', 'p3wifi', $_POST['p3wifi']);
-}
-
-if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
-	submitJob('p3bt', $_POST['p3bt'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-	phpSession('write', 'p3bt', $_POST['p3bt']);
-}
-
 if (isset($_POST['update_actled']) && $_POST['actled'] != explode(',', $_SESSION['led_state'])[0]) {
 	submitJob('actled', $_POST['actled']);
 	$_SESSION['led_state'] = $_POST['actled'] . ',' . explode(',', $_SESSION['led_state'])[1];
 }
-
 if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION['led_state'])[1]) {
 	submitJob('pwrled', $_POST['pwrled']);
 	$_SESSION['led_state'] = explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled'];
 }
-
+// Networking
+if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
+	submitJob('p3wifi', $_POST['p3wifi'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+	phpSession('write', 'p3wifi', $_POST['p3wifi']);
+}
+if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
+	submitJob('p3bt', $_POST['p3bt'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+	phpSession('write', 'p3bt', $_POST['p3bt']);
+}
 if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESSION['ipaddr_timeout']) {
 	phpSession('write', 'ipaddr_timeout', $_POST['ipaddr_timeout']);
 }
-
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	$_SESSION['eth0chk'] = $_POST['eth0chk'];
 }
@@ -198,7 +184,6 @@ if (isset($_POST['update_fs_smb'])) {
 		submitJob('fs_smb', $_POST['fs_smb']);
 	}
 }
-
 if (isset($_POST['update_fs_smb_pwd'])) {
 	if (isset($_POST['fs_smb_pwd']) && $_POST['fs_smb_pwd'] != $_SESSION['fs_smb_pwd']) {
 		$_SESSION['fs_smb_pwd'] = $_POST['fs_smb_pwd'];
@@ -397,43 +382,49 @@ $_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
 
 // STARTUP OPTIONS
 
-$_select['worker_responsiveness'] .= "<option value=\"Default\" " . (($_SESSION['worker_responsiveness'] == 'Default') ? "selected" : "") . ">Default</option>\n";
-$_select['worker_responsiveness'] .= "<option value=\"Boosted\" " . (($_SESSION['worker_responsiveness'] == 'Boosted') ? "selected" : "") . ">Boosted</option>\n";
-
-$_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
-$_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
-
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 $piName = $_SESSION['hdwrrev'];
-
-// Pi-5
 if ($piModel == '5') {
-	$_reduce_power_hide = '';
-	$autoClick = " onchange=\"autoClick('#btn-set-reduce-power');\"";
-	$_select['reduce_power_on']  .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-1\" value=\"on\" " . (($_SESSION['reduce_power'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['reduce_power_off'] .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-2\" value=\"off\" " . (($_SESSION['reduce_power'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_pci_express_hide = '';
-	$_select['pci_express'] .= "<option value=\"auto\" " . (($_SESSION['pci_express'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
-	$_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
-	$_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
+	$_reduce_power_hide = '';
 	$_fan_temp0_hide = '';
-	$_select['fan_temp0'] = $_SESSION['fan_temp0'];
-	$_pi_audio_driver_hide = 'hide';
 } else {
-	$_reduce_power_hide = 'hide';
 	$_pci_express_hide = 'hide';
+	$_reduce_power_hide = 'hide';
 	$_fan_temp0_hide = 'hide';
-	$_pi_audio_driver_hide = '';
-	$_select['pi_audio_driver'] .= "<option value=\"" . PI_VC4_KMS_V3D . "\" " . (($_SESSION['pi_audio_driver'] == PI_VC4_KMS_V3D) ? "selected" : "") . ">Kernel mode (Default)</option>\n";
-	$_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($_SESSION['pi_audio_driver'] == PI_SND_BCM2835) ? "selected" : "") . ">Firmware mode (Legacy)</option>\n";
 }
 
-// Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B
-if (
-	stripos($piName, 'Pi-Zero W') !== false ||
-	stripos($piName, 'Pi-Zero 2 W') !== false ||
-	$piModel >= 3
-) {
+// Performance
+$_select['worker_responsiveness'] .= "<option value=\"Default\" " . (($_SESSION['worker_responsiveness'] == 'Default') ? "selected" : "") . ">Default</option>\n";
+$_select['worker_responsiveness'] .= "<option value=\"Boosted\" " . (($_SESSION['worker_responsiveness'] == 'Boosted') ? "selected" : "") . ">Boosted</option>\n";
+$_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
+$_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
+$_select['pci_express'] .= "<option value=\"auto\" " . (($_SESSION['pci_express'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
+$_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
+$_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
+// Power management
+$autoClick = " onchange=\"autoClick('#btn-set-reduce-power');\"";
+$_select['reduce_power_on']  .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-1\" value=\"on\" " . (($_SESSION['reduce_power'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['reduce_power_off'] .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-2\" value=\"off\" " . (($_SESSION['reduce_power'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['fan_temp0'] = $_SESSION['fan_temp0'];
+$actled = explode(',', $_SESSION['led_state'])[0];
+$autoClick = " onchange=\"autoClick('#btn-set-actled');\"";
+$_select['actled_on']  .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-1\" value=\"1\" " . (($actled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['actled_off'] .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-2\" value=\"0\" " . (($actled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+if ($PiModel == '1' || $piModel == '5' ||
+	str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
+	$_pwrled_hide = 'hide';
+} else {
+	$_pwrled_hide = '';
+	$pwrled = explode(',', $_SESSION['led_state'])[1];
+	$autoClick = " onchange=\"autoClick('#btn-set-pwrled');\"";
+	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+}
+
+// Networking
+// Integrated WiFi and BT adapters (Pi-Zero W, Pi-Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B)
+if (stripos($piName, 'Pi-Zero W') !== false || stripos($piName, 'Pi-Zero 2 W') !== false || $piModel >= 3) {
 	$_wifibt_hide = '';
 	$autoClick = " onchange=\"autoClick('#btn-set-p3wifi');\"";
 	$_select['p3wifi_on']  .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -443,24 +434,6 @@ if (
 	$_select['p3bt_off'] .= "<input type=\"radio\" name=\"p3bt\" id=\"toggle-p3bt-2\" value=\"0\" " . (($_SESSION['p3bt'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_wifibt_hide = 'hide';
-}
-
-$actled = explode(',', $_SESSION['led_state'])[0];
-$autoClick = " onchange=\"autoClick('#btn-set-actled');\"";
-$_select['actled_on']  .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-1\" value=\"1\" " . (($actled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['actled_off'] .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-2\" value=\"0\" " . (($actled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-if ($PiModel == '1' ||
-	$piModel == '5' ||
-	str_contains($_SESSION['hdwrrev'], 'Pi-Zero') ||
-	str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
-	$_pwrled_hide = 'hide';
-} else {
-	$_pwrled_hide = '';
-	$pwrled = explode(',', $_SESSION['led_state'])[1];
-	$autoClick = " onchange=\"autoClick('#btn-set-pwrled');\"";
-	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 }
 
 $_select['ipaddr_timeout'] .= "<option value=\"10\" " . (($_SESSION['ipaddr_timeout'] == '10') ? "selected" : "") . ">10 secs</option>\n";
