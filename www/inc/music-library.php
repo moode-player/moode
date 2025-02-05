@@ -676,7 +676,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		} else if ($ext == 'dsf' || $ext == 'dff') {
 			// DSD: DSF/DFF
 			// DSD rate,h,channels
-			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
+			$result = getDSDRateAndChannels($songData['file']);
 			$encodedAt = empty($result[1]) ? 'DSD,h' : 'DSD ' . formatRate($result[1]) . ',h,' . $result[2];
 		} else if ($ext == 'wv' && strpos($mpdFormatTag[0], 'dsd') !== false) {
 			// DSD: WavPack (format dsd64:2)
@@ -702,25 +702,11 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		// UPnP file
 		$encodedAt = 'Unknown';
 	} else if ($ext == 'dsf' || $ext == 'dff') {
-		// DSD file
-		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
-		if ($result[1] == '') {
-			$result = syscmd('file -b ' . '"' . MPD_MUSICROOT . $songData['file'] . '"' .
-				' | grep -o "2822400\|5644800\|11289600\|22579200\|45158400"');
-			$result[1] = $result[0];
-			$result[2] = '2';
-		}
-
-		if ($result[1] == '') {
-			$encodedAt = '?';
-		} else {
-			if ($displayFormat == 'default') {
-				$encodedAt = 'DSD ' . formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch';
-			} else {
-				// 'verbose'
-				$encodedAt = ' DSD 1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]);
-			}
-		}
+		// DSD: DSF/DFF
+		$result = getDSDRateAndChannels($songData['file']);
+		$encodedAt = empty($result[1]) ? 'DSD' : ($displayFormat == 'default' ?
+			'DSD ' . formatRate($result[1]) . ' MHz, ' . $result[2] . 'ch' :
+			' DSD 1 bit ' . formatRate($result[1]) . ' MHz, ' . formatChannels($result[2]));
 	} else if ($ext == 'wv') {
 		if (strpos($mpdFormatTag[0], 'dsd') !== false) {
 			// WavPack DSD file
@@ -749,7 +735,6 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		// Mediainfo
 		// NOTE: Mediainfo called via sysCmd() i.e. exec() returns nothing if the file name contains accented chars
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
-		//workerLog(print_r($result, true));
 		if ($result[0] == '' || $result[1] == '') {
 			// Empty mediainfo so fallback to MPD lsinfo Format tag rate:bits:channels
 			$format = isset($songData['Format']) ? $songData['Format'] : getMpdFormatTag($songData['file']);
@@ -790,6 +775,18 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 	}
 
 	return $encodedAt;
+}
+
+// Return DSD rate and channels
+function getDSDRateAndChannels($file) {
+	$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $file . '"');
+		// Empty mediainfo so fallback to using the "file" command
+		$result = syscmd('file -b ' . '"' . MPD_MUSICROOT . $file . '"' .
+			' | grep -o "2822400\|5644800\|11289600\|22579200\|45158400"');
+		$result[1] = $result[0];
+		$result[2] = '2';
+
+	return $result;
 }
 
 // Return MPD format tag rate:bits:channels
