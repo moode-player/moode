@@ -1350,11 +1350,11 @@ if ($_SESSION['rotaryenc'] == '1') {
 }
 workerLog('worker: Rotary encoder:  ' . ($_SESSION['rotaryenc'] == '1' ? 'on' : 'off'));
 
-// Log USB volume knob on/off state
+// Log Triggerhappy / USB volume knob on/off state
 if (!isset($_SESSION['usb_volknob'])) {
 	$_SESSION['usb_volknob'] = '0';
 }
-workerLog('worker: USB volume knob: ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
+workerLog('worker: Triggerhappy:    ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
 
 // Start LCD updater engine
 if (!isset($_SESSION['lcdup'])) {

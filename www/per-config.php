@@ -153,9 +153,9 @@ if (isset($_POST['update_restart_local_display'])) {
 	submitJob('local_display_restart', '', NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
-// OTHER PERIPHERALS
+// VOLUME CONTROLLERS
 
-// USB volume knob
+// Triggerhappy / USB volume knob
 if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
 	submitJob('usb_volknob', $_POST['usb_volknob']);
 	$_SESSION['usb_volknob'] = $_POST['usb_volknob'];
@@ -174,6 +174,9 @@ if (isset($_POST['update_rotenc_params'])) {
 		submitJob('rotaryenc', $_POST['rotaryenc']);
 	}
 }
+
+// OTHER PERIPHERALS
+
 // GPIO buttons
 if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_svc']) {
 	phpSession('write', 'gpio_svc', $_POST['gpio_svc']);
@@ -308,9 +311,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_feat_localdisplay = 'hide';
 }
 
-// OTHER PERIPHERALS
+// VOLUME CONTROLLERS
 
-// USB volume knob
+// Triggerhappy / USB volume knob
 $autoClick = " onchange=\"autoClick('#btn-set-usb-volknob');\"";
 $_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -320,6 +323,8 @@ $autoClick = " onchange=\"autoClick('#btn-set-rotaryenc');\"";
 $_select['rotaryenc_on']  .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rotaryenc_off'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rotenc_params'] = $_SESSION['rotenc_params'];
+
+// OTHER PERIPHERALS
 
 // GPIO buttons
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {

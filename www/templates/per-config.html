@@ -211,16 +211,18 @@
 		<div class="control-group">
 			<legend>Volume controllers</legend>
 
-			<label class="control-label">USB volume knob</label>
+			<label class="control-label">Triggerhappy</label>
 			<div class="controls">
 				<div class="toggle">
 					<label class="toggle-radio toggle-usb-volknob" for="toggle-usb-volknob-2">ON </label>$_select[usb_volknob_on]
 					<label class="toggle-radio toggle-usb-volknob" for="toggle-usb-volknob-1">OFF</label>$_select[usb_volknob_off]
 				</div>
 				<button id="btn-set-usb-volknob" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_usb_volknob" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info_usb_volknob" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info_usb_volknob" class="config-help-info">
-					Activates the triggerhappy key mapping daemon for USB volume knobs.<br>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-usb-volknob" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span class="config-help-static">
+					Activates the triggerhappy key mapping daemon for USB volume knobs or other USB input devices.
+				</span>
+				<span id="info-usb-volknob" class="config-help-info">
 					Refer to /etc/triggerhappy/triggers.d/media.conf for key/event mappings.
                 </span>
 			</div>

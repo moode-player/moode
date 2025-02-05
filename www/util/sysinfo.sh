@@ -152,7 +152,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nAutoplay\t\t= $autoplay\c"
 	echo -e "\nRotary encoder\t\t= $rotaryenc\c"
 	echo -e "\nEncoder params\t\t= $rotenc_params\c"
-	echo -e "\nUSB volume knob\t\t= $usb_volknob\c"
+	echo -e "\nTriggerhappy\t\t= $usb_volknob\c"
 	echo -e "\nPolarity inversion\t= $invert_polarity\c"
 	echo -e "\nCrossfeed\t\t= $crossfeed\c"
 	echo -e "\nCrossfade\t\t= $mpdcrossfade\c"
