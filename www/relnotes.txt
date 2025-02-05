@@ -38,6 +38,9 @@ Bug fixes
 - FIX: Time slider position after moving the thumb
 - FIX: Players discovery not working in certain cases
 - FIX: Hotspot fail on Pi-3B
+- FIX: Radio monitor settings missing from backup/restore
+- FIX: SATA mount type missing from backup/restore
+- FIX: No fallback probe when mediainfo is empty for DSD files
 
 ################################################################################
 #
