@@ -705,6 +705,13 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		// DSD file
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
 		if ($result[1] == '') {
+			$result = syscmd('file -b ' . '"' . MPD_MUSICROOT . $songData['file'] . '"' .
+				' | grep -o "2822400\|5644800\|11289600\|22579200\|45158400"');
+			$result[1] = $result[0];
+			$result[2] = '2';
+		}
+
+		if ($result[1] == '') {
 			$encodedAt = '?';
 		} else {
 			if ($displayFormat == 'default') {
