@@ -574,6 +574,12 @@ function autoConfigSettings() {
 		['requires' => ['scnsaver_layout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_xmeta'], 'handler' => 'setSessVarSql'],
 		//
+		// Radio manager
+		//
+		'Radio monitor',
+		['requires' => ['mpd_monitor_svc'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['mpd_monitor_opt'], 'handler' => 'setSessVarOnly'],
+		//
 		// Multiroom
 		//
 		'Multiroom',
