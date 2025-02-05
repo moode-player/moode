@@ -32,7 +32,7 @@ Updates
 - UPD: Improve >> Players feature
 - UPD: Improve border style for the badges
 - UPD: Improve Startup options section of System Config
-- UPD: Move "Integrated audio" option from System to Audio Config.
+- UPD: Move "Integrated audio" option from System to Audio Config
 
 Bug fixes
 - FIX: Time slider position after moving the thumb
