@@ -384,12 +384,6 @@ workerLog('worker: Fan control:   ' . $fanControlMsg);
 // CPU governor
 workerLog('worker: CPU governor:  ' . $_SESSION['cpugov']);
 
-// Pi integrated audio driver
-if (!isset($_SESSION['pi_audio_driver'])) {
-	$_SESSION['pi_audio_driver'] = PI_VC4_KMS_V3D;
-}
-workerLog('worker: Integ audio:   ' . $_SESSION['pi_audio_driver']);
-
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- Network');
@@ -528,6 +522,13 @@ if (!empty($wlan0Ip)) {
 	$_SESSION['ipaddress'] = '0.0.0.0';
 	workerLog('worker: No active network interface');
 }
+
+// mDNS options
+if (!isset($_SESSION['avahi_options'])) {
+	$_SESSION['avahi_options'] = 'ipv4ipv6';
+}
+workerLog('worker: mDNS');
+workerLog('worker: Discover: ' . ($_SESSION['avahi_options'] == 'ipv4ipv6' ? 'IPv4 and IPv6' : 'IPv4-only'));
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -810,6 +811,11 @@ workerLog('worker: MPD mixer      ' . $mixerType);
 if ($_SESSION['audioout'] == 'Local') {
 	phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
 }
+// Pi integrated audio driver
+if (!isset($_SESSION['pi_audio_driver'])) {
+	$_SESSION['pi_audio_driver'] = PI_VC4_KMS_V3D;
+}
+workerLog('worker: Integ audio:   ' . $_SESSION['pi_audio_driver']);
 // Audio formats
 if ($cards[$_SESSION['cardnum']] == ALSA_EMPTY_CARD) {
 	workerLog('worker: Audio formats: Warning: card ' . $_SESSION['cardnum'] . ' is empty');
@@ -3125,6 +3131,9 @@ function runQueuedJob() {
 			break;
 		case 'p3bt':
 			ctlBt($_SESSION['w_queueargs']);
+			break;
+		case 'avahi_options':
+			updAvahiOptions($_SESSION['w_queueargs']);
 			break;
 		case 'actled': // LED0
 			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {

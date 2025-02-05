@@ -249,6 +249,21 @@
 					If set to NO the address check will be skipped and startup time will be reduced.
 				</span>
 			</div>
+
+			<label class="control-label" for="avahi-options">mDNS discovery</label>
+			<div class="controls">
+				<select id="avahi-options" class="config-select-large" name="avahi_options" onchange="autoClick('#btn-set-avahi-options');">
+					$_select[avahi_options]
+				</select>
+				<button id="btn-set-avahi-options" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_avahi_options" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-avahi-options" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-avahi-options" class="config-help-info">
+					The mDNS discovery option determines which protocols are used advertize this-host to other hosts on the network.
+					The default is to use both IPv4 and IPv6.
+					Having both enabled can result in this-host being advertized twice where the second appears to other hosts on the network as this-host-2.
+					If this occurs try setting the option to IPv4-only which can eliminate the second advertized host.
+				</span>
+			</div>
 		</div>
 
 		<div class="control-group">

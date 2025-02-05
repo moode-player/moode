@@ -175,6 +175,10 @@ if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESS
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	$_SESSION['eth0chk'] = $_POST['eth0chk'];
 }
+if (isset($_POST['avahi_options']) && $_POST['avahi_options'] != $_SESSION['avahi_options']) {
+	$_SESSION['avahi_options'] = $_POST['avahi_options'];
+	submitJob('avahi_options', $_POST['avahi_options'], NOTIFY_TITLE_INFO, 'mDNS' . NOTIFY_MSG_SVC_RESTARTED);
+}
 
 // FILE SHARING
 
@@ -447,6 +451,10 @@ $_select['ipaddr_timeout'] .= "<option value=\"300\" " . (($_SESSION['ipaddr_tim
 $autoClick = " onchange=\"autoClick('#btn-set-eth0chk');\"";
 $_select['eth0chk_on']  .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-eth0chk-2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// mDNS discovery
+$_select['avahi_options'] .= "<option value=\"ipv4ipv6\" " . (($_SESSION['avahi_options'] == 'ipv4ipv6') ? "selected" : "") . ">IPv4 and IPv6 (Default)</option>\n";
+$_select['avahi_options'] .= "<option value=\"ipv4only\" " . (($_SESSION['avahi_options'] == 'ipv4only') ? "selected" : "") . ">IPv4-only</option>\n";
 
 // FILE SHARING
 

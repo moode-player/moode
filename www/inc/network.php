@@ -231,3 +231,10 @@ function ctlBt($ctl) {
 	$value = $ctl == '0' ? '' : '#';
 	updBootConfigTxt('upd_disable_bt', $value);
 }
+
+// mDNS (avahi) options
+function updAvahiOptions($options) {
+	$value = $options == 'ipv4ipv6' ? 'yes' : 'no';
+	sysCmd("sed -i 's/use-ipv6=.*/use-ipv6=" . $value . "/' /etc/avahi/avahi-daemon.conf");
+	sysCmd('systemctl restart avahi-daemon');
+}
