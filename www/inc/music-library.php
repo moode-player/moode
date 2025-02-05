@@ -735,7 +735,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		// Mediainfo
 		// NOTE: Mediainfo called via sysCmd() i.e. exec() returns nothing if the file name contains accented chars
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
-		if ($result[0] == '' || $result[1] == '') {
+		if (empty($result[0]) || empty($result[1])) {
 			// Empty mediainfo so fallback to MPD lsinfo Format tag rate:bits:channels
 			$format = isset($songData['Format']) ? $songData['Format'] : getMpdFormatTag($songData['file']);
 			$mpdFormatTag = explode(':', $format); //rate:bits:channels
@@ -760,15 +760,10 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 
 		if ($displayFormat == 'default') {
 			$encodedAt = $bitDepth == '?' ?
-				//formatRate($sampleRate) . 'kHz, ' . $format :
-				//$bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch ' . $format;
 				$format . ' ' . formatRate($sampleRate) . 'kHz' :
 				$format . ' ' . $bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch';
 		} else {
-			// 'verbose'
 			$encodedAt = $bitDepth == '?' ?
-				//formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format :
-				//$bitDepth . ' bit ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) . ' ' . $format;
 				$format . ' ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels) :
 				$format . ' ' . $bitDepth . ' bit ' . formatRate($sampleRate) . ' kHz, ' . formatChannels($channels);
 		}
