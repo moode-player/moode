@@ -710,7 +710,7 @@ function autoConfigSettings() {
 		'LCD updater',
 		['requires' => ['lcdup'], 'handler' => 'setSessVarOnly'],
 		//
-		// NAS and NVME sources
+		// NAS, NVME and SATA sources
 		//
 		'Music Sources',
 		['requires' => ['fs_mountmon'], 'handler' => 'setSessVarOnly'],
@@ -729,13 +729,21 @@ function autoConfigSettings() {
 				foreach ($keys as $key) {
 					$mount['mount'][substr($key, 7)] = $values[$key][$i];
 					if (substr($key, 7) == 'type') {
-						$mount['mount']['action'] = $values[$key][$i] == LIB_MOUNT_TYPE_NVME ? 'add_nvme_source' : 'add_nas_source';
+						if ($values[$key][$i] == LIB_MOUNT_TYPE_NFS || $values[$key][$i] == LIB_MOUNT_TYPE_SMB) {
+							$mount['mount']['action'] = 'add_nas_source';
+						} else if ($values[$key][$i] == LIB_MOUNT_TYPE_NVME) {
+							$mount['mount']['action'] = 'add_nvme_source';
+						} else if ($values[$key][$i] == LIB_MOUNT_TYPE_SATA) {
+							$mount['mount']['action'] = 'add_sata_source';
+						}
 					}
 				}
-				if ($mount['mount']['action'] == 'add_nvme_source') {
-					nvmeSourceCfg($mount);
-				} else {
+				if ($mount['mount']['action'] == 'add_nas_source') {
 					nasSourceCfg($mount);
+				} else if ($mount['mount']['action'] == 'add_nvme_source'){
+					nvmeSourceCfg($mount);
+				} else if ($mount['mount']['action'] == 'add_sata_source'){
+					sataSourceCfg($mount);
 				}
 			}
 		}, 'custom_write' => function($values) {
