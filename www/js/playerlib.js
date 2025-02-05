@@ -2851,7 +2851,9 @@ $(document).on('click', '.context-menu a', function(e) {
             if (SESSION.json['mpd_httpd'] != '1' || SESSION.json['mpd_httpd_encoder'] != 'lame') {
                 notify(NOTIFY_TITLE_ALERT, 'play_here_config_error', NOTIFY_DURATION_MEDIUM);
             } else {
-                window.open('http://' + SESSION.json['ipaddress'] + ':' + SESSION.json['mpd_httpd_port'], '_blank');
+                var host = SESSION.json['ap_network_addr'].includes(SESSION.json['ipaddress']) ?
+                    SESSION.json['hostname'] + '.local' : SESSION.json['ipaddress'];
+                window.open('http://' + host + ':' + SESSION.json['mpd_httpd_port'], '_blank');
             }
             break;
         case 'edit_station':
