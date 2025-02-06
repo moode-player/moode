@@ -16,7 +16,6 @@
 ################################################################################
 
 New features
-
 - NEW: Play here (Opens new tab/window and plays MPD HTTP server stream)
 
 Updates
