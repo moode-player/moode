@@ -637,19 +637,6 @@ class CamillaDsp {
         }
         return 20 * log10($y);
     }
-
-    static function checkResultToHtml($checkResult) {
-    	$message = '';
-    	$checkMsgRaw = implode('<br>', $checkResult['msg']);
-    	if ($checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
-    		$message = "<span style='color: red'>&#10007;</span> ". $checkMsgRaw;
-    	} else if ($checkResult['valid'] == CDSP_CHECK_VALID) {
-    		$message = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
-    	} else {
-    		$message = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
-    	}
-    	return $message;
-    }
 }
 
 function test_cdsp() {

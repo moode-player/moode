@@ -304,12 +304,12 @@ if ($selectedConfig) {
 	if (!isset($checkResult)) {
 		$checkResult = $cdsp->checkConfigFile($selectedConfig);
 	}
-	$_check_msg_config = $cdsp->checkResultToHtml($checkResult);
+	$_check_msg_config = checkResultToHtml($checkResult);
 }
 if ($cdsp->isQuickConvolutionActive()) {
 	$_check_msg_quick_convolution =
 		'<span class="config-help-static">' .
-			$cdsp->checkResultToHtml($cdsp->checkConfigFile($cdsp->getConfig())) .
+			checkResultToHtml($cdsp->checkConfigFile($cdsp->getConfig())) .
 		'</span>';
 }
 // Sample configs plugin version
@@ -356,3 +356,16 @@ storeBackLink($section, $tpl);
 include('header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
+
+function checkResultToHtml($checkResult) {
+	$message = '';
+	$checkMsgRaw = implode('<br>', $checkResult['msg']);
+	if ($checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
+		$message = "<span style='color: red'>&#10007;</span> ". $checkMsgRaw;
+	} else if ($checkResult['valid'] == CDSP_CHECK_VALID) {
+		$message = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
+	} else {
+		$message = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
+	}
+	return $message;
+}
