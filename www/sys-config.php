@@ -175,7 +175,7 @@ if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESS
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	$_SESSION['eth0chk'] = $_POST['eth0chk'];
 }
-if (isset($_POST['avahi_options']) && $_POST['avahi_options'] != $_SESSION['avahi_options']) {
+if (isset($_POST['update_avahi_options']) && $_POST['avahi_options'] != $_SESSION['avahi_options']) {
 	$_SESSION['avahi_options'] = $_POST['avahi_options'];
 	submitJob('avahi_options', $_POST['avahi_options'], NOTIFY_TITLE_INFO, 'mDNS' . NOTIFY_MSG_SVC_RESTARTED);
 }
