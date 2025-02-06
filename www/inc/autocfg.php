@@ -174,6 +174,10 @@ function autoConfigSettings() {
 		['requires' => ['led_state'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['ipaddr_timeout'], 'handler' => 'setSessVarSql'],
 		['requires' => ['eth0chk'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['avahi_options'], 'handler' => function($values) {
+			$_SESSION['avahi_options'] = $values['avahi_options'];
+			updAvahiOptions($values['avahi_options']);
+		}],
 		//
 		// File sharing
 		//
