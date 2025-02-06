@@ -1,30 +1,30 @@
 devices:
-  samplerate: 44100
-  chunksize: 4096
-  queuelimit: 1
-  volume_ramp_time: 150
   capture:
-    type: File
     channels: 2
-    filename: "/dev/stdin"
     format: S16LE
+    type: Stdin
+  chunksize: 4096
   playback:
-    type: Alsa
     channels: 2
-    device: "plughw:0,0"
+    device: plughw:0,0
     format: S16LE
+    type: Alsa
+  queuelimit: 1
+  samplerate: 44100
+  volume_ramp_time: 150
 filters:
-    mastergain:
-        type: Gain
-        parameters:
-            gain: 0
+  mastergain:
+    parameters:
+      gain: 0
+    type: Gain
 pipeline:
-  - type: Filter
-    channel: 0
-    names:
-      - mastergain
-  - type: Filter
-    channel: 1
-    names:
-      - mastergain
-
+- channels:
+  - 0
+  names:
+  - mastergain
+  type: Filter
+- channels:
+  - 1
+  names:
+  - mastergain
+  type: Filter

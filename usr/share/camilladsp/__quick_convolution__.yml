@@ -4,10 +4,9 @@ devices:
   queuelimit: 1
   volume_ramp_time: 150
   capture:
-    type: File
     channels: 2
-    filename: "/dev/stdin"
     format: S16LE
+    type: Stdin
   playback:
     type: Alsa
     channels: 2
@@ -50,12 +49,14 @@ pipeline:
   - type: Mixer
     name: stereo
   - type: Filter
-    channel: 0
+    channels:
+    - 0
     names:
       - mastergain
       - ir_left
   - type: Filter
-    channel: 1
+    channels:
+    - 1
     names:
       - mastergain
       - ir_right
