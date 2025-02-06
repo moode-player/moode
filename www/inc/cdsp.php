@@ -267,7 +267,7 @@ class CamillaDsp {
 
     function upgradeConfigFile($configName) {
         $configFullPath = $this->CAMILLA_CONFIG_DIR . '/configs/' . $configName;
-        exec("/var/www/util/cdsp_config_update.py ".$configFullPath, $output, $exitcode);
+        exec('/var/www/util/cdsp_config_update.py "' . $configFullPath . '"', $output, $exitcode);
         return $this->checkConfigFile($configName);
     }
 
