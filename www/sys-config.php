@@ -19,7 +19,7 @@ const TMP_SELF_SIGNED_CER_FILE = '/tmp/moode.cer';
 phpSession('open');
 $dbh = sqlConnect();
 
-chkVariables($_POST);
+chkVariables($_POST, array('fs_smb_pwd'));
 
 // SOFTWARE UPDATE
 
