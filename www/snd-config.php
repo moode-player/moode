@@ -327,6 +327,7 @@ $cfgMPD = array();
 foreach ($result as $row) {
 	$cfgMPD[$row['param']] = $row['value'];
 }
+$cfgAudioDev = sqlQuery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh)[0];
 
 // Various button disables
 if ($_SESSION['audioout'] == 'Bluetooth' ||
@@ -345,8 +346,8 @@ if ($_SESSION['audioout'] == 'Bluetooth' ||
 	$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
 	$_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
 	$_driveropt_btn_disable = $i2sReboot === false ? '' : 'disabled';
-	$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'disabled';
-	$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'onclick="return false;"';
+	$_chip_btn_disable = (!empty($cfgAudioDev['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'disabled';
+	$_chip_link_disable = (!empty($cfgAudioDev['chipoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) ? '' : 'onclick="return false;"';
 }
 
 // AUDIO OUTPUT
@@ -416,10 +417,9 @@ foreach ($overlayList as $overlay) {
 	$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlayName, $selected, $overlayName);
 }
 // Driver options
-$result = sqlQuery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
-if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) {
-	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
-	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
+if (!empty($cfgAudioDev['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $i2sReboot === false) {
+	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($cfgAudioDev['driver'], $cfgAudioDev['drvoptions']) !== false) ? "selected" : "") . ">" . $cfgAudioDev['drvoptions'] . " Enabled</option>\n";
+	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($cfgAudioDev['driver'], $cfgAudioDev['drvoptions']) === false) ? "selected" : "") . ">" . $cfgAudioDev['drvoptions'] . " Disabled</option>\n";
 	$_driveropt_btn_disable = '';
 } else {
 	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
