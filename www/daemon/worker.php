@@ -1814,6 +1814,15 @@ function chkBtActive() {
 				}
 			}
 		}
+
+		/*// TODO: Disconnect after timeout period
+		$GLOBALS['bt_timeout'] = $GLOBALS['bt_timeout'] - (WORKER_SLEEP / 1000000);
+		if ($GLOBALS['bt_timeout'] <= 0) {
+			// Check hwparams
+			// Disconnect if not playing
+			// Reset timeout
+			$GLOBALS['bt_timeout'] = $_SESSION['bt_timeout'];
+		}*/
 	} else {
 		// Do this section only once
 		if ($_SESSION['btactive'] == '1') {
