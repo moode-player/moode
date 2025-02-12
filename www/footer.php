@@ -13,7 +13,8 @@
 	<div class="modal-body">
 		<h5>Overview</h5>
 		<p>
-			moOde audio player is a derivative of the wonderful WebUI audio player for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori under the Tsunamp project and subsequently enhanced by early efforts from the RaspyFi/Volumio projects. Refer to the Contributors link below more information.
+			Moode Audio Player is a derivative of the wonderful WebUI audio player for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori and subsequently enhanced by early efforts from RaspyFi/Volumio projects.
+			Refer to the Contributors link below more information.
 		</p>
 
 		<h5>Your Privacy</h5>
@@ -24,9 +25,9 @@
 		<ul>
 			<li>Release: 9.2.5 2025-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
 			<li>Maintainer: Tim Curtis &copy; 2014</li>
-			<li>Documentation: <a class="moode-about-link target-blank-link" href="./relnotes.txt" target="_blank">View release notes,</a>&nbsp<a class="moode-about-link target-blank-link" href="https://github.com/moode-player/docs/blob/main/setup_guide.md#setup-guide-" target="_blank">View setup guide</a></li>
-			<li>Contributors:  <a class="moode-about-link target-blank-link" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
-			<li>License:       <a class="moode-about-link target-blank-link" href="./COPYING.html" target="_blank">View GPLv3</a></li>
+			<li>Documentation: <a class="moode-about-link target-blank-link" href="./relnotes.txt" target="_blank">View</a>  release notes,&nbsp<a class="moode-about-link target-blank-link" href="https://github.com/moode-player/docs/blob/main/setup_guide.md#setup-guide-" target="_blank">View</a>  setup guide</li>
+			<li>Contributors:  <a class="moode-about-link target-blank-link" href="./CONTRIBS.html" target="_blank">View</a> contributors</li>
+			<li>License:       <a class="moode-about-link target-blank-link" href="./COPYING.html" target="_blank">View</a> GPLv3</li>
 		</ul>
 		<h5>Platform Information</h5>
 		<ul>

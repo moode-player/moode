@@ -159,7 +159,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	100% {background-color: rgba(0,0,0,0.8);}
 }
 /* For links on the About modal */
-.moode-about-link, .moode-about-link:visited {color:var(--adapttext);text-decoration:none;}
+.moode-about-link, .moode-about-link:visited {color:var(--adapttext);text-decoration:underline;}
 .moode-about-link:hover {color:var(--adapttext);text-decoration:underline;}
 /* other stuff */
 .menu-separator {border-bottom:1px solid rgba(128,128,128,0.2);border-radius:0;}
