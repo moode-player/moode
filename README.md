@@ -4,6 +4,8 @@ moOde provides a beautifully designed and responsive user interface, an extensiv
 
 moOde is a derivative of the wonderful WebUI audio player for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori and subsequently enhanced by early efforts from RaspyFi/Volumio projects. moOde today is a complete redesign of the original WebUI and codebase  and includes highly automated build tooling based on standard Debian packaging and the Pi-gen image builder.
 
+We want you to know that our audio player does not serve Ads, nag for subscriptions, use cookies, analytics/tracking or any other such technology. Player preference, configuration and operational data is stored on the local boot media and is not provided to any 3rd parties.
+
 Tim Curtis © 2014
 
 ### Disclaimer ###
