@@ -25,7 +25,7 @@
 		<ul>
 			<li>Release: 9.2.5 2025-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
 			<li>Maintainer: Tim Curtis &copy; 2014</li>
-			<li>Documentation: <a class="moode-about-link target-blank-link" href="./relnotes.txt" target="_blank">View</a>  release notes,&nbsp<a class="moode-about-link target-blank-link" href="https://github.com/moode-player/docs/blob/main/setup_guide.md#setup-guide-" target="_blank">View</a>  setup guide</li>
+			<li>Documentation: <a class="moode-about-link target-blank-link" href="./relnotes.txt" target="_blank">View</a> release notes,&nbsp<a class="moode-about-link target-blank-link" href="https://github.com/moode-player/docs/blob/main/setup_guide.md#setup-guide-" target="_blank">View</a> setup guide</li>
 			<li>Contributors:  <a class="moode-about-link target-blank-link" href="./CONTRIBS.html" target="_blank">View</a> contributors</li>
 			<li>License:       <a class="moode-about-link target-blank-link" href="./COPYING.html" target="_blank">View</a> GPLv3</li>
 		</ul>
