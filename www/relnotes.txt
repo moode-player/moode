@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+Updates
+- UPD: Bump to CamillaGUI 3.0.1
+
 Bug fixes
 - FIX: Chip options button not working
 
@@ -3818,7 +3821,7 @@ Updates
 - UPD: Streamline config pages by converting from block to on-demand help
 - UPD: Replace most hover help with on-demand help/information text
 - UPD: Edit help for MPD Volume normalization to indicate "converts to 16 bit"
-- UPD: About contribs better reflect work from the RaspyFi/Volumio projects
+- UPD: Update contribs to reflect RaspyFi/Volumio projects
 - UPD: Add "Restart MPD" button to MPD config for refresh Browse panel if needed
 - UPD: Add "Interf" to logic for MPD config friendly name for Audio device
 - UPD: Add RME Fireface UCX audio device to Audio Device Description database
