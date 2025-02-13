@@ -55,6 +55,7 @@ $currentSettings['ashuffle_exclude'] = $_SESSION['ashuffle_exclude'];
 $currentSettings['alsa_output_mode_bt'] = $_SESSION['alsa_output_mode_bt'];
 $currentSettings['alsavolume_max_bt'] = $_SESSION['alsavolume_max_bt'];
 $currentSettings['cdspvolume_max_bt'] = $_SESSION['cdspvolume_max_bt'];
+$currentSettings['bt_auto_disconnect'] = $_SESSION['bt_auto_disconnect'];
 // Plexamp
 $currentSettings['alsavolume_max_pa'] = $_SESSION['alsavolume_max_pa'];
 // Library

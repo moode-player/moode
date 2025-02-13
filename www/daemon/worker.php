@@ -1505,6 +1505,10 @@ if (!isset($_SESSION['mpd_monitor_svc'])) {
 	$_SESSION['mpd_monitor_svc'] = 'Off';
 	$_SESSION['mpd_monitor_opt'] = '6,Yes,3'; // sleep_interval,resume_play,msg_threshold
 }
+// Bluetooth timeout
+if (!isset($_SESSION['bt_auto_disconnect'])) {
+	$_SESSION['bt_auto_disconnect'] = 'never';
+}
 
 //----------------------------------------------------------------------------//
 // Globals section
@@ -1536,6 +1540,9 @@ $maint_interval = $_SESSION['maint_interval'];
 // Screen saver
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
+
+// Bluetooth
+$bt_auto_disconnect = $_SESSION['bt_auto_disconnect'];
 
 // Inizialize job queue
 $_SESSION['w_queue'] = '';
@@ -1815,14 +1822,19 @@ function chkBtActive() {
 			}
 		}
 
-		/*// TODO: Disconnect after timeout period
-		$GLOBALS['bt_timeout'] = $GLOBALS['bt_timeout'] - (WORKER_SLEEP / 1000000);
-		if ($GLOBALS['bt_timeout'] <= 0) {
-			// Check hwparams
-			// Disconnect if not playing
-			// Reset timeout
-			$GLOBALS['bt_timeout'] = $_SESSION['bt_timeout'];
-		}*/
+		// Disconnect Bluetooth clients after timeout period
+		if ($GLOBALS['bt_auto_disconnect'] != 'never') {
+			$GLOBALS['bt_auto_disconnect'] = $GLOBALS['bt_auto_disconnect'] - (WORKER_SLEEP / 1000000);
+			if ($GLOBALS['bt_auto_disconnect'] <= 0) {
+				$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
+				if ($hwParams['status'] != 'active') {
+					// Disconnect all clients
+					sysCmd('/var/www/util/blu-control.sh -D');
+				}
+				// Reset timeout
+				$GLOBALS['bt_auto_disconnect'] = $_SESSION['bt_auto_disconnect'];
+			}
+		}
 	} else {
 		// Do this section only once
 		if ($_SESSION['btactive'] == '1') {
@@ -2852,6 +2864,9 @@ function runQueuedJob() {
 			}
 			sysCmd('systemctl daemon-reload');
 			sysCmd('systemctl restart bt-agent');
+			break;
+		case 'reset_bt_auto_disconnect':
+			$GLOBALS['bt_auto_disconnect'] = $_SESSION['bt_auto_disconnect'];
 			break;
 		case 'airplaysvc':
 			stopAirPlay();

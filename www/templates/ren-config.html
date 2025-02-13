@@ -68,6 +68,18 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="bt-auto-disconnect">Auto-disconnect</label>
+			<div class="controls">
+                <select id="bt-auto-disconnect" name="bt_auto_disconnect" class="config-select-large" onchange="autoClick('#btn-set-bt-auto-disconnect');">
+					$_select[bt_auto_disconnect]
+                </select>
+				<button id="btn-set-bt-auto-disconnect" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_auto_disconnect" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-bt-auto-disconnect" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-bt-auto-disconnect" class="config-help-info">
+					If nothing is playing all clients are disconnected when this time interval expires.
+				</span>
+			</div>
+
 			<label class="control-label">Resume MPD</label>
 			<div class="controls">
 				<div class="toggle">

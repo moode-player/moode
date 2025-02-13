@@ -291,7 +291,8 @@ RENDERER_SETTINGS() {
 		echo -e "\nCDSP max volume\t\t= $CDSPVOLUME_MAX_BT dB\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
 		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\c"
-		echo -e "\nALSA output mode\t= $ALSA_OUTPUT_MODE_BT\n"
+		echo -e "\nALSA output mode\t= $ALSA_OUTPUT_MODE_BT\c"
+		echo -e "\nActivity timeout\t= $BT_AUTO_DISCONNECT\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
@@ -532,6 +533,7 @@ TMP=$(moodeutl -d -gv bt_pin_code)
 [[ "$TMP" = "None" ]] && BT_PIN_CODE="None" || BT_PIN_CODE="******"
 ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)
 CDSPVOLUME_MAX_BT=$(moodeutl -d -gv cdspvolume_max_bt)
+BT_AUTO_DISCONNECT=$(moodeutl -d -gv bt_auto_disconnect)
 
 # Plexamp
 ALSAVOLUME_MAX_PA=$(moodeutl -d -gv alsavolume_max_pa)

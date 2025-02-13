@@ -57,6 +57,11 @@ if (isset($_POST['update_alsavolume_max_bt'])) {
 if (isset($_POST['update_cdspvolume_max_bt'])) {
 	$_SESSION['cdspvolume_max_bt'] = $_POST['cdspvolume_max_bt'];
 }
+if (isset($_POST['update_bt_auto_disconnect']) && $_POST['bt_auto_disconnect'] != $_SESSION['bt_auto_disconnect']) {
+	$_SESSION['bt_auto_disconnect'] = $_POST['bt_auto_disconnect'];
+	submitJob('reset_bt_auto_disconnect', '', NOTIFY_TITLE_INFO, 'Auto-disconnect time updated');
+}
+
 if (isset($_POST['update_rsmafterbt'])) {
 	phpSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
 }
@@ -227,6 +232,14 @@ if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max_bt_msg = '';
 }
 $_cdspvolume_max_bt = $_SESSION['cdspvolume_max_bt'];
+$_select['bt_auto_disconnect'] .= "<option value=\"never\" " . (($_SESSION['bt_auto_disconnect'] == 'never') ? "selected" : "") . ">Never (Default)</option>\n";
+$_select['bt_auto_disconnect'] .= "<option value=\"10\" " . (($_SESSION['bt_auto_disconnect'] == '10') ? "selected" : "") . ">10 secs</option>\n";
+$_select['bt_auto_disconnect'] .= "<option value=\"20\" " . (($_SESSION['bt_auto_disconnect'] == '20') ? "selected" : "") . ">20 secs</option>\n";
+$_select['bt_auto_disconnect'] .= "<option value=\"30\" " . (($_SESSION['bt_auto_disconnect'] == '30') ? "selected" : "") . ">30 secs</option>\n";
+$_select['bt_auto_disconnect'] .= "<option value=\"60\" " . (($_SESSION['bt_auto_disconnect'] == '60') ? "selected" : "") . ">60 secs</option>\n";
+$_select['bt_auto_disconnect'] .= "<option value=\"90\" " . (($_SESSION['bt_auto_disconnect'] == '90') ? "selected" : "") . ">90 secs</option>\n";
+$_select['bt_auto_disconnect'] .= "<option value=\"120\" " . (($_SESSION['bt_auto_disconnect'] == '120') ? "selected" : "") . ">2 mins</option>\n";
+$_select['bt_auto_disconnect'] .= "<option value=\"300\" " . (($_SESSION['bt_auto_disconnect'] == '300') ? "selected" : "") . ">5 mins</option>\n";
 $autoClick = " onchange=\"autoClick('#btn-set-rsmafterbt');\" " . $_bt_btn_disable;
 $_select['rsmafterbt_on'] .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-1\" value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmafterbt_off']  .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-2\" value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
