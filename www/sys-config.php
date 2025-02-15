@@ -224,7 +224,7 @@ if (isset($_POST['update_dlna_settings'])) {
 	if (isset($_POST['dlnasvc']) && $_POST['dlnasvc'] != $_SESSION['dlnasvc']) {
 		$update = true;
 		$msg = $_POST['dlnasvc'] == '0' ?
-			NAME_DLNA . 'DNLA server off. Database has been cleared' :
+			NAME_DLNA . ' server off. Database has been cleared' :
 			NAME_DLNA . NOTIFY_MSG_SVC_RESTARTED . ' Database rebuild initiated...';
 		phpSession('write', 'dlnasvc', $_POST['dlnasvc']);
 	}
