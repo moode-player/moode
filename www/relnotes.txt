@@ -16,11 +16,12 @@
 ################################################################################
 
 Updates
-- UPD: Bump to CamillaGUI 3.0.1
+- UPD: Bump to CamillaGUI 3.0.2
 - UPD: Add Bluetooth auto-disconnect
 
 Bug fixes
 - FIX: Chip options button not working
+- FIX: DLNA rebuild button not working
 
 ################################################################################
 #
