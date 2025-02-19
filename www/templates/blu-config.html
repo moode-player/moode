@@ -30,7 +30,7 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="connectto_device" value="1">Connect</button>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="rm_paired_device" value="1"><i class="fa fa-sharp fa-trash"></i></button>
 				<span class="config-msg-static">
-					Connect or remove a paired device. This also changes to the selected audio output.
+					Connect or remove a paired device. This also changes to the selected Audio output.
 	            </span>
 			</div>
 
@@ -40,7 +40,7 @@
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
 				<span class="config-msg-static">
-					Disconnect the currently connected device. This also changes to the selected audio output.
+					Disconnect the currently connected device. This automatically changes Audio output to Local.
 	            </span>
 			</div>
 
@@ -62,7 +62,7 @@
 			</select>
 			<button id="btn-set-audioout" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="change_audioout_bt" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			<span class="config-msg-static">
-				Output to the Local audio device or a Bluetooth speaker.
+				<b>Audio output:</b> Local audio device or Bluetooth speaker.
             </span>
 
 			<select id="pcm-buffer" class="config-select-large" name="pcm_buffer" onchange="autoClick('#btn-set-pcm-buffer');">
@@ -70,7 +70,7 @@
 			</select>
 			<button id="btn-set-pcm-buffer" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pcm_buffer" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			<span class="config-msg-static">
-				I-O buffer length in milliseconds. Lower values reduce latency but may cause dropouts.
+				<b>PCM buffer:</b> Lower values reduce latency but may cause dropouts.
 	        </span>
 
 			<select id="sbc-quality" class="config-select-large" name="sbc_quality" onchange="autoClick('#btn-set-sbc-quality');">
@@ -78,16 +78,26 @@
 			</select>
 			<button id="btn-set-sbc-quality" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_sbc_quality" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			<span class="config-msg-static">
-				Specify the quality mode when the SBC encoder is in use.
+				<b>SBC encoder:</b> Higher settings improve quality but may cause dropouts.
 				<!--b>Low:</b> Mono 114 kbps, Stereo 213 kbps<br>
 				<b>Medium:</b> Mono 132 kbps, Stereo 237 kbps<br>
 				<b>High:</b> Mono 198 kbps, Stereo 345 kbps<br>
 				<b>XQ:</b> SBC Dual Channel HD 452 kbps<br>
 				<b>XQ+:</b> SBC Dual Channel HD 551 kbps-->
 	        </span>
+
+			<select id="alsa-output-mode-bt" class="config-select-large" name="alsa_output_mode_bt" onchange="autoClick('#btn-set-alsa-output-mode-bt');">
+				$_select[alsa_output_mode_bt]
+			</select>
+			<button id="btn-set-alsa-output-mode-bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode_bt" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+			<span class="config-msg-static">
+				<b>ALSA mode:</b><br>
+				Standard uses the Output mode setting from Audio Config. DSP is supported.<br>
+				Compatibility can be tried if audio device is not working in Standard mode.
+            </span>
 		</div>
 
-		<div class="control-group">
+		<!--div class="control-group">
 			<legend>ALSA output mode</legend>
 			<select id="alsa-output-mode-bt" class="config-select-large" name="alsa_output_mode_bt" onchange="autoClick('#btn-set-alsa-output-mode-bt');">
 				$_select[alsa_output_mode_bt]
@@ -97,7 +107,7 @@
 				<b>Standard:</b> Use the "Output mode" setting from Audio Config. This enables DSP to be used.<br>
 				<b>Compatibility:</b> This mode provides improved device compatibility but does not support DSP.
             </span>
-		</div>
+		</div-->
 	</form>
 </div>
 </div>
