@@ -58,6 +58,17 @@
                 </span>
 			</div>
 
+			<label class="control-label" for="disable-synchronization">Disable sync</label>
+			<div class="controls">
+				<select id="disable-synchronization" class="config-select-large" name="config[disable_synchronization]">
+					$_select[disable_synchronization]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-synchronizatio" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-disable-synchronizatio" class="config-help-info">
+					Disable synchronization. Set this to Yes if CamillaDSP is on and there are audio glitches. Default is No.
+                </span>
+			</div>
+
 			<label class="control-label" for="session-timeout">Session timeout</label>
 			<div class="controls">
 				<input class="config-input-large" type="number" id="session-timeout" name="config[session_timeout]" value="$_select[session_timeout]">

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Feb 19 06:33:37 2025
+-- File generated with SQLiteStudio v3.4.4 on Thu Feb 20 11:42:00 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -17,6 +17,7 @@ INSERT INTO cfg_airplay (id, param, value) VALUES (6, 'allow_session_interruptio
 INSERT INTO cfg_airplay (id, param, value) VALUES (7, 'session_timeout', '120');
 INSERT INTO cfg_airplay (id, param, value) VALUES (8, 'audio_backend_latency_offset_in_seconds', '0.0');
 INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'audio_backend_buffer_desired_length_in_seconds', '0.2');
+INSERT INTO cfg_airplay (id, param, value) VALUES (10, 'disable_synchronization', 'no');
 
 -- Table: cfg_audiodev
 CREATE TABLE cfg_audiodev (id INTEGER PRIMARY KEY, name CHAR (64), alt_name CHAR (64), dacchip CHAR (64), chipoptions CHAR (64), iface CHAR (32), list CHAR (10), driver CHAR (64), drvoptions CHAR (64));

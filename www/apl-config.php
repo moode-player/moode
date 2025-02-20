@@ -54,6 +54,9 @@ $_select['output_rate'] .= "<option value=\"352800\" " . (($cfgAirplay['output_r
 $_select['allow_session_interruption'] .= "<option value=\"yes\" " . (($cfgAirplay['allow_session_interruption'] == 'yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['allow_session_interruption'] .= "<option value=\"no\" " . (($cfgAirplay['allow_session_interruption'] == 'no') ? "selected" : "") . ">No</option>\n";
 
+$_select['disable_synchronization'] .= "<option value=\"yes\" " . (($cfgAirplay['disable_synchronization'] == 'yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['disable_synchronization'] .= "<option value=\"no\" " . (($cfgAirplay['disable_synchronization'] == 'no') ? "selected" : "") . ">No</option>\n";
+
 $_select['session_timeout'] = $cfgAirplay['session_timeout'];
 $_select['audio_backend_latency_offset_in_seconds'] = $cfgAirplay['audio_backend_latency_offset_in_seconds'];
 $_select['audio_backend_buffer_desired_length_in_seconds'] = $cfgAirplay['audio_backend_buffer_desired_length_in_seconds'];
