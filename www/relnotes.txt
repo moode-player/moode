@@ -17,9 +17,10 @@
 
 Updates
 - UPD: Bump to CamillaGUI 3.0.2
-- UPD: Add Bluetooth auto-disconnect
+- UPD: Add Bluetooth auto-disconnect to Renderer Config
+- UPD: Add Disable sync to AirPlay Config
 - UPD: Update JB Radio2 (320K) playable URL
-- UPD: Improve help on Bluetooth Control  
+- UPD: Improve help on Bluetooth Control
 
 Bug fixes
 - FIX: Chip options button not working
