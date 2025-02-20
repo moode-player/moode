@@ -307,6 +307,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nSession timeout\t\t= $session_timeout (ms)\c"
 		echo -e "\nLatency offset\t\t= $audio_backend_latency_offset_in_seconds (secs)\c"
 		echo -e "\nAudio buffer\t\t= $audio_backend_buffer_desired_length_in_seconds (secs)\c"
+		echo -e "\nDisable sync\t\t= $disable_synchronization\c"
 		echo -e "\nResume MPD\t\t= $rsmafterapl\n"
 	fi
 
@@ -557,6 +558,7 @@ allow_session_interruption=${arr[5]}
 session_timeout=${arr[6]}
 audio_backend_latency_offset_in_seconds=${arr[7]}
 audio_backend_buffer_desired_length_in_seconds=${arr[8]}
+disable_synchronization=${arr[9]}
 
 # MPD settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
