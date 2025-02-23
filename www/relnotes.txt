@@ -26,6 +26,7 @@ Updates
 Bug fixes
 - FIX: Chip options button not working
 - FIX: DLNA rebuild button not working
+- FIX: Shairport-sync.conf not being updated during restore
 
 ################################################################################
 #
