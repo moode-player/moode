@@ -449,7 +449,14 @@ function autoConfigSettings() {
 			'airplay_allow_session_interruption', 'airplay_session_timeout', 'airplay_audio_backend_latency_offset_in_seconds',
 			'airplay_audio_backend_buffer_desired_length_in_seconds', 'airplay_disable_synchronization'],
 			'handler' => function($values) {
-				setCfgTableParams('cfg_airplay', $values, 'airplay_');
+				$dbh = sqlConnect();
+				$prefix = 'airplay_';
+				foreach ($values as $key => $value) {
+					$param = str_replace($prefix, '', $key);
+					$result = sqlUpdate('cfg_airplay', $dbh, $param, $value);
+					$value = is_numeric($value) ? $value : '"' . $value . '"';
+					sysCmd("sed -i '/" . $param . ' =' . '/c\\' . $param . ' = ' . $value . ";' /etc/shairport-sync.conf");
+				}
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_airplay', $values, 'airplay_');
 		}],
