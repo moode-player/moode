@@ -17,6 +17,7 @@
 
 Updates
 - UPD: Improve metadata layout for mobile portrait
+- UPD: Minor naming improvements to CamillaDSP sample configs (new image only)
 
 ################################################################################
 #
