@@ -51,35 +51,35 @@ filters:
     description: null
     parameters:
       channel: 0
-      filename: ../coeffs/V3-Sennheiser_HD800S_HpCF_A.wav
+      filename: ../coeffs/Sennheiser_HD800S_HpCF_A.wav
       type: Wav
     type: Conv
   ir_l_input_l_ear:
     description: null
     parameters:
       channel: 0
-      filename: ../coeffs/V3-BRIR_R02_P1_E0_A-30.wav
+      filename: ../coeffs/BRIR_R02_P1_E0_A-30.wav
       type: Wav
     type: Conv
   ir_l_input_r_ear:
     description: null
     parameters:
       channel: 1
-      filename: ../coeffs/V3-BRIR_R02_P1_E0_A-30.wav
+      filename: ../coeffs/BRIR_R02_P1_E0_A-30.wav
       type: Wav
     type: Conv
   ir_r_input_l_ear:
     description: null
     parameters:
       channel: 0
-      filename: ../coeffs/V3-BRIR_R02_P1_E0_A+30.wav
+      filename: ../coeffs/BRIR_R02_P1_E0_A+30.wav
       type: Wav
     type: Conv
   ir_r_input_r_ear:
     description: null
     parameters:
       channel: 1
-      filename: ../coeffs/V3-BRIR_R02_P1_E0_A+30.wav
+      filename: ../coeffs/BRIR_R02_P1_E0_A+30.wav
       type: Wav
     type: Conv
   mastergain:
