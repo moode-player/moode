@@ -1009,7 +1009,7 @@ function resetPlayCtls() {
     UI.mobile ? $('#playbar-mcount').css('display', 'block') : $('#playbar-mcount').css('display', 'none');
 
     $('#extra-tags-display, #ss-extra-metadata').text('Not playing');
-    $('#countdown-sample-rate, #songsand-sample-rate').text('');
+    $('#countdown-sample-rate, #songsand-sample-rate').text('Not playing');
     $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
     $('#ss-countdown').text('');
 }
@@ -1186,12 +1186,12 @@ function renderUI() {
     	if (MPD.json['state'] == 'stop') {
             // Radio station or end of Queue
     		$('#extra-tags-display, #ss-extra-metadata').text('Not playing');
-            $('#countdown-sample-rate, #songsand-sample-rate').text('');
+            $('#countdown-sample-rate, #songsand-sample-rate').text('Not playing');
             $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
         } else if (MPD.json['state'] == 'pause') {
             // Track
             $('#extra-tags-display').html(formatExtraTagsString());
-            $('#ss-extra-metadata-output-format, #countdown-sample-rate').text('Not playing');
+            $('#ss-extra-metadata-output-format, #countdown-sample-rate, #songsand-sample-rate').text('Not playing');
             $('#ss-extra-metadata-output-format').removeClass('ss-npicon');
     	} else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
             // Play and no extra tags
