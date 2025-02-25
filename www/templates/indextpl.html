@@ -2461,6 +2461,27 @@
 							Delete raw recordings that have not been converted to FLAC and tagged yet. These are the WAV files directly under the Recordings folder. Files that have been previously converted to FLAC and placed in subfolders are not deleted.
 						</span>
 					</div>
+					<label class="control-label" for="retag-recordings">Retag recordings</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="retag-recordings" class="filter-option pull-left">
+									<span>No</span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="retag-recordings-sel"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="retag-recordings-sel"><span class="text">Yes</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-retag-recordings" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-retag-recordings" class="help-block hide">
+							Retag all recordings. This can be useful for regenerating the track number sequence.
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>

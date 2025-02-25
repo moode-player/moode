@@ -1441,6 +1441,11 @@ $('#btn-upd-radio-manager').click(function(e) {
                         notify(NOTIFY_TITLE_INFO, 'recorder_deleted', 'Updating library...');
                     });
                     $('#delete-recordings span').text('No'); // Reset
+                } else if ($('#retag-recordings span').text() == 'Yes') {
+                    // NOTE: Completion message sent from back-end via sendFECmd()
+                    notify(NOTIFY_TITLE_INFO, 'recorder_tagging', 'Please wait for completion message.', NOTIFY_DURATION_INFINITE);
+                    $('#retag-recordings span').text('No');
+                    $.post('command/recorder-cmd.php?cmd=recorder_retag_files');
                 // Rest of radio manager (dup of below)
                 } else if (mpdMonitorSvcChange || mpdMonitorOptChange) {
                     $.post('command/radio.php?cmd=mpd_monitor_svc',
