@@ -297,7 +297,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .db-song.db-action a {width:100vw;}
 #lib-file .songtrack {left:0px;text-align:right;width:2em;float:left;display:table-cell;}
 #lib-file .songname {overflow:hidden;width:40%;height:auto;float:left;margin-left:1em;display:table-cell;}
-#lib-file .songartist {margin-left:1em;float:left;width:35%;display:table-cell;}
+#lib-file .songartist {margin-left:1em;float:left;width:30%;display:table-cell;}
 #lib-file .songcomposer {font-style:italic;}
 #lib-file .songtime {font-style:normal;margin-left:1em;float:left;display:table-cell;}
 #lib-file .songyear {font-style:normal;position:absolute;right:1em;float:right;display:table-cell;}
