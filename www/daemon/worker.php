@@ -3184,24 +3184,25 @@ function runQueuedJob() {
 				if ($CN != $_SESSION['hostname'] . '.local') {
 					if ($_SESSION['nginx_cert_type'] == 'automatic') {
 						sysCmd('/var/www/util/gen-cert.sh');
-						sysCmd('systemctl restart nginx');
-						$status .= ', Self-signed cert created for host: ' . $_SESSION['hostname'];
+						//DELETE:sysCmd('systemctl restart nginx');
+						$status = 'Self-signed cert created for host: ' . $_SESSION['hostname'];
 					} else {
-						$status .= ', Warning: Manually created cert exists but CN does not match host: ' . $_SESSION['hostname'];
+						$status = 'Warning: Manually created cert exists but CN does not match host: ' . $_SESSION['hostname'];
 					}
 				} else {
-					$status .= ', Using ' . ucfirst($_SESSION['nginx_cert_type']) . ' cert for host: ' . $_SESSION['hostname'];
+					$status = 'Using ' . ucfirst($_SESSION['nginx_cert_type']) . ' cert for host: ' . $_SESSION['hostname'];
 				}
-
 				workerLog('worker: ' . $status);
 
 				// Enable HTTPS
 				sysCmd('rm -f /etc/nginx/sites-enabled/*');
 				sysCmd('ln -s /etc/nginx/sites-available/moode-https.conf /etc/nginx/sites-enabled/moode-https.conf');
+				workerLog('worker: HTTPS mode is on');
 			} else {
 				// Enable HTTP
 				sysCmd('rm -f /etc/nginx/sites-enabled/*');
 				sysCmd('ln -s /etc/nginx/sites-available/moode-http.conf /etc/nginx/sites-enabled/moode-http.conf');
+				workerLog('worker: HTTPS mode is off');
 			}
 			break;
 		case 'clearbrcache':

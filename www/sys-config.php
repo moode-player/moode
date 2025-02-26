@@ -255,7 +255,7 @@ if (isset($_POST['update_nginx_https_only']) && $_POST['nginx_https_only'] != $_
 	$_SESSION['nginx_https_only'] = $_POST['nginx_https_only'];
 	$notify = $_POST['nginx_https_only'] == '0' ?
 		array('title' => NOTIFY_TITLE_INFO, 'msg' => NOTIFY_MSG_SYSTEM_RESTART_REQD) :
-		array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Download the certificate, install it into the OS certificate store then restart.');
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => '- Download the certificate<br>- Import it into the client OS<br>- Restart moOde');
 	$duration = $_POST['nginx_https_only'] == '0' ? NOTIFY_DURATION_DEFAULT : 30;
 	submitJob('nginx_https_only', $_POST['nginx_https_only'], $notify['title'], $notify['msg'], $duration);
 }

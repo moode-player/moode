@@ -20,7 +20,7 @@ req_extensions          = req_ext
 commonName              = $HOSTNAME.local
 
 [ req_ext ]
-basicConstraints        = critical, CA:FALSE
+basicConstraints        = critical, CA:TRUE
 keyUsage                = digitalSignature, keyEncipherment, nonRepudiation
 extendedKeyUsage        = clientAuth, serverAuth
 subjectAltName          = @req_sans
@@ -37,12 +37,3 @@ SSL_CRT_FILE=/etc/ssl/certs/moode.crt
 SSL_KEY_FILE=/etc/ssl/private/moode.key
 openssl req -new -config $OPENSSL_CFG_FILE -out $SSL_CSR_FILE -keyout $SSL_KEY_FILE
 openssl req -x509 -days 3650 -config $OPENSSL_CFG_FILE -in $SSL_CSR_FILE -key $SSL_KEY_FILE -out $SSL_CRT_FILE -extensions req_ext
-
-# TEST: Add to chromium-browser trust store
-#sudo apt -y install libnss3-tools
-#CERT_NICKNAME=moOde self-signed cert
-#certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n $CERT_NICKNAME -i $SSL_CRT_FILE
-
-# TEST: Add to RaspiOS/Debian trust store (needed?)
-#sudo cp $SSL_CRT_FILE /usr/local/share/ca-certificates/
-#sudo update-ca-certificates
