@@ -2,7 +2,7 @@
 #
 #  Configuration Guide for moOde HTTPS mode
 #
-#  Version: 1.0 2024-01-11
+#  Version: 2.0 2025-02-26
 #
 #  (C) Tim Curtis 2023 http://moodeaudio.org
 #
@@ -14,7 +14,7 @@ HTTPS mode is an experimental feature in moOde that enables secure communication
 between the Browser and moOde/NGINX web server. This is achieved through use of
 an automatically or manually generated security certificate (cert).
 
-AUTOMATICALLY GENERATED (SELF_SIGNED)
+Automatically Generated (Self-Signed)
 
 This type of cert is automatically created and installed into NGINX web server
 when HTTPS mode is turned on. The cert can be downloaded via the DOWNLOAD button
@@ -22,7 +22,7 @@ or Browser Export option and then a manual procedure is required to import the
 cert into the client Operating System (OS) certificate store. After this is done
 the Browser will be able to establish secure HTTPS communication with moOde.
 
-MANUALLY GENERATED
+Manually Generated
 
 This type of cert is manually created and can be self-signed or signed by a
 local Certificate Authority (CA) then manually installed into NGINX web server
@@ -30,10 +30,12 @@ via the UPLOAD and INSTALL buttons. A second manual procedure is used to import
 the cert into the client Operating System (OS) certificate Store. After this is
 done the Browser will be able to establish secure HTTPS communication with moOde.
 
-BASIC PROCEDURE (Desktop OS)
+CONFIGURING HTTPS MODE
 
-Below is a basic procedure for configuring HTTPS mode. The detailed steps for
-importing the cert into the OS certificate store vary depending on the OS.
+Below is a basic procedure for configuring HTTPS mode. The steps to install the
+cert into the client OS certificate store vary depending on the OS.
+
+First, open moOde on a desktop OS for example MacOS.
 
 1. HTTPS mode on
 
@@ -66,12 +68,28 @@ c. Navigate to an option that offers an "Export" button
 d. Click the Export button
 e. Select DER encoding format
 f. Export/Download the cert
-g. Install the downloaded cert into the OS certificate store and set its Trust
-   policy to "Always trust"
+g. Install the downloaded cert into the client OS certificate store and set its
+   trust policy to "Always trust"
 
-BASIC PROCEDURE (Mobile OS)
+IMPORTING CERTS INTO DESKTOP AND MOBILE OS
 
-*** Content TBD ***
+MacOS:
+  - Double click the cert
+  - Auto-opens the Keychain Access app
+  - Install the cert into the System store
+  - Double click the installed cert
+  - Set its trust policy to "Always trust"
+  - Done
+
+IOS:
+  - First attach the cert to an email on another client
+  - Open the email on IOS
+  - Click the cert icon to download the "Profile"
+  - Open Settings>General>VPN and Device Management
+  - Under CONFIGURATON PROFILE, click and install the cert profile
+  - Open Settings>General>About>Certificate Trust Settings
+  - Click the slider to trust the cert
+  - Done
 
 DEVELOPER INFORMATION
 
@@ -110,7 +128,7 @@ Certificate files:
 Certificate attribute summary:
 Bits            = 2048
 Common name     = $HOSTNAME.local
-Constraints     = critical, CA:FALSE
+Constraints     = critical, CA:TRUE
 Key usage       = digitalSignature, keyEncipherment, nonRepudiation
 Key usage ext   = clientAuth, serverAuth
 DNS.1           = $HOSTNAME.local
