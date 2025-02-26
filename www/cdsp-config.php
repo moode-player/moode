@@ -161,13 +161,6 @@ else if (isset($_POST['camillaguistatus']) && isset($_POST['update_camillagui'])
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 	$_SESSION['notify']['msg'] = 'Upload complete.';
 	$selectedCoeff = $_FILES["coeffs_file"]["name"];
-
-/*DELETE:// SAMPLE CONFIGURATIONS
-} else if (isset($_POST['install_sample_configs']) && $_POST['install_sample_configs'] == '1') {
-	// Update to latest sample configs
-	$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='camilladsp' AND type='sample-configs'", sqlConnect());
-	submitJob('install_plugin', 'camilladsp,' . $result[0]['plugin'], NOTIFY_TITLE_INFO, 'Sample configs updated. ' . NOTIFY_MSG_SYSTEM_RESTART_REQD);
-*/
 } else if ($selectedCoeff && isset($_POST['info']) && $_POST['info'] == '1') {
 	// Placeholder, no implementation required
 }
@@ -313,10 +306,6 @@ if ($cdsp->isQuickConvolutionActive()) {
 			checkResultToHtml($cdsp->checkConfigFile($cdsp->getConfig())) .
 		'</span>';
 }
-/*DELETE:// Sample configs plugin version
-$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='camilladsp' AND type='sample-configs'", sqlConnect());
-$_sample_configs_version = $result[0]['plugin'];
-*/
 
 // EXTENSIONS
 
