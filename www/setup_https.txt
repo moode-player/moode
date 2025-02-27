@@ -122,7 +122,15 @@ ANDROID
 
 1. Text goes here
 
-DEVELOPER INFORMATION
+LINUX
+
+1. Text goes here
+
+################################################################################
+#
+# DEVELOPER INFORMATION
+#
+################################################################################
 
 The software components for the HTTPS mode feature are listed below.
 
