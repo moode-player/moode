@@ -10,86 +10,116 @@
 
 OVERVIEW
 
-HTTPS mode is an experimental feature in moOde that enables secure communication
-between the Browser and moOde/NGINX web server. This is achieved through use of
-an automatically or manually generated security certificate (cert).
+HTTPS mode is an experimental feature in moOde System Config that enables secure
+communication between the Browser and moOde/NGINX web server through use of an
+automatically or manually generated Security Certificate [Cert].
 
-Automatically Generated (Self-Signed)
+Automatically Generated Cert (Self-Signed)
 
-This type of cert is automatically created and installed into NGINX web server
-when HTTPS mode is turned on. The cert can be downloaded via the DOWNLOAD button
+This type of Cert is automatically created and installed into NGINX web server
+when HTTPS mode is turned on. The Cert can be downloaded via the DOWNLOAD button
 or Browser Export option and then a manual procedure is required to import the
-cert into the client Operating System (OS) certificate store. After this is done
+Cert into the client Operating System (OS) Certificate Store. After this is done
 the Browser will be able to establish secure HTTPS communication with moOde.
 
-Manually Generated
+Manually Generated Cert
 
-This type of cert is manually created and can be self-signed or signed by a
+This type of Cert is manually created and can be self-signed or signed by a
 local Certificate Authority (CA) then manually installed into NGINX web server
 via the UPLOAD and INSTALL buttons. A second manual procedure is used to import
-the cert into the client Operating System (OS) certificate Store. After this is
+the Cert into the client Operating System (OS) Certificate Store. After this is
 done the Browser will be able to establish secure HTTPS communication with moOde.
 
 CONFIGURING HTTPS MODE
 
-Below is a basic procedure for configuring HTTPS mode. The steps to install the
-cert into the client OS certificate store vary depending on the OS.
+Below is the procedure for configuring HTTPS mode on moOde. The steps to install
+the Cert into the client OS Certificate Store vary depending on the OS.
 
 First, open moOde on a desktop OS for example MacOS.
 
-1. HTTPS mode on
+HTTPS Mode: ON
 
-a. Open System Config and scroll to the Security section
-b. Set the Certificate type to "Automatic"
-c. Turn HTTPS mode on
-d. DOWNLOAD the cert
-e. Install the downloaded cert into the OS certificate store and set its trust
-   policy to "Always trust". This terminology may vary depending on the OS.
-f. Reboot moOde
-g. Refresh the Browser and a secure HTTPS connection should be established
+1. Open System Config and scroll to the Security section
+2. Set the Certificate type to "Automatic"
+3. Turn HTTPS mode ON
+4. DOWNLOAD the Cert
+5. Install the downloaded Cert into the client OS Certificate Store and set its
+   trust policy to "Always trust" (this terminology varies depending on the OS)
+6. Reboot moOde
+7. Refresh the Browser and a secure HTTPS connection should be established
 
-2. HTTPS mode off
+HTTPS Mode: OFF
 
-a. Open System Config and scroll to the Security section
-b. Turn HTTPS mode OFF
-c. Reboot
-d. Open http://moode
-e. A non-secure HTTP connection should be established
+1. Open System Config and scroll to the Security section
+2. Turn HTTPS mode OFF
+3. Reboot
+4. Open http://moode
+5. A non-secure HTTP connection should be established
+6. You may need to clear the Browser cache
 
-3. Changing the host name
+Changing the host name
 
-If the host name is changed via System Config while HTTPS mode is on and the
-Certificate type was set to "Automatic" a new self-signed cert will be generated
+If the host name is changed via System Config while HTTPS Mode is ON and the
+Certificate type was set to "Automatic" a new self-signed Cert will be generated
 automatically and installed into NGINX web server during startup after reboot.
 
-a. Refresh the Browser
-b. Click the browser "Security warning" badge to view the cert
-c. Navigate to an option that offers an "Export" button
-d. Click the Export button
-e. Select DER encoding format
-f. Export/Download the cert
-g. Install the downloaded cert into the client OS certificate store and set its
+1. Refresh the Browser
+2. Click the browser "Security warning" badge to view the Cert
+3. Navigate to an option that offers an "Export" button
+4. Click the Export button
+5. Select DER encoding format
+6. Export/Download the Cert
+7. Install the downloaded Cert into the client OS Certificate Store and set its
    trust policy to "Always trust"
 
 IMPORTING CERTS INTO DESKTOP AND MOBILE OS
 
-MacOS:
-  - Double click the cert
-  - Auto-opens the Keychain Access app
-  - Install the cert into the System store
-  - Double click the installed cert
-  - Set its trust policy to "Always trust"
-  - Done
+MacOS
 
-IOS:
-  - First attach the cert to an email on another client
-  - Open the email on IOS
-  - Click the cert icon to download the "Profile"
-  - Open Settings>General>VPN and Device Management
-  - Under CONFIGURATON PROFILE, click and install the cert profile
-  - Open Settings>General>About>Certificate Trust Settings
-  - Click the slider to trust the cert
-  - Done
+  1. Double click the Cert
+  2. Auto-opens the Keychain Access app
+  3. Install the Cert into the System store
+  4. Double click the installed Cert
+  5. Set its trust policy to "Always trust"
+  6. Done
+
+IOS
+
+  1. First attach the Cert to an email on another client
+  2. Open the email on IOS
+  3. Click the Cert icon to download the "Profile"
+  4. Open Settings > General > VPN and Device Management
+  5. Under CONFIGURATON PROFILE, click and install the Cert profile
+  6. Open Settings > General > About > Certificate Trust Settings
+  7. Click the slider to trust the Cert
+  8. Done
+
+WINDOWS
+
+Add the Certificates Snap-in
+
+1. Open the “Microsoft Management Console” by using the Windows + R keyboard combination, typing "mmc" and clicking Open
+2. Go to File > Add/Remove Snap-in
+3. Click Certificates then click Add
+4. Select Computer Account and click Next
+5. Select Local Computer then click Finish
+6. Click OK to go back to the MMC window
+
+Add the moOde Cert
+
+1. Double-click Certificates (local computer) to expand the view
+2. Select Trusted Root Certification Authorities
+3. Right-click on Certificates in the middle column under “Object Type” then select All Tasks then Import
+4. Click Next then Browse
+5. Change the certificate extension dropdown next to the filename field to All Files (*.*) and locate the moOde Cert file
+6. Click Open then Next then "Place all certificates in the following store" > "Trusted Root Certification Authorities store"
+7. Click Next then click Finish to complete the wizard
+8. If everything worked, you should see the moOde Cert listed under Trusted Root Certification Authorities > Certificates
+9. Done
+
+ANDROID
+
+1. Text goes here
 
 DEVELOPER INFORMATION
 
@@ -116,7 +146,7 @@ MOODE FILES
 /var/www/util/gen-cert.sh
 /var/www/setup_https.txt
 
-AUTOMATICALLY GENERATED CERTIFICATE (SELF_SIGNED)
+AUTOMATICALLY GENERATED CERT (SELF_SIGNED)
 
 Generated by:
 /var/www/util/gen-cert.sh
