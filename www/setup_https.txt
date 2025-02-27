@@ -4,8 +4,8 @@
 #
 #  Version: 2.0 2025-02-26
 #
-#  (C) Tim Curtis  2023 http://moodeaudio.org
-#  (C) @the_betrum 2025 http://moodeaudio.org/forum
+#  (C) Tim Curtis  2023 https://moodeaudio.org
+#  (C) @the_betrum 2025 https://moodeaudio.org/forum
 #
 ################################################################################
 
@@ -175,5 +175,5 @@ DNS.2           = $HOSTNAME
 IP.1            = 172.24.1.1 (Hotspot default address)
 
 ################################################################################
-#  Post questions regarding this guide to http://moodeaudio.org/forum
+#  Post questions regarding this guide to https://moodeaudio.org/forum
 ################################################################################
