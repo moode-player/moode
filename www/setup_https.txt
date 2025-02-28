@@ -43,7 +43,7 @@ HTTPS Mode: ON
     1. Open System Config and scroll to the Security section
     2. Set the Certificate type to "Automatic"
     3. Turn HTTPS mode ON
-    4. DOWNLOAD the Cert
+    4. DOWNLOAD the Cert (it will be a .cer file)
     5. Install the downloaded Cert into the client OS Certificate Store and set its
        trust policy to "Always trust" (this terminology varies depending on the OS)
     6. Reboot moOde
