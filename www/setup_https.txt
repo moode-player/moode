@@ -36,7 +36,7 @@ CONFIGURING HTTPS MODE
 Below is the procedure for configuring HTTPS mode. The steps to install the Cert
 into the client OS Certificate Store vary depending on the OS.
 
-First, open moOde on a desktop OS for example MacOS.
+First, open moOde on a desktop OS.
 
 HTTPS Mode: ON
 
@@ -73,7 +73,7 @@ automatically and installed into NGINX web server during startup after reboot.
     7. Install the Cert into the client OS Certificate Store and set its trust
        policy to "Always trust"
 
-IMSTALLING THE CERT INTO DESKTOP AND MOBILE OPERATING SYSTEMS
+INSTALLING THE CERT INTO DESKTOP AND MOBILE OPERATING SYSTEMS
 
 MACOS
 
