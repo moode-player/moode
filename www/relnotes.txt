@@ -16,8 +16,8 @@
 ################################################################################
 
 Updates
-- UPD: Improve HTTPS mode (Cert compatible with Android OS, Updated Setup Guide)
-- UPD: Improve metadata layout for mobile portrait (left justify)
+- UPD: Improve HTTPS mode cert compatibility with Android
+- UPD: Improve metadata layout for mobile portrait
 - UPD: Minor naming improvements to CamillaDSP sample configs (new image only)
 
 Bug fixes
