@@ -20,6 +20,9 @@ Updates
 - UPD: Improve metadata layout for mobile portrait (left justify)
 - UPD: Minor naming improvements to CamillaDSP sample configs (new image only)
 
+Bug fixes
+- FIX: Advanced search strict == not working
+
 ################################################################################
 #
 # 2025-02-23 moOde 9.2.5 (Bookworm)
