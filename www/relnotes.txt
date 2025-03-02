@@ -18,6 +18,7 @@
 Updates
 - UPD: Improve HTTPS mode cert compatibility with Android
 - UPD: Improve metadata layout for mobile portrait
+- UPD: Improve encodedAt labels for UPnP files and Radio stations
 - UPD: Minor naming improvements to CamillaDSP sample configs (new image only)
 
 Bug fixes
