@@ -697,10 +697,10 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 	} else if (isset($songData['Name']) || (substr($songData['file'], 0, 4) == 'http' && !isset($songData['Artist']))) {
 		// Radio station
 		$format = isset($_SESSION[$songData['file']]['format']) ? $_SESSION[$songData['file']]['format'] : 'VBR';
-		$encodedAt = empty($format) ? 'Unknown' : ($displayFormat == 'verbose' ? $format . ' Compression' : $format);
+		$encodedAt = empty($format) ? 'VBR' : ($displayFormat == 'verbose' ? $format . ' Compression' : $format);
 	} else if (substr($songData['file'], 0, 4) == 'http' && isset($songData['Artist'])) {
 		// UPnP file
-		$encodedAt = 'Unknown';
+		$encodedAt = 'UPnP stream';
 	} else if ($ext == 'dsf' || $ext == 'dff') {
 		// DSD: DSF/DFF
 		$result = getDSDRateAndChannels($songData['file']);
