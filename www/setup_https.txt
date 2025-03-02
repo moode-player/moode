@@ -28,8 +28,8 @@ Manually Generated Cert
 This type of Cert is manually created and can be self-signed or signed by a
 local Certificate Authority (CA) then manually installed into NGINX web server
 via the UPLOAD and INSTALL buttons. A second manual procedure is used to import
-the Cert into the client OS Certificate Store. After this is
-done the Browser will be able to establish secure HTTPS communication with moOde.
+the Cert into the client OS Certificate Store. After this is done the Browser
+will be able to establish secure HTTPS communication with moOde.
 
 CONFIGURING HTTPS MODE
 
@@ -44,8 +44,9 @@ HTTPS Mode: ON
     2. Set the Certificate type to "Automatic"
     3. Turn HTTPS mode ON
     4. DOWNLOAD the Cert (it will be a .cer file)
-    5. Install the downloaded Cert into the client OS Certificate Store and set its
-       trust policy to "Always trust" (this terminology varies depending on the OS)
+    5. Install the downloaded Cert into the client OS Certificate Store and set
+       its trust policy to "Always trust" (this terminology varies depending on
+       the OS)
     6. Reboot moOde
     7. Refresh the Browser and a secure HTTPS connection should be established
 
@@ -88,7 +89,8 @@ WINDOWS
 
 Add the Certificates Snap-in
 
-    1. Open the “Microsoft Management Console” by using the Windows + R keyboard combination, typing "mmc" and clicking Open
+    1. Open the “Microsoft Management Console” by using the Windows + R keyboard
+       combination, typing "mmc" and clicking Open
     2. Go to File > Add/Remove Snap-in
     3. Click Certificates then click Add
     4. Select Computer Account and click Next
@@ -99,28 +101,36 @@ Add the Cert
 
     1. Double-click Certificates (local computer) to expand the view
     2. Select Trusted Root Certification Authorities
-    3. Right-click on Certificates in the middle column under “Object Type” then select All Tasks then Import
+    3. Right-click on Certificates in the middle column under “Object Type” then
+       select All Tasks then Import
     4. Click Next then Browse
-    5. Change the certificate extension dropdown next to the filename field to All Files (*.*) and locate the moOde Cert file
-    6. Click Open then Next then "Place all certificates in the following store" > "Trusted Root Certification Authorities store"
+    5. Change the certificate extension dropdown next to the filename field to
+       All Files (*.*) and locate the moOde Cert file
+    6. Click Open then Next then "Place all certificates in the following store"
+       > "Trusted Root Certification Authorities store"
     7. Click Next then click Finish to complete the wizard
-    8. If everything worked, you should see the moOde Cert listed under Trusted Root Certification Authorities > Certificates
+    8. If everything worked, you should see the moOde Cert listed under Trusted
+       Root Certification Authorities > Certificates
 
 ANDROID
 
     1. First, attach the Cert to an Email
     2. Open the Email on Android and download the attached Cert
-    3. Open Settings > Security and privacy > More security and privacy > Encryption and credentials
+    3. Open Settings > Security and privacy > More security and privacy >
+       Encryption and credentials
     4. Select "Install a certificate", then choose "CA certificate"
-    5. A warning will appear stating "the certificate owner could see your encrypted data"
+    5. A warning will appear stating "the certificate owner could see your
+       encrypted data"
     6. Accept the warning by selecting "Install anyway"
-    7. Navigate to where you stored the certificate from step 2, select it and choose "Install"
+    7. Navigate to where you stored the certificate from step 2, select it and
+       choose "Install"
 
 IOS
 
     1. First, attach the Cert to an Email
     2. Open the Email on IOS
-    3. Click the Cert icon to download the "Profile"
+    3. Click the Cert icon and text to download the "Profile", don't click the
+       Download button
     4. Open Settings > General > VPN and Device Management
     5. Under CONFIGURATON PROFILE, click and install the Cert profile
     6. Open Settings > General > About > Certificate Trust Settings
