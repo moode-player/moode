@@ -2,7 +2,7 @@
 #
 #  Configuration Guide for moOde HTTPS mode
 #
-#  Version: 2.0 2025-02-26
+#  Version: 2.0 2025-03-03
 #
 #  (C) Tim Curtis  2023 https://moodeaudio.org
 #  (C) @the_betrum 2025 https://moodeaudio.org/forum
@@ -129,10 +129,10 @@ IOS
 
     1. First, attach the Cert to an Email
     2. Open the Email on IOS
-    3. Click the Cert icon and text to download the "Profile", don't click the
+    3. Click the "Cert icon and text" to download the Profile, don't click the
        Download button
     4. Open Settings > General > VPN and Device Management
-    5. Under CONFIGURATON PROFILE, click and install the Cert profile
+    5. Under CONFIGURATON PROFILE, click and install the Cert Profile
     6. Open Settings > General > About > Certificate Trust Settings
     7. Click the slider to trust the Cert
 
