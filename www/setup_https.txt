@@ -112,6 +112,16 @@ Add the Cert
     8. If everything worked, you should see the moOde Cert listed under Trusted
        Root Certification Authorities > Certificates
 
+LINUX
+
+    1. DOWNLOAD the Cert (it will be a .cer file)
+    2. Convert the .cer file to a .crt file
+       openssl x509 -inform DER -outform PEM -in ./moode.local.cer -out ./moode.local.crt
+    3. Copy the .crt file to the local staging directory used by update-ca-certificates
+       sudo cp moode.local.crt /usr/local/share/ca-certificates/
+    4. Update the certificate store
+       sudo update-ca-certificates
+
 ANDROID
 
     1. First, attach the Cert to an Email
