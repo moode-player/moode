@@ -779,10 +779,20 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		// Determine badging
 		// NOTE: This is modeled after the code in getEncodedAt()
 		if (!(substr($song['file'], 0, 4) == 'http' && !isset($current['duration']))) { // Not a radio station
-			sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
-			$songData = parseDelimFile(readMpdResp($sock), ': ');
-			$mpdFormatTag = explode(':', $songData['Format']);
-			if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
+            if (substr($song['file'], 0, 4) == 'http') { // UPnP file
+                // [0] bits, [1] rate, [2] channels [3] ext, [4] duration
+                $result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . $song['file'] . '"');
+                $format[0] = $result[1]; // rate
+                $format[1] = $result[0]; // bits
+                $format[2] = $result[2]; // channels
+            } else { // Song file
+                sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
+    			$songData = parseDelimFile(readMpdResp($sock), ': ');
+                // [0] rate, [1] bits, [2] channels
+    			$format = explode(':', $songData['Format']);
+            }
+
+			if ($ext == 'mp3' || ($format[1] == 'f' && $format[2] <= 2)) {
 				// Lossy
 				$current['hidef'] = 'no';
 			} else if ($ext == 'dsf' || $ext == 'dff') {
@@ -793,8 +803,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				$current['hidef'] = 'yes';
 			} else {
 				// PCM or Multichannel PCM
-				$current['hidef'] = ($mpdFormatTag[1] == 'f' || $mpdFormatTag[1] > ALBUM_BIT_DEPTH_THRESHOLD ||
-					$mpdFormatTag[0] > ALBUM_SAMPLE_RATE_THRESHOLD) ? 'yes' : 'no';
+				$current['hidef'] = ($format[1] == 'f' || $format[1] > ALBUM_BIT_DEPTH_THRESHOLD ||
+					$format[0] > ALBUM_SAMPLE_RATE_THRESHOLD) ? 'yes' : 'no';
 			}
 		}
 

@@ -700,7 +700,14 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		$encodedAt = empty($format) ? 'VBR' : ($displayFormat == 'verbose' ? $format . ' Compression' : $format);
 	} else if (substr($songData['file'], 0, 4) == 'http' && isset($songData['Artist'])) {
 		// UPnP file
-		$encodedAt = 'UPnP stream';
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . $songData['file'] . '"');
+		$bitDepth = $result[0];
+		$sampleRate = $result[1];
+		$channels = $result[2];
+		$format = $result[3];
+		$encodedAt = $bitDepth == '?' ?
+		'UPnP ' . $format . ' ' . formatRate($sampleRate) . 'kHz' :
+		'UPnP ' . $format . ' ' . $bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch';
 	} else if ($ext == 'dsf' || $ext == 'dff') {
 		// DSD: DSF/DFF
 		$result = getDSDRateAndChannels($songData['file']);
