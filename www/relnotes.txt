@@ -23,6 +23,7 @@ Updates
 
 Bug fixes
 - FIX: Advanced search strict == not working
+- FIX: Crossfeed settings: set Jan Meier to 9.5 dB, add Liqube (730 Hz, 6.2 dB)
 
 ################################################################################
 #
