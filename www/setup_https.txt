@@ -4,8 +4,9 @@
 #
 #  Version: 2.0 2025-03-03
 #
-#  (C) Tim Curtis  2023 https://moodeaudio.org
-#  (C) @the_betrum 2025 https://moodeaudio.org/forum
+#  (C) Tim Curtis       2023 https://moodeaudio.org
+#  (C) @the_betrum      2025 https://moodeaudio.org/forum
+#  (C) @TheOldPresbyope 2025 https://moodeaudio.org/forum
 #
 ################################################################################
 
