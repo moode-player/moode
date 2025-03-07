@@ -217,7 +217,7 @@ function autoConfigSettings() {
 			return $str;
 		}],
 		'Network (wlan0)',
-		['requires' => ['wlanssid', 'wlanpwd', 'wlanuuid'],
+		['requires' => ['wlanssid', 'wlansecurity', 'wlanpwd', 'wlanuuid'],
 		'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry', 'wlanpsk'],
 		'handler' => function($values, $optionals) {
 			$dbh = sqlConnect();
@@ -228,7 +228,7 @@ function autoConfigSettings() {
 				'netmask' => $cfgNetwork[1]['netmask'],	'gateway' => $cfgNetwork[1]['gateway'],
 				'pridns' => $cfgNetwork[1]['pridns'], 'secdns' => $cfgNetwork[1]['secdns'],
 				'wlanssid' => $values['wlanssid'], 'wlanuuid' => $values['wlanuuid'], 'wlanpwd' => $psk,
-				'wlanpsk' => $psk, 'wlancc' =>  $cfgNetwork[1]['wlancc']);
+				'wlanpsk' => $psk, 'wlancc' =>  $cfgNetwork[1]['wlancc'], 'wlansecurity' =>  $cfgNetwork[1]['wlansec']);
 			if (key_exists('wlanmethod', $optionals)) {$value['method'] = $optionals['wlanmethod'];}
 			if (key_exists('wlanipaddr', $optionals)) {$value['ipaddr'] = $optionals['wlanipaddr'];}
 			if (key_exists('wlannetmask', $optionals)) {$value['netmask'] = $optionals['wlannetmask'];}
@@ -249,13 +249,14 @@ function autoConfigSettings() {
 			$str .= "wlanpridns = \"" . $result[0]['pridns'] . "\"\n";
 			$str .= "wlansecdns = \"" . $result[0]['secdns'] . "\"\n";
 			$str .= "wlanssid = \"" . $result[0]['wlanssid'] . "\"\n";
+			$str .= "wlansecurity = \"" . $result[0]['wlansec'] . "\"\n";
 			$str .= "wlanuuid = \"" . $result[0]['wlanuuid'] . "\"\n";
 			$str .= "wlanpwd = \"" . "" . "\"\n"; // Keep empty
 			$str .= "wlanpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
 			$str .= "wlancountry = \"" . $result[0]['wlancc'] . "\"\n";
 			return $str;
 		}],
-		['requires' => ['ssid_ssid', 'ssid_uuid', 'ssid_psk'],
+		['requires' => ['ssid_ssid', 'ssid_security', 'ssid_uuid', 'ssid_psk'],
 		'handler' => function($values) {
 			$dbh = sqlConnect();
 			sqlDelete('cfg_ssid', $dbh);
@@ -266,7 +267,8 @@ function autoConfigSettings() {
 					$values['ssid_uuid'][$i] . "\", \"" .
 					$values['ssid_psk'][$i] . "\", " .
 					// method, ipaddr, netmask, gateway, pridns, secdns
-					"\"\", \"\", \"\", \"\", \"\", \"\"";
+					"\"\", \"\", \"\", \"\", \"\", \"\"" .
+					$values['ssid_security'][$i] . "\"";
 				sqlInsert('cfg_ssid', $dbh, $value);
 			}
 			cfgNetworks();
@@ -276,6 +278,7 @@ function autoConfigSettings() {
 			$str = '';
 			foreach ($result as $i => $row) {
 				$str .= sprintf($format, 'ssid', $i, $row['ssid']);
+				$str .= sprintf($format, 'security', $i, $row['security']);
 				$str .= sprintf($format, 'uuid', $i, $row['uuid']);
 				$str .= sprintf($format, 'psk', $i, $row['psk']);
 				// TODO: Add method, ipaddr, netmask, gateway, pridns, secdns
