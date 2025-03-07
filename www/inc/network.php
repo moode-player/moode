@@ -56,7 +56,7 @@ function cfgNetworks() {
 		$data .= "ssid=" . $cfgNetwork[1]['wlanssid'] . "\n";
 		$data .= "hidden=false\n";
 		$data .= "[wifi-security]\n";
-		$data .= "key-mgmt=wpa-psk\n";
+		$data .= "key-mgmt=" . $cfgNetwork[1]['wlansec'] . "\n";
 		$data .= "psk=" . $cfgNetwork[1]['wlanpsk'] . "\n";
 		$data .= "[ipv4]\n";
 		$data .= getIPv4AddressBlock($cfgNetwork[1]);
@@ -87,7 +87,7 @@ function cfgNetworks() {
 		$data .= "ssid=" . $row['ssid'] . "\n";
 		$data .= "hidden=false\n";
 		$data .= "[wifi-security]\n";
-		$data .= "key-mgmt=wpa-psk\n";
+		$data .= "key-mgmt=" . $row['security'] . "\n";
 		$data .= "psk=" . $row['psk'] . "\n";
 		$data .= "[ipv4]\n";
 		// TODO: Allow static ip address

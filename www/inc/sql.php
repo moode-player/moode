@@ -61,6 +61,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', wlanpwd='" . SQLite3::escapeString($value['wlanpwd']) .
 				"', wlanpsk='" . $value['wlanpsk'] .
 				"', wlancc='" . $value['wlancc'] .
+				"', wlansec='" . $value['wlansec'] .
 				"' WHERE iface='" . $key . "'";
 			break;
 		case 'cfg_source':

@@ -21,7 +21,7 @@ $cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	// eth0
 	$value = array('method' => 'dhcp', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '', 'wlanssid' => '',
-		'wlanuuid' => '', 'wlanpwd' => '', 'wlanpsk' => '', 'wlancc' => '');
+		'wlanuuid' => '', 'wlanpwd' => '', 'wlanpsk' => '', 'wlancc' => '', 'wlansec' => '');
 	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
 	// wlan0
@@ -38,7 +38,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// Ethernet (eth0)
 	$value = array('method' => $_POST['eth0method'], 'ipaddr' => $_POST['eth0ipaddr'], 'netmask' => $_POST['eth0netmask'],
 		'gateway' => $_POST['eth0gateway'], 'pridns' => $_POST['eth0pridns'], 'secdns' => $_POST['eth0secdns'], 'wlanssid' => '',
-		'wlanuuid' => '', 'wlanpwd' => '', 'wlanpsk' => '', 'wlancc' => '');
+		'wlanuuid' => '', 'wlanpwd' => '', 'wlanpsk' => '', 'wlancc' => '', 'wlansec' => '');
 	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
 	// Wireless (wlan0)
@@ -66,7 +66,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
 		'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
 		'wlanssid' => $_POST['wlan0ssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $psk, 'wlanpsk' => $psk,
-		'wlancc' => $_POST['wlan0country']);
+		'wlancc' => $_POST['wlan0country'], 'wlansec' => $_POST['wlan0security']);
 	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
 	// cfg_ssid
@@ -82,7 +82,8 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 				"'" . $_POST['wlan0netmask'] . "', " .
 				"'" . $_POST['wlan0gateway'] . "', " .
 				"'" . $_POST['wlan0pridns'] . "', " .
-				"'" . $_POST['wlan0secdns'] . "'";
+				"'" . $_POST['wlan0secdns'] . "', " .
+				"'" . $_POST['wlan0security'] . "'";
 			$result = sqlQuery("INSERT INTO cfg_ssid VALUES " . '(NULL,' . $values . ')', $dbh);
 		} else {
 			$result = sqlQuery("UPDATE cfg_ssid SET " .
@@ -93,7 +94,8 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 				"netmask='" . $_POST['wlan0netmask'] . "', " .
 				"gateway='" . $_POST['wlan0gateway'] . "', " .
 				"pridns='" .  $_POST['wlan0pridns'] . "', " .
-				"secdns='" .  $_POST['wlan0secdns'] . "' " .
+				"secdns='" .  $_POST['wlan0secdns'] . "', " .
+				"security='" . $_POST['wlan0security'] . "' " .
 				"WHERE id='" . $cfgSSID[0]['id'] . "'" , $dbh);
 		}
 	}
@@ -108,7 +110,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	}
 	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 		'wlanssid' => $_POST['wlan0apdssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $psk, 'wlanpsk' => $psk,
-		'wlancc' => '');
+		'wlancc' => '', 'wlansec' => 'wpa-psk');
 	sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 
 	// Generate .nmconnection files
@@ -260,6 +262,10 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		$_wlan0ssid .= $cfgSSIDItemsFiltered;
 	}
 }
+// Security protocol
+$_wlan0security .= "<option value=\"wpa-psk\" " . ($cfgNetwork[1]['wlansec'] == 'wpa-psk' ? 'selected' : '') . " >WPA2-PSK</option>\n";
+$_wlan0security .= "<option value=\"sae\" " . ($cfgNetwork[1]['wlansec'] == 'sae' ? 'selected' : '') . " >WPA3-SEC</option>\n";
+
 // Password (PSK)
 // TODO: load psk from cfg_ssid
 $_wlan0pwd = empty($_POST['wlan0otherssid']) ? $cfgNetwork[1]['wlanpwd'] : '';

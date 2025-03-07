@@ -95,6 +95,17 @@
                 </span>
 			</div>
 
+			<label class="control-label" for="wlan0security">Security</label>
+			<div class="controls">
+				<select id="wlan0security" name="wlan0security" class="config-select-large">
+					$_wlan0security
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0security" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-wlan0security" class="config-help-info">
+					The default security protocol is WPA2-PSK which covers both WPA and WPA2. Select WPA3-SEC if the network is running only WPA3-SEC.
+                </span>
+			</div>
+
 			<label class="control-label" for="wlan0pwd">Password</label>
 			<div class="controls">
 				<input class="config-input-large" type="password" pattern=".{8,64}" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
