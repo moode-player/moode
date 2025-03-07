@@ -228,7 +228,7 @@ function autoConfigSettings() {
 				'netmask' => $cfgNetwork[1]['netmask'],	'gateway' => $cfgNetwork[1]['gateway'],
 				'pridns' => $cfgNetwork[1]['pridns'], 'secdns' => $cfgNetwork[1]['secdns'],
 				'wlanssid' => $values['wlanssid'], 'wlanuuid' => $values['wlanuuid'], 'wlanpwd' => $psk,
-				'wlanpsk' => $psk, 'wlancc' =>  $cfgNetwork[1]['wlancc'], 'wlansecurity' =>  $cfgNetwork[1]['wlansec']);
+				'wlanpsk' => $psk, 'wlancc' =>  $cfgNetwork[1]['wlancc'], 'wlansec' =>  $cfgNetwork[1]['wlansec']);
 			if (key_exists('wlanmethod', $optionals)) {$value['method'] = $optionals['wlanmethod'];}
 			if (key_exists('wlanipaddr', $optionals)) {$value['ipaddr'] = $optionals['wlanipaddr'];}
 			if (key_exists('wlannetmask', $optionals)) {$value['netmask'] = $optionals['wlannetmask'];}
@@ -267,7 +267,7 @@ function autoConfigSettings() {
 					$values['ssid_uuid'][$i] . "\", \"" .
 					$values['ssid_psk'][$i] . "\", " .
 					// method, ipaddr, netmask, gateway, pridns, secdns
-					"\"\", \"\", \"\", \"\", \"\", \"\"" .
+					"\"\", \"\", \"\", \"\", \"\", \"\", \"" .
 					$values['ssid_security'][$i] . "\"";
 				sqlInsert('cfg_ssid', $dbh, $value);
 			}
@@ -294,7 +294,7 @@ function autoConfigSettings() {
 				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 				'wlanssid' => $values['apdssid'], 'wlanuuid' => $values['apduuid'], 'wlanpwd' => $psk, 'wlanpsk' =>  $psk,
-				'wlancc' => '');
+				'wlancc' => '', 'wlansec' => 'wpa-psk');
 			sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 			sqlUpdate('cfg_system', $dbh, 'ap_network_addr', $values['apdaddr']);
 			cfgNetworks();
