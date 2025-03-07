@@ -16,6 +16,7 @@
 ################################################################################
 
 Updates
+- UPD: Add Security protocol option to Network Config for WPA3-SEC support
 - UPD: Improve HTTPS mode cert compatibility with Android
 - UPD: Improve metadata layout for mobile portrait
 - UPD: Improve encodedAt labels for UPnP files and Radio stations
