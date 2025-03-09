@@ -16,9 +16,10 @@
 ################################################################################
 
 Updates
-- UPD:
+- UPD: Radio station URL's that recently changed
 
 Bug fixes
+- FIX: Extra metadata contains 'Not playing' when playing to Bluetooth speaker
 - FIX: ALSA volume max message in Audio Config and Multiroom Config
 - FIX: Samba logs not being cleared by maintenance task
 
