@@ -1200,6 +1200,7 @@ function renderUI() {
             $('#ss-extra-metadata-output-format').text('').removeClass('ss-npicon');
         } else {
             // Play
+            var mpdJsonOutput = SESSION.json['audioout'] == 'Bluetooth' ? '16/44.1 kHz, 2ch' : MPD.json['output'];
             if (MPD.json['artist'] == 'Radio station') {
                 if (typeof(RADIO.json[MPD.json['file']]['format']) == 'undefined' ||
                     RADIO.json[MPD.json['file']]['format'] == '') {
@@ -1212,7 +1213,7 @@ function renderUI() {
                 } else {
                     var bitRate = format + ' ' + MPD.json['bitrate'];
                 }
-        		$('#extra-tags-display').text(bitRate + ' • ' + MPD.json['output']);
+        		$('#extra-tags-display').text(bitRate + ' • ' + mpdJsonOutput);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
                 $('#extra-tags-display').html(formatExtraTagsString());
@@ -1223,7 +1224,7 @@ function renderUI() {
         	}
 
             if (SESSION.json['show_npicon'] != 'None') {
-                $('#ss-extra-metadata-output-format').text(MPD.json['output']).addClass('ss-npicon');
+                $('#ss-extra-metadata-output-format').text(mpdJsonOutput).addClass('ss-npicon');
             }
         }
 
@@ -5012,7 +5013,8 @@ function setNpIcon() {
             $('.playqueue li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').removeClass('no-npicon');
             $('.cv-playqueue li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').removeClass('no-npicon');
             if (MPD.json['state'] == 'play') {
-                $('#ss-extra-metadata-output-format').text(MPD.json['output']).addClass('ss-npicon');
+                var mpdJsonOutput = SESSION.json['audioout'] == 'Bluetooth' ? '16/44.1 kHz, 2ch' : MPD.json['output'];
+                $('#ss-extra-metadata-output-format').text(mpdJsonOutput).addClass('ss-npicon');
             }
         }
         // Track in Library
@@ -5071,6 +5073,9 @@ function formatExtraTagsString () {
         //console.log(tag, MPD.json[tag]);
         if (MPD.json[tag] != null && MPD.json[tag] != 'Disc tag missing' && MPD.json[tag] != 'Unknown' && MPD.json[tag] != '') {
             var displayedTag = tag == 'track' ? 'Track' : (tag == 'disc' ? 'Disc' : '');
+            if (tag == 'output' && SESSION.json['audioout'] == 'Bluetooth' && MPD.json['state'] == 'play') {
+                MPD.json[tag] = '16/44.1 kHz, 2ch';
+            }
             output += displayedTag + ' ' + MPD.json[tag] + ' • ';
         }
     }
