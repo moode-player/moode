@@ -65,11 +65,10 @@ RECEIVER CONFIGURATION
 
 Receivers should be configured first. The Receiver daemon is separate from MPD
 and the other Audio Renderers and thus the Receiver configuration should be
-dedicated although it's not absolutely required. A Receiver can have Bluetooth,
-AirPlay and Spotify Connect renderers running in the background but there is no
-coordination between them and the Receiver player. Initiating a Bluetooth,
-Spotify Connect or AirPlay connection while the Receiver player is on will
-result in audio output conflicts and errors.
+dedicated although it's not absolutely required. A Receiver can have other audio
+renderers running in the background but there is no coordination between them
+and the Receiver player. Initiating a connection to a renderer while the
+Receiver player is on will result in audio output conflicts and errors.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
@@ -127,8 +126,9 @@ B) Renderer Configuration (Menu, Configure, Renderers)
 
 1. Turn the following Audio Renderers off
    a. Squeezelite
-   b. RoonBridge
-2. Optionally turn on Bluetooth, AirPlay and/or Spotify Connect renderers
+   b. Plexamp
+   c. RoonBridge
+2. Optionally turn on Bluetooth, AirPlay, Spotify Connect and/or Deezer Connect
 3. Turn the DLNA server off
 
 B) Sender Configuration (Menu, Configure, Multiroom)
