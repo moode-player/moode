@@ -436,17 +436,15 @@ $_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($
 // Max volume
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max = '';
-	$_alsavolume_max_pct = '';
 	$_alsavolume_max_readonly = 'readonly';
 	$_alsavolume_max_disable = 'disabled';
-	$_alsavolume_max_msg = "<i>Hardware volume controller not detected</i><br>";
+	$_alsavolume_max_msg = '<span class="config-msg-static"><i>Hardware volume controller not detected</i></span>';
 } else {
 	$_alsavolume_max = $_SESSION['alsavolume_max'];
-	$_alsavolume_max_pct = '<span class="config-msg-static">Current ALSA volume: ' .
-		sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0] . '</span>';
 	$_alsavolume_max_readonly = '';
 	$_alsavolume_max_disable = '';
-	$_alsavolume_max_msg = '';
+	$_alsavolume_max_msg = '<span class="config-msg-static">Current ALSA volume: ' .
+		sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0] . '</span>';
 }
 // Output mode
 $_alsa_output_mode_disable = ($_SESSION['alsa_loopback'] == 'On' || isHDMIDevice($_SESSION['adevname'])) ? 'disabled' : '';

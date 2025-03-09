@@ -283,7 +283,7 @@ $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($cf
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($cfgMultiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
 $_multiroom_rx_alsavol_max = $cfgMultiroom['rx_alsa_volume_max'];;
 $_multiroom_rx_alsavol_pct = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
-if (stripos($_multiroom_rx_alsavol_percent, 'amixer:') === false) {
+if (stripos($_multiroom_rx_alsavol_pct, 'amixer:') === false) {
 	$_multiroom_rx_alsavol_msg = '<span class="config-msg-static">Current ALSA volume: ' . $_multiroom_rx_alsavol_pct . '</span>';
 	$_multiroom_rx_alsavol_disable = '';
 } else {
