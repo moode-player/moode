@@ -164,8 +164,7 @@ if [[ $1 = "clear-syslogs" ]]; then
 	rm /var/log/btmp.* 2> /dev/null
 	rm /var/log/apt/*.log.* 2> /dev/null
 	rm /var/log/nginx/*.log.* 2> /dev/null
-	rm /var/log/samba/log.wb* 2> /dev/null
-	rm /var/log/samba/log.winbindd 2> /dev/null
+	rm /var/log/samba/log* 2> /dev/null
 	exit
 fi
 
