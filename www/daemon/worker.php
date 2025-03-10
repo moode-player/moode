@@ -716,19 +716,21 @@ workerLog('worker: --');
 // Audio device
 workerLog('worker: Audio device:  ' . $_SESSION['cardnum'] . ':' . $_SESSION['adevname']);
 
-// Check for reassigned or empty card number
-$actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
-if ($actualCardNum == $_SESSION['cardnum']) {
-	workerLog('worker: ALSA card:     has not been reassigned');
-	if (isHDMIDevice($_SESSION['adevname'])) {
-		phpSession('write', 'alsa_output_mode', 'iec958');
-		updMpdConf();
-		sysCmd('systemctl restart mpd');
-		workerLog('worker: MPD config:    updated (iec958 device)');
+// Retry if empty card assignment
+$maxLoops = 12;
+$sleepTime = 5;
+for ($i = 0; $i < $maxLoops; $i++) {
+	$actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
+	if ($actualCardNum == ALSA_EMPTY_CARD) {
+		workerLog('worker: ALSA card:     is empty, retry ' . ($i + 1));
+		sleep($sleepTime);
 	} else {
-		workerLog('worker: MPD config:    update not needed');
+		break;
 	}
-} else if ($actualCardNum == ALSA_EMPTY_CARD) {
+}
+
+// Configure audio device
+if ($actualCardNum == ALSA_EMPTY_CARD) {
 	workerLog('worker: ALSA card:     is empty, reconfigure to HDMI 1');
 	$hdmi1CardNum = getAlsaCardNumForDevice(PI_HDMI1);
 	$devCache = checkOutputDeviceCache(PI_HDMI1, $hdmi1CardNum);
@@ -742,6 +744,16 @@ if ($actualCardNum == $_SESSION['cardnum']) {
 	updMpdConf();
 	sysCmd('systemctl restart mpd');
 	workerLog('worker: MPD config:    updated');
+} else if ($actualCardNum == $_SESSION['cardnum']) {
+	workerLog('worker: ALSA card:     has not been reassigned');
+	if (isHDMIDevice($_SESSION['adevname'])) {
+		phpSession('write', 'alsa_output_mode', 'iec958');
+		updMpdConf();
+		sysCmd('systemctl restart mpd');
+		workerLog('worker: MPD config:    updated (iec958 device)');
+	} else {
+		workerLog('worker: MPD config:    update not needed');
+	}
 } else {
 	workerLog('worker: ALSA card:     has been reassigned to ' . $actualCardNum . ' from ' . $_SESSION['cardnum']);
 	phpSession('write', 'cardnum', $actualCardNum);
