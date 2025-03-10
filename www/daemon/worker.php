@@ -684,10 +684,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 }
 
 // Cards
-$pad_length = 16;
+$padLength = 16;
 $cards = getAlsaCardIDs();
 foreach ($cards as &$card) {
-	$card = str_pad($card, $pad_length);
+	$card = str_pad($card, $padLength);
 }
 workerLog('worker: Cards:  0:' . $cards[0] . '1:' . $cards[1]. '2:' . $cards[2]. '3:' . $cards[3]);
 workerLog('worker:         4:' . $cards[4] . '5:' . $cards[5]. '6:' . $cards[6]. '7:' . $cards[7]);
@@ -702,7 +702,7 @@ foreach ($cards as $card) {
 		$mixerName = (empty($result) || str_contains($result[0], 'Invalid card number')) ? 'none' : $result[0];
 	}
 
-	array_push($mixers, str_pad($mixerName, $pad_length));
+	array_push($mixers, str_pad($mixerName, $padLength));
 }
 workerLog('worker: Mixers: 0:' . $mixers[0] . '1:' . $mixers[1] . '2:' . $mixers[2] . '3:' . $mixers[3]);
 workerLog('worker:         4:' . $mixers[4] . '5:' . $mixers[5] . '6:' . $mixers[6] . '7:' . $mixers[7]);
