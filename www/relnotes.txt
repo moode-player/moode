@@ -16,6 +16,7 @@
 ################################################################################
 
 Updates
+- UPD: Add retry loop for ALSA card empty during startup
 - UPD: Radio station URL's that recently changed
 
 Bug fixes
