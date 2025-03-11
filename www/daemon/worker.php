@@ -717,7 +717,10 @@ workerLog('worker: --');
 workerLog('worker: Audio device:  ' . $_SESSION['cardnum'] . ':' . $_SESSION['adevname']);
 
 // Retry if empty card assignment
-$maxLoops = 12;
+if (!isset($_SESSION['alsa_empty_retry'])) {
+	$_SESSION['alsa_empty_retry'] = 12; // Default = 1 minute (12 x 5 sec sleep)
+}
+$maxLoops = $_SESSION['alsa_empty_retry'];
 $sleepTime = 5;
 for ($i = 0; $i < $maxLoops; $i++) {
 	$actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);

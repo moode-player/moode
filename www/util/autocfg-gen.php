@@ -46,18 +46,20 @@ $currentSettings['usb_volknob'] = $_SESSION['usb_volknob'];
 $currentSettings['led_state'] = $_SESSION['led_state'];
 $currentSettings['eth0chk'] = $_SESSION['eth0chk'];
 $currentSettings['avahi_options'] = $_SESSION['avahi_options'];
-// MPD options
+// Audio: MPD options
 $currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
 $currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];
 $currentSettings['ashuffle_filter'] = $_SESSION['ashuffle_filter'];
 $currentSettings['ashuffle_exclude'] = $_SESSION['ashuffle_exclude'];
-// Bluetooth
+// Audio: Bluetooth
 $currentSettings['alsa_output_mode_bt'] = $_SESSION['alsa_output_mode_bt'];
 $currentSettings['alsavolume_max_bt'] = $_SESSION['alsavolume_max_bt'];
 $currentSettings['cdspvolume_max_bt'] = $_SESSION['cdspvolume_max_bt'];
 $currentSettings['bt_auto_disconnect'] = $_SESSION['bt_auto_disconnect'];
-// Plexamp
+// Audio: Plexamp
 $currentSettings['alsavolume_max_pa'] = $_SESSION['alsavolume_max_pa'];
+// Audio: ALSA
+$currentSettings['alsa_empty_retry'] = $_SESSION['alsa_empty_retry'];
 // Library
 $currentSettings['lib_scope'] = $_SESSION['lib_scope'];
 $currentSettings['lib_active_search'] = $_SESSION['lib_active_search'];

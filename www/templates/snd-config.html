@@ -65,6 +65,18 @@
 				</div>
 			</div>
 
+			<label class="control-label" for="alsa-empty-retry">Device ready wait</label>
+			<div class="controls">
+                <select id="alsa-empty-retry" name="alsa_empty_retry" class="config-select-large" onchange="autoClick('#btn-set-alsa-empty-retry');">
+					$_select[alsa_empty_retry]
+                </select>
+				<button id="btn-set-alsa-empty-retry" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_empty_retry" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-empty-retry" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-alsa-empty-retry" class="config-help-info">
+					During start up, wait up to the specified number of minutes for the Output device to become ready.
+				</span>
+			</div>
+
 			<div class="config-horiz-rule"></div>
 
 			<label class="control-label" for="i2sdevice">Named I2S device</label>

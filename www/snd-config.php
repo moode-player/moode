@@ -87,6 +87,13 @@ if (isset($_POST['update_camilladsp_volume_range']) && $_POST['camilladsp_volume
 	sysCmd('systemctl restart mpd2cdspvolume');
 }
 
+// ALSA empty retry
+if (isset($_POST['update_alsa_empty_retry'])) {
+	if (isset($_POST['alsa_empty_retry'])) {
+		$_SESSION['alsa_empty_retry'] = $_POST['alsa_empty_retry'];
+	}
+}
+
 // I2S AUDIO DEVICE
 
 // Flag that controls what is displayed in the Output device field after changing I2S device or overlay
@@ -392,6 +399,10 @@ if ($_SESSION['camilladsp'] != 'off') {
 } else {
 	$_camilladsp_volume_range_hide = 'hide';
 }
+// ALSA empty retry
+$_select['alsa_empty_retry'] .= "<option value=\"12\" " . (($_SESSION['alsa_empty_retry'] == '12') ? "selected" : "") . ">1 min (Default)</option>\n";
+$_select['alsa_empty_retry'] .= "<option value=\"24\" " . (($_SESSION['alsa_empty_retry'] == '24') ? "selected" : "") . ">2 mins</option>\n";
+$_select['alsa_empty_retry'] .= "<option value=\"36\" " . (($_SESSION['alsa_empty_retry'] == '36') ? "selected" : "") . ">3 mins</option>\n";
 // Named I2S devices
 $result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
 sort($result);
