@@ -16,8 +16,8 @@
 ################################################################################
 
 Updates
-- UPD: Add retry loop for ALSA card empty during startup
-- UPD: Radio station URL's that recently changed
+- UPD: Add configurable retry for ALSA card empty during startup
+- UPD: Radio station URL's for 6forty Radio, Hi On Line - Pop (320K)
 
 Bug fixes
 - FIX: Extra metadata contains 'Not playing' when playing to Bluetooth speaker
