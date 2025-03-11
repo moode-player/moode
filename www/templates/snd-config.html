@@ -19,7 +19,7 @@
 			<label class="control-label" for="output-device">Output device</label>
 			<div class="controls">
                 <select id="output-device" name="output_device_cardnum" class="config-select-large" onchange="autoClick('#btn-set-output-device');" $_output_device_btn_disabled>
-					$_mpd_select[device]
+					$_select[device]
                 </select>
 				<button id="btn-set-output-device" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_output_device" value="novalue" $_output_device_btn_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="nop" value="novalue" $_output_device_btn_disabled>Scan</i></button>
@@ -33,7 +33,7 @@
 			<label class="control-label" for="mixer-type">Volume type</label>
             <div class="controls">
                 <select id="mixer-type" name="mixer_type" class="config-select-large" onchange="autoClick('#btn-set-mixer-type');" $_volume_type_btn_disabled>
-					$_mpd_select[mixer_type]
+					$_select[mixer_type]
                 </select>
 				<button id="btn-set-mixer-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_volume_type" value="novalue" $_volume_type_btn_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>

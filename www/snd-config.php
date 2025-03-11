@@ -362,13 +362,13 @@ if ($_SESSION['audioout'] == 'Bluetooth' ||
 // Output device
 // Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device(s)
 if ($i2sReboot === true) {
-	$_mpd_select['device'] = "<option value=\"0\" selected>RESTART REQUIRED</option>\n";
+	$_select['device'] = "<option value=\"0\" selected>RESTART REQUIRED</option>\n";
 } else {
 	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$deviceName = $deviceNames[$i] == ALSA_DUMMY_DEVICE ?
 			$i . ': '  . TRX_SENDER_NAME :
 			$i . ': '  . $deviceNames[$i];
-		$_mpd_select['device'] .= "<option value=\"" . $i . "\" " . (($cfgMPD['device'] == $i) ? "selected" : "") . ">$deviceName</option>\n";
+		$_select['device'] .= "<option value=\"" . $i . "\" " . (($cfgMPD['device'] == $i) ? "selected" : "") . ">$deviceName</option>\n";
 	}
 }
 // For USB device
@@ -379,15 +379,15 @@ $_device_error = $deviceNames[$_SESSION['cardnum']] == ALSA_EMPTY_CARD ? 'Device
 $_software_and_dsd_warning = $cfgMPD['mixer_type'] == 'software' ?
 	'<br><b>WARNING:</b> DSD format will output 0dB when using Software volume.' : '';
 if ($_SESSION['alsavolume'] != 'none' || $_SESSION['adevname'] == TRX_SENDER_NAME) {
-	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " .
+	$_select['mixer_type'] .= "<option value=\"hardware\" " .
 		($cfgMPD['mixer_type'] == 'hardware' ? "selected" : "") . ">Hardware</option>\n";
 }
-$_mpd_select['mixer_type'] .= "<option value=\"software\" " .
+$_select['mixer_type'] .= "<option value=\"software\" " .
 	($cfgMPD['mixer_type'] == 'software' ? "selected" : "") . ">Software</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"none\" " .
+$_select['mixer_type'] .= "<option value=\"none\" " .
 	($cfgMPD['mixer_type'] == 'none' ? "selected" : "") . ">Fixed (0dB)</option>\n";
 if ($_SESSION['camilladsp'] != 'off') {
-	$_mpd_select['mixer_type'] .= "<option value=\"null\" " .
+	$_select['mixer_type'] .= "<option value=\"null\" " .
 		($cfgMPD['mixer_type'] == 'null' ? "selected" : "") . ">CamillaDSP</option>\n";
 	$_camilladsp_volume_range_hide = ($cfgMPD['mixer_type'] == 'null' && $_SESSION['camilladsp_volume_sync'] == 'on') ? '' : 'hide';
 	$_select['camilladsp_volume_range'] .= "<option value=\"30\" " . (($_SESSION['camilladsp_volume_range'] == '30') ? "selected" : "") . ">30 dB</option>\n";
