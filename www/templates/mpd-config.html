@@ -32,7 +32,6 @@
 					<b>DSD over PCM (DoP):</b>&nbsp;There is no way to detect if an audio device supports DoP so only enable this if you are certain that the device supports it otherwise the encapsulated DSD bitstream may cause loud or unpredictable distortion.
                 </span>
             </div>
-
             <label class="control-label" for="stop_dsd_silence">Silence before stop</label>
             <div class="controls">
 				<select id="stop_dsd_silence" name="conf[stop_dsd_silence]" class="config-select-large">
@@ -43,7 +42,6 @@
 					Play silence before manually stopping or pausing DSD/DoP playback. This is a workaround for some audio devices that emit noise when stopping DSD/DoP playback.
 				</span>
             </div>
-
 			<label class="control-label" for="thesycon_dsd_workaround">Thesycon patch</label>
             <div class="controls">
 				<select id="thesycon_dsd_workaround" name="conf[thesycon_dsd_workaround]" class="config-select-large">
@@ -66,28 +64,24 @@
                     The Selective resampling option will appear when SoX is enabled and a sample rate is specified.
                 </span>
             </div>
-
 			<label class="control-label" for="sox-bit-depth">Bit depth</label>
             <div class="controls">
                 <select id="sox-bit-depth" name="sox_bit_depth" class="config-select-large">
 					$_mpd_select[sox_bit_depth]
                 </select>
             </div>
-
             <label class="control-label" for="sox-sample-rate">Sample rate (kHz)</label>
             <div class="controls">
                 <select id="sox-sample-rate" name="sox_sample_rate" class="config-select-large">
 					$_mpd_select[sox_sample_rate]
                 </select>
             </div>
-
             <label class="control-label" for="sox-channels">Channels</label>
             <div class="controls">
                 <select id="sox-channels" name="sox_channels" class="config-select-large">
 					$_mpd_select[sox_channels]
                 </select>
             </div>
-
     		<div class="$_selective_resampling_hide"> <!-- This is ment to control visibility of the feature in case MPD no longer supports the patch -->
     			<div id="selective-resample" class="hide">
 	                <label class="control-label" for="selective-resample-mode">Selective resampling</label>
@@ -105,7 +99,6 @@
 	                </div>
     			</div>
     		</div>
-
             <label class="control-label" for="sox-quality">Quality</label>
             <div class="controls">
                 <select id="sox-quality" name="conf[sox_quality]" class="config-select-large">
@@ -124,7 +117,6 @@
                     Individual quality parameters will appear when Quality is set to "Custom recipe".
                 </span>
             </div>
-
 			<div class="$_sox_custom_recipe_hide">
 				<div id="sox-custom-recipe" class="hide">
 					<label class="control-label" for="sox-precision">Precision</label>
@@ -185,7 +177,6 @@
 	                </div>
 				</div>
 			</div>
-
             <label class="control-label" for="sox-multithreading">Multithreading</label>
             <div class="controls">
                 <select id="sox-multithreading" name="conf[sox_multithreading]" class="config-select-large">
@@ -209,7 +200,6 @@
 					Adjust the volume of songs played using ReplayGain tags. Setting this to "album" will adjust volume using the album's ReplayGain tags, while setting it to "track" will	adjust it using the track ReplayGain tags. Setting it to "auto" uses the track ReplayGain tags if MPD random play is activated otherwise the album ReplayGain tags. Currently only FLAC, Ogg Vorbis, Musepack, and MP3 (through ID3v2 ReplayGain tags, not APEv2) are supported.
                </span>
             </div>
-
             <label class="control-label" for="replaygain-preamp">ReplayGain preamp</label>
             <div class="controls">
                 <input class="config-input-large" type="number" id="replaygain-preamp" name="conf[replaygain_preamp]" value="$_mpd_select[replaygain_preamp]" min="-15" max="15">
@@ -218,7 +208,6 @@
 					The gain (in dB) applied to songs with ReplayGain tags. Range is -15 to 15.
                 </span>
             </div>
-
             <label class="control-label" for="volume-normalization">Normalize volume</label>
             <div class="controls">
 				<select id="volume-normalization" name="conf[volume_normalization]" class="config-select-large">
@@ -241,7 +230,6 @@
                 	Size of the buffer for audio samples. Range is 4 to 64MB. Default size is 4MB.
                 </span>
             </div>
-
 			<label class="control-label" for="max_output_buffer_size">Output buffer (MB)</label>
             <div class="controls">
                 <input class="config-input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">
@@ -250,7 +238,6 @@
                 	Size of the buffer for command output. Range is 8 to 512MB. Default is 128MB.
                 </span>
             </div>
-
 			<label class="control-label" for="max_playlist_length">Max Queue items</label>
             <div class="controls">
                 <input class="config-input-large" type="number" id="max_playlist_length" name="conf[max_playlist_length]" value="$_mpd_select[max_playlist_length]" min="2" max="32768">
@@ -259,7 +246,6 @@
                 	Range is 2 to 32768 Queue items. Default is 16384 items.
                 </span>
             </div>
-
 			<label class="control-label" for="input_cache">Input cache</label>
 			<div class="controls">
 				<select id="input_cache" name="conf[input_cache]" class="config-select-large">
@@ -281,7 +267,6 @@
                 	Specify the address of the HTTP proxy server for example proxy.isp.com:8080
                 </span>
             </div>
-
 			<label class="control-label" for="proxy-user">Userid</label>
             <div class="controls">
                 <input class="config-input-large" type="text" id="proxy-user" name="conf[proxy_user]" value="$_mpd_select[proxy_user]">
@@ -290,7 +275,6 @@
                     Specify the userid used to authenticate to the proxy server.
                 </span>
             </div>
-
             <label class="control-label" for="proxy-password">Password</label>
             <div class="controls">
                 <input class="config-input-large" type="password" id="proxy-password" name="conf[proxy_password]" value="$_mpd_select[proxy_password]">
@@ -305,15 +289,29 @@
 
             <label class="control-label" for="log_level">Log level</label>
             <div class="controls">
-				<select id="log_level" name="conf[log_level]" class="config-select-large">
-					$_mpd_select[log_level]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-log_level" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-log_level" class="config-help-info">
-					Control the amount of detail in the MPD log (/var/log/mpd/log).
+               <select id="log_level" name="conf[log_level]" class="config-select-large">
+                   $_mpd_select[log_level]
+               </select>
+               <a aria-label="Help" class="config-info-toggle" data-cmd="info-log_level" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+               <span id="info-log_level" class="config-help-info">
+                   Suppress all log messages below the given threshold.<br>
+                   <b>Notice:</b> Interesting informational messages, (default).<br>
+                   <b>Error:</b> Errors.<br>
+                   <b>Warning:</b> Warnings.<br>
+                   <b>Info:</b> Unimportant informational messages.<br>
+                   <b>Verbose:</b> debug messages (for developers and for troubleshooting)
                </span>
             </div>
-
+            <label class="control-label" for="close-on-pause">Close on pause</label>
+            <div class="controls">
+				<select id="close-on-pause" name="conf[close_on_pause]" class="config-select-large">
+					$_mpd_select[close_on_pause]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-close-on-pause" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-close-on-pause" class="config-help-info">
+					Close the ALSA device while playback is paused. This defaults to yes because it allows other applications to use the device while MPD is paused.
+                </span>
+            </div>
             <label class="control-label" for="buffer-time">Device buffer (ms)</label>
             <div class="controls">
 				<select id="buffer-time" name="conf[buffer_time]" class="config-select-large">
@@ -324,7 +322,6 @@
 					Device sample buffer length in milliseconds.
 				</span>
             </div>
-
             <label class="control-label" for="period-time">Device period (ms)</label>
              <div class="controls">
  				<input class="config-input-large" type="number" id="period-time" name="conf[period_time]" value="$_period_time" readonly>

@@ -54,7 +54,8 @@ if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' ||
 	$_save_disabled = '';
 }
 
-// DSD support
+// DSD SUPPORT
+
 // Format
 $_mpd_select['dop'] .= "<option value=\"no\" " . (($cfgMPD['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";
 $_mpd_select['dop'] .= "<option value=\"yes\" " . (($cfgMPD['dop'] == 'yes') ? "selected" : "") . " >DSD over PCM (DoP)</option>\n";
@@ -65,13 +66,14 @@ $_mpd_select['stop_dsd_silence'] .= "<option value=\"no\" " . (($cfgMPD['stop_ds
 $_mpd_select['thesycon_dsd_workaround'] .= "<option value=\"yes\" " . (($cfgMPD['thesycon_dsd_workaround'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['thesycon_dsd_workaround'] .= "<option value=\"no\" " . (($cfgMPD['thesycon_dsd_workaround'] == 'no') ? "selected" : "") . " >No</option>\n";
 
-// SoX resampling
-$format = array('','','');
-$format = explode(':', $cfgMPD['audio_output_format']);
+// SOX RESAMPLING
+
 // Enabled
 $_mpd_select['sox_enabled'] .= "<option value=\"Yes\" " . (($cfgMPD['audio_output_format'] != 'disabled') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['sox_enabled'] .= "<option value=\"No\" " . (($cfgMPD['audio_output_format'] == 'disabled') ? "selected" : "") . " >No</option>\n";
 // Bit depth
+$format = array('','','');
+$format = explode(':', $cfgMPD['audio_output_format']);
 $_mpd_select['sox_bit_depth'] .= "<option value=\"*\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[1] == '*') ? "selected" : "") . " >Any</option>\n";
 $_mpd_select['sox_bit_depth'] .= "<option value=\"16\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[1] == '16') ? "selected" : "") . " >16</option>\n";
 $_mpd_select['sox_bit_depth'] .= "<option value=\"24\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[1] == '24') ? "selected" : "") . " >24</option>\n";
@@ -92,7 +94,6 @@ $_mpd_select['sox_sample_rate'] .= "<option value=\"768000\" " . (($cfgMPD['audi
 $_mpd_select['sox_channels'] .= "<option value=\"*\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[2] == '*') ? "selected" : "") . " >Any</option>\n";
 $_mpd_select['sox_channels'] .= "<option value=\"2\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[2] == '2') ? "selected" : "") . " >Stereo</option>\n";
 $_mpd_select['sox_channels'] .= "<option value=\"1\" " . (($cfgMPD['audio_output_format'] != 'disabled' && $format[2] == '1') ? "selected" : "") . " >Mono</option>\n";
-
 // Selective resample mode
 $_selective_resampling_hide = ''; // This is ment to control visibility of the feature in case MPD no longer supports the patch
 $selectiveModeLabel = array(
@@ -115,7 +116,6 @@ $_mpd_select['sox_quality'] .= "<option value=\"very high\" " . (($cfgMPD['sox_q
 $_mpd_select['sox_quality'] .= "<option value=\"high\" " . (($cfgMPD['sox_quality'] == 'high') ? "selected" : "") . " >High (Default)</option>\n";
 $_mpd_select['sox_quality'] .= "<option value=\"medium\" " . (($cfgMPD['sox_quality'] == 'medium') ? "selected" : "") . " >Medium</option>\n";
 $_mpd_select['sox_quality'] .= "<option value=\"custom\" " . (($cfgMPD['sox_quality'] == 'custom') ? "selected" : "") . " >Custom recipe</option>\n";
-
 // Custom SoX recipe
 $_sox_custom_recipe_hide = '';
 $_mpd_select['sox_precision'] .= "<option value=\"16\" " . (($cfgMPD['sox_precision'] == '16') ? "selected" : "") . " >16 bit</option>\n";
@@ -128,28 +128,31 @@ $_mpd_select['sox_passband_end'] = $cfgMPD['sox_passband_end'];
 $_mpd_select['sox_stopband_begin'] = $cfgMPD['sox_stopband_begin'];
 $_mpd_select['sox_attenuation'] = $cfgMPD['sox_attenuation'];
 $_mpd_select['sox_flags'] = $cfgMPD['sox_flags'];
-
 // SoX multithreading
 $_mpd_select['sox_multithreading'] .= "<option value=\"0\" " . (($cfgMPD['sox_multithreading'] == '0') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['sox_multithreading'] .= "<option value=\"1\" " . (($cfgMPD['sox_multithreading'] == '1') ? "selected" : "") . " >No</option>\n";
+
+// GAIN AND NORMALIZATION
 
 // Replaygain
 $_mpd_select['replaygain'] .= "<option value=\"off\" " . (($cfgMPD['replaygain'] == 'off') ? "selected" : "") . " >Off</option>\n";
 $_mpd_select['replaygain'] .= "<option value=\"auto\" " . (($cfgMPD['replaygain'] == 'auto') ? "selected" : "") . " >Auto</option>\n";
 $_mpd_select['replaygain'] .= "<option value=\"album\" " . (($cfgMPD['replaygain'] == 'album') ? "selected" : "") . " >Album</option>\n";
 $_mpd_select['replaygain'] .= "<option value=\"track\" " . (($cfgMPD['replaygain'] == 'track') ? "selected" : "") . " >Track</option>\n";
-
 // Replaygain preamp
 $_mpd_select['replaygain_preamp'] = $cfgMPD['replaygain_preamp'];
-
 // Volume normalization
 $_mpd_select['volume_normalization'] .= "<option value=\"yes\" " . (($cfgMPD['volume_normalization'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['volume_normalization'] .= "<option value=\"no\" " . (($cfgMPD['volume_normalization'] == 'no') ? "selected" : "") . " >No</option>\n";
 
-// Resource limits
+// RESOURCE ALLOCATION
+
+// Buffers
 $_mpd_select['audio_buffer_size'] = $cfgMPD['audio_buffer_size'] / 1024; // Convert these from KB to MB
 $_mpd_select['max_output_buffer_size'] = $cfgMPD['max_output_buffer_size'] / 1024;
+// Max Queue items
 $_mpd_select['max_playlist_length'] = $cfgMPD['max_playlist_length'];
+// Input cache
 $_mpd_select['input_cache'] .= "<option value=\"Disabled\" " . (($cfgMPD['input_cache'] == 'Disabled') ? "selected" : "") . " >Disabled</option>\n";
 $_mpd_select['input_cache'] .= "<option value=\"128 MB\" " . (($cfgMPD['input_cache'] == '128 MB') ? "selected" : "") . " >128 MB</option>\n";
 $_mpd_select['input_cache'] .= "<option value=\"256 MB\" " . (($cfgMPD['input_cache'] == '256 MB') ? "selected" : "") . " >256 MB</option>\n";
@@ -157,23 +160,30 @@ $_mpd_select['input_cache'] .= "<option value=\"512 MB\" " . (($cfgMPD['input_ca
 $_mpd_select['input_cache'] .= "<option value=\"1 GB\" " . (($cfgMPD['input_cache'] == '1 GB') ? "selected" : "") . " >1 GB</option>\n";
 $_mpd_select['input_cache'] .= "<option value=\"2 GB\" " . (($cfgMPD['input_cache'] == '2 GB') ? "selected" : "") . " >2 GB</option>\n";
 
-// Log level
-$_mpd_select['log_level'] .= "<option value=\"default\" " . (($cfgMPD['log_level'] == 'default') ? "selected" : "") . " >Default</option>\n";
-$_mpd_select['log_level'] .= "<option value=\"verbose\" " . (($cfgMPD['log_level'] == 'verbose') ? "selected" : "") . " >Verbose</option>\n";
+// HTTP PROXY
 
-// TEST
-// Device buffer time in microseconds (label in milliseconds)
+$_mpd_select['proxy'] = $cfgMPD['proxy'];
+$_mpd_select['proxy_user'] = $cfgMPD['proxy_user'];
+$_mpd_select['proxy_password'] = $cfgMPD['proxy_password'];
+
+// OTHER OPTIONS
+
+// Log level
+$_mpd_select['log_level'] .= "<option value=\"notice\" " . (($cfgMPD['log_level'] == 'notice') ? "selected" : "") . " >Notice (Default)</option>\n";
+$_mpd_select['log_level'] .= "<option value=\"error\" " . (($cfgMPD['log_level'] == 'error') ? "selected" : "") . " >Error</option>\n";
+$_mpd_select['log_level'] .= "<option value=\"warning\" " . (($cfgMPD['log_level'] == 'warning') ? "selected" : "") . " >Warning</option>\n";
+$_mpd_select['log_level'] .= "<option value=\"info\" " . (($cfgMPD['log_level'] == 'info') ? "selected" : "") . " >Info</option>\n";
+$_mpd_select['log_level'] .= "<option value=\"verbose\" " . (($cfgMPD['log_level'] == 'verbose') ? "selected" : "") . " >Verbose</option>\n";
+// ALSA: Close on pause
+$_mpd_select['close_on_pause'] .= "<option value=\"yes\" " . (($cfgMPD['close_on_pause'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
+$_mpd_select['close_on_pause'] .= "<option value=\"no\" " . (($cfgMPD['close_on_pause'] == 'no') ? "selected" : "") . " >No</option>\n";
+// ALSA: Device buffer time in microseconds (label in milliseconds)
 $_mpd_select['buffer_time'] .= "<option value=\"500000\" " . (($cfgMPD['buffer_time'] == '500000') ? "selected" : "") . " >500 (Default)</option>\n";
 $_mpd_select['buffer_time'] .= "<option value=\"400000\" " . (($cfgMPD['buffer_time'] == '400000') ? "selected" : "") . " >400</option>\n";
 $_mpd_select['buffer_time'] .= "<option value=\"300000\" " . (($cfgMPD['buffer_time'] == '300000') ? "selected" : "") . " >300</option>\n";
 $_mpd_select['buffer_time'] .= "<option value=\"200000\" " . (($cfgMPD['buffer_time'] == '200000') ? "selected" : "") . " >200</option>\n";
 $_mpd_select['buffer_time'] .= "<option value=\"100000\" " . (($cfgMPD['buffer_time'] == '100000') ? "selected" : "") . " >100</option>\n";
 $_period_time = $cfgMPD['buffer_time'] / 4000; // miliseconds
-
-// HTTP Proxy
-$_mpd_select['proxy'] = $cfgMPD['proxy'];
-$_mpd_select['proxy_user'] = $cfgMPD['proxy_user'];
-$_mpd_select['proxy_password'] = $cfgMPD['proxy_password'];
 
 waitWorker('mpd-config');
 

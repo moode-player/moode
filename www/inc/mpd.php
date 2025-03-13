@@ -35,6 +35,9 @@ function updMpdConf() {
 			case 'thesycon_dsd_workaround':
 				$thesyconDsdWorkaround = $cfg['value'];
 				break;
+            case 'close_on_pause':
+                $closeOnPause = $cfg['value'];
+                break;
 			case 'mixer_type':
 				$mixerType = $cfg['value'];
 				break;
@@ -189,6 +192,7 @@ function updMpdConf() {
 	$data .= "dop \"" . $dop . "\"\n";
 	$data .= "stop_dsd_silence \"" . $stopDsdSilence . "\"\n";
 	$data .= "thesycon_dsd_workaround \"" . $thesyconDsdWorkaround . "\"\n";
+    $data .= "close_on_pause \"" . $closeOnPause . "\"\n";
 	$data .= $bufferTime == $bufferTimeDefault ? '' : "buffer_time \"" . $bufferTime . "\"\n";
 	$data .= "}\n\n";
 

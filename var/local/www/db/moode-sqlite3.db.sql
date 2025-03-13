@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Mar 9 06:30:01 2025
+-- File generated with SQLiteStudio v3.4.4 on Wed Mar 12 07:35:48 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -154,7 +154,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (8, 'user', 'mpd');
 INSERT INTO cfg_mpd (id, param, value) VALUES (9, 'group', 'audio');
 INSERT INTO cfg_mpd (id, param, value) VALUES (10, 'bind_to_address', 'any');
 INSERT INTO cfg_mpd (id, param, value) VALUES (11, 'port', '6600');
-INSERT INTO cfg_mpd (id, param, value) VALUES (12, 'log_level', 'default');
+INSERT INTO cfg_mpd (id, param, value) VALUES (12, 'log_level', 'notice');
 INSERT INTO cfg_mpd (id, param, value) VALUES (13, 'restore_paused', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (14, 'auto_update', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (15, 'follow_outside_symlinks', 'yes');
@@ -194,6 +194,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (48, 'thesycon_dsd_workaround', 'n
 INSERT INTO cfg_mpd (id, param, value) VALUES (49, 'proxy', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (50, 'proxy_user', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (51, 'proxy_password', '');
+INSERT INTO cfg_mpd (id, param, value) VALUES (52, 'close_on_pause', 'yes');
 
 -- Table: cfg_multiroom
 CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
