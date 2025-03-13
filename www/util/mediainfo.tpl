@@ -3,3 +3,4 @@
 %Channel(s)%
 %Format%
 %BitRate%
+%Compression_Mode%

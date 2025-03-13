@@ -705,9 +705,10 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		$sampleRate = $result[1];
 		$channels = $result[2];
 		$format = $result[3];
-		$encodedAt = $bitDepth == '?' ?
-		'UPnP ' . $format . ' ' . formatRate($sampleRate) . 'kHz' :
-		'UPnP ' . $format . ' ' . $bitDepth . '/' . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch';
+		$compression = $result[5];
+		$encodedAt = 'UPnP ' . $format . ' ' . ($bitDepth == '?' ?
+		formatRate($sampleRate) . 'kHz' :
+		($bitDepth = $compression == 'Lossless' ? $bitDepth . '/' : '') . formatRate($sampleRate) . ' kHz, ' . $channels . 'ch');
 	} else if ($ext == 'dsf' || $ext == 'dff') {
 		// DSD: DSF/DFF
 		$result = getDSDRateAndChannels($songData['file']);
