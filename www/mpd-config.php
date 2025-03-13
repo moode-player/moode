@@ -54,6 +54,9 @@ if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' ||
 	$_save_disabled = '';
 }
 
+// MPD VERSION
+$_mpd_version = $_SESSION['mpdver'];
+
 // DSD SUPPORT
 
 // Format
