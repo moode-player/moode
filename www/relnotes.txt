@@ -18,6 +18,7 @@
 
 Updates
 - UPD: Bump to MPD 0.24
+- UPD: Bump to MPC 0.35
 - UPD: Bump to pleezer 0.12.2
 - UPD: Add configurable retry for ALSA card empty during startup
 - UPD: Radio station URL's for 6forty Radio, Hi On Line - Pop (320K)
