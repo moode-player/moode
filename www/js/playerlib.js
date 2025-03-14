@@ -91,6 +91,7 @@ const DEFAULT_RADIO_TITLE = 'Radio station';
 const DEFAULT_RADIO_COVER = 'images/default-album-cover.png';
 const DEFAULT_ALBUM_COVER = 'images/default-album-cover.png';
 const DEFAULT_UPNP_COVER = 'images/default-upnp-cover.jpg';
+const DEFAULT_RX_COVER = 'images/default-rx-cover.jpg';
 const DEFAULT_PLAYLIST_COVER = '/var/www/images/default-playlist-cover.jpg';
 const DEFAULT_NOTFOUND_COVER = '/var/www/images/default-notfound-cover.jpg';
 
@@ -772,13 +773,16 @@ function inpSrcIndicator(cmd, msgText) {
     $('#inpsrc-metadata').hide();
 
     // Set custom backdrop (if any)
-    if (SESSION.json['renderer_backdrop'] == 'Yes') {
+    if (cmd == 'rxactive1') {
+        $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + DEFAULT_RX_COVER + '">');
+        $('#inpsrc-backdrop').css('filter', 'blur(1.25px)');
+        $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
+    } else if (SESSION.json['renderer_backdrop'] == 'Yes') {
         if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1) {
             $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
             $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
             $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
-        }
-        else if (SESSION.json['bgimage'] != '') {
+        } else if (SESSION.json['bgimage'] != '') {
             $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + SESSION.json['bgimage'] + '">');
             $('#inpsrc-backdrop').css('filter', 'blur(0px)');
             $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
