@@ -1154,6 +1154,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 	if (isset($_SESSION['multiroom_tx']) && $_SESSION['multiroom_tx'] == 'On') {
 		$statusTx = 'started';
 		startMultiroomSender();
+		// No need for db display since each individual Receiver has its own volume
+		phpSession('write', 'volume_db_display', '0');
 	} else {
 		$statusTx = 'available';
 	}
@@ -2991,7 +2993,6 @@ function runQueuedJob() {
 				$cardNum = loadSndDummy();
 				phpSession('write', 'cardnum', $cardNum);
 				phpSession('write', 'adevname', TRX_SENDER_NAME);
-				// TODO: Investigate why this is getting reset to 'none'
 				phpSession('write', 'amixname', 'Master');
 				sqlUpdate('cfg_mpd', sqlConnect(), 'device', $cardNum);
 				changeMPDMixer('hardware');
