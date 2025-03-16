@@ -42,30 +42,38 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
 	// Wireless (wlan0)
-	// This values may be overridden if saved SSID exists (see $('#wlan0ssid').change in scripts-configs.js)
+	// These values may be overridden if saved SSID exists (see $('#wlan0ssid').change in scripts-configs.js)
 	$method = ($_POST['wlan0ssid'] == 'Activate Hotspot' || $_POST['wlan0ssid'] == 'None') ?
 		'dhcp' : $_POST['wlan0method'];
 	// Always generate a new UUID to make things simpler
 	$uuid = genUUID();
-	// Pre-shared key (PSK)
-	if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlanpsk']) {
-		// SSID or password changed
-		if (strlen($_POST['wlan0pwd']) < 64) {
-			// Convert plain text password to PSK
-			$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
+
+	if ($_POST['wlan0security'] == 'wpa-psk') {
+		// WPA2-PSK requires pre-shared key password
+		if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlanpsk']) {
+			// SSID or password changed
+			if (strlen($_POST['wlan0pwd']) < 64) {
+				// Convert plain text password to PSK
+				$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
+			} else {
+				// Use PSK from saved SSID
+				$psk = $_POST['wlan0pwd'];
+			}
 		} else {
-			// Use PSK from saved SSID
-			$psk = $_POST['wlan0pwd'];
+			// Use PSK from configured SSID
+			$psk = $cfgNetwork[1]['wlanpsk'];
 		}
-	} else {
-		// Use PSK from configured SSID
-		$psk = $cfgNetwork[1]['wlanpsk'];
+		$pwd = $psk;
+	} else if ($_POST['wlan0security'] == 'sae') {
+		// WPA3-SAE requires plaintext password
+		$psk = '';
+		$pwd = $_POST['wlan0pwd'];
 	}
 
 	// cfg_network
 	$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
 		'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
-		'wlanssid' => $_POST['wlan0ssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $psk, 'wlanpsk' => $psk,
+		'wlanssid' => $_POST['wlan0ssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $pwd, 'wlanpsk' => $psk,
 		'wlancc' => $_POST['wlan0country'], 'wlansec' => $_POST['wlan0security']);
 	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
@@ -83,19 +91,21 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 				"'" . $_POST['wlan0gateway'] . "', " .
 				"'" . $_POST['wlan0pridns'] . "', " .
 				"'" . $_POST['wlan0secdns'] . "', " .
-				"'" . $_POST['wlan0security'] . "'";
+				"'" . $_POST['wlan0security'] . "', " .
+				"'" . $_POST['wlan0pwd'] . "'";
 			$result = sqlQuery("INSERT INTO cfg_ssid VALUES " . '(NULL,' . $values . ')', $dbh);
 		} else {
 			$result = sqlQuery("UPDATE cfg_ssid SET " .
-				"uuid='" .    $uuid . "', " .
-				"psk='" .     $psk . "', " .
-				"method='" .  $method . "', " .
-				"ipaddr='" .  $_POST['wlan0ipaddr'] . "', " .
-				"netmask='" . $_POST['wlan0netmask'] . "', " .
-				"gateway='" . $_POST['wlan0gateway'] . "', " .
-				"pridns='" .  $_POST['wlan0pridns'] . "', " .
-				"secdns='" .  $_POST['wlan0secdns'] . "', " .
-				"security='" . $_POST['wlan0security'] . "' " .
+				"uuid='" .     $uuid . "', " .
+				"psk='" .      $psk . "', " .
+				"method='" .   $method . "', " .
+				"ipaddr='" .   $_POST['wlan0ipaddr'] . "', " .
+				"netmask='" .  $_POST['wlan0netmask'] . "', " .
+				"gateway='" .  $_POST['wlan0gateway'] . "', " .
+				"pridns='" .   $_POST['wlan0pridns'] . "', " .
+				"secdns='" .   $_POST['wlan0secdns'] . "', " .
+				"security='" . $_POST['wlan0security'] . "', " .
+				"saepwd='" .   $pwd . "' " .
 				"WHERE id='" . $cfgSSID[0]['id'] . "'" , $dbh);
 		}
 	}
@@ -266,9 +276,15 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 $_wlan0security .= "<option value=\"wpa-psk\" " . ($cfgNetwork[1]['wlansec'] == 'wpa-psk' ? 'selected' : '') . " >WPA2-PSK</option>\n";
 $_wlan0security .= "<option value=\"sae\" " . ($cfgNetwork[1]['wlansec'] == 'sae' ? 'selected' : '') . " >WPA3-SEC</option>\n";
 
-// Password (PSK)
+// Password (PSK or SAE plaintext)
 // TODO: load psk from cfg_ssid
-$_wlan0pwd = empty($_POST['wlan0otherssid']) ? $cfgNetwork[1]['wlanpwd'] : '';
+if (empty($_POST['wlan0otherssid'])) {
+	$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
+	$_show_hide_password_icon_hide = 'hide';
+} else {
+	$_wlan0pwd = '';
+	$_show_hide_password_icon_hide = '';
+}
 // Country code
 $zoneList = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
 $zoneListSorted = array();

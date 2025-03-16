@@ -251,7 +251,7 @@ function autoConfigSettings() {
 			$str .= "wlanssid = \"" . $result[0]['wlanssid'] . "\"\n";
 			$str .= "wlansecurity = \"" . $result[0]['wlansec'] . "\"\n";
 			$str .= "wlanuuid = \"" . $result[0]['wlanuuid'] . "\"\n";
-			$str .= "wlanpwd = \"" . "" . "\"\n"; // Keep empty
+			$str .= "wlanpwd = \"" . $result[0]['wlanpwd'] . "\"\n";
 			$str .= "wlanpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
 			$str .= "wlancountry = \"" . $result[0]['wlancc'] . "\"\n";
 			return $str;
@@ -268,7 +268,8 @@ function autoConfigSettings() {
 					$values['ssid_psk'][$i] . "\", " .
 					// method, ipaddr, netmask, gateway, pridns, secdns
 					"\"\", \"\", \"\", \"\", \"\", \"\", \"" .
-					$values['ssid_security'][$i] . "\"";
+					$values['ssid_security'][$i] . "\", " .
+					$values['ssid_saepwd'][$i] . "\"";
 				sqlInsert('cfg_ssid', $dbh, $value);
 			}
 			cfgNetworks();
@@ -282,6 +283,7 @@ function autoConfigSettings() {
 				$str .= sprintf($format, 'uuid', $i, $row['uuid']);
 				$str .= sprintf($format, 'psk', $i, $row['psk']);
 				// TODO: Add method, ipaddr, netmask, gateway, pridns, secdns
+				$str .= sprintf($format, 'saepwd', $i, $row['saepwd']);
 			}
 			return $str;
 		}],

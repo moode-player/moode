@@ -55,7 +55,7 @@ switch ($_GET['cmd']) {
 		$cfgSSID = array();
 		foreach ($result as $row) {
 			$cfgSSID[$row['ssid']] = array('uuid' => $row['uuid'], 'psk' => $row['psk'], 'method' => $row['method'], 'ipaddr' => $row['ipaddr'], 'netmask' => $row['netmask'],
-			'gateway' => $row['gateway'], 'pridns' => $row['pridns'], 'secdns' => $row['secdns']);
+			'gateway' => $row['gateway'], 'pridns' => $row['pridns'], 'secdns' => $row['secdns'], 'security' => $row['security'], 'saepwd' => $row['saepwd']);
 		}
 		$data['cfg_ssid'] = $cfgSSID;
 

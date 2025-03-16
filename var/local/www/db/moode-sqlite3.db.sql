@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Mar 12 07:35:48 2025
+-- File generated with SQLiteStudio v3.4.4 on Sat Mar 15 17:31:10 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -537,7 +537,7 @@ INSERT INTO cfg_spotify (id, param, value) VALUES (17, 'zeroconf', 'random');
 INSERT INTO cfg_spotify (id, param, value) VALUES (18, 'zeroconf_port', '9000');
 
 -- Table: cfg_ssid
-CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32), method CHAR (32), ipaddr CHAR (32), netmask CHAR (32), gateway CHAR (32), pridns CHAR (32), secdns CHAR (32), security CHAR (32));
+CREATE TABLE cfg_ssid (id INTEGER PRIMARY KEY, ssid CHAR (32), uuid CHAR (32), psk CHAR (32), method CHAR (32), ipaddr CHAR (32), netmask CHAR (32), gateway CHAR (32), pridns CHAR (32), secdns CHAR (32), security CHAR (32), saepwd CHAR (32));
 
 -- Table: cfg_system
 CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));

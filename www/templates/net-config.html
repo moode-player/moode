@@ -102,7 +102,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0security" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-wlan0security" class="config-help-info">
-					The default security protocol is WPA2-PSK which covers both WPA and WPA2. Select WPA3-SEC if the network is running only WPA3-SEC.
+					The default security protocol is WPA2-PSK which covers WPA/WPA2/WPA2-WPA3 Mixed. Select WPA3-SEC if the network is running only WPA3-SEC.
                 </span>
 			</div>
 
@@ -110,9 +110,11 @@
 			<div class="controls">
 				<input class="config-input-large" type="password" pattern=".{8,64}" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<a class="show-hide-password" href="#notarget" data-id="wlan0pwd"><i class="fa-regular fa-sharp fa-eye"></i></a>
+				<a class="show-hide-password $_show_hide_password_icon_hide" href="#notarget" data-id="wlan0pwd"><i class="fa-regular fa-sharp fa-eye"></i></a>
 				<span id="info-wlan0pwd" class="config-help-info">
-                	Length 8-63 characters. The password will be converted to a pre-shared key (PSK) after saving.
+                	Length 8-63 characters.<br>
+					<b>WPA2-PSK:</b> The password will be converted to a pre-shared key (PSK) after saving.<br>
+					<b>WPA3-SAE:</b> The password will remain plaintext after saving.
                 </span>
 			</div>
 

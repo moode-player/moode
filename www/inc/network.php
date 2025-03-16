@@ -57,7 +57,11 @@ function cfgNetworks() {
 		$data .= "hidden=false\n";
 		$data .= "[wifi-security]\n";
 		$data .= "key-mgmt=" . $cfgNetwork[1]['wlansec'] . "\n";
-		$data .= "psk=" . $cfgNetwork[1]['wlanpsk'] . "\n";
+		if ($cfgNetwork[1]['wlansec'] == 'wpa-psk') {
+			$data .= "psk=" . $cfgNetwork[1]['wlanpsk'] . "\n";
+		} else if ($cfgNetwork[1]['wlansec'] == 'sae') {
+			$data .= "sae_password=" . $cfgNetwork[1]['wlanpwd'] . "\n";
+		}
 		$data .= "[ipv4]\n";
 		$data .= getIPv4AddressBlock($cfgNetwork[1]);
 		$data .= "[ipv6]\n";
@@ -88,7 +92,11 @@ function cfgNetworks() {
 		$data .= "hidden=false\n";
 		$data .= "[wifi-security]\n";
 		$data .= "key-mgmt=" . $row['security'] . "\n";
-		$data .= "psk=" . $row['psk'] . "\n";
+		if ($row['security'] == 'wpa-psk') {
+			$data .= "psk=" . $row['psk'] . "\n";
+		} else if ($row['security'] == 'sae') {
+			$data .= "sae_password=" . $row['saepwd'] . "\n";
+		}
 		$data .= "[ipv4]\n";
 		// TODO: Allow static ip address
 		// Use same param names as in cfg_network
