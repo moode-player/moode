@@ -23,11 +23,13 @@ Updates
 - UPD: Add configurable retry for ALSA card empty during startup
 - UPD: Add dedicated backdrop for Multiroom Receiver active
 - UPD: Update 6forty Radio, Hi On Line - Pop (320K) URL's
+- UPD: Improve UPnP file metadata
 
 Bug fixes
 - FIX: Extra metadata contains 'Not playing' when playing to Bluetooth speaker
 - FIX: ALSA volume max message in Audio Config and Multiroom Config
 - FIX: Samba logs not being cleared by maintenance task
+- FIX: WPA3-SAE password config
 
 ################################################################################
 #
