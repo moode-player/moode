@@ -44,18 +44,20 @@ switch ($_GET['cmd']) {
 		$result = sqlRead('cfg_network', $dbh);
 		$cfgNetwork = array();
 		foreach ($result as $row) {
+			$pwd = $row['wlansec'] == 'wpa-psk' ? $row['wlanpwd'] : '';
 			$cfgNetwork[$row['iface']] = array('method' => $row['method'], 'ipaddr' => $row['ipaddr'], 'netmask' => $row['netmask'],
 			'gateway' => $row['gateway'], 'pridns' => $row['pridns'], 'secdns' => $row['secdns'], 'wlanssid' => $row['wlanssid'],
-			'wlanuuid' => $row['wlanuuid'], 'wlanpwd' => $row['wlanpwd'], 'wlanpsk' => $row['wlanpsk'],
-			'wlancc' => $row['wlancc']);
+			'wlanuuid' => $row['wlanuuid'], 'wlanpwd' => $pwd, 'wlanpsk' => $row['wlanpsk'],
+			'wlancc' => $row['wlancc'], 'wlansec' => $row['wlansec']);
 		}
 		$data['cfg_network'] = $cfgNetwork;
 		// Saved SSID's
 		$result = sqlRead('cfg_ssid', $dbh);
 		$cfgSSID = array();
 		foreach ($result as $row) {
-			$cfgSSID[$row['ssid']] = array('uuid' => $row['uuid'], 'psk' => $row['psk'], 'method' => $row['method'], 'ipaddr' => $row['ipaddr'], 'netmask' => $row['netmask'],
-			'gateway' => $row['gateway'], 'pridns' => $row['pridns'], 'secdns' => $row['secdns'], 'security' => $row['security'], 'saepwd' => $row['saepwd']);
+			$cfgSSID[$row['ssid']] = array('uuid' => $row['uuid'], 'psk' => $row['psk'], 'method' => $row['method'],
+			'ipaddr' => $row['ipaddr'], 'netmask' => $row['netmask'], 'gateway' => $row['gateway'], 'pridns' => $row['pridns'],
+			'secdns' => $row['secdns'], 'security' => $row['security'], 'saepwd' => '');
 		}
 		$data['cfg_ssid'] = $cfgSSID;
 

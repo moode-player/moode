@@ -101,8 +101,12 @@
 					$_wlan0security
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0security" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="wpa3-sae-msg" class="config-help-static hide">
+					<em>For WPA3-SAE a password must be entered before saving.</em>
+				</span>
 				<span id="info-wlan0security" class="config-help-info">
-					The default security protocol is WPA2-PSK which covers WPA/WPA2/WPA2-WPA3 Mixed. Select WPA3-SEC if the network is running only WPA3-SEC.
+					<b>WPA2-PSK:</b> The default protocol supporting WPA/WPA2 and WPA2-WPA3 Mixed.<br>
+					<b>WPA3-SAE:</b> Select this if the network is running only WPA3-SAE.
                 </span>
 			</div>
 
@@ -113,8 +117,8 @@
 				<a class="show-hide-password $_show_hide_password_icon_hide" href="#notarget" data-id="wlan0pwd"><i class="fa-regular fa-sharp fa-eye"></i></a>
 				<span id="info-wlan0pwd" class="config-help-info">
                 	Length 8-63 characters.<br>
-					<b>WPA2-PSK:</b> The password will be converted to a pre-shared key (PSK) after saving.<br>
-					<b>WPA3-SAE:</b> The password will remain plaintext after saving.
+					<b>WPA2-PSK:</b> The password is converted to a pre-shared key (PSK) after saving.<br>
+					<b>WPA3-SAE:</b> The password is plaintext after saving but will not appear in the Browser.
                 </span>
 			</div>
 

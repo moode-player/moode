@@ -64,67 +64,72 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 			$psk = $cfgNetwork[1]['wlanpsk'];
 		}
 		$pwd = $psk;
-	} else if ($_POST['wlan0security'] == 'sae') {
+	} else {
 		// WPA3-SAE requires plaintext password
 		$psk = '';
 		$pwd = $_POST['wlan0pwd'];
 	}
 
-	// cfg_network
-	$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
-		'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
-		'wlanssid' => $_POST['wlan0ssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $pwd, 'wlanpsk' => $psk,
-		'wlancc' => $_POST['wlan0country'], 'wlansec' => $_POST['wlan0security']);
-	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
-
-	// cfg_ssid
-	if ($_POST['wlan0ssid'] != 'Activate Hotspot' && $_POST['wlan0ssid'] != 'None') {
-		$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
-		if ($cfgSSID === true) {
-			$values =
-				"'"	. SQLite3::escapeString($_POST['wlan0ssid']) . "', " .
-				"'" . $uuid . "', " .
-				"'" . $psk . "', " .
-				"'" . $method . "', " .
-				"'" . $_POST['wlan0ipaddr'] . "', " .
-				"'" . $_POST['wlan0netmask'] . "', " .
-				"'" . $_POST['wlan0gateway'] . "', " .
-				"'" . $_POST['wlan0pridns'] . "', " .
-				"'" . $_POST['wlan0secdns'] . "', " .
-				"'" . $_POST['wlan0security'] . "', " .
-				"'" . $_POST['wlan0pwd'] . "'";
-			$result = sqlQuery("INSERT INTO cfg_ssid VALUES " . '(NULL,' . $values . ')', $dbh);
-		} else {
-			$result = sqlQuery("UPDATE cfg_ssid SET " .
-				"uuid='" .     $uuid . "', " .
-				"psk='" .      $psk . "', " .
-				"method='" .   $method . "', " .
-				"ipaddr='" .   $_POST['wlan0ipaddr'] . "', " .
-				"netmask='" .  $_POST['wlan0netmask'] . "', " .
-				"gateway='" .  $_POST['wlan0gateway'] . "', " .
-				"pridns='" .   $_POST['wlan0pridns'] . "', " .
-				"secdns='" .   $_POST['wlan0secdns'] . "', " .
-				"security='" . $_POST['wlan0security'] . "', " .
-				"saepwd='" .   $pwd . "' " .
-				"WHERE id='" . $cfgSSID[0]['id'] . "'" , $dbh);
-		}
-	}
-
-	// apd0 (Hotspot)
-	if ($_POST['wlan0apdssid'] != $cfgNetwork[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfgNetwork[2]['wlanpsk']) {
-		$uuid = genUUID();
-		$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
+	if (empty($pwd)) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'A password must be entered when Security is WPA3-SAE.';
 	} else {
-		$uuid = $cfgNetwork[2]['wlanuuid'];
-		$psk = $cfgNetwork[2]['wlanpsk'];
-	}
-	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-		'wlanssid' => $_POST['wlan0apdssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $psk, 'wlanpsk' => $psk,
-		'wlancc' => '', 'wlansec' => 'wpa-psk');
-	sqlUpdate('cfg_network', $dbh, 'apd0', $value);
+		// cfg_network
+		$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
+			'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
+			'wlanssid' => $_POST['wlan0ssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $pwd, 'wlanpsk' => $psk,
+			'wlancc' => $_POST['wlan0country'], 'wlansec' => $_POST['wlan0security']);
+		sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
-	// Generate .nmconnection files
-	submitJob('netcfg', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+		// cfg_ssid
+		if ($_POST['wlan0ssid'] != 'Activate Hotspot' && $_POST['wlan0ssid'] != 'None') {
+			$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
+			if ($cfgSSID === true) {
+				$values =
+					"'"	. SQLite3::escapeString($_POST['wlan0ssid']) . "', " .
+					"'" . $uuid . "', " .
+					"'" . $psk . "', " .
+					"'" . $method . "', " .
+					"'" . $_POST['wlan0ipaddr'] . "', " .
+					"'" . $_POST['wlan0netmask'] . "', " .
+					"'" . $_POST['wlan0gateway'] . "', " .
+					"'" . $_POST['wlan0pridns'] . "', " .
+					"'" . $_POST['wlan0secdns'] . "', " .
+					"'" . $_POST['wlan0security'] . "', " .
+					"'" . $_POST['wlan0pwd'] . "'";
+				$result = sqlQuery("INSERT INTO cfg_ssid VALUES " . '(NULL,' . $values . ')', $dbh);
+			} else {
+				$result = sqlQuery("UPDATE cfg_ssid SET " .
+					"uuid='" .     $uuid . "', " .
+					"psk='" .      $psk . "', " .
+					"method='" .   $method . "', " .
+					"ipaddr='" .   $_POST['wlan0ipaddr'] . "', " .
+					"netmask='" .  $_POST['wlan0netmask'] . "', " .
+					"gateway='" .  $_POST['wlan0gateway'] . "', " .
+					"pridns='" .   $_POST['wlan0pridns'] . "', " .
+					"secdns='" .   $_POST['wlan0secdns'] . "', " .
+					"security='" . $_POST['wlan0security'] . "', " .
+					"saepwd='" .   $pwd . "' " .
+					"WHERE id='" . $cfgSSID[0]['id'] . "'" , $dbh);
+			}
+		}
+
+		// apd0 (Hotspot)
+		if ($_POST['wlan0apdssid'] != $cfgNetwork[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfgNetwork[2]['wlanpsk']) {
+			$uuid = genUUID();
+			$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
+		} else {
+			$uuid = $cfgNetwork[2]['wlanuuid'];
+			$psk = $cfgNetwork[2]['wlanpsk'];
+		}
+		$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
+			'wlanssid' => $_POST['wlan0apdssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $psk, 'wlanpsk' => $psk,
+			'wlancc' => '', 'wlansec' => 'wpa-psk');
+		sqlUpdate('cfg_network', $dbh, 'apd0', $value);
+
+		// Generate .nmconnection files
+		submitJob('netcfg', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+	}
 }
 
 // Update saved networks
@@ -274,13 +279,19 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 }
 // Security protocol
 $_wlan0security .= "<option value=\"wpa-psk\" " . ($cfgNetwork[1]['wlansec'] == 'wpa-psk' ? 'selected' : '') . " >WPA2-PSK</option>\n";
-$_wlan0security .= "<option value=\"sae\" " . ($cfgNetwork[1]['wlansec'] == 'sae' ? 'selected' : '') . " >WPA3-SEC</option>\n";
+$_wlan0security .= "<option value=\"sae\" " . ($cfgNetwork[1]['wlansec'] == 'sae' ? 'selected' : '') . " >WPA3-SAE</option>\n";
 
 // Password (PSK or SAE plaintext)
 // TODO: load psk from cfg_ssid
+
 if (empty($_POST['wlan0otherssid'])) {
-	$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
-	$_show_hide_password_icon_hide = 'hide';
+	if ($cfgNetwork[1]['wlansec'] == 'wpa-psk') {
+		$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
+		$_show_hide_password_icon_hide = 'hide';
+	} else if ($cfgNetwork[1]['wlansec'] == 'sae') {
+		$_wlan0pwd = '';
+		$_show_hide_password_icon_hide = '';
+	}
 } else {
 	$_wlan0pwd = '';
 	$_show_hide_password_icon_hide = '';

@@ -196,11 +196,7 @@ jQuery(document).ready(function($){ 'use strict';
             $('#wlan0pridns').val(SSID.json[ssid]['pridns']);
             $('#wlan0secdns').val(SSID.json[ssid]['secdns']);
             $('#wlan0security').val(SSID.json[ssid]['security']).change();
-            if (SSID.json[ssid]['security'] == 'wpa-psk') {
-                var pwd = SSID.json[ssid]['psk'];
-            } else if (SSID.json[ssid]['security'] == 'sae') {
-                var pwd = SSID.json[ssid]['saepwd'];
-            }
+            var pwd = SSID.json[ssid]['security'] == 'wpa-psk' ? SSID.json[ssid]['psk'] : '';
             $('#wlan0pwd').val(pwd);
         } else {
             // Reset to DHCP, WPA2-PSK, and empty password
@@ -214,6 +210,11 @@ jQuery(document).ready(function($){ 'use strict';
         $('#wlan0method').val('dhcp').change();
         $('#wlan0pwd').val('');
         $('a.show-hide-password').css('display', 'inline');
+        if ($('#wlan0security').val() == 'wpa-psk') {
+            $('#wpa3-sae-msg').css('display', 'none');
+        } else {
+            $('#wpa3-sae-msg').css('display', 'block');
+        }
     });
     $('#wlan0pwd').on('input', function() {
         // Show the Eye icon
