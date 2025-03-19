@@ -188,7 +188,7 @@ jQuery(document).ready(function($){ 'use strict';
 	$('#wlan0ssid').change(function() {
         var ssid = $('#wlan0ssid').val();
         if (typeof(SSID.json[ssid]) != 'undefined') {
-            // Set to saved SSID values
+            // Set to configured values
             $('#wlan0method').val(SSID.json[ssid]['method']).change();
             $('#wlan0ipaddr').val(SSID.json[ssid]['ipaddr']);
             $('#wlan0netmask').val(SSID.json[ssid]['netmask']);
@@ -196,23 +196,29 @@ jQuery(document).ready(function($){ 'use strict';
             $('#wlan0pridns').val(SSID.json[ssid]['pridns']);
             $('#wlan0secdns').val(SSID.json[ssid]['secdns']);
             $('#wlan0security').val(SSID.json[ssid]['security']).change();
-            var pwd = SSID.json[ssid]['security'] == 'wpa-psk' ? SSID.json[ssid]['psk'] : '';
-            $('#wlan0pwd').val(pwd);
         } else {
-            // Reset to DHCP, WPA2-PSK, and empty password
-            $('#wlan0method').val('dhcp').change();
-            $('#wlan0security').val('wpa-psk');
-            $('#wlan0pwd').val('');
+            // Reset to default values
+            //$('#wlan0method').val('dhcp').change();
+            //$('#wlan0pwd').val('');
+            $('#wlan0security').val('wpa-psk').change();
         }
 	});
     $('#wlan0security').change(function() {
-        // Reset to DHCP and empty password
-        $('#wlan0method').val('dhcp').change();
-        $('#wlan0pwd').val('');
-        $('a.show-hide-password').css('display', 'inline');
         if ($('#wlan0security').val() == 'wpa-psk') {
+            var ssid = $('#wlan0ssid').val();
+            if (typeof(SSID.json[ssid]) != 'undefined') {
+                $('#wlan0pwd').val(SSID.json[ssid]['psk']);
+                $('a.show-hide-password').css('display', 'none');
+            } else {
+                $('#wlan0method').val('dhcp').change();
+                $('#wlan0pwd').val('');
+                $('a.show-hide-password').css('display', 'inline');
+            }
             $('#wpa3-sae-msg').css('display', 'none');
         } else {
+            $('#wlan0method').val('dhcp').change();
+            $('#wlan0pwd').val('');
+            $('a.show-hide-password').css('display', 'inline');
             $('#wpa3-sae-msg').css('display', 'block');
         }
     });
@@ -220,6 +226,7 @@ jQuery(document).ready(function($){ 'use strict';
         // Show the Eye icon
         $('a.show-hide-password').css('display', 'inline');
     });
+    // Hotspot
     $('#apdssid').on('input', function() {
         if ($('#apdssid').val() == NETWORK.json['apd0']['wlanssid']) {
             $('#apdpwd').val(NETWORK.json['apd0']['wlanpsk']);
