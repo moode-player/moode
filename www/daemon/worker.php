@@ -2148,11 +2148,11 @@ function updExtMetaFile() {
 }
 
 function chkClockRadio() {
-	$curtime = date('h,i,A'); // HH,MM,AP
-	$curday = date('N') - 1; // 0-6 where 0 = Monday
-	$retrystop = 2;
+	$currentTime = date('h,i,A'); // HH,MM,AP
+	$currentDay = date('N') - 1; // 0-6 where 0 = Monday
+	$retryStopCmd = 2;
 
-	if ($curtime == $GLOBALS['clkradio_start_time'] && $GLOBALS['clkradio_start_days'][$curday] == '1') {
+	if ($currentTime == $GLOBALS['clkradio_start_time'] && $GLOBALS['clkradio_start_days'][$currentDay] == '1') {
 		$GLOBALS['clkradio_start_time'] = ''; // Reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
 		// Check the Queue
@@ -2176,26 +2176,26 @@ function chkClockRadio() {
 		// Set volume
 		sysCmd('/var/www/util/vol.sh ' . $_SESSION['clkradio_volume']);
 
-	} else if ($curtime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$curday] == '1') {
+	} else if ($currentTime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$currentDay] == '1') {
 		//workerLog('chkClockRadio(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
 		$GLOBALS['clkradio_stop_time'] = '';  // Reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
 
 		// Send several stop commands for robustness
-		while ($retrystop > 0) {
+		while ($retryStopCmd > 0) {
 			sendMpdCmd($sock, 'stop');
 			$resp = readMpdResp($sock);
 			usleep(250000);
-			--$retrystop;
+			--$retryStopCmd;
 		}
 		closeMpdSock($sock);
-		//workerLog('chkClockRadio(): $curtime=(' . $curtime . '), $curday=(' . $curday . ')');
+		//workerLog('chkClockRadio(): $currentTime=(' . $currentTime . '), $currentDay=(' . $currentDay . ')');
 		//workerLog('chkClockRadio(): stop command sent');
 
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
 			if ($_SESSION['clkradio_action'] == 'Restart') {
-				sleep(45); // To ensure that after reboot $curtime != clkradio_stop_time
+				sleep(45); // To ensure that after reboot $currentTime != clkradio_stop_time
 				sysCmd('/var/local/www/commandw/restart.sh reboot');
 			} else if ($_SESSION['clkradio_action'] == 'Shutdown') {
 				sysCmd('/var/local/www/commandw/restart.sh poweroff');
@@ -2207,45 +2207,45 @@ function chkClockRadio() {
 	}
 
 	// Reload start/stop time globals
-	if ($curtime != substr($_SESSION['clkradio_start'], 0, 8) && $GLOBALS['clkradio_start_time'] == '') {
+	if ($currentTime != substr($_SESSION['clkradio_start'], 0, 8) && $GLOBALS['clkradio_start_time'] == '') {
 		$GLOBALS['clkradio_start_time'] = substr($_SESSION['clkradio_start'], 0, 8);
 		//workerLog('chkClockRadio(): starttime global reloaded');
 	}
 
-	if ($curtime != substr($_SESSION['clkradio_stop'], 0, 8) && $GLOBALS['clkradio_stop_time'] == '') {
+	if ($currentTime != substr($_SESSION['clkradio_stop'], 0, 8) && $GLOBALS['clkradio_stop_time'] == '') {
 		$GLOBALS['clkradio_stop_time'] = substr($_SESSION['clkradio_stop'], 0, 8);
 		//workerLog('chkClockRadio(): stoptime global reloaded');
 	}
 }
 
 function chkSleepTimer() {
-	$curtime = date('h,i,A'); // HH,MM,AP
-	$curday = date('N') - 1; // 0-6 where 0 = Monday
-	$retrystop = 2;
+	$currentTime = date('h,i,A'); // HH,MM,AP
+	$currentDay = date('N') - 1; // 0-6 where 0 = Monday
+	$retryStopCmd = 2;
 
-	if ($curtime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$curday] == '1') {
+	if ($currentTime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$currentDay] == '1') {
 		//workerLog('chkSleepTimer(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
 		$GLOBALS['clkradio_stop_time'] = '';  // Reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
 
 		// Send several stop commands for robustness
-		while ($retrystop > 0) {
+		while ($retryStopCmd > 0) {
 			sendMpdCmd($sock, 'stop');
 			$resp = readMpdResp($sock);
 			usleep(250000);
-			--$retrystop;
+			--$retryStopCmd;
 		}
 
 		sendMpdCmd($sock, 'stop');
 		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
-		//workerLog('chkSleepTimer(): $curtime=(' . $curtime . '), $curday=(' . $curday . ')');
+		//workerLog('chkSleepTimer(): $currentTime=(' . $currentTime . '), $currentDay=(' . $currentDay . ')');
 		//workerLog('chkSleepTimer(): stop command sent');
 
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
 			if ($_SESSION['clkradio_action'] == 'Restart') {
-				sleep(45); // To ensure that after reboot $curtime != clkradio_stop_time
+				sleep(45); // To ensure that after reboot $currentTime != clkradio_stop_time
 				sysCmd('/var/local/www/commandw/restart.sh reboot');
 			} else if ($_SESSION['clkradio_action'] == 'Shutdown') {
 				sysCmd('/var/local/www/commandw/restart.sh poweroff');
@@ -2257,7 +2257,7 @@ function chkSleepTimer() {
 	}
 
 	// Reload stop time global
-	if ($curtime != substr($_SESSION['clkradio_stop'], 0, 8) && $GLOBALS['clkradio_stop_time'] == '') {
+	if ($currentTime != substr($_SESSION['clkradio_stop'], 0, 8) && $GLOBALS['clkradio_stop_time'] == '') {
 		$GLOBALS['clkradio_stop_time'] = substr($_SESSION['clkradio_stop'], 0, 8);
 		//workerLog('chkSleepTimer(): stoptime global reloaded');
 	}
