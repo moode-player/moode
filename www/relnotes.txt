@@ -25,6 +25,7 @@ Updates
 - UPD: Add dedicated backdrop for Multiroom Receiver active
 - UPD: Update 6forty Radio, Hi On Line - Pop (320K) URL's
 - UPD: Improve UPnP file metadata
+- UPD: Improve password input fields
 
 Bug fixes
 - FIX: Extra metadata contains 'Not playing' when playing to Bluetooth speaker
