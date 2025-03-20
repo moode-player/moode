@@ -197,9 +197,6 @@ jQuery(document).ready(function($){ 'use strict';
             $('#wlan0secdns').val(SSID.json[ssid]['secdns']);
             $('#wlan0security').val(SSID.json[ssid]['security']).change();
         } else {
-            // Reset to default values
-            //$('#wlan0method').val('dhcp').change();
-            //$('#wlan0pwd').val('');
             $('#wlan0security').val('wpa-psk').change();
         }
 	});
