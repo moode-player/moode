@@ -23,6 +23,7 @@ Updates
 - UPD: Bump to pleezer 0.13.0
 - UPD: Add configurable retry for ALSA card empty during startup
 - UPD: Add dedicated backdrop for Multiroom Receiver active
+- UPD: Add HiFiBerry DAC2 HD to Named I2S device list
 - UPD: Update 6forty Radio, Hi On Line - Pop (320K) URL's
 - UPD: Improve UPnP file metadata
 - UPD: Improve password input fields
