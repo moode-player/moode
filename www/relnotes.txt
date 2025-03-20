@@ -11,14 +11,15 @@
 
 ################################################################################
 #
-# 2025-MM-DD moOde 9.2.7 (Bookworm)
+# 2025-MM-DD moOde 9.3.0 (Bookworm)
 #
 ################################################################################
 
+New features
+- NEW: MPD 0.24
+- NEW: MPC 0.35
 
 Updates
-- UPD: Bump to MPD 0.24
-- UPD: Bump to MPC 0.35
 - UPD: Bump to pleezer 0.12.2
 - UPD: Add configurable retry for ALSA card empty during startup
 - UPD: Add dedicated backdrop for Multiroom Receiver active
