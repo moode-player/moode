@@ -71,7 +71,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', address='" . $value['address'] .
 				"', remotedir='" . $value['remotedir'] .
 				"', username='" . $value['username'] .
-				"', password='" . $value['password'] .
+				($value['password'] == 'Password set' ? '' : "', password='" . $value['password']) .
 				"', charset='" . $value['charset'] .
 				"', rsize='" . $value['rsize'] .
 				"', wsize='" . $value['wsize'] .

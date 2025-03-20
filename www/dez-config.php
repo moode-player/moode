@@ -16,7 +16,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($key != 'password') {
 			chkValue($key, $value);
 		}
-		sqlUpdate('cfg_deezer', $dbh, $key, $value);
+		if ($key != 'password' || $value != 'Password set') {
+			sqlUpdate('cfg_deezer', $dbh, $key, $value);
+		}
 	}
 	$notify = $_SESSION['deezersvc'] == '1' ?
 		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_DEEZER . NOTIFY_MSG_SVC_RESTARTED) :
@@ -42,8 +44,13 @@ $_select['normalize_volume'] .= "<option value=\"No\" "  . (($cfgDeezer['normali
 $_select['no_interruptions'] .= "<option value=\"Yes\" " . (($cfgDeezer['no_interruptions'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['no_interruptions'] .= "<option value=\"No\" "  . (($cfgDeezer['no_interruptions'] == 'No')  ? "selected" : "") . ">No (Default)</option>\n";
 $_select['email'] = $cfgDeezer['email'];
-$_select['password'] = $cfgDeezer['password'];
-$_show_hide_password_icon_hide = empty($cfgDeezer['password']) ? '' : 'hide';
+if (empty($cfgDeezer['password'])) {
+	$_select['password'] = '';
+	$_pwd_input_format = 'password';
+} else {
+	$_select['password'] = 'Password set';
+	$_pwd_input_format = 'text';
+}
 /* TBD option
 $_select['dns_options'] .= "<option value=\"default\" " . (($cfgDeezer['dns_options'] == 'default') ? "selected" : "") . ">Default</option>\n";
 $_select['dns_options'] .= "<option value=\"timeout-1\" " . (($cfgDeezer['dns_options'] == 'timeout-1') ? "selected" : "") . ">Timeout-1</option>\n";

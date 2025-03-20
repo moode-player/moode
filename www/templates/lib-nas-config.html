@@ -62,11 +62,11 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				</div>
 
-				<label class="control-label" for="nas-pasw">Password</label>
+				<label class="control-label" for="nas-pwd">Password</label>
 				<div class="controls">
-					<input  id="nas-pasw" class="config-input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
+					<input  id="nas-pwd" class="config-input-large" type="$_pwd_input_format" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fa-regular fa-sharp fa-eye"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="nas-pwd"><i class="fa-regular fa-sharp fa-eye"></i></a>
 					<span id="info-nas-uidpwd" class="config-help-info">
 						Try userid Guest and a blank password unless your NAS device requires a specific userid/password.
 						Note that single and double quotes are not allowed.

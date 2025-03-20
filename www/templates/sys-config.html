@@ -287,9 +287,9 @@
 
 			<label class="control-label" for="fs-smb-pwd">Password</label>
 			<div class="controls">
-				<input class="config-input-large" type="password" pattern=".{8,64}" id="fs-smb-pwd" name="fs_smb_pwd" value="$_select[fs_smb_pwd]" placeholder="None">
+				<input class="config-input-large" type="$_pwd_input_format" pattern=".{8,64}" id="fs-smb-pwd" name="fs_smb_pwd" value="$_select[fs_smb_pwd]" placeholder="None">
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fs_smb_pwd" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a class="show-hide-password $_show_hide_password_icon_hide" href="#notarget" data-id="fs-smb-pwd"><i class="fa-regular fa-sharp fa-eye" style="margin-left:0;"></i></a>
+				<a class="show-hide-password" href="#notarget" data-id="fs-smb-pwd"><i class="fa-regular fa-sharp fa-eye" style="margin-left:0;"></i></a>
 				<span class="config-help-static">
 					Length: 8-63 characters.<br>
 					If password is None specify anonymous access or userid "guest" and no password when mounting shares.<br>

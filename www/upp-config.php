@@ -19,12 +19,14 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($key != 'qobuzpass') {
 			chkValue($key, $value);
 		}
-		sqlUpdate('cfg_upnp', $dbh, $key, $value);
-		if ($value != '') {
-			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
-		}
-		else {
-			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . '#' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
+		if ($key != 'qobuzpass' || $value != 'Password set') {
+			sqlUpdate('cfg_upnp', $dbh, $key, $value);
+			if ($value != '') {
+				sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
+			}
+			else {
+				sysCmd("sed -i '/" . $key . ' =' . '/c\\' . '#' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
+			}
 		}
 	}
 	$notify = $_SESSION['upnpsvc'] == '1' ?
@@ -50,8 +52,13 @@ $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfgUPNP['checkcont
 
 // Music services
 $_select['qobuzuser'] = $cfgUPNP['qobuzuser'];
-$_select['qobuzpass'] = $cfgUPNP['qobuzpass'];
-$_show_hide_password_icon_hide = empty($cfgUPNP['qobuzpass']) ? '' : 'hide';
+if (empty($cfgUPNP['qobuzpass'])) {
+	$_select['qobuzpass'] = '';
+	$_pwd_input_format = 'password';
+} else {
+	$_select['qobuzpass'] = 'Password set';
+	$_pwd_input_format = 'text';
+}
 $_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfgUPNP['qobuzformatid'] == '5') ? "selected" : "") . ">MP3 320K</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"6\" " . (($cfgUPNP['qobuzformatid'] == '6') ? "selected" : "") . ">FLAC</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfgUPNP['qobuzformatid'] == '7') ? "selected" : "") . ">FLAC 24/96K</option>\n";

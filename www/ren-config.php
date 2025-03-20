@@ -38,18 +38,12 @@ if (isset($_POST['update_bt_settings'])) {
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('btsvc', '', NOTIFY_TITLE_INFO, NAME_BLUETOOTH . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
-if (isset($_POST['update_bt_pin_code'])) {
-	$pinCode = empty($_POST['bt_pin_code']) ? 'None' : $_POST['bt_pin_code'];
-	if ($pinCode == 'None' || (is_numeric($pinCode) && strlen($pinCode) == 6)) {
-		$_SESSION['bt_pin_code'] = $pinCode;
-		$notify = $_SESSION['btsvc'] == '1' ?
-			array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_BLUETOOTH_PAIRING_AGENT . NOTIFY_MSG_SVC_RESTARTED) :
-			array('title' => '', 'msg' => '');
-		submitJob('bt_pin_code', $pinCode, $notify['title'], $notify['msg']);
-	} else {
-		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['notify']['msg'] = 'The PIN code must be a 6 digit value or "None"';
-	}
+if (isset($_POST['update_bt_pin_code']) && $_POST['update_bt_pin_code'] != 'Pincode set') {
+	phpSession('write', 'bt_pin_code', $_POST['bt_pin_code']);
+	$notify = $_SESSION['btsvc'] == '1' ?
+		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_BLUETOOTH_PAIRING_AGENT . NOTIFY_MSG_SVC_RESTARTED) :
+		array('title' => '', 'msg' => '');
+	submitJob('bt_pin_code', $_SESSION['bt_pin_code'], $notify['title'], $notify['msg']);
 }
 if (isset($_POST['update_alsavolume_max_bt'])) {
 	$_SESSION['alsavolume_max_bt'] = $_POST['alsavolume_max_bt'];
@@ -219,7 +213,14 @@ $autoClick = " onchange=\"autoClick('#btn-set-btsvc');\"";
 $_select['btsvc_on']  .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-1\" value=\"1\" " . (($_SESSION['btsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['btsvc_off'] .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-2\" value=\"0\" " . (($_SESSION['btsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['btname'] = $_SESSION['btname'];
-$_bt_pin_code = $_SESSION['bt_pin_code'];
+if (empty($_SESSION['bt_pin_code'])) {
+	$_bt_pin_code = '';
+	$_pwd_input_format = 'password';
+} else {
+	$_bt_pin_code = 'Pincode set';
+	$_pwd_input_format = 'text';
+}
+
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max_bt = '';
 	$_alsavolume_max_bt_readonly = 'readonly';

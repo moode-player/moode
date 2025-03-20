@@ -39,11 +39,12 @@
 
 			<label class="control-label" for="bt-pin-code">PIN code</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" pattern="[A-Za-z0-9]{4,6}" id="bt-pin-code" name="bt_pin_code" value="$_bt_pin_code" placeholder="None">
+				<input class="config-input-large" type="$_pwd_input_format" pattern="[0-9]{6}" id="bt-pin-code" name="bt_pin_code" value="$_bt_pin_code" placeholder="None">
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bt_pin_code" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-bt-pin-code" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<a class="show-hide-password" href="#notarget" data-id="bt-pin-code"><i class="fa-regular fa-sharp fa-eye"></i></a>
 				<span id="info-bt-pin-code" class="config-help-info">
-					Set a 6 digit numeric PIN code (or "None") that clients are required to enter before the initial connection request is accepted. Subsequent connection requests are then verified and accepted without needing to re-enter the PIN code.
+					Set a 6 digit numeric PIN code that clients are required to enter before the initial connection request is accepted. Subsequent connection requests are then verified and accepted without needing to re-enter the PIN code.
 				</span>
 			</div>
 

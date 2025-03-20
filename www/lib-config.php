@@ -431,7 +431,13 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 				$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : $mp['address'] . '/' . $mp['remotedir'];
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);
 				$_username = $mp['username'];
-				$_password = $mp['password'];
+				if (empty($mp['password'])) {
+					$_password = '';
+					$_pwd_input_format = 'password';
+				} else {
+					$_password = 'Password set';
+					$_pwd_input_format = 'text';
+				}
 				$_name = $mp['name'];
 				$_charset = $mp['charset'];
 				$_rsize = $mp['rsize'];
@@ -462,6 +468,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 		$_action = 'add_nas_source';
 		$_hide_remove_nas_source = 'hide';
 		$_hide_nas_mount_error = 'style="display:none;"';
+		$_pwd_input_format = 'password';
 
 		// Manual server entry/edit or scanner
 		if (isset($_POST['nas_manualserver']) || isset($_POST['scan'])) {
