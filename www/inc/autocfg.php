@@ -262,13 +262,15 @@ function autoConfigSettings() {
 			sqlDelete('cfg_ssid', $dbh);
 			$count = count($values['ssid_ssid']);
 			for ($i = 0; $i < $count; $i++) {
+				if (empty($values['ssid_security'][$i])) {$values['ssid_security'][$i] = '';}
+				if (empty($values['ssid_saepwd'][$i])) {$values['ssid_saepwd'][$i] = '';}
 				$value = "\"" .
 					$values['ssid_ssid'][$i] . "\", \"" .
 					$values['ssid_uuid'][$i] . "\", \"" .
 					$values['ssid_psk'][$i] . "\", " .
 					// method, ipaddr, netmask, gateway, pridns, secdns
 					"\"\", \"\", \"\", \"\", \"\", \"\", \"" .
-					$values['ssid_security'][$i] . "\", " .
+					$values['ssid_security'][$i] . "\", \"" .
 					$values['ssid_saepwd'][$i] . "\"";
 				sqlInsert('cfg_ssid', $dbh, $value);
 			}
