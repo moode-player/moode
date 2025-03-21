@@ -644,7 +644,7 @@ workerLog('worker: ' . $msg);
 $status = 'session vars ok';
 if (!isset($_SESSION['bt_pin_code'])) {
 	$status = 'session vars created';
-	$_SESSION['bt_pin_code'] = 'None';
+	$_SESSION['bt_pin_code'] = '';
 }
 // ALSA/CDSP max volumes
 if (!isset($_SESSION['alsavolume_max_bt'])) {
