@@ -80,6 +80,7 @@ a.config-info-toggle:visited {color:var(--config-help-icon-color);}
 .config-help-info {display:none;}
 .config-help-no-margin {margin-bottom:0;}
 .config-help-less-margin {margin-bottom:.75em;}
+.config-help-header {display:block}
 
 /* blu-control, sys-status */
 #blu-control-cmd-output,
