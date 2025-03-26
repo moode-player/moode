@@ -48,7 +48,7 @@ if (isset($_POST['update_fs_mountmon'])) {
 // Regenerate MPD database
 if (isset($_POST['regen_library'])) {
 	unset($_GET['cmd']);
-	submitJob('regen_library', '', NOTIFY_TITLE_INFO, 'Regenerating the database. Stay on this screen until the progress spinner is cleared', NOTIFY_DURATION_INFINITE);
+	submitJob('regen_library', '', NOTIFY_TITLE_INFO, 'Regenerating the database. Stay on this screen until the progress spinner (top right) disappears.', NOTIFY_DURATION_INFINITE);
 }
 // Clear library cache
 if (isset($_POST['clear_libcache'])) {
