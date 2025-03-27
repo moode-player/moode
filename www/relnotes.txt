@@ -17,6 +17,7 @@
 
 Updates
 - UPD: Improve mobile portrait layout for Config screens
+- UPD: Improve lib-config message for regenerate db
 
 Bug fixes
 - FIX: Hand cursor appearing when hovering over Album name
