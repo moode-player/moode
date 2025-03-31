@@ -24,6 +24,7 @@ Updates
 
 Bug fixes
 - FIX: Hand cursor appearing when hovering over Album name
+- FIX: Fix volume and mute updates in currentsong.txt
 
 ################################################################################
 #
