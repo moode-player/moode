@@ -16,8 +16,11 @@
 ################################################################################
 
 Updates
+- UPD: Bump to MPD 0.24.2
+- UPD: Bump to Linux kernel 6.12.20
 - UPD: Improve mobile portrait layout for Config screens
-- UPD: Improve lib-config message for regenerate db
+- UPD: Improve Regenerate db message on Library Config
+- UPD: Improve help info for certain settings on MPD Config
 
 Bug fixes
 - FIX: Hand cursor appearing when hovering over Album name
