@@ -332,6 +332,9 @@ if (empty($_wlan0apdpwd)) {
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 	$_SESSION['notify']['msg'] = 'A Hotspot password needs to be entered. This is to ensure moOde can be accessed when Ethernet and WiFi are not available.';
 	phpSession('close');
+	$_show_hide_password_icon_hide = '';
+} else {
+	$_show_hide_password_icon_hide = 'hide';
 }
 
 waitWorker('net-config');
