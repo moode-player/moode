@@ -253,9 +253,12 @@
 					$_mpd_select[input_cache]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-input-cache" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+                <span class="config-help-static">
+					<em>This is an experimental feature.</em>
+                </span>
 				<span id="info-input-cache" class="config-help-info">
 					The input cache prefetches queued song files into memory before they are going to be played. If the cache grows larger than the specified size, older files will be evicted.
-			   </span>
+                </span>
 			</div>
 
             <div class="config-horiz-rule">HTTP Proxy</div>
@@ -319,6 +322,9 @@
 					$_mpd_select[buffer_time]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-buffer-time" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+                <span class="config-help-static">
+					Do not change this unless you know what you are doing.
+                </span>
 				<span id="info-buffer-time" class="config-help-info">
 					Device sample buffer length in milliseconds.
 				</span>
