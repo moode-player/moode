@@ -2110,12 +2110,14 @@ function updExtMetaFile() {
 		$status = getMpdStatus($sock);
 		$current = enhanceMetadata($status, $sock, 'worker_php');
 		closeMpdSock($sock);
+		$volknob = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", $GLOBALS['dbh'])[0]['value'];
+		$volmute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $GLOBALS['dbh'])[0]['value'];
 
 		if (
 			$fileData['state'] != $current['state'] ||
 			$fileData['title'] != $current['title'] ||
 			$fileData['album'] != $current['album'] ||
-			$fileData['volume'] != $_SESSION['volknob'] ||
+			$fileData['volume'] != $volknob ||
 			$fileData['mute'] != $_SESSION['volmute'] ||
 			$fileData['outrate'] != $current['output']
 		) {
@@ -2135,9 +2137,9 @@ function updExtMetaFile() {
 			$data .= 'encoded=' . $current['encoded'] . "\n";
 			$data .= 'bitrate=' . $current['bitrate'] . "\n";
 			//$data .= 'outrate=' . $current['output'] . $hwParamsCalcrate . "\n"; ;
-			$data .= 'outrate=' . $current['output'] . "\n"; ;
-			$data .= 'volume=' . $_SESSION['volknob'] . "\n";
-			$data .= 'mute=' . $_SESSION['volmute'] . "\n";
+			$data .= 'outrate=' . $current['output'] . "\n";
+			$data .= 'volume=' . $volknob . "\n";
+			$data .= 'mute=' . $volmute . "\n";
 			$data .= 'state=' . $current['state'] . "\n";
 			fwrite($fh, $data);
 			fclose($fh);
