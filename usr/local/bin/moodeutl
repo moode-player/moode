@@ -5,7 +5,7 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
-const VERSION = '9.0.0';
+const VERSION = '9.0.1';
 
 set_include_path('/var/www/inc');
 
@@ -357,11 +357,11 @@ function systemMonitor() {
 		// Temp
 		$cpuTemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
 
-		// CPU
-		$cpuLoad = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
-		$cpuLoad += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
-		$cpuLoad = $cpuLoad / 2;
-		$cpuLoad = number_format($cpuLoad,0,'.','');
+		// CPU (get top 'us' user space column: $2)
+		$cpuLoad = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
+		$cpuLoad += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
+		$cpuLoad = $cpuLoad / 2; // Average of the above
+		$cpuLoad = $cpuload == '100' ? '100' : number_format($cpuLoad,1,'.','');
 
 		// Memory
 		$memTotal = exec("grep MemTotal /proc/meminfo | awk '{print $2}'");
@@ -376,9 +376,9 @@ function systemMonitor() {
 		$fpmPool = exec('pgrep -c -f "php-fpm: pool www"');
 
 		echo 'CPU: ' . $cpuFreq . ' | ' .
-			'Load: ' . $cpuLoad . '% / ' . $cpuTemp . 'C | ' .
-			'Memory: ' . $memUtil . '% used | ' .
-			'Disk: ' . $diskUsed . ' used / ' .	$diskFree . ' free | ' .
+			'LOAD: ' . $cpuLoad . '% / ' . $cpuTemp . 'C | ' .
+			'RAM: ' . $memUtil . '% used | ' .
+			'DISK: ' . $diskUsed . ' used / ' .	$diskFree . ' free | ' .
 			'PHP: ' . $fpmPool . " workers\r";
 	}
 }
