@@ -18,6 +18,7 @@
 Updates
 - UPD: Bump to MPD 0.24.2
 - UPD: Bump to Linux kernel 6.12.20
+- UPD: Update moodeutl -m to report user space CPU load 
 - UPD: Improve mobile portrait layout for Config screens
 - UPD: Improve Regenerate db message on Library Config
 - UPD: Improve help info for certain settings on MPD Config
