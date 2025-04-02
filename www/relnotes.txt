@@ -18,14 +18,16 @@
 Updates
 - UPD: Bump to MPD 0.24.2
 - UPD: Bump to Linux kernel 6.12.20
-- UPD: Update moodeutl -m to report user space CPU load 
+- UPD: Update moodeutl -m to report user space CPU load
 - UPD: Improve mobile portrait layout for Config screens
 - UPD: Improve Regenerate db message on Library Config
 - UPD: Improve help info for certain settings on MPD Config
 
 Bug fixes
 - FIX: Hand cursor appearing when hovering over Album name
-- FIX: Fix volume and mute updates in currentsong.txt
+- FIX: Fix volume and mute not being updated in currentsong.txt
+- FIX: Embedded single quote not working in Library search
+- FIX: Title string not escaped when submitted to search engine
 
 ################################################################################
 #
