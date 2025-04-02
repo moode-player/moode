@@ -17,6 +17,7 @@
 
 Updates
 - UPD: Bump to MPD 0.24.2
+- UPD: Bump to pleezer 0.14.1
 - UPD: Bump to Linux kernel 6.12.20
 - UPD: Update moodeutl -m to report user space CPU load
 - UPD: Improve mobile portrait layout for Config screens
