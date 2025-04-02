@@ -1546,7 +1546,7 @@ function genSearchUrl (artist, title, album) {
     	}
         // Song file
     	else {
-    		var searchStr = artist + '+' + album;
+    		var searchStr = encodeHTMLEntities(artist + '+' + album);
     	}
 
         // Search engine
