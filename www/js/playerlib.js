@@ -583,8 +583,9 @@ function engineCmd() {
                     // Fetch from back-end for robustness
                     refreshInpsrcMeta();
                     break;
-                case 'update_spotmeta':
+                case 'update_aplmeta':
                 case 'update_deezmeta':
+                case 'update_spotmeta':
                     // Received from back-end
                     updateInpsrcMeta(cmd[0], cmd[1]); // cmd[1]: metadata
                     // Fetch from back-end again for robustness
@@ -1406,11 +1407,15 @@ function renderUI() {
      	}
     	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
-    		inpSrcIndicator('aplactive1',
-            '<span id="inpsrc-msg-text">AirPlay Active</span>' +
-            '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
-            receiversBtn() +
-            audioInfoBtn());
+        		inpSrcIndicator('aplactive1',
+                '<span id="inpsrc-msg-text">AirPlay Active</span>' +
+                '<button class="btn renderer-btn disconnect-airplay" data-job="airplaysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                receiversBtn('aplactive1') +
+                audioInfoBtn('aplactive1') +
+                rendererRefreshBtn()
+            );
+
+            refreshInpsrcMeta();
     	}
     	// Spotify Connect renderer
     	if (SESSION.json['spotactive'] == '1') {

@@ -27,7 +27,11 @@ switch ($_GET['cmd']) {
 			$cfgSystem[$row['param']] = $row['value'];
 		}
 
+		// Add session vars
 		addExtraSessionVars($cfgSystem);
+
+		// Add MPD settings
+		$cfgSystem['mpd_log_level'] = sqlQuery("SELECT value FROM cfg_mpd WHERE param='log_level'", $dbh)[0]['value'];
 
 		$data['cfg_system'] = $cfgSystem;
 
@@ -84,7 +88,11 @@ switch ($_GET['cmd']) {
 			$cfgSystem[$row['param']] = $row['value'];
 		}
 
+		// Add session vars
 		addExtraSessionVars($cfgSystem);
+
+		// Add MPD settings
+		$cfgSystem['mpd_log_level'] = sqlQuery("SELECT value FROM cfg_mpd WHERE param='log_level'", $dbh)[0]['value'];
 
 		echo json_encode($cfgSystem);
 		break;

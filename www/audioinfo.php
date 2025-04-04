@@ -37,6 +37,9 @@ $slActive = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $dbh
 $paActive = sqlQuery("SELECT value FROM cfg_system WHERE param='paactive'", $dbh)[0]['value'];
 $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh)[0]['value'];
 
+// AirPlay options
+$disableSync = sqlQuery("SELECT value FROM cfg_airplay WHERE param='disable_synchronization'", $dbh)[0]['value'];
+
 //
 // INPUT
 //
@@ -47,7 +50,7 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($aplActive == '1') {
-	$_file = 'AirPlay stream';
+	$_file = 'AirPlay stream' . ($disableSync == 'yes' ? ' (sync disabled)' : '');
 	$_encoded_at = 'ALAC or AAC';
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
