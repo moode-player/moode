@@ -104,16 +104,19 @@
 						<div id="playback-firstuse-help"><div></div></div>
 						<div aria-label="Cover Art" id="coverart-url"></div>
 						<div id="timeline">
-							<div class="timeline-bg"></div>
-							<div class="timeline-progress"></div>
-							<div class="timeline-thm">
-								<input aria-label="Time" id="timetrack" type="range" min="0" max="1000" value="0" step="1">
+							<div id=timeline-slider>
+								<div class="timeline-bg"></div>
+								<div class="timeline-progress"></div>
+								<div class="timeline-thm">
+									<input aria-label="Time" id="timetrack" type="range" min="0" max="1000" value="0" step="1">
+								</div>
 							</div>
 							<div id="mobile-time">
 								<div aria-label="Countdown" id="m-countdown"></div>
 								<div aria-label="Total" id="m-total"></div>
 							</div>
 						</div>
+						<div id="songsand-sample-rate" class="hide"></div>
 						<div id="songsand">
 							<div id="extra-tags-display"></div>
 							<div id="currentalbum-div">
@@ -123,7 +126,6 @@
 							<div id="currentartist-div">
 								<span id="currentartist"></span>
 							</div>
-							<div id="songsand-sample-rate" class="hide"></div>
 						</div>
 					</div>
 				</div>

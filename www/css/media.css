@@ -60,12 +60,12 @@ body {
 
 	/* Metadata under the cover art in Playback view */
 	#songsand {font-size:1.25em;width:90%;text-align:left}
-	#timeline {display:none;width:74vw;}
+	#timeline {display:none;width:73vw;}
 	#mobile-time {display:block;}
 	#extra-tags-display {display:none;}
 	#currentsong {font-size:1.5em;margin-top:.85em;max-height:5em;overflow:hidden;}
 	#currentartist, #currentalbum {font-size:1.25em;margin-top:1em;}
-	#songsand-sample-rate {display:block;font-size:1.25em;padding:1em 0 2em 0;color:var(--textvariant);}
+	#songsand-sample-rate {display:block;font-size:1em;/*padding:1em 0 2em 0;*/color:var(--textvariant);}
 
 	/* Playback view Queue */
 	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}

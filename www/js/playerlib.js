@@ -2512,18 +2512,21 @@ function updKnobAndTimeTrack() {
 }
 
 // Fill in timeline color as song plays
-$('input[type="range"]').change(function() {
-	var val = ($(this).val() - $(this).attr('min')) / ($(this).attr('max') - $(this).attr('min')) * 100;
-	if (val < 50) {val = val + 1;} else {val = val - 1;}
-	$('.timeline-progress').css('width', val + '%');
-	//console.log(val);
+//$('input[type="range"]').change(function() {
+$('#timetrack, #playbar-timetrack').change(function() {
+    updateTimelineFill($(this).val(), $(this).attr('min'), $(this).attr('max'))
+	//console.log('change event ' + val);
 });
-
+// Fill in timeline as slider is dragged
+$('#timetrack, #playbar-timetrack').on('input', function() {
+    updateTimelineFill($(this).val(), $(this).attr('min'), $(this).attr('max'))
+    //console.log('input event ' + val);
+});
 $('#timetrack, #playbar-timetrack').bind('touchstart mousedown', function(e) {
 	timeSliderMove = true;
     window.clearInterval(UI.knob)
+    //console.log('touchstart mousedown');
 });
-
 $('#timetrack, #playbar-timetrack').bind('touchend mouseup', function(e) {
 	var delta, time;
 	time = parseInt(MPD.json['time']);
@@ -2532,7 +2535,13 @@ $('#timetrack, #playbar-timetrack').bind('touchend mouseup', function(e) {
 	if (seekto > time - 2) {seekto = time - 2;}
 	sendMpdCmd('seek ' + MPD.json['song'] + ' ' + seekto);
 	timeSliderMove = false;
+    //console.log('touchend mouseup');
 });
+function updateTimelineFill(val, min, max) {
+    var y = (val - min) / (max - min) * 100;
+    y < 50 ? y++ : y--;
+    $('.timeline-progress').css('width', y + '%');
+}
 
 // Format song time for knob #total and #countdown-display and for playlist items
 function formatSongTime(seconds) {
@@ -4123,7 +4132,7 @@ function setColors() {
 			document.body.style.setProperty('--timethumb', 'url("' + thumbd + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbd + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
-			document.body.style.setProperty('--trackfill', 'rgba(48,48,48,1.0)');
+			document.body.style.setProperty('--trackfill', 'rgba(48,48,48,0.5)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-d.svg")');
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(32,32,32,0.06)",
@@ -4136,7 +4145,7 @@ function setColors() {
 			document.body.style.setProperty('--timethumb', 'url("' + thumbw + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbw + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
-			document.body.style.setProperty('--trackfill', 'rgba(240,240,240,1.0)');
+			document.body.style.setProperty('--trackfill', 'rgba(240,240,240,0.5)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-l.svg")');
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(224,224,224,0.09)",
