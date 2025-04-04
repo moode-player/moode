@@ -827,7 +827,7 @@ function updateInpsrcMeta(cmd, data) {
     // Spotify: [0]:title [1]:artists [2]:album [3]:duration (in ms)   [4];coverurls [5]:format
     var metadata = data.split('~~~');
     //DELETE:var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
-    var timeDivisor = (cmd.includes('aplmeta') || cmd.includes('spotmeta')) ? 1000 : 1;
+    var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta')) ? 1000 : 1;
     var title = metadata[0];
     var artist = cmd == 'get_spotmeta' ? metadata[1].split("\n")[0] : metadata[1];
     var album = metadata[2];

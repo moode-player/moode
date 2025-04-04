@@ -19,6 +19,11 @@ import glob
 # Globals
 #
 
+PGM_VERSION = '1.0.0'
+COVERS_LOCAL_ROOT = '/var/local/www/imagesw/airplay-covers/'
+COVERS_WEB_ROOT = 'imagesw/airplay-covers/'
+APLMETA_FILE = '/var/local/www/aplmeta.txt'
+
 artist = None
 title = None
 album = None
@@ -39,13 +44,13 @@ def get_metadata(line):
 # Update global vars
 def update_globals(key, val):
     global artist, album, title
-    if key == "Title":
+    if key == 'Title':
          title = val
-    elif key == "Artist":
+    elif key == 'Artist':
         artist = val
-    elif key == "Album Name":
+    elif key == 'Album Name':
         album = val
-    elif key == "Track length":
+    elif key == 'Track length':
          duration = val
 
 #
@@ -62,27 +67,33 @@ try:
             update_globals(key, val)
 
 		# When all globals are set, send metadata to front-end for display
-		if artist and title and album:
-			# 1. Get cover file name
+		if artist and title and album and duration:
+			# Get cover file name
 			# from: /tmp/shairport-sync/.cache/coverart/ (default in conf file)
 			# example: cover-c5e0731b10a3758fc217716d5a64d589.jpg
-			# Prolly edit shairport-sync.conf: cover_art_cache_directory = "/var/local/www/imagesw/airplay-covers";
-			# cover_url = "/var/local/www/imagesw/airplay-covers" + cover_file
+			# shairport-sync.conf: cover_art_cache_directory = "/var/local/www/imagesw/airplay-covers";
+			# cover_url = "imagesw/airplay-covers" + cover_file_name
+			cover_path = glob.glob(COVERS_LOCAL_ROOT + '*')
+			cover_url = COVERS_WEB_ROOT + os.path.basename(cover_path[0])
 
-            # 2. Write metadata file
+            # Write metadata file
 			# /var/local/www/aplmeta.txt
 			# title + "~~~" + artist + "~~~" + album + "~~~" + duration + "~~~" + cover_url + "~~~" + format
 			# Note format is "ALAC or AAC"
+			format = 'ALAC or AAC'
+			metadata = title + '~~~' + artist + '~~~' + album + '~~~' + duration + '~~~' + cover_url + '~~~' + format
+			file = open(APLMETA_FILE, 'w')
+			file.write(metadata)
+			file.close()
 
-			# 3. Send FE command
-			# /var/www/util/send-fecmd.php "update_aplmeta,$METADATA"
+			# Send FE command
+			subprocess.call("/var/www/util/send-fecmd.php \"update_aplmeta," + metadata + "\"")
 
-			# 4. Reset globals
-			# artist = None
-			# title = None
-			# album = None
-			# duration = None
-
+			# Reset globals
+			artist = None
+			title = None
+			album = None
+			duration = None
 except KeyboardInterrupt:
     sys.stdout.flush()
     pass
