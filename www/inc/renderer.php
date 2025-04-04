@@ -73,13 +73,18 @@ function startAirPlay() {
 		' -a "' . $_SESSION['airplayname'] . '" ' .
 		'-- -d ' . $device . ' > ' . $logFile . ' 2>&1 &';
 
+	// Start AirPlay receiver
 	debugLog('startAirPlay(): (' . $cmd . ')');
 	sysCmd($cmd);
+
+	// Start AirPlay metadata reader
+	sysCmd('cat /tmp/shairport-sync-metadata | shairport-sync-metadata-reader | /var/www/daemon/aplmeta.py  > /dev/null 2>&1 &');
 }
 function stopAirPlay() {
 	$maxRetries = 3;
+	// shairport-sync
 	for ($i = 0; $i < $maxRetries; $i++) {
-		sysCmd('killall -s9 shairport-sync');
+		sysCmd('killall -s 9 shairport-sync');
 		$result = sysCmd('pgrep shairport-sync');
 		if (empty($result)) {
 			break;
@@ -87,7 +92,17 @@ function stopAirPlay() {
 		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay');
 		sleep(1);
 	}
-
+	// aplmeta
+	for ($i = 0; $i < $maxRetries; $i++) {
+		sysCmd('killall -s 9 aplmeta.py');
+		$result = sysCmd('pgrep aplmeta.py');
+		if (empty($result)) {
+			break;
+		}
+		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay metadata reader');
+		sleep(1);
+	}
+	// nqptp
 	sysCmd('systemctl stop nqptp');
 
 	// Local

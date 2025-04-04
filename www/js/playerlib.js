@@ -550,31 +550,28 @@ function engineCmd() {
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
-    				inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">AirPlay Active</span>' +
-                        '<button class="btn disconnect-renderer" data-job="airplaysvc">Disconnect</button>' +
-                        receiversBtn() +
-                        audioInfoBtn());
-                    break;
-                case 'spotactive1':
-                case 'spotactive0':
                 case 'deezactive1':
                 case 'deezactive0':
-                    if (cmd[0].includes('spot')) {
-                        var rendererName = 'spotify';
-                        SESSION.json['spotactive'] = cmd[0].slice(-1);
-                    } else {
-                        var rendererName = 'deezer';
+                case 'spotactive1':
+                case 'spotactive0':
+                    if (cmd[0].includes('apl')) {
+                        var rendererName = 'AirPlay';
                         SESSION.json['deezactive'] = cmd[0].slice(-1);
+                    } else if (cmd[0].includes('deez')){
+                        var rendererName = 'Deezer';
+                        SESSION.json['deezactive'] = cmd[0].slice(-1);
+                    } else if (cmd[0].includes('spot')) {
+                        var rendererName = 'Spotify';
+                        SESSION.json['spotactive'] = cmd[0].slice(-1);
                     }
                     inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">' +
-                        rendererName.charAt(0).toUpperCase() + rendererName.slice(1) +
+                        rendererName +
                         ' Active</span>' +
                         '<button class="btn renderer-btn disconnect-' +
-                        rendererName +
+                        rendererName.toLowerCase() +
                         '" data-job="' +
-                        rendererName + 'svc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                        rendererName.toLowerCase() + 'svc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                         receiversBtn(cmd[0]) +
                         audioInfoBtn(cmd[0]) +
                         rendererRefreshBtn()
@@ -806,7 +803,13 @@ function inpSrcIndicator(cmd, msgText) {
 }
 
 function refreshInpsrcMeta() {
-    cmd = SESSION.json['spotactive'] == '1' ? 'get_spotmeta' : 'get_deezmeta';
+    if (SESSION.json['aplactive'] == '1') {
+        cmd = 'get_aplmeta';
+    } else if (SESSION.json['deezactive'] == '1') {
+        cmd = 'get_deezmeta';
+    } else if (SESSION.json['spotactive'] == '1') {
+        cmd = 'get_spotmeta';
+    }
     $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
         updateInpsrcMeta(cmd, data);
     });
@@ -819,11 +822,12 @@ function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
-    // Spotify: [0]:title [1]:artists [2]:album [3]:duration (in ms)   [4];coverurls [5]:format
+    // AirPlay: [0]:title [1]:artist  [2]:album [3]:duration (in ms)   [4];coverurl  [5]:format
     // Deezer:  [0]:title [1]:artist  [2]:album [3]:duration (in secs) [4];coverurl  [5]:format [6]:decoder
+    // Spotify: [0]:title [1]:artists [2]:album [3]:duration (in ms)   [4];coverurls [5]:format
     var metadata = data.split('~~~');
-    var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
-
+    //DELETE:var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
+    var timeDivisor = (cmd.includes('aplmeta') || cmd.includes('spotmeta')) ? 1000 : 1;
     var title = metadata[0];
     var artist = cmd == 'get_spotmeta' ? metadata[1].split("\n")[0] : metadata[1];
     var album = metadata[2];

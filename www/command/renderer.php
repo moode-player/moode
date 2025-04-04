@@ -41,11 +41,14 @@ switch ($_GET['cmd']) {
 	 		echo json_encode('worker busy');
 	 	}
 		break;
-	case 'get_spotmeta':
-		echo json_encode(file_get_contents(SPOTMETA_FILE));
+	case 'get_aplmeta':
+		echo json_encode(file_get_contents(APLMETA_FILE));
 		break;
 	case 'get_deezmeta':
 		echo json_encode(file_get_contents(DEEZMETA_FILE));
+		break;
+	case 'get_spotmeta':
+		echo json_encode(file_get_contents(SPOTMETA_FILE));
 		break;
 	default:
 		echo 'Unknown command';

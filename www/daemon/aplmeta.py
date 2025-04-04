@@ -71,7 +71,8 @@ try:
 
             # 2. Write metadata file
 			# /var/local/www/aplmeta.txt
-			# title + "~~~" + artist + "~~~" + album + "~~~" + duration + "~~~" + cover_url + format + "~~~" + decoder + "~~~" +
+			# title + "~~~" + artist + "~~~" + album + "~~~" + duration + "~~~" + cover_url + "~~~" + format
+			# Note format is "ALAC or AAC"
 
 			# 3. Send FE command
 			# /var/www/util/send-fecmd.php "update_aplmeta,$METADATA"
