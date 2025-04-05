@@ -1036,7 +1036,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 } else {
 	$status = 'n/a';
 }
-$status .= ', PIN: ' . ($_SESSION['bt_pin_code'] == 'None' ? 'None' : 'Set');
+$status .= ', PIN: ' . (empty($_SESSION['bt_pin_code']) ? 'None' : 'Set');
 $status .= ', ALSA/CDSP maxvol: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SESSION['cdspvolume_max_bt'] . 'dB';
 $status .= ', ALSA outmode: ' . ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
 workerLog('worker: Bluetooth:       ' . $status);
