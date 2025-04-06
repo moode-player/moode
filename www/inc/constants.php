@@ -48,6 +48,7 @@ const DEFAULT_UPNP_COVER = 'images/default-upnp-cover.jpg';
 const DEFAULT_RX_COVER = 'images/default-rx-cover.jpg';
 const DEFAULT_PLAYLIST_COVER = '/var/www/images/default-playlist-cover.jpg';
 const DEFAULT_NOTFOUND_COVER = '/var/www/images/default-notfound-cover.jpg';
+const AIRPLAY_COVERS_ROOT = '/var/local/www/imagesw/airplay-covers/';
 const PLAYLIST_COVERS_ROOT = '/var/local/www/imagesw/playlist-covers/';
 const RADIO_LOGOS_ROOT = '/var/local/www/imagesw/radio-logos/';
 const LOGO_ROOT_DIR = 'imagesw/radio-logos/';

@@ -556,7 +556,7 @@ function engineCmd() {
                 case 'spotactive0':
                     if (cmd[0].includes('apl')) {
                         var rendererName = 'AirPlay';
-                        SESSION.json['deezactive'] = cmd[0].slice(-1);
+                        SESSION.json['aplactive'] = cmd[0].slice(-1);
                     } else if (cmd[0].includes('deez')){
                         var rendererName = 'Deezer';
                         SESSION.json['deezactive'] = cmd[0].slice(-1);
@@ -826,7 +826,6 @@ function updateInpsrcMeta(cmd, data) {
     // Deezer:  [0]:title [1]:artist  [2]:album [3]:duration (in secs) [4];coverurl  [5]:format [6]:decoder
     // Spotify: [0]:title [1]:artists [2]:album [3]:duration (in ms)   [4];coverurls [5]:format
     var metadata = data.split('~~~');
-    //DELETE:var timeDivisor = (cmd == 'get_spotmeta' || cmd == 'update_spotmeta') ? 1000 : 1;
     var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta')) ? 1000 : 1;
     var title = metadata[0];
     var artist = cmd == 'get_spotmeta' ? metadata[1].split("\n")[0] : metadata[1];
@@ -840,6 +839,7 @@ function updateInpsrcMeta(cmd, data) {
         var metadataHTML = artist + '<br><span id="renderer-format-badge">' + format + '</span><br><span>Live</span>';
     } else {
         // Song file
+        // NOTE: duration not being displayed at this time
         var metadataHTML = artist + ' - ' + title + '<br><span id="renderer-format-badge">' + format + '</span><br><span>' + album + '</span>';
     }
 
@@ -1422,18 +1422,6 @@ function renderUI() {
 
             refreshInpsrcMeta();
     	}
-    	// Spotify Connect renderer
-    	if (SESSION.json['spotactive'] == '1') {
-            inpSrcIndicator('spotactive1',
-                '<span id="inpsrc-msg-text">Spotify Active</span>' +
-                '<button class="btn renderer-btn disconnect-spotify" data-job="spotifysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
-                receiversBtn('spotactive1') +
-                audioInfoBtn('spotactive1') +
-                rendererRefreshBtn()
-            );
-
-            refreshInpsrcMeta();
-    	}
         // Deezer Connect renderer
     	if (SESSION.json['deezactive'] == '1') {
             inpSrcIndicator('deezactive1',
@@ -1441,6 +1429,18 @@ function renderUI() {
                 '<button class="btn renderer-btn disconnect-deezer" data-job="deezersvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                 receiversBtn('deezactive1') +
                 audioInfoBtn('deezactive1') +
+                rendererRefreshBtn()
+            );
+
+            refreshInpsrcMeta();
+    	}
+        // Spotify Connect renderer
+    	if (SESSION.json['spotactive'] == '1') {
+            inpSrcIndicator('spotactive1',
+                '<span id="inpsrc-msg-text">Spotify Active</span>' +
+                '<button class="btn renderer-btn disconnect-spotify" data-job="spotifysvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                receiversBtn('spotactive1') +
+                audioInfoBtn('spotactive1') +
                 rendererRefreshBtn()
             );
 
@@ -1489,10 +1489,7 @@ function renderUI() {
 // Multiroom receivers
 function receiversBtn(rendererActive = '') {
     if (SESSION.json['multiroom_tx'] == 'On') {
-        if (rendererActive == 'spotactive1') {
-            // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
-            var html = '<span class="context-menu"><a class="btn renderer-btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
-        } else if (rendererActive == 'deezactive1') {
+        if (rendererActive == 'aplactive1' || rendererActive == 'deezactive1' || rendererActive == 'spotactive1') {
             // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
             var html = '<span class="context-menu"><a class="btn renderer-btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
         } else {
@@ -1506,9 +1503,7 @@ function receiversBtn(rendererActive = '') {
 }
 // Audio info
 function audioInfoBtn(rendererActive = '') {
-    if (rendererActive == 'spotactive1') {
-        var html = '<span><a class="btn renderer-btn" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
-    } else if (rendererActive == 'deezactive1') {
+    if (rendererActive == 'aplactive1' || rendererActive == 'deezactive1' || rendererActive == 'spotactive1') {
         var html = '<span><a class="btn renderer-btn" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else {
         var html = '<br><span><a class="btn audioinfo-renderer" href="javascript:audioInfoPlayback()">Audio info</a></span>';

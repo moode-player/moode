@@ -77,32 +77,59 @@ function startAirPlay() {
 	debugLog('startAirPlay(): (' . $cmd . ')');
 	sysCmd($cmd);
 
+	// Wait until metadata pipe is ready
+	$maxRetries = 3;
+	for ($i = 0; $i < $maxRetries; $i++) {
+		$result = sysCmd('ls -1 /tmp/shairport-sync-metadata | wc -l')[0];
+		//debugLog('result=' . $result);
+
+		if ($result != 0) {
+			break;
+		}
+		workerLog('worker: Retry ' . ($i + 1) . ' waiting for metadata pipe');
+		sleep(1);
+	}
+
 	// Start AirPlay metadata reader
-	sysCmd('cat /tmp/shairport-sync-metadata | shairport-sync-metadata-reader | /var/www/daemon/aplmeta.py  > /dev/null 2>&1 &');
+	$cmd = '/var/www/daemon/aplmeta-reader.sh > /dev/null 2>&1 &';
+	debugLog('startAirPlay(): (' . $cmd . ')');
+	sysCmd($cmd);
 }
 function stopAirPlay() {
 	$maxRetries = 3;
-	// shairport-sync
+	// Metadata componenta
 	for ($i = 0; $i < $maxRetries; $i++) {
-		sysCmd('killall -s 9 shairport-sync');
-		$result = sysCmd('pgrep shairport-sync');
-		if (empty($result)) {
-			break;
-		}
-		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay');
-		sleep(1);
-	}
-	// aplmeta
-	for ($i = 0; $i < $maxRetries; $i++) {
+		sysCmd('killall -s 9 aplmeta-reader.sh');
+		sysCmd('killall -s 9 shairport-sync-metadata-reader');
 		sysCmd('killall -s 9 aplmeta.py');
-		$result = sysCmd('pgrep aplmeta.py');
-		if (empty($result)) {
+		sysCmd('killall -s 9 cat');
+		// Use the 15 char names from PS -A for some of these
+		$result1 = sysCmd('pgrep -cx aplmeta-reader.')[0]; // aplmeta-reader. sh
+		$result2 = sysCmd('pgrep -cx shairport-sync-')[0]; // shairport-sync- metadata-reader
+		$result3 = sysCmd('pgrep -cx aplmeta.py')[0];
+		$result4 = sysCmd("pgrep -fac \"cat /tmp/shairport-sync-metadata\"")[0];
+		//debugLog('result1=' . $result1);
+		//debugLog('result2=' . $result2);
+		//debugLog('result3=' . $result3);
+		//debugLog('result4=' . $result4);
+
+		if ($result1 == 0 && $result2 == 0 && $result3 == 0 && $result4 == 0) {
 			break;
 		}
 		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay metadata reader');
 		sleep(1);
 	}
-	// nqptp
+	// Shairport-sync
+	for ($i = 0; $i < $maxRetries; $i++) {
+		sysCmd('killall -s 9 shairport-sync');
+		$result = sysCmd('pgrep -cx shairport-sync')[0];
+		if ($result == 0) {
+			break;
+		}
+		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay');
+		sleep(1);
+	}
+	// Nqptp
 	sysCmd('systemctl stop nqptp');
 
 	// Local
