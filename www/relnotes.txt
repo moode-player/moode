@@ -28,6 +28,7 @@ Updates
 - UPD: Improve Regenerate db message on Library Config
 - UPD: Improve help info for certain settings on MPD Config
 - UPD: Improve timeline style and drag response
+- UPD: Improve renderer metadata overlay style
 
 Bug fixes
 - FIX: Hand cursor appearing when hovering over Album name
