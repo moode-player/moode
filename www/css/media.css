@@ -65,7 +65,7 @@ body {
 	#extra-tags-display {display:none;}
 	#currentsong {font-size:1.5em;margin-top:.85em;max-height:5em;overflow:hidden;}
 	#currentartist, #currentalbum {font-size:1.25em;margin-top:1em;}
-	#songsand-sample-rate {display:block;font-size:1em;/*padding:1em 0 2em 0;*/color:var(--textvariant);}
+	#songsand-sample-rate {display:block;font-size:1em;margin-top:.5em;color:var(--textvariant);}
 
 	/* Playback view Queue */
 	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
@@ -128,9 +128,12 @@ body {
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:3.5em;}
 	#inpsrc-msg {top:50%;width:100%;padding-bottom:calc(.5em + env(safe-area-inset-bottom))}
-	#inpsrc-metadata {position:relative;font-size:.65em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#inpsrc-metadata {position:relative;font-size:.65em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;margin-top:.5em;}
 	#inpsrc-metadata-refresh {padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
-	.inpsrc-metadata-backdrop {height:auto;}
+	.inpsrc-metadata-backdrop {
+		height:auto;
+		width:95%;
+	}
 
 	/* Shutdown, Restart, Reconnect */
 	.reconnect-btn {font-size:2em;}
@@ -363,10 +366,10 @@ body {
 
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:2.85em;}
-	#inpsrc-metadata {font-size:.5em;padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
-	#inpsrc-metadata-refresh {padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
+	#inpsrc-metadata {font-size:.55em;padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
 	#inpsrc-metadata-refresh i,
 	#inpsrc-msg i {font-size:1.25em;}
+	.inpsrc-metadata-backdrop {height:calc(75vh - .5rem);}
 
 	/* For the configs */
 	#panel-header,

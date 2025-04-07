@@ -836,11 +836,11 @@ function updateInpsrcMeta(cmd, data) {
 
     if (title == '' || duration == '') {
         // Radio station
-        var metadataHTML = artist + '<br><span id="renderer-format-badge">' + format + '</span><br><span>Live</span>';
+        var metadataHTML = '<b>' + artist  + '</b>' + '<br><span id="renderer-format-badge">' + format + '</span><br><span>Live</span>';
     } else {
         // Song file
         // NOTE: duration not being displayed at this time
-        var metadataHTML = artist + ' - ' + title + '<br><span id="renderer-format-badge">' + format + '</span><br><span>' + album + '</span>';
+        var metadataHTML = '<b>' + artist + ' - ' + title + '</b>' + '<br><span id="renderer-format-badge">' + format + '</span><br><span>' + album + '</span>';
     }
 
     $('#inpsrc-backdrop').html('<img class="inpsrc-metadata-backdrop" ' + 'src="' + coverURL + '">');
