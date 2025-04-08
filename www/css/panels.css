@@ -103,7 +103,7 @@ html {background-color:inherit;}
 
 /* TEST: */
 /* AirPlay, Deezer, Spotify cover art */
-.inpsrc-metadata-backdrop {
+.inpsrc-metadata-cover {
 	height:calc(85vh - .5rem);
 	margin-top:.5em;
 	border-radius:.2em;
@@ -569,8 +569,17 @@ img.lib-artistart {
 #lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1.17rem));margin:.25em 0;}
 /* coverview screen saver */
 #screen-saver {animation: fadeIn var(--fadein-rate);color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
-#ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
-#ss-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:none;transform:translateZ(0);}
+#ss-backdrop,
+#inpsrc-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
+#inpsrc-backdrop {
+	z-index:-1;
+}
+#ss-style,
+#inpsrc-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:none;transform:translateZ(0);}
+#inpsrc-style {
+	background: linear-gradient(rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.6) 25%, rgba(0, 0, 0, 0.75) 40%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 0.9) 100%);
+    z-index: -1;
+}
 #ss-clock, #ss-extra-metadata, #ss-extra-metadata-output-format {display:none;}
 .ss-clock {
 	position:absolute;

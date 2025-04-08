@@ -844,12 +844,10 @@ function updateInpsrcMeta(cmd, data) {
     }
 
     /* TEST: */
-    // Refactor to class="inpsrc-metadata-cover"
-    $('#inpsrc-backdrop').html('<img class="inpsrc-metadata-backdrop" ' + 'src="' + coverURL + '">');
-    //$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + coverURL + '">');
-    //$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
-    //$('#cover-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
-
+    $('#inpsrc-cover').html('<img class="inpsrc-metadata-cover" ' + 'src="' + coverURL + '">');
+    $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + coverURL + '">');
+    $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
+    $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
 
     $('#inpsrc-metadata').html(metadataHTML);
 

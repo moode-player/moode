@@ -130,7 +130,7 @@ body {
 	#inpsrc-msg {top:50%;width:100%;padding-bottom:calc(.5em + env(safe-area-inset-bottom))}
 	#inpsrc-metadata {position:relative;font-size:.65em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;margin-top:.5em;}
 	#inpsrc-metadata-refresh {padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
-	.inpsrc-metadata-backdrop {
+	.inpsrc-metadata-cover {
 		height:auto;
 		width:95%;
 	}
@@ -368,7 +368,7 @@ body {
 	#inpsrc-metadata {font-size:.55em;padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
 	#inpsrc-metadata-refresh i,
 	#inpsrc-msg i {font-size:1.25em;}
-	.inpsrc-metadata-backdrop {height:calc(75vh - .5rem);}
+	.inpsrc-metadata-cover {height:calc(75vh - .5rem);}
 
 	/* For the configs */
 	#panel-header,
