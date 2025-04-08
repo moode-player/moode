@@ -847,6 +847,7 @@ function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + coverURL + '">');
     $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
     $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
+    $('#inpsrc-style').css('display', 'block');
 
     $('#inpsrc-metadata').html(metadataHTML);
 
