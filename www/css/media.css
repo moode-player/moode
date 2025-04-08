@@ -128,7 +128,17 @@ body {
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:3.5em;}
 	#inpsrc-msg {top:50%;width:100%;padding-bottom:calc(.5em + env(safe-area-inset-bottom))}
-	#inpsrc-metadata {position:relative;font-size:.65em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;margin-top:.5em;}
+	#inpsrc-metadata {
+		position:relative;
+		font-size:.65em;
+		text-overflow:ellipsis;
+		white-space:nowrap;
+		overflow:hidden;
+		margin-top:.5em;
+		width:auto;
+		margin-left:.75em;
+		margin-right:.75em;
+	}
 	#inpsrc-metadata-refresh {padding-bottom:calc(.5em + env(safe-area-inset-bottom));}
 	.inpsrc-metadata-cover {
 		height:auto;
