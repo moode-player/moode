@@ -843,7 +843,6 @@ function updateInpsrcMeta(cmd, data) {
         var metadataHTML = '<b>' + artist + ' - ' + title + '</b>' + '<br><span id="renderer-format-badge">' + format + '</span><br><span>' + album + '</span>';
     }
 
-    /* TEST: */
     $('#inpsrc-cover').html('<img class="inpsrc-metadata-cover" ' + 'src="' + coverURL + '">');
     $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + coverURL + '">');
     $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
