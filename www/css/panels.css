@@ -245,8 +245,7 @@ a.btn-cmd {width:18px;}
 .btn2 {color:inherit;display:inline-block;}
 .btn-cmd:focus {outline:none;}
 img.coverart {
-	/*box-shadow:0 .1em .2em rgba(32, 32, 32, 0.25);*/
-	box-shadow:	0 .2em .25em rgba(32,32,32,0.5);
+	box-shadow:0em .25em .75em rgba(32,32,32,0.5);
 	width:100%;
 	height:100%;
 	cursor:pointer;
