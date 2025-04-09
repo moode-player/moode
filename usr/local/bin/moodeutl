@@ -169,7 +169,7 @@ With no OPTION print the help text and exit.
  -M\t\tScan for MPD hosts
  -o\t\tList audio overlays
  -q\t\tQuery sql database
- -r\t\tRestart servers
+ -r\t\tRestart servers and renderers
  -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --deezer | --squeezelite | --plexamp | --roonbridge]
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
@@ -358,10 +358,10 @@ function systemMonitor() {
 		$cpuTemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
 
 		// CPU (get top 'us' user space column: $2)
-		$cpuLoad = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
-		$cpuLoad += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
+		$cpuLoad =  (float)exec("top -bn 2 -d 1.0  | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
+		$cpuLoad += (float)exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
 		$cpuLoad = $cpuLoad / 2; // Average of the above
-		$cpuLoad = $cpuload == '100' ? '100' : number_format($cpuLoad,1,'.','');
+		$cpuLoad = $cpuload >= 100 ? '100' : number_format($cpuLoad,1,'.','');
 
 		// Memory
 		$memTotal = exec("grep MemTotal /proc/meminfo | awk '{print $2}'");
@@ -388,17 +388,52 @@ function sqlQuery($argv) {
 }
 
 function restartServers() {
+	// Stop daemons
+	echo "Stopping daemons...\n";
+	echo "- watchdog.sh\n";
 	exec('sudo killall -s 9 watchdog.sh');
+	echo "- mountmon.php\n";
 	exec('sudo killall -s 9 mountmon.php >/dev/null 2>&1');
+	echo "- mpdmon.php\n";
 	exec('sudo killall -s 9 mpdmon.php >/dev/null 2>&1');
+	echo "- worker.php.php\n";
 	exec('sudo killall -s 9 worker.php');
 	exec('sudo rm /var/run/worker.pid');
+	echo "- mpd2cdspvolume\n";
 	exec('sudo systemctl stop mpd2cdspvolume');
-	exec('sudo systemctl restart php' . PHP_VER . '-fpm');
-	exec('sudo systemctl restart nginx');
-	exec('sudo systemctl stop mpd');
+	echo "- localui\n";
 	exec('sudo systemctl stop localdisplay');
+	echo "- mpd\n";
+	exec('sudo systemctl stop mpd');
+
+	// Stop renderers
+	echo "Stopping renderers...\n";
+	echo "- bluetooth\n";
+	sysCmd('/var/www/util/restart-renderer.php --bluetooth --stop');
+	echo "- airplay\n";
+	sysCmd('/var/www/util/restart-renderer.php --airplay --stop');
+	echo "- spotify\n";
+	sysCmd('/var/www/util/restart-renderer.php --spotify --stop');
+	echo "- deezer\n";
+	sysCmd('/var/www/util/restart-renderer.php --deezer --stop');
+	echo "- squeezelite\n";
+	sysCmd('/var/www/util/restart-renderer.php --squeezelite --stop');
+	echo "- plexamp\n";
+	sysCmd('/var/www/util/restart-renderer.php --plexamp --stop');
+	echo "- roonbridge\n";
+	sysCmd('/var/www/util/restart-renderer.php --roonbridge --stop');
+
+	// Restart PHP and NGINX
+	echo "Restarting php/nginx...\n";
+	echo "- php\n";
+	exec('sudo systemctl restart php' . PHP_VER . '-fpm');
+	echo "- nginx\n";
+	exec('sudo systemctl restart nginx');
+
+	// Start worker
+	echo "Starting worker daemon...\n";
 	exec('sudo /var/www/daemon/worker.php');
+
 	echo "Servers restarted\n";
 }
 
