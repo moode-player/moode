@@ -378,12 +378,10 @@ function sendMpdCmd($sock, $cmd) {
 	fputs($sock, $cmd . "\n");
 }
 function chainMpdCmds($sock, $cmds) {
-    sendMpdCmd($sock, 'command_list_begin');
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
+        $resp = readMpdResp($sock);
     }
-    sendMpdCmd($sock, 'command_list_end');
-    $resp = readMpdResp($sock);
 }
 
 // Get MPD status and stats
