@@ -35,6 +35,7 @@ Bug fixes
 - FIX: Fix volume and mute not being updated in currentsong.txt
 - FIX: Embedded single quote not working in Library search
 - FIX: Title string not escaped when submitted to search engine
+- FIX: Incomplete status may be returned after chainMpdCmds()
 
 ################################################################################
 #
