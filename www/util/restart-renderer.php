@@ -16,35 +16,37 @@ session_id(phpSession('get_sessionid'));
 phpSession('open');
 
 $option = isset($argv[1]) ? $argv[1] : '';
+$stopOnly = (isset($argv[2]) && $argv[2] == '--stop') ? true : false;
 
 switch ($option) {
 	case '--bluetooth':
-		restartBluetooth();
+		restartBluetooth($stopOnly);
 		break;
 	case '--airplay':
-		restartAirPlay();
+		restartAirPlay($stopOnly);
 		break;
 	case '--spotify':
-		restartSpotify();
+		restartSpotify($stopOnly);
 		break;
 	case '--deezer':
-		restartDeezer();
+		restartDeezer($stopOnly);
 		break;
 	case '--squeezelite':
-		restartSqueezelite();
+		restartSqueezelite($stopOnly);
 		break;
 	case '--plexamp':
-		restartPlexamp();
+		restartPlexamp($stopOnly);
 		break;
 	case '--roonbridge':
-		restartRoonBridge();
+		restartRoonBridge($stopOnly);
 		break;
 	default:
 		echo
-"Usage: restart-renderer [OPTION]
+"Usage: restart-renderer [OPTION] [--stop]
 Moode renderer restarter
 
 With no OPTION print the help text and exit.
+With OPTION --stop the renderer is stopped but not started.
 
  --bluetooth\tRestart Bluetooth
  --airplay\tRestart AirPlay
@@ -58,49 +60,63 @@ With no OPTION print the help text and exit.
 
 phpSession('close');
 
-function restartBluetooth() {
+function restartBluetooth($stopOnly) {
 	stopBluetooth();
-	sysCmd('/var/www/util/vol.sh -restore');
-	// Reset to inactive
-	phpSession('write', 'btactive', '0');
-	// Dismiss active screen
-	sendFECmd('btactive0');
+	if ($stopOnly === false) {
+		sysCmd('/var/www/util/vol.sh -restore');
+		// Reset to inactive
+		phpSession('write', 'btactive', '0');
+		// Dismiss active screen
+		sendFECmd('btactive0');
 
-	// Restore MPD volume and start Bluetooth
-	sysCmd('/var/www/util/vol.sh -restore');
-	$status = startBluetooth();
-	if ($status != 'started') {
-		echo $status;
+		// Restore MPD volume and start Bluetooth
+		sysCmd('/var/www/util/vol.sh -restore');
+		$status = startBluetooth();
+		if ($status != 'started') {
+			echo $status;
+		}
 	}
 }
 
-function restartAirPlay() {
+function restartAirPlay($stopOnly) {
 	stopAirPlay();
-	startAirPlay();
+	if ($stopOnly === false) {
+		startAirPlay();
+	}
 }
 
-function restartSpotify() {
+function restartSpotify($stopOnly) {
 	stopSpotify();
-	startSpotify();
+	if ($stopOnly === false) {
+		startSpotify();
+	}
 }
 
-function restartDeezer() {
+function restartDeezer($stopOnly) {
 	stopDeezer();
-	startDeezer();
+	if ($stopOnly === false) {
+		startDeezer();
+	}
 }
 
-function restartSqueezelite() {
+function restartSqueezelite($stopOnly) {
 	stopSqueezelite();
 	phpSession('write', 'rsmaftersl', 'No');
-	startSqueezelite();
+	if ($stopOnly === false) {
+		startSqueezelite();
+	}
 }
 
-function restartPlexamp() {
+function restartPlexamp($stopOnly) {
 	stopPlexamp();
-	startPlexamp();
+	if ($stopOnly === false) {
+		startPlexamp();
+	}
 }
 
-function restartRoonBridge() {
+function restartRoonBridge($stopOnly) {
 	stopRoonBridge();
-	startRoonBridge();
+	if ($stopOnly === false) {
+		startRoonBridge();
+	}
 }
