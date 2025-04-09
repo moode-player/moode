@@ -107,11 +107,14 @@ function stopAirPlay() {
 		$result1 = sysCmd('pgrep -cx aplmeta-reader.')[0]; // aplmeta-reader. sh
 		$result2 = sysCmd('pgrep -cx shairport-sync-')[0]; // shairport-sync- metadata-reader
 		$result3 = sysCmd('pgrep -cx aplmeta.py')[0];
-		$result4 = sysCmd("pgrep -fac \"cat /tmp/shairport-sync-metadata\"")[0];
-		//debugLog('result1=' . $result1);
-		//debugLog('result2=' . $result2);
-		//debugLog('result3=' . $result3);
-		//debugLog('result4=' . $result4);
+		$result4 = sysCmd("pgrep -cfax \"cat /tmp/shairport-sync-metadata\"")[0];
+
+		// DEBUG
+		/*workerLog('result1=' . $result1);
+		workerLog('result2=' . $result2);
+		workerLog('result3=' . $result3);
+		workerLog('result4=' . $result4);
+		}*/
 
 		if ($result1 == 0 && $result2 == 0 && $result3 == 0 && $result4 == 0) {
 			break;
