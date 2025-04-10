@@ -98,31 +98,29 @@ html {background-color:inherit;}
 #inpsrc-msg i,
 #inpsrc-metadata-refresh i {font-size:1.5em;}
 #inpsrc-msg-text {display:block;font-size:1em;margin-bottom:0.5em;}
-/* Volume control */
-#inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 
-/* TEST: */
 /* AirPlay, Deezer, Spotify cover art */
 .inpsrc-metadata-cover {
-	height:calc(85vh - .5rem);
+	height:calc(80vh + .25em);
 	margin-top:.5em;
 	border-radius:.2em;
 	box-shadow:	0 .25em .75em rgba(32,32,32,0.5);
 }
-
 #inpsrc-metadata {
 	position:absolute;
 	display:block;
-	height: 12vh;
+	height: 16vh;
 	width:100%;
 	bottom:0;
 	padding-top:.5em;
-	font-size:.75em;
+	font-size:1em;
 	font-weight:500;
-	/*background:linear-gradient(to right, rgba(64,64,64,0.5), rgba(8,8,8,0.5) 50%, rgba(64,64,64,.5));*/
 }
 #inpsrc-metadata span {font-size:.75em;font-weight:400;}
 #inpsrc-metadata-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;padding-bottom:.5em;}
+
+/* Volume control */
+#inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 
 /* Buttons */
 .audioinfo-renderer,
@@ -1013,7 +1011,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 	border-radius:2%;
 	/*box-shadow: 0 0 1px 0px var(--adapttext) inset, 0 0 1px 0px var(--adapttext);*/
 	padding: .1em .5em .1em .5em;
-	margin-bottom:.25em;
+	/*margin-bottom:.25em;*/
 }
 /* Radio manager */
 .modal-button-style {display:inline-block;margin:0 10px 10px 0;color:inherit!important;}
