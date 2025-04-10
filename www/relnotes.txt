@@ -36,6 +36,7 @@ Bug fixes
 - FIX: Embedded single quote not working in Library search
 - FIX: Title string not escaped when submitted to search engine
 - FIX: Incomplete status may be returned after chainMpdCmds()
+- FIX: Input field validation on Network Config screen
 
 ################################################################################
 #
