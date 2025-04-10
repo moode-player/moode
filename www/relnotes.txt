@@ -20,7 +20,7 @@ New features
 
 Updates
 - UPD: Bump to MPD 0.24.2
-- UPD: Bump to pleezer 0.15.0
+- UPD: Bump to pleezer 0.15.0 (new RAM cache option)
 - UPD: Bump to Linux kernel 6.12.20
 - UPD: Add MPD verbose log on indicator to Playback view
 - UPD: Update moodeutl -m to report user space CPU load
