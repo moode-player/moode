@@ -17,71 +17,70 @@ chkVariables($_POST, array('wlan0ssid', 'wlan0pwd', 'wlan0apdpwd'));
 // Get current settings: [0] = eth0, [1] = wlan0, [2] = apd0
 $cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 
-// Reset eth0 and wlan0 to defaults
-if (isset($_POST['reset']) && $_POST['reset'] == 1) {
-	// eth0
-	$value = array('method' => 'dhcp', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '', 'wlanssid' => '',
-		'wlanuuid' => '', 'wlanpwd' => '', 'wlanpsk' => '', 'wlancc' => '', 'wlansec' => '');
-	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
-
-	// wlan0
-	$value['wlanssid'] = 'None';
-	$value['wlanuuid'] = '';
-	$value['wlancc'] = $cfgNetwork[1]['wlancc']; // Preserve country code
-	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
-
-	submitJob('netcfg', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-}
-
 // Update interfaces
 if (isset($_POST['save']) && $_POST['save'] == 1) {
-	// Ethernet (eth0)
+	//
+	// ETHERNET (eth0)
+	//
 	$value = array('method' => $_POST['eth0method'], 'ipaddr' => $_POST['eth0ipaddr'], 'netmask' => $_POST['eth0netmask'],
 		'gateway' => $_POST['eth0gateway'], 'pridns' => $_POST['eth0pridns'], 'secdns' => $_POST['eth0secdns'], 'wlanssid' => '',
 		'wlanuuid' => '', 'wlanpwd' => '', 'wlanpsk' => '', 'wlancc' => '', 'wlansec' => '');
 	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
-	// Wireless (wlan0)
-	// These values may be overridden if saved SSID exists (see $('#wlan0ssid').change in scripts-configs.js)
-	$method = ($_POST['wlan0ssid'] == 'Activate Hotspot' || $_POST['wlan0ssid'] == 'None') ?
-		'dhcp' : $_POST['wlan0method'];
-	// Always generate a new UUID to make things simpler
-	$uuid = genUUID();
+	//
+	// WIRELESS (wlan0, apd0)
+	//
 
-	if ($_POST['wlan0security'] == 'wpa-psk') {
-		// WPA2-PSK requires pre-shared key password
-		if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlanpsk']) {
-			// SSID or password changed
-			if (strlen($_POST['wlan0pwd']) < 64) {
-				// Convert plain text password to PSK
-				$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
-			} else {
-				// Use PSK from saved SSID
-				$psk = $_POST['wlan0pwd'];
-			}
-		} else {
-			// Use PSK from configured SSID
-			$psk = $cfgNetwork[1]['wlanpsk'];
-		}
-		$pwd = $psk;
-	} else {
-		// WPA3-SAE requires plaintext password
+	// WIFI (wlan0)
+	// NOTE: These values may be overridden if saved SSID exists (see $('#wlan0ssid').change in scripts-configs.js)
+
+	// 1. Set variables
+	if ($_POST['wlan0ssid'] == 'Activate Hotspot' || $_POST['wlan0ssid'] == 'None') {
+		$method = 'dhcp';
+		$uuid = '';
+		$pwd = '';
 		$psk = '';
-		$pwd = $_POST['wlan0pwd'];
+	} else {
+		$method = $_POST['wlan0method'];
+		$uuid = genUUID(); // Always generate a new UUID to make things simpler
+
+		if ($_POST['wlan0security'] == 'wpa-psk') {
+			// WPA2-PSK requires pre-shared key password
+			if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlanpsk']) {
+				// SSID or password changed
+				if (strlen($_POST['wlan0pwd']) < 64) {
+					// Convert plain text password to PSK
+					$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
+				} else {
+					// Use PSK from saved SSID
+					$psk = $_POST['wlan0pwd'];
+				}
+			} else {
+				// Use PSK from configured SSID
+				$psk = $cfgNetwork[1]['wlanpsk'];
+			}
+			$pwd = $psk;
+		} else {
+			// WPA3-SAE requires plaintext password
+			$psk = '';
+			$pwd = $_POST['wlan0pwd'];
+		}
 	}
 
-	if (empty($pwd)) {
+	// 2. Update configuration or display alert
+	if (empty($pwd) && $_POST['wlan0ssid'] != 'Activate Hotspot' && $_POST['wlan0ssid'] != 'None') {
+		// Blank WPA3-SA password
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'A password must be entered when Security is WPA3-SAE.';
 	} else {
-		// cfg_network
+		// Update cfg_network (Configured SSID)
 		$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
 			'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
 			'wlanssid' => $_POST['wlan0ssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $pwd, 'wlanpsk' => $psk,
 			'wlancc' => $_POST['wlan0country'], 'wlansec' => $_POST['wlan0security']);
 		sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
-		// cfg_ssid
+		// Update cfg_ssid (Saved SSID's)
 		if ($_POST['wlan0ssid'] != 'Activate Hotspot' && $_POST['wlan0ssid'] != 'None') {
 			$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
 			if ($cfgSSID === true) {
@@ -114,7 +113,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 			}
 		}
 
-		// apd0 (Hotspot)
+		// HOTSPOT (apd0)
 		if ($_POST['wlan0apdssid'] != $cfgNetwork[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfgNetwork[2]['wlanpsk']) {
 			$uuid = genUUID();
 			$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
