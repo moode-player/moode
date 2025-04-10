@@ -5,7 +5,7 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
-const VERSION = '9.0.1';
+const VERSION = '9.1.0';
 
 set_include_path('/var/www/inc');
 
