@@ -58,6 +58,20 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="max-ram">RAM file cache</label>
+			<div class="controls">
+				<select id="max-ram" class="config-select-large" name="config[max_ram]">
+					$_select[max_ram]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-max-ram" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-max-ram" class="config-help-info">
+					Maximum amount of RAM to use for storing audio files in memory.<br>
+					<b>Disabled:</b> Files are cached to the default [] location.<br>
+					<b>128MB:</b> Should comfortably handle most MP3 tracks.<br>
+					<b>256MB:</b> Would handle most FLAC tracks.
+				</span>
+			</div>
+
 			<div class="config-horiz-rule">Credentials</div>
 
 			<label class="control-label" for="email">Email address</label>

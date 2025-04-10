@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Mar 20 17:37:21 2025
+-- File generated with SQLiteStudio v3.4.4 on Thu Apr 10 18:01:58 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -103,7 +103,7 @@ INSERT INTO cfg_deezer (id, param, value) VALUES (1, 'normalize_volume', 'No');
 INSERT INTO cfg_deezer (id, param, value) VALUES (2, 'no_interruptions', 'No');
 INSERT INTO cfg_deezer (id, param, value) VALUES (3, 'format', 'S32');
 INSERT INTO cfg_deezer (id, param, value) VALUES (4, 'initial_volume', '10');
-INSERT INTO cfg_deezer (id, param, value) VALUES (5, 'RESERVED_5', '');
+INSERT INTO cfg_deezer (id, param, value) VALUES (5, 'max_ram', '0');
 INSERT INTO cfg_deezer (id, param, value) VALUES (6, 'RESERVED_6', '');
 INSERT INTO cfg_deezer (id, param, value) VALUES (7, 'RESERVED_7', '');
 INSERT INTO cfg_deezer (id, param, value) VALUES (8, 'RESERVED_8', '');

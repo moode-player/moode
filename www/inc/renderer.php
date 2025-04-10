@@ -163,7 +163,7 @@ function startSpotify() {
 
 	// Options
 	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . $cfgSpotify['dither'];
-	$volume_normalization = $cfgSpotify['volume_normalization'] == 'Yes' ?
+	$normalization = $cfgSpotify['volume_normalization'] == 'Yes' ?
 		' --enable-volume-normalisation ' .
 		' --normalisation-method ' . $cfgSpotify['normalization_method'] .
 		' --normalisation-gain-type ' . $cfgSpotify['normalization_gain_type'] .
@@ -190,7 +190,7 @@ function startSpotify() {
 		' --initial-volume ' . $cfgSpotify['initial_volume'] .
 		' --volume-ctrl ' . $cfgSpotify['volume_curve'] .
 		' --volume-range ' . $cfgSpotify['volume_range'] .
-		$volume_normalization .
+		$normalization .
 		$autoplay .
 		$zeroconf .
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' .
@@ -234,8 +234,9 @@ function startDeezer() {
 	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
 
 	// Options
-	$volume_normalization = $cfgDeezer['normalize_volume'] == 'Yes' ? ' --normalize-volume' : '';
+	$normalization = $cfgDeezer['normalize_volume'] == 'Yes' ? ' --normalize-volume' : '';
 	$interruption = $cfgDeezer['no_interruption'] == 'Yes' ? ' --no_interruption' : '';
+	$ramcache = $cfgDeezer['max_ram'] == '0' ? '' : ' --max_ram ' . $cfgDeezer['max_ram'];
 	$rate = '';
 	$format = $cfgDeezer['format'];
 	// Logging
@@ -248,7 +249,8 @@ function startDeezer() {
 		' --device "' . 'ALSA|' . $device . '|' . $rate . '|' . $format . '"' .
 		' --initial-volume "' . $cfgDeezer['initial_volume'] . '"' .
 		' --secrets "' . DEEZ_CREDENTIALS_FILE . '"' .
-		$volume_normalization .
+		$normalization .
+		$ramcache .
 		$interruption .
 		' --hook /var/local/www/commandw/deezevent.sh' .
 		$logging . ' 2>&1 &';

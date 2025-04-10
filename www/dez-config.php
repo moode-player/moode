@@ -43,6 +43,10 @@ $_select['normalize_volume'] .= "<option value=\"Yes\" " . (($cfgDeezer['normali
 $_select['normalize_volume'] .= "<option value=\"No\" "  . (($cfgDeezer['normalize_volume'] == 'No')  ? "selected" : "") . ">No (Default)</option>\n";
 $_select['no_interruptions'] .= "<option value=\"Yes\" " . (($cfgDeezer['no_interruptions'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['no_interruptions'] .= "<option value=\"No\" "  . (($cfgDeezer['no_interruptions'] == 'No')  ? "selected" : "") . ">No (Default)</option>\n";
+$_select['max_ram'] .= "<option value=\"0\" "  . (($cfgDeezer['max_ram'] == '0')  ? "selected" : "") . ">Disabled (Default)</option>\n";
+$_select['max_ram'] .= "<option value=\"128\" "  . (($cfgDeezer['max_ram'] == '128')  ? "selected" : "") . ">128MB</option>\n";
+$_select['max_ram'] .= "<option value=\"256\" "  . (($cfgDeezer['max_ram'] == '256')  ? "selected" : "") . ">256MB</option>\n";
+$_select['max_ram'] .= "<option value=\"512\" "  . (($cfgDeezer['max_ram'] == '512')  ? "selected" : "") . ">512MB</option>\n";
 $_select['email'] = $cfgDeezer['email'];
 if (empty($cfgDeezer['password'])) {
 	$_select['password'] = '';
