@@ -19,7 +19,7 @@ New features
 - NEW: AirPlay metadata and cover art
 
 Updates
-- UPD: Bump to MPD 0.24.2
+- UPD: Bump to MPD 0.24.3
 - UPD: Bump to pleezer 0.15.0 (new RAM cache option)
 - UPD: Bump to Linux kernel 6.12.20
 - UPD: Add MPD verbose log on indicator to Playback view
