@@ -361,6 +361,7 @@ if ($_SESSION['audioout'] == 'Bluetooth' ||
 
 // Output device
 // Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device(s)
+// NOTE: ALSA removes the card id after a USB audio device is unplugged or turned off
 if ($i2sReboot === true) {
 	$_select['device'] = "<option value=\"0\" selected>RESTART REQUIRED</option>\n";
 } else {
@@ -371,9 +372,6 @@ if ($i2sReboot === true) {
 		$_select['device'] .= "<option value=\"" . $i . "\" " . (($cfgMPD['device'] == $i) ? "selected" : "") . ">$deviceName</option>\n";
 	}
 }
-// For USB device
-// ALSA removes the card id after the device is unplugged or turned off
-$_device_error = $deviceNames[$_SESSION['cardnum']] == ALSA_EMPTY_CARD ? 'Device turned off or disconnected' : '';
 // Volume type
 // Hardware, Software, Fixed (none), CamillaDSP (null)
 $_software_and_dsd_warning = $cfgMPD['mixer_type'] == 'software' ?
