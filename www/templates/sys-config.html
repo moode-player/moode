@@ -128,6 +128,19 @@
 				</div>
 			</div>
 
+			<label class="control-label">Tmp to RAM</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-tmp2ram" for="toggle-tmp2ram-2">ON </label>$_select[tmp2ram_on]
+					<label class="toggle-radio toggle-tmp2ram" for="toggle-tmp2ram-1">OFF</label>$_select[tmp2ram_off]
+				</div>
+				<button id="btn-set-tmp2ram" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_tmp2ram" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-help-static">
+					$_tmp2ram_stats
+					Write temporary files to memory. The default maximum size is 50% of total RAM and is only used as needed.
+				</span>
+			</div>
+
 			<div class="config-horiz-rule">Power management</div>
 
 			<div class="$_reduce_power_hide">
@@ -518,7 +531,7 @@
 				</div>
 				<button id="btn-set-log2ram" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_log2ram" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<span class="config-help-static">
-					$_log2ram_stats<br>
+					$_log2ram_stats
 					Write logs to memory. Logs are flushed to disk once per day at 23:55:00 or whenever the system is restarted or shutdown.
 				</span>
 			</div>

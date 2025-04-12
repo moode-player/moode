@@ -42,6 +42,7 @@ $currentSettings['pi_audio_driver'] = $_SESSION['pi_audio_driver'];
 $currentSettings['pci_express'] = $_SESSION['pci_express'];
 $currentSettings['fan_temp0'] = $_SESSION['fan_temp0'];
 $currentSettings['log2ram'] = $_SESSION['log2ram'];
+$currentSettings['tmp2ram'] = $_SESSION['tmp2ram'];
 $currentSettings['usb_volknob'] = $_SESSION['usb_volknob'];
 $currentSettings['led_state'] = $_SESSION['led_state'];
 $currentSettings['eth0chk'] = $_SESSION['eth0chk'];

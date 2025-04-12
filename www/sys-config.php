@@ -160,6 +160,11 @@ if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION
 	submitJob('pwrled', $_POST['pwrled']);
 	$_SESSION['led_state'] = explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled'];
 }
+if (isset($_POST['update_tmp2ram']) && $_POST['tmp2ram'] != $_SESSION['tmp2ram']) {
+	$_SESSION['tmp2ram'] = $_POST['tmp2ram'];
+	$queueArgs = $_POST['tmp2ram'] == 'on' ? 'unmask' : 'mask';
+	submitJob('tmp2ram', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+}
 // Networking
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
 	submitJob('p3wifi', $_POST['p3wifi'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
@@ -425,6 +430,15 @@ if ($PiModel == '1' || $piModel == '5' ||
 	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 }
+$autoClick = " onchange=\"autoClick('#btn-set-tmp2ram');\"";
+$_select['tmp2ram_on']  .= "<input type=\"radio\" name=\"tmp2ram\" id=\"toggle-tmp2ram-1\" value=\"on\" " . (($_SESSION['tmp2ram'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['tmp2ram_off'] .= "<input type=\"radio\" name=\"tmp2ram\" id=\"toggle-tmp2ram-2\" value=\"off\" " . (($_SESSION['tmp2ram'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+if ($_SESSION['tmp2ram'] == 'on') {
+	$_tmp2ram_stats = sysCmd('df -h /tmp | tail -n +2 | awk \'{print "Usage: " $5 " | Size: " $2 " | Used: " $3 " | Free: " $4}\'')[0] .
+	'<br>';
+} else {
+	$_tmp2ram_stats = '';
+}
 
 // Networking
 // Integrated WiFi and BT adapters (Pi-Zero W, Pi-Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B)
@@ -539,7 +553,8 @@ $autoClick = " onchange=\"autoClick('#btn-set-log2ram');\"";
 $_select['log2ram_on']  .= "<input type=\"radio\" name=\"log2ram\" id=\"toggle-log2ram-1\" value=\"on\" " . (($_SESSION['log2ram'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['log2ram_off'] .= "<input type=\"radio\" name=\"log2ram\" id=\"toggle-log2ram-2\" value=\"off\" " . (($_SESSION['log2ram'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 if ($_SESSION['log2ram'] == 'on') {
-	$_log2ram_stats = sysCmd('df -hT | grep log2ram | awk \'{print "Usage: " $6 " | Size: " $3 " | Used: " $4 " | Free: " $5}\'')[0];
+	$_log2ram_stats = sysCmd('df -h | grep log2ram | awk \'{print "Usage: " $5 " | Size: " $2 " | Used: " $3 " | Free: " $4}\'')[0] .
+	'<br>';
 } else {
 	$_log2ram_stats = '';
 }

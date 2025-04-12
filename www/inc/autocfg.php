@@ -152,6 +152,10 @@ function autoConfigSettings() {
 			$value = $values['pci_express'];
 			updBootConfigTxt('upd_pci_express', $value);
 		}],
+		['requires' => ['tmp2ram'], 'handler' => function($values) {
+			$_SESSION['tmp2ram'] = $values['tmp2ram'];
+			$value = $values['tmp2ram'];
+		}],
 
 		// NOTE: $_SESSION['reduce_power'] is an eeprom config
 		// The setting does not need to be restored

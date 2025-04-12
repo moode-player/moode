@@ -230,6 +230,12 @@ if (!isset($_SESSION['log2ram'])) {
 }
 workerLog('worker: Log to RAM:    ' . $_SESSION['log2ram']);
 
+// /tmp to RAM
+if (!isset($_SESSION['tmp2ram'])) {
+	$_SESSION['tmp2ram'] = 'on';
+}
+workerLog('worker: Tmp to RAM:    ' . $_SESSION['tmp2ram']);
+
 // Debug logging
 if (!isset($_SESSION['debuglog'])) {
 	phpSession('write', 'debuglog', '0');
@@ -3193,6 +3199,9 @@ function runQueuedJob() {
 		case 'pwrled': // LED1
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
+			break;
+		case 'tmp2ram':
+			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' tmp.mount');
 			break;
 		// HTTPS mode
 		case 'nginx_https_only':
