@@ -107,6 +107,7 @@ jQuery(document).ready(function($) { 'use strict';
     	UI.libPos[0] = parseInt(tmpStr[0]); // Album list
     	UI.libPos[1] = parseInt(tmpStr[1]); // Album cover
     	UI.libPos[2] = parseInt(tmpStr[2]); // Artist list
+        UI.libPos[3] = parseInt(tmpStr[3]); // Genre list
         // Playlist view
     	UI.playlistPos = parseInt(SESSION.json['playlist_pos']);
         //console.log('scripts-panels: UI.radioPos', UI.radioPos);

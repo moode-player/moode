@@ -119,11 +119,12 @@ var UI = {
 	// Either 'lsinfo' or 'get_pl_items_fv'
     radioPos: -1,
     folderPos: -1,
-	libPos: [-1,-1,-1],
+	libPos: [-1,-1,-1,-1],
     // [0]: Album list pos (tag view)
     // [1]: Album cover pos (album view)
     // [2]: Artist list pos (tag view)
-    // Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
+    // [3]: Genre list pos (tag view)
+    // Special values for [0],[1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
     playlistPos: -1,
 	libAlbum: '',
 	mobile: false,
@@ -4365,7 +4366,9 @@ function storePlaylistPos(pos) {
     $.post('command/cfg-table.php?cmd=upd_cfg_system', {'playlist_pos': pos});
 }
 function storeLibPos(pos) {
-    $.post('command/cfg-table.php?cmd=upd_cfg_system', {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2], 'lib_scope': GLOBAL.musicScope});
+    $.post('command/cfg-table.php?cmd=upd_cfg_system',
+        {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2] + ',' + pos[3], 'lib_scope': GLOBAL.musicScope}
+    );
 }
 
 // Switch to Library
@@ -4751,17 +4754,29 @@ function lazyLode(view) {
         // [0]: Album list pos (tag view)
         // [1]: Album cover pos (album view)
         // [2]: Artist list pos (tag view)
-        // Special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
+        // [3]: Genre list pos (tag view)
+        // Special values for [0],[1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
         //console.log('lazyLode(): UI.libPos', UI.libPos);
         //console.log('lazyLode(): UI.radioPos', UI.radioPos);
         var albumPos = UI.libPos[0];
         var albumCoverPos = UI.libPos[1];
+        var artistPos = UI.libPos[2];
 
         if (view == 'tag') {
-            if (UI.libPos[2] >= 0) {
-                customScroll('artists', UI.libPos[2], scrollSpeed);
-                $('#artistsList .lib-entry').eq(UI.libPos[2]).addClass('active');
-                $('#artistsList .lib-entry').eq(UI.libPos[2]).click();
+            // Genre
+            if (UI.libPos[3] >= 0) {
+                customScroll('genres', UI.libPos[3], scrollSpeed);
+                $('#genresList .lib-entry').eq(UI.libPos[3]).addClass('active');
+                $('#genresList .lib-entry').eq(UI.libPos[3]).click();
+            } else {
+                customScroll('genres', 0, scrollSpeed);
+            }
+            // Artist
+            // UI.libPos[2] -> artistPos
+            if (artistPos >= 0) {
+                customScroll('artists', artistPos, scrollSpeed);
+                $('#artistsList .lib-entry').eq(artistPos).addClass('active');
+                $('#artistsList .lib-entry').eq(artistPos).click();
             } else {
                 customScroll('artists', 0, scrollSpeed);
             }

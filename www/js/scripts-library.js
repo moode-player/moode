@@ -922,7 +922,7 @@ var renderSongs = function(albumPos) {
 	}
 }
 
-// Click genre or menu header (reset all)
+// Click genre header or menu header (reset all)
 $('#genreheader, #library-header').on('click', function(e) {
     if (SESSION.json['library_flatlist_filter'] != 'full_lib' && $(e.target).parent('#genreheader').length == 0 && GLOBAL.musicScope == 'all') {
         SESSION.json['lib_active_search'] = LIB_FULL_LIBRARY;
@@ -969,7 +969,9 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
     LIB.albumClicked = false;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
-	UI.libPos.fill(-2);
+    UI.libPos[0] = -2;
+    UI.libPos[1] = -2;
+    UI.libPos[2] = -2;
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
     setLibMenuAndHeader();
@@ -986,6 +988,12 @@ $('#albumheader').on('click', '.lib-heading', function(e) {
 });
 
 // Click genre
+// UI.libPos
+// [0]: Album list pos (tag view)
+// [1]: Album cover pos (album view)
+// [2]: Artist list pos (tag view)
+// [3]: Genre list pos (tag view)
+// Special values for [0],[1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
 $('#genresList').on('click', '.lib-entry', function(e) {
 	var pos = $('#genresList .lib-entry').index(this);
     LIB.artistClicked = false;
@@ -993,6 +1001,8 @@ $('#genresList').on('click', '.lib-entry', function(e) {
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
 	UI.libPos[0] = -1;
+    UI.libPos[2] = -1;
+    UI.libPos[3] = pos;
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, allGenres[pos], LIB.filters.genres, renderGenres);
     setLibMenuAndHeader();
