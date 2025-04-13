@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Apr 10 18:01:58 2025
+-- File generated with SQLiteStudio v3.4.4 on Sun Apr 13 06:01:02 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -330,7 +330,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (84, 'http://direct.fipradio.fr/live/fip-midfi.mp3', 'France Inter Paris (FIP)', 'r', 'local', 'Classical, Jazz, Rock, World Music', 'Radio France', 'French', 'France', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (85, 'http://direct.francemusique.fr/live/francemusiqueclassiqueplus-hifi.mp3', 'France Musique Classique Plus', 'r', 'local', 'Classical', 'Radio France', 'French', 'France', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (86, 'http://direct.francemusique.fr/live/francemusiquelacontemporaine-hifi.mp3', 'France Musique La Contemporaine', 'r', 'local', 'Contemporary', 'Radio France', 'French', 'France', 'Europe', '128', 'MP3', 'No', '', 'No');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (87, 'http://direct.francemusique.fr/live/francemusiquelajazz-hifi.mp3', 'France Musique La Jazz', 'r', 'local', 'Jazz', 'Radio France', 'French', 'France', 'Europe', '128', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (87, 'http://direct.francemusique.fr/live/francemusiquelajazz-hifi.aac', 'France Musique La Jazz', 'r', 'local', 'Jazz', 'Radio France', 'French', 'France', 'Europe', '192', 'AAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (88, 'http://direct.francemusique.fr/live/francemusique-midfi.mp3', 'France Musique Live', 'r', 'local', 'Classical, Jazz', 'Radio France', 'French', 'France', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (89, 'http://hd.stream.frequence3.net/frequence3.flac', 'frequence3 (FLAC)', 'r', 'local', 'Pop, Top 40, Chart', 'Frequence3 Association', 'French', 'France', 'Europe', '900', 'FLAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (90, 'http://mediaserv30.live-streams.nl:8088/live', 'Hi On Line - Classical', 'r', 'local', 'Classical', 'Hi.Fine', 'English', 'Netherlands', 'Europe', '320', 'MP3', 'No', '', 'No');
