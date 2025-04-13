@@ -20,7 +20,7 @@ New features
 
 Updates
 - UPD: Bump to MPD 0.24.3
-- UPD: Bump to pleezer 0.15.0 (new RAM cache option)
+- UPD: Bump to pleezer 0.16.0 (new RAM cache option)
 - UPD: Bump to Linux kernel 6.12.20
 - UPD: Add MPD verbose log on indicator to Playback view
 - UPD: Add System Config option to store /tmp in RAM
@@ -33,6 +33,7 @@ Updates
 
 Radio stations
 - UPD: Update France Musique La Jazz to 192K AAC
+- UPD: Update station names for NTS 1 and 2
 
 Bug fixes
 - FIX: Hand cursor appearing when hovering over Album name
