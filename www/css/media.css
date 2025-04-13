@@ -441,7 +441,24 @@ body {
 }
 
 /*
-// Pi 7" Touch
+// Pi 7" Touch 2 1280 x 720
+*/
+@media (width:1279px) and (height:719px) {
+	img.lib-coverart,
+	img.lib-artistart {
+		width:calc(20vw - 2rem);
+	}
+	#tagview-text-cover {
+		height:calc(20vw - 2rem);
+		width:calc(20vw - 2rem);
+	}
+	#trackscontainer {
+    	width:calc(80vw - var(--sbw) + 1rem);
+	}
+}
+
+/*
+// Pi 7" Touch 1 800 x 480
 */
 /* 443 = Square pixel, 479 = Default pixel */
 @media (height:443px) and (width:799px),
