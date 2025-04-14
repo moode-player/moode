@@ -36,7 +36,6 @@ Radio stations
 - UPD: Update station names for NTS 1 and 2
 
 Bug fixes
-- FIX: Hand cursor appearing when hovering over Album name
 - FIX: Fix volume and mute not being updated in currentsong.txt
 - FIX: Embedded single quote not working in Library search
 - FIX: Title string not escaped when submitted to search engine
