@@ -9,7 +9,7 @@
 # cat /tmp/shairport-sync-metadata | shairport-sync-metadata-reader | /var/www/daemon/aplmeta.py
 #
 # DEBUG
-# /var/www/daemon/aplmeta.py 1
+# /var/www/daemon/aplmeta.py 1 (2 for more detail)
 #
 # Shairport-sync.conf
 # metadata = {
@@ -26,13 +26,15 @@ import subprocess
 import re
 import os
 import glob
+import time
+from datetime import datetime
 
 #
 # Globals
 #
 
 PGM_VERSION = '1.0.0'
-DEBUG = None
+DEBUG = 0
 COVERS_LOCAL_ROOT = '/var/local/www/imagesw/airplay-covers/'
 COVERS_WEB_ROOT = 'imagesw/airplay-covers/'
 APLMETA_FILE = '/var/local/www/aplmeta.txt'
@@ -40,7 +42,7 @@ APLMETA_FILE = '/var/local/www/aplmeta.txt'
 artist = None
 title = None
 album = None
-duration = None
+duration = '0'
 
 #
 # Functions
@@ -49,8 +51,9 @@ duration = None
 # Debug logger
 def debug_msg(msg, line_ending = '\n'):
 	global DEBUG
-	if DEBUG:
-		print('DEBUG: ' + msg, end = line_ending);
+	if DEBUG > 0:
+		time_stamp = datetime.now().strftime("%H:%M:%S")
+		print(time_stamp + ' DEBUG: ' + msg, end = line_ending);
 
 # Get specified metadata key,value pairs
 def get_metadata(line):
@@ -82,13 +85,14 @@ def update_globals(key, val):
 
 # Get debug level
 if len(sys.argv) > 1:
-	DEBUG = sys.argv[1]
+	DEBUG = int(sys.argv[1])
 
 # Forever loop
 try:
 	while True:
 		line = sys.stdin.readline()
-		debug_msg(line, '')
+		if DEBUG > 1:
+			debug_msg(line, '')
 
 		# Update specified globals
 		key, val = get_metadata(line)
@@ -97,31 +101,42 @@ try:
 			update_globals(key, val)
 
 		# When all globals are set, send metadata to front-end for display
-		if artist and title and album and duration:
-			# Get cover file name
-			# NOTE: There will only be one file per retain_cover_art = "no";
-			debug_msg('--> Get cover file name')
+		if artist and title and album:
+			# Get cover file:
+			# - Only one file will exist because retain_cover_art = "no"
+			# - We need a delay to allow shairport-sync time to write the file
+			debug_msg('--> Get cover file...')
+			time.sleep(1)
 			cover_path = glob.glob(COVERS_LOCAL_ROOT + '*')
-			cover_url = COVERS_WEB_ROOT + os.path.basename(cover_path[0])
 
-			# Write metadata file
-			debug_msg('--> Write metadata file')
-			format = 'ALAC or AAC'
-			metadata = title + '~~~' + artist + '~~~' + album + '~~~' + duration + '~~~' + cover_url + '~~~' + format
-			file = open(APLMETA_FILE, 'w')
-			file.write(metadata + "\n")
-			file.close()
+			if not cover_path:
+				cover_file = 'notfound.jpg'
+				debug_msg('--> Cover file not found')
+			else:
+				# Construct cover URL
+				cover_file = os.path.basename(cover_path[0])
+				cover_url = COVERS_WEB_ROOT + cover_file
+				debug_msg('--> Cover ' + cover_file)
 
-			# Send FE command
-			debug_msg('--> Send FE command')
-			subprocess.call(['/var/www/util/send-fecmd.php','update_aplmeta,' + metadata])
+				# Write metadata file
+				debug_msg('--> Write metadata file')
+				format = 'ALAC or AAC'
+				metadata = title + '~~~' + artist + '~~~' + album + '~~~' + duration + '~~~' + cover_url + '~~~' + format
+				file = open(APLMETA_FILE, 'w')
+				file.write(metadata + "\n")
+				file.close()
 
-			# Reset globals
-			debug_msg('--> Reset globals')
-			artist = None
-			title = None
-			album = None
-			duration = None
+				# Send FE command
+				debug_msg('--> Send FE command')
+				subprocess.call(['/var/www/util/send-fecmd.php','update_aplmeta,' + metadata])
+
+				# Reset globals
+				debug_msg('--> Reset globals')
+				artist = None
+				title = None
+				album = None
+				duration = '0'
+
 except KeyboardInterrupt:
 	sys.stdout.flush()
-	pass
+	print("\n")
