@@ -97,8 +97,8 @@ function genFlatList($sock) {
 			case 'work':
 				$tag = empty($_SESSION['library_flatlist_filter_str']) ? 'any' : $_SESSION['library_flatlist_filter'];
 				$str = empty($_SESSION['library_flatlist_filter_str']) ? $_SESSION['library_flatlist_filter'] : $_SESSION['library_flatlist_filter_str'];
+				// NOTE: $str needs to be enclosed in literal escaped double-quotes
 				$cmd = "search \"((base '" . $dir . "') AND (" . $tag . " contains " . '\"' . $str . '\"' . "))\"";
-				//workerLog($cmd);
 				break;
 			// Filter on file path or extension
 			// NOTE: Lossless and Lossy have an additional M4A probe in genLibrary()
@@ -114,6 +114,7 @@ function genFlatList($sock) {
 				break;
 		}
 
+		//workerLog($_SESSION['library_flatlist_filter'] . ' - ' . $cmd);
 		sendMpdCmd($sock, $cmd);
 		$respTmp = readMpdResp($sock);
 		if ($respTmp != "OK\n") {
