@@ -15,6 +15,11 @@
 #
 ################################################################################
 
+Updates
+- UPD: Improve Configure and Players style
+
+Bug fixes
+- FIX: Embedded single quote not working in Library search
 
 ################################################################################
 #
