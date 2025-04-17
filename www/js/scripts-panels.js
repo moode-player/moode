@@ -1741,12 +1741,13 @@ jQuery(document).ready(function($) { 'use strict';
     });
     $('#players-modal').on('shown.bs.modal', function() {
         setTimeout(function() {
-            $('#players-submit-confirm-msg').text('');
+            $('#btn-players-submit').text('Submit');
+            $('#btn-players-submit').prop('disabled', false);
         }, DEFAULT_TIMEOUT);
 	});
     $(document).on('click', '#btn-players-submit', function(e) {
-        var cmdKey = $('#players-command span').text();
-        var cmdValue = getKeyOrValue('value', cmdKey);
+        var command = $('#players-command span').text();
+        var cmdValue = getKeyOrValue('value', command);
         var ipaddr = [];
         var host = [];
         $('#players-ul a').each(function() {
@@ -1754,15 +1755,18 @@ jQuery(document).ready(function($) { 'use strict';
             ipaddr.push($(this).attr('data-ipaddr'));
         });
         //console.log(ipaddr);
-        if (cmdKey == 'Rediscover' || (ipaddr.length > 0 && cmdKey != 'No action')) {
-            var msgText = $('#players-submit-confirm-msg').text();
-            if (msgText == '' || msgText == 'Discovery complete') {
-                $('#players-submit-confirm-msg').text('Click again to confirm');
+        if (command == 'Rediscover' || (ipaddr.length > 0 && command != 'No action')) {
+            var msgText = $('#btn-players-submit').text();
+            if (msgText == 'Submit') {
+                $('#btn-players-submit').text('Confirm');
             } else {
-                if (cmdKey == 'Rediscover') {
-                    $('#players-submit-confirm-msg').text('Discovering players...');
+                if (command == 'Rediscover') {
+                    $('#players-submit-confirm-msg').html("<div class='busy-spinner-btn-players'>" + GLOBAL.busySpinnerSVG + "</div>");
+                    $('#btn-players-submit').prop('disabled', true);
                     $('#players-modal .modal-body').load('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr}, function() {
-                        $('#players-submit-confirm-msg').text('Discovery complete');
+                        $('#players-submit-confirm-msg').text('');
+                        $('#btn-players-submit').text('Submit');
+                        $('#btn-players-submit').prop('disabled', false);
                     });
                 } else {
                     $('#players-modal').modal('toggle');
