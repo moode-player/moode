@@ -1329,11 +1329,14 @@ jQuery(document).ready(function($) { 'use strict';
     // NOTE: Add 'starts_with' operator when bump to MPD 0.24
     function setSearchStr(str) {
         str = str.trim();
+
+        // NOTE: str needs to be enclosed in literal escaped double-quotes
         if (($.inArray(str.slice(0, 2), GLOBAL.searchOperators) != -1) && str.slice(2, 3) == ' ') {
-            str = str.slice(0, 3) + "'" +  str.slice(3) + "'";
+            str = str.slice(0, 3) + '\\"' +  str.slice(3) + '\\"';
         } else {
-            str = "contains '" + str + "'";
+            str = 'contains ' + '\\"' + str + '\\"';
         }
+
         return str;
     }
 
