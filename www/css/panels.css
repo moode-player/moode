@@ -632,7 +632,7 @@ body.cvwide-xmeta #ss-extra-metadata,
 body.cvwide-xmeta #ss-extra-metadata-output-format,
 body.cvwide-xmeta #ss-countdown {display:block;color:var(--textvariant);font-size:.85em;margin-top:0;}
 body.cvwide-xmeta #ss-extra-metadata-output-format.ss-npicon:before {
-	content: url("../images/npicon/waveform-light.svg");
+	content: var(--npicon);
 	display: inline-block;
 	width: 1.25em;
 	margin-right: .25em;
