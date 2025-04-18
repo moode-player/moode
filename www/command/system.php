@@ -26,6 +26,12 @@ switch ($_GET['cmd']) {
 	case 'refresh_screen':
 		sendFECmd('refresh_screen');
 		break;
+	case 'play':
+	case 'pause':
+	case 'next':
+	case 'prev':
+		sysCmd('mpc ' . $_GET['cmd']);
+		break;
 	case 'get_client_ip':
 		echo json_encode($_SERVER['REMOTE_ADDR']);
 		break;
