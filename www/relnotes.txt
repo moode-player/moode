@@ -16,10 +16,12 @@
 ################################################################################
 
 Updates
-- UPD: Improve Configure and Players style
+- UPD: Improve layout of Configure and Players dashboard modals
+- UPD: Add multi-select to Players dashboard
 
 Bug fixes
-- FIX: Embedded single quote not working in Library search
+- FIX: Embedded single quote not working in Library Adv search
+- FIX: Equalizer (Animated) now playing icon in CoverView
 
 ################################################################################
 #
@@ -545,6 +547,7 @@ Bug fixes
 - FIX: Library HD badge routine causing script crash under certain conditions
 - FIX: RoonBridge feature visibility and help text
 - FIX: Incorrect notification message when restoring Radio stations
+
 ################################################################################
 #
 # 2024-05-30 moOde 9.0.1 (Bookworm)
