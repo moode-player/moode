@@ -16,8 +16,7 @@
 ################################################################################
 
 Updates
-- UPD: Improve layout of Configure and Players dashboard modals
-- UPD: Add multi-select to Players dashboard
+- UPD: Add multi-select and additional commands to Players dashboard
 
 Bug fixes
 - FIX: Embedded single quote not working in Library Adv search
