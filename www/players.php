@@ -83,6 +83,7 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 	sort($playersArray);
 
 	// Output for ul
+	$i = 0;
 	foreach ($playersArray as $player) {
 		if ($player['ipaddr'] == $thisIpAddr) {
 			$_players .= sprintf(
@@ -94,10 +95,13 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 		} else {
 			$_players .= sprintf(
 				'<li><a href="http://%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank">' .
-				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>%s%s</a></li>',
+				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>' .
+				'<input id="player-' . $i . '" class="checkbox-ctl player-checkbox" type="checkbox" data-item="' . $i . '">%s%s</a></li>',
 				$player['ipaddr'], $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator']
 			);
 		}
+
+		$i++;
 	}
 }
 

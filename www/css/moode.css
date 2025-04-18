@@ -69,7 +69,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 #players ul, #configure ul {margin:0;display:inline-table;}
 #players i, #configure i {font-size:2em;padding:.25em;}
 .players-rxtx-indicator {font-size:.85em!important;margin-left:.25em;}
-#players a, #configure a {font-size:1.2em;width:8em;height:6em;text-transform:capitalize}
+#players a, #configure a {font-size:1em;width:10em;height:6em;text-transform:capitalize}
 #players-ul {margin:0;}
 #players-no-players-found {font-size:1.25em;font-style:italic;}
 #players-submit-confirm-msg {font-style:italic;margin-top:2px;}

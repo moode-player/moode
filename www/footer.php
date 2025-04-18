@@ -80,7 +80,7 @@
 <!-- PLAYERS -->
 <div id="players-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="players-modal-label">Players</h3>
+		<h3 id="players-modal-label">Players dashboard</h3>
 	</div>
 	<div id="players-modal-body" class="modal-body">
 	</div>
@@ -166,8 +166,8 @@
 </div>
 
 <?php
-    //workerLog('-- footer.php');
-    $return_val = session_write_close();
+	//workerLog('-- footer.php');
+	$return_val = session_write_close();
 	//workerLog('session_write_close=' . (($return_val) ? 'TRUE' : 'FALSE'));
 	echo "</body></html>";
 ?>

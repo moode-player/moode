@@ -1738,7 +1738,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
     });
 
-    // Players >>
+    // Players Dashboard
     $('#players-menu-item').click(function(e) {
         notify(NOTIFY_TITLE_INFO, 'discovering_players', 'Please wait.', NOTIFY_DURATION_INFINITE);
     });
@@ -1748,16 +1748,24 @@ jQuery(document).ready(function($) { 'use strict';
             $('#btn-players-submit').prop('disabled', false);
         }, DEFAULT_TIMEOUT);
 	});
+    $(document).on('click', '#player-check-uncheck-all', function(e) {
+        var checked = $(this).prop('checked') === true ? 'true' : '';
+        $('#players-ul a').each(function() {
+            $(this).children('input').prop('checked', checked);
+        });
+    });
     $(document).on('click', '#btn-players-submit', function(e) {
         var command = $('#players-command span').text();
         var cmdValue = getKeyOrValue('value', command);
         var ipaddr = [];
         var host = [];
         $('#players-ul a').each(function() {
-            host.push($(this).attr('data-host'));
-            ipaddr.push($(this).attr('data-ipaddr'));
+            if ($(this).children('input').prop('checked') === true) {
+                host.push($(this).attr('data-host'));
+                ipaddr.push($(this).attr('data-ipaddr'));
+            }
         });
-        //console.log(ipaddr);
+        //console.log(host + '|' + ipaddr);
         if (command == 'Rediscover' || (ipaddr.length > 0 && command != 'No action')) {
             var msgText = $('#btn-players-submit').text();
             if (msgText == 'Submit') {
