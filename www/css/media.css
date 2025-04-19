@@ -59,9 +59,9 @@ body {
 	#togglebtns .btn-group .btn.volume-popup-btn {display:inline-block;width:3.25em;}
 
 	/* Metadata under the cover art in Playback view */
-	#songsand {font-size:1.25em;width:90%;text-align:left}
-	#timeline {display:none;width:73vw;}
-	#mobile-time {display:block;}
+	#songsand {font-size:1.25em;width:88%;text-align:left}
+	#timeline {display:none;width:72vw;}
+	#mobile-time {display:block;color:var(--textvariant);}
 	#extra-tags-display {display:none;}
 	#currentsong {font-size:1.5em;margin-top:0;max-height:5em;overflow:hidden;}
 	#currentartist, #currentalbum {font-size:1.25em;margin-top:1em;}
