@@ -15,10 +15,14 @@
 #
 ################################################################################
 
+New features
+- NEW: Players dashboard with multi-select
+
 Updates
-- UPD: Add multi-select and additional commands to Players dashboard
+- UPD: Minor style improvements for mobile portrait
 
 Bug fixes
+- FIX: Function chainMpdCmds(): Add, Play or Clear/Play a group of tracks
 - FIX: Embedded single quote not working in Library Adv search
 - FIX: Equalizer (Animated) now playing icon in CoverView
 
