@@ -236,7 +236,7 @@ function startDeezer() {
 	// Options
 	$normalization = $cfgDeezer['normalize_volume'] == 'Yes' ? ' --normalize-volume' : '';
 	$interruption = $cfgDeezer['no_interruption'] == 'Yes' ? ' --no_interruption' : '';
-	$ramcache = $cfgDeezer['max_ram'] == '0' ? '' : ' --max_ram ' . $cfgDeezer['max_ram'];
+	$ramcache = $cfgDeezer['max_ram'] == '0' ? '' : ' --max-ram ' . $cfgDeezer['max_ram'];
 	$rate = '';
 	$format = $cfgDeezer['format'];
 	// Logging
