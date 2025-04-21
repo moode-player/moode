@@ -240,7 +240,7 @@ jQuery(document).ready(function($) { 'use strict';
         } else {
             $('#playhistory-hide').css('display', 'none');
         }
-        // Show/hide Bluetoioth on main menu
+        // Show/hide Bluetooth on main menu
         if (SESSION.json['btsvc'] == '1') {
             $('#bluetooth-hide').css('display', 'block');
         } else {
