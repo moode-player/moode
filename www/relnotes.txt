@@ -16,10 +16,11 @@
 ################################################################################
 
 New features
-- NEW: Players dashboard with multi-select
+- NEW: Dashboard with multi-select (formerly Players)
 
 Updates
 - UPD: Minor style improvements for mobile portrait
+- UPD: Use uid:gid 1000:1000 in function getUserId()
 
 Bug fixes
 - FIX: Function chainMpdCmds(): Play or Clear/Play a group of tracks
