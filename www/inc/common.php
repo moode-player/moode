@@ -254,30 +254,23 @@ function getMoodeSeries() {
 	return substr(getMoodeRel(), 1, 1);
 }
 
-// Assumes only one dir under /home, the one matching the userid entered into
-// the Raspberry Pi Imager when making the image.
+// Get the userid set in the Pi Imager. It will always be uid:gid 1000:1000
 function getUserID() {
-	// Delete '/home/pi' if no corresponding userid exists. The homedir pi is
-	// created by the moode-player package install during in-place update.
+	// 1. Cleanup from in-place update (if any)
+	// - The moode-player pkg creates /home/pi containing .dircolors, piano.sh amd .xinitrc
+	// - Delete '/home/pi' if no corresponding userid exists
 	if (file_exists('/home/pi/') && empty(sysCmd('grep ":/home/pi:" /etc/passwd'))) {
 		sysCmd('cp /home/pi/.xinitrc /tmp/xinitrc');
 		sysCmd('rm -rf /home/pi/');
 	}
-	// Return empty string if locked password for userid pi. A locked password
-	// is from the pi-gen build and remains unless a userid is set in Pi Imager.
+	// 2. Check for no userid set in Pi Imager
+	// - A locked password for userid pi is from the pi-gen image build
+	// - It stays locked unless a userid is set in the Pi Imager
 	if (sysCmd('cat /etc/shadow | grep "pi:" | cut -d ":" -f 2')[0] == '!') {
-		// No userid set in Pi Imager
 		$userId = NO_USERID_DEFINED;
 	} else {
-		// Return userid or empty string if no subdirs under /home/
-		$userId = sysCmd('ls /home/')[0];
-		if (strpos($userId, 'ls: cannot access') !== false) {
-			$userId = NO_USERID_DEFINED;
-		}
-	}
-
-	// Install xinitrc script
-	if ($userId != NO_USERID_DEFINED) {
+		// 3. Get userid and install xinitrc script to homedir
+		$userId = sysCmd('grep 1000:1000 /etc/passwd | cut -d: -f1')[0];
 		if (file_exists('/tmp/xinitrc')) {
 			sysCmd('cp -f /tmp/xinitrc /home/' . $userId . '/.xinitrc');
 		}
