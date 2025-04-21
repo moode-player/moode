@@ -46,6 +46,8 @@ body {
 	--config_modal_btn_bg: rgba(64,64,64,0.08);
 	--npicon: url('');
 	--fadein-rate: .5s;
+	--img-border-radius: .5em;
+	--btn-border-radius: .25em;
 }
 
 .btn,
@@ -103,7 +105,7 @@ html {background-color:inherit;}
 .inpsrc-metadata-cover {
 	height:calc(80vh + .25em);
 	margin-top:.5em;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 	box-shadow:	0 .25em .75em rgba(32,32,32,0.5);
 }
 #inpsrc-metadata {
@@ -212,7 +214,10 @@ html {background-color:inherit;}
 #togglebtns .btn-group {font-size:1em;white-space:normal;width:100%;}
 #togglebtns .btn-group .btn {font-size:.9em;margin:0 .3em;width:12%;padding:0;}
 #togglebtns .coverview i {font-size:.85em;}
-#togglebtns .btn-primary {color:var(--accentxts);border-radius:.25em;}
+#togglebtns .btn-primary {
+	color:var(--accentxts);
+	border-radius:var(--btn-border-radius);
+}
 #panel-header, #panel-footer {position:fixed;left:0;right:0;color:inherit;}
 .btnlist.btnlist-top.btnlist-top-playqueue {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;display:none;}
 .btn.btn-primary.btn-small,
@@ -250,7 +255,7 @@ img.coverart {
 	height:100%;
 	cursor:pointer;
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 .covers {padding:.75em 1em 0 1em}
 #coverart-url {position:relative;}
@@ -286,7 +291,7 @@ img.coverart {
 	height:3rem;
 	object-fit:contain;
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 #albumsList li {padding-top:.4em;padding-bottom:.4em;}
 #albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .2em);min-width:50%;max-width:calc(100% - 3.6rem);}
@@ -309,7 +314,16 @@ img.coverart {
 .playqueue li.no-npicon:before, .cv-playqueue li.no-npicon:before {color:unset!important;background:unset;}
 .playqueue .pll1, .cv-playqueue .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playqueue .playqueue-entry, .cv-playqueue .playqueue-entry {padding:0px;}
-.playqueue .playqueue-thumb, .cv-playqueue .playqueue-thumb {float:left;width:2.4em;height:2.4em;margin-left:1.2vmin!important;margin-right:1.2vmin;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
+.playqueue .playqueue-thumb, .cv-playqueue .playqueue-thumb {
+	float:left;
+	width:2.4em;
+	height:2.4em;
+	margin-left:1.2vmin!important;
+	margin-right:1.2vmin;
+	border-radius:var(--img-border-radius);
+	filter:brightness(80%);
+	overflow:hidden;
+}
 .database .db-entry {margin-left:4rem;padding:1em 0;max-width:calc(100vw - 10px);overflow:hidden;font-size:1.1rem;line-height:normal;border-bottom:1px solid var(--btnshade);}
 .database .db-song {padding:.5em 0;}
 .database .db-icon {display:block;height:2.4em !important;width:2.4em !important;position:absolute !important;top:50%;transform:translate(0, -50%);padding:0;color:inherit;}
@@ -318,7 +332,7 @@ img.coverart {
 	height:100%;
 	width:100%;
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 .database .db-action a {position:absolute;transform:translate(0, -50%);top:50%;}
 .db-song.db-action a {width:100vw;}
@@ -344,7 +358,17 @@ img.coverart {
 .btnlist {position:fixed;left:0;right:0;display:block;width:auto;height:2.5em;padding:0;background:none;-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px;z-index:999;}
 .btnlist:focus {outline:none;}
 .btnlist.playqueue-prevPage, .btnlist.db-prevPage, .btnlist.playqueue-firstPage, .btnlist.db-firstPage {padding:0 .3em;}
-.btnlist-top-db, .btnlist-top-ra, .btnlist-top-pl {position:relative;background-color:var(--btnshade3);top:.25em;color:var(--adapttext);border-radius:.25em;width:calc(100vw - 2.5em);height:2.5rem;padding:0 !important;margin:0 auto;}
+.btnlist-top-db, .btnlist-top-ra, .btnlist-top-pl {
+	position:relative;
+	background-color:var(--btnshade3);
+	top:.25em;
+	color:var(--adapttext);
+	border-radius:var(--btn-border-radius);
+	width:calc(100vw - 2.5em);
+	height:2.5rem;
+	padding:0!important;
+	margin:0 auto;
+}
 #playqueue-filter, #lib-album-filter, #ra-filter, #pl-filter {padding:0}
 #db-browse .dropdown {display:block;height:40px;line-height:40px;margin:0 20px 0 0;}
 #db-browse .dropdown-menu {background:transparent;border:none;border-radius:0px;box-shadow:none;list-style:none outside none;margin:0;padding:0;border-top:1px solid #000;border-left:1px solid #000;border-right:1px solid #000;position:absolute;top:100%;z-index:1000;}
@@ -507,7 +531,7 @@ img.lib-artistart {
 	width:calc(20vw - 1rem);
 	box-shadow:0px 0px .2em rgba(0,0,0,0.2);
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 /* Artist name overlay */
 img.lib-artistart {
@@ -553,7 +577,7 @@ img.lib-artistart {
 	width:var(--thumbimagesize);
 	max-height:var(--thumbimagesize);
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 #albumcovers .thumbHW, #radio-covers .thumbHW, #playlist-covers .thumbHW {height:var(--thumbimagesize);width:var(--thumbimagesize);position:relative;margin:.75em 0 .5em 0;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
@@ -586,7 +610,7 @@ img.lib-artistart {
 #ss-coverart-url img {
 	width:75vh;
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 #ss-currentsong {font-weight:600;}
 #ss-currentsong, #ss-currentalbum-div, #ss-extra-metadata {margin-top:1em;}
@@ -623,7 +647,7 @@ body.cvwide #ss-coverart-url img {
 	margin-left:5em;
 	width:80vh;
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 /*body.cvwide #ss-metadata {float:left;top:15vh;left:100vh;text-align:left;font-size:2em;position:absolute;right:10vh;}*/
 body.cvwide #ss-metadata {position:absolute;float:left;text-align:left;top:50%;transform:translateY(-50%);left:calc(80vh + 4em);right:2em;font-size:2em;}
@@ -644,7 +668,7 @@ body.cvwide #ss-currentartist {font-size:1.2em;margin-top:1em;}
 body:not(.cvpb) #ss-coverart-url img {
 	margin-top:1.5em;
 	border-style:none;
-	border-radius:.2em;
+	border-radius:var(--img-border-radius);
 }
 body:not(.cvwide) #ss-metadata {width:98%;margin:0 auto;}
 body:not(.cvwide) #ss-countdown {margin-top:1em;}

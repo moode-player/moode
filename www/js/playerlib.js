@@ -4373,10 +4373,16 @@ function storeLibPos(pos) {
 
 // Switch to Library
 $('#coverart-url, #playback-switch').click(function(e){
+    // console.log('click cover')
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
 		return;
 	}
+
+    if (UI.mobile) {
+        $('#panel-header').css('margin-right', '0');
+    }
+
     // TEST: Fixes issue where some elements briefly remain on-screen when switching between Playback and Library
     $('#coverart-link').hide();
 
@@ -4428,7 +4434,14 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
     if (GLOBAL.coverViewActive) {
         return;
     }
-	if (SESSION.json['playlist_art'] == 'Yes') lazyLode('playqueue');
+
+    if (UI.mobile) {
+        $('#panel-header').css('margin-right', '1.5rem');
+    }
+
+	if (SESSION.json['playlist_art'] == 'Yes') {
+        lazyLode('playqueue');
+    }
 
 	if (currentView.indexOf('playback') == 0) {
         // Already in playback means mobile and view has scrolled, so scroll to top

@@ -335,6 +335,7 @@ jQuery(document).ready(function($) { 'use strict';
     		if (UI.mobile) {
     			$('#container-playqueue').css('visibility','hidden');
     			$('#playback-controls').show();
+                $('#panel-header').css('margin-right', '1.5rem');
     		}
             else {
 		        customScroll('playqueue', parseInt(MPD.json['song']));
@@ -347,6 +348,7 @@ jQuery(document).ready(function($) { 'use strict';
     	}
         // Library
     	else {
+            $('#panel-header').css('margin-right', '0');
     		$('#panel-footer, #viewswitch').css('display', 'flex');
     		$('#playback-switch').hide();
     	}
