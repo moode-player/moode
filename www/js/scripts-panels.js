@@ -1774,10 +1774,10 @@ jQuery(document).ready(function($) { 'use strict';
                 $('#btn-players-submit').text('Confirm');
             } else {
                 if (command == 'Rediscover') {
-                    $('#players-submit-confirm-msg').html("<div class='busy-spinner-btn-players'>" + GLOBAL.busySpinnerSVG + "</div>");
+                    $('#players-submit-confirmed').html("<div class='busy-spinner-btn-players'>" + GLOBAL.busySpinnerSVG + "</div>");
                     $('#btn-players-submit').prop('disabled', true);
                     $('#players-modal .modal-body').load('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr}, function() {
-                        $('#players-submit-confirm-msg').text('');
+                        $('#players-submit-confirmed').text('');
                         $('#btn-players-submit').text('Submit');
                         $('#btn-players-submit').prop('disabled', false);
                     });

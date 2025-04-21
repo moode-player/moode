@@ -72,7 +72,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 #players a, #configure a {font-size:1em;width:10em;height:6em;text-transform:capitalize}
 #players-ul {margin:0;}
 #players-no-players-found {font-size:1.25em;font-style:italic;}
-#players-submit-confirm-msg {font-style:italic;margin-top:2px;}
+#players-submit-confirmed {
+    margin: 0 10px 8px 0;
+}
 #players-modal-body {height:75vh;}
 /* dropdown menus */
 #panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */

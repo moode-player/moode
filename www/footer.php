@@ -77,10 +77,10 @@
 	</div>
 </div>
 
-<!-- PLAYERS -->
+<!-- DASHBOARD -->
 <div id="players-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="players-modal-label">Players dashboard</h3>
+		<h3 id="players-modal-label">Dashboard</h3>
 	</div>
 	<div id="players-modal-body" class="modal-body">
 	</div>

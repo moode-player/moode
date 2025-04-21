@@ -208,7 +208,7 @@
 					<li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i>Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fa-solid fa-sharp fa-pen sx"></i>Preferences</a></li>
 					<li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fa-solid fa-sharp fa-sync sx"></i>Update library</a></li>
-					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-grid sx"></i>Players dashboard</a></li>
+					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fa-solid fa-sharp fa-grid sx"></i>Dashboard</a></li>
 					<?php if ($_SESSION['camilladsp'] != "off") {?>
 						<li><a href="cdsp-config.php"><i class="fa-solid fa-sharp fa-square-sliders-vertical sx"></i>CamillaDSP</a></li>
 					<?php } ?>
