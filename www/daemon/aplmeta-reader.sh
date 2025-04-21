@@ -6,7 +6,7 @@
 
 #
 # To enable debug logging
-# sudo /var/www/daemon/aplmeta-reader.sh 1
+# sudo /var/www/daemon/aplmeta-reader.sh 1 (or 2 for more detail)
 #
 
 if [ -z $1 ]; then
