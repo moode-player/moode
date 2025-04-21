@@ -33,7 +33,7 @@ from datetime import datetime
 # Globals
 #
 
-PGM_VERSION = '1.0.0'
+PGM_VERSION = '1.0.1'
 DEBUG = 0
 COVERS_LOCAL_ROOT = '/var/local/www/imagesw/airplay-covers/'
 COVERS_WEB_ROOT = 'imagesw/airplay-covers/'
@@ -85,7 +85,11 @@ def update_globals(key, val):
 
 # Get debug level
 if len(sys.argv) > 1:
-	DEBUG = int(sys.argv[1])
+	if sys.argv[1] == '--version':
+		print('aplmeta.py version ' + PGM_VERSION)
+		exit()
+	else:
+		DEBUG = int(sys.argv[1])
 
 # Forever loop
 try:
