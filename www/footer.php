@@ -78,11 +78,11 @@
 </div>
 
 <!-- DASHBOARD -->
-<div id="players-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
+<div id="dashboard-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dashboard-modal-label" aria-hidden="true">
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="players-modal-label">Dashboard</h3>
+		<h3 id="dashboard-modal-label">Dashboard</h3>
 	</div>
-	<div id="players-modal-body" class="modal-body">
+	<div id="dashboard-modal-body" class="modal-body">
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>

@@ -180,7 +180,7 @@ sysCmd("echo -n '" . json_encode(['filter_type' => 'full_lib', 'filter_str' => '
 	' | tee "' . LIBSEARCH_BASE . LIB_FULL_LIBRARY . '.json" > /dev/null');
 sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
-sysCmd('touch ' . PLAYERS_CACHE_FILE);
+sysCmd('touch ' . DASHBOARD_CACHE_FILE);
 sysCmd('touch ' . SHAIRPORT_SYNC_LOG);
 sysCmd('touch ' . LIBRESPOT_LOG);
 sysCmd('touch ' . PLEEZER_LOG);
@@ -202,7 +202,7 @@ sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
 sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
 sysCmd('chmod 0666 /var/log/moode_playhistory.log');
 sysCmd('chmod 0666 /var/local/www/currentsong.txt');
-sysCmd('chmod 0666 ' . PLAYERS_CACHE_FILE);
+sysCmd('chmod 0666 ' . DASHBOARD_CACHE_FILE);
 sysCmd('chmod 0666 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . SHAIRPORT_SYNC_LOG);
 sysCmd('chmod 0666 ' . LIBRESPOT_LOG);

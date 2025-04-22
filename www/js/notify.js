@@ -81,9 +81,10 @@ function notify(title, message, arg3, arg4 = '') {
         updater: 'An update is available.<br>',
         viewport: 'VIEWPORT<br>',
         debug: 'DEBUG<br>',
-        // Players >>
-        discovering_players: 'Discovering players...<br>',
-        players_command_sumbitted: 'Command: ',
+        // Dashboard
+        dashboard_discovering: 'Discovering players...<br>',
+        dashboard_cmd_submitted: 'Command: ',
+        dashboard_none_selected: 'No players have been selected. ',
         // Advanced search
         search_fields_empty: 'Search fields are empty. ',
         predefined_filter_invalid: 'Predefined filter is invalid. ',

@@ -62,20 +62,20 @@ li.modal-dropdown-text:hover,
 li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {color:inherit;}
 .help-block-modal {margin:0 !important;}
-/* Players and Configure modals */
-#players, #configure {max-width:calc(5 * 10em);margin-left:auto;margin-right:auto;text-align:center;}
-#players .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
-#players ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
-#players ul, #configure ul {margin:0;display:inline-table;}
-#players i, #configure i {font-size:2em;padding:.25em;}
-.players-rxtx-indicator {font-size:.85em!important;margin-left:.25em;}
-#players a, #configure a {font-size:1em;width:10em;height:6em;text-transform:capitalize}
-#players-ul {margin:0;}
-#players-no-players-found {font-size:1.25em;font-style:italic;}
-#players-submit-confirmed {
+/* Dashboard and Configure modals */
+#dashboard, #configure {max-width:calc(5 * 10em);margin-left:auto;margin-right:auto;text-align:center;}
+#dashboard .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
+#dashboard ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
+#dashboard ul, #configure ul {margin:0;display:inline-table;}
+#dashboard i, #configure i {font-size:2em;padding:.25em;}
+.dashboard-rxtx-indicator {font-size:.85em!important;margin-left:.25em;}
+#dashboard a, #configure a {font-size:1em;width:10em;height:6em;text-transform:capitalize}
+#dashboard-ul {margin:0;}
+#dashboard-no-players-found {font-size:1.25em;font-style:italic;}
+#dashboard-submit-confirmed {
     margin: 0 10px 8px 0;
 }
-#players-modal-body {height:75vh;}
+#dashboard-modal-body {height:75vh;}
 /* dropdown menus */
 #panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
 #current-tab, #library-header {font-size:1em;}
@@ -120,7 +120,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 #info-toggle-bgimage {margin-left:0;margin-top:2px;}
 /* clock radio */
 .checkbox-grp {margin:0 7px 10px 0;}
-.checkbox-ctl {margin:.45em .25em .5em 0!important;}
+.checkbox-ctl {margin:.3em .25em .5em 0!important;}
 .time-seperator {margin:0 7px 10px 0;font-size:1.25em;}
 #info-clockradio-playname {font-weight:500;}
 /* forms */

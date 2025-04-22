@@ -14,8 +14,6 @@ phpSession('open');
 chkVariables($_GET);
 
 switch ($_GET['cmd']) {
-	case 'reboot':
-	case 'poweroff':
 	case 'update_library':
 		if (submitJob($_GET['cmd'])) {
 			echo json_encode('job submitted');
@@ -23,17 +21,15 @@ switch ($_GET['cmd']) {
 			echo json_encode('worker busy');
 		}
 		break;
-	case 'get_client_ip':
-		echo json_encode($_SERVER['REMOTE_ADDR']);
+	case 'refresh_screen':
+		sendFECmd('refresh_screen');
 		break;
-	case 'restart_local_display':
-		if ($_SESSION['local_display'] == '1') {
-			if (submitJob('local_display_restart')) {
-				echo json_encode('job submitted');
-			} else {
-				echo json_encode('worker busy');
-			}
-		}
+	case 'play':
+	case 'pause':
+	case 'stop':
+	case 'next':
+	case 'prev':
+		sysCmd('mpc ' . $_GET['cmd']);
 		break;
 	default:
 		echo 'Unknown command';

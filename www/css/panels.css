@@ -935,7 +935,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 .busy-spinner svg {stroke:var(--adapttext);height:2.25rem;width:1.25rem;}
 .busy-spinner-btn svg {stroke:var(--accentxts);height:2.25rem;width:1.25rem;}
 .busy-spinner-btn-rx svg {stroke:var(--adapttext);height:1rem;width:1rem;}
-.busy-spinner-btn-players svg {stroke:var(--adapttext);height:1.6rem;width:1.6rem;}
+.busy-spinner-btn-dashboard svg {stroke:var(--adapttext);height:1.5rem;width:1.5rem;}
 #tagview-text-cover {position:relative;font-size:1.8rem;line-height:1.1em;height:calc(20vw - 1rem);width:calc(20vw - 1rem);background:rgba(64,64,64,.2);box-shadow: 0px 0px .2em rgba(0,0,0,0.2);word-break:break-word;}
 .plview-text-cover-div {margin:0 .5em;}
 .plview-text-cover {position:relative;

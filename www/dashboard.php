@@ -14,45 +14,45 @@ $thisIpAddr = getThisIpAddr();
 
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	chkValue('cmd', $_GET['cmd']);
-	if ($_GET['cmd'] == 'rediscover_players') {
+	if ($_GET['cmd'] == 'discover_players') {
 		$discoverPlayers = true;
 	} else if (!isset($_POST['ipaddr'])) {
-		workerLog('players.php: No destination IP addresses for command ' . $_GET['cmd']);
+		workerLog('dashboard.php: No destination IP addresses for command ' . $_GET['cmd']);
 		exit(0);
 	} else {
 		chkVariables($_POST);
-		workerLog('players.php: command submitted');
 		$count = count($_POST['ipaddr']);
 		for ($i = 0; $i < $count; $i++) {
 			if (!empty($_POST['ipaddr'][$i]) && $_POST['ipaddr'][$i] != $thisIpAddr) {
+				$phpScript = ($_GET['cmd'] == 'reboot' || $_GET['cmd'] == 'poweroff') ? 'system.php' : 'dashboard.php';
 				if (false === ($result = file_get_contents('http://' . $_POST['ipaddr'][$i] .
-					'/command/system.php?cmd=' . rawurlencode($_GET['cmd'])))) {
+					'/command/' . $phpScript . '?cmd=' . rawurlencode($_GET['cmd'])))) {
 					$result = 'fail';
 				} else {
 					$result = 'sent';
 				}
-				workerLog('players.php: ' . $_GET['cmd'] . ' ' . $result . ' to host: ' . $_POST['host'][$i] . ' (' . $_POST['ipaddr'][$i] . ')');
+				//workerLog('dashboard.php: ' . $_GET['cmd'] . ' ' . $result . ' to host: ' . $_POST['host'][$i] . ' (' . $_POST['ipaddr'][$i] . ')');
+				workerLog('dashboard.php: ' . $_POST['ipaddr'][$i] . ' (' . $_POST['host'][$i] . ') ' . $_GET['cmd'] . ' ' . $result);
 			}
 		}
-		exit(0);
 	}
 }
 
-if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $discoverPlayers === false) {
+if (file_exists(DASHBOARD_CACHE_FILE) && filesize(DASHBOARD_CACHE_FILE) > 0 && $discoverPlayers === false) {
 	// Use contents of cache file
-	$_players = file_get_contents(PLAYERS_CACHE_FILE);
+	$_players = file_get_contents(DASHBOARD_CACHE_FILE);
 } else {
-	// Scan the network for hosts with open port 6600 (MPD)
+	// Discover players: scan the network for hosts with open port 6600 (MPD)
 	$port6600Hosts = scanForMPDHosts();
 
 	// Parse the results
 	$_players = '';
-	$_players_command_div_hide = '';
+	$_dashboard_command_div_hide = '';
 	$playersArray = array();
 	$timeout = getStreamTimeout();
 	foreach ($port6600Hosts as $ipAddr) {
 		if (false === ($status = sendTrxControlCmd($ipAddr, '-all'))) {
-			debugLog('players.php: sendTrxControlCmd -all failed: ' . $ipAddr);
+			debugLog('dashboard.php: sendTrxControlCmd -all failed: ' . $ipAddr);
 		} else {
 			if ($status != 'Unknown command') {
 				$allStatus = explode(';', $status);
@@ -61,9 +61,9 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 				$rxStatus = explode(',', $allStatus[0]);
 				$txStatus = explode(',', $allStatus[1]);
 				if ($rxStatus[1] == 'On') {
-					$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-speaker"></i>';
+					$rxtxIndicator = '<i class="dashboard-rxtx-indicator fa-solid fa-sharp fa-speaker"></i>';
 				} else if ($txStatus[1] == 'On') {
-					$rxtxIndicator = '<i class="players-rxtx-indicator fa-solid fa-sharp fa-play"></i>';
+					$rxtxIndicator = '<i class="dashboard-rxtx-indicator fa-solid fa-sharp fa-play"></i>';
 				} else {
 					$rxtxIndicator = '';
 				}
@@ -107,15 +107,15 @@ if (file_exists(PLAYERS_CACHE_FILE) && filesize(PLAYERS_CACHE_FILE) > 0 && $disc
 
 // Check for no players found
 if (empty(trim($_players))) {
-	$_players = '<li id="players-no-players-found">No players found</li>';
-	$_players_command_div_hide = 'hide';
+	$_players = '<li id="dashboard-no-players-found">No players found</li>';
+	$_dashboard_command_div_hide = 'hide';
 }
 
 // Write cache file
-sysCmd("echo -n '" . $_players . "' | sudo tee " . PLAYERS_CACHE_FILE);
+sysCmd("echo -n '" . $_players . "' | sudo tee " . DASHBOARD_CACHE_FILE);
 
 // Close the "Discovering players..." notification
 sendFECmd('close_notification');
 
-$tpl = 'players.html';
+$tpl = 'dashboard.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');

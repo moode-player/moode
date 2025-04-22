@@ -1740,52 +1740,51 @@ jQuery(document).ready(function($) { 'use strict';
         }
     });
 
-    // Players Dashboard
-    $('#players-menu-item').click(function(e) {
-        notify(NOTIFY_TITLE_INFO, 'discovering_players', 'Please wait.', NOTIFY_DURATION_INFINITE);
+    // Dashboard
+    $('#dashboard-menu-item').click(function(e) {
+        notify(NOTIFY_TITLE_INFO, 'dashboard_discovering', 'Please wait.', NOTIFY_DURATION_INFINITE);
     });
-    $('#players-modal').on('shown.bs.modal', function() {
+    $('#dashboard-modal').on('shown.bs.modal', function() {
         setTimeout(function() {
-            $('#btn-players-submit').text('Submit');
-            $('#btn-players-submit').prop('disabled', false);
+            $('#btn-dashboard-submit').text('Submit');
+            $('#btn-dashboard-submit').prop('disabled', false);
         }, DEFAULT_TIMEOUT);
 	});
-    $(document).on('click', '#player-check-uncheck-all', function(e) {
+    $(document).on('click', '#dashboard-command', function(e) {
+        $('#btn-dashboard-submit').text('Submit');
+    });
+    $(document).on('click', '#dashboard-check-uncheck-all', function(e) {
         var checked = $(this).prop('checked') === true ? 'true' : '';
-        $('#players-ul a').each(function() {
+        $('#dashboard-ul a').each(function() {
             $(this).children('input').prop('checked', checked);
         });
     });
-    $(document).on('click', '#btn-players-submit', function(e) {
-        var command = $('#players-command span').text();
+    $(document).on('click', '#btn-dashboard-submit', function(e) {
+        var command = $('#dashboard-command span').text();
         var cmdValue = getKeyOrValue('value', command);
         var ipaddr = [];
         var host = [];
-        $('#players-ul a').each(function() {
+        $('#dashboard-ul a').each(function() {
             if ($(this).children('input').prop('checked') === true) {
                 host.push($(this).attr('data-host'));
                 ipaddr.push($(this).attr('data-ipaddr'));
             }
         });
-        //console.log(host + '|' + ipaddr);
-        if (command == 'Rediscover' || (ipaddr.length > 0 && command != 'No action')) {
-            var msgText = $('#btn-players-submit').text();
-            if (msgText == 'Submit') {
-                $('#btn-players-submit').text('Confirm');
+
+        if (command != 'No action') {
+            if ($('#btn-dashboard-submit').text() == 'Submit' && (command == 'Restart' || command == 'Shutdown')) {
+                $('#btn-dashboard-submit').text('Confirm');
+            } else if (command == 'Discover' || ipaddr.length > 0) {
+                $('#dashboard-submit-confirmed').html("<div class='busy-spinner-btn-dashboard'>" + GLOBAL.busySpinnerSVG + "</div>");
+                $('#btn-dashboard-submit').prop('disabled', true);
+                $('#dashboard-modal .modal-body').load('dashboard.php?cmd=' + cmdValue, {'ipaddr': ipaddr, 'host': host}, function() {
+                    $('#dashboard-submit-confirmed').text('');
+                    $('#btn-dashboard-submit').text('Submit');
+                    $('#btn-dashboard-submit').prop('disabled', false);
+                });
             } else {
-                if (command == 'Rediscover') {
-                    $('#players-submit-confirmed').html("<div class='busy-spinner-btn-players'>" + GLOBAL.busySpinnerSVG + "</div>");
-                    $('#btn-players-submit').prop('disabled', true);
-                    $('#players-modal .modal-body').load('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr}, function() {
-                        $('#players-submit-confirmed').text('');
-                        $('#btn-players-submit').text('Submit');
-                        $('#btn-players-submit').prop('disabled', false);
-                    });
-                } else {
-                    $('#players-modal').modal('toggle');
-                    notify(NOTIFY_TITLE_INFO, 'players_command_sumbitted', '<em>' + getKeyOrValue('key', cmdValue) + '</em> submitted');
-                    $.post('players.php?cmd=' + cmdValue, {'ipaddr': ipaddr, 'host': host});
-                }
+                $('#dashboard-modal').modal('toggle');
+                notify(NOTIFY_TITLE_ALERT, 'dashboard_none_selected');
             }
         }
     });
