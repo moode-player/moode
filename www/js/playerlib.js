@@ -4435,6 +4435,8 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         return;
     }
 
+    $('img.coverart').hide().fadeIn('medium');
+
     if (UI.mobile) {
         $('#panel-header').css('margin-right', '1.5rem');
     }
