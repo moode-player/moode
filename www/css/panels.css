@@ -141,10 +141,10 @@ html {background-color:inherit;}
 
 /* main ui */
 #currentsong, #currentalbum, #currentartist, #format-bitrate, #elapsed, #countdown-display {display:block;}
-#extra-tags-display {color:var(--textvariant);padding-top:.5em;text-align:center;display:block;cursor:pointer;}
-#currentsong {font-size:1.5em;margin-top:0;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
+#extra-tags-display {color:var(--textvariant);padding-top:.25em;text-align:center;display:block;cursor:pointer;}
+#currentsong {font-size:1.5em;margin-top:0;font-weight:700;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
 #currentalbum,
-#currentartist {font-size:1.25em;margin-top:1.65rem;font-weight:500;}
+#currentartist {font-size:1.25em;margin-top:1.65rem;font-weight:500;color:var(--textvariant);}
 #currentartist 	{cursor:pointer;}
 #currentalbum-div {display:inline;justify-content: center;}
 #currentartist-div {display:inline-flex;justify-content: center;}
@@ -250,7 +250,7 @@ a.btn-cmd {width:18px;}
 .btn2 {color:inherit;display:inline-block;}
 .btn-cmd:focus {outline:none;}
 img.coverart {
-	box-shadow:0em .25em .75em rgba(32,32,32,0.5);
+	box-shadow:0em .25em 1em rgba(32,32,32,0.25);
 	width:100%;
 	height:100%;
 	cursor:pointer;
