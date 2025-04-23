@@ -19,13 +19,13 @@ New features
 - NEW: Dashboard with multi-select (formerly Players)
 
 Updates
-- UPD: Minor style improvements for mobile portrait
+- UPD: Style improvements for mobile portrait
 - UPD: Use uid:gid 1000:1000 in function getUserId()
 
 Bug fixes
 - FIX: Function chainMpdCmds(): Play or Clear/Play a group of tracks
 - FIX: Embedded single quote not working in Library Adv search
-- FIX: Equalizer (Animated) now playing icon in CoverView
+- FIX: Waveform icon showing underneath Equalizer icon in CoverView
 
 ################################################################################
 #
