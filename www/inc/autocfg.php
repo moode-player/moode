@@ -486,7 +486,7 @@ function autoConfigSettings() {
 		}],
 		'Deezer Connect',
 		['requires' => ['deezer_format', 'deezer_email', 'deezer_password'],
-			'optionals' => ['deezer_initial_volume', 'deezer_normalize_volume', 'deezer_no_interruptions'],
+			'optionals' => ['deezer_initial_volume', 'deezer_normalize_volume', 'deezer_no_interruptions', 'max_ram'],
 			'handler' => function($values, $optionals) {
 				$mergedValues = array_merge($values, $optionals);
 				setCfgTableParams('cfg_deezer', $mergedValues, 'deezer_');
