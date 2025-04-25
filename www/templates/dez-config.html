@@ -58,6 +58,8 @@
 				</span>
 			</div>
 
+			<div class="config-horiz-rule">Advanced</div>
+
 			<label class="control-label" for="max-ram">RAM file cache</label>
 			<div class="controls">
 				<select id="max-ram" class="config-select-large" name="config[max_ram]">
@@ -66,9 +68,35 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-max-ram" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-max-ram" class="config-help-info">
 					Maximum amount of RAM to use for storing audio files in memory.<br>
-					<b>Disabled:</b> Files are cached to the default [] location.<br>
+					<b>Disabled:</b> Files are cached to the default /tmp location.<br>
 					<b>128MB:</b> Should comfortably handle most MP3 tracks.<br>
 					<b>256MB:</b> Would handle most FLAC tracks.
+				</span>
+			</div>
+
+			<label class="control-label" for="dither-bits">Dither bits</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" pattern="[0-9.]+" maxlength="4" id="dither-bits" name="config[dither_bits]" value="$_select[dither_bits]" required>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dither-bits" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-dither-bits" class="config-help-info">
+					For THD+N in dB use the formula: ((-1 * dB) - 1.76) / 6.02<br>
+					For THD+N as P% use the formula: (-20 * (log10(P) - 1.76)) / 6.02<br>
+					- Example: THD+N dB = -118 = 19.3 bits<br>
+					- Example: THD+N % = 0.0002 = 18.1 bits<br>
+					The default is 0 (dithering disabled).
+                </span>
+			</div>
+
+			<label class="control-label" for="noise-shaping">Noise shaping</label>
+			<div class="controls">
+				<select id="noise-shaping" class="config-select-large" name="config[noise_shaping]">
+					$_select[noise_shaping]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-noise-shaping" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-noise-shaping" class="config-help-info">
+					Enable psychoacoustic noise shaping to optimize audio quality by moving quantization noise to less audible frequencies.
+					Modern Shibata coefficients are used for optimal noise distribution.<br>
+					<b>Caution:</b> The Aggressive 4 - 7 selections reduce in-band noise further but increases noise energy above 15 kHz.
 				</span>
 			</div>
 

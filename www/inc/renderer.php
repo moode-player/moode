@@ -250,8 +250,10 @@ function startDeezer() {
 		' --initial-volume "' . $cfgDeezer['initial_volume'] . '"' .
 		' --secrets "' . DEEZ_CREDENTIALS_FILE . '"' .
 		$normalization .
-		$ramcache .
 		$interruption .
+		$ramcache .
+		' --dither-bits "' . $cfgDeezer['dither_bits'] . '"' .
+		' --noise-shaping "' . $cfgDeezer['noise_shaping'] . '"' .
 		' --hook /var/local/www/commandw/deezevent.sh' .
 		$logging . ' 2>&1 &';
 

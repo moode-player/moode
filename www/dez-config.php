@@ -47,6 +47,15 @@ $_select['max_ram'] .= "<option value=\"0\" "  . (($cfgDeezer['max_ram'] == '0')
 $_select['max_ram'] .= "<option value=\"128\" "  . (($cfgDeezer['max_ram'] == '128')  ? "selected" : "") . ">128MB</option>\n";
 $_select['max_ram'] .= "<option value=\"256\" "  . (($cfgDeezer['max_ram'] == '256')  ? "selected" : "") . ">256MB</option>\n";
 $_select['max_ram'] .= "<option value=\"512\" "  . (($cfgDeezer['max_ram'] == '512')  ? "selected" : "") . ">512MB</option>\n";
+$_select['dither_bits'] = $cfgDeezer['dither_bits'];
+$_select['noise_shaping'] .= "<option value=\"0\" " . (($cfgDeezer['noise_shaping'] == '0') ? "selected" : "") . ">Off</option>\n";
+$_select['noise_shaping'] .= "<option value=\"1\" " . (($cfgDeezer['noise_shaping'] == '1') ? "selected" : "") . ">Minimal</option>\n";
+$_select['noise_shaping'] .= "<option value=\"2\" " . (($cfgDeezer['noise_shaping'] == '2') ? "selected" : "") . ">Conservative</option>\n";
+$_select['noise_shaping'] .= "<option value=\"3\" " . (($cfgDeezer['noise_shaping'] == '3') ? "selected" : "") . ">Balanced (Default)</option>\n";
+$_select['noise_shaping'] .= "<option value=\"4\" " . (($cfgDeezer['noise_shaping'] == '4') ? "selected" : "") . ">Aggressive 4</option>\n";
+$_select['noise_shaping'] .= "<option value=\"5\" " . (($cfgDeezer['noise_shaping'] == '5') ? "selected" : "") . ">Aggressive 5</option>\n";
+$_select['noise_shaping'] .= "<option value=\"6\" " . (($cfgDeezer['noise_shaping'] == '6') ? "selected" : "") . ">Aggressive 6</option>\n";
+$_select['noise_shaping'] .= "<option value=\"7\" " . (($cfgDeezer['noise_shaping'] == '7') ? "selected" : "") . ">Aggressive 7</option>\n";
 $_select['email'] = $cfgDeezer['email'];
 if (empty($cfgDeezer['password'])) {
 	$_select['password'] = '';
