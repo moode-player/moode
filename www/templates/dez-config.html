@@ -76,14 +76,14 @@
 
 			<label class="control-label" for="dither-bits">Dither bits</label>
 			<div class="controls">
-				<input class="config-input-large" type="text" pattern="[0-9.]+" maxlength="4" id="dither-bits" name="config[dither_bits]" value="$_select[dither_bits]" required>
+				<input class="config-input-large" type="text" maxlength="4" id="dither-bits" name="config[dither_bits]" value="$_select[dither_bits]" placeholder="Auto">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dither-bits" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-dither-bits" class="config-help-info">
 					For THD+N in dB use the formula: ((-1 * dB) - 1.76) / 6.02<br>
-					For THD+N as P% use the formula: (-20 * (log10(P) - 1.76)) / 6.02<br>
+					For THD+N as P% use the formula: ((-20 * log10(P/100)) - 1.76) / 6.02 / 6.02<br>
 					- Example: THD+N dB = -118 = 19.3 bits<br>
-					- Example: THD+N % = 0.0002 = 18.1 bits<br>
-					The default is 0 (dithering disabled).
+					- Example: THD+N % = 0.0002 = 18.6 bits<br>
+					The default is Auto: 15.5 bits for S16, 19.5 for S32 and 24.0 for F32.
                 </span>
 			</div>
 

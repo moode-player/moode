@@ -236,7 +236,8 @@ function startDeezer() {
 	// Options
 	$normalization = $cfgDeezer['normalize_volume'] == 'Yes' ? ' --normalize-volume' : '';
 	$interruption = $cfgDeezer['no_interruption'] == 'Yes' ? ' --no_interruption' : '';
-	$ramcache = $cfgDeezer['max_ram'] == '0' ? '' : ' --max-ram ' . $cfgDeezer['max_ram'];
+	$ramCache = $cfgDeezer['max_ram'] == '0' ? '' : ' --max-ram ' . $cfgDeezer['max_ram'];
+	$ditherBits = empty($cfgDeezer['dither_bits']) ? '' : ' --dither-bits ' . $cfgDeezer['dither_bits'];
 	$rate = '';
 	$format = $cfgDeezer['format'];
 	// Logging
@@ -251,9 +252,9 @@ function startDeezer() {
 		' --secrets "' . DEEZ_CREDENTIALS_FILE . '"' .
 		$normalization .
 		$interruption .
-		$ramcache .
-		' --dither-bits "' . $cfgDeezer['dither_bits'] . '"' .
-		' --noise-shaping "' . $cfgDeezer['noise_shaping'] . '"' .
+		$ramCache .
+		$ditherBits .
+		' --noise-shaping ' . $cfgDeezer['noise_shaping'] .
 		' --hook /var/local/www/commandw/deezevent.sh' .
 		$logging . ' 2>&1 &';
 
