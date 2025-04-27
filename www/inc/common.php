@@ -376,6 +376,7 @@ function storeBackLink($section, $tpl) {
 		'lib-nas-config.html' => '/lib-config.php',
 		'lib-nvme-config.html' => '/lib-config.php',
 		'lib-nvme-format.html' => '/lib-config.php',
+		'lib-sata-config.html' => '/lib-config.php',
 		'sys-status.html'	=> '/sys-config.php',
 		'upp-config.html' 	=> '/ren-config.php'
 	);
