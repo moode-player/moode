@@ -21,7 +21,7 @@ function restart_nfs_if_on () {
 	fi
 }
 
-# Udisks-glue add/remove mount
+# Add/remove mount: Udisks-glue
 # $2 = mount point (/media/DISK_LABEL)
 if [[ $1 = "add_mount_udisks" ]]; then
 	# SMB
@@ -42,7 +42,8 @@ if [[ $1 = "add_mount_udisks" ]]; then
 		sed -i "$ a/srv/nfs/usb/$(basename "$2")\t$ACCESS($OPTIONS)\n" /etc/exports
 		restart_nfs_if_on ${SQLDB}
 	fi
-	exit
+
+	exit 0
 fi
 if [[ $1 = "remove_mount_udisks" ]]; then
 	# SMB
@@ -52,9 +53,11 @@ if [[ $1 = "remove_mount_udisks" ]]; then
 	sed -i "/$(basename "$2")/ d" /etc/exports
 	sed -i '/^$/d' /etc/exports
 	restart_nfs_if_on ${SQLDB}
-    exit
+
+    exit 0
 fi
 
+# DEPRECATE:
 # Devmon add/remove mount
 # $2 = mount point: /media/DISK_LABEL
 # $3 = device: /dev/sda1, sdb1, sdc1
@@ -71,9 +74,9 @@ if [[ $1 = "add_mount_devmon" ]]; then
 		sed -i "$ a# $3\n/srv/nfs/usb/$(basename "$2")\t$ACCESS($OPTIONS)\n# end" /etc/exports
 		restart_nfs_if_on ${SQLDB}
 	fi
-	exit
-fi
 
+	exit 0
+fi
 # $2 = device w/o the number: /dev/sda, sdb, sdc
 if [[ $1 = "remove_mount_devmon" ]]; then
 	# SMB
@@ -83,5 +86,6 @@ if [[ $1 = "remove_mount_devmon" ]]; then
 	sed -i "\|$2|,\|end| d" /etc/exports
 	sed -i '/^$/d' /etc/exports
 	restart_nfs_if_on ${SQLDB}
-    exit
+
+    exit 0
 fi
