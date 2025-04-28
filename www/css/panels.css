@@ -597,7 +597,9 @@ img.lib-artistart {
 }
 #albumcovers .thumbHW, #radio-covers .thumbHW, #playlist-covers .thumbHW {height:var(--thumbimagesize);width:var(--thumbimagesize);position:relative;margin:.75em 0 .5em 0;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
-#albumcovers .artist-name, #albumcovers .album-year, #albumcovers .album-comment {margin:0 .15em;}
+#albumcovers .artist-name {
+	margin:0 .15em;
+}
 #albumcovers .album-name {font-weight:600;}
 #radio-covers, #playlist-covers, #albumcovers {width:98%;margin-left:0;}
 #lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1.17rem));margin:.25em 0;}
