@@ -28,7 +28,7 @@ from the client.
 +-------------------------------------------------------------------------------
 | Bluetooth           | Any client supporting Bluetooth     | No
 +-------------------------------------------------------------------------------
-| AirPlay             | Any client supporting AirPlay 2     | No
+| AirPlay             | Any client supporting AirPlay 2     | Yes
 +-------------------------------------------------------------------------------
 | Spotify Connect     | Spotify app (Desktop or Smartphone) | Yes
 +-------------------------------------------------------------------------------
