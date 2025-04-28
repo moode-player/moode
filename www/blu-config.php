@@ -49,10 +49,16 @@ if (isset($_POST['rm_paired_device']) && $_POST['rm_paired_device'] == '1') {
 	$cmd = '-p';
 	sleep(1);
 }
+
+function updateBluetoothSpeakerMACAddress($deviceMac) {
+	sysCmd("sed -i '/device/c\device \"" . $deviceMac . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+	phpSession('write', 'used_bt_speaker', $deviceMac);
+}
+
 // Connect to device
 if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
-	if ($_POST['audioout'] == 'Bluetooth') { // Update MAC address
-		sysCmd("sed -i '/device/c\device \"" . $_POST['paired_device'] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+	if ($_POST['audioout'] == 'Bluetooth') {
+		updateBluetoothSpeakerMACAddress($_POST['paired_device']);
 	}
 	phpSession('write', 'audioout', $_POST['audioout']);
 	sysCmd('/var/www/util/blu-control.sh -C ' . '"' . $_POST['paired_device'] . '"');
@@ -66,7 +72,7 @@ if (isset($_POST['change_audioout_bt']) && $_POST['audioout'] != $_SESSION['audi
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		// Change to Bluetooth out, update MAC address
 		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
-		sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+		updateBluetoothSpeakerMACAddress($device);
 
 		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);

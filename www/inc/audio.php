@@ -174,14 +174,12 @@ function setAudioOut($output) {
 	// Update audio out and BT out confs
 	updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 
-	// Restart renderers if indicated
-	if ($_SESSION['airplaysvc'] == '1') {
-		stopAirPlay();
-		startAirPlay();
-	}
-	if ($_SESSION['spotifysvc'] == '1') {
-		stopSpotify();
-		startSpotify();
+	// Restart renderers if we are on Local output. Bluetooth is managing by connection
+	if ($output == 'Local') {
+		restartAllRenderers();
+	} else if ($output == 'Bluetooth') {
+		stopAllRenderers();
+		phpSession('write', 'bt_speaker_connected', '0');
 	}
 
 	// Set HTTP server state

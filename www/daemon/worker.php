@@ -1047,112 +1047,118 @@ $status .= ', ALSA/CDSP maxvol: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SE
 $status .= ', ALSA outmode: ' . ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
 workerLog('worker: Bluetooth:       ' . $status);
 
-// Start airplay renderer
-if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
-	if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
-		$status = 'started';
-		startAirPlay();
-	} else {
-		$status = 'available';
-	}
+// If we are using bluetooth speaker as output, we will let the bluetooth connection starting renderers
+if (isset($_SESSION['audioout']) && $_SESSION['audioout'] == 'Bluetooth') {
+	workerLog('worker: audioout is set to Bluetooth speaker, waiting speaker connection to start renderers');
+	phpSession('write', 'bt_speaker_connected', '0');
 } else {
-	$status = 'n/a';
-}
-workerLog('worker: AirPlay:         ' . $status);
-
-// Start Spotify Connect renderer
-if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
-	if (isset($_SESSION['spotifysvc']) && $_SESSION['spotifysvc'] == 1) {
-		$status = 'started';
-		startSpotify();
-	} else {
-		$status = 'available';
-	}
-} else {
-	$status = 'n/a';
-}
-workerLog('worker: Spotify Connect: ' . $status);
-
-// Start Deezer Connect renderer
-if ($_SESSION['feat_bitmask'] & FEAT_DEEZER) {
-	if (isset($_SESSION['deezersvc']) && $_SESSION['deezersvc'] == 1) {
-		$status = 'started';
-		startDeezer();
-	} else {
-		$status = 'available';
-	}
-} else {
-	$status = 'n/a';
-}
-workerLog('worker: Deezer Connect:  ' . $status);
-
-// Start Squeezelite renderer
-if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
-	if (isset($_SESSION['slsvc']) && $_SESSION['slsvc'] == 1) {
-		$status = 'started';
-		cfgSqueezelite();
-		startSqueezeLite();
-	} else {
-		$status = 'available';
-	}
-} else {
-	$status = 'n/a';
-}
-workerLog('worker: Squeezelite:     ' . $status);
-
-// Start UPnP renderer
-if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
-	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
-		$status = 'started';
-		startUPnP();
-	} else {
-		$status = 'available';
-	}
-} else {
-	$status = 'n/a';
-}
-workerLog('worker: UPnP client:     ' . $status);
-
-// Start Plexamp renderer
-if ($_SESSION['feat_bitmask'] & FEAT_PLEXAMP) {
-	if ($_SESSION['plexamp_installed'] == 'yes') {
-		sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /etc/systemd/system/plexamp.service");
-		sysCmd("sed -i '/WorkingDirectory=/c \WorkingDirectory=/home/" . $_SESSION['user_id'] . "/plexamp' /etc/systemd/system/plexamp.service");
-		sysCmd("sed -i '/ExecStart=/c \ExecStart=/usr/bin/node /home/" . $_SESSION['user_id'] . "/plexamp/js/index.js' /etc/systemd/system/plexamp.service");
-		if (isset($_SESSION['pasvc']) && $_SESSION['pasvc'] == 1) {
+	// Start airplay renderer
+	if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
+		if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
 			$status = 'started';
-			startPlexamp();
+			startAirPlay();
 		} else {
 			$status = 'available';
 		}
 	} else {
-		$status = 'not installed';
+		$status = 'n/a';
 	}
-} else {
-	$status = 'n/a';
-}
-if (!isset($_SESSION['alsavolume_max_pa'])) {
-	$_SESSION['alsavolume_max_pa'] = $_SESSION['alsavolume_max'];
-}
-$status .= ', ALSA maxvol: ' . $_SESSION['alsavolume_max_pa'] . '%';
-workerLog('worker: Plexamp:         ' . $status);
+	workerLog('worker: AirPlay:         ' . $status);
 
-// Start RoonBridge renderer
-if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
-	if ($_SESSION['roonbridge_installed'] == 'yes') {
-		if (isset($_SESSION['rbsvc']) && $_SESSION['rbsvc'] == 1) {
+	// Start Spotify Connect renderer
+	if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
+		if (isset($_SESSION['spotifysvc']) && $_SESSION['spotifysvc'] == 1) {
 			$status = 'started';
-			startRoonBridge();
+			startSpotify();
 		} else {
 			$status = 'available';
 		}
 	} else {
-		$status = 'not installed';
+		$status = 'n/a';
 	}
-} else {
-	$status = 'n/a';
+	workerLog('worker: Spotify Connect: ' . $status);
+
+	// Start Deezer Connect renderer
+	if ($_SESSION['feat_bitmask'] & FEAT_DEEZER) {
+		if (isset($_SESSION['deezersvc']) && $_SESSION['deezersvc'] == 1) {
+			$status = 'started';
+			startDeezer();
+		} else {
+			$status = 'available';
+		}
+	} else {
+		$status = 'n/a';
+	}
+	workerLog('worker: Deezer Connect:  ' . $status);
+
+	// Start Squeezelite renderer
+	if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
+		if (isset($_SESSION['slsvc']) && $_SESSION['slsvc'] == 1) {
+			$status = 'started';
+			cfgSqueezelite();
+			startSqueezeLite();
+		} else {
+			$status = 'available';
+		}
+	} else {
+		$status = 'n/a';
+	}
+	workerLog('worker: Squeezelite:     ' . $status);
+
+	// Start UPnP renderer
+	if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
+		if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
+			$status = 'started';
+			startUPnP();
+		} else {
+			$status = 'available';
+		}
+	} else {
+		$status = 'n/a';
+	}
+	workerLog('worker: UPnP client:     ' . $status);
+
+	// Start Plexamp renderer
+	if ($_SESSION['feat_bitmask'] & FEAT_PLEXAMP) {
+		if ($_SESSION['plexamp_installed'] == 'yes') {
+			sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /etc/systemd/system/plexamp.service");
+			sysCmd("sed -i '/WorkingDirectory=/c \WorkingDirectory=/home/" . $_SESSION['user_id'] . "/plexamp' /etc/systemd/system/plexamp.service");
+			sysCmd("sed -i '/ExecStart=/c \ExecStart=/usr/bin/node /home/" . $_SESSION['user_id'] . "/plexamp/js/index.js' /etc/systemd/system/plexamp.service");
+			if (isset($_SESSION['pasvc']) && $_SESSION['pasvc'] == 1) {
+				$status = 'started';
+				startPlexamp();
+			} else {
+				$status = 'available';
+			}
+		} else {
+			$status = 'not installed';
+		}
+	} else {
+		$status = 'n/a';
+	}
+	if (!isset($_SESSION['alsavolume_max_pa'])) {
+		$_SESSION['alsavolume_max_pa'] = $_SESSION['alsavolume_max'];
+	}
+	$status .= ', ALSA maxvol: ' . $_SESSION['alsavolume_max_pa'] . '%';
+	workerLog('worker: Plexamp:         ' . $status);
+
+	// Start RoonBridge renderer
+	if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
+		if ($_SESSION['roonbridge_installed'] == 'yes') {
+			if (isset($_SESSION['rbsvc']) && $_SESSION['rbsvc'] == 1) {
+				$status = 'started';
+				startRoonBridge();
+			} else {
+				$status = 'available';
+			}
+		} else {
+			$status = 'not installed';
+		}
+	} else {
+		$status = 'n/a';
+	}
+	workerLog('worker: RoonBridge:      ' . $status);
 }
-workerLog('worker: RoonBridge:      ' . $status);
 
 // Start Multiroom audio
 if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
@@ -1694,8 +1700,12 @@ while (true) {
 	if ($_SESSION['maint_interval'] != 0) {
 		chkMaintenance();
 	}
-	if ($_SESSION['btsvc'] == '1' && $_SESSION['audioout'] == 'Local') {
-		chkBtActive();
+	if ($_SESSION['btsvc'] == '1') {
+		if($_SESSION['audioout'] == 'Local') {
+			chkBtActive();
+		} else if($_SESSION['audioout'] == 'Bluetooth') {
+			checkBtSpeakerConnected();
+		}
 	}
 	if ($_SESSION['airplaysvc'] == '1') {
 		chkAplActive();
@@ -1805,6 +1815,35 @@ function chkMaintenance() {
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 
 		debugLog('Maintenance completed');
+	}
+}
+
+function checkBtSpeakerConnected() {
+	if (!isset($_SESSION['used_bt_speaker'])) {
+		return;
+	}
+	
+	$previously_connected = $_SESSION['bt_speaker_connected'];
+	$result = sysCmd('bt-device -i '.$_SESSION['used_bt_speaker']);
+	// The selected bluetooth speaker is currenctly disconnected
+	if (strpos($result[9], 'Connected: 0') !== false) {
+		if(!$previously_connected)
+		{
+			// Already processed the disconnection
+			return;
+		}
+		phpSession('write', 'bt_speaker_connected', '0');
+		workerLog("worker: checkBtSpeakerConnected(): Speaker ".$_SESSION['used_bt_speaker']." is disconnected we need to stop renderes to prevent issues");
+		stopAllRenderers();
+	} else {
+		if($previously_connected)
+		{
+			// Already processed the [re]connection
+			return;
+		}
+		phpSession('write', 'bt_speaker_connected', '1');
+		workerLog("worker: checkBtSpeakerConnected(): Speaker ".$_SESSION['used_bt_speaker']." is connected, renderers can now work");
+		startAllRenderers();
 	}
 }
 

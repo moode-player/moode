@@ -10,6 +10,55 @@ require_once __DIR__ . '/multiroom.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
+// GLOBALS
+function restartAllRenderers() {
+	stopAllRenderers();
+	startAllRenderers();
+}
+
+function stopAllRenderers() {
+	if ($_SESSION['airplaysvc'] == 1) {
+		stopAirPlay();
+	}
+	if ($_SESSION['spotifysvc'] == 1) {
+		stopSpotify();
+	}
+	if ($_SESSION['deezersvc'] == 1) {
+		stopDeezer();
+	}
+	if ($_SESSION['slsvc'] == 1) {
+		stopSqueezelite();
+	}
+	if ($_SESSION['pasvc'] == 1) {
+		stopPlexamp();
+	}
+	if ($_SESSION['rbsvc'] == 1) {
+		stopRoonBridge();
+	}
+}
+
+function startAllRenderers() {
+	if ($_SESSION['airplaysvc'] == 1) {
+		startAirPlay();
+	}
+	if ($_SESSION['spotifysvc'] == 1) {
+		startSpotify();
+	}
+	if ($_SESSION['deezersvc'] == 1) {
+		startDeezer();
+	}
+	if ($_SESSION['slsvc'] == 1) {
+		cfgSqueezelite();
+		startSqueezelite();
+	}
+	if ($_SESSION['pasvc'] == 1) {
+		startPlexamp();
+	}
+	if ($_SESSION['rbsvc'] == 1) {
+		startRoonBridge();
+	}
+}
+
 // Bluetooth
 function startBluetooth() {
 	sysCmd('systemctl start hciuart');
