@@ -19,7 +19,7 @@ New features
 - NEW: Dashboard with multi-select (formerly >>Players)
 
 Updates
-- UPD: Bump to pleezer 0.17.1 (new --dither-bits, --noise-shaping)
+- UPD: Bump to pleezer 0.17.2 (new --dither-bits, --noise-shaping)
 - UPD: Style improvements for mobile portrait
 - UPD: Use uid:gid 1000:1000 in function getUserId()
 - UPD: Remove NVMe and SATA root shares (replaced by actual shared directories)
