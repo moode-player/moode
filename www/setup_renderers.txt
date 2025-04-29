@@ -61,6 +61,7 @@ another renderer.
 These audio renderers try to acquire exclusive access to the audio device
 when they are turned ON and thus no other renderer can be also be ON.
 
+- Squeezelite (if -c <timeout> option is not specified)
 - Plexamp
 - RoonBridge
 
@@ -76,14 +77,16 @@ Bluetooth uses a Connection based protocol. This means that Bluetooth first
 establishes a physical network connection between two hosts before any audio
 data can be sent between them. This network connection remains active until it
 is manually disconnected. moOde detects the connection and displays the
-"Renderer Active" overlay.
+"Bluetooth Active" screen.
 
 Session Based
 
 The other renderers use Session based protocols that run over existing
 Ethernet or WiFi networks. Since these networks are already present this type
 of renderer operates by establishing a playback session. moOde detects the
-session and displays the "Renderer Active" overlay.
+session and displays cover art and track metadata for AirPlay, Spotify Connect
+and Deezer Connect, or the "Renderer Active" screen for Squeezelite, Plexamp
+and RoonBridge renderers.
 
 AirPlay and Squeezelite renderers can automatically end their session and
 release the audio output after playback ends based on a configurable timeout
