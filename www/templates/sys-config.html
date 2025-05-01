@@ -49,19 +49,24 @@
 
 		<div class="control-group">
 			<legend>General</legend>
-			<label class="control-label" for="hostname">Host/player name</label>
+			<label class="control-label" for="hostname">Host name</label>
             <div class="controls">
                 <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<span class="config-help-info">
-					Length 3-63 characters, alphanumeric and hyphen allowed. This is the name that will appear on the network.
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hostname" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-hostname" class="config-help-info">
+					This is the name that will appear on the network. Length 3-63 characters, alphanumeric and hyphen allowed.
 				</span>
             </div>
 
-            <label class="control-label" for="browsertitle">Browser title</label>
+            <label class="control-label" for="browsertitle">Player name</label>
             <div class="controls">
                 <input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-browsertitle" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-browsertitle" class="config-help-info">
+					This is the name that will appear in the "m" menu header, Browser tab and other parts of the WebUI where its helpful to show the player name.
+				</span>
             </div>
 
 			<label class="control-label" for="timezone">Timezone</label>
