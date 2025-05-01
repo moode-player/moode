@@ -4585,7 +4585,7 @@ function makeActive (vswitch, panel, view) {
 
     if (view == 'tag' || view == 'album') {
         if ($('#lib-album-filter').val() != '') {
-            $('#searchResetLib').show();
+            $('#search-reset-library').show();
         }
     }
 

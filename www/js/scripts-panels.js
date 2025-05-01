@@ -1422,7 +1422,7 @@ jQuery(document).ready(function($) { 'use strict';
             e.preventDefault();
         }
 
-        $('#lib-album-filter').val().length > 0 ? $('#searchResetLib').show() : $('#searchResetLib').hide();
+        $('#lib-album-filter').val().length > 0 ? $('#search-reset-library').show() : $('#search-reset-library').hide();
 
         if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
             clearActiveSearch();
@@ -1451,18 +1451,18 @@ jQuery(document).ready(function($) { 'use strict';
             $('#viewswitch').click();
         }
 	});
-	$('#searchResetLib').click(function(e) {
+	$('#search-reset-library').click(function(e) {
 		e.preventDefault();
 		document.getElementById("lib-album-filter").focus();
         $('#lib-album-filter').val('');
-        $('#searchResetLib').hide();
+        $('#search-reset-library').hide();
 		return false;
 	});
 
     // Queue search
 	$('#playqueue-filter').keyup(function(e){
 		if (!showSearchResetPq) {
-			$('#searchResetPlayqueue').show();
+			$('#search-reset-playqueue').show();
 			showSearchResetPq = true;
 		}
 
@@ -1474,7 +1474,7 @@ jQuery(document).ready(function($) { 'use strict';
 			var count = 0;
 
 			if (filter == '') {
-				$("#searchResetPlayqueue").hide();
+				$("#search-reset-playqueue").hide();
 				showSearchResetPq = false;
 			}
 
@@ -1487,12 +1487,11 @@ jQuery(document).ready(function($) { 'use strict';
 					count++;
 				}
 			});
-		    var s = (count == 1) ? '' : 's';
 			$('#container-playqueue').scrollTo(0, 200);
 		}, SEARCH_TIMEOUT);
 	});
-	$('#searchResetPlayqueue').click(function(e) {
-		$("#searchResetPlayqueue").hide();
+	$('#search-reset-playqueue').click(function(e) {
+		$("#search-reset-playqueue").hide();
 		showSearchResetPq = false;
 		$('.playqueue li').css('display', 'block');
 	});

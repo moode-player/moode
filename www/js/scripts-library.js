@@ -937,11 +937,10 @@ $('#genreheader, #library-header').on('click', function(e) {
         LIB.albumClicked = false;
         $('#tracklist-toggle').html('<i class="fa-regular fa-sharp fa-list sx"></i> Show tracks');
         if ($('#lib-album-filter').val() != '') {
-            $('#searchResetLib').show();
+            $('#search-reset-library').show();
         }
         else {
-            $("#searchResetLib").hide();
-    		showSearchResetLib = false;
+            $("#search-reset-library").hide();
         }
 		if (GLOBAL.musicScope == 'recent') {
 			GLOBAL.musicScope = 'all';

@@ -37,6 +37,13 @@ body {
 		margin-top: .75em;
 		left:2.25rem;
 	}
+	#playqueue-filter {
+		width: 25vw;
+	}
+	#search-reset-playqueue {
+	    font-size: 1.5rem;
+	    margin-top: .2rem;
+	}
 	#top-columns {
 		margin-top:1.25em;
 	}
@@ -145,6 +152,7 @@ body {
 		font-size:2.15rem;
 	}
 	#menu-cdsp {font-size:1.5rem;}
+	#multiroom-sender {left:52%}
 	#multiroom-sender a {font-size: 1.45rem;}
 	/* Library button and header text */
 	#current-tab {font-size:1.35rem;}
@@ -282,7 +290,7 @@ body {
 	#audioinfo-modal {width:35%!important;}
 
 	/* Multiroom and Updater header icons */
-	#multiroom-sender {left:46%!important;}
+	#multiroom-sender {left:47%!important;}
 	#multiroom-sender a {font-size: 1.45rem;}
 	#updater-notification {left:50%!important;}
 
@@ -313,6 +321,11 @@ body {
 	.playqueue .pll1 {font-size:1rem;}
     .playqueue .pll2 {font-size:.9rem;line-height:inherit;margin-left:calc(3.5em + 1vmin)!important}
 	.playqueue-action {font-size:1rem!important;}
+	#playqueue-search {left:3rem;}
+	#search-reset-playqueue {
+	    font-size: 1.5rem;
+	    margin-top: .2rem;
+	}
 
 	/* CoverView cover art */
 	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 10em);height:calc(100vh - 10em);margin-top:1em;}
@@ -496,7 +509,7 @@ body {
 @media (height:443px) and (width:799px),
 	   (height:479px) and (width:799px) {
 	/* Panel header */
-	#multiroom-sender {left:50%!important;}
+	/*#multiroom-sender {left:50%!important;}*/
 	#updater-notification {left:54%!important;}
 
 	/* Search input */
