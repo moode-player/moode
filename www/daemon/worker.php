@@ -1331,7 +1331,7 @@ if (file_exists($cfgDir)) {
 		$cfgStatus = 'directory ok';
 	}
 } else {
-	$cfgStatus = 'WARNING: directory ' . $cfgDir . ' does not exist';
+	$cfgStatus = 'directory ' . $cfgDir . ' does not exist';
 }
 if ($_SESSION['local_display'] == '1') {
 	startLocalDisplay();
@@ -2076,6 +2076,8 @@ function updExtMetaFile() {
 		$renderer = 'AirPlay Active';
 	} else if ($GLOBALS['spotactive'] == '1') {
 		$renderer = 'Spotify Active';
+	} else if ($GLOBALS['deezactive'] == '1') {
+		$renderer = 'Deezer Active';
 	} else if ($GLOBALS['slactive'] == '1') {
 		$renderer = 'Squeezelite Active';
 	} else if ($GLOBALS['rbactive'] == '1') {
