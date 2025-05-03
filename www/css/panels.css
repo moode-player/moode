@@ -255,7 +255,7 @@ html {background-color:inherit;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
 .dropdown-cdsp-line {padding-left:1em;}
 #menu-header-player-name {
-	padding: .5em 0 .5em .75em;
+	padding: .75em 0 .75em .75em;
 	text-align: left;
 	color: var(--textvariant);
 }
