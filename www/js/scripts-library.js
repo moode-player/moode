@@ -1986,8 +1986,17 @@ function showHideTracks(posChange) {
     customScroll('albumcovers', UI.libPos[1], 200);
 }
 
-function encodeHTMLEntities (str) {
+function encodeHTMLEntities(str) {
     return String(str).replace(/[&<>"'`=\/]/g, function (s) {
         return htmlEntityMap[s];
     });
+}
+function decodeHTMLEntities(str) {
+    var element = document.createElement('div');
+
+    element.innerHTML = str;
+    str = element.textContent;
+    element.textContent = '';
+
+    return str;
 }

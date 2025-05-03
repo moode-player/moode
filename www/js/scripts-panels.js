@@ -778,15 +778,37 @@ jQuery(document).ready(function($) { 'use strict';
                 }, DEFAULT_TIMEOUT);
     		} else {
                 // Song file
-    			$('#playback-switch').click();
+                $('#playback-switch').click();
     			$('.tag-view-btn').click();
+                $('#genreheader').click(); // Reset to full lib
 
-                var artistText = $(this).text().indexOf('...') != -1 ? $(this).text().slice(0, -3) : $(this).text();
-				$('#artistsList .lib-entry').filter(function() {return $(this).text() == artistText/*MPD.json['artist']*/;}).click();
-                customScroll('artists', UI.libPos[2], 200);
+                setTimeout(function() {
+                    var genrePos = $('#genresList .lib-entry').filter(function() {
+                        return $(this).text() == decodeHTMLEntities(MPD.json['genre']);
+                    }).index();
+                    customScroll('genres', genrePos, 200);
+                    $('#genresList .lib-entry').eq(genrePos).click();
 
-                $('#albumsList .lib-entry .album-name-art').filter(function() {return $(this).text() == MPD.json['album'];}).click();
-                customScroll('albums', UI.libPos[0], 200);
+                    var artistPos = $('#artistsList .lib-entry').filter(function() {
+                        return $(this).text() == decodeHTMLEntities(MPD.json['artist']);
+                    }).index();
+                    customScroll('artists', artistPos, 200);
+                    $('#artistsList .lib-entry').eq(artistPos).click();
+
+                    var albumPos = $('#albumsList .lib-entry .album-name-art').filter(function() {
+                        return $(this).text() == decodeHTMLEntities(MPD.json['album']);
+                    }).parent().parent().index();
+                    customScroll('albums', albumPos, 200);
+                    $('#albumsList .lib-entry').eq(albumPos).click();
+
+                    UI.libPos[0] = albumPos;
+                    UI.libPos[2] = artistPos;
+                    UI.libPos[3] = genrePos;
+
+                    //console.log(genrePos + '|' + MPD.json['genre']);
+                    //console.log(artistPos + '|' + MPD.json['artist']);
+                    //console.log(albumPos + '|' + MPD.json['album']);
+                }, DEFAULT_TIMEOUT);
     		}
         }
 	});

@@ -4771,18 +4771,19 @@ function lazyLode(view) {
         // [2]: Artist list pos (tag view)
         // [3]: Genre list pos (tag view)
         // Special values for [0],[1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
-        //console.log('lazyLode(): UI.libPos', UI.libPos);
+        //console.log('lazyLode(): UI.libPos:', UI.libPos);
         //console.log('lazyLode(): UI.radioPos', UI.radioPos);
         var albumPos = UI.libPos[0];
         var albumCoverPos = UI.libPos[1];
         var artistPos = UI.libPos[2];
+        var genrePos = UI.libPos[3];
 
         if (view == 'tag') {
             // Genre
-            if (UI.libPos[3] >= 0) {
-                customScroll('genres', UI.libPos[3], scrollSpeed);
-                $('#genresList .lib-entry').eq(UI.libPos[3]).addClass('active');
-                $('#genresList .lib-entry').eq(UI.libPos[3]).click();
+            if (genrePos >= 0) {
+                customScroll('genres', genrePos, scrollSpeed);
+                $('#genresList .lib-entry').eq(genrePos).addClass('active');
+                $('#genresList .lib-entry').eq(genrePos).click();
             } else {
                 customScroll('genres', 0, scrollSpeed);
             }
