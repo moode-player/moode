@@ -19,10 +19,11 @@ New features
 - NEW:
 
 Updates
-- UPD:
+- UPD: Add player name to main menu header
 
 Bug fixes
-- FIX:
+- FIX: Click on "Artist - Album" in Playback view not working
+- FIX: Deezer not updating currentsong.txt
 
 ################################################################################
 #
