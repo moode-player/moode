@@ -124,6 +124,9 @@ body {
 	#togglebtns .btn-group .btn.volume-popup-btn {padding:0;}
 	.btn .btn-cmd .btn-toggle {font-size:.75em;}
 	.ralbum svg {height:1.2rem;width:1.2rem;}
+	.volume-popup-btn {
+		border-bottom: 3px solid var(--accentxts);	
+	}
 
 	/* Playbar */
 	#panel-footer, #playbar {height:10rem;}
