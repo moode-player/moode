@@ -374,6 +374,9 @@ body {
 	.busy-spinner {
 		right:calc(3.25rem + .85em)
 	}
+	#menu-header-player-name {
+		display:none;
+	}
 	/* Library button and header text */
 	#current-tab {font-size:1.35rem;}
 	#library-header {font-size:1.11rem;}
