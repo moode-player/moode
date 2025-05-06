@@ -15,9 +15,6 @@
 #
 ################################################################################
 
-New features
-- NEW:
-
 Updates
 - UPD: Bump to Linux kernel 6.12.25
 - UPD: Add IP address to Dashboard
