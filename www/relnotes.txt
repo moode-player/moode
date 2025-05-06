@@ -22,6 +22,7 @@ Updates
 - UPD: Bump to Linux kernel 6.12.25
 - UPD: Add IP address to Dashboard
 - UPD: Add player name to main menu header (click for Player info)
+- UPD: Add accent color border under volume icon for mobile portrait
 
 Bug fixes
 - FIX: Click on "Artist - Album" in Playback view not working
