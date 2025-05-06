@@ -70,6 +70,13 @@ li.modal-dropdown-text:focus {color:#eee;}
 #dashboard i, #configure i {font-size:2em;padding:.25em;}
 .dashboard-rxtx-indicator {font-size:.85em!important;margin-left:.25em;}
 #dashboard a, #configure a {font-size:1em;width:10em;height:6em;text-transform:capitalize}
+#dashboard a {
+    height:7em;
+}
+.dashboard-ipaddr {
+    color:var(--textvariant);
+    font-size:.75em;
+}
 #dashboard-ul {margin:0;}
 #dashboard-no-players-found {font-size:1.25em;font-style:italic;}
 #dashboard-submit-confirmed {

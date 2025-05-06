@@ -89,15 +89,16 @@ if (file_exists(DASHBOARD_CACHE_FILE) && filesize(DASHBOARD_CACHE_FILE) > 0 && $
 			$_players .= sprintf(
 				'<li><a href="%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank" ' .
 				'onclick="return false;" disabled>' .
-				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>%s%s</a></li>',
-				'#notarget', $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator']
+				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>%s%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
+				'#notarget', $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator'], $player['ipaddr']
 			);
 		} else {
 			$_players .= sprintf(
 				'<li><a href="http://%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank">' .
 				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>' .
-				'<input id="player-' . $i . '" class="checkbox-ctl player-checkbox" type="checkbox" data-item="' . $i . '">%s%s</a></li>',
-				$player['ipaddr'], $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator']
+				'<input id="player-' . $i . '" class="checkbox-ctl player-checkbox" type="checkbox" data-item="' . $i .
+				'">%s%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
+				$player['ipaddr'], $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator'], $player['ipaddr']
 			);
 		}
 
