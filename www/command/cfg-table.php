@@ -46,6 +46,7 @@ switch ($_GET['cmd']) {
 
 		// Network settings
 		$result = sqlRead('cfg_network', $dbh);
+		workerLog(print_r($result, true));
 		$cfgNetwork = array();
 		foreach ($result as $row) {
 			$pwd = $row['wlansec'] == 'wpa-psk' ? $row['wlanpwd'] : '';
@@ -162,6 +163,7 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['kernelver'] = $_SESSION['kernelver'];
 	$cfgSystem['mpdver'] = $_SESSION['mpdver'];
 	$cfgSystem['ipaddress'] = $_SESSION['ipaddress'];
+	$cfgSystem['wlanssid'] = $_SESSION['wlanssid'];
 	$cfgSystem['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
 	$cfgSystem['rx_hostnames'] = $_SESSION['rx_hostnames'];
 	$cfgSystem['rx_addresses'] = $_SESSION['rx_addresses'];

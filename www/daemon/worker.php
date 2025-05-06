@@ -522,10 +522,13 @@ if (empty($wlan0)) {
 // Store IP address (prefer wlan0 address)
 if (!empty($wlan0Ip)) {
 	$_SESSION['ipaddress'] = $wlan0Ip;
+	$_SESSION['wlanssid'] = $cfgNetwork[1]['wlanssid'];
 } else if (!empty($eth0Ip)) {
 	$_SESSION['ipaddress'] = $eth0Ip;
+	$_SESSION['wlanssid'] = '';
 } else {
 	$_SESSION['ipaddress'] = '0.0.0.0';
+	$_SESSION['wlanssid'] = '';
 	workerLog('worker: No active network interface');
 }
 

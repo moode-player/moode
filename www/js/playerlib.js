@@ -2890,6 +2890,20 @@ $(document).on('click', '.context-menu a', function(e) {
                 window.open('http://' + host + ':' + SESSION.json['mpd_httpd_port'], '_blank');
             }
             break;
+        case 'player_info':
+            var networkIface = SESSION.json['wlanssid'] == '' ? 'Ethernet' : 'Wireless (' + SESSION.json['wlanssid'] + ')';
+            notify(NOTIFY_TITLE_INFO, 'player_info',
+                'Host:&nbsp;&nbsp;&nbsp;' + SESSION.json['hostname'] + '<br>' +
+                'Addr:&nbsp;&nbsp;&nbsp;' + SESSION.json['ipaddress'] + '<br>' +
+                'Type:&nbsp;&nbsp;&nbsp;' + networkIface + '<br>' +
+                'Model:&nbsp;&nbsp;' + SESSION.json['hdwrrev'] + '<br>' +
+                'Kernel:&nbsp;' + SESSION.json['kernelver'] + '<br>' +
+                'PiOS:&nbsp;&nbsp;&nbsp;' + SESSION.json['raspbianver'] + '<br>' +
+                'MPD:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'],
+                NOTIFY_DURATION_INFINITE);
+                // Styling (gets automatically reset by pnotify for other notifications)
+                $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
+            break;
         case 'edit_station':
             $.post('command/radio.php?cmd=get_station_contents', {'path': path}, function(data) {
                 GLOBAL.editStationId = data['id']; // This is to pass to the update station routine so it can uniquely identify the row

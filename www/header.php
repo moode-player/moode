@@ -204,7 +204,7 @@
 		<div class="dropdown">
 			<a aria-label="Menu" class="dropdown-toggle btn target-blank-link" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget"><div id="mblur">mm</div><div id="mbrand">m</div></a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
-				<li id="menu-header-player-name" class="menu-separator"><?php echo $_SESSION['browsertitle']; ?></li>
+				<li id="menu-header-player-name" class="context-menu menu-separator"><a href="#notarget" data-cmd="player_info"><?php echo $_SESSION['browsertitle']; ?></a></li>
 				<?php if ($section == 'index') { ?>
 					<li><a href="#configure-modal" data-toggle="modal"><i class="fa-solid fa-sharp fa-gear-complex sx"></i>Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="preferences"><i class="fa-solid fa-sharp fa-pen sx"></i>Preferences</a></li>

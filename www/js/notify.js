@@ -79,6 +79,7 @@ function notify(title, message, arg3, arg4 = '') {
         userid_error: 'The image does not contain a userid.<br><br>',
         firstuse_welcome: '<b>Welcome to moOde audio player</b><br><br>',
         updater: 'An update is available.<br>',
+        player_info: 'Player information.<br>',
         viewport: 'VIEWPORT<br>',
         debug: 'DEBUG<br>',
         // Dashboard
