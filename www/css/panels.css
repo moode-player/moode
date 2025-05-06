@@ -550,6 +550,10 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-coverart-meta-area {line-height:normal;padding:0;float:left;position:fixed;}
 #lib-coverart-img a {display:inline-block;}
 #lib-collection-stats {font-size:.8em;font-style:italic;text-align:center;margin-top:0.25em;}
+#lib-collection-stats-ellipsis {
+	float:right;
+	display:none;
+}
 img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 img.lib-coverart,
 img.lib-artistart {

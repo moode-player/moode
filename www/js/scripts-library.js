@@ -878,13 +878,14 @@ var renderSongs = function(albumPos) {
             $('#albumsList .lib-entry, #artistsList .lib-entry').removeClass('active');
             $('.lib-encoded-at-hdonly, lib-encoded-at-hdonly-tagview, .lib-encoded-at-text, .lib-encoded-at-badge').text('');
             $('.tag-cover-text').css('transform', 'translateY(0.5em)');
-            $('#songsList, #lib-collection-stats').text('');
+            $('#songsList, #lib-collection-stats').html('');
             $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
         } else {
     		$('#lib-collection-stats').html(
                 formatNumCommas(filteredSongs.length)
                 + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ')
                 + formatLibTotalTime(LIB.totalTime)
+                + '<span id="lib-collection-stats-ellipsis"><i class="fa-regular fa-sharp fa-ellipsis-h"></i></span>'
             );
         }
 	} else {
@@ -918,6 +919,7 @@ var renderSongs = function(albumPos) {
             + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ')
             +  '<br>'
             + formatLibTotalTime(LIB.totalTime)
+            + '<span id="lib-collection-stats-ellipsis"><i class="fa-regular fa-sharp fa-ellipsis-h"></i></span>'
         );
 	}
 }

@@ -202,7 +202,10 @@ body {
 	#lib-coverart-meta-area {position:absolute!important;z-index:9999;background-color:var(--btnbarback);position:unset;float:left;width:100vw;line-height:14px;}
 	#songsList {padding-bottom:12rem;margin:.25em !important;}
 	.lib-entry {padding: 0 .25em;}
-	#lib-collection-stats {width:100vw;font-size:1em;float:left;text-align:left;margin:.5em 0 .5em .5em;}
+	#lib-collection-stats {width:90vw;font-size:1em;float:left;text-align:left;margin:.5em .5em;}
+	#lib-collection-stats-ellipsis {
+		display:inline-block;
+	}
 	#trackscontainer {width:100vw;margin-top:3em;}
 	#db-path {display:none;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
@@ -398,11 +401,14 @@ body {
 	#lib-artist-header,
 	#lib-album-header {font-size:1.1rem;}
 	#bottom-row {left:env(safe-area-inset-left);top:54%;height:35%}
-	#lib-collection-stats {width:100vw;font-size:.75em;float:left;text-align:left;margin:.5em 0 .5em .5em;}
+	#lib-collection-stats {width:90vw;font-size:.75em;float:left;text-align:left;margin:.5em .5em;}
+	#lib-collection-stats-ellipsis {
+		display:inline-block;
+	}
 	#trackscontainer {width:100vw;}
 	#trackscontainer span {font-size:1.1rem;}
 	#lib-coverart-img {display:none;}
-	#lib-coverart-meta-area {background-color:rgba(128,128,128,.1);width:100vw;position:relative;}
+	#lib-coverart-meta-area {background-color:var(--btnbarback);width:100vw;position:relative;}
 	#songsList {padding-bottom:10rem;}
 	#tagview-text-cover {font-size:1.35rem;}
 	#tagview-text-cover,
@@ -697,11 +703,14 @@ body {
 	#lib-genre-header,
 	#lib-artist-header,
 	#lib-album-header {font-size:1.1rem;}
-	#lib-collection-stats {width:100vw;font-size:.75em;float:left;text-align:left;margin:.5em 0 .5em .5em;}
+	#lib-collection-stats {width:98vw;font-size:.75em;float:left;text-align:left;margin:.5em .5em;}
+	#lib-collection-stats-ellipsis {
+		display:inline-block;
+	}
 	#trackscontainer {float:unset;width:100vw;}
 	#trackscontainer span {font-size:1.1rem;}
 	#lib-coverart-img {display:none;}
-	#lib-coverart-meta-area {background-color:rgba(128,128,128,.1);width:100vw;position:relative;}
+	#lib-coverart-meta-area {background-color:var(--btnbarback);width:100vw;position:relative;}
 	#songsList {padding-bottom:10rem;}
 	#tagview-text-cover {font-size:1.35rem;height:calc(10.5vw - 1rem);width:calc(10.5vw - 1rem);}
 
@@ -807,11 +816,14 @@ body {
 	#lib-genre-header,
 	#lib-artist-header,
 	#lib-album-header {font-size:1.1rem;}
-	#lib-collection-stats {width:100vw;font-size:.75em;float:left;text-align:left;margin:.5em 0 .5em .5em;}
+	#lib-collection-stats {width:95vw;font-size:.75em;float:left;text-align:left;margin:.5em .5em;}
+	#lib-collection-stats-ellipsis {
+		display:inline-block;
+	}
 	#trackscontainer {float:unset;width:100vw;}
 	#trackscontainer span {font-size:1.1rem;}
 	#lib-coverart-img {display:none;}
-	#lib-coverart-meta-area {background-color:rgba(128,128,128,.1);width:100vw;position:relative}
+	#lib-coverart-meta-area {background-color:var(--btnbarback);width:100vw;position:relative}
 	#songsList {padding-bottom:6rem;}
 	#tagview-text-cover {font-size:1.35rem;height:calc(10vw - 1rem);width:calc(10vw - 1rem);}
 
