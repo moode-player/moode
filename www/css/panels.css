@@ -896,7 +896,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 #playbar-title a {padding:0;margin:0;display:unset;text-align:unset;font-size:.9rem;color:var(--adapttext) !important;}
 #playbar-currentsong, #playbar-currentalbum {overflow:hidden;text-overflow:ellipsis;word-wrap:break-word;}
 #playbar-currentsong {font-weight:600;}
-#playbar-time, #playbar-total {font-size:.9rem;}
+#playbar-time, #playbar-total {font-size:.8rem;}
 #playbar-controls {position:absolute;left:.5rem;top:50%;transform:translate(0, -50%);opacity:1;}
 #playbar-controls .btn {font-size:2rem;padding:1rem;}
 #playbar-controls .next,
