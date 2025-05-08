@@ -129,9 +129,9 @@
 				<div class="controls">
 					<input class="config-input-large" type="text" id="options" name="mount[options]" value="$_options">
 					<span id="info-mount-flags" class="config-help-static">
-						Most mount options are auto-negotiated when the mount is attempted but in some cases auto-negotiation cannot determine the correct values and the mount may fail. In this case certain options must be explicitly added. Some of these are listed below.<br>
-						SMB: vers=x.y, sec=ntlm or sec=ntlmssp<br>
-						NFS: vers=x.y, type=nfs2, nfs3 or nfs4
+						Most mount options are auto-negotiated when the mount is attempted but in some cases auto-negotiation cannot determine the correct values and the mount may fail. In this case certain options must be explicitly added or changed. Some of these are listed below.<br>
+						<b>SMB:</b> vers=x.y | sec=ntlm or sec=ntlmssp | cache=strict<br>
+						<b>NFS:</b> vers=x.y | type=nfs2, nfs3 or nfs4
                     </span>
 				</div>
 			</div>
