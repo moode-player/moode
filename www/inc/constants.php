@@ -164,14 +164,14 @@ const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // moodeutl -q "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
-// moodeutl -q "UPDATE cfg_system SET value='97271' WHERE param='feat_bitmask'"
+// moodeutl -q "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
 const FEAT_HTTPS        = 1;		// y HTTPS mode
 const FEAT_AIRPLAY      = 2;		// y AirPlay renderer
 const FEAT_MINIDLNA     = 4;		// y DLNA server
 const FEAT_RECORDER     = 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE  = 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;		// y UPnP client for MPD
-const FEAT_DEEZER       = 64;   	// y Deezer Connect renderer
+const FEAT_DEEZER       = 64;   	// n Deezer Connect renderer
 const FEAT_ROONBRIDGE   = 128;		// y RoonBridge renderer
 const FEAT_LOCALDISPLAY = 256;		// y Local display
 const FEAT_INPSOURCE    = 512;		// y Input source select
@@ -183,7 +183,7 @@ const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 //						-------
-//						  97271
+//						  97207
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate
