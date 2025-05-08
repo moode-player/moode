@@ -5,7 +5,7 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
-const VERSION = '9.1.0';
+const VERSION = '9.2.0';
 
 set_include_path('/var/www/inc');
 
@@ -93,7 +93,7 @@ switch ($option) {
 		sqlQuery($argv);
 		break;
 	case '-r':
-		restartServers();
+		restartServers($featBitmask);
 		break;
 	case '-R':
 		restartRenderer($argv);
@@ -387,7 +387,7 @@ function sqlQuery($argv) {
 	echo shell_exec("sqlite3 " . SQLDB_PATH . " \"" . $argv[2] . "\"");
 }
 
-function restartServers() {
+function restartServers($featBitmask) {
 	// Stop daemons
 	echo "Stopping daemons...\n";
 	echo "- watchdog.sh\n";
@@ -408,20 +408,83 @@ function restartServers() {
 
 	// Stop renderers
 	echo "Stopping renderers...\n";
-	echo "- bluetooth\n";
-	sysCmd('/var/www/util/restart-renderer.php --bluetooth --stop');
-	echo "- airplay\n";
-	sysCmd('/var/www/util/restart-renderer.php --airplay --stop');
-	echo "- spotify\n";
-	sysCmd('/var/www/util/restart-renderer.php --spotify --stop');
-	echo "- deezer\n";
-	sysCmd('/var/www/util/restart-renderer.php --deezer --stop');
-	echo "- squeezelite\n";
-	sysCmd('/var/www/util/restart-renderer.php --squeezelite --stop');
-	echo "- plexamp\n";
-	sysCmd('/var/www/util/restart-renderer.php --plexamp --stop');
-	echo "- roonbridge\n";
-	sysCmd('/var/www/util/restart-renderer.php --roonbridge --stop');
+	if ($featBitmask & FEAT_BLUETOOTH) {
+		$btSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='btsvc'\""));
+		if ($btSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --bluetooth --stop');
+			echo "- bluetooth\t\tstopped\n";
+		} else {
+			echo "- bluetooth\t\tnot on\n";
+		}
+	} else {
+		echo "- bluetooth\t\tfeature disabled\n";
+	}
+	if ($featBitmask & FEAT_AIRPLAY) {
+		$airplaySvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='airplaysvc'\""));
+		if ($airplaySvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --airplay --stop');
+			echo "- airplay\t\tstopped\n";
+		} else {
+			echo "- airplay\t\tnot on\n";
+		}
+	} else {
+		echo "- airplay\t\tfeature disabled\n";
+	}
+	if ($featBitmask & FEAT_SPOTIFY) {
+		$spotifySvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='spotifysvc'\""));
+		if ($spotifySvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --spotify --stop');
+			echo "- spotify connect\tstopped\n";
+		} else {
+			echo "- spotify connect\tnot on\n";
+		}
+	} else {
+		echo "- spotify connect\tfeature disabled\n";
+	}
+	if ($featBitmask & FEAT_DEEZER) {
+		$deezerSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='deezersvc'\""));
+		if ($deezerSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --deezer --stop');
+			echo "- deezer connect\tstopped\n";
+		} else {
+			echo "- deezer connect\tnot on\n";
+		}
+	} else {
+		echo "- deezer connect\tfeature disabled\n";
+	}
+	if ($featBitmask & FEAT_SQUEEZELITE) {
+		$slSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='slsvc'\""));
+		if ($slSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --squeezelite --stop');
+			echo "- squeezelite\t\tstopped\n";
+		} else {
+			echo "- squeezelite\t\tnot on\n";
+		}
+	} else {
+		echo "- squeezelite\t\tfeature disabled\n";
+	}
+	if ($featBitmask & FEAT_PLEXAMP) {
+		$paSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='pasvc'\""));
+		if ($paSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --plexamp --stop');
+			echo "- plexamp\t\tstopped\n";
+		} else {
+			echo "- plexamp\t\tnot on\n";
+		}
+	} else {
+		echo "- plexamp\t\tfeature disabled\n";
+	}
+	if ($featBitmask & FEAT_ROONBRIDGE) {
+		$rbSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='rbsvc'\""));
+		if ($rbSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --roonbridge --stop');
+			echo "- roonbridge\t\tstopped\n";
+		} else {
+			echo "- roonbridge\t\tnot on\n";
+		}
+	} else {
+		echo "- roonbridge\t\tfeature disabled\n";
+	}
 
 	// Restart PHP and NGINX
 	echo "Restarting php/nginx...\n";
