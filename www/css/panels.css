@@ -258,11 +258,10 @@ html {background-color:inherit;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
 .dropdown-cdsp-line {padding-left:1em;}
 #menu-header-player-name {
-	padding: .75em 0 .75em .75em;
 	text-align: left;
 }
 #menu-header-player-name a {
-	/* Placeholder */
+	padding: .5em 0 .5em .75em;
 }
 
 #panel-footer {bottom:0;width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
