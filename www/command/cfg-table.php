@@ -46,7 +46,7 @@ switch ($_GET['cmd']) {
 
 		// Network settings
 		$result = sqlRead('cfg_network', $dbh);
-		workerLog(print_r($result, true));
+		//workerLog(print_r($result, true));
 		$cfgNetwork = array();
 		foreach ($result as $row) {
 			$pwd = $row['wlansec'] == 'wpa-psk' ? $row['wlanpwd'] : '';
