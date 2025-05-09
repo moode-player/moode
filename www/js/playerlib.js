@@ -5189,8 +5189,10 @@ function getKeyOrValue (type, item) {
         // Thumbnail resolutions
         ['Auto','Auto'],['400px','400px,75'],['500px','500px,60'],['600px','600px,60'],
         // Dashboard commands
-        ['Shutdown','poweroff'],['Restart','reboot'],['Update library','update_library'],['Refresh screen','refresh_screen'],
-        ['Discover','discover_players'],['Play','play'],['Pause','pause'],['Stop','stop'],['Next','next'],['Previous','prev'],
+        ['Discover','discover_players'],
+        ['Update library','update_library'],['Regen thumbnails','regen_thmcache'],['Refresh screen','refresh_screen'],
+        ['Shutdown','poweroff'],['Restart','reboot'],
+        ['Play','play'],['Pause','pause'],['Stop','stop'],['Next','next'],['Previous','prev'],
         // Root folder icons
         ['NAS','fa-computer'],['NVME','fa-memory'],['RADIO','fa-microphone'],['SATA','fa-hard-drive'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
         // Now-playing icon

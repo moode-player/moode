@@ -15,12 +15,14 @@ chkVariables($_GET);
 
 switch ($_GET['cmd']) {
 	case 'update_library':
+	case 'regen_thmcache':
 		if (submitJob($_GET['cmd'])) {
 			echo json_encode('job submitted');
 		} else {
 			echo json_encode('worker busy');
 		}
 		break;
+	case 'regen_thumbnails':
 	case 'refresh_screen':
 		sendFECmd('refresh_screen');
 		break;
