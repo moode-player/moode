@@ -144,6 +144,15 @@ switch ($option) {
 		break;
 	case '--help':
 	default:
+		//[--bluetooth | --airplay | --spotify | --deezer | --squeezelite | --plexamp | --roonbridge]
+		$btArg = $featBitmask & FEAT_BLUETOOTH ? '--bluetooth | ' : '';
+		$apArg = $featBitmask & FEAT_AIRPLAY ? '--airplay | ' : '';
+		$spArg = $featBitmask & FEAT_SPOTIFY ? '--spotify | ' : '';
+		$dzArg = $featBitmask & FEAT_DEEZER ? '--deezer | ' : '';
+		$slArg = $featBitmask & FEAT_SQUEEZELITE ? '--squeezelite | ' : '';
+		$paArg = $featBitmask & FEAT_PLEXAMP ? '--plexamp | ' : '';
+		$rbArg = $featBitmask & FEAT_ROONBRIDGE ? '--roonbridge | ' : '';
+		$rendererList = rtrim($btArg . $apArg . $spArg . $dzArg . $slArg . $paArg . $rbArg, ' | ');
 		echo
 "Usage: moodeutl [OPTION]
 Moode utility programs
@@ -169,9 +178,9 @@ With no OPTION print the help text and exit.
  -M\t\tScan for MPD hosts
  -o\t\tList audio overlays
  -q\t\tQuery sql database
- -r\t\tRestart servers and renderers
- -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --deezer | --squeezelite | --plexamp | --roonbridge]
- -t\t\tPrint last 10 lines of moode log and wait
+ -r\t\tRestart servers and renderers\n" .
+ " -R\t\tRestart renderer [" . $rendererList . "]\n" .
+ " -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
  --hwparams\tPrint ALSA hardware params
