@@ -20,6 +20,7 @@ Updates
 - UPD: Add IP address to Dashboard
 - UPD: Add player name to main menu header (click for Player info)
 - UPD: Add accent color border under volume icon for mobile portrait
+- UPD: Add DSI screen type "Other" with brightness 0-255, rotation 0|90|180|270
 - UPD: Remove Deezer Connect feature (discontinued by company)
 - UPD: Improve moodeutl restartServers()
 
