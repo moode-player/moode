@@ -138,7 +138,7 @@ if (isset($_POST['update_dsi_scn_rotate'])) {
         phpSession('write', 'dsi_scn_rotate', $_POST['dsi_scn_rotate']);
         if ($_SESSION['dsi_scn_type'] == '1') {
             submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-        } else if ($_SESSION['dsi_scn_type'] == '2') {
+        } else if ($_SESSION['dsi_scn_type'] == '2' || $_SESSION['dsi_scn_type'] == 'other') {
             submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
         }
     }
@@ -282,6 +282,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
     $_select['dsi_scn_type'] .= "<option value=\"none\" " . (($_SESSION['dsi_scn_type'] == 'none') ? "selected" : "") . ">None</option>\n";
     $_select['dsi_scn_type'] .= "<option value=\"1\" " . (($_SESSION['dsi_scn_type'] == '1') ? "selected" : "") . ">Pi Touch 1</option>\n";
     $_select['dsi_scn_type'] .= "<option value=\"2\" " . (($_SESSION['dsi_scn_type'] == '2') ? "selected" : "") . ">Pi Touch 2</option>\n";
+    $_select['dsi_scn_type'] .= "<option value=\"other\" " . (($_SESSION['dsi_scn_type'] == 'other') ? "selected" : "") . ">Other</option>\n";
 
     $_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1</option>\n";
     $_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-2</option>\n";
@@ -297,9 +298,14 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
         $_dsi_scn_brightness_max = '255';
         $_select['dsi_scn_rotate'] .= "<option value=\"0\" " . (($_SESSION['dsi_scn_rotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
         $_select['dsi_scn_rotate'] .= "<option value=\"180\" " . (($_SESSION['dsi_scn_rotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
-    } else if ($_SESSION['dsi_scn_type'] == '2') {
-        $_dsi_scn_brightness_min = '1';
-        $_dsi_scn_brightness_max = '31';
+    } else if ($_SESSION['dsi_scn_type'] == '2' || $_SESSION['dsi_scn_type'] == 'other') {
+        if ($_SESSION['dsi_scn_type'] == '2') {
+            $_dsi_scn_brightness_min = '1';
+            $_dsi_scn_brightness_max = '31';
+        } else if ($_SESSION['dsi_scn_type'] == 'other') {
+            $_dsi_scn_brightness_min = '0';
+            $_dsi_scn_brightness_max = '255';
+        }
         $_select['dsi_scn_rotate'] .= "<option value=\"0\" " . (($_SESSION['dsi_scn_rotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
     	$_select['dsi_scn_rotate'] .= "<option value=\"90\" " . (($_SESSION['dsi_scn_rotate'] == '90') ? "selected" : "") . ">90 Deg</option>\n";
         $_select['dsi_scn_rotate'] .= "<option value=\"180\" " . (($_SESSION['dsi_scn_rotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";

@@ -678,7 +678,7 @@ function autoConfigSettings() {
 				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
 				// Update touch1 rotation
 				updBootConfigTxt('upd_dsi_scn_rotate', $degree);
-			} else if ($values['dsi_scn_type'] == '2') {
+			} else if ($values['dsi_scn_type'] == '2' || $values['dsi_scn_type'] == 'other') {
 				// Only update the touch angle here, xinitrc handles rotation value
 				if ($degree == '0') {
 					// Remove touch2 touch angle setting
