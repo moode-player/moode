@@ -261,7 +261,7 @@ html {background-color:inherit;}
 	text-align: left;
 }
 #menu-header-player-name a {
-	padding: .5em 0 .5em .75em;
+	padding: .5em 0 .5em 1em;
 }
 
 #panel-footer {bottom:0;width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
