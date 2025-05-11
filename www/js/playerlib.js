@@ -1198,7 +1198,7 @@ function renderUI() {
 
     	// Extra metadata displayed under the cover
         // (1) #countdown-sample-rate is displayed in the time knob on Ultrawide displays
-        // (2) #songsand-sample-rate is displayed under the metadata in mobile portrait
+        // (2) #songsand-sample-rate is displayed under the cover in mobile portrait
     	if (MPD.json['state'] == 'stop') {
             // Radio station or end of Queue
     		$('#extra-tags-display, #ss-extra-metadata').text('Not playing');
@@ -1233,7 +1233,8 @@ function renderUI() {
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
                 $('#extra-tags-display').html(formatExtraTagsString());
-                $('#ss-extra-metadata, #songsand-sample-rate').text(MPD.json['encoded']);
+                $('#ss-extra-metadata').text(MPD.json['encoded']);
+                $('#songsand-sample-rate').text('Track ' + MPD.json['track'] + ' • ' + MPD.json['encoded']);
                 $('#countdown-sample-rate').text(
                     (typeof(MPD.json['encoded']) === 'undefined' ? '' : MPD.json['encoded'].split(',')[0])
                 );
