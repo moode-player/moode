@@ -548,7 +548,13 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-artist-header {left:33.33%;border-top:1px solid var(--btnshade);border-bottom:1px solid var(--btnshade);}
 #lib-album-header {left:66.66%;border-top:1px solid var(--btnshade);border-bottom:1px solid var(--btnshade);border-left:1px solid var(--btnshade);}
 .lib-heading {text-transform:uppercase;font-weight:500;padding-top:3px;font-size:.8em;background:rgba(128,128,128,.1);text-align:center;}
-#lib-genre, #lib-artist, #lib-album {top:calc(1.75em + 1px);height:calc(100% - 2em);border-right:1px solid var(--btnshade);-webkit-overflow-scrolling:touch;box-sizing:border-box;}
+#lib-genre, #lib-artist, #lib-album {
+	top:calc(1.75em + 1px);
+	height:calc(100% - 3em);
+	border-right:1px solid var(--btnshade);
+	-webkit-overflow-scrolling:touch;
+	box-sizing:border-box;
+}
 #lib-artist {left:33.33%;}
 #lib-album {left:66.66%;}
 #lib-file {overflow-y:scroll;overflow-x:hidden;margin:1px 0 0 0;height:100%;width:100%;-webkit-overflow-scrolling:touch;}

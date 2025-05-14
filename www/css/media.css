@@ -125,7 +125,7 @@ body {
 	.btn .btn-cmd .btn-toggle {font-size:.75em;}
 	.ralbum svg {height:1.2rem;width:1.2rem;}
 	.volume-popup-btn {
-		border-bottom: 3px solid var(--accentxts);	
+		border-bottom: 3px solid var(--accentxts);
 	}
 
 	/* Playbar */
@@ -209,7 +209,10 @@ body {
 	#lib-collection-stats-ellipsis {
 		display:inline-block;
 	}
-	#trackscontainer {width:100vw;margin-top:3em;}
+	#trackscontainer {
+		width:100vw;
+		margin-top:3.5em;
+	}
 	#db-path {display:none;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
 	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
