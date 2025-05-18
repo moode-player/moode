@@ -685,7 +685,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['album'] = '';
 		$current['comment'] = '';
 		$current['coverurl'] = DEFAULT_ALBUM_COVER;
-		debugLog('enhanceMetadata(): error: currentsong file is NULL');
 	} else {
 		// Only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
