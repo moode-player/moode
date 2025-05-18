@@ -1229,7 +1229,8 @@ function renderUI() {
                 } else {
                     var bitRate = format + ' ' + MPD.json['bitrate'];
                 }
-        		$('#extra-tags-display').text(bitRate + ' • ' + mpdJsonOutput);
+        		//DELETE:$('#extra-tags-display').text(bitRate + ' • ' + mpdJsonOutput);
+                $('#extra-tags-display').text(bitRate);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
                 $('#extra-tags-display').html(formatExtraTagsString());
@@ -1274,12 +1275,12 @@ function renderUI() {
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentartist').html(
                 '<span class="playback-hd-badge"></span>' + MPD.json['album'] +
-                ' - ' +
+                (MPD.json['file'] == null ? '' : ' - ') +
                 (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'])
             );
             // Playbar and CoverView
             var artist = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
-            var dash = (typeof(artist) == 'undefined' || artist == '') ? '' : ' - ';
+            var dash = (typeof(artist) == 'undefined' || artist == '') ? '' : ' - '; // artist = '' means end of Queue
             // Playbar
             $('#playbar-currentsong').html(MPD.json['title']);
             $('#playbar-currentalbum').html(
