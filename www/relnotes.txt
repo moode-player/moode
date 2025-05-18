@@ -15,11 +15,16 @@
 #
 ################################################################################
 
+New features
+- NEW: REST API play_item | play_item_next supports Album and Playlist
+
 Updates
-- UPD:
+- UPD: REST API play_item | play_item_next replaces playitem | playitem_next
+- UPD: Improve debug logging for NAS mounts
 
 Bug fixes
 - FIX: Tag view column height on mobile portrait
+- FIX: Hyphen showing when "Not playing"
 
 ################################################################################
 #
