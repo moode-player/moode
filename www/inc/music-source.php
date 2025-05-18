@@ -132,14 +132,16 @@ function nasSourceMount($action, $id = '', $log = '') {
 					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
 				}
 				$mp[0]['error'] = 'Mount error';
-				if ($log == '') {
+				if ($log == 'debugLog') {
 					// Mounts performed by Library or Music Source Config
-					workerLog('worker: Try (' . $mountStr . ')');
-					workerLog('worker: Err (' . implode("\n", $result) . ')');
-				} else {
+					debugLog('- Try (' . $mountStr . ')');
+					debugLog('- Err (' . implode("\n", $result) . ')');
+				} else if ($log == 'mountmonlog') {
 					// Mounts performed by the monitor daemon ($log = 'mountmonlog')
 					mountmonLog('- Try (' . $mountStr . ')');
 					mountmonLog('- Err (' . implode("\n", $result) . ')');
+				} else if ($log == '') {
+					// No logging
 				}
 				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 				$return = false;
@@ -168,7 +170,9 @@ function nasSourceMount($action, $id = '', $log = '') {
 
 			foreach ($mounts as $mp) {
 				if (!nasMountExists($mp['name'])) {
-					$return = nasSourceMount('mount', $mp['id'], 'workerlog');
+					$return = nasSourceMount('mount', $mp['id'], 'debuglog');
+				} else {
+					debugLog('Mount: ' . $mp['name'] . ' already exists');
 				}
 			}
 			// For logging
@@ -353,7 +357,7 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 
 			foreach ($mounts as $mp) {
 				if (!nvmeMountExists($mp['name'])) {
-					$return = nvmeSourceMount('mount', $mp['id'], 'workerlog');
+					$return = nvmeSourceMount('mount', $mp['id'], 'debuglog');
 				}
 			}
 			// For logging
@@ -592,7 +596,7 @@ function sataSourceMount($action, $id = '', $log = '') {
 
 			foreach ($mounts as $mp) {
 				if (!sataMountExists($mp['name'])) {
-					$return = sataSourceMount('mount', $mp['id'], 'workerlog');
+					$return = sataSourceMount('mount', $mp['id'], 'debuglog');
 				}
 			}
 			// For logging
