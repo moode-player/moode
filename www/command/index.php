@@ -65,37 +65,80 @@ switch ($cmd[0]) {
 			echo json_encode(array('volume' => $volume, 'muted' => ($mute == '0' ? 'no' : 'yes')));
 		}
 		break;
-	case 'playitem':
-	case 'playitem_next':
-		$item = trim(getArgs($cmd));
+	case 'clear_queue':
 		$sock = getMpdSock();
+		sendMpdCmd($sock, 'clear');
+		$resp = readMpdResp($sock);
+		break;
+	case 'play_item':
+	case 'play_item_next':
+		$item = trim(getArgs($cmd));
+
 		// Turn off auto-shuffle
 		_openSessionReadOnly($dbh);
 		if ($_SESSION['ashuffle'] == '1') {
 		    turnOffAutoShuffle($sock);
 		}
-		// Search the Queue for the item
-		$search = strpos($item, 'RADIO') !== false ? parseDelimFile(file_get_contents(MPD_MUSICROOT . $item), '=')['File1'] : $item;
-		$result = findInQueue($sock, 'file', $search);
 
-		if (isset($result['Pos'])) {
-			// Play already Queued item
-			sendMpdCmd($sock, 'play ' . $result['Pos']);
-			$resp = readMpdResp($sock);
+		// Parse the item type
+		if (str_contains($item, 'RADIO') || str_contains($item, 'http')) {
+			$itemType = 'Station';
+		} else if (str_contains($item, '.m3u')) {
+			$itemType = 'Playlist';
+		} else if (!(str_contains($item, 'RADIO') || str_contains($item, '.'))) {
+			$itemType = 'Album';
 		} else {
-			// Otherwise play the item after adding it to the Queue
-			$status = getMpdStatus($sock);
-			$cmds = array(addItemToQueue($item));
-			if ($cmd[0] == 'play_item_next') {
-				$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
-				array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . $pos);
-			} else {
-				$pos = $status['playlistlength'];
-			}
-			array_push($cmds, 'play ' . $pos);
-			chainMpdCmds($sock, $cmds);
+			$itemType = 'Track';
 		}
+		debugLog($cmd[0] . ': ' . $itemType . '|' . $item);
 
+		// Process by itemType
+		if ($itemType == 'Playlist' || $itemType == 'Album') {
+			// Clear Queue
+			$sock = getMpdSock();
+			sendMpdCmd($sock, 'clear');
+			$resp = readMpdResp($sock);
+
+			// Submit POST to queue.php
+			$item = $itemType == 'Playlist' ? rtrim($item, '.m3u') : $item;
+			$url = 'http://' . $_SESSION['ipaddress'] . '/command/queue.php?cmd=' . $cmd[0];
+			$options = array(
+				'http' => array(
+					'header'  => 'Content-type: application/x-www-form-urlencoded',
+					'method'  => 'POST',
+					'content' => http_build_query(array('path' => $item))
+				)
+			);
+			$context  = stream_context_create($options);
+			$result = file_get_contents($url, false, $context);
+			if ($result === false) {
+				debugLog($cmd[0] . ': file_get_contents(' . $url . ') failed');
+			} else {
+				debugLog($cmd[0] . ': file_get_contents(' . $url . ') succeeded');
+			}
+		} else if ($itemType == 'Station' || $itemType == 'Track') {
+			// Search the Queue for the item
+			$sock = getMpdSock();
+			$search = strpos($item, 'RADIO') !== false ? parseDelimFile(file_get_contents(MPD_MUSICROOT . $item), '=')['File1'] : $item;
+			$result = findInQueue($sock, 'file', $search);
+			if (isset($result['Pos'])) {
+				// Play already Queued item
+				sendMpdCmd($sock, 'play ' . $result['Pos']);
+				$resp = readMpdResp($sock);
+			} else {
+				// Otherwise play the item after adding it to the Queue
+				$status = getMpdStatus($sock);
+				$cmds = array(addItemToQueue($item));
+				if ($cmd[0] == 'play_item_next') {
+					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
+					array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . $pos);
+				} else {
+					$pos = $status['playlistlength'];
+				}
+				array_push($cmds, 'play ' . $pos);
+				chainMpdCmds($sock, $cmds);
+			}
+		}
 		echo json_encode(array('info' => 'OK'));
 		break;
 	case 'get_cdsp_config':
