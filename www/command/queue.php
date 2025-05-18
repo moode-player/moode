@@ -17,6 +17,10 @@ phpSession('open_ro');
 chkVariables($_GET);
 chkVariables($_POST, array('path'));
 
+// DEBUG:
+//workerLog("_GET\n" . print_r($_GET, true));
+//workerLog("_POST\n" . print_r($_POST, true));
+
 // Turn off auto-shuffle and consume mode before Queue is updated
 $queueCmds = array(
     'delete_playqueue_item', 'move_playqueue_item', 'favorite_playqueue_item',
