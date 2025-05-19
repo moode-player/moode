@@ -33,6 +33,10 @@ body {
 		margin-top:.75em;
     	margin-right:1.5rem;
 	}
+	.clockradio-on {
+		top:2px;
+		right:-8px;
+	}
 	#playqueue-search {
 		margin-top: .75em;
 		left:2.25rem;
