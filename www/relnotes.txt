@@ -17,6 +17,7 @@
 
 New features
 - NEW: REST API play_item | play_item_next supports Album and Playlist
+- NEW: REST API clear_queue for clearing the Queue
 
 Updates
 - UPD: REST API play_item | play_item_next replaces playitem | playitem_next
@@ -25,6 +26,7 @@ Updates
 Bug fixes
 - FIX: Tag view column height on mobile portrait
 - FIX: Hyphen showing when "Not playing"
+- FIX: Clock radio on indicator position for mobile portrait
 
 ################################################################################
 #
