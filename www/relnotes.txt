@@ -27,6 +27,7 @@ Bug fixes
 - FIX: Tag view column height on mobile portrait
 - FIX: Hyphen showing when "Not playing"
 - FIX: Clock radio on indicator position for mobile portrait
+- FIX: ChainMpdCmds() Clear/Play results in stale MPD status
 
 ################################################################################
 #
