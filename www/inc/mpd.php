@@ -378,12 +378,16 @@ function sendMpdCmd($sock, $cmd) {
 	fputs($sock, $cmd . "\n");
 }
 function chainMpdCmds($sock, $cmds) {
-    sendMpdCmd($sock, 'command_list_begin');
+    if ($cmds[0] == 'clear') {
+        sendMpdCmd($sock, 'clear');
+        $resp = readMpdResp($sock);
+        array_shift($cmds); // Remove element 0
+    }
 
+    sendMpdCmd($sock, 'command_list_begin');
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
     }
-
     sendMpdCmd($sock, 'command_list_end');
     $resp = readMpdResp($sock);
 }
