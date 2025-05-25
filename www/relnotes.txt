@@ -20,6 +20,7 @@ New features
 - NEW: REST API clear_queue for clearing the Queue
 
 Updates
+- UPD: Bump to MPD 0.24.4
 - UPD: REST API play_item | play_item_next replaces playitem | playitem_next
 - UPD: Improve debug logging for NAS mounts
 
