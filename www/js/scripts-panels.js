@@ -21,7 +21,7 @@ jQuery(document).ready(function($) { 'use strict';
     function visChange() {
         //console.log('visChange()', document.visibilityState);
         if (document.visibilityState == 'visible') {
-            // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time eknob using current data
+            // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time knob using current data
     		sendMpdCmd('subscribe dumy_channel');
         }
     }
