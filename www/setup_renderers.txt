@@ -21,26 +21,28 @@ RENDERERS AND CLIENTS
 
 The following is a list of Audio Renderers and client apps that can play to
 them, plus an indication of whether moOde displays metadata and cover art sent
-from the client.
+from the client and whether CamillaDSP is supported in the playback chain.
 
 +-------------------------------------------------------------------------------
-| RENDERER            | CLIENT                              | METADATA/COVERART
+| RENDERER             | CLIENT                          | COVERART | CamillaDSP
 +-------------------------------------------------------------------------------
-| Bluetooth           | Any client supporting Bluetooth     | No
+| Bluetooth (Inbound)  | Any client supporting Bluetooth | No       | Yes
 +-------------------------------------------------------------------------------
-| AirPlay             | Any client supporting AirPlay 2     | Yes
+| Bluetooth (Outbound) | MPD, Other renderer apps        | No       | No
 +-------------------------------------------------------------------------------
-| Spotify Connect     | Spotify app (Desktop or Smartphone) | Yes
+| AirPlay             | Any app supporting AirPlay 2     | Yes      | Yes
 +-------------------------------------------------------------------------------
-| Deezer Connect      | Deezer app (Smartphone only)        | Yes
+| Deezer Connect      | Deezer app (Smartphone only)     | Yes      | Yes
 +-------------------------------------------------------------------------------
-| Squeezelite         | Lyrion Media Server (LMS)           | No
+| Spotify Connect     | Spotify app (Desktop/Smartphone) | Yes      | Yes
 +-------------------------------------------------------------------------------
-| UPnP Client for MPD | Any UPnP Control Point app          | Yes
+| Squeezelite         | Lyrion Media Server (LMS)        | No       | Yes
 +-------------------------------------------------------------------------------
-| Plexamp             | Plex Web app                        | No
+| UPnP Client for MPD | Any UPnP Control Point app       | Yes      | Yes
 +-------------------------------------------------------------------------------
-| RoonBridge          | Roon server                         | No
+| Plexamp             | Plex Web app                     | No       | No
++-------------------------------------------------------------------------------
+| RoonBridge          | Roon server                      | No       | No
 +-------------------------------------------------------------------------------
 
 MULTIPLE RENDERERS ON
