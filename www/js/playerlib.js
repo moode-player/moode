@@ -191,7 +191,8 @@ var GLOBAL = {
         'composer', 'conductor', 'performer', 'work', 'comment', 'file'],
     npIcon: '',
     coverViewActive: false,
-    userAgent: ''
+    userAgent: '',
+    ralbumClickedClearPlay: false
 };
 
 // All Library filters
@@ -1167,7 +1168,11 @@ function renderUI() {
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
     		//console.log(MPD.json['coverurl']);
             // Standard cover for Playback
-     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+            // NOTE: GLOBAL.ralbumClickedClearPlay when true prevents the default cover from briefly showing
+            // scripts-library.js $('.ralbum').click
+            if (GLOBAL.ralbumClickedClearPlay === false || MPD.json['coverurl'] != DEFAULT_ALBUM_COVER) {
+                $('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+            }
             // Thumbnail cover for Playbar
             if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
@@ -1175,15 +1180,21 @@ function renderUI() {
                     '/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             } else {
-	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + DEFAULT_ALBUM_COVER + '" alt="Cover art not found"' + '>');
-                $('#playbar-cover').html('<img src="' + DEFAULT_ALBUM_COVER + '">');
+                if (GLOBAL.ralbumClickedClearPlay === false) {
+                    $('#coverart-url').html('<img class="coverart" ' + 'src="' + DEFAULT_ALBUM_COVER + '" alt="Cover art not found"' + '>');
+                    $('#playbar-cover').html('<img src="' + DEFAULT_ALBUM_COVER + '">');
+                }
             }
+
     		// Cover backdrop or bgimage
     		if (SESSION.json['cover_backdrop'] == 'Yes') {
+                if (GLOBAL.ralbumClickedClearPlay === true) {
+                    GLOBAL.ralbumClickedClearPlay = false;
+                }
                 var backDropHTML = MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
-    			$('#cover-backdrop').html(backDropHTML);
-    			$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
-    			$('#cover-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
+                $('#cover-backdrop').html(backDropHTML);
+                $('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
+                $('#cover-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
     		} else if (SESSION.json['bgimage'] != '') {
     			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + SESSION.json['bgimage'] + '">');
     			$('#cover-backdrop').css('filter', 'blur(0px)');

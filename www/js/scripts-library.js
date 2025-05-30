@@ -1216,6 +1216,8 @@ $('#albumcovers').on('click', 'img', function(e) {
 // Random album instant play button on Playback
 $('.ralbum').click(function(e) {
     if (SESSION.json['library_onetouch_ralbum'] != 'No action') {
+        // In playerlib.js this prevents the default cover from briefly showing
+        GLOBAL.ralbumClickedClearPlay = SESSION.json['library_onetouch_ralbum'] == 'Clear/Play' ? true : false;
 		$('#albumsList .lib-entry').eq(UI.libPos[0]).removeClass('active');
 		$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 
