@@ -16,10 +16,12 @@
 ################################################################################
 
 Updates
-- UPD:
+- UPD: Improve Renderer setup guide
+- UPD: Improve help for Equalizers section of Audio Config
 
 Bug fixes
-- FIX:
+- FIX: Playbar album - artist line not ellipsis limited
+- FIX: Random album (Clear/Play) in Playback view briefly shows default cover
 
 ################################################################################
 #
