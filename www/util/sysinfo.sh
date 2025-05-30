@@ -94,6 +94,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nALSA max volume\t\t= $alsavolume_max\c"
 	echo -e "\nALSA output mode\t= $alsa_output_mode\c"
 	echo -e "\nALSA loopback\t\t= $alsa_loopback\c"
+	echo -e "\nIntegrated audio\t= $alsa_pi_audio_driver\c"
 	echo -e "\nMPD max volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
 	echo -e "\nDisplay dB volume\t= $volume_db_display\c"
@@ -907,6 +908,7 @@ value=$(moodeutl -d -gv eth0chk)
 [[ "$value" = "1" ]] && eth0chk="Yes" || eth0chk="No"
 value=$(moodeutl -d -gv lcdup)
 [[ "$value" = "1" ]] && lcdup="Yes" || lcdup="No"
+alsa_pi_audio_driver=$(moodeutl -d -gv "pi_audio_driver")
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
