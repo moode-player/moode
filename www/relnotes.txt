@@ -18,6 +18,7 @@
 Updates
 - UPD: Improve Renderer setup guide
 - UPD: Improve help for Equalizers section of Audio Config
+- UPD: Improve corner radius for main and thumbnail images
 
 Bug fixes
 - FIX: Playbar album - artist line not ellipsis limited
