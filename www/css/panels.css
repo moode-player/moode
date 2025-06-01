@@ -46,7 +46,8 @@ body {
 	--config_modal_btn_bg: rgba(64,64,64,0.08);
 	--npicon: url('');
 	--fadein-rate: .5s;
-	--img-border-radius: .5em;
+	--img-border-radius: .35em; /* full size cover */
+	--thm-border-radius: .2em; /* thumbs */
 	--btn-border-radius: .25em;
 }
 
@@ -317,7 +318,7 @@ img.coverart {
 	height:3rem;
 	object-fit:contain;
 	border-style:none;
-	border-radius:var(--img-border-radius);
+	border-radius:var(--thm-border-radius);
 }
 #albumsList li {padding-top:.4em;padding-bottom:.4em;}
 #albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .2em);min-width:50%;max-width:calc(100% - 3.6rem);}
@@ -346,7 +347,7 @@ img.coverart {
 	height:2.4em;
 	margin-left:1.2vmin!important;
 	margin-right:1.2vmin;
-	border-radius:var(--img-border-radius);
+	border-radius:var(--thm-border-radius);
 	filter:brightness(80%);
 	overflow:hidden;
 }
@@ -358,7 +359,7 @@ img.coverart {
 	height:100%;
 	width:100%;
 	border-style:none;
-	border-radius:var(--img-border-radius);
+	border-radius:var(--thm-border-radius);
 }
 .database .db-action a {position:absolute;transform:translate(0, -50%);top:50%;}
 .db-song.db-action a {width:100vw;}
@@ -572,7 +573,7 @@ img.lib-artistart {
 	width:calc(20vw - 1rem);
 	box-shadow:0px 0px .2em rgba(0,0,0,0.2);
 	border-style:none;
-	border-radius:var(--img-border-radius);
+	border-radius:var(--thm-border-radius);
 }
 /* Artist name overlay */
 img.lib-artistart {
@@ -618,7 +619,7 @@ img.lib-artistart {
 	width:var(--thumbimagesize);
 	max-height:var(--thumbimagesize);
 	border-style:none;
-	border-radius:var(--img-border-radius);
+	border-radius:var(--thm-border-radius);
 }
 #albumcovers .thumbHW, #radio-covers .thumbHW, #playlist-covers .thumbHW {height:var(--thumbimagesize);width:var(--thumbimagesize);position:relative;margin:.75em 0 .5em 0;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
