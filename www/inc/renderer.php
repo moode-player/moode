@@ -86,7 +86,7 @@ function startAirPlay() {
 		if ($result != 0) {
 			break;
 		}
-		workerLog('worker: Retry ' . ($i + 1) . ' waiting for metadata pipe');
+		debugLog('startAirPlay(): Retry ' . ($i + 1) . ' waiting for metadata pipe');
 		sleep(1);
 	}
 
