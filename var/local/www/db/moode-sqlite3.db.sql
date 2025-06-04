@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun May 11 18:46:00 2025
+-- File generated with SQLiteStudio v3.4.4 on Wed Jun 4 07:48:10 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -691,7 +691,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter'
 INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
 INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
 INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not installed');
-INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
+INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/OSDISK');
 INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
 INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '0');

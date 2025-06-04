@@ -945,11 +945,11 @@ $resp = readMpdResp($sock);
 // Ignore CUE files
 setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 workerLog('worker: MPD ignore CUE:     ' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no'));
-// On first boot update SDCARD dir to pick up Stereo Test file and then clear/load Default Playlist
+// On first boot update /mnt/OSDISK dir to pick up Stereo Test file and then clear/load Default Playlist
 if ($_SESSION['first_use_help'] == 'y,y,y') {
-	sendMpdCmd($sock, 'update SDCARD');
+	sendMpdCmd($sock, 'update OSDISK');
 	$resp = readMpdResp($sock);
-	workerLog('worker: MPD first boot:     SDCARD scanned');
+	workerLog('worker: MPD first boot:     OSDISK scanned');
 	sleep(1);
 	sendMpdCmd($sock, 'clear');
 	$resp = readMpdResp($sock);

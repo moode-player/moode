@@ -689,7 +689,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (plName) {
 			if (containsBaseFolderName(plName)) {
-				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name.');
+				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, NVME, OSDISK, RADIO, SATA, SDCARD and USB cannot be used in the name.');
 			} else {
                 notify(NOTIFY_TITLE_INFO, 'saving_queue', NOTIFY_DURATION_SHORT);
                 $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + plName, function() {
@@ -713,7 +713,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (favoritesName) {
 			if (containsBaseFolderName(favoritesName)) {
-				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, RADIO, SDCARD and USB cannot be used in the name.');
+				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, NVME, OSDISK, RADIO, SATA, SDCARD and USB cannot be used in the name.');
 			} else {
                 notify(NOTIFY_TITLE_INFO, 'setting_favorites_name', NOTIFY_DURATION_SHORT);
                 $.get('command/playlist.php?cmd=set_favorites_name&name=' + favoritesName, function(){

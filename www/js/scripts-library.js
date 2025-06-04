@@ -1410,7 +1410,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                 		success: function(msgKey) {
                             if (msgKey == 'recorder_installed') {
                                 $('#stream-recorder-options, #context-menu-stream-recorder').show();
-                                $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
+                                $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/OSDISK'});
                                 notify(NOTIFY_TITLE_INFO, msgKey, 'Restart the system to make the changes effective.', NOTIFY_DURATION_MEDIUM);
                             } else {
                                 notify(NOTIFY_TITLE_INFO, msgKey);

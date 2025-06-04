@@ -1909,6 +1909,7 @@ s
             var rootFolderIcon = 'fa-circle-question';
             if (data[i].directory == 'NAS' ||
                 data[i].directory == 'NVME' ||
+                data[i].directory == 'OSDISK' ||
                 data[i].directory == 'SATA' ||
                 data[i].directory == 'SDCARD' ||
                 data[i].directory == 'USB') {
@@ -1923,7 +1924,7 @@ s
                 '<img src="' + 'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg' + '"></img></a></div>');
             var dirName = data[i].directory.replace(path + '/', '');
             dirName = dirName.lastIndexOf('.cue') == -1 ? dirName : dirName.substr(0, dirName.lastIndexOf('.cue'));
-    		output += '<div class="db-entry db-folder db-browse"><div>' + dirName + '</div></div>';
+    		output += '<div class="db-entry db-folder db-browse"><div>' + getDirDisplayName(dirName) + '</div></div>';
             output += '</li>';
 
             // Flag cue virtual directory
@@ -2017,6 +2018,20 @@ s
 	if (currentView == 'folder') {
 		customScroll('folder', UI.dbPos[UI.dbPos[10]], 100);
 	}
+}
+// Friendly names for the root dirs
+function getDirDisplayName(dirName) {
+    var dirDisplayNames = {
+        NAS: 'NAS',
+        NVME: 'NVMe',
+        OSDISK: 'OSDisk',
+        SATA: 'SATA',
+        SDCARD: 'SDCard',
+        USB: 'USB'
+    }
+
+    var dirDisplayName = typeof(dirDisplayNames[dirName]) == 'undefined' ? dirName : dirDisplayNames[dirName];
+    return dirDisplayName;
 }
 
 // Render Radio view
@@ -5149,7 +5164,15 @@ function albumHDBadge(format) {
 
 // Base folder names
 function containsBaseFolderName(name) {
-    return (~name.indexOf('NAS') || ~name.indexOf('NVME') || ~name.indexOf('RADIO') || ~name.indexOf('SDCARD') || ~name.indexOf('USB'));
+    return (
+        ~name.indexOf('NAS') ||
+        ~name.indexOf('NVME') ||
+        ~name.indexOf('OSDISK') ||
+        ~name.indexOf('RADIO') ||
+        ~name.indexOf('SATA') ||
+        ~name.indexOf('SDCARD') ||
+        ~name.indexOf('USB')
+    );
 }
 
 // Extra metadata tags
@@ -5207,7 +5230,7 @@ function getKeyOrValue (type, item) {
         ['Shutdown','poweroff'],['Restart','reboot'],
         ['Play','play'],['Pause','pause'],['Stop','stop'],['Next','next'],['Previous','prev'],
         // Root folder icons
-        ['NAS','fa-computer'],['NVME','fa-memory'],['RADIO','fa-microphone'],['SATA','fa-hard-drive'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
+        ['NAS','fa-computer'],['NVME','fa-memory'],['OSDISK','fa-folders'],['RADIO','fa-microphone'],['SATA','fa-hard-drive'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
         // Now-playing icon
         ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer'],
         // View -> Item position
