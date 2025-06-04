@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+New
+- NEW: Add /mnt/OSDISK and corresponding Samba share point (deprecate SDCARD)
+
 Updates
 - UPD: Improve Renderer setup guide
 - UPD: Improve help for Equalizers section of Audio Config
