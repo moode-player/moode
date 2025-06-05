@@ -26,6 +26,7 @@ Updates
 Bug fixes
 - FIX: Playbar album - artist line not ellipsis limited
 - FIX: Random album (Clear/Play) in Playback view briefly shows default cover
+- FIX: CamillaDSP Quick config broken when Airplay/Deezer/Spotify on
 
 ################################################################################
 #
