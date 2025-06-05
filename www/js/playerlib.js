@@ -811,10 +811,15 @@ function refreshInpsrcMeta() {
         cmd = 'get_deezmeta';
     } else if (SESSION.json['spotactive'] == '1') {
         cmd = 'get_spotmeta';
+    } else {
+        cmd = '';
     }
-    $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
-        updateInpsrcMeta(cmd, data);
-    });
+    
+    if (cmd != '') {
+        $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
+            updateInpsrcMeta(cmd, data);
+        });
+    }
 }
 function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-msg').removeClass('inpsrc-msg-default');
