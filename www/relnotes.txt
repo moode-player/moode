@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+New
+- NEW: REST API's get_receiver_status, set_receiver_onoff
+
 Updates
 - UPD:
 
