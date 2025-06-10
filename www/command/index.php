@@ -174,6 +174,25 @@ switch ($cmd[0]) {
 			echo json_encode(array('alert' => 'Argument missing: Configuration name'));
 		}
 		break;
+	case 'get_receiver_status': // -rx
+		$result = sysCmd('/var/www/util/trx-control.php -rx')[0];
+		echo json_encode(array('status' => $result));
+		break;
+	case 'set_receiver_onoff': // -on | -off
+		// Parse on/off state from status
+		$status = sysCmd('/var/www/util/trx-control.php -rx')[0];
+		$onoffState = explode(',', $status)[1];
+		// Process command
+		$onoffCmd = trim(getArgs($cmd));
+		$onoffCmd = $onoffCmd == '-on' ? 'On' : 'Off';
+		if ($onoffCmd != $onoffState) {
+			$result = sysCmd('/var/www/util/trx-control.php -rx ' . $onoffCmd)[0];
+			$result = sysCmd('/var/www/util/trx-control.php -rx')[0];
+			echo json_encode(array('status' => $result));
+		} else {
+			echo json_encode(array('alert' => 'Receiver is already ' . $onoffCmd));
+		}
+		break;
 	case 'set_coverview': // -on | -off
 		$cvState = sysCmd('/var/www/util/coverview.php' . getArgs($cmd))[0];
 		echo json_encode(array('info' => $cvState));

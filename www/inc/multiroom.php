@@ -51,7 +51,7 @@ function startMultiroomReceiver() {
 		' -j ' . $cfgMultiroom['rx_jitter_bfr'] .
 		' -f ' . $cfgMultiroom['rx_frame_size'] .
 		' -R ' . $cfgMultiroom['rx_rtprio'] .
-		' -D /tmp/trx-rxpid  >/dev/null';
+		' -D /tmp/trx-rxpid  >/dev/null 2>&1';
 	$result = shell_exec($cmd);
 	debugLog($cmd);
 }
