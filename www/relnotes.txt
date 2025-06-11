@@ -19,7 +19,8 @@ New
 - NEW: REST API's get_receiver_status, set_receiver_onoff
 
 Updates
-- UPD:
+- UPD: Improve logging for Update and Regenerate library
+- UPD: KEXP 90.3 FM Seattle to 160K AAC-LC stream
 
 ################################################################################
 #
