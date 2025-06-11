@@ -2379,11 +2379,13 @@ function chkLibraryRegen() {
 	//workerLog('chkLibraryRegen');
 	$sock = openMpdSock('localhost', 6600);
 	$status = getMpdStatus($sock);
+	$stats = getMpdStats($sock);
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
 		sendFECmd('libregen_done');
 		$GLOBALS['check_library_regen'] = '0';
+		workerLog('mpdindex: Done: indexed ' . $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs');
 		workerLog('worker: Job regen_library done');
 	}
 }
@@ -2487,6 +2489,8 @@ function runQueuedJob() {
 	if ($_SESSION['w_queue'] != 'reset_screen_saver') {
 		workerLog('worker: Job ' . $_SESSION['w_queue']);
 		if ($_SESSION['w_queue'] == 'update_library') {
+			workerLog('worker: Clear Library tag cache');
+			clearLibCacheAll();
 			workerLog('mpdindex: Start');
 		}
 	}
@@ -2501,15 +2505,14 @@ function runQueuedJob() {
 		// Menu Update library, Context menu, Update this folder
 		case 'update_library':
 			// Update library
-			clearLibCacheAll();
 			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
 			workerLog('mpdindex: Cmd (' . $cmd . ')');
 			$sock = openMpdSock('localhost', 6600);
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-
 			// Start thumbnail generator
+			workerLog('worker: Update thumbnail cache');
 			$result = sysCmd('pgrep -l thumb-gen.php');
 			if (strpos($result[0], 'thumb-gen.php') === false) {
 				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
@@ -2517,16 +2520,34 @@ function runQueuedJob() {
 			$GLOBALS['check_library_update'] = '1';
 			break;
 
-		// Library saved searches
-		case 'create_saved_search':
-			$fh = fopen(LIBSEARCH_BASE . $_SESSION['w_queueargs'] . '.json', 'w');
-			$data = json_encode(['filter_type' => $_SESSION['library_flatlist_filter'], 'filter_str' => $_SESSION['library_flatlist_filter_str']]);
-			fwrite($fh, $data);
-			fclose($fh);
-			sysCmd('chmod 0777 "' . $file . '"');
-			break;
-
 		// lib-config jobs
+		case 'regen_library':
+			// Clear libcache then regen MPD database
+			workerLog('worker: Clear Library tag cache');
+			clearLibCacheAll();
+			//DELETE:workerLog('worker: Start MPD database regen');
+			workerLog('mpdindex: Start');
+			workerLog('mpdindex: Cmd (rescan)');
+			$sock = openMpdSock('localhost', 6600);
+			sendMpdCmd($sock, 'rescan');
+			$resp = readMpdResp($sock);
+			closeMpdSock($sock);
+			// Clear thmcache then regen thumbnails
+			workerLog('worker: Clear thumbnail cache');
+			sysCmd('rm -rf ' . THMCACHE_DIR);
+			sysCmd('mkdir ' . THMCACHE_DIR);
+			$result = sysCmd('pgrep -l thumb-gen.php');
+			if (strpos($result[0], 'thumb-gen.php') === false) {
+				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
+				//workerLog('regen_library, thumb-gen.php launched');
+			}
+			$GLOBALS['check_library_regen'] = '1';
+			break;
+		case 'regen_thmcache':
+			sysCmd('rm -rf ' . THMCACHE_DIR);
+			sysCmd('mkdir ' . THMCACHE_DIR);
+			sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
+			break;
 		case 'nas_source_cfg':
 			clearLibCacheAll();
 			nasSourceCfg($_SESSION['w_queueargs']);
@@ -2555,37 +2576,22 @@ function runQueuedJob() {
 				sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 			}
 			break;
-		case 'regen_library':
-			// Clear libcache then regen MPD database
-			workerLog('worker: Clear Library tag cache');
-			clearLibCacheAll();
-			workerLog('worker: Start MPD database regen');
-			$sock = openMpdSock('localhost', 6600);
-			sendMpdCmd($sock, 'rescan');
-			$resp = readMpdResp($sock);
-			closeMpdSock($sock);
-			// Clear thmcache then regen thumbnails
-			workerLog('worker: Clear thumbnail cache');
-			sysCmd('rm -rf ' . THMCACHE_DIR);
-			sysCmd('mkdir ' . THMCACHE_DIR);
-			$result = sysCmd('pgrep -l thumb-gen.php');
-			if (strpos($result[0], 'thumb-gen.php') === false) {
-				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
-				//workerLog('regen_library, thumb-gen.php launched');
-			}
-			$GLOBALS['check_library_regen'] = '1';
-			break;
-		case 'regen_thmcache':
-			sysCmd('rm -rf ' . THMCACHE_DIR);
-			sysCmd('mkdir ' . THMCACHE_DIR);
-			sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
-			break;
 		case 'cuefiles_ignore':
 			setCuefilesIgnore($_SESSION['w_queueargs']);
 			clearLibCacheAll();
 			sysCmd('mpc stop');
 			sysCmd('systemctl restart mpd');
 			break;
+
+		// Library saved searches
+		case 'create_saved_search':
+			$fh = fopen(LIBSEARCH_BASE . $_SESSION['w_queueargs'] . '.json', 'w');
+			$data = json_encode(['filter_type' => $_SESSION['library_flatlist_filter'], 'filter_str' => $_SESSION['library_flatlist_filter_str']]);
+			fwrite($fh, $data);
+			fclose($fh);
+			sysCmd('chmod 0777 "' . $file . '"');
+			break;
+
 		// mpd-config jobs
 		case 'mpdrestart':
 			sysCmd('killall -s 9 mpd');
