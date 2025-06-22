@@ -16,9 +16,11 @@
 ################################################################################
 
 New
+- NEW: Optional BASH script that runs after moOde startup completes
 - NEW: REST API's get_receiver_status, set_receiver_onoff
 
 Updates
+- UPD: Add MPD stats to moode startup log
 - UPD: Improve logging for Update and Regenerate library
 - UPD: KEXP 90.3 FM Seattle to 160K AAC-LC stream
 
