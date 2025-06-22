@@ -48,6 +48,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWorker responsiveness\t= $WORKER_RESPONSIVENESS\c"
 	echo -e "\nCPU governor\t\t= $CPUGOV\c"
 	echo -e "\nPCI express\t\t= $PCI_EXPRESS\c"
+	echo -e "\nReady script\t\t= $READY_SCRIPT\c"
+	echo -e "\nReady script wait\t= $READY_SCRIPT_WAIT (secs)\c"
 	echo -e "\nReduce power\t\t= $REDUCE_POWER (Pi-5 only)\c"
 	echo -e "\nFan control\t\t= $FAN_CONTROL (Pi-5 only)\c"
 	echo -e "\nPi integrated WiFi\t= $piwifi\c"
@@ -461,6 +463,9 @@ TMP2RAM=$(moodeutl -d -gv tmp2ram)
 WORKER_RESPONSIVENESS=$(moodeutl -d -gv worker_responsiveness)
 TMP=$(moodeutl -d -gv "pci_express")
 [[ "$TMP" = "off" ]] && PCI_EXPRESS="Off" || PCI_EXPRESS="$TMP"
+TMP=$(moodeutl -d -gv "ready_script")
+[[ "$TMP" = "off" ]] && READY_SCRIPT="Off" || READY_SCRIPT="On"
+READY_SCRIPT_WAIT=$(moodeutl -d -gv "ready_script_wait")
 TMP=$(moodeutl -d -gv "reduce_power")
 [[ "$TMP" = "on" ]] && REDUCE_POWER="On" || REDUCE_POWER="Off"
 FAN_CONTROL=$(moodeutl -d -gv "fan_temp0")

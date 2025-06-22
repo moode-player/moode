@@ -47,6 +47,8 @@ $currentSettings['usb_volknob'] = $_SESSION['usb_volknob'];
 $currentSettings['led_state'] = $_SESSION['led_state'];
 $currentSettings['eth0chk'] = $_SESSION['eth0chk'];
 $currentSettings['avahi_options'] = $_SESSION['avahi_options'];
+$currentSettings['ready_script'] = $_SESSION['ready_script'];
+$currentSettings['ready_script_wait'] = $_SESSION['ready_script_wait'];
 // Audio: MPD options
 $currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
 $currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];

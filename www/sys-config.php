@@ -120,6 +120,22 @@ if (isset($_POST['update_pci_express'])) {
 	$_SESSION['pci_express'] = $_POST['pci_express'];
 	submitJob('pci_express', $_POST['pci_express'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
+if (isset($_POST['update_tmp2ram']) && $_POST['tmp2ram'] != $_SESSION['tmp2ram']) {
+	$_SESSION['tmp2ram'] = $_POST['tmp2ram'];
+	$queueArgs = $_POST['tmp2ram'] == 'on' ? 'unmask' : 'mask';
+	submitJob('tmp2ram', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+}
+// Ready script
+if (isset($_POST['update_ready_script'])) {
+	$_SESSION['ready_script'] = $_POST['ready_script'];
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
+}
+if (isset($_POST['update_ready_script_wait'])) {
+	$_SESSION['ready_script_wait'] = $_POST['ready_script_wait'];
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
+}
 // Power management
 if (isset($_POST['reduce_power']) && $_POST['reduce_power'] != $_SESSION['reduce_power']) {
 	submitJob('reduce_power', $_POST['reduce_power'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
@@ -159,11 +175,6 @@ if (isset($_POST['update_actled']) && $_POST['actled'] != explode(',', $_SESSION
 if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION['led_state'])[1]) {
 	submitJob('pwrled', $_POST['pwrled']);
 	$_SESSION['led_state'] = explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled'];
-}
-if (isset($_POST['update_tmp2ram']) && $_POST['tmp2ram'] != $_SESSION['tmp2ram']) {
-	$_SESSION['tmp2ram'] = $_POST['tmp2ram'];
-	$queueArgs = $_POST['tmp2ram'] == 'on' ? 'unmask' : 'mask';
-	submitJob('tmp2ram', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
 // Networking
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
@@ -411,6 +422,22 @@ $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] =
 $_select['pci_express'] .= "<option value=\"auto\" " . (($_SESSION['pci_express'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
 $_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
 $_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
+$autoClick = " onchange=\"autoClick('#btn-set-tmp2ram');\"";
+$_select['tmp2ram_on']  .= "<input type=\"radio\" name=\"tmp2ram\" id=\"toggle-tmp2ram-1\" value=\"on\" " . (($_SESSION['tmp2ram'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['tmp2ram_off'] .= "<input type=\"radio\" name=\"tmp2ram\" id=\"toggle-tmp2ram-2\" value=\"off\" " . (($_SESSION['tmp2ram'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+if ($_SESSION['tmp2ram'] == 'on') {
+	$_tmp2ram_stats = sysCmd('df -h /tmp | tail -n +2 | awk \'{print "Usage: " $5 " | Size: " $2 " | Used: " $3 " | Free: " $4}\'')[0] .
+	'<br>';
+} else {
+	$_tmp2ram_stats = '';
+}
+
+// Ready script
+$autoClick = " onchange=\"autoClick('#btn-set-ready-script');\"";
+$_select['ready_script_on']  .= "<input type=\"radio\" name=\"ready_script\" id=\"toggle-ready-script-1\" value=\"on\" " . (($_SESSION['ready_script'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['ready_script_off'] .= "<input type=\"radio\" name=\"ready_script\" id=\"toggle-ready-script-2\" value=\"off\" " . (($_SESSION['ready_script'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['ready_script_wait'] = $_SESSION['ready_script_wait'];
+
 // Power management
 $autoClick = " onchange=\"autoClick('#btn-set-reduce-power');\"";
 $_select['reduce_power_on']  .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-1\" value=\"on\" " . (($_SESSION['reduce_power'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -429,15 +456,6 @@ if ($PiModel == '1' || $piModel == '5' ||
 	$autoClick = " onchange=\"autoClick('#btn-set-pwrled');\"";
 	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-}
-$autoClick = " onchange=\"autoClick('#btn-set-tmp2ram');\"";
-$_select['tmp2ram_on']  .= "<input type=\"radio\" name=\"tmp2ram\" id=\"toggle-tmp2ram-1\" value=\"on\" " . (($_SESSION['tmp2ram'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['tmp2ram_off'] .= "<input type=\"radio\" name=\"tmp2ram\" id=\"toggle-tmp2ram-2\" value=\"off\" " . (($_SESSION['tmp2ram'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-if ($_SESSION['tmp2ram'] == 'on') {
-	$_tmp2ram_stats = sysCmd('df -h /tmp | tail -n +2 | awk \'{print "Usage: " $5 " | Size: " $2 " | Used: " $3 " | Free: " $4}\'')[0] .
-	'<br>';
-} else {
-	$_tmp2ram_stats = '';
 }
 
 // Networking

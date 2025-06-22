@@ -146,6 +146,36 @@
 				</span>
 			</div>
 
+			<div class="config-horiz-rule">Ready script</div>
+
+			<label class="control-label">Enable</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-ready-script" for="toggle-ready-script-2">ON </label>$_select[ready_script_on]
+					<label class="toggle-radio toggle-ready-script" for="toggle-ready-script-1">OFF</label>$_select[ready_script_off]
+				</div>
+				<button id="btn-set-ready-script" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ready_script" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-ready-script" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span class="config-help-static">
+					Run the BASH script named ready-script.sh after moOde startup has completed.<br>
+				</span>
+				<span id="info-ready-script" class="config-help-info">
+					Script location: /var/local/www/commandw/<br>
+					Default action: Play OSDISK/System Sounds/ReadyChime.flac
+				</span>
+			</div>
+
+			<label class="control-label" for="ready-script-wait">Wait (secs)</label>
+			<div class="controls">
+				<input class="config-input-large" type="number" min="0" max="30" id="ready-script-wait" name="ready_script_wait" value="$_select[ready_script_wait]">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ready_script_wait" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<!--a aria-label="Help" class="config-info-toggle" data-cmd="info-ready-script-wait" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a-->
+				<!--span id="info-ready-script-wait" class="config-help-info"-->
+				<span class="config-help-static">
+					Number of seconds to wait before starting the script. Range is 0 - 30 seconds.
+				</span>
+			</div>
+
 			<div class="config-horiz-rule">Power management</div>
 
 			<div class="$_reduce_power_hide">

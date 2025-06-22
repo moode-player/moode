@@ -90,6 +90,9 @@ const BT_PINCODE_CONF = '/etc/bluetooth/pin.conf';
 const ETC_MACHINE_INFO = '/etc/machine-info';
 const CHROMIUM_DOWNGRADE_VER = '126.0.6478.164-rpt1';
 const NO_USERID_DEFINED = 'userid does not exist';
+const READY_SCRIPT = '/var/local/www/commandw/ready-script.sh';
+const READY_CHIME_URI = 'OSDISK/System Sounds/ReadyChime.flac';
+const READY_CHIME_TITLE = 'moOde audio - Ready Chime';
 // File sharing
 const FS_SMB_CONF = '/etc/samba/smb.conf';
 // Notifications

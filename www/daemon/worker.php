@@ -961,6 +961,13 @@ if ($_SESSION['first_use_help'] == 'y,y,y') {
 workerLog('worker: MPD CDSP volsync:   ' . lcfirst($_SESSION['camilladsp_volume_sync']));
 $serviceCmd = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
 sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
+// MPD database stats
+$stats = getMpdStats($sock);
+workerLog('worker: MPD DB stats:       '
+	. 'Tracks:' . $stats['songs'] . ' | '
+	. 'Albums:' . $stats['albums'] . ' | '
+	. 'Artists:' . $stats['artists']
+);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -1441,7 +1448,7 @@ if ($_SESSION['autoplay'] == '1') {
 		//workerLog(print_r($status, true));
 		sendMpdCmd($sock, 'playid ' . $status['songid']);
 		$resp = readMpdResp($sock);
-		workerLog('worker: Auto-play:         on, via playid ' . $status['songid']);
+		workerLog('worker: Auto-play:         on, playid ' . $status['songid']);
 	}
 } else {
 	sendMpdCmd($sock, 'stop');
@@ -1534,6 +1541,11 @@ if (!isset($_SESSION['mpd_monitor_svc'])) {
 // Bluetooth timeout
 if (!isset($_SESSION['bt_auto_disconnect'])) {
 	$_SESSION['bt_auto_disconnect'] = 'never';
+}
+// Ready script
+if (!isset($_SESSION['ready_script'])) {
+	$_SESSION['ready_script'] = 'off';
+	$_SESSION['ready_script_wait'] = '3';
 }
 
 //----------------------------------------------------------------------------//
@@ -1664,7 +1676,10 @@ workerLog('worker: Radio monitor:    ' . ($_SESSION['mpd_monitor_svc'] == 'On' ?
 
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
-$result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
+
+// TODO: move this
+//DELETE:$result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
+
 sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
 workerLog('worker: Watchdog monitor: started');
 
@@ -1680,7 +1695,28 @@ debugLog('Sleep intervals:  ' .
 );
 
 // Worker ready
+$result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
 workerLog('worker: Ready');
+
+// Ready script
+if ($_SESSION['ready_script'] == 'on') {
+	if (file_exists(READY_SCRIPT)) {
+		$contents = file_get_contents(READY_SCRIPT);
+		if (empty($contents)) {
+			workerLog('worker: ERROR: Ready script enabled: Empty file');
+		} else if (substr($contents, 0, 11) != '#!/bin/bash') {
+			workerLog('worker: ERROR: Ready script enabled: Missing BASH shebang');
+		} else if (!is_executable(READY_SCRIPT)) {
+			workerLog('worker: ERROR: Ready script enabled: Not marked executable');
+		} else if (!file_exists('/mnt/' . READY_CHIME_URI)) {
+			workerLog('worker: ERROR: Ready script enabled: File /mnt/' . READY_CHIME_URI . ' missing');
+		} else {
+			sysCmd(READY_SCRIPT . ' "' . READY_CHIME_URI . '" "' . READY_CHIME_TITLE . '" "' . $_SESSION['ready_script_wait'] . '" 2>&1 &');
+		}
+	} else {
+		workerLog('worker: ERROR: Ready script enabled: File ready-script.sh not found');
+	}
+}
 
 //----------------------------------------------------------------------------//
 // WORKER EVENT LOOP

@@ -156,6 +156,14 @@ function autoConfigSettings() {
 			$_SESSION['tmp2ram'] = $values['tmp2ram'];
 			$value = $values['tmp2ram'];
 		}],
+		['requires' => ['ready_script'], 'handler' => function($values) {
+			$_SESSION['ready_script'] = $values['ready_script'];
+			$value = $values['ready_script'];
+		}],
+		['requires' => ['ready_script_wait'], 'handler' => function($values) {
+			$_SESSION['ready_script_wait'] = $values['ready_script_wait'];
+			$value = $values['ready_script_wait'];
+		}],
 
 		// NOTE: $_SESSION['reduce_power'] is an eeprom config
 		// The setting does not need to be restored
