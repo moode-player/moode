@@ -2547,10 +2547,10 @@ function runQueuedJob() {
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			// Start thumbnail generator
+			// Update thumbnails
 			workerLog('worker: Update thumbnail cache');
-			$result = sysCmd('pgrep -l thumb-gen.php');
-			if (strpos($result[0], 'thumb-gen.php') === false) {
+			$result = sysCmd('pgrep -c thumb-gen.php');
+			if ($result[0] == '0') {
 				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 			}
 			$GLOBALS['check_library_update'] = '1';
@@ -2561,7 +2561,6 @@ function runQueuedJob() {
 			// Clear libcache then regen MPD database
 			workerLog('worker: Clear Library tag cache');
 			clearLibCacheAll();
-			//DELETE:workerLog('worker: Start MPD database regen');
 			workerLog('mpdindex: Start');
 			workerLog('mpdindex: Cmd (rescan)');
 			$sock = openMpdSock('localhost', 6600);
@@ -2572,10 +2571,9 @@ function runQueuedJob() {
 			workerLog('worker: Clear thumbnail cache');
 			sysCmd('rm -rf ' . THMCACHE_DIR);
 			sysCmd('mkdir ' . THMCACHE_DIR);
-			$result = sysCmd('pgrep -l thumb-gen.php');
-			if (strpos($result[0], 'thumb-gen.php') === false) {
+			$result = sysCmd('pgrep -c thumb-gen.php');
+			if ($result[0] == '0') {
 				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
-				//workerLog('regen_library, thumb-gen.php launched');
 			}
 			$GLOBALS['check_library_regen'] = '1';
 			break;
