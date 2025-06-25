@@ -41,6 +41,15 @@ switch ($option) {
 		restartRoonBridge($stopOnly);
 		break;
 	default:
+		//[--bluetooth | --airplay | --spotify | --deezer | --squeezelite | --plexamp | --roonbridge]
+		$btArg = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? "--bluetooth\tRestart Bluetooth\n" : "";
+		$apArg = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? " --airplay\tRestart AirPlay\n" : "";
+		$spArg = $_SESSION['feat_bitmask'] & FEAT_SPOTIFY ? " --spotify\tRestart Spotify Connect\n" : "";
+		$dzArg = $_SESSION['feat_bitmask'] & FEAT_DEEZER ? " --deezer\tRestart Deezer Connect\n" : "";
+		$slArg = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? " --squeezelite\tRestart Squeezelite\n" : "";
+		$paArg = $_SESSION['feat_bitmask'] & FEAT_PLEXAMP ? " --plexamp\tRestart Plexamp\n" : "";
+		$rbArg = $_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE ? " --roonbridge\tRestart RoonBridge\n" : "";
+		$rendererList = $btArg . $apArg . $spArg . $dzArg . $slArg . $paArg . $rbArg;
 		echo
 "Usage: restart-renderer [OPTION] [--stop]
 Moode renderer restarter
@@ -48,14 +57,8 @@ Moode renderer restarter
 With no OPTION print the help text and exit.
 With OPTION --stop the renderer is stopped but not started.
 
- --bluetooth\tRestart Bluetooth
- --airplay\tRestart AirPlay
- --spotify\tRestart Spotify Connect
- --deezer\tRestart Deezer Connect
- --squeezelite\tRestart Squeezelite
- --plexamp\tRestart Plexamp
- --roonbridge\tRestart RoonBridge\n";
-		break;
+ $rendererList";
+ 		break;
 }
 
 phpSession('close');
