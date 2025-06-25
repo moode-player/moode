@@ -32,8 +32,6 @@ from the client and whether CamillaDSP is supported in the playback chain.
 +-------------------------------------------------------------------------------
 | AirPlay             | Any app supporting AirPlay 2     | Yes      | Yes
 +-------------------------------------------------------------------------------
-| Deezer Connect      | Deezer app (Smartphone only)     | Yes      | Yes
-+-------------------------------------------------------------------------------
 | Spotify Connect     | Spotify app (Desktop/Smartphone) | Yes      | Yes
 +-------------------------------------------------------------------------------
 | Squeezelite         | Lyrion Media Server (LMS)        | No       | Yes
@@ -56,7 +54,6 @@ another renderer.
 - Bluetooth
 - AirPlay
 - Spotify Connect
-- Deezer Connect
 - Squeezelite (providing -c <timeout> option is specified)
 - UPnP Client for MPD
 
@@ -86,9 +83,9 @@ Session Based
 The other renderers use Session based protocols that run over existing
 Ethernet or WiFi networks. Since these networks are already present this type
 of renderer operates by establishing a playback session. moOde detects the
-session and displays cover art and track metadata for AirPlay, Spotify Connect
-and Deezer Connect, or the "Renderer Active" screen for Squeezelite, Plexamp
-and RoonBridge renderers.
+session and displays cover art and track metadata for AirPlay and Spotify
+Connect, or the "Renderer Active" screen for Squeezelite, Plexamp and RoonBridge
+renderers.
 
 AirPlay and Squeezelite renderers can automatically end their session and
 release the audio output after playback ends based on a configurable timeout

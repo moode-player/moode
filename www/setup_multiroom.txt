@@ -128,7 +128,7 @@ B) Renderer Configuration (Menu, Configure, Renderers)
    a. Squeezelite
    b. Plexamp
    c. RoonBridge
-2. Optionally turn on Bluetooth, AirPlay, Spotify Connect and/or Deezer Connect
+2. Optionally turn on Bluetooth, AirPlay and/or Spotify Connect
 3. Turn the DLNA server off
 
 B) Sender Configuration (Menu, Configure, Multiroom)
