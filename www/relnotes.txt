@@ -24,6 +24,7 @@ Updates
 - UPD: Improve logging for Update and Regenerate library
 - UPD: KEXP 90.3 FM Seattle to 160K AAC-LC stream
 - UPD: Improve help for NVMe and SATA mount options
+- UPD: Remove refs to Deezer from setup guides and help
 
 ################################################################################
 #
