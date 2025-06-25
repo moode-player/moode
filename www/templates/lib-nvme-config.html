@@ -31,9 +31,15 @@
 					$_nvme_drives
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-nvme-drives" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-nvme-drives" class="config-help-info">
-					List of NVMe drives showing the device ID and in parenthesis its volume label or a status for example "Unformatted" or "No label".
+				<span class="config-help-static">
+					List of NVMe drives and in parenthesis the volume label or "Unformatted", "No label" or "Not ext4".
                 </span>
+				<span id="info-nvme-drives" class="config-help-info">
+					Boot NVMe drives will be listed as below. The partition "/dev/nvme0n1p2 (roofs)" contains your music files.<br>
+					- /dev/nvme0n1 (Not ext4)<br>
+					- /dev/nvme0n1p1 (Not ext4)<br>
+					- <b>/dev/nvme0n1p2 (roofs)</b><br>
+				</span>
 			</div>
 
 			<label class="control-label" for="nvme-name">Name</label>
