@@ -23,6 +23,7 @@ Updates
 - UPD: Add MPD stats to moode startup log
 - UPD: Improve logging for Update and Regenerate library
 - UPD: KEXP 90.3 FM Seattle to 160K AAC-LC stream
+- UPD: Improve help for NVMe and SATA mount options
 
 ################################################################################
 #
