@@ -179,6 +179,8 @@ if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
 // Autoplay last played item after reboot/powerup
 if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 	phpSession('write', 'autoplay', $_POST['autoplay']);
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
 }
 
 // Metadata file

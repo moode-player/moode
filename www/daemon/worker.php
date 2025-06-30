@@ -1438,32 +1438,6 @@ if (!isset($_SESSION['ashuffle_exclude'])) {
 }
 workerLog('worker: Auto-shuffle:      ' . ($_SESSION['ashufflesvc'] == '1' ? 'on' : 'off'));
 
-// Auto-play: start auto-shuffle random play or auto-play last played item
-if ($_SESSION['autoplay'] == '1') {
-	if ($_SESSION['ashuffle'] == '1') {
-		workerLog('worker: Auto-play:         on, via auto-shuffle');
-		startAutoShuffle();
-	} else {
-		$status = getMpdStatus($sock);
-		//workerLog(print_r($status, true));
-		sendMpdCmd($sock, 'playid ' . $status['songid']);
-		$resp = readMpdResp($sock);
-		workerLog('worker: Auto-play:         on, playid ' . $status['songid']);
-	}
-} else {
-	sendMpdCmd($sock, 'stop');
-	$resp = readMpdResp($sock);
-	// Turn off Auto-shuffle based random play if it's on
-	if ($_SESSION['ashuffle'] == '1') {
-		phpSession('write', 'ashuffle', '0');
-		sendMpdCmd($sock, 'consume 0');
-		$resp = readMpdResp($sock);
-		workerLog('worker: Auto-play:         off, random toggle reset to off');
-	} else {
-		workerLog('worker: Auto-play:         off');
-	}
-}
-
 // Maintenance task
 workerLog('worker: Maintenance task:  ' . ($_SESSION['maint_interval'] / 60) . ' mins');
 
@@ -1698,28 +1672,79 @@ debugLog('Sleep intervals:  ' .
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
 workerLog('worker: Ready');
 
-// Ready script
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Post-startup actions ');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
+
+// Get ID of last played item for Auto-play
+$sock = openMpdSock('localhost', 6600);
+$status = getMpdStatus($sock);
+$lastPlayedItemId = $status['songid'];
+
+// Ready script (default is to add/play ReadyChime.flac)
 if ($_SESSION['ready_script'] == 'on') {
+	workerLog('worker: Ready-script: enabled');
 	if (file_exists(READY_SCRIPT)) {
 		$contents = file_get_contents(READY_SCRIPT);
 		if (empty($contents)) {
-			workerLog('worker: ERROR: Ready script enabled: Empty file');
+			workerLog('worker: Ready-script: ERROR: Empty file');
 		} else if (substr($contents, 0, 11) != '#!/bin/bash') {
-			workerLog('worker: ERROR: Ready script enabled: Missing BASH shebang');
+			workerLog('worker: Ready-script: ERROR: Missing BASH shebang');
 		} else if (!is_executable(READY_SCRIPT)) {
-			workerLog('worker: ERROR: Ready script enabled: Not marked executable');
+			workerLog('worker: Ready-script: ERROR: Not marked executable');
 		} else if (!file_exists('/mnt/' . READY_CHIME_URI)) {
-			workerLog('worker: ERROR: Ready script enabled: File /mnt/' . READY_CHIME_URI . ' missing');
+			workerLog('worker: Ready-script: ERROR: File /mnt/' . READY_CHIME_URI . ' missing');
 		} else {
-			sysCmd(READY_SCRIPT . ' "' . READY_CHIME_URI . '" "' . READY_CHIME_TITLE . '" "' . $_SESSION['ready_script_wait'] . '" 2>&1 &');
+			// NOTE: for non-blocking use '2>&1 &' but this will conflict with autoplay
+			sysCmd(READY_SCRIPT . ' "' . READY_CHIME_URI . '" "' . READY_CHIME_TITLE . '" "' . $_SESSION['ready_script_wait'] . '" 2>&1');
+			workerLog('worker: Ready-script: finished');
 		}
 	} else {
-		workerLog('worker: ERROR: Ready script enabled: File ready-script.sh not found');
+		workerLog('worker: Ready-script: ERROR: File ready-script.sh not found');
+	}
+} else {
+	workerLog('worker: Ready-script: disabled');
+}
+
+// Auto-play: start auto-shuffle random play or auto-play last played item
+if ($_SESSION['autoplay'] == '1') {
+	if ($_SESSION['ashuffle'] == '1') {
+		workerLog('worker: Auto-play:    on');
+		workerLog('worker: Auto-play:    using auto-shuffle');
+		startAutoShuffle();
+	} else {
+		sendMpdCmd($sock, 'playid ' . $lastPlayedItemId);
+		$resp = readMpdResp($sock);
+		workerLog('worker: Auto-play:    on');
+		workerLog('worker: Auto-play:    using songid ' . $lastPlayedItemId);
+	}
+} else {
+	sendMpdCmd($sock, 'stop');
+	$resp = readMpdResp($sock);
+	// Turn off Auto-shuffle based random play if it's on
+	if ($_SESSION['ashuffle'] == '1') {
+		phpSession('open');
+		phpSession('write', 'ashuffle', '0');
+		phpSession('close');
+		sendMpdCmd($sock, 'consume 0');
+		$resp = readMpdResp($sock);
+		workerLog('worker: Auto-play:    off');
+		workerLog('worker: Auto-play:    random toggle reset to off');
+	} else {
+		workerLog('worker: Auto-play:    off');
 	}
 }
 
+closeMpdSock($sock);
+
 //----------------------------------------------------------------------------//
-// WORKER EVENT LOOP
+workerLog('worker: --');
+workerLog('worker: -- Event loop ');
+workerLog('worker: --');
+workerLog('worker: Poll every ' . (WORKER_SLEEP / 1000000) . ' seconds');
+workerLog('worker: Begin...');
 //----------------------------------------------------------------------------//
 
 while (true) {

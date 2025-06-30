@@ -18,6 +18,7 @@
 
 #
 # Default action is to play the "System Ready" chime
+# Do not modify this section
 #
 
 READY_CHIME_URI="$1"
@@ -32,7 +33,7 @@ moode_log () {
 }
 
 # Begin
-moode_log "Started"
+moode_log "Start"
 
 # Wait before continuing
 moode_log "Wait $WAIT_SECS seconds..."
@@ -43,16 +44,16 @@ ITEM=1
 FOUND=0
 QUEUE=$(mpc playlist)
 while IFS= read -r LINE; do
-  if [ "$LINE" == "$READY_CHIME_TITLE" ]; then
-    FOUND=1
-    break
-  else
-    ((ITEM++))
-  fi
+	if [ "$LINE" == "$READY_CHIME_TITLE" ]; then
+		FOUND=1
+		break
+	else
+		((ITEM++))
+	fi
 done <<< "$QUEUE"
 # Remove if found
 if [ $FOUND == 1 ]; then
-  mpc -q del $ITEM
+	mpc -q del $ITEM
 fi
 
 # Add to end of Queue then play
@@ -61,5 +62,21 @@ ITEM=$(mpc status %length%)
 mpc -q play $ITEM
 moode_log "Play $READY_CHIME_URI"
 
-# We are done
-moode_log "Finished"
+# Check for play complete
+MAX_RETRIES=15
+PLAYING=$(mpc status | grep "\[playing\]")
+while true; do
+	if [ "$PLAYING" == "" ] || [ $MAX_RETRIES == 0 ]; then
+		break
+	else
+		((MAX_RETRIES--))
+		sleep 1
+		PLAYING=$(mpc status | grep "\[playing\]")
+	fi
+done <<< "$PLAYING"
+
+if [ $MAX_RETRIES == 0 ]; then
+	moode_log "ERROR: Playback failed"
+else
+	moode_log "Done"
+fi
