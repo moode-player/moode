@@ -1417,8 +1417,8 @@ workerLog('worker: Auto-CoverView:    ' . ($_SESSION['auto_coverview'] == '-on' 
 
 // CoverView screen saver timeout
 workerLog('worker: CoverView timeout: ' . $_SESSION['scnsaver_timeout']);
-// Play history
 
+// Play history
 if (!isset($_SESSION['phistsong'])) {
 	$_SESSION['phistsong'] = '';
 }
