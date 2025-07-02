@@ -83,6 +83,11 @@ function getParentDirectory(audioEntry) {
 /*** ** * CUE HELPERS - END * ** ***/
 
 function loadLibrary() {
+    if (SESSION.json['lib_fv_only'] == 'on') {
+        GLOBAL.libLoading = false;
+        GLOBAL.libRendered = false;
+        return;
+    }
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
     // DEBUG:

@@ -1521,6 +1521,10 @@ if (!isset($_SESSION['ready_script'])) {
 	$_SESSION['ready_script'] = 'off';
 	$_SESSION['ready_script_wait'] = '3';
 }
+// Folder view only
+if (!isset($_SESSION['lib_fv_only'])) {
+	$_SESSION['lib_fv_only'] = 'off';
+}
 
 //----------------------------------------------------------------------------//
 // Globals section

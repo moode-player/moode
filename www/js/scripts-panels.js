@@ -83,6 +83,13 @@ jQuery(document).ready(function($) { 'use strict';
     	// Set currentView global
     	currentView = SESSION.json['current_view'];
 
+        // Folder view only
+        if (SESSION.json['lib_fv_only'] == 'on') {
+            $('.tag-view-btn, .album-view-btn').hide();
+        } else {
+            $('.tag-view-btn, .album-view-btn').show();
+        }
+
     	// Detect mobile
     	UI.mobile = $(window).width() < 480 ? true : false;
         //console.log('window: ' + $(window).width() + 'x' + $(window).height());
@@ -93,7 +100,9 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Initiate loads
         renderRadioView(false); // False = don't run lazylode() since it's going to be run as part of makeActive downstream
-        loadLibrary(); // Tag and Album views
+        if (SESSION.json['lib_fv_only'] == 'off') {
+            loadLibrary(); // Tag and Album views
+        }
         renderPlaylistView();
         $.getJSON('command/music-library.php?cmd=lsinfo', {'path': ''}, function(data) {
             renderFolderView(data, '');
@@ -777,39 +786,41 @@ jQuery(document).ready(function($) { 'use strict';
                     UI.dbEntry[3] = 'ra-' + (UI.radioPos - rvHeaderCount + 1).toString();
                 }, DEFAULT_TIMEOUT);
     		} else {
-                // Song file
-                $('#playback-switch').click();
-    			$('.tag-view-btn').click();
-                $('#genreheader').click(); // Reset to full lib
+                if (SESSION.json['lib_fv_only'] == 'off') {
+                    // Song file
+                    $('#playback-switch').click();
+        			$('.tag-view-btn').click();
+                    $('#genreheader').click(); // Reset to full lib
 
-                setTimeout(function() {
-                    var genrePos = $('#genresList .lib-entry').filter(function() {
-                        return $(this).text() == decodeHTMLEntities(MPD.json['genre']);
-                    }).index();
-                    customScroll('genres', genrePos, 200);
-                    $('#genresList .lib-entry').eq(genrePos).click();
+                    setTimeout(function() {
+                        var genrePos = $('#genresList .lib-entry').filter(function() {
+                            return $(this).text() == decodeHTMLEntities(MPD.json['genre']);
+                        }).index();
+                        customScroll('genres', genrePos, 200);
+                        $('#genresList .lib-entry').eq(genrePos).click();
 
-                    var artistPos = $('#artistsList .lib-entry').filter(function() {
-                        return $(this).text() == decodeHTMLEntities(MPD.json['artist']);
-                    }).index();
-                    customScroll('artists', artistPos, 200);
-                    $('#artistsList .lib-entry').eq(artistPos).click();
+                        var artistPos = $('#artistsList .lib-entry').filter(function() {
+                            return $(this).text() == decodeHTMLEntities(MPD.json['artist']);
+                        }).index();
+                        customScroll('artists', artistPos, 200);
+                        $('#artistsList .lib-entry').eq(artistPos).click();
 
-                    var albumPos = $('#albumsList .lib-entry .album-name-art').filter(function() {
-                        return $(this).text() == decodeHTMLEntities(MPD.json['album']);
-                    }).parent().parent().index();
-                    customScroll('albums', albumPos, 200);
-                    $('#albumsList .lib-entry').eq(albumPos).click();
+                        var albumPos = $('#albumsList .lib-entry .album-name-art').filter(function() {
+                            return $(this).text() == decodeHTMLEntities(MPD.json['album']);
+                        }).parent().parent().index();
+                        customScroll('albums', albumPos, 200);
+                        $('#albumsList .lib-entry').eq(albumPos).click();
 
-                    UI.libPos[0] = albumPos;
-                    UI.libPos[2] = artistPos;
-                    UI.libPos[3] = genrePos;
+                        UI.libPos[0] = albumPos;
+                        UI.libPos[2] = artistPos;
+                        UI.libPos[3] = genrePos;
 
-                    //console.log(genrePos + '|' + MPD.json['genre']);
-                    //console.log(artistPos + '|' + MPD.json['artist']);
-                    //console.log(albumPos + '|' + MPD.json['album']);
-                }, DEFAULT_TIMEOUT);
-    		}
+                        //console.log(genrePos + '|' + MPD.json['genre']);
+                        //console.log(artistPos + '|' + MPD.json['artist']);
+                        //console.log(albumPos + '|' + MPD.json['album']);
+                    }, DEFAULT_TIMEOUT);
+        		}
+            }
         }
 	});
 

@@ -45,6 +45,15 @@ if (isset($_POST['update_fs_mountmon'])) {
 		submitJob('fs_mountmon', $_POST['fs_mountmon']);
 	}
 }
+// Folder view only
+if (isset($_POST['update_lib_fv_only'])) {
+	unset($_GET['cmd']);
+	if ($_POST['lib_fv_only'] == 'on') {
+		clearLibCacheAll();
+		phpSession('write', 'current_view', 'folder');
+	}
+	$_SESSION['lib_fv_only'] = $_POST['lib_fv_only'];
+}
 // Regenerate MPD database
 if (isset($_POST['regen_library'])) {
 	unset($_GET['cmd']);
@@ -405,6 +414,11 @@ if (!isset($_GET['cmd'])) {
 	if (empty($mounts)) {
 		$_usb_mounts .= '<span class="btn-large config-btn config-btn-music-source config-btn-music-source-none">None auto-mounted</span>';
 	}
+
+	// Folder view only
+	$autoClick = " onchange=\"autoClick('#btn-set-lib-fv-only');\"";
+	$_select['lib_fv_only_on'] = "<input type=\"radio\" name=\"lib_fv_only\" id=\"toggle-lib-fv-only-1\" value=\"on\" " . (($_SESSION['lib_fv_only'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['lib_fv_only_off'] = "<input type=\"radio\" name=\"lib_fv_only\" id=\"toggle-lib-fv-only-2\" value=\"off\" " . (($_SESSION['lib_fv_only'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// Ignore .cue files
 	$autoClick = " onchange=\"autoClick('#btn-set-cuefiles-ignore');\"";
