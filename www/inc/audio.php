@@ -144,7 +144,9 @@ function setAudioIn($inputSource) {
 		}
 
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
-			sysCmd('alsaloop > /dev/null 2>&1 &');
+			$captureDevice = 'plughw:' . $_SESSION['cardnum'] . ',0';
+			$playbackDevice = '_audioout';
+			sysCmd('alsaloop -C ' . $captureDevice . ' -P ' . $playbackDevice . ' > /dev/null 2>&1 &');
 		} else if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 			sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "I2S/SPDIF Select" SPDIF');
 		}
