@@ -174,6 +174,8 @@ if ($btActive === true) {
 	$renderer = 'Plexamp';
 } else if ($rbActive == '1') {
 	$renderer = 'Roonbridge';
+} else if ($_SESSION['audioin'] != 'Local') {
+	$renderer = $_SESSION['audioin'] . ' input';
 } else {
 	$renderer = 'MPD';
 }
