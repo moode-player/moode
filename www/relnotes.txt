@@ -15,8 +15,14 @@
 #
 ################################################################################
 
+New features
+- NEW: Folder view only: Hide Tag/Album view, skip creating the Library tag cache
+
 Updates
 - UPD: Improve ready script, play system ready chime before auto-play
+
+Bug fixes
+- FIX: Incorrect capture and playback cards assigned for HifiBerry DAC+ ADC
 
 ################################################################################
 #
@@ -24,7 +30,7 @@ Updates
 #
 ################################################################################
 
-New
+New features
 - NEW: Optional BASH script that runs after moOde startup completes
 - NEW: REST API's get_receiver_status, set_receiver_onoff
 
@@ -41,7 +47,7 @@ Updates
 #
 ################################################################################
 
-New
+New features
 - NEW: Add /mnt/OSDISK and corresponding Samba share point (deprecate SDCARD)
 
 Updates
