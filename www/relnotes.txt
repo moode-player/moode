@@ -21,6 +21,7 @@ New features
 Updates
 - UPD: Bump to Linux kernel 6.12.34
 - UPD: Improve ready script, play system ready chime before auto-play
+- UPD: Add audio device to Player info 
 
 Bug fixes
 - FIX: Incorrect capture and playback cards assigned for HifiBerry DAC+ ADC
