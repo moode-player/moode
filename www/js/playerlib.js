@@ -814,7 +814,7 @@ function refreshInpsrcMeta() {
     } else {
         cmd = '';
     }
-    
+
     if (cmd != '') {
         $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
             updateInpsrcMeta(cmd, data);
@@ -2932,7 +2932,8 @@ $(document).on('click', '.context-menu a', function(e) {
                 'Model:&nbsp;&nbsp;' + SESSION.json['hdwrrev'] + '<br>' +
                 'Kernel:&nbsp;' + SESSION.json['kernelver'] + '<br>' +
                 'PiOS:&nbsp;&nbsp;&nbsp;' + SESSION.json['raspbianver'] + '<br>' +
-                'MPD:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'],
+                'MPD:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'] + '<br>' +
+                'Audio:&nbsp;&nbsp;' + SESSION.json['adevname'],
                 NOTIFY_DURATION_INFINITE);
                 // Styling (gets automatically reset by pnotify for other notifications)
                 $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
