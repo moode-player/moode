@@ -19,6 +19,7 @@ New features
 - NEW: Folder view only: Hide Tag/Album view, skip creating the Library tag cache
 
 Updates
+- UPD: Bump to Linux kernel 6.12.34
 - UPD: Improve ready script, play system ready chime before auto-play
 
 Bug fixes
