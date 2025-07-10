@@ -405,7 +405,7 @@ function restartServers($featBitmask) {
 	exec('sudo killall -s 9 mountmon.php >/dev/null 2>&1');
 	echo "- mpdmon.php\n";
 	exec('sudo killall -s 9 mpdmon.php >/dev/null 2>&1');
-	echo "- worker.php.php\n";
+	echo "- worker.php\n";
 	exec('sudo killall -s 9 worker.php');
 	exec('sudo rm /var/run/worker.pid');
 	echo "- mpd2cdspvolume\n";
