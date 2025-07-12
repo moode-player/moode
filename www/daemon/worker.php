@@ -604,20 +604,23 @@ if (file_exists('/opt/RoonBridge/start.sh') === true) {
 }
 workerLog('worker: RoonBridge:       ' . $msg);
 
-// Allo Boss 2 OLED
-// The Allo installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
+// Allo Boss 2
+// OLED: The Allo installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
 if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
 	sleep(1); // Allow rc.local script time to exit after starting worker.php
 	sysCmd('sed -i /boss2/d /etc/rc.local');
-	$scriptMsg = 'manually installed script, rc.local updated';
-} else {
-	$scriptMsg = 'OLED script ok';
+	workerLog('worker: Allo Boss 2:      3rd party OLED script removed from rc.local');
 }
-if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
-	sysCmd('systemctl start boss2oled');
-	$msg = 'OLED started, ' . $scriptMsg;
+// DAC
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+	if (file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
+		$msg = 'detected, OLED script not started (boss2oled_no_load)';
+	} else {
+		sysCmd('systemctl start boss2oled');
+		$msg = 'detected, OLED script started';
+	}
 } else {
-	$msg = 'not detected, ' . $scriptMsg;
+	$msg = 'not detected';
 }
 workerLog('worker: Allo Boss 2:      ' . $msg);
 
