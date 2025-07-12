@@ -1278,6 +1278,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#saved-search-modal').on('shown.bs.modal', function(e) {
         setTimeout(function() {
             $('#saved-search-items li').removeClass('active');
+			$('#btn-save-search').prop('disabled', true);
             updateSavedSearchModal();
         }, DEFAULT_TIMEOUT);
 	});
@@ -1314,23 +1315,26 @@ jQuery(document).ready(function($) { 'use strict';
 	});
     // Save search
     $('#btn-save-search').click(function(e) {
-        var name = $('#saved-search-name').val().trim();
-        if (name == '') {
-            notify(NOTIFY_TITLE_ALERT, 'search_name_blank');
-        } else {
-            e.stopImmediatePropagation();
-            $.post('command/music-library.php?cmd=create_saved_search', {'name': name});
-            // Allow worker job to complete
-            setTimeout(function() {
-    			updateSavedSearchModal();
-    		}, 2000);
-
-        }
+		e.stopImmediatePropagation();
+		// Display spinner
+		$('#btn-save-search').html('<div class="busy-spinner-btn-saved-search" style="margin:-.18rem 0;">' + GLOBAL.busySpinnerSVG + '</div>');
+		// Send job to worker.php
+		$.post('command/music-library.php?cmd=create_saved_search', {'name': $('#saved-search-name').val().trim()});
+		// Update list (allow time for job to complete)
+		setTimeout(function() {
+			updateSavedSearchModal();
+		}, 3500);
     });
+	// Save button enabled/disabled
+	$('#saved-search-name').on('input', function() {
+		var value = $('#saved-search-name').val() == '' ? true : false;
+		$('#btn-save-search').prop('disabled', value);
+	});
     // Update Saved Search items
     function updateSavedSearchModal() {
         // Name input and current search criteria
         $('#saved-search-name').val('');
+		$('#btn-save-search').prop('disabled', true);
         $('#lib-search-criteria').text(SESSION.json['library_flatlist_filter']
             + (SESSION.json['library_flatlist_filter_str'] == '' ? '' : ': ' + SESSION.json['library_flatlist_filter_str']));
         // Subset list
@@ -1352,6 +1356,7 @@ jQuery(document).ready(function($) { 'use strict';
                 // Error: No saved searches found (item 1 LIB_FULL_LIBRARY should always exist
             }
             element.innerHTML = output;
+			$('#btn-save-search').html('Save');
         }, 'json');
     }
     // Clear active search
