@@ -21,6 +21,8 @@ New features
 Updates
 - UPD: Bump to Linux kernel 6.12.34
 - UPD: Improve ready script, play system ready chime before auto-play
+- UPD: Improve startup logging for Boss 2
+- UPD: Add button feedback for Saved searches feature
 - UPD: Add audio device to Player info
 - UPD: Designate Bluetooth PIN code option as experimental in help
 
