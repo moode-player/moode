@@ -2069,7 +2069,7 @@ function chkRbActive() {
 	if ($result[0] > 0) {
 		$rendererNotActive = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
 			&& $GLOBALS['deezactive'] == '0' && $GLOBALS['slactive'] == '0' && $_SESSION['paactive']
-			 && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
+			&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
 		$mpdNotPlaying = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
 		$alsaOutputActive = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
 		//workerLog('rnp:' . ($rendererNotActive ? 'T' : 'F') . '|' . 'mnp:' . ($mpdNotPlaying ? 'T' : 'F') . '|' . 'aoa:' . ($alsaOutputActive ? 'T' : 'F'));
