@@ -143,7 +143,7 @@ IOS
     3. Click the "Cert icon and text" to download the Profile, don't click the
        Download button
     4. Open Settings > General > VPN and Device Management
-    5. Under CONFIGURATON PROFILE, click and install the Cert Profile
+    5. Under DOWNLOADED PROFILE, click the profile then click Install
     6. Open Settings > General > About > Certificate Trust Settings
     7. Click the slider to trust the Cert
 
@@ -164,11 +164,13 @@ Firefox desktop
 Chromium desktop (and derivatives like Chrome, Opera, Vivaldi, etc)
 
     1. Open Settings > Privacy and Security
-    2. Select Security and scroll to Manage Certificates
-    3. Select the Authorities tab and click Import
-    4. Select the Cert file and click Open
-    5. Select "Use for validating websites"
-    6. Click OK
+    2. Select Security, scroll to Manage Certificates then click it
+    3. If the Authorities tab exists click it then click Import
+       a. Select the Cert file and click Open
+       b. Select "Use for validating websites"
+       c. Click OK
+    4. If the Authorities tab does not exist verify that the cert you added to
+       the OS is listed as Imported.
 
 Firefox Android
 

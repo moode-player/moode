@@ -1,3 +1,4 @@
+# Standard params
 fastcgi_param  QUERY_STRING       $query_string;
 fastcgi_param  REQUEST_METHOD     $request_method;
 fastcgi_param  CONTENT_TYPE       $content_type;
@@ -30,15 +31,8 @@ fastcgi_buffer_size 32k;
 fastcgi_read_timeout 600000;
 fastcgi_busy_buffers_size 96k;
 
-# ORIGINAL
+# Original
 #fastcgi_buffers 4 32k;
 #fastcgi_buffer_size 4k;
 #fastcgi_read_timeout 600000;
 #fastcgi_busy_buffers_size 96k;
-
-# SUGGESTED
-#fastcgi_buffers 8 16k;
-#fastcgi_buffer_size 32k;
-#fastcgi_connect_timeout 300;
-#fastcgi_send_timeout 300;
-#fastcgi_read_timeout 300;
