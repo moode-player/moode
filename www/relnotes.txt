@@ -29,6 +29,7 @@ Updates
 Bug fixes
 - FIX: Incorrect capture and playback cards assigned for HifiBerry DAC+ ADC
 - FIX: Typo in moodeutl log output for restartServers()
+- FIX: Local display feature not working correctly in HTTPS mode
 
 ################################################################################
 #
