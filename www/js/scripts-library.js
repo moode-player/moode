@@ -1077,7 +1077,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 				function getArtist(a) {
 					return a.artist;
 				});
-			// Have to do this check because someone might have
+			// Have to do this check because user may have
 			// ctrl+clicked to select multiple artists which may
 			// or may not be on the same displayed albums.
 			// So we can't just use the count.
