@@ -231,7 +231,8 @@ function startDeezer() {
 	}
 
 	// Output device
-	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
+	#$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream'; // <= 0.18.0
+	$device = $_SESSION['audioout'] == 'Local' ? 'default' : 'btstream'; // 0.19.0 /etc/alsa/conf.d/default.conf
 
 	// Options
 	$normalization = $cfgDeezer['normalize_volume'] == 'Yes' ? ' --normalize-volume' : '';
