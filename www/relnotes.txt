@@ -25,6 +25,7 @@ Updates
 - UPD: Improve startup logging for Boss 2
 - UPD: Add button feedback for Saved searches feature
 - UPD: Add audio device to Player info
+- UPD: Add Protocol (RSN/WPA) option to Hotspot section if Network Config 
 - UPD: Designate Bluetooth PIN code option as experimental in help
 
 Bug fixes
