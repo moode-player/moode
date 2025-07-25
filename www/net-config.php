@@ -125,6 +125,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 			'wlanssid' => $_POST['wlan0apdssid'], 'wlanuuid' => $uuid, 'wlanpwd' => $psk, 'wlanpsk' => $psk,
 			'wlancc' => '', 'wlansec' => 'wpa-psk');
 		sqlUpdate('cfg_network', $dbh, 'apd0', $value);
+		$_SESSION['approto'] = $_POST['wlan0apdproto'];
 
 		// Generate .nmconnection files
 		submitJob('netcfg', '', NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
@@ -324,6 +325,8 @@ $_wlan0secdns = $cfgNetwork[1]['secdns'];
 
 $_wlan0apdssid = $cfgNetwork[2]['wlanssid'];
 $_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
+$_wlan0apdproto .= "<option value=\"rsn\" " . ($_SESSION['approto'] == 'rsn' ? 'selected' : '') . " >RSN (Default)</option>\n";
+$_wlan0apdproto .= "<option value=\"wpa\" " . ($_SESSION['approto'] == 'wpa' ? 'selected' : '') . " >WPA</option>\n";
 $_ap_network = 'http://' . explode('/', $_SESSION['ap_network_addr'])[0];
 $_ap_host = 'http://' . $_wlan0apdssid . '.local';
 if (empty($_wlan0apdpwd)) {

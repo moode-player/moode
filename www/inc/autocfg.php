@@ -302,7 +302,7 @@ function autoConfigSettings() {
 			return $str;
 		}],
 		'Network (apd0)',
-		['requires' => ['apdssid', 'apdpwd', 'apduuid', 'apdaddr'],
+		['requires' => ['apdssid', 'apdpwd', 'apduuid', 'apdaddr', 'approto'],
 		'optionals' => ['apdpsk'],
 		'handler' => function($values, $optionals) {
 			$dbh = sqlConnect();
@@ -313,6 +313,7 @@ function autoConfigSettings() {
 				'wlancc' => '', 'wlansec' => 'wpa-psk');
 			sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 			sqlUpdate('cfg_system', $dbh, 'ap_network_addr', $values['apdaddr']);
+			$_SESSION['approto'] = $values['approto'];
 			cfgNetworks();
 		}, 'custom_write' => function($values) {
 			$result = sqlQuery("select * from cfg_network where iface='apd0'", sqlConnect());
@@ -323,6 +324,7 @@ function autoConfigSettings() {
 			$str .= "apdpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
 			$result = sqlQuery("SELECT value FROM cfg_system WHERE param='ap_network_addr'", sqlConnect());
 			$str .= "apdaddr = \"" . $result[0]['value'] . "\"\n";
+			$str .= "apdproto = \"" . $_SESSION['approto'] . "\"\n";
 			return $str;
 		}],
 		//

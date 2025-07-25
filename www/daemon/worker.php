@@ -428,9 +428,13 @@ if (file_exists('/etc/NetworkManager/system-connections/preconfigured.nmconnecti
 	}
 }
 
+// Default AP protocol
+if (!isset($_SESSION['approto'])) {
+	$_SESSION['approto'] = 'rsn';
+}
 // NOTE: Fix for Pi-3B Hotspot fail (use wpa instead of rsn protocol)
-$hotspotProto = str_contains($_SESSION['hdwrrev'], 'Pi-3B ') ? 'wpa' : 'rsn';
-sysCmd("sed -i 's/proto=.*/proto=" . $hotspotProto . "/' /etc/NetworkManager/system-connections/Hotspot.nmconnection");
+$_SESSION['approto'] = str_contains($_SESSION['hdwrrev'], 'Pi-3B ') ? 'wpa' : 'rsn';
+sysCmd("sed -i 's/proto=.*/proto=" . $_SESSION['approto'] . "/' /etc/NetworkManager/system-connections/Hotspot.nmconnection");
 
 // Ethernet
 workerLog('worker: Eth0');
@@ -536,8 +540,9 @@ if (!empty($wlan0Ip)) {
 if (!isset($_SESSION['avahi_options'])) {
 	$_SESSION['avahi_options'] = 'ipv4ipv6';
 }
-workerLog('worker: mDNS');
-workerLog('worker: Discover: ' . ($_SESSION['avahi_options'] == 'ipv4ipv6' ? 'IPv4 and IPv6' : 'IPv4-only'));
+workerLog('worker: Other');
+workerLog('worker: mDNS discover: ' . ($_SESSION['avahi_options'] == 'ipv4ipv6' ? 'IPv4 and IPv6' : 'IPv4-only'));
+workerLog('worker: Hotspot proto: ' . strtoupper($_SESSION['approto']));
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');

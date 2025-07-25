@@ -29,6 +29,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWLAN country\t\t= $wlancountry\c"
 	echo -e "\nWLAN AP SSID\t\t= $apdssid\c"
 	echo -e "\nWLAN AP addr\t\t= $ap_network_addr\c"
+	echo -e "\nWLAN AP proto\t\t= $approto\c"
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
@@ -922,6 +923,7 @@ wlanssid=$(echo ${arr[1]} | cut -f 9 -d "|")
 wlanuuid=$(echo ${arr[1]} | cut -f 10 -d "|")
 wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
 apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
+approto=$(moodeutl -d -gv approto)
 
 # Misc settings
 modprobe configs

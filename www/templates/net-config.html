@@ -200,6 +200,18 @@
 					Length 8-63 characters. The password will be converted to a pre-shared key (PSK) after saving.
 				</span>
             </div>
+
+			<label class="control-label" for="apdproto">Protocol</label>
+			<div class="controls">
+				<select id="apdproto" name="wlan0apdproto" class="config-select-large">
+					$_wlan0apdproto
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wlan0apdproto" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-wlan0apdproto" class="config-help-info">
+					The default protocol is RSN (Robust Secure Network) which works for most network adapters.<br>
+					Some adapters including the integrated adapter on Pi-3B require WPA protocol for AP mode.
+                </span>
+			</div>
         </div>
 	</form>
 </div>
