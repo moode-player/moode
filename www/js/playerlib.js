@@ -69,7 +69,7 @@ const ONE_SEC_TIMEOUT   = 1000;
 const TWO_SEC_TIMEOUT   = 2000;
 
 // Album and Radio HD parameters
-const ALBUM_HD_BADGE_TEXT           = 'HD';
+const ALBUM_HD_BADGE_TEXT           = 'HiRes';
 const ALBUM_BIT_DEPTH_THRESHOLD     = 16;
 const ALBUM_SAMPLE_RATE_THRESHOLD   = 44100;
 const RADIO_HD_BADGE_TEXT           = 'HiRes';

@@ -524,29 +524,43 @@ jQuery(document).ready(function($) { 'use strict';
             sendMpdCmd('next');
         } else {
             // Custom wrap last track to first track
-    		var cmd = $(".playqueue li").length == (parseInt(MPD.json['song']) + 1).toString() ? 'play 0' : 'next';
+			if (typeof(MPD.json['song']) != 'undefined') {
+				var cmd = $('.playqueue li').length == (parseInt(MPD.json['song']) + 1).toString() ? 'play 0' : 'next';
+			} else {
+				var cmd = 'play 0';
+			}
     		sendMpdCmd(cmd);
         }
 		return false;
 	});
 	$('.prev').click(function(e) {
-        $.getJSON('command/playback.php?cmd=get_mpd_status', function(data) {
-            if (parseInt(MPD.json['time']) > 0 && parseInt(data['elapsed']) > 0) {
-                // Song file
-    			window.clearInterval(UI.knob);
-    			if (MPD.json['state'] != 'pause') {
-    				sendMpdCmd('pause');
-    			}
-                setTimeout(function() {
-                    sendMpdCmd('seek ' + MPD.json['song'] + ' 0');
-                }, DEFAULT_TIMEOUT);
-            }
-    		else {
-                // Radio station
-    			sendMpdCmd('previous');
-    		}
-    		return false;
-        });
+		if (MPD.json['artist'] == 'Radio station') {
+			// Radio station
+			sendMpdCmd('previous');
+		} else {
+			// Song file
+			if (MPD.json['state'] == 'play') {
+				sendMpdCmd('pause');
+				// Rewind
+				window.clearInterval(UI.knob);
+				setTimeout(function() {
+					sendMpdCmd('seek ' + MPD.json['song'] + ' 0');
+				}, DEFAULT_TIMEOUT);
+			} else if (MPD.json['state'] == 'pause') {
+				if (MPD.json['elapsed'] != '0') {
+					// Rewind
+					window.clearInterval(UI.knob);
+					setTimeout(function() {
+						sendMpdCmd('seek ' + MPD.json['song'] + ' 0');
+					}, DEFAULT_TIMEOUT);
+				} else {
+					sendMpdCmd('previous');
+				}
+			} else if (MPD.json['state'] != 'stop') {
+				sendMpdCmd('previous');
+			}
+		}
+		return false;
 	});
 	$('#volumeup,#volumeup-2').click(function(e) {
 		SESSION.json['volmute'] == '1' ? volMuteSwitch() : '';
