@@ -20,7 +20,7 @@ New features
 
 Updates
 - UPD: Bump to Linux kernel 6.12.34
-- UPD: Reenable Deezer Connect (deprecated but still works on IOS)
+- UPD: Bump to pleezer 0.19.1 and reenable Deezer Connect (deprecated)
 - UPD: Improve ready script, play system ready chime before auto-play
 - UPD: Improve startup logging for Boss 2
 - UPD: Improve responsiveness for Prev button
