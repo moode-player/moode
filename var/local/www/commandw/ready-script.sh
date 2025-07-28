@@ -10,17 +10,6 @@
 # $3 = Wait before start (secs)
 #
 
-#
-# To use this script for something other than the Default action
-# add your own code below followed by an exit statement
-#
-#exit 0
-
-#
-# Default action is to play the "System Ready" chime
-# Do not modify this section
-#
-
 READY_CHIME_URI="$1"
 READY_CHIME_TITLE="$2"
 WAIT_SECS="$3"
@@ -32,6 +21,17 @@ moode_log () {
 	echo "$TIME ready-script: $1" >> $MOODE_LOG
 }
 
+#
+# To use this script for something other than the Default action or in addition
+# to the Default action, add your own code below optionally followed by the exit
+# statement.
+#
+#exit 0
+
+#
+# Default action is to play the "System Ready" chime
+# Do not modify this section
+#
 # Begin
 moode_log "Start"
 
