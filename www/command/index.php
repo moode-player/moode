@@ -141,6 +141,19 @@ switch ($cmd[0]) {
 		}
 		echo json_encode(array('info' => 'OK'));
 		break;
+	case 'toggle_play_pause':
+		$sock = getMpdSock();
+		$status = getMpdStatus($sock);
+		$currentSong = getCurrentSong($sock);
+		if (substr($currentSong['file'], 0, 4) == 'http' && !isset($status['duration'])) {
+			// Radio station
+			$cmd = $status['state'] == 'play' ? 'stop' : 'play';
+		} else {
+			// Song file
+			$cmd = $status['state'] == 'play' ? 'pause' : 'play';
+		}
+		sendMpdCmd($sock, $cmd);
+		break;
 	case 'get_cdsp_config':
 		_openSessionReadOnly($dbh);
 		echo json_encode(array('config' => $_SESSION['camilladsp']));
@@ -221,9 +234,13 @@ switch ($cmd[0]) {
 		} else {
 			sendMpdCmd($sock, $_GET['cmd']);
 			$resp = readMpdResp($sock);
-			closeMpdSock($sock);
 			echo json_encode(parseMpdRespAsJSON($resp), JSON_FORCE_OBJECT);
 		}
+}
+
+// Close MPD socket
+if (isset($sock) && $sock !== false) {
+	closeMpdSock($sock);
 }
 
 function getArgs($cmd) {
