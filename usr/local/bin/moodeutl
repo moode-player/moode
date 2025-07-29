@@ -106,7 +106,7 @@ switch ($option) {
 		checkStationUrls($argv);
 		break;
 	case '--hwparams':
-		printHWParams();
+		printHWParams($argv);
 		break;
 	case '--btreset':
 		bluetoothReset();
@@ -183,7 +183,7 @@ With no OPTION print the help text and exit.
  " -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
- --hwparams\tPrint ALSA hardware params
+ --hwparams\tPrint ALSA hardware params [cardnum]
  --btreset\tReset Bluetooth to off
  --odcclear\tClear output device cache
  --mpdlog\tPrint MPD log
@@ -636,14 +636,19 @@ function outputDeviceCacheClear() {
 	echo 'Output device cache cleared' . "\n";
 }
 
-function printHWParams() {
+function printHWParams($argv) {
 	$trxTx = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='multiroom_tx'\""));
 	if ($trxTx == 'On') {
 		$cardNum = sysCmd("cat /proc/asound/Loopback/pcm0p/info | awk -F': ' '/card/{print $2}'")[0];
 		$adevName = 'ALSA Loopback device';
 	} else {
-		$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));
-		$adevName = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='adevname'\""));
+		if (isset($argv[2])) {
+			$cardNum = $argv[2];
+			$adevName = sysCmd("aplay -l | awk '/card " . $argv[2] . "/{print $3}' | awk 'NR==1{print}'")[0];
+		} else {
+			$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));
+			$adevName = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='adevname'\""));
+		}
 	}
 	echo 'card ' . $cardNum . ': ' . $adevName . "\n";
 	echo shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
