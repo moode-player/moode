@@ -107,8 +107,8 @@ const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
 const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
 const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
 const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
-const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display starting...';
-const NOTIFY_MSG_PEPPYDISPLAY_STARTING = 'PeppyMeter display starting...';
+const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display is starting...';
+const NOTIFY_MSG_PEPPYDISPLAY_STARTING = 'Peppy display is starting...';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
 // Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
@@ -123,6 +123,7 @@ const NAME_PLEXAMP = 'Plexamp';
 const NAME_ROONBRIDGE = 'RoonBridge';
 const NAME_GPIO = 'GPIO Controller';
 const NAME_LOCALDISPLAY = 'Local Display';
+const NAME_PEPPYDISPLAY = 'Peppy Display';
 
 // Local display X11 CalibrationMatrix touch angles
 const X11_TOUCH_ANGLE = array(
@@ -186,7 +187,7 @@ const FEAT_PLEXAMP      = 8192;		// y Plexamp renderer
 const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
-const FEAT_PEPPYDISPLAY = 131072;	// y PeppyMeter
+const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
 //						-------
 //						  228343
 

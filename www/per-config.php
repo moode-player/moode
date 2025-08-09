@@ -153,17 +153,26 @@ if (isset($_POST['update_restart_local_display'])) {
 	submitJob('local_display_restart', '', NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
-// PEPPYMETER
+// PEPPY DISPLAY
 
 if (isset($_POST['update_peppy_display'])) {
-    if (isset($_POST['peppy_display']) && $_POST['peppy_display'] != $_SESSION['peppy_display']) {
-        if ($_POST['peppy_display'] == '1') {
-            submitJob('peppy_display', $_POST['peppy_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_PEPPYDISPLAY_STARTING);
-        } else {
-            submitJob('peppy_display', $_POST['peppy_display']);
-        }
-        $_SESSION['peppy_display'] = $_POST['peppy_display'];
-    }
+	if (isset($_POST['peppy_display']) && $_POST['peppy_display'] != $_SESSION['peppy_display']) {
+		if ($_POST['peppy_display'] == '1') {
+			submitJob('peppy_display', $_POST['peppy_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_PEPPYDISPLAY_STARTING);
+		} else {
+			submitJob('peppy_display', $_POST['peppy_display']);
+		}
+		$_SESSION['peppy_display'] = $_POST['peppy_display'];
+	}
+}
+if (isset($_POST['update_peppy_display_type'])) {
+	if (isset($_POST['peppy_display_type']) && $_POST['peppy_display_type'] != $_SESSION['peppy_display_type']) {
+		submitJob('peppy_display_restart', $_POST['peppy_display_type'], NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+		$_SESSION['peppy_display_type'] = $_POST['peppy_display_type'];
+	}
+}
+if (isset($_POST['update_restart_peppy_display'])) {
+	submitJob('peppy_display_restart', $_SESSION['peppy_display_type'], NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // VOLUME CONTROLLERS
@@ -206,6 +215,10 @@ if (isset($_POST['update_lcdup'])) {
 
 phpSession('close');
 
+// Display on/off controls
+$_local_display_on_off_disable = $_SESSION['peppy_display'] == '1' ? 'disabled' : '';
+$_peppy_display_on_off_disable = $_SESSION['local_display'] == '1' ? 'disabled' : '';
+
 // LOCAL DISPLAY
 
 // GENERAL
@@ -228,7 +241,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
     $piModel = substr($_SESSION['hdwrrev'], 3, 1);
     $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
 
-	$autoClick = " onchange=\"autoClick('#btn-set-local-display');\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-local-display');\" " . $_local_display_on_off_disable;
 	$_select['local_display_on']  .= "<input type=\"radio\" name=\"local_display\" id=\"toggle-local-display-1\" value=\"1\" " . (($_SESSION['local_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['local_display_off'] .= "<input type=\"radio\" name=\"local_display\" id=\"toggle-local-display-2\" value=\"0\" " . (($_SESSION['local_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
@@ -263,15 +276,15 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
     $_installed_chromium_ver = sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0];
     $downgradeVerMajor = substr(CHROMIUM_DOWNGRADE_VER, 0, 3);
     if (substr($_installed_chromium_ver, 0, 3) > $downgradeVerMajor) {
-        $_downgrade_ctl_disabled = '';
-        $_downgrade_link_disabled = '';
+        $_downgrade_ctl_disable = '';
+        $_downgrade_link_disable = '';
         $_downgrade_chromium_msg = 'Downgrading to version ' . $downgradeVerMajor . ' is recommended ' .
         'to resolve performance issues with recent versions of Chromium.<br>' .
         '<b>Note:</b> This process can take several minutes to complete.';
 
     } else {
-        $_downgrade_ctl_disabled = 'disabled';
-        $_downgrade_link_disabled = 'onclick="return false;"';
+        $_downgrade_ctl_disable = 'disabled';
+        $_downgrade_link_disable = 'onclick="return false;"';
         $_downgrade_chromium_msg = 'Downgrade installed';
     }
 
@@ -337,21 +350,24 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	$_feat_peppydisplay = '';
 	if ($_SESSION['peppy_display'] == '1') {
-		//$_ctl_disable = '';
-		//$_link_disable = '';
+		$_peppy_ctl_disable = '';
+		$_peppy_link_disable = '';
         $_screen_res = '<span class="config-help-static">Resolution: '
             . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
             . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
             . '</span>';
 	} else {
-		//$_ctl_disable = 'disabled';
-		//$_link_disable = 'onclick="return false;"';
+		$_peppy_ctl_disable = 'disabled';
+		$_peppy_link_disable = 'onclick="return false;"';
         $_screen_res = '';
 	}
-
-	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\"";
+	# Display on|off
+	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\" " . $_peppy_display_on_off_disable;
 	$_select['peppy_display_on']  .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-1\" value=\"1\" " . (($_SESSION['peppy_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['peppy_display_off'] .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-2\" value=\"0\" " . (($_SESSION['peppy_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	# Display type
+	$_select['peppy_display_type'] .= "<option value=\"meter\" " . (($_SESSION['peppy_display_type'] == 'meter') ? "selected" : "") . ">Meter</option>\n";
+	$_select['peppy_display_type'] .= "<option value=\"spectrum\" " . (($_SESSION['peppy_display_type'] == 'spectrum') ? "selected" : "") . ">Spectrum</option>\n";
 } else {
 	$_feat_peppydisplay = 'hide';
 }

@@ -84,6 +84,7 @@ $currentSettings['scn_cursor'] = $_SESSION['scn_cursor'];
 $currentSettings['scn_blank'] = $_SESSION['scn_blank'];
 $currentSettings['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
 $currentSettings['peppy_display'] = $_SESSION['peppy_display'];
+$currentSettings['peppy_display_type'] = $_SESSION['peppy_display_type'];
 // LCD updater
 $currentSettings['lcdup'] = $_SESSION['lcdup'];
 // Miscellaneous

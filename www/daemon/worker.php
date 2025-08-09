@@ -1386,13 +1386,15 @@ if (!isset($_SESSION['toggle_coverview'])) {
 // Start peppymeter diplay
 if (!isset($_SESSION['peppy_display'])) {
 	$_SESSION['peppy_display'] = '0';
+	$_SESSION['peppy_display_type'] = 'meter';
 }
 if ($_SESSION['peppy_display'] == '1') {
-	startPeppyDisplay();
+	startPeppyDisplay($_SESSION['peppy_display_type']);
 } else {
-	stopPeppyDisplay();
+	stopPeppyDisplay($_SESSION['peppy_display_type']);
 }
 workerLog('worker: Peppy display:   ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
+workerLog('worker: Peppy disp type: ' . $_SESSION['peppy_display_type']);
 
 // Start rotary encoder
 if (!isset($_SESSION['rotaryenc'])) {
@@ -3474,6 +3476,19 @@ function runQueuedJob() {
 				stopLocalDisplay();
 				startLocalDisplay();
 			}
+			break;
+		case 'peppy_display':
+			workerLog('w_queueargs: ' . $_SESSION['w_queueargs']);
+			/*if ($_SESSION['w_queueargs'] == '1') {
+				startPeppyDisplay();
+			} else {
+				stopPeppyDisplay();
+			}*/
+			break;
+		case 'peppy_display_type':
+		case 'peppy_display_restart':
+			workerLog('w_queueargs: ' . $_SESSION['w_queueargs']);
+			//restartPeppyDisplay();
 			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio_buttons.py');

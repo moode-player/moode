@@ -274,23 +274,23 @@ function updPeppyMeterConfs($cardNum, $outputMode) {
 	$alsaMixer = $_SESSION['amixname'] == 'none' ? 'PCM' : $_SESSION['amixname'];
 	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . $alsaDevice . "\"/' " . ALSA_PLUGIN_PATH . '/_peppyout.conf');
 	# ALSA mixer
-	sysCmd("sed -i 's/^name.*/name \"" . $alsaMixer . "\"/' " . ALSA_PLUGIN_PATH . '/peppymeter.conf');
-	sysCmd("sed -i 's/^card.*/card " . $cardNum . "/' " . ALSA_PLUGIN_PATH . '/peppymeter.conf');
+	sysCmd("sed -i 's/^name.*/name \"" . $alsaMixer . "\"/' " . ALSA_PLUGIN_PATH . '/peppy.conf');
+	sysCmd("sed -i 's/^card.*/card " . $cardNum . "/' " . ALSA_PLUGIN_PATH . '/peppy.conf');
 }
 
 // Configure PeppyMeter in or out of the ALSA/CamillaDSP chain
 function configPeppyMeter($cardNum, $outputMode) {
-	if ($_SESSION['peppysvc'] == 'On') {
-		// Configure PeppyMeter as last in ALSA chain
+	if ($_SESSION['peppy_display'] == '1') {
+		// Configure Peppy as last in ALSA chain
 
 		//if no EQ
-		//	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . 'peppymeter' . "\"/' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+		//	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . 'peppy' . "\"/' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 		//else if CamillaDSP
 		//	update CamillaDSP
 		//		set default device to off (if on)
 		//		update actual pipeline device
 		//else
-		//	update eq-name.conf		-> "peppymeter"
+		//	update eq-name.conf		-> "peppy"
 	} else {
 		// Revert to Standard ALSA chain
 		// updAudioOutAndBtOutConfs($cardNum, $outputMode)

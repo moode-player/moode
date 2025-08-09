@@ -76,7 +76,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nSQLite3 version\t\t= $SQLITEVER\c"
 	echo -e "\nPython version\t\t= $PYTHON_VER\c"
 	echo -e "\nNodejs version\t\t= $NODEJS_VER\c"
-	echo -e "\nPyLGPIO version\t\t= $PYTHON_LGPIO_VER\n"
+	echo -e "\nPyLGPIO version\t\t= $PYTHON_LGPIO_VER\c"
+	echo -e "\nPygame version\t\t= $PYTHON_PYGAME_VER\n"
 }
 
 AUDIO_PARAMETERS() {
@@ -403,7 +404,8 @@ RENDERER_SETTINGS() {
 
 	if [ $(($feat_bitmask & $FEAT_PEPPYDISPLAY)) -ne 0 ]; then
 		echo -e "P E P P Y M E T E R   D I S P L A Y"
-		echo -e "\nPeppy display\t\t= $peppy_display\n"
+		echo -e "\nPeppy display\t\t= $peppy_display\c"
+		echo -e "\nPeppy type\t\t= $peppy_display_type\n"
 	fi
 }
 
@@ -529,8 +531,9 @@ THROTTLED_TEXT=${THROTTLED_TEXT%, }
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
-PYTHON_LGPIO_VER=$(dpkg -s python3-lgpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
 PYTHON_VER=$(python --version | awk '{ print  $2 }')
+PYTHON_LGPIO_VER=$(dpkg -s python3-lgpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
+PYTHON_PYGAME_VER=$(dpkg -s python3-pygame 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
 which node
 if [[ $? -gt 0 ]]; then
 	NODEJS_VER="Not installed"
@@ -923,6 +926,8 @@ value=$(moodeutl -d -gv lcdup)
 alsa_pi_audio_driver=$(moodeutl -d -gv "pi_audio_driver")
 value=$(moodeutl -d -gv peppy_display)
 [[ "$value" = "1" ]] && peppy_display="On" || peppy_display="Off"
+value=$(moodeutl -d -gv peppy_display)
+[[ "$value" = "meter" ]] && peppy_display_type="Meter" || peppy_display_type="Spectrum"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

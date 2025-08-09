@@ -14,12 +14,16 @@ function stopLocalDisplay() {
 	sysCmd('systemctl stop localdisplay');
 }
 
-// PeppyMeter display
+// Peppy display
+// $_SESSION['peppy_display_type'] = meter|spectrum
 function startPeppyDisplay() {
-	sysCmd('/var/www/daemon/peppymeter.sh --start');
+	sysCmd('/var/www/daemon/peppy.sh --' . $_SESSION['peppy_display_type'] . ' on');
 }
 function stopPeppyDisplay() {
-	sysCmd('/var/www/daemon/peppymeter.sh --stop');
+	sysCmd('/var/www/daemon/peppy.sh --' . $_SESSION['peppy_display_type'] . ' off');
+}
+function restartPeppyDisplay() {
+	sysCmd('/var/www/daemon/peppy.sh --' . $_SESSION['peppy_display_type'] . ' restart');
 }
 
 // LCD updater

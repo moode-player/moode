@@ -25,7 +25,7 @@
 					<label class="toggle-radio toggle-local-display" for="toggle-local-display-2">ON </label>$_select[local_display_on]
 					<label class="toggle-radio toggle-local-display" for="toggle-local-display-1">OFF</label>$_select[local_display_off]
 				</div>
-                <button id="btn-set-local-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+                <button id="btn-set-local-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display" value="novalue" $_local_display_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				$_screen_res
 				<span id="info-local-display" class="config-help-info">
@@ -112,7 +112,7 @@
 
 			<label class="control-label">Chromium browser</label>
 			<div class="controls">
-				<a data-toggle="modal" href="#downgrade-chromium-modal" $_downgrade_link_disabled><button class="btn btn-medium btn-primary config-btn" $_downgrade_ctl_disabled>Downgrade</button></a>
+				<a data-toggle="modal" href="#downgrade-chromium-modal" $_downgrade_link_disable><button class="btn btn-medium btn-primary config-btn" $_downgrade_ctl_disable>Downgrade</button></a>
 				<span class="config-help-static">
 					Installed version is: $_installed_chromium_ver<br>
 					$_downgrade_chromium_msg
@@ -209,10 +209,12 @@
 		</div>
 
 		<div class="control-group $_feat_peppydisplay">
-			<legend>PeppyMeter Display</legend>
+			<legend>Peppy Display</legend>
 
 			<p class="sub-legend">
-				Sub-legend text goes here.
+				Peppy is a software VU Meter / Spectrum display written in Python by @rpi.
+				It was originally developed as the screensaver for Peppy Player. With minor modifications it became a stand-alone application.
+				Peppy receives volume and spectrum data from media players via named pipes and displays the volume level or spectrum in a Graphical User Interface.
 			</p>
 
 			<div class="config-horiz-rule">General settings</div>
@@ -223,15 +225,35 @@
 					<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-2">ON </label>$_select[peppy_display_on]
 					<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-1">OFF</label>$_select[peppy_display_off]
 				</div>
-				<button id="btn-set-peppy-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-peppy-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display" value="novalue" $_peppy_display_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				$_screen_res
 				<span id="info-peppy-display" class="config-help-info">
-					Display PeppyMeter on a locally attached display.
+					Display Peppy on a locally attached display.
 				</span>
 			</div>
 
+			<label class="control-label" for="peppy-display-type">Type</label>
+			<div class="controls">
+				<select id="scn-blank" class="config-select-large" name="peppy_display_type" onchange="autoClick('#btn-set-peppy-display-type');" $_peppy_ctl_disable>
+					$_select[peppy_display_type]
+				</select>
+				<button id="btn-set-peppy-display-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display_type" value="novalue" $_peppy_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-display-type" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-peppy-display-type" class="config-help-info">
+					Choose between VU Meter and Spectrum displays.
+                </span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#restart-peppy-display" $_peppy_link_disable><button class="btn btn-medium btn-primary config-btn" $_peppy_ctl_disable>Restart</button></a>
+				<span class="config-btn-after">Peppy Display</span>
+			</div>
+
 			<div class="config-horiz-rule">Other settings</div>
+			<span class="config-help-static">
+				Placeholder.
+			</span>
 		</div>
 
 		<div class="control-group">
@@ -344,6 +366,19 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button id="btn-downgrade-chromium-submit" class="btn btn-primary btn-submit" type="submit" name="downgrade_chromium" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="restart-peppy-display" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="restart-peppy-display-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Restart Peppy Display?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_restart_peppy_display" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
