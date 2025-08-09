@@ -107,7 +107,8 @@ const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
 const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
 const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
 const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
-const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display is starting...';
+const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display starting...';
+const NOTIFY_MSG_PEPPYDISPLAY_STARTING = 'PeppyMeter display starting...';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
 // Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
@@ -167,7 +168,7 @@ const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // moodeutl -q "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
-// moodeutl -q "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
+// moodeutl -q "UPDATE cfg_system SET value='228343' WHERE param='feat_bitmask'"
 const FEAT_HTTPS        = 1;		// y HTTPS mode
 const FEAT_AIRPLAY      = 2;		// y AirPlay renderer
 const FEAT_MINIDLNA     = 4;		// y DLNA server
@@ -185,8 +186,9 @@ const FEAT_PLEXAMP      = 8192;		// y Plexamp renderer
 const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
+const FEAT_PEPPYDISPLAY = 131072;	// y PeppyMeter
 //						-------
-//						  97271
+//						  228343
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate

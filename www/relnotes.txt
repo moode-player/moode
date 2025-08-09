@@ -16,10 +16,12 @@
 ################################################################################
 
 New features
+- NEW: PeppyMeter display with DSD native option
 - NEW: Folder view only: Hide Tag/Album view, skip the Library tag cache
 
 Updates
 - UPD: Bump to Linux kernel 6.12.34
+- UPD: Bump to MPD 0.24.5
 - UPD: Bump to pleezer 0.19.1 and reenable Deezer Connect (deprecated)
 - UPD: Improve ready script, play system ready chime before auto-play
 - UPD: Improve startup logging for Boss 2
@@ -29,12 +31,14 @@ Updates
 - UPD: Add audio device to Player info
 - UPD: Add Protocol (RSN/WPA) option to Hotspot section if Network Config
 - UPD: Kanal-K radio playable URL
+- UPD: BBC playable URL's
 - UPD: Designate Bluetooth PIN code option as experimental in help
 
 Bug fixes
 - FIX: Incorrect capture and playback cards assigned for HifiBerry DAC+ ADC
 - FIX: Typo in moodeutl log output for restartServers()
 - FIX: Local display feature not working correctly in HTTPS mode
+- FIX: MPD excluding .aif files in database scan
 
 ################################################################################
 #

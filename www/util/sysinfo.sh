@@ -385,7 +385,7 @@ RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_LOCALDISPLAY)) -ne 0 ]; then
 		echo -e "L O C A L   D I S P L A Y"
 		echo -e "\nChromium browser\t= $chromium_ver\c"
-		echo -e "\nLocal UI display\t= $local_display\c"
+		echo -e "\nLocal display\t\t= $local_display\c"
 		echo -e "\nWake display on play\t= $wake_display\c"
 		echo -e "\nMouse cursor\t\t= $scn_cursor\c"
 		echo -e "\nOn screen keyboard\t= $on_screen_kbd\c"
@@ -399,6 +399,11 @@ RENDERER_SETTINGS() {
 		echo -e "\nDSI Brightness\t\t= $dsi_scn_brightness\c"
 		#echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
 		echo -e "\nDSI Rotate\t\t= $dsi_scn_rotate Deg\n"
+	fi
+
+	if [ $(($feat_bitmask & $FEAT_PEPPYDISPLAY)) -ne 0 ]; then
+		echo -e "P E P P Y M E T E R   D I S P L A Y"
+		echo -e "\nPeppy display\t\t= $peppy_display\n"
 	fi
 }
 
@@ -430,6 +435,7 @@ FEAT_GPIO=4096
 FEAT_PLEXAMP=8192
 FEAT_BLUETOOTH=16384
 FEAT_MULTIROOM=65536
+FEAT_PEPPYDISPLAY=131072
 
 # Selective resampling bitmask
 SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
@@ -915,6 +921,8 @@ value=$(moodeutl -d -gv eth0chk)
 value=$(moodeutl -d -gv lcdup)
 [[ "$value" = "1" ]] && lcdup="Yes" || lcdup="No"
 alsa_pi_audio_driver=$(moodeutl -d -gv "pi_audio_driver")
+value=$(moodeutl -d -gv peppy_display)
+[[ "$value" = "1" ]] && peppy_display="On" || peppy_display="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

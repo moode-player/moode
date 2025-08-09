@@ -237,6 +237,7 @@ function updMpdConf() {
 	// Update ALSA and Bluetooth confs
 	updAudioOutAndBtOutConfs($cardNum, $_SESSION['alsa_output_mode']);
 	updDspAndBtInConfs($cardNum, $_SESSION['alsa_output_mode']);
+	updPeppyMeterConfs($cardNum, $_SESSION['alsa_output_mode']);
 
     // Update output device cache
     updOutputDeviceCache($_SESSION['adevname']);

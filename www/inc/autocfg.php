@@ -703,6 +703,8 @@ function autoConfigSettings() {
 				}
 			}
 		}],
+		'PeppyMeter display (General)',
+		['requires' => ['peppy_display'], 'handler' => 'setSessVarOnly'],
 		'USB volume knob',
 		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],
 		'Rotary encoder',

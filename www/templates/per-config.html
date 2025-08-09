@@ -208,6 +208,32 @@
 			</div>
 		</div>
 
+		<div class="control-group $_feat_peppydisplay">
+			<legend>PeppyMeter Display</legend>
+
+			<p class="sub-legend">
+				Sub-legend text goes here.
+			</p>
+
+			<div class="config-horiz-rule">General settings</div>
+
+			<label class="control-label">Display</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-2">ON </label>$_select[peppy_display_on]
+					<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-1">OFF</label>$_select[peppy_display_off]
+				</div>
+				<button id="btn-set-peppy-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				$_screen_res
+				<span id="info-peppy-display" class="config-help-info">
+					Display PeppyMeter on a locally attached display.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Other settings</div>
+		</div>
+
 		<div class="control-group">
 			<legend>Volume controllers</legend>
 

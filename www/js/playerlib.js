@@ -22,8 +22,9 @@ const FEAT_PLEXAMP      = 8192;     // y Plexamp renderer
 const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
+const FEAT_PEPPYDISPLAY = 131072;	// y PeppyMeter
 //						-------
-//						  97271
+//						  228343
 
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';

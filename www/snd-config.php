@@ -274,8 +274,8 @@ if (isset($_POST['update_crossfeed']) && $_POST['crossfeed'] != $_SESSION['cross
 }
 // Polarity inversion
 if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
-	submitJob('invpolarity', $_POST['invert_polarity']);
 	phpSession('write', 'invert_polarity', $_POST['invert_polarity']);
+	submitJob('invpolarity', $_POST['invert_polarity']);
 }
 
 // HTTP streaming

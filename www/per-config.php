@@ -153,6 +153,19 @@ if (isset($_POST['update_restart_local_display'])) {
 	submitJob('local_display_restart', '', NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
+// PEPPYMETER
+
+if (isset($_POST['update_peppy_display'])) {
+    if (isset($_POST['peppy_display']) && $_POST['peppy_display'] != $_SESSION['peppy_display']) {
+        if ($_POST['peppy_display'] == '1') {
+            submitJob('peppy_display', $_POST['peppy_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_PEPPYDISPLAY_STARTING);
+        } else {
+            submitJob('peppy_display', $_POST['peppy_display']);
+        }
+        $_SESSION['peppy_display'] = $_POST['peppy_display'];
+    }
+}
+
 // VOLUME CONTROLLERS
 
 // Triggerhappy / USB volume knob
@@ -315,6 +328,32 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_coverview_onoff = $_SESSION['toggle_coverview'] == '-off' ? 'Off' : 'On';
 } else {
 	$_feat_localdisplay = 'hide';
+}
+
+// PEPPYMETER DISPLAY
+
+// GENERAL
+
+if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
+	$_feat_peppydisplay = '';
+	if ($_SESSION['peppy_display'] == '1') {
+		//$_ctl_disable = '';
+		//$_link_disable = '';
+        $_screen_res = '<span class="config-help-static">Resolution: '
+            . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
+            . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
+            . '</span>';
+	} else {
+		//$_ctl_disable = 'disabled';
+		//$_link_disable = 'onclick="return false;"';
+        $_screen_res = '';
+	}
+
+	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\"";
+	$_select['peppy_display_on']  .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-1\" value=\"1\" " . (($_SESSION['peppy_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['peppy_display_off'] .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-2\" value=\"0\" " . (($_SESSION['peppy_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+} else {
+	$_feat_peppydisplay = 'hide';
 }
 
 // VOLUME CONTROLLERS
