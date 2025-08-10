@@ -34,7 +34,7 @@ function stop_peppyspectrum () {
 	pkill -9 -f spectrum.py
 }
 function print_help () {
-	echo -e "Usage: peppymeter.sh [OPTION]"
+	echo -e "Usage: peppy-display.sh [OPTION]"
 	echo
 	echo "OPTIONS"
 	echo -e " --meter [on|off|restart]\tControl PeppyMeter display"

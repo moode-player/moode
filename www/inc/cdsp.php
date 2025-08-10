@@ -54,8 +54,12 @@ class CamillaDsp {
      */
     function setPlaybackDevice($cardNum, $outputMode = 'plughw') {
         if($this->configFile != null && $this->configFile != 'off' && $this->configFile != 'custom') {
-            $this->device = $cardNum;
-            $alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
+			$this->device = $cardNum;
+			if ($_SESSION['peppy_display'] == '1') {
+				$alsaDevice = 'peppy';
+			} else {
+				$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';				
+			}
             $supportedFormats = $this->detectSupportedSoundFormats();
             $useFormat = count($supportedFormats) >= 1 ?  $supportedFormats[0] : 'S32LE';
 

@@ -165,12 +165,14 @@ if (isset($_POST['update_peppy_display'])) {
 		$_SESSION['peppy_display'] = $_POST['peppy_display'];
 	}
 }
+
 if (isset($_POST['update_peppy_display_type'])) {
 	if (isset($_POST['peppy_display_type']) && $_POST['peppy_display_type'] != $_SESSION['peppy_display_type']) {
 		submitJob('peppy_display_restart', $_POST['peppy_display_type'], NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
 		$_SESSION['peppy_display_type'] = $_POST['peppy_display_type'];
 	}
 }
+
 if (isset($_POST['update_restart_peppy_display'])) {
 	submitJob('peppy_display_restart', $_SESSION['peppy_display_type'], NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }

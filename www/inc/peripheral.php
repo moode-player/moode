@@ -17,13 +17,13 @@ function stopLocalDisplay() {
 // Peppy display
 // $_SESSION['peppy_display_type'] = meter|spectrum
 function startPeppyDisplay() {
-	sysCmd('/var/www/daemon/peppy.sh --' . $_SESSION['peppy_display_type'] . ' on');
+	sysCmd('/var/www/daemon/peppy-display.sh --' . $_SESSION['peppy_display_type'] . ' on');
 }
 function stopPeppyDisplay() {
-	sysCmd('/var/www/daemon/peppy.sh --' . $_SESSION['peppy_display_type'] . ' off');
+	sysCmd('/var/www/daemon/peppy-display.sh --' . $_SESSION['peppy_display_type'] . ' off');
 }
 function restartPeppyDisplay() {
-	sysCmd('/var/www/daemon/peppy.sh --' . $_SESSION['peppy_display_type'] . ' restart');
+	sysCmd('/var/www/daemon/peppy-display.sh --' . $_SESSION['peppy_display_type'] . ' restart');
 }
 
 // LCD updater

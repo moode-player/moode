@@ -3478,17 +3478,36 @@ function runQueuedJob() {
 			}
 			break;
 		case 'peppy_display':
-			workerLog('w_queueargs: ' . $_SESSION['w_queueargs']);
-			/*if ($_SESSION['w_queueargs'] == '1') {
+			// Update ALSA configs
+			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			// Restart MPD
+			sysCmd('systemctl restart mpd');
+			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
+			closeMpdSock($sock);
+			// Restart renderers
+			if ($_SESSION['airplaysvc'] == 1) {
+				stopAirPlay();
+				startAirPlay();
+			}
+			if ($_SESSION['spotifysvc'] == 1) {
+				stopSpotify();
+				startSpotify();
+			}
+			if ($_SESSION['deezersvc'] == 1) {
+				stopDeezer();
+				startDeezer();
+			}
+			// Start/stop Peppy display
+			if ($_SESSION['peppy_display'] == '1') {
 				startPeppyDisplay();
 			} else {
 				stopPeppyDisplay();
-			}*/
+			}
 			break;
 		case 'peppy_display_type':
 		case 'peppy_display_restart':
-			workerLog('w_queueargs: ' . $_SESSION['w_queueargs']);
-			//restartPeppyDisplay();
+			restartPeppyDisplay();
 			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio_buttons.py');
