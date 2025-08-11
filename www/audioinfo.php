@@ -215,6 +215,9 @@ if ($btActive === true) {
 	$outputModeName = ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']];
 }
 
+// Peppy ALSA
+$peppyAlsa = $_SESSION['peppy_display'] == '1' ? 'PeppyALSA' : '';
+
 // Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {
 	$_audio_output_chain = 'MPD &rarr; Bluetooth stream &rarr; Bluetooth speaker';
@@ -223,9 +226,9 @@ if ($_SESSION['audioout'] == 'Bluetooth') {
 } else if ($_SESSION['multiroom_rx'] == 'On') {
 	$_audio_output_chain = 'Multiroom Receiver &rarr; Device';
 } else if ($dsp != '') {
-	$_audio_output_chain = $renderer . ' &rarr; ' . $dsp . ' &rarr; ' . $outputMode . ' &rarr; Device';
+	$_audio_output_chain = $renderer . ' &rarr; ' . $dsp . ' &rarr; ' . $peppyAlsa  . ' &rarr; ' . $outputMode . ' &rarr; Device';
 } else {
-	$_audio_output_chain = $renderer . ' &rarr; ' . $outputMode . ' &rarr; Device';
+	$_audio_output_chain = $renderer . ' &rarr; ' . $peppyAlsa  . ' &rarr; ' . $outputMode . ' &rarr; Device';
 }
 
 // ALSA Output mode and Loopback
