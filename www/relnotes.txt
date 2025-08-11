@@ -26,6 +26,7 @@ Updates
 - UPD: Improve ready script, play system ready chime before auto-play
 - UPD: Improve startup logging for Boss 2
 - UPD: Improve responsiveness for Prev button
+- UPD: Improve volume knob display of mute and dB
 - UPD: Add REST API toggle_play_pause
 - UPD: Add button feedback for Saved searches feature
 - UPD: Add audio device to Player info
