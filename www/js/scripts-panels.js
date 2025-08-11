@@ -567,14 +567,14 @@ jQuery(document).ready(function($) { 'use strict';
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol < GLOBAL.mpdMaxVolume ? curVol + 1 : GLOBAL.mpdMaxVolume;
 		setVolume(newVol, 'volume_up');
-		return false
+		return false;
 	});
 	$('#volumedn,#volumedn-2').click(function(e) {
 		SESSION.json['volmute'] == '1' ? volMuteSwitch() : '';
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol > 0 ? curVol - 1 : 0;
 		setVolume(newVol, 'volume_down');
-		return false
+		return false;
 	});
 	$('.btn-toggle').click(function(e) {
 		var cmd = $(this).data('cmd');

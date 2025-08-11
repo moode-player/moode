@@ -836,27 +836,31 @@ function getMappedDbVol() {
 	phpSession('open_ro');
 
 	if (CamillaDsp::isMPD2CamillaDSPVolSyncEnabled()) {
-		// For CamillaDSP volume
-		$result = sqlRead('cfg_system', sqlConnect(), 'volknob');
+		// CamillaDSP volume
+		$volKnob = sqlRead('cfg_system', sqlConnect(), 'volknob')[0]['value'];
 		$dynamicRange = $_SESSION['camilladsp_volume_range'];
-		$mappedDbVol = CamillaDsp::calcMappedDbVol($result[0]['value'], $dynamicRange) ;
+		$mappedDbVol = CamillaDsp::calcMappedDbVol($volKnob, $dynamicRange);
 		$mappedDbVol = round($mappedDbVol, 1);
 		if ($mappedDbVol == '0') {
 			$mappedDbVol = '0dB';
 		} else if ($mappedDbVol == '-120') {
 			$mappedDbVol = '-120dB';
 		} else {
-			$mappedDbVol = ($mappedDbVol > -10 ? number_format($mappedDbVol, 1) : substr($mappedDbVol, 0, 3)) . 'dB';
+			$mappedDbVol = str_contains($mappedDbVol, '.') ? $mappedDbVol . 'dB' : $mappedDbVol . '.0dB';
 		}
 	} else {
-		// For MPD volume
-		$result = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .
-			"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
-		if (empty($result[0]) || $_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'null') {
+		// MPD volume
+		$mappedDbVol = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .
+			"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'")[0];
+		if (empty($mappedDbVol) || $_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'null') {
 			$mappedDbVol = '';
 		} else {
-			$result = explode('.', $result[0])[0];
-			$mappedDbVol = ($result < -127 ? '-127' : $result) . 'dB';
+			$mappedDbVol = number_format(rtrim($mappedDbVol, 'dB'), 1);
+			if ($mappedDbVol == 0) {
+				$mappedDbVol = '0dB';
+			} else {
+				$mappedDbVol = ($mappedDbVol <= -127 ? '-127' : $mappedDbVol) . 'dB';
+			}
 		}
 	}
 

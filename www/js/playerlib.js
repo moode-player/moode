@@ -284,8 +284,6 @@ function sendVolCmd(type, cmd, data, async) {
         $('#volumedn').addClass('active');
     }
 
-	var obj;
-
 	$.ajax({
 		type: type,
 		url: 'command/playback.php?cmd=' + cmd,
@@ -293,16 +291,12 @@ function sendVolCmd(type, cmd, data, async) {
 		cache: false,
 		data: data,
 		success: function(data) {
-            // Omit the try/catch to enable improved volume knob behavior
-			obj = JSON.parse(data);
+			//console.log(JSON.parse(data));
 		},
 		error: function() {
-			//debugLog('sendVolCmd(): ' + cmd + ' no data returned');
-			obj = false;
+			//console.log('NOK');
 		}
 	});
-
-	return obj;
 }
 
 // MPD metadata engine
@@ -1078,7 +1072,7 @@ function renderUIVol() {
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
-    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('mute');
+    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').html('<i class="fa fa-solid fa-sharp fa-volume-xmark"></i>');
                 $('.mpd-volume-level').text('');
                 $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-off').addClass('fa-volume-xmark');
     		} else {
@@ -1136,7 +1130,7 @@ function renderUI() {
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
-    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('mute');
+    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('<i class="fa fa-solid fa-sharp fa-volume-xmark"></i>');
                 $('.mpd-volume-level').text('');
                 $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-off').addClass('fa-volume-xmark');
     		} else {

@@ -83,7 +83,7 @@ body {
 	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;font-size:8.5vw;}
 	#volume-popup .volume-display {font-size:10vw}
 	#volume-pad {height:85vw;width:85vw;}
-	#volpad .volume-display-db {left:64%;font-size:1.75em;}
+	#volpad .volume-display-db {left:60%;font-size:1.75em;}
 
 	/* Playback view */
 	#timezone,
@@ -297,7 +297,7 @@ body {
 	#volumedn-2,
 	#volumeup-2 {font-size:2.5vw;}*/
 	#volume-popup .volume-display {font-size:3.75vw;}
-	#volpad .volume-display-db {left:68%;top:51%;font-size:1.5em;}
+	#volpad .volume-display-db {left:65%;top:50%;font-size:1.5em;}
 
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
