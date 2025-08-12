@@ -186,6 +186,10 @@ function setAudioOut($output) {
 		stopSpotify();
 		startSpotify();
 	}
+	if ($_SESSION['deezersvc'] == '1') {
+		stopDeezer();
+		startDeezer();
+	}
 
 	// Set HTTP server state
 	setMpdHttpd();
