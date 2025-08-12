@@ -230,14 +230,14 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	if ($_SESSION['local_display'] == '1') {
 		$_ctl_disable = '';
 		$_link_disable = '';
-        $_screen_res = '<span class="config-help-static">Resolution: '
+        $_screen_res_local_display = '<span class="config-help-static">Resolution: '
             . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
             . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
             . '</span>';
 	} else {
 		$_ctl_disable = 'disabled';
 		$_link_disable = 'onclick="return false;"';
-        $_screen_res = '';
+        $_screen_res_local_display = '';
 	}
 
     $piModel = substr($_SESSION['hdwrrev'], 3, 1);
@@ -354,14 +354,14 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	if ($_SESSION['peppy_display'] == '1') {
 		$_peppy_ctl_disable = '';
 		$_peppy_link_disable = '';
-        $_screen_res = '<span class="config-help-static">Resolution: '
+        $_screen_res_peppy_display = '<span class="config-help-static">Resolution: '
             . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
             . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
             . '</span>';
 	} else {
 		$_peppy_ctl_disable = 'disabled';
 		$_peppy_link_disable = 'onclick="return false;"';
-        $_screen_res = '';
+        $_screen_res_peppy_display = '';
 	}
 	# Display on|off
 	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\" " . $_peppy_display_on_off_disable;
