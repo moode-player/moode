@@ -98,6 +98,7 @@ a.show-hide-password:visited {color:var(--config-help-icon-color);}
 /* lib-config */
 .config-btn-music-source {font-size:1.15em;width:80%;background-color:#333;text-align:left;}
 .config-btn-music-source-none {color:var(--config-help-color);}
+.config-btn-music-source-stats {margin-left:1.8em;font-size:.85em;color:var(--config-help-color);}
 
 /* CamillaDSP Config */
 .cdsp-help-table td {padding:0 0.5em 0 0;}

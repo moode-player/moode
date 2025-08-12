@@ -689,7 +689,7 @@ function usbMountExists($mountName) {
 }
 
 //----------------------------------------------------------------------------//
-// DLNA SERVER
+// DLNA SERVER (Music source for UPnP clients)
 //----------------------------------------------------------------------------//
 
 function startMiniDlna() {
@@ -708,4 +708,21 @@ function getDriveFormat($device) {
 function getDriveLabel($device) {
 	$label = sysCmd('blkid ' . $device . " | awk -F'LABEL=' '{print $2}' | awk -F'\"' '{print $2}'");
 	return empty($label) ? '' : $label[0];
+}
+
+// NOTE: $device can be a local device or remote mount
+function getDriveStats($device) {
+	$dfResult = sysCmd('df -h ' . $device . " | awk 'FNR==2 {print $2\",\"$3\",\"$4\",\"$5}'")[0];
+	$dfArray = explode(',', $dfResult);
+	return array('size' => $dfArray[0], 'used' => $dfArray[1],'free' => $dfArray[2],'pctu' => $dfArray[3]);
+}
+
+// For line2 in lib-config source mount
+function formatDriveStats($device) {
+	$driveStats = getDriveStats($device);
+	return '<br><span class="config-btn-music-source-stats">' .
+		'Size: ' . $driveStats['size'] . ' | ' .
+		'Used: ' . $driveStats['used'] . ' ('. $driveStats['pctu'] . ') | ' .
+		'Free:' . $driveStats['free'] .
+		'</span>';
 }
