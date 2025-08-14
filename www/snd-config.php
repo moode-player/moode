@@ -511,7 +511,7 @@ $_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_dis
 if ($_SESSION['audioout'] == 'Local' &&
 	$_SESSION['multiroom_tx'] == 'Off' &&
 	$_SESSION['multiroom_rx'] != 'On') {
-	// Only one DSP'can be on
+	// Only one DSP can be on
 	$_invpolarity_ctl_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_crossfeed_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_eqfa12p_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
