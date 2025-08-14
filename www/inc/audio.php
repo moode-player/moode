@@ -175,7 +175,7 @@ function setAudioOut($output) {
 
 	// Update audio out and BT out confs
 	updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-	updPeppyMeterConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+	updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 
 	// Restart renderers if indicated
 	if ($_SESSION['airplaysvc'] == '1') {
@@ -280,8 +280,8 @@ function updDspAndBtInConfs($cardNum, $outputMode) {
 	sysCmd("sed -i 's/^AUDIODEV.*/AUDIODEV=" . $alsaDevice . "/' /etc/bluealsaaplay.conf");
 }
 
-// Update PeppyMeter ALSA audio out
-function updPeppyMeterConfs($cardNum, $outputMode) {
+// Update Peppy configs
+function updPeppyConfs($cardNum, $outputMode) {
 	# ALSA device
 	$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
 	$alsaMixer = $_SESSION['amixname'] == 'none' ? 'PCM' : $_SESSION['amixname'];

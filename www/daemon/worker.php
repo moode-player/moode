@@ -3068,7 +3068,7 @@ function runQueuedJob() {
 
 				updAudioOutAndBtOutConfs($cardNum, 'hw');
 				updDspAndBtInConfs($cardNum, 'hw');
-				updPeppyMeterConfs($cardNum, 'hw');
+				updPeppyConfs($cardNum, 'hw');
 				sysCmd('systemctl restart mpd');
 
 				startMultiroomSender();
@@ -3084,7 +3084,7 @@ function runQueuedJob() {
 
 				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-				updPeppyMeterConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+				updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				sysCmd('systemctl restart mpd');
 				unloadSndDummy();
 			}
