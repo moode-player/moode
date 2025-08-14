@@ -3482,9 +3482,14 @@ function runQueuedJob() {
 			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			// Restart MPD
+			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('systemctl restart mpd');
 			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
+			if (!empty($playing)) {
+				sysCmd('mpc play');
+			}
+
 			// Restart renderers
 			if ($_SESSION['airplaysvc'] == 1) {
 				stopAirPlay();
@@ -3500,14 +3505,19 @@ function runQueuedJob() {
 			}
 			// Start/stop Peppy display
 			if ($_SESSION['peppy_display'] == '1') {
-				startPeppyDisplay();
+				startPeppyDisplay($_SESSION['peppy_display_type']);
 			} else {
-				stopPeppyDisplay();
+				stopPeppyDisplay($_SESSION['peppy_display_type']);
 			}
 			break;
 		case 'peppy_display_type':
+			// Stop current, start new
+			$queueArgs = explode(',', $_SESSION['w_queueargs']); // current,new
+			stopPeppyDisplay($queueArgs[0]);
+			startPeppyDisplay($queueArgs[1]);
+			break;
 		case 'peppy_display_restart':
-			restartPeppyDisplay();
+			restartPeppyDisplay($_SESSION['peppy_display_type']);
 			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio_buttons.py');
