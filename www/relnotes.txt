@@ -16,7 +16,8 @@
 ################################################################################
 
 New features
-- NEW: PeppyMeter display with DSD native option
+- NEW: Peppy VU Meter and Spectrum display
+- NEW: CoreDSP supporting MPD, Renderers and Bluetooth (inbound and speaker)
 - NEW: Folder view only: Hide Tag/Album view, skip the Library tag cache
 
 Updates
