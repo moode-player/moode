@@ -305,7 +305,7 @@
 			</div>
 		</div>
 
-		<div class="config-horiz-rule">Volume options</div>
+		<div class="config-horiz-rule">Volume control</div>
 		<div class="control-group">
 			<label class="control-label" for="volume-step-limit">Volume step limit</label>
 			<div class="controls">
@@ -343,9 +343,9 @@
 			</div>
 		</div>
 
-		<div class="config-horiz-rule">DSP options</div>
+		<div class="config-horiz-rule">MPD DSP</div>
 		<p class="sub-legend">
-			Note that the Equalizers, Crossfeed, and Polarity inversion are mutually exclusive. Enabling one will disable the others.
+			Note that Core DSP, Crossfeed, and Polarity inversion are mutually exclusive. Enabling one will disable the others.
 		</p>
 
 		<div class="control-group">
@@ -432,13 +432,14 @@
 			</div>
 		</div>
 
-		<legend>Equalizers</legend>
+		<legend>CoreDSP</legend>
 		<p class="sub-legend">
-			The Equalizers are supported by MPD, Bluetooth (inbound), AirPlay, Spotify Connect, Deezer Connect and Squeezelite renderers.
-			They are not available if Bluetooth output is set to "Bluetooth speaker" or Multiroom Sender or Receiver are On.
-			Note that the Equalizers, Crossfeed, and Polarity inversion are mutually exclusive. Enabling one will disable the others.
+			CoreDSP supports MPD, Bluetooth, AirPlay, Spotify Connect, Deezer Connect and Squeezelite renderers.
+			It is not available if Multiroom Sender or Receiver are On.
+			Note that CoreDSP and MPD Crossfeed and Polarity inversion are mutually exclusive. Enabling one will disable the others.
 		</p>
 
+		<div class="config-horiz-rule">General Purpose DSP</div>
 		<div class="control-group">
 			<label class="control-label" for="cdsp-mode">CamillaDSP</label>
 			<div class="controls">
@@ -471,7 +472,32 @@
 				<a href="cdsp-config.php"><button class="btn btn-medium btn-primary config-btn" $_cdsp_mode_ctl_disabled>Edit</button></a>
 				<span class="config-btn-after">CamillaDSP settings</span>
 			</div>
+		</div>
 
+		<div class="config-horiz-rule">Legacy Equalizers</div>
+		<p class="sub-legend">
+			Note: Peppy display cannot be turned on if playing to a Bluetooth speaker with Graphic or Parameteic EQ on.
+		</p>
+
+		<label class="control-label" for="alsaequal">Graphic EQ</label>
+		<div class="controls">
+			<select id="alsaequal" class="config-select-large" name="alsaequal" onchange="autoClick('#btn-set-alsaequal');" $_alsaequal_ctl_disabled>
+				$_select[alsaequal]
+			</select>
+			<button id="btn-set-alsaequal" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsaequal" value="novalue" $_alsaequal_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+			<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsaequal" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+			<span id="info-alsaequal" class="config-help-info">
+				A classic octave-band, constant-Q, second-order filter design. Frequency bands centered above Nyquist are automatically disabled. This EQ uses the Eq10X2 component of the CAPS suite of DSP programs written by Tim Goetze.<br>
+				<b>NOTE:</b> Equalizer processing applies to MPD, AirPlay and Spotify output.<br>
+			</span>
+		</div>
+
+		<div class="controls">
+			<a href="eqg-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
+			<span class="config-btn-after">EQ curve</span>
+		</div>
+
+		<div class="control-group">
 			<label class="control-label" for="eqfa12p">Parametric EQ</label>
 			<div class="controls">
 				<select id="eqfa12p" class="config-select-large" name="eqfa12p" onchange="autoClick('#btn-set-eqfa12p');" $_eqfa12p_ctl_disabled>
@@ -487,24 +513,6 @@
 
 			<div class="controls">
 				<a href="eqp-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
-				<span class="config-btn-after">EQ curve</span>
-			</div>
-
-			<label class="control-label" for="alsaequal">Graphic EQ</label>
-			<div class="controls">
-				<select id="alsaequal" class="config-select-large" name="alsaequal" onchange="autoClick('#btn-set-alsaequal');" $_alsaequal_ctl_disabled>
-					$_select[alsaequal]
-				</select>
-				<button id="btn-set-alsaequal" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsaequal" value="novalue" $_alsaequal_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsaequal" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-alsaequal" class="config-help-info">
-					A classic octave-band, constant-Q, second-order filter design. Frequency bands centered above Nyquist are automatically disabled. This EQ uses the Eq10X2 component of the CAPS suite of DSP programs written by Tim Goetze.<br>
-					<b>NOTE:</b> Equalizer processing applies to MPD, AirPlay and Spotify output.<br>
-                </span>
-			</div>
-
-			<div class="controls">
-				<a href="eqg-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
 				<span class="config-btn-after">EQ curve</span>
 			</div>
 		</div>

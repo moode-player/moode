@@ -6,6 +6,7 @@
 */
 
 require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/peripheral.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
@@ -220,7 +221,7 @@ phpSession('close');
 
 // Display on/off controls
 $_local_display_on_off_disable = $_SESSION['peppy_display'] == '1' ? 'disabled' : '';
-$_peppy_display_on_off_disable = $_SESSION['local_display'] == '1' ? 'disabled' : '';
+$_peppy_display_on_off_disable = ($_SESSION['local_display'] == '1' || allowPeppyInAlsaChain() == false) ? 'disabled' : '';
 
 // LOCAL DISPLAY
 
@@ -346,7 +347,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_feat_localdisplay = 'hide';
 }
 
-// PEPPYMETER DISPLAY
+// PEPPY DISPLAY
 
 // GENERAL
 

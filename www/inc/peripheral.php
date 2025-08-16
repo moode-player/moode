@@ -25,6 +25,23 @@ function stopPeppyDisplay($displayType) {
 function restartPeppyDisplay($displayType) {
 	sysCmd('/var/www/daemon/peppy-display.sh --' . $displayType . ' restart');
 }
+function allowPeppyInAlsaChain() {
+	// NOTE: MPD cant play ALSA chain: _audioout -> [alsaequal or eqfa12p] -> peppy -> btstream
+	if ($_SESSION['audioout'] == 'Bluetooth' && ($_SESSION['alsaequal'] != 'Off' || $_SESSION['eqfa12p'] != 'Off')) {
+		$allowPeppy = false;
+	} else {
+		$allowPeppy = true;
+	}
+	return $allowPeppy;
+}
+function allowDspInAlsaChain() {
+	if ($_SESSION['audioout'] == 'Bluetooth' && $_SESSION['peppy_display'] == '1') {
+		$allowDsp = false;
+	} else {
+		$allowDsp = true;
+	}
+	return $allowDsp;
+}
 
 // LCD updater
 function startLcdUpdater() {

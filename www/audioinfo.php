@@ -25,9 +25,9 @@ $hwParams = getAlsaHwParams(getAlsaCardNumForDevice($adevName));
 // SQL table cfg_mpd settings
 $cfgMPD = getCfgMpd($dbh);
 
-// Bluetooth active
+// Bluetooth inbound active
 $result = sysCmd('pgrep -l bluealsa-aplay');
-$btActive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
+$btActive = ($_SESSION['audioout'] == 'Local' && strpos($result[0], 'bluealsa-aplay') !== false) ? true : false;
 
 // Other renderer active
 $aplActive = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $dbh)[0]['value'];
@@ -159,42 +159,44 @@ if ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play') {
 $_alsa_output_format = $_hwparams_format . $_hwparams_calcrate;
 
 // Output chain
+
 // Renderer
 if ($btActive === true) {
-	$renderer = 'Bluetooth';
+	// Bluetooth inbound
+	$renderer = 'Bluetooth &rarr; ';
 } else if ($aplActive == '1') {
-	$renderer = 'AirPlay';
+	$renderer = 'AirPlay &rarr; ';
 } else if ($spotActive == '1') {
-	$renderer = 'Spotify Connect';
+	$renderer = 'Spotify Connect &rarr; ';
 } else if ($deezActive == '1') {
-	$renderer = 'Deezer Connect';
+	$renderer = 'Deezer Connect &rarr; ';
 } else if ($slActive == '1') {
-	$renderer = 'Squeezelite';
+	$renderer = 'Squeezelite &rarr; ';
 } else if ($paActive == '1') {
-	$renderer = 'Plexamp';
+	$renderer = 'Plexamp &rarr; ';
 } else if ($rbActive == '1') {
-	$renderer = 'Roonbridge';
+	$renderer = 'Roonbridge &rarr; ';
 } else if ($_SESSION['audioin'] != 'Local') {
 	$renderer = $_SESSION['audioin'] . ' input';
 } else {
-	$renderer = 'MPD';
+	$renderer = 'MPD &rarr; ';
 }
-// DSP and output mode
 
+// DSP and output mode
 if ($_SESSION['invert_polarity'] == '1') {
-	$dsp = 'Polarity inversion';
+	$dsp = 'Polarity inversion &rarr; ';
 	$outputMode = $_SESSION['alsa_output_mode'];
 } else if ($_SESSION['crossfeed'] != 'Off') {
-	$dsp = 'Crossfeed';
-	$outputMode = 'plughw';
+	$dsp = 'Crossfeed &rarr; ';
+	$outputMode = $_SESSION['peppy_display'] == '1' ? $_SESSION['alsa_output_mode'] : 'plughw';
 } else if ($_SESSION['eqfa12p'] != 'Off') {
-	$dsp = 'Parametric EQ';
-	$outputMode = 'plughw';
+	$dsp = 'Parametric EQ &rarr; ';
+	$outputMode = $_SESSION['peppy_display'] == '1' ? $_SESSION['alsa_output_mode'] : 'plughw';
 } else if ($_SESSION['alsaequal'] != 'Off') {
-	$dsp = 'Graphic EQ';
-	$outputMode = 'plughw';
+	$dsp = 'Graphic EQ &rarr; ';
+	$outputMode = $_SESSION['peppy_display'] == '1' ? $_SESSION['alsa_output_mode'] : 'plughw';
 } else if (getCamillaDspConfigName($_SESSION['camilladsp']) != 'Off') {
-	$dsp = 'CamillaDSP';
+	$dsp = 'CamillaDSP &rarr; ';
 	$outputMode = $_SESSION['alsa_output_mode'];
 } else {
 	$dsp = '';
@@ -203,6 +205,7 @@ if ($_SESSION['invert_polarity'] == '1') {
 
 // Bluetooth overrides
 if ($btActive === true) {
+	// Bluetooth inbound
 	if ($_SESSION['alsa_output_mode'] == 'iec958') {
 		$outputModeName = ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']];
 	} else {
@@ -216,19 +219,18 @@ if ($btActive === true) {
 }
 
 // Peppy ALSA
-$peppyAlsa = $_SESSION['peppy_display'] == '1' ? 'PeppyALSA' : '';
+$peppyAlsa = $_SESSION['peppy_display'] == '1' ? 'PeppyALSA &rarr; ' : '';
 
 // Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {
-	$_audio_output_chain = 'MPD &rarr; Bluetooth stream &rarr; Bluetooth speaker';
+	// $renderer = MPD
+	$_audio_output_chain = $renderer . $dsp . $peppyAlsa  . 'Bluetooth speaker';
 } else if ($_SESSION['multiroom_tx'] == 'On') {
-	$_audio_output_chain = $renderer . ' &rarr; Multiroom Sender';
+	$_audio_output_chain = $renderer . 'Multiroom Sender';
 } else if ($_SESSION['multiroom_rx'] == 'On') {
 	$_audio_output_chain = 'Multiroom Receiver &rarr; Device';
-} else if ($dsp != '') {
-	$_audio_output_chain = $renderer . ' &rarr; ' . $dsp . ' &rarr; ' . $peppyAlsa  . ' &rarr; ' . $outputMode . ' &rarr; Device';
 } else {
-	$_audio_output_chain = $renderer . ' &rarr; ' . $peppyAlsa  . ' &rarr; ' . $outputMode . ' &rarr; Device';
+	$_audio_output_chain = $renderer . $dsp . $peppyAlsa  . $outputMode . ' &rarr; Device';
 }
 
 // ALSA Output mode and Loopback

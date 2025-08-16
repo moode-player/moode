@@ -204,59 +204,60 @@ function setAudioOut($output) {
 	sysCmd('/var/www/util/vol.sh -restore');
 }
 
-// Update ALSA audio out and BT out confs
-// $outputMode:
-// plughw	Default
-// hw		Direct
-// iec958	IEC958
+// Update ALSA output configs (_audioout and _sndaloop)
 function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
-	// Local audio device
-	if ($_SESSION['audioout'] == 'Local') {
-		// With DSP
-		if ($_SESSION['alsaequal'] != 'Off') {
-			$alsaOutput = 'alsaequal';
-		} else if ($_SESSION['camilladsp'] != 'off') {
-			$alsaOutput = 'camilladsp';
-		} else if ($_SESSION['crossfeed'] != 'Off') {
-			$alsaOutput = 'crossfeed';
-		} else if ($_SESSION['eqfa12p'] != 'Off') {
-			$alsaOutput = 'eqfa12p';
-		} else if ($_SESSION['invert_polarity'] != '0') {
-			$alsaOutput = 'invpolarity';
-		// No DSP
-		} else {
-			if ($_SESSION['peppy_display'] == '1') {
-				$alsaOutput = 'peppy';
-			} else {
-				$alsaOutput = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
-			}
-		}
-	// Remote Bluetooth speaker
+	// $outputMode: plughw | hw | iec98
+	// With DSP
+	if ($_SESSION['alsaequal'] != 'Off') {
+		$alsaDevice = 'alsaequal';
+	} else if ($_SESSION['camilladsp'] != 'off') {
+		$alsaDevice = 'camilladsp';
+	} else if ($_SESSION['crossfeed'] != 'Off') {
+		$alsaDevice = 'crossfeed';
+	} else if ($_SESSION['eqfa12p'] != 'Off') {
+		$alsaDevice = 'eqfa12p';
+	} else if ($_SESSION['invert_polarity'] != '0') {
+		$alsaDevice = 'invpolarity';
+	// No DSP
 	} else {
-		$alsaOutput = 'btstream';
+		if ($_SESSION['peppy_display'] == '1') {
+			$alsaDevice = 'peppy';
+		} else if ($_SESSION['audioout'] == 'Bluetooth') {
+			$alsaDevice = 'btstream';
+		} else {
+			$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
+		}
 	}
 
 	// Update configs
-	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . $alsaOutput .  "\"/' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
-	sysCmd("sed -i 's/^a { channels 2 pcm.*/a { channels 2 pcm \"" . $alsaOutput .  "\" }/' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
+	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . $alsaDevice .  "\"/' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+	sysCmd("sed -i 's/^a { channels 2 pcm.*/a { channels 2 pcm \"" . $alsaDevice .  "\" }/' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
+
+	// DEBUG:
+	//workerLog('updAudioOutAndBtOutConfs(): ' . $cardNum . ':' . $outputMode . ' | ' . $alsaDevice);
 }
 
-// Update ALSA DSP and Bluetooth in confs
-// $outputMode:
-// plughw	Default
-// hw		Direct
-// iec958	IEC958
+// Update DSP and Bluetooth output configs
 function updDspAndBtInConfs($cardNum, $outputMode) {
+	// $outputMode: plughw | hw | iec98
 	// DSP configs
 	if ($_SESSION['peppy_display'] == '1') {
 		$alsaDevice1 = 'peppy';
 		$alsaDevice2 = 'peppy';
 	} else {
-		// Alsaequal, crossfeed and eqfa12p: plughw is required when not HDMI device
-		$alsaDevice1 = $outputMode == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $cardNum . ',0';
-		// Invpolarity: can use any ALSA output mode
-		$alsaDevice2 = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
+		if ($_SESSION['audioout'] == 'Local') {
+			// Alsaequal, crossfeed and eqfa12p: plughw is required when not HDMI device
+			$alsaDevice1 = $outputMode == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $cardNum . ',0';
+			// Invpolarity: can use any ALSA output mode
+			$alsaDevice2 = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
+		} else {
+			// Bluetooth speaker
+			$alsaDevice1 = 'btstream';
+			$alsaDevice2 = 'btstream';
+		}
 	}
+
+	// Update configs
 	sysCmd("sed -i 's/.*#device.*/slave.pcm \"" . $alsaDevice1 . "\" #device/' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
 	sysCmd("sed -i 's/.*#device.*/slave.pcm \"" . $alsaDevice1 . "\" #device/' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 	sysCmd("sed -i 's/.*#device.*/slave.pcm \"" . $alsaDevice1 . "\" #device/' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
@@ -278,15 +279,23 @@ function updDspAndBtInConfs($cardNum, $outputMode) {
 		$alsaDevice = $_SESSION['alsa_output_mode_bt']; // _audioout
 	}
 	sysCmd("sed -i 's/^AUDIODEV.*/AUDIODEV=" . $alsaDevice . "/' /etc/bluealsaaplay.conf");
+
+	// DEBUG:
+	//workerLog('updDspAndBtInConfs():       ' . $cardNum . ':' . $outputMode . ' | ' . $alsaDevice1 . ' | ' . $alsaDevice2);
 }
 
-// Update Peppy configs
+// Update Peppy output configs
 function updPeppyConfs($cardNum, $outputMode) {
-	# ALSA device
-	$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
-	$alsaMixer = $_SESSION['amixname'] == 'none' ? 'PCM' : $_SESSION['amixname'];
+	// $outputMode: plughw | hw | iec98
+	// ALSA device
+	if ($_SESSION['audioout'] == 'Bluetooth') {
+		$alsaDevice = 'btstream';
+	} else {
+		$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
+	}
 	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . $alsaDevice . "\"/' " . ALSA_PLUGIN_PATH . '/_peppyout.conf');
-	# ALSA mixer
+	// ALSA mixer
+	$alsaMixer = $_SESSION['amixname'] == 'none' ? 'PCM' : $_SESSION['amixname'];
 	sysCmd("sed -i 's/^name.*/name \"" . $alsaMixer . "\"/' " . ALSA_PLUGIN_PATH . '/peppy.conf');
 	sysCmd("sed -i 's/^card.*/card " . $cardNum . "/' " . ALSA_PLUGIN_PATH . '/peppy.conf');
 }

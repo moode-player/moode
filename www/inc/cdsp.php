@@ -57,8 +57,10 @@ class CamillaDsp {
 			$this->device = $cardNum;
 			if ($_SESSION['peppy_display'] == '1') {
 				$alsaDevice = 'peppy';
+			} else if ($_SESSION['audioout'] == 'Bluetooth') {
+				$alsaDevice = 'btstream';
 			} else {
-				$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';				
+				$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
 			}
             $supportedFormats = $this->detectSupportedSoundFormats();
             $useFormat = count($supportedFormats) >= 1 ?  $supportedFormats[0] : 'S32LE';

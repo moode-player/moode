@@ -10,6 +10,7 @@ require_once __DIR__ . '/inc/audio.php';
 require_once __DIR__ . '/inc/cdsp.php';
 require_once __DIR__ . '/inc/eqp.php';
 require_once __DIR__ . '/inc/mpd.php';
+require_once __DIR__ . '/inc/peripheral.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
@@ -508,14 +509,13 @@ $autoClick = " onchange=\"autoClick('#btn-set-volume-db-display');\"";
 $_select['volume_db_display_on']  .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-1\" value=\"1\" " . (($_SESSION['volume_db_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_display\" id=\"toggle-volume-db-display-2\" value=\"0\" " . (($_SESSION['volume_db_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Configure DSP buttons
-if ($_SESSION['audioout'] == 'Local' &&
-	$_SESSION['multiroom_tx'] == 'Off' &&
-	$_SESSION['multiroom_rx'] != 'On') {
+if ($_SESSION['multiroom_tx'] == 'Off' &&
+	$_SESSION['multiroom_rx'] != 'On') { // Off or Disabled
 	// Only one DSP can be on
 	$_invpolarity_ctl_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_crossfeed_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_eqfa12p_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_alsaequal_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_eqfa12p_ctl_disabled = (allowDspInAlsaChain() == false || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_alsaequal_ctl_disabled = (allowDspInAlsaChain() == false || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$piModel = substr($_SESSION['hdwrrev'], 3, 1);
 	$piName = $_SESSION['hdwrrev'];
 	$cmModel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
@@ -532,7 +532,6 @@ if ($_SESSION['audioout'] == 'Local' &&
 	}
 } else {
 	// Don't allow any DSP to be set for:
-	// Bluetooth speaker, Multiroom Sender/Receiver On or ALSA output mode "Pure Direct"
 	$_invpolarity_ctl_disabled = 'disabled';
 	$_crossfeed_ctl_disabled = 'disabled';
 	$_eqfa12p_ctl_disabled = 'disabled';

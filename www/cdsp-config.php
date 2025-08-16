@@ -175,7 +175,6 @@ if ($_SESSION['invert_polarity'] != '0' ||
  	$_SESSION['crossfeed'] != 'Off' ||
  	$_SESSION['eqfa12p'] != 'Off' ||
  	$_SESSION['alsaequal'] != 'Off' ||
-	$_SESSION['audioout'] == 'Bluetooth' ||
 	$_SESSION['multiroom_tx'] == 'On' ||
 	$_SESSION['multiroom_rx'] == 'On')
 {
