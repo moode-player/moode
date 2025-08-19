@@ -124,7 +124,7 @@ try:
 
 				# Write metadata file
 				debug_msg('--> Write metadata file')
-				format = 'ALAC or AAC'
+				format = 'ALAC/AAC'
 				metadata = title + '~~~' + artist + '~~~' + album + '~~~' + duration + '~~~' + cover_url + '~~~' + format
 				file = open(APLMETA_FILE, 'w')
 				file.write(metadata + "\n")
