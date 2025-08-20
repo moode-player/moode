@@ -637,6 +637,7 @@ function autoConfigSettings() {
 		//
 		'Local display (General)',
 		['requires' => ['local_display'], 'handler' => 'setSessVarSql'],
+		['requires' => ['local_display_url'], 'handler' => 'setSessVarSql'],
 		['requires' => ['wake_display'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scn_cursor'], 'handler' => function($values) {
 			$_SESSION['scn_cursor'] = $values['scn_cursor'];

@@ -48,7 +48,8 @@ fi
 $(/var/www/util/sysutil.sh clearbrcache)
 
 # Launch chromium browser
-chromium-browser --app="http://localhost/" \
+chromium-browser \
+--app="http://localhost/" \
 --window-size="$SCREEN_RES" \
 --window-position="0,0" \
 --enable-features="OverlayScrollbar" \

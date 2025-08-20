@@ -29,6 +29,13 @@ if (isset($_POST['update_local_display'])) {
     }
 }
 
+if (isset($_POST['update_local_display_url'])) {
+    if (isset($_POST['local_display_url']) && $_POST['local_display_url'] != $_SESSION['local_display_url']) {
+		$_SESSION['local_display_url'] = $_POST['local_display_url'];
+        submitJob('local_display_url', $_POST['local_display_url'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+    }
+}
+
 if (isset($_POST['update_wake_display'])) {
     if (isset($_POST['wake_display']) && $_POST['wake_display'] != $_SESSION['wake_display']) {
         phpSession('write', 'wake_display', $_POST['wake_display']);
@@ -248,6 +255,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$autoClick = " onchange=\"autoClick('#btn-set-local-display');\" " . $_local_display_on_off_disable;
 	$_select['local_display_on']  .= "<input type=\"radio\" name=\"local_display\" id=\"toggle-local-display-1\" value=\"1\" " . (($_SESSION['local_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['local_display_off'] .= "<input type=\"radio\" name=\"local_display\" id=\"toggle-local-display-2\" value=\"0\" " . (($_SESSION['local_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+	$_select['local_display_url'] = $_SESSION['local_display_url'];
 
 	$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\" " . $_ctl_disable;
 	$_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";

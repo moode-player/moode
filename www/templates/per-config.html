@@ -33,6 +33,17 @@
                 </span>
             </div>
 
+			<label class="control-label" for="local-display-url">Target URL</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="local-display-url" name="local_display_url" value="$_select[local_display_url]" $_ctl_disable>
+				<button id="btn-set-local-display-url" class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display_url" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display-url" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-local-display-url" class="config-help-info">
+					Enter the the target URL in the format "http://HOST_NAME_OR_IP_ADDRESS/".<br>
+					Default is "http://localhost/"
+                </span>
+			</div>
+
 			<label class="control-label">Wake on play</label>
 			<div class="controls">
 				<div class="toggle">

@@ -385,8 +385,9 @@ RENDERER_SETTINGS() {
 
 	if [ $(($feat_bitmask & $FEAT_LOCALDISPLAY)) -ne 0 ]; then
 		echo -e "L O C A L   D I S P L A Y"
-		echo -e "\nChromium browser\t= $chromium_ver\c"
 		echo -e "\nLocal display\t\t= $local_display\c"
+		echo -e "\nTarget url\t\t= $local_display_url\c"
+		echo -e "\nChromium browser\t= $chromium_ver\c"
 		echo -e "\nWake display on play\t= $wake_display\c"
 		echo -e "\nMouse cursor\t\t= $scn_cursor\c"
 		echo -e "\nOn screen keyboard\t= $on_screen_kbd\c"
@@ -906,6 +907,7 @@ ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
 ashuffle_window=$(moodeutl -d -gv "ashuffle_window")
 ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
 ashuffle_exclude=$(moodeutl -d -gv "ashuffle_exclude")
+local_display_url=$(moodeutl -d -gv "local_display_url")
 value=$(moodeutl -d -gv "scn_cursor")
 [[ "$value" = "1" ]] && scn_cursor="On" || scn_cursor="Off"
 value=$(moodeutl -d -gv "scn_blank")

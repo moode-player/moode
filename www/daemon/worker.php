@@ -1316,6 +1316,11 @@ if (!isset($_SESSION['scn_cursor'])) {
 }
 $param = $_SESSION['scn_cursor'] == '0' ? ' -- -nocursor' : '';
 sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
+// - Host address
+if (!isset($_SESSION['local_display_url'])) {
+	$_SESSION['local_display_url'] = 'http://localhost/';
+}
+sysCmd("sed -i 's|--app.*|--app=\"" . $_SESSION['local_display_url'] . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
 // - Screen blank interval
 if (!isset($_SESSION['scn_blank'])) {
 	$_SESSION['scn_blank'] = '600'; // 10 mins
@@ -1356,6 +1361,7 @@ if ($_SESSION['local_display'] == '1') {
 	startLocalDisplay();
 }
 workerLog('worker: Local display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
+workerLog('worker: Target url:      ' . $_SESSION['local_display_url']);
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
 workerLog('worker: Chromium cfg:    ' . $cfgStatus);
 workerLog('worker: Screen blank     ' . $_SESSION['scn_blank']);
@@ -3390,6 +3396,11 @@ function runQueuedJob() {
 			} else {
 				stopLocalDisplay();
 			}
+			break;
+		case 'local_display_url':
+			sysCmd("sed -i 's|--app.*|--app=\"" . $_SESSION['w_queueargs'] . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
 		case 'local_display_restart':
 			stopLocalDisplay();
