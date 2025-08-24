@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Aug 24 08:23:02 2025
+-- File generated with SQLiteStudio v3.4.4 on Sun Aug 24 11:26:11 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -301,7 +301,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (55, 'https://channels.fluxfm.de/chillout-radio/stream.mp3', 'FluxFM - Chillout Radio', 'r', 'local', 'Chill Out, Laidback', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (56, 'https://channels.fluxfm.de/clubsandwich/stream.mp3', 'FluxFM - Clubsandwich', 'r', 'local', 'Electronica', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (57, 'https://channels.fluxfm.de/elektro-flux/stream.mp3', 'FluxFM - ElectroFlux', 'r', 'local', 'Electronica, Pop', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (58, 'https://channels.fluxfm.de/electronic-chillout/stream.mp3 ', 'FluxFM - Electronic Chillout', 'r', 'local', 'HipHop', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (58, 'https://channels.fluxfm.de/electronic-chillout/stream.mp3', 'FluxFM - Electronic Chillout', 'r', 'local', 'Chill Out, Laidback', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (59, 'https://channels.fluxfm.de/fluxfm-finest/stream.mp3', 'FluxFM - FluxFinest', 'r', 'local', 'HipHop', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (60, 'https://channels.fluxfm.de/flux-lounge/stream.mp3', 'FluxFM - FluxLounge', 'r', 'local', 'Lounge, Neo-Soul, Trip-Hop, Jazz', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (61, 'https://channels.fluxfm.de/boom-fm-classics/stream.mp3', 'FluxFM - HipHop Classics', 'r', 'local', 'HipHop', 'FluxFM', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', 'No');
