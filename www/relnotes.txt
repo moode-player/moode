@@ -35,9 +35,15 @@ Updates
 - UPD: Add audio device to Player info
 - UPD: Add Protocol (RSN/WPA) option to Hotspot section if Network Config
 - UPD: Add drive stats (size, used, free) to source mounts in Library Config
-- UPD: Kanal-K radio playable URL
-- UPD: BBC playable URL's
 - UPD: Designate Bluetooth PIN code option as experimental in help
+
+Radio stations
+- UPD: Kanal-K radio
+- UPD: BBC stations
+- UPD: FluxFM stations
+- UPD: WRTI Philadelphia 90.1
+- DEL: JazzFM
+- DEL: Magic Classical
 
 Bug fixes
 - FIX: Incorrect capture and playback cards assigned for HifiBerry DAC+ ADC
