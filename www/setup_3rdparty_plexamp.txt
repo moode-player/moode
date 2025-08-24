@@ -30,7 +30,7 @@ sudo apt-get install -y nodejs
 4. Install Plexamp Headless 4.11.2 by running the two commands below.
 
 wget https://plexamp.plex.tv/headless/Plexamp-Linux-headless-v4.11.2.tar.bz2
-tar xjf Plexamp-Linux-headless-v4.11.2.tar.bz2
+tar xvf Plexamp-Linux-headless-v4.11.2.tar.bz2
 
 5. Run Plexamp Headless and authenticate with Plex
 
