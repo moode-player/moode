@@ -6,7 +6,7 @@
 #  1.2 2024-10-05: Bump Plexamp to v4.11.2
 #  1.1 2024-07-13: Initial Plexamp v4.10.1
 #
-#  (C) 2024 Tim Curtis http://moodeaudio.org
+#  (C) 2024 Tim Curtis https://moodeaudio.org
 #  (C) 2024 @vinnn for Plexamp setup
 #  https://moodeaudio.org/forum/showthread.php?tid=6541&pid=55010#pid55010
 #
@@ -68,5 +68,5 @@ Plexamp player in a Plex or Plexamp client/app where you can play your Plex
 or Tidal library.
 
 ################################################################################
-#  Post questions regarding this guide to http://moodeaudio.org/forum
+#  Post questions regarding this guide to https://moodeaudio.org/forum
 ################################################################################
