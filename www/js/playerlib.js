@@ -1130,7 +1130,7 @@ function renderUI() {
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
-    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('<i class="fa fa-solid fa-sharp fa-volume-xmark"></i>');
+    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').html('<i class="fa fa-solid fa-sharp fa-volume-xmark"></i>');
                 $('.mpd-volume-level').text('');
                 $('#playbar-volume-popup-btn i, .volume-popup-btn i').removeClass('fa-volume-off').addClass('fa-volume-xmark');
     		} else {
