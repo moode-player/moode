@@ -384,10 +384,12 @@ jQuery(document).ready(function($) { 'use strict';
     		makeActive('.playlist-view-btn', '#playlist-panel', currentView);
     	}
 
-        // CoverView auto-display
-		//var debugMsg = GLOBAL.userAgent + '|' + GLOBAL.chromium + '|' + SESSION.json['local_display']  + '|' + SESSION.json['auto_coverview'];
+		// DEBUG:
+		//var debugMsg = GLOBAL.chromium + '|' + SESSION.json['local_display']  + '|' + SESSION.json['auto_coverview'] + '<br>' + GLOBAL.useragent;
         //notify(NOTIFY_TITLE_INFO, 'debug', debugMsg, NOTIFY_DURATION_MEDIUM);
-        //DELETE:if (GLOBAL.chromium && SESSION.json['local_display'] == '1' && SESSION.json['auto_coverview'] == '-on') {
+
+        // NOTE: For r940 peppy dual display the condition && SESSION.json['local_display'] == '1' was removed
+		// CoverView auto-display
 		if (GLOBAL.chromium && SESSION.json['auto_coverview'] == '-on') {
             notify(NOTIFY_TITLE_INFO, 'auto_coverview', 'will be activating in ' + NOTIFY_DURATION_DEFAULT + ' seconds.', NOTIFY_DURATION_DEFAULT);
             setTimeout(function() {
