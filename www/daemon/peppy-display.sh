@@ -6,8 +6,8 @@
 
 PIPE_VU="/tmp/peppymeter"
 PIPE_SP="/tmp/peppyspectrum"
-PEPPYMETER_DIR="/opt/PeppyMeter/"
-PEPPYSPECTRUM_DIR="/opt/PeppySpectrum/"
+PEPPYMETER_DIR="/opt/peppymeter/"
+PEPPYSPECTRUM_DIR="/opt/peppyspectrum/"
 CURRENT_DIR=$(pwd)
 
 function recreate_pipes () {
