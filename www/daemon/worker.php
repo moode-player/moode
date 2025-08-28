@@ -3492,6 +3492,7 @@ function runQueuedJob() {
 			// Update ALSA configs
 			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			// Restart MPD
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('systemctl restart mpd');
