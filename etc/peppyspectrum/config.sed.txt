@@ -1,0 +1,24 @@
+[current]
+spectrum =
+base.folder =
+spectrum.folder = 480x320
+update.period = 20
+max.value = 100
+pipe.name = /tmp/peppyspectrum
+size = 30
+update.ui.interval = 0.04
+frame.rate = 30
+depth = 32
+exit.on.touch = False
+use.logging = False
+use.test.data =
+
+[sdl.env]
+framebuffer.device = /dev/fb0
+mouse.device = /dev/input/event0
+mouse.driver = TSLIB
+mouse.enabled = False
+video.driver = dummy
+video.display = :0
+double.buffer = True
+no.frame = False

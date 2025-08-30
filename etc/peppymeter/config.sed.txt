@@ -1,0 +1,67 @@
+[current]
+meter = random
+random.meter.interval = 20
+base.folder =
+meter.folder = 480x320
+screen.width = 
+screen.height = 
+exit.on.touch = False
+stop.display.on.touch = False
+output.display = True
+output.serial = False
+output.i2c = False
+output.pwm = False
+output.http = False
+use.logging = False
+use.cache = True
+cache.size = 20
+frame.rate = 30
+
+[sdl.env]
+framebuffer.device = /dev/fb0
+mouse.device = /dev/input/event0
+mouse.driver = TSLIB
+mouse.enabled = False
+video.driver = dummy
+video.display = :0
+double.buffer = False
+no.frame = False
+
+[serial.interface]
+device.name = /dev/serial0
+baud.rate = 9600
+include.time = False
+update.period = 0.1
+
+[i2c.interface]
+port = 1
+left.channel.address = 0x21
+right.channel.address = 0x20
+output.size = 10
+update.period = 0.1
+
+[pwm.interface]
+frequency = 500
+gpio.pin.left = 24
+gpio.pin.right = 25
+update.period = 0.1
+
+[http.interface]
+target.url = http://localhost:8000/vumeter
+update.period = 0.033
+
+[web.server]
+http.port = 8001
+
+[data.source]
+type = pipe
+polling.interval = 0.04
+pipe.name = /tmp/peppymeter
+volume.constant = 80.0
+volume.min = 0.0
+volume.max = 100.0
+volume.max.in.pipe = 100.0
+step = 6
+mono.algorithm = average
+stereo.algorithm = new
+smooth.buffer.size = 4
