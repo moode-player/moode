@@ -296,8 +296,9 @@ function updPeppyConfs($cardNum, $outputMode) {
 	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . $alsaDevice . "\"/' " . ALSA_PLUGIN_PATH . '/_peppyout.conf');
 	// ALSA mixer
 	$alsaMixer = $_SESSION['amixname'] == 'none' ? 'PCM' : $_SESSION['amixname'];
-	sysCmd("sed -i 's/^name.*/name \"" . $alsaMixer . "\"/' " . ALSA_PLUGIN_PATH . '/peppy.conf');
-	sysCmd("sed -i 's/^card.*/card " . $cardNum . "/' " . ALSA_PLUGIN_PATH . '/peppy.conf');
+	$peppyConfFile = file_exists(ALSA_PLUGIN_PATH . '/peppy.conf.hide') ? '/peppy.conf.hide' : '/peppy.conf';
+	sysCmd("sed -i 's/^name.*/name \"" . $alsaMixer . "\"/' " . ALSA_PLUGIN_PATH . $peppyConfFile);
+	sysCmd("sed -i 's/^card.*/card " . $cardNum . "/' " . ALSA_PLUGIN_PATH . $peppyConfFile);
 }
 
 // Read output device cache

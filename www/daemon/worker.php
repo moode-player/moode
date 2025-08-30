@@ -1389,7 +1389,7 @@ if (!isset($_SESSION['toggle_coverview'])) {
 	$_SESSION['toggle_coverview'] = $_SESSION['auto_coverview'];
 }
 
-// Start peppymeter diplay
+// Start peppymeter display
 if (!isset($_SESSION['peppy_display'])) {
 	$_SESSION['peppy_display'] = '0';
 	$_SESSION['peppy_display_type'] = 'meter';
@@ -3493,43 +3493,31 @@ function runQueuedJob() {
 			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 			updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-			// Restart MPD
-			$playing = sysCmd('mpc status | grep "\[playing\]"');
-			sysCmd('systemctl restart mpd');
-			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
-			closeMpdSock($sock);
-			if (!empty($playing)) {
-				sysCmd('mpc play');
-			}
 
-			// Restart renderers
-			if ($_SESSION['airplaysvc'] == 1) {
-				stopAirPlay();
-				startAirPlay();
-			}
-			if ($_SESSION['spotifysvc'] == 1) {
-				stopSpotify();
-				startSpotify();
-			}
-			if ($_SESSION['deezersvc'] == 1) {
-				stopDeezer();
-				startDeezer();
-			}
 			// Start/stop Peppy display
 			if ($_SESSION['peppy_display'] == '1') {
 				startPeppyDisplay($_SESSION['peppy_display_type']);
+				$resetAlsaCtl = false;
 			} else {
 				stopPeppyDisplay($_SESSION['peppy_display_type']);
+				$resetAlsaCtl = true;
 			}
+
+			// Restart MPD and Renderers
+			restartMpdAndRenderers($resetAlsaCtl);
 			break;
 		case 'peppy_display_type':
 			// Stop current, start new
 			$queueArgs = explode(',', $_SESSION['w_queueargs']); // current,new
 			stopPeppyDisplay($queueArgs[0]);
 			startPeppyDisplay($queueArgs[1]);
+			$resetAlsaCtl = false;
+			restartMpdAndRenderers($resetAlsaCtl);
 			break;
 		case 'peppy_display_restart':
 			restartPeppyDisplay($_SESSION['peppy_display_type']);
+			$resetAlsaCtl = false;
+			restartMpdAndRenderers($resetAlsaCtl);
 			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio_buttons.py');

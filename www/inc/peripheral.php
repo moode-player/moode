@@ -17,13 +17,42 @@ function stopLocalDisplay() {
 // Peppy display
 // $displayType = meter|spectrum
 function startPeppyDisplay($displayType) {
+	sysCmd('mv ' . ALSA_PLUGIN_PATH . '/peppy.conf.hide ' .ALSA_PLUGIN_PATH . '/peppy.conf');
 	sysCmd('/var/www/daemon/peppy-display.sh --' . $displayType . ' on');
 }
 function stopPeppyDisplay($displayType) {
 	sysCmd('/var/www/daemon/peppy-display.sh --' . $displayType . ' off');
+	sysCmd('mv ' . ALSA_PLUGIN_PATH . '/peppy.conf ' .ALSA_PLUGIN_PATH . '/peppy.conf.hide');
 }
 function restartPeppyDisplay($displayType) {
 	sysCmd('/var/www/daemon/peppy-display.sh --' . $displayType . ' restart');
+}
+function restartMpdAndRenderers($resetAlsaCtl) {
+	// Restart MPD
+	$playing = sysCmd('mpc status | grep "\[playing\]"');
+	sysCmd('systemctl stop mpd');
+	if ($resetAlsaCtl === true) {
+		sysCmd('alsactl clean ' . $_SESSION['cardnum']); // Reset alsa controls for card
+	}
+	sysCmd('systemctl start mpd');
+	$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
+	closeMpdSock($sock);
+	if (!empty($playing)) {
+		sysCmd('mpc play');
+	}
+	// Restart renderers
+	if ($_SESSION['airplaysvc'] == 1) {
+		stopAirPlay();
+		startAirPlay();
+	}
+	if ($_SESSION['spotifysvc'] == 1) {
+		stopSpotify();
+		startSpotify();
+	}
+	if ($_SESSION['deezersvc'] == 1) {
+		stopDeezer();
+		startDeezer();
+	}
 }
 function allowPeppyInAlsaChain() {
 	// NOTE: MPD cant play ALSA chain: _audioout -> [alsaequal or eqfa12p] -> peppy -> btstream
