@@ -29,17 +29,15 @@ function restartPeppyDisplay($displayType) {
 }
 function restartMpdAndRenderers($resetAlsaCtl) {
 	// Restart MPD
-	$playing = sysCmd('mpc status | grep "\[playing\]"');
 	sysCmd('systemctl stop mpd');
 	if ($resetAlsaCtl === true) {
-		sysCmd('alsactl clean ' . $_SESSION['cardnum']); // Reset alsa controls for card
+		sysCmd('alsactl clean ' . $_SESSION['cardnum']); // Clean (reset) application controls
+		sysCmd('alsactl init ' . $_SESSION['cardnum']); // Initialize driver to a default state
 	}
 	sysCmd('systemctl start mpd');
 	$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 	closeMpdSock($sock);
-	if (!empty($playing)) {
-		sysCmd('mpc play');
-	}
+
 	// Restart renderers
 	if ($_SESSION['airplaysvc'] == 1) {
 		stopAirPlay();
