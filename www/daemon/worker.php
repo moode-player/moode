@@ -1396,8 +1396,6 @@ if (!isset($_SESSION['peppy_display'])) {
 }
 if ($_SESSION['peppy_display'] == '1') {
 	startPeppyDisplay($_SESSION['peppy_display_type']);
-} else {
-	stopPeppyDisplay($_SESSION['peppy_display_type']);
 }
 workerLog('worker: Peppy display:   ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
 workerLog('worker: Peppy disp type: ' . $_SESSION['peppy_display_type']);
