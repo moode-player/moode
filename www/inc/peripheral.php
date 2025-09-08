@@ -69,6 +69,32 @@ function allowDspInAlsaChain() {
 	}
 	return $allowDsp;
 }
+function getPeppyConfig($type) {
+	$configFile = $type == 'meter' ? PEPPY_METER_ETC_DIR . '/config.txt' : PEPPY_SPECTRUM_ETC_DIR . '/config.txt';
+	return parseDelimFile(file_get_contents($configFile), ' = ');
+}
+function putPeppyConfig($type, $configArray) {
+	$configFile = $type == 'meter' ? PEPPY_METER_ETC_DIR . '/config.txt' : PEPPY_SPECTRUM_ETC_DIR . '/config.txt';
+	// Code goes here
+}
+function getPeppyFolderList($type) {
+	$peppyBaseDir = $type == 'meter' ? PEPPY_METER_OPT_DIR : PEPPY_SPECTRUM_OPT_DIR;
+	return glob($peppyBaseDir . '/*/', GLOB_ONLYDIR);
+}
+function getPeppyFolderContents($type, $contentDir) {
+	$peppyBaseDir = $type == 'meter' ? PEPPY_METER_OPT_DIR : PEPPY_SPECTRUM_OPT_DIR;
+	$configFile = $type == 'meter' ? 'meters.txt' : 'spectrum.txt';
+	// Get all [name] items
+	$items = sysCmd('cat ' . $peppyBaseDir . '/' . $contentDir . '/' . $configFile . ' | grep "]"');
+	// Strip the brackets and add comma separator
+	foreach ($items as $item) {
+		$item = rtrim(ltrim($item, '['), ']');
+		$itemList .= $item . ', ';
+	}
+	$itemList = rtrim($itemList, ', ');
+
+	return $itemList;
+}
 
 // LCD updater
 function startLcdUpdater() {

@@ -411,8 +411,11 @@ function restartServers($featBitmask) {
 	exec('sudo rm /var/run/worker.pid');
 	echo "- mpd2cdspvolume\n";
 	exec('sudo systemctl stop mpd2cdspvolume');
-	echo "- localui\n";
+	echo "- localdisplay\n";
 	exec('sudo systemctl stop localdisplay');
+	echo "- peppydisplay\n";
+	exec('sudo systemctl stop peppymeter');
+	exec('sudo systemctl stop peppyspectrum');
 	echo "- mpd\n";
 	exec('sudo systemctl stop mpd');
 

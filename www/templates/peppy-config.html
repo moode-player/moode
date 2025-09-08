@@ -1,0 +1,94 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="per-config">Peppy Config</h1>
+
+    <form class="form-horizontal" action="" method="post">
+    	<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+		</legend>
+
+		<div class="config-horiz-rule">General</div>
+
+		<div class="control-group">
+			<label class="control-label" for="screen-width">Screen width</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="screen-width" name="settings[screen_width]" value="$_select[screen_width]">
+			</div>
+
+			<label class="control-label" for="screen-height">Screen height</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="screen-height" name="settings[screen_height]" value="$_select[screen_height]">
+				<span class="config-help-static">
+					Width and height in pixels.
+				</span>
+			</div>
+
+			<label class="control-label" for="random-interval">Random interval</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="random-interval" name="settings[random_interval]" value="$_select[random_interval]">
+				<span class="config-help-static">
+					Time in seconds to show randomly selected Meters or Spectrums.
+				</span>
+			</div>
+		</div>
+
+		<div class="config-horiz-rule">Meters</div>
+
+		<div class="control-group">
+			<label class="control-label" for="meter-folder">Folder</label>
+			<div class="controls">
+				<select id="meter-folder" class="config-select-large" name="settings[meter_folder]">
+					$_select[meter_folder]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-meter-folder" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-meter-folder" class="config-help-info">
+					Select a Meter folder. The available Meters contained in the folder will be listed below.
+				</span>
+				<span id="meter-list" class="config-help-static">
+					$_meter_list
+				</span>
+			</div>
+
+			<label class="control-label" for="meter-name">Meter(s)</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="meter-name" name="settings[meter_name]" value="$_select[meter_name]">
+				<span class="config-help-static">
+					Enter "random" or one or more comma separated Meter names from the list above.
+				</span>
+			</div>
+		</div>
+
+		<div class="config-horiz-rule">Spectrums</div>
+
+		<div class="control-group">
+			<label class="control-label" for="spectrum-folder">Folder</label>
+			<div class="controls">
+				<select id="spectrum-folder" class="config-select-large" name="settings[spectrum_folder]">
+					$_select[spectrum_folder]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-spectrum-folder" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-spectrum-folder" class="config-help-info">
+					Select a Meter folder. The available Meters contained in the folder will be listed below.
+				</span>
+				<span id="spectrum-list" class="config-help-static">
+					$_spectrum_list
+				</span>
+			</div>
+
+			<label class="control-label" for="spectrum-name">Spectrum(s)</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="spectrum-name" name="settings[spectrum_name]" value="$_select[spectrum_name]">
+				<span class="config-help-static">
+					Enter "random" or one or more comma separated Spectrum names from the list above.
+				</span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>

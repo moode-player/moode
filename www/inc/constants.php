@@ -95,6 +95,11 @@ const READY_CHIME_URI = 'OSDISK/System Sounds/ReadyChime.flac';
 const READY_CHIME_TITLE = 'moOde audio - Ready Chime';
 // File sharing
 const FS_SMB_CONF = '/etc/samba/smb.conf';
+// Peppy display
+const PEPPY_METER_ETC_DIR = '/etc/peppymeter';
+const PEPPY_METER_OPT_DIR = '/opt/peppymeter';
+const PEPPY_SPECTRUM_ETC_DIR = '/etc/peppyspectrum';
+const PEPPY_SPECTRUM_OPT_DIR = '/opt/peppyspectrum';
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
