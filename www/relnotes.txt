@@ -34,7 +34,7 @@ Updates
 - UPD: Add REST API toggle_play_pause
 - UPD: Add button feedback for Saved searches feature
 - UPD: Add audio device to Player info
-- UPD: Add Protocol (RSN/WPA) option to Hotspot section if Network Config
+- UPD: Add Protocol (RSN/WPA) option to Hotspot section of Network Config
 - UPD: Add drive stats (size, used, free) to source mounts in Library Config
 - UPD: Designate Bluetooth PIN code option as experimental in help
 
@@ -50,7 +50,7 @@ Bug fixes
 - FIX: Incorrect capture and playback cards assigned for HifiBerry DAC+ ADC
 - FIX: Typo in moodeutl log output for restartServers()
 - FIX: Local display feature not working correctly in HTTPS mode
-- FIX: MPD excluding .aif files in database scan
+- FIX: MPD excluding .aif files in database scan (part of MPD 0.24.5)
 
 ################################################################################
 #
