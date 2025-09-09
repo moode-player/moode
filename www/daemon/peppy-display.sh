@@ -6,6 +6,9 @@
 
 PIPE_VU="/tmp/peppymeter"
 PIPE_SP="/tmp/peppyspectrum"
+METER_DIR="/opt/peppymeter/"
+SPECTRUM_DIR="/opt/peppyspectrum/"
+CURRENT_DIR=$(pwd)
 
 function recreate_pipes () {
 	[ -e $PIPE_VU ] && rm $PIPE_VU
@@ -15,17 +18,23 @@ function recreate_pipes () {
 	chmod 0666 $PIPE_VU $PIPE_SP
 }
 function start_peppymeter () {
-	systemctl start peppymeter
+	cd $METER_DIR
+	python peppymeter.py >/dev/null 2>&1 &
+	cd $CURRENT_DIR
 }
 function stop_peppymeter () {
-	systemctl stop peppymeter
+	pkill -9 -f peppymeter.py
 }
+
 function start_peppyspectrum () {
-	systemctl start peppyspectrum
+	cd $SPECTRUM_DIR
+	python spectrum.py >/dev/null 2>&1 &
+	cd $CURRENT_DIR
 }
 function stop_peppyspectrum () {
-	systemctl stop peppyspectrum
+	pkill -9 -f spectrum.py
 }
+
 function print_help () {
 	echo -e "Usage: peppy-display.sh [OPTION]"
 	echo

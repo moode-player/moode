@@ -366,12 +366,14 @@ jQuery(document).ready(function($){ 'use strict';
         var selectedFolder = $('#meter-folder :selected').text();
         $.getJSON('command/peripheral.php?cmd=get_peppy_meter_list&selected_folder=' + selectedFolder, function(data) {
             $('#meter-list').text(data);
+			$('#meter-name').val('random');
         });
     });
 	$('#spectrum-folder').change(function(e) {
         var selectedFolder = $('#spectrum-folder :selected').text();
         $.getJSON('command/peripheral.php?cmd=get_peppy_spectrum_list&selected_folder=' + selectedFolder, function(data) {
             $('#spectrum-list').text(data);
+			$('#spectrum-name').val('random');
         });
     });
 
