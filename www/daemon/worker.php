@@ -2720,23 +2720,30 @@ function runQueuedJob() {
 				sysCmd('mpc play');
 			}
 
-			// Restart renderers to catch any cardnum changes
+			// Restart renderers (to catch cardnum change if any)
 			if ($_SESSION['btsvc'] == 1) {
 				stopBluetooth();
 				startBluetooth();
 			}
 			if ($_SESSION['airplaysvc'] == 1) {
-				sysCmd('killall shairport-sync');
+				stopAirPlay();
 				startAirPlay();
 			}
 			if ($_SESSION['spotifysvc'] == 1) {
-				sysCmd('killall librespot');
+				stopSpotify();
 				startSpotify();
 			}
 			if ($_SESSION['deezersvc'] == 1) {
-				sysCmd('killall pleezer');
+				stopDeezer();
 				startDeezer();
 			}
+			if ($_SESSION['slsvc'] == 1) {
+				stopSqueezelite();
+				cfgSqueezelite();
+				startSqueezelite();
+			}
+			// Reenable HTTP server (if indicated)
+			setMpdHttpd();
 
 			// DEBUG:
 			debugLog('Job mpdcfg: ' .
@@ -2803,7 +2810,7 @@ function runQueuedJob() {
 				cfgSqueezelite();
 				startSqueezelite();
 			}
-			// Reenable HTTP server
+			// Reenable HTTP server (if indicated)
 			setMpdHttpd();
 			break;
 		case 'mpd_httpd':
@@ -2917,7 +2924,7 @@ function runQueuedJob() {
 				stopDeezer();
 				startDeezer();
 			}
-			// Reenable HTTP server
+			// Reenable HTTP server (if indicated)
 			setMpdHttpd();
 
 			debugLog('Job ' . $_SESSION['w_queue'] . ': ' .
