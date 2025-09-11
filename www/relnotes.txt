@@ -51,6 +51,7 @@ Bug fixes
 - FIX: Typo in moodeutl log output for restartServers()
 - FIX: Local display feature not working correctly in HTTPS mode
 - FIX: MPD excluding .aif files in database scan (part of MPD 0.24.5)
+- FIX: AirPlay not restarted correctly in mpdcfg job causing high CPU
 
 ################################################################################
 #
