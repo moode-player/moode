@@ -30,6 +30,7 @@ Updates
 - UPD: Improve startup logging for Boss 2
 - UPD: Improve responsiveness for Prev button
 - UPD: Improve volume knob display of mute and dB
+- UPD: Improve font size for CoverView on Ultrawide screens
 - UPD: Add host address option to Local display
 - UPD: Add REST API toggle_play_pause
 - UPD: Add button feedback for Saved searches feature
