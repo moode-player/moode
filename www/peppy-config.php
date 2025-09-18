@@ -43,7 +43,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			case 'spectrum_name':
 				$param = 'spectrum =';
 				$value = $value == 'random' ? '' : $value;
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/'" . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
 				break;
 		}
 	}
