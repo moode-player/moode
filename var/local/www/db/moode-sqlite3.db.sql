@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Fri Sep 19 07:42:35 2025
+-- File generated with SQLiteStudio v3.4.4 on Fri Sep 19 07:50:12 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -339,7 +339,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (92, 'https://onair22.xdevel.com/proxy/xautocloud_6cqz_422?mp=/stream', 'Jazz de Ville - Dance', 'r', 'local', 'Jazz', 'Jazz de Ville', 'English', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (93, 'https://onair22.xdevel.com/proxy/xautocloud_1kha_423?mp=/stream', 'Jazz de Ville - Groove', 'r', 'local', 'Jazz', 'Jazz de Ville', 'English', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (94, 'https://onair22.xdevel.com/proxy/xautocloud_kkyb_420?mp=/stream', 'Jazz de Ville - Jazz', 'r', 'local', 'Jazz', 'Jazz de Ville', 'English', 'Netherlands', 'Europe', '128', 'MP3', 'No', '', 'No');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (95, 'https://live.amperwave.net/direct/ppm-jazz24aac256-ibc1', 'Jazz24', 'r', 'local', 'Jazz', 'Jazz24.org', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (95, 'https://knkx-live-a.edge.audiocdn.com/6285_256k', 'Jazz24', 'r', 'local', 'Jazz', 'Jazz24.org', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (96, 'https://mediacp.jb-radio.net:8001/aac', 'JB Radio2 (320K)', 'r', 'local', 'Alternative, Rock, Eclectic', 'JB Radio', 'English', 'Canada', 'North America', '320', 'AAC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (97, 'https://play.kanalk.ch/kanalk/mp3-192/', 'Kanal K', 'r', 'local', 'Alternative', 'Regionalradio Aargaudio AG', 'German', 'Switzerland', 'Europe', '192', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (98, 'http://current.stream.publicradio.org/kcmp.mp3', 'KCMP 89.3 FM - The Current', 'r', 'local', 'Alternative', 'PBS', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', 'No');
