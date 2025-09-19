@@ -162,6 +162,7 @@ $_mpd_select['input_cache'] .= "<option value=\"256 MB\" " . (($cfgMPD['input_ca
 $_mpd_select['input_cache'] .= "<option value=\"512 MB\" " . (($cfgMPD['input_cache'] == '512 MB') ? "selected" : "") . " >512 MB</option>\n";
 $_mpd_select['input_cache'] .= "<option value=\"1 GB\" " . (($cfgMPD['input_cache'] == '1 GB') ? "selected" : "") . " >1 GB</option>\n";
 $_mpd_select['input_cache'] .= "<option value=\"2 GB\" " . (($cfgMPD['input_cache'] == '2 GB') ? "selected" : "") . " >2 GB</option>\n";
+$_mpd_select['input_cache'] .= "<option value=\"4 GB\" " . (($cfgMPD['input_cache'] == '4 GB') ? "selected" : "") . " >4 GB</option>\n";
 
 // HTTP PROXY
 
