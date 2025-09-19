@@ -177,4 +177,5 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['mpd_monitor_svc'] = $_SESSION['mpd_monitor_svc'];
 	$cfgSystem['mpd_monitor_opt'] = $_SESSION['mpd_monitor_opt'];
 	$cfgSystem['user_id'] = $_SESSION['user_id'];
+	$cfgSystem['moode_release'] = getMoodeRel('verbose');
 }

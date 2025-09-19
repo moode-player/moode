@@ -22,7 +22,7 @@ function notify(title, message, arg3, arg4 = '') {
         queue_item_removed: 'Selected items have been removed. ',
 		queue_item_moved: 'Selected items have been moved. ',
         queue_cleared: 'Queue has been cleared. ',
-        playqueue_info: 'Queue statistics.<br>',
+        playqueue_info: '<br>',
         // Library
         update_library: 'Library is being updated... ',
         library_updating: 'Library update is already in progress. ',
@@ -79,7 +79,7 @@ function notify(title, message, arg3, arg4 = '') {
         userid_error: 'The image does not contain a userid.<br><br>',
         firstuse_welcome: '<b>Welcome to moOde audio player</b><br><br>',
         updater: 'An update is available.<br>',
-        player_info: 'Player information.<br>',
+        player_info: '<br>',
         viewport: 'VIEWPORT<br>',
         debug: 'DEBUG<br>',
         // Dashboard
