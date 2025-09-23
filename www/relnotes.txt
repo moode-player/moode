@@ -16,6 +16,7 @@
 ################################################################################
 
 Updates
+- UPD: Run Peppy within XServer for orientation and rotation options
 - UPD: Add 4GB item for MPD input cache
 - UPD: Add moode version to player info popup
 
