@@ -375,7 +375,7 @@ function autoConfigSettings() {
 		'MPD Options',
 		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
 		['requires' => ['mpdcrossfade'], 'handler' => 'setSessVarSql'],
-		['requires' => ['crossfeed'], 'handler' => 'setSessVarSql'],
+		['requires' => ['crossfeed'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['invert_polarity'], 'handler' => 'setSessVarSql'],
 		['requires' => ['volume_step_limit'], 'handler' => 'setSessVarSql'],
 		['requires' => ['volume_mpd_max'], 'handler' => 'setSessVarSql'],
@@ -405,7 +405,7 @@ function autoConfigSettings() {
 		}],
 		['requires' => ['cdsp_fix_playback'], 'handler' => 'setSessVarSql'],
 		'Parametric EQ',
-		['requires' => ['eqfa12p'], 'handler' => 'setSessVarSql'],
+		['requires' => ['eqfa12p'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {
 			require_once __DIR__ . '/eqp.php';
 			$eqp = Eqp12(sqlConnect());
@@ -705,7 +705,8 @@ function autoConfigSettings() {
 			}
 		}],
 		'PeppyMeter display (General)',
-		['requires' => ['peppy_display', 'peppy_display_type'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['peppy_display'], 'handler' => 'setSessVarSql'],
+		['requires' => ['peppy_display_type'], 'handler' => 'setSessVarSql'],
 		'USB volume knob',
 		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],
 		'Rotary encoder',

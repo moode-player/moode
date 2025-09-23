@@ -15,17 +15,18 @@ function stopLocalDisplay() {
 }
 
 // Peppy display
-// $displayType = meter|spectrum
-function startPeppyDisplay($displayType) {
-	sysCmd('mv ' . ALSA_PLUGIN_PATH . '/peppy.conf.hide ' .ALSA_PLUGIN_PATH . '/peppy.conf');
-	sysCmd('/var/www/daemon/peppy-display.sh --' . $displayType . ' on');
+function createPeppyFifoPipes () {
+	$pipeMeter = "/tmp/peppymeter";
+	$pipeSpectrum = "/tmp/peppyspectrum";
+	sysCmd('mkfifo ' . $pipeMeter . ' ' . $pipeSpectrum);
+	sysCmd('chown root:root ' . $pipeMeter . ' ' . $pipeSpectrum);
+	sysCmd('chmod 0666 ' . $pipeMeter . ' ' . $pipeSpectrum);
 }
-function stopPeppyDisplay($displayType) {
-	sysCmd('/var/www/daemon/peppy-display.sh --' . $displayType . ' off');
+function hidePeppyConf() {
 	sysCmd('mv ' . ALSA_PLUGIN_PATH . '/peppy.conf ' .ALSA_PLUGIN_PATH . '/peppy.conf.hide');
 }
-function restartPeppyDisplay($displayType) {
-	sysCmd('/var/www/daemon/peppy-display.sh --' . $displayType . ' restart');
+function unhidePeppyConf() {
+	sysCmd('mv ' . ALSA_PLUGIN_PATH . '/peppy.conf.hide ' .ALSA_PLUGIN_PATH . '/peppy.conf');
 }
 function restartMpdAndRenderers($resetAlsaCtl) {
 	// Restart MPD

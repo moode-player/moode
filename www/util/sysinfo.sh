@@ -384,14 +384,11 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_LOCALDISPLAY)) -ne 0 ]; then
-		echo -e "L O C A L   D I S P L A Y"
-		echo -e "\nLocal display\t\t= $local_display\c"
-		echo -e "\nTarget url\t\t= $local_display_url\c"
-		echo -e "\nChromium browser\t= $chromium_ver\c"
+		echo -e "A T T A C H E D   D I S P L A Y"
+		echo -e "\nScreen blank\t\t= $scn_blank\c"
 		echo -e "\nWake display on play\t= $wake_display\c"
 		echo -e "\nMouse cursor\t\t= $scn_cursor\c"
 		echo -e "\nOn screen keyboard\t= $on_screen_kbd\c"
-		echo -e "\nScreen blank\t\t= $scn_blank\c"
 		echo -e "\nDisable GPU\t\t= $disable_gpu_chromium\c"
 		echo -e "\nHDMI Orient\t\t= $hdmi_scn_orient\c"
 		echo -e "\nHDMI CEC\t\t= $hdmi_cec\c"
@@ -403,8 +400,16 @@ RENDERER_SETTINGS() {
 		echo -e "\nDSI Rotate\t\t= $dsi_scn_rotate Deg\n"
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_LOCALDISPLAY)) -ne 0 ]; then
+		echo -e "W E B U I   D I S P L A Y"
+		echo -e "\nWebUI display\t\t= $local_display\c"
+		echo -e "\nTarget url\t\t= $local_display_url\c"
+		echo -e "\nDisable GPU\t\t= $disable_gpu_chromium\c"
+		echo -e "\nChromium browser\t= $chromium_ver\n"
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_PEPPYDISPLAY)) -ne 0 ]; then
-		echo -e "P E P P Y M E T E R   D I S P L A Y"
+		echo -e "P E P P Y   D I S P L A Y"
 		echo -e "\nPeppy display\t\t= $peppy_display\c"
 		echo -e "\nPeppy type\t\t= $peppy_display_type\n"
 	fi
@@ -729,7 +734,7 @@ library_show_genres=${arr[40]}
 extmeta=${arr[41]}
 i2soverlay=${arr[42]}
 folder_pos=${arr[43]}
-[[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
+[[ "${arr[44]}" = "1" ]] && peppy_display="On" || peppy_display="Off"
 bluez_pcm_buffer=${arr[45]}
 fs_nfs_options=${arr[46]}
 library_onetouch_album=${arr[47]}
@@ -926,9 +931,8 @@ value=$(moodeutl -d -gv eth0chk)
 value=$(moodeutl -d -gv lcdup)
 [[ "$value" = "1" ]] && lcdup="Yes" || lcdup="No"
 alsa_pi_audio_driver=$(moodeutl -d -gv "pi_audio_driver")
-value=$(moodeutl -d -gv peppy_display)
-[[ "$value" = "1" ]] && peppy_display="On" || peppy_display="Off"
-value=$(moodeutl -d -gv peppy_display)
+crossfeed=$(moodeutl -d -gv crossfeed)
+value=$(moodeutl -d -gv peppy_display_type)
 [[ "$value" = "meter" ]] && peppy_display_type="Meter" || peppy_display_type="Spectrum"
 
 # Network settings

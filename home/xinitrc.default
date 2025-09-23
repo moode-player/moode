@@ -44,16 +44,27 @@ elif [ $DSI_SCN_TYPE = '2' ] || [ $DSI_SCN_TYPE = 'other' ]; then
     fi
 fi
 
-# Clear browser cache
-$(/var/www/util/sysutil.sh clearbrcache)
-
-# Launch chromium browser
-chromium-browser \
---app="http://localhost/" \
---window-size="$SCREEN_RES" \
---window-position="0,0" \
---enable-features="OverlayScrollbar" \
---no-first-run \
---disable-infobars \
---disable-session-crashed-bubble \
---kiosk
+# Launch WebUI or Peppy
+WEBUI_SHOW=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='local_display'")
+PEPPY_SHOW=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='peppy_display'")
+PEPPY_TYPE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='peppy_display_type'")
+if [ $WEBUI_SHOW = "1" ]; then
+	# Clear browser cache
+	$(/var/www/util/sysutil.sh clearbrcache)
+	# Launch chromium browser
+	chromium-browser \
+	--app="http://localhost/" \
+	--window-size="$SCREEN_RES" \
+	--window-position="0,0" \
+	--enable-features="OverlayScrollbar" \
+	--no-first-run \
+	--disable-infobars \
+	--disable-session-crashed-bubble \
+	--kiosk
+elif [ $PEPPY_SHOW = "1" ]; then
+	if [ $PEPPY_TYPE = 'meter' ]; then
+		cd /opt/peppymeter && python3 peppymeter.py
+	else
+		cd /opt/peppyspectrum && python3 spectrum.py
+	fi
+fi

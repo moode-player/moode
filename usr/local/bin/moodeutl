@@ -5,7 +5,7 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
-const VERSION = '9.2.0';
+const VERSION = '9.2.1';
 
 set_include_path('/var/www/inc');
 
@@ -413,9 +413,6 @@ function restartServers($featBitmask) {
 	exec('sudo systemctl stop mpd2cdspvolume');
 	echo "- localdisplay\n";
 	exec('sudo systemctl stop localdisplay');
-	echo "- peppydisplay\n";
-	exec('sudo systemctl stop peppymeter');
-	exec('sudo systemctl stop peppyspectrum');
 	echo "- mpd\n";
 	exec('sudo systemctl stop mpd');
 

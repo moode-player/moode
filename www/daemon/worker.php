@@ -217,7 +217,18 @@ sysCmd('chmod 0666 ' . MOUNTMON_LOG);
 sysCmd('chmod 0600 ' . BT_PINCODE_CONF);
 if (!file_exists(ETC_MACHINE_INFO)) {
 	sysCmd('cp /usr/share/moode-player' . ETC_MACHINE_INFO . ' /etc/');
-	workerLog('worker: File check created default /etc/machine-info');
+	workerLog('worker: File check:    created default /etc/machine-info');
+}
+// Peppy ALSA config
+if (file_exists(ALSA_PLUGIN_PATH . '/peppy.conf') && file_exists(ALSA_PLUGIN_PATH . '/peppy.conf.hide')) {
+	workerLog('worker: File check:    found both peppy.conf and peppy.conf.hide');
+	if ($_SESSION['peppy_display'] == '1') {
+		sysCmd('rm ' . ALSA_PLUGIN_PATH . '/peppy.conf.hide');
+		workerLog('worker: File check:    peppy is on, removed peppy.conf.hide');
+	} else {
+		sysCmd('rm ' . ALSA_PLUGIN_PATH . '/peppy.conf');
+		workerLog('worker: File check:    peppy is off, removed peppy.conf');
+	}
 }
 
 // Moode-player package should set these but "file not found" errors occur so lets set them here
@@ -680,6 +691,14 @@ if (!isset($_SESSION['alsa_output_mode_bt'])) {
 	$_SESSION['alsa_output_mode_bt'] = '_audioout';
 }
 workerLog('worker: Bluetooth:        ' . $status);
+
+// Crossfeed and eqfa12p session vars
+if (!isset($_SESSION['crossfeed'])) {
+	$_SESSION['crossfeed'] = 'Off';
+}
+if (!isset($_SESSION['eqfa12p'])) {
+	$_SESSION['eqfa12p'] = 'Off';
+}
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -1306,7 +1325,7 @@ workerLog('worker: -- Peripherals');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Local display
+// Attached display
 // Reapply service file and xinitrc user settings
 // - UserID
 sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localdisplay.service");
@@ -1343,6 +1362,9 @@ if (!isset($_SESSION['dsi_scn_brightness'])) {
 updDSIScnBrightness($_SESSION['dsi_scn_type'], $_SESSION['dsi_scn_brightness']);
 sysCmd('systemctl daemon-reload');
 
+// Create Peppy FIFO pipes
+createPeppyFifoPipes();
+
 // Start local display
 $cfgDir = $_SESSION['home_dir'] . '/.config';
 if (file_exists($cfgDir)) {
@@ -1357,14 +1379,22 @@ if (file_exists($cfgDir)) {
 } else {
 	$cfgStatus = 'directory ' . $cfgDir . ' does not exist';
 }
-if ($_SESSION['local_display'] == '1') {
+if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
 	startLocalDisplay();
 }
-workerLog('worker: Local display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
+
+// WebUI display
+workerLog('worker: WebUI display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
 workerLog('worker: Target url:      ' . $_SESSION['local_display_url']);
 workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
 workerLog('worker: Chromium cfg:    ' . $cfgStatus);
-workerLog('worker: Screen blank     ' . $_SESSION['scn_blank']);
+// Peppy display
+workerLog('worker: Peppy display:   ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
+workerLog('worker: Peppy disp type: ' . $_SESSION['peppy_display_type']);
+
+// Attached display
+workerLog('worker: Screen blank     ' . $_SESSION['scn_blank'] . ' secs');
+workerLog('worker: Wake on play     ' . ($_SESSION['wake_display'] == '1' ? 'on' : 'off'));
 workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
 workerLog('worker: Disable GPU:     ' . $_SESSION['disable_gpu_chromium']);
 workerLog('worker: HDMI orient:     ' . $_SESSION['hdmi_scn_orient']);
@@ -1388,17 +1418,6 @@ if (!isset($_SESSION['toggle_coverview'])) {
 } else {
 	$_SESSION['toggle_coverview'] = $_SESSION['auto_coverview'];
 }
-
-// Start peppymeter display
-if (!isset($_SESSION['peppy_display'])) {
-	$_SESSION['peppy_display'] = '0';
-	$_SESSION['peppy_display_type'] = 'meter';
-}
-if ($_SESSION['peppy_display'] == '1') {
-	startPeppyDisplay($_SESSION['peppy_display_type']);
-}
-workerLog('worker: Peppy display:   ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
-workerLog('worker: Peppy disp type: ' . $_SESSION['peppy_display_type']);
 
 // Start rotary encoder
 if (!isset($_SESSION['rotaryenc'])) {
@@ -1582,6 +1601,10 @@ $maint_interval = $_SESSION['maint_interval'];
 // Screen saver
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
+
+// Screen blank
+$scn_blank_active = '0';
+$scn_blank_timeout = $_SESSION['scn_blank'];
 
 // Bluetooth
 $bt_auto_disconnect = $_SESSION['bt_auto_disconnect'];
@@ -1773,8 +1796,8 @@ closeMpdSock($sock);
 workerLog('worker: --');
 workerLog('worker: -- Event loop ');
 workerLog('worker: --');
-workerLog('worker: Poll every ' . (WORKER_SLEEP / 1000000) . ' seconds');
-workerLog('worker: Begin...');
+workerLog('worker: Entering event loop');
+workerLog('worker: Poll every ' . (WORKER_SLEEP / 1000000) . ' seconds...');
 //----------------------------------------------------------------------------//
 
 while (true) {
@@ -1784,6 +1807,9 @@ while (true) {
 
 	if ($_SESSION['scnsaver_timeout'] != 'Never') {
 		chkScnSaver();
+	}
+	if ($_SESSION['peppy_display'] == '1') {
+		chkScnBlank();
 	}
 	if ($_SESSION['maint_interval'] != 0) {
 		chkMaintenance();
@@ -1870,6 +1896,15 @@ function chkScnSaver() {
 		}
 	}
 	//workerLog($mpdState . ' | ' . $_SESSION['scnsaver_whenplaying'] . ' | ' . $GLOBALS['scnsaver_timeout'] . ' | ' . $GLOBALS['scnactive']);
+}
+
+// Activate if timeout is set and Peppy is on
+function chkScnBlank() {
+	if ($_SESSION['scn_blank'] != 'Never') {
+		$GLOBALS['scn_blank_timeout'] = $GLOBALS['scn_blank_timeout'] - (WORKER_SLEEP / 1000000);
+		//sysCmd('DISPLAY=:0 xset dpms force off');
+	    //sysCmd('DISPLAY=:0 xset dpms force on');
+	}
 }
 
 function chkMaintenance() {
@@ -3500,11 +3535,13 @@ function runQueuedJob() {
 			updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 
 			// Start/stop Peppy display
-			if ($_SESSION['peppy_display'] == '1') {
-				startPeppyDisplay($_SESSION['peppy_display_type']);
+			if ($_SESSION['w_queueargs'] == '1') {
+				unhidePeppyConf();
+				startLocalDisplay();
 				$resetAlsaCtl = false;
 			} else {
-				stopPeppyDisplay($_SESSION['peppy_display_type']);
+				stopLocalDisplay();
+				hidePeppyConf();
 				$resetAlsaCtl = true;
 			}
 
@@ -3512,15 +3549,14 @@ function runQueuedJob() {
 			restartMpdAndRenderers($resetAlsaCtl);
 			break;
 		case 'peppy_display_type':
-			// Stop current, start new
-			$queueArgs = explode(',', $_SESSION['w_queueargs']); // current,new
-			stopPeppyDisplay($queueArgs[0]);
-			startPeppyDisplay($queueArgs[1]);
+			stopLocalDisplay();
+			startLocalDisplay();
 			$resetAlsaCtl = false;
 			restartMpdAndRenderers($resetAlsaCtl);
 			break;
 		case 'peppy_display_restart':
-			restartPeppyDisplay($_SESSION['peppy_display_type']);
+			stopLocalDisplay();
+			startLocalDisplay();
 			$resetAlsaCtl = false;
 			restartMpdAndRenderers($resetAlsaCtl);
 			break;

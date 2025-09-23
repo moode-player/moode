@@ -14,9 +14,9 @@ phpSession('open');
 
 chkVariables($_POST);
 
-// LOCAL DISPLAY
+// ATTACHED DISPLAYS
 
-// GENERAL
+// moOde WebUI
 
 if (isset($_POST['update_local_display'])) {
     if (isset($_POST['local_display']) && $_POST['local_display'] != $_SESSION['local_display']) {
@@ -33,6 +33,66 @@ if (isset($_POST['update_local_display_url'])) {
     if (isset($_POST['local_display_url']) && $_POST['local_display_url'] != $_SESSION['local_display_url']) {
 		$_SESSION['local_display_url'] = $_POST['local_display_url'];
         submitJob('local_display_url', $_POST['local_display_url'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+    }
+}
+
+if (isset($_POST['update_toggle_coverview'])) {
+	$_SESSION['toggle_coverview'] = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
+	$result = sysCmd('/var/www/util/coverview.php ' . $_SESSION['toggle_coverview']);
+}
+
+if (isset($_POST['update_restart_local_display'])) {
+	submitJob('local_display_restart', '', NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+
+if (isset($_POST['update_disable_gpu_chromium'])) {
+    if (isset($_POST['disable_gpu_chromium']) && $_POST['disable_gpu_chromium'] != $_SESSION['disable_gpu_chromium']) {
+        $_SESSION['disable_gpu_chromium'] = $_POST['disable_gpu_chromium'];
+        if ($_SESSION['local_display'] == '1') {
+            submitJob('disable_gpu_chromium', $_POST['disable_gpu_chromium'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+        } else {
+            submitJob('disable_gpu_chromium', $_POST['disable_gpu_chromium']);
+        }
+    }
+}
+
+if (isset($_POST['downgrade_chromium'])) {
+    submitJob('downgrade_chromium', '',
+        NOTIFY_TITLE_INFO,
+        'Update complete.<br>' . NOTIFY_MSG_SYSTEM_RESTART_REQD,
+        NOTIFY_DURATION_INFINITE);
+}
+
+// PeppyMeter
+
+if (isset($_POST['update_peppy_display'])) {
+	if (isset($_POST['peppy_display']) && $_POST['peppy_display'] != $_SESSION['peppy_display']) {
+		if ($_POST['peppy_display'] == '1') {
+			submitJob('peppy_display', $_POST['peppy_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_PEPPYDISPLAY_STARTING);
+		} else {
+			submitJob('peppy_display', $_POST['peppy_display']);
+		}
+		phpSession('write', 'peppy_display', $_POST['peppy_display']);
+	}
+}
+
+if (isset($_POST['update_peppy_display_type'])) {
+	if (isset($_POST['peppy_display_type']) && $_POST['peppy_display_type'] != $_SESSION['peppy_display_type']) {
+		phpSession('write', 'peppy_display_type', $_POST['peppy_display_type']);
+		submitJob('peppy_display_type', '', NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+	}
+}
+
+if (isset($_POST['update_restart_peppy_display'])) {
+	submitJob('peppy_display_restart', '', NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+
+// General
+
+if (isset($_POST['update_scn_blank'])) {
+    if (isset($_POST['scn_blank']) && $_POST['scn_blank'] != $_SESSION['scn_blank']) {
+        $_SESSION['scn_blank'] = $_POST['scn_blank'];
+        submitJob('scn_blank', $_POST['scn_blank'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
     }
 }
 
@@ -55,32 +115,7 @@ if (isset($_POST['update_on_screen_kbd'])) {
     }
 }
 
-if (isset($_POST['update_scn_blank'])) {
-    if (isset($_POST['scn_blank']) && $_POST['scn_blank'] != $_SESSION['scn_blank']) {
-        $_SESSION['scn_blank'] = $_POST['scn_blank'];
-        submitJob('scn_blank', $_POST['scn_blank'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
-    }
-}
-
-if (isset($_POST['update_disable_gpu_chromium'])) {
-    if (isset($_POST['disable_gpu_chromium']) && $_POST['disable_gpu_chromium'] != $_SESSION['disable_gpu_chromium']) {
-        $_SESSION['disable_gpu_chromium'] = $_POST['disable_gpu_chromium'];
-        if ($_SESSION['local_display'] == '1') {
-            submitJob('disable_gpu_chromium', $_POST['disable_gpu_chromium'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
-        } else {
-            submitJob('disable_gpu_chromium', $_POST['disable_gpu_chromium']);
-        }
-    }
-}
-
-if (isset($_POST['downgrade_chromium'])) {
-    submitJob('downgrade_chromium', '',
-        NOTIFY_TITLE_INFO,
-        'Update complete.<br>' . NOTIFY_MSG_SYSTEM_RESTART_REQD,
-        NOTIFY_DURATION_INFINITE);
-}
-
-// HDMI DISPLAYS
+// HDMI displays
 
 if (isset($_POST['update_hdmi_scn_orient'])) {
     if (isset($_POST['hdmi_scn_orient']) && $_POST['hdmi_scn_orient'] != $_SESSION['hdmi_scn_orient']) {
@@ -104,7 +139,7 @@ if (isset($_POST['update_hdmi_enable_4kp60'])) {
     }
 }
 
-// DSI DISPLAYS (PI TOUCH1/TOUCH2)
+// DSI displays (Pi Touch1/Touch2)
 
 if (isset($_POST['update_dsi_scn_type'])) {
     if (isset($_POST['dsi_scn_type']) && $_POST['dsi_scn_type'] != $_SESSION['dsi_scn_type']) {
@@ -152,40 +187,6 @@ if (isset($_POST['update_dsi_scn_rotate'])) {
     }
 }
 
-if (isset($_POST['update_toggle_coverview'])) {
-	$_SESSION['toggle_coverview'] = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
-	$result = sysCmd('/var/www/util/coverview.php ' . $_SESSION['toggle_coverview']);
-}
-
-if (isset($_POST['update_restart_local_display'])) {
-	submitJob('local_display_restart', '', NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
-}
-
-// PEPPY DISPLAY
-
-if (isset($_POST['update_peppy_display'])) {
-	if (isset($_POST['peppy_display']) && $_POST['peppy_display'] != $_SESSION['peppy_display']) {
-		if ($_POST['peppy_display'] == '1') {
-			submitJob('peppy_display', $_POST['peppy_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_PEPPYDISPLAY_STARTING);
-		} else {
-			submitJob('peppy_display', $_POST['peppy_display']);
-		}
-		$_SESSION['peppy_display'] = $_POST['peppy_display'];
-	}
-}
-
-if (isset($_POST['update_peppy_display_type'])) {
-	if (isset($_POST['peppy_display_type']) && $_POST['peppy_display_type'] != $_SESSION['peppy_display_type']) {
-		$currentAndNew = $_SESSION['peppy_display_type'] . ',' . $_POST['peppy_display_type'];
-		submitJob('peppy_display_type', $currentAndNew, NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
-		$_SESSION['peppy_display_type'] = $_POST['peppy_display_type'];
-	}
-}
-
-if (isset($_POST['update_restart_peppy_display'])) {
-	submitJob('peppy_display_restart', $_SESSION['peppy_display_type'], NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
-}
-
 // VOLUME CONTROLLERS
 
 // Triggerhappy / USB volume knob
@@ -226,63 +227,37 @@ if (isset($_POST['update_lcdup'])) {
 
 phpSession('close');
 
-// Display on/off controls
-$_local_display_on_off_disable = $_SESSION['peppy_display'] == '1' ? 'disabled' : '';
-$_peppy_display_on_off_disable = ($_SESSION['local_display'] == '1' || allowPeppyInAlsaChain() == false) ? 'disabled' : '';
+// WebUI and Peppy on/off disables
+$_webui_on_off_disable = $_SESSION['peppy_display'] == '1' ? 'disabled' : '';
+$_peppy_on_off_disable = ($_SESSION['local_display'] == '1' || allowPeppyInAlsaChain() == false) ? 'disabled' : '';
 
-// LOCAL DISPLAY
+// ATTACHED DISPLAYS
 
-// GENERAL
-
+// moOde WebUI
 if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_feat_localdisplay = '';
 	if ($_SESSION['local_display'] == '1') {
-		$_ctl_disable = '';
-		$_link_disable = '';
+		$_webui_ctl_disable = '';
+		$_webui_link_disable = '';
         $_screen_res_local_display = '<span class="config-help-static">Resolution: '
             . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
             . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
             . '</span>';
 	} else {
-		$_ctl_disable = 'disabled';
-		$_link_disable = 'onclick="return false;"';
+		$_webui_ctl_disable = 'disabled';
+		$_webui_link_disable = 'onclick="return false;"';
         $_screen_res_local_display = '';
 	}
 
-    $piModel = substr($_SESSION['hdwrrev'], 3, 1);
-    $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
-
-	$autoClick = " onchange=\"autoClick('#btn-set-local-display');\" " . $_local_display_on_off_disable;
+	$autoClick = " onchange=\"autoClick('#btn-set-local-display');\" " . $_webui_on_off_disable;
 	$_select['local_display_on']  .= "<input type=\"radio\" name=\"local_display\" id=\"toggle-local-display-1\" value=\"1\" " . (($_SESSION['local_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['local_display_off'] .= "<input type=\"radio\" name=\"local_display\" id=\"toggle-local-display-2\" value=\"0\" " . (($_SESSION['local_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	$_select['local_display_url'] = $_SESSION['local_display_url'];
 
-	$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\" " . $_ctl_disable;
-	$_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['wake_display_off'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_coverview_onoff = $_SESSION['toggle_coverview'] == '-off' ? 'Off' : 'On';
 
-	$autoClick = " onchange=\"autoClick('#btn-set-scn-cursor');\" " . $_ctl_disable;
-	$_select['scn_cursor_on']  .= "<input type=\"radio\" name=\"scn_cursor\" id=\"toggle-scn-cursor-1\" value=\"1\" " . (($_SESSION['scn_cursor'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['scn_cursor_off'] .= "<input type=\"radio\" name=\"scn_cursor\" id=\"toggle-scn-cursor-2\" value=\"0\" " . (($_SESSION['scn_cursor'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-    $autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_ctl_disable;
-	$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-	$_select['scn_blank'] .= "<option value=\"off\" " . (($_SESSION['scn_blank'] == 'off') ? "selected" : "") . ">Never</option>\n";
-	$_select['scn_blank'] .= "<option value=\"10\" " . (($_SESSION['scn_blank'] == '10') ? "selected" : "") . ">10 Secs</option>\n";
-	$_select['scn_blank'] .= "<option value=\"20\" " . (($_SESSION['scn_blank'] == '20') ? "selected" : "") . ">20 Secs</option>\n";
-	$_select['scn_blank'] .= "<option value=\"30\" " . (($_SESSION['scn_blank'] == '30') ? "selected" : "") . ">30 Secs</option>\n";
-	$_select['scn_blank'] .= "<option value=\"60\" " . (($_SESSION['scn_blank'] == '60') ? "selected" : "") . ">1 Min</option>\n";
-	$_select['scn_blank'] .= "<option value=\"120\" " . (($_SESSION['scn_blank'] == '120') ? "selected" : "") . ">2 Mins</option>\n";
-	$_select['scn_blank'] .= "<option value=\"300\" " . (($_SESSION['scn_blank'] == '300') ? "selected" : "") . ">5 Mins</option>\n";
-	$_select['scn_blank'] .= "<option value=\"600\" " . (($_SESSION['scn_blank'] == '600') ? "selected" : "") . ">10 Mins</option>\n";
-	$_select['scn_blank'] .= "<option value=\"1200\" " . (($_SESSION['scn_blank'] == '1200') ? "selected" : "") . ">20 Mins</option>\n";
-	$_select['scn_blank'] .= "<option value=\"1800\" " . (($_SESSION['scn_blank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
-	$_select['scn_blank'] .= "<option value=\"3600\" " . (($_SESSION['scn_blank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
-
-    $autoClick = " onchange=\"autoClick('#btn-set-disable-gpu-chromium');\"";
+	$autoClick = " onchange=\"autoClick('#btn-set-disable-gpu-chromium');\"";
 	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
@@ -300,65 +275,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
         $_downgrade_link_disable = 'onclick="return false;"';
         $_downgrade_chromium_msg = 'Downgrade installed';
     }
-
-    // HDMI DISPLAYS
-
-    $_select['hdmi_scn_orient'] .= "<option value=\"landscape\" " . (($_SESSION['hdmi_scn_orient'] == 'landscape') ? "selected" : "") . ">Landscape</option>\n";
-    $_select['hdmi_scn_orient'] .= "<option value=\"portrait\" " . (($_SESSION['hdmi_scn_orient'] == 'portrait') ? "selected" : "") . ">Portrait</option>\n";
-
-    $autoClick = " onchange=\"autoClick('#btn-set-hdmi-cec');\" " . $_hdmi_cec_btn_disable;
-	$_select['hdmi_cec_on']  .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-1\" value=\"on\" " . (($_SESSION['hdmi_cec'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['hdmi_cec_off'] .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-2\" value=\"off\" " . (($_SESSION['hdmi_cec'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-    $autoClick = " onchange=\"autoClick('#btn-set-hdmi-enable-4kp60');\" " . $_hdmi_4kp60_btn_disable;
-	$_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-    // DSI DISPLAYS (PI TOUCH1/TOUCH2)
-
-    $_dsi_ctl_disable = $_SESSION['dsi_scn_type'] == 'none' ? 'disabled' : '';
-    // NOTE: The option 'none' is used in xinitrc to determine whether HDMI or DSI configuration is used
-    $_select['dsi_scn_type'] .= "<option value=\"none\" " . (($_SESSION['dsi_scn_type'] == 'none') ? "selected" : "") . ">None</option>\n";
-    $_select['dsi_scn_type'] .= "<option value=\"1\" " . (($_SESSION['dsi_scn_type'] == '1') ? "selected" : "") . ">Pi Touch 1</option>\n";
-    $_select['dsi_scn_type'] .= "<option value=\"2\" " . (($_SESSION['dsi_scn_type'] == '2') ? "selected" : "") . ">Pi Touch 2</option>\n";
-    $_select['dsi_scn_type'] .= "<option value=\"other\" " . (($_SESSION['dsi_scn_type'] == 'other') ? "selected" : "") . ">Other</option>\n";
-
-    $_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1</option>\n";
-    $_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-2</option>\n";
-
-    // NOTE: Touch1 (square pixels): no solution yet with the KMS driver
-	//$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
-	//$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
-
-    $_select['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
-
-    if ($_SESSION['dsi_scn_type'] == '1' || $_SESSION['dsi_scn_type'] == 'none') {
-        $_dsi_scn_brightness_min = '0';
-        $_dsi_scn_brightness_max = '255';
-        $_select['dsi_scn_rotate'] .= "<option value=\"0\" " . (($_SESSION['dsi_scn_rotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
-        $_select['dsi_scn_rotate'] .= "<option value=\"180\" " . (($_SESSION['dsi_scn_rotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
-    } else if ($_SESSION['dsi_scn_type'] == '2' || $_SESSION['dsi_scn_type'] == 'other') {
-        if ($_SESSION['dsi_scn_type'] == '2') {
-            $_dsi_scn_brightness_min = '1';
-            $_dsi_scn_brightness_max = '31';
-        } else if ($_SESSION['dsi_scn_type'] == 'other') {
-            $_dsi_scn_brightness_min = '0';
-            $_dsi_scn_brightness_max = '255';
-        }
-        $_select['dsi_scn_rotate'] .= "<option value=\"0\" " . (($_SESSION['dsi_scn_rotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
-    	$_select['dsi_scn_rotate'] .= "<option value=\"90\" " . (($_SESSION['dsi_scn_rotate'] == '90') ? "selected" : "") . ">90 Deg</option>\n";
-        $_select['dsi_scn_rotate'] .= "<option value=\"180\" " . (($_SESSION['dsi_scn_rotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
-        $_select['dsi_scn_rotate'] .= "<option value=\"270\" " . (($_SESSION['dsi_scn_rotate'] == '270') ? "selected" : "") . ">270 Deg</option>\n";
-    }
-
-	$_coverview_onoff = $_SESSION['toggle_coverview'] == '-off' ? 'Off' : 'On';
 } else {
 	$_feat_localdisplay = 'hide';
 }
 
-// PEPPY DISPLAY
-
-// GENERAL
+// PeppyMeter
 
 if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	$_feat_peppydisplay = '';
@@ -375,7 +296,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
         $_screen_res_peppy_display = '';
 	}
 	# Display on|off
-	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\" " . $_peppy_display_on_off_disable;
+	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\" " . $_peppy_on_off_disable;
 	$_select['peppy_display_on']  .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-1\" value=\"1\" " . (($_SESSION['peppy_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['peppy_display_off'] .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-2\" value=\"0\" " . (($_SESSION['peppy_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	# Display type
@@ -383,6 +304,84 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	$_select['peppy_display_type'] .= "<option value=\"spectrum\" " . (($_SESSION['peppy_display_type'] == 'spectrum') ? "selected" : "") . ">Spectrum</option>\n";
 } else {
 	$_feat_peppydisplay = 'hide';
+}
+
+// General
+
+$_select['scn_blank'] .= "<option value=\"off\" " . (($_SESSION['scn_blank'] == 'off') ? "selected" : "") . ">Never</option>\n";
+$_select['scn_blank'] .= "<option value=\"10\" " . (($_SESSION['scn_blank'] == '10') ? "selected" : "") . ">10 Secs</option>\n";
+$_select['scn_blank'] .= "<option value=\"20\" " . (($_SESSION['scn_blank'] == '20') ? "selected" : "") . ">20 Secs</option>\n";
+$_select['scn_blank'] .= "<option value=\"30\" " . (($_SESSION['scn_blank'] == '30') ? "selected" : "") . ">30 Secs</option>\n";
+$_select['scn_blank'] .= "<option value=\"60\" " . (($_SESSION['scn_blank'] == '60') ? "selected" : "") . ">1 Min</option>\n";
+$_select['scn_blank'] .= "<option value=\"120\" " . (($_SESSION['scn_blank'] == '120') ? "selected" : "") . ">2 Mins</option>\n";
+$_select['scn_blank'] .= "<option value=\"300\" " . (($_SESSION['scn_blank'] == '300') ? "selected" : "") . ">5 Mins</option>\n";
+$_select['scn_blank'] .= "<option value=\"600\" " . (($_SESSION['scn_blank'] == '600') ? "selected" : "") . ">10 Mins</option>\n";
+$_select['scn_blank'] .= "<option value=\"1200\" " . (($_SESSION['scn_blank'] == '1200') ? "selected" : "") . ">20 Mins</option>\n";
+$_select['scn_blank'] .= "<option value=\"1800\" " . (($_SESSION['scn_blank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
+$_select['scn_blank'] .= "<option value=\"3600\" " . (($_SESSION['scn_blank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
+
+$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\" " . $_ctl_disable;
+$_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['wake_display_off'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+$autoClick = " onchange=\"autoClick('#btn-set-scn-cursor');\" " . $_ctl_disable;
+$_select['scn_cursor_on']  .= "<input type=\"radio\" name=\"scn_cursor\" id=\"toggle-scn-cursor-1\" value=\"1\" " . (($_SESSION['scn_cursor'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['scn_cursor_off'] .= "<input type=\"radio\" name=\"scn_cursor\" id=\"toggle-scn-cursor-2\" value=\"0\" " . (($_SESSION['scn_cursor'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+$autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_ctl_disable;
+$_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// HDMI displays
+
+$_select['hdmi_scn_orient'] .= "<option value=\"landscape\" " . (($_SESSION['hdmi_scn_orient'] == 'landscape') ? "selected" : "") . ">Landscape</option>\n";
+$_select['hdmi_scn_orient'] .= "<option value=\"portrait\" " . (($_SESSION['hdmi_scn_orient'] == 'portrait') ? "selected" : "") . ">Portrait</option>\n";
+
+$autoClick = " onchange=\"autoClick('#btn-set-hdmi-cec');\"";
+$_select['hdmi_cec_on']  .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-1\" value=\"on\" " . (($_SESSION['hdmi_cec'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['hdmi_cec_off'] .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-2\" value=\"off\" " . (($_SESSION['hdmi_cec'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+$piModel = substr($_SESSION['hdwrrev'], 3, 1);
+$_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
+$autoClick = " onchange=\"autoClick('#btn-set-hdmi-enable-4kp60');\" " . $_hdmi_4kp60_btn_disable;
+$_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// DSI displays (Pi Touch1/Touch2)
+
+$_dsi_ctl_disable = $_SESSION['dsi_scn_type'] == 'none' ? 'disabled' : '';
+// NOTE: The option 'none' is used in xinitrc to determine whether HDMI or DSI configuration is used
+$_select['dsi_scn_type'] .= "<option value=\"none\" " . (($_SESSION['dsi_scn_type'] == 'none') ? "selected" : "") . ">None</option>\n";
+$_select['dsi_scn_type'] .= "<option value=\"1\" " . (($_SESSION['dsi_scn_type'] == '1') ? "selected" : "") . ">Pi Touch 1</option>\n";
+$_select['dsi_scn_type'] .= "<option value=\"2\" " . (($_SESSION['dsi_scn_type'] == '2') ? "selected" : "") . ">Pi Touch 2</option>\n";
+$_select['dsi_scn_type'] .= "<option value=\"other\" " . (($_SESSION['dsi_scn_type'] == 'other') ? "selected" : "") . ">Other</option>\n";
+
+$_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1</option>\n";
+$_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-2</option>\n";
+
+// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
+//$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
+//$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
+
+$_select['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
+
+if ($_SESSION['dsi_scn_type'] == '1' || $_SESSION['dsi_scn_type'] == 'none') {
+    $_dsi_scn_brightness_min = '0';
+    $_dsi_scn_brightness_max = '255';
+    $_select['dsi_scn_rotate'] .= "<option value=\"0\" " . (($_SESSION['dsi_scn_rotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
+    $_select['dsi_scn_rotate'] .= "<option value=\"180\" " . (($_SESSION['dsi_scn_rotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
+} else if ($_SESSION['dsi_scn_type'] == '2' || $_SESSION['dsi_scn_type'] == 'other') {
+    if ($_SESSION['dsi_scn_type'] == '2') {
+        $_dsi_scn_brightness_min = '1';
+        $_dsi_scn_brightness_max = '31';
+    } else if ($_SESSION['dsi_scn_type'] == 'other') {
+        $_dsi_scn_brightness_min = '0';
+        $_dsi_scn_brightness_max = '255';
+    }
+    $_select['dsi_scn_rotate'] .= "<option value=\"0\" " . (($_SESSION['dsi_scn_rotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
+	$_select['dsi_scn_rotate'] .= "<option value=\"90\" " . (($_SESSION['dsi_scn_rotate'] == '90') ? "selected" : "") . ">90 Deg</option>\n";
+    $_select['dsi_scn_rotate'] .= "<option value=\"180\" " . (($_SESSION['dsi_scn_rotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
+    $_select['dsi_scn_rotate'] .= "<option value=\"270\" " . (($_SESSION['dsi_scn_rotate'] == '270') ? "selected" : "") . ">270 Deg</option>\n";
 }
 
 // VOLUME CONTROLLERS

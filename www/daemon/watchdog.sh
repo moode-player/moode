@@ -31,6 +31,7 @@ wake_display () {
 		cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on
 		export DISPLAY=:0
 		xset s reset > /dev/null 2>&1
+		# xset dpms force on (use this to cover both webUI and Peppy)
 	fi
 }
 

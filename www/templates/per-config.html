@@ -9,39 +9,132 @@
 	<h1 class="per-config">Peripherals</h1>
 
 	<form class="form-horizontal" method="post">
-		<div class="control-group $_feat_localdisplay">
-			<legend>Local Display</legend>
+		<div class="control-group">
+			<legend>Attached Displays</legend>
 
 			<p class="sub-legend">
-				Both HDMI and DSI attached displays are supported. There are settings in common between these two
-				types of displays in the General settings section. Specific settings for each type are in their respective sections.
+				Show either the moOde WebUI or PeppyMeter on an attached display.
+				Both HDMI and DSI attached displays are supported.
+				There are settings in common between these two types of displays in the General settings section.
+				Specific settings for each type are in their respective sections.
 			</p>
+
+			<div class="control-group $_feat_localdisplay">
+				<div class="config-horiz-rule">moOde WebUI</div>
+
+				<label class="control-label">WebUI</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-local-display" for="toggle-local-display-2">ON </label>$_select[local_display_on]
+						<label class="toggle-radio toggle-local-display" for="toggle-local-display-1">OFF</label>$_select[local_display_off]
+					</div>
+	                <button id="btn-set-local-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display" value="novalue" $_webui_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					$_screen_res_local_display
+					<span id="info-local-display" class="config-help-info">
+						Show the moOde WebUI on a locally attached display.
+	                </span>
+	            </div>
+
+				<label class="control-label" for="local-display-url">Target URL</label>
+				<div class="controls">
+					<input class="config-input-large" type="text" id="local-display-url" name="local_display_url" value="$_select[local_display_url]" $_ctl_disable>
+					<button id="btn-set-local-display-url" class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display_url" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display-url" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-local-display-url" class="config-help-info">
+						Enter the the target URL in the format "http://HOST_NAME_OR_IP_ADDRESS/".<br>
+						Default is "http://localhost/"
+	                </span>
+				</div>
+
+				<div class="controls">
+					<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_webui_ctl_disable>Toggle</button>
+					<span class="config-btn-after">CoverView</span>
+					<span class="config-help-static">
+						Coverview is: $_coverview_onoff
+					</span>
+				</div>
+
+				<div class="controls">
+					<a data-toggle="modal" href="#restart-local-display" $_link_disable><button class="btn btn-medium btn-primary config-btn" $_webui_ctl_disable>Restart</button></a>
+					<span class="config-btn-after">Local Display</span>
+				</div>
+
+				<label class="control-label">Disable GPU</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-2">ON </label>$_select[disable_gpu_chromium_on]
+						<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-1">OFF</label>$_select[disable_gpu_chromium_off]
+					</div>
+	                <button id="btn-set-disable-gpu-chromium" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_disable_gpu_chromium" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-gpu-chromium" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-disable-gpu-chromium" class="config-help-info">
+						Disable the GPU for Chromium if the WebUI knob sliders on Pi-2 or Pi-3 are missing or there are any other display artifacts.
+					</span>
+				</div>
+
+				<label class="control-label">Chromium browser</label>
+				<div class="controls">
+					<a data-toggle="modal" href="#downgrade-chromium-modal" $_downgrade_link_disable><button class="btn btn-medium btn-primary config-btn" $_downgrade_ctl_disable>Downgrade</button></a>
+					<span class="config-help-static">
+						Installed version is: $_installed_chromium_ver<br>
+						$_downgrade_chromium_msg
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group $_feat_peppydisplay">
+				<div class="config-horiz-rule">PeppyMeter</div>
+
+				<label class="control-label">Peppy</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-2">ON </label>$_select[peppy_display_on]
+						<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-1">OFF</label>$_select[peppy_display_off]
+					</div>
+					<button id="btn-set-peppy-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display" value="novalue" $_peppy_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					$_screen_res_peppy_display
+					<span class="config-help-static">
+						Show Peppy Meter or Spectrum on a locally attached display.<br>
+						Note: Peppy cannot be turned on if playing to a Bluetooth speaker with Graphic or Parameteic EQ on.
+					</span>
+				</div>
+
+				<label class="control-label" for="peppy-display-type">Type</label>
+				<div class="controls">
+					<select id="scn-blank" class="config-select-large" name="peppy_display_type" onchange="autoClick('#btn-set-peppy-display-type');" $_peppy_ctl_disable>
+						$_select[peppy_display_type]
+					</select>
+					<button id="btn-set-peppy-display-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display_type" value="novalue" $_peppy_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-display-type" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-peppy-display-type" class="config-help-info">
+						Choose between VU Meter and Spectrum displays.
+	                </span>
+				</div>
+
+				<div class="controls">
+					<a data-toggle="modal" href="#restart-peppy-display" $_peppy_link_disable><button class="btn btn-medium btn-primary config-btn" $_peppy_ctl_disable>Restart</button></a>
+					<span class="config-btn-after">Peppy Display</span>
+				</div>
+
+				<div class="controls">
+					<a href="peppy-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
+					<span class="config-btn-after">Meter/Spectrum settings</span>
+				</div>
+			</div>
 
  			<div class="config-horiz-rule">General settings</div>
 
-			<label class="control-label">Display</label>
+			<label class="control-label" for="scn-blank">Screen blank</label>
 			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-local-display" for="toggle-local-display-2">ON </label>$_select[local_display_on]
-					<label class="toggle-radio toggle-local-display" for="toggle-local-display-1">OFF</label>$_select[local_display_off]
-				</div>
-                <button id="btn-set-local-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display" value="novalue" $_local_display_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				$_screen_res_local_display
-				<span id="info-local-display" class="config-help-info">
-					Display the moOde WebUI on a locally attached display.
-                </span>
-            </div>
-
-			<label class="control-label" for="local-display-url">Target URL</label>
-			<div class="controls">
-				<input class="config-input-large" type="text" id="local-display-url" name="local_display_url" value="$_select[local_display_url]" $_ctl_disable>
-				<button id="btn-set-local-display-url" class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display_url" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display-url" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-local-display-url" class="config-help-info">
-					Enter the the target URL in the format "http://HOST_NAME_OR_IP_ADDRESS/".<br>
-					Default is "http://localhost/"
-                </span>
+				<select id="scn-blank" class="config-select-large" name="scn_blank" onchange="autoClick('#btn-set-scn-blank');" $_ctl_disable>
+					$_select[scn_blank]
+				</select>
+				<button id="btn-set-scn-blank" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_blank" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scn-blank" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-scn-blank" class="config-help-info">
+					When playback has stopped the display will be turned off after the specified time period.
+				</span>
 			</div>
 
 			<label class="control-label">Wake on play</label>
@@ -50,12 +143,12 @@
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-2">ON </label>$_select[wake_display_on]
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
 				</div>
-                <button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wake-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-wake-display" class="config-help-info">
 					Wake the display when audio starts playing.
-                </span>
-            </div>
+				</span>
+			</div>
 
 			<label class="control-label">Mouse cursor</label>
 			<div class="controls">
@@ -63,12 +156,12 @@
 					<label class="toggle-radio toggle-scn-cursor" for="toggle-scn-cursor-2">ON </label>$_select[scn_cursor_on]
 					<label class="toggle-radio toggle-scn-cursor" for="toggle-scn-cursor-1">OFF</label>$_select[scn_cursor_off]
 				</div>
-                <button id="btn-set-scn-cursor" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_cursor" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-scn-cursor" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_cursor" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scn-cursor" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-scn-cursor" class="config-help-info">
 					Show or hide the cursor.
-                </span>
-            </div>
+				</span>
+			</div>
 
 			<label class="control-label">Popup keyboard</label>
 			<div class="controls">
@@ -80,53 +173,6 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-on-screen-kbd" class="config-help-info">
 					On-screen popup keyboard by @Nutul.
-                </span>
-            </div>
-
-			<label class="control-label" for="scn-blank">Screen blank</label>
-			<div class="controls">
-				<select id="scn-blank" class="config-select-large" name="scn_blank" onchange="autoClick('#btn-set-scn-blank');" $_ctl_disable>
-					$_select[scn_blank]
-				</select>
-				<button id="btn-set-scn-blank" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_blank" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scn-blank" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-scn-blank" class="config-help-info">
-					When playback has stopped the display will be turned off after the specified time period.
-                </span>
-			</div>
-
-			<div class="controls">
-				<button class="btn btn-primary btn-medium config-btn btn-submit" type="submit" name="update_toggle_coverview" value="novalue" $_ctl_disable>Toggle</button>
-				<span class="config-btn-after">CoverView</span>
-				<span class="config-help-static">
-					Coverview is: $_coverview_onoff
-				</span>
-			</div>
-
-			<div class="controls">
-				<a data-toggle="modal" href="#restart-local-display" $_link_disable><button class="btn btn-medium btn-primary config-btn" $_ctl_disable>Restart</button></a>
-				<span class="config-btn-after">Local Display</span>
-			</div>
-
-			<label class="control-label">Disable GPU</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-2">ON </label>$_select[disable_gpu_chromium_on]
-					<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-1">OFF</label>$_select[disable_gpu_chromium_off]
-				</div>
-                <button id="btn-set-disable-gpu-chromium" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_disable_gpu_chromium" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-gpu-chromium" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-disable-gpu-chromium" class="config-help-info">
-					Disable the GPU for Chromium if the WebUI knob sliders on Pi-2 or Pi-3 are missing or there are any other display artifacts.
-				</span>
-			</div>
-
-			<label class="control-label">Chromium browser</label>
-			<div class="controls">
-				<a data-toggle="modal" href="#downgrade-chromium-modal" $_downgrade_link_disable><button class="btn btn-medium btn-primary config-btn" $_downgrade_ctl_disable>Downgrade</button></a>
-				<span class="config-help-static">
-					Installed version is: $_installed_chromium_ver<br>
-					$_downgrade_chromium_msg
 				</span>
 			</div>
 
@@ -141,7 +187,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-scn-orient" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-hdmi-scn-orient" class="config-help-info">
 					Change between Landscape and Portrait orientation. Assumes Landscape is the native orientation.
-                </span>
+				</span>
 			</div>
 
 			<label class="control-label">CEC control</label>
@@ -150,12 +196,12 @@
 					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-2">ON </label>$_select[hdmi_cec_on]
 					<label class="toggle-radio toggle-hdmi-cec" for="toggle-hdmi-cec-1">OFF</label>$_select[hdmi_cec_off]
 				</div>
-                <button id="btn-set-hdmi-cec" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_cec" value="novalue" $_hdmi_cec_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-hdmi-cec" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_cec" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-cec" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-hdmi-cec" class="config-help-info">
 					Automatically turn the display on when moOde starts or when wake on play is initiated. Turn the display off when moOde is shutdown.
-                </span>
-            </div>
+				</span>
+			</div>
 
 			<label class="control-label">4K 60Hz rate</label>
 			<div class="controls">
@@ -163,12 +209,12 @@
 					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-2">ON </label>$_select[hdmi_enable_4kp60_on]
 					<label class="toggle-radio toggle-hdmi-enable-4kp60" for="toggle-hdmi-enable-4kp60-1">OFF</label>$_select[hdmi_enable_4kp60_off]
 				</div>
-                <button id="btn-set-hdmi-enable-4kp60" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_enable_4kp60" value="novalue" $_hdmi_4kp60_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-hdmi-enable-4kp60" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_enable_4kp60" value="novalue" $_hdmi_4kp60_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-enable-4kp60" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-hdmi-enable-4kp60" class="config-help-info">
 					By default, when connected to a 4K monitor, the Raspberry Pi 4B, 400 and CM4 will select a 30Hz refresh rate. Use this option to allow selection of 60Hz refresh rates.
-                </span>
-            </div>
+				</span>
+			</div>
 
 			<div class="config-horiz-rule">DSI displays (Pi Touch1/Touch2)</div>
 
@@ -190,11 +236,11 @@
 
 			<label class="control-label" for="dsi-scn-brightness">Brightness</label>
 			<div class="controls">
-            	<input class="config-input-large" type="number" maxlength="3" min="$_dsi_scn_brightness_min" max="$_dsi_scn_brightness_max" id="dsi-scn-brightness" name="dsi_scn_brightness" value="$_select[dsi_scn_brightness]" $_dsi_ctl_disable>
+				<input class="config-input-large" type="number" maxlength="3" min="$_dsi_scn_brightness_min" max="$_dsi_scn_brightness_max" id="dsi-scn-brightness" name="dsi_scn_brightness" value="$_select[dsi_scn_brightness]" $_dsi_ctl_disable>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_brightness" value="novalue" $_dsi_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<span class="config-help-static">
 					Note: The Pi Touch 2 has a brightness range of 1-31.
-                </span>
+				</span>
 			</div>
 
 			<!-- Touch1: No solution with KMS driver as of r902 -->
@@ -207,7 +253,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info_pixel_aspect_ratio" class="config-help-info">
 					Rectangular (default) or square pixels for 7" Pi Touch.
-                </span>
+				s</span>
 			</div-->
 
 			<label class="control-label" for="dsi-scn-rotate">Rotate</label>
@@ -216,53 +262,6 @@
 					$_select[dsi_scn_rotate]
 				</select>
 				<button id="btn-set-dsi-scn-rotate" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dsi_scn_rotate" value="novalue" $_dsi_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-			</div>
-		</div>
-
-		<div class="control-group $_feat_peppydisplay">
-			<legend>Peppy Display</legend>
-
-			<p class="sub-legend">
-				Peppy is a software VU Meter / Frequency Spectrum display written in Python by developer @project-owner
-				<a href="https://github.com/project-owner" class="target-blank-link" target="_blank">(GitHub repositories)</a>.
-				It was originally developed as the screensaver for Peppy Player. With minor modifications it became a stand-alone application.
-				Peppy receives volume and spectrum data from media players via FIFO pipes and displays the volume level or frequency spectrum in a Graphical User Interface.
-			</p>
-
-			<label class="control-label">Display</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-2">ON </label>$_select[peppy_display_on]
-					<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-1">OFF</label>$_select[peppy_display_off]
-				</div>
-				<button id="btn-set-peppy-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display" value="novalue" $_peppy_display_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				$_screen_res_peppy_display
-				<span class="config-help-static">
-					Display Peppy Meter or Spectrum on a locally attached display.<br>
-					Note: Peppy cannot be turned on if playing to a Bluetooth speaker with Graphic or Parameteic EQ on.
-				</span>
-			</div>
-
-			<label class="control-label" for="peppy-display-type">Type</label>
-			<div class="controls">
-				<select id="scn-blank" class="config-select-large" name="peppy_display_type" onchange="autoClick('#btn-set-peppy-display-type');" $_peppy_ctl_disable>
-					$_select[peppy_display_type]
-				</select>
-				<button id="btn-set-peppy-display-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display_type" value="novalue" $_peppy_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-display-type" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-peppy-display-type" class="config-help-info">
-					Choose between VU Meter and Spectrum displays.
-                </span>
-			</div>
-
-			<div class="controls">
-				<a data-toggle="modal" href="#restart-peppy-display" $_peppy_link_disable><button class="btn btn-medium btn-primary config-btn" $_peppy_ctl_disable>Restart</button></a>
-				<span class="config-btn-after">Peppy Display</span>
-			</div>
-
-			<div class="controls">
-				<a href="peppy-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
-				<span class="config-btn-after">Meter/Spectrum settings</span>
 			</div>
 		</div>
 

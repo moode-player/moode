@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Fri Sep 19 07:50:12 2025
+-- File generated with SQLiteStudio v3.4.4 on Sun Sep 21 10:48:38 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -575,7 +575,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Ye
 INSERT INTO cfg_system (id, param, value) VALUES (42, 'extmeta', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (44, 'folder_pos', '-1');
-INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (45, 'peppy_display', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
 INSERT INTO cfg_system (id, param, value) VALUES (47, 'fs_nfs_options', 'rw,sync,no_subtree_check,no_root_squash');
 INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Show tracks');
@@ -604,7 +604,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
 INSERT INTO cfg_system (id, param, value) VALUES (72, 'shellinabox', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (73, 'alsaequal', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (74, 'eqfa12p', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (74, 'peppy_display_type', 'meter');
 INSERT INTO cfg_system (id, param, value) VALUES (75, 'p3wifi', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (76, 'p3bt', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');

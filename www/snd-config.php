@@ -270,7 +270,7 @@ if (isset($_POST['update_mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION[
 }
 // Crossfeed
 if (isset($_POST['update_crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed']) {
-	phpSession('write', 'crossfeed', $_POST['crossfeed']);
+	$_SESSION['crossfeed'] = $_POST['crossfeed'];
 	submitJob('crossfeed', $_POST['crossfeed']);
 }
 // Polarity inversion
@@ -319,7 +319,7 @@ if (isset($_POST['update_eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off
 	$currentActive = $eqfa12p->getActivePresetIndex();
 	$newActive = intval($_POST['eqfa12p']);
 	$eqfa12p->setActivePresetIndex($newActive);
-	phpSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
+	$_SESSION['eqfa12p'] = $newActive == 0 ? "Off" : "On";
 	submitJob('eqfa12p', $currentActive . ',' . $newActive);
 }
 unset($eqfa12p);
