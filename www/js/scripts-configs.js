@@ -13,7 +13,9 @@ jQuery(document).ready(function($){ 'use strict';
     GLOBAL.scriptSection = 'configs';
 
 	$('#config-tabs').css('display', 'flex');
+	$('#panel-header').css('margin-top', '.5em');
 	$('#panel-footer').css('display', 'none');
+	$('#menu-settings').css('top', 'calc(env(safe-area-inset-top))');
     $('.dropdown-menu > li > a').css('color', 'var(--config-text-color)');
 
     // For ultra-wide screens
