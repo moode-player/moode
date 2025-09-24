@@ -19,12 +19,14 @@ Updates
 - UPD: Run Peppy within XServer for orientation and rotation options
 - UPD: Add 4GB item for MPD input cache
 - UPD: Add moode version to player info popup
+- UPD: Improve CSS for panel-header and related elements
 
 Radio stations
 - UPD: Jazz24
 
 Bug fixes
 - FIX: Peppy spectrum name always reverts to "random"
+- FIX: Cover visible when returning from CoverView in Mobile landscape 
 
 ################################################################################
 #
