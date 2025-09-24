@@ -885,8 +885,8 @@ function screenSaver(cmd) {
                 $('body').addClass('cvwide-xmeta');
             }
         }
-        // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
-        $('#lib-coverart-img').hide();
+        // Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
+		$('#lib-coverart-meta-area').hide();
 
         if (SESSION.json['scnsaver_mode'].includes('clock')) {
             $('#ss-coverart').css('display', 'none');
@@ -4237,7 +4237,7 @@ $(window).on('scroll', function(e) {
 			$('#playback-controls').hide();
 			$('#container-playqueue').css('visibility','visible');
 			$('#panel-footer').show();
-			$('#panel-header').css('height', $('#panel-header').css('line-height'));
+			$('#panel-header').css('height', '3.75rem');
 			$('#panel-header').css('backdrop-filter', 'blur(20px)');
             $('#playbar-toggles .add-item-to-favorites').show();
             $('#random-album').hide();
@@ -4423,10 +4423,6 @@ $('#coverart-url, #playback-switch').click(function(e){
 		return;
 	}
 
-    if (UI.mobile) {
-        $('#panel-header').css('margin-right', '0');
-    }
-
     // TEST: Fixes issue where some elements briefly remain on-screen when switching between Playback and Library
     $('#coverart-link').hide();
 
@@ -4480,10 +4476,6 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
     }
 
     $('img.coverart').hide().fadeIn('medium');
-
-    if (UI.mobile) {
-        $('#panel-header').css('margin-right', '1.5rem');
-    }
 
 	if (SESSION.json['playlist_art'] == 'Yes') {
         lazyLode('playqueue');

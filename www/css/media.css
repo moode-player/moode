@@ -29,13 +29,9 @@ body {
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
 	.no-fluid {flex-direction:column-reverse;}
-	#panel-header {
-		margin-top:.75em;
-    	margin-right:1.5rem;
-	}
 	.clockradio-on {
-		top:2px;
-		right:-8px;
+		top:.5rem;
+		right:.5rem;
 	}
 	#playqueue-search {
 		margin-top: .75em;
@@ -154,13 +150,15 @@ body {
 	#playbar-toggles .ralbum svg {height:12px;width:12px;margin-top:2px;}
 	.coverview {display:none;}
 
-	/* Menu 'm', CamillaDSP and multiroom Sender icons/buttons */
-	#menu-settings {
-		font-size:2.15rem;
-	}
-	#menu-cdsp {font-size:1.5rem;}
-	#multiroom-sender {left:52%}
+	/* Panel header icons and 'm' Menu button */
+	#multiroom-sender {left:50%;top:calc(env(safe-area-inset-top) + .7rem);}
 	#multiroom-sender a {font-size: 1.45rem;}
+	#updater-notification {left:60%;top:calc(env(safe-area-inset-top) + .8rem);}
+	#updater-notification i {font-size:1.45rem;}
+	#dropdown-cdsp-btn {right:7.25rem !important;top:calc(env(safe-area-inset-top) + .7rem) !important;}
+	#menu-cdsp {font-size:1.5rem;}
+	.busy-spinner {right:5.5rem;top:calc(env(safe-area-inset-top) + .8rem);}
+	#menu-settings {right:1.75rem;top:calc(env(safe-area-inset-top) + .7rem);font-size:2.15rem;}
 	/* Library button and header text */
 	#current-tab {font-size:1.35rem;}
 	#library-header {font-size:1.11rem;}

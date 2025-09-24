@@ -560,7 +560,8 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-album {left:66.66%;}
 #lib-file {overflow-y:scroll;overflow-x:hidden;margin:1px 0 0 0;height:100%;width:100%;-webkit-overflow-scrolling:touch;}
 #lib-coverart-meta-area {line-height:normal;padding:0;float:left;position:fixed;}
-#lib-coverart-img a {display:inline-block;}
+#lib-coverart-img,
+#lib-coverart-metaarea {display:block;}
 #lib-collection-stats {font-size:.8em;font-style:italic;text-align:center;margin-top:0.25em;}
 #lib-collection-stats-ellipsis {
 	float:right;

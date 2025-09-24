@@ -344,7 +344,6 @@ jQuery(document).ready(function($) { 'use strict';
     		if (UI.mobile) {
     			$('#container-playqueue').css('visibility','hidden');
     			$('#playback-controls').show();
-                $('#panel-header').css('margin-right', '1.5rem');
     		}
             else {
 		        customScroll('playqueue', parseInt(MPD.json['song']));
@@ -1772,12 +1771,12 @@ jQuery(document).ready(function($) { 'use strict';
 				hideSSClock();
             }
 
-            // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
+            // Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
             $('#cv-playqueue ul').html('');
             $('#cv-playqueue').hide();
-            $('#lib-coverart-img').show();
+			$('#lib-coverart-meta-area').show();
 
-            // TEST: Fixes Queue sometimes not being visible after returning from CoverView
+            // Fixes Queue sometimes not being visible after returning from CoverView
             UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
             setTimeout(function() {
                 $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visible
