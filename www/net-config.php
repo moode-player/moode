@@ -212,7 +212,9 @@ if (!empty($ipAddr[0])) {
 		$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 		$array = explode('=', $signal[0]);
 		$qual = explode('/', $array[1]);
-		$quality = round((100 * $qual[0]) / $qual[1]);
+		$qual0 = (int)$qual[0];
+		$qual1 = (int)$qual[1];
+		$quality = $qual1 > 0 ? round((100 * $qual0) / $qual1) : 0;
 		$lev = explode('/', $array[2]);
 		$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
 
