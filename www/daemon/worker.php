@@ -147,7 +147,8 @@ $sessionVars = array(
 	'scnbrightness',
 	'rpi_scntype',
 	'rpi_backlight',
-	'dsi_backlight'
+	'dsi_backlight',
+	'usb_auto_mounter'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -1602,9 +1603,9 @@ $maint_interval = $_SESSION['maint_interval'];
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
 
-// Screen blank
-$scn_blank_active = '0';
+// Peppy screen blank
 $scn_blank_timeout = $_SESSION['scn_blank'];
+sqlQuery("UPDATE cfg_system SET value='0' WHERE param='peppy_scn_blank_active'", $dbh);
 
 // Bluetooth
 $bt_auto_disconnect = $_SESSION['bt_auto_disconnect'];
@@ -1808,8 +1809,8 @@ while (true) {
 	if ($_SESSION['scnsaver_timeout'] != 'Never') {
 		chkScnSaver();
 	}
-	if ($_SESSION['peppy_display'] == '1') {
-		chkScnBlank();
+	if ($_SESSION['peppy_display'] == '1' && $_SESSION['scn_blank'] != 'Never') {
+		chkPeppyScnBlank();
 	}
 	if ($_SESSION['maint_interval'] != 0) {
 		chkMaintenance();
@@ -1873,13 +1874,16 @@ while (true) {
 // WORKER FUNCTIONS
 //----------------------------------------------------------------------------//
 
-// Activate if timeout is set and no other overlay is active and MPD is not playing
+// WebUI CoverView screen saver
+// - Timeout is set
+// - No renderer is active
+// - MPD is not playing
 function chkScnSaver() {
 	$sock = openMpdSock('localhost', 6600);
 	$mpdState = getMpdStatus($sock)['state'];
 	closeMpdSock($sock);
 	if ($mpdState == 'play' && $_SESSION['scnsaver_whenplaying'] == 'No') {
-		$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
+		$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
 	}
 
 	if ($GLOBALS['scnsaver_timeout'] != 'Never'
@@ -1889,22 +1893,52 @@ function chkScnSaver() {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
-				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
+				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 				$GLOBALS['scnactive'] = '1';
 				sendFECmd('scnactive1');
 			}
 		}
 	}
+	// DEBUG:
 	//workerLog($mpdState . ' | ' . $_SESSION['scnsaver_whenplaying'] . ' | ' . $GLOBALS['scnsaver_timeout'] . ' | ' . $GLOBALS['scnactive']);
 }
 
-// Activate if timeout is set and Peppy is on
-function chkScnBlank() {
-	if ($_SESSION['scn_blank'] != 'Never') {
-		$GLOBALS['scn_blank_timeout'] = $GLOBALS['scn_blank_timeout'] - (WORKER_SLEEP / 1000000);
-		//sysCmd('DISPLAY=:0 xset dpms force off');
-	    //sysCmd('DISPLAY=:0 xset dpms force on');
+// Peppy screen blank
+// - Timeout is set
+// - Peppy is on
+// - No renderer is active
+// - MPD is not playing
+function chkPeppyScnBlank() {
+	$sock = openMpdSock('localhost', 6600);
+	$mpdState = getMpdStatus($sock)['state'];
+	closeMpdSock($sock);
+	if ($mpdState == 'play') {
+		$GLOBALS['scn_blank_timeout'] = $_SESSION['scn_blank']; // Reset timeout
 	}
+
+	if ($GLOBALS['scn_blank_timeout'] != 'off'
+		&& chkRendererActive() === false
+		&& $_SESSION['rxactive'] == '0'
+		&& $mpdState != 'play') {
+		// This SQL value is set to '1' here and '0' in watchdog.sh wake_display()
+		$peppyScnBlankActive = sqlQuery("SELECT value FROM cfg_system WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh'])[0]['value'];
+		if ($peppyScnBlankActive == '0') {
+			$GLOBALS['scn_blank_timeout'] = $GLOBALS['scn_blank_timeout'] - (WORKER_SLEEP / 1000000);
+			if ($GLOBALS['scn_blank_timeout'] <= 0) {
+				$GLOBALS['scn_blank_timeout'] = $_SESSION['scn_blank']; // Reset timeout
+				// Output interface (HDMI or DSI)
+				$dsiScnType = sqlQuery("SELECT value FROM cfg_system WHERE param='dsi_scn_type'", $GLOBALS['dbh'])[0]['value'];
+				$dsiPort = sqlQuery("SELECT value FROM cfg_system WHERE param='dsi_port'", $GLOBALS['dbh'])[0]['value'];
+				$output = $dsiScnType == 'none' ? 'HDMI-1' : $dsiPort;
+				// Turn screen off
+				sqlQuery("UPDATE cfg_system SET value='1' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
+				sysCmd('DISPLAY=:0 xrandr --output ' . $output . ' --off');
+			}
+		}
+	}
+	// DEBUG:
+	//$result = sqlQuery("SELECT value FROM cfg_system WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
+	//workerLog($mpdState . ' | ' . $_SESSION['scn_blank'] . ' | ' . $GLOBALS['scn_blank_timeout'] . ' | ' . $result[0]['value']);
 }
 
 function chkMaintenance() {
@@ -3270,19 +3304,6 @@ function runQueuedJob() {
 			$value = $_SESSION['w_queueargs'];
 			updBootConfigTxt('upd_fan_temp0', $value);
 			break;
-		case 'usb_auto_mounter':
-			if ($_SESSION['w_queueargs'] == 'udisks-glue') {
-				sysCmd('sed -e "/udisks-glue/ s/^#*//" -i /etc/rc.local');
-				sysCmd('sed -e "/devmon/ s/^#*/#/" -i /etc/rc.local');
-				sysCmd('systemctl enable udisks');
-				sysCmd('systemctl disable udisks2');
-			} else if ($_SESSION['w_queueargs'] == 'devmon') {
-				sysCmd('sed -e "/udisks-glue/ s/^#*/#/" -i /etc/rc.local');
-				sysCmd('sed -e "/devmon/ s/^#*//" -i /etc/rc.local');
-				sysCmd('systemctl disable udisks');
-				sysCmd('systemctl enable udisks2');
-			}
-			break;
 		case 'p3wifi':
 			ctlWifi($_SESSION['w_queueargs']);
 			break;
@@ -3455,6 +3476,11 @@ function runQueuedJob() {
 			break;
 		case 'scn_blank':
 			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+			$GLOBALS['scn_blank_timeout'] = $_SESSION['w_queueargs'];
+			if ($_SESSION['w_queueargs'] == 'off') {
+				sqlQuery("UPDATE cfg_system SET value='0' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
+				//DELETE:sysCmd('DISPLAY=:0 xset dpms force on');
+			}
 			stopLocalDisplay();
 			startLocalDisplay();
 			break;

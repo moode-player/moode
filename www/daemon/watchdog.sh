@@ -24,14 +24,31 @@ message_log () {
 	TIME=$(date +'%Y%m%d %H%M%S')
 	echo "$TIME watchdog: $1" >> /var/log/moode.log
 }
+debug_log () {
+	TIME=$(date +'%Y%m%d %H%M%S')
+	# Comment out to suppress debug messages
+	#echo "$TIME watchdog: DEBUG: $1" >> /var/log/moode.log
+}
 
 wake_display () {
 	WAKE_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='wake_display'")
+	PEPPY_ACTIVE=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='peppy_display'")
+	SCN_BLANK_ACTIVE=$(sqlite3 $SQLDB "SELECT value from cfg_system WHERE param='peppy_scn_blank_active'")
 	if [[ $WAKE_DISPLAY = "1" ]]; then
+		debug_log "wake display: on"
+		debug_log "wake display: send cec-ctl"
 		cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on
 		export DISPLAY=:0
-		xset s reset > /dev/null 2>&1
-		# xset dpms force on (use this to cover both webUI and Peppy)
+		if [[ $PEPPY_ACTIVE = "1" ]] && [[ $SCN_BLANK_ACTIVE = "1" ]]; then
+			debug_log "wake display: set peppy screen blank 0, restart localdisplay"
+			$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='peppy_scn_blank_active'")
+			systemctl restart localdisplay
+		else
+			debug_log "wake display: send xset s reset"
+			xset s reset > /dev/null 2>&1
+		fi
+	else
+		debug_log "wake display: off"
 	fi
 }
 
@@ -105,24 +122,21 @@ while true; do
 		TX_CARD_NUM="card2"
 		HW_PARAMS=$(cat /proc/asound/$TX_CARD_NUM/pcm0p/sub0/hw_params)
 		if [[ $HW_PARAMS = "closed" ]]; then
-			MSG="Multiroom sender is not transmitting"
+			debug_log "Multiroom sender is not transmitting"
 		else
-			MSG="Multiroom sender is transmitting"
+			debug_log "Multiroom sender is transmitting, wake display"
 			wake_display
 		fi
 	else
 		LOCAL_CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
 		HW_PARAMS=$(cat /proc/asound/card$LOCAL_CARD_NUM/pcm0p/sub0/hw_params)
 		if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
-			MSG="Local audio output is closed or audio device is disconnected"
+			debug_log "Local audio output is closed or audio device is disconnected"
 		else
-			MSG="Local audio output is active"
+			debug_log "Local audio output is active, wake display"
 			wake_display
 		fi
 	fi
-
-	# DEBUG
-	#message_log "$MSG"
 
 	sleep $WATCHDOG_SLEEP
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")

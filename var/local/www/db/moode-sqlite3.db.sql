@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Sep 21 10:48:38 2025
+-- File generated with SQLiteStudio v3.4.4 on Fri Sep 26 07:12:25 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -599,7 +599,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
 INSERT INTO cfg_system (id, param, value) VALUES (67, 'mpdcrossfade', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (68, 'deezactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (69, 'usb_auto_mounter', 'udisks-glue');
+INSERT INTO cfg_system (id, param, value) VALUES (69, 'peppy_scn_blank_active', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
 INSERT INTO cfg_system (id, param, value) VALUES (72, 'shellinabox', '0');
