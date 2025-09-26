@@ -12,7 +12,6 @@ echo "$CPU_GOV" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
 # USB storage auto-mounter
 /usr/bin/udisks-glue --config=/etc/udisks-glue.conf > /dev/null 2>&1
-#/usr/bin/devmon --exec-on-drive "/var/www/util/automount.sh add_mount_devmon %d %f" --exec-on-remove "/var/www/util/automount.sh remove_mount_devmon %f" --always-exec --no-gui > /dev/null 2>&1 &
 
 # moOde startup and job processor daemon
 /var/www/daemon/worker.php > /dev/null 2>&1
