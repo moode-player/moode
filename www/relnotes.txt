@@ -17,6 +17,7 @@
 
 Updates
 - UPD: Run Peppy within XServer for orientation and rotation options
+- UPD: Enable screen blank for Peppy
 - UPD: Add 4GB item for MPD input cache
 - UPD: Add moode version to player info popup
 - UPD: Improve CSS for panel-header and related elements
