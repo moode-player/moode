@@ -153,6 +153,7 @@ switch ($cmd[0]) {
 			$cmd = $status['state'] == 'play' ? 'pause' : 'play';
 		}
 		sendMpdCmd($sock, $cmd);
+		echo json_encode(array('state' => $cmd));
 		break;
 	case 'get_cdsp_config':
 		_openSessionReadOnly($dbh);
