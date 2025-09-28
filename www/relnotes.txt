@@ -18,9 +18,11 @@
 Updates
 - UPD: Run Peppy within XServer for orientation and rotation options
 - UPD: Enable screen blank for Peppy
+- UPD: Add check to Graphic and Parametric EQ (Peppy on cannot use ALSA plughw)
 - UPD: Add 4GB item for MPD input cache
 - UPD: Add moode version to player info popup
 - UPD: Improve CSS for panel-header and related elements
+- UPD: Improve robustness and error handling for worker.php
 
 Radio stations
 - UPD: Jazz24
