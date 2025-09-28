@@ -23,7 +23,7 @@ Updates
 - UPD: Add moode version to player info popup
 - UPD: Improve CSS for panel-header and related elements
 - UPD: Improve robustness and error handling for worker.php
-- UPD: Return play state for REST API toggle_play_pause
+- UPD: Improve REST API toggle_play_pause (return play state after toggle)
 
 Radio stations
 - UPD: Jazz24
