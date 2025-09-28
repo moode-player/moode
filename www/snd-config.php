@@ -313,21 +313,33 @@ if (isset($_POST['update_cdsp_mode']) && $_POST['cdsp_mode'] != $_SESSION['camil
 	$cdsp->updCDSPConfig($newMode, $currentMode, $cdsp);
 }
 // Parametric eq
+// NOTE: Requires ALSA hw mode if Peppy is on
 $eqfa12p = Eqp12($dbh);
 if (isset($_POST['update_eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] || intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex())) {
-	// Pass old,new curve name to worker job
-	$currentActive = $eqfa12p->getActivePresetIndex();
-	$newActive = intval($_POST['eqfa12p']);
-	$eqfa12p->setActivePresetIndex($newActive);
-	$_SESSION['eqfa12p'] = $newActive == 0 ? "Off" : "On";
-	submitJob('eqfa12p', $currentActive . ',' . $newActive);
+	if (intval($_POST['eqfa12p']) != 0 && $_SESSION['peppy_display'] == '1' && $_SESSION['alsa_output_mode'] == 'plughw') {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'When Peppy is on, ALSA output mode cannot be "Default".';
+	} else {
+		// Pass old,new curve name to worker job
+		$currentActive = $eqfa12p->getActivePresetIndex();
+		$newActive = intval($_POST['eqfa12p']);
+		$eqfa12p->setActivePresetIndex($newActive);
+		$_SESSION['eqfa12p'] = $newActive == 0 ? "Off" : "On";
+		submitJob('eqfa12p', $currentActive . ',' . $newActive);
+	}
 }
 unset($eqfa12p);
 // Graphic eq
+// NOTE: Requires ALSA hw mode if Peppy is on
 if (isset($_POST['update_alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
-	// Pass old,new curve name to worker job
-	phpSession('write', 'alsaequal', $_POST['alsaequal']);
-	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal']);
+	if ($_POST['alsaequal'] != 'Off' && $_SESSION['peppy_display'] == '1' && $_SESSION['alsa_output_mode'] == 'plughw') {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'When Peppy is on, ALSA output mode cannot be "Default".';
+	} else {
+		// Pass old,new curve name to worker job
+		phpSession('write', 'alsaequal', $_POST['alsaequal']);
+		submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal']);
+	}
 }
 
 phpSession('close');
