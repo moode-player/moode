@@ -1793,13 +1793,8 @@ if ($_SESSION['autoplay'] == '1') {
 
 closeMpdSock($sock);
 
-//----------------------------------------------------------------------------//
-workerLog('worker: --');
-workerLog('worker: -- Event processing');
-workerLog('worker: --');
 workerLog('worker: Entering event loop');
-workerLog('worker: Poll every ' . (WORKER_SLEEP / 1000000) . ' seconds...');
-//----------------------------------------------------------------------------//
+workerLog('worker: Poll every ' . (WORKER_SLEEP / 1000000) . ' seconds');
 
 while (true) {
 	usleep(WORKER_SLEEP);
