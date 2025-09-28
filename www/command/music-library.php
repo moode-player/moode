@@ -10,7 +10,7 @@ require_once __DIR__ . '/../inc/music-library.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
-$sock = getMpdSock();
+$sock = getMpdSock('command/music-library.php');
 phpSession('open_ro');
 
 chkVariables($_GET, array('path', 'query', 'tagname'));

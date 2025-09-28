@@ -218,7 +218,7 @@ function setALSAVolTo0dB($alsaVolMax = '100') {
 function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
 	if ($mpdState == '') {
 		// Called from command/index.php get_output_format
-		$mpdStatus = getMpdStatus(getMpdSock());
+		$mpdStatus = getMpdStatus(getMpdSock('inc/alsa.php'));
 		$outputStr = alsaOutputStr($mpdStatus['audio_sample_rate']);
 	} else if ($mpdState == 'play') {
 		// Called from enhanceMetadata() in inc/mpd.php
@@ -297,7 +297,7 @@ function getAlsaHwParams($cardNum) {
 		} else {
 			// PCM: 'S16_LE', etc or 'IEC958_SUBFRAME_LE' format designators
 			if ($array['format'] == ALSA_IEC958_FORMAT) {
-				$status['audio_sample_depth'] = getMpdStatus(getMpdSock())['audio_sample_depth'];
+				$status['audio_sample_depth'] = getMpdStatus(getMpdSock('inc/alsa.php'))['audio_sample_depth'];
 				// NOTE: audio_sample_depth = 1 in this section means DSD -> PCM so lets assume 24 bit
 				$array['format'] = $status['audio_sample_depth'] == '1' ? '24' : $status['audio_sample_depth'];
 			} else {

@@ -11,7 +11,7 @@ require_once __DIR__ . '/../inc/queue.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
-$sock = getMpdSock();
+$sock = getMpdSock('command/queue.php');
 phpSession('open_ro');
 
 chkVariables($_GET);

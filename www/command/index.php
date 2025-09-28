@@ -66,7 +66,7 @@ switch ($cmd[0]) {
 		}
 		break;
 	case 'clear_queue':
-		$sock = getMpdSock();
+		$sock = getMpdSock('command/index.php');
 		sendMpdCmd($sock, 'clear');
 		$resp = readMpdResp($sock);
 		break;
@@ -95,7 +95,7 @@ switch ($cmd[0]) {
 		// Process by itemType
 		if ($itemType == 'Playlist' || $itemType == 'Album') {
 			// Clear Queue
-			$sock = getMpdSock();
+			$sock = getMpdSock('command/index.php');
 			sendMpdCmd($sock, 'clear');
 			$resp = readMpdResp($sock);
 
@@ -118,7 +118,7 @@ switch ($cmd[0]) {
 			}
 		} else if ($itemType == 'Station' || $itemType == 'Track') {
 			// Search the Queue for the item
-			$sock = getMpdSock();
+			$sock = getMpdSock('command/index.php');
 			$search = strpos($item, 'RADIO') !== false ? parseDelimFile(file_get_contents(MPD_MUSICROOT . $item), '=')['File1'] : $item;
 			$result = findInQueue($sock, 'file', $search);
 			if (isset($result['Pos'])) {
@@ -142,7 +142,7 @@ switch ($cmd[0]) {
 		echo json_encode(array('info' => 'OK'));
 		break;
 	case 'toggle_play_pause':
-		$sock = getMpdSock();
+		$sock = getMpdSock('command/index.php');
 		$status = getMpdStatus($sock);
 		$currentSong = getCurrentSong($sock);
 		if (substr($currentSong['file'], 0, 4) == 'http' && !isset($status['duration'])) {

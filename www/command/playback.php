@@ -12,7 +12,7 @@ require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 $dbh = sqlConnect();
-$sock = getMpdSock();
+$sock = getMpdSock('command/playback.php');
 
 chkVariables($_GET);
 chkVariables($_POST);

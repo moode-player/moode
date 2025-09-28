@@ -9,7 +9,7 @@ require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
-$sock = getMpdSock();
+$sock = getMpdSock('www/chp-config.php');
 $dbh = sqlConnect();
 phpSession('open');
 

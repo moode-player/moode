@@ -74,7 +74,7 @@ while true; do
 			((counter++))
 		done
 		if [[ $MPD_RUNNING = 0 ]]; then
-			message_log "Started MPD after crash detected (check system journal)"
+			message_log "CRITICAL ERROR: Started MPD after crash detected"
 			systemctl start mpd
 		fi
 	fi
@@ -91,7 +91,7 @@ while true; do
 				((counter++))
 			done
 			if [[ $TRX_RX_RUNNING = 0 ]]; then
-				message_log "Started Multiroom receiver after crash detected"
+				message_log "CRITICAL ERROR: Started Multiroom receiver after crash detected"
 				/var/www/util/trx-control.php -rx On
 			fi
 		fi
@@ -109,7 +109,7 @@ while true; do
 				((counter++))
 			done
 			if [[ $LIBRESPOT_RUNNING = 0 ]]; then
-				message_log "Started Spotify Connect after crash detected"
+				message_log "CRITICAL ERROR: Started Spotify Connect after crash detected"
 				moodeutl -R --spotify
 			fi
 		fi

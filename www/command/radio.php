@@ -208,7 +208,7 @@ function putStationContents($cmd, $path, $stFile) {
 	sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
 	// MPD update the radio folder
-	$sock = getMpdSock();
+	$sock = getMpdSock('command/radio.php');
 	sendMpdCmd($sock, 'update RADIO');
 	readMpdResp($sock);
 }
@@ -263,7 +263,7 @@ function deleteStation($stationName, $stationPls) {
 	sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
 	// Update radio folder
-	$sock = getMpdSock();
+	$sock = getMpdSock('command/radio.php');
 	sendMpdCmd($sock, 'update RADIO');
 	readMpdResp($sock);
 }

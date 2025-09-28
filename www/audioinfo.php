@@ -12,7 +12,7 @@ require_once __DIR__ . '/inc/music-library.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
-$sock = getMpdSock();
+$sock = getMpdSock('www/audioinfo.php');
 $dbh = sqlConnect();
 phpSession('open_ro');
 

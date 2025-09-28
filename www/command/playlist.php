@@ -71,7 +71,7 @@ switch ($_GET['cmd']) {
     case 'save_queue_to_playlist':
 		$plName = html_entity_decode($_GET['name']);
 		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
-		$sock = getMpdSock();
+		$sock = getMpdSock('command/playlist.php');
 
 		// Get metadata (may not exist so defaults will be returned)
 		$plMeta = getPlaylistMetadata($plName);
@@ -194,7 +194,7 @@ function getPlaylists() {
 function getPlaylistContents($plName) {
 	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 	$dbh = sqlConnect();
-	$sock = getMpdSock();
+	$sock = getMpdSock('command/playlist.php');
 
 	$genre = '';
 	$cover = 'default';
@@ -324,7 +324,7 @@ function putPlaylistCover($plName) {
 
 // Return contents of playlist (Folder view)
 function listPlaylistFv($plName) {
-	$sock = getMpdSock();
+	$sock = getMpdSock('command/playlist.php');
 	sendMpdCmd($sock, 'listplaylist "' . $plName . '"');
 	$resp = readMpdResp($sock);
 	return formatMpdQueryResults($resp);
