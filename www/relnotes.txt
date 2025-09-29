@@ -16,6 +16,7 @@
 ################################################################################
 
 Updates
+- UPD: Bump to Linux kernel 6.12.47
 - UPD: Run Peppy within XServer for orientation and rotation options
 - UPD: Enable screen blank for Peppy
 - UPD: Add check to Graphic and Parametric EQ (Peppy on cannot use ALSA plughw)
