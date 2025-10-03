@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Fri Sep 26 07:12:25 2025
+-- File generated with SQLiteStudio v3.4.4 on Fri Oct 3 08:00:39 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -588,7 +588,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');
 INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0,Sennheiser_HD800S_L_44100Hz_32b.raw,Sennheiser_HD800S_R_44100Hz_32b.raw,S32LE');
 INSERT INTO cfg_system (id, param, value) VALUES (57, 'alsa_loopback', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
+INSERT INTO cfg_system (id, param, value) VALUES (58, 'local_display_url', 'http://localhost/');
 INSERT INTO cfg_system (id, param, value) VALUES (59, 'local_display', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (60, 'toggle_songid', '');
 INSERT INTO cfg_system (id, param, value) VALUES (61, 'slsvc', '0');

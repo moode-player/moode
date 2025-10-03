@@ -314,7 +314,7 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 $timeZone = sysCmd("timedatectl show | awk -F\"=\" '/Timezone/{print $2;exit;}'");
 $keyboard = sysCmd("cat /etc/default/keyboard | awk -F\"=\" '/XKBLAYOUT/{print $2;exit;}'");
 $_SESSION['timezone'] = $timeZone[0];
-phpSession('write', 'keyboard', trim($keyboard[0], "\""));
+$_SESSION['keyboard'] = trim($keyboard[0], "\"");
 
 // Store platform data
 $_SESSION['hdwrrev'] = getHdwrRev();
@@ -1337,9 +1337,6 @@ if (!isset($_SESSION['scn_cursor'])) {
 $param = $_SESSION['scn_cursor'] == '0' ? ' -- -nocursor' : '';
 sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
 // - Host address
-if (!isset($_SESSION['local_display_url'])) {
-	$_SESSION['local_display_url'] = 'http://localhost/';
-}
 sysCmd("sed -i 's|--app.*|--app=\"" . $_SESSION['local_display_url'] . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
 // - Screen blank interval
 if (!isset($_SESSION['scn_blank'])) {

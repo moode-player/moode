@@ -128,12 +128,22 @@ while true; do
 			wake_display
 		fi
 	else
-		LOCAL_CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
-		HW_PARAMS=$(cat /proc/asound/card$LOCAL_CARD_NUM/pcm0p/sub0/hw_params)
-		if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
-			debug_log "Local audio output is closed or audio device is disconnected"
+		debug_log "check wake on play"
+		LOCAL_DISPLAY_HOST=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='local_display_url'" | awk -F"/" '{print $3}')
+		if  [[ $LOCAL_DISPLAY_HOST = "localhost" ]]; then
+			TYPE="local"
+			CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
+			HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
 		else
-			debug_log "Local audio output is active, wake display"
+			TYPE="remote"
+			TMP=$(curl -G -S -s --data-urlencode "cmd=get_output_format" http://$LOCAL_DISPLAY_HOST/command/ | grep "Not playing")
+			[ -z "$TMP" ] && HW_PARAMS="playing" || HW_PARAMS="closed"
+		fi
+
+		if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
+			debug_log "$TYPE audio output is closed or audio device is disconnected"
+		else
+			debug_log "$TYPE audio output is active, wake display"
 			wake_display
 		fi
 	fi

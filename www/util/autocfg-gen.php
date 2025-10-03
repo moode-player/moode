@@ -49,6 +49,7 @@ $currentSettings['eth0chk'] = $_SESSION['eth0chk'];
 $currentSettings['avahi_options'] = $_SESSION['avahi_options'];
 $currentSettings['ready_script'] = $_SESSION['ready_script'];
 $currentSettings['ready_script_wait'] = $_SESSION['ready_script_wait'];
+$currentSettings['keyboard'] = $_SESSION['keyboard'];
 // Network
 $currentSettings['approto'] = $_SESSION['approto'];
 // Audio: MPD options
@@ -74,7 +75,6 @@ $currentSettings['mpd_monitor_opt'] = $_SESSION['mpd_monitor_opt'];
 // Mount monitor
 $currentSettings['fs_mountmon'] = $_SESSION['fs_mountmon'];
 // Local display
-$currentSettings['local_display_url'] = $_SESSION['local_display_url'];
 $currentSettings['scn_cursor'] = $_SESSION['scn_cursor'];
 $currentSettings['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
 $currentSettings['scn_blank'] = $_SESSION['scn_blank'];

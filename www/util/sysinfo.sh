@@ -747,7 +747,7 @@ camilladsp=${arr[53]}
 cdsp_fix_playback=${arr[54]}
 camilladsp_quickconv=${arr[55]}
 alsa_loopback=${arr[56]}
-keyboard=${arr[57]}
+local_display_url=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && local_display="On" || local_display="Off"
 toggle_songid=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
@@ -912,7 +912,6 @@ ashuffle_mode=$(moodeutl -d -gv "ashuffle_mode")
 ashuffle_window=$(moodeutl -d -gv "ashuffle_window")
 ashuffle_filter=$(moodeutl -d -gv "ashuffle_filter")
 ashuffle_exclude=$(moodeutl -d -gv "ashuffle_exclude")
-local_display_url=$(moodeutl -d -gv "local_display_url")
 value=$(moodeutl -d -gv "scn_cursor")
 [[ "$value" = "1" ]] && scn_cursor="On" || scn_cursor="Off"
 value=$(moodeutl -d -gv "scn_blank")
@@ -934,6 +933,7 @@ alsa_pi_audio_driver=$(moodeutl -d -gv "pi_audio_driver")
 crossfeed=$(moodeutl -d -gv crossfeed)
 value=$(moodeutl -d -gv peppy_display_type)
 [[ "$value" = "meter" ]] && peppy_display_type="Meter" || peppy_display_type="Spectrum"
+keyboard=$(moodeutl -d -gv "keyboard")
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

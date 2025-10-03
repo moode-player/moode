@@ -101,8 +101,8 @@ if (isset($_POST['update_time_zone'])) {
 
 if (isset($_POST['update_keyboard'])) {
     if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
+		$_SESSION['keyboard'] = $_POST['keyboard'];
         submitJob('keyboard', $_POST['keyboard'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-        phpSession('write', 'keyboard', $_POST['keyboard']);
     }
 }
 
