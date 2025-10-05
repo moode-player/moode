@@ -20,7 +20,10 @@ function getAlsaMixerName($deviceName) {
 			$mixerName = 'Channels';
 		} else if ($deviceName == 'HiFiBerry DAC+ DSP') {
 			$mixerName = 'DSPVolume';
-		} else if ($_SESSION['i2soverlay'] == 'hifiberry-dacplushd') {
+		} else if
+			$deviceName == 'HiFiBerry DAC2 HD' ||
+			$_SESSION['i2soverlay'] == 'hifiberry-dacplushd'
+		) {
 			$mixerName = 'DAC';
 		} else if ($deviceName == 'MERUS(tm) Amp piHAT ZW') {
 			$mixerName = 'A.Mstr Vol';
