@@ -286,9 +286,9 @@ function getAlsaHwParams($cardNum) {
 		}
 
 		// Rates: '44100 (44100/1)' etc
-	 	$rate = substr($array['rate'], 0, strpos($array['rate'], ' (')); // Could use: explode(' ', $array['rate'])
-	 	$array['rate'] = formatRate($rate);
-	 	$floatRate = (float)$rate;
+		$rate = substr($array['rate'], 0, strpos($array['rate'], ' (')); // Could use: explode(' ', $array['rate'])
+		$array['rate'] = formatRate($rate);
+		$floatRate = (float)$rate;
 
 		if (substr($array['format'], 0, 3) == 'DSD') {
 			// Native DSD: 'DSD_U16_BE', 'DSD_U32_BE' format designators
