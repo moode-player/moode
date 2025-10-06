@@ -47,12 +47,11 @@ while (true) {
 						mountmonLog('- Warning: File sharing is not accessible');
 					} else {
 						mountmonLog('- File sharing is accessible');
-						// Check for "Stale file handle" (NFS) or "Host is down" (SMB) return messages
-						// NOTE: This check can sometimes result in long timeouts or even a hang
-						//mountmonLog('- Checking for remount needed'); // DEBUG
-						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] . ' 2>&1 | grep "Host is down\|Stale file handle\|No such file or directory"');
+						// Check for remount needed (NOTE: ls can sometimes result in long timeouts or even a hang)
+						//mountmonLog('- Checking mount ' . $mp['name']); //DEBUG
+						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] . ' 2>&1 | grep -o "Stale file handle\|Host is down\|No such file or directory"');
 						if (!empty($result)) {
-							mountmonLog('- Re-mounting ' . $mp['name'] . ' (stale file handle)');
+							mountmonLog('- Remounting ' . $mp['name'] . ' (' . $result[0] . ')');
 							nasSourceMount('unmount', $mp['id']);
 							nasSourceMount('mount', $mp['id'], 'mountmonlog');
 						} else {
@@ -60,7 +59,7 @@ while (true) {
 						}
 					}
 				} else {
-					mountmonLog('- Re-mounting ' . $mp['name'] . ' (mount dir did not exist)');
+					mountmonLog('- Remounting ' . $mp['name'] . ' (Mount dir did not exist)');
 					nasSourceMount('mount', $mp['id'], 'mountmonlog');
 				}
 			} else {
