@@ -475,7 +475,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 				} else {
 					$_hide_nas_mount_error = '';
 					$_nas_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
-					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
+					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "TRY: mount"'));
 				}
 			}
 		}
@@ -553,7 +553,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nvme_source' || $_GET['cmd'] =
 				} else {
 					$_hide_nvme_mount_error = '';
 					$_nvme_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
-					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
+					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "TRY: mount"'));
 				}
 			}
 		}
@@ -624,7 +624,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_sata_source' || $_GET['cmd'] =
 				} else {
 					$_hide_sata_mount_error = '';
 					$_sata_mount_error_msg = LIB_MOUNT_FAILED . 'Click to view the mount error.';
-					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "Try (mount"'));
+					$_moode_log = "\n" . implode("\n", sysCmd('cat ' . MOODE_LOG . ' | grep -A 1 "TRY: mount"'));
 				}
 			}
 		}

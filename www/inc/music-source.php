@@ -82,7 +82,7 @@ function nasSourceCfg($queueArgs) {
 }
 
 // NAS source mount using SMB and NFS protocols
-function nasSourceMount($action, $id = '', $log = '') {
+function nasSourceMount($action, $id = '', $log = 'workerlog') {
 	$dbh = sqlConnect();
 
 	switch ($action) {
@@ -134,14 +134,12 @@ function nasSourceMount($action, $id = '', $log = '') {
 				$mp[0]['error'] = 'Mount error';
 				if ($log == 'workerlog') {
 					// Mounts performed by Library or Music Source Config
-					workerLog('- Try (' . $mountStr . ')');
-					workerLog('- Err (' . implode("\n", $result) . ')');
+					workerLog('- TRY: ' . $mountStr);
+					workerLog('- ERR: ' . implode("\n", $result));
 				} else if ($log == 'mountmonlog') {
-					// Mounts performed by the monitor daemon ($log = 'mountmonlog')
-					mountmonLog('- Try (' . $mountStr . ')');
-					mountmonLog('- Err (' . implode("\n", $result) . ')');
-				} else if ($log == '') {
-					// No logging
+					// Mounts performed by the Mountmon monitor daemon
+					mountmonLog('- TRY: ' . $mountStr);
+					mountmonLog('- ERR: ' . implode("\n", $result));
 				}
 				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 				$return = false;
@@ -149,7 +147,7 @@ function nasSourceMount($action, $id = '', $log = '') {
 
 			// Log the mount string if debug logging on and mount appeared to be successful
 			if ($return === true) {
-				debugLog('Mount (' . $mountStr . ')');
+				debugLog('Mount: ' . $mountStr);
 			}
 			break;
 		case 'unmount':
@@ -170,7 +168,7 @@ function nasSourceMount($action, $id = '', $log = '') {
 
 			foreach ($mounts as $mp) {
 				if (!nasMountExists($mp['name'])) {
-					$return = nasSourceMount('mount', $mp['id'], 'workerlog');
+					$return = nasSourceMount('mount', $mp['id']);
 				} else {
 					debugLog('Mount: ' . $mp['name'] . ' already exists');
 				}
@@ -207,6 +205,7 @@ function detectSMBVersion($host) {
 
 	if (count($parts) >= 2)  {
 		$version = trim($parts[2]);
+		// TODO: Remove this when upstream Samba package no longer includes the v1 protocol
 		if (str_contains($version, 'SMBv1')) {
 			$version = '1.0';
 		} else if (array_key_exists($version, SMB_VERSIONS)) {
@@ -294,7 +293,7 @@ function nvmeSourceCfg($queueArgs) {
 	return $result;
 }
 
-function nvmeSourceMount($action, $id = '', $log = '') {
+function nvmeSourceMount($action, $id = '', $log = 'workerlog') {
 	$dbh = sqlConnect();
 
 	switch ($action) {
@@ -331,8 +330,8 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 						sysCmd('rmdir "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
 					}
 					$mp[0]['error'] = 'Mount error';
-					workerLog('worker: Try (' . $mountStr . ')');
-					workerLog('worker: Err (' . $resultStr . ')');
+					workerLog('worker: - TRY: ' . $mountStr);
+					workerLog('worker: - ERR: ' . $resultStr);
 					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 					$return = false;
 				}
@@ -340,7 +339,7 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 
 			// Log the mount string if debug logging on and mount appeared to be successful
 			if ($return === true) {
-				debugLog('Mount (' . $mountStr . ')');
+				debugLog('Mount: ' . $mountStr);
 			}
 			break;
 		case 'unmount':
@@ -357,7 +356,7 @@ function nvmeSourceMount($action, $id = '', $log = '') {
 
 			foreach ($mounts as $mp) {
 				if (!nvmeMountExists($mp['name'])) {
-					$return = nvmeSourceMount('mount', $mp['id'], 'workerlog');
+					$return = nvmeSourceMount('mount', $mp['id']);
 				}
 			}
 			// For logging
@@ -532,7 +531,7 @@ function sataSourceCfg($queueArgs) {
 	return $result;
 }
 
-function sataSourceMount($action, $id = '', $log = '') {
+function sataSourceMount($action, $id = '', $log = 'workerlog') {
 	$dbh = sqlConnect();
 
 	switch ($action) {
@@ -570,8 +569,8 @@ function sataSourceMount($action, $id = '', $log = '') {
 						sysCmd('rmdir "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
 					}
 					$mp[0]['error'] = 'Mount error';
-					workerLog('worker: Try (' . $mountStr . ')');
-					workerLog('worker: Err (' . $resultStr . ')');
+					workerLog('worker: - TRY: ' . $mountStr);
+					workerLog('worker: - ERR: ' . $resultStr);
 					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 					$return = false;
 				}
@@ -579,7 +578,7 @@ function sataSourceMount($action, $id = '', $log = '') {
 
 			// Log the mount string if debug logging on and mount appeared to be successful
 			if ($return === true) {
-				debugLog('Mount (' . $mountStr . ')');
+				debugLog('Mount: ' . $mountStr);
 			}
 			break;
 		case 'unmount':
@@ -596,7 +595,7 @@ function sataSourceMount($action, $id = '', $log = '') {
 
 			foreach ($mounts as $mp) {
 				if (!sataMountExists($mp['name'])) {
-					$return = sataSourceMount('mount', $mp['id'], 'workerlog');
+					$return = sataSourceMount('mount', $mp['id']);
 				}
 			}
 			// For logging
