@@ -35,6 +35,7 @@ Bug fixes
 - FIX: Peppy spectrum name always reverts to "random"
 - FIX: Cover visible when returning from CoverView in Mobile landscape
 - FIX: Potential divide by 0 condition in Network Config "qual" value
+- FIX: Mount errors not being logged in Library Config
 
 ################################################################################
 #
