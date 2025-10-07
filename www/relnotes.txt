@@ -36,6 +36,7 @@ Bug fixes
 - FIX: Cover visible when returning from CoverView in Mobile landscape
 - FIX: Potential divide by 0 condition in Network Config "qual" value
 - FIX: Mount errors not being logged in Library Config
+- FIX: Volume type "Hardware" not available for HiFiBerry DAC2 HD
 
 ################################################################################
 #
