@@ -270,9 +270,13 @@ function updDspAndBtInConfs($cardNum, $outputMode) {
 	}
 
 	// Bluetooth config (inbound)
-	// NOTE: bluealsaaplay.conf AUDIODEV=_audioout or plughw depending on Bluetooth Config, ALSA output mode
 	if ($_SESSION['peppy_display'] == '1') {
-		$alsaDevice = 'peppy';
+		if ($_SESSION['camilladsp'] != 'off') {
+			$alsaDevice = 'camilladsp';
+		} else {
+			$alsaDevice = 'peppy';
+		}
+	// AUDIODEV=_audioout or plughw depending on Bluetooth Config, ALSA output mode
 	} else if ($_SESSION['alsa_output_mode_bt'] == 'plughw') {
 		$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $cardNum . ',0';
 	} else {
