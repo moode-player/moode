@@ -1702,9 +1702,6 @@ workerLog('worker: Radio monitor:    ' . ($_SESSION['mpd_monitor_svc'] == 'On' ?
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
 
-// TODO: move this
-//DELETE:$result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
-
 sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
 workerLog('worker: Watchdog monitor: started');
 
