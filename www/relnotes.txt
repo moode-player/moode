@@ -16,10 +16,8 @@
 ################################################################################
 
 Updates
-- UPD:
-
-Radio stations
-- UPD:
+- UPD: Add support for AirPlay metadata/covers from YouTube and other apps
+- UPD: Add "Crop queue" feature (Remove all but the currently playing item)
 
 Bug fixes
 - FIX: Bluetooth inbound AUDIODEV not set correctly when Peppy + CamillaDSP
