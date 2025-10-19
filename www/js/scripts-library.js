@@ -1750,6 +1750,12 @@ $('#context-menu-playback a').click(function(e) {
                 notify(NOTIFY_TITLE_INFO, 'queue_cleared', NOTIFY_DURATION_SHORT);
             });
             break;
+		case 'crop':
+            $.post('command/queue.php?cmd=crop_playqueue', function() {
+                $('#playlist-save-name').val('');
+                notify(NOTIFY_TITLE_INFO, 'queue_cropped', NOTIFY_DURATION_SHORT);
+            });
+            break;
         case 'stream_recorder':
     		$('#menu-check-recorder').toggle();
             if ($('#menu-check-recorder').css('display') == 'block') {

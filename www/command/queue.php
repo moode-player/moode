@@ -56,10 +56,14 @@ switch ($_GET['cmd']) {
         echo json_encode(parseDelimFile(readMpdResp($sock), ': ')['file']);
 		break;
     case 'clear_playqueue':
-        workerLog('clear_playqueue');
+        //workerLog('clear_playqueue');
 		sendMpdCmd($sock, 'clear');
         $resp = readMpdResp($sock);
         updLibRecentPlaylistVar('None');
+		break;
+	case 'crop_playqueue':
+        //workerLog('crop_playqueue');
+		sysCmd('mpc crop');
 		break;
 	case 'add_item':
 	case 'add_item_next':

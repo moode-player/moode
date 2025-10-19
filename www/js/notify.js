@@ -22,6 +22,7 @@ function notify(title, message, arg3, arg4 = '') {
         queue_item_removed: 'Selected items have been removed. ',
 		queue_item_moved: 'Selected items have been moved. ',
         queue_cleared: 'Queue has been cleared. ',
+		queue_cropped: 'Queue has been cropped. ',
         playqueue_info: '<br>',
         // Library
         update_library: 'Library is being updated... ',
