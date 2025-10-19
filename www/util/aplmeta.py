@@ -104,8 +104,13 @@ try:
 			debug_msg('--> key|val=' + key + '|' + val)
 			update_globals(key, val)
 
-		# When all globals are set, send metadata to front-end for display
-		if artist and title and album:
+		# When globals are set, send metadata to front-end for display
+		if title:
+			if not album:
+				album = "AirPlay Source"
+			if not artist:
+				artist = ""
+
 			# Get cover file:
 			# - Only one file will exist because retain_cover_art = "no"
 			# - We need a delay to allow shairport-sync time to write the file
