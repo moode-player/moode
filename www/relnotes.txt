@@ -16,6 +16,7 @@
 ################################################################################
 
 Updates
+- UPD: Bump to MPD 0.24.6
 - UPD: Add support for AirPlay metadata/covers from YouTube and other apps
 - UPD: Add "Crop queue" feature (Remove all but the currently playing item)
 
