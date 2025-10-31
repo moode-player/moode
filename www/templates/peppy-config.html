@@ -62,6 +62,17 @@
 					Enter "random" or one or more comma separated Meter names from the list above.
 				</span>
 			</div>
+
+			<label class="control-label" for="meter-normalization">Normalization</label>
+			<div class="controls">
+				<select id="meter-normalization" class="config-select-large" name="settings[meter_normalization]">
+					$_select[meter_normalization]
+				</select>
+				<span class="config-help-static">
+					Set the value used for normalizing volume data comming from the FIFO pipe.
+					A lower value will cause the meter needle or bars to appear higher.
+				</span>
+			</div>
 		</div>
 
 		<div class="config-horiz-rule">Spectrums</div>

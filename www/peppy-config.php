@@ -36,6 +36,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 				$param = 'meter =';
 				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
 				break;
+			case 'meter_normalization':
+				$param = 'volume.max.in.pipe';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
 			case 'spectrum_folder':
 				$param = 'spectrum.folder';
 				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
@@ -73,6 +77,16 @@ foreach($folders as $folderPath) {
 }
 $_meter_list = getPeppyFolderContents('meter', $configMeter['meter.folder']);
 $_select['meter_name'] = $configMeter['meter'];
+$_select['meter_normalization'] .= "<option value=\"100.0\" " . (($configMeter['volume.max.in.pipe'] == '100.0') ? "selected" : "") . ">100 (Default) </option>\n";
+$_select['meter_normalization'] .= "<option value=\"90.0\" " . (($configMeter['volume.max.in.pipe'] == '90.0') ? "selected" : "") . ">90</option>\n";
+$_select['meter_normalization'] .= "<option value=\"80.0\" " . (($configMeter['volume.max.in.pipe'] == '80.0') ? "selected" : "") . ">80</option>\n";
+$_select['meter_normalization'] .= "<option value=\"70.0\" " . (($configMeter['volume.max.in.pipe'] == '70.0') ? "selected" : "") . ">70</option>\n";
+$_select['meter_normalization'] .= "<option value=\"60.0\" " . (($configMeter['volume.max.in.pipe'] == '60.0') ? "selected" : "") . ">60</option>\n";
+$_select['meter_normalization'] .= "<option value=\"50.0\" " . (($configMeter['volume.max.in.pipe'] == '50.0') ? "selected" : "") . ">50</option>\n";
+$_select['meter_normalization'] .= "<option value=\"40.0\" " . (($configMeter['volume.max.in.pipe'] == '40.0') ? "selected" : "") . ">40</option>\n";
+$_select['meter_normalization'] .= "<option value=\"30.0\" " . (($configMeter['volume.max.in.pipe'] == '30.0') ? "selected" : "") . ">30</option>\n";
+$_select['meter_normalization'] .= "<option value=\"20.0\" " . (($configMeter['volume.max.in.pipe'] == '20.0') ? "selected" : "") . ">20</option>\n";
+$_select['meter_normalization'] .= "<option value=\"10.0\" " . (($configMeter['volume.max.in.pipe'] == '10.0') ? "selected" : "") . ">10</option>\n";
 
 // Spectrum settings
 $folders = getPeppyFolderList('spectrum');
