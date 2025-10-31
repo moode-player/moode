@@ -20,6 +20,8 @@ Updates
 - UPD: Add support for AirPlay metadata/covers from YouTube and other apps
 - UPD: Add "Crop queue" feature (Remove all but the currently playing item)
 - UPD: Improve help for the LCD updater and CAPS equalizers
+- UPD: Add "Normalization" to Peppymeter config (adjust height of needle/bars)
+- UPD: Resume MPD play after changing Peppy configs
 
 Bug fixes
 - FIX: Bluetooth inbound AUDIODEV not set correctly when Peppy + CamillaDSP
