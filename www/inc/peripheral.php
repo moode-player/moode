@@ -30,6 +30,8 @@ function unhidePeppyConf() {
 }
 function restartMpdAndRenderers($resetAlsaCtl) {
 	// Restart MPD
+	$MpdWasPlaying = sysCmd('mpc status | grep "\[playing\]"');
+
 	sysCmd('systemctl stop mpd');
 	if ($resetAlsaCtl === true) {
 		sysCmd('alsactl clean ' . $_SESSION['cardnum']); // Clean (reset) application controls
@@ -38,6 +40,10 @@ function restartMpdAndRenderers($resetAlsaCtl) {
 	sysCmd('systemctl start mpd');
 	$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 	closeMpdSock($sock);
+
+	if (!empty($MpdWasPlaying)) {
+		sysCmd('mpc play');
+	}
 
 	// Restart renderers
 	if ($_SESSION['airplaysvc'] == 1) {
