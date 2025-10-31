@@ -474,7 +474,7 @@
 			</div>
 		</div>
 
-		<div class="config-horiz-rule">Legacy Equalizers</div>
+		<div class="config-horiz-rule">ALSA Equalizers</div>
 		<p class="sub-legend">
 			Note: Peppy display cannot be turned on if playing to a Bluetooth speaker with Graphic or Parameteic EQ on.
 		</p>
@@ -487,8 +487,9 @@
 			<button id="btn-set-alsaequal" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsaequal" value="novalue" $_alsaequal_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsaequal" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 			<span id="info-alsaequal" class="config-help-info">
-				A classic octave-band, constant-Q, second-order filter design. Frequency bands centered above Nyquist are automatically disabled. This EQ uses the Eq10X2 component of the CAPS suite of DSP programs written by Tim Goetze.<br>
-				<b>NOTE:</b> Equalizer processing applies to MPD, AirPlay and Spotify output.<br>
+				A classic octave-band, constant-Q, second-order filter design.
+				Frequency bands centered above Nyquist are automatically disabled.
+				This EQ uses the Eq10X2 component of the C Audio Plugin Suite (CAPS) suite of DSP programs written by Tim Goetze.
 			</span>
 		</div>
 
@@ -506,8 +507,9 @@
 				<button id="btn-set-eqfa12p" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_eqfa12p" value="novalue" $_eqfa12p_ctl_disabled><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-eqp" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-eqp" class="config-help-info">
-					Three x Four Mitra-Regalia peaking equaliser filters in series; a vector arithmetic re-implementation of Fons Adriaensens "Parametric1" equaliser[fafil] with minor differences. Parallelisation of the serial filter organisation causes the output to lag by three samples. This EQ uses the @bitlab custom eqfa12p component of the CAPS suite of DSP programs written by Tim Goetze<br>
-					<b>NOTE:</b> Equalizer processing applies to MPD, AirPlay and Spotify output.<br>
+					Twelve Mitra-Regalia peaking equaliser filters in series; a vector arithmetic re-implementation of Fons Adriaensens "Parametric1" equaliser[fafil] with minor differences. 
+					Parallelisation of the serial filter organisation causes the output to lag by three samples.
+					This EQ uses the @bitlab eqfa12p plugin based on the eqfa4p plugin in the C Audio Plugin Suite (CAPS) suite of DSP programs written by Tim Goetze.
                 </span>
 			</div>
 

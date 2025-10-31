@@ -346,8 +346,10 @@
 				<button id="btn-set-lcdup" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_lcdup" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-lcdup" class="config-help-info">
-					The LCD update engine runs the lcd-updater.py script whenever UI state changes.<br>
-					A stub lcd-updater.py script is located in the /var/local/www/commandw/ directory.
+					The LCD update daemon monitors the Metadata file /var/local/www/currentsong.txt.
+					When changes are detected it runs a Python script named lcd-updater.py located
+					in the /var/local/www/commandw/ directory.<br>
+					<b>NOTE:</b> The Metadata file is automatically turned on when LCD updater is turned on.
                 </span>
 			</div>
 		</div>
