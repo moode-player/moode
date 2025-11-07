@@ -209,7 +209,7 @@ if [[ $1 = "get-osinfo" ]]; then
 	RPIOS_MVER=$(cat /etc/debian_version | cut -d "." -f 1)
 	if [[ "$RPIOS_MVER" == "11" ]]; then RPIOS_NAME="Bullseye"; fi
 	if [[ "$RPIOS_MVER" == "12" ]]; then RPIOS_NAME="Bookworm"; fi
-	if [[ "$RPIOS_MVER" == "13" ]]; then RPIOS_NAME="Trxie"; fi
+	if [[ "$RPIOS_MVER" == "13" ]]; then RPIOS_NAME="Trixie"; fi
 	if [[ "$RPIOS_MVER" == "14" ]]; then RPIOS_NAME="Forky"; fi
 	RPIOS_ARCH=$(dpkg -l | grep nano | awk '{print $4}')
 	if [ $RPIOS_ARCH = "arm64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
