@@ -5,7 +5,7 @@
 */
 
 // PHP
-const PHP_VER = '8.2';
+const PHP_VER = '8.4';
 
 // Log files
 const MOODE_LOG = '/var/log/moode.log';

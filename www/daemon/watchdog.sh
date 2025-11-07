@@ -8,7 +8,7 @@
 # $1: Loop sleep time (secs)
 if [ -z $1 ]; then WATCHDOG_SLEEP=6; else WATCHDOG_SLEEP=$1; fi
 
-PHP_VER="8.2"
+PHP_VER="8.4"
 
 # NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool
 FPM_MAX_LIMIT=64
