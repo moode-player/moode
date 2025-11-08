@@ -81,8 +81,8 @@ SYSTEM_PARAMETERS() {
 }
 
 AUDIO_PARAMETERS() {
-	ALSAVER="$(dpkg -l | awk '/libasound2:/ { print  $3 }')"
- 	SOXVER="$(dpkg -l | awk '/libsoxr0:/ { print  $3 }')"
+	ALSAVER="$(dpkg -l | awk '/libasound2t64:/ {print $3}')"
+ 	SOXVER="$(dpkg -l | awk '/libsoxr0:/ {print $3}')"
 	CDSPVER="$(camilladsp --version | cut -d' ' -f 2)"
 	BITS="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w format | cut -f 2 -d " ")"
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
@@ -350,7 +350,7 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
-		SL=`squeezelite -? | grep "Squeezelite" | cut -f 2 -d "v" | cut -f 1 -d ","`
+		SL=$(squeezelite -? | grep "Squeezelite" | awk '{print $2}' | cut -d "," -f1)
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
 		echo -e "S Q U E E Z E L I T E"
 		echo -e "\nVersion\t\t\t= $SL $SLT\c"
@@ -920,7 +920,7 @@ on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
-chromium_ver=$(dpkg -l | grep -m 1 "chromium-browser" | awk '{print $3}' | cut -d":" -f 2)
+chromium_ver=$(moodeutl --chromiumrel)
 dsi_scn_brightness=$(moodeutl -d -gv "dsi_scn_brightness")
 value=$(moodeutl -d -gv usb_volknob)
 [[ "$value" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
