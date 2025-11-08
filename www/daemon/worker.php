@@ -318,7 +318,7 @@ $_SESSION['keyboard'] = trim($keyboard[0], "\"");
 
 // Store platform data
 $_SESSION['hdwrrev'] = getHdwrRev();
-$_SESSION['moode_release'] = getMoodeRel(); // rNNN format
+$_SESSION['moode_release'] = getMoodeRel(); // rSSNN format
 // get-osinfo: 'RPiOS: 11.8 (Bullseye 64-bit) | Linux: 6.1.21 (64-bit)'
 $osInfo = explode(' | ', sysCmd('/var/www/util/sysutil.sh "get-osinfo"')[0]);
 $_SESSION['raspbianver'] = explode(': ', $osInfo[0])[1];
@@ -1384,7 +1384,7 @@ if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
 // WebUI display
 workerLog('worker: WebUI display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
 workerLog('worker: Target url:      ' . $_SESSION['local_display_url']);
-workerLog('worker: Chromium ver:    ' . sysCmd("dpkg -l | grep -m 1 \"chromium-browser\" | awk '{print $3}' | cut -d\":\" -f 2")[0]);
+workerLog('worker: Chromium ver:    ' . sysCmd('moodeutl --chromiumrel')[0]);
 workerLog('worker: Chromium cfg:    ' . $cfgStatus);
 // Peppy display
 workerLog('worker: Peppy display:   ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));

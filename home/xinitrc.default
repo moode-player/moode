@@ -52,7 +52,7 @@ if [ $WEBUI_SHOW = "1" ]; then
 	# Clear browser cache
 	$(/var/www/util/sysutil.sh clearbrcache)
 	# Launch chromium browser
-	chromium-browser \
+	chromium \
 	--app="http://localhost/" \
 	--window-size="$SCREEN_RES" \
 	--window-position="0,0" \

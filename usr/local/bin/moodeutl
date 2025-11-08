@@ -134,6 +134,9 @@ switch ($option) {
 		$file = file_get_contents('/var/www/footer.min.php');
 		echo substr($file, strpos($file, 'Release: ') + 9, 17) . "\n";
 		break;
+	case '--chromiumrel':
+		echo shell_exec("dpkg -l | grep -m 1 \"chromium\" | awk '{print $3}' | cut -d\":\" -f 2");
+		break;
 	case '--pirev':
 		echo shell_exec('/var/www/util/pirev.py');
 		break;
@@ -193,6 +196,7 @@ With no OPTION print the help text and exit.
  --autocfglog\tPrint auto config update log
  --sleepint\tPrint daemon sleep intervals
  --mooderel\tPrint moOde release
+ --chromiumrel\tPrint Chromium release
  --pirev\tPrint Pi revision
  --osinfo\tPrint OS info
  --version\tPrint program version

@@ -239,7 +239,7 @@ var currentView = 'playback';
 var alphabitsFilter;
 var lastYIQ = ''; // Last yiq value from setColors
 
-// Detect chromium-browser
+// Detect chromium browser
 GLOBAL.userAgent = navigator.userAgent;
 GLOBAL.userAgent.indexOf('CrOS') != -1 ? GLOBAL.chromium = true : GLOBAL.chromium = false;
 

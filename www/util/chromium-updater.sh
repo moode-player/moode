@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2014 The moOde audio player project / Tim Curtis
 #
-# Arg $1 = chromium-browser version
+# Arg $1 = chromium version
+#
+# Moode10: Save in case needed in future
 #
 
 MOODE_LOG="/var/log/moode.log"
@@ -37,15 +39,15 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-# Step 2 - Remove package holds for current package set
+# Step 2 - Remove package holds for stock >v130 package set
 message_log "- Removing package holds"
-apt-mark unhold chromium chromium-browser chromium-common chromium-sandbox rpi-chromium-mods
+apt-mark unhold chromium chromium-common chromium-l10n chromium-sandbox rpi-chromium-mods
 if [ $? -ne 0 ]; then
 	message_log "APT unhold failed"
 	exit 1
 fi
 
-# Step 3 - Downgrade
+# Step 3 - Downgrade to v126 package set
 message_log "- Installing chromium-browser "$CHROMIUM_VER
 apt -y install \
 chromium-browser=$CHROMIUM_VER \
@@ -57,11 +59,12 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-# Step 4 - Remove current version package set
+# Step 4 - Remove stock >v130 package set
 message_log "- Removing leftover packages"
 apt -y purge \
 chromium \
 chromium-common \
+chromium-l10n \
 chromium-sandbox \
 rpi-chromium-mods
 if [ $? -ne 0 ]; then
