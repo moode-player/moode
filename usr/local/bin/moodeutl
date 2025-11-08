@@ -132,7 +132,7 @@ switch ($option) {
 		break;
 	case '--mooderel':
 		$file = file_get_contents('/var/www/footer.min.php');
-		echo substr($file, strpos($file, 'Release: ') + 9, 16) . "\n";
+		echo substr($file, strpos($file, 'Release: ') + 9, 17) . "\n";
 		break;
 	case '--pirev':
 		echo shell_exec('/var/www/util/pirev.py');
