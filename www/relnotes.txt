@@ -22,7 +22,7 @@ Updates
 - UPD:
 
 Bug fixes
-- FIX:
+- FIX: Blank hotspot password after restore
 
 ################################################################################
 #
