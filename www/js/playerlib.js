@@ -1911,7 +1911,6 @@ s
                 data[i].directory == 'NVME' ||
                 data[i].directory == 'OSDISK' ||
                 data[i].directory == 'SATA' ||
-                data[i].directory == 'SDCARD' ||
                 data[i].directory == 'USB') {
                 rootFolderIcon = getKeyOrValue('value', data[i].directory);
             }
@@ -2026,7 +2025,6 @@ function getDirDisplayName(dirName) {
         NVME: 'NVMe',
         OSDISK: 'OSDisk',
         SATA: 'SATA',
-        SDCARD: 'SDCard',
         USB: 'USB'
     }
 
@@ -5164,7 +5162,6 @@ function containsBaseFolderName(name) {
         ~name.indexOf('OSDISK') ||
         ~name.indexOf('RADIO') ||
         ~name.indexOf('SATA') ||
-        ~name.indexOf('SDCARD') ||
         ~name.indexOf('USB')
     );
 }
@@ -5224,7 +5221,7 @@ function getKeyOrValue (type, item) {
         ['Shutdown','poweroff'],['Restart','reboot'],
         ['Play','play'],['Pause','pause'],['Stop','stop'],['Next','next'],['Previous','prev'],
         // Root folder icons
-        ['NAS','fa-computer'],['NVME','fa-memory'],['OSDISK','fa-folders'],['RADIO','fa-microphone'],['SATA','fa-hard-drive'],['SDCARD','fa-sd-card'],['USB','fa-usb-drive'],
+        ['NAS','fa-computer'],['NVME','fa-memory'],['OSDISK','fa-folders'],['RADIO','fa-microphone'],['SATA','fa-hard-drive'],['USB','fa-usb-drive'],
         // Now-playing icon
         ['None','None'],['Waveform','waveform'],['Equalizer (Animated)','equalizer'],
         // View -> Item position
