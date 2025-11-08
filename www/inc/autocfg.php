@@ -319,7 +319,7 @@ function autoConfigSettings() {
 			$result = sqlQuery("select * from cfg_network where iface='apd0'", sqlConnect());
 			$str = '';
 			$str .= "apdssid = \"" . $result[0]['wlanssid'] . "\"\n";
-			$str .= "apdpwd = \"" . "" . "\"\n"; // Keep empty
+			$str .= "apdpwd = \"" . $psk . "\"\n";
 			$str .= "apduuid = \"" . $result[0]['wlanuuid'] . "\"\n";
 			$str .= "apdpsk = \"" . $result[0]['wlanpsk'] . "\"\n";
 			$result = sqlQuery("SELECT value FROM cfg_system WHERE param='ap_network_addr'", sqlConnect());
