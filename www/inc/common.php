@@ -249,9 +249,9 @@ function sysCmd($cmd) {
 	return $output;
 }
 
-// Get major version (series) S in 'rSNN'
+// Get major version (series) SS in 'rSSNN'
 function getMoodeSeries() {
-	return substr(getMoodeRel(), 1, 1);
+	return substr(getMoodeRel(), 1, 2);
 }
 
 // Get the userid set in the Pi Imager. It will always be uid:gid 1000:1000
