@@ -19,7 +19,7 @@ New features
 - NEW:
 
 Updates
-- UPD:
+- UPD: Support Comfast CF-912AC dual-band WiFi adapter (rtl88xxau driver)
 
 Bug fixes
 - FIX: Blank hotspot password after restore
