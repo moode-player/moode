@@ -1327,6 +1327,8 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Attached display
+// Set symlink chromium -> chromium-browser v126
+sysCmd('ln -s /usr/bin/chromium-browser /usr/local/bin/chromium');
 // Reapply service file and xinitrc user settings
 // - UserID
 sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localdisplay.service");
