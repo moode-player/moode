@@ -94,7 +94,7 @@ function getAlsaVolumeDb($mixerName) {
 	if (substr($result[0], 0, 6 ) == 'amixer') {
 		$alsaVolume = 'none';
 	} else {
-		$alsaVolume = $result[0];
+		$alsaVolume = rtrim($result[0], 'dB') < -127 ? '-127dB' : $result[0];
 	}
 
 	return $alsaVolume;
