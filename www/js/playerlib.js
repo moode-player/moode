@@ -30,6 +30,7 @@ const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
 const NOTIFY_TITLE_ERROR = '<i class="fa fa-solid fa-sharp fa-do-not-enter" style="color:#e74c3c;"></i> Error';
+const NOTIFY_TITLE_WELCOME = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Welcome!';
 const NOTIFY_DURATION_SHORT = 2; // Seconds
 const NOTIFY_DURATION_DEFAULT = 5;
 const NOTIFY_DURATION_MEDIUM = 10;

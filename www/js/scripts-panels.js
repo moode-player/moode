@@ -140,7 +140,7 @@ jQuery(document).ready(function($) { 'use strict';
             $('#playbar-firstuse-help').css('display', 'block');
         }
         if (firstUseHelp[2] == 'y') {
-            notify(NOTIFY_TITLE_INFO, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
+            notify(NOTIFY_TITLE_WELCOME, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
         }
 
     	// Compile the ignore articles regEx
@@ -407,7 +407,7 @@ jQuery(document).ready(function($) { 'use strict';
             notify(NOTIFY_TITLE_ERROR, 'userid_error', NOTIFY_MSG_NO_USERID, NOTIFY_DURATION_INFINITE);
         //} else if (SESSION.json['first_use_help'].includes('y')) {
         //    // First use welcome notification
-        //    notify(NOTIFY_TITLE_INFO, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
+        //    notify(NOTIFY_TITLE_WELCOME, 'firstuse_welcome', NOTIFY_MSG_WELCOME, NOTIFY_DURATION_INFINITE);
         }
     });
 
