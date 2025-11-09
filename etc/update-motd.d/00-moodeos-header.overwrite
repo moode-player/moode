@@ -10,6 +10,7 @@ AUDIO_DEV=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='adevname'"
 OS_INFO=$(/var/www/util/sysutil.sh "get-osinfo")
 RPI_MODEL=$(/var/www/util/pirev.py | awk -F"\t" '{print "Pi-"$2" "$4}')
 MOODE_REL=$(moodeutl --mooderel | tr -d '\n')
+MOODE_SERIES=$(echo $MOODE_REL | cut -d"." -f1)
 
 echo " "
 echo "Host:  $HOST_NAME"
@@ -21,8 +22,10 @@ echo "
 
         m o O d e   a u d i o   p l a y e r
 
-              Release $MOODE_REL
-                (C) 2014 Tim Curtis
+                    Series $MOODE_SERIES
+
+             Release $MOODE_REL
+               (C) 2014 Tim Curtis
 
 
 The programs included with moOde are free software; the
