@@ -16,10 +16,13 @@
 ################################################################################
 
 New features
-- NEW:
+- NEW: PiOS Trixie Lite (Debian 13)
+  https://www.raspberrypi.com/news/trixie-the-new-version-of-raspberry-pi-os/
 
 Updates
-- UPD: Support Comfast CF-912AC dual-band WiFi adapter (rtl88xxau driver)
+- UPD: Bump to Bluez 4.3.1
+- UPD: Bump to ashuffle 3.14.9
+- UPD: Add rtl88xxau WiFi driver (Comfast CF-912AC)
 
 Bug fixes
 - FIX: Blank hotspot password after restore
