@@ -19,6 +19,9 @@ New features
 - NEW: PiOS Trixie Lite (Debian 13)
   https://www.raspberrypi.com/news/trixie-the-new-version-of-raspberry-pi-os/
 
+Radio stations
+- UPD: Linn stations
+
 Updates
 - UPD: Bump to Bluez 4.3.1
 - UPD: Bump to ashuffle 3.14.9
