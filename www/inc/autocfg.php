@@ -674,12 +674,6 @@ function autoConfigSettings() {
 			$_SESSION['dsi_scn_brightness'] = $values['dsi_scn_brightness'];
 			updDSIScnBrightness($values['dsi_scn_type'], $values['dsi_scn_brightness']);
 		}],
-		// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
-		['requires' => ['pixel_aspect_ratio'], 'handler' => function($values) {
-			phpSession('write', 'pixel_aspect_ratio', $values['pixel_aspect_ratio']);
-			//$value = $values['pixel_aspect_ratio'] == 'Square' ? '' : '#';
-			//updBootConfigTxt('upd_framebuffer_settings', $value);
-		}],
 		['requires' => ['dsi_scn_rotate'], 'handler' => function($values) {
 			// touch1 value: 0 landscape | 180 inverted
 			// touch2 value  0 portrait  | 90 | 180 | 270 landscape

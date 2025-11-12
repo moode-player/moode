@@ -396,7 +396,6 @@ RENDERER_SETTINGS() {
 		echo -e "\nDSI Screentype\t\t= $dsi_scn_type\c"
 		echo -e "\nDSI Port\t\t= $dsi_port\c"
 		echo -e "\nDSI Brightness\t\t= $dsi_scn_brightness\c"
-		#echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
 		echo -e "\nDSI Rotate\t\t= $dsi_scn_rotate Deg\n"
 	fi
 
@@ -809,7 +808,7 @@ rsmaftersl=${arr[94]}
 mpdmixer_local=${arr[95]}
 wrkready=${arr[96]}
 scnsaver_timeout=${arr[97]}
-pixel_aspect_ratio=${arr[98]}
+RESERVED_99=${arr[98]}
 favorites_name=${arr[99]}
 [[ "${arr[100]}" = "1" ]] && spotifysvc="On" || spotifysvc="Off"
 spotifyname=${arr[101]}

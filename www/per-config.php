@@ -169,14 +169,6 @@ if (isset($_POST['update_dsi_scn_brightness'])) {
     }
 }
 
-// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
-/*if (isset($_POST['update_pixel_aspect_ratio'])) {
-    if (isset($_POST['pixel_aspect_ratio']) && $_POST['pixel_aspect_ratio'] != $_SESSION['pixel_aspect_ratio']) {
-		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-		phpSession('write', 'pixel_aspect_ratio', $_POST['pixel_aspect_ratio']);
-    }
-}*/
-
 if (isset($_POST['update_dsi_scn_rotate'])) {
     if (isset($_POST['dsi_scn_rotate']) && $_POST['dsi_scn_rotate'] != $_SESSION['dsi_scn_rotate']) {
         phpSession('write', 'dsi_scn_rotate', $_POST['dsi_scn_rotate']);
@@ -344,10 +336,6 @@ $_select['dsi_scn_type'] .= "<option value=\"other\" " . (($_SESSION['dsi_scn_ty
 
 $_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1</option>\n";
 $_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-2</option>\n";
-
-// NOTE: Touch1 (square pixels): no solution yet with the KMS driver
-//$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
-//$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
 
 $_select['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
 

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Nov 10 18:00:16 2025
+-- File generated with SQLiteStudio v3.4.4 on Wed Nov 12 07:19:41 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -629,7 +629,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (95, 'rsmaftersl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (96, 'mpdmixer_local', 'software');
 INSERT INTO cfg_system (id, param, value) VALUES (97, 'wrkready', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (98, 'scnsaver_timeout', 'Never');
-INSERT INTO cfg_system (id, param, value) VALUES (99, 'pixel_aspect_ratio', 'Default');
+INSERT INTO cfg_system (id, param, value) VALUES (99, 'RESERVED_99', '');
 INSERT INTO cfg_system (id, param, value) VALUES (100, 'favorites_name', 'Favorites');
 INSERT INTO cfg_system (id, param, value) VALUES (101, 'spotifysvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (102, 'spotifyname', 'Moode Spotify');
