@@ -40,7 +40,7 @@ wake_display () {
 		cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on
 		export DISPLAY=:0
 		if [[ $PEPPY_ACTIVE = "1" ]] && [[ $SCN_BLANK_ACTIVE = "1" ]]; then
-			debug_log "wake display: set peppy screen blank 0, restart localdisplay"
+			debug_log "wake display: set peppy_scn_blank_active 0, restart localdisplay"
 			$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='peppy_scn_blank_active'")
 			systemctl restart localdisplay
 		else
@@ -141,7 +141,7 @@ while true; do
 		fi
 
 		if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
-			debug_log "$TYPE audio output is closed or audio device is disconnected"
+			debug_log "$TYPE audio output is closed, don't wake display"
 		else
 			debug_log "$TYPE audio output is active, wake display"
 			wake_display
