@@ -1944,7 +1944,7 @@ function chkPeppyScnBlank() {
 					// Output interface (HDMI or DSI)
 					$dsiScnType = sqlQuery("SELECT value FROM cfg_system WHERE param='dsi_scn_type'", $GLOBALS['dbh'])[0]['value'];
 					$dsiPort = sqlQuery("SELECT value FROM cfg_system WHERE param='dsi_port'", $GLOBALS['dbh'])[0]['value'];
-					$output = $dsiScnType == 'none' ? 'HDMI-1' : $dsiPort;
+					$output = $dsiScnType == 'none' ? 'HDMI-1' : 'DSI-' . $dsiPort;
 					// Turn screen off
 					sqlQuery("UPDATE cfg_system SET value='1' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
 					sysCmd('DISPLAY=:0 xrandr --output ' . $output . ' --off');
