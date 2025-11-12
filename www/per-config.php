@@ -56,15 +56,6 @@ if (isset($_POST['update_disable_gpu_chromium'])) {
     }
 }
 
-/* Moode 10: Save in case needed in future
-if (isset($_POST['downgrade_chromium'])) {
-    submitJob('downgrade_chromium', '',
-        NOTIFY_TITLE_INFO,
-        'Update complete.<br>' . NOTIFY_MSG_SYSTEM_RESTART_REQD,
-        NOTIFY_DURATION_INFINITE);
-}
-*/
-
 // PeppyMeter
 
 if (isset($_POST['update_peppy_display'])) {
@@ -270,23 +261,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$autoClick = " onchange=\"autoClick('#btn-set-disable-gpu-chromium');\"";
 	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-	/* Moode 10: Save in case needed in future
-    $_installed_chromium_ver = sysCmd('moodeutl --chromiumrel')[0];
-    $downgradeVerMajor = substr(CHROMIUM_DOWNGRADE_VER, 0, 3);
-    if (substr($_installed_chromium_ver, 0, 3) > $downgradeVerMajor) {
-        $_downgrade_ctl_disable = '';
-        $_downgrade_link_disable = '';
-        $_downgrade_chromium_msg = 'Downgrading to version ' . $downgradeVerMajor . ' is recommended ' .
-        'to resolve performance issues with recent versions of Chromium.<br>' .
-        '<b>Note:</b> This process can take several minutes to complete.';
-
-    } else {
-        $_downgrade_ctl_disable = 'disabled';
-        $_downgrade_link_disable = 'onclick="return false;"';
-        $_downgrade_chromium_msg = 'Downgrade installed';
-    }
-	*/
 } else {
 	$_feat_localdisplay = 'hide';
 }
