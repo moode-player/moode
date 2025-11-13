@@ -118,7 +118,8 @@ if ($userId != NO_USERID_DEFINED) {
 	}
 }
 
-// Delete hidden MacOS dot files from boot partition
+// Cleanup:
+// - Delete hidden MacOS dot files from boot partition
 if (file_exists(BOOT_DIR . '/.fseventsd')) {
 	sysCmd('rm -rf ' . BOOT_DIR . '/.fseventsd');
 	sysCmd('rm -rf ' . BOOT_DIR . '/.Spotlight-V100');
@@ -126,33 +127,13 @@ if (file_exists(BOOT_DIR . '/.fseventsd')) {
 } else {
 	workerLog('worker: Boot folder:   ok');
 }
-// Delete embedded \r from cfg_radio table (bugfix)
-$result = sqlQuery("SELECT count() FROM cfg_radio WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
-if ($result[0]['count()'] > 0) {
-	sqlQuery("UPDATE cfg_radio SET monitor = 'No' WHERE monitor != 'Yes' AND length(monitor) = 3", $dbh);
-	workerLog('worker: Radio table:   cleaned (' . $result[0]['count()'] . ')');
-} else {
-	workerLog('worker: Radio table:   ok');
-}
-// For this series: Delete session vars that have been removed or renamed
+// - Delete session vars that have been removed or renamed
 $sessionVars = array(
-	'usb_auto_updatedb',
-	'src_action',
-	'src_mpid',
-	'adaptive',
-	'localui',
-	'touchscn',
-	'scnblank',
-	'scnrotate',
-	'scnbrightness',
-	'rpi_scntype',
-	'rpi_backlight',
-	'dsi_backlight',
-	'usb_auto_mounter'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
 }
+// - Delete orphaned session files
 purgeSessionFiles();
 workerLog('worker: PHP session:   cleaned');
 
