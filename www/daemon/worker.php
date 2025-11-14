@@ -1699,10 +1699,6 @@ debugLog('Sleep intervals:  ' .
 	'gpiobuttons=' . GPIOBUTTONS_SLEEP
 );
 
-// Worker ready
-$result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
-workerLog('worker: Ready');
-
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- Post-startup actions');
@@ -1716,7 +1712,7 @@ $lastPlayedItemId = $status['songid'];
 
 // Ready script (default is to add/play ReadyChime.flac)
 if ($_SESSION['ready_script'] == 'on') {
-	workerLog('worker: Ready-script: enabled');
+	workerLog('worker: Ready-script: on');
 	if (file_exists(READY_SCRIPT)) {
 		$contents = file_get_contents(READY_SCRIPT);
 		if (empty($contents)) {
@@ -1736,7 +1732,7 @@ if ($_SESSION['ready_script'] == 'on') {
 		workerLog('worker: Ready-script: CRITICAL ERROR: File ready-script.sh not found');
 	}
 } else {
-	workerLog('worker: Ready-script: disabled');
+	workerLog('worker: Ready-script: off');
 }
 
 // Auto-play: start auto-shuffle random play or auto-play last played item
@@ -1770,8 +1766,17 @@ if ($_SESSION['autoplay'] == '1') {
 
 closeMpdSock($sock);
 
-workerLog('worker: Entering event loop');
-workerLog('worker: Poll every ' . (WORKER_SLEEP / 1000000) . ' seconds');
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Event and job processing');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
+
+workerLog('worker: Polling loop: started');
+workerLog('worker: Poll every:   ' . (WORKER_SLEEP / 1000000) . ' seconds');
+// Worker ready
+$result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
+workerLog('worker: Ready');
 
 while (true) {
 	usleep(WORKER_SLEEP);
@@ -2372,8 +2377,10 @@ function chkClockRadio() {
 			if ($_SESSION['clkradio_action'] != "None") {
 				if ($_SESSION['clkradio_action'] == 'Restart') {
 					sleep(45); // To ensure that after reboot $currentTime != clkradio_stop_time
+					stopAllRenderers();
 					sysCmd('/var/local/www/commandw/restart.sh reboot');
 				} else if ($_SESSION['clkradio_action'] == 'Shutdown') {
+					stopAllRenderers();
 					sysCmd('/var/local/www/commandw/restart.sh poweroff');
 				} else if ($_SESSION['clkradio_action'] == 'Update Library') {
 					workerLog('update library');
@@ -3781,8 +3788,12 @@ function runQueuedJob() {
 				sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --standby');
 				workerLog('worker: Display turned off');
 			}
+			// Stop all renderers
+			workerLog('worker: Stopping renderers');
+			stopAllRenderers();
 			// Run shutdown script
 			workerLog('worker: Running shutdown script');
+			sysCmd('cp ' . MOODE_LOG . ' ' . MOODE_PREVLOG);
 			sysCmd('/var/local/www/commandw/restart.sh ' . $_SESSION['w_queue']);
 			break;
 		case 'upd_clock_radio':
