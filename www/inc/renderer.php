@@ -301,6 +301,14 @@ function updateDeezCredentials($email, $password) {
 	fclose($fh);
 }
 
+// UPnP
+function startUPnP() {
+	sysCmd('systemctl start upmpdcli');
+}
+function stopUPnP() {
+	sysCmd('systemctl stop upmpdcli');
+}
+
 // Squeezelite
 function startSqueezeLite() {
 	sysCmd('mpc stop');
@@ -335,11 +343,6 @@ function cfgSqueezelite() {
 	fclose($fh);
 }
 
-// UPnP
-function startUPnP() {
-	sysCmd('systemctl start upmpdcli');
-}
-
 // Plexamp
 function startPlexamp() {
 	sysCmd('mpc stop');
@@ -364,4 +367,30 @@ function stopRoonBridge() {
 	phpSession('write', 'rbactive', '0');
 	$GLOBALS['rbactive'] = '0';
 	sendFECmd('rbactive0');
+}
+
+// Stop all renderers
+function stopAllRenderers() {
+	$renderers = array(
+		'btsvc'		 => 'stopBluetooth',
+		'airplaysvc' => 'stopAirPlay',
+		'spotifysvc' => 'stopSpotify',
+		'deezersvc'  => 'stopDeezer',
+		'upnpsvc'	 => 'stopUPnP',
+		'slsvc'		 => 'stopSqueezeLite',
+		'pasvc'		 => 'stopPlexamp',
+		'rbsvc'		 => 'stopRoonBridge'
+	);
+
+	// Watchdog (so monitored renderers are not auto restarted)
+	sysCmd('killall -s9 watchdog.sh');
+	workerLog('stopAllRenderers(): watchdog stopped');
+
+	// Renderers
+	foreach ($renderers as $svc => $stopFunction) {
+		if ($_SESSION[$svc] == '1') {
+			$stopFunction();
+			workerLog('stopAllRenderers(): ' . $svc . ' stopped');
+		}
+	}
 }
