@@ -251,12 +251,44 @@
 				$_deezer_credentials_msg
 			</div>
 		</div>
+		<div class="control-group $_feat_upmpdcli">
+			<legend>UPnP Client for MPD</legend>
+			<p class="sub-legend">This service functions as a UPnP media renderer that uses MPD for playback.</p>
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-upnpsvc" for="toggle-upnpsvc-2">ON </label>$_select[upnpsvc_on]
+					<label class="toggle-radio toggle-upnpsvc" for="toggle-upnpsvc-1">OFF</label>$_select[upnpsvc_off]
+				</div>
+				<button id="btn-set-upnpsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_upnp_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-upnpsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-upnpsvc" class="config-help-info">
+					UPnP Client for MPD by Jean-Francois Dockes.
+                </span>
+			</div>
+
+			<label class="control-label" for="upnpname">Name</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="upnpname" name="upnpname" value="$_select[upnpname]" required">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_upnp_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#upnp-restart" $_upnp_link_disable><button class="btn btn-medium btn-primary config-btn" $_upnp_btn_disable>Restart</button></a>
+				<span class="config-btn-after">UPnP</span>
+			</div>
+
+			<div class="controls">
+				<a href="upp-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
+				<span class="config-btn-after">UPnP settings</span>
+			</div>
+		</div>
 
 		<div class="control-group $_feat_squeezelite">
 			<legend>Squeezelite</legend>
 			<p class="sub-legend">
-				This service requires Logitech Media Server (LMS) to be running on the network.<br>
-				<b>Caution:</b> Squeezelite hogs the audio output by default and so only turn it on when all other renderers are off otherwise it can interfere with the other renderers and with MPD.
+				This service requires <a href="https://lyrion.org" class="target-blank-link" target="_blank">Lyrion Music Server (LMS)</a>.<br>
+				<b>Caution:</b> ALSA volume will be 100% (0dB) if Squeezelite can't communicate with LMS.
 			</p>
 			<label class="control-label">Service</label>
 			<div class="controls">
@@ -292,39 +324,6 @@
 			<div class="controls">
 				<a href="sqe-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
 				<span class="config-btn-after">Squeezelite settings</span>
-			</div>
-		</div>
-
-		<div class="control-group $_feat_upmpdcli">
-			<legend>UPnP Client for MPD</legend>
-			<p class="sub-legend">This service functions as a UPnP media renderer that uses MPD for playback.</p>
-			<label class="control-label">Service</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-upnpsvc" for="toggle-upnpsvc-2">ON </label>$_select[upnpsvc_on]
-					<label class="toggle-radio toggle-upnpsvc" for="toggle-upnpsvc-1">OFF</label>$_select[upnpsvc_off]
-				</div>
-				<button id="btn-set-upnpsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_upnp_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-upnpsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-upnpsvc" class="config-help-info">
-					UPnP Client for MPD by Jean-Francois Dockes.
-                </span>
-			</div>
-
-			<label class="control-label" for="upnpname">Name</label>
-			<div class="controls">
-				<input class="config-input-large" type="text" id="upnpname" name="upnpname" value="$_select[upnpname]" required">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_upnp_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-			</div>
-
-			<div class="controls">
-				<a data-toggle="modal" href="#upnp-restart" $_upnp_link_disable><button class="btn btn-medium btn-primary config-btn" $_upnp_btn_disable>Restart</button></a>
-				<span class="config-btn-after">UPnP</span>
-			</div>
-
-			<div class="controls">
-				<a href="upp-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
-				<span class="config-btn-after">UPnP settings</span>
 			</div>
 		</div>
 

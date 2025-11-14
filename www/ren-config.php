@@ -126,6 +126,25 @@ if (isset($_POST['deezerrestart']) && $_POST['deezerrestart'] == 1 && $_SESSION[
 	submitJob('deezersvc', '', NOTIFY_TITLE_INFO, NAME_DEEZER . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
+// UPnP client for MPD
+if (isset($_POST['update_upnp_settings'])) {
+	$currentUpnpName = $_SESSION['upnpname'];
+	if (isset($_POST['upnpname']) && $_POST['upnpname'] != $_SESSION['upnpname']) {
+		$update = true;
+		phpSession('write', 'upnpname', $_POST['upnpname']);
+	}
+	if (isset($_POST['upnpsvc']) && $_POST['upnpsvc'] != $_SESSION['upnpsvc']) {
+		$update = true;
+		phpSession('write', 'upnpsvc', $_POST['upnpsvc']);
+	}
+	if (isset($update)) {
+		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"');
+	}
+}
+if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upnpsvc'] == '1') {
+	submitJob('upnpsvc', '', NOTIFY_TITLE_INFO, NAME_UPNP . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+
 // Squeezelite
 if (isset($_POST['update_sl_settings'])) {
 	if (isset($_POST['slsvc']) && $_POST['slsvc'] != $_SESSION['slsvc']) {
@@ -145,25 +164,6 @@ if (isset($_POST['update_rsmaftersl'])) {
 if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
 	phpSession('write', 'rsmaftersl', 'No');
 	submitJob('slrestart', '', NOTIFY_TITLE_INFO, NAME_SQUEEZELITE . NOTIFY_MSG_SVC_MANUAL_RESTART);
-}
-
-// UPnP client for MPD
-if (isset($_POST['update_upnp_settings'])) {
-	$currentUpnpName = $_SESSION['upnpname'];
-	if (isset($_POST['upnpname']) && $_POST['upnpname'] != $_SESSION['upnpname']) {
-		$update = true;
-		phpSession('write', 'upnpname', $_POST['upnpname']);
-	}
-	if (isset($_POST['upnpsvc']) && $_POST['upnpsvc'] != $_SESSION['upnpsvc']) {
-		$update = true;
-		phpSession('write', 'upnpsvc', $_POST['upnpsvc']);
-	}
-	if (isset($update)) {
-		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"');
-	}
-}
-if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upnpsvc'] == '1') {
-	submitJob('upnpsvc', '', NOTIFY_TITLE_INFO, NAME_UPNP . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // Plexamp
@@ -294,17 +294,6 @@ $autoClick = " onchange=\"autoClick('#btn-set-rsmafterdeez');\" " . $_deezer_btn
 $_select['rsmafterdeez_on'] .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-1\" value=\"Yes\" " . (($_SESSION['rsmafterdeez'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmafterdeez_off']  .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-2\" value=\"No\" " . (($_SESSION['rsmafterdeez'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-// Squeezelite
-$_feat_squeezelite = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? '' : 'hide';
-$_SESSION['slsvc'] == '1' ? $_sl_btn_disable = '' : $_sl_btn_disable = 'disabled';
-$_SESSION['slsvc'] == '1' ? $_sl_link_disable = '' : $_sl_link_disable = 'onclick="return false;"';
-$autoClick = " onchange=\"autoClick('#btn-set-slsvc');\"";
-$_select['slsvc_on']  .= "<input type=\"radio\" name=\"slsvc\" id=\"toggle-slsvc-1\" value=\"1\" " . (($_SESSION['slsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['slsvc_off'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggle-slsvc-2\" value=\"0\" " . (($_SESSION['slsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$autoClick = " onchange=\"autoClick('#btn-set-rsmaftersl');\" " . $_sl_btn_disable;
-$_select['rsmaftersl_on'] .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-1\" value=\"Yes\" " . (($_SESSION['rsmaftersl'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['rsmaftersl_off']  .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-2\" value=\"No\" " . (($_SESSION['rsmaftersl'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
 // UPnP client for MPD
 $_feat_upmpdcli = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? '' : 'hide';
 $_SESSION['upnpsvc'] == '1' ? $_upnp_btn_disable = '' : $_upnp_btn_disable = 'disabled';
@@ -315,6 +304,17 @@ $autoClick = " onchange=\"autoClick('#btn-set-upnpsvc');\"";
 $_select['upnpsvc_on']  .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-1\" value=\"1\" " . (($_SESSION['upnpsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['upnpsvc_off'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-2\" value=\"0\" " . (($_SESSION['upnpsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['upnpname'] = $_SESSION['upnpname'];
+
+// Squeezelite
+$_feat_squeezelite = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? '' : 'hide';
+$_SESSION['slsvc'] == '1' ? $_sl_btn_disable = '' : $_sl_btn_disable = 'disabled';
+$_SESSION['slsvc'] == '1' ? $_sl_link_disable = '' : $_sl_link_disable = 'onclick="return false;"';
+$autoClick = " onchange=\"autoClick('#btn-set-slsvc');\"";
+$_select['slsvc_on']  .= "<input type=\"radio\" name=\"slsvc\" id=\"toggle-slsvc-1\" value=\"1\" " . (($_SESSION['slsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['slsvc_off'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggle-slsvc-2\" value=\"0\" " . (($_SESSION['slsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$autoClick = " onchange=\"autoClick('#btn-set-rsmaftersl');\" " . $_sl_btn_disable;
+$_select['rsmaftersl_on'] .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-1\" value=\"Yes\" " . (($_SESSION['rsmaftersl'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rsmaftersl_off']  .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-2\" value=\"No\" " . (($_SESSION['rsmaftersl'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // Plexamp
 if (($_SESSION['feat_bitmask'] & FEAT_PLEXAMP)) {
