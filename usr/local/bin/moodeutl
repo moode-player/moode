@@ -5,7 +5,7 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
-const VERSION = '9.2.1';
+const VERSION = '10.0.0';
 
 set_include_path('/var/www/inc');
 
@@ -67,7 +67,8 @@ switch ($option) {
 		audioFormats($option);
 		break;
 	case '-l':
-		moodeLog();
+	case '-p':
+		moodeLog($argv);
 		break;
 	case '-m':
 		systemMonitor();
@@ -105,6 +106,12 @@ switch ($option) {
 	case '-u':
 	case '-U':
 		checkStationUrls($argv);
+		break;
+	case '--reboot':
+		restartSystem($featBitmask, 'reboot');
+		break;
+	case '--shutdown':
+		restartSystem($featBitmask, 'poweroff');
 		break;
 	case '--hwparams':
 		printHWParams($argv);
@@ -147,16 +154,16 @@ switch ($option) {
 		echo VERSION . "\n";
 		break;
 	case '--help':
-	default:
-		//[--bluetooth | --airplay | --spotify | --deezer | --squeezelite | --plexamp | --roonbridge]
+		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge]
 		$btArg = $featBitmask & FEAT_BLUETOOTH ? '--bluetooth | ' : '';
 		$apArg = $featBitmask & FEAT_AIRPLAY ? '--airplay | ' : '';
 		$spArg = $featBitmask & FEAT_SPOTIFY ? '--spotify | ' : '';
 		$dzArg = $featBitmask & FEAT_DEEZER ? '--deezer | ' : '';
+		$upArg = $featBitmask & FEAT_UPMPDCLI ? '--upnp | ' : '';
 		$slArg = $featBitmask & FEAT_SQUEEZELITE ? '--squeezelite | ' : '';
 		$paArg = $featBitmask & FEAT_PLEXAMP ? '--plexamp | ' : '';
 		$rbArg = $featBitmask & FEAT_ROONBRIDGE ? '--roonbridge | ' : '';
-		$rendererList = rtrim($btArg . $apArg . $spArg . $dzArg . $slArg . $paArg . $rbArg, ' | ');
+		$rendererList = rtrim($btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg, ' | ');
 		echo
 "Usage: moodeutl [OPTION]
 Moode utility programs
@@ -165,15 +172,16 @@ With no OPTION print the help text and exit.
 
  -a\t\tPrint features availability
  -A [add|rm N] \tUpdate features availability
- -d\t\tDump session file (requires sudo)
- -d [-nr]\tDump session file, no radio (requires sudo)
- -d [-gv var]\tDump session file, get value (requires sudo)
- -D [var] \tDelete session variable (requires sudo)
- -e [filename]\tExport settings to [filename] or ~/moodecfg-<timestamp>.ini (requires sudo)
- -i\t\tImport settings from /boot/moodecfg.ini (requires sudo)
+ -d\t\t(sudo) Dump session file
+ -d [-nr]\t(sudo) Dump session file, no radio
+ -d [-gv var]\t(sudo) Dump session file, get value
+ -D [var] \t(sudo) Delete session variable
+ -e [filename]\t(sudo) Export settings to [filename] or ~/moodecfg-<timestamp>.ini
+ -i\t\t(sudo) Import settings from /boot/moodecfg.ini
  -f\t\tPrint supported audio formats
  -F\t\tPrint full alsacap info
- -l\t\tPrint moode log
+ -l\t\tPrint moode startup log
+ -p\t\tPrint previous moode startup log
  -m\t\tRun system monitor
  -s\t\tPrint system info
  -c\t\tScan for SMB hosts
@@ -187,6 +195,8 @@ With no OPTION print the help text and exit.
  " -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
+ --reboot\t(sudo) Restart the system
+ --shutdown\t(sudo) Shut down the system
  --hwparams\tPrint ALSA hardware params [cardnum]
  --btreset\tReset Bluetooth to off
  --odcclear\tClear output device cache
@@ -202,6 +212,8 @@ With no OPTION print the help text and exit.
  --version\tPrint program version
  --help\t\tPrint this help text\n";
 		break;
+	default:
+		echo 'Unknown option, try moodeutl --help' . "\n";
 }
 
 // NOTE: This is a copy of the function in /inc/common.php
@@ -260,7 +272,7 @@ function updateFeatures($features, $featBitmask, $argv) {
 
 function dumpSession($argv) {
 	if (posix_getuid() != 0) {
-		echo "This option requires sudo\n";
+		fwrite(STDERR, "This option requires sudo\n");
 		return;
 	}
 
@@ -308,7 +320,7 @@ function dumpSession($argv) {
 
 function deleteSessionVar($argv) {
 	if (posix_getuid() != 0) {
-		echo "This option requires sudo\n";
+		fwrite(STDERR, "This option requires sudo\n");
 		return;
 	}
 
@@ -351,8 +363,9 @@ function audioFormats($option) {
 	}
 }
 
-function moodeLog() {
-	echo shell_exec('cat ' . MOODE_LOG);
+function moodeLog($argv) {
+	$logFile = array('-l' => MOODE_LOG, '-p' => MOODE_PREVLOG);
+	echo shell_exec('cat ' . $logFile[$argv[1]]);
 }
 
 function systemMonitor() {
@@ -420,7 +433,23 @@ function restartServers($featBitmask) {
 	echo "- mpd\n";
 	exec('sudo systemctl stop mpd');
 
-	// Stop renderers
+	// Stop all renderers
+	stopAllRenderers($featBitmask);
+
+	// Restart PHP and NGINX
+	echo "Restarting php/nginx...\n";
+	echo "- php\n";
+	exec('sudo systemctl restart php' . PHP_VER . '-fpm');
+	echo "- nginx\n";
+	exec('sudo systemctl restart nginx');
+
+	// Start worker
+	echo "Starting worker daemon...\n";
+	exec('sudo /var/www/daemon/worker.php');
+
+	echo "Servers restarted\n";
+}
+function stopAllRenderers($featBitmask) {
 	echo "Stopping renderers...\n";
 	if ($featBitmask & FEAT_BLUETOOTH) {
 		$btSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='btsvc'\""));
@@ -466,6 +495,17 @@ function restartServers($featBitmask) {
 	} else {
 		echo "- deezer connect\tfeature disabled\n";
 	}
+	if ($featBitmask & FEAT_UPMPDCLI) {
+		$upSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='upnpsvc'\""));
+		if ($upSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --upnp --stop');
+			echo "- upnp\t\t\tstopped\n";
+		} else {
+			echo "- upnp\t\t\tnot on\n";
+		}
+	} else {
+		echo "- upnp\t\t\tfeature disabled\n";
+	}
 	if ($featBitmask & FEAT_SQUEEZELITE) {
 		$slSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='slsvc'\""));
 		if ($slSvc == '1') {
@@ -499,24 +539,12 @@ function restartServers($featBitmask) {
 	} else {
 		echo "- roonbridge\t\tfeature disabled\n";
 	}
-
-	// Restart PHP and NGINX
-	echo "Restarting php/nginx...\n";
-	echo "- php\n";
-	exec('sudo systemctl restart php' . PHP_VER . '-fpm');
-	echo "- nginx\n";
-	exec('sudo systemctl restart nginx');
-
-	// Start worker
-	echo "Starting worker daemon...\n";
-	exec('sudo /var/www/daemon/worker.php');
-
-	echo "Servers restarted\n";
 }
 
 function restartRenderer($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
-		'--deezer' => 'deezersvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc', '--roonbridge' => 'rbsvc');
+		'--deezer' => 'deezersvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
+		'--roonbridge' => 'rbsvc');
 
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [renderer name]' . "\n";
@@ -532,7 +560,7 @@ function restartRenderer($argv) {
 	}
 	else {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
 		return;
 	}
 
@@ -593,7 +621,7 @@ function checkStationUrls($argv) {
 
 function exportAutoconfig($argv) {
 	if (posix_getuid() != 0) {
-		echo "This option requires sudo\n";
+		fwrite(STDERR, "This option requires sudo\n");
 		return;
 	}
 
@@ -609,7 +637,7 @@ function exportAutoconfig($argv) {
 
 function importAutoconfig() {
 	if (posix_getuid() != 0) {
-		echo "This option requires sudo\n";
+		fwrite(STDERR, "This option requires sudo\n");
 		return;
 	}
 
@@ -639,6 +667,19 @@ function bluetoothReset() {
 function outputDeviceCacheClear() {
 	shell_exec("sqlite3 " .  SQLDB_PATH . " \"DELETE FROM cfg_outputdev\"");
 	echo 'Output device cache cleared' . "\n";
+}
+
+function restartSystem($featBitmask, $command) {
+	if (posix_getuid() != 0) {
+		fwrite(STDERR, "This option requires sudo\n");
+		return;
+	}
+
+	stopAllRenderers($featBitmask);
+
+	echo 'Submitting ' . $command . "\n";
+	sleep(3);
+	shell_exec($command);
 }
 
 function printHWParams($argv) {
@@ -700,7 +741,7 @@ function printAutoCfgLog() {
 
 function printSleepInt() {
 	if (posix_getuid() != 0) {
-		echo "This option requires sudo\n";
+		fwrite(STDERR, "This option requires sudo\n");
 		return;
 	}
 
