@@ -9,6 +9,7 @@ const PHP_VER = '8.4';
 
 // Log files
 const MOODE_LOG = '/var/log/moode.log';
+const MOODE_PREVLOG = '/var/log/moode_prevlog.log';
 const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
 const AUTORESTORE_LOG = '/var/log/moode_autorestore.log';
 const UPDATER_LOG = '/var/log/moode_update.log';
