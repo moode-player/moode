@@ -3616,6 +3616,12 @@ function runQueuedJob() {
 			$resetAlsaCtl = false;
 			restartMpdAndRenderers($resetAlsaCtl);
 			break;
+		case 'install_moode_meters':
+			// https://raw.githubusercontent.com/moode-player/plugins/main
+			// $1 = component_name	peppydisplay
+			// $2 = plugin_name		v2-moode-meters
+			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "v2-moode-meters"');
+			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio_buttons.py');
 			if ($_SESSION['w_queueargs'] == 1) {

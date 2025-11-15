@@ -84,8 +84,9 @@
 						<label class="toggle-radio toggle-peppy-display" for="toggle-peppy-display-1">OFF</label>$_select[peppy_display_off]
 					</div>
 					<button id="btn-set-peppy-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display" value="novalue" $_peppy_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					$_screen_res_peppy_display
-					<span class="config-help-static">
+					<span id="info-peppy-display" class="config-help-info">
 						Show Peppy Meter or Spectrum on a locally attached display.<br>
 						Note: If Graphic EQ or Parameteic EQ is on, Peppy cannot be turned on if:<br>
 						- Playing to a Bluetooth speaker.<br>

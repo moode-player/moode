@@ -47,6 +47,7 @@
 					$_select[meter_folder]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-meter-folder" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<a aria-label="Refresh" class="config-refresh-btn" href="peppy-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>
 				<span id="info-meter-folder" class="config-help-info">
 					Select a Meter folder. The available Meters contained in the folder will be listed below.
 				</span>
@@ -71,6 +72,15 @@
 				<span class="config-help-static">
 					Set the value used for normalizing volume data comming from the FIFO pipe.
 					A lower value will cause the meter needle or bars to appear higher.
+				</span>
+			</div>
+
+			<label class="control-label">moOde meters</label>
+			<div class="controls">
+				<a data-toggle="modal" href="#install-moode-meters"><button class="btn btn-medium btn-primary config-btn">Install</button></a>
+				<span class="config-help-static">
+					Install the latest set of custom moOde meters. The meter folders are prefixed with "moode_" and are installed into /opt/peppymeter.<br>
+					<b>Caution:</b> After confirming, the installed files will overwrite existing files of the same name.
 				</span>
 			</div>
 		</div>
@@ -103,3 +113,16 @@
 	</form>
 </div>
 </div>
+
+<form class="form-horizontal" method="post">
+	<div id="install-moode-meters" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="install-moode-meters-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Install Latest Moode Meters?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="install_moode_meters" value="1">Yes</button>
+		</div>
+	</div>
+</form>

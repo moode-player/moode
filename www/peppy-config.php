@@ -8,55 +8,66 @@ require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/peripheral.php';
 require_once __DIR__ . '/inc/session.php';
 
-phpSession('open_ro');
+phpSession('open');
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
-	foreach ($_POST['settings'] as $key => $value) {
-		chkValue($key, $value);
-		switch ($key) {
-			case 'screen_width':
-				$param = 'screen.width';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
-				break;
-			case 'screen_height':
-				$param = 'screen.height';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
-				break;
-			case 'random_interval':
-				$param = 'random.meter.interval';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
-				$param = 'update.period';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
-				break;
-			case 'meter_folder':
-				$param = 'meter.folder';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
-				break;
-			case 'meter_name':
-				$param = 'meter =';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
-				break;
-			case 'meter_normalization':
-				$param = 'volume.max.in.pipe';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
-				break;
-			case 'spectrum_folder':
-				$param = 'spectrum.folder';
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
-				break;
-			case 'spectrum_name':
-				$param = 'spectrum =';
-				$value = $value == 'random' ? '' : $value;
-				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
-				break;
+	if (empty($_POST['settings']['screen_width']) || empty($_POST['settings']['screen_height'])) {
+		// Validation check
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Screen width and height cannot be blank.';
+	} else {
+		// Update settings
+		foreach ($_POST['settings'] as $key => $value) {
+			chkValue($key, $value);
+			switch ($key) {
+				case 'screen_width':
+					$param = 'screen.width';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
+				case 'screen_height':
+					$param = 'screen.height';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
+				case 'random_interval':
+					$param = 'random.meter.interval';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					$param = 'update.period';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+					break;
+				case 'meter_folder':
+					$param = 'meter.folder';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
+				case 'meter_name':
+					$param = 'meter =';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
+				case 'meter_normalization':
+					$param = 'volume.max.in.pipe';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
+				case 'spectrum_folder':
+					$param = 'spectrum.folder';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+					break;
+				case 'spectrum_name':
+					$param = 'spectrum =';
+					$value = $value == 'random' ? '' : $value;
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+					break;
+			}
+		}
+		if ($_SESSION['peppy_display'] == '1') {
+			$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+			submitJob('peppy_display_restart', '', $notify['title'], $notify['msg']);
 		}
 	}
-
-	if ($_SESSION['peppy_display'] == '1') {
-		$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
-		submitJob('peppy_display_restart', '', $notify['title'], $notify['msg']);
-	}
+} else if (isset($_POST['install_moode_meters']) && $_POST['install_moode_meters'] == '1') {
+	// Install latest moode meters
+	submitJob('install_moode_meters','',NOTIFY_TITLE_INFO, 'Meters installed. Click <i class="fa-solid fa-sharp fa-redo dx"></i> to refresh the Folder list.');
 }
+
+phpSession('close');
 
 // Load etc configs
 $configMeter = getPeppyConfig('meter');
