@@ -45,9 +45,7 @@ const NOTIFY_MSG_NO_USERID =
 const NOTIFY_MSG_WELCOME =
       '<b>View</b> <span class="context-menu">'
     + ' <a href="#notarget" data-cmd="quickhelp">Quick help</a></span>'
-    + ' for information on using the WebUI, configuring audio devices and setting up the Library.<br>'
-    + 'Quick help is also available on the Main menu which is accessed'
-    + ' via the "m" icon in the upper right.<br><br>'
+    + ' for information on using the WebUI, configuring audio devices and setting up the Music Library.<br><br>'
     + '<b>Read</b> the <a href="https://moodeaudio.org/forum/forumdisplay.php?fid=17"'
     + ' class="target-blank-link" target="_blank">Release Announcement</a>'
     + ' for any special instructions or patches for this release.<br><br>'
