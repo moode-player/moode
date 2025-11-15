@@ -31,6 +31,7 @@ Updates
 - UPD: Add moodeutl options --reboot, --shutdown, -p (print previous moode log)
 - UPD: Add moode_prevlog.log (previous startup log) to improve debugging
 - UPD: Improve help for Squeezelite renderer in Renderer Config
+- UPD: Improve Peppy config (validate screen W/H, btn to install moode meters)
 
 Bug fixes
 - FIX: Blank hotspot password after restore
