@@ -32,6 +32,7 @@ Updates
 - UPD: Add moode_prevlog.log (previous startup log) to improve debugging
 - UPD: Improve help for Squeezelite renderer in Renderer Config
 - UPD: Improve Peppy config (validate screen W/H, btn to install moode meters)
+- UPD: Improve Welcome screen
 
 Bug fixes
 - FIX: Blank hotspot password after restore
