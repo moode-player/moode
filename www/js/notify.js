@@ -78,7 +78,10 @@ function notify(title, message, arg3, arg4 = '') {
         reconnect: 'Connection is being reestablished... ',
         mpd_error: '',
         userid_error: 'The image does not contain a userid.<br><br>',
-        firstuse_welcome: '<b>moOde audio player 10 series</b><br><br>',
+        firstuse_welcome: '<b>moOde audio player ' +
+			SESSION.json['moode_release'].substring(0,2) +
+			' series</b><br>Powered by PiOS ' +
+			SESSION.json['raspbianver'].split(' ')[1] + '<br><br>',
         updater: 'An update is available.<br>',
         player_info: '<br>',
         viewport: 'VIEWPORT<br>',
