@@ -43,7 +43,11 @@ switch ($option) {
 	case '--upnp':
 		restartUPnP($stopOnly);
 		break;
-	default:
+	case '--help':
+		if (posix_getuid() != 0) {
+			fwrite(STDERR, "This command requires sudo to print the help\n");
+			return;
+		}
 		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge]
 		$btArg = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? "--bluetooth\tRestart Bluetooth\n" : "";
 		$apArg = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? " --airplay\tRestart AirPlay\n" : "";
@@ -53,16 +57,18 @@ switch ($option) {
 		$slArg = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? " --squeezelite\tRestart Squeezelite\n" : "";
 		$paArg = $_SESSION['feat_bitmask'] & FEAT_PLEXAMP ? " --plexamp\tRestart Plexamp\n" : "";
 		$rbArg = $_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE ? " --roonbridge\tRestart RoonBridge\n" : "";
-		$rendererList = $btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg;
+		$rendererList = ' '. $btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg .
+		" --help\t\tPrint this help text\n";
 		echo
 "Usage: restart-renderer [OPTION] [--stop]
-Moode renderer restarter
+Moode renderer restart utility
 
-With no OPTION print the help text and exit.
-With OPTION --stop the renderer is stopped but not started.
-
- $rendererList";
+With --stop the renderer is stopped but not started.\n" .
+ $rendererList;
  		break;
+	default:
+		echo "Missing option. Use sudo /var/www/util/restart-renderer.php --help\n";
+		break;
 }
 
 phpSession('close');
