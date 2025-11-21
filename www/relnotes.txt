@@ -38,6 +38,8 @@ Bug fixes
 - FIX: Blank hotspot password after restore
 - FIX: Peppy screen blank not working for DSI displays
 - FIX: Notification for Target URL in Peripheral Config
+- FIX: Help option for restart-renderer.php
+- FIX: Go to Artist/Album fails when tag are missing
 
 ################################################################################
 #
