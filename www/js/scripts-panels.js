@@ -802,28 +802,34 @@ jQuery(document).ready(function($) { 'use strict';
                     $('#ra-' + (UI.radioPos - rvHeaderCount + 1).toString()).addClass('active');
                     UI.dbEntry[3] = 'ra-' + (UI.radioPos - rvHeaderCount + 1).toString();
                 }, DEFAULT_TIMEOUT);
+			// Song file
     		} else {
                 if (SESSION.json['lib_fv_only'] == 'off') {
-                    // Song file
+					// Switch to Tag view, full library
                     $('#playback-switch').click();
         			$('.tag-view-btn').click();
-                    $('#genreheader').click(); // Reset to full lib
+                    $('#genreheader').click();
+					// Set genre and album
+					var genre = MPD.json['genre'] ? MPD.json['genre'] : 'Unknown';
+					var artist = MPD.json['artist'] ? MPD.json['artist'] :
+						(MPD.json['albumartist'] ? MPD.json['albumartist'] : 'Unknown AlbumArtist');
+					var album = MPD.json['album'] ? MPD.json['album'] : 'Unknown Album';
 
                     setTimeout(function() {
                         var genrePos = $('#genresList .lib-entry').filter(function() {
-                            return $(this).text() == decodeHTMLEntities(MPD.json['genre']);
+                            return $(this).text() == decodeHTMLEntities(genre);
                         }).index();
                         customScroll('genres', genrePos, 200);
                         $('#genresList .lib-entry').eq(genrePos).click();
 
                         var artistPos = $('#artistsList .lib-entry').filter(function() {
-                            return $(this).text() == decodeHTMLEntities(MPD.json['artist']);
+                            return $(this).text() == decodeHTMLEntities(artist);
                         }).index();
                         customScroll('artists', artistPos, 200);
                         $('#artistsList .lib-entry').eq(artistPos).click();
 
                         var albumPos = $('#albumsList .lib-entry .album-name-art').filter(function() {
-                            return $(this).text() == decodeHTMLEntities(MPD.json['album']);
+                            return $(this).text() == decodeHTMLEntities(album);
                         }).parent().parent().index();
                         customScroll('albums', albumPos, 200);
                         $('#albumsList .lib-entry').eq(albumPos).click();
