@@ -59,22 +59,22 @@ log_user 0
 set timeout -1
 match_max 100000
 spawn bluetoothctl
-expect "*# "
+expect "*> "
 send "menu scan\r"
-expect "*# "
+expect "*> "
 send "clear\r"
-expect "*# "
+expect "*> "
 send "transport bredr\r"
-expect "*# "
+expect "*> "
 send "back\r"
-expect "*# "
+expect "*> "
 send "scan on\r"
 expect "Discovery started\r"
-expect "*# "
+expect "*> "
 sleep $SCAN_DURATION
 send "scan off\r"
 expect "Discovery stopped\r"
-expect "*# "
+expect "*> "
 send "quit\r"
 expect eof
 EOF
@@ -90,20 +90,20 @@ log_user 0
 set timeout -1
 match_max 100000
 spawn bluetoothctl
-expect "*# "
+expect "*> "
 send "menu scan\r"
-expect "*# "
+expect "*> "
 send "clear\r"
-expect "*# "
+expect "*> "
 send "back\r"
-expect "*# "
+expect "*> "
 send "scan on\r"
 expect "Discovery started\r"
-expect "*# "
+expect "*> "
 sleep $SCAN_DURATION
 send "scan off\r"
 expect "Discovery stopped\r"
-expect "*# "
+expect "*> "
 send "quit\r"
 expect eof
 EOF
@@ -215,10 +215,10 @@ log_user 0
 set timeout -1
 match_max 100000
 spawn bluetoothctl
-expect "*# "
+expect "*> "
 send "pair $DEVICE\r"
 expect "Attempting to pair with $DEVICE\r"
-expect "*# "
+expect "*> "
 sleep $WAIT_FOR_PAIR
 send "quit\r"
 expect eof
@@ -235,10 +235,10 @@ log_user 0
 set timeout -1
 match_max 100000
 spawn bluetoothctl
-expect "*# "
+expect "*> "
 send "connect $DEVICE\r"
 expect "Attempting to connect to $DEVICE\r"
-expect "*# "
+expect "*> "
 sleep $WAIT_FOR_CONNECT
 send "quit\r"
 expect eof
