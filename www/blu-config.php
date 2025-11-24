@@ -120,13 +120,12 @@ if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mo
 phpSession('close');
 
 // Command list
-$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Standard)</option>\n";
-$_cmd['btcmd'] .= "<option value=\"-S\" " . (($cmd == '-S') ? "selected" : "") . ">SCAN (Plus LE devices)</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (20 seconds)</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-p\" " . (($cmd == '-p') ? "selected" : "") . ">LIST paired</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-c\" " . (($cmd == '-c') ? "selected" : "") . ">LIST connected</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-l\" " . (($cmd == '-l') ? "selected" : "") . ">LIST trusted</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-D\" " . (($cmd == '-D') ? "selected" : "") . ">DISCONNECT all</option>\n";
-$_cmd['btcmd'] .= "<option value=\"-R\" " . (($cmd == '-R') ? "selected" : "") . ">REMOVE all devices</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-R\" " . (($cmd == '-R') ? "selected" : "") . ">REMOVE all</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-H\" " . (($cmd == '-H') ? "selected" : "") . ">HELP</option>\n";
 
 // Initial control states
@@ -159,7 +158,7 @@ $_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 
 $_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth speaker</option>\n";
 
 // Provide a select for removing, disconnecting, pairing or connecting a device
-$cmd_array = array('-p', '-c', '-l', '-s', '-S');
+$cmd_array = array('-p', '-c', '-l', '-s');
 if (in_array($cmd, $cmd_array)) {
 	switch ($cmd) {
 		case '-p':
@@ -170,7 +169,6 @@ if (in_array($cmd, $cmd_array)) {
 			break;
 		case '-l':
 		case '-s':
-		case '-S':
 			$type = 'scanned_device';
 			break;
 	}

@@ -14,13 +14,15 @@
 # - show and kill active connections - "online"
 # - kill active connections before scanning
 # - TODO: How to avoid double source connection??
+# Rev 2.0 24-Nov-2025
+# - Update for moOde 10 Trixie
 #
 # This script is designed to work with bluez and bluez-alsa
 # It performs bluetooth controller initialization and provides management of bluetooth sources
 # All related data files will reside under /var/lib/bluetooth
 #
 
-REV=1.6
+REV=2.0
 
 # Check for sudo
 [[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
@@ -50,40 +52,9 @@ echo "**"
 echo "** Controller initialized"
 }
 
-# Scan for only BR/EDR devices
-SCAN_BREDR() {
-echo "** Scanning for only BR/EDR devices (${SCAN_DURATION} seconds)"
-echo "**"
-expect <(cat <<EOF
-log_user 0
-set timeout -1
-match_max 100000
-spawn bluetoothctl
-expect "*> "
-send "menu scan\r"
-expect "*> "
-send "clear\r"
-expect "*> "
-send "transport bredr\r"
-expect "*> "
-send "back\r"
-expect "*> "
-send "scan on\r"
-expect "Discovery started\r"
-expect "*> "
-sleep $SCAN_DURATION
-send "scan off\r"
-expect "Discovery stopped\r"
-expect "*> "
-send "quit\r"
-expect eof
-EOF
-)
-}
-
-# Scan for both BR/EDR and LE devices
-SCAN_DUAL() {
-echo "** Scanning for BR/EDR and LE devices (${SCAN_DURATION} seconds)"
+# Scan for devices
+SCAN() {
+echo "** Scanning for devices (${SCAN_DURATION} seconds)"
 echo "**"
 expect <(cat <<EOF
 log_user 0
@@ -258,8 +229,7 @@ HELP_TERM() {
 	echo "** Usage: blu-control.sh [OPTION]"
 	echo "**"
 	echo "** -i Initialize/reset controller"
-	echo "** -s Scan (BR/EDR only) and trust devices"
-	echo "** -S Scan (LE and BR/EDR) and trust devices"
+	echo "** -s Scan for and trust devices"
 	echo "** -p List paired devices"
 	echo "** -c List connected devices"
 	echo "** -l List trusted devices"
@@ -272,16 +242,6 @@ HELP_TERM() {
 	echo "** -h Help"
 }
 
-# Format help for html presentation
-HELP_HTML() {
-	echo "1) Put your device in discovery mode and wait until it discovers Moode Bluetooth. You may have to turn Bluetooth off/on on your device to accomplish this."
-	echo
-	echo -e "2) To send audio from your device to moOde:<br>First turn on the Pairing agent in Audio Config and then initiate the connection on your device. Your device should automatically pair and connect. You can verify that your device has been successfully paired and connected by submitting \"LIST paired\" or \"LIST connected\" commands."
-	echo
-	echo -e "3) To send audio from moOde to your device:<br>First submit a SCAN command and verify that your device appears in the scan results. The SCAN may have to be run multiple times. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetooth\" from the dropdown then CONNECT."
-	echo "<br>Note: Bluetooth has a range of around 30 feet (10 meters) but range will vary depending on obstacles (metal, wall, etc.), device signal strength and quality, and level of electromagnetic interferrence."
-}
-
 #
 # Main
 #
@@ -291,14 +251,8 @@ case $1 in
 	-i) INIT
 		exit 0
 		;;
-	-s) SCAN_BREDR
+	-s) SCAN
 		TRUST
-		#echo "** Scan complete"
-		exit 0
-		;;
-	-S) SCAN_DUAL
-		TRUST
-		#echo "** Scan complete"
 		exit 0
 		;;
 	-l) LIST_DISCOVERED
@@ -337,9 +291,6 @@ case $1 in
 		exit 0
 		;;
 	-h) HELP_TERM
-		exit 0
-		;;
-	-H) HELP_HTML
 		exit 0
 		;;
 	*)  HELP_TERM
