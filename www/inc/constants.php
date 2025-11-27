@@ -183,7 +183,7 @@ const FEAT_MINIDLNA     = 4;		// y DLNA server
 const FEAT_RECORDER     = 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE  = 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;		// y UPnP client for MPD
-const FEAT_DEEZER       = 64;   	// y Deezer Connect renderer
+const FEAT_DEEZER       = 64;   	// n Deezer Connect renderer
 const FEAT_ROONBRIDGE   = 128;		// y RoonBridge renderer
 const FEAT_LOCALDISPLAY = 256;		// y Local display
 const FEAT_INPSOURCE    = 512;		// y Input source select
@@ -196,7 +196,7 @@ const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
 //						-------
-//						  228343
+//						  228279
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate

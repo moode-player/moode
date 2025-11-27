@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sat Nov 15 05:15:04 2025
+-- File generated with SQLiteStudio v3.4.4 on Thu Nov 27 10:48:33 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -611,7 +611,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
 INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '228343');
+INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '228279');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (84, 'deezersvc', '0');
