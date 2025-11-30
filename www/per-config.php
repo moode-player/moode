@@ -32,7 +32,7 @@ if (isset($_POST['update_local_display'])) {
 if (isset($_POST['update_local_display_url'])) {
     if (isset($_POST['local_display_url']) && $_POST['local_display_url'] != $_SESSION['local_display_url']) {
 		phpSession('write', 'local_display_url', $_POST['local_display_url']);
-		if ($_POST['local_display'] == '1') {
+		if ($_SESSION['local_display'] == '1') {
 			submitJob('local_display_url', $_POST['local_display_url'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
         } else {
             submitJob('local_display_url', $_POST['local_display_url']);
@@ -84,7 +84,11 @@ if (isset($_POST['update_peppy_display'])) {
 if (isset($_POST['update_peppy_display_type'])) {
 	if (isset($_POST['peppy_display_type']) && $_POST['peppy_display_type'] != $_SESSION['peppy_display_type']) {
 		phpSession('write', 'peppy_display_type', $_POST['peppy_display_type']);
-		submitJob('peppy_display_type', '', NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+		if ($_SESSION['peppy_display'] == '1') {
+			submitJob('peppy_display_type', '', NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+		} else {
+			submitJob('peppy_display_type', '');
+		}
 	}
 }
 
@@ -94,10 +98,17 @@ if (isset($_POST['update_restart_peppy_display'])) {
 
 // General
 
+$displayOn = ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') ? true : false;
+$displayName = $_SESSION['local_display'] == '1' ? NAME_LOCALDISPLAY : NAME_PEPPYDISPLAY;
+
 if (isset($_POST['update_scn_blank'])) {
     if (isset($_POST['scn_blank']) && $_POST['scn_blank'] != $_SESSION['scn_blank']) {
         $_SESSION['scn_blank'] = $_POST['scn_blank'];
-        submitJob('scn_blank', $_POST['scn_blank'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+		if ($displayOn) {
+			submitJob('scn_blank', $_POST['scn_blank'], NOTIFY_TITLE_INFO, $displayName . NOTIFY_MSG_SVC_RESTARTED);
+		} else {
+			submitJob('scn_blank', $_POST['scn_blank']);
+		}
     }
 }
 
@@ -125,7 +136,11 @@ if (isset($_POST['update_on_screen_kbd'])) {
 if (isset($_POST['update_hdmi_scn_orient'])) {
     if (isset($_POST['hdmi_scn_orient']) && $_POST['hdmi_scn_orient'] != $_SESSION['hdmi_scn_orient']) {
         phpSession('write', 'hdmi_scn_orient', $_POST['hdmi_scn_orient']);
-        submitJob('hdmi_scn_orient', $_POST['hdmi_scn_orient'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+		if ($displayOn) {
+			submitJob('hdmi_scn_orient', $_POST['hdmi_scn_orient'], NOTIFY_TITLE_INFO, $displayName . NOTIFY_MSG_SVC_RESTARTED);
+		} else {
+			submitJob('hdmi_scn_orient', $_POST['hdmi_scn_orient']);
+		}
     }
 }
 
@@ -162,7 +177,11 @@ if (isset($_POST['update_dsi_scn_type'])) {
 if (isset($_POST['update_dsi_port'])) {
     if (isset($_POST['dsi_port']) && $_POST['dsi_port'] != $_SESSION['dsi_port']) {
         phpSession('write', 'dsi_port', $_POST['dsi_port']);
-    	submitJob('dsi_port','', NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+		if ($displayOn) {
+			submitJob('dsi_port', '', NOTIFY_TITLE_INFO, $displayName . NOTIFY_MSG_SVC_RESTARTED);
+		} else {
+			submitJob('dsi_port', '');
+		}
     }
 }
 
@@ -179,7 +198,11 @@ if (isset($_POST['update_dsi_scn_rotate'])) {
         if ($_SESSION['dsi_scn_type'] == '1') {
             submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
         } else if ($_SESSION['dsi_scn_type'] == '2' || $_SESSION['dsi_scn_type'] == 'other') {
-            submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate'], NOTIFY_TITLE_INFO, NAME_LOCALDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
+			if ($displayOn) {
+				submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate'], NOTIFY_TITLE_INFO, $displayName . NOTIFY_MSG_SVC_RESTARTED);
+			} else {
+				submitJob('dsi_scn_rotate', $_POST['dsi_scn_rotate']);
+			}
         }
     }
 }
