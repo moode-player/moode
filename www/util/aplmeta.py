@@ -57,11 +57,11 @@ def debug_msg(msg, line_ending = '\n'):
 
 # Get specified metadata key,value pairs
 def get_metadata(line):
-	match = re.match('^(Title|Artist|Album Name): \"(.*?)\"\.$', line)
+	match = re.match(r'^(Title|Artist|Album Name): \"(.*?)\"\.$', line)
 	if match:
 		return match.group(1), match.group(2)
 	else:
-		match = re.match('^(Track length): (.*?)\.$', line)
+		match = re.match(r'^(Track length): (.*?)\.$', line)
 		if match:
 			return match.group(1), match.group(2).split(' ')[0]
 		else:
@@ -93,6 +93,7 @@ if len(sys.argv) > 1:
 
 # Forever loop
 try:
+	debug_msg('Entering while loop...')
 	while True:
 		line = sys.stdin.readline()
 		if DEBUG > 1:
@@ -147,5 +148,6 @@ try:
 				duration = '0'
 
 except KeyboardInterrupt:
+	debug_msg('Exception branch')
 	sys.stdout.flush()
 	print("\n")
