@@ -15,9 +15,12 @@
 #
 ################################################################################
 
-FIX: Bluetooth SCAN failing
-FIX: Squeezelight crashing after launch
-FIX: Parametric EQ not working
+Bug fixes
+- FIX: Bluetooth SCAN failing due to prompt change in bluetoothctl
+- FIX: Squeezelight crashing because stock package missing RPI build option
+- FIX: Parametric EQ ladspa plugin not found due to package issue
+- FIX: Auto-play section in worker.php stops MPD after ready-script
+- FIX: Samba versions using colon delimiter (3:1:1) not detected
 
 ################################################################################
 #
