@@ -49,9 +49,9 @@ const NOTIFY_MSG_WELCOME =
     + '<b>Read</b> the <a href="https://moodeaudio.org/forum/forumdisplay.php?fid=17"'
     + ' class="target-blank-link" target="_blank">Release Announcement</a>'
     + ' for any special instructions or patches for this release.<br><br>'
-    + '<b>Remember</b> to always practice Volume Safety and make sure a physical'
+    + '<b>Remember</b> to practice Volume Safety and make sure a physical'
     + ' volume control is downstream and set to a low volume before first use or'
-    + ' whenever changing volume options.<br><br>'
+    + ' whenever changing device or volume options.<br><br>'
     + '<button id="welcome-firstuse-help" aria-label="Dismiss" class="btn btn-primary btn-small modal-button-style">Dismiss</button>';
 
 // System
