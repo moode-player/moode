@@ -1748,13 +1748,15 @@ if ($_SESSION['autoplay'] == '1') {
 		workerLog('worker: Auto-play:    using songid ' . $lastPlayedItemId);
 	}
 } else {
-	sendMpdCmd($sock, 'stop');
-	$resp = readMpdResp($sock);
 	// Turn off Auto-shuffle based random play if it's on
 	if ($_SESSION['ashuffle'] == '1') {
+		sendMpdCmd($sock, 'stop');
+		$resp = readMpdResp($sock);
+
 		phpSession('open');
 		phpSession('write', 'ashuffle', '0');
 		phpSession('close');
+
 		sendMpdCmd($sock, 'consume 0');
 		$resp = readMpdResp($sock);
 		workerLog('worker: Auto-play:    off');
