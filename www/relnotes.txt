@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+Updates
+- UPD: Remove Deezer Connect feature (discontinued by manufacturer)
+
 Bug fixes
 - FIX: Bluetooth SCAN failing due to prompt change in bluetoothctl
 - FIX: Squeezelight crashing because stock package missing RPI build option
