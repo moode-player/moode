@@ -10,51 +10,64 @@ xset -dpms
 # Screensaver timeout in secs or 'off' for no timeout
 xset s 600
 
-# Capture native screen size
-fgrep "#dtoverlay=vc4-kms-v3d" /boot/firmware/config.txt
-if [ $? -ne 0 ]; then
-    SCREEN_RES=$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')
-else
-    SCREEN_RES=$(fbset -s | awk '$1 == "geometry" {print $2","$3}')
-fi
-
-# Set HDMI/DSI screen orientation
+# Get configuration
 HDMI_SCN_ORIENT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='hdmi_scn_orient'")
 DSI_SCN_TYPE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_type'")
 DSI_PORT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_port'")
 DSI_SCN_ROTATE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_rotate'")
-if [ $DSI_SCN_TYPE = 'none' ]; then
-    if [ $HDMI_SCN_ORIENT = "portrait" ]; then
-        SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
-        DISPLAY=:0 xrandr --output HDMI-1 --rotate left
-    fi
-# Rotation for Touch2 or Other
-# Note that touch1 rotation is configured in config.txt and cmdline.txt
-elif [ $DSI_SCN_TYPE = '2' ] || [ $DSI_SCN_TYPE = 'other' ]; then
-    if [ $DSI_SCN_ROTATE = "0" ]; then
-        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate normal
-    elif [ $DSI_SCN_ROTATE = "90" ]; then
-        SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
-        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate right
-    elif [ $DSI_SCN_ROTATE = "180" ]; then
-        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate inverted
-    elif [ $DSI_SCN_ROTATE = "270" ]; then
-        SCREEN_RES=$(echo $SCREEN_RES | awk -F"," '{print $2","$1}')
-        DISPLAY=:0 xrandr --output DSI-$DSI_PORT --rotate left
-    fi
+
+# Get screen res for chromium (format is W,H)
+fgrep "#dtoverlay=vc4-kms-v3d" /boot/firmware/config.txt
+if [ $? -ne 0 ]; then
+	if [ $DSI_SCN_TYPE = 'none' ]; then
+		# HDMI screen
+	    SCREEN_RES_CHROMIUM=$(kmsprint | awk '$1 == "FB" {print $3}' | awk -F"x" '{print $1","$2}')
+	else
+		# DSI screen
+		SCREEN_RES_CHROMIUM=$(kmsprint --modes | awk '$1 == "0" {print $2}' | cut -d"@" -f1 | awk -F"x" '{print $1","$2}')
+	fi
+else
+    SCREEN_RES_CHROMIUM=$(fbset -s | awk '$1 == "geometry" {print $2","$3}')
 fi
 
-# Launch WebUI or Peppy
+# Set orientation or rotation
+if [ $DSI_SCN_TYPE = 'none' ]; then
+	# HDMI screen orientation (default is landscape)
+    if [ $HDMI_SCN_ORIENT = "portrait" ]; then
+        SCREEN_RES_CHROMIUM=$(echo $SCREEN_RES_CHROMIUM | awk -F"," '{print $2","$1}')
+        DISPLAY=:0 xrandr --output HDMI-1 --rotate left
+    fi
+elif [ $DSI_SCN_TYPE = '2' ] || [ $DSI_SCN_TYPE = 'other' ]; then
+	# DSI Touch2 or Other rotation (format is WxH)
+    SCREEN_RES_DSI=$(echo $SCREEN_RES_CHROMIUM | awk -F"," '{print $1"x"$2}')
+    if [ $DSI_SCN_ROTATE = "0" ]; then
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT-1 --rotate normal --mode $SCREEN_RES_DSI
+    elif [ $DSI_SCN_ROTATE = "90" ]; then
+        SCREEN_RES_CHROMIUM=$(echo $SCREEN_RES_CHROMIUM | awk -F"," '{print $2","$1}')
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT-1 --rotate right --mode $SCREEN_RES_DSI
+    elif [ $DSI_SCN_ROTATE = "180" ]; then
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT-1 --rotate inverted --mode $SCREEN_RES_DSI
+    elif [ $DSI_SCN_ROTATE = "270" ]; then
+        SCREEN_RES_CHROMIUM=$(echo $SCREEN_RES_CHROMIUM | awk -F"," '{print $2","$1}')
+        DISPLAY=:0 xrandr --output DSI-$DSI_PORT-1 --rotate left --mode $SCREEN_RES_DSI
+    fi
+else
+	echo "Touch1 is set in config and cmdline txt files"
+fi
+
+# Get display type config
 WEBUI_SHOW=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='local_display'")
 PEPPY_SHOW=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='peppy_display'")
 PEPPY_TYPE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='peppy_display_type'")
+
+# Launch WebUI or Peppy
 if [ $WEBUI_SHOW = "1" ]; then
 	# Clear browser cache
 	$(/var/www/util/sysutil.sh clearbrcache)
 	# Launch chromium browser
 	chromium \
 	--app="http://localhost/" \
-	--window-size="$SCREEN_RES" \
+	--window-size="$SCREEN_RES_CHROMIUM" \
 	--window-position="0,0" \
 	--enable-features="OverlayScrollbar" \
 	--no-first-run \
