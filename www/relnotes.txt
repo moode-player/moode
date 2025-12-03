@@ -24,7 +24,7 @@ Bug fixes
 - FIX: Parametric EQ ladspa plugin not found due to package issue
 - FIX: Auto-play section in worker.php stops MPD after ready-script
 - FIX: Samba versions using colon delimiter (3:1:1) not detected
-- FIX: DSI screen res not detected, DSI port requires "-1" suffix (DSI-1-1)
+- FIX: DSI port names: Pi4 or higher (DSI-1-1, DSI-1-2) otherwise DSI-1
 
 ################################################################################
 #
