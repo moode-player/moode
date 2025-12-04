@@ -15,7 +15,7 @@ HDMI_SCN_ORIENT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='hdmi_sc
 DSI_SCN_TYPE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_type'")
 DSI_PORT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_port'")
 DSI_SCN_ROTATE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='dsi_scn_rotate'")
-Pi_MODEL=$(/var/www/util/pirev.py | awk -F"\t" '{print $2}' | cut -c 1)
+PI_MODEL=$(/var/www/util/pirev.py | awk -F"\t" '{print $2}' | cut -c 1)
 
 # Get screen res (use W,H for chromium)
 fgrep "#dtoverlay=vc4-kms-v3d" /boot/firmware/config.txt
