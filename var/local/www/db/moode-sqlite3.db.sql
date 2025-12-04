@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Nov 27 10:48:33 2025
+-- File generated with SQLiteStudio v3.4.4 on Wed Dec 3 20:00:54 2025
 --
 -- Text encoding used: UTF-8
 --
@@ -344,7 +344,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (97, 'https://play.kanalk.ch/kanalk/mp3-192/', 'Kanal K', 'r', 'local', 'Alternative', 'Regionalradio Aargaudio AG', 'German', 'Switzerland', 'Europe', '192', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (98, 'http://current.stream.publicradio.org/kcmp.mp3', 'KCMP 89.3 FM - The Current', 'r', 'local', 'Alternative', 'PBS', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (99, 'http://ice5.securenetsystems.net/KCSM', 'KCSM', 'r', 'local', 'Jazz', 'KCSM FM', 'English', 'United States', 'North America', '64', 'AAC', 'No', '', 'No');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (100, 'http://kdhx-ice.streamguys1.com:80/live', 'KDHX 88.1 FM St. Louis', 'r', 'local', 'Alternative', 'KDHX', 'English', 'United States', 'North America', '320', 'MP3', 'No', '', 'No');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (100, 'OFFLINE', 'KDHX 88.1 FM St. Louis', 'r', 'local', 'Alternative', 'KDHX', 'English', 'United States', 'North America', '320', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (101, 'https://kexp.streamguys1.com/kexp160.aac', 'KEXP 90.3 FM Seattle', 'r', 'local', 'Alternative, Indie', 'PBS', 'English', 'United States', 'North America', '160', 'AAC-LC', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (102, 'http://stream1.opb.org/kmhd.mp3', 'KMHD Portland FM 89.1 -  Jazz', 'r', 'local', 'Jazz', 'KMHD', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (103, 'http://kuvo-ice.streamguys.org/kuvo-aac-128', 'KUVO 89.3 FM Denver', 'r', 'local', 'Jazz', 'PBS', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', 'No');
