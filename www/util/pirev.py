@@ -59,7 +59,9 @@ PI_TYPES = {
     0x14: "CM4",
     0x15: "CM4S",
     0x16: "Internal use only",
-    0x17: "5B"
+    0x17: "5B",
+    0x18: "CM5",
+    0x1a: "CM5 Lite"
 }
 
 PI_MEM = {
