@@ -18,6 +18,7 @@
 Updates
 - UPD: Remove Deezer Connect feature (discontinued by manufacturer)
 - UPD: Add CM5, CM5 Lite revision codes
+- UPD: Add xss_detect setting to backup/restore
 
 Bug fixes
 - FIX: Bluetooth SCAN failing due to prompt change in bluetoothctl
