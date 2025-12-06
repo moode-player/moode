@@ -254,13 +254,16 @@ $_peppy_on_off_disable = ($_SESSION['local_display'] == '1' || allowPeppyInAlsaC
 // ATTACHED DISPLAYS
 
 // moOde WebUI
+
 if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$_feat_localdisplay = '';
 	if ($_SESSION['local_display'] == '1') {
 		$_webui_ctl_disable = '';
 		$_webui_link_disable = '';
-        $_screen_res_local_display = '<span class="config-help-static">Resolution: '
-            . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
+        $_screen_res_local_display = '<span class="config-help-static">'
+			. sysCmd('DISPLAY=:0 xrandr --query | grep " connected" | cut -d" " -f1')[0]
+			. ' / '
+			. sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
             . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
             . '</span>';
 	} else {
@@ -291,7 +294,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	if ($_SESSION['peppy_display'] == '1') {
 		$_peppy_ctl_disable = '';
 		$_peppy_link_disable = '';
-        $_screen_res_peppy_display = '<span class="config-help-static">Resolution: '
+        $_screen_res_peppy_display = '<span class="config-help-static">'
+			. sysCmd('DISPLAY=:0 xrandr --query | grep " connected" | cut -d" " -f1')[0]
+			. ' / '
             . sysCmd("kmsprint | awk '$1 == \"FB\" {print $3}' | awk -F\"x\" '{print $1\"x\"$2}'")[0]
             . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
             . '</span>';
@@ -361,8 +366,12 @@ $_select['dsi_scn_type'] .= "<option value=\"1\" " . (($_SESSION['dsi_scn_type']
 $_select['dsi_scn_type'] .= "<option value=\"2\" " . (($_SESSION['dsi_scn_type'] == '2') ? "selected" : "") . ">Pi Touch 2</option>\n";
 $_select['dsi_scn_type'] .= "<option value=\"other\" " . (($_SESSION['dsi_scn_type'] == 'other') ? "selected" : "") . ">Other</option>\n";
 
-$_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1</option>\n";
-$_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-2</option>\n";
+if ($piModel == '5') {
+	$_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1-1</option>\n";
+	$_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-1-2</option>\n";
+} else {
+	$_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1</option>\n";
+}
 
 $_select['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
 

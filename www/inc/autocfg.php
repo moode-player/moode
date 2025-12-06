@@ -647,7 +647,7 @@ function autoConfigSettings() {
 		['requires' => ['on_screen_kbd'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['scn_blank'], 'handler' => function($values) {
 			$_SESSION['scn_blank'] = $values['scn_blank'];
-			sysCmd('sed -i "/xset s/c\xset s ' . $values['scn_blank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+			setScreenBlankTimeout($values['scn_blank']);
 		}],
 		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
 		'HDMI displays',

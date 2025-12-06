@@ -112,3 +112,8 @@ function startLcdUpdater() {
 function startGpioBtnHandler() {
 	sysCmd('/var/www/daemon/gpio_buttons.py ' . GPIOBUTTONS_SLEEP . ' > /dev/null &');
 }
+
+function setScreenBlankTimeout($timeoutSecs) {
+	sysCmd("sed -i 's/xset s.*/xset s " . $timeoutSecs . " 0/' " . $_SESSION['home_dir'] . '/.xinitrc');
+	sysCmd("sed -i 's/xset dpms.*/xset dpms " . $timeoutSecs . " 0 0/' " . $_SESSION['home_dir'] . '/.xinitrc');
+}

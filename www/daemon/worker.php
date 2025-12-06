@@ -1325,7 +1325,7 @@ sysCmd("sed -i 's|--app.*|--app=\"" . $_SESSION['local_display_url'] . "\" \\\\|
 if (!isset($_SESSION['scn_blank'])) {
 	$_SESSION['scn_blank'] = '600'; // 10 mins
 }
-sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['scn_blank'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+setScreenBlankTimeout($_SESSION['scn_blank']);
 // - Disable GPU
 if (!isset($_SESSION['disable_gpu_chromium'])) {
 	$_SESSION['disable_gpu_chromium'] = 'off';
@@ -3511,7 +3511,7 @@ function runQueuedJob() {
 			startLocalDisplay();
 			break;
 		case 'scn_blank':
-			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" ' . $_SESSION['home_dir'] . '/.xinitrc');
+			setScreenBlankTimeout($_SESSION['w_queueargs']);
 			$GLOBALS['scn_blank_timeout'] = $_SESSION['w_queueargs'];
 			if ($_SESSION['w_queueargs'] == 'off') {
 				sqlQuery("UPDATE cfg_system SET value='0' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);

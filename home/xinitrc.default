@@ -4,11 +4,10 @@
 # Copyright 2014 The moOde audio player project / Tim Curtis
 #
 
-# Turn off display power management
-xset -dpms
-
-# Screensaver timeout in secs or 'off' for no timeout
-xset s 600
+# Screen blanking: Use both Screen saver and DPMS
+xset s 600 0
+xset +dpms
+xset dpms 600 0 0
 
 # Get configuration
 HDMI_SCN_ORIENT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='hdmi_scn_orient'")
@@ -42,7 +41,7 @@ elif [ $DSI_SCN_TYPE = '2' ] || [ $DSI_SCN_TYPE = 'other' ]; then
 	# DSI screens (use size WxH for --mode)
 	SCREEN_RES_DSI=$(echo $SCREEN_RES | awk -F"," '{print $1"x"$2}')
 	# 1X ports use DSI-1 | 2X ports use DSI-1-1 or DSI-1-2
-	[[ $PI_MODEL == "Z" || $PI_MODEL -lt 5 ]] && DSI_PORT_NAME="DSI-$DSI_PORT" || DSI_PORT_NAME="DSI-1-$DSI_PORT"
+	[[ $PI_MODEL = "5" ]] && DSI_PORT_NAME="DSI-1-$DSI_PORT" || DSI_PORT_NAME="DSI-$DSI_PORT"
     if [ $DSI_SCN_ROTATE = "0" ]; then
         DISPLAY=:0 xrandr --output $DSI_PORT_NAME --rotate normal --mode $SCREEN_RES_DSI
     elif [ $DSI_SCN_ROTATE = "90" ]; then
