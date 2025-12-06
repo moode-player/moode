@@ -203,6 +203,7 @@ function autoConfigSettings() {
 		//
 		'Security',
 		['requires' => ['shellinabox'], 'handler' => 'setSessVarSql'],
+		['requires' => ['xss_detect'], 'handler' => 'setSessVarOnly'],
 		//
 		// Logs
 		//

@@ -91,6 +91,7 @@ $currentSettings['auto_coverview'] = $_SESSION['auto_coverview'];
 $currentSettings['rotaryenc'] = $_SESSION['rotaryenc'];
 $currentSettings['crossfeed'] = $_SESSION['crossfeed'];
 $currentSettings['eqfa12p'] = $_SESSION['eqfa12p'];
+$currentSettings['xss_detect'] = $_SESSION['xss_detect'];
 
 // Extract to ini file
 print(autoConfigExtract($currentSettings));
