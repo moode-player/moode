@@ -11,6 +11,7 @@
 # Package id's are:
 # moode		8 series releases
 # moode9	9 series releases
+# moode10	10 series releases
 #
 
 MOODE_SERIES=$(moodeutl --mooderel | cut -d"." -f1)
