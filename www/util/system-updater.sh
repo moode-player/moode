@@ -13,7 +13,7 @@
 # moode9	9 series releases
 #
 
-MOODE_SERIES=$(moodeutl -d -gv "moode_release" | cut -c 2)
+MOODE_SERIES=$(moodeutl --mooderel | cut -d"." -f1)
 MOODE_LOG="/var/log/moode.log"
 UPDATER_LOG="/var/log/moode_update.log"
 
