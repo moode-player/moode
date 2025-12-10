@@ -676,6 +676,7 @@ function autoConfigSettings() {
 			updDSIScnBrightness($values['dsi_scn_type'], $values['dsi_scn_brightness']);
 		}],
 		['requires' => ['dsi_scn_rotate'], 'handler' => function($values) {
+			phpSession('write', 'dsi_scn_rotate', $values['dsi_scn_rotate']);
 			// touch1 value: 0 landscape | 180 inverted
 			// touch2 value  0 portrait  | 90 | 180 | 270 landscape
 			$degree = $values['dsi_scn_rotate'];
