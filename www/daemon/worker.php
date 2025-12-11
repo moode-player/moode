@@ -201,7 +201,11 @@ if (!file_exists(ETC_MACHINE_INFO)) {
 	sysCmd('cp /usr/share/moode-player' . ETC_MACHINE_INFO . ' /etc/');
 	workerLog('worker: File check:    created default /etc/machine-info');
 }
-// Peppy ALSA config
+// PeppyALSA standalone driver
+if (!isset($_SESSION['enable_peppyalsa'])) {
+	$_SESSION['enable_peppyalsa'] = 'off';
+}
+// Peppy display ALSA config.d check
 if (file_exists(ALSA_PLUGIN_PATH . '/peppy.conf') && file_exists(ALSA_PLUGIN_PATH . '/peppy.conf.hide')) {
 	workerLog('worker: File check:    found both peppy.conf and peppy.conf.hide');
 	if ($_SESSION['peppy_display'] == '1') {
@@ -1365,41 +1369,51 @@ if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
 }
 
 // WebUI display
-workerLog('worker: WebUI display:   ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
-workerLog('worker: Target url:      ' . $_SESSION['local_display_url']);
-workerLog('worker: Chromium ver:    ' . sysCmd('moodeutl --chromiumrel')[0]);
-workerLog('worker: Chromium cfg:    ' . $cfgStatus);
+workerLog('worker: WebUI display:    ' . ($_SESSION['local_display'] == '1' ? 'on' : 'off'));
+workerLog('worker: Target url:       ' . $_SESSION['local_display_url']);
+workerLog('worker: Chromium ver:     ' . sysCmd('moodeutl --chromiumrel')[0]);
+workerLog('worker: Chromium cfg:     ' . $cfgStatus);
+workerLog('worker: Disable GPU:      ' . $_SESSION['disable_gpu_chromium']);
+workerLog('worker: PeppyALSA driver: ' . $_SESSION['enable_peppyalsa']);
+workerLog('worker: --');
 // Peppy display
-workerLog('worker: Peppy display:   ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
-workerLog('worker: Peppy disp type: ' . $_SESSION['peppy_display_type']);
+workerLog('worker: Peppy display:    ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
+workerLog('worker: Peppy disp type:  ' . $_SESSION['peppy_display_type']);
+$result = sysCmd('cat /etc/peppymeter/config.txt | grep "meter = \|meter.folder = " | cut -d"=" -f2');
+workerLog('worker: Meter(s):         ' . (empty(trim($result[0])) ? 'Not set' : trim($result[0])));
+workerLog('worker: Meter folder:     ' . trim($result[1]));
+$result = sysCmd('cat /etc/peppyspectrum/config.txt | grep "spectrum = \|spectrum.folder = " | cut -d"=" -f2');
+workerLog('worker: Spectrum(s):      ' . (empty(trim($result[0])) ? 'Not set' : trim($result[0])));
+workerLog('worker: Spectrum folder:  ' . trim($result[1]));
 
-// Attached display
-workerLog('worker: Screen blank     ' . $_SESSION['scn_blank'] . ' secs');
-workerLog('worker: Wake on play     ' . ($_SESSION['wake_display'] == '1' ? 'on' : 'off'));
-workerLog('worker: On-screen kbd:   ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
-workerLog('worker: Disable GPU:     ' . $_SESSION['disable_gpu_chromium']);
-workerLog('worker: HDMI orient:     ' . $_SESSION['hdmi_scn_orient']);
-// HDMI enable 4k 60Hz (Pi-4 only)
-if (!isset($_SESSION['hdmi_enable_4kp60'])) {
-	$_SESSION['hdmi_enable_4kp60'] = 'off';
-}
-workerLog('worker: HDMI 4K 60Hz:    ' . $_SESSION['hdmi_enable_4kp60']);
-// DSI settings
-workerLog('worker: DSI scn type:    ' . $_SESSION['dsi_scn_type']);
-workerLog('worker: DSI port:        ' . $_SESSION['dsi_port']);
-workerLog('worker: DSI brightness:  ' . $_SESSION['dsi_scn_brightness']);
-workerLog('worker: DSI rotate:      ' . $_SESSION['dsi_scn_rotate']);
+workerLog('worker: --');
+// General display settings
+workerLog('worker: Screen blank      ' . $_SESSION['scn_blank'] . ' secs');
+workerLog('worker: Wake on play      ' . ($_SESSION['wake_display'] == '1' ? 'on' : 'off'));
+workerLog('worker: Screen cursor     ' . ($_SESSION['scn_cursor'] == '1' ? 'on' : 'off'));
 // On-screen keyboard ('Enable' is the text on the button)
 if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';
 }
-// Toggle CoverView (System Config)
-if (!isset($_SESSION['toggle_coverview'])) {
-	$_SESSION['toggle_coverview'] = '-off';
-} else {
-	$_SESSION['toggle_coverview'] = $_SESSION['auto_coverview'];
+workerLog('worker: On-screen kbd:    ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
+workerLog('worker: HDMI orientation: ' . $_SESSION['hdmi_scn_orient']);
+workerLog('worker: HDMI CEC control: ' . $_SESSION['hdmi_cec']);
+// HDMI enable 4k 60Hz (Pi-4 only)
+if (!isset($_SESSION['hdmi_enable_4kp60'])) {
+	$_SESSION['hdmi_enable_4kp60'] = 'off';
 }
-
+workerLog('worker: HDMI 4K 60Hz:     ' . $_SESSION['hdmi_enable_4kp60']);
+// DSI settings
+workerLog('worker: DSI scn type:     ' . $_SESSION['dsi_scn_type']);
+workerLog('worker: DSI port:         ' . $_SESSION['dsi_port']);
+workerLog('worker: DSI brightness:   ' . $_SESSION['dsi_scn_brightness']);
+workerLog('worker: DSI rotate:       ' . $_SESSION['dsi_scn_rotate']);
+workerLog('worker: --');
+// Log Triggerhappy / USB volume knob on/off state
+if (!isset($_SESSION['usb_volknob'])) {
+	$_SESSION['usb_volknob'] = '0';
+}
+workerLog('worker: Triggerhappy:     ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
 // Start rotary encoder
 if (!isset($_SESSION['rotaryenc'])) {
 	$_SESSION['rotaryenc'] = '0';
@@ -1407,14 +1421,10 @@ if (!isset($_SESSION['rotaryenc'])) {
 if ($_SESSION['rotaryenc'] == '1') {
 	sysCmd('systemctl start rotenc');
 }
-workerLog('worker: Rotary encoder:  ' . ($_SESSION['rotaryenc'] == '1' ? 'on' : 'off'));
-
-// Log Triggerhappy / USB volume knob on/off state
-if (!isset($_SESSION['usb_volknob'])) {
-	$_SESSION['usb_volknob'] = '0';
-}
-workerLog('worker: Triggerhappy:    ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
-
+workerLog('worker: Rotary encoder:   ' . ($_SESSION['rotaryenc'] == '1' ? 'on' : 'off'));
+workerLog('worker: Encoder params:   ' . $_SESSION['rotenc_params']);
+// GPIO buttons
+workerLog('worker: GPIO buttons:     ' . ($_SESSION['gpio_svc'] == '1' ? 'on' : 'off'));
 // Start LCD updater engine
 if (!isset($_SESSION['lcdup'])) {
 	$_SESSION['lcdup'] == '0';
@@ -1422,7 +1432,15 @@ if (!isset($_SESSION['lcdup'])) {
 if ($_SESSION['lcdup'] == '1') {
 	startLcdUpdater();
 }
-workerLog('worker: LCD updater:     ' . ($_SESSION['lcdup'] == '1' ? 'on' : 'off'));
+workerLog('worker: LCD updater:      ' . ($_SESSION['lcdup'] == '1' ? 'on' : 'off'));
+
+// CoverView toggle state
+if (!isset($_SESSION['toggle_coverview'])) {
+	$_SESSION['toggle_coverview'] = '-off';
+} else {
+	$_SESSION['toggle_coverview'] = $_SESSION['auto_coverview'];
+}
+workerLog('worker: CoverView toggle: ' . ($_SESSION['toggle_coverview'] == '-on' ? 'on' : 'off'));
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -1929,19 +1947,13 @@ function chkPeppyScnBlank() {
 				$GLOBALS['scn_blank_timeout'] = $GLOBALS['scn_blank_timeout'] - (WORKER_SLEEP / 1000000);
 				if ($GLOBALS['scn_blank_timeout'] <= 0) {
 					$GLOBALS['scn_blank_timeout'] = $_SESSION['scn_blank']; // Reset timeout
-					// Output interface (HDMI or DSI)
-					$dsiScnType = sqlQuery("SELECT value FROM cfg_system WHERE param='dsi_scn_type'", $GLOBALS['dbh'])[0]['value'];
-					$dsiPort = sqlQuery("SELECT value FROM cfg_system WHERE param='dsi_port'", $GLOBALS['dbh'])[0]['value'];
-					$output = $dsiScnType == 'none' ? 'HDMI-1' : 'DSI-' . $dsiPort;
-					// Turn screen off
+					// Turn screen off (HDMI or DSI port)
+					$connectedPort = sysCmd('DISPLAY=:0 xrandr --query | grep " connected" | cut -d" " -f1')[0];
 					sqlQuery("UPDATE cfg_system SET value='1' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
-					sysCmd('DISPLAY=:0 xrandr --output ' . $output . ' --off');
+					sysCmd('DISPLAY=:0 xrandr --output ' . $connectedPort . ' --off');
 				}
 			}
 		}
-		// DEBUG:
-		//$result = sqlQuery("SELECT value FROM cfg_system WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
-		//workerLog($mpdState . ' | ' . $_SESSION['scn_blank'] . ' | ' . $GLOBALS['scn_blank_timeout'] . ' | ' . $result[0]['value']);
 	} else {
 		workerLog('worker: CRITICAL ERROR: chkPeppyScnBlank() failed: Unable to connect to MPD');
 	}
