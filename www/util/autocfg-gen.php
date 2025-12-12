@@ -84,6 +84,7 @@ $currentSettings['hdmi_enable_4kp60'] = $_SESSION['hdmi_enable_4kp60'];
 $currentSettings['scn_cursor'] = $_SESSION['scn_cursor'];
 $currentSettings['scn_blank'] = $_SESSION['scn_blank'];
 $currentSettings['dsi_scn_brightness'] = $_SESSION['dsi_scn_brightness'];
+$currentSettings['enable_peppyalsa'] = $_SESSION['enable_peppyalsa'];
 // LCD updater
 $currentSettings['lcdup'] = $_SESSION['lcdup'];
 // Miscellaneous

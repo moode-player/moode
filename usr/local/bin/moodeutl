@@ -113,6 +113,9 @@ switch ($option) {
 	case '--shutdown':
 		restartSystem($featBitmask, 'poweroff');
 		break;
+	case '--setdisplay':
+		setDisplay($argv);
+		break;
 	case '--hwparams':
 		printHWParams($argv);
 		break;
@@ -195,6 +198,7 @@ Moode utility functions
  -U\t\tCheck station urls, list only unplayable
  --reboot\t(sudo) Restart the system
  --shutdown\t(sudo) Shut down the system
+ --setdisplay\t(sudo) Set WebUI or Peppy display [webui | peppy]
  --hwparams\tPrint ALSA hardware params [cardnum]
  --btreset\tReset Bluetooth to off
  --odcclear\tClear output device cache
@@ -678,6 +682,46 @@ function restartSystem($featBitmask, $command) {
 	echo 'Submitting ' . $command . "\n";
 	sleep(3);
 	shell_exec($command);
+}
+
+function setDisplay($argv) {
+	if (posix_getuid() != 0) {
+		fwrite(STDERR, "This option requires sudo\n");
+		return;
+	}
+
+	// Check enable_peppyalsa
+	setSessionId();
+	session_start();
+	session_write_close();
+	if ($argv[2] == 'peppy' && $_SESSION['enable_peppyalsa'] == '0' ) {
+		fwrite(STDERR, "This option requires PeppyALSA driver to be On\n");
+		return;
+	}
+
+	if (isset($argv[2])) {
+		if ($argv[2] == 'webui') {
+			$localDisplay = '1';
+			$peppyDisplay = '0';
+			$valid = true;
+		} else if ($argv[2] == 'peppy') {
+			$localDisplay = '0';
+			$peppyDisplay = '1';
+			$valid = true;
+		} else {
+			fwrite(STDERR, "Invalid option [webui | peppy]\n");
+			$valid = false;
+		}
+		if ($valid) {
+			shell_exec('sqlite3 ' .  SQLDB_PATH .
+				" \"UPDATE cfg_system SET value='" . $localDisplay . "' WHERE param='local_display'\"");
+			shell_exec('sqlite3 ' .  SQLDB_PATH .
+				" \"UPDATE cfg_system SET value='" . $peppyDisplay . "' WHERE param='peppy_display'\"");
+			shell_exec('systemctl restart localdisplay');
+		}
+	} else {
+		fwrite(STDERR, "Missing option [webui | peppy]\n");
+	}
 }
 
 function printHWParams($argv) {

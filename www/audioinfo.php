@@ -188,13 +188,13 @@ if ($_SESSION['invert_polarity'] == '1') {
 	$outputMode = $_SESSION['alsa_output_mode'];
 } else if ($_SESSION['crossfeed'] != 'Off') {
 	$dsp = 'Crossfeed &rarr; ';
-	$outputMode = $_SESSION['peppy_display'] == '1' ? $_SESSION['alsa_output_mode'] : 'plughw';
+	$outputMode = ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') ? $_SESSION['alsa_output_mode'] : 'plughw';
 } else if ($_SESSION['eqfa12p'] != 'Off') {
 	$dsp = 'Parametric EQ &rarr; ';
-	$outputMode = $_SESSION['peppy_display'] == '1' ? $_SESSION['alsa_output_mode'] : 'plughw';
+	$outputMode = ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') ? $_SESSION['alsa_output_mode'] : 'plughw';
 } else if ($_SESSION['alsaequal'] != 'Off') {
 	$dsp = 'Graphic EQ &rarr; ';
-	$outputMode = $_SESSION['peppy_display'] == '1' ? $_SESSION['alsa_output_mode'] : 'plughw';
+	$outputMode = ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') ? $_SESSION['alsa_output_mode'] : 'plughw';
 } else if (getCamillaDspConfigName($_SESSION['camilladsp']) != 'Off') {
 	$dsp = 'CamillaDSP &rarr; ';
 	$outputMode = $_SESSION['alsa_output_mode'];
@@ -219,7 +219,7 @@ if ($btActive === true) {
 }
 
 // Peppy ALSA
-$peppyAlsa = $_SESSION['peppy_display'] == '1' ? 'PeppyALSA &rarr; ' : '';
+$peppyAlsa = ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') ? 'PeppyALSA &rarr; ' : '';
 
 // Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {

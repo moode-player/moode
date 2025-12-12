@@ -203,12 +203,12 @@ if (!file_exists(ETC_MACHINE_INFO)) {
 }
 // PeppyALSA standalone driver
 if (!isset($_SESSION['enable_peppyalsa'])) {
-	$_SESSION['enable_peppyalsa'] = 'off';
+	$_SESSION['enable_peppyalsa'] = '0';
 }
 // Peppy display ALSA config.d check
 if (file_exists(ALSA_PLUGIN_PATH . '/peppy.conf') && file_exists(ALSA_PLUGIN_PATH . '/peppy.conf.hide')) {
 	workerLog('worker: File check:    found both peppy.conf and peppy.conf.hide');
-	if ($_SESSION['peppy_display'] == '1') {
+	if ($_SESSION['peppy_display'] == '1'  || $_SESSION['enable_peppyalsa'] == '1') {
 		sysCmd('rm ' . ALSA_PLUGIN_PATH . '/peppy.conf.hide');
 		workerLog('worker: File check:    peppy is on, removed peppy.conf.hide');
 	} else {
@@ -1374,7 +1374,7 @@ workerLog('worker: Target url:       ' . $_SESSION['local_display_url']);
 workerLog('worker: Chromium ver:     ' . sysCmd('moodeutl --chromiumrel')[0]);
 workerLog('worker: Chromium cfg:     ' . $cfgStatus);
 workerLog('worker: Disable GPU:      ' . $_SESSION['disable_gpu_chromium']);
-workerLog('worker: PeppyALSA driver: ' . $_SESSION['enable_peppyalsa']);
+workerLog('worker: PeppyALSA driver: ' . ($_SESSION['enable_peppyalsa'] == '1' ? 'on' : 'off'));
 workerLog('worker: --');
 // Peppy display
 workerLog('worker: Peppy display:    ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
@@ -1665,7 +1665,7 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Turn display on
-if ($_SESSION['hdmi_cec'] == 'on' && $_SESSION['local_display'] == '1') {
+if ($_SESSION['hdmi_cec'] == 'on' && ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1')) {
 	if (file_exists('/sys/class/drm/card0-HDMI-A-1/edid')) {
 		$drmCardID = 'card0-HDMI-A-1';
 	} else if (file_exists('/sys/class/drm/card1-HDMI-A-1/edid')) {
@@ -1951,6 +1951,10 @@ function chkPeppyScnBlank() {
 					$connectedPort = sysCmd('DISPLAY=:0 xrandr --query | grep " connected" | cut -d" " -f1')[0];
 					sqlQuery("UPDATE cfg_system SET value='1' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
 					sysCmd('DISPLAY=:0 xrandr --output ' . $connectedPort . ' --off');
+					sysCmd('DISPLAY=:0 xset dpms force off');
+					// DEBUG:
+					//workerLog('DISPLAY=:0 xrandr --output ' . $connectedPort . ' --off');
+					//workerLog('DISPLAY=:0 xset dpms force off');
 				}
 			}
 		}
@@ -3515,12 +3519,50 @@ function runQueuedJob() {
 			stopLocalDisplay();
 			startLocalDisplay();
 			break;
-		case 'scn_cursor':
-			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
-			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
-			sysCmd('systemctl daemon-reload');
+		case 'disable_gpu_chromium':
+			$value = $_SESSION['w_queueargs'] == 'on' ? ' --disable-gpu' : '';
+			sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
+			if ($_SESSION['local_display'] == '1') {
+				stopLocalDisplay();
+				startLocalDisplay();
+			}
+			break;
+		case 'enable_peppyalsa':
+		case 'peppy_display':
+			// Update ALSA configs
+			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			// Start/stop local display
+			if ($_SESSION['w_queueargs'] == '1') {
+				unhidePeppyConf();
+				startLocalDisplay();
+				$resetAlsaCtl = false;
+			} else {
+				stopLocalDisplay();
+				hidePeppyConf();
+				$resetAlsaCtl = true;
+			}
+			// Restart MPD and Renderers
+			restartMpdAndRenderers($resetAlsaCtl);
+			break;
+		case 'peppy_display_type':
 			stopLocalDisplay();
 			startLocalDisplay();
+			$resetAlsaCtl = false;
+			restartMpdAndRenderers($resetAlsaCtl);
+			break;
+		case 'peppy_display_restart':
+			stopLocalDisplay();
+			startLocalDisplay();
+			$resetAlsaCtl = false;
+			restartMpdAndRenderers($resetAlsaCtl);
+			break;
+		case 'install_moode_meters':
+			// https://raw.githubusercontent.com/moode-player/plugins/main
+			// $1 = component_name	peppydisplay
+			// $2 = plugin_name		v2-moode-meters
+			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "v2-moode-meters"');
 			break;
 		case 'scn_blank':
 			setScreenBlankTimeout($_SESSION['w_queueargs']);
@@ -3531,17 +3573,12 @@ function runQueuedJob() {
 			stopLocalDisplay();
 			startLocalDisplay();
 			break;
-		case 'disable_gpu_chromium':
-			$value = $_SESSION['w_queueargs'] == 'on' ? ' --disable-gpu' : '';
-			sysCmd("sed -i 's/--kiosk.*/--kiosk" . $value . "/' ". $_SESSION['home_dir'] . '/.xinitrc');
-			if ($_SESSION['local_display'] == '1') {
-				stopLocalDisplay();
-				startLocalDisplay();
-			}
-			break;
-		case 'downgrade_chromium':
-			sendFECmd('downgrading_chromium');
-			$result = sysCmd('/var/www/util/chromium-updater.sh "' . CHROMIUM_DOWNGRADE_VER . '"');
+		case 'scn_cursor':
+			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
+			sysCmd('systemctl daemon-reload');
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
 		case 'hdmi_scn_orient':
 			if ($_SESSION['w_queueargs'] == 'portrait') {
@@ -3597,44 +3634,6 @@ function runQueuedJob() {
 				stopLocalDisplay();
 				startLocalDisplay();
 			}
-			break;
-		case 'peppy_display':
-			// Update ALSA configs
-			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-			updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-
-			// Start/stop Peppy display
-			if ($_SESSION['w_queueargs'] == '1') {
-				unhidePeppyConf();
-				startLocalDisplay();
-				$resetAlsaCtl = false;
-			} else {
-				stopLocalDisplay();
-				hidePeppyConf();
-				$resetAlsaCtl = true;
-			}
-
-			// Restart MPD and Renderers
-			restartMpdAndRenderers($resetAlsaCtl);
-			break;
-		case 'peppy_display_type':
-			stopLocalDisplay();
-			startLocalDisplay();
-			$resetAlsaCtl = false;
-			restartMpdAndRenderers($resetAlsaCtl);
-			break;
-		case 'peppy_display_restart':
-			stopLocalDisplay();
-			startLocalDisplay();
-			$resetAlsaCtl = false;
-			restartMpdAndRenderers($resetAlsaCtl);
-			break;
-		case 'install_moode_meters':
-			// https://raw.githubusercontent.com/moode-player/plugins/main
-			// $1 = component_name	peppydisplay
-			// $2 = plugin_name		v2-moode-meters
-			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "v2-moode-meters"');
 			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio_buttons.py');

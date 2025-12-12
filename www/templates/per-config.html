@@ -72,6 +72,19 @@
 						Disable the GPU for Chromium if the WebUI knob sliders on Pi-2 or Pi-3 are missing or there are any other display artifacts.
 					</span>
 				</div>
+
+				<label class="control-label">PeppyALSA driver</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-enable-peppyalsa" for="toggle-enable-peppyalsa-2">ON </label>$_select[enable_peppyalsa_on]
+						<label class="toggle-radio toggle-enable-peppyalsa" for="toggle-enable-peppyalsa-1">OFF</label>$_select[enable_peppyalsa_off]
+					</div>
+					<button id="btn-set-enable-peppyalsa" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_enable_peppyalsa" value="novalue" $_webui_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-enable-peppyalsa" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-enable-peppyalsa" class="config-help-info">
+						Adds the PeppyALSA driver to the audio chain. This allows user written programs to switch between WebUI and Peppy display using the command: <b>moodeutl --setdisplay [webui | peppy]</b>.
+					</span>
+				</div>
 			</div>
 
 			<div class="control-group $_feat_peppydisplay">

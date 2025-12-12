@@ -220,7 +220,7 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 		$alsaDevice = 'invpolarity';
 	// No DSP
 	} else {
-		if ($_SESSION['peppy_display'] == '1') {
+		if ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') {
 			$alsaDevice = 'peppy';
 		} else if ($_SESSION['audioout'] == 'Bluetooth') {
 			$alsaDevice = 'btstream';
@@ -241,7 +241,7 @@ function updAudioOutAndBtOutConfs($cardNum, $outputMode) {
 function updDspAndBtInConfs($cardNum, $outputMode) {
 	// $outputMode: plughw | hw | iec98
 	// DSP configs
-	if ($_SESSION['peppy_display'] == '1') {
+	if ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') {
 		$alsaDevice1 = 'peppy';
 		$alsaDevice2 = 'peppy';
 	} else {
@@ -270,7 +270,7 @@ function updDspAndBtInConfs($cardNum, $outputMode) {
 	}
 
 	// Bluetooth config (inbound)
-	if ($_SESSION['peppy_display'] == '1') {
+	if ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') {
 		if ($_SESSION['camilladsp'] != 'off') {
 			$alsaDevice = 'camilladsp';
 		} else {

@@ -22,10 +22,16 @@ if (isset($_POST['update_local_display'])) {
     if (isset($_POST['local_display']) && $_POST['local_display'] != $_SESSION['local_display']) {
         if ($_POST['local_display'] == '1') {
             submitJob('local_display', $_POST['local_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_LOCALDISPLAY_STARTING);
+			phpSession('write', 'local_display', $_POST['local_display']);
         } else {
-            submitJob('local_display', $_POST['local_display']);
+			if ($_SESSION['enable_peppyalsa'] == '1') {
+				$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+				$_SESSION['notify']['msg'] = 'Turn PeppyALSA driver off before turning WebUI off.';
+			} else {
+				submitJob('local_display', $_POST['local_display']);
+				phpSession('write', 'local_display', $_POST['local_display']);
+			}
         }
-        phpSession('write', 'local_display', $_POST['local_display']);
     }
 }
 
@@ -57,6 +63,13 @@ if (isset($_POST['update_disable_gpu_chromium'])) {
         } else {
             submitJob('disable_gpu_chromium', $_POST['disable_gpu_chromium']);
         }
+    }
+}
+
+if (isset($_POST['update_enable_peppyalsa'])) {
+    if (isset($_POST['enable_peppyalsa']) && $_POST['enable_peppyalsa'] != $_SESSION['enable_peppyalsa']) {
+        $_SESSION['enable_peppyalsa'] = $_POST['enable_peppyalsa'];
+        submitJob('enable_peppyalsa', $_POST['enable_peppyalsa']);
     }
 }
 
@@ -283,6 +296,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$autoClick = " onchange=\"autoClick('#btn-set-disable-gpu-chromium');\"";
 	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+	$autoClick = " onchange=\"autoClick('#btn-set-enable-peppyalsa');\" " . $_webui_ctl_disable;
+	$_select['enable_peppyalsa_on']  .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-1\" value=\"1\" " . (($_SESSION['enable_peppyalsa'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['enable_peppyalsa_off'] .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-2\" value=\"0\" " . (($_SESSION['enable_peppyalsa'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_feat_localdisplay = 'hide';
 }

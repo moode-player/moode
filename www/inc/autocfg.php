@@ -624,7 +624,7 @@ function autoConfigSettings() {
 		['requires' => ['multiroom_rx'], 'handler' => 'setSessVarSql'],
 		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels', 'multiroom_tx_frame_size', 'multiroom_tx_bitrate',
 			'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port',  'multiroom_rx_jitter_bfr', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_initial_volume'],
-         'optionals' => ['multiroom_tx_rtprio', 'multiroom_tx_query_timeout', 'multiroom_rx_frame_size', 'multiroom_rx_rtprio', 'multiroom_rx_alsa_output_mode', 'multiroom_rx_mastervol_opt_in'],
+			'optionals' => ['multiroom_tx_rtprio', 'multiroom_tx_query_timeout', 'multiroom_rx_frame_size', 'multiroom_rx_rtprio', 'multiroom_rx_alsa_output_mode', 'multiroom_rx_mastervol_opt_in'],
 			'handler' => function($values, $optionals) {
 				$mergedValues = array_merge($values, $optionals);
 				setCfgTableParams('cfg_multiroom', $mergedValues, 'multiroom_');
@@ -662,6 +662,12 @@ function autoConfigSettings() {
 				);
 			}
 		}],
+		/*NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
+		['requires' => ['enable_peppyalsa'], 'handler' => function($values) {
+			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
+			someFunctionGoesHere($values['enable_peppyalsa']);
+		}],
+		*/
 		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
 			$_SESSION['hdmi_enable_4kp60'] = $values['hdmi_enable_4kp60'];
@@ -700,10 +706,14 @@ function autoConfigSettings() {
 				}
 			}
 		}],
-		/*TODO: Requires more extensive configuration
+		/*NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
 		'PeppyMeter display (General)',
-		['requires' => ['peppy_display'], 'handler' => 'setSessVarSql'],
-		['requires' => ['peppy_display_type'], 'handler' => 'setSessVarSql'],*/
+		['requires' => ['peppy_display', 'peppy_display_type'], 'handler' => function($values) {
+			phpSession('write', 'peppy_display', $values['peppy_display']);
+			phpSession('write', 'peppy_display_type', $values['peppy_display_type']);
+			someFunctionGoesHere($values['peppy_display'], $values['peppy_display_type']);
+		}],
+		*/
 		'USB volume knob',
 		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],
 		'Rotary encoder',

@@ -43,7 +43,6 @@ wake_display () {
 			debug_log "wake display: set peppy_scn_blank_active 0, restart localdisplay"
 			$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='peppy_scn_blank_active'")
 			systemctl restart localdisplay
-			# TODO: Also need xset dpms force on ?
 		else
 			debug_log "wake display: send xset s reset"
 			debug_log "wake display: send dpms force on"
