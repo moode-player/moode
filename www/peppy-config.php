@@ -7,6 +7,7 @@
 require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/peripheral.php';
 require_once __DIR__ . '/inc/session.php';
+require_once __DIR__ . '/inc/sql.php';
 
 phpSession('open');
 
@@ -109,6 +110,9 @@ foreach($folders as $folderPath) {
 }
 $_spectrum_list = getPeppyFolderContents('spectrum', $configSpectrum['spectrum.folder']);
 $_select['spectrum_name'] = $configSpectrum['spectrum'] == '' ? 'random' : $configSpectrum['spectrum'];
+
+// Latest moode meters
+$_latest_moode_meters = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='peppydisplay' AND type='moode-meters'", sqlConnect())[0]['plugin'];
 
 waitWorker('peppy-config');
 

@@ -1366,7 +1366,7 @@ if (file_exists($cfgDir)) {
 }
 if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
 	if ($_SESSION['peppy_display'] == '1') {
-		$_SESSION['enable_peppyalsa'] = '1';		
+		$_SESSION['enable_peppyalsa'] = '1';
 	}
 	startLocalDisplay();
 }
@@ -3563,9 +3563,8 @@ function runQueuedJob() {
 			break;
 		case 'install_moode_meters':
 			// https://raw.githubusercontent.com/moode-player/plugins/main
-			// $1 = component_name	peppydisplay
-			// $2 = plugin_name		v2-moode-meters
-			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "v2-moode-meters"');
+			$latestMoodeMeters = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='peppydisplay' AND type='moode-meters'", $GLOBALS['dbh'])[0]['plugin'];
+			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "' . $latestMoodeMeters . '"');
 			break;
 		case 'scn_blank':
 			setScreenBlankTimeout($_SESSION['w_queueargs']);
