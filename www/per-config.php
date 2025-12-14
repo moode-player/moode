@@ -24,13 +24,8 @@ if (isset($_POST['update_local_display'])) {
             submitJob('local_display', $_POST['local_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_LOCALDISPLAY_STARTING);
 			phpSession('write', 'local_display', $_POST['local_display']);
         } else {
-			/*if ($_SESSION['enable_peppyalsa'] == '1') {
-				$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-				$_SESSION['notify']['msg'] = 'Turn PeppyALSA driver off before turning WebUI off.';
-			} else {*/
-				submitJob('local_display', $_POST['local_display']);
-				phpSession('write', 'local_display', $_POST['local_display']);
-			//}
+			submitJob('local_display', $_POST['local_display']);
+			phpSession('write', 'local_display', $_POST['local_display']);
         }
     }
 }
