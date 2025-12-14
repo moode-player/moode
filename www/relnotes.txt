@@ -18,9 +18,11 @@
 Updates:
 - UPD: Add option to Peripheral Config to load PeppyALSA driver
 - UPD: Add moodeutl option to switch between WebUI and Peppy display
+- UPD: Add 1024x600-moode-d meters (resized from the 1280x400-moode set)
 - UPD: Improve Peripheral section of startup log
 
 Bug fixes
+- FIX: Shairport-sync 4.3.7 pi repo is AirPlay1 (Bump to 4.3.7-1moode1 AirPlay2)
 - FIX: Moode meters v2 1280x720 (blue,emerald,gold broken)
 - FIX: Screen rotation not restored
 
