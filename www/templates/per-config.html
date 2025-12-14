@@ -38,8 +38,8 @@
 
 				<label class="control-label" for="local-display-url">Target URL</label>
 				<div class="controls">
-					<input class="config-input-large" type="text" id="local-display-url" name="local_display_url" value="$_select[local_display_url]" $_ctl_disable>
-					<button id="btn-set-local-display-url" class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display_url" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<input class="config-input-large" type="text" id="local-display-url" name="local_display_url" value="$_select[local_display_url]">
+					<button id="btn-set-local-display-url" class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display_url" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display-url" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-local-display-url" class="config-help-info">
 						Enter the the target URL in the format "http://HOST_NAME_OR_IP_ADDRESS/".<br>
@@ -70,19 +70,6 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-gpu-chromium" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-disable-gpu-chromium" class="config-help-info">
 						Disable the GPU for Chromium if the WebUI knob sliders on Pi-2 or Pi-3 are missing or there are any other display artifacts.
-					</span>
-				</div>
-
-				<label class="control-label">PeppyALSA driver</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio toggle-enable-peppyalsa" for="toggle-enable-peppyalsa-2">ON </label>$_select[enable_peppyalsa_on]
-						<label class="toggle-radio toggle-enable-peppyalsa" for="toggle-enable-peppyalsa-1">OFF</label>$_select[enable_peppyalsa_off]
-					</div>
-					<button id="btn-set-enable-peppyalsa" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_enable_peppyalsa" value="novalue" $_webui_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-enable-peppyalsa" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<span id="info-enable-peppyalsa" class="config-help-info">
-						Adds the PeppyALSA driver to the audio chain. This allows user written programs to switch between WebUI and Peppy display using the command: <b>moodeutl --setdisplay [webui | peppy]</b>.
 					</span>
 				</div>
 			</div>
@@ -128,16 +115,29 @@
 					<a href="peppy-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
 					<span class="config-btn-after">Meter/Spectrum settings</span>
 				</div>
+
+				<label class="control-label">PeppyALSA</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-enable-peppyalsa" for="toggle-enable-peppyalsa-2">ON </label>$_select[enable_peppyalsa_on]
+						<label class="toggle-radio toggle-enable-peppyalsa" for="toggle-enable-peppyalsa-1">OFF</label>$_select[enable_peppyalsa_off]
+					</div>
+					<button id="btn-set-enable-peppyalsa" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_enable_peppyalsa" value="novalue" $_peppyalsa_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-enable-peppyalsa" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-enable-peppyalsa" class="config-help-info">
+						Adds PeppyALSA as a standalone driver to the audio chain. This allows user written programs to switch between WebUI and Peppy display using the command: <b>sudo moodeutl --setdisplay [webui | peppy].</b>
+					</span>
+				</div>
 			</div>
 
  			<div class="config-horiz-rule">General settings</div>
 
 			<label class="control-label" for="scn-blank">Screen blank</label>
 			<div class="controls">
-				<select id="scn-blank" class="config-select-large" name="scn_blank" onchange="autoClick('#btn-set-scn-blank');" $_ctl_disable>
+				<select id="scn-blank" class="config-select-large" name="scn_blank" onchange="autoClick('#btn-set-scn-blank');">
 					$_select[scn_blank]
 				</select>
-				<button id="btn-set-scn-blank" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_blank" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-scn-blank" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_blank" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scn-blank" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-scn-blank" class="config-help-info">
 					When playback has stopped the display will be turned off after the specified time period.
@@ -150,7 +150,7 @@
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-2">ON </label>$_select[wake_display_on]
 					<label class="toggle-radio toggle-wake-display" for="toggle-wake-display-1">OFF</label>$_select[wake_display_off]
 				</div>
-				<button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-wake-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-wake-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-wake-display" class="config-help-info">
 					Wake the display when audio starts playing.
@@ -163,7 +163,7 @@
 					<label class="toggle-radio toggle-scn-cursor" for="toggle-scn-cursor-2">ON </label>$_select[scn_cursor_on]
 					<label class="toggle-radio toggle-scn-cursor" for="toggle-scn-cursor-1">OFF</label>$_select[scn_cursor_off]
 				</div>
-				<button id="btn-set-scn-cursor" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_cursor" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-scn-cursor" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scn_cursor" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-scn-cursor" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-scn-cursor" class="config-help-info">
 					Show or hide the cursor.
@@ -176,7 +176,7 @@
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
 				</div>
-                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-on-screen-kbd" class="config-help-info">
 					On-screen popup keyboard by @Nutul.
@@ -187,10 +187,10 @@
 
 			<label class="control-label" for="hdmi-scn-orient">Screen Orientation</label>
 			<div class="controls">
-				<select id="hdmi-scn-orient" class="config-select-large" name="hdmi_scn_orient" onchange="autoClick('#btn-set-hdmi-scn-orient');" $_ctl_disable>
+				<select id="hdmi-scn-orient" class="config-select-large" name="hdmi_scn_orient" onchange="autoClick('#btn-set-hdmi-scn-orient');">
 					$_select[hdmi_scn_orient]
 				</select>
-				<button id="btn-set-hdmi-scn-orient" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_scn_orient" value="novalue" $_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-hdmi-scn-orient" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_scn_orient" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-scn-orient" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-hdmi-scn-orient" class="config-help-info">
 					Change between Landscape and Portrait orientation. Assumes Landscape is the native orientation.

@@ -205,7 +205,7 @@ if (!file_exists(ETC_MACHINE_INFO)) {
 if (!isset($_SESSION['enable_peppyalsa'])) {
 	$_SESSION['enable_peppyalsa'] = '0';
 }
-// Peppy display ALSA config.d check
+// Peppy display /etc/alsa/config.d check
 if (file_exists(ALSA_PLUGIN_PATH . '/peppy.conf') && file_exists(ALSA_PLUGIN_PATH . '/peppy.conf.hide')) {
 	workerLog('worker: File check:    found both peppy.conf and peppy.conf.hide');
 	if ($_SESSION['peppy_display'] == '1'  || $_SESSION['enable_peppyalsa'] == '1') {
@@ -1365,6 +1365,9 @@ if (file_exists($cfgDir)) {
 	$cfgStatus = 'directory ' . $cfgDir . ' does not exist';
 }
 if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
+	if ($_SESSION['peppy_display'] == '1') {
+		$_SESSION['enable_peppyalsa'] = '1';		
+	}
 	startLocalDisplay();
 }
 

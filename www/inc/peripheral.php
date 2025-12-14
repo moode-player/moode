@@ -86,7 +86,9 @@ function putPeppyConfig($type, $configArray) {
 }
 function getPeppyFolderList($type) {
 	$peppyBaseDir = $type == 'meter' ? PEPPY_METER_OPT_DIR : PEPPY_SPECTRUM_OPT_DIR;
-	return glob($peppyBaseDir . '/*/', GLOB_ONLYDIR);
+	$array = glob($peppyBaseDir . '/*/', GLOB_ONLYDIR);
+	rsort($array, SORT_NATURAL);
+	return $array;
 }
 function getPeppyFolderContents($type, $contentDir) {
 	$peppyBaseDir = $type == 'meter' ? PEPPY_METER_OPT_DIR : PEPPY_SPECTRUM_OPT_DIR;

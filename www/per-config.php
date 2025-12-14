@@ -24,13 +24,13 @@ if (isset($_POST['update_local_display'])) {
             submitJob('local_display', $_POST['local_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_LOCALDISPLAY_STARTING);
 			phpSession('write', 'local_display', $_POST['local_display']);
         } else {
-			if ($_SESSION['enable_peppyalsa'] == '1') {
+			/*if ($_SESSION['enable_peppyalsa'] == '1') {
 				$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 				$_SESSION['notify']['msg'] = 'Turn PeppyALSA driver off before turning WebUI off.';
-			} else {
+			} else {*/
 				submitJob('local_display', $_POST['local_display']);
 				phpSession('write', 'local_display', $_POST['local_display']);
-			}
+			//}
         }
     }
 }
@@ -66,13 +66,6 @@ if (isset($_POST['update_disable_gpu_chromium'])) {
     }
 }
 
-if (isset($_POST['update_enable_peppyalsa'])) {
-    if (isset($_POST['enable_peppyalsa']) && $_POST['enable_peppyalsa'] != $_SESSION['enable_peppyalsa']) {
-        $_SESSION['enable_peppyalsa'] = $_POST['enable_peppyalsa'];
-        submitJob('enable_peppyalsa', $_POST['enable_peppyalsa']);
-    }
-}
-
 // PeppyMeter
 
 if (isset($_POST['update_peppy_display'])) {
@@ -86,10 +79,12 @@ if (isset($_POST['update_peppy_display'])) {
 				$msg = NOTIFY_MSG_PEPPYDISPLAY_STARTING;
 				submitJob('peppy_display', $_POST['peppy_display'], NOTIFY_TITLE_INFO, NOTIFY_MSG_PEPPYDISPLAY_STARTING);
 				phpSession('write', 'peppy_display', $_POST['peppy_display']);
+				$_SESSION['enable_peppyalsa'] = $_POST['peppy_display'];
 			}
 		} else {
 			submitJob('peppy_display', $_POST['peppy_display']);
 			phpSession('write', 'peppy_display', $_POST['peppy_display']);
+			$_SESSION['enable_peppyalsa'] = $_POST['peppy_display'];
 		}
 	}
 }
@@ -107,6 +102,13 @@ if (isset($_POST['update_peppy_display_type'])) {
 
 if (isset($_POST['update_restart_peppy_display'])) {
 	submitJob('peppy_display_restart', '', NOTIFY_TITLE_INFO, NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+
+if (isset($_POST['update_enable_peppyalsa'])) {
+	if (isset($_POST['enable_peppyalsa']) && $_POST['enable_peppyalsa'] != $_SESSION['enable_peppyalsa']) {
+		$_SESSION['enable_peppyalsa'] = $_POST['enable_peppyalsa'];
+		submitJob('enable_peppyalsa', $_POST['enable_peppyalsa']);
+	}
 }
 
 // General
@@ -262,7 +264,11 @@ phpSession('close');
 
 // WebUI and Peppy on/off disables
 $_webui_on_off_disable = $_SESSION['peppy_display'] == '1' ? 'disabled' : '';
-$_peppy_on_off_disable = ($_SESSION['local_display'] == '1' || allowPeppyInAlsaChain() == false) ? 'disabled' : '';
+$_peppy_on_off_disable = (
+	$_SESSION['local_display'] == '1' ||
+	($_SESSION['enable_peppyalsa'] == '1' && $_SESSION['peppy_display'] == '0') ||
+	allowPeppyInAlsaChain() == false
+) ? 'disabled' : '';
 
 // ATTACHED DISPLAYS
 
@@ -296,10 +302,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALDISPLAY) {
 	$autoClick = " onchange=\"autoClick('#btn-set-disable-gpu-chromium');\"";
 	$_select['disable_gpu_chromium_on']  .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-1\" value=\"on\" " . (($_SESSION['disable_gpu_chromium'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['disable_gpu_chromium_off'] .= "<input type=\"radio\" name=\"disable_gpu_chromium\" id=\"toggle-disable-gpu-chromium-2\" value=\"off\" " . (($_SESSION['disable_gpu_chromium'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-
-	$autoClick = " onchange=\"autoClick('#btn-set-enable-peppyalsa');\" " . $_webui_ctl_disable;
-	$_select['enable_peppyalsa_on']  .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-1\" value=\"1\" " . (($_SESSION['enable_peppyalsa'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	$_select['enable_peppyalsa_off'] .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-2\" value=\"0\" " . (($_SESSION['enable_peppyalsa'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 } else {
 	$_feat_localdisplay = 'hide';
 }
@@ -310,6 +312,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	$_feat_peppydisplay = '';
 	if ($_SESSION['peppy_display'] == '1') {
 		$_peppy_ctl_disable = '';
+		$_peppyalsa_ctl_disable = 'disabled';
 		$_peppy_link_disable = '';
         $_screen_res_peppy_display = '<span class="config-help-static">'
 			. sysCmd('DISPLAY=:0 xrandr --query | grep " connected" | cut -d" " -f1')[0]
@@ -318,7 +321,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
             . '<a aria-label="Refresh" href="per-config.php"><i class="fa-solid fa-sharp fa-redo dx"></i></a>'
             . '</span>';
 	} else {
-		$_peppy_ctl_disable = 'disabled';
+		$_peppy_ctl_disable = '';
+		$_peppyalsa_ctl_disable = '';
 		$_peppy_link_disable = 'onclick="return false;"';
         $_screen_res_peppy_display = '';
 	}
@@ -326,6 +330,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\" " . $_peppy_on_off_disable;
 	$_select['peppy_display_on']  .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-1\" value=\"1\" " . (($_SESSION['peppy_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['peppy_display_off'] .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-2\" value=\"0\" " . (($_SESSION['peppy_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	# PeppyALSA driver on|off
+	$autoClick = " onchange=\"autoClick('#btn-set-enable-peppyalsa');\" " . $_peppyalsa_ctl_disable;
+	$_select['enable_peppyalsa_on']  .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-1\" value=\"1\" " . (($_SESSION['enable_peppyalsa'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['enable_peppyalsa_off'] .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-2\" value=\"0\" " . (($_SESSION['enable_peppyalsa'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	# Display type
 	$_select['peppy_display_type'] .= "<option value=\"meter\" " . (($_SESSION['peppy_display_type'] == 'meter') ? "selected" : "") . ">Meter</option>\n";
 	$_select['peppy_display_type'] .= "<option value=\"spectrum\" " . (($_SESSION['peppy_display_type'] == 'spectrum') ? "selected" : "") . ">Spectrum</option>\n";
@@ -347,15 +355,15 @@ $_select['scn_blank'] .= "<option value=\"1200\" " . (($_SESSION['scn_blank'] ==
 $_select['scn_blank'] .= "<option value=\"1800\" " . (($_SESSION['scn_blank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 $_select['scn_blank'] .= "<option value=\"3600\" " . (($_SESSION['scn_blank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
 
-$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\" " . $_ctl_disable;
+$autoClick = " onchange=\"autoClick('#btn-set-wake-display');\"";
 $_select['wake_display_on']  .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['wake_display_off'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle-wake-display-2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-$autoClick = " onchange=\"autoClick('#btn-set-scn-cursor');\" " . $_ctl_disable;
+$autoClick = " onchange=\"autoClick('#btn-set-scn-cursor');\"";
 $_select['scn_cursor_on']  .= "<input type=\"radio\" name=\"scn_cursor\" id=\"toggle-scn-cursor-1\" value=\"1\" " . (($_SESSION['scn_cursor'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['scn_cursor_off'] .= "<input type=\"radio\" name=\"scn_cursor\" id=\"toggle-scn-cursor-2\" value=\"0\" " . (($_SESSION['scn_cursor'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-$autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\" " . $_ctl_disable;
+$autoClick = " onchange=\"autoClick('#btn-set-on-screen-kbd');\"";
 $_select['on_screen_kbd_on']  .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-1\" value=\"On\" " . (($_SESSION['on_screen_kbd'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['on_screen_kbd_off'] .= "<input type=\"radio\" name=\"on_screen_kbd\" id=\"toggle-on-screen-kbd-2\" value=\"Off\" " . (($_SESSION['on_screen_kbd'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 

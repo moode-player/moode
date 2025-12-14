@@ -410,7 +410,8 @@ RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_PEPPYDISPLAY)) -ne 0 ]; then
 		echo -e "P E P P Y   D I S P L A Y"
 		echo -e "\nPeppy display\t\t= $peppy_display\c"
-		echo -e "\nPeppy type\t\t= $peppy_display_type\n"
+		echo -e "\nPeppy type\t\t= $peppy_display_type\c"
+		echo -e "\nPeppyALSA\t\t= $enable_peppyalsa\n"
 	fi
 }
 
@@ -919,6 +920,8 @@ on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
+value=$(moodeutl -d -gv "enable_peppyalsa")
+[[ "$value" = "1" ]] && enable_peppyalsa="On" || enable_peppyalsa="Off"
 chromium_ver=$(moodeutl --chromiumrel)
 dsi_scn_brightness=$(moodeutl -d -gv "dsi_scn_brightness")
 value=$(moodeutl -d -gv usb_volknob)

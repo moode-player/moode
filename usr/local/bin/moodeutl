@@ -713,10 +713,13 @@ function setDisplay($argv) {
 			$valid = false;
 		}
 		if ($valid) {
-			shell_exec('sqlite3 ' .  SQLDB_PATH .
-				" \"UPDATE cfg_system SET value='" . $localDisplay . "' WHERE param='local_display'\"");
-			shell_exec('sqlite3 ' .  SQLDB_PATH .
-				" \"UPDATE cfg_system SET value='" . $peppyDisplay . "' WHERE param='peppy_display'\"");
+			setSessionId();
+			session_start();
+			$_SESSION['local_display'] = $localDisplay;
+			$_SESSION['peppy_display'] = $peppyDisplay;
+			session_write_close();
+			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $localDisplay . "' WHERE param='local_display'\"");
+			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $peppyDisplay . "' WHERE param='peppy_display'\"");
 			shell_exec('systemctl restart localdisplay');
 		}
 	} else {
