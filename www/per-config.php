@@ -259,11 +259,7 @@ phpSession('close');
 
 // WebUI and Peppy on/off disables
 $_webui_on_off_disable = $_SESSION['peppy_display'] == '1' ? 'disabled' : '';
-$_peppy_on_off_disable = (
-	$_SESSION['local_display'] == '1' ||
-	($_SESSION['enable_peppyalsa'] == '1' && $_SESSION['peppy_display'] == '0') ||
-	allowPeppyInAlsaChain() == false
-) ? 'disabled' : '';
+$_peppy_on_off_disable = ($_SESSION['local_display'] == '1' || allowPeppyInAlsaChain() === false) ? 'disabled' : '';
 
 // ATTACHED DISPLAYS
 
