@@ -1679,10 +1679,10 @@ if ($_SESSION['hdmi_cec'] == 'on' && ($_SESSION['local_display'] == '1' || $_SES
 
 	if ($drmCardID != 'undefined') {
 		sysCmd('cec-ctl --device=0 --playback "--phys-addr-from-edid=/sys/class/drm/' . $drmCardID . '/edid"');
-		$cecSourceAddress = trim(sysCmd('cec-ctl --skip-info --show-topology | grep ": Playback" | cut -d":" -f1')[0]);
-		sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecSourceAddress);
+		$cecPhysicalAddress = trim(sysCmd('cec-ctl --skip-info --physical-address')[0]);
+		sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecPhysicalAddress);
 		sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on');
-		workerLog('worker: HDMI display:     drm-card=' . $drmCardID . ', cec-source-addr=' . $cecSourceAddress);
+		workerLog('worker: HDMI display:     drm-card=' . $drmCardID . ', cec-source-addr=' . $cecPhysicalAddress);
 	} else {
 		workerLog('worker: HDMI display:     drm-card=' . $drmCardID);
 	}
@@ -3804,8 +3804,8 @@ function runQueuedJob() {
 			}
 			// Turn display off
 			if ($_SESSION['w_queue'] == 'poweroff' && $_SESSION['local_display'] == '1') {
-				$cecSourceAddress = trim(sysCmd('cec-ctl --skip-info --show-topology | grep ": Playback" | cut -d":" -f1')[0]);
-				sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecSourceAddress);
+				$cecPhysicalAddress = trim(sysCmd('cec-ctl --skip-info --physical-address')[0]);
+				sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecPhysicalAddress);
 				sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --standby');
 				workerLog('worker: Display turned off');
 			}
