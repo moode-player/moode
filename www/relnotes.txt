@@ -24,7 +24,6 @@ Updates:
 - UPD: Improve Peripheral section of startup log
 
 Bug fixes
-- FIX: Shairport-sync 4.3.7 in Raspberry Pi repo is AirPlay1
 - FIX: Cec-ctl param to get phy address changed causing --standby to fail
 - FIX: Moode meters v2 1280x720 blue,emerald,gold are broken
 - FIX: Screen rotation not restored
