@@ -27,9 +27,6 @@ if (isset($_POST['update_bt_settings'])) {
 	if (isset($_POST['btsvc']) && $_POST['btsvc'] != $_SESSION['btsvc']) {
 		$update = true;
 		phpSession('write', 'btsvc', $_POST['btsvc']);
-		if ($_POST['btsvc'] == '0') {
-			phpSession('write', 'pairing_agent', '0');
-		}
 	}
 	if (isset($update)) {
 		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"');

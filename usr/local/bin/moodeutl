@@ -662,7 +662,6 @@ function listAudioOverlays() {
 
 function bluetoothReset() {
 	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='btsvc'\"");
-	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='pairing_agent'\"");
 	echo 'Bluetooth reset to off, reboot required' . "\n";
 }
 
