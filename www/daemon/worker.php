@@ -3065,7 +3065,7 @@ function runQueuedJob() {
 			stopBluetooth();
 			sysCmd('/var/www/util/vol.sh -restore');
 			phpSession('write', 'btactive', '0');
-			('btactive0');
+			sendFECmd('btactive0');
 			if ($_SESSION['btsvc'] == 1) {
 				$status = startBluetooth();
 				if ($status != 'started') {
