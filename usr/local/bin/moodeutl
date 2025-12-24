@@ -198,7 +198,7 @@ Moode utility functions
  -U\t\tCheck station urls, list only unplayable
  --reboot\t(sudo) Restart the system
  --shutdown\t(sudo) Shut down the system
- --setdisplay\t(sudo) Set WebUI or Peppy display [webui | peppy]
+ --setdisplay\t(sudo) Set WebUI or Peppy display [webui | peppy | toggle]
  --hwparams\tPrint ALSA hardware params [cardnum]
  --btreset\tReset Bluetooth to off
  --odcclear\tClear output device cache
@@ -708,8 +708,23 @@ function setDisplay($argv) {
 			$localDisplay = '0';
 			$peppyDisplay = '1';
 			$valid = true;
+		} else if ($argv[2] == 'toggle') {
+			$webuiOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='local_display'\""));
+			$peppyOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='peppy_display'\""));
+			if ($webuiOn == '1') {
+				$localDisplay = '0';
+				$peppyDisplay = '1';
+				$valid = true;
+			} else if ($peppyOn == '1') {
+				$localDisplay = '1';
+				$peppyDisplay = '0';
+				$valid = true;
+			} else {
+				fwrite(STDERR, "Invalid option: WebUI or Peppy must be on first\n");
+				$valid = false;
+			}
 		} else {
-			fwrite(STDERR, "Invalid option [webui | peppy]\n");
+			fwrite(STDERR, "Invalid option: valid values are [webui | peppy | toggle]\n");
 			$valid = false;
 		}
 		if ($valid) {
