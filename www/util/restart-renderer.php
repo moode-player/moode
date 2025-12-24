@@ -76,14 +76,13 @@ phpSession('close');
 function restartBluetooth($stopOnly) {
 	stopBluetooth();
 	if ($stopOnly === false) {
+		// Restore MPD volume
 		sysCmd('/var/www/util/vol.sh -restore');
 		// Reset to inactive
 		phpSession('write', 'btactive', '0');
 		// Dismiss active screen
 		sendFECmd('btactive0');
-
-		// Restore MPD volume and start Bluetooth
-		sysCmd('/var/www/util/vol.sh -restore');
+		// Start Bluetooth
 		$status = startBluetooth();
 		if ($status != 'started') {
 			echo $status;
