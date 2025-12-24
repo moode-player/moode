@@ -15,11 +15,14 @@
 #
 ################################################################################
 
+New features
+- NEW: Moodeutl option to set local display to [webui|peppy|toggle]
+
 Updates:
 - UPD:
 
 Bug fixes
-- FIX: 
+- FIX: When Bluetooth is turned off the "Active" screen is not immediately cleared
 
 ################################################################################
 #
