@@ -154,7 +154,7 @@ switch ($_GET['cmd']) {
 	/*case 'clear_add_group':*/
 	case 'clear_play_group':
 		$cmds = array_merge(array('clear'), addGroupToQueue($_POST['path']));
-
+		updLibRecentPlaylistVar('None');
 		if ($_GET['cmd'] == 'clear_play_group') {
 			array_push($cmds, 'play'); // Defaults to pos 0
 		}
