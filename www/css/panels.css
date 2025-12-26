@@ -200,7 +200,7 @@ html {background-color:inherit;}
 #countdown div {margin:0 auto;} /* Needed to center the knob */
 #countdown-display {position:absolute;top:46%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:2.4vw;font-weight:500;cursor:pointer;}
 #total {position:absolute;top:62%;left:50%;transform:translate(-50%);font-size:1.5vw;}
-.total-radio {background-image:var(--radiobadge);background-position:center center;background-size:100%;background-repeat:no-repeat;width:3.5em;height:20px;margin-left:0 !important;}
+.total-radio {background-image:var(--radiobadge);background-position:center center;background-size:100%;background-repeat:no-repeat;width:3.5em;height:1.65em;margin-left:0 !important;}
 #playbtns,
 #playbtns .btn-group {font-size:1em;margin:1em 0;}
 #playbtns .play {font-size:3.25vw;padding:1.25rem;}
