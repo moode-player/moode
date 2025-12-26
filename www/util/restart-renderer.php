@@ -16,6 +16,8 @@ session_id(phpSession('get_sessionid'));
 phpSession('open');
 
 $option = isset($argv[1]) ? $argv[1] : '';
+// This param is passed by moodeutl function stopAllRenderers()
+// Ex: /var/www/util/restart-renderer.php --bluetooth --stop
 $stopOnly = (isset($argv[2]) && $argv[2] == '--stop') ? true : false;
 
 switch ($option) {
