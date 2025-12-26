@@ -77,14 +77,14 @@ if (empty($onoff || $onoff != 'on' || $onoff != 'off')) {
 }
 
 function onoffBluetooth($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['btsvc'] == '0') {
 		phpSession('write', 'btsvc', '1');
 		sysCmd('/var/www/util/vol.sh -restore');
 		$status = startBluetooth();
 		if ($status != 'started') {
 			echo $status;
 		}
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['btsvc'] == '1') {
 		phpSession('write', 'btsvc', '0');
 		stopBluetooth();
 		sysCmd('/var/www/util/vol.sh -restore');
@@ -94,70 +94,70 @@ function onoffBluetooth($onoff) {
 }
 
 function onoffAirPlay($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['airplaysvc'] == '0') {
 		phpSession('write', 'airplaysvc', '1');
 		startAirPlay();
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['airplaysvc'] == '1') {
 		phpSession('write', 'airplaysvc', '0');
 		stopAirPlay();
 	}
 }
 
 function onoffSpotify($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['spotifysvc'] == '0') {
 		phpSession('write', 'spotifysvc', '1');
 		startSpotify();
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['spotifysvc'] == '1') {
 		phpSession('write', 'spotifysvc', '0');
 		stopSpotify();
 	}
 }
 
 function onoffDeezer($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['deezersvc'] == '0') {
 		phpSession('write', 'deezersvc', '1');
 		startDeezer();
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['deezersvc'] == '1') {
 		phpSession('write', 'deezersvc', '0');
 		stopDeezer();
 	}
 }
 
 function onoffUPnP($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['upnpsvc'] == '0') {
 		phpSession('write', 'upnpsvc', '1');
 		startUPnP();
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['upnpsvc'] == '1') {
 		phpSession('write', 'upnpsvc', '0');
 		stopUPnP();
 	}
 }
 
 function onoffSqueezelite($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['slsvc'] == '0') {
 		phpSession('write', 'slsvc', '1');
 		startSqueezelite();
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['slsvc'] == '1') {
 		phpSession('write', 'slsvc', '0');
 		stopSqueezelite();
 	}
 }
 
 function onoffPlexamp($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['pasvc'] == '0') {
 		phpSession('write', 'pasvc', '1');
 		startPlexamp();
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['pasvc'] == '1') {
 		phpSession('write', 'pasvc', '0');
 		stopPlexamp();
 	}
 }
 
 function onoffRoonBridge($onoff) {
-	if ($onoff == 'on') {
+	if ($onoff == 'on' && $_SESSION['rbsvc'] == '0') {
 		phpSession('write', 'rbsvc', '1');
 		startRoonBridge();
-	} else {
+	} else if ($onoff == 'off' && $_SESSION['rbsvc'] == '1') {
 		phpSession('write', 'rbsvc', '0');
 		stopRoonBridge();
 	}
