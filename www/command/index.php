@@ -216,19 +216,19 @@ switch ($cmd[0]) {
 		echo json_encode(array('info' => 'Library update submitted'));
 		break;
 	case 'restart_renderer': // --bluetooth | --airplay | --spotify | --pleezer | --squeezelite | --roonbridge
-		$result = sysCmd('/var/www/util/restart-renderer.php' . getArgs($cmd));
-		echo empty($result) ?
-			json_encode(array('info' => 'Render restart submitted')) :
+		$result = sysCmd('moodeutl -R' . getArgs($cmd));
+		echo $result[0] == 'Renderer restarted' ?
+			json_encode(array('info' => 'Renderer restart submitted')) :
 			json_encode(array('alert' => 'Missing or invalid argument'));
 		break;
 	case 'renderer_onoff': // --bluetooth | --airplay | --spotify | --pleezer | --squeezelite | --roonbridge [on|off]
-		$result = sysCmd('/var/www/util/renderer-onoff.php' . getArgs($cmd));
-		echo empty($result) ?
+		$result = sysCmd('moodeutl -Ro' . getArgs($cmd));
+		echo str_contains($result[0], 'Renderer turned') ?
 			json_encode(array('info' => 'Renderer ' . getArgs($cmd) . ' submitted')) :
 			json_encode(array('alert' => 'Missing or invalid argument'));
 		break;
 	case 'set_display': // webui | peppy | toggle
-		$result = sysCmd('moodeutl --setdisplay ' . getArgs($cmd));
+		$result = sysCmd('moodeutl --setdisplay' . getArgs($cmd));
 		echo empty($result) ?
 			json_encode(array('info' => 'Set display to ' . getArgs($cmd) . ' submitted')) :
 			json_encode(array('alert' => 'Missing or invalid argument'));
