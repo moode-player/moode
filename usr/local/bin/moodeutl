@@ -100,6 +100,9 @@ switch ($option) {
 	case '-R':
 		restartRenderer($argv);
 		break;
+	case '-Ro':
+		rendererOnoff($argv);
+		break;
 	case '-t':
 		tailLog();
 		break;
@@ -193,6 +196,7 @@ Moode utility functions
  -q\t\tQuery sql database
  -r\t\tRestart servers and renderers\n" .
  " -R\t\tRestart renderer [" . $rendererList . "]\n" .
+ " -Ro\t\tRenderer on/off  [" . $rendererList . "] [on|off]\n" .
  " -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
@@ -551,16 +555,14 @@ function restartRenderer($argv) {
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [renderer name]' . "\n";
 		return;
-	}
-	else if (array_key_exists($argv[2], $renderers)) {
+	} else if (array_key_exists($argv[2], $renderers)) {
 		$svcName = $renderers[$argv[2]];
 		$svcOn = trim(shell_exec("sqlite3 " .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='" . $svcName . "'\""));
 		if ($svcOn == '0') {
 			echo 'Renderer is not currently on' . "\n";
 			return;
 		}
-	}
-	else {
+	} else {
 		echo 'Invalid renderer name' . "\n";
 		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
 		return;
@@ -568,6 +570,27 @@ function restartRenderer($argv) {
 
 	sysCmd('/var/www/util/restart-renderer.php ' . $argv[2]);
 	echo 'Renderer restarted' . "\n";
+}
+
+function rendererOnoff($argv) {
+	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
+		'--deezer' => 'deezersvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
+		'--roonbridge' => 'rbsvc');
+
+	if (!isset($argv[2])) {
+		echo 'Missing 2nd argument [renderer name]' . "\n";
+		return;
+	} else if (!array_key_exists($argv[2], $renderers)) {
+		echo 'Invalid renderer name' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
+		return;
+	} else if (!isset($argv[3])) {
+		echo 'Missing 3nd argument [on|off]' . "\n";
+		return;
+	}
+
+	sysCmd('/var/www/util/renderer-onoff.php ' . $argv[2] . ' ' . $argv[3]);
+	echo 'Renderer turned ' . $argv[3] . "\n";
 }
 
 function systemInfo() {

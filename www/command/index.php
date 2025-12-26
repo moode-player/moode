@@ -221,6 +221,12 @@ switch ($cmd[0]) {
 			json_encode(array('info' => 'Render restart submitted')) :
 			json_encode(array('alert' => 'Missing or invalid argument'));
 		break;
+	case 'renderer_onoff': // --bluetooth | --airplay | --spotify | --pleezer | --squeezelite | --roonbridge [on|off]
+		$result = sysCmd('/var/www/util/renderer-onoff.php' . getArgs($cmd));
+		echo empty($result) ?
+			json_encode(array('info' => 'Renderer ' . getArgs($cmd) . ' submitted')) :
+			json_encode(array('alert' => 'Missing or invalid argument'));
+		break;
 
 	// API commands
 	case 'trx_control': // Up to 3 args, result is status or empty, used by renderer event scripts
