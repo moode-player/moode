@@ -16,13 +16,16 @@
 ################################################################################
 
 New features
-- NEW: Moodeutl option to set local display to [webui|peppy|toggle]
+- NEW: Moodeutl option and REST API to set local display to [webui|peppy|toggle]
+- NEW: Moodeutl option and REST API to turn renderer on/off
 
 Updates:
 - UPD:
 
 Bug fixes
 - FIX: When Bluetooth is turned off the "Active" screen is not immediately cleared
+- FIX: Units used to position Radio badge (use em instead of px)
+- FIX: Queue info shows wrong playlist when clear/play album
 
 ################################################################################
 #
