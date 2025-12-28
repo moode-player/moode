@@ -470,13 +470,13 @@ if (empty($wlan0)) {
 	$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 	$cfgSSID = sysCmd("moodeutl -q \"SELECT ssid FROM cfg_ssid WHERE ssid NOT IN ('" .
 		SQLite3::escapeString($cfgNetwork[1]['wlanssid']) . "', 'Activate Hotspot')\"");
-	$altSSIDList = empty($cfgSSID) ? 'None' : implode(',', $cfgSSID);
+	$altSSIDList = empty($cfgSSID) ? 'none' : implode(',', $cfgSSID);
 	workerLog('worker: Wireless: adapter exists');
 	workerLog('worker: Wireless: country ' . $cfgNetwork[1]['wlancc']);
 	workerLog('worker: Wireless: SSID    ' . $cfgNetwork[1]['wlanssid']);
 	workerLog('worker: Wireless: Alt     ' . $altSSIDList);
 	workerLog('worker: Wireless: AP SSID ' . $cfgNetwork[2]['wlanssid']);
-	workerLog('worker: Wireless: AP pwd  ' . (empty($cfgNetwork[2]['wlanpwd']) ? 'Not set' : 'Set'));
+	workerLog('worker: Wireless: AP pwd  ' . (empty($cfgNetwork[2]['wlanpwd']) ? 'not set' : 'ok'));
 
 	if ($cfgNetwork[1]['wlanssid'] == 'None') {
 		// No SSID
@@ -2617,10 +2617,11 @@ function getHdwrRev() {
 function logNetworkInfo($iFace) {
 	$ifaceName = $iFace == 'eth0' ? 'Ethernet: ' : 'Wireless: ';
 	$method = sqlQuery("SELECT method FROM cfg_network WHERE iface='" . $iFace . "'", $GLOBALS['dbh'])[0]['method'];
-
+	$secondaryDns = sqlQuery("SELECT secdns FROM cfg_network WHERE iface='" . $iFace . "'", $GLOBALS['dbh'])[0]['secdns'];
 	$domainName = sysCmd("cat /etc/resolv.conf | awk '/^search/ {print $2; exit}'")[0]; // First entry of possibly many
 	$primaryDns = sysCmd("cat /etc/resolv.conf | awk '/^nameserver/ {print $2; exit}'")[0]; // First entry of possibly many
 	$primaryDns = !empty($primaryDns) ? $primaryDns : 'none found';
+	$secondaryDns = !empty($secondaryDns) ? $secondaryDns : 'not set';
 	$domainName = !empty($domainName) ? $domainName : 'none found';
 
 	workerLog('worker: ' . $ifaceName . 'method  ' . $method);
@@ -2628,6 +2629,7 @@ function logNetworkInfo($iFace) {
 	workerLog('worker: ' . $ifaceName . 'netmask ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $4}'")[0]);
 	workerLog('worker: ' . $ifaceName . 'gateway ' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0]);
 	workerLog('worker: ' . $ifaceName . 'pri DNS ' . $primaryDns);
+	workerLog('worker: ' . $ifaceName . 'sec DNS ' . $secondaryDns);
 	workerLog('worker: ' . $ifaceName . 'domain  ' . $domainName);
 }
 
