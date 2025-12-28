@@ -20,12 +20,14 @@ New features
 - NEW: Moodeutl option and REST API to turn renderer on/off
 
 Updates:
-- UPD:
+- UPD: Add Radio manager show/hide options "Edit hidden" and "Show non-hidden"
+- UPD: Improve network section of startup log
 
 Bug fixes
 - FIX: When Bluetooth is turned off the "Active" screen is not immediately cleared
 - FIX: Units used to position Radio badge (use em instead of px)
 - FIX: Queue info shows wrong playlist when clear/play album
+- FIX: Crossfeed conf file has bad path to bs2b ladspa plugin
 
 ################################################################################
 #
