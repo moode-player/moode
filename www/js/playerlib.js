@@ -2128,14 +2128,11 @@ function renderRadioView(lazyLoad = true) {
         allNonHiddenStations.sort(function(a, b) {
             if (sortTag == 'name') {
                 return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
-            }
-            else if (sortTag == 'genre') {
+            } else if (sortTag == 'genre') {
                 return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
-            }
-            else if (sortTag == 'bitrate') {
+            } else if (sortTag == 'bitrate') {
                 return collator.compare(b[sortTag], a[sortTag]);
-            }
-            else {
+            } else {
                 return collator.compare(a[sortTag], b[sortTag]);
             }
         });
@@ -2145,14 +2142,11 @@ function renderRadioView(lazyLoad = true) {
         regularStations.sort(function(a, b) {
             if (sortTag == 'name') {
                 return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
-            }
-            else if (sortTag == 'genre') {
+            } else if (sortTag == 'genre') {
                 return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
-            }
-            else if (sortTag == 'bitrate') {
+            } else if (sortTag == 'bitrate') {
                 return collator.compare(b[sortTag], a[sortTag]);
-            }
-            else {
+            } else {
                 return collator.compare(a[sortTag], b[sortTag]);
             }
         });
@@ -2173,16 +2167,15 @@ function renderRadioView(lazyLoad = true) {
         });
 
         // Set filtered list
-        if (showHideMoodeStations == 'Show hidden') {
+        if (showHideMoodeStations == 'Edit hidden') {
             data = hiddenMoodeStations;
-        }
-        else if (showHideOtherStations == 'Show hidden') {
+		} else if (showHideMoodeStations == 'Show non-hidden') {
+			data = allNonHiddenStations;
+        } else if (showHideOtherStations == 'Edit hidden') {
             data = hiddenOtherStations;
-        }
-        else if (groupMethod == 'Favorites first') {
+        } else if (groupMethod == 'Favorites first') {
             data = favoriteStations.concat(regularStations);
-        }
-        else if (groupMethod == 'Sort tag' || groupMethod == 'No grouping') {
+        } else if (groupMethod == 'Sort tag' || groupMethod == 'No grouping') {
             data =  allNonHiddenStations;
         }
 
