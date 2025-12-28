@@ -66,9 +66,9 @@ if (isset($_POST['update_disable_gpu_chromium'])) {
 if (isset($_POST['update_peppy_display'])) {
 	if (isset($_POST['peppy_display']) && $_POST['peppy_display'] != $_SESSION['peppy_display']) {
 		if ($_POST['peppy_display'] == '1') {
-			if (($_SESSION['alsaequal'] != 'Off' || $_SESSION['eqfa12p'] != 'Off') && $_SESSION['alsa_output_mode'] == 'plughw') {
+			if (($_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['eqfa12p'] != 'Off') && $_SESSION['alsa_output_mode'] == 'plughw') {
 				$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-				$_SESSION['notify']['msg'] = 'When G-EQ or P-EQ is on, ALSA output mode cannot be "Default".';
+				$_SESSION['notify']['msg'] = 'To run Peppy when Crossfeed, Graphic or Parametric EQ is on, set ALSA output mode to Direct or IEC958.';
 			} else {
 				$title = NOTIFY_TITLE_INFO;
 				$msg = NOTIFY_MSG_PEPPYDISPLAY_STARTING;
