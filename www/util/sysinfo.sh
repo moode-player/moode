@@ -392,6 +392,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nDisable GPU\t\t= $disable_gpu_chromium\c"
 		echo -e "\nHDMI Orient\t\t= $hdmi_scn_orient\c"
 		echo -e "\nHDMI CEC\t\t= $hdmi_cec\c"
+		echo -e "\nHDMI CEC ver\t\t= $hdmi_cec_ver\c"
 		echo -e "\nHDMI 4K 60Hz\t\t= $hdmi_enable_4kp60\c"
 		echo -e "\nDSI Screentype\t\t= $dsi_scn_type\c"
 		echo -e "\nDSI Port\t\t= $dsi_port\c"
@@ -918,6 +919,7 @@ value=$(moodeutl -d -gv "scn_blank")
 [[ "$value" = "off" ]] && scn_blank="Off" || scn_blank="$value Secs"
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
 hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
+hdmi_cec_ver=$(moodeutl -d -gv "hdmi_cec_ver")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
 value=$(moodeutl -d -gv "enable_peppyalsa")

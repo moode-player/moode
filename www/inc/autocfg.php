@@ -669,6 +669,7 @@ function autoConfigSettings() {
 		}],
 		*/
 		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['hdmi_cec_ver'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
 			$_SESSION['hdmi_enable_4kp60'] = $values['hdmi_enable_4kp60'];
 			$value = $values['hdmi_enable_4kp60'] == 'on' ? '1' : '0';

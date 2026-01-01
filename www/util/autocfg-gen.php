@@ -80,6 +80,7 @@ $currentSettings['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
 $currentSettings['scn_blank'] = $_SESSION['scn_blank'];
 $currentSettings['disable_gpu_chromium'] = $_SESSION['disable_gpu_chromium'];
 $currentSettings['hdmi_cec'] = $_SESSION['hdmi_cec'];
+$currentSettings['hdmi_cec_ver'] = $_SESSION['hdmi_cec_ver'];
 $currentSettings['hdmi_enable_4kp60'] = $_SESSION['hdmi_enable_4kp60'];
 $currentSettings['scn_cursor'] = $_SESSION['scn_cursor'];
 $currentSettings['scn_blank'] = $_SESSION['scn_blank'];

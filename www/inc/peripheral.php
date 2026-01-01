@@ -119,3 +119,10 @@ function setScreenBlankTimeout($timeoutSecs) {
 	sysCmd("sed -i 's/xset s.*/xset s " . $timeoutSecs . " 0/' " . $_SESSION['home_dir'] . '/.xinitrc');
 	sysCmd("sed -i 's/xset dpms.*/xset dpms " . $timeoutSecs . " 0 0/' " . $_SESSION['home_dir'] . '/.xinitrc');
 }
+
+function cecControl($cecCmd) {
+	$cecPhysicalAddress = trim(sysCmd('cec-ctl --skip-info --physical-address')[0]);
+	$cecVersion = $_SESSION['hdmi_cec_ver'] == '1.4' ? '--cec-version-1.4' : '';
+	sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecPhysicalAddress);
+	sysCmd('cec-ctl --skip-info --to 0 ' . $cecVersion . ' ' . $cecCmd);
+}

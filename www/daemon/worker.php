@@ -327,11 +327,6 @@ workerLog('worker: Kbd layout:    ' . $_SESSION['keyboard']);
 // HDMI port(s)
 // They are always on in Bookworm
 workerLog('worker: HDMI ports(s): on');
-// HDMI CEC control
-if (!isset($_SESSION['hdmi_cec'])) {
-	$_SESSION['hdmi_cec'] = 'off';
-}
-workerLog('worker: HDMI-CEC:      ' . $_SESSION['hdmi_cec']);
 
 // LED states
 if (!isset($_SESSION['led_state'])) {
@@ -1401,8 +1396,17 @@ if (!isset($_SESSION['on_screen_kbd'])) {
 	$_SESSION['on_screen_kbd'] = 'Enable';
 }
 workerLog('worker: On-screen kbd:    ' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'off' : 'on'));
+workerLog('worker: HDMI port:        ' . 'HDMI-1');
 workerLog('worker: HDMI orientation: ' . $_SESSION['hdmi_scn_orient']);
+// HDMI CEC control
+if (!isset($_SESSION['hdmi_cec'])) {
+	$_SESSION['hdmi_cec'] = 'off';
+}
 workerLog('worker: HDMI CEC control: ' . $_SESSION['hdmi_cec']);
+if (!isset($_SESSION['hdmi_cec_ver'])) {
+	$_SESSION['hdmi_cec_ver'] = '2.0';
+}
+workerLog('worker: HDMI CEC version: ' . $_SESSION['hdmi_cec_ver']);
 // HDMI enable 4k 60Hz (Pi-4 only)
 if (!isset($_SESSION['hdmi_enable_4kp60'])) {
 	$_SESSION['hdmi_enable_4kp60'] = 'off';
@@ -1681,9 +1685,8 @@ if ($_SESSION['hdmi_cec'] == 'on' && ($_SESSION['local_display'] == '1' || $_SES
 
 	if ($drmCardID != 'undefined') {
 		sysCmd('cec-ctl --device=0 --playback "--phys-addr-from-edid=/sys/class/drm/' . $drmCardID . '/edid"');
+		cecControl('--image-view-on');
 		$cecPhysicalAddress = trim(sysCmd('cec-ctl --skip-info --physical-address')[0]);
-		sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecPhysicalAddress);
-		sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on');
 		workerLog('worker: HDMI display:     drm-card=' . $drmCardID . ', cec-source-addr=' . $cecPhysicalAddress);
 	} else {
 		workerLog('worker: HDMI display:     drm-card=' . $drmCardID);
@@ -3808,9 +3811,7 @@ function runQueuedJob() {
 			}
 			// Turn display off
 			if ($_SESSION['w_queue'] == 'poweroff' && $_SESSION['local_display'] == '1') {
-				$cecPhysicalAddress = trim(sysCmd('cec-ctl --skip-info --physical-address')[0]);
-				sysCmd('cec-ctl --skip-info --to 0 --active-source phys-addr=' . $cecPhysicalAddress);
-				sysCmd('cec-ctl --skip-info --to 0 --cec-version-1.4 --standby');
+				cecControl('--standby');
 				workerLog('worker: Display turned off');
 			}
 			// Stop all renderers

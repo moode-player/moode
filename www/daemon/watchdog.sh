@@ -34,10 +34,15 @@ wake_display () {
 	WAKE_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='wake_display'")
 	PEPPY_ACTIVE=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='peppy_display'")
 	SCN_BLANK_ACTIVE=$(sqlite3 $SQLDB "SELECT value from cfg_system WHERE param='peppy_scn_blank_active'")
+	CEC_CONTROL=$(moodeutl -d -gv hdmi_cec)
+	CEC_VERSION=$(moodeutl -d -gv hdmi_cec_ver)
 	if [[ $WAKE_DISPLAY = "1" ]]; then
 		debug_log "wake display: on"
-		debug_log "wake display: send cec-ctl"
-		cec-ctl --skip-info --to 0 --cec-version-1.4 --image-view-on
+		if [[ $CEC_CONTROL = "on" ]]; then
+			[[ "$CEC_VERSION" = "1.4" ]] && CEC_VER_STRING="--cec-version-1.4" || CEC_VER_STRING=""
+			debug_log "wake display: send cec-ctl --skip-info --to 0 $CEC_VER_STRING --image-view-on"
+			cec-ctl --skip-info --to 0 $CEC_VER_STRING --image-view-on
+		fi
 		export DISPLAY=:0
 		if [[ $PEPPY_ACTIVE = "1" && $SCN_BLANK_ACTIVE = "1" ]]; then
 			debug_log "wake display: set peppy_scn_blank_active 0, restart localdisplay"

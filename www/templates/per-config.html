@@ -210,6 +210,18 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="hdmi-cec-ver">CEC version</label>
+			<div class="controls">
+				<select id="hdmi-cec-ver" class="config-select-large" name="hdmi_cec_ver" onchange="autoClick('#btn-set-hdmi-cec-ver');">
+					$_select[hdmi_cec_ver]
+				</select>
+				<button id="btn-set-hdmi-cec-ver" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_hdmi_cec_ver" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hdmi-cec-ver" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-hdmi-cec-ver" class="config-help-info">
+					Set the CEC version to be used. Older devices may require CEC version 1.4.
+				</span>
+			</div>
+
 			<label class="control-label">4K 60Hz rate</label>
 			<div class="controls">
 				<div class="toggle">

@@ -156,7 +156,15 @@ if (isset($_POST['update_hdmi_scn_orient'])) {
 
 if (isset($_POST['update_hdmi_cec'])) {
     if (isset($_POST['hdmi_cec']) && $_POST['hdmi_cec'] != $_SESSION['hdmi_cec']) {
-        phpSession('write', 'hdmi_cec', $_POST['hdmi_cec']);
+		$_SESSION['hdmi_cec'] = $_POST['hdmi_cec'];
+        $_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+        $_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
+    }
+}
+
+if (isset($_POST['update_hdmi_cec_ver'])) {
+    if (isset($_POST['hdmi_cec_ver']) && $_POST['hdmi_cec_ver'] != $_SESSION['hdmi_cec_ver']) {
+		$_SESSION['hdmi_cec_ver'] = $_POST['hdmi_cec_ver'];
         $_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
         $_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
     }
@@ -366,6 +374,9 @@ $_select['hdmi_scn_orient'] .= "<option value=\"portrait\" " . (($_SESSION['hdmi
 $autoClick = " onchange=\"autoClick('#btn-set-hdmi-cec');\"";
 $_select['hdmi_cec_on']  .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-1\" value=\"on\" " . (($_SESSION['hdmi_cec'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['hdmi_cec_off'] .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle-hdmi-cec-2\" value=\"off\" " . (($_SESSION['hdmi_cec'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+$_select['hdmi_cec_ver'] .= "<option value=\"2.0\" " . (($_SESSION['hdmi_cec_ver'] == '2.0') ? "selected" : "") . ">2.0 (Default)</option>\n";
+$_select['hdmi_cec_ver'] .= "<option value=\"1.4\" " . (($_SESSION['hdmi_cec_ver'] == '1.4') ? "selected" : "") . ">1.4 (Compatibility)</option>\n";
 
 $piModel = substr($_SESSION['hdwrrev'], 3, 1);
 $_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
