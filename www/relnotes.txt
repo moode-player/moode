@@ -19,7 +19,7 @@ New features
 - NEW:
 
 Updates:
-- UPD:
+- UPD: Add option for CEC version (2.0 or 1.4)
 
 Bug fixes
 - FIX:
