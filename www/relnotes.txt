@@ -22,7 +22,7 @@ Updates:
 - UPD: Add option for CEC version (2.0 or 1.4)
 
 Bug fixes
-- FIX:
+- FIX: Screen blank not working for the "Never" setting
 
 ################################################################################
 #
