@@ -369,6 +369,16 @@ function stopRoonBridge() {
 	sendFECmd('rbactive0');
 }
 
+// Sendspin
+function startSendspin() {
+	sysCmd('mpc stop');
+	sysCmd('systemctl start sendspin');
+}
+
+function stopSendspin() {
+	sysCmd('systemctl stop sendspin');
+}
+
 // Stop all renderers
 function stopAllRenderers() {
 	$renderers = array(
@@ -379,7 +389,8 @@ function stopAllRenderers() {
 		'upnpsvc'	 => 'stopUPnP',
 		'slsvc'		 => 'stopSqueezeLite',
 		'pasvc'		 => 'stopPlexamp',
-		'rbsvc'		 => 'stopRoonBridge'
+		'rbsvc'		 => 'stopRoonBridge',
+		'sendspinsvc' => 'stopSendspin'
 	);
 
 	// Watchdog (so monitored renderers are not auto restarted)

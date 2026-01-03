@@ -140,6 +140,9 @@ AUDIO_PARAMETERS() {
 	if [ $(($feat_bitmask & $FEAT_ROONBRIDGE)) -ne 0 ]; then
 		echo -e "\nRoonBridge\t\t= $rbsvc\c"
 	fi
+	if [ $(($feat_bitmask & $FEAT_SENDSPIN)) -ne 0 ]; then
+		echo -e "\nSendspin server\t= $sendspinsvc\c"
+	fi
 	if [ $(($feat_bitmask & $FEAT_GPIO)) -ne 0 ]; then
 		echo -e "\nGPIO button handler\t= $gpio_svc\c"
 	fi
@@ -383,6 +386,11 @@ RENDERER_SETTINGS() {
 		fi
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_SENDSPIN)) -ne 0 ]; then
+		echo -e "S E N D S P I N"
+		echo -e "\nSendspin information here\c"
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_LOCALDISPLAY)) -ne 0 ]; then
 		echo -e "A T T A C H E D   D I S P L A Y"
 		echo -e "\nScreen blank\t\t= $scn_blank\c"
@@ -445,6 +453,7 @@ FEAT_PLEXAMP=8192
 FEAT_BLUETOOTH=16384
 FEAT_MULTIROOM=65536
 FEAT_PEPPYDISPLAY=131072
+FEAT_SENDSPIN=262144
 
 # Selective resampling bitmask
 SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate

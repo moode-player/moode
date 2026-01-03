@@ -202,8 +202,9 @@ const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
-//						-------
-//						  228279
+const FEAT_SENDSPIN     = 262144;   // y Sendspin renderer
+//					      ------
+//						  524287
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate

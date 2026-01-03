@@ -200,6 +200,17 @@ if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
 	submitJob('rbrestart', '', NOTIFY_TITLE_INFO, NAME_ROONBRIDGE . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
+// Sendspin
+if (isset($_POST['update_sendspin_settings'])) {
+	if (isset($_POST['sendspinsvc']) && $_POST['sendspinsvc'] != $_SESSION['sendspinsvc']) {
+		$update = true;
+		phpSession('write', 'sendspinsvc', $_POST['sendspinsvc']);
+	}
+	if (isset($update)) {
+		submitJob('sendspinsvc');
+	}
+}
+
 phpSession('close');
 
 // Bluetooth
@@ -355,6 +366,14 @@ if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE)) {
 } else {
 	$_feat_roonbridge = 'hide';
 }
+
+// Sendspin
+$_feat_sendspin = $_SESSION['feat_bitmask'] & FEAT_SENDSPIN ? '' : 'hide';
+$_SESSION['sendspinsvc'] == '1' ? $_sendspin_btn_disable = '' : $_sendspin_btn_disable = 'disabled';
+$_SESSION['sendspinsvc'] == '1' ? $_sendspin_link_disable = '' : $_sendspin_link_disable = 'onclick="return false;"';
+$autoClick = " onchange=\"autoClick('#btn-set-sendspinsvc');\"";
+$_select['sendspinsvc_on']  .= "<input type=\"radio\" name=\"sendspinsvc\" id=\"toggle-sendspinsvc-1\" value=\"1\" " . (($_SESSION['sendspinsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['sendspinsvc_off'] .= "<input type=\"radio\" name=\"sendspinsvc\" id=\"toggle-sendspinsvc-2\" value=\"0\" " . (($_SESSION['sendspinsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 waitWorker('ren-config');
 

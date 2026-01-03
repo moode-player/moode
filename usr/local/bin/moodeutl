@@ -36,7 +36,8 @@ $features = array(
 	FEAT_BLUETOOTH => 'Bluetooth renderer',
 	FEAT_DEVTWEAKS	=> 'Developer tweaks',
 	FEAT_MULTIROOM	=> 'Multiroom audio',
-	FEAT_PEPPYDISPLAY => 'PeppyMeter display'
+	FEAT_PEPPYDISPLAY => 'PeppyMeter display',
+	FEAT_SENDSPIN => 'Sendspin renderer'
 );
 
 $featBitmask = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));
@@ -160,7 +161,7 @@ switch ($option) {
 		echo VERSION . "\n";
 		break;
 	case '--help':
-		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge]
+		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge | --sendspin]
 		$btArg = $featBitmask & FEAT_BLUETOOTH ? '--bluetooth | ' : '';
 		$apArg = $featBitmask & FEAT_AIRPLAY ? '--airplay | ' : '';
 		$spArg = $featBitmask & FEAT_SPOTIFY ? '--spotify | ' : '';
@@ -169,7 +170,8 @@ switch ($option) {
 		$slArg = $featBitmask & FEAT_SQUEEZELITE ? '--squeezelite | ' : '';
 		$paArg = $featBitmask & FEAT_PLEXAMP ? '--plexamp | ' : '';
 		$rbArg = $featBitmask & FEAT_ROONBRIDGE ? '--roonbridge | ' : '';
-		$rendererList = rtrim($btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg, ' | ');
+		$ssArg = $featBitmask & FEAT_SENDSPIN ? '--sendspin | ' : '';
+		$rendererList = rtrim($btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg . $ssArg, ' | ');
 		echo
 "Usage: moodeutl [OPTION]
 Moode utility functions
@@ -545,12 +547,24 @@ function stopAllRenderers($featBitmask) {
 	} else {
 		echo "- roonbridge\t\tfeature disabled\n";
 	}
+
+	if ($featBitmask & FEAT_SENDSPIN) {
+		$sendspinSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sendspinsvc'\""));
+		if ($sendspinSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --sendspin --stop');
+			echo "- sendspin\t\tstopped\n";
+		} else {
+			echo "- sendspin\t\tnot on\n";
+		}
+	} else {
+		echo "- sendspin\t\tfeature disabled\n";
+	}
 }
 
 function restartRenderer($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
 		'--deezer' => 'deezersvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
-		'--roonbridge' => 'rbsvc');
+		'--roonbridge' => 'rbsvc', '--sendspin' => 'sendspinsvc');
 
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [renderer name]' . "\n";
@@ -564,7 +578,7 @@ function restartRenderer($argv) {
 		}
 	} else {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge, --sendspin' . "\n";
 		return;
 	}
 
@@ -575,14 +589,14 @@ function restartRenderer($argv) {
 function rendererOnoff($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
 		'--deezer' => 'deezersvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
-		'--roonbridge' => 'rbsvc');
+		'--roonbridge' => 'rbsvc', '--sendspin' => 'sendspinsvc');
 
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [renderer name]' . "\n";
 		return;
 	} else if (!array_key_exists($argv[2], $renderers)) {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge, --sendspin' . "\n";
 		return;
 	} else if (!isset($argv[3])) {
 		echo 'Missing 3nd argument [on|off]' . "\n";
