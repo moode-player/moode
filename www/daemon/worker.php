@@ -1191,12 +1191,13 @@ workerLog('worker: RoonBridge:      ' . $status);
 
 // Start Sendspin renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SENDSPIN) {
-	if (isset($_SESSION['sendspinsvc']) && $_SESSION['sendspinsvc'] == 1) {
-		$status = 'started';
-		startSendspin();
-	} else {
-		$status = 'available';
-	}
+	if ($_SESSION['sendspin_installed'] == 'yes') {
+		if (isset($_SESSION['sendspinsvc']) && $_SESSION['sendspinsvc'] == 1) {
+			$status = 'started';
+			startSendspin();
+		} else {
+			$status = 'available';
+		}
 	} else {
 		$status = 'not installed';
 	}
