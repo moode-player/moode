@@ -201,13 +201,27 @@ $ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1"
 // Get link quality and signal level
 if (!empty($ipAddr[0])) {
 	if ($_SESSION['apactivated'] === true) {
-		$_wlan0stats = $ipAddr[0] . ' Hotspot active';
+		// Network
+		$conn = explode(':', sysCmd('nmcli -f SSID,CHAN,SECURITY,FREQ -t dev wifi | grep -w "' . $cfgNetwork[2]['wlanssid'] . '"')[0]);
+		$ssid = $conn[0];
+		// Connection
+		$chan = $conn[1];
+		$sec = $conn[2];
+		$freq = substr($conn[3], 0, 1) == '5' ? '5GHz' : '2.4GHz';
+		// Stats
+		$_wlan0stats =
+			'Address: ' . $ipAddr[0] . ' (Hotspot active)' . '<br>' .
+			'Network: ' . $ssid . ', ' . $sec . ', ' . $freq . ', chan ' . $chan;
 	} else {
 		// Network
-		$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
-		$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3');
+		$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'")[0];
+		$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3')[0];
 		// Connection
-		$con = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY,SSID -t dev wifi | grep "' . $ssid[0] . '"')[0]);
+		$conn = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY,SSID,FREQ -t dev wifi | grep -w "' . $ssid . '"')[0]);
+		$chan = $conn[0];
+		$rate = $conn[1];
+		$sec = $conn[2];
+		$freq = substr($conn[4], 0, 1) == '5' ? '5GHz' : '2.4GHz';
 		// Quality
 		$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 		$array = explode('=', $signal[0]);
@@ -217,11 +231,11 @@ if (!empty($ipAddr[0])) {
 		$quality = $qual1 > 0 ? round((100 * $qual0) / $qual1) : 0;
 		$lev = explode('/', $array[2]);
 		$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
-
+		// Stats
 		$_wlan0stats =
 			'Address: ' . $ipAddr[0] . '<br>' .
-			'Network: ' . $ssid[0] . ' (' . $bssid[0] . '), ' . $con[2] . '<br>' .
-			'Channel: ' . $con[0] . ', ' . $con[1] . ', qual ' .  $quality . '%, level ' . $level;
+			'Network: ' . $ssid . ' (' . $bssid . '), ' . $sec . ', ' . $freq . '<br>' .
+			'Channel: ' . $chan . ', ' . $rate . ', qual ' .  $quality . '%, level ' . $level;
 	}
 } else {
 	$_wlan0stats = $_SESSION['apactivated'] === true ? 'Unable to activate Hotspot' : 'Not in use';
@@ -330,7 +344,7 @@ $_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
 $_wlan0apdproto .= "<option value=\"rsn\" " . ($_SESSION['approto'] == 'rsn' ? 'selected' : '') . " >RSN (Default)</option>\n";
 $_wlan0apdproto .= "<option value=\"wpa\" " . ($_SESSION['approto'] == 'wpa' ? 'selected' : '') . " >WPA</option>\n";
 $_ap_network = 'http://' . explode('/', $_SESSION['ap_network_addr'])[0];
-$_ap_host = 'http://' . $_wlan0apdssid . '.local';
+$_ap_host = 'http://' . $_SESSION['hostname'] . '.local';
 if (empty($_wlan0apdpwd)) {
 	phpSession('open');
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;

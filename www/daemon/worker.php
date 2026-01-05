@@ -2657,7 +2657,9 @@ function logNetworkInfo($iFace) {
 	$secondaryDns = !empty($secondaryDns) ? $secondaryDns : 'not set';
 	$domainName = !empty($domainName) ? $domainName : 'none found';
 
-	workerLog('worker: ' . $ifaceName . 'method  ' . $method);
+	if ($_SESSION['apactivated'] === false) {
+		workerLog('worker: ' . $ifaceName . 'method  ' . $method);
+	}
  	workerLog('worker: ' . $ifaceName . 'address ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $2}'")[0]);
 	workerLog('worker: ' . $ifaceName . 'netmask ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $4}'")[0]);
 	workerLog('worker: ' . $ifaceName . 'gateway ' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0]);
