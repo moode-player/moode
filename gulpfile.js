@@ -458,11 +458,11 @@ gulp.task('minifyhtml', function (done) {
 });
 
 gulp.task('artwork', function(done) {
-    gulp.src([ pkg.app.src+'/webfonts/**/*'
-              ,pkg.app.src+'/fonts/**/*'
-              ,pkg.app.src+'/images/**/*' ], {base:pkg.app.src})
-        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dest})))
-//        .pipe($.size({showFiles: true, total: true}))
+    gulp.src([ pkg.app.src+'/webfonts/**/*',
+               pkg.app.src+'/fonts/**/*',
+               pkg.app.src+'/images/**/*' ], {base: pkg.app.src, encoding: false})
+        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dest })))
+//      .pipe($.size({showFiles: true, total: true}))
         .pipe(gulp.dest(pkg.app.dest));
     done();
 });
@@ -511,7 +511,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 
                       ,'!'+pkg.app.src+'/*-config.php'
                       ,pkg.app.src+'/css/shellinabox*.css'
                       ],
-                      {base: pkg.app.src})
+                      {base: pkg.app.src, encoding: false})
         // optional headers fields can be update and or added:
         //.pipe( $.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
         //.pipe($.if('*.html', $.header(banner_html, {pkg: pkg}) ))
@@ -525,7 +525,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 
 }));
 
 gulp.task('deployfront', function (done) {
-    return gulp.src( [pkg.app.dest+'/**/*', '!'+pkg.app.dest+'/index.html'] )
+    return gulp.src( [pkg.app.dest+'/**/*', '!'+pkg.app.dest+'/index.html'], { encoding: false } )
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
         .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe(gulp.dest(DEPLOY_LOCATION))
