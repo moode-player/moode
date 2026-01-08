@@ -15,8 +15,6 @@ require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 // Initialization
-debugLog('touchmon: Started');
-debugLog('touchmon: Initialization');
 $timeoutArg = !isset($argv[1]) ? TOUCHMON_TIMEOUT_DEFAULT : $argv[1];
 $timeout = $timeoutArg;
 $dbh = sqlConnect();
@@ -24,15 +22,11 @@ sysCmd('rm ' . TOUCHMON_LOG . ' > /dev/null');
 sysCmd('killall -s9 xinput > /dev/null');
 
 // Monitor for touch events
-debugLog('touchmon: Polling loop...');
 while (true) {
-	debugLog('touchmon: Top');
 	// XServer must be running
 	if (isWebuiOn($dbh) === true || isPeppyOn($dbh) === true) {
-		debugLog('touchmon: - XServer is running');
 		// Start xinput or restart it in case localdisplay restarted or turned off
 		if (isXinputOn() === false) {
-			debugLog('touchmon: - xinput started');
 			startXinput();
 			$lastMTime = filemtime(TOUCHMON_LOG);
 		}
@@ -43,11 +37,8 @@ while (true) {
 
 		// Touch detected
 		if ($currentMTime != $lastMTime) {
-			debugLog('touchmon: - touch detected');
 			$timeout = $timeoutArg;
-			debugLog('touchmon: - timeout reset to ' . $timeout);
 			if (isWebuiOn($dbh) === false) {
-				debugLog('touchmon: - setdisplay webui');
 				sysCmd('moodeutl --setdisplay webui');
 			}
 
@@ -57,16 +48,12 @@ while (true) {
 		// Switch to Peppy if no touch events within the timeout period
 		if (isWebuiOn($dbh) === true && isMpdPlaying() === true) {
 			--$timeout;
-			debugLog('touchmon: - timeout ' . $timeout);
 			if ($timeout == 0) {
-				debugLog('touchmon: - setdisplay peppy');
 				sysCmd('moodeutl --setdisplay peppy');
 			}
 		}
-	} else {
-		debugLog('touchmon: - X11 not running');
 	}
-
+	
 	sleep(1);
 }
 
@@ -92,7 +79,7 @@ function isMpdPlaying() {
 		closeMpdSock($sock);
 	} else {
 		$mpdState = 'unknown';
-		debugLog('touchmon: CRITICAL ERROR: Unable to connect to MPD');
+		workerLog('touchmon: CRITICAL ERROR: Unable to connect to MPD');
 	}
 	return $mpdState == 'play' ? true : false;
 }
