@@ -16,7 +16,7 @@
 ################################################################################
 
 New features
-- NEW:
+- NEW: Peppy "Display on play" feature
 
 Updates:
 - UPD: Add option for CEC version (2.0 or 1.4)
