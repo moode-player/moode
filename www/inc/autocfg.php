@@ -377,7 +377,7 @@ function autoConfigSettings() {
 		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
 		['requires' => ['mpdcrossfade'], 'handler' => 'setSessVarSql'],
 		['requires' => ['crossfeed'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['invert_polarity'], 'handler' => 'setSessVarSql'],
+		['requires' => ['invert_polarity'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['volume_step_limit'], 'handler' => 'setSessVarSql'],
 		['requires' => ['volume_mpd_max'], 'handler' => 'setSessVarSql'],
 		['requires' => ['volume_db_display'], 'handler' => 'setSessVarSql'],
@@ -662,12 +662,6 @@ function autoConfigSettings() {
 				);
 			}
 		}],
-		/*NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
-		['requires' => ['enable_peppyalsa'], 'handler' => function($values) {
-			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
-			someFunctionGoesHere($values['enable_peppyalsa']);
-		}],
-		*/
 		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_cec_ver'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
@@ -707,12 +701,25 @@ function autoConfigSettings() {
 				}
 			}
 		}],
-		/*NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
+		/*
+		NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
 		'PeppyMeter display (General)',
 		['requires' => ['peppy_display', 'peppy_display_type'], 'handler' => function($values) {
 			phpSession('write', 'peppy_display', $values['peppy_display']);
 			phpSession('write', 'peppy_display_type', $values['peppy_display_type']);
 			someFunctionGoesHere($values['peppy_display'], $values['peppy_display_type']);
+		}],
+		['requires' => ['enable_peppyalsa'], 'handler' => function($values) {
+			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
+			someFunctionGoesHere($values['enable_peppyalsa']);
+		}],
+		['requires' => ['touchmon_svc'], 'handler' => function($values) {
+			phpSession('write', 'touchmon_svc', $values['touchmon_svc']);
+			someFunctionGoesHere($values['touchmon_svc']);
+		}],
+		['requires' => ['touchmon_timeout'], 'handler' => function($values) {
+			phpSession('write', 'touchmon_timeout', $values['touchmon_timeout']);
+			someFunctionGoesHere($values['touchmon_timeout']);
 		}],
 		*/
 		'USB volume knob',

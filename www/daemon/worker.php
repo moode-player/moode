@@ -889,6 +889,11 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	workerLog('worker: Allo Piano2.1: volume initialized');
 }
 
+// Invert polarity
+if (!isset($_SESSION['invert_polarity'])) {
+	$_SESSION['invert_polarity'] = '0';
+}
+
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- MPD startup');
@@ -1374,7 +1379,6 @@ workerLog('worker: Target url:       ' . $_SESSION['local_display_url']);
 workerLog('worker: Chromium ver:     ' . sysCmd('moodeutl --chromiumrel')[0]);
 workerLog('worker: Chromium cfg:     ' . $cfgStatus);
 workerLog('worker: Disable GPU:      ' . $_SESSION['disable_gpu_chromium']);
-workerLog('worker: PeppyALSA driver: ' . ($_SESSION['enable_peppyalsa'] == '1' ? 'on' : 'off'));
 workerLog('worker: --');
 // Peppy display
 workerLog('worker: Peppy display:    ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
@@ -1385,6 +1389,7 @@ workerLog('worker: Meter folder:     ' . trim($result[1]));
 $result = sysCmd('cat /etc/peppyspectrum/config.txt | grep "spectrum = \|spectrum.folder = " | cut -d"=" -f2');
 workerLog('worker: Spectrum(s):      ' . (empty(trim($result[0])) ? 'Not set' : trim($result[0])));
 workerLog('worker: Spectrum folder:  ' . trim($result[1]));
+workerLog('worker: PeppyALSA driver: ' . ($_SESSION['enable_peppyalsa'] == '1' ? 'on' : 'off'));
 
 workerLog('worker: --');
 // General display settings
@@ -3557,6 +3562,13 @@ function runQueuedJob() {
 			}
 			// Restart MPD and Renderers
 			restartMpdAndRenderers($resetAlsaCtl);
+			break;
+		case 'touchmon_svc':
+		case 'touchmon_timeout':
+			if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
+				stopLocalDisplay();
+				startLocalDisplay();
+			}
 			break;
 		case 'peppy_display_type':
 			stopLocalDisplay();

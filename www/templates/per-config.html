@@ -96,7 +96,7 @@
 
 				<label class="control-label" for="peppy-display-type">Type</label>
 				<div class="controls">
-					<select id="scn-blank" class="config-select-large" name="peppy_display_type" onchange="autoClick('#btn-set-peppy-display-type');" $_peppy_ctl_disable>
+					<select id="peppy-display-type" class="config-select-large" name="peppy_display_type" onchange="autoClick('#btn-set-peppy-display-type');" $_peppy_ctl_disable>
 						$_select[peppy_display_type]
 					</select>
 					<button id="btn-set-peppy-display-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_peppy_display_type" value="novalue" $_peppy_ctl_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
@@ -127,6 +127,32 @@
 					<span id="info-enable-peppyalsa" class="config-help-info">
 						Adds PeppyALSA as a standalone driver to the audio chain. This allows user written programs to switch between WebUI and Peppy display using the command: <b>sudo moodeutl --setdisplay [webui | peppy].</b>
 					</span>
+				</div>
+
+				<label class="control-label">Display on play</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-touchmon-svc" for="toggle-touchmon-svc-2">ON </label>$_select[touchmon_svc_on]
+						<label class="toggle-radio toggle-touchmon-svc" for="toggle-touchmon-svc-1">OFF</label>$_select[touchmon_svc_off]
+					</div>
+					<button id="btn-set-touchmon-svc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchmon_svc" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchmon-svc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-touchmon-svc" class="config-help-info">
+						Displays Peppy when MPD starts playing. Touching the display switches to the WebUI.
+						If a touch does not occur within the Timeout period the display switches back to Peppy.
+					</span>
+				</div>
+
+				<label class="control-label" for="touchmon-timeout">Timeout (secs)</label>
+				<div class="controls">
+					<select id="touchmon-timeout" class="config-select-large" name="touchmon_timeout" onchange="autoClick('#btn-set-touchmon-timeout');">
+						$_select[touchmon_timeout]
+					</select>
+					<button id="btn-set-touchmon-timeout" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchmon_timeout" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchmon-timeout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-touchmon-timeout" class="config-help-info">
+						When the WebUI is displayed and MPD playback starts playback this timeout determines when the display will be switched to Peppy if no touch occurs.
+	                </span>
 				</div>
 			</div>
 

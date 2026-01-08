@@ -101,6 +101,9 @@ const PEPPY_METER_ETC_DIR = '/etc/peppymeter';
 const PEPPY_METER_OPT_DIR = '/opt/peppymeter';
 const PEPPY_SPECTRUM_ETC_DIR = '/etc/peppyspectrum';
 const PEPPY_SPECTRUM_OPT_DIR = '/opt/peppyspectrum';
+// Peppy touch monitor
+const TOUCHMON_LOG = '/tmp/moode_touchmon.log';
+const TOUCHMON_TIMEOUT_DEFAULT = 15;
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';

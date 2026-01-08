@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Dec 14 11:24:38 2025
+-- File generated with SQLiteStudio v3.4.4 on Wed Jan 7 17:27:41 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -629,7 +629,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (95, 'rsmaftersl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (96, 'mpdmixer_local', 'software');
 INSERT INTO cfg_system (id, param, value) VALUES (97, 'wrkready', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (98, 'scnsaver_timeout', 'Never');
-INSERT INTO cfg_system (id, param, value) VALUES (99, 'RESERVED_99', '');
+INSERT INTO cfg_system (id, param, value) VALUES (99, 'touchmon_svc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (100, 'favorites_name', 'Favorites');
 INSERT INTO cfg_system (id, param, value) VALUES (101, 'spotifysvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (102, 'spotifyname', 'Moode Spotify');
@@ -649,7 +649,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (115, 'rsmafterpa', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (117, 'mpd_httpd_port', '8000');
 INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lame');
-INSERT INTO cfg_system (id, param, value) VALUES (119, 'invert_polarity', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (119, 'touchmon_timeoout', '15');
 INSERT INTO cfg_system (id, param, value) VALUES (120, 'inpactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (121, 'rsmafterinp', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
