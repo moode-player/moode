@@ -15,6 +15,7 @@ max_framebuffers=2
 display_auto_detect=1
 disable_fw_kms_setup=1
 arm_64bit=1
+auto_initramfs=1
 
 # General settings
 arm_boost=0
