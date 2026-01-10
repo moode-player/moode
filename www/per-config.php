@@ -350,8 +350,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	$autoClick = " onchange=\"autoClick('#btn-set-enable-peppyalsa');\" " . $_peppyalsa_ctl_disable;
 	$_select['enable_peppyalsa_on']  .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-1\" value=\"1\" " . (($_SESSION['enable_peppyalsa'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['enable_peppyalsa_off'] .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-2\" value=\"0\" " . (($_SESSION['enable_peppyalsa'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	# Touch monitor
-	$autoClick = " onchange=\"autoClick('#btn-set-touchmon-svc');\"";
+	# Touch monitor on|off
+	$_touchmon_ctl_disable = $_SESSION['enable_peppyalsa'] == '0' ? 'disabled' : '';
+	$autoClick = " onchange=\"autoClick('#btn-set-touchmon-svc');\" " . $_touchmon_ctl_disable;
 	$_select['touchmon_svc_on']  .= "<input type=\"radio\" name=\"touchmon_svc\" id=\"toggle-touchmon-svc-1\" value=\"1\" " . (($_SESSION['touchmon_svc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['touchmon_svc_off'] .= "<input type=\"radio\" name=\"touchmon_svc\" id=\"toggle-touchmon-svc-2\" value=\"0\" " . (($_SESSION['touchmon_svc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	# Touch monitor timeout

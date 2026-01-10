@@ -15,31 +15,54 @@ require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 // Initialization
+debugLog('touchmon: Started');
 $timeoutArg = !isset($argv[1]) ? TOUCHMON_TIMEOUT_DEFAULT : $argv[1];
 $timeout = $timeoutArg;
 $dbh = sqlConnect();
 sysCmd('rm ' . TOUCHMON_LOG . ' > /dev/null');
 sysCmd('killall -s9 xinput > /dev/null');
 
+// Wait for xServer to start
+$maxLoops = 3;
+for ($i = 0; $i < $maxLoops; $i++) {
+	debugLog('touchmon: Wait ' . ($i + 1) . ' for xServer to start');
+	sleep(3);
+	$result = sysCmd('pgrep -c Xorg')[0];
+	if ($result > 0) {
+		break;
+	}
+}
+$result = sysCmd('pgrep -c Xorg')[0];
+if ($result > 0) {
+	debugLog('touchmon: XServer is running');
+} else {
+	workerLog('touchmon: CRITICAL ERROR: XServer is not running');
+	exit (1);
+}
+
 // Monitor for touch events
 while (true) {
-	// XServer must be running
-	if (isWebuiOn($dbh) === true || isPeppyOn($dbh) === true) {
-		// Start xinput or restart it in case localdisplay restarted or turned off
-		if (isXinputOn() === false) {
-			startXinput();
-			$lastMTime = filemtime(TOUCHMON_LOG);
-		}
+	debugLog('touchmon: Loop');
+	// Start/restart xinput in case localdisplay.service restarted or stopped
+	if (isXinputOn() === false) {
+		debugLog('touchmon: - start xinput');
+		startXinput();
+		$lastMTime = filemtime(TOUCHMON_LOG);
+	}
 
-		// Get file modified time
+	if (isPeppyALSAOn() === true) {
+		// Get logfile modified time
 		clearstatcache();
 		$currentMTime = filemtime(TOUCHMON_LOG);
 
-		// Touch detected
+		// Switch to webUI (touch detected)
 		if ($currentMTime != $lastMTime) {
+			debugLog('touchmon: - touch detected');
+			debugLog('touchmon: - timeout reset to ' . $timeoutArg);
 			$timeout = $timeoutArg;
 			if (isWebuiOn($dbh) === false) {
-				sysCmd('moodeutl --setdisplay webui');
+				debugLog('touchmon: - switch to webui');
+				exec('sudo moodeutl --setdisplay webui');
 			}
 
 			$lastMTime = $currentMTime;
@@ -47,15 +70,21 @@ while (true) {
 
 		// Switch to Peppy if no touch events within the timeout period
 		if (isWebuiOn($dbh) === true && isMpdPlaying() === true) {
+			debugLog('touchmon: - timeout ' . $timeout);
 			--$timeout;
 			if ($timeout == 0) {
-				sysCmd('moodeutl --setdisplay peppy');
+				debugLog('touchmon: - switch to peppy');
+				exec('sudo moodeutl --setdisplay peppy');
 			}
 		}
+	} else {
+		debugLog('touchmon: - WARNING: peppyalsa is not enabled');
 	}
-	
+
 	sleep(1);
 }
+
+// Helpers
 
 function isXinputOn() {
 	$xinputOn = sysCmd('pgrep -c xinput')[0];
@@ -64,6 +93,9 @@ function isXinputOn() {
 function startXinput() {
 	shell_exec('export DISPLAY=:0');
 	shell_exec('xinput --test-xi2 --root | unbuffer -p grep RawTouchEnd > ' . TOUCHMON_LOG . ' &');
+}
+function isPeppyALSAOn() {
+	return file_exists('/etc/alsa/conf.d/peppy.conf');
 }
 function isWebuiOn($dbh) {
 	$webuiOn = sqlQuery("SELECT value FROM cfg_system WHERE param='local_display'", $dbh)[0]['value'];

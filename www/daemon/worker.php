@@ -3558,6 +3558,7 @@ function runQueuedJob() {
 			} else {
 				stopLocalDisplay();
 				hidePeppyConf();
+				$_SESSION['touchmon_svc'] = '0';
 				$resetAlsaCtl = true;
 			}
 			// Restart MPD and Renderers
@@ -3565,10 +3566,8 @@ function runQueuedJob() {
 			break;
 		case 'touchmon_svc':
 		case 'touchmon_timeout':
-			if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
-				stopLocalDisplay();
-				startLocalDisplay();
-			}
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
 		case 'peppy_display_type':
 			stopLocalDisplay();

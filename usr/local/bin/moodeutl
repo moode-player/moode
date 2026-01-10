@@ -759,12 +759,37 @@ function setDisplay($argv) {
 			session_write_close();
 			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2webui . "' WHERE param='local_display'\"");
 			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2peppy . "' WHERE param='peppy_display'\"");
-			if (($set2webui == '1' && $webuiOn == '0') || ($set2peppy == '1' && $peppyOn == '0')) {
+
+			// SLOW SWITCH: Restart localdisplay.service
+			//if (($set2webui == '1' && $webuiOn == '0') || ($set2peppy == '1' && $peppyOn == '0')) {
+			//	shell_exec('systemctl restart localdisplay');
+			//}
+
+			// FAST SWITCH: Run Peppy over WebUI
+			// Both off start fresh
+			if ($webuiOn == '0' && $peppyOn == '0') {
 				shell_exec('systemctl restart localdisplay');
+			}
+			// Switch to Peppy
+			if ($webuiOn == '1' && $set2peppy == '1') {
+				if ($_SESSION['peppy_display_type'] == 'meter') {
+					shell_exec('/var/www/util/start-peppy.sh peppymeter.py > /dev/null 2>&1');
+				} else {
+					shell_exec('/var/www/util/start-peppy.sh spectrum.py > /dev/null 2>&1');
+				}
+			}
+			// Switch to WebUI
+ 			if ($peppyOn == '1' && $set2webui == '1') {
+				$process = $_SESSION['peppy_display_type'] == 'meter' ? 'peppymeter.py' : 'spectrum.py';
+				shell_exec('pkill -f ' . $process . ' > /dev/null 2>&1');
+				$result = shell_exec('pgrep -c chromium-browse');
+				if ($result == 0) {
+					shell_exec('systemctl restart localdisplay');
+				}
 			}
 		}
 	} else {
-		fwrite(STDERR, "Missing option [webui | peppy]\n");
+		fwrite(STDERR, "Missing option [webui|peppy]\n");
 	}
 }
 
