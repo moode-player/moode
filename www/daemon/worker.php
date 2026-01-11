@@ -1432,6 +1432,7 @@ workerLog('worker: Triggerhappy:     ' . ($_SESSION['usb_volknob'] == '1' ? 'on'
 if (!isset($_SESSION['rotaryenc'])) {
 	$_SESSION['rotaryenc'] = '0';
 }
+sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
 if ($_SESSION['rotaryenc'] == '1') {
 	sysCmd('systemctl start rotenc');
 }
