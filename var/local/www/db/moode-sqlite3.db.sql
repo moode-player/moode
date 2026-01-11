@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Jan 7 17:27:41 2026
+-- File generated with SQLiteStudio v3.4.4 on Sun Jan 11 12:03:03 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -649,7 +649,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (115, 'rsmafterpa', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (117, 'mpd_httpd_port', '8000');
 INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lame');
-INSERT INTO cfg_system (id, param, value) VALUES (119, 'touchmon_timeoout', '15');
+INSERT INTO cfg_system (id, param, value) VALUES (119, 'touchmon_timeout', '15');
 INSERT INTO cfg_system (id, param, value) VALUES (120, 'inpactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (121, 'rsmafterinp', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
