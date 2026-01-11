@@ -47,6 +47,18 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 					$param = 'volume.max.in.pipe';
 					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
 					break;
+				case 'frame_rate':
+					$param = 'frame.rate';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
+				case 'polling_interval':
+					$param = 'polling.interval';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
+				case 'smooth_buffer_size':
+					$param = 'smooth.buffer.size';
+					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+					break;
 				case 'spectrum_folder':
 					$param = 'spectrum.folder';
 					sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
@@ -99,6 +111,15 @@ $_select['meter_normalization'] .= "<option value=\"40.0\" " . (($configMeter['v
 $_select['meter_normalization'] .= "<option value=\"30.0\" " . (($configMeter['volume.max.in.pipe'] == '30.0') ? "selected" : "") . ">30</option>\n";
 $_select['meter_normalization'] .= "<option value=\"20.0\" " . (($configMeter['volume.max.in.pipe'] == '20.0') ? "selected" : "") . ">20</option>\n";
 $_select['meter_normalization'] .= "<option value=\"10.0\" " . (($configMeter['volume.max.in.pipe'] == '10.0') ? "selected" : "") . ">10</option>\n";
+$_select['frame_rate'] .= "<option value=\"30\" " . (($configMeter['frame.rate'] == '30') ? "selected" : "") . ">30 (Default)</option>\n";
+$_select['frame_rate'] .= "<option value=\"60\" " . (($configMeter['frame.rate'] == '60') ? "selected" : "") . ">60</option>\n";
+$_select['polling_interval'] .= "<option value=\"0.05\" " . (($configMeter['polling.interval'] == '0.05') ? "selected" : "") . ">0.05</option>\n";
+$_select['polling_interval'] .= "<option value=\"0.04\" " . (($configMeter['polling.interval'] == '0.04') ? "selected" : "") . ">0.04</option>\n";
+$_select['polling_interval'] .= "<option value=\"0.03\" " . (($configMeter['polling.interval'] == '0.03') ? "selected" : "") . ">0.03</option>\n";
+$_select['polling_interval'] .= "<option value=\"0.02\" " . (($configMeter['polling.interval'] == '0.02') ? "selected" : "") . ">0.02</option>\n";
+$_select['polling_interval'] .= "<option value=\"0.015\" " . (($configMeter['polling.interval'] == '0.015') ? "selected" : "") . ">0.015</option>\n";
+$_select['polling_interval'] .= "<option value=\"0.01\" " . (($configMeter['polling.interval'] == '0.01') ? "selected" : "") . ">0.01</option>\n";
+$_select['smooth_buffer_size'] = $configMeter['smooth.buffer.size'];
 
 // Spectrum settings
 $folders = getPeppyFolderList('spectrum');

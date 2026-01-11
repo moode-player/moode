@@ -69,9 +69,43 @@
 				<select id="meter-normalization" class="config-select-large" name="settings[meter_normalization]">
 					$_select[meter_normalization]
 				</select>
-				<span class="config-help-static">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-meter-normalization" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-meter-normalization" class="config-help-info">
 					Set the value used for normalizing volume data comming from the FIFO pipe.
 					A lower value will cause the meter needle or bars to appear higher.
+				</span>
+			</div>
+
+			<label class="control-label" for="frame-rate">Frame rate (fps)</label>
+			<div class="controls">
+				<select id="frame-rate" class="config-select-large" name="settings[frame_rate]">
+					$_select[frame_rate]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-frame-rate" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-frame-rate" class="config-help-info">
+					Set this to the specified frame rate of the display.<br>
+					The default is 30.
+				</span>
+			</div>
+			<label class="control-label" for="polling-interval">Polling interval (secs)</label>
+			<div class="controls">
+				<select id="polling-interval" class="config-select-large" name="settings[polling_interval]">
+					$_select[polling_interval]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-polling-interval" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-polling-interval" class="config-help-info">
+					Determines how often data is read from the named pipe.
+					The value is based on the frame rate and should be >= once per frame.<br>
+					Use 0.03|0.04 for 30 fps, 0.015|0.02 for 60 fps.
+				</span>
+			</div>
+			<label class="control-label" for="smooth-buffer-size">Smooth buffer size</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="smooth-buffer-size" name="settings[smooth_buffer_size]" value="$_select[smooth_buffer_size]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-smooth-buffer-size" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-smooth-buffer-size" class="config-help-info">
+					Increasing the value will increase animation smoothness and vice versa.<br>
+					The default value is 4.
 				</span>
 			</div>
 
