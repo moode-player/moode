@@ -98,8 +98,7 @@ function isXinputOn() {
 	return $xinputOn > 0 ? true : false;
 }
 function startXinput() {
-	shell_exec('export DISPLAY=:0');
-	shell_exec('xinput --test-xi2 --root | unbuffer -p grep RawTouchEnd > ' . TOUCHMON_LOG . ' &');
+	shell_exec('/var/www/util/start-xinput.sh ' . TOUCHMON_LOG);
 }
 function isPeppyALSAOn() {
 	return file_exists('/etc/alsa/conf.d/peppy.conf');
