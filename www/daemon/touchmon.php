@@ -75,7 +75,14 @@ while (true) {
 			if ($timeout == 0) {
 				debugLog('touchmon: - switch to peppy');
 				exec('sudo moodeutl --setdisplay peppy');
+				debugLog('touchmon: - timeout reset to ' . $timeoutArg);
+				$timeout = $timeoutArg;
 			}
+		}
+		// Switch to WebUI immediately when MPD stops
+		if (isPeppyOn($dbh) === true && isMpdPlaying() === false) {
+			debugLog('touchmon: - switch to webui');
+			exec('sudo moodeutl --setdisplay webui');
 		}
 	} else {
 		debugLog('touchmon: - WARNING: peppyalsa is not enabled');
