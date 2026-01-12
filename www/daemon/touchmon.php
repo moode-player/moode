@@ -68,8 +68,8 @@ while (true) {
 			$lastMTime = $currentMTime;
 		}
 
-		// Switch to Peppy if no touch events within the timeout period
-		if (isWebuiOn($dbh) === true && isMpdPlaying() === true) {
+		// Switch to Peppy
+		if (isWebuiOn($dbh) === true && isAudioPlaying() === true) {
 			debugLog('touchmon: - timeout ' . $timeout);
 			--$timeout;
 			if ($timeout == 0) {
@@ -79,8 +79,8 @@ while (true) {
 				$timeout = $timeoutArg;
 			}
 		}
-		// Switch to WebUI immediately when MPD stops
-		if (isPeppyOn($dbh) === true && isMpdPlaying() === false) {
+		// Switch to WebUI
+		if (isPeppyOn($dbh) === true && isAudioPlaying() === false) {
 			debugLog('touchmon: - switch to webui');
 			exec('sudo moodeutl --setdisplay webui');
 		}
@@ -120,4 +120,8 @@ function isMpdPlaying() {
 		workerLog('touchmon: CRITICAL ERROR: Unable to connect to MPD');
 	}
 	return $mpdState == 'play' ? true : false;
+}
+function isAudioPlaying() {
+	$audioOutput = trim(shell_exec('moodeutl --hwparams | grep closed'));
+	return $audioOutput == 'closed' ? false : true;
 }
