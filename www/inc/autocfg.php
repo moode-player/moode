@@ -562,6 +562,7 @@ function autoConfigSettings() {
 		'Playback',
 		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
 		['requires' => ['extra_tags'], 'handler' => 'setSessVarSql'],
+		['requires' => ['search_site'], 'handler' => 'setSessVarSql'],
 		['requires' => ['playhist'], 'handler' => 'setSessVarSql'],
 		['requires' => ['show_npicon'], 'handler' => function($values) {
 			if ($values['show_npicon'] == 'Yes') {
