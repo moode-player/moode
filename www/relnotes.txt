@@ -19,7 +19,7 @@ New features
 - NEW: Peppy "Display on play" feature
 
 Updates:
-- Bump to Linux kernel 6.12.62
+- UPD: Bump to Linux kernel 6.12.62
 - UPD: Add option for CEC version (2.0 or 1.4)
 - UPD: Improve stats displayed on Network Config screen
 - UPD: Patch initramfs.conf to avoid apt kernel upgrade errors
