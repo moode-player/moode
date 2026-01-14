@@ -118,6 +118,11 @@ if ($userId != NO_USERID_DEFINED) {
 	}
 }
 
+// Patch initramfs.conf
+// This allows apt upgrade kernel installs to succeed when the parameter
+// auto_initramfs=1 is not in /boot/firmware/config.txt
+sysCmd("sed -i 's/^MODULES.*/MODULES=most/' /etc/initramfs-tools/initramfs.conf");
+
 // Cleanup:
 // - Delete hidden MacOS dot files from boot partition
 if (file_exists(BOOT_DIR . '/.fseventsd')) {
