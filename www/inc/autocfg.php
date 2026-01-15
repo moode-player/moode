@@ -637,9 +637,36 @@ function autoConfigSettings() {
 		//
 		// Peripherals
 		//
-		'Local display (General)',
+		'WebUI display',
 		['requires' => ['local_display'], 'handler' => 'setSessVarSql'],
 		['requires' => ['local_display_url'], 'handler' => 'setSessVarSql'],
+		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
+		'Peppy display',
+		['requires' => ['peppy_display', 'enable_peppyalsa'], 'handler' => function($values) {
+			phpSession('write', 'peppy_display', $values['peppy_display']);
+			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
+			// Update ALSA configs
+			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+			// Update peppy.conf
+			if ($values['peppy_display'] == '1' || $values['enable_peppyalsa'] == '1') {
+				unhidePeppyConf();
+			} else {
+				hidePeppyConf();
+			}
+		}],
+		['requires' => ['peppy_display_type'], 'handler'  => 'setSessVarSql'],
+		['requires' => ['touchmon_svc'], 'handler' => function($values) {
+			$value = $values['peppy_display'] == '0' ? '0' : $values['touchmon_svc'];
+			phpSession('write', 'touchmon_svc', $value);
+		}],
+		['requires' => ['touchmon_timeout'], 'handler' => 'setSessVarSql'],
+		'General display',
+		['requires' => ['scn_blank'], 'handler' => function($values) {
+			$_SESSION['scn_blank'] = $values['scn_blank'];
+			setScreenBlankTimeout($values['scn_blank']);
+		}],
 		['requires' => ['wake_display'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scn_cursor'], 'handler' => function($values) {
 			$_SESSION['scn_cursor'] = $values['scn_cursor'];
@@ -647,11 +674,6 @@ function autoConfigSettings() {
 			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
 		}],
 		['requires' => ['on_screen_kbd'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['scn_blank'], 'handler' => function($values) {
-			$_SESSION['scn_blank'] = $values['scn_blank'];
-			setScreenBlankTimeout($values['scn_blank']);
-		}],
-		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
 		'HDMI displays',
 		['requires' => ['hdmi_scn_orient'], 'handler' => function($values) {
 			phpSession('write', 'hdmi_scn_orient', $values['hdmi_scn_orient']);
@@ -702,27 +724,6 @@ function autoConfigSettings() {
 				}
 			}
 		}],
-		/*
-		NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
-		'PeppyMeter display (General)',
-		['requires' => ['peppy_display', 'peppy_display_type'], 'handler' => function($values) {
-			phpSession('write', 'peppy_display', $values['peppy_display']);
-			phpSession('write', 'peppy_display_type', $values['peppy_display_type']);
-			someFunctionGoesHere($values['peppy_display'], $values['peppy_display_type']);
-		}],
-		['requires' => ['enable_peppyalsa'], 'handler' => function($values) {
-			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
-			someFunctionGoesHere($values['enable_peppyalsa']);
-		}],
-		['requires' => ['touchmon_svc'], 'handler' => function($values) {
-			phpSession('write', 'touchmon_svc', $values['touchmon_svc']);
-			someFunctionGoesHere($values['touchmon_svc']);
-		}],
-		['requires' => ['touchmon_timeout'], 'handler' => function($values) {
-			phpSession('write', 'touchmon_timeout', $values['touchmon_timeout']);
-			someFunctionGoesHere($values['touchmon_timeout']);
-		}],
-		*/
 		'USB volume knob',
 		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],
 		'Rotary encoder',
