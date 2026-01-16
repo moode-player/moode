@@ -25,11 +25,12 @@ Updates:
 - UPD: Improve stats displayed on Network Config screen
 - UPD: Patch initramfs.conf to avoid apt kernel upgrade errors
 - UPD: Add peppy settings to backup/restore
-- UPD: Add codec to "Bluetooth speaker" in Audio Info
+- UPD: Add (codec) to "Bluetooth speaker" in Audio Info
 
 Bug fixes
 - FIX: Screen blank not working for the "Never" setting
 - FIX: Search site Pref missing from backup/restore
+- FIX: Rotary encoder params not applied during startup
 
 ################################################################################
 #
