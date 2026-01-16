@@ -3236,6 +3236,13 @@ function runQueuedJob() {
 				startSendspin();
 			}
 			break;
+		case 'sendspincfgupdate':
+			cfgSendspin();
+			if ($_SESSION['sendspinsvc'] == '1') {
+				sysCmd('systemctl stop sendspin');
+				startSendspin();
+			}
+			break;
 		case 'multiroom_tx':
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				// Reconfigure to Dummy sound driver

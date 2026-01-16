@@ -1,0 +1,42 @@
+################################################################################
+#
+#  Setup Guide for sendspin-cli 3rd party component
+#
+#  Version: 1.0 2026-01-16
+#
+################################################################################
+
+
+OVERVIEW
+
+This document provides some information on using moOde with Sendspin.
+
+Sendspin CLI is a synchronized audio client supporting Sendspin servers.
+
+In moOde, it can be setup as a player; rendering it a multiroom audio endpoint for Sendspin servers such as Music Assistant.
+
+See https://github.com/Sendspin/sendspin-cli for more information.
+
+INSTALLATION
+
+To install sendspin-cli in moOde, SSH to your Raspberry Pi and install uv / sendspin:
+
+$ sudo pip install uv --break-system-packages
+$ sudo uv tool install sendspin@4.0.0
+
+To check if the Sendspin server is listed and the desired audio device is available:
+
+$ sudo /root/.local/share/uv/tools/sendspin/bin/sendspin --list-servers
+$ sudo /root/.local/share/uv/tools/sendspin/bin/sendspin --list-audio-devices
+
+TROUBLESHOOTING
+
+Trying to playing both from moOde via MPD and to the Sendspin renderer at the same moment may crash/loop sendspin and trigger [PaErrorCode -9985]
+
+Change moOde's audio output to a different device while playing through the Sendspin renderer prevents this error. 
+
+This issue might be fixed in a future release of moOde.
+
+################################################################################
+#  Post questions regarding this guide to http://moodeaudio.org/forum
+################################################################################

@@ -374,9 +374,24 @@ function startSendspin() {
 	sysCmd('mpc stop');
 	sysCmd('systemctl start sendspin');
 }
-
 function stopSendspin() {
 	sysCmd('systemctl stop sendspin');
+}
+function cfgSendspin() {
+	// example, minimal 'required config' for /root/.config/sendspin/settings-daemon.json
+	//
+	// {
+ 	//  "static_delay_ms": 0.0,
+  	//  "name": "moOde Sendspin Audio Client",
+  	//  "client_id": "moode-sendspin",
+  	//  "audio_device": "snd_rpi_hifiberry_dacplus",
+  	//  "use_mpris": false
+	// }
+
+	$filename = '/root/.config/sendspin/settings-daemon.json';
+	$data = sqlRead(table:'cfg_sendspin', dbh: sqlConnect(), format: 'json');
+
+	file_put_contents($filename, $data);
 }
 
 // Stop all renderers

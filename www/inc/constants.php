@@ -128,6 +128,7 @@ const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
 const NAME_PLEXAMP = 'Plexamp';
 const NAME_ROONBRIDGE = 'RoonBridge';
+const NAME_SENDSPIN = 'Sendspin';
 const NAME_GPIO = 'GPIO Controller';
 const NAME_LOCALDISPLAY = 'Local Display';
 const NAME_PEPPYDISPLAY = 'Peppy Display';

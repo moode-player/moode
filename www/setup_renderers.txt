@@ -2,7 +2,7 @@
 #
 #  Setup Guide for Audio Renderers
 #
-#  Version: 1.2 2025-07-21
+#  Version: 1.2 2026-01-16
 #
 #  (C) Tim Curtis 2024 http://moodeaudio.org
 #
@@ -44,12 +44,18 @@ from the client and whether CamillaDSP is supported in the playback chain.
 +-------------------------------------------------------------------------------
 | RoonBridge          | Roon server                      | No       | No
 +-------------------------------------------------------------------------------
+| Sendspin            | Music Assistant Server (2)        | No       | No
 
 (1) On 2025-05-06 Deezer officially cancelled support for Deezer Connect but it
 apparantly is still available on iOS when you enable Remote Control under
 Settings > Music > Deezer Lab, and on Android when you use an older APK version.
 This may stop working at any time. Official notice of cancellation:
 https://en.deezercommunity.com/product-updates/say-goodbye-to-deezer-connect-80661
+
+(2) On 2026-01-16, Sendspin is currently in technical preview. While functional, the
+protocol and its implementation may change (see https://www.sendspin-audio.com/ )
+
+To use the Sendspin renderer in moOde, see setup_3rdparty_sendspin.txt.
 
 MULTIPLE RENDERERS ON
 
@@ -72,6 +78,7 @@ when they are turned ON and thus no other renderer can be also be ON.
 - Squeezelite (if -c <timeout> option is not specified)
 - Plexamp
 - RoonBridge
+- Sendspin
 
 RENDERER PROTOCOL TYPES
 
