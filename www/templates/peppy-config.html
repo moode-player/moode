@@ -66,13 +66,12 @@
 
 			<label class="control-label" for="meter-normalization">Normalization</label>
 			<div class="controls">
-				<select id="meter-normalization" class="config-select-large" name="settings[meter_normalization]">
-					$_select[meter_normalization]
-				</select>
+				<input class="config-input-large" type="number" step="0.1" pattern="^\d*\.\d$" id="meter-normalization" name="settings[meter_normalization]" value="$_select[meter_normalization]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-meter-normalization" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-meter-normalization" class="config-help-info">
 					Set the value used for normalizing volume data comming from the FIFO pipe.
-					A lower value will cause the meter needle or bars to appear higher.
+					A lower value will cause the meter needle to appear higher and vis versa for higher values.<br>
+					The default is 100.0.
 				</span>
 			</div>
 

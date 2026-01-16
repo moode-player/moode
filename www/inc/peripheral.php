@@ -80,9 +80,62 @@ function getPeppyConfig($type) {
 	$configFile = $type == 'meter' ? PEPPY_METER_ETC_DIR . '/config.txt' : PEPPY_SPECTRUM_ETC_DIR . '/config.txt';
 	return parseDelimFile(file_get_contents($configFile), ' = ');
 }
-function putPeppyConfig($type, $configArray) {
-	$configFile = $type == 'meter' ? PEPPY_METER_ETC_DIR . '/config.txt' : PEPPY_SPECTRUM_ETC_DIR . '/config.txt';
-	// Code goes here
+function putPeppyConfig($configArray) {
+	foreach ($configArray as $key => $value) {
+		chkValue($key, $value);
+		switch ($key) {
+			case 'screen_width':
+				$param = 'screen.width';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
+			case 'screen_height':
+				$param = 'screen.height';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
+			case 'random_interval':
+				$param = 'random.meter.interval';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				$param = 'update.period';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+				break;
+			case 'meter_folder':
+				$param = 'meter.folder';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
+			case 'meter_name':
+				$param = 'meter =';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
+			case 'meter_normalization':
+				$param = 'volume.max.in.pipe';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . number_format($value, 1) . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
+			case 'frame_rate':
+				$param = 'frame.rate';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				//sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+				break;
+			case 'polling_interval':
+				$param = 'polling.interval';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				//$param = 'update.ui.interval';
+				//sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+				break;
+			case 'smooth_buffer_size':
+				$param = 'smooth.buffer.size';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
+			case 'spectrum_folder':
+				$param = 'spectrum.folder';
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' = ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+				break;
+			case 'spectrum_name':
+				$param = 'spectrum =';
+				$value = $value == 'random' ? '' : $value;
+				sysCmd("sed -i 's/^" . $param . '.*/' . $param . ' ' . $value . "/' " . PEPPY_SPECTRUM_ETC_DIR . '/config.txt');
+				break;
+		}
+	}
 }
 function getPeppyFolderList($type) {
 	$peppyBaseDir = $type == 'meter' ? PEPPY_METER_OPT_DIR : PEPPY_SPECTRUM_OPT_DIR;
