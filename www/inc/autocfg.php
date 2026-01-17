@@ -643,26 +643,22 @@ function autoConfigSettings() {
 		['requires' => ['local_display_url'], 'handler' => 'setSessVarSql'],
 		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
 		'Peppy display',
-		['requires' => ['peppy_display', 'enable_peppyalsa'], 'handler' => function($values) {
+		['requires' => ['peppy_display', 'peppy_display_type', 'enable_peppyalsa',
+		'touchmon_svc', 'touchmon_timeout'], 'handler' => function($values) {
+			/*
+			// Peppy on/off and type
 			phpSession('write', 'peppy_display', $values['peppy_display']);
+			phpSession('write', 'peppy_display_type', $values['peppy_display_type']);
+			//PeppyALSA on/off
 			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
-			// Update ALSA configs
-			updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-			updPeppyConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
-			// Update ALSA peppy.conf
-			if ($values['peppy_display'] == '1' || $values['enable_peppyalsa'] == '1') {
-				unhidePeppyConf();
-			} else {
-				hidePeppyConf();
-			}
-		}],
-		['requires' => ['peppy_display_type'], 'handler'  => 'setSessVarSql'],
-		['requires' => ['touchmon_svc'], 'handler' => function($values) {
+			// Touchmon on/off
 			$value = $values['peppy_display'] == '0' ? '0' : $values['touchmon_svc'];
 			phpSession('write', 'touchmon_svc', $value);
+			phpSession('write', 'touchmon_timeout', $values['touchmon_timeout']);
+			// Configure
+			// This needs to be done in startup after audio config ?
+			*/
 		}],
-		['requires' => ['touchmon_timeout'], 'handler' => 'setSessVarSql'],
 		'Peppy meters',
 		['requires' => ['screen_width', 'screen_height', 'random_interval', 'meter_folder', 'meter_name',
 		'meter_normalization', 'frame_rate', 'polling_interval', 'smooth_buffer_size'], 'handler' => function($values) {
