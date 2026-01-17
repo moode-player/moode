@@ -664,8 +664,8 @@ function autoConfigSettings() {
 		}],
 		['requires' => ['touchmon_timeout'], 'handler' => 'setSessVarSql'],
 		'Peppy meters',
-		['requires' => ['screen_width', 'screen_height', 'random_interval', 'meter_normalization',
-		'frame_rate', 'polling_interval', 'smooth_buffer_size'], 'handler' => function($values) {
+		['requires' => ['screen_width', 'screen_height', 'random_interval', 'meter_folder', 'meter_name',
+		'meter_normalization', 'frame_rate', 'polling_interval', 'smooth_buffer_size'], 'handler' => function($values) {
 			putPeppyConfig($values);
 		}, 'custom_write' => function($values) {
 			$configMeter = getPeppyConfig('meter');
