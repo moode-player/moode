@@ -718,12 +718,12 @@ function autoConfigSettings() {
 			// touch1 value: 0 landscape | 180 inverted
 			// touch2 value  0 portrait  | 90 | 180 | 270 landscape
 			$degree = $values['dsi_scn_rotate'];
-			if ($values['dsi_scn_type'] == '1') {
+			if ($_SESSION['dsi_scn_type'] == '1') {
 				// Remove touch2 touch angle setting
 				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
 				// Update touch1 rotation
 				updBootConfigTxt('upd_dsi_scn_rotate', $degree);
-			} else if ($values['dsi_scn_type'] == '2' || $values['dsi_scn_type'] == 'other') {
+			} else if ($_SESSION['dsi_scn_type'] == '2' || $_SESSION['dsi_scn_type'] == 'other') {
 				// Only update the touch angle here, xinitrc handles rotation value
 				if ($degree == '0') {
 					// Remove touch2 touch angle setting
