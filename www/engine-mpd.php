@@ -78,5 +78,5 @@ scriptLog('Script end');
 
 // Script log
 function scriptLog($msg) {
-	workerLog('engine-mpd: ' . $_SERVER['REMOTE_ADDR'] . ' ' . $msg);
+	#workerLog('engine-mpd: ' . $_SERVER['REMOTE_ADDR'] . ' ' . $msg);
 }
