@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Jan 14 16:02:03 2026
+-- File generated with SQLiteStudio v3.4.4 on Mon Jan 19 13:30:57 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -652,7 +652,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lam
 INSERT INTO cfg_system (id, param, value) VALUES (119, 'touchmon_timeout', '15');
 INSERT INTO cfg_system (id, param, value) VALUES (120, 'inpactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (121, 'rsmafterinp', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (122, 'empd_socket_timeout', '600000');
 INSERT INTO cfg_system (id, param, value) VALUES (123, 'library_ignore_articles', 'a,an,the');
 INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (125, 'volknob_preamp', '0');

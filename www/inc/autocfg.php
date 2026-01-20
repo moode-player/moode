@@ -747,7 +747,7 @@ function autoConfigSettings() {
 			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $values['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
 		}],
 		'GPIO Buttons',
-		['requires' => ['gpio_svc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['gpio_svc'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['gpio_button'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			// Buttons: id 1 - 8

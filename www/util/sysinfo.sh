@@ -833,7 +833,7 @@ mpd_httpd_encoder=${arr[117]}
 [[ "${arr[118]}" = "1" ]] && invert_polarity="On" || invert_polarity="Off"
 inpactive=${arr[119]}
 rsmafterinp=${arr[120]}
-[[ "${arr[121]}" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
+empd_socket_timeout=${arr[121]}
 ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
@@ -938,6 +938,8 @@ crossfeed=$(moodeutl -d -gv crossfeed)
 value=$(moodeutl -d -gv peppy_display_type)
 [[ "$value" = "meter" ]] && peppy_display_type="Meter" || peppy_display_type="Spectrum"
 keyboard=$(moodeutl -d -gv "keyboard")
+value=$(moodeutl -d -gv gpio_svc)
+[[ "$value" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

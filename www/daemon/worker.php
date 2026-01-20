@@ -1233,7 +1233,10 @@ if ($statusTx == 'started') {
 
 // Start GPIO button handler
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
-	if (isset($_SESSION['gpio_svc']) && $_SESSION['gpio_svc'] == 1) {
+	if (!isset($_SESSION['gpio_svc'])) {
+		$_SESSION['gpio_svc'] = '0';
+	}
+	if ($_SESSION['gpio_svc'] == '1') {
 		$status = 'started';
 		startGpioBtnHandler();
 	} else {
@@ -1530,6 +1533,9 @@ if (chkRendererActive() === true) {
 	workerLog('worker: Active flags:      all false');
 	workerLog('worker: Reset flags:       skipped');
 }
+
+// Engine-mpd socket timeour
+workerLog('worker: Engine-mpd:        socket timeout (' . $_SESSION['empd_socket_timeout'] . ' secs)');
 
 //----------------------------------------------------------------------------//
 // Initialize some session vars

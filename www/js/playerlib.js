@@ -355,7 +355,7 @@ function engineMpd() {
 			}
 			// Error of some sort
 			else {
-				debugLog('engineMpd(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
+				debugLog('engineMpd(): success branch: error=(' + MPD.json['error']['code'] + ' ' + MPD.json['error']['message'] + ')');
 
 				// JSON parse errors @ohinckel https: //github.com/moode-player/moode/pull/14/files
 				if (typeof(MPD.json['error']) == 'object') {
@@ -367,7 +367,7 @@ function engineMpd() {
                             notify(NOTIFY_TITLE_INFO, 'reconnect', NOTIFY_DURATION_INFINITE);
                             GLOBAL.reconnecting = true;
                         }
-                    } else {
+                    } else if (MPD.json['error']['message'] != 'Socket timed out') {
                         notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
                     }
 				}
@@ -394,7 +394,10 @@ function engineMpd() {
                     notify(NOTIFY_TITLE_ALERT, 'mpd_error', msg);
 				}
 
-				renderUI();
+				// Socket timeout is ok but no need to renderUI when it happens
+				if (MPD.json['error']['message'] != 'Socket timed out') {
+					renderUI();
+				}
 
 				setTimeout(function() {
 					engineMpd();
@@ -462,7 +465,7 @@ function engineMpdLite() {
 			else {
 				setTimeout(function(data) {
 					// Client connects before MPD started by worker, various other issues
-					debugLog('engineMpdLite(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
+					debugLog('engineMpd(): success branch: error=(' + MPD.json['error']['code'] + ' ' + MPD.json['error']['message'] + ')');
 
                     // TEST: Show reconnect overlay when on configs
                     if (typeof(data) !== 'undefined') {
@@ -483,7 +486,9 @@ function engineMpdLite() {
                                 GLOBAL.reconnecting = true;
                             }
                         } else {
-                            notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
+							if (MPD.json['error']['message'] != "Socket timed out") {
+								notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
+							}
                         }
     				}
 
