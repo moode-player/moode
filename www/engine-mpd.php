@@ -11,12 +11,15 @@ require_once __DIR__ . '/inc/music-library.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
-instrumentLog('Script start');
+// Fetch the socket timeout value
+$timeout = sqlQuery("SELECT value FROM cfg_system WHERE param='empd_socket_timeout'", sqlConnect())[0]['value'];
+$sockTimeout = $timeout == 'default' ? MPD_DEFAULT_SOCKET_TIMEOUT : $timeout; // Default is 600000 secs (7 days)
+scriptLog('Script start');
 
 // Check for Worker startup complete
 $wrkready = sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", sqlConnect())[0]['value'];
 if ($wrkready == '0') {
-	instrumentLog('Script exit');
+	scriptLog('Script exit (startup not complete yet)');
 	exit;
 }
 
@@ -25,32 +28,33 @@ $sock = openMpdSock('localhost', 6600);
 if (!$sock) {
 	debugLog('engine-mpd: ' . $_SERVER['REMOTE_ADDR'] . ' Socket open failed');
 	echo json_encode(array('error' => array('code' => '1001', 'message' => 'Socket open failed')));
-	instrumentLog('Script exit');
+	scriptLog('Script exit (socket open failed)');
 	exit;
 } else {
-	 // How often PHP times out the socket (default 600000 secs - 7 days)
-	$timeout = sqlQuery("SELECT value FROM cfg_system WHERE param='empd_socket_timeout'", sqlConnect())[0]['value'];
-	stream_set_timeout($sock, $timeout);
-	instrumentLog('Socket opened (timeout ' . $timeout . ' secs)');
+	 // Determines how often PHP times out the socket
+	stream_set_timeout($sock, $sockTimeout);
+	scriptLog('Socket opened (timeout ' . $sockTimeout . ' secs)');
 }
 
 // Get MPD status
 $status = getMpdStatus($sock);
+$status['empd_socket_timeout'] = $sockTimeout;
 
 // Initiate MPD idle
 if ($_GET['state'] == $status['state']) {
-	instrumentLog('Idle');
+	scriptLog('Idle');
 
 	sendMpdCmd($sock, 'idle');
 	$resp = readMpdResp($sock);
 
 	if ($resp == 'Socket timed out') {
-		instrumentLog('** Socket timed out');
+		scriptLog('** Socket timed out');
 	} else {
 		$event = explode("\n", $resp)[0];
 		$status = getMpdStatus($sock);
 		$status['idle_timeout_event'] = $event;
-		instrumentLog('Event (' . $event . ')');
+		$status['empd_socket_timeout'] = $sockTimeout;
+		scriptLog('Event (' . $event . ')');
 	}
 }
 
@@ -58,10 +62,10 @@ if ($resp != 'Socket timed out') {
 	// Return data to front-end
 	$metadata = json_encode(enhanceMetadata($status, $sock, 'engine_mpd_php'));
 	if ($metadata === false) {
-		instrumentLog('Error returned to front-end');
+		scriptLog('Error returned to front-end (json encode failed)');
 		echo json_encode(array('error' => array('code' => json_last_error(), 'message' => json_last_error_msg())));
 	} else {
-		instrumentLog('Data returned to front-end');
+		scriptLog('Data returned to front-end');
 		echo $metadata;
 	}
 } else {
@@ -69,10 +73,10 @@ if ($resp != 'Socket timed out') {
 }
 
 closeMpdSock($sock);
-instrumentLog('Socket closed');
-instrumentLog('Script end');
+scriptLog('Socket closed');
+scriptLog('Script end');
 
-// Instrumentation log
-function instrumentLog($msg) {
+// Script log
+function scriptLog($msg) {
 	workerLog('engine-mpd: ' . $_SERVER['REMOTE_ADDR'] . ' ' . $msg);
 }
