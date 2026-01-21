@@ -76,7 +76,13 @@ closeMpdSock($sock);
 scriptLog('Socket closed');
 scriptLog('Script end');
 
-// Script log
+// Script log (Default is off)
+// Turn on/off
+// sudo sed -i 's/#workerLog/workerLog/' /var/www/engine-mpd.php
+// sudo sed -i 's/workerLog/#workerLog/' /var/www/engine-mpd.php
+// Set timeout value
+// moodeutl -q "UPDATE cfg_system SET value='30' WHERE param='empd_socket_timeout'"
+// moodeutl -q "UPDATE cfg_system SET value='default' WHERE param='empd_socket_timeout'"
 function scriptLog($msg) {
 	#workerLog('engine-mpd: ' . $_SERVER['REMOTE_ADDR'] . ' ' . $msg);
 }
