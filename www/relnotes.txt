@@ -22,11 +22,12 @@ Updates:
 - UPD: Bump to Linux kernel 6.12.62
 - UPD: Bump to v4-moode-meters (includes select 1600x900 meters)
 - UPD: Add option for CEC version (2.0 or 1.4)
-- UPD: Improve stats displayed on Network Config screen
-- UPD: Patch initramfs.conf to avoid apt kernel upgrade errors
 - UPD: Add peppy meter settings to backup/restore
 - UPD: Add (codec) to "Bluetooth speaker" in Audio Info
 - UPD: Add revision code for Pi-5 16GB
+- UPD: Add option to Reduce notifications
+- UPD: Improve stats displayed on Network Config screen
+- UPD: Patch initramfs.conf to avoid apt kernel upgrade errors
 
 Bug fixes
 - FIX: Screen blank not working for the "Never" setting
