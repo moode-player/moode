@@ -1534,8 +1534,9 @@ if (chkRendererActive() === true) {
 	workerLog('worker: Reset flags:       skipped');
 }
 
-// Engine-mpd socket timeour
-workerLog('worker: Engine-mpd:        socket timeout (' . $_SESSION['empd_socket_timeout'] . ' secs)');
+// Engine-mpd socket timeout: Default is 600000 secs (7 days)
+$sockTimeout = $_SESSION['empd_socket_timeout'] == 'default' ? MPD_DEFAULT_SOCKET_TIMEOUT : $timeout;
+workerLog('worker: Engine-mpd:        socket timeout (' . $sockTimeout . ' secs)');
 
 //----------------------------------------------------------------------------//
 // Initialize some session vars
