@@ -106,6 +106,14 @@ if (isset($_POST['update_keyboard'])) {
     }
 }
 
+if (isset($_POST['update_reduce_notifications'])) {
+    if (isset($_POST['reduce_notifications']) && $_POST['reduce_notifications'] != $_SESSION['reduce_notifications']) {
+		$_SESSION['reduce_notifications'] = $_POST['reduce_notifications'];
+		//$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		//$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
+    }
+}
+
 // STARTUP OPTIONS
 // Performance
 if (isset($_POST['update_worker_responsiveness']) && $_SESSION['worker_responsiveness'] != $_POST['worker_responsiveness']) {
@@ -399,6 +407,9 @@ $_select['hostname'] = $_SESSION['hostname'];
 $_select['browsertitle'] = $_SESSION['browsertitle'];
 $_timezone['timezone'] = buildTimezoneSelect($_SESSION['timezone']);
 $_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
+$autoClick = " onchange=\"autoClick('#btn-set-reduce-notifications');\"";
+$_select['reduce_notifications_on']  .= "<input type=\"radio\" name=\"reduce_notifications\" id=\"toggle-reduce-notifications-1\" value=\"1\" " . (($_SESSION['reduce_notifications'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['reduce_notifications_off'] .= "<input type=\"radio\" name=\"reduce_notifications\" id=\"toggle-reduce-notifications-2\" value=\"0\" " . (($_SESSION['reduce_notifications'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // STARTUP OPTIONS
 

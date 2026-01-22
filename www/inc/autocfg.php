@@ -127,6 +127,7 @@ function autoConfigSettings() {
 		['requires' => ['updater_auto_check'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['timezone'], 'handler' => 'setSessVarOnlySysCmd', 'cmd' => 'set-timezone %s'],
 		['requires' => ['keyboard'], 'handler' => 'setSessVarOnlySysCmd', 'cmd' => 'set-keyboard %s'],
+		['requires' => ['reduce_notifications'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['worker_responsiveness'], 'handler' => function($values) {
 			$_SESSION['worker_responsiveness'] = $values['worker_responsiveness'];
 			if ($values['worker_responsiveness'] == 'Default') {

@@ -307,7 +307,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#updater-notification').click(function(e) {
             if (SESSION.json['updater_available_update'].substring(0, 7) == 'Release') {
                 var msg = SESSION.json['updater_available_update'] + 'This notification can be turned off in System Config';
-                notify(NOTIFY_TITLE_INFO, 'updater', msg, NOTIFY_DURATION_MEDIUM);
+                notify(NOTIFY_TITLE_INFO, 'update_available', msg, NOTIFY_DURATION_MEDIUM);
             } else {
                 $('#updater-notification').hide();
             }
@@ -1118,7 +1118,9 @@ jQuery(document).ready(function($) { 'use strict';
     		storeRadioPos(UI.radioPos);
             renderRadioView();
             lazyLode('radio');
-            $('.busy-spinner').hide();
+			setTimeout(function() {
+				$('.busy-spinner').hide();
+			}, ONE_SEC_TIMEOUT);
         });
 	});
 

@@ -1563,6 +1563,10 @@ if (!isset($_SESSION['lib_active_search'])) {
 if (!isset($_SESSION['lib_recent_playlist'])) {
 	$_SESSION['lib_recent_playlist'] = 'Default Playlist';
 }
+// Reduce notifications
+if (!isset($_SESSION['reduce_notifications'])) {
+	$_SESSION['reduce_notifications'] = '0';
+}
 // Worker sleep interval
 if (!isset($_SESSION['worker_responsiveness'])) {
 	$_SESSION['worker_responsiveness'] = 'Default';

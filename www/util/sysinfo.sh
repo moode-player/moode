@@ -30,6 +30,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWLAN AP SSID\t\t= $apdssid\c"
 	echo -e "\nWLAN AP addr\t\t= $ap_network_addr\c"
 	echo -e "\nWLAN AP proto\t\t= $approto\c"
+	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
+	echo -e "\nEthernet check\t\t= $eth0chk\c"
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
@@ -57,8 +59,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nPi integrated BT\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
 	echo -e "\nLED state\t\t= $led_state\c"
-	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
-	echo -e "\nEthernet check\t\t= $eth0chk\c"
 	if [ $(($feat_bitmask & $FEAT_HTTPS)) -ne 0 ]; then
 		echo -e "\nHTTPS mode\t\t= $HTTPS_MODE\c"
 	fi
@@ -185,6 +185,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nRenderer backdrop\t= $renderer_backdrop\c"
 	echo -e "\nFont size\t\t= $font_size\c"
 	echo -e "\nNative lazyload\t\t= $native_lazyload\c"
+	echo -e "\nReduce notifications\t= $reduce_notifications\c"
 	echo -e "\n\nPlayback\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
@@ -940,6 +941,8 @@ value=$(moodeutl -d -gv peppy_display_type)
 keyboard=$(moodeutl -d -gv "keyboard")
 value=$(moodeutl -d -gv gpio_svc)
 [[ "$value" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
+value=$(moodeutl -d -gv reduce_notifications)
+[[ "$value" = "1" ]] && reduce_notifications="On" || reduce_notifications="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

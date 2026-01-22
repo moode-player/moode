@@ -3717,7 +3717,7 @@ $('#btn-preferences-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
-                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {
                     location.reload(true);
                 }, (NOTIFY_DURATION_DEFAULT * 1000));
@@ -3725,7 +3725,7 @@ $('#btn-preferences-update').click(function(e){
                 $('#btn-ra-refresh').click();
                 loadLibrary();
             } else if (regenThumbsReqd) {
-                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' Thumbnails must be regenerated after changing this setting.');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' Thumbnails must be regenerated after changing this setting.');
             } else {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated', NOTIFY_DURATION_SHORT);
             }

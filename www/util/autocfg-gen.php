@@ -50,6 +50,7 @@ $currentSettings['avahi_options'] = $_SESSION['avahi_options'];
 $currentSettings['ready_script'] = $_SESSION['ready_script'];
 $currentSettings['ready_script_wait'] = $_SESSION['ready_script_wait'];
 $currentSettings['keyboard'] = $_SESSION['keyboard'];
+$currentSettings['reduce_notifications'] = $_SESSION['reduce_notifications'];
 // Network
 $currentSettings['approto'] = $_SESSION['approto'];
 // Audio: MPD options
