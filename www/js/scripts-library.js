@@ -864,7 +864,8 @@ var renderSongs = function(albumPos) {
 		$('.lib-album-heading').css('display', 'block');
 	}
 
-	// Display disc num if more than 1 disc, exceot for case: Album name contains the string '[Disc' which indicates separate albums for each disc
+	// Display disc num if more than 1 disc
+	// Except for case: Album name contains the string '[Disc' which indicates separate albums for each disc
 	if (lastDisc > 1 && !filteredSongs[0].album.toLowerCase().includes('[disc')) {
 		$('.lib-disc').css('display', 'block');
 	}
