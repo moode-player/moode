@@ -1244,7 +1244,6 @@ function renderUI() {
                 } else {
                     var bitRate = format + ' ' + MPD.json['bitrate'];
                 }
-        		//DELETE:$('#extra-tags-display').text(bitRate + ' • ' + mpdJsonOutput);
                 $('#extra-tags-display').text(bitRate);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
