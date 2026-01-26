@@ -47,6 +47,7 @@ $currentSettings['usb_volknob'] = $_SESSION['usb_volknob'];
 $currentSettings['led_state'] = $_SESSION['led_state'];
 $currentSettings['eth0chk'] = $_SESSION['eth0chk'];
 $currentSettings['avahi_options'] = $_SESSION['avahi_options'];
+$currentSettings['external_antenna'] = $_SESSION['external_antenna'];
 $currentSettings['ready_script'] = $_SESSION['ready_script'];
 $currentSettings['ready_script_wait'] = $_SESSION['ready_script_wait'];
 $currentSettings['keyboard'] = $_SESSION['keyboard'];

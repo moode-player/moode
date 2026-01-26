@@ -325,6 +325,18 @@
 					If this occurs try setting the option to IPv4-only which can eliminate the second advertized host.
 				</span>
 			</div>
+			<label class="control-label">External antenna</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-external-antenna" for="toggle-external-antenna-2">ON </label>$_select[external_antenna_on]
+					<label class="toggle-radio toggle-external-antenna" for="toggle-external-antenna-1">OFF</label>$_select[external_antenna_off]
+				</div>
+				<button id="btn-set-external-antenna" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_external_antenna" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-external-antenna" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-external-antenna" class="config-help-info">
+					The antenna supports dual-band Wi-Fi and attaches to the U.FL connector on CM4 or CM5 compute modules.
+				</span>
+			</div>
 		</div>
 
 		<div class="control-group">

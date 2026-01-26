@@ -181,6 +181,7 @@ const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
 const CFG_DISPLAY_AUTODETECT = 'display_auto_detect=1';
 const CFG_PITOUCH_INVERTXY = 'vc4-kms-dsi-7inch,invx,invy';
+const CFG_EXTERNAL_ANTENNA = 'dtparam=ant2';
 // Boot cmdline.txt managed params
 const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
 

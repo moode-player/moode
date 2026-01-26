@@ -388,6 +388,11 @@ workerLog('worker: Fan control:   ' . $fanControlMsg);
 // CPU governor
 workerLog('worker: CPU governor:  ' . $_SESSION['cpugov']);
 
+// External antenna
+if (!isset($_SESSION['external_antenna'])) {
+	$_SESSION['external_antenna'] = '0';
+}
+
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- Network');
@@ -543,6 +548,7 @@ if (!isset($_SESSION['avahi_options'])) {
 workerLog('worker: Other');
 workerLog('worker: mDNS discover: ' . ($_SESSION['avahi_options'] == 'ipv4ipv6' ? 'IPv4 and IPv6' : 'IPv4-only'));
 workerLog('worker: Hotspot proto: ' . strtoupper($_SESSION['approto']));
+workerLog('worker: Ext antenna:   ' . ($_SESSION['external_antenna'] == '1' ? 'on' : 'off'));
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -3398,6 +3404,10 @@ function runQueuedJob() {
 			break;
 		case 'avahi_options':
 			updAvahiOptions($_SESSION['w_queueargs']);
+			break;
+		case 'external_antenna':
+			$value = $_SESSION['w_queueargs'] == '0' ? '#' : '';
+			updBootConfigTxt('upd_external_antenna', $value);
 			break;
 		case 'actled': // LED0
 			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {

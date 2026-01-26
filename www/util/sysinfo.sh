@@ -32,6 +32,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWLAN AP proto\t\t= $approto\c"
 	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
 	echo -e "\nEthernet check\t\t= $eth0chk\c"
+	echo -e "\nExt antenna\t\t= $external_antenna\c"
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
@@ -952,6 +953,8 @@ wlanuuid=$(echo ${arr[1]} | cut -f 10 -d "|")
 wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
 apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
 approto=$(moodeutl -d -gv approto)
+value=$(moodeutl -d -gv external_antenna)
+[[ "$value" = "1" ]] && external_antenna="On" || external_antenna="Off"
 
 # Misc settings
 modprobe configs
