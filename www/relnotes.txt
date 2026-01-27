@@ -20,6 +20,7 @@ New features
 
 Updates:
 - UPD: Bump to Linux kernel 6.12.62
+- UPD: Bump to MPD 0.24.8
 - UPD: Bump to v4-moode-meters (includes select 1600x900 meters)
 - UPD: Add option for CEC version (2.0 or 1.4)
 - UPD: Add peppy meter settings to backup/restore
