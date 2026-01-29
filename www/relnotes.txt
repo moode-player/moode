@@ -11,14 +11,14 @@
 
 ################################################################################
 #
-# 2026-MM-DD moOde 10.0.4 (Trixie)
+# 2026-MM-DD moOde 10.1.0 (Trixie)
 #
 ################################################################################
 
 New features
 - NEW: Peppy "Display on play" feature
 
-Updates:
+Updates
 - UPD: Bump to Linux kernel 6.12.62
 - UPD: Bump to MPD 0.24.8
 - UPD: Bump to v4-moode-meters (includes select 1600x900 meters)
