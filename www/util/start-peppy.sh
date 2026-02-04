@@ -5,10 +5,16 @@
 #
 
 #
-# Arg $1 = peppymeter.py|spectrum.py
+# Arg $1 = meter|spectrum
 #
 
-PEPPY_PROGRAM=$1
+TYPE=$1
 
 export DISPLAY=:0
-cd /opt/peppymeter && python3 $PEPPY_PROGRAM >/dev/null &
+if [ $TYPE = 'meter' ]; then
+	cd /opt/peppymeter && python3 peppymeter.py >/dev/null &
+elif [ $TYPE = 'spectrum' ]; then
+	cd /opt/peppyspectrum && python3 spectrum.py >/dev/null &
+else
+	echo "Valid args are meter|spectrum"
+fi

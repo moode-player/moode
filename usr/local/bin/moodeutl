@@ -772,11 +772,7 @@ function setDisplay($argv) {
 			}
 			// Switch to Peppy
 			if ($webuiOn == '1' && $set2peppy == '1') {
-				if ($_SESSION['peppy_display_type'] == 'meter') {
-					shell_exec('/var/www/util/start-peppy.sh peppymeter.py > /dev/null 2>&1');
-				} else {
-					shell_exec('/var/www/util/start-peppy.sh spectrum.py > /dev/null 2>&1');
-				}
+				shell_exec('/var/www/util/start-peppy.sh ' . $_SESSION['peppy_display_type'] . ' > /dev/null 2>&1');
 			}
 			// Switch to WebUI
  			if ($peppyOn == '1' && $set2webui == '1') {
