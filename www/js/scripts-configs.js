@@ -278,6 +278,13 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#manualserver').val($('#address').val().trim());
 	});
 
+	// View MPD db update status
+	$('#view-dbupdate-status').click(function(e) {
+		$.getJSON('command/music-library.php?cmd=get_dbupdate_status', function(status) {
+			$('#dbupdate-status').html(status);
+		});
+	});
+
 	// View thumbnail cache generation status
     $('#view-thmcache-status').click(function(e) {
         $.getJSON('command/music-library.php?cmd=thumcache_status', function(data) {

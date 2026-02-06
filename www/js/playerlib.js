@@ -2913,20 +2913,25 @@ $(document).on('click', '.context-menu a', function(e) {
             }
             break;
         case 'player_info':
-            var networkIface = SESSION.json['wlanssid'] == '' ? 'Ethernet' : 'Wireless (' + SESSION.json['wlanssid'] + ')';
-            notify(NOTIFY_TITLE_INFO, 'player_info',
-				'moOde:&nbsp;&nbsp;' + SESSION.json['moode_release'] + '<br>' +
-                'Host:&nbsp;&nbsp;&nbsp;' + SESSION.json['hostname'] + '<br>' +
-                'Addr:&nbsp;&nbsp;&nbsp;' + SESSION.json['ipaddress'] + '<br>' +
-                'Type:&nbsp;&nbsp;&nbsp;' + networkIface + '<br>' +
-				'PiOS:&nbsp;&nbsp;&nbsp;' + SESSION.json['raspbianver'] + '<br>' +
-                'Model:&nbsp;&nbsp;' + SESSION.json['hdwrrev'] + '<br>' +
-                'Kernel:&nbsp;' + SESSION.json['kernelver'] + '<br>' +
-                'MPD:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'] + '<br>' +
-                'Audio:&nbsp;&nbsp;' + SESSION.json['adevname'],
-                NOTIFY_DURATION_INFINITE);
-                // Styling (gets automatically reset by pnotify for other notifications)
-                $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
+			$.getJSON('command/music-library.php?cmd=get_dbupdate_status', {'mpcstats': ''}, function(status) {
+				var songCount = status.split(', ')[2];
+		        var networkIface = SESSION.json['wlanssid'] == '' ? 'Ethernet' : 'Wireless (' + SESSION.json['wlanssid'] + ')';
+		        notify(NOTIFY_TITLE_INFO, 'player_info',
+					'moOde:&nbsp;&nbsp;&nbsp;' + SESSION.json['moode_release'] + '<br>' +
+		            'Host:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['hostname'] + '<br>' +
+		            'Addr:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['ipaddress'] + '<br>' +
+		            'Type:&nbsp;&nbsp;&nbsp;&nbsp;' + networkIface + '<br>' +
+					'PiOS:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['raspbianver'] + '<br>' +
+		            'Model:&nbsp;&nbsp;&nbsp;' + SESSION.json['hdwrrev'] + '<br>' +
+		            'Kernel:&nbsp;&nbsp;' + SESSION.json['kernelver'] + '<br>' +
+		            'MPD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'] + '<br>' +
+					'Audio:&nbsp;&nbsp;&nbsp;' + SESSION.json['adevname'] + '<br>' +
+					'Library:&nbsp' + songCount,
+		            NOTIFY_DURATION_INFINITE);
+		            // Styling (gets automatically reset by pnotify for other notifications)
+		            $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
+			});
+
             break;
         case 'edit_station':
             $.post('command/radio.php?cmd=get_station_contents', {'path': path}, function(data) {

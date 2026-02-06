@@ -29,6 +29,13 @@ switch ($_GET['cmd']) {
 		//sleep(10); // To simulate a long library load
 		echo loadLibrary($sock);
     	break;
+	case 'get_dbupdate_status':
+		$stats = getMpdStats($sock);
+		$status = ($_SESSION['mpd_dbupdate_status'] == '0' || isset($_GET['mpcstats'])) ?
+			$stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs' :
+			'Files indexed: ' . $_SESSION['mpd_dbupdate_status'];
+		echo json_encode($status);
+		break;
 	case 'lsinfo':
 		$path = isset($_GET['path']) && $_GET['path'] != '' ? $_GET['path'] : '';
 		echo json_encode(searchMpdDb($sock, 'lsinfo', $path));

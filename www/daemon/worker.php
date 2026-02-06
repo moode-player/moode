@@ -932,6 +932,11 @@ if (!file_exists('/etc/mpd.conf')) {
 	}
 }
 
+// Database update item count
+if (!isset($_SESSION['mpd_dbupdate_status'])) {
+	$_SESSION['mpd_dbupdate_status'] = 0;
+}
+
 // Start MPD
 sysCmd("systemctl start mpd");
 workerLog('worker: MPD service:        started');
@@ -2598,6 +2603,11 @@ function chkLibraryUpdate() {
 		$stats = getMpdStats($sock);
 		closeMpdSock($sock);
 
+		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_status'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		}
+
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libupd_done');
 			$GLOBALS['check_library_update'] = '0';
@@ -2617,6 +2627,11 @@ function chkLibraryRegen() {
 		$stats = getMpdStats($sock);
 		closeMpdSock($sock);
 
+		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_status'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		}
+
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libregen_done');
 			$GLOBALS['check_library_regen'] = '0';
@@ -2626,6 +2641,18 @@ function chkLibraryRegen() {
 	} else {
 		workerLog('worker: CRITICAL ERROR: chkLibraryRegen() failed: Unable to connect to MPD');
 	}
+}
+
+// Clear MPD log
+function truncateMpdLog() {
+	sysCmd('truncate ' . MPD_LOG . ' --size 0');
+	$_SESSION['mpd_dbupdate_status'] = 0;
+}
+
+// Count number of lines in MPD log
+function countMpdLogLines() {
+	$count = sysCmd('cat ' . MPD_LOG . ' | grep "update:" | wc -l')[0];
+	return $count;
 }
 
 // Return hardware revision
@@ -2723,9 +2750,13 @@ function runQueuedJob() {
 
 		// Menu Update library, Context menu, Update this folder
 		case 'update_library':
+			// Truncate MPD log
+			workerLog('worker: Truncate MPD log');
+			truncateMpdLog();
 			// Update library
 			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
 			workerLog('mpdindex: Cmd (' . $cmd . ')');
+			workerLog('mpdindex: Scanning');
 			if (false !== ($sock = openMpdSock('localhost', 6600))) {
 				sendMpdCmd($sock, $cmd);
 				$resp = readMpdResp($sock);
@@ -2744,11 +2775,15 @@ function runQueuedJob() {
 
 		// lib-config jobs
 		case 'regen_library':
+			// Truncate MPD log
+			workerLog('worker: Truncate MPD log');
+			truncateMpdLog();
 			// Clear libcache then regen MPD database
 			workerLog('worker: Clear Library tag cache');
 			clearLibCacheAll();
 			workerLog('mpdindex: Start');
 			workerLog('mpdindex: Cmd (rescan)');
+			workerLog('mpdindex: Scanning');
 			if (false !== ($sock = openMpdSock('localhost', 6600))) {
 				sendMpdCmd($sock, 'rescan');
 				$resp = readMpdResp($sock);

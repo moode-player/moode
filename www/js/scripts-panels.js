@@ -1920,6 +1920,15 @@ jQuery(document).ready(function($) { 'use strict';
         $('#dropdown-cdsp-menu').scrollTo(0, 200);
     });
 
+	// Display MPD update status
+	$('.busy-spinner').click(function(e) {
+		if (GLOBAL.libLoading == true) {
+			$.getJSON('command/music-library.php?cmd=get_dbupdate_status', function(status) {
+				notify(NOTIFY_TITLE_INFO, 'dbupdate_status', status);
+			});
+		}
+	});
+
 	// Info button (i) show/hide toggle
     $(document).on('click', '.info-toggle', function(e) {
 		var spanId = '#' + $(this).data('cmd');

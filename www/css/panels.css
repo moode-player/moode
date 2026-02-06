@@ -981,7 +981,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 .stopscroll {height:100%;overflow:hidden;}
 .sysinfo-modal {margin-top:-2em;}
 .config-label {color:#eee;margin-left:.35em;}
-.busy-spinner {position:absolute;right:3.25rem;top:calc(env(safe-area-inset-top) + .4rem);display:none;}
+.busy-spinner {position:absolute;right:3.25rem;top:calc(env(safe-area-inset-top) + .4rem);display:none;cursor:pointer;}
 .busy-spinner svg {
 	stroke:var(--adapttext);
 	height:2.25rem;

@@ -26,9 +26,10 @@ function notify(title, tag, arg3, arg4 = '') {
 		queue_cropped: 'Queue has been cropped. ',
 		playqueue_info: '<br>',
 		// Library
-		update_library: 'Library is being updated... ',
+		update_library: 'Library is being updated... <br><br>Click the progress spinner for status.',
 		library_updating: 'Library update is already in progress. ',
 		library_loading: 'Library is loading... ',
+		dbupdate_status: 'Files indexed: ',
 		// Playlist/Queue
 		saving_queue: 'Saving Queue. ',
 		queue_saved: 'Queue has been saved. ',
@@ -117,9 +118,10 @@ function notify(title, tag, arg3, arg4 = '') {
 		// Queue
 		playqueue_info: '<br>',
 		// Library
-		update_library: 'Library is being updated... ',
+		update_library: 'Library is being updated... <br><br>Click the progress spinner for status.',
 		library_updating: 'Library update is already in progress. ',
 		library_loading: 'Library is loading... ',
+		dbupdate_status: 'Files indexed: ',
 		// Playlist/Queue
 		playlist_name_needed: 'Playlist name is empty. ',
 		playlist_name_error: 'Invalid playlist name. ',
