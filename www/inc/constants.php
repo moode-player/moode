@@ -25,6 +25,7 @@ const SLPOWER_LOG = '/var/log/moode_slpower.log';
 // MPD
 const MPD_RESPONSE_ERR = 'ACK';
 const MPD_RESPONSE_OK = 'OK';
+const MPD_DEFAULT_SOCKET_TIMEOUT = '600000'; // Secs (7 days)
 const MPD_CONF = '/etc/mpd.conf';
 const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
@@ -101,6 +102,9 @@ const PEPPY_METER_ETC_DIR = '/etc/peppymeter';
 const PEPPY_METER_OPT_DIR = '/opt/peppymeter';
 const PEPPY_SPECTRUM_ETC_DIR = '/etc/peppyspectrum';
 const PEPPY_SPECTRUM_OPT_DIR = '/opt/peppyspectrum';
+// Peppy touch monitor
+const TOUCHMON_LOG = '/tmp/moode_touchmon.log';
+const TOUCHMON_TIMEOUT_DEFAULT = 15;
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
@@ -117,6 +121,7 @@ const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
 const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display is starting...';
 const NOTIFY_MSG_PEPPYDISPLAY_STARTING = 'Peppy display is starting...';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
+const NOTIFY_MSG_BLUETOOTH_RECONNECT = 'Reconnect to the Bluetooth device to make this setting effective.';
 // Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';
@@ -178,6 +183,7 @@ const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
 const CFG_DISPLAY_AUTODETECT = 'display_auto_detect=1';
 const CFG_PITOUCH_INVERTXY = 'vc4-kms-dsi-7inch,invx,invy';
+const CFG_EXTERNAL_ANTENNA = 'dtparam=ant2';
 // Boot cmdline.txt managed params
 const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
 

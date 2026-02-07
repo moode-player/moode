@@ -11,19 +11,48 @@
 
 ################################################################################
 #
-# 2026-MM-DD moOde 10.0.4 (Trixie)
+# 2026-MM-DD moOde 10.1.1 (Trixie)
+#
+################################################################################
+
+Updates
+- UPD: Add progress (file count) indicator for Library update/regenerate
+- UPD: Add Library song count (mpc stats) to Player info notification
+- UPD: Improve Bluetooth Control screen layout and notifications
+- UPD: Reduce watchdog interval to improve "Wake on play" responsiveness
+
+Bug fixes
+- FIX: Peppy spectrum not working with "Display on play" feature
+- FIX: Foreground for 1280x720 Blue meter not positioned correctly
+- FIX: Screen blank not working for the "Never" setting (regression)
+
+################################################################################
+#
+# 2026-01-29 moOde 10.1.0 (Trixie)
 #
 ################################################################################
 
 New features
-- NEW:
+- NEW: Peppy "Display on play" feature
 
-Updates:
+Updates
+- UPD: Bump to Linux kernel 6.12.62
+- UPD: Bump to MPD 0.24.8
+- UPD: Bump to v4-moode-meters (includes select 1600x900 meters)
 - UPD: Add option for CEC version (2.0 or 1.4)
+- UPD: Add peppy meter settings to backup/restore
+- UPD: Add (codec) to "Bluetooth speaker" in Audio Info
+- UPD: Add revision code for Pi-5 16GB
+- UPD: Add option to Reduce notifications
+- UPD: Add option for Compute Module external antenna
 - UPD: Improve stats displayed on Network Config screen
+- UPD: Patch initramfs.conf to avoid apt kernel upgrade errors
 
 Bug fixes
 - FIX: Screen blank not working for the "Never" setting
+- FIX: Search site Pref missing from backup/restore
+- FIX: Rotary encoder params not applied during startup
+- FIX: Screen rotation not restored (regression)
 
 ################################################################################
 #

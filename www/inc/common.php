@@ -658,6 +658,10 @@ function updBootConfigTxt($action, $value) {
 			// $value: '#' or ''
 			sysCmd('sed -i /' . CFG_DISABLE_WIFI . "/c\\" . $value . 'dtoverlay=' . CFG_DISABLE_WIFI . ' ' . BOOT_CONFIG_TXT);
 			break;
+		case 'upd_external_antenna':
+			// $value: '#' or ''
+			sysCmd('sed -i /' . CFG_EXTERNAL_ANTENNA . "/c\\" . $value . CFG_EXTERNAL_ANTENNA . ' ' . BOOT_CONFIG_TXT);
+			break;
 	}
 }
 

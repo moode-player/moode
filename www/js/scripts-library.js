@@ -864,7 +864,8 @@ var renderSongs = function(albumPos) {
 		$('.lib-album-heading').css('display', 'block');
 	}
 
-	// Display disc num if more than 1 disc, exceot for case: Album name contains the string '[Disc' which indicates separate albums for each disc
+	// Display disc num if more than 1 disc
+	// Except for case: Album name contains the string '[Disc' which indicates separate albums for each disc
 	if (lastDisc > 1 && !filteredSongs[0].album.toLowerCase().includes('[disc')) {
 		$('.lib-disc').css('display', 'block');
 	}
@@ -1447,7 +1448,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                         $('.playback-context-menu i').removeClass('recorder-on');
                         $('#menu-check-recorder').css('display', 'none');
                     }
-                    notify(NOTIFY_TITLE_INFO, 'settings_updated', 'Recorder ' + recorderStatus, NOTIFY_DURATION_SHORT);
+                    notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', 'Recorder ' + recorderStatus, NOTIFY_DURATION_SHORT);
                 } else if ($('#tag-recordings span').text() == 'Yes') {
                     // NOTE: Completion message sent from back-end via sendFECmd()
                     notify(NOTIFY_TITLE_INFO, 'recorder_tagging', 'Please wait for completion message.', NOTIFY_DURATION_INFINITE);
@@ -1471,7 +1472,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                         function() {
                             var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] + '.' :
                             (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted.' : '');
-                            notify(NOTIFY_TITLE_INFO, 'settings_updated', msg, NOTIFY_DURATION_SHORT);
+                            notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', msg, NOTIFY_DURATION_SHORT);
                         }
                     );
                 } else {
@@ -1485,7 +1486,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                         function() {
                             var msg = mpdMonitorSvcChange === true ? 'Monitor ' + SESSION.json['mpd_monitor_svc'] + '.' :
                             (SESSION.json['mpd_monitor_svc'] == 'On' ? 'Monitor restarted.' : '');
-                            notify(NOTIFY_TITLE_INFO, 'settings_updated', msg, NOTIFY_DURATION_SHORT);
+                            notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', msg, NOTIFY_DURATION_SHORT);
                         }
                     );
                 } else {

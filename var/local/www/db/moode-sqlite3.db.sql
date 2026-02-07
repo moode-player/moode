@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Dec 14 11:24:38 2025
+-- File generated with SQLiteStudio v3.4.4 on Tue Jan 20 11:36:29 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -241,7 +241,7 @@ CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_v
 -- Table: cfg_plugin
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32));
 INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (1, 'camilladsp', 'sample-configs', 'v3-sample-configs');
-INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (2, 'peppydisplay', 'moode-meters', 'v3-moode-meters');
+INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters');
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));
@@ -640,7 +640,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (95, 'rsmaftersl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (96, 'mpdmixer_local', 'software');
 INSERT INTO cfg_system (id, param, value) VALUES (97, 'wrkready', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (98, 'scnsaver_timeout', 'Never');
-INSERT INTO cfg_system (id, param, value) VALUES (99, 'RESERVED_99', '');
+INSERT INTO cfg_system (id, param, value) VALUES (99, 'touchmon_svc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (100, 'favorites_name', 'Favorites');
 INSERT INTO cfg_system (id, param, value) VALUES (101, 'spotifysvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (102, 'spotifyname', 'Moode Spotify');
@@ -660,10 +660,10 @@ INSERT INTO cfg_system (id, param, value) VALUES (115, 'rsmafterpa', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (117, 'mpd_httpd_port', '8000');
 INSERT INTO cfg_system (id, param, value) VALUES (118, 'mpd_httpd_encoder', 'lame');
-INSERT INTO cfg_system (id, param, value) VALUES (119, 'invert_polarity', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (119, 'touchmon_timeout', '15');
 INSERT INTO cfg_system (id, param, value) VALUES (120, 'inpactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (121, 'rsmafterinp', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (122, 'gpio_svc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (122, 'empd_socket_timeout', 'default');
 INSERT INTO cfg_system (id, param, value) VALUES (123, 'library_ignore_articles', 'a,an,the');
 INSERT INTO cfg_system (id, param, value) VALUES (124, 'volknob_mpd', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (125, 'volknob_preamp', '0');

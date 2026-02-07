@@ -224,7 +224,8 @@ $peppyAlsa = ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa']
 // Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {
 	// $renderer = MPD
-	$_audio_output_chain = $renderer . $dsp . $peppyAlsa  . 'Bluetooth speaker';
+	$btCodec =	sysCmd("bluealsa-cli -v list-pcms | awk -F\": \" '/Selected codec/ {print $2}' | cut -d\":\" -f1")[0];
+	$_audio_output_chain = $renderer . $dsp . $peppyAlsa  . 'Bluetooth speaker (' . $btCodec . ' codec)';
 } else if ($_SESSION['multiroom_tx'] == 'On') {
 	$_audio_output_chain = $renderer . 'Multiroom Sender';
 } else if ($_SESSION['multiroom_rx'] == 'On') {

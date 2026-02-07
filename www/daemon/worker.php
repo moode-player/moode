@@ -118,6 +118,11 @@ if ($userId != NO_USERID_DEFINED) {
 	}
 }
 
+// Patch initramfs.conf
+// This allows apt upgrade kernel installs to succeed when the parameter
+// auto_initramfs=1 is not in /boot/firmware/config.txt
+sysCmd("sed -i 's/^MODULES.*/MODULES=most/' /etc/initramfs-tools/initramfs.conf");
+
 // Cleanup:
 // - Delete hidden MacOS dot files from boot partition
 if (file_exists(BOOT_DIR . '/.fseventsd')) {
@@ -383,6 +388,11 @@ workerLog('worker: Fan control:   ' . $fanControlMsg);
 // CPU governor
 workerLog('worker: CPU governor:  ' . $_SESSION['cpugov']);
 
+// External antenna
+if (!isset($_SESSION['external_antenna'])) {
+	$_SESSION['external_antenna'] = '0';
+}
+
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- Network');
@@ -538,6 +548,7 @@ if (!isset($_SESSION['avahi_options'])) {
 workerLog('worker: Other');
 workerLog('worker: mDNS discover: ' . ($_SESSION['avahi_options'] == 'ipv4ipv6' ? 'IPv4 and IPv6' : 'IPv4-only'));
 workerLog('worker: Hotspot proto: ' . strtoupper($_SESSION['approto']));
+workerLog('worker: Ext antenna:   ' . ($_SESSION['external_antenna'] == '1' ? 'on' : 'off'));
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -903,6 +914,11 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	workerLog('worker: Allo Piano2.1: volume initialized');
 }
 
+// Invert polarity
+if (!isset($_SESSION['invert_polarity'])) {
+	$_SESSION['invert_polarity'] = '0';
+}
+
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
 workerLog('worker: -- MPD startup');
@@ -928,6 +944,11 @@ if (!file_exists('/etc/mpd.conf')) {
 		workerLog('worker: MPD config:         Updated (ALSA conf device mismatch)');
 		updMpdConf();
 	}
+}
+
+// Database update item count
+if (!isset($_SESSION['mpd_dbupdate_status'])) {
+	$_SESSION['mpd_dbupdate_status'] = 0;
 }
 
 // Start MPD
@@ -1254,7 +1275,10 @@ if ($statusTx == 'started') {
 
 // Start GPIO button handler
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
-	if (isset($_SESSION['gpio_svc']) && $_SESSION['gpio_svc'] == 1) {
+	if (!isset($_SESSION['gpio_svc'])) {
+		$_SESSION['gpio_svc'] = '0';
+	}
+	if ($_SESSION['gpio_svc'] == '1') {
 		$status = 'started';
 		startGpioBtnHandler();
 	} else {
@@ -1405,7 +1429,6 @@ workerLog('worker: Target url:       ' . $_SESSION['local_display_url']);
 workerLog('worker: Chromium ver:     ' . sysCmd('moodeutl --chromiumrel')[0]);
 workerLog('worker: Chromium cfg:     ' . $cfgStatus);
 workerLog('worker: Disable GPU:      ' . $_SESSION['disable_gpu_chromium']);
-workerLog('worker: PeppyALSA driver: ' . ($_SESSION['enable_peppyalsa'] == '1' ? 'on' : 'off'));
 workerLog('worker: --');
 // Peppy display
 workerLog('worker: Peppy display:    ' . ($_SESSION['peppy_display'] == '1' ? 'on' : 'off'));
@@ -1416,6 +1439,7 @@ workerLog('worker: Meter folder:     ' . trim($result[1]));
 $result = sysCmd('cat /etc/peppyspectrum/config.txt | grep "spectrum = \|spectrum.folder = " | cut -d"=" -f2');
 workerLog('worker: Spectrum(s):      ' . (empty(trim($result[0])) ? 'Not set' : trim($result[0])));
 workerLog('worker: Spectrum folder:  ' . trim($result[1]));
+workerLog('worker: PeppyALSA driver: ' . ($_SESSION['enable_peppyalsa'] == '1' ? 'on' : 'off'));
 
 workerLog('worker: --');
 // General display settings
@@ -1458,6 +1482,7 @@ workerLog('worker: Triggerhappy:     ' . ($_SESSION['usb_volknob'] == '1' ? 'on'
 if (!isset($_SESSION['rotaryenc'])) {
 	$_SESSION['rotaryenc'] = '0';
 }
+sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
 if ($_SESSION['rotaryenc'] == '1') {
 	sysCmd('systemctl start rotenc');
 }
@@ -1551,6 +1576,10 @@ if (chkRendererActive() === true) {
 	workerLog('worker: Reset flags:       skipped');
 }
 
+// Engine-mpd socket timeout: Default is 600000 secs (7 days)
+$sockTimeout = $_SESSION['empd_socket_timeout'] == 'default' ? MPD_DEFAULT_SOCKET_TIMEOUT : $timeout;
+workerLog('worker: Engine-mpd:        socket timeout (' . $sockTimeout . ' secs)');
+
 //----------------------------------------------------------------------------//
 // Initialize some session vars
 //----------------------------------------------------------------------------//
@@ -1575,6 +1604,10 @@ if (!isset($_SESSION['lib_active_search'])) {
 // Library most recent playlist added to Queue
 if (!isset($_SESSION['lib_recent_playlist'])) {
 	$_SESSION['lib_recent_playlist'] = 'Default Playlist';
+}
+// Reduce notifications
+if (!isset($_SESSION['reduce_notifications'])) {
+	$_SESSION['reduce_notifications'] = '0';
 }
 // Worker sleep interval
 if (!isset($_SESSION['worker_responsiveness'])) {
@@ -2601,6 +2634,11 @@ function chkLibraryUpdate() {
 		$stats = getMpdStats($sock);
 		closeMpdSock($sock);
 
+		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_status'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		}
+
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libupd_done');
 			$GLOBALS['check_library_update'] = '0';
@@ -2620,6 +2658,11 @@ function chkLibraryRegen() {
 		$stats = getMpdStats($sock);
 		closeMpdSock($sock);
 
+		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_status'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		}
+
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libregen_done');
 			$GLOBALS['check_library_regen'] = '0';
@@ -2629,6 +2672,18 @@ function chkLibraryRegen() {
 	} else {
 		workerLog('worker: CRITICAL ERROR: chkLibraryRegen() failed: Unable to connect to MPD');
 	}
+}
+
+// Clear MPD log
+function truncateMpdLog() {
+	sysCmd('truncate ' . MPD_LOG . ' --size 0');
+	$_SESSION['mpd_dbupdate_status'] = 0;
+}
+
+// Count number of lines in MPD log
+function countMpdLogLines() {
+	$count = sysCmd('cat ' . MPD_LOG . ' | grep "update:" | wc -l')[0];
+	return $count;
 }
 
 // Return hardware revision
@@ -2726,9 +2781,13 @@ function runQueuedJob() {
 
 		// Menu Update library, Context menu, Update this folder
 		case 'update_library':
+			// Truncate MPD log
+			workerLog('worker: Truncate MPD log');
+			truncateMpdLog();
 			// Update library
 			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
 			workerLog('mpdindex: Cmd (' . $cmd . ')');
+			workerLog('mpdindex: Scanning');
 			if (false !== ($sock = openMpdSock('localhost', 6600))) {
 				sendMpdCmd($sock, $cmd);
 				$resp = readMpdResp($sock);
@@ -2747,11 +2806,15 @@ function runQueuedJob() {
 
 		// lib-config jobs
 		case 'regen_library':
+			// Truncate MPD log
+			workerLog('worker: Truncate MPD log');
+			truncateMpdLog();
 			// Clear libcache then regen MPD database
 			workerLog('worker: Clear Library tag cache');
 			clearLibCacheAll();
 			workerLog('mpdindex: Start');
 			workerLog('mpdindex: Cmd (rescan)');
+			workerLog('mpdindex: Scanning');
 			if (false !== ($sock = openMpdSock('localhost', 6600))) {
 				sendMpdCmd($sock, 'rescan');
 				$resp = readMpdResp($sock);
@@ -3420,6 +3483,10 @@ function runQueuedJob() {
 		case 'avahi_options':
 			updAvahiOptions($_SESSION['w_queueargs']);
 			break;
+		case 'external_antenna':
+			$value = $_SESSION['w_queueargs'] == '0' ? '#' : '';
+			updBootConfigTxt('upd_external_antenna', $value);
+			break;
 		case 'actled': // LED0
 			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
@@ -3596,10 +3663,16 @@ function runQueuedJob() {
 			} else {
 				stopLocalDisplay();
 				hidePeppyConf();
+				$_SESSION['touchmon_svc'] = '0';
 				$resetAlsaCtl = true;
 			}
 			// Restart MPD and Renderers
 			restartMpdAndRenderers($resetAlsaCtl);
+			break;
+		case 'touchmon_svc':
+		case 'touchmon_timeout':
+			stopLocalDisplay();
+			startLocalDisplay();
 			break;
 		case 'peppy_display_type':
 			stopLocalDisplay();

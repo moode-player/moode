@@ -106,6 +106,20 @@ if (isset($_POST['update_enable_peppyalsa'])) {
 	}
 }
 
+if (isset($_POST['update_touchmon_svc'])) {
+	if (isset($_POST['touchmon_svc']) && $_POST['touchmon_svc'] != $_SESSION['touchmon_svc']) {
+		phpSession('write', 'touchmon_svc', $_POST['touchmon_svc']);
+		submitJob('touchmon_svc', $_POST['touchmon_svc']);
+	}
+}
+
+if (isset($_POST['update_touchmon_timeout'])) {
+	if (isset($_POST['touchmon_timeout']) && $_POST['touchmon_timeout'] != $_SESSION['touchmon_timeout']) {
+		phpSession('write', 'touchmon_timeout', $_POST['touchmon_timeout']);
+		submitJob('touchmon_timeout', $_POST['touchmon_timeout']);
+	}
+}
+
 // General
 
 $displayOn = ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') ? true : false;
@@ -329,13 +343,24 @@ if ($_SESSION['feat_bitmask'] & FEAT_PEPPYDISPLAY) {
 	$autoClick = " onchange=\"autoClick('#btn-set-peppy-display');\" " . $_peppy_on_off_disable;
 	$_select['peppy_display_on']  .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-1\" value=\"1\" " . (($_SESSION['peppy_display'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['peppy_display_off'] .= "<input type=\"radio\" name=\"peppy_display\" id=\"toggle-peppy-display-2\" value=\"0\" " . (($_SESSION['peppy_display'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	# Display type
+	$_select['peppy_display_type'] .= "<option value=\"meter\" " . (($_SESSION['peppy_display_type'] == 'meter') ? "selected" : "") . ">Meter</option>\n";
+	$_select['peppy_display_type'] .= "<option value=\"spectrum\" " . (($_SESSION['peppy_display_type'] == 'spectrum') ? "selected" : "") . ">Spectrum</option>\n";
 	# PeppyALSA driver on|off
 	$autoClick = " onchange=\"autoClick('#btn-set-enable-peppyalsa');\" " . $_peppyalsa_ctl_disable;
 	$_select['enable_peppyalsa_on']  .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-1\" value=\"1\" " . (($_SESSION['enable_peppyalsa'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['enable_peppyalsa_off'] .= "<input type=\"radio\" name=\"enable_peppyalsa\" id=\"toggle-enable-peppyalsa-2\" value=\"0\" " . (($_SESSION['enable_peppyalsa'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-	# Display type
-	$_select['peppy_display_type'] .= "<option value=\"meter\" " . (($_SESSION['peppy_display_type'] == 'meter') ? "selected" : "") . ">Meter</option>\n";
-	$_select['peppy_display_type'] .= "<option value=\"spectrum\" " . (($_SESSION['peppy_display_type'] == 'spectrum') ? "selected" : "") . ">Spectrum</option>\n";
+	# Touch monitor on|off
+	$_touchmon_ctl_disable = $_SESSION['enable_peppyalsa'] == '0' ? 'disabled' : '';
+	$autoClick = " onchange=\"autoClick('#btn-set-touchmon-svc');\" " . $_touchmon_ctl_disable;
+	$_select['touchmon_svc_on']  .= "<input type=\"radio\" name=\"touchmon_svc\" id=\"toggle-touchmon-svc-1\" value=\"1\" " . (($_SESSION['touchmon_svc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['touchmon_svc_off'] .= "<input type=\"radio\" name=\"touchmon_svc\" id=\"toggle-touchmon-svc-2\" value=\"0\" " . (($_SESSION['touchmon_svc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	# Touch monitor timeout
+	$_select['touchmon_timeout'] .= "<option value=\"10\" " . (($_SESSION['touchmon_timeout'] == '10') ? "selected" : "") . ">10</option>\n";
+	$_select['touchmon_timeout'] .= "<option value=\"15\" " . (($_SESSION['touchmon_timeout'] == '15') ? "selected" : "") . ">15 (Default)</option>\n";
+	$_select['touchmon_timeout'] .= "<option value=\"20\" " . (($_SESSION['touchmon_timeout'] == '20') ? "selected" : "") . ">20</option>\n";
+	$_select['touchmon_timeout'] .= "<option value=\"25\" " . (($_SESSION['touchmon_timeout'] == '25') ? "selected" : "") . ">25</option>\n";
+	$_select['touchmon_timeout'] .= "<option value=\"30\" " . (($_SESSION['touchmon_timeout'] == '30') ? "selected" : "") . ">30</option>\n";
 } else {
 	$_feat_peppydisplay = 'hide';
 }

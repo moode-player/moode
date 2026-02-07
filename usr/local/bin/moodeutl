@@ -736,24 +736,25 @@ function setDisplay($argv) {
 	}
 
 	if (isset($argv[2])) {
+		$webuiOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='local_display'\""));
+		$peppyOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='peppy_display'\""));
+
 		if ($argv[2] == 'webui') {
-			$localDisplay = '1';
-			$peppyDisplay = '0';
+			$set2webui = '1';
+			$set2peppy = '0';
 			$valid = true;
 		} else if ($argv[2] == 'peppy') {
-			$localDisplay = '0';
-			$peppyDisplay = '1';
+			$set2webui = '0';
+			$set2peppy = '1';
 			$valid = true;
 		} else if ($argv[2] == 'toggle') {
-			$webuiOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='local_display'\""));
-			$peppyOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='peppy_display'\""));
 			if ($webuiOn == '1') {
-				$localDisplay = '0';
-				$peppyDisplay = '1';
+				$set2webui = '0';
+				$set2peppy = '1';
 				$valid = true;
 			} else if ($peppyOn == '1') {
-				$localDisplay = '1';
-				$peppyDisplay = '0';
+				$set2webui = '1';
+				$set2peppy = '0';
 				$valid = true;
 			} else {
 				fwrite(STDERR, "Invalid option: WebUI or Peppy must be on first\n");
@@ -763,18 +764,42 @@ function setDisplay($argv) {
 			fwrite(STDERR, "Invalid option: valid values are [webui | peppy | toggle]\n");
 			$valid = false;
 		}
+
 		if ($valid) {
 			setSessionId();
 			session_start();
-			$_SESSION['local_display'] = $localDisplay;
-			$_SESSION['peppy_display'] = $peppyDisplay;
+			$_SESSION['local_display'] = $set2webui;
+			$_SESSION['peppy_display'] = $set2peppy;
 			session_write_close();
-			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $localDisplay . "' WHERE param='local_display'\"");
-			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $peppyDisplay . "' WHERE param='peppy_display'\"");
-			shell_exec('systemctl restart localdisplay');
+			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2webui . "' WHERE param='local_display'\"");
+			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2peppy . "' WHERE param='peppy_display'\"");
+
+			// SLOW SWITCH: Restart localdisplay.service
+			//if (($set2webui == '1' && $webuiOn == '0') || ($set2peppy == '1' && $peppyOn == '0')) {
+			//	shell_exec('systemctl restart localdisplay');
+			//}
+
+			// FAST SWITCH: Run Peppy over WebUI
+			// Both off start fresh
+			if ($webuiOn == '0' && $peppyOn == '0') {
+				shell_exec('systemctl restart localdisplay');
+			}
+			// Switch to Peppy
+			if ($webuiOn == '1' && $set2peppy == '1') {
+				shell_exec('/var/www/util/start-peppy.sh ' . $_SESSION['peppy_display_type'] . ' > /dev/null 2>&1');
+			}
+			// Switch to WebUI
+ 			if ($peppyOn == '1' && $set2webui == '1') {
+				$process = $_SESSION['peppy_display_type'] == 'meter' ? 'peppymeter.py' : 'spectrum.py';
+				shell_exec('pkill -f ' . $process . ' > /dev/null 2>&1');
+				$result = shell_exec('pgrep -c chromium-browse');
+				if ($result == 0) {
+					shell_exec('systemctl restart localdisplay');
+				}
+			}
 		}
 	} else {
-		fwrite(STDERR, "Missing option [webui | peppy]\n");
+		fwrite(STDERR, "Missing option [webui|peppy]\n");
 	}
 }
 

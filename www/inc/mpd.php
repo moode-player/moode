@@ -363,8 +363,13 @@ function readMpdResp($sock) {
 	}
 
 	if (!feof($sock)) {
-		// Socket timed out or PHP/MPD connection failure
-		debugLog('readMpdResp(): Error: fgets failure (' . explode("\n", $resp)[0] . ')');
+		if (stream_get_meta_data($sock)['timed_out']) {
+			debugLog('readMpdResp(): Socket timed out');
+			$resp = 'Socket timed out';
+		} else {
+			// Socket timed out or PHP/MPD connection failure
+			debugLog('readMpdResp(): Error: fgets failure (' . explode("\n", $resp)[0] . ')');
+		}
 	}
 
 	return $resp;

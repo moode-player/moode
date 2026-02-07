@@ -30,6 +30,9 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWLAN AP SSID\t\t= $apdssid\c"
 	echo -e "\nWLAN AP addr\t\t= $ap_network_addr\c"
 	echo -e "\nWLAN AP proto\t\t= $approto\c"
+	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
+	echo -e "\nEthernet check\t\t= $eth0chk\c"
+	echo -e "\nExt antenna\t\t= $external_antenna\c"
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
@@ -57,8 +60,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nPi integrated BT\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
 	echo -e "\nLED state\t\t= $led_state\c"
-	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
-	echo -e "\nEthernet check\t\t= $eth0chk\c"
 	if [ $(($feat_bitmask & $FEAT_HTTPS)) -ne 0 ]; then
 		echo -e "\nHTTPS mode\t\t= $HTTPS_MODE\c"
 	fi
@@ -188,6 +189,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nRenderer backdrop\t= $renderer_backdrop\c"
 	echo -e "\nFont size\t\t= $font_size\c"
 	echo -e "\nNative lazyload\t\t= $native_lazyload\c"
+	echo -e "\nReduce notifications\t= $reduce_notifications\c"
 	echo -e "\n\nPlayback\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
@@ -842,7 +844,7 @@ mpd_httpd_encoder=${arr[117]}
 [[ "${arr[118]}" = "1" ]] && invert_polarity="On" || invert_polarity="Off"
 inpactive=${arr[119]}
 rsmafterinp=${arr[120]}
-[[ "${arr[121]}" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
+empd_socket_timeout=${arr[121]}
 ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
@@ -947,6 +949,10 @@ crossfeed=$(moodeutl -d -gv crossfeed)
 value=$(moodeutl -d -gv peppy_display_type)
 [[ "$value" = "meter" ]] && peppy_display_type="Meter" || peppy_display_type="Spectrum"
 keyboard=$(moodeutl -d -gv "keyboard")
+value=$(moodeutl -d -gv gpio_svc)
+[[ "$value" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
+value=$(moodeutl -d -gv reduce_notifications)
+[[ "$value" = "1" ]] && reduce_notifications="On" || reduce_notifications="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
@@ -956,6 +962,8 @@ wlanuuid=$(echo ${arr[1]} | cut -f 10 -d "|")
 wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
 apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
 approto=$(moodeutl -d -gv approto)
+value=$(moodeutl -d -gv external_antenna)
+[[ "$value" = "1" ]] && external_antenna="On" || external_antenna="Off"
 
 # Misc settings
 modprobe configs

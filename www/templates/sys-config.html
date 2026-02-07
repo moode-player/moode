@@ -84,6 +84,19 @@
                 </select>
                 <button id="btn-set-keyboard" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
             </div>
+
+			<label class="control-label">Reduce notifications</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-reduce-notifications" for="toggle-reduce-notifications-2">ON </label>$_select[reduce_notifications_on]
+					<label class="toggle-radio toggle-reduce-notifications" for="toggle-reduce-notifications-1">OFF</label>$_select[reduce_notifications_off]
+				</div>
+				<button id="btn-set-reduce-notifications" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_reduce_notifications" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-reduce-notifications" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-reduce-notifications" class="config-help-info">
+					Reduce the number of popup notifications that appear when performing most Playback, Queue, Library or Preference functions. This can provide a smoother experience with the WebUI.
+				</span>
+			</div>
 		</div>
 
 		<div class="control-group">
@@ -310,6 +323,18 @@
 					The default is to use both IPv4 and IPv6.
 					Having both enabled can result in this-host being advertized twice where the second appears to other hosts on the network as this-host-2.
 					If this occurs try setting the option to IPv4-only which can eliminate the second advertized host.
+				</span>
+			</div>
+			<label class="control-label">External antenna</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-external-antenna" for="toggle-external-antenna-2">ON </label>$_select[external_antenna_on]
+					<label class="toggle-radio toggle-external-antenna" for="toggle-external-antenna-1">OFF</label>$_select[external_antenna_off]
+				</div>
+				<button id="btn-set-external-antenna" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_external_antenna" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-external-antenna" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-external-antenna" class="config-help-info">
+					The antenna supports dual-band Wi-Fi and attaches to the U.FL connector on CM4 or CM5 compute modules.
 				</span>
 			</div>
 		</div>

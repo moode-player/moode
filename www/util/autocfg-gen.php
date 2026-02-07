@@ -47,9 +47,11 @@ $currentSettings['usb_volknob'] = $_SESSION['usb_volknob'];
 $currentSettings['led_state'] = $_SESSION['led_state'];
 $currentSettings['eth0chk'] = $_SESSION['eth0chk'];
 $currentSettings['avahi_options'] = $_SESSION['avahi_options'];
+$currentSettings['external_antenna'] = $_SESSION['external_antenna'];
 $currentSettings['ready_script'] = $_SESSION['ready_script'];
 $currentSettings['ready_script_wait'] = $_SESSION['ready_script_wait'];
 $currentSettings['keyboard'] = $_SESSION['keyboard'];
+$currentSettings['reduce_notifications'] = $_SESSION['reduce_notifications'];
 // Network
 $currentSettings['approto'] = $_SESSION['approto'];
 // Audio: MPD options
@@ -57,6 +59,7 @@ $currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
 $currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];
 $currentSettings['ashuffle_filter'] = $_SESSION['ashuffle_filter'];
 $currentSettings['ashuffle_exclude'] = $_SESSION['ashuffle_exclude'];
+$currentSettings['invert_polarity'] = $_SESSION['invert_polarity'];
 // Audio: Bluetooth
 $currentSettings['alsa_output_mode_bt'] = $_SESSION['alsa_output_mode_bt'];
 $currentSettings['alsavolume_max_bt'] = $_SESSION['alsavolume_max_bt'];
@@ -94,6 +97,7 @@ $currentSettings['rotaryenc'] = $_SESSION['rotaryenc'];
 $currentSettings['crossfeed'] = $_SESSION['crossfeed'];
 $currentSettings['eqfa12p'] = $_SESSION['eqfa12p'];
 $currentSettings['xss_detect'] = $_SESSION['xss_detect'];
+$currentSettings['gpio_svc'] = $_SESSION['gpio_svc'];
 
 // Extract to ini file
 print(autoConfigExtract($currentSettings));

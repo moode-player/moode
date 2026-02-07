@@ -57,10 +57,17 @@ else
 	echo "Touch1 is set in config and cmdline txt files"
 fi
 
-# Get display type config
+# Get display config
 WEBUI_SHOW=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='local_display'")
 PEPPY_SHOW=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='peppy_display'")
 PEPPY_TYPE=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='peppy_display_type'")
+
+# Launch Touch screen monitor
+TOUCHMON_SVC=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='touchmon_svc'")
+TOUCHMON_TIMEOUT=$(moodeutl -q "SELECT value FROM cfg_system WHERE param='touchmon_timeout'")
+if [ $TOUCHMON_SVC = "1" ]; then
+	/var/www/daemon/touchmon.php $TOUCHMON_TIMEOUT &
+fi
 
 # Launch WebUI or Peppy
 if [ $WEBUI_SHOW = "1" ]; then

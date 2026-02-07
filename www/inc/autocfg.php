@@ -19,6 +19,7 @@ require_once __DIR__ . '/audio.php';
 require_once __DIR__ . '/mpd.php';
 require_once __DIR__ . '/music-source.php';
 require_once __DIR__ . '/network.php';
+require_once __DIR__ . '/peripheral.php';
 require_once __DIR__ . '/renderer.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
@@ -126,6 +127,7 @@ function autoConfigSettings() {
 		['requires' => ['updater_auto_check'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['timezone'], 'handler' => 'setSessVarOnlySysCmd', 'cmd' => 'set-timezone %s'],
 		['requires' => ['keyboard'], 'handler' => 'setSessVarOnlySysCmd', 'cmd' => 'set-keyboard %s'],
+		['requires' => ['reduce_notifications'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['worker_responsiveness'], 'handler' => function($values) {
 			$_SESSION['worker_responsiveness'] = $values['worker_responsiveness'];
 			if ($values['worker_responsiveness'] == 'Default') {
@@ -189,6 +191,11 @@ function autoConfigSettings() {
 		['requires' => ['avahi_options'], 'handler' => function($values) {
 			$_SESSION['avahi_options'] = $values['avahi_options'];
 			updAvahiOptions($values['avahi_options']);
+		}],
+		['requires' => ['external_antenna'], 'handler' => function($values) {
+			$_SESSION['external_antenna'] = $values['external_antenna'];
+			$value = $values['external_antenna'] == '0' ? '#' : '';
+			updBootConfigTxt('upd_external_antenna', $value);
 		}],
 		//
 		// File sharing
@@ -377,7 +384,7 @@ function autoConfigSettings() {
 		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
 		['requires' => ['mpdcrossfade'], 'handler' => 'setSessVarSql'],
 		['requires' => ['crossfeed'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['invert_polarity'], 'handler' => 'setSessVarSql'],
+		['requires' => ['invert_polarity'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['volume_step_limit'], 'handler' => 'setSessVarSql'],
 		['requires' => ['volume_mpd_max'], 'handler' => 'setSessVarSql'],
 		['requires' => ['volume_db_display'], 'handler' => 'setSessVarSql'],
@@ -562,6 +569,7 @@ function autoConfigSettings() {
 		'Playback',
 		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
 		['requires' => ['extra_tags'], 'handler' => 'setSessVarSql'],
+		['requires' => ['search_site'], 'handler' => 'setSessVarSql'],
 		['requires' => ['playhist'], 'handler' => 'setSessVarSql'],
 		['requires' => ['show_npicon'], 'handler' => function($values) {
 			if ($values['show_npicon'] == 'Yes') {
@@ -636,9 +644,49 @@ function autoConfigSettings() {
 		//
 		// Peripherals
 		//
-		'Local display (General)',
+		'WebUI display',
 		['requires' => ['local_display'], 'handler' => 'setSessVarSql'],
 		['requires' => ['local_display_url'], 'handler' => 'setSessVarSql'],
+		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
+		'Peppy display',
+		['requires' => ['peppy_display', 'peppy_display_type', 'enable_peppyalsa',
+		'touchmon_svc', 'touchmon_timeout'], 'handler' => function($values) {
+			/*
+			// Peppy on/off and type
+			phpSession('write', 'peppy_display', $values['peppy_display']);
+			phpSession('write', 'peppy_display_type', $values['peppy_display_type']);
+			//PeppyALSA on/off
+			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
+			// Touchmon on/off
+			$value = $values['peppy_display'] == '0' ? '0' : $values['touchmon_svc'];
+			phpSession('write', 'touchmon_svc', $value);
+			phpSession('write', 'touchmon_timeout', $values['touchmon_timeout']);
+			// Configure
+			// This needs to be done in startup after audio config ?
+			*/
+		}],
+		'Peppy meters',
+		['requires' => ['screen_width', 'screen_height', 'random_interval', 'meter_folder', 'meter_name',
+		'meter_normalization', 'frame_rate', 'polling_interval', 'smooth_buffer_size'], 'handler' => function($values) {
+			putPeppyConfig($values);
+		}, 'custom_write' => function($values) {
+			$configMeter = getPeppyConfig('meter');
+			$str .= sprintf("%s = \"%s\"\n", 'screen_width', $configMeter['screen.width']);
+			$str .= sprintf("%s = \"%s\"\n", 'screen_height', $configMeter['screen.height']);
+			$str .= sprintf("%s = \"%s\"\n", 'random_interval', $configMeter['random.meter.interval']);
+			$str .= sprintf("%s = \"%s\"\n", 'meter_folder', $configMeter['meter.folder']);
+			$str .= sprintf("%s = \"%s\"\n", 'meter_name', $configMeter['meter']);
+			$str .= sprintf("%s = \"%s\"\n", 'meter_normalization', $configMeter['volume.max.in.pipe']);
+			$str .= sprintf("%s = \"%s\"\n", 'frame_rate', $configMeter['frame.rate']);
+			$str .= sprintf("%s = \"%s\"\n", 'polling_interval', $configMeter['polling.interval']);
+			$str .= sprintf("%s = \"%s\"\n", 'smooth_buffer_size', $configMeter['smooth.buffer.size']);
+			return $str;
+		}],
+		'General display',
+		['requires' => ['scn_blank'], 'handler' => function($values) {
+			$_SESSION['scn_blank'] = $values['scn_blank'];
+			setScreenBlankTimeout($values['scn_blank']);
+		}],
 		['requires' => ['wake_display'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scn_cursor'], 'handler' => function($values) {
 			$_SESSION['scn_cursor'] = $values['scn_cursor'];
@@ -646,11 +694,6 @@ function autoConfigSettings() {
 			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
 		}],
 		['requires' => ['on_screen_kbd'], 'handler' => 'setSessVarOnly'],
-		['requires' => ['scn_blank'], 'handler' => function($values) {
-			$_SESSION['scn_blank'] = $values['scn_blank'];
-			setScreenBlankTimeout($values['scn_blank']);
-		}],
-		['requires' => ['disable_gpu_chromium'], 'handler' => 'setSessVarOnly'],
 		'HDMI displays',
 		['requires' => ['hdmi_scn_orient'], 'handler' => function($values) {
 			phpSession('write', 'hdmi_scn_orient', $values['hdmi_scn_orient']);
@@ -662,12 +705,6 @@ function autoConfigSettings() {
 				);
 			}
 		}],
-		/*NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
-		['requires' => ['enable_peppyalsa'], 'handler' => function($values) {
-			$_SESSION['enable_peppyalsa'] = $values['enable_peppyalsa'];
-			someFunctionGoesHere($values['enable_peppyalsa']);
-		}],
-		*/
 		['requires' => ['hdmi_cec'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_cec_ver'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['hdmi_enable_4kp60'], 'handler' => function($values) {
@@ -687,12 +724,12 @@ function autoConfigSettings() {
 			// touch1 value: 0 landscape | 180 inverted
 			// touch2 value  0 portrait  | 90 | 180 | 270 landscape
 			$degree = $values['dsi_scn_rotate'];
-			if ($values['dsi_scn_type'] == '1') {
+			if ($_SESSION['dsi_scn_type'] == '1') {
 				// Remove touch2 touch angle setting
 				sysCmd('sed -i /CalibrationMatrix/d /usr/share/X11/xorg.conf.d/40-libinput.conf');
 				// Update touch1 rotation
 				updBootConfigTxt('upd_dsi_scn_rotate', $degree);
-			} else if ($values['dsi_scn_type'] == '2' || $values['dsi_scn_type'] == 'other') {
+			} else if ($_SESSION['dsi_scn_type'] == '2' || $_SESSION['dsi_scn_type'] == 'other') {
 				// Only update the touch angle here, xinitrc handles rotation value
 				if ($degree == '0') {
 					// Remove touch2 touch angle setting
@@ -707,14 +744,6 @@ function autoConfigSettings() {
 				}
 			}
 		}],
-		/*NOTE: Prolly shouldn't try to restore Peppy because of likely user customizations
-		'PeppyMeter display (General)',
-		['requires' => ['peppy_display', 'peppy_display_type'], 'handler' => function($values) {
-			phpSession('write', 'peppy_display', $values['peppy_display']);
-			phpSession('write', 'peppy_display_type', $values['peppy_display_type']);
-			someFunctionGoesHere($values['peppy_display'], $values['peppy_display_type']);
-		}],
-		*/
 		'USB volume knob',
 		['requires' => ['usb_volknob'], 'handler' => 'setSessVarOnly'],
 		'Rotary encoder',
@@ -724,7 +753,7 @@ function autoConfigSettings() {
 			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $values['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
 		}],
 		'GPIO Buttons',
-		['requires' => ['gpio_svc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['gpio_svc'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['gpio_button'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			// Buttons: id 1 - 8

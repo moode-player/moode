@@ -106,6 +106,14 @@ if (isset($_POST['update_keyboard'])) {
     }
 }
 
+if (isset($_POST['update_reduce_notifications'])) {
+    if (isset($_POST['reduce_notifications']) && $_POST['reduce_notifications'] != $_SESSION['reduce_notifications']) {
+		$_SESSION['reduce_notifications'] = $_POST['reduce_notifications'];
+		//$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+		//$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
+    }
+}
+
 // STARTUP OPTIONS
 // Performance
 if (isset($_POST['update_worker_responsiveness']) && $_SESSION['worker_responsiveness'] != $_POST['worker_responsiveness']) {
@@ -194,6 +202,10 @@ if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 if (isset($_POST['update_avahi_options']) && $_POST['avahi_options'] != $_SESSION['avahi_options']) {
 	$_SESSION['avahi_options'] = $_POST['avahi_options'];
 	submitJob('avahi_options', $_POST['avahi_options'], NOTIFY_TITLE_INFO, 'mDNS' . NOTIFY_MSG_SVC_RESTARTED);
+}
+if (isset($_POST['external_antenna']) && $_POST['external_antenna'] != $_SESSION['external_antenna']) {
+	$_SESSION['external_antenna'] = $_POST['external_antenna'];
+	submitJob('external_antenna', $_POST['external_antenna'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
 
 // FILE SHARING
@@ -399,6 +411,9 @@ $_select['hostname'] = $_SESSION['hostname'];
 $_select['browsertitle'] = $_SESSION['browsertitle'];
 $_timezone['timezone'] = buildTimezoneSelect($_SESSION['timezone']);
 $_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
+$autoClick = " onchange=\"autoClick('#btn-set-reduce-notifications');\"";
+$_select['reduce_notifications_on']  .= "<input type=\"radio\" name=\"reduce_notifications\" id=\"toggle-reduce-notifications-1\" value=\"1\" " . (($_SESSION['reduce_notifications'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['reduce_notifications_off'] .= "<input type=\"radio\" name=\"reduce_notifications\" id=\"toggle-reduce-notifications-2\" value=\"0\" " . (($_SESSION['reduce_notifications'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // STARTUP OPTIONS
 
@@ -487,6 +502,11 @@ $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-e
 // mDNS discovery
 $_select['avahi_options'] .= "<option value=\"ipv4ipv6\" " . (($_SESSION['avahi_options'] == 'ipv4ipv6') ? "selected" : "") . ">IPv4 and IPv6 (Default)</option>\n";
 $_select['avahi_options'] .= "<option value=\"ipv4only\" " . (($_SESSION['avahi_options'] == 'ipv4only') ? "selected" : "") . ">IPv4-only</option>\n";
+
+// External antenna
+$autoClick = " onchange=\"autoClick('#btn-set-external-antenna');\"";
+$_select['external_antenna_on']  .= "<input type=\"radio\" name=\"external_antenna\" id=\"toggle-external-antenna-1\" value=\"1\" " . (($_SESSION['external_antenna'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['external_antenna_off'] .= "<input type=\"radio\" name=\"external_antenna\" id=\"toggle-external-antenna-2\" value=\"0\" " . (($_SESSION['external_antenna'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // FILE SHARING
 

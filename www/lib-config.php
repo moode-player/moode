@@ -57,7 +57,9 @@ if (isset($_POST['update_lib_fv_only'])) {
 // Regenerate MPD database
 if (isset($_POST['regen_library'])) {
 	unset($_GET['cmd']);
-	submitJob('regen_library', '', NOTIFY_TITLE_INFO, 'Regenerating the database. Stay on this screen until the progress spinner (top right) disappears.', NOTIFY_DURATION_INFINITE);
+	submitJob('regen_library', '', NOTIFY_TITLE_INFO,
+		'Regenerating the database. Stay on this screen until the progress spinner disappears.<br><br>Click VIEW STATUS for progress.',
+		NOTIFY_DURATION_INFINITE);
 }
 // Clear library cache
 if (isset($_POST['clear_libcache'])) {
@@ -83,7 +85,7 @@ if (isset($_POST['regen_thmcache'])) {
 		$_SESSION['notify']['msg'] = 'The Thumbnail Generator is currently running.';
 	} else {
 		$_SESSION['thmcache_status'] = 'Regenerating the thumbnail cache...';
-		submitJob('regen_thmcache', '', NOTIFY_TITLE_INFO, 'Regenerating the thumbnail cache. Click the VIEW STATUS button for progress.');
+		submitJob('regen_thmcache', '', NOTIFY_TITLE_INFO, 'Regenerating the thumbnail cache. Click VIEW STATUS for progress.');
 	}
 }
 
@@ -431,6 +433,16 @@ if (!isset($_GET['cmd'])) {
 	$autoClick = " onchange=\"autoClick('#btn-set-cuefiles-ignore');\"";
 	$_select['cuefiles_ignore_on'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-1\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['cuefiles_ignore_off'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-2\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+	// DB update status
+	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+		$stats = getMpdStats($sock);
+		closeMpdSock($sock);
+		$msg = $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs';
+	} else {
+		$msg = 'CRITICAL ERROR: chkLibraryUpdate() failed: Unable to connect to MPD';
+	}
+	$_dbupdate_status = $_SESSION['mpd_dbupdate_status'] == '0' ? $msg : 'Files indexed: ' . $_SESSION['mpd_dbupdate_status'];
 
 	// Thumbcache status
 	$_thmcache_status = $_SESSION['thmcache_status'];

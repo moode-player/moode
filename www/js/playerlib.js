@@ -356,7 +356,7 @@ function engineMpd() {
 			}
 			// Error of some sort
 			else {
-				debugLog('engineMpd(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
+				debugLog('engineMpd(): success branch: error=(' + MPD.json['error']['code'] + ' ' + MPD.json['error']['message'] + ')');
 
 				// JSON parse errors @ohinckel https: //github.com/moode-player/moode/pull/14/files
 				if (typeof(MPD.json['error']) == 'object') {
@@ -368,7 +368,7 @@ function engineMpd() {
                             notify(NOTIFY_TITLE_INFO, 'reconnect', NOTIFY_DURATION_INFINITE);
                             GLOBAL.reconnecting = true;
                         }
-                    } else {
+                    } else if (MPD.json['error']['message'] != 'Socket timed out') {
                         notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
                     }
 				}
@@ -395,7 +395,10 @@ function engineMpd() {
                     notify(NOTIFY_TITLE_ALERT, 'mpd_error', msg);
 				}
 
-				renderUI();
+				// Socket timeout is ok but no need to renderUI when it happens
+				if (MPD.json['error']['message'] != 'Socket timed out') {
+					renderUI();
+				}
 
 				setTimeout(function() {
 					engineMpd();
@@ -463,7 +466,7 @@ function engineMpdLite() {
 			else {
 				setTimeout(function(data) {
 					// Client connects before MPD started by worker, various other issues
-					debugLog('engineMpdLite(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
+					debugLog('engineMpd(): success branch: error=(' + MPD.json['error']['code'] + ' ' + MPD.json['error']['message'] + ')');
 
                     // TEST: Show reconnect overlay when on configs
                     if (typeof(data) !== 'undefined') {
@@ -484,7 +487,9 @@ function engineMpdLite() {
                                 GLOBAL.reconnecting = true;
                             }
                         } else {
-                            notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
+							if (MPD.json['error']['message'] != "Socket timed out") {
+								notify(NOTIFY_TITLE_ALERT, 'mpd_error', MPD.json['error']['message'] + errorCode);
+							}
                         }
     				}
 
@@ -1240,7 +1245,6 @@ function renderUI() {
                 } else {
                     var bitRate = format + ' ' + MPD.json['bitrate'];
                 }
-        		//DELETE:$('#extra-tags-display').text(bitRate + ' • ' + mpdJsonOutput);
                 $('#extra-tags-display').text(bitRate);
                 $('#countdown-sample-rate, #songsand-sample-rate, #ss-extra-metadata').text(bitRate);
         	} else {
@@ -2910,20 +2914,25 @@ $(document).on('click', '.context-menu a', function(e) {
             }
             break;
         case 'player_info':
-            var networkIface = SESSION.json['wlanssid'] == '' ? 'Ethernet' : 'Wireless (' + SESSION.json['wlanssid'] + ')';
-            notify(NOTIFY_TITLE_INFO, 'player_info',
-				'moOde:&nbsp;&nbsp;' + SESSION.json['moode_release'] + '<br>' +
-                'Host:&nbsp;&nbsp;&nbsp;' + SESSION.json['hostname'] + '<br>' +
-                'Addr:&nbsp;&nbsp;&nbsp;' + SESSION.json['ipaddress'] + '<br>' +
-                'Type:&nbsp;&nbsp;&nbsp;' + networkIface + '<br>' +
-				'PiOS:&nbsp;&nbsp;&nbsp;' + SESSION.json['raspbianver'] + '<br>' +
-                'Model:&nbsp;&nbsp;' + SESSION.json['hdwrrev'] + '<br>' +
-                'Kernel:&nbsp;' + SESSION.json['kernelver'] + '<br>' +
-                'MPD:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'] + '<br>' +
-                'Audio:&nbsp;&nbsp;' + SESSION.json['adevname'],
-                NOTIFY_DURATION_INFINITE);
-                // Styling (gets automatically reset by pnotify for other notifications)
-                $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
+			$.getJSON('command/music-library.php?cmd=get_dbupdate_status', {'mpcstats': ''}, function(status) {
+				var songCount = status.split(', ')[2];
+		        var networkIface = SESSION.json['wlanssid'] == '' ? 'Ethernet' : 'Wireless (' + SESSION.json['wlanssid'] + ')';
+		        notify(NOTIFY_TITLE_INFO, 'player_info',
+					'moOde:&nbsp;&nbsp;&nbsp;' + SESSION.json['moode_release'] + '<br>' +
+		            'Host:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['hostname'] + '<br>' +
+		            'Addr:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['ipaddress'] + '<br>' +
+		            'Type:&nbsp;&nbsp;&nbsp;&nbsp;' + networkIface + '<br>' +
+					'PiOS:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['raspbianver'] + '<br>' +
+		            'Model:&nbsp;&nbsp;&nbsp;' + SESSION.json['hdwrrev'] + '<br>' +
+		            'Kernel:&nbsp;&nbsp;' + SESSION.json['kernelver'] + '<br>' +
+		            'MPD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'] + '<br>' +
+					'Audio:&nbsp;&nbsp;&nbsp;' + SESSION.json['adevname'] + '<br>' +
+					'Library:&nbsp' + songCount,
+		            NOTIFY_DURATION_INFINITE);
+		            // Styling (gets automatically reset by pnotify for other notifications)
+		            $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');
+			});
+
             break;
         case 'edit_station':
             $.post('command/radio.php?cmd=get_station_contents', {'path': path}, function(data) {
@@ -3713,7 +3722,7 @@ $('#btn-preferences-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
-                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' The page will automatically refresh to make the settings effective.');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {
                     location.reload(true);
                 }, (NOTIFY_DURATION_DEFAULT * 1000));
@@ -3721,7 +3730,7 @@ $('#btn-preferences-update').click(function(e){
                 $('#btn-ra-refresh').click();
                 loadLibrary();
             } else if (regenThumbsReqd) {
-                notify(NOTIFY_TITLE_INFO, 'settings_updated', ' Thumbnails must be regenerated after changing this setting.');
+                notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' Thumbnails must be regenerated after changing this setting.');
             } else {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated', NOTIFY_DURATION_SHORT);
             }
