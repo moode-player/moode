@@ -121,6 +121,7 @@ const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
 const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display is starting...';
 const NOTIFY_MSG_PEPPYDISPLAY_STARTING = 'Peppy display is starting...';
 const NOTIFY_MSG_LOOPBACK_ACTIVE = 'Loopback cannot be turned off while playback is active.';
+const NOTIFY_MSG_BLUETOOTH_RECONNECT = 'Reconnect to the Bluetooth device to make this setting effective.';
 // Component names (for notification messages)
 const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';

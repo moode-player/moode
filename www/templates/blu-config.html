@@ -8,8 +8,8 @@
 <div class="container">
 	<h1 class="ren-config">Bluetooth Control</h1>
 
-    <form class="form-horizontal" action="" method="post">
-    	<legend>Devices</legend>
+	<form class="form-horizontal" action="" method="post">
+		<legend>Devices</legend>
 		<div class="control-group">
 			<select id="btcmd" class="config-select-large" name="btcmd" onchange="autoClick('#btn-set-cmd');" $_ctl_disabled>
 				$_cmd[btcmd]
@@ -18,7 +18,7 @@
 			<a aria-label="Help" class="config-info-toggle" data-cmd="info-btcmd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 			<span id="info-btcmd" class="config-help-info">
 				Select a command to submit to the Bluetooth controller.
-	        </span>
+			</span>
 			<div id="blu-control-cmd-output">
 				$_cmd_output
 			</div>
@@ -31,7 +31,7 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="rm_paired_device" value="1"><i class="fa fa-sharp fa-trash"></i></button>
 				<span class="config-msg-static">
 					Connect or remove a paired device. This also changes to the selected Audio output.
-	            </span>
+				</span>
 			</div>
 
 			<div class="$_hide_ctl[connected_device]">
@@ -41,7 +41,7 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
 				<span class="config-msg-static">
 					Disconnect the currently connected device. This automatically changes Audio output to Local.
-	            </span>
+				</span>
 			</div>
 
 			<div class="$_hide_ctl[scanned_device]">
@@ -51,50 +51,65 @@
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="pairwith_device" value="1">Pair</button>
 				<span class="config-msg-static">
 					Select a device to pair with.
-	            </span>
+				</span>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<legend>Options</legend>
-			<select id="audioout" class="config-select-large" name="audioout" onchange="autoClick('#btn-set-audioout');">
-				$_select[audioout]
-			</select>
-			<button id="btn-set-audioout" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="change_audioout_bt" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-			<span class="config-msg-static">
-				<b>Audio output:</b> Local audio device or Bluetooth speaker.
-            </span>
+			<div>
+				<select id="audioout" class="config-select-large" name="audioout" onchange="autoClick('#btn-set-audioout');">
+					$_select[audioout]
+				</select>
+				<button id="btn-set-audioout" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="change_audioout_bt" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-input-after">Audio routing</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audioout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-audioout" class="config-help-info">
+					Route audio to the Local audio device or a remote Bluetooth speaker.
+				</span>
+			</div>
 
-			<select id="pcm-buffer" class="config-select-large" name="pcm_buffer" onchange="autoClick('#btn-set-pcm-buffer');">
-				$_select[pcm_buffer]
-			</select>
-			<button id="btn-set-pcm-buffer" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pcm_buffer" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-			<span class="config-msg-static">
-				<b>PCM buffer:</b> Lower values reduce latency but may cause dropouts.
-	        </span>
+			<div>
+				<select id="pcm-buffer" class="config-select-large" name="pcm_buffer" onchange="autoClick('#btn-set-pcm-buffer');">
+					$_select[pcm_buffer]
+				</select>
+				<button id="btn-set-pcm-buffer" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pcm_buffer" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-input-after">PCM buffer</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-pcm-buffer" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-pcm-buffer" class="config-help-info">
+					Lower values reduce latency but may cause dropouts.
+				</span>
+			</div>
 
-			<select id="sbc-quality" class="config-select-large" name="sbc_quality" onchange="autoClick('#btn-set-sbc-quality');">
-				$_select[sbc_quality]
-			</select>
-			<button id="btn-set-sbc-quality" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_sbc_quality" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-			<span class="config-msg-static">
-				<b>SBC encoder:</b> Higher settings improve quality but may cause dropouts.
-				<!--b>Low:</b> Mono 114 kbps, Stereo 213 kbps<br>
-				<b>Medium:</b> Mono 132 kbps, Stereo 237 kbps<br>
-				<b>High:</b> Mono 198 kbps, Stereo 345 kbps<br>
-				<b>XQ:</b> SBC Dual Channel HD 452 kbps<br>
-				<b>XQ+:</b> SBC Dual Channel HD 551 kbps-->
-	        </span>
+			<div>
+				<select id="sbc-quality" class="config-select-large" name="sbc_quality" onchange="autoClick('#btn-set-sbc-quality');">
+					$_select[sbc_quality]
+				</select>
+				<button id="btn-set-sbc-quality" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_sbc_quality" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-btn-after">SBC quality</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-sbc-quality" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-sbc-quality" class="config-help-info">
+					Higher settings improve quality but may cause dropouts.<br>
+					<b>Low:</b> Mono 114 kbps, Stereo 213 kbps<br>
+					<b>Medium:</b> Mono 132 kbps, Stereo 237 kbps<br>
+					<b>High:</b> Mono 198 kbps, Stereo 345 kbps<br>
+					<b>XQ:</b> SBC Dual Channel HD 452 kbps<br>
+					<b>XQ+:</b> SBC Dual Channel HD 551 kbps>
+				</span>
+			</div>
 
-			<select id="alsa-output-mode-bt" class="config-select-large" name="alsa_output_mode_bt" onchange="autoClick('#btn-set-alsa-output-mode-bt');">
-				$_select[alsa_output_mode_bt]
-			</select>
-			<button id="btn-set-alsa-output-mode-bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode_bt" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-			<span class="config-msg-static">
-				<b>ALSA mode:</b><br>
-				Standard uses the Output mode setting from Audio Config. DSP is supported.<br>
-				Compatibility does not support DSP but may help if there is no sound output.
-            </span>
+			<div>
+				<select id="alsa-output-mode-bt" class="config-select-large" name="alsa_output_mode_bt" onchange="autoClick('#btn-set-alsa-output-mode-bt');">
+					$_select[alsa_output_mode_bt]
+				</select>
+				<button id="btn-set-alsa-output-mode-bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode_bt" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-btn-after">ALSA output mode</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-output-mode-bt" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-alsa-output-mode-bt" class="config-help-info">
+					<b>Standard:</b> use the Output mode setting from Audio Config. DSP is supported.<br>
+					<b>Compatibility:</b> does not support DSP but may help if there is no sound output.
+				</span>
+			</div>
 		</div>
 
 		<!--div class="control-group">
@@ -106,7 +121,7 @@
 			<span class="config-msg-static">
 				<b>Standard:</b> Use the "Output mode" setting from Audio Config. This enables DSP to be used.<br>
 				<b>Compatibility:</b> This mode provides improved device compatibility but does not support DSP.
-            </span>
+			</span>
 		</div-->
 	</form>
 </div>

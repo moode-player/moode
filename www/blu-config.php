@@ -16,7 +16,11 @@ phpSession('open');
 
 chkVariables($_POST);
 
-// Controller commands
+//
+// CONTROLLER
+//
+
+// Commands
 if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
 	$cmd = $_POST['btcmd'];
 	sleep(1);
@@ -60,8 +64,21 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	sleep(1);
 	setAudioOut($_POST['audioout']);
 }
+// Disconnect device
+if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
+	$audioout = $_SESSION['audioout'] == 'Bluetooth' ? 'Local' : $_SESSION['audioout'];
+	phpSession('write', 'audioout', $audioout);
+	setAudioOut($audioout);
+	sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
+	$cmd = '-p';
+	sleep(1);
+}
 
-// Change audio routing
+//
+// OPTONS
+//
+
+// Audio routing
 if (isset($_POST['change_audioout_bt']) && $_POST['audioout'] != $_SESSION['audioout']) {
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		// Change to Bluetooth out, update MAC address
@@ -81,30 +98,21 @@ if (isset($_POST['change_audioout_bt']) && $_POST['audioout'] != $_SESSION['audi
 		sleep(1);
 	}
 }
-
-// Disconnect device
-if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
-	$audioout = $_SESSION['audioout'] == 'Bluetooth' ? 'Local' : $_SESSION['audioout'];
-	phpSession('write', 'audioout', $audioout);
-	setAudioOut($audioout);
-	sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
-	$cmd = '-p';
-	sleep(1);
-}
-
 // I-O buffer time
 if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 	phpSession('write', 'bluez_pcm_buffer', $_POST['pcm_buffer']);
 	sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $_POST['pcm_buffer'] . "' /etc/bluealsaaplay.conf");
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = NOTIFY_MSG_BLUETOOTH_RECONNECT;
 }
-
 // SBC encoder mode
 if (isset($_POST['update_sbc_quality']) && $_POST['update_sbc_quality'] == '1') {
 	$_SESSION['bluez_sbc_quality'] = $_POST['sbc_quality'];
 	sysCmd("sed -i 's/--sbc-quality.*/--sbc-quality=" . $_POST['sbc_quality'] . "/' /etc/systemd/system/bluealsa.service");
 	sysCmd('systemctl daemon-reload');
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = NOTIFY_MSG_BLUETOOTH_RECONNECT;
 }
-
 // ALSA output mode
 if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mode_bt'] == '1') {
 	// Either _audioout (Standard) or plughw (Compatibility)
@@ -115,6 +123,8 @@ if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mo
 		$alsaDevice = $_POST['alsa_output_mode_bt']; // _audioout
 	}
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $alsaDevice . "' /etc/bluealsaaplay.conf");
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = NOTIFY_MSG_BLUETOOTH_RECONNECT;
 }
 
 phpSession('close');
