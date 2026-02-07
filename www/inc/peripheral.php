@@ -169,8 +169,9 @@ function startGpioBtnHandler() {
 }
 
 function setScreenBlankTimeout($timeoutValue) {
+	$timeoutValueSsav = $timeoutValue == 'off' ? 'off' : $timeoutValue . ' 0';
 	$timeoutValueDpms = $timeoutValue == 'off' ? '0' : $timeoutValue;
-	sysCmd("sed -i 's/xset s.*/xset s " . $timeoutValue . " 0/' " . $_SESSION['home_dir'] . '/.xinitrc');
+	sysCmd("sed -i 's/xset s.*/xset s " . $timeoutValueSsav . "/' " . $_SESSION['home_dir'] . '/.xinitrc');
 	sysCmd("sed -i 's/xset dpms.*/xset dpms " . $timeoutValueDpms . " 0 0/' " . $_SESSION['home_dir'] . '/.xinitrc');
 }
 
