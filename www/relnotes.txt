@@ -18,11 +18,13 @@
 Updates
 - UPD: Add progress (file count) indicator for Library update/regenerate
 - UPD: Add Library song count (mpc stats) to Player info notification
+- UPD: Improve Bluetooth Control screen layout and notifications
 - UPD: Reduce watchdog interval to improve "Wake on play" responsiveness
 
 Bug fixes
 - FIX: Peppy spectrum not working with "Display on play" feature
 - FIX: Foreground for 1280x720 Blue meter not positioned correctly
+- FIX: Screen blank not working for the "Never" setting (regression)
 
 ################################################################################
 #
