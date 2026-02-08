@@ -35,6 +35,7 @@ const APLMETA_FILE = '/var/local/www/aplmeta.txt';
 const DEEZMETA_FILE = '/var/local/www/deezmeta.txt';
 const DEEZ_CREDENTIALS_FILE = '/etc/deezer/deezer.toml';
 const SPOTMETA_FILE = '/var/local/www/spotmeta.txt';
+const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';

@@ -748,6 +748,12 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					// URL logo image
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
+				// Track cover from Apple Music (iTunes API)
+				if ($current['title'] != DEFAULT_RADIO_TITLE) {
+					$current['coverurl'] = getTrackCoverUrl($current['title']);
+					$current['cover_art_hash'] = 'trackcover';
+				}
+
                 if ($_SESSION[$song['file']]['bitrate'] == '') {
                     $current['bitrate'] == '';
                 } else {
@@ -828,6 +834,21 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	}
 
 	return $current;
+}
+
+function getTrackCoverUrl($trackTitle) {
+	$parts = explode(' - ', $trackTitle); // $parts[0]=Artist name, $parts[1]=Track title
+	$query = '?term=' . urlencode($parts[0] . ' ' . $parts[1]) . '&media=music&entity=musicTrack&limit=1';
+	$apiUrl = ITUNES_API_BASE_URL . $query;
+
+	$result = file_get_contents($apiUrl);
+	if ($result === false) {
+		$coverUrl = 'getTrackCoverUrl(): API get failed';
+	} else {
+		$coverUrl = str_replace('100x100', '1000x1000', json_decode($result, true)['results'][0]['artworkUrl100']);
+	}
+
+	return $coverUrl;
 }
 
 function getUpnpCoverUrl() {

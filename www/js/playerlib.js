@@ -1169,8 +1169,10 @@ function renderUI() {
     	//console.log('CUR: ' + UI.currentHash);
     	//console.log('NEW: ' + MPD.json['cover_art_hash']);
     	// Compare new to current to prevent unnecessary image reloads
-    	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
-    		//console.log(MPD.json['coverurl']);
+    	if ((MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) ||
+			MPD.json['cover_art_hash'] == 'trackcover') {
+			console.log('Title: ' + MPD.json['title']);
+    		console.log(MPD.json['coverurl']);
             // Standard cover for Playback
             // NOTE: GLOBAL.ralbumClickedClearPlay when true prevents the default cover from briefly showing
             // scripts-library.js $('.ralbum').click
@@ -1178,10 +1180,22 @@ function renderUI() {
                 $('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
             }
             // Thumbnail cover for Playbar
-            if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
-                var image_url = MPD.json['artist'] == 'Radio station' ?
-                    MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs') :
-                    '/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg'
+            if (MPD.json['file'] && MPD.json['coverurl']) {
+				if (MPD.json['artist'] == 'Radio station') {
+					if (MPD.json['coverurl'].includes('https://')) {
+						 // Track cover
+						var image_url = MPD.json['coverurl'];
+					} else {
+						 // Radio logo
+						var image_url = MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs');
+					}
+				} else {
+					// Album cover
+					var image_url = '/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg';
+				}
+                //DELETE:var image_url = MPD.json['artist'] == 'Radio station' ?
+                    //MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs') :
+                    //'/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             } else {
                 if (GLOBAL.ralbumClickedClearPlay === false) {
@@ -1414,8 +1428,8 @@ function renderUI() {
 
         // Render the Queue
         //console.log('ID ' + MPD.json['playlist'], MPD.json['idle_timeout_event'], MPD.json['state']);
+		// Page load/reload or Queue changed (items added/removed, station metadata updated)
         if (typeof(MPD.json['idle_timeout_event']) == 'undefined' ||
-            // Page load/reload, Queue changed (items added/removed)
             MPD.json['idle_timeout_event'] == 'changed: playlist' ||
             GLOBAL.playQueueChanged == true) {
             renderPlayqueue(MPD.json['state']);
@@ -1663,13 +1677,15 @@ function updateActivePlayqueueItem() {
                             // Use station supplied title
                             $('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(data[i].Title);
     						if (i == parseInt(MPD.json['song'])) { // active
-    							if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
+								console.log('updateActivePlayqueueItem(): active title: ' + data[i].Title);
+    							//DELETE:if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
                                     // Update in case MPD did not get Title tag at initial play
     								$('#currentsong').html(data[i].Title);
-    							} else {
+									updateTrackCover(data[i].Title);
+    							//} else {
                                     // Add search URL, see corresponding code in renderUI()
     								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
-    							}
+    							//}
                                 // CoverView and Playbar
     							$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
     						}
@@ -1747,13 +1763,15 @@ function renderPlayqueue(state) {
 						output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 						output += '<span class="pll1">' + data[i].Title + '</span>';
 						if (i == parseInt(MPD.json['song'])) { // active
-							if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
+							console.log('renderPlayqueue(): active title: ' + data[i].Title);
+							//DELETE:if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
                                 // Update in case MPD did not get Title tag at initial play
 								$('#currentsong').html(data[i].Title);
-							} else {
+								updateTrackCover(data[i].Title);
+							//} else {
                                 // Add search URL, see corresponding code in renderUI()
 								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
-							}
+							//}
                             // CoverView and Playbar
                             $('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
 						}
@@ -1834,6 +1852,15 @@ function renderPlayqueue(state) {
         // Reset
         GLOBAL.playQueueChanged = false;
     });
+}
+
+// Update track cover
+function updateTrackCover(trackTitle) {
+	$.getJSON('command/radio.php?cmd=get_track_cover_url&track_title=' + trackTitle, function(data) {
+		MPD.json['coverurl'] = data;
+		MPD.json['cover_art_hash'] = 'trackcover';
+		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+	});
 }
 
 // Handle Queue commands

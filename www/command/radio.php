@@ -62,6 +62,9 @@ switch ($_GET['cmd']) {
 			sysCmd('/var/www/daemon/mpdmon.php "' . $_POST['opt'] . '" > /dev/null 2>&1 &');
 		}
 		break;
+	case 'get_track_cover_url':
+		echo json_encode(getTrackCoverUrl($_GET['track_title']));
+		break;
 	default:
 		echo 'Unknown command';
 		break;
