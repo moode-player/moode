@@ -1171,9 +1171,6 @@ function renderUI() {
     	// Compare new to current to prevent unnecessary image reloads
     	if ((MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) ||
 			MPD.json['cover_art_hash'] == 'trackcover') {
-			//console.log('Title: ' + MPD.json['title']);
-    		//console.log(MPD.json['coverurl']);
-
             // Standard cover for Playback
             // NOTE: GLOBAL.ralbumClickedClearPlay when true prevents the default cover from briefly showing
             // scripts-library.js $('.ralbum').click
@@ -1194,9 +1191,6 @@ function renderUI() {
 					// Album cover
 					var image_url = '/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg';
 				}
-                //DELETE:var image_url = MPD.json['artist'] == 'Radio station' ?
-                    //MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs') :
-                    //'/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             } else {
                 if (GLOBAL.ralbumClickedClearPlay === false) {
@@ -1771,7 +1765,6 @@ function renderPlayqueue(state) {
 							}
 							// Add search URL, see corresponding code in renderUI()
 							$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
-							$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
                             // CoverView and Playbar
                             $('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
 						}
@@ -1862,6 +1855,13 @@ function updateTrackCover(trackTitle) {
 			MPD.json['cover_art_hash'] = 'trackcover';
 			$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
 			$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
+			if (SESSION.json['cover_backdrop'] == 'Yes') {
+                if (GLOBAL.ralbumClickedClearPlay === true) {
+                    GLOBAL.ralbumClickedClearPlay = false;
+                }
+                var backDropHTML = MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
+                $('#cover-backdrop').html(backDropHTML);
+			}
 		}
 	});
 }

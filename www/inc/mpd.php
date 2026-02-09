@@ -860,6 +860,7 @@ function getTrackCoverUrl($trackTitle) {
 		}
 	}
 
+	//debugLog($coverUrl . "\n" . $apiUrl);
 	return $coverUrl;
 }
 
