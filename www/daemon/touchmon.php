@@ -15,7 +15,7 @@ require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 // Initialization
-debugLog('touchmon: Started');
+//debugLog('touchmon: Started');
 $timeoutArg = !isset($argv[1]) ? TOUCHMON_TIMEOUT_DEFAULT : $argv[1];
 $timeout = $timeoutArg;
 $dbh = sqlConnect();
@@ -25,7 +25,7 @@ sysCmd('killall -s9 xinput > /dev/null');
 // Wait for xServer to start
 $maxLoops = 3;
 for ($i = 0; $i < $maxLoops; $i++) {
-	debugLog('touchmon: Wait ' . ($i + 1) . ' for xServer to start');
+	//debugLog('touchmon: Wait ' . ($i + 1) . ' for xServer to start');
 	sleep(3);
 	$result = sysCmd('pgrep -c Xorg')[0];
 	if ($result > 0) {
@@ -34,7 +34,7 @@ for ($i = 0; $i < $maxLoops; $i++) {
 }
 $result = sysCmd('pgrep -c Xorg')[0];
 if ($result > 0) {
-	debugLog('touchmon: XServer is running');
+	//debugLog('touchmon: XServer is running');
 } else {
 	workerLog('touchmon: CRITICAL ERROR: XServer is not running');
 	exit (1);
@@ -42,10 +42,10 @@ if ($result > 0) {
 
 // Monitor for touch events
 while (true) {
-	debugLog('touchmon: Loop');
+	//debugLog('touchmon: Loop');
 	// Start/restart xinput in case localdisplay.service restarted or stopped
 	if (isXinputOn() === false) {
-		debugLog('touchmon: - start xinput');
+		//debugLog('touchmon: - start xinput');
 		startXinput();
 		$lastMTime = filemtime(TOUCHMON_LOG);
 	}
@@ -57,11 +57,11 @@ while (true) {
 
 		// Switch to webUI (touch detected)
 		if ($currentMTime != $lastMTime) {
-			debugLog('touchmon: - touch detected');
-			debugLog('touchmon: - timeout reset to ' . $timeoutArg);
+			//debugLog('touchmon: - touch detected');
+			//debugLog('touchmon: - timeout reset to ' . $timeoutArg);
 			$timeout = $timeoutArg;
 			if (isWebuiOn($dbh) === false) {
-				debugLog('touchmon: - switch to webui');
+				//debugLog('touchmon: - switch to webui');
 				exec('sudo moodeutl --setdisplay webui');
 			}
 
@@ -70,22 +70,22 @@ while (true) {
 
 		// Switch to Peppy
 		if (isWebuiOn($dbh) === true && isAudioPlaying() === true) {
-			debugLog('touchmon: - timeout ' . $timeout);
+			//debugLog('touchmon: - timeout ' . $timeout);
 			--$timeout;
 			if ($timeout == 0) {
-				debugLog('touchmon: - switch to peppy');
+				//debugLog('touchmon: - switch to peppy');
 				exec('sudo moodeutl --setdisplay peppy');
-				debugLog('touchmon: - timeout reset to ' . $timeoutArg);
+				//debugLog('touchmon: - timeout reset to ' . $timeoutArg);
 				$timeout = $timeoutArg;
 			}
 		}
 		// Switch to WebUI
 		if (isPeppyOn($dbh) === true && isAudioPlaying() === false) {
-			debugLog('touchmon: - switch to webui');
+			//debugLog('touchmon: - switch to webui');
 			exec('sudo moodeutl --setdisplay webui');
 		}
 	} else {
-		debugLog('touchmon: - WARNING: peppyalsa is not enabled');
+		//debugLog('touchmon: - WARNING: peppyalsa is not enabled');
 	}
 
 	sleep(1);
