@@ -468,12 +468,25 @@ function autoConfigSettings() {
 		['requires' => ['bt_pin_code'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['alsavolume_max_bt'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['cdspvolume_max_bt'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['audioout'], 'handler' => function($values) {
+			phpSession('write', 'audioout', 'Local'); // Reset to Local
+		}],
 		['requires' => ['bluez_pcm_buffer'], 'handler' => function($values) {
 			phpSession('write', 'bluez_pcm_buffer', $values['bluez_pcm_buffer']);
 			sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $values['bluez_pcm_buffer'] . "' /etc/bluealsaaplay.conf");
 		}],
-		['requires' => ['audioout'], 'handler' => 'setSessVarSql'],
-		['requires' => ['alsa_output_mode_bt'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['bluez_sbc_quality'], 'handler' => function($values) {
+			$_SESSION['bluez_sbc_quality'] = $values['bluez_sbc_quality'];
+			sysCmd("sed -i 's/--sbc-quality.*/--sbc-quality=" . $values['bluez_sbc_quality'] . "/' /etc/systemd/system/bluealsa.service");
+		}],
+		['requires' => ['alsa_output_mode_bt'], 'handler' => function($values) {
+			$_SESSION['alsa_output_mode_bt'] = '_audioout'; // Reset to Standard (_audioout)
+			sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=_audioout" . "' /etc/bluealsaaplay.conf");
+		}],
+		['requires' => ['bluez_controller_mode'], 'handler' => function($values) {
+			$_SESSION['bluez_controller_mode'] = $values['bluez_controller_mode'];
+			sysCmd("sed -i 's/ControllerMode.*/ControllerMode = " . $_SESSION['bluez_controller_mode'] . "/' /etc/bluetooth/main.conf");
+		}],
 		['requires' => ['bt_auto_disconnect'], 'handler' => 'setSessVarOnly'],
 		'AirPlay',
 		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate',

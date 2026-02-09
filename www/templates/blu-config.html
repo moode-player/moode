@@ -106,23 +106,24 @@
 				<span class="config-btn-after">ALSA output mode</span>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-output-mode-bt" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-alsa-output-mode-bt" class="config-help-info">
-					<b>Standard:</b> use the Output mode setting from Audio Config. DSP is supported.<br>
-					<b>Compatibility:</b> does not support DSP but may help if there is no sound output.
+					<b>Standard:</b> Use the Output mode setting from Audio Config. DSP and Peppy are supported.<br>
+					<b>Compatibility:</b> Does not support DSP or Peppy but may help if there is no sound output.
+				</span>
+			</div>
+
+			<div>
+				<select id="bluez-controller-mode" class="config-select-large" name="bluez_controller_mode" onchange="autoClick('#btn-set-bluez-controller-mode');">
+					$_select[bluez_controller_mode]
+				</select>
+				<button id="btn-set-bluez-controller-mode" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bluez_controller_mode" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<span class="config-btn-after">Controller mode</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-bluez-controller-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-bluez-controller-mode" class="config-help-info">
+					Sets the controller to the specified transport. The default mode is "Dual" which enables both
+					BR/EDR and LE transports.
 				</span>
 			</div>
 		</div>
-
-		<!--div class="control-group">
-			<legend>ALSA output mode</legend>
-			<select id="alsa-output-mode-bt" class="config-select-large" name="alsa_output_mode_bt" onchange="autoClick('#btn-set-alsa-output-mode-bt');">
-				$_select[alsa_output_mode_bt]
-			</select>
-			<button id="btn-set-alsa-output-mode-bt" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_alsa_output_mode_bt" value="1"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-			<span class="config-msg-static">
-				<b>Standard:</b> Use the "Output mode" setting from Audio Config. This enables DSP to be used.<br>
-				<b>Compatibility:</b> This mode provides improved device compatibility but does not support DSP.
-			</span>
-		</div-->
 	</form>
 </div>
 </div>

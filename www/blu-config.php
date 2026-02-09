@@ -113,18 +113,24 @@ if (isset($_POST['update_sbc_quality']) && $_POST['update_sbc_quality'] == '1') 
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 	$_SESSION['notify']['msg'] = NOTIFY_MSG_BLUETOOTH_RECONNECT;
 }
-// ALSA output mode
+// ALSA output mode: Standard = _audioout, Compatibility = plughw
+// NOTE: conflicts with peppy
 if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mode_bt'] == '1') {
-	// Either _audioout (Standard) or plughw (Compatibility)
 	$_SESSION['alsa_output_mode_bt'] = $_POST['alsa_output_mode_bt'];
 	if ($_POST['alsa_output_mode_bt'] == 'plughw') {
 		$alsaDevice = $_SESSION['alsa_output_mode'] == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $_SESSION['cardnum'] . ',0';
-	} else {
-		$alsaDevice = $_POST['alsa_output_mode_bt']; // _audioout
+	} else { // _audioout
+		$alsaDevice = $_POST['alsa_output_mode_bt'];
 	}
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $alsaDevice . "' /etc/bluealsaaplay.conf");
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 	$_SESSION['notify']['msg'] = NOTIFY_MSG_BLUETOOTH_RECONNECT;
+}
+// Controller mode
+if (isset($_POST['update_bluez_controller_mode']) && $_POST['update_bluez_controller_mode'] == '1') {
+	$_SESSION['bluez_controller_mode'] = $_POST['bluez_controller_mode'];
+	sysCmd("sed -i 's/ControllerMode.*/ControllerMode = " . $_SESSION['bluez_controller_mode'] . "/' /etc/bluetooth/main.conf");
+	submitJob('btsvc', '', NOTIFY_TITLE_INFO, NAME_BLUETOOTH . NOTIFY_MSG_SVC_MANUAL_RESTART); // Restart Bluetooth
 }
 
 phpSession('close');
@@ -211,6 +217,11 @@ $_select['sbc_quality'] .= "<option value=\"xq+\" " . (($_SESSION['bluez_sbc_qua
 // ALSA output mode
 $_select['alsa_output_mode_bt'] .= "<option value=\"_audioout\" " . (($_SESSION['alsa_output_mode_bt'] == '_audioout') ? "selected" : "") . ">Standard</option>\n";
 $_select['alsa_output_mode_bt'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode_bt'] == 'plughw') ? "selected" : "") . ">Compatibility</option>\n";
+
+// Controller mode
+$_select['bluez_controller_mode'] .= "<option value=\"dual\" " . (($_SESSION['bluez_controller_mode'] == 'dual') ? "selected" : "") . ">Dual (Default)</option>\n";
+$_select['bluez_controller_mode'] .= "<option value=\"bredr\" " . (($_SESSION['bluez_controller_mode'] == 'bredr') ? "selected" : "") . ">BR/EDR</option>\n";
+$_select['bluez_controller_mode'] .= "<option value=\"le\" " . (($_SESSION['bluez_controller_mode'] == 'le') ? "selected" : "") . ">LE</option>\n";
 
 waitWorker('blu-control');
 

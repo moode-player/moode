@@ -662,7 +662,7 @@ if ($_SESSION['i2sdevice'] == 'Raspberry Pi DigiAMP+') {
 }
 workerLog('worker: ' . $msg);
 
-// Bluetooth audio session vars
+// Bluetooth session vars
 // Pairing agent PIN code
 $status = 'session vars ok';
 if (!isset($_SESSION['bt_pin_code'])) {
@@ -683,6 +683,10 @@ if (!isset($_SESSION['bluez_sbc_quality'])) {
 // ALSA output mode
 if (!isset($_SESSION['alsa_output_mode_bt'])) {
 	$_SESSION['alsa_output_mode_bt'] = '_audioout';
+}
+// Controller mode
+if (!isset($_SESSION['bluez_controller_mode'])) {
+	$_SESSION['bluez_controller_mode'] = 'dual';
 }
 workerLog('worker: Bluetooth:        ' . $status);
 
@@ -1088,8 +1092,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 	$status = 'n/a';
 }
 $status .= ', PIN: ' . (empty($_SESSION['bt_pin_code']) ? 'None' : 'Set');
-$status .= ', ALSA/CDSP maxvol: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SESSION['cdspvolume_max_bt'] . 'dB';
-$status .= ', ALSA outmode: ' . ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
+$status .= ', ALSA/CDSP max: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SESSION['cdspvolume_max_bt'] . 'dB';
+$status .= ', ALSA out: ' . ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
+$status .= ', Transport: ' . $_SESSION['bluez_controller_mode'];
 workerLog('worker: Bluetooth:       ' . $status);
 
 // Start airplay renderer
