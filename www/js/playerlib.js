@@ -1171,8 +1171,9 @@ function renderUI() {
     	// Compare new to current to prevent unnecessary image reloads
     	if ((MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) ||
 			MPD.json['cover_art_hash'] == 'trackcover') {
-			console.log('Title: ' + MPD.json['title']);
-    		console.log(MPD.json['coverurl']);
+			//console.log('Title: ' + MPD.json['title']);
+    		//console.log(MPD.json['coverurl']);
+
             // Standard cover for Playback
             // NOTE: GLOBAL.ralbumClickedClearPlay when true prevents the default cover from briefly showing
             // scripts-library.js $('.ralbum').click
@@ -1677,15 +1678,14 @@ function updateActivePlayqueueItem() {
                             // Use station supplied title
                             $('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(data[i].Title);
     						if (i == parseInt(MPD.json['song'])) { // active
-								console.log('updateActivePlayqueueItem(): active title: ' + data[i].Title);
-    							//DELETE:if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
-                                    // Update in case MPD did not get Title tag at initial play
-    								$('#currentsong').html(data[i].Title);
+								//console.log('updateActivePlayqueueItem(): active title: ' + data[i].Title);
+                                // Update in case MPD did not get Title tag at initial play
+								$('#currentsong').html(data[i].Title);
+								if (SESSION.json['radio_track_covers'] == 'Yes') {
 									updateTrackCover(data[i].Title);
-    							//} else {
-                                    // Add search URL, see corresponding code in renderUI()
-    								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
-    							//}
+								}
+                                // Add search URL, see corresponding code in renderUI()
+								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
                                 // CoverView and Playbar
     							$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
     						}
@@ -1763,15 +1763,15 @@ function renderPlayqueue(state) {
 						output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 						output += '<span class="pll1">' + data[i].Title + '</span>';
 						if (i == parseInt(MPD.json['song'])) { // active
-							console.log('renderPlayqueue(): active title: ' + data[i].Title);
-							//DELETE:if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
-                                // Update in case MPD did not get Title tag at initial play
-								$('#currentsong').html(data[i].Title);
+							//console.log('renderPlayqueue(): active title: ' + data[i].Title);
+                            // Update in case MPD did not get Title tag at initial play
+							$('#currentsong').html(data[i].Title);
+							if (SESSION.json['radio_track_covers'] == 'Yes') {
 								updateTrackCover(data[i].Title);
-							//} else {
-                                // Add search URL, see corresponding code in renderUI()
-								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
-							//}
+							}
+							// Add search URL, see corresponding code in renderUI()
+							$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
+							$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
                             // CoverView and Playbar
                             $('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
 						}
@@ -1857,9 +1857,12 @@ function renderPlayqueue(state) {
 // Update track cover
 function updateTrackCover(trackTitle) {
 	$.getJSON('command/radio.php?cmd=get_track_cover_url&track_title=' + trackTitle, function(data) {
-		MPD.json['coverurl'] = data;
-		MPD.json['cover_art_hash'] = 'trackcover';
-		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+		if (data.includes('https://')) {
+			MPD.json['coverurl'] = data;
+			MPD.json['cover_art_hash'] = 'trackcover';
+			$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+			$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
+		}
 	});
 }
 
@@ -3318,6 +3321,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#hires-thumbnails span').text(getKeyOrValue('key', SESSION.json['library_hiresthm']));
                 $('#playqueue-art-enabled span').text(SESSION.json['playlist_art']);
                 $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
+				$('#show-radio-track-covers span').text(SESSION.json['radio_track_covers']);
 
                 // Library
                 $('#onetouch_album span').text(SESSION.json['library_onetouch_album']);
@@ -3490,6 +3494,7 @@ $('#btn-preferences-update').click(function(e){
 	var fontSizeChange = false;
     var lazyLoadChange = false;
     var playqueueArtChange = false;
+	var radioTrackCoversChange = false;
     var showNpIconChange = false;
 	var thumbSizeChange = false;
 
@@ -3528,6 +3533,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_hiresthm'] != getKeyOrValue('value', $('#hires-thumbnails span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['playlist_art'] != $('#playqueue-art-enabled span').text()) {playqueueArtChange = true;}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
+	if (SESSION.json['radio_track_covers'] != $('#show-radio-track-covers span').text()) {radioTrackCoversChange = true;}
 
     // Library
     if (SESSION.json['library_onetouch_album'] != $('#onetouch_album span').text()) {libraryOptionsChange = true;}
@@ -3588,6 +3594,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_hiresthm'] = getKeyOrValue('value', $('#hires-thumbnails span').text());
     SESSION.json['playlist_art'] = $('#playqueue-art-enabled span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
+	SESSION.json['radio_track_covers'] = $('#show-radio-track-covers span').text();
 
     // Library
     SESSION.json['library_onetouch_album'] = $('#onetouch_album span').text();
@@ -3708,6 +3715,7 @@ $('#btn-preferences-update').click(function(e){
             'library_hiresthm': SESSION.json['library_hiresthm'],
             'playlist_art': SESSION.json['playlist_art'],
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
+			'radio_track_covers': SESSION.json['radio_track_covers'],
 
             // Library
             'library_onetouch_album': SESSION.json['library_onetouch_album'],
@@ -3747,6 +3755,7 @@ $('#btn-preferences-update').click(function(e){
         function() {
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
+				radioTrackCoversChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {

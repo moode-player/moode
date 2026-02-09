@@ -971,6 +971,9 @@ workerLog('worker: MPD volume:         ' . $volKnob);
 workerLog('worker: Saved MPD vol:      ' . $_SESSION['volknob_mpd']);
 workerLog('worker: Saved SRC vol:      ' . $_SESSION['volknob_preamp']);
 // MPD crossfade
+if (!isset($_SESSION['mpdcrossfade'])) {
+	$_SESSION['mpdcrossfade'] = '0';
+}
 workerLog('worker: MPD crossfade:      ' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs'));
 sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
 $resp = readMpdResp($sock);

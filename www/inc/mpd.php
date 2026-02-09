@@ -750,8 +750,13 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				}
 				// Track cover from Apple Music (iTunes API)
 				if ($current['title'] != DEFAULT_RADIO_TITLE) {
-					$current['coverurl'] = getTrackCoverUrl($current['title']);
-					$current['cover_art_hash'] = 'trackcover';
+					if ($_SESSION['radio_track_covers'] == 'Yes') {
+						$trackCoverUrl = getTrackCoverUrl($current['title']);
+						if (str_contains($trackCoverUrl, 'https://')) {
+							$current['coverurl'] = $trackCoverUrl;
+							$current['cover_art_hash'] = 'trackcover';
+						}
+					}
 				}
 
                 if ($_SESSION[$song['file']]['bitrate'] == '') {
@@ -843,9 +848,16 @@ function getTrackCoverUrl($trackTitle) {
 
 	$result = file_get_contents($apiUrl);
 	if ($result === false) {
-		$coverUrl = 'getTrackCoverUrl(): API get failed';
+		$coverUrl = 'getTrackCoverUrl(): query failed';
+		debugLog($coverUrl . "\n" . $apiUrl);
 	} else {
-		$coverUrl = str_replace('100x100', '1000x1000', json_decode($result, true)['results'][0]['artworkUrl100']);
+		$resultArray = json_decode($result, true);
+		if ($resultArray['resultCount'] == '0') {
+			$coverUrl = 'getTrackCoverUrl(): query result count 0';
+			debugLog($coverUrl . "\n" . $apiUrl);
+		} else {
+			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
+		}
 	}
 
 	return $coverUrl;
