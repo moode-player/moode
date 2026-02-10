@@ -848,12 +848,12 @@ function getTrackCoverUrl($trackTitle) {
 
 	$result = file_get_contents($apiUrl);
 	if ($result === false) {
-		$coverUrl = 'getTrackCoverUrl(): query failed';
+		$coverUrl = 'query failed';
 		debugLog($coverUrl . "\n" . $apiUrl);
 	} else {
 		$resultArray = json_decode($result, true);
 		if ($resultArray['resultCount'] == '0') {
-			$coverUrl = 'getTrackCoverUrl(): query result count 0';
+			$coverUrl = 'query result count 0';
 			debugLog($coverUrl . "\n" . $apiUrl);
 		} else {
 			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
