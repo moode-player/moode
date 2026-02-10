@@ -3741,7 +3741,7 @@ $('#btn-preferences-update').click(function(e){
 
             // CoverView
             'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-            'scnsaver_whenplaying' = SESSION.json['scnsaver_whenplaying'],
+            'scnsaver_whenplaying': SESSION.json['scnsaver_whenplaying'],
             'auto_coverview': SESSION.json['auto_coverview'],
             'scnsaver_style': SESSION.json['scnsaver_style'],
             'scnsaver_mode': SESSION.json['scnsaver_mode'],
