@@ -1732,11 +1732,13 @@ function renderPlayqueue(state) {
 					output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
                     output += data[i].Name + '</span>';
-					// Line 2 artist, album
+					// Line 2 artist - album
 					output += '<span class="pll2">'; // for clock radio
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
-					//output += ' - ';
-					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
+					output += '<span class="pll2-album" style="display:contents;">';
+					output += (typeof(data[i].Album) === 'undefined') ?  ' - Unknown album' : ' - ' + data[i].Album;
+					output += '</span>';
+					output += '</span>';
 				} else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
                     // Radio station
                     var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"' + DEFAULT_RADIO_COVER + '"' : '"imagesw/radio-logos/thumbs/' +
@@ -1769,11 +1771,9 @@ function renderPlayqueue(state) {
                             $('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
 						}
 					}
-
 					// Line 2 station name
 					output += '<span class="pll2">';
 					output += '<i class="fa-solid fa-sharp fa-microphone"></i> ';
-
 					if (typeof(RADIO.json[data[i].file]) === 'undefined') {
 						var name = typeof(data[i].Name) === 'undefined' ? 'Radio station' : data[i].Name;
 						output += name;
@@ -1786,6 +1786,7 @@ function renderPlayqueue(state) {
 							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hd-badge"></span>');
 						}
 					}
+					output += '</span>';
 				} else {
                     // Song file or upnp url
 					var thumb = (data[i].file.substring(0, 4) == 'http') ?
@@ -1795,7 +1796,8 @@ function renderPlayqueue(state) {
 	                // Line 1 title
 					output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
-					if (typeof(data[i].Title) === 'undefined') { // use file name
+					if (typeof(data[i].Title) === 'undefined') {
+						// Use file name
 						var pos = data[i].file.lastIndexOf('.');
 						if (pos == -1) {
 							output += data[i].file; // Some upnp url's have no file ext
@@ -1809,12 +1811,16 @@ function renderPlayqueue(state) {
                         // Use supplied title
 	                    output += data[i].Title + '</span>';
 					}
-					// Line 2 artist, album
+					// Line 2 artist - album
 					output += '<span class="pll2">';
 					output += (typeof(data[i].Artist) === 'undefined') ? data[i].AlbumArtist : data[i].Artist;
+					output += '<span class="pll2-album" style="display:contents;">';
+					output += (typeof(data[i].Album) === 'undefined') ?  ' - Unknown album' : ' - ' + data[i].Album;
+					output += '</span>';
+					output += '</span>';
 				}
 
-                output += '</span></div></li>';
+				output += '</div></li>';
 
             } // End loop
         }
@@ -2866,8 +2872,8 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'track_info_playqueue':
             var cmd = '';
-            if ($('#pq-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') { // Has icon (fa-microphone)
-                cmd = 'station_info';
+            if ($('#pq-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') {
+                cmd = 'station_info';  // Has mic icon
             } else {
                 cmd = 'track_info';
             }
@@ -2877,7 +2883,22 @@ $(document).on('click', '.context-menu a', function(e) {
                 }
             });
             break;
-        // NOTE: playqueue and cv-playqueue
+		case 'go_to_folder':
+			var pqItem = '#pq-' + (UI.dbEntry[0] + 1);
+			var micIcon = $(pqItem + ' .pll2').html().substr(0, 2) == '<i';
+			var artist = $(pqItem + ' .pll2').text().split(' - ')[0];
+			var album = $(pqItem + ' .pll2').text().split(' - ')[1]
+			// Only song files
+			if (!micIcon) {
+				// Switch to Folder view
+				currentView = 'playback,folder';
+				$('#coverart-url').click();
+				// Execute Advanced search
+				$('#dbsearch-artist').val(artist);
+				$('#dbsearch-album').val(album);
+				$('#db-search-submit').click();
+			}
+			break;
         case 'playqueue_top':
             if (UI.mobile) {
         		itemPos = $('#playqueue ul li:nth-child(1)').position().top;
