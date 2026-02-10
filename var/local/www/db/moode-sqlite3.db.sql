@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Sun Feb 8 15:57:03 2026
+-- File generated with SQLiteStudio v3.4.4 on Tue Feb 10 10:25:46 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -597,7 +597,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
 INSERT INTO cfg_system (id, param, value) VALUES (64, 'pasvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
-INSERT INTO cfg_system (id, param, value) VALUES (67, 'radio_track_covers', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (67, 'radio_track_covers', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (68, 'deezactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (69, 'peppy_scn_blank_active', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');

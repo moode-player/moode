@@ -578,12 +578,10 @@ function autoConfigSettings() {
 		['requires' => ['cover_backdrop'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cover_blur'], 'handler' => 'setSessVarSql'],
 		['requires' => ['cover_scale'], 'handler' => 'setSessVarSql'],
+		['requires' => ['renderer_backdrop'], 'handler' => 'setSessVarSql'],
 		['requires' => ['font_size'], 'handler' => 'setSessVarSql'],
+		['requires' => ['native_lazyload'], 'handler' => 'setSessVarSql'],
 		'Playback',
-		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
-		['requires' => ['extra_tags'], 'handler' => 'setSessVarSql'],
-		['requires' => ['search_site'], 'handler' => 'setSessVarSql'],
-		['requires' => ['playhist'], 'handler' => 'setSessVarSql'],
 		['requires' => ['show_npicon'], 'handler' => function($values) {
 			if ($values['show_npicon'] == 'Yes') {
 				$value = 'Waveform';
@@ -594,7 +592,16 @@ function autoConfigSettings() {
 			}
 			phpSession('write', 'show_npicon', $value);
 		}],
-		['requires' => ['show_cvpb'], 'handler' => 'setSessVarSql'],
+		['requires' => ['extra_tags'], 'handler' => 'setSessVarSql'],
+		['requires' => ['search_site'], 'handler' => 'setSessVarSql'],
+		['requires' => ['playhist'], 'handler' => 'setSessVarSql'],
+		'Cover Art',
+		['requires' => ['library_covsearchpri'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_thmgen_scan'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_hiresthm'], 'handler' => 'setSessVarSql'],
+		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_tagview_covers'], 'handler' => 'setSessVarSql'],
+		['requires' => ['radio_track_covers'], 'handler' => 'setSessVarSql'],
 		'Library',
 		['requires' => ['library_onetouch_album'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_onetouch_ralbum'], 'handler' => 'setSessVarSql'],
@@ -602,26 +609,20 @@ function autoConfigSettings() {
 		['requires' => ['library_onetouch_pl'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_albumview_sort'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_tagview_sort'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_track_play'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_recently_added'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_encoded_at'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_covsearchpri'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_thmgen_scan'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_hiresthm'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_thumbnail_columns'], 'handler' => 'setSessVarSql'],
-		'Library (Advanced)',
+		['requires' => ['library_show_genres'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_tagview_genre'], 'handler' => function($values) {
 			$value = $values['library_tagview_genre'] == 'Genres' ? 'Genre' :
 				($values['library_tagview_genre'] == 'Composers' ? 'Composer' : $values['library_tagview_genre']);
 			phpSession('write', 'library_tagview_genre', $value);
 		}],
-		//['requires' => ['library_tagview_genre'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_tagview_artist'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_track_play'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_recently_added'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_encoded_at'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_ellipsis_limited_text'], 'handler' => 'setSessVarSql'],
+		['requires' => ['library_thumbnail_columns'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_misc_options'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_ignore_articles'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_show_genres'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_tagview_covers'], 'handler' => 'setSessVarSql'],
-		['requires' => ['library_ellipsis_limited_text'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_utf8rep'], 'handler' => 'setSessVarSql'],
 		'CoverView',
 		['requires' => ['scnsaver_timeout'], 'handler' => 'setSessVarSql'],
@@ -630,6 +631,7 @@ function autoConfigSettings() {
 		['requires' => ['scnsaver_style'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_mode'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_layout'], 'handler' => 'setSessVarSql'],
+		['requires' => ['show_cvpb'], 'handler' => 'setSessVarSql'],
 		['requires' => ['scnsaver_xmeta'], 'handler' => 'setSessVarSql'],
 		//
 		// Radio manager
