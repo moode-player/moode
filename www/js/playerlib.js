@@ -1856,18 +1856,31 @@ function renderPlayqueue(state) {
 // Update track cover
 function updateTrackCover(trackTitle) {
 	$.getJSON('command/radio.php?cmd=get_track_cover_url&track_title=' + trackTitle, function(data) {
+		//console.log('updateTrackCover(): ' + data);
+		// data: URL, 'query failed' or 'query result count 0'
 		if (data.includes('https://')) {
+			// Update to track cover
 			MPD.json['coverurl'] = data;
 			MPD.json['cover_art_hash'] = 'trackcover';
-			$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
-			$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
-			if (SESSION.json['cover_backdrop'] == 'Yes') {
-                if (GLOBAL.ralbumClickedClearPlay === true) {
-                    GLOBAL.ralbumClickedClearPlay = false;
-                }
-                var backDropHTML = MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
-                $('#cover-backdrop').html(backDropHTML);
-			}
+		} else {
+			// Leave as-is (radio logo)
+		}
+
+		// Playback/Playbar cover
+		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+		$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
+		// Cover backdrop
+		if (SESSION.json['cover_backdrop'] == 'Yes') {
+            if (GLOBAL.ralbumClickedClearPlay === true) {
+                GLOBAL.ralbumClickedClearPlay = false;
+            }
+            var backDropHTML = MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
+            $('#cover-backdrop').html(backDropHTML);
+		}
+		// Screen saver
+		$('#ss-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
+		if (GLOBAL.coverViewActive) {
+			$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
 		}
 	});
 }
