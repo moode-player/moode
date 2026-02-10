@@ -134,7 +134,8 @@ function parseTrackInfo($resp) {
 				case 'Date':
 				case 'OriginalDate':
 				case 'OriginalReleaseDate':
-					// Format YYYY or YYYYMM
+					// Format YYYY or YYYYMM (or... YYYY-MM)
+					$value = str_replace('-', '', $value); // get rid of the dash...
 					$year = substr($value, 0, 4);
 					$month = substr($value, 4, 2);
 					$idx = $element == 'Date' ? 11 : ($element == 'OriginalDate' ? 12 : 13);
