@@ -982,8 +982,11 @@ workerLog('worker: MPD crossfade:      ' . ($_SESSION['mpdcrossfade'] == '0' ? '
 sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
 $resp = readMpdResp($sock);
 // Ignore CUE files
-setCuefilesIgnore($_SESSION['cuefiles_ignore']);
+setMpdIgnore($_SESSION['cuefiles_ignore'], 'cue');
 workerLog('worker: MPD ignore CUE:     ' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no'));
+// Ignore Moode files
+setMpdIgnore($_SESSION['moodefiles_ignore'], 'moode');
+workerLog('worker: MPD ignore Moode:   ' . ($_SESSION['moodefiles_ignore'] == '1' ? 'yes' : 'no'));
 // On first boot update /mnt/OSDISK dir to pick up Stereo Test file and then clear/load Default Playlist
 if ($_SESSION['first_use_help'] == 'y,y,y') {
 	sendMpdCmd($sock, 'update OSDISK');
@@ -1288,7 +1291,9 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Start Web SSH server
-if ($_SESSION['shellinabox'] == '1') {
+if (!isset($_SESSION['shellinabox'])) {
+	$_SESSION['shellinabox'] = '0';
+} else if ($_SESSION['shellinabox'] == '1') {
 	sysCmd('systemctl start shellinabox');
 }
 workerLog('worker: Web SSH server:    ' . ($_SESSION['shellinabox'] == '1' ? 'on' : 'off'));
@@ -2842,11 +2847,10 @@ function runQueuedJob() {
 				sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 			}
 			break;
-		case 'cuefiles_ignore':
-			setCuefilesIgnore($_SESSION['w_queueargs']);
-			clearLibCacheAll();
-			sysCmd('mpc stop');
-			sysCmd('systemctl restart mpd');
+		case 'mpd_ignore':
+			// $queueArgs: ignore,type
+			$queueArgs = explode(',', $_SESSION['w_queueargs']);
+			setMpdIgnore($queueArgs[0], $queueArgs[1]);
 			break;
 
 		// Library saved searches

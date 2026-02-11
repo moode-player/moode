@@ -269,7 +269,7 @@ if (isset($_POST['rebuild_dlnadb'])) {
 
 // Shellinabox WebSSH
 if (isset($_POST['update_shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
-	phpSession('write', 'shellinabox', $_POST['shellinabox']);
+	$_SESSION['shellinabox'] = $_POST['shellinabox'];
 	submitJob('shellinabox', $_POST['shellinabox']);
 }
 

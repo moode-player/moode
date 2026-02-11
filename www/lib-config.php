@@ -73,7 +73,15 @@ if (isset($_POST['update_cuefiles_ignore'])) {
 	unset($_GET['cmd']);
 	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
 		phpSession('write', 'cuefiles_ignore', $_POST['cuefiles_ignore']);
-		submitJob('cuefiles_ignore', $_POST['cuefiles_ignore'], NOTIFY_TITLE_INFO, 'MPD' . NOTIFY_MSG_SVC_RESTARTED);
+		submitJob('mpd_ignore', ($_POST['cuefiles_ignore'] . ',cue'), NOTIFY_TITLE_INFO, NOTIFY_MPD_UPDATE_LIBRARY);
+	}
+}
+// Scan or ignore moode files by adding or removing the filenames from /var/lib/mpd/music/.mpdignore
+if (isset($_POST['update_moodefiles_ignore'])) {
+	unset($_GET['cmd']);
+	if (isset($_POST['moodefiles_ignore']) && $_POST['moodefiles_ignore'] != $_SESSION['moodefiles_ignore']) {
+		phpSession('write', 'moodefiles_ignore', $_POST['moodefiles_ignore']);
+		submitJob('mpd_ignore', ($_POST['moodefiles_ignore'] . ',moode'), NOTIFY_TITLE_INFO, NOTIFY_MPD_UPDATE_LIBRARY);
 	}
 }
 // Regenerate thumbnail cache
@@ -433,6 +441,11 @@ if (!isset($_GET['cmd'])) {
 	$autoClick = " onchange=\"autoClick('#btn-set-cuefiles-ignore');\"";
 	$_select['cuefiles_ignore_on'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-1\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['cuefiles_ignore_off'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle-cuefiles-ignore-2\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+	// Ignore moode files
+	$autoClick = " onchange=\"autoClick('#btn-set-moodefiles-ignore');\"";
+	$_select['moodefiles_ignore_on'] = "<input type=\"radio\" name=\"moodefiles_ignore\" id=\"toggle-moodefiles-ignore-1\" value=\"1\" " . (($_SESSION['moodefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	$_select['moodefiles_ignore_off'] = "<input type=\"radio\" name=\"moodefiles_ignore\" id=\"toggle-moodefiles-ignore-2\" value=\"0\" " . (($_SESSION['moodefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// DB update status
 	if (false !== ($sock = openMpdSock('localhost', 6600))) {

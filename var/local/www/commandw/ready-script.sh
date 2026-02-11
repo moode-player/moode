@@ -39,7 +39,14 @@ moode_log "Start"
 moode_log "Wait $WAIT_SECS seconds..."
 sleep $WAIT_SECS
 
-# Search the Queue first
+# Check MPD database first
+RESULT=$(mpc find filename "$READY_CHIME_URI")
+if [ -z "$RESULT" ]; then
+	moode_log "ERROR: File $READY_CHIME_URI is not in the MPD database"
+	exit 1
+fi
+
+# Search the Queue
 ITEM=1
 FOUND=0
 QUEUE=$(mpc playlist)
@@ -78,5 +85,6 @@ done <<< "$PLAYING"
 if [ $MAX_RETRIES == 0 ]; then
 	moode_log "ERROR: Playback failed"
 else
+	mpc -q del $ITEM
 	moode_log "Done"
 fi

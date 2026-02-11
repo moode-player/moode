@@ -209,7 +209,7 @@ function autoConfigSettings() {
 		// Security
 		//
 		'Security',
-		['requires' => ['shellinabox'], 'handler' => 'setSessVarSql'],
+		['requires' => ['shellinabox'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['xss_detect'], 'handler' => 'setSessVarOnly'],
 		//
 		// Logs
@@ -807,6 +807,7 @@ function autoConfigSettings() {
 		'Music Sources',
 		['requires' => ['fs_mountmon'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['cuefiles_ignore'], 'handler' => 'setSessVarSql'],
+		['requires' => ['moodefiles_ignore'], 'handler' => 'setSessVarSql'],
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...
 		['requires' => ['source_name', 'source_type', 'source_address', 'source_remotedir', 'source_username', 'source_password',

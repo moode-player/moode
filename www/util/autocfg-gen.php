@@ -52,6 +52,7 @@ $currentSettings['ready_script'] = $_SESSION['ready_script'];
 $currentSettings['ready_script_wait'] = $_SESSION['ready_script_wait'];
 $currentSettings['keyboard'] = $_SESSION['keyboard'];
 $currentSettings['reduce_notifications'] = $_SESSION['reduce_notifications'];
+$currentSettings['shellinabox'] = $_SESSION['shellinabox'];
 // Network
 $currentSettings['approto'] = $_SESSION['approto'];
 // Audio: MPD options

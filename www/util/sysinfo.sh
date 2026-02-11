@@ -168,7 +168,8 @@ AUDIO_PARAMETERS() {
 	echo -e "\nCamillaDSP\t\t= $camilladsp\c"
 	echo -e "\nCamillaDSP volsync\t= $camilladsp_volume_sync\c"
 	echo -e "\nMPD httpd\t\t= $mpd_httpd\c"
-	echo -e "\nIgnore CUE files\t= $cuefiles_ignore\n"
+	echo -e "\nIgnore CUE files\t= $cuefiles_ignore\c"
+	echo -e "\nIgnore Moode files\t= $moodefiles_ignore\n"
 }
 
 APPEARANCE_SETTINGS() {
@@ -770,7 +771,7 @@ deezactive=${arr[67]}
 peppy_scn_blank_active=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
-[[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
+[[ "${arr[71]}" = "1" ]] && moodefiles_ignore="Yes" || moodefiles_ignore="No"
 alsaequal=${arr[72]}
 eqfa12p=${arr[73]}
 model=$(echo $HDWRREV | cut -c 4)
@@ -946,6 +947,8 @@ value=$(moodeutl -d -gv gpio_svc)
 [[ "$value" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
 value=$(moodeutl -d -gv reduce_notifications)
 [[ "$value" = "1" ]] && reduce_notifications="On" || reduce_notifications="Off"
+value=$(moodeutl -d -gv shellinabox)
+[[ "$value" = "1" ]] && shellinabox="On" || shellinabox="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

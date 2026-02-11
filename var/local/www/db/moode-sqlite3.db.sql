@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Tue Feb 10 10:25:46 2026
+-- File generated with SQLiteStudio v3.4.4 on Wed Feb 11 08:29:49 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -602,7 +602,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (68, 'deezactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (69, 'peppy_scn_blank_active', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
-INSERT INTO cfg_system (id, param, value) VALUES (72, 'shellinabox', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (72, 'moodefiles_ignore', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (73, 'alsaequal', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (74, 'peppy_display_type', 'meter');
 INSERT INTO cfg_system (id, param, value) VALUES (75, 'p3wifi', '1');

@@ -136,7 +136,21 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cuefiles-ignore" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-cuefiles-ignore" class="config-help-info">
 					This can help prevent duplicate tracks entries when a .cue file is present in the album directory.
-					After changing this setting return to Playback or any of the Library views then select "Update library" from the Menu.
+					Update the library after changing this setting.
+		        </span>
+			</div>
+
+			<div>
+				<div class="toggle">
+					<label class="toggle-radio toggle-moodefiles-ignore" for="toggle-moodefiles-ignore-2">ON </label>$_select[moodefiles_ignore_on]
+					<label class="toggle-radio toggle-moodefiles-ignore" for="toggle-moodefiles-ignore-1">OFF</label>$_select[moodefiles_ignore_off]
+				</div>
+				<span class="config-toggle-after">Ignore moOde files</span>
+				<button id="btn-set-moodefiles-ignore" class="hide btn btn-primary btn-small btn-submit config-btn-set" type="submit" name="update_moodefiles_ignore" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-moodefiles-ignore" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-moodefiles-ignore" class="config-help-info">
+					This hides the moOde system files Stereo Test and Ready Chime from the Library.
+					Update the library after changing this setting.
 		        </span>
 			</div>
 		</div>

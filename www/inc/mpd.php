@@ -643,23 +643,29 @@ function setMpdHttpd () {
 	sysCmd($cmd);
 }
 
-// Ignore CUE files
-function setCuefilesIgnore($ignore) {
-	$file = MPD_MUSICROOT . '.mpdignore';
-	if (is_file($file) === false) {
-		if ($ignore == 1) {
-			sysCmd('touch "' . $file . '"');
-			sysCmd('chmod 0777 "' . $file . '"');
-			sysCmd('chown root:root "' . $file . '"');
-			sysCmd('echo "*.cue" >> ' . $file);
+// Ignore files
+function setMpdIgnore($ignore, $fileType) {
+	$mpdignoreFile = MPD_MUSICROOT . '.mpdignore';
+
+	// Create empty file if not present
+	if (is_file($mpdignoreFile) === false) {
+		sysCmd('touch "' . $mpdignoreFile . '"');
+		sysCmd('chmod 0755 "' . $mpdignoreFile . '"');
+		sysCmd('chown root:root "' . $mpdignoreFile . '"');
+	}
+
+	// By type
+	if ($fileType == 'cue') {
+		sysCmd("sed -i '/^\*\.cue/d' " . $mpdignoreFile);
+		if ($ignore == '1') {
+			sysCmd('echo "*.cue" >> ' . $mpdignoreFile);
 		}
-	} else {
-		if(sysCmd('cat ' . $file . ' | grep cue')) {
-			if ($ignore == 0) {
-				sysCmd("sed -i '/^\*\.cue/d' " . $file);
-			}
-		} else if ($ignore == "1") {
-			sysCmd('echo "*.cue" >> ' . $file);
+	} else if ($fileType == 'moode') {
+		sysCmd("sed -i '/LRMonoPhase4.flac/d' " . $mpdignoreFile);
+		sysCmd("sed -i '/ReadyChime.flac/d' " . $mpdignoreFile);
+		if ($ignore == '1') {
+			sysCmd('echo "LRMonoPhase4.flac" >> ' . $mpdignoreFile);
+			sysCmd('echo "ReadyChime.flac" >> ' . $mpdignoreFile);
 		}
 	}
 }
