@@ -21,6 +21,7 @@ Updates
 - UPD: Add Library song count (mpc stats) to Player info notification
 - UPD: Add Controller mode (bredr, le, dual) to Bluetooth Control
 - UPD: Add Goto Folder option to Queue context menu
+- UPD: Add option to ignore moode system files 
 - UPD: Improve Bluetooth Control screen layout and notifications
 - UPD: Reduce watchdog interval to improve "Wake on play" responsiveness
 
