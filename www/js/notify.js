@@ -29,7 +29,7 @@ function notify(title, tag, arg3, arg4 = '') {
 		update_library: 'Library is being updated... <br><br>Click the progress spinner for status.',
 		library_updating: 'Library update is already in progress. ',
 		library_loading: 'Library is loading... ',
-		dbupdate_status: 'Files indexed: ',
+		dbupdate_status: '',
 		// Playlist/Queue
 		saving_queue: 'Saving Queue. ',
 		queue_saved: 'Queue has been saved. ',
@@ -121,7 +121,7 @@ function notify(title, tag, arg3, arg4 = '') {
 		update_library: 'Library is being updated... <br><br>Click the progress spinner for status.',
 		library_updating: 'Library update is already in progress. ',
 		library_loading: 'Library is loading... ',
-		dbupdate_status: 'Files indexed: ',
+		dbupdate_status: '',
 		// Playlist/Queue
 		playlist_name_needed: 'Playlist name is empty. ',
 		playlist_name_error: 'Invalid playlist name. ',
