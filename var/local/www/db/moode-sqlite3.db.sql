@@ -491,6 +491,17 @@ INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
 INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
 INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
 
+-- Table: cfg_sendspin
+CREATE TABLE cfg_sendspin (id INTEGER PRIMARY KEY, param CHAR (10), value CHAR (128));
+INSERT INTO cfg_sendspin (id, param, value) VALUES (1, 'last_server_url', '');                 -- default: discover via mDNS, otherwise WebSocket URL of Sendspin server
+INSERT INTO cfg_sendspin (id, param, value) VALUES (2, 'name', 'moOde Sendspin Audio Client'); -- default: <hostname>
+INSERT INTO cfg_sendspin (id, param, value) VALUES (3, 'client_id', 'moode-sendspin');         -- default: sendspin-cli-<hostname> 
+INSERT INTO cfg_sendspin (id, param, value) VALUES (4, 'log_level','INFO');                    -- options: DEBUG, INFO, WARNING, ERROR or CRITICAL
+INSERT INTO cfg_sendspin (id, param, value) VALUES (5, 'static_delay_ms', '0.0');              -- extra playback delay in milliseconds (applied after clock sync)
+INSERT INTO cfg_sendspin (id, param, value) VALUES (6, 'audio_device', '');                    -- audio output device index (e.g., 0, 1, 2) or name prefix (e.g., 'vc4-hdmi-1' or 'snd_rpi_hifiberry_dacplus')
+INSERT INTO cfg_sendspin (id, param, value) VALUES (7, 'use_mpris', 'false');                  -- Media Player Remote Interfacing Specification - see https://github.com/abmantis/aiosendspin-mpris
+
+
 -- Table: cfg_source
 CREATE TABLE cfg_source (
 id INTEGER PRIMARY KEY,
@@ -706,6 +717,8 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'S
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (176, 'sendspinsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (177, 'sendspin_installed', 'no');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

@@ -40,6 +40,8 @@ switch ($option) {
 	case '--roonbridge':
 		onoffRoonBridge($onoff);
 		break;
+	case '--sendspin':
+		onoffSendspin($onoff);
 	case '--upnp':
 		onoffUPnP($onoff);
 		break;
@@ -57,7 +59,8 @@ switch ($option) {
 		$slArg = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? " --squeezelite\tTurn Squeezelite On/Off\n" : "";
 		$paArg = $_SESSION['feat_bitmask'] & FEAT_PLEXAMP ? " --plexamp\tTurn Plexamp On/Off\n" : "";
 		$rbArg = $_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE ? " --roonbridge\tTurn RoonBridge On/Off\n" : "";
-		$rendererList = ' '. $btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg .
+		$ssArg = $_SESSION['feat_bitmask'] & FEAT_SENDSPIN ? " --sendspin\tTurn Sendspin On/Off\n" : "";
+		$rendererList = ' '. $btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg . $ssArg .
 		" --help\t\tPrint this help text\n";
 		echo
 "Usage: renderer-onoff [OPTION] [on|off]
@@ -162,3 +165,14 @@ function onoffRoonBridge($onoff) {
 		stopRoonBridge();
 	}
 }
+
+function onoffSendspin($onoff) {
+	if ($onoff == 'on' && $_SESSION['sendspinsvc'] == '0') {
+		phpSession('write', 'sendspinsvc', '1');
+		startSendspin();
+	} else if ($onoff == 'off' && $_SESSION['sendspinsvc'] == '1') {
+		phpSession('write', 'sendspinsvc', '0');
+		stopSendspin();
+	}
+}
+

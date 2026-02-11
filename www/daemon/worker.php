@@ -615,6 +615,20 @@ if (file_exists('/opt/RoonBridge/start.sh') === true) {
 }
 workerLog('worker: RoonBridge:       ' . $msg);
 
+// Sendspin
+// To install
+// - sudo pip install uv --break-system-packages
+// - sudo uv tool install sendspin
+if (file_exists('/root/.local/share/uv/tools/sendspin/bin/sendspin') === true) {
+	$msg = 'installed';
+	$_SESSION['sendspin_installed'] = 'yes';
+
+} else {
+	$_SESSION['sendspin_installed'] = 'no';
+	$msg = 'not installed';
+}
+workerLog('worker: Sendspin:          ' . $msg);
+
 // Allo Boss 2
 // OLED: The Allo installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
 if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
@@ -1203,6 +1217,23 @@ if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
 	$status = 'n/a';
 }
 workerLog('worker: RoonBridge:      ' . $status);
+
+// Start Sendspin renderer
+if ($_SESSION['feat_bitmask'] & FEAT_SENDSPIN) {
+	if ($_SESSION['sendspin_installed'] == 'yes') {
+		if (isset($_SESSION['sendspinsvc']) && $_SESSION['sendspinsvc'] == 1) {
+			$status = 'started';
+			startSendspin();
+		} else {
+			$status = 'available';
+		}
+	} else {
+		$status = 'not installed';
+	}
+} else {
+	$status = 'n/a';
+}
+workerLog('worker: Sendspin:      ' . $status);
 
 // Start Multiroom audio
 if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
@@ -3270,7 +3301,19 @@ function runQueuedJob() {
 				}
 			}
 			break;
-
+		case 'sendspinsvc':
+			stopSendspin();
+			if ($_SESSION['sendspinsvc'] == 1) {
+				startSendspin();
+			}
+			break;
+		case 'sendspincfgupdate':
+			cfgSendspin();
+			if ($_SESSION['sendspinsvc'] == '1') {
+				sysCmd('systemctl stop sendspin');
+				startSendspin();
+			}
+			break;
 		case 'multiroom_tx':
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				// Reconfigure to Dummy sound driver

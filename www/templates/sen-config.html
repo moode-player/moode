@@ -1,0 +1,54 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+*/
+-->
+<div id="container">
+<div class="container">
+    <h1 class="ren-config">Sendspin</h1>
+
+    <form class="form-horizontal" action="" method="post">
+    	<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+		</legend>
+
+        <p class="sub-legend">
+			For a full list of sendspin-cli options visit <a href="https://github.com/Sendspin/sendspin-cli" class="target-blank-link" target="_blank">https://github.com/Sendspin/sendspin-cli</a>
+		</p>
+
+        <div class="control-group">
+            <label class="control-label" for="renderer-name">Player Name</label>
+            <div class="controls">
+                <input class="config-input-large" type="text" id="renderer-name" name="config[name]" value="$_sendspin_select[name]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-renderer_name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-renderer_name" class="config-help-info">
+					Friendly name that will appear at the Sendspin Players list
+                </span>
+            </div>
+
+            <label class="control-label" for="audio-device">Audio Device</label>
+            <div class="controls">
+                <input class="config-input-large" type="text" id="audio-device" name="config[audio_device]" value="$_sendspin_select[audio_device]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-device" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-audio-device" class="config-help-info">
+                    Audio output device index (e.g., 0, 1, 2) or name prefix (e.g., 'vc4-hdmi-1' or 'snd_rpi_hifiberry_dacplus')<br />
+                    Use <b>sudo /root/.local/share/uv/tools/sendspin/bin/sendspin --list-audio-devices</b> to see available devices.<br />
+                    <br />
+                    <b>IMPORTANT:</b> DO NOT use MPD while executing this cmd!
+                </span>
+            </div>
+
+            <label class="control-label" for="server">Sendspin Server</label>
+            <div class="controls">
+                <input class="config-input-large" type="text" id="sendspin-server" name="config[last_server_url]" value="$_sendspin_select[last_server_url]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-sendspin-server" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-sendpin-server" class="config-help-info">
+                    When empty, the URL will discover via mDNS, otherwise WebSocket URL of Sendspin server.
+                </span>
+            </div>
+
+        </div>
+    </form>
+</div>
+</div>

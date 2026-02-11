@@ -1,0 +1,13 @@
+[Unit]
+Description=Sendspin Multi Room Audio Client
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/root/.local/share/uv/tools/sendspin/bin/sendspin daemon
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target

@@ -42,6 +42,9 @@ switch ($option) {
 	case '--roonbridge':
 		restartRoonBridge($stopOnly);
 		break;
+	case '--sendspin':
+		restartSendspin($stopOnly);
+		break;
 	case '--upnp':
 		restartUPnP($stopOnly);
 		break;
@@ -50,7 +53,7 @@ switch ($option) {
 			fwrite(STDERR, "This command requires sudo to print the help\n");
 			return;
 		}
-		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge]
+		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge | --sendspin]
 		$btArg = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? "--bluetooth\tRestart Bluetooth\n" : "";
 		$apArg = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? " --airplay\tRestart AirPlay\n" : "";
 		$spArg = $_SESSION['feat_bitmask'] & FEAT_SPOTIFY ? " --spotify\tRestart Spotify Connect\n" : "";
@@ -59,7 +62,8 @@ switch ($option) {
 		$slArg = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? " --squeezelite\tRestart Squeezelite\n" : "";
 		$paArg = $_SESSION['feat_bitmask'] & FEAT_PLEXAMP ? " --plexamp\tRestart Plexamp\n" : "";
 		$rbArg = $_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE ? " --roonbridge\tRestart RoonBridge\n" : "";
-		$rendererList = ' '. $btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg .
+		$ssArg = $_SESSION['feat_bitmask'] & FEAT_SENDSPIN ? " --sendspin\tRestart Sendspin\n" : "";
+		$rendererList = ' '. $btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg . $ssArg .
 		" --help\t\tPrint this help text\n";
 		echo
 "Usage: restart-renderer [OPTION] [--stop]
@@ -139,5 +143,12 @@ function restartRoonBridge($stopOnly) {
 	stopRoonBridge();
 	if ($stopOnly === false) {
 		startRoonBridge();
+	}
+}
+
+function restartSendspin($stopOnly) {
+	stopSendspin();
+	if ($stopOnly === false) {
+		startSendspin();
 	}
 }
