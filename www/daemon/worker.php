@@ -3630,7 +3630,9 @@ function runQueuedJob() {
 				startLocalDisplay();
 				$resetAlsaCtl = false;
 			} else {
-				stopLocalDisplay();
+				if ($_SESSION['peppy_display'] == '1') {
+					stopLocalDisplay();
+				}
 				hidePeppyConf();
 				$_SESSION['touchmon_svc'] = '0';
 				$resetAlsaCtl = true;
