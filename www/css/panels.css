@@ -404,7 +404,7 @@ img.coverart {
 #db-browse .dropdown-menu > li > a:hover, #db-browse .dropdown-menu > li > a:focus, #db-browse .dropdown-menu > li.active > a {background-color:var(--accentxta);}
 .btnlist a {font-size:1em;text-decoration:none;color:inherit;}
 #playqueue-search, #lib-album-search, #ra-search, #pl-search {display:block;float:left;margin:0;z-index:1001;position:relative;}
-#lib-album-search {display:flex;top:50%; transform:translate(0, -50%);width:8rem;}
+#lib-album-search {display:flex;/*top:50%;*/transform:translate(0, -50%);width:8rem;}
 #lib-album-filter {width:11.5rem;}
 #playqueue-search {left:1rem}
 #playqueue-search input, #ra-search input, #pl-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;height:2.75rem;font-size:1em;padding:0;}
