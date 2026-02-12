@@ -21,7 +21,7 @@ Updates
 - UPD: Add Library song count (mpc stats) to Player info notification
 - UPD: Add Controller mode (bredr, le, dual) to Bluetooth Control
 - UPD: Add Goto Folder option to Queue context menu
-- UPD: Add option to ignore moode system files 
+- UPD: Add option to ignore moode system files
 - UPD: Improve Bluetooth Control screen layout and notifications
 - UPD: Reduce watchdog interval to improve "Wake on play" responsiveness
 
@@ -29,6 +29,7 @@ Bug fixes
 - FIX: Peppy spectrum not working with "Display on play" feature
 - FIX: Foreground for 1280x720 Blue meter not positioned correctly
 - FIX: Screen blank not working for the "Never" setting (regression)
+- FIX: Library quick search input field position
 
 ################################################################################
 #
