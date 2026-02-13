@@ -88,7 +88,7 @@ const gulp = require("gulp");
 var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
 const path = require('path');
-
+const { exec } = require('child_process');
 // load all plugins in 'devDependencies' into the variable $
 const $ = require('gulp-load-plugins')({
     pattern: ['*'],
@@ -399,7 +399,6 @@ gulp.task('patchheader', function (done) {
         .pipe($.if('header.php', $.cacheBust({
             type: 'timestamp'
             }))  )
-        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -415,7 +414,6 @@ gulp.task('patchfooter', function (done) {
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
-        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -426,7 +424,6 @@ gulp.task('patchindex', function (done) {
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.replace(/indextpl[.]html/g, "indextpl.min.html"))
         .pipe($.replace(/footer[.]php/g, "footer.min.php"))
-        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -436,7 +433,6 @@ gulp.task('patchconfigs', function (done) {
     return gulp.src(pkg.app.src+'/*-config.php')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.replace(/footer[.]php/g, "footer.min.php"))
-        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
@@ -451,7 +447,6 @@ gulp.task('minifyhtml', function (done) {
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
-        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION+'/templates'))
         .on('end', done);
@@ -462,7 +457,6 @@ gulp.task('artwork', function(done) {
               ,pkg.app.src+'/fonts/**/*'
               ,pkg.app.src+'/images/**/*' ], {base:pkg.app.src})
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dest})))
-//        .pipe($.size({showFiles: true, total: true}))
         .pipe(gulp.dest(pkg.app.dest));
     done();
 });
@@ -515,19 +509,17 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 
         // optional headers fields can be update and or added:
         //.pipe( $.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
         //.pipe($.if('*.html', $.header(banner_html, {pkg: pkg}) ))
-        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
         //.pipe($.size({showFiles: true, total: true}))
         .pipe($.if('*.html', $.replaceTask({ patterns: REPLACEMENT_PATTERNS})))
         .pipe($.chmod(0o755))
         .pipe(gulp.dest(DEPLOY_LOCATION))
-        .on('end', done);
+        .on('end', done);        
 }));
 
 gulp.task('deployfront', function (done) {
     return gulp.src( [pkg.app.dest+'/**/*', '!'+pkg.app.dest+'/index.html'] )
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
-        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
 });
@@ -576,8 +568,19 @@ else if (mode.all() ==true ){
     deployTasks = ['deployfront', 'deployback', 'deploymoodeutl', 'deployvarlocalwww'];
 }
 
-gulp.task('deploy', gulp.series( deployTasks, function (done) {
-    done();
+gulp.task('deploy', gulp.series( deployTasks, function (done) { 
+    if (mode.test()||mode.remote())  {
+         exec(`chown -R root:root ${DEPLOY_LOCATION}`, (err, stdout, stderr) => {
+                    if (err) {
+                        console.error(err);
+                        done(err);
+                        return;
+                    }
+                    done();
+                });
+    }else {
+        done();
+    }
 }));
 
 var watchTasks = mode.build() ? ['build', 'browserSync']: ['sass', 'genindexdev', 'browserSync'],
