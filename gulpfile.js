@@ -569,7 +569,7 @@ else if (mode.all() ==true ){
 }
 
 gulp.task('deploy', gulp.series( deployTasks, function (done) { 
-    if (mode.test()||mode.remote())  {
+    if (!(mode.test()||mode.remote()))  {
          exec(`chown -R root:root ${DEPLOY_LOCATION}`, (err, stdout, stderr) => {
                     if (err) {
                         console.error(err);
