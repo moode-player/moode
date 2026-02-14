@@ -208,7 +208,7 @@ function notify(title, tag, arg3, arg4 = '') {
 
 	// Get message text
 	if (typeof(notifications[tag]) == 'undefined') {
-		console.log('Unknown notification tag, exit script');
+		console.log('Unknown notification tag (' + tag + ')');
 		return;
 	} else {
 		var messageText = notifications[tag];
