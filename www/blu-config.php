@@ -80,14 +80,18 @@ if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 
 // Audio routing
 if (isset($_POST['change_audioout_bt']) && $_POST['audioout'] != $_SESSION['audioout']) {
-	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
-		// Change to Bluetooth out, update MAC address
-		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
-		sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
-
-		phpSession('write', 'audioout', $_POST['audioout']);
-		setAudioOut($_POST['audioout']);
-	} else {
+	if ($_POST['audioout'] == 'Bluetooth') {
+		if (isset($_POST['paired_device']) || isset($_POST['connected_device'])) {
+			// Change to Bluetooth out, update MAC address
+			$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
+			sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+			phpSession('write', 'audioout', $_POST['audioout']);
+			setAudioOut($_POST['audioout']);
+		} else {
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] = 'Pair or connect a device first.';
+		}
+	} else if ($_POST['audioout'] == 'Local') {
 		// Change to local out, disconnect device
 		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
