@@ -760,11 +760,6 @@ function setDisplay($argv) {
 			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2webui . "' WHERE param='local_display'\"");
 			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2peppy . "' WHERE param='peppy_display'\"");
 
-			// SLOW SWITCH: Restart localdisplay.service
-			//if (($set2webui == '1' && $webuiOn == '0') || ($set2peppy == '1' && $peppyOn == '0')) {
-			//	shell_exec('systemctl restart localdisplay');
-			//}
-
 			// FAST SWITCH: Run Peppy over WebUI
 			// Both off start fresh
 			if ($webuiOn == '0' && $peppyOn == '0') {
