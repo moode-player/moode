@@ -34,6 +34,8 @@ if ($output == 'Bluetooth') {
 		setAudioOut($output);
 		// Update MAC address
 		sysCmd("sed -i '/device/c\device \"" . $argv[2] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+		// Connect device
+		sysCmd('/var/www/util/blu-control.sh -C ' . '"' . $macAddr . '"');
 	} else {
 		echo 'Output is already set to Bluetooth' . "\n";
 	}
