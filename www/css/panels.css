@@ -462,8 +462,8 @@ img.coverart {
 .ui-pnotify .alert h4 {color:#333;text-shadow:none;text-align:left;}
 .ui-pnotify .alert h4 {font-size:1em;font-weight:600;text-align:left;}
 .ui-pnotify-text {padding-top:.5em;}
-.ui-pnotify-sticker {position:absolute;right:2.5em;}
-.ui-pnotify-closer {position:absolute;right:1.25em;}
+.ui-pnotify-sticker {position:absolute;right:3em;font-size:1.35em}
+.ui-pnotify-closer {position:absolute;right:1.25em;font-size:1.35em}
 .ui-pnotify-welcome {top:10%!important;}
 .ui-pnotify-default {top:33%!important;}
 .btn-primary {text-transform:uppercase;font-weight:500;}
