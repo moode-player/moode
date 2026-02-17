@@ -246,3 +246,14 @@ function updAvahiOptions($options) {
 	sysCmd("sed -i 's/use-ipv6=.*/use-ipv6=" . $value . "/' /etc/avahi/avahi-daemon.conf");
 	sysCmd('systemctl restart avahi-daemon');
 }
+
+// Return connection status
+function getConnectionStats($ssid) {
+	$conn = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY,SSID,FREQ -t dev wifi | grep -w "' . $ssid . '"')[0]);
+	$stats['channel'] = $conn[0];
+	$stats['rate'] = $conn[1];
+	$stats['security'] = $conn[2];
+	$stats['frequency'] = substr($conn[4], 0, 1) == '5' ? '5GHz' : '2.4GHz';
+
+	return $stats;
+}

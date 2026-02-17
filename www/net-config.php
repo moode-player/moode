@@ -169,7 +169,7 @@ if ($cfgSSID === true) {
 		$_saved_networks .= '<div class="control-group">';
 		$_saved_networks .= '<label class="control-label">' . $cfgSSID[$i]['ssid'] . '</label>';
 		$_saved_networks .= '<div class="controls">';
-		$_saved_networks .= '<input name="cfg-ssid-' . $cfgSSID[$i]['id'] . '" class="checkbox-ctl saved-ssid-modal-delete" type="checkbox"><em>Delete</em>';
+		$_saved_networks .= '<input name="cfg-ssid-' . $cfgSSID[$i]['id'] . '" class="checkbox-ctl-network saved-ssid-modal-delete" type="checkbox"><em>Delete</em>';
 		$_saved_networks .= '</div>';
 		$_saved_networks .= '</div>';
 	}
@@ -198,30 +198,19 @@ $_wlan0method .= "<option value=\"dhcp\" " . ($cfgNetwork[1]['method'] == 'dhcp'
 $_wlan0method .= "<option value=\"static\" " . ($cfgNetwork[1]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
 // Get IP address if any
 $ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
-// Get link quality and signal level
+// Get conection stats
 if (!empty($ipAddr[0])) {
 	if ($_SESSION['apactivated'] === true) {
-		// Network
-		$conn = explode(':', sysCmd('nmcli -f SSID,CHAN,SECURITY,FREQ -t dev wifi | grep -w "' . $cfgNetwork[2]['wlanssid'] . '"')[0]);
-		$ssid = $conn[0];
-		// Connection
-		$chan = $conn[1];
-		$sec = $conn[2];
-		$freq = substr($conn[3], 0, 1) == '5' ? '5GHz' : '2.4GHz';
-		// Stats
+		$stats = getConnectionStats($cfgNetwork[2]['wlanssid']);
 		$_wlan0stats =
 			'Address: ' . $ipAddr[0] . ' (Hotspot active)' . '<br>' .
-			'Network: ' . $ssid . ', ' . $sec . ', ' . $freq . ', chan ' . $chan;
+			'Network: ' . $cfgNetwork[2]['wlanssid'] . ', ' . $stats['security'] . ', ' . $stats['frequency'] . ', chan ' . $stats['channel'];
 	} else {
 		// Network
 		$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'")[0];
 		$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3')[0];
 		// Connection
-		$conn = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY,SSID,FREQ -t dev wifi | grep -w "' . $ssid . '"')[0]);
-		$chan = $conn[0];
-		$rate = $conn[1];
-		$sec = $conn[2];
-		$freq = substr($conn[4], 0, 1) == '5' ? '5GHz' : '2.4GHz';
+		$stats = getConnectionStats($ssid);
 		// Quality
 		$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 		$array = explode('=', $signal[0]);
@@ -231,11 +220,11 @@ if (!empty($ipAddr[0])) {
 		$quality = $qual1 > 0 ? round((100 * $qual0) / $qual1) : 0;
 		$lev = explode('/', $array[2]);
 		$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
-		// Stats
+
 		$_wlan0stats =
 			'Address: ' . $ipAddr[0] . '<br>' .
-			'Network: ' . $ssid . ' (' . $bssid . '), ' . $sec . ', ' . $freq . '<br>' .
-			'Channel: ' . $chan . ', ' . $rate . ', qual ' .  $quality . '%, level ' . $level;
+			'Network: ' . $ssid . ' (' . $bssid . '), ' . $stats['security'] . ', ' . $stats['frequency'] . '<br>' .
+			'Channel: ' . $stats['channel'] . ', ' . $stats['rate'] . ', qual ' .  $quality . '%, level ' . $level;
 	}
 } else {
 	$_wlan0stats = $_SESSION['apactivated'] === true ? 'Unable to activate Hotspot' : 'Not in use';
