@@ -14,7 +14,7 @@ $thisIpAddr = getThisIpAddr();
 
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	chkValue('cmd', $_GET['cmd']);
-	if ($_GET['cmd'] == 'discover_players') {
+	if ($_GET['cmd'] == 'discover_players_all' || $_GET['cmd'] == 'discover_players_new') {
 		$discoverPlayers = true;
 	} else if (!isset($_POST['ipaddr'])) {
 		workerLog('dashboard.php: No destination IP addresses for command ' . $_GET['cmd']);
@@ -31,26 +31,39 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				} else {
 					$result = 'sent';
 				}
-				//workerLog('dashboard.php: ' . $_GET['cmd'] . ' ' . $result . ' to host: ' . $_POST['host'][$i] . ' (' . $_POST['ipaddr'][$i] . ')');
 				workerLog('dashboard.php: ' . $_POST['ipaddr'][$i] . ' (' . $_POST['host'][$i] . ') ' . $_GET['cmd'] . ' ' . $result);
 			}
 		}
 	}
 }
 
-if (file_exists(DASHBOARD_CACHE_FILE) && filesize(DASHBOARD_CACHE_FILE) > 0 && $discoverPlayers === false) {
-	// Use contents of cache file
-	$_players = file_get_contents(DASHBOARD_CACHE_FILE);
+if ($discoverPlayers === false) {
+	if (file_exists(DASHBOARD_CACHE_FILE) && filesize(DASHBOARD_CACHE_FILE) > 0) {
+		// Use contents of cache file
+		$_players = file_get_contents(DASHBOARD_CACHE_FILE);
+	}
 } else {
-	// Discover players: scan the network for hosts with open port 6600 (MPD)
-	$port6600Hosts = scanForMPDHosts();
+	// Discover players (hosts with open port 6600 MPD)
+	$discoveredIPAddresses = scanForMPDHosts();
+
+	if ($_GET['cmd'] == 'discover_players_new') {
+		$cachedIPAddresses = getCachedIPAddresses();
+		$newHosts = array_diff($discoveredIPAddresses, $cachedIPAddresses);
+		$discoveredIPAddresses = array_merge($discoveredIPAddresses, $newHosts);
+	}
+
+	// DEBUG:
+	//workerLog(print_r($cachedIPAddresses, true));
+	//workerLog(print_r($newHosts, true));
+	//workerLog(print_r($discoveredIPAddresses, true));
+	//exit;
 
 	// Parse the results
 	$_players = '';
 	$_dashboard_command_div_hide = '';
 	$playersArray = array();
 	$timeout = getStreamTimeout();
-	foreach ($port6600Hosts as $ipAddr) {
+	foreach ($discoveredIPAddresses as $ipAddr) {
 		if (false === ($status = sendTrxControlCmd($ipAddr, '-all'))) {
 			debugLog('dashboard.php: sendTrxControlCmd -all failed: ' . $ipAddr);
 		} else {
@@ -120,3 +133,19 @@ sendFECmd('close_notification');
 
 $tpl = 'dashboard.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
+
+function getCachedIPAddresses() {
+	$cachedPlayers = array_filter(explode('<li>', file_get_contents(DASHBOARD_CACHE_FILE)));
+	$cachedIPAddresses = array();
+	foreach ($cachedPlayers as $line) {
+		$htmlParts = explode(' ', $line);
+		foreach ($htmlParts as $part) {
+			if (str_contains($part, 'data-ipaddr')) {
+				$IPaddr = trim(explode('=', $part)[1], '"');
+			}
+		}
+		array_push($cachedIPAddresses, $IPaddr);
+	}
+
+	return $cachedIPAddresses;
+}

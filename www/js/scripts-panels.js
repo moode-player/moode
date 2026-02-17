@@ -1836,7 +1836,7 @@ jQuery(document).ready(function($) { 'use strict';
         if (command != 'No action') {
             if ($('#btn-dashboard-submit').text() == 'Submit' && (command == 'Restart' || command == 'Shutdown')) {
                 $('#btn-dashboard-submit').text('Confirm');
-            } else if (command == 'Discover' || ipaddr.length > 0) {
+            } else if (command.includes('Discover') || ipaddr.length > 0) {
                 $('#dashboard-submit-confirmed').html("<div class='busy-spinner-btn-dashboard'>" + GLOBAL.busySpinnerSVG + "</div>");
                 $('#btn-dashboard-submit').prop('disabled', true);
                 $('#dashboard-modal .modal-body').load('dashboard.php?cmd=' + cmdValue, {'ipaddr': ipaddr, 'host': host}, function() {
