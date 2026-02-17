@@ -109,7 +109,7 @@ if ($discoverPlayers === false) {
 			$_players .= sprintf(
 				'<li><a href="http://%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank">' .
 				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>' .
-				'<input id="player-' . $i . '" class="checkbox-ctl player-checkbox" type="checkbox" data-item="' . $i .
+				'<input id="player-' . $i . '" class="checkbox-ctl-dashboard player-checkbox" type="checkbox" data-item="' . $i .
 				'">%s%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
 				$player['ipaddr'], $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator'], $player['ipaddr']
 			);

@@ -127,7 +127,10 @@ li.modal-dropdown-text:focus {color:#eee;}
 #info-toggle-bgimage {margin-left:0;margin-top:2px;}
 /* clock radio */
 .checkbox-grp {margin:0 7px 10px 0;}
-.checkbox-ctl {margin:.3em .25em .5em 0!important;}
+.checkbox-ctl-clockradio {margin:.3em .25em .5em 0 !important;transform:scale(1.25, 1.25)}
+.checkbox-ctl-dashboard {margin:.3em .5em .5em 0 !important;transform:scale(1.25, 1.25)}
+.checkbox-ctl-network {margin:0 .5em .5em 0!important;transform:scale(1.25, 1.25)}
+.checkbox-ctl-receivers {margin: .1em .5em 0 0 !important;transform:scale(1.25, 1.25)}
 .time-seperator {margin:0 7px 10px 0;font-size:1.25em;}
 #info-clockradio-playname {font-weight:500;}
 /* forms */
