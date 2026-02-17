@@ -16,13 +16,16 @@
 ################################################################################
 
 Updates
-- UPD: Add Prefs option for displaying Radio Station track covers
-- UPD: Add progress (file count) indicator for Library update/regenerate
-- UPD: Add Library song count (mpc stats) to Player info notification
-- UPD: Add Controller mode (bredr, le, dual) to Bluetooth Control
-- UPD: Add Goto Folder option to Queue context menu
-- UPD: Add option to ignore moode system files
+- UPD: Add Radio Station track covers Prefs option
+- UPD: Add file count progress to Library update/regenerate
+- UPD: Add song count to Player info notification
+- UPD: Add "Controller mode" option to Bluetooth Control
+- UPD: Add "Goto Folder" option to Queue context menu
+- UPD: Add "Ignore moOde files" option to Library config
+- UPD: Add "Discover new" command to Dashboard
+- UPD: Add set-btaudio.php utility to set Local or Bluetooth speaker
 - UPD: Improve Bluetooth Control screen layout and notifications
+- UPD: Increase size of notification closer/pause buttons
 - UPD: Reduce watchdog interval to improve "Wake on play" responsiveness
 
 Bug fixes
