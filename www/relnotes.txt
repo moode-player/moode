@@ -25,7 +25,9 @@ Updates
 - UPD: Add "Discover new" command to Dashboard
 - UPD: Add set-btaudio.php utility to set Local or Bluetooth speaker
 - UPD: Improve Bluetooth Control screen layout and notifications
-- UPD: Increase size of notification closer/pause buttons
+- UPD: Improve network logging in moode startup log
+- UPD: Increase size of notification close/pause buttons
+- UPD: Increase size of checkbox controls
 - UPD: Reduce watchdog interval to improve "Wake on play" responsiveness
 
 Bug fixes
