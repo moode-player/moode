@@ -24,6 +24,7 @@ Updates
 - UPD: Add "Ignore moOde files" option to Library config
 - UPD: Add "Discover new" command to Dashboard
 - UPD: Add set-btaudio.php utility to set Local or Bluetooth speaker
+- UPD: Add WiFi security option "None" to Network Config
 - UPD: Improve Bluetooth Control screen layout and notifications
 - UPD: Improve network logging in moode startup log
 - UPD: Increase size of notification close/pause buttons
