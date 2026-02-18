@@ -15,8 +15,10 @@
 #
 ################################################################################
 
+New features
+- NEW: Add Radio Station track covers Prefs option
+
 Updates
-- UPD: Add Radio Station track covers Prefs option
 - UPD: Add file count progress to Library update/regenerate
 - UPD: Add song count to Player info notification
 - UPD: Add "Controller mode" option to Bluetooth Control
