@@ -35,7 +35,7 @@ if ($output == 'Bluetooth') {
 		// Update MAC address
 		sysCmd("sed -i '/device/c\device \"" . $argv[2] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 		// Connect device
-		sysCmd('/var/www/util/blu-control.sh -C ' . '"' . $macAddr . '"');
+		sysCmd('/var/www/util/blu-control.sh -C ' . '"' . $argv[2] . '"');
 	} else {
 		echo 'Output is already set to Bluetooth' . "\n";
 	}
@@ -43,8 +43,8 @@ if ($output == 'Bluetooth') {
 	if ($_SESSION['audioout'] != 'Local') {
 		phpSession('write', 'audioout', $output);
 		setAudioOut($output);
-		// Disconnect device
-		sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $macAddr . '"');
+		// Disconnect device (-D = all devices)
+		sysCmd('/var/www/util/blu-control.sh -D');
 	} else {
 		echo 'Output is already set to Local' . "\n";
 	}
