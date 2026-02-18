@@ -60,15 +60,20 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 				$psk = $cfgNetwork[1]['wlanpsk'];
 			}
 			$pwd = $psk;
-		} else {
+		} else if ($_POST['wlan0security'] == 'sae') {
 			// WPA3-SAE requires plaintext password
 			$psk = '';
 			$pwd = $_POST['wlan0pwd'];
+		} else if ($_POST['wlan0security'] == 'none') {
+			// None requires no psk or password
+			$psk = '';
+			$pwd = '';
 		}
 	}
 
 	// 2. Update configuration or display alert
-	if (empty($pwd) && $_POST['wlan0ssid'] != 'Activate Hotspot' && $_POST['wlan0ssid'] != 'None') {
+	if ($_POST['wlan0security'] == 'sae' && empty($pwd) &&
+		$_POST['wlan0ssid'] != 'None' && $_POST['wlan0ssid'] != 'Activate Hotspot') {
 		// Blank WPA3-SA password
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'A password must be entered when Security is WPA3-SAE.';
@@ -285,6 +290,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 // Security protocol
 $_wlan0security .= "<option value=\"wpa-psk\" " . ($cfgNetwork[1]['wlansec'] == 'wpa-psk' ? 'selected' : '') . " >WPA2-PSK</option>\n";
 $_wlan0security .= "<option value=\"sae\" " . ($cfgNetwork[1]['wlansec'] == 'sae' ? 'selected' : '') . " >WPA3-SAE</option>\n";
+$_wlan0security .= "<option value=\"none\" " . ($cfgNetwork[1]['wlansec'] == 'none' ? 'selected' : '') . " >None</option>\n";
 
 // Password (PSK or SAE plaintext)
 // TODO: load psk from cfg_ssid
@@ -294,6 +300,9 @@ if (empty($_POST['wlan0otherssid'])) {
 		$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
 		$_show_hide_password_icon_hide = 'hide';
 	} else if ($cfgNetwork[1]['wlansec'] == 'sae') {
+		$_wlan0pwd = '';
+		$_show_hide_password_icon_hide = '';
+	} else if ($cfgNetwork[1]['wlansec'] == 'none') {
 		$_wlan0pwd = '';
 		$_show_hide_password_icon_hide = '';
 	}

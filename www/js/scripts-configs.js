@@ -214,11 +214,16 @@ jQuery(document).ready(function($){ 'use strict';
                 $('a.show-hide-password').css('display', 'inline');
             }
             $('#wpa3-sae-msg').css('display', 'none');
-        } else {
+        } else if ($('#wlan0security').val() == 'sae') {
             $('#wlan0method').val('dhcp').change();
             $('#wlan0pwd').val('');
             $('a.show-hide-password').css('display', 'inline');
             $('#wpa3-sae-msg').css('display', 'block');
+		} else if ($('#wlan0security').val() == 'none') {
+            $('#wlan0method').val('dhcp').change();
+            $('#wlan0pwd').val('');
+            $('a.show-hide-password').css('display', 'none');
+            $('#wpa3-sae-msg').css('display', 'none');
         }
     });
     $('#wlan0pwd').on('input', function() {
