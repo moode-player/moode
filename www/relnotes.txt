@@ -11,12 +11,12 @@
 
 ################################################################################
 #
-# 2026-MM-DD moOde 10.1.1 (Trixie)
+# 2026-02-19 moOde 10.1.1 (Trixie)
 #
 ################################################################################
 
 New features
-- NEW: Add Radio Station track covers Prefs option
+- NEW: Radio Station track covers Prefs option
 
 Updates
 - UPD: Add file count progress to Library update/regenerate

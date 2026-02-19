@@ -23,7 +23,7 @@
 		</p>
 		<h5>Release Information</h5>
 		<ul>
-			<li>Release: 10.1.1 2026-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
+			<li>Release: 10.1.1 2026-02-19</li> <!-- NOTE: getMoodeRel() parses this  -->
 			<li>Maintainer: Tim Curtis &copy; 2014</li>
 			<li>Documentation: <a class="moode-about-link target-blank-link" href="./relnotes.txt" target="_blank">View</a> release notes,&nbsp<a class="moode-about-link target-blank-link" href="https://github.com/moode-player/docs/blob/main/setup_guide.md#setup-guide-" target="_blank">View</a> setup guide</li>
 			<li>Contributors:  <a class="moode-about-link target-blank-link" href="./CONTRIBS.html" target="_blank">View</a> contributors</li>
