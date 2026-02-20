@@ -48,15 +48,8 @@ if ($discoverPlayers === false) {
 
 	if ($_GET['cmd'] == 'discover_players_new') {
 		$cachedIPAddresses = getCachedIPAddresses();
-		$newHosts = array_diff($discoveredIPAddresses, $cachedIPAddresses);
-		$discoveredIPAddresses = array_merge($discoveredIPAddresses, $newHosts);
+		$discoveredIPAddresses = array_unique(array_merge($discoveredIPAddresses, $cachedIPAddresses));
 	}
-
-	// DEBUG:
-	//workerLog(print_r($cachedIPAddresses, true));
-	//workerLog(print_r($newHosts, true));
-	//workerLog(print_r($discoveredIPAddresses, true));
-	//exit;
 
 	// Parse the results
 	$_players = '';
@@ -66,6 +59,8 @@ if ($discoverPlayers === false) {
 	foreach ($discoveredIPAddresses as $ipAddr) {
 		if (false === ($status = sendTrxControlCmd($ipAddr, '-all'))) {
 			debugLog('dashboard.php: sendTrxControlCmd -all failed: ' . $ipAddr);
+			$rxtxIndicator = '';
+			$host = 'offline';
 		} else {
 			if ($status != 'Unknown command') {
 				$allStatus = explode(';', $status);
@@ -87,9 +82,9 @@ if ($discoverPlayers === false) {
 				$rxtxIndicator = '';
 				$host = $ipAddr;
 			}
-
-			array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxtxindicator' => $rxtxIndicator));
 		}
+
+		array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxtxindicator' => $rxtxIndicator));
 	}
 
 	// Sort results
