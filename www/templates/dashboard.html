@@ -17,13 +17,13 @@
 				</button>
 				<div id="dashboard-menu" class="dropdown-menu open">
 					<ul class="dropdown-menu custom-select inner" role="menu">
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-magnifying-glass sx"></i>Discover all</a></li>
-						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-magnifying-glass-plus sx"></i>Discover new</a></li>
+						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-magnifying-glass-plus sx"></i>Discover (update)</a></li>
 						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-sync sx"></i>Update library</a></li>
 						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-file-image sx"></i>Regen thumbnails</a></li>
 						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-redo sx"></i>Refresh screen</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-power-icons fa-solid fa-sharp fa-power-off sx"></i>Shutdown</a></li>
-						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-power-icons fa-solid fa-sharp fa-power-off sx"></i>Restart</a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-power-off sx"></i>Shutdown</a></li>
+						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-power-off sx"></i>Restart</a></li>
+						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-magnifying-glass sx"></i>Discover (rebuild)</a></li>
 						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-play sx"></i>Play</a></li>
 						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-pause sx"></i>Pause</a></li>
 						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-stop sx"></i>Stop</a></li>
@@ -34,7 +34,12 @@
 			</div>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-dashboard-command" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 			<span id="info-dashboard-command" class="help-block hide">
-				Click an individual player to open it or select a command that can be submitted to all check marked players. The Submit button will request a second click for confirmation.
+				Select a command to submit to checked players or
+				click a player to open its WebUI in a new tab.<br>
+				Indicator icons<br>
+				<b>Red X:</b> Offline<br>
+				<b>Speaker:</b> Multiroom receiver<br>
+				<b>Play:</b> Multiroom sender
 			</span>
 		</div>
 

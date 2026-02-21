@@ -1818,7 +1818,9 @@ jQuery(document).ready(function($) { 'use strict';
     $(document).on('click', '#dashboard-check-uncheck-all', function(e) {
         var checked = $(this).prop('checked') === true ? 'true' : '';
         $('#dashboard-ul a').each(function() {
-            $(this).children('input').prop('checked', checked);
+			if ($(this).children('i.dashboard-badge.fa-solid.fa-sharp.fa-xmark').length != 1) {
+				$(this).children('input').prop('checked', checked);
+			}
         });
     });
     $(document).on('click', '#btn-dashboard-submit', function(e) {
@@ -1834,7 +1836,8 @@ jQuery(document).ready(function($) { 'use strict';
         });
 
         if (command != 'No action') {
-            if ($('#btn-dashboard-submit').text() == 'Submit' && (command == 'Restart' || command == 'Shutdown')) {
+            if ($('#btn-dashboard-submit').text() == 'Submit' &&
+				(command == 'Restart' || command == 'Shutdown' || command == 'Discover (rebuild)')) {
                 $('#btn-dashboard-submit').text('Confirm');
             } else if (command.includes('Discover') || ipaddr.length > 0) {
                 $('#dashboard-submit-confirmed').html("<div class='busy-spinner-btn-dashboard'>" + GLOBAL.busySpinnerSVG + "</div>");

@@ -68,7 +68,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 #dashboard ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
 #dashboard ul, #configure ul {margin:0;display:inline-table;}
 #dashboard i, #configure i {font-size:2em;padding:.25em;}
-.dashboard-rxtx-indicator {font-size:.85em!important;margin-left:.25em;}
+.dashboard-badge {
+	font-size:.85em!important;
+	float: right;
+	margin-left: -1em;
+	padding: 0;
+}
 #dashboard a, #configure a {font-size:1em;width:10em;height:6em;text-transform:capitalize}
 #dashboard a {
     height:7em;

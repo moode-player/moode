@@ -14,7 +14,7 @@ $thisIpAddr = getThisIpAddr();
 
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	chkValue('cmd', $_GET['cmd']);
-	if ($_GET['cmd'] == 'discover_players_all' || $_GET['cmd'] == 'discover_players_new') {
+	if (str_contains($_GET['cmd'], 'discover')) {
 		$discoverPlayers = true;
 	} else if (!isset($_POST['ipaddr'])) {
 		workerLog('dashboard.php: No destination IP addresses for command ' . $_GET['cmd']);
@@ -45,22 +45,22 @@ if ($discoverPlayers === false) {
 } else {
 	// Discover players (hosts with open port 6600 MPD)
 	$discoveredIPAddresses = scanForMPDHosts();
+	$cachedIPAddresses = getCachedIPAddresses();
 
-	if ($_GET['cmd'] == 'discover_players_new') {
-		$cachedIPAddresses = getCachedIPAddresses();
-		$discoveredIPAddresses = array_unique(array_merge($discoveredIPAddresses, $cachedIPAddresses));
+	// This option shows only new players since the last Discover
+	if ($_GET['cmd'] == 'discover_players_update_cache') {
+		$discoveredIPAddresses = array_unique(array_merge($discoveredIPAddresses, array_keys($cachedIPAddresses)));
 	}
 
 	// Parse the results
 	$_players = '';
-	$_dashboard_command_div_hide = '';
 	$playersArray = array();
 	$timeout = getStreamTimeout();
 	foreach ($discoveredIPAddresses as $ipAddr) {
 		if (false === ($status = sendTrxControlCmd($ipAddr, '-all'))) {
 			debugLog('dashboard.php: sendTrxControlCmd -all failed: ' . $ipAddr);
-			$rxtxIndicator = '';
-			$host = 'offline';
+			$playerBadge = '<i class="dashboard-badge fa-solid fa-sharp fa-xmark" style="color:red"></i>';
+			$host = $cachedIPAddresses[$ipAddr];
 		} else {
 			if ($status != 'Unknown command') {
 				$allStatus = explode(';', $status);
@@ -69,22 +69,22 @@ if ($discoverPlayers === false) {
 				$rxStatus = explode(',', $allStatus[0]);
 				$txStatus = explode(',', $allStatus[1]);
 				if ($rxStatus[1] == 'On') {
-					$rxtxIndicator = '<i class="dashboard-rxtx-indicator fa-solid fa-sharp fa-speaker"></i>';
+					$playerBadge = '<i class="dashboard-badge fa-solid fa-sharp fa-speaker"></i>';
 				} else if ($txStatus[1] == 'On') {
-					$rxtxIndicator = '<i class="dashboard-rxtx-indicator fa-solid fa-sharp fa-play"></i>';
+					$playerBadge = '<i class="dashboard-badge fa-solid fa-sharp fa-play"></i>';
 				} else {
-					$rxtxIndicator = '';
+					$playerBadge = '';
 				}
 
 				$host = $rxStatus[5]; // Can use rxStatus[5] or txStatus[5]
 
 			} else {
-				$rxtxIndicator = '';
+				$playerBadge = '';
 				$host = $ipAddr;
 			}
 		}
 
-		array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'rxtxindicator' => $rxtxIndicator));
+		array_push($playersArray, array('host' => $host, 'ipaddr' => $ipAddr, 'badge' => $playerBadge));
 	}
 
 	// Sort results
@@ -95,29 +95,40 @@ if ($discoverPlayers === false) {
 	foreach ($playersArray as $player) {
 		if ($player['ipaddr'] == $thisIpAddr) {
 			$_players .= sprintf(
-				'<li><a href="%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank" ' .
+				'<li><a href="#notarget" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank" ' .
 				'onclick="return false;" disabled>' .
-				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>%s%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
-				'#notarget', $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator'], $player['ipaddr']
+				'<i class="fa-solid fa-sharp fa-sitemap"></i>%s<br>%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
+				$player['host'], $player['ipaddr'], $player['badge'], $player['host'], $player['ipaddr']
 			);
 		} else {
+			if (str_contains($player['badge'], 'fa-xmark')) {
+				$href = "#notarget";
+				$onclick = 'onclick="return false;"';
+			} else {
+				$href = 'http://' . $player['ipaddr'];
+				$onclick = '';
+			}
 			$_players .= sprintf(
-				'<li><a href="http://%s" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank">' .
-				'<i class="fa-solid fa-sharp fa-sitemap"></i><br>' .
+				'<li><a href="' . $href . '" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank" ' .
+				$onclick . '>' .
+				'<i class="fa-solid fa-sharp fa-sitemap"></i>%s<br>' .
 				'<input id="player-' . $i . '" class="checkbox-ctl-dashboard player-checkbox" type="checkbox" data-item="' . $i .
-				'">%s%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
-				$player['ipaddr'], $player['host'], $player['ipaddr'], $player['host'], $player['rxtxindicator'], $player['ipaddr']
+				'">%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
+				$player['host'], $player['ipaddr'], $player['badge'], $player['host'], $player['ipaddr']
 			);
 		}
 
 		$i++;
 	}
+
 }
 
 // Check for no players found
 if (empty(trim($_players))) {
 	$_players = '<li id="dashboard-no-players-found">No players found</li>';
 	$_dashboard_command_div_hide = 'hide';
+} else {
+	$_dashboard_command_div_hide = '';
 }
 
 // Write cache file
@@ -136,10 +147,13 @@ function getCachedIPAddresses() {
 		$htmlParts = explode(' ', $line);
 		foreach ($htmlParts as $part) {
 			if (str_contains($part, 'data-ipaddr')) {
-				$IPaddr = trim(explode('=', $part)[1], '"');
+				$ipAddr = trim(explode('=', $part)[1], '"');
+			}
+			if (str_contains($part, 'data-host')) {
+				$hostName = trim(explode('=', $part)[1], '"');
 			}
 		}
-		array_push($cachedIPAddresses, $IPaddr);
+		$cachedIPAddresses[$ipAddr] = $hostName;
 	}
 
 	return $cachedIPAddresses;
