@@ -7,43 +7,73 @@
 */
 
 require_once __DIR__ . '/../inc/common.php';
-require_once __DIR__ . '/../inc/session.php';
-require_once __DIR__ . '/../inc/sql.php';
+require_once __DIR__ . '/../inc/mpd.php';
 
-session_id(phpSession('get_sessionid'));
-phpSession('open');
-//$scanFormats = $_SESSION['library_thmgen_scan'];
-$scanFormats = 'All';
-$ignoreMoodeFiles = $_SESSION['moodefiles_ignore'];
-phpSession('close');
-
-// Generate the file list
-$result = shell_exec('/var/www/util/list-songfiles.sh "' . $scanFormats . '" | sort');
-if (is_null($result) || substr($result, 0, 2) == 'OK') {
-	echo 'libstats: no files found';
-	exit(0);
+// Connect to MPD
+if (false === ($sock = openMpdSock('localhost', 6600))) {
+	echo 'libstats.php: Connection to MPD failed';
+	exit;
 }
 
-// Generate the counts
-$albumCnt = 0;
-$line = strtok($result, "\n");
-while ($line) {
-	$fileA = explode(': ', $line, 2)[1];
-	$dirA = dirname($fileA);
+// Generate the file list
+$fileList = sysCmd("mpc search '(Title !=\"\")'");
 
-	$line = strtok("\n");
+// Scan the list and generate counts
+$trackCount = 0;
+$albumCount = 0;
+$albumKeys = array();
+foreach ($fileList as $file) {
+	// Tracks
+	$trackCount++;
+	// Albums
+	sendMpdCmd($sock, 'lsinfo "' . $file . '"');
+	$tags = parseLsinfoAsArray(readMpdResp($sock));
 
-	$fileB = explode(': ', $line, 2)[1];
-	$dirB = dirname($fileB);
+	$album = $tags['Album'] ? $tags['Album'] : 'Unknown Album';
+	$albumartist = $tags['AlbumArtist'] ? $tags['AlbumArtist'] :
+		($tags['Artist'] ? (count($tags['Artist']) == 1 ? $tags['Artist'][0] :
+		'Unknown AlbumArtist') : 'Unknown AlbumArtist');
 
-	if ($dirA != $dirB) {
-		++$albumCnt;
+	// Create unique album key
+	$albumKey = $album . '@' . $albumartist;
+	if  (!in_array($albumKey, $albumKeys)) {
+		array_push($albumKeys, $albumKey);
 	}
 }
 
-$trackCnt = sysCmd("mpc search '(Title !=\"\")' | wc -l")[0];
-if ($ignoreMoodeFiles == '1') {
-	$albumCnt = $albumCnt - 2;
-}
+$albumCount = count($albumKeys);
 
-echo 'Albums:' . $albumCnt . ' Tracks:' . $trackCnt . "\n";
+// Print counts
+echo 'Albums:' . $albumCount . ' Tracks:' . $trackCount . "\n";
+
+closeMpdSock($sock);
+
+function parseLsinfoAsArray($resp) {
+	$array = array();
+	$array['Genre'] = array();
+	$array['Artist'] = array();
+
+	$line = strtok($resp, "\n");
+	while ($line) {
+		list($param, $value) = explode(': ', $line, 2);
+
+		switch ($param) {
+			case 'Genre':
+				array_push($array['Genre'], $value);
+				break;
+			case 'Artist':
+			case 'Performer':
+			case 'Conductor':
+			case 'Composer':
+				array_push($array['Artist'], $value);
+				break;
+			default:
+				$array[$param] = $value;
+				break;
+		}
+
+		$line = strtok("\n");
+	}
+
+	return $array;
+}
