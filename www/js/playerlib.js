@@ -4228,7 +4228,6 @@ function btnbarfix(temp1,temp2) {
 	var tempa = hexToRgb(accentColor);
 	UI.accenta = rgbaToRgb(.3 - tempx, .75, temprgba, tempa);
 	document.body.style.setProperty('--btnbarback', rgbaToRgb(.90, '.9', temprgba, temprgb));
-    document.body.style.setProperty('--config_modal_btn_bg', 'rgba(128,128,128,0.12)');
 }
 
 function getYIQ(color) {

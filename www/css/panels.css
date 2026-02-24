@@ -43,7 +43,6 @@ body {
 	--thumbmargin: 0px;
 	--thumbtextcoverfontsize: 1.35rem;
 	--coverback: '';
-	--config_modal_btn_bg: rgba(64,64,64,0.08);
 	--npicon: url('');
 	--fadein-rate: .5s;
 	--img-border-radius: .35em; /* full size cover */
@@ -749,7 +748,7 @@ input[type='range'].hslide2::-webkit-slider-thumb {background:#fff;background-im
 .eqg-label {text-align:center;margin:.75em 0 1em .75em;opacity:.5;font-size:.9em;font-style:italic;}
 .eqg-vslider-group {margin-left:-3.25em;width:inherit;}
 .eqg-vslider {display:inline-grid;width:9%}
-input[type='range'].vslide2 {height:2.5em;width:10em;margin:5em 0 5em 0;appearance:auto;transform:rotate(270deg);background:var(--config_modal_btn_bg); /* For Firefox */}
+input[type='range'].vslide2 {height:2.5em;width:10em;margin:5em 0 5em 0;appearance:auto;transform:rotate(270deg);background:var(--btnshade3); /* For Firefox */}
 input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-image:'';height:1.25em;width:1.25em;}
 input[type='range']::-moz-range-thumb {border:none;width:0.75em;height:0.75em;border-radius:50%;box-shadow:0 0 0.125em #333;background:#fff;}
 input[type='range'] {-webkit-appearance:none;border:none;padding:0;background-color:transparent;}

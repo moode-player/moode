@@ -96,7 +96,7 @@ if ($discoverPlayers === false) {
 		if ($player['ipaddr'] == $thisIpAddr) {
 			$_players .= sprintf(
 				'<li><a href="#notarget" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank" ' .
-				'onclick="return false;" disabled>' .
+				'onclick="return false;">' .
 				'<i class="fa-solid fa-sharp fa-sitemap"></i>%s<br>%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
 				$player['host'], $player['ipaddr'], $player['badge'], $player['host'], $player['ipaddr']
 			);

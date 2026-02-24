@@ -56,7 +56,6 @@ jQuery(document).ready(function($){ 'use strict';
     	var test = getCSSRule('.toggle .toggle-radio');
     	test.style.backgroundImage='url("' + radio1 + '")';
 
-        document.body.style.setProperty('--config_modal_btn_bg', 'rgba(64,64,64,0.75)');
         $('.modal-footer .btn').css('background-color', 'rgba(128,128,128,.35)');
 
     	if ($('.lib-config').length) {

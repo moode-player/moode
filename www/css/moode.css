@@ -64,7 +64,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .help-block-modal {margin:0 !important;}
 /* Dashboard and Configure modals */
 #dashboard, #configure {max-width:calc(5 * 10em);margin-left:auto;margin-right:auto;text-align:center;}
-#dashboard .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
+#dashboard .btn, #configure .btn {background:var(--btnshade3);padding:.5em .75em;}
 #dashboard ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
 #dashboard ul, #configure ul {margin:0;display:inline-table;}
 #dashboard i, #configure i {font-size:2em;padding:.25em;}
