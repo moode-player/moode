@@ -2511,8 +2511,10 @@ function chkSleepTimer() {
 			if ($_SESSION['clkradio_action'] != "None") {
 				if ($_SESSION['clkradio_action'] == 'Restart') {
 					sleep(45); // To ensure that after reboot $currentTime != clkradio_stop_time
+					stopAllRenderers();
 					sysCmd('/var/local/www/commandw/restart.sh reboot');
 				} else if ($_SESSION['clkradio_action'] == 'Shutdown') {
+					stopAllRenderers();
 					sysCmd('/var/local/www/commandw/restart.sh poweroff');
 				} else if ($_SESSION['clkradio_action'] == 'Update Library') {
 					workerLog('update library');
