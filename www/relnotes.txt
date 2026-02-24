@@ -20,6 +20,7 @@ Updates:
 
 Bug fixes
 - FIX: Dashboard various issues
+- FIX: Background color for Configure and Dashboard buttons
 
 ################################################################################
 #
