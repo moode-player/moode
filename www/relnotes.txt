@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+Updates:
+- UPD: Improve Library stats
+
 Bug fixes
 - FIX: Dashboard various issues
 
