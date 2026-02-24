@@ -2977,8 +2977,8 @@ $(document).on('click', '.context-menu a', function(e) {
             }
             break;
         case 'player_info':
-			$.getJSON('command/music-library.php?cmd=get_dbupdate_status', {'mpcstats': ''}, function(status) {
-				var songCount = status.split(', ')[2];
+			$.getJSON('command/music-library.php?cmd=get_dbupdate_status', {'lib_stats': ''}, function(status) {
+				var stats = status.split(' ');
 		        var networkIface = SESSION.json['wlanssid'] == '' ? 'Ethernet' : 'Wireless (' + SESSION.json['wlanssid'] + ')';
 		        notify(NOTIFY_TITLE_INFO, 'player_info',
 					'moOde:&nbsp;&nbsp;&nbsp;' + SESSION.json['moode_release'] + '<br>' +
@@ -2990,7 +2990,9 @@ $(document).on('click', '.context-menu a', function(e) {
 		            'Kernel:&nbsp;&nbsp;' + SESSION.json['kernelver'] + '<br>' +
 		            'MPD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['mpdver'] + '<br>' +
 					'Audio:&nbsp;&nbsp;&nbsp;' + SESSION.json['adevname'] + '<br>' +
-					'Library:&nbsp' + songCount,
+					'Artists:&nbsp' + stats[0].split(':')[1]  + '<br>' +
+					'Albums:&nbsp&nbsp' + stats[1].split(':')[1]  + '<br>' +
+					'Tracks:&nbsp&nbsp' + stats[2].split(':')[1],
 		            NOTIFY_DURATION_INFINITE);
 		            // Styling (gets automatically reset by pnotify for other notifications)
 		            $('.ui-pnotify-text').attr('style', 'text-align:left;font-family:monospace;font-size:.85em');

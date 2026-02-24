@@ -577,6 +577,40 @@ function getAlbumYear($trackData) {
 	return $albumYear;
 }
 
+function getLibraryStats($sock) {
+	// Generate the file list
+	$fileList = sysCmd("mpc search '(Title !=\"\")'");
+
+	// Scan the list and generate counts
+	$trackCount = 0;
+	$albumCount = 0;
+	$albumKeys = array();
+	foreach ($fileList as $file) {
+		// Albums
+		sendMpdCmd($sock, 'lsinfo "' . $file . '"');
+		$tags = parseLsinfoAsArray(readMpdResp($sock));
+
+		$album = $tags['Album'] ? $tags['Album'] : 'Unknown Album';
+		$albumartist = $tags['AlbumArtist'] ? $tags['AlbumArtist'] :
+			($tags['Artist'] ? (count($tags['Artist']) == 1 ? $tags['Artist'][0] :
+			'Unknown AlbumArtist') : 'Unknown AlbumArtist');
+
+		// Create unique album key
+		$albumKey = $album . '@' . $albumartist;
+		if  (!in_array($albumKey, $albumKeys)) {
+			array_push($albumKeys, $albumKey);
+		}
+		// Tracks
+		$trackCount++;
+	}
+
+	$albumCount = count($albumKeys);
+	$artistCount = getMpdStats($sock)['artists'];
+
+	// Return counts as a formatted string
+	return 'Artists:' . $artistCount . ' Albums:' . $albumCount . ' Tracks:' . $trackCount;
+}
+
 function formatSongTime($sec) {
 	$mins = sprintf('%02d', floor($sec / 60));
 	$secs = sprintf(':%02d', (int) $sec % 60);

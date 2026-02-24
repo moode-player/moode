@@ -637,6 +637,36 @@ function parseMpdRespAsArray($resp) {
 	return $array;
 }
 
+function parseLsinfoAsArray($resp) {
+	$array = array();
+	$array['Genre'] = array();
+	$array['Artist'] = array();
+
+	$line = strtok($resp, "\n");
+	while ($line) {
+		list($param, $value) = explode(': ', $line, 2);
+
+		switch ($param) {
+			case 'Genre':
+				array_push($array['Genre'], $value);
+				break;
+			case 'Artist':
+			case 'Performer':
+			case 'Conductor':
+			case 'Composer':
+				array_push($array['Artist'], $value);
+				break;
+			default:
+				$array[$param] = $value;
+				break;
+		}
+
+		$line = strtok("\n");
+	}
+
+	return $array;
+}
+
 // Turn MPD HTTP server on/off
 function setMpdHttpd () {
 	$cmd = $_SESSION['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';

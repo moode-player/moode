@@ -1015,13 +1015,9 @@ if ($_SESSION['first_use_help'] == 'y,y,y') {
 workerLog('worker: MPD CDSP volsync:   ' . lcfirst($_SESSION['camilladsp_volume_sync']));
 $serviceCmd = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
 sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
-// MPD database stats
-$stats = getMpdStats($sock);
-workerLog('worker: MPD DB stats:       '
-	. 'Tracks:' . $stats['songs'] . ' | '
-	. 'Albums:' . $stats['albums'] . ' | '
-	. 'Artists:' . $stats['artists']
-);
+// Library stats
+$stats = getLibraryStats($sock);
+workerLog('worker: Library stats:      ' . $stats);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -2625,7 +2621,7 @@ function chkLibraryUpdate() {
 	//workerLog('chkLibraryUpdate');
 	if (false !== ($sock = openMpdSock('localhost', 6600))) {
 		$status = getMpdStatus($sock);
-		$stats = getMpdStats($sock);
+		$stats = getLibraryStats($sock);
 		closeMpdSock($sock);
 
 		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
@@ -2636,7 +2632,7 @@ function chkLibraryUpdate() {
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libupd_done');
 			$GLOBALS['check_library_update'] = '0';
-			workerLog('mpdindex: Done: indexed ' . $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs');
+			workerLog('mpdindex: Done: indexed ' . $stats);
 			workerLog('worker: Job update_library done');
 		}
 	} else {
@@ -2649,7 +2645,7 @@ function chkLibraryRegen() {
 	//workerLog('chkLibraryRegen');
 	if (false !== ($sock = openMpdSock('localhost', 6600))) {
 		$status = getMpdStatus($sock);
-		$stats = getMpdStats($sock);
+		$stats = getLibraryStats($sock);
 		closeMpdSock($sock);
 
 		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
@@ -2660,7 +2656,7 @@ function chkLibraryRegen() {
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libregen_done');
 			$GLOBALS['check_library_regen'] = '0';
-			workerLog('mpdindex: Done: indexed ' . $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs');
+			workerLog('mpdindex: Done: indexed ' . $stats);
 			workerLog('worker: Job regen_library done');
 		}
 	} else {

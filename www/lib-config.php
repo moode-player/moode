@@ -449,9 +449,8 @@ if (!isset($_GET['cmd'])) {
 
 	// DB update status
 	if (false !== ($sock = openMpdSock('localhost', 6600))) {
-		$stats = getMpdStats($sock);
+		$msg = getLibraryStats($sock);
 		closeMpdSock($sock);
-		$msg = $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs';
 	} else {
 		$msg = 'CRITICAL ERROR: chkLibraryUpdate() failed: Unable to connect to MPD';
 	}

@@ -30,9 +30,8 @@ switch ($_GET['cmd']) {
 		echo loadLibrary($sock);
     	break;
 	case 'get_dbupdate_status':
-		$stats = getMpdStats($sock);
-		$status = ($_SESSION['mpd_dbupdate_status'] == '0' || isset($_GET['mpcstats'])) ?
-			$stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs' :
+		$stats = getLibraryStats($sock);
+		$status = ($_SESSION['mpd_dbupdate_status'] == '0' || isset($_GET['lib_stats'])) ? $stats :
 			'Files indexed: ' . $_SESSION['mpd_dbupdate_status'];
 		echo json_encode($status);
 		break;
