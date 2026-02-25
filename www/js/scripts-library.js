@@ -889,7 +889,7 @@ var renderSongs = function(albumPos) {
         } else {
     		$('#lib-collection-stats').html(
                 formatNumCommas(filteredSongs.length)
-                + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ')
+				+ ' Tracks '
                 + formatLibTotalTime(LIB.totalTime)
                 + '<span id="lib-collection-stats-ellipsis"><i class="fa-regular fa-sharp fa-ellipsis-h"></i></span>'
             );
@@ -918,11 +918,18 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 'Music Collection' + libFilter + '</button>');
         }
+		
+		if (LIB.filters.artists.length == 0) {
+			var artistStr = formatNumCommas(filteredArtists.length) + ' Artists ';
+		} else if (LIB.filters.artists.length == 1) {
+			var artistStr = '';
+		} else {
+			var artistStr = formatNumCommas(LIB.filters.artists.length) + ' Artists ';
+		}
         $('#lib-collection-stats').html(
-            formatNumCommas(filteredAlbums.length)
-            + ' albums, '
-            + formatNumCommas(filteredSongs.length)
-            + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ')
+			artistStr
+            + formatNumCommas(filteredAlbums.length) + ' Albums '
+            + formatNumCommas(filteredSongs.length) + ' Tracks'
             +  '<br>'
             + formatLibTotalTime(LIB.totalTime)
             + '<span id="lib-collection-stats-ellipsis"><i class="fa-regular fa-sharp fa-ellipsis-h"></i></span>'
@@ -1957,14 +1964,14 @@ function formatLibTotalTime(totalSecs) {
     	minutes = ~~(totalSecs / 60);
 
         // Format output string
-        hhStr = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
-        mmStr = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
+        hhStr = hours == 0 ? '' : (hours == 1 ? hours + ' Hour' : hours + ' Hours');
+        mmStr = minutes == 0 ? '' : (minutes == 1 ? minutes + ' Min' : minutes + ' Mins');
 		if (hours > 0) {
             output = minutes > 0 ? hhStr + ' ' + mmStr : hhStr;
 		} else if (minutes > 0) {
 			output = mmStr;
 		} else {
-            output = totalSecs + ' secs'
+            output = totalSecs + ' Secs'
         }
     }
 
