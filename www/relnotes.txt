@@ -17,8 +17,11 @@
 
 Updates:
 - UPD: Improve Library stats
+- UPD: Improve Radio track covers
 
 Bug fixes
+- FIX: Samba auto-starts during boot via wsdd2 systemd dep
+- FIX: Incorrect Radio track covers due to bad query string
 - FIX: Dashboard various issues
 - FIX: Background color for Configure and Dashboard buttons
 
