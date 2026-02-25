@@ -569,12 +569,19 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // SMB
+// Service file check
+$result = sysCmd('systemctl is-enabled wsdd2 smbd nmbd');
+if (in_array('enabled', $result)) {
+	workerLog('worker: SMB WARNING:       Units wsdd2, smbd, or nmbd have status=enabled');
+	workerLog('worker: SMB unit status:   Reset to disabled');
+	sysCmd('systemctl disable wsdd2 smbd nmbd');
+}
 if (!isset($_SESSION['fs_smb_pwd'])) {
 	$_SESSION['fs_smb_pwd'] = '';
 }
 if ($_SESSION['fs_smb'] == 'On') {
-	sysCmd('systemctl start smbd');
-	sysCmd('systemctl start nmbd');
+	// NOTE: wsdd2 starts smbd
+	sysCmd('systemctl start wsdd2 nmbd');
 }
 // NFS
 if ($_SESSION['fs_nfs'] == 'On') {
@@ -3519,9 +3526,12 @@ function runQueuedJob() {
 			sysCmd('/var/www/util/sysutil.sh clearbrcache');
 			break;
 		case 'fs_smb':
-			$cmd = $_SESSION['w_queueargs'] == 'On' ? 'start' : 'stop';
-			sysCmd('systemctl ' . $cmd . ' smbd');
-			sysCmd('systemctl ' . $cmd . ' nmbd');
+			if ($_SESSION['w_queueargs'] == 'On') {
+				// NOTE: wsdd2 starts smbd
+				sysCmd('systemctl start wsdd2 nmbd');
+			} else {
+				sysCmd('systemctl stop smbd nmbd wsdd2');
+			}
 			break;
 		case 'fs_smb_pwd':
 			if ($_SESSION['w_queueargs'] == '') {
