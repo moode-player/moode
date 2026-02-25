@@ -9,7 +9,7 @@ require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
-chkVariables($_GET);
+chkVariables($_GET, array('track_title'));
 chkVariables($_POST, array('path'));
 
 switch ($_GET['cmd']) {
@@ -63,6 +63,7 @@ switch ($_GET['cmd']) {
 		}
 		break;
 	case 'get_track_cover_url':
+		//workerLog('get_track_cover_url: track_title: (' . $_GET['track_title'] . ')');
 		echo json_encode(getTrackCoverUrl($_GET['track_title']));
 		break;
 	default:

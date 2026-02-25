@@ -1170,7 +1170,7 @@ function renderUI() {
     	//console.log('NEW: ' + MPD.json['cover_art_hash']);
     	// Compare new to current to prevent unnecessary image reloads
     	if ((MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) ||
-			MPD.json['cover_art_hash'] == 'trackcover') {
+			MPD.json['cover_art_hash'] == 'trackcover' || MPD.json['cover_art_hash'] == 'radiologo') {
             // Standard cover for Playback
             // NOTE: GLOBAL.ralbumClickedClearPlay when true prevents the default cover from briefly showing
             // scripts-library.js $('.ralbum').click
@@ -1675,7 +1675,7 @@ function updateActivePlayqueueItem() {
 								//console.log('updateActivePlayqueueItem(): active title: ' + data[i].Title);
                                 // Update in case MPD did not get Title tag at initial play
 								$('#currentsong').html(data[i].Title);
-								if (SESSION.json['radio_track_covers'] == 'Yes') {
+								if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
 									updateTrackCover(data[i].Title);
 								}
                                 // Add search URL, see corresponding code in renderUI()
@@ -1762,7 +1762,7 @@ function renderPlayqueue(state) {
 							//console.log('renderPlayqueue(): active title: ' + data[i].Title);
                             // Update in case MPD did not get Title tag at initial play
 							$('#currentsong').html(data[i].Title);
-							if (SESSION.json['radio_track_covers'] == 'Yes') {
+							if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
 								updateTrackCover(data[i].Title);
 							}
 							// Add search URL, see corresponding code in renderUI()
@@ -1855,11 +1855,9 @@ function renderPlayqueue(state) {
 
 // Update track cover
 function updateTrackCover(trackTitle) {
-	$.getJSON('command/radio.php?cmd=get_track_cover_url&track_title=' + trackTitle, function(data) {
-		//console.log('updateTrackCover(): ' + data);
-		// data: URL, 'query failed' or 'query result count 0'
+	//console.log(trackTitle);
+	$.getJSON('command/radio.php?cmd=get_track_cover_url', {'track_title': trackTitle}, function(data) {
 		if (data.includes('https://')) {
-			// Update to track cover
 			MPD.json['coverurl'] = data;
 			MPD.json['cover_art_hash'] = 'trackcover';
 		} else {

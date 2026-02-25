@@ -784,15 +784,25 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
 				// Track cover from Apple Music (iTunes API)
+				//workerLog('enhanceMetadata(): BEFORE: ' . $current['state'] . ' | ' . $current['title']);
+				//workerLog('enhanceMetadata(): - URL:  ' . substr($current['coverurl'], 0, 64));
+				//workerLog('enhanceMetadata(): - Hash: ' . $current['cover_art_hash']);
 				if ($current['title'] != DEFAULT_RADIO_TITLE) {
 					if ($_SESSION['radio_track_covers'] == 'Yes') {
-						$trackCoverUrl = getTrackCoverUrl($current['title']);
-						if (str_contains($trackCoverUrl, 'https://')) {
-							$current['coverurl'] = $trackCoverUrl;
-							$current['cover_art_hash'] = 'trackcover';
+						if ($current['state'] == 'play') {
+							$trackCoverUrl = getTrackCoverUrl($current['title']);
+							if (str_contains($trackCoverUrl, 'https://')) {
+								$current['coverurl'] = $trackCoverUrl;
+								$current['cover_art_hash'] = 'trackcover';
+							}
+						} else {
+							$current['cover_art_hash'] = 'radiologo';
 						}
 					}
 				}
+				//workerLog('enhanceMetadata(): AFTER:');
+				//workerLog('enhanceMetadata(): - URL:  ' . substr($current['coverurl'], 0, 64));
+				//workerLog('enhanceMetadata(): - Hash: ' . $current['cover_art_hash']);
 
                 if ($_SESSION[$song['file']]['bitrate'] == '') {
                     $current['bitrate'] == '';
@@ -877,25 +887,30 @@ function enhanceMetadata($current, $sock, $caller = '') {
 }
 
 function getTrackCoverUrl($trackTitle) {
+	$trackTitle = html_entity_decode($trackTitle);
 	$parts = explode(' - ', $trackTitle); // $parts[0]=Artist name, $parts[1]=Track title
 	$query = '?term=' . urlencode($parts[0] . ' ' . $parts[1]) . '&media=music&entity=musicTrack&limit=1';
 	$apiUrl = ITUNES_API_BASE_URL . $query;
 
 	$result = file_get_contents($apiUrl);
 	if ($result === false) {
-		$coverUrl = 'query failed';
-		debugLog($coverUrl . "\n" . $apiUrl);
+		$msg = 'Query failed: ' . $trackTitle;
+		$coverUrl = '';
 	} else {
 		$resultArray = json_decode($result, true);
 		if ($resultArray['resultCount'] == '0') {
-			$coverUrl = 'query result count 0';
-			debugLog($coverUrl . "\n" . $apiUrl);
+			$msg = 'Query 0 found: ' . $trackTitle;
+			$coverUrl = '';
 		} else {
+			$msg = 'Query successful: ' . $trackTitle;
 			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
 		}
 	}
+	//debugLog('getTrackCoverUrl(): ' .
+	//	$msg . "\n" .
+	//	$coverUrl . (!empty($coverUrl) ? "\n" : '') .
+	//	$apiUrl);
 
-	//debugLog($coverUrl . "\n" . $apiUrl);
 	return $coverUrl;
 }
 
