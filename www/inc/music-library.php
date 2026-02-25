@@ -613,9 +613,8 @@ function getLibraryStats($sock) {
 		$trackCount++;
 	}
 
-	$albumCount = count($albumKeys);
-	//$artistCount = getMpdStats($sock)['artists'];
 	$artistCount = count($artists);
+	$albumCount = count($albumKeys);
 
 	// Return counts as a formatted string
 	return 'Artists:' . $artistCount . ' Albums:' . $albumCount . ' Tracks:' . $trackCount;
