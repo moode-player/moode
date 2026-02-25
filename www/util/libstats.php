@@ -13,8 +13,8 @@ require_once __DIR__ . '/../inc/music-library.php';
 // Connect to MPD
 if (false !== ($sock = openMpdSock('localhost', 6600))) {
 	$stats = getLibraryStats($sock);
-	echo 'Artists:' . $stats['artists'] . ' Albums:' . $stats['albums'] . ' Tracks:' . $stats['tracks'] . "\n";
+	echo $stats . "\n";
 	closeMpdSock($sock);
 } else {
-	echo 'libstats.php: Connection to MPD failed';	
+	echo 'libstats.php: Connection to MPD failed';
 }

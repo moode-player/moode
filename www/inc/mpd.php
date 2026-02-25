@@ -653,7 +653,6 @@ function parseLsinfoAsArray($resp) {
 			case 'Artist':
 			case 'Performer':
 			case 'Conductor':
-			case 'Composer':
 				array_push($array['Artist'], $value);
 				break;
 			default:

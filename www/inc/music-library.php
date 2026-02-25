@@ -584,6 +584,8 @@ function getLibraryStats($sock) {
 	// Scan the list and generate counts
 	$trackCount = 0;
 	$albumCount = 0;
+	$artistCount = 0;
+	$artists = array();
 	$albumKeys = array();
 	foreach ($fileList as $file) {
 		// Albums
@@ -595,7 +597,14 @@ function getLibraryStats($sock) {
 			($tags['Artist'] ? (count($tags['Artist']) == 1 ? $tags['Artist'][0] :
 			'Unknown AlbumArtist') : 'Unknown AlbumArtist');
 
-		// Create unique album key
+		// Accumulate artists (unique)
+		foreach($tags['Artist'] as $artist) {
+			if  (!in_array($artist, $artists)) {
+				array_push($artists, $artist);
+			}
+		}
+
+		// Create unique album keys
 		$albumKey = $album . '@' . $albumartist;
 		if  (!in_array($albumKey, $albumKeys)) {
 			array_push($albumKeys, $albumKey);
@@ -605,7 +614,8 @@ function getLibraryStats($sock) {
 	}
 
 	$albumCount = count($albumKeys);
-	$artistCount = getMpdStats($sock)['artists'];
+	//$artistCount = getMpdStats($sock)['artists'];
+	$artistCount = count($artists);
 
 	// Return counts as a formatted string
 	return 'Artists:' . $artistCount . ' Albums:' . $albumCount . ' Tracks:' . $trackCount;
