@@ -21,25 +21,25 @@
 if [ -z $1 ] || [ $1 = "Default" ]; then
 	TYPES_REGEX="\(aac\|aif\|aiff\|dff\|dsf\|flac\|m4a\|mp3\|mp4\|ogg\|wav\|wma\|wv\)"
 elif [ $1 = "Default+" ]; then
-	TYPES_REGEX="\(aac\|aif\|aiff\|dff\|dsf\|flac\|m4a\|mp3\|mp4\|ogg\|wav\|wma\|wv\\
-	|jpg\|jpeg\|png\|tif\|tiff\)"
+	TYPES_REGEX="\(aac\|aif\|aiff\|dff\|dsf\|flac\|m4a\|mp3\|mp4\|ogg\|wav\|wma\|wv\|\
+jpg\|jpeg\|png\|tif\|tiff\)"
 elif [ $1 = "All" ]; then
-	TYPES_REGEX="\(3g2\|3g2\|3gp\|4xm\|8svx\|aa3\|aac\|ac3\|adx\|afc\|aif\|aifc\|aiff\|al\|alaw\|amr\|anim\|apc\|ape\\
-	|asf\|atrac\|au\|aud\|avi\|avm2\|avs\|bap\|bfi\|c93\|cak\|cin\|cmv\|cpk\|daud\|dct\|dff\|divx\|dsf\|dts\|dv\|dvd\\
-	|dxa\|eac3\|film\|flac\|flc\|fli\|fll\|flx\|flv\|g726\|gsm\|gxf\|iss\|m1v\|m2v\|m2t\|m2ts\|m4a\|m4b\|m4v\|mad\|mj2\\
-	|mjpeg\|mjpg\|mka\|mkv\|mlp\|mm\|mmf\|mov\|mp+\|mp1\|mp2\|mp3\|mp4\|mpc\|mpeg\|mpg\|mpga\|mpp\|mpu\|mve\|mvi\|mxf\\
-	|nc\|nsv\|nut\|nuv\|oga\|ogm\|ogv\|ogx\|oma\|ogg\|omg\|opus\|pcm\|psp\|pva\|qcp\|qt\|r3d\|ra\|ram\|rl2\|rm\|rmvb\\
-	|roq\|rpl\|rvc\|shn\|smk\|snd\|sol\|son\|spx\|str\|swf\|tak\|tgi\|tgq\|tgv\|thp\|ts\|tsp\|tta\|xa\|xvid\|uv\|uv2\\
-	|vb\|vid\|vob\|voc\|vp6\|vmd\|wav\|webm\|wma\|wmv\|wsaud\|wsvga\|wv\|wve\)"
+	TYPES_REGEX="\(3g2\|3g2\|3gp\|4xm\|8svx\|aa3\|aac\|ac3\|adx\|afc\|aif\|aifc\|aiff\|al\|alaw\|amr\|anim\|apc\|ape\|\
+asf\|atrac\|au\|aud\|avi\|avm2\|avs\|bap\|bfi\|c93\|cak\|cin\|cmv\|cpk\|daud\|dct\|dff\|divx\|dsf\|dts\|dv\|dvd\|\
+dxa\|eac3\|film\|flac\|flc\|fli\|fll\|flx\|flv\|g726\|gsm\|gxf\|iss\|m1v\|m2v\|m2t\|m2ts\|m4a\|m4b\|m4v\|mad\|mj2\|\
+mjpeg\|mjpg\|mka\|mkv\|mlp\|mm\|mmf\|mov\|mp+\|mp1\|mp2\|mp3\|mp4\|mpc\|mpeg\|mpg\|mpga\|mpp\|mpu\|mve\|mvi\|mxf\|\
+nc\|nsv\|nut\|nuv\|oga\|ogm\|ogv\|ogx\|oma\|ogg\|omg\|opus\|pcm\|psp\|pva\|qcp\|qt\|r3d\|ra\|ram\|rl2\|rm\|rmvb\|\
+roq\|rpl\|rvc\|shn\|smk\|snd\|sol\|son\|spx\|str\|swf\|tak\|tgi\|tgq\|tgv\|thp\|ts\|tsp\|tta\|xa\|xvid\|uv\|uv2\|\
+vb\|vid\|vob\|voc\|vp6\|vmd\|wav\|webm\|wma\|wmv\|wsaud\|wsvga\|wv\|wve\)"
 elif [ $1 = "All+" ]; then
-	TYPES_REGEX="\(3g2\|3g2\|3gp\|4xm\|8svx\|aa3\|aac\|ac3\|adx\|afc\|aif\|aifc\|aiff\|al\|alaw\|amr\|anim\|apc\|ape\\
-	|asf\|atrac\|au\|aud\|avi\|avm2\|avs\|bap\|bfi\|c93\|cak\|cin\|cmv\|cpk\|daud\|dct\|dff\|divx\|dsf\|dts\|dv\|dvd\\
-	|dxa\|eac3\|film\|flac\|flc\|fli\|fll\|flx\|flv\|g726\|gsm\|gxf\|iss\|m1v\|m2v\|m2t\|m2ts\|m4a\|m4b\|m4v\|mad\|mj2\\
-	|mjpeg\|mjpg\|mka\|mkv\|mlp\|mm\|mmf\|mov\|mp+\|mp1\|mp2\|mp3\|mp4\|mpc\|mpeg\|mpg\|mpga\|mpp\|mpu\|mve\|mvi\|mxf\\
-	|nc\|nsv\|nut\|nuv\|oga\|ogm\|ogv\|ogx\|oma\|ogg\|omg\|opus\|pcm\|psp\|pva\|qcp\|qt\|r3d\|ra\|ram\|rl2\|rm\|rmvb\\
-	|roq\|rpl\|rvc\|shn\|smk\|snd\|sol\|son\|spx\|str\|swf\|tak\|tgi\|tgq\|tgv\|thp\|ts\|tsp\|tta\|xa\|xvid\|uv\|uv2\\
-	|vb\|vid\|vob\|voc\|vp6\|vmd\|wav\|webm\|wma\|wmv\|wsaud\|wsvga\|wv\|wve\\
-	|jpg\|jpeg\|png\|tif\|tiff\)"
+	TYPES_REGEX="\(3g2\|3g2\|3gp\|4xm\|8svx\|aa3\|aac\|ac3\|adx\|afc\|aif\|aifc\|aiff\|al\|alaw\|amr\|anim\|apc\|ape\|\
+asf\|atrac\|au\|aud\|avi\|avm2\|avs\|bap\|bfi\|c93\|cak\|cin\|cmv\|cpk\|daud\|dct\|dff\|divx\|dsf\|dts\|dv\|dvd\|\
+dxa\|eac3\|film\|flac\|flc\|fli\|fll\|flx\|flv\|g726\|gsm\|gxf\|iss\|m1v\|m2v\|m2t\|m2ts\|m4a\|m4b\|m4v\|mad\|mj2\|\
+mjpeg\|mjpg\|mka\|mkv\|mlp\|mm\|mmf\|mov\|mp+\|mp1\|mp2\|mp3\|mp4\|mpc\|mpeg\|mpg\|mpga\|mpp\|mpu\|mve\|mvi\|mxf\|\
+nc\|nsv\|nut\|nuv\|oga\|ogm\|ogv\|ogx\|oma\|ogg\|omg\|opus\|pcm\|psp\|pva\|qcp\|qt\|r3d\|ra\|ram\|rl2\|rm\|rmvb\|\
+roq\|rpl\|rvc\|shn\|smk\|snd\|sol\|son\|spx\|str\|swf\|tak\|tgi\|tgq\|tgv\|thp\|ts\|tsp\|tta\|xa\|xvid\|uv\|uv2\|\
+vb\|vid\|vob\|voc\|vp6\|vmd\|wav\|webm\|wma\|wmv\|wsaud\|wsvga\|wv\|wve\\
+jpg\|jpeg\|png\|tif\|tiff\)"
 fi
 
 #echo "DEBUG: "$1
