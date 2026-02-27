@@ -252,7 +252,7 @@ html {background-color:inherit;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
 #menu-cdsp {font-size:1.25rem;}
-#dropdown-cdsp-btn {right:4.6rem!important;top:env(safe-area-inset-top)!important;}
+#dropdown-cdsp-btn {right:5.8rem!important;top:env(safe-area-inset-top)!important;}
 #dropdown-cdsp-menu {max-height:calc(100vh - 12rem);overflow:scroll;min-width:20rem!important;padding-top:.5em;}
 .cdsp-menu-background {background-image:url(../images/camilladsp.svg);background-repeat:no-repeat;background-position-y:top;background-position-x:50%;background-blend-mode:difference;background-size:5em;background-origin:content-box;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
