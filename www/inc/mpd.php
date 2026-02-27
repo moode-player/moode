@@ -731,7 +731,19 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['comment'] = '';
 		$current['coverurl'] = DEFAULT_ALBUM_COVER;
 	} else {
-		// Only do this code block once for a given file
+		// Reset old title when new Radio station to prevent unneeded cover display
+		// This is checked in playerlib.js function renderUI()()
+		if ($current['file'] != $_SESSION['currentfile']) {
+			if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
+				$current['title_reset'] = '1';
+			} else {
+				$current['title_reset'] = '0';
+			}
+		} else {
+			$current['title_reset'] = '0';
+		}
+
+		// Only do getEncodedAt() once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
 			$current['encoded'] = getEncodedAt($song, 'default'); // Encoded bit depth and sample rate
 			phpSession('open');
@@ -784,9 +796,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
 				// Track cover from Apple Music (iTunes API)
-				//workerLog('enhanceMetadata(): BEFORE: ' . $current['state'] . ' | ' . $current['title']);
-				//workerLog('enhanceMetadata(): - URL:  ' . substr($current['coverurl'], 0, 64));
-				//workerLog('enhanceMetadata(): - Hash: ' . $current['cover_art_hash']);
 				if ($current['title'] != DEFAULT_RADIO_TITLE) {
 					if ($_SESSION['radio_track_covers'] == 'Yes') {
 						if ($current['state'] == 'play') {
@@ -794,15 +803,14 @@ function enhanceMetadata($current, $sock, $caller = '') {
 							if (str_contains($trackCoverUrl, 'https://')) {
 								$current['coverurl'] = $trackCoverUrl;
 								$current['cover_art_hash'] = 'trackcover';
+							} else {
+								$current['cover_art_hash'] = 'radiologo';
 							}
 						} else {
 							$current['cover_art_hash'] = 'radiologo';
 						}
 					}
 				}
-				//workerLog('enhanceMetadata(): AFTER:');
-				//workerLog('enhanceMetadata(): - URL:  ' . substr($current['coverurl'], 0, 64));
-				//workerLog('enhanceMetadata(): - Hash: ' . $current['cover_art_hash']);
 
                 if ($_SESSION[$song['file']]['bitrate'] == '') {
                     $current['bitrate'] == '';
@@ -815,7 +823,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				$current['coverurl'] = DEFAULT_RADIO_COVER;
                 $current['bitrate'] = '';
 			}
-            //workerLog(print_r($song, true));
+
 		} else {
 			// Song file, UPnP URL or Podcast
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
@@ -903,10 +911,10 @@ function getTrackCoverUrl($trackTitle) {
 			$coverUrl = '';
 		} else {
 			$msg = 'Query successful: ' . $trackTitle;
-			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
+			$coverUrl = str_replace('100x100', '500x500', $resultArray['results'][0]['artworkUrl100']);
 		}
 	}
-	//debugLog('getTrackCoverUrl(): ' .
+	//workerLog('getTrackCoverUrl(): ' .
 	//	$msg . "\n" .
 	//	$coverUrl . (!empty($coverUrl) ? "\n" : '') .
 	//	$apiUrl);

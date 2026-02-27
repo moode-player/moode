@@ -1166,11 +1166,18 @@ function renderUI() {
         $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #m-countdown, #playbar-total, #m-total, #ss-countdown').addClass('long-time') :
             $('#playbar-countdown, #m-countdown, #playbar-total, #m-total, #ss-countdown').removeClass('long-time');
 
-    	//console.log('CUR: ' + UI.currentHash);
-    	//console.log('NEW: ' + MPD.json['cover_art_hash']);
-    	// Compare new to current to prevent unnecessary image reloads
-    	if ((MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) ||
-			MPD.json['cover_art_hash'] == 'trackcover' || MPD.json['cover_art_hash'] == 'radiologo') {
+		// DEBUG:
+		//console.log(MPD.json['state']);
+		//console.log('- Files UI|MPD:  ' + UI.currentFile.slice(0, 30)  + ' | ' + MPD.json['file'].slice(0, 30));
+    	//console.log('- Hashes UI|MPD: ' + UI.currentHash  + ' | ' + MPD.json['cover_art_hash']);
+		//console.log('- Title reset:   ' + MPD.json['title_reset']);
+
+    	// Compare new to current to prevent unnecessary cover reloads
+    	if (
+			(MPD.json['file'] != UI.currentFile &&	MPD.json['cover_art_hash'] != UI.currentHash) ||
+			(MPD.json['cover_art_hash'] == 'trackcover' && MPD.json['title_reset'] == '0') ||
+			MPD.json['cover_art_hash'] == 'radiologo'
+		) {
             // Standard cover for Playback
             // NOTE: GLOBAL.ralbumClickedClearPlay when true prevents the default cover from briefly showing
             // scripts-library.js $('.ralbum').click
@@ -1855,30 +1862,32 @@ function renderPlayqueue(state) {
 
 // Update track cover
 function updateTrackCover(trackTitle) {
-	//console.log(trackTitle);
-	$.getJSON('command/radio.php?cmd=get_track_cover_url', {'track_title': trackTitle}, function(data) {
-		if (data.includes('https://')) {
-			MPD.json['coverurl'] = data;
+	$.getJSON('command/radio.php?cmd=get_track_cover_url', {'track_title': trackTitle}, function(coverURL) {
+		if (coverURL.includes('https://') && MPD.json['coverurl'] != coverURL) {
+			//console.log('updateTrackCover(): ' + trackTitle);
+			MPD.json['coverurl'] = coverURL;
 			MPD.json['cover_art_hash'] = 'trackcover';
+			MPD.json['title'] = trackTitle;
+			UI.currentHash = MPD.json['cover_art_hash'];
+
+			// Playback/Playbar cover
+			$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+			$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
+			// Cover backdrop
+			if (SESSION.json['cover_backdrop'] == 'Yes') {
+	            if (GLOBAL.ralbumClickedClearPlay === true) {
+	                GLOBAL.ralbumClickedClearPlay = false;
+	            }
+	            var backDropHTML = MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
+	            $('#cover-backdrop').html(backDropHTML);
+			}
+			// Screen saver
+			$('#ss-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
+			if (GLOBAL.coverViewActive) {
+				$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+			}
 		} else {
 			// Leave as-is (radio logo)
-		}
-
-		// Playback/Playbar cover
-		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
-		$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
-		// Cover backdrop
-		if (SESSION.json['cover_backdrop'] == 'Yes') {
-            if (GLOBAL.ralbumClickedClearPlay === true) {
-                GLOBAL.ralbumClickedClearPlay = false;
-            }
-            var backDropHTML = MPD.json['coverurl'].indexOf(DEFAULT_ALBUM_COVER) === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
-            $('#cover-backdrop').html(backDropHTML);
-		}
-		// Screen saver
-		$('#ss-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
-		if (GLOBAL.coverViewActive) {
-			$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
 		}
 	});
 }
