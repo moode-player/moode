@@ -2679,9 +2679,12 @@ function truncateMpdLog() {
 	$_SESSION['mpd_dbupdate_status'] = 0;
 }
 
-// Count number of lines in MPD log
+// Count number of lines in MPD log for database update or regen
 function countMpdLogLines() {
-	$count = sysCmd('cat ' . MPD_LOG . ' | grep "update:" | wc -l')[0];
+	// update: added
+	// update: updating
+	// update: removing
+	$count = sysCmd('cat ' . MPD_LOG . ' | grep "update: added\|update: updating" | wc -l')[0];
 	return $count;
 }
 
