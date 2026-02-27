@@ -714,15 +714,15 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 
 	// Special section for calls from genLibrary() to populate the "encoded_at" element
 	if ($calledFromGenLib) {
-		if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
-			// Lossy: bit depth has no meaning so it's omitted
-			// format,l,channels
-			$encodedAt = strtoupper($ext) . ',l,' . $mpdFormatTag[2];
-		} else if ($ext == 'dsf' || $ext == 'dff') {
+		if ($ext == 'dsf' || $ext == 'dff') {
 			// DSD: DSF/DFF
 			// DSD rate,h,channels
 			$result = getDSDRateAndChannels($songData['file']);
 			$encodedAt = empty($result[1]) ? 'DSD,h' : 'DSD ' . formatRate($result[1]) . ',h,' . $result[2];
+		} else if ($ext == 'mp3' || ($mpdFormatTag[1] == 'f' && $mpdFormatTag[2] <= 2)) {
+			// Lossy: bit depth has no meaning so it's omitted
+			// format,l,channels
+			$encodedAt = strtoupper($ext) . ',l,' . $mpdFormatTag[2];
 		} else if ($ext == 'wv' && strpos($mpdFormatTag[0], 'dsd') !== false) {
 			// DSD: WavPack (format dsd64:2)
 			// DSD rate,h,channels
@@ -827,6 +827,33 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 
 // Return DSD rate and channels
 function getDSDRateAndChannels($file) {
+	//workerLog('getDSDRateAndChannels(): ' . $file);
+	$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $file . '"');
+	// [0] bitdepth
+	// [1] sampleRate
+	// [2] channels
+	// [3] format
+	// [4] compression
+
+	//$result = array('','',''); // DEBUG:
+
+	// Empty rate or channels fallback to file -b for those values
+	if (empty($result[1]) || empty($result[2])) {
+		$str = syscmd('file -b ' . '"' . MPD_MUSICROOT . $file . '"' .
+			" | awk -F\",\" '{print $3\" \"$4}' | awk -F\" \" '{print $4\" \"$1}'")[0];
+		$parts = explode(' ', $str); // rate channels
+		$result[1] = empty($parts[0]) ? '?' : $parts[0];
+		$result[2] = empty($parts[1]) ? '?' : ($parts[1] == 'stereo' ? '2' : explode(' ', $parts[1])[0]);
+		//workerLog('getDSDRateAndChannels(): file -b:   ' . $result[1] . '|' . $result[2]);
+	} else {
+		//workerLog('getDSDRateAndChannels(): mediainfo: ' . $result[1] . '|' . $result[2]);
+	}
+
+	return $result;
+}
+
+// ORIGINAL: Return DSD rate and channels
+function __getDSDRateAndChannels($file) {
 	$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $file . '"');
 		// Empty mediainfo so fallback to using the "file" command
 		$result = syscmd('file -b ' . '"' . MPD_MUSICROOT . $file . '"' .
