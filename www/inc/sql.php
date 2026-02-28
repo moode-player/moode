@@ -16,7 +16,7 @@ function sqlConnect() {
 	}
 }
 
-function sqlRead($table, $dbh, $param = '', $id = '', $format = 'array') {
+function sqlRead($table, $dbh, $param = '', $id = '') {
 	if (empty($param) && empty($id)) {
 		$queryStr = 'SELECT * FROM ' . $table;
 	} else if (!empty($id)) {
@@ -38,28 +38,6 @@ function sqlRead($table, $dbh, $param = '', $id = '', $format = 'array') {
 	}
 
 	$rows = sqlQuery($queryStr, $dbh);
-    if ($format === 'json') {
-    	$clean = [];
-		foreach ($rows as $row) {
-			$param = $row['param'];
-			$value = $row['value'];
-			
-			// Universal type detection and conversion
-			if ($value === '' || $value === null) {
-				$clean[$param] = null;
-			} elseif (is_numeric($value) && strpos($value, '.') !== false) {
-				$clean[$param] = (float)$value;  // "0.0" → 0.0
-			} elseif (is_numeric($value)) {
-				$clean[$param] = (int)$value;    // "123" → 123
-			} elseif (in_array(strtolower($value), ['true', 'false', 'yes', 'no', '1', '0'])) {
-				$clean[$param] = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== false;
-			} else {
-				$clean[$param] = $value;  // String
-			}
-		}
-		return json_encode($clean, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    }
-
 	return $rows;
 }
 
