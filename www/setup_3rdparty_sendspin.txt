@@ -2,7 +2,7 @@
 #
 #  Setup Guide for sendspin-cli 3rd party component
 #
-#  Version: 1.0 2026-01-16
+#  Version: 1.0 2026-02-28
 #
 ################################################################################
 
@@ -19,15 +19,9 @@ See https://github.com/Sendspin/sendspin-cli for more information.
 
 INSTALLATION
 
-To install sendspin-cli in moOde, SSH to your Raspberry Pi and install uv / sendspin:
+To install sendspin-cli in moOde, SSH to your Raspberry Pi and start the installer script to configure Sendspin as daemon.
 
-$ sudo pip install uv --break-system-packages
-$ sudo uv tool install sendspin@4.0.0
-
-To check if the Sendspin server is listed and the desired audio device is available:
-
-$ sudo /root/.local/share/uv/tools/sendspin/bin/sendspin --list-servers
-$ sudo /root/.local/share/uv/tools/sendspin/bin/sendspin --list-audio-devices
+$ curl -fsSL https://raw.githubusercontent.com/Sendspin/sendspin-cli/refs/heads/main/scripts/systemd/install-systemd.sh | sudo bash
 
 TROUBLESHOOTING
 
@@ -35,7 +29,13 @@ Trying to playing both from moOde via MPD and to the Sendspin renderer at the sa
 
 Change moOde's audio output to a different device while playing through the Sendspin renderer prevents this error. 
 
-This issue might be fixed in a future release of moOde.
+This issue might be fixed in the future release.
+
+To check if the Sendspin server is listed and the desired audio device is available:
+
+$ sudo /home/sendspin/.local/share/uv/tools/sendspin/bin/sendspin --list-servers
+$ sudo /home/sendspin/.local/share/uv/tools/sendspin/bin/sendspin --list-audio-devices
+
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum

@@ -616,10 +616,8 @@ if (file_exists('/opt/RoonBridge/start.sh') === true) {
 workerLog('worker: RoonBridge:       ' . $msg);
 
 // Sendspin
-// To install
-// - sudo pip install uv --break-system-packages
-// - sudo uv tool install sendspin
-if (file_exists('/root/.local/share/uv/tools/sendspin/bin/sendspin') === true) {
+// Installer: https://github.com/Sendspin/sendspin-cli/blob/main/scripts/systemd/install-systemd.sh
+if (file_exists('/home/sendspin/.local/share/uv/tools/sendspin/bin/sendspin') === true) {
 	$msg = 'installed';
 	$_SESSION['sendspin_installed'] = 'yes';
 
@@ -3296,13 +3294,6 @@ function runQueuedJob() {
 		case 'sendspinsvc':
 			stopSendspin();
 			if ($_SESSION['sendspinsvc'] == 1) {
-				startSendspin();
-			}
-			break;
-		case 'sendspincfgupdate':
-			cfgSendspin();
-			if ($_SESSION['sendspinsvc'] == '1') {
-				sysCmd('systemctl stop sendspin');
 				startSendspin();
 			}
 			break;
