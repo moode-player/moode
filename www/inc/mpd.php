@@ -731,20 +731,12 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['comment'] = '';
 		$current['coverurl'] = DEFAULT_ALBUM_COVER;
 	} else {
-		// Reset old title when new Radio station to prevent unneeded cover display
-		// This is checked in playerlib.js function renderUI()()
 		if ($current['file'] != $_SESSION['currentfile']) {
+			// When switching stations reset title so logo displays
 			if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
-				$current['title_reset'] = '1';
-			} else {
-				$current['title_reset'] = '0';
+				$song['Title'] = 'Radio station';
 			}
-		} else {
-			$current['title_reset'] = '0';
-		}
-
-		// Only do getEncodedAt() once for a given file
-		if ($current['file'] != $_SESSION['currentfile']) {
+			// Only do getEncodedAt() once for a given file
 			$current['encoded'] = getEncodedAt($song, 'default'); // Encoded bit depth and sample rate
 			phpSession('open');
 			$_SESSION['currentfile'] = $current['file'];
@@ -778,8 +770,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				$current['title'] = DEFAULT_RADIO_TITLE;
 			} else {
 				// Use custom name for certain stations if needed
-				// EX: $current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
-				$current['title'] = $song['Title'];
+				$current['title'] = str_contains(strtolower($song['Title']), 'advert') ? 'Radio station' : $song['Title'];
+				//$current['title'] = $song['Title'];
 			}
 
 			if (isset($_SESSION[$song['file']])) {
@@ -802,16 +794,11 @@ function enhanceMetadata($current, $sock, $caller = '') {
 							$trackCoverUrl = getTrackCoverUrl($current['title']);
 							if (str_contains($trackCoverUrl, 'https://')) {
 								$current['coverurl'] = $trackCoverUrl;
-								$current['cover_art_hash'] = 'trackcover';
-							} else {
-								$current['cover_art_hash'] = 'radiologo';
 							}
-						} else {
-							$current['cover_art_hash'] = 'radiologo';
 						}
 					}
 				}
-
+				// Bitrate
                 if ($_SESSION[$song['file']]['bitrate'] == '') {
                     $current['bitrate'] == '';
                 } else {
@@ -847,7 +834,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				$current['thumb_hash'] = md5(dirname($song['file'], $level));
 			}
 
-			// DEBUG
+			// DEBUG:
 			/*if (substr($song['file'], 0, 4) == 'http') {
 				workerLog('enhanceMetadata(): UPnP url');
 			} else {
@@ -911,9 +898,10 @@ function getTrackCoverUrl($trackTitle) {
 			$coverUrl = '';
 		} else {
 			$msg = 'Query successful: ' . $trackTitle;
-			$coverUrl = str_replace('100x100', '500x500', $resultArray['results'][0]['artworkUrl100']);
+			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
 		}
 	}
+	// DEBUG:
 	//workerLog('getTrackCoverUrl(): ' .
 	//	$msg . "\n" .
 	//	$coverUrl . (!empty($coverUrl) ? "\n" : '') .

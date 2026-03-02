@@ -1166,21 +1166,11 @@ function renderUI() {
         $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #m-countdown, #playbar-total, #m-total, #ss-countdown').addClass('long-time') :
             $('#playbar-countdown, #m-countdown, #playbar-total, #m-total, #ss-countdown').removeClass('long-time');
 
-		// DEBUG:
-		//console.log(MPD.json['state']);
-		//console.log('- Files UI|MPD:  ' + UI.currentFile.slice(0, 30)  + ' | ' + MPD.json['file'].slice(0, 30));
-    	//console.log('- Hashes UI|MPD: ' + UI.currentHash  + ' | ' + MPD.json['cover_art_hash']);
-		//console.log('- Title reset:   ' + MPD.json['title_reset']);
-
-    	// Compare new to current to prevent unnecessary cover reloads
-    	if (
-			(MPD.json['file'] != UI.currentFile &&	MPD.json['cover_art_hash'] != UI.currentHash) ||
-			(MPD.json['cover_art_hash'] == 'trackcover' && MPD.json['title_reset'] == '0') ||
-			MPD.json['cover_art_hash'] == 'radiologo'
-		) {
+		if ((MPD.json['artist'] != 'Radio station' && MPD.json['file'] != UI.currentFile && MPD.json['cover_art_hash'] != UI.currentHash) ||
+			(MPD.json['artist'] == 'Radio station')) {
             // Standard cover for Playback
             // NOTE: GLOBAL.ralbumClickedClearPlay when true prevents the default cover from briefly showing
-            // scripts-library.js $('.ralbum').click
+            // see scripts-library.js $('.ralbum').click
             if (GLOBAL.ralbumClickedClearPlay === false || MPD.json['coverurl'] != DEFAULT_ALBUM_COVER) {
                 $('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
             }
@@ -1283,7 +1273,7 @@ function renderUI() {
             // - #currentsong = MPD.json['title']
             // - #currentartist = MPD.json['album']
             // Playback
-            $('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
+			$('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentsong').css('margin-top', '');
             $('#currentartist').html('<span class="playback-hd-badge"></span>' + MPD.json['album']);
             // Playbar
@@ -1683,7 +1673,9 @@ function updateActivePlayqueueItem() {
                                 // Update in case MPD did not get Title tag at initial play
 								$('#currentsong').html(data[i].Title);
 								if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
-									updateTrackCover(data[i].Title);
+									if (!data[i].Title.toLowerCase().includes('advert')) {
+										updateTrackCover(data[i].Title);
+									}
 								}
                                 // Add search URL, see corresponding code in renderUI()
 								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
@@ -1770,7 +1762,9 @@ function renderPlayqueue(state) {
                             // Update in case MPD did not get Title tag at initial play
 							$('#currentsong').html(data[i].Title);
 							if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
-								updateTrackCover(data[i].Title);
+								if (!data[i].Title.toLowerCase().includes('advert')) {
+									updateTrackCover(data[i].Title);
+								}
 							}
 							// Add search URL, see corresponding code in renderUI()
 							$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
@@ -1864,12 +1858,8 @@ function renderPlayqueue(state) {
 function updateTrackCover(trackTitle) {
 	$.getJSON('command/radio.php?cmd=get_track_cover_url', {'track_title': trackTitle}, function(coverURL) {
 		if (coverURL.includes('https://') && MPD.json['coverurl'] != coverURL) {
-			//console.log('updateTrackCover(): ' + trackTitle);
 			MPD.json['coverurl'] = coverURL;
-			MPD.json['cover_art_hash'] = 'trackcover';
 			MPD.json['title'] = trackTitle;
-			UI.currentHash = MPD.json['cover_art_hash'];
-
 			// Playback/Playbar cover
 			$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
 			$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
