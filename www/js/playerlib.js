@@ -1912,7 +1912,7 @@ function renderFolderView(data, path, searchstr) {
             }
 		}
 	}
-s
+
 	// Sort directories and playlists
 	var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 	if (typeof(dirs[0]) != 'undefined') {
