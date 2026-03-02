@@ -16,8 +16,8 @@
 ################################################################################
 
 Updates:
-- UPD: Improve Library stats
 - UPD: Improve Radio track covers
+- UPD: Improve Library stats
 
 Bug fixes
 - FIX: Samba auto-starts during boot via wsdd2 systemd dep
