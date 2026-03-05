@@ -2894,21 +2894,22 @@ $(document).on('click', '.context-menu a', function(e) {
             });
             break;
 		case 'go_to_folder':
-			var pqItem = '#pq-' + (UI.dbEntry[0] + 1);
-			var micIcon = $(pqItem + ' .pll2').html().substr(0, 2) == '<i';
-			var artist = $(pqItem + ' .pll2').text().split(' - ')[0];
-			var album = $(pqItem + ' .pll2').text().split(' - ')[1]
-			// Only song files
-			if (!micIcon) {
-				// Switch to Folder view
-				currentView = 'playback,folder';
-				$('#coverart-url').click();
-				// Execute Advanced search
-				$('#dbsearch-artist').val(artist);
-				$('#dbsearch-album').val(album);
-				$('#db-search-submit').click();
-			}
-			break;
+            // get track complete filename
+            $.getJSON('command/queue.php?cmd=get_playqueue_item_tag&songpos=' + UI.dbEntry[0] + '&tag=file', function(trackPath) {
+                if (trackPath != '') {
+                    trackPath = trackPath.slice(0, trackPath.lastIndexOf('/')); // just the path / cue
+                    // set the depth of the path for backwards navigation
+                    UI.dbPos[10] = trackPath.split('/').length;
+                    // read folder contents
+                    $.getJSON('command/music-library.php?cmd=lsinfo', { 'path': trackPath }, function(folderContents) {
+                        // switch to Folder view
+                        renderFolderView(folderContents, trackPath);
+                        currentView = 'playback,folder';
+                        $('#coverart-url').click();
+                    });
+               }
+            });
+            break;
         case 'playqueue_top':
             if (UI.mobile) {
         		itemPos = $('#playqueue ul li:nth-child(1)').position().top;
