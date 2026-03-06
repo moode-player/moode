@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+Updates
+- UPD: Replace predefined search filter "hdonly" with "hires" to match badge
+
 Bug fixes
 - FIX: Goto folder various issues
 
