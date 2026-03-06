@@ -177,7 +177,7 @@ var GLOBAL = {
     playQueueLength: 0,
 	initTime: 0,
     searchOperators: ['==', '!=', '=~', '!~'],
-    oneArgFilters: ['full_lib', 'hdonly', 'lossless', 'lossy'],
+    oneArgFilters: ['full_lib', 'hires', 'lossless', 'lossy'],
     twoArgFilters: ['album', 'albumartist', 'any', 'artist', 'composer', 'conductor', 'encoded', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
     allFilters: [],
     sbw: 0,
@@ -2261,7 +2261,7 @@ function renderRadioView(lazyLoad = true) {
                 var bitrate = parseInt(data[i].bitrate);
                 var bitrateAndFormat = data[i].format + ' ' + data[i].bitrate + 'K ';
                 var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
-                var radioViewHdDiv = (encodedAtOption == 1 && bitrate > RADIO_BITRATE_THRESHOLD) ? '<div class="lib-encoded-at-hdonly">' + RADIO_HD_BADGE_TEXT + '</div>' : '';
+                var radioViewHdDiv = (encodedAtOption == 1 && bitrate > RADIO_BITRATE_THRESHOLD) ? '<div class="lib-encoded-at-hires">' + RADIO_HD_BADGE_TEXT + '</div>' : '';
                 var radioViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + bitrateAndFormat + '</div>' : '';
                 var radioViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }

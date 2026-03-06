@@ -74,7 +74,7 @@ function genFlatList($sock) {
 			case 'full_lib':
 			// These filters are in genLibrary()
 			case 'encoded':
-			case 'hdonly':
+			case 'hires':
 			case 'year':
 				$cmd = "search base \"" . $dir . "\"";
 				break;
@@ -239,8 +239,8 @@ function genLibrary($flat) {
 			$push = ($trackYear >= $filterYear[0] && $trackYear <= $filterYear[1]) ? true : false;
 		}
 
-		// Filters: encoded, hdonly
-		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
+		// Filters: encoded, hires
+		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hires') {
 			$encodedAt = getEncodedAt($flatData, 'default', true); // bits/rate format,Flag,channels
 
 			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
@@ -322,7 +322,7 @@ function libcacheFile() {
 			break;
 		case 'folder':
 		case 'format':
-		case 'hdonly':
+		case 'hires':
 		case 'lossless':
 		case 'lossy':
 			$suffix = '_' . strtolower($_SESSION['library_flatlist_filter']) . '.json';
@@ -439,7 +439,7 @@ function genLibraryUTF8Rep($flat) {
 		}
 
 		// Encoded or HD only filter
-		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
+		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hires') {
 			$encodedAt = getEncodedAt($flatData, 'default', true); // bits/rate format,Flag,channels
 			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
 				if ($_SESSION['library_flatlist_filter_str'] == 'multichannel') {

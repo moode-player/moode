@@ -1023,7 +1023,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 	font-weight:normal;
 	transform:translate(0%, -195%);
 }
-.lib-encoded-at-hdonly {
+.lib-encoded-at-hires {
 	position:absolute;
 	float:right;
 	padding:.1em .2em 0 .3em;
@@ -1040,7 +1040,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 	font-weight:600;
 	transform:translate(0%, -195%);
 }
-.lib-encoded-at-hdonly-tagview {
+.lib-encoded-at-hires-tagview {
 	position:absolute;
 	padding:.05rem .2em 0 .3em;
 	line-height:1.2em;
