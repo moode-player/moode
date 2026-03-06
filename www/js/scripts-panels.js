@@ -700,12 +700,14 @@ jQuery(document).ready(function($) { 'use strict';
 			var line2 = $('#pq-' + (UI.dbEntry[0] + 1) + ' .pll2').html();
 			var station = line2.substr((line2.indexOf('</i>') + 4));
 			UI.dbEntry[5] = station.trim();
+			$('#context-menu-goto-folder').hide();
 		}
 		else {
 			// Song file
 			var title = $('#pq-' + (UI.dbEntry[0] + 1) + ' .pll1').html().trim();
             var artist = $('#pq-' + (UI.dbEntry[0] + 1) + ' .pll2').text();
 			UI.dbEntry[5] = title + ' - ' + artist;
+			$('#context-menu-goto-folder').show();
 		}
     });
 
