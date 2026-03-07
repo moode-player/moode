@@ -1074,7 +1074,9 @@
 		<div class="accordian"><span class="h5">Library</span>
 			<div class="kontrol">
 				<div class="control-group">
-					<label class="control-label" for="onetouch_album">One-touch album</label>
+					<!-- SECTION -->
+					<div class="horiz-rule-preferences">One-touch actions</div>
+					<label class="control-label" for="onetouch_album">Album</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1100,7 +1102,7 @@
 	                    	Specify an action to be performed when clicking a cover in Album view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch_radio">radio</label>
+					<label class="control-label" for="onetouch_radio">Radio</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1125,7 +1127,7 @@
 	                    	Specify an action to be performed when clicking a cover in Radio view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch-pl">playlist</label>
+					<label class="control-label" for="onetouch-pl">Playlist</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1151,8 +1153,8 @@
 	                    	Specify an action to be performed when clicking a playlist in Playlist view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch-ralbum">random album</label>
-	                <div class="controls control-xtra-bottom-margin">
+					<label class="control-label" for="onetouch-ralbum">Random album</label>
+	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="onetouch-ralbum" class="filter-option pull-left">
@@ -1182,7 +1184,8 @@
 								</span> in Playback view.
 	                    </span>
 	                </div>
-
+					<!-- SECTION -->
+					<div class="horiz-rule-preferences">Sorting and Filtering</div>
 					<label class="control-label" for="albumview-sort-order">Album view sort</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
@@ -1245,6 +1248,141 @@
 							 - The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the sort order.
 						</span>
 	                </div>
+					<label class="control-label" for="tag-view-artist">Artists filter</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tag-view-artist" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Reduced)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist+</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-tag-view-artist" class="help-block hide">
+							Specify how to populate the Artist column in Tag view.<br>
+							<b>Artist: </b>List artists, album artists, performers and conductors. Compilation albums listed for an artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the artist.<br>
+							<b>Artist (Reduced): </b>Same as above except exclude album artists<br>
+							<b>Artist (Strict): </b>List only artists (the artist tag). Compilation album handling is same as for Artist above.<br>
+							<b>Album Artist: </b>List album artists. Compilation albums are listed under the album artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
+							<b>Album Artist+: </b>Same as Album Artist above except compilation albums listed for an album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the album artist.
+						</span>
+	                </div>
+					<label class="control-label" for="recently-added">Recents filter</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="recently-added" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Week</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Month</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">3 Months</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">6 Months</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Year</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">No limit</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-recently-added" class="help-block hide">
+		                	Time period used to filter the Library for recently added albums. The default is 1 month.
+							Note that the "No limit" option provides a way to achieve a "date added" sort of the Library.
+	                    </span>
+	                </div>
+					<label class="control-label" for="ignore-articles">Articles filter</label>
+	                <div class="controls">
+	                    <input id="ignore-articles" class="input-large" type="text">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-ignore-articles" class="help-block hide">
+							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
+						</span>
+	                </div>
+					<label class="control-label" for="utf8-char-filter">UTF-8 filter</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="utf8-char-filter" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-utf8-char-filter" class="help-block hide">
+							Specify whether to replace non-UTF-8 characters which may be present in files with UTF-8 compliant characters.<br>
+							Note that this is only a best effort approach. It is not guaranteed to work, may result in an empty Library and may impact performance.
+ 	                    </span>
+ 	                </div>
+					<!-- SECTION -->
+					<div class="horiz-rule-preferences">Album and Track options</div>
+					<label class="control-label" for="library-album-key">Album key</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-album-key" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist (Default)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist@AlbumID</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath@AlbumID</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
+ 		                    Specify how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
+ 	                    </span>
+ 	                </div>
+					<label class="control-label" for="track-play">Track play</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="track-play" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="track-play-sel"><span class="text">Track</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="track-play-sel"><span class="text">Track+</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-track-play" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-track-play" class="help-block hide">
+							For the track list in Tag/Album views this option controls whether the Play and Clear/Play actions add only the selected track to the Queue or the selected track and all following tracks.<br>
+	                    	<b>Track: </b>Play selected track only.<br>
+							<b>Track+: </b>Play selected track and all following tracks.
+	                    </span>
+					</div>
+					<!-- SECTION -->
+					<div class="horiz-rule-preferences">Display and Layout options</div>
 					<label class="control-label" for="show-genres-column">Show genres</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-large">
@@ -1287,132 +1425,31 @@
 							Specify how to populate the Genre column in Tag view.
 						</span>
 	                </div>
-					<label class="control-label" for="tag-view-artist">Artist column</label>
-	                <div class="controls control-xtra-bottom-margin">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="tag-view-artist" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Reduced)</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist (Strict)</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist+</span></a></li>
-								</ul>
-							</div>
- 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-						<span id="info-tag-view-artist" class="help-block hide">
-							Specify how to populate the Artist column in Tag view.<br>
-							<b>Artist: </b>List artists, album artists, performers and conductors. Compilation albums listed for an artist will show only the tracks belonging to the artist. Clicking the album will toggle between showing all the album's tracks and just those for the artist.<br>
-							<b>Artist (Reduced): </b>Same as above except exclude album artists<br>
-							<b>Artist (Strict): </b>List only artists (the artist tag). Compilation album handling is same as for Artist above.<br>
-							<b>Album Artist: </b>List album artists. Compilation albums are listed under the album artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
-							<b>Album Artist+: </b>Same as Album Artist above except compilation albums listed for an album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the album artist.
-						</span>
-	                </div>
-					<label class="control-label" for="track-play">Track play</label>
-	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="track-play" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="track-play-sel"><span class="text">Track</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="track-play-sel"><span class="text">Track+</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-track-play" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-						<span id="info-track-play" class="help-block hide">
-							For the track list in Tag/Album views this option controls whether the Play and Clear/Play actions add only the selected track to the Queue or the selected track and all following tracks.<br>
-	                    	<b>Track: </b>Play selected track only.<br>
-							<b>Track+: </b>Play selected track and all following tracks.
-	                    </span>
-					</div>
-					<label class="control-label" for="recently-added">Recently added</label>
-	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="recently-added" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Week</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Month</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">3 Months</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">6 Months</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Year</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">No limit</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-						<span id="info-recently-added" class="help-block hide">
-		                	Time period used to filter the Library for recently added albums. The default is 1 month.
-							Note that the "No limit" option provides a way to achieve a "date added" sort of the Library.
-	                    </span>
-	                </div>
-					<label class="control-label" for="show-encoded-at">Sample rate</label>
-	                <div class="controls">
-					<div class="btn-group bootstrap-select select-large">
-						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="show-encoded-at" class="filter-option pull-left">
-								<span></span>
-							</div>&nbsp;
-							<div class="caret"></div>
-						</button>
-						<div class="dropdown-menu open">
-							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No (searchable)</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Text</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Badge</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">HD only</span></a></li>
-							</ul>
-						</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-						<span id="info-show-encoded-at" class="help-block hide">
-                    		The bit depth and sample rate can be displayed in one of several formats on or below the cover art.
-							The "HD only" option displays an HD badge when the bit depth for song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for radio stations the bit rate is &gt; 128 kbps.
-	                    </span>
-	                </div>
-					<label class="control-label" for="ellipsis-limited-text">Ellipsis text</label>
+					<label class="control-label" for="library-inc-comment-tag">Show comment</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="ellipsis-limited-text" class="filter-option pull-left">
+								<div id="library-inc-comment-tag" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
- 						<span id="info-ellipsis-limited-text" class="help-block hide">
- 		                    Display ellipsis limited text underneath the cover art in Album view for a more compact look.
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-library-inc-comment-tag" class="help-block hide">
+							The Comment tag is displayed in Tag/Album views after the Year in the album title and as
+							part of the album heading in the track list. See Quick help for more information on how
+							the Comment tag can be used.
  	                    </span>
  	                </div>
 					<label class="control-label" for="thumbnail-columns">Column layout</label>
-	                <div class="controls control-xtra-bottom-margin">
+	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 							<div id="thumbnail-columns" class="filter-option pull-left">
@@ -1438,80 +1475,50 @@
 		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for desktop and the second is for mobile.
 	                    </span>
 	                </div>
-					<label class="control-label" for="library-album-key">Album key</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-album-key" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist (Default)</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist@AlbumID</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath@AlbumID</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
- 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
- 		                    Specify how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
- 	                    </span>
- 	                </div>
-					<label class="control-label" for="library-inc-comment-tag">Comment tag</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-large">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-inc-comment-tag" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
- 						<span id="info-library-inc-comment-tag" class="help-block hide">
-							The comment text is displayed in Tag/Album views after the year in the album title
-							or as an album heading in the track list if "Album key" is set to include @AlbumID.<br>
-							The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the Album year sort order for Tag and Album views.
- 	                    </span>
- 	                </div>
-					<label class="control-label" for="ignore-articles">Ignore articles</label>
+					<label class="control-label" for="show-encoded-at">Sample rate badge</label>
 	                <div class="controls">
-	                    <input id="ignore-articles" class="input-large" type="text">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-						<span id="info-ignore-articles" class="help-block hide">
-							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
-						</span>
+					<div class="btn-group bootstrap-select select-large">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="show-encoded-at" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No (searchable)</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Text</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Badge</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">HiRes only</span></a></li>
+							</ul>
+						</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-show-encoded-at" class="help-block hide">
+                    		The bit depth and sample rate can be displayed in one of several formats on or below the cover art.
+							The "HiRes only" option displays a HiRes badge when the bit depth for song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for radio stations the bit rate is &gt; 128 kbps.
+	                    </span>
 	                </div>
-					<label class="control-label" for="utf8-char-filter">UTF-8 filter</label>
+					<label class="control-label" for="ellipsis-limited-text">Ellipsis text</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="utf8-char-filter" class="filter-option pull-left">
+								<div id="ellipsis-limited-text" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
- 						<span id="info-utf8-char-filter" class="help-block hide">
-							Specify whether to replace non-UTF-8 characters which may be present in files with UTF-8 compliant characters.<br>
-							Note that this is only a best effort approach. It is not guaranteed to work, may result in an empty Library and may impact performance.
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-ellipsis-limited-text" class="help-block hide">
+ 		                    Display ellipsis limited text underneath the cover art in Album view for a more compact look.
  	                    </span>
  	                </div>
 				</div>
