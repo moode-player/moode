@@ -16,9 +16,9 @@
 ################################################################################
 
 Updates
-- UPD: Replace predefined search filter "hdonly" with "hires" to match badge
 - UPD: Improve layout of the Library section of Preferences
 - UPD: Improve Quick help explanation of the custom AlbumDate tag
+- UPD: Replace predefined search filter "hdonly" with "hires" to match badge
 
 Bug fixes
 - FIX: Goto folder various issues
