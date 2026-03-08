@@ -438,7 +438,7 @@ function genLibraryUTF8Rep($flat) {
 			$push = ($trackYear >= $filterYear[0] && $trackYear <= $filterYear[1]) ? true : false;
 		}
 
-		// Encoded or HD only filter
+		// Encoded or HiRes only filter
 		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hires') {
 			$encodedAt = getEncodedAt($flatData, 'default', true); // bits/rate format,Flag,channels
 			if ($_SESSION['library_flatlist_filter'] == 'encoded') {

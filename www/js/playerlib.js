@@ -69,10 +69,10 @@ const ONE_SEC_TIMEOUT   = 1000;
 const TWO_SEC_TIMEOUT   = 2000;
 
 // Album and Radio HD parameters
-const ALBUM_HD_BADGE_TEXT           = 'HiRes';
+const ALBUM_HIRES_BADGE_TEXT        = 'HiRes';
 const ALBUM_BIT_DEPTH_THRESHOLD     = 16;
 const ALBUM_SAMPLE_RATE_THRESHOLD   = 44100;
-const RADIO_HD_BADGE_TEXT           = 'HiRes';
+const RADIO_HIRES_BADGE_TEXT        = 'HiRes';
 const RADIO_BITRATE_THRESHOLD       = 128;
 
 // For legacy Radio Manager station export
@@ -1275,15 +1275,15 @@ function renderUI() {
             // Playback
 			$('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentsong').css('margin-top', '');
-            $('#currentartist').html('<span class="playback-hd-badge"></span>' + MPD.json['album']);
+            $('#currentartist').html('<span class="playback-hires-badge"></span>' + MPD.json['album']);
             // Playbar
-            $('#playbar-currentalbum').html('<span id="playbar-hd-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
+            $('#playbar-currentalbum').html('<span id="playbar-hires-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
                 RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
             $('#playbar-currentsong').html(MPD.json['title']);
             // CoverView
             $('#ss-currentsong').text(MPD.json['title']);
             $('#ss-currentartist').text('');
-            $('#ss-currentalbum').html('<span id="ss-hd-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
+            $('#ss-currentalbum').html('<span id="ss-hires-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
                 RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
         } else {
             // For albums
@@ -1294,7 +1294,7 @@ function renderUI() {
             $('#currentalbum').html('');
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentartist').html(
-                '<span class="playback-hd-badge"></span>' + MPD.json['album'] +
+                '<span class="playback-hires-badge"></span>' + MPD.json['album'] +
                 (MPD.json['file'] == null ? '' : ' - ') +
                 (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'])
             );
@@ -1304,7 +1304,7 @@ function renderUI() {
             // Playbar
             $('#playbar-currentsong').html(MPD.json['title']);
             $('#playbar-currentalbum').html(
-                '<span id="playbar-hd-badge"></span>' +
+                '<span id="playbar-hires-badge"></span>' +
                 MPD.json['album'] + dash + artist
             );
             // CoverView
@@ -1312,22 +1312,22 @@ function renderUI() {
                 // Default mode
                 $('#ss-currentsong').html(MPD.json['title']);
                 $('#ss-currentalbum').html(
-                    '<span id="ss-hd-badge"></span>' +
+                    '<span id="ss-hires-badge"></span>' +
                     MPD.json['album'] + dash + artist
                 );
             } else {
                 // Wide mode
                 $('#ss-currentsong').html(MPD.json['title']);
                 $('#ss-currentartist').html(artist);
-                $('#ss-currentalbum').html('<span id="ss-hd-badge"></span>' + MPD.json['album']);
+                $('#ss-currentalbum').html('<span id="ss-hires-badge"></span>' + MPD.json['album']);
             }
         }
 
         // Set HD badge text
         if (MPD.json['artist'] == 'Radio station') {
-            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(RADIO_HD_BADGE_TEXT);
+            $('.playback-hires-badge, #playbar-hires-badge, #ss-hires-badge').text(RADIO_HIRES_BADGE_TEXT);
         } else {
-            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(albumHDBadge(MPD.json['audio_format']));
+            $('.playback-hires-badge, #playbar-hires-badge, #ss-hires-badge').text(albumHiResBadge(MPD.json['audio_format']));
         }
         // Show/hide HD badge
         if (MPD.json['hidef'] == 'yes' &&
@@ -1335,21 +1335,21 @@ function renderUI() {
             SESSION.json['library_encoded_at'] != '9') {
             // Playback
             if (MPD.json['artist'] == 'Radio station') {
-                $('#currentartist-div span.playback-hd-badge').show();
+                $('#currentartist-div span.playback-hires-badge').show();
             } else {
-                $('#currentalbum-div span.playback-hd-badge').hide();
-                $('#currentartist-div span.playback-hd-badge').show();
+                $('#currentalbum-div span.playback-hires-badge').hide();
+                $('#currentartist-div span.playback-hires-badge').show();
             }
             // Playbar
-            $('#playbar-hd-badge').show();
+            $('#playbar-hires-badge').show();
             // CoverView
             if (SESSION.json['scnsaver_xmeta'] == 'Yes') {
-                $('#ss-hd-badge').show();
+                $('#ss-hires-badge').show();
             } else {
-                $('#ss-hd-badge').hide();
+                $('#ss-hires-badge').hide();
             }
         } else {
-            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+            $('.playback-hires-badge, #playbar-hires-badge, #ss-hires-badge').hide();
         }
 
         // Store songid for last track (toggle song)
@@ -1779,12 +1779,12 @@ function renderPlayqueue(state) {
 						var name = typeof(data[i].Name) === 'undefined' ? 'Radio station' : data[i].Name;
 						output += name;
 						if (i == parseInt(MPD.json['song'])) { // active
-							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(name + '<span id="playbar-hd-badge"></span>');
+							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(name + '<span id="playbar-hires-badge"></span>');
 						}
 					} else {
 						output += RADIO.json[data[i].file]['name'];
 						if (i == parseInt(MPD.json['song'])) { // active
-							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hd-badge"></span>');
+							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hires-badge"></span>');
 						}
 					}
 					output += '</span>';
@@ -1846,7 +1846,7 @@ function renderPlayqueue(state) {
             }
         } else {
             // Queue is empty
-            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+            $('.playback-hires-badge, #playbar-hires-badge, #ss-hires-badge').hide();
         }
 
         // Reset
@@ -2231,7 +2231,7 @@ function renderRadioView(lazyLoad = true) {
 
         // Encoded-at div's
         // SESSION.json['library_encoded_at']
-        // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
+        // 0 = No (searchable), 1 = HiRes only, 2 = Text, 3 = Badge, 9 = No
         var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
         var radioViewNvDiv = '';
         var radioViewHdDiv = '';
@@ -2261,9 +2261,9 @@ function renderRadioView(lazyLoad = true) {
                 var bitrate = parseInt(data[i].bitrate);
                 var bitrateAndFormat = data[i].format + ' ' + data[i].bitrate + 'K ';
                 var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
-                var radioViewHdDiv = (encodedAtOption == 1 && bitrate > RADIO_BITRATE_THRESHOLD) ? '<div class="lib-encoded-at-hires">' + RADIO_HD_BADGE_TEXT + '</div>' : '';
+                var radioViewHdDiv = (encodedAtOption == 1 && bitrate > RADIO_BITRATE_THRESHOLD) ? '<div class="lib-encoded-at-hires-badge">' + RADIO_HIRES_BADGE_TEXT + '</div>' : '';
                 var radioViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + bitrateAndFormat + '</div>' : '';
-                var radioViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
+                var radioViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-rate-badge">' + bitrateAndFormat + '</div>' : '';
             }
 
             // Monitor div
@@ -5224,9 +5224,9 @@ function autoClick(selector) {
 }
 
 // Return HD badge text for Library and Playback views
-function albumHDBadge(format) {
+function albumHiResBadge(format) {
     format = typeof(format) == 'undefined' ? '???' : format;
-    return format.slice(0, 3) == 'DSD' ? format : ALBUM_HD_BADGE_TEXT;
+    return format.slice(0, 3) == 'DSD' ? format : ALBUM_HIRES_BADGE_TEXT;
 }
 
 // Base folder names
@@ -5282,10 +5282,10 @@ function getKeyOrValue (type, item) {
         ['1 Week','604800000'],['1 Month','2592000000'],['3 Months','7776000000'],['6 Months','15552000000'],['1 Year','31536000000'],['No limit','3153600000000'],
         // Library cover search priority
         ['Embedded','Embedded cover'],['Cover file','Cover image file'],
+		// Library sample rate display options
+        ['No (searchable)',0],['HiRes only',1],['Text',2],['Badge',3],['No',9],
         // Font size factors
         ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65],['X-Large',.75],
-        // Sample rate display options
-        ['No (searchable)',0],['HD only',1],['Text',2],['Badge',3],['No',9],
         // Radioview station types
         ['Regular','r'],['Favorite','f'],['Hidden','h'],
         // Thumbnail resolutions

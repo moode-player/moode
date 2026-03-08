@@ -221,10 +221,10 @@ const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
 
 // Album and Radio HD badge parameters
 // NOTE: Mirrored in playerlib.js
-const ALBUM_HD_BADGE_TEXT 			= 'HD';
+const ALBUM_HIRES_BADGE_TEXT 			= 'HD';
 const ALBUM_BIT_DEPTH_THRESHOLD 	= 16;
 const ALBUM_SAMPLE_RATE_THRESHOLD 	= 44100;
-const RADIO_HD_BADGE_TEXT 			= 'HiRes';
+const RADIO_HIRES_BADGE_TEXT 			= 'HiRes';
 const RADIO_BITRATE_THRESHOLD 		= 128;
 
 // MPD output names

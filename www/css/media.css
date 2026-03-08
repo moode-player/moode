@@ -132,7 +132,7 @@ body {
 	#panel-footer, #playbar {height:10rem;}
 	#playbar-cover {height:9rem;width:9rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
 	#playbar-controls .prev {display:none;}
-	#playbar-hd-badge {display:none!important;}
+	#playbar-hires-badge {display:none!important;}
 	#playbar-currentalbum {display:block;} /* So ellipsis works */
 	.mpd-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}

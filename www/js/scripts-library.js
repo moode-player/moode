@@ -615,15 +615,15 @@ var renderAlbums = function() {
 
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable)
-    // 1 = HD only
+    // 1 = HiRes only
     // 2 = Text
     // 3 = Badge
     // 9 = No
     var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
-    var tagViewHdDiv = '';
+    var tagViewHrDiv = '';
     var tagViewNvDiv = '';
     var albumViewNvDiv = '';
-    var albumViewHdDiv = '';
+    var albumViewHrDiv = '';
     var albumViewTxDiv = '';
     var albumViewBgDiv = '';
 
@@ -642,23 +642,23 @@ var renderAlbums = function() {
         if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
             var encodedAt = filteredAlbums[i].encoded_at.split(',');
-            var tagViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
-                '<div class="lib-encoded-at-hires-tagview">' + albumHDBadge(encodedAt[0].split(' ')[0]) + '</div>' : '';
+            var tagViewHrDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
+                '<div class="lib-encoded-at-hires-badge-tagview">' + albumHiResBadge(encodedAt[0].split(' ')[0]) + '</div>' : '';
             var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
             // Album view
             var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
             var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
-            var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
-                '<div class="lib-encoded-at-hires">' + albumHDBadge(encodedAt[0].split(' ')[0]) + '</div>' : '';
+            var albumViewHrDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ?
+                '<div class="lib-encoded-at-hires-badge">' + albumHiResBadge(encodedAt[0].split(' ')[0]) + '</div>' : '';
             var albumViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + encodedAt[0] + '</div>' : '';
-            var albumViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + encodedAt[0] + '</div>' : '';
+            var albumViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-rate-badge">' + encodedAt[0] + '</div>' : '';
         }
 
         // NOTE: To handle no filter results we want artist to be '' for display
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
                 + tagViewLazy + filteredAlbums[i].imgurl + '">'
-                + tagViewHdDiv
+                + tagViewHrDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
                 + '<span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span>' // @Atair: Should be album_artist
                 + '<span class="album-year">' + tagViewYear + '</span><span class="album-comment">' + tagViewComment + '</span></div>'
@@ -674,7 +674,7 @@ var renderAlbums = function() {
 		output2 += '<li class="lib-entry">'
             + albumViewLazy + filteredAlbumCovers[i].imgurl + '"></div>'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-album"></div>'
-			+ albumViewHdDiv
+			+ albumViewHrDiv
 			+ albumViewBgDiv
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
             + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].album_artist + '</span><span class="album-year">' + albumViewYear + '</span><span class="album-comment">' + albumViewComment + '</span></div>'
@@ -882,7 +882,7 @@ var renderSongs = function(albumPos) {
 		}
         if (filteredSongs[0].album == 'Nothing found') {
             $('#albumsList .lib-entry, #artistsList .lib-entry').removeClass('active');
-            $('.lib-encoded-at-hires, lib-encoded-at-hires-tagview, .lib-encoded-at-text, .lib-encoded-at-badge').text('');
+            $('.lib-encoded-at-hires-badge, lib-encoded-at-hires-badge-tagview, .lib-encoded-at-text, .lib-encoded-at-rate-badge').text('');
             $('.tag-cover-text').css('transform', 'translateY(0.5em)');
             $('#songsList, #lib-collection-stats').html('');
             $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
@@ -918,7 +918,7 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 'Music Collection' + libFilter + '</button>');
         }
-		
+
 		if (LIB.filters.artists.length == 0) {
 			var artistStr = formatNumCommas(filteredArtists.length) + ' Artists ';
 		} else if (LIB.filters.artists.length == 1) {
