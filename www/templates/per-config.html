@@ -13,7 +13,7 @@
 			<legend>Attached Displays</legend>
 
 			<p class="sub-legend">
-				Show either the moOde WebUI or PeppyMeter on an attached display.
+				Show the moOde WebUI or PeppyMeter on an attached display.
 				Both HDMI and DSI attached displays are supported.
 				There are settings in common between these two types of displays in the General settings section.
 				Specific settings for each type are in their respective sections.
@@ -28,23 +28,27 @@
 						<label class="toggle-radio toggle-local-display" for="toggle-local-display-2">ON </label>$_select[local_display_on]
 						<label class="toggle-radio toggle-local-display" for="toggle-local-display-1">OFF</label>$_select[local_display_off]
 					</div>
-	                <button id="btn-set-local-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display" value="novalue" $_webui_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<button id="btn-set-local-display" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display" value="novalue" $_webui_on_off_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					$_screen_res_local_display
 					<span id="info-local-display" class="config-help-info">
 						Show the moOde WebUI on a locally attached display.
-	                </span>
-	            </div>
+					</span>
+				</div>
 
 				<label class="control-label" for="local-display-url">Target URL</label>
 				<div class="controls">
-					<input class="config-input-large" type="text" id="local-display-url" name="local_display_url" value="$_select[local_display_url]">
+					<input id="local-display-url" class="config-input-large" type="text" pattern="^((?!:\d+).)*$" name="local_display_url" value="$_select[local_display_url]">
 					<button id="btn-set-local-display-url" class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_local_display_url" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-local-display-url" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-local-display-url" class="config-help-info">
-						Enter the the target URL in the format "http://HOST_NAME_OR_IP_ADDRESS/".<br>
-						Default is "http://localhost/"
-	                </span>
+						This setting can be used to support a dual-display configuration where one display shows PeppyMeter
+						and the other display shows the WebUI/CoverView. It requires two moOde players.<br>
+						1. THIS_MOODE: which has a locally attached display showing PeppyMeter.<br>
+						2. OTHER_MOODE: which is connected to a large display.<br>
+						In this case OTHER_MOODE sets "Target URL" to "http://THIS_MOODE/" to show that player's WebUI/CoverView.<br>
+						If you want this player to show its own WebUI set "Target URL" to the default $_default_webui_display_url
+					</span>
 				</div>
 
 				<div class="controls">
@@ -66,7 +70,7 @@
 						<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-2">ON </label>$_select[disable_gpu_chromium_on]
 						<label class="toggle-radio toggle-disable-gpu-chromium" for="toggle-disable-gpu-chromium-1">OFF</label>$_select[disable_gpu_chromium_off]
 					</div>
-	                <button id="btn-set-disable-gpu-chromium" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_disable_gpu_chromium" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<button id="btn-set-disable-gpu-chromium" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_disable_gpu_chromium" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-gpu-chromium" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-disable-gpu-chromium" class="config-help-info">
 						Disable the GPU for Chromium if the WebUI knob sliders on Pi-2 or Pi-3 are missing or there are any other display artifacts.
@@ -103,7 +107,7 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-display-type" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-peppy-display-type" class="config-help-info">
 						Choose between VU Meter and Spectrum displays.
-	                </span>
+					</span>
 				</div>
 
 				<div class="controls">
@@ -155,7 +159,7 @@
 						When the WebUI is displayed and MPD playback starts playback this timeout determines
 						when the display will be switched to Peppy meter if no touch occurs.<br>
 						<b>Note:</b> Requires PeppyALSA ON.
-	                </span>
+					</span>
 				</div>
 			</div>
 
@@ -205,7 +209,7 @@
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-2">ON </label>$_select[on_screen_kbd_on]
 					<label class="toggle-radio toggle-on-screen-kbd" for="toggle-on-screen-kbd-1">OFF</label>$_select[on_screen_kbd_off]
 				</div>
-                <button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button id="btn-set-on-screen-kbd" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_on_screen_kbd" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-on-screen-kbd" class="config-help-info">
 					On-screen popup keyboard by @Nutul.
@@ -316,7 +320,7 @@
 				</span>
 				<span id="info-usb-volknob" class="config-help-info">
 					Refer to /etc/triggerhappy/triggers.d/media.conf for key/event mappings.
-                </span>
+				</span>
 			</div>
 
 			<label class="control-label">Rotary encoder</label>
@@ -329,7 +333,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rotaryenc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-rotaryenc" class="config-help-info">
 					Enable a rotary encoder device to control MPD volume.
-                </span>
+				</span>
 			</div>
 
 			<label class="control-label" for="rotenc-params">Encoder settings</label>
@@ -343,7 +347,7 @@
 					- <b>Speed factor:</b> Threshold (diff betw last/current enc pos) to determine whether to use 1 step or volume_step steps. Default = 2.<br>
 					- <b>Volume_step:</b> Number of steps to use when knob turns at fast rate. Default = 3.<br>
 					- <b>Pin_A Pin_B:</b> Broadcom SoC pin numbers. Default = 23 24.
-                </span>
+				</span>
 			</div>
 		</div>
 
@@ -361,7 +365,7 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-gpio-svc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-gpio-svc" class="config-help-info">
 						Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.
-                    </span>
+					</span>
 				</div>
 
 				<div class="controls">
@@ -383,7 +387,7 @@
 					When changes are detected it runs a Python script named lcd-updater.py located
 					in the /var/local/www/commandw/ directory.<br>
 					<b>NOTE:</b> The Metadata file is automatically turned on when LCD updater is turned on.
-                </span>
+				</span>
 			</div>
 		</div>
 	</form>

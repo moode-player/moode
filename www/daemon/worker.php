@@ -1373,6 +1373,10 @@ if (!isset($_SESSION['scn_cursor'])) {
 $param = $_SESSION['scn_cursor'] == '0' ? ' -- -nocursor' : '';
 sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' . $param . '" /lib/systemd/system/localdisplay.service');
 // - Host address
+if (0 === preg_match('/^((?!:\d+).)*$/', $_SESSION['local_display_url'])) {
+	phpSession('write', 'local_display_url', DEFAULT_WEBUI_DISPLAY_URL);
+	workerLog('worker: WARNING:          Invalid Target URL: Reset to default');
+}
 sysCmd("sed -i 's|--app.*|--app=\"" . $_SESSION['local_display_url'] . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
 // - Screen blank interval
 if (!isset($_SESSION['scn_blank'])) {
