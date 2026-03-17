@@ -26,6 +26,7 @@ Updates
 
 Bug fixes
 - FIX: Goto folder various issues
+- FIX: Dropdown menu hover corner radius for first and last item
 
 ################################################################################
 #
