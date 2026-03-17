@@ -701,7 +701,7 @@ function setMpdIgnore($ignore, $fileType) {
 
 // Create enhanced MPD metadata
 function enhanceMetadata($current, $sock, $caller = '') {
-    // NOTE: $current is output from getMpdStatus() in engine-mpd.php
+	// NOTE: $current is output from getMpdStatus() in engine-mpd.php
 	$song = getCurrentSong($sock);
 	$current['file'] = $song['file'];
 	$current['thumb_hash'] = '';
@@ -709,7 +709,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	// NOTE: Any of these might be empty ''
 	$current['genre'] = $song['Genre'];
 	$current['track'] = $song['Track'];
-    $current['date'] = getTrackYear($song);
+	$current['date'] = getTrackYear($song);
 	$current['composer'] = $song['Composer'];
 	$current['conductor'] = $song['Conductor'];
 	$current['performer'] = $song['Performer'];
@@ -734,7 +734,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		if ($current['file'] != $_SESSION['currentfile']) {
 			// When switching stations reset title so logo displays
 			if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
-				$song['Title'] = 'Radio station';
+				$song['Title'] = DEFAULT_RADIO_TITLE;
 			}
 			// Only do getEncodedAt() once for a given file
 			$current['encoded'] = getEncodedAt($song, 'default'); // Encoded bit depth and sample rate
@@ -763,22 +763,26 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['artist'] = 'Radio station';
 			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
-			if (!isset($song['Title']) ||
-                trim($song['Title']) == '-' || // NTS can return just a dash in its Title tag
-                substr($song['Title'], 0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
-                trim($song['Title']) == '') {
-				$current['title'] = DEFAULT_RADIO_TITLE;
+			if ($current['state'] == 'stop') {
+				$song['Title'] = DEFAULT_RADIO_TITLE;
 			} else {
-				// Use custom name for certain stations if needed
-				$current['title'] = str_contains(strtolower($song['Title']), 'advert') ? 'Radio station' : $song['Title'];
-				//$current['title'] = $song['Title'];
+				if (!isset($song['Title']) ||
+					trim($song['Title']) == '-' || // NTS can return just a dash in its Title tag
+					substr($song['Title'], 0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
+					trim($song['Title']) == '') {
+					$current['title'] = DEFAULT_RADIO_TITLE;
+				} else {
+					// Use custom name for certain stations if needed
+					$current['title'] = str_contains(strtolower($song['Title']), 'advert') ? 'Radio station' : $song['Title'];
+					//$current['title'] = $song['Title'];
+				}
 			}
 
 			if (isset($_SESSION[$song['file']])) {
 				// Use transmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ?
-                    (isset($song['Name']) ? $song['Name'] : $_SESSION[$song['file']]['name']) :
-                    $_SESSION[$song['file']]['name'];
+					(isset($song['Name']) ? $song['Name'] : $_SESSION[$song['file']]['name']) :
+					$_SESSION[$song['file']]['name'];
 				// Include original station name
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
 					// Local logo image
@@ -799,16 +803,16 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					}
 				}
 				// Bitrate
-                if ($_SESSION[$song['file']]['bitrate'] == '') {
-                    $current['bitrate'] == '';
-                } else {
-                    $current['bitrate'] = $_SESSION[$song['file']]['bitrate'] . ' kbps';
-                }
+				if ($_SESSION[$song['file']]['bitrate'] == '') {
+					$current['bitrate'] == '';
+				} else {
+					$current['bitrate'] = $_SESSION[$song['file']]['bitrate'] . ' kbps';
+				}
 			} else {
 				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 				$current['coverurl'] = DEFAULT_RADIO_COVER;
-                $current['bitrate'] = '';
+				$current['bitrate'] = '';
 			}
 
 		} else {
@@ -845,18 +849,18 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		// Determine badging
 		// NOTE: This is modeled after the code in getEncodedAt()
 		if (!(substr($song['file'], 0, 4) == 'http' && !isset($current['duration']))) { // Not a radio station
-            if (substr($song['file'], 0, 4) == 'http') { // UPnP file
-                // [0] bits, [1] rate, [2] channels [3] ext, [4] duration
-                $result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . $song['file'] . '"');
-                $format[0] = $result[1]; // rate
-                $format[1] = $result[0]; // bits
-                $format[2] = $result[2]; // channels
-            } else { // Song file
-                sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
+			if (substr($song['file'], 0, 4) == 'http') { // UPnP file
+				// [0] bits, [1] rate, [2] channels [3] ext, [4] duration
+				$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . $song['file'] . '"');
+				$format[0] = $result[1]; // rate
+				$format[1] = $result[0]; // bits
+				$format[2] = $result[2]; // channels
+			} else { // Song file
+				sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
     			$songData = parseDelimFile(readMpdResp($sock), ': ');
-                // [0] rate, [1] bits, [2] channels
-    			$format = explode(':', $songData['Format']);
-            }
+				// [0] rate, [1] bits, [2] channels
+				$format = explode(':', $songData['Format']);
+			}
 
 			if ($ext == 'mp3' || ($format[1] == 'f' && $format[2] <= 2)) {
 				// Lossy
@@ -864,7 +868,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			} else if ($ext == 'dsf' || $ext == 'dff') {
 				// DSD
 				$current['hidef'] = 'yes';
-            } else if ($ext == 'wv') {
+			} else if ($ext == 'wv') {
 				// WavPack DSD
 				$current['hidef'] = 'yes';
 			} else {
@@ -874,8 +878,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			}
 		}
 
-        // ALSA output format (or 'Not playing')
-        $current['output'] = getALSAOutputFormat($current['state'], $current['audio_sample_rate']);
+		// ALSA output format (or 'Not playing')
+		$current['output'] = getALSAOutputFormat($current['state'], $current['audio_sample_rate']);
 	}
 
 	return $current;
