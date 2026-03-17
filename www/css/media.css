@@ -623,8 +623,10 @@ body {
 */
 @media (max-height:549px) and (width:1919px),
 	(max-height:719px) and (width:1919px),
+	(max-height:719px) and (width:1559px),
 	(max-height:599px) and (width:1599px),
-	(max-height:719px) and (width:1559px) {
+	(max-height:359px) and (width:959px) {
+
 	/* Hide the volume knob */
 	#volzone {display:none;}
 
