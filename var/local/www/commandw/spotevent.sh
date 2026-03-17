@@ -6,7 +6,7 @@
 
 LOGFILE="/var/log/moode_spotevent.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
-SPOTMETA_FILE="/var/local/www/spotmeta.txt"
+SPOTMETA_CACHE_FILE="/var/local/www/spotmeta.json"
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
@@ -54,7 +54,7 @@ MULTIROOM_TX=${arr[9]}
 RX_ADDRESSES=$(sudo moodeutl -d -gv rx_addresses)
 # cfg_spotify
 BITRATE=$(sqlite3 $SQLDB "SELECT value FROM cfg_spotify WHERE param='bitrate'")"K"
-FORMAT="Vorbis "$BITRATE
+CFG_SPOTIFY_FORMAT="Vorbis "$BITRATE
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -118,9 +118,9 @@ if [[ $PLAYER_EVENT == "session_disconnected" ]]; then
 fi
 
 if [[ $PLAYER_EVENT == "track_changed" ]]; then
-	#ARTISTS=$(echo -e -n "$ARTISTS" | tr "\n" ";")
-	#COVERS=$(echo -e -n "$COVERS" | tr "\n" ";")
-	METADATA="${NAME}~~~${ARTISTS}~~~${ALBUM}~~~${DURATION_MS}~~~${COVERS}~~~${FORMAT}"
-	echo -e "$METADATA" > $SPOTMETA_FILE
-	/var/www/util/send-fecmd.php "update_spotmeta,$METADATA"
+	ARTISTS=$(echo -e -n "$ARTISTS" | tr "\n" ";")
+	COVERS=$(echo -e -n "$COVERS" | tr "\n" ";")
+	METADATA_JSON="{\"fecmd\": \"update_spotmeta\", \"title\": \"${NAME}\", \"artist\": \"${ARTISTS}\", \"album\": \"${ALBUM}\", \"duration\": \"${DURATION_MS}\", \"cover_url\": \"${COVERS}\", \"sformat\": \"${CFG_SPOTIFY_FORMAT}\"}"
+	echo -e "$METADATA_JSON" > $SPOTMETA_CACHE_FILE
+	/var/www/util/send-fecmd.php "$METADATA_JSON"
 fi

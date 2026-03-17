@@ -7,7 +7,7 @@
 LOGFILE="/var/log/moode_deezevent.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
 
-DEEZMETA_FILE="/var/local/www/deezmeta.txt"
+DEEZMETA_CACHE_FILE="/var/local/www/deezmeta.json"
 DEEZ_BASE_COVERURL_MUSIC="https://e-cdns-images.dzcdn.net/images/cover"
 DEEZ_BASE_COVERURL_TALK="https://cdn-images.dzcdn.net/images/talk"
 DEEZ_TRACK_TYPE_EPISODE="episode"
@@ -125,7 +125,7 @@ if [[ $EVENT == "track_changed" ]]; then
 	else
 		DEEZ_COVERURL=$DEEZ_BASE_COVERURL_MUSIC
 	fi
-	METADATA="${TITLE}~~~${ARTIST}~~~${ALBUM_TITLE}~~~${DURATION}~~~${DEEZ_COVERURL}/${COVER_ID}/500x500.jpg~~~${FORMAT}~~~${DECODER}"
-	echo -e "$METADATA" > $DEEZMETA_FILE
-	/var/www/util/send-fecmd.php "update_deezmeta,$METADATA"
+	METADATA="{\"fecmd\": \"update_deezmeta\", \"title\": \"${TITLE}\", \"artist\": \"${ARTIST}\", \"album\": \"${ALBUM_TITLE}\", \"duration\": \"${DURATION_MS}\", \"cover_url\": \"${DEEZ_COVERURL}/${COVER_ID}/500x500.jpg\", \"sformat\": \"${FORMAT}\", \"oformat\": \"${DECODER}\"}"
+	echo -e "$METADATA_JSON" > $DEEZMETA_CACHE_FILE
+	/var/www/util/send-fecmd.php "$METADATA_JSON"
 fi

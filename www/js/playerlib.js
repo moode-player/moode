@@ -518,8 +518,6 @@ function engineMpdLite() {
 
 // Command engine
 function engineCmd() {
-	var cmd;
-
     $.ajax({
 		type: 'GET',
 		url: 'engine-cmd.php',
@@ -527,8 +525,21 @@ function engineCmd() {
 		cache: false,
 		success: function(data) {
 			//console.log('engineCmd: success branch: data=(' + data + ')');
-			cmd = JSON.parse(data).split(',');
 
+			// Parse for string format
+			// - JSON 1 '"cmd,string"'
+			// - JSON 2 '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
+			cmd = [];
+			if (data.includes('fecmd')) {
+				var str = JSON.parse(data);
+				var array = JSON.parse(str);
+				cmd[0] = array['fecmd'];
+				cmd[1] = JSON.parse(data);
+			} else {
+				cmd = JSON.parse(data).split(',');
+			}
+
+			// Process command
             switch (cmd[0]) {
                 case 'inpactive1':
                 case 'inpactive0':
@@ -578,15 +589,13 @@ function engineCmd() {
                         rendererRefreshBtn()
                     );
                     $('#inpsrc-metadata-refresh').html('');
-                    // Fetch from back-end for robustness
-                    refreshInpsrcMeta();
                     break;
                 case 'update_aplmeta':
                 case 'update_deezmeta':
                 case 'update_spotmeta':
-                    // Received from back-end
-                    updateInpsrcMeta(cmd[0], cmd[1]); // cmd[1]: metadata
-                    // Fetch from back-end again for robustness
+					// cmd[1]: '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
+                    updateInpsrcMeta(cmd[0], cmd[1]);
+					// Fetch from back-end for robustness
                     setTimeout(function() {
                         refreshInpsrcMeta();
                     }, ONE_SEC_TIMEOUT);
@@ -770,6 +779,7 @@ function inpSrcIndicator(cmd, msgText) {
     $('#inpsrc-msg').addClass('inpsrc-msg-default');
     $('#inpsrc-msg').css({width:'100%', top:'50%', bottom:'unset'});
     $('#inpsrc-metadata').hide();
+	$('#inpsrc-cover').html('');
 
     // Set custom backdrop (if any)
     if (cmd == 'rxactive1') {
@@ -815,38 +825,46 @@ function refreshInpsrcMeta() {
     }
 
     if (cmd != '') {
-        $.getJSON('command/renderer.php?cmd=' + cmd, function(data) {
+		$.get('command/renderer.php?cmd=' + cmd, function(data) {
+			// data is string: '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
             updateInpsrcMeta(cmd, data);
         });
     }
 }
 function updateInpsrcMeta(cmd, data) {
-    $('#inpsrc-msg').removeClass('inpsrc-msg-default');
+	$('#inpsrc-msg').removeClass('inpsrc-msg-default');
     $('#inpsrc-msg').addClass('inpsrc-msg-metadata');
     $('#inpsrc-msg-text').text('');
-
     $('#inpsrc-backdrop').css('filter', 'blur(0px)');
     $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
 
-    // AirPlay: [0]:title [1]:artist  [2]:album [3]:duration (in ms)   [4];coverurl  [5]:format
-    // Deezer:  [0]:title [1]:artist  [2]:album [3]:duration (in secs) [4];coverurl  [5]:format [6]:decoder
-    // Spotify: [0]:title [1]:artists [2]:album [3]:duration (in ms)   [4];coverurls [5]:format
-    var metadata = data.split('~~~');
-    var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta')) ? 1000 : 1;
-    var title = metadata[0];
-    var artist = cmd == 'get_spotmeta' ? metadata[1].split("\n")[0] : metadata[1];
-    var album = metadata[2];
-    var duration = formatSongTime(Math.round(parseInt(metadata[3]) / timeDivisor));
-    var coverURL = cmd == 'get_spotmeta' ? metadata[4].split("\n")[0] : metadata[4];
-    var format = metadata[5];
+	// Formats
+	// - AirPlay: title, artist,  album, duration (in ms),  cover_url,  sformat, oformat
+	// - Deezer:  title, artist,  album, duration (in sec), cover_url,  sformat,  decoder
+	// - Spotify: title, artists, album, duration (in ms),  cover_urls, sformat
 
+	try {
+		var metadata = JSON.parse(data);
+	}
+	catch (e) {
+		console.log('updateInpsrcMeta(): JSON parse error:', e.message);
+		console.log('updateInpsrcMeta(): data=(' + (data ? data : 'empty') + ')');
+		return;
+	}
+
+	var title = metadata['title'];
+    var artist = cmd == 'get_spotmeta' ? metadata['artist'].split(';')[0] : metadata['artist'];
+    var album = metadata['album'];
+	var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta')) ? 1000 : 1;
+    var duration = formatSongTime(Math.round(parseInt(metadata['duration']) / timeDivisor));
+    var coverURL = cmd == 'get_spotmeta' ? metadata['cover_url'].split(';')[0] : metadata['cover_url'];
+    var sformat = metadata['sformat'];
     if (title == '' || duration == '') {
         // Radio station
-        var metadataHTML = '<b>' + artist  + '</b>' + '<br><span id="renderer-format-badge">' + format + '</span><br><span>Live</span>';
+        var metadataHTML = '<b>' + artist  + '</b>' + '<br><span id="renderer-format-badge">' + sformat + '</span><br><span>Live</span>';
     } else {
-        // Song file
-        // NOTE: duration not being displayed at this time
-        var metadataHTML = '<b>' + artist + ' - ' + title + '</b>' + '<br><span id="renderer-format-badge">' + format + '</span><br><span>' + album + '</span>';
+        // Song file (NOTE: duration not being displayed at this time)
+        var metadataHTML = '<b>' + artist + ' - ' + title + '</b>' + '<br><span id="renderer-format-badge">' + sformat + '</span><br><span>' + album + '</span>';
     }
 
     $('#inpsrc-cover').html('<img class="inpsrc-metadata-cover" ' + 'src="' + coverURL + '">');

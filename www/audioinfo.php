@@ -51,18 +51,25 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 	$_decode_rate = '';
 } else if ($aplActive == '1') {
 	$_file = 'AirPlay stream' . ($disableSync == 'yes' ? ' (sync disabled)' : '');
-	$_encoded_at = 'ALAC/AAC';
-	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
+	$metadata = json_decode(file_get_contents(APLMETA_CACHE_FILE), true);
+	// sformat: AAC 24/48K 2ch
+	$_encoded_at = $metadata['sformat'];
+	// oformat: '16/44.1K 2ch'
+	$bits = explode('/', $metadata['oformat'])[0];
+	$rate = explode('K', explode('/', $metadata['oformat'])[1])[0];
+	$_decoded_to = 'PCM ' . $bits . ' bit ' . $rate . ' kHz, Stereo';
 	$_decode_rate = '';
 } else if ($spotActive == '1') {
 	$_file = 'Spotify stream';
-	$_encoded_at = getSpotifyFormat();
+	$metadata = json_decode(file_get_contents(SPOTMETA_CACHE_FILE), true);
+	$_encoded_at = $metadata['sformat'];
 	$_decoded_to = 'PCM 16 bit 44.1 kHz, Stereo';
 	$_decode_rate = '';
 } else if ($deezActive == '1') {
 	$_file = 'Deezer stream';
-	$_encoded_at = getDeezerInfo('stream_format');
-	$_decoded_to = getDeezerInfo('decoded_to');
+	$metadata = json_decode(file_get_contents(DEEZMETA_CACHE_FILE), true);
+	$_encoded_at = $metadata['sformat'];
+	$_decoded_to = $metadata['oformat'];
 	$_decode_rate = '';
 } else if ($slActive == '1') {
 	$_file = 'Squeezelite stream';

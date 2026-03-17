@@ -31,10 +31,10 @@ const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
 // AirPlay, Deezer Connect and Spotify Connect
-const APLMETA_FILE = '/var/local/www/aplmeta.txt';
-const DEEZMETA_FILE = '/var/local/www/deezmeta.txt';
+const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
+const DEEZMETA_CACHE_FILE = '/var/local/www/deezmeta.json';
 const DEEZ_CREDENTIALS_FILE = '/etc/deezer/deezer.toml';
-const SPOTMETA_FILE = '/var/local/www/spotmeta.txt';
+const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
 const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';

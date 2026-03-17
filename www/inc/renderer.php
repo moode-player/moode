@@ -97,17 +97,17 @@ function startAirPlay() {
 }
 function stopAirPlay() {
 	$maxRetries = 3;
-	// Metadata componenta
+	// Stop metadata reader components
 	for ($i = 0; $i < $maxRetries; $i++) {
-		sysCmd('killall -s 9 aplmeta-reader.sh');
-		sysCmd('killall -s 9 shairport-sync-metadata-reader');
-		sysCmd('killall -s 9 aplmeta.py');
-		sysCmd('killall -s 9 cat');
+		sysCmd('pkill -f -9  aplmeta-reader.sh');
+		sysCmd('pkill -f -9  shairport-sync-metadata-reader');
+		sysCmd('pkill -f -9  aplmeta.py');
+		sysCmd('pkill -f -9  cat');
 		// Use the 15 char names from PS -A for some of these
-		$result1 = sysCmd('pgrep -cx aplmeta-reader.')[0]; // aplmeta-reader. sh
-		$result2 = sysCmd('pgrep -cx shairport-sync-')[0]; // shairport-sync- metadata-reader
-		$result3 = sysCmd('pgrep -cx aplmeta.py')[0];
-		$result4 = sysCmd("pgrep -cfax \"cat /tmp/shairport-sync-metadata\"")[0];
+		$result1 = sysCmd('pgrep -cx "aplmeta-reader."')[0]; // aplmeta.sh
+		$result2 = sysCmd('pgrep -cx "shairport-sync-"')[0]; // shairport-sync-metadata-reader
+		$result3 = sysCmd('pgrep -cx "aplmeta.py"')[0];
+		$result4 = sysCmd('pgrep -cfax "cat /tmp/shairport-sync-metadata"')[0];
 
 		// DEBUG
 		/*workerLog('result1=' . $result1);
@@ -119,20 +119,20 @@ function stopAirPlay() {
 		if ($result1 == 0 && $result2 == 0 && $result3 == 0 && $result4 == 0) {
 			break;
 		}
-		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay metadata reader');
+		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay metadata reader components');
 		sleep(1);
 	}
-	// Shairport-sync
+	// Stop shairport-sync
 	for ($i = 0; $i < $maxRetries; $i++) {
-		sysCmd('killall -s 9 shairport-sync');
-		$result = sysCmd('pgrep -cx shairport-sync')[0];
+		sysCmd('pkill -f -9 shairport-sync');
+		$result = sysCmd('pgrep -c "shairport-sync"')[0];
 		if ($result == 0) {
 			break;
 		}
-		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay');
+		workerLog('worker: Retry ' . ($i + 1) . ' stopping AirPlay (shairport-sync)');
 		sleep(1);
 	}
-	// Nqptp
+	// Stop nqptp
 	sysCmd('systemctl stop nqptp');
 
 	// Local
@@ -217,10 +217,6 @@ function stopSpotify() {
 	$GLOBALS['spotactive'] = '0';
 	sendFECmd('spotactive0');
 }
-function getSpotifyFormat() {
-	$metadata = explode('~~~', file_get_contents(SPOTMETA_FILE));
-	return $metadata[5];
-}
 
 // Deezer Connect
 function startDeezer() {
@@ -277,18 +273,6 @@ function stopDeezer() {
 	phpSession('write', 'deezactive', '0');
 	$GLOBALS['deezactive'] = '0';
 	sendFECmd('deezactive0');
-}
-function getDeezerInfo($item) {
-	switch ($item) {
-		case 'stream_format':
-			$itemIndex = 5;
-			break;
-		case 'decoded_to':
-			$itemIndex = 6;
-			break;
-	}
-	$metadata = explode('~~~', file_get_contents(DEEZMETA_FILE));
-	return $metadata[$itemIndex];
 }
 function updateDeezCredentials($email, $password) {
 	// Truncate the file

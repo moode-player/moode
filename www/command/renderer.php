@@ -41,14 +41,16 @@ switch ($_GET['cmd']) {
 	 		echo json_encode('worker busy');
 	 	}
 		break;
+	// Metadata files are in JSON format
+	// Return is string '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
 	case 'get_aplmeta':
-		echo json_encode(file_get_contents(APLMETA_FILE));
+		echo trim(file_get_contents(APLMETA_CACHE_FILE));
 		break;
 	case 'get_deezmeta':
-		echo json_encode(file_get_contents(DEEZMETA_FILE));
+		echo trim(file_get_contents(DEEZMETA_CACHE_FILE));
 		break;
 	case 'get_spotmeta':
-		echo json_encode(file_get_contents(SPOTMETA_FILE));
+		echo trim(file_get_contents(SPOTMETA_CACHE_FILE));
 		break;
 	default:
 		echo 'Unknown command';
