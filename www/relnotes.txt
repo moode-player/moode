@@ -20,6 +20,7 @@ Updates
 - UPD: Improve layout of the Library section of Preferences
 - UPD: Improve Quick help explanation of the custom AlbumDate tag
 - UPD: Improve Peripheral Config help and field validation
+- UPD: Add 'play' context menu for Playlist items
 - UPD: Add CSS media query for 1920x720 resolution
 - UPD: Add CSS media query for 960x360 resolution
 - UPD: Replace predefined search filter "hdonly" with "hires" to match badge
