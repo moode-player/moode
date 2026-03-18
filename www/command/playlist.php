@@ -220,7 +220,7 @@ function getPlaylistContents($plName) {
 						// Query successful and non-empty result
 						$name = $result[0]['name'];
 					}
-					$line2 = 'Radio Station';
+					$line2 = DEFAULT_STATION_NAME;
 				} else {
 					// Song file
 					sendMpdCmd($sock, 'lsinfo "' . $item . '"');

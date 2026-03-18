@@ -44,7 +44,7 @@ const DASHBOARD_CACHE_FILE = '/var/local/www/dashboard.txt';
 // Library/Playback
 const LIBCACHE_BASE = '/var/local/www/libcache';
 const ROOT_DIRECTORIES = array('NAS', 'NVME', 'OSDISK', 'RADIO', 'SATA', 'USB');
-const DEFAULT_RADIO_TITLE = 'Radio station';
+const DEFAULT_STATION_NAME = 'Radio station';
 const DEFAULT_RADIO_COVER = 'images/default-album-cover.png';
 const DEFAULT_ALBUM_COVER = 'images/default-album-cover.png';
 const DEFAULT_UPNP_COVER = 'images/default-upnp-cover.jpg';

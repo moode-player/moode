@@ -493,7 +493,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 			if (MPD.json['file'].substr(0, 4).toLowerCase() == 'http') {
                 // Pause if upnp url
-				var cmd = MPD.json['artist'] == 'Radio station' ? 'stop' : 'pause';
+				var cmd = MPD.json['artist'] == DEFAULT_STATION_NAME ? 'stop' : 'pause';
 			}
 			else {
                 // Song file
@@ -537,7 +537,7 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('.prev').click(function(e) {
-		if (MPD.json['artist'] == 'Radio station') {
+		if (MPD.json['artist'] == DEFAULT_STATION_NAME) {
 			// Radio station
 			sendMpdCmd('previous');
 		} else {
@@ -657,7 +657,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Toggle count up/down and direction icon, radio always counts up
 	$('#countdown-display, #m-countdown').click(function(e) {
-		if (MPD.json['artist'] != 'Radio station') {
+		if (MPD.json['artist'] != DEFAULT_STATION_NAME) {
 			SESSION.json['timecountup'] == '1' ? SESSION.json['timecountup'] = '0' : SESSION.json['timecountup'] = '1';
             $.post('command/cfg-table.php?cmd=upd_cfg_system', {'timecountup': SESSION.json['timecountup']});
             $.getJSON('command/playback.php?cmd=get_mpd_status', function(data) {
@@ -787,7 +787,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#currentartist').click(function(e) {
         if (!$('#playback-panel').hasClass('cv')) {
             // Radio station
-    		if (MPD.json['artist'] == 'Radio station') {
+    		if (MPD.json['artist'] == DEFAULT_STATION_NAME) {
                 currentView = 'playback,radio';
     			$('#playback-switch').click();
 
@@ -1748,7 +1748,7 @@ jQuery(document).ready(function($) { 'use strict';
     // Track info for Playback
     $('#extra-tags-display').click(function(e) {
         if ($('#currentsong').html() != '') {
-            var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
+            var cmd = MPD.json['artist'] == DEFAULT_STATION_NAME ? 'station_info' : 'track_info';
             audioInfo(cmd, MPD.json['file']);
         }
     });

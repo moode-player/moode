@@ -2568,7 +2568,7 @@ function updPlayHistory() {
 
 		} else if (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && !isset($song['Artist']))) {
 			// Radio station
-			$artist = 'Radio station';
+			$artist = DEFAULT_STATION_NAME;
 
 			if (!isset($song['Title']) || trim($song['Title']) == '') {
 				$title = $song['file'];

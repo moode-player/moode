@@ -734,7 +734,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		if ($current['file'] != $_SESSION['currentfile']) {
 			// When switching stations reset title so logo displays
 			if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
-				$song['Title'] = DEFAULT_RADIO_TITLE;
+				$song['Title'] = DEFAULT_STATION_NAME;
 			}
 			// Only do getEncodedAt() once for a given file
 			$current['encoded'] = getEncodedAt($song, 'default'); // Encoded bit depth and sample rate
@@ -760,20 +760,20 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['thumb_hash'] = md5(dirname($song['file']));
 		} else if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
 			// Radio station
-			$current['artist'] = 'Radio station';
+			$current['artist'] = DEFAULT_STATION_NAME;
 			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
-			if ($current['state'] == 'stop') {
-				$current['title'] = DEFAULT_RADIO_TITLE;
+			if ($current['state'] != 'play') {
+				$current['title'] = DEFAULT_STATION_NAME;
 			} else {
 				if (!isset($song['Title']) ||
 					trim($song['Title']) == '-' || // NTS can return just a dash in its Title tag
 					substr($song['Title'], 0, 4) == 'BBC ' || // BBC just returns the station name in the Title tag
 					trim($song['Title']) == '') {
-					$current['title'] = DEFAULT_RADIO_TITLE;
+					$current['title'] = DEFAULT_STATION_NAME;
 				} else {
 					// Use custom name for certain stations if needed
-					$current['title'] = str_contains(strtolower($song['Title']), 'advert') ? 'Radio station' : $song['Title'];
+					$current['title'] = str_contains(strtolower($song['Title']), 'advert') ? DEFAULT_STATION_NAME : $song['Title'];
 					//$current['title'] = $song['Title'];
 				}
 			}
@@ -792,7 +792,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
 				// Track cover from Apple Music (iTunes API)
-				if ($current['title'] != DEFAULT_RADIO_TITLE) {
+				if ($current['title'] != DEFAULT_STATION_NAME) {
 					if ($_SESSION['radio_track_covers'] == 'Yes') {
 						if ($current['state'] == 'play') {
 							$trackCoverUrl = getTrackCoverUrl($current['title']);
@@ -825,7 +825,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				if (isset($_SESSION[$song['file']])) {
 					// Podcast
 					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
-					$current['artist'] = 'Radio station';
+					$current['artist'] = DEFAULT_STATION_NAME;
 					$current['album'] = $_SESSION[$song['file']]['name'];
 				} else {
 					// UPnP file
