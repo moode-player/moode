@@ -1535,10 +1535,12 @@ $('#database-playlist').on('click', 'img', function(e) {
                 if (data['items'].length > 0) {
                     UI.dbEntry[4] = data['items'].length;
                     for (i = 0; i < data['items'].length; i++) {
-                        output += '<li id="view-pl-item-' + (i + 1) + '" class="pl-item">';
-                        output += '<span class="pl-item-line1">' + data['items'][i]['name'] + '</span>';
-                        output += '<span class="pl-item-line2">' + data['items'][i]['line2'] + '</span>';
-            			output += '</li>';
+						output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" ';
+						output += 'data-toggle="context" data-target="#context-menu-view-pl-contents" ';
+						output += 'data-path="' + data['items'][i]['path'] + '">';
+						output += '<span class="pl-item-line1">' + data['items'][i]['name'] + '</span>';
+						output += '<span class="pl-item-line2">' + data['items'][i]['line2'] + '</span>';
+						output += '</li>';
                     }
                 } else {
                     output = 'Playlist is empty';
@@ -1673,11 +1675,11 @@ $('#songsList').on('click', '.lib-track', function(e) {
 });
 
 // Click playlist item
-$('#playlist-items').on('click', '.pl-item', function(e) {
-    UI.dbEntry[0] = $('#playlist-items .pl-item').index(this); // Store pos for use in action menu item click
-	$('#playlist-items li').removeClass('active');
+$('#edit-playlist-items, #view-playlist-items').on('click', '.pl-item', function(e) {
+	var selector = $(this).parent().attr('id');
+    UI.dbEntry[0] = $('#' + selector + ' .pl-item').index(this); // Store pos for use in action menu item click
+	$('#' + selector + ' li').removeClass('active');
     $('#pl-item-' + (UI.dbEntry[0] + 1).toString()).addClass('active');
-    //console.log(UI.dbEntry[0]);
 });
 // Click playlist name
 $('#playlist-names').on('click', '.pl-name', function(e) {

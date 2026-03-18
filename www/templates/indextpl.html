@@ -2619,7 +2619,7 @@
 				</div>
 			</div>
         </div>
-		<div id="playlist-items-container">
+		<div id="edit-playlist-items-container">
 			<div id="delete-playlist-item" class="pl-item hide">
 				<button id="btn-delete-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Remove</button>&nbsp;
 				<input id="delete-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
@@ -2632,7 +2632,7 @@
 				To&nbsp;
 				<input id="move-playlist-item-newpos" class="pl-item input-mini" type="number" min="1" max="" value="">
 			</div>
-			<ul id="playlist-items"></ul>
+			<ul id="edit-playlist-items"></ul>
 		</div>
 	</div>
 	<div class="modal-footer">
@@ -2882,7 +2882,7 @@
 			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="add_item_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
-			<li ><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<li><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
 			<li class="menu-separator"><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-music sx"></i> Add to playlist</a></li>
 			<li><a href="#notarget" data-cmd="edit_station"><i class="fa-regular fa-sharp fa-edit sx"></i> Edit station</a></li>
@@ -2903,10 +2903,20 @@
 		</ul>
 	</div>
 
-	<div id="context-menu-pl-contents" class="context-menu">
+	<div id="context-menu-edit-pl-contents" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="delete_pl_item"><i class="fa-regular fa-sharp fa-trash sx"></i> Remove</a></li>
 			<li><a href="#notarget" data-cmd="move_pl_item"><i class="fa-regular fa-sharp fa-arrow-up sx"></i> Move</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-view-pl-contents" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add_pl_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_pl_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_pl_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_pl_item_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_pl_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
 		</ul>
 	</div>
 

@@ -1225,7 +1225,7 @@ jQuery(document).ready(function($) { 'use strict';
 			notify(NOTIFY_TITLE_ALERT, 'blank_entries', 'Playlist not updated.');
 		} else {
             var items = [];
-            $('#playlist-items li').each(function() {
+            $('#edit-playlist-items li').each(function() {
                 items.push($(this).data('path'));
             });
             var path = {
@@ -1262,7 +1262,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Convert lines to array
         var items = [];
-        $('#playlist-items li').each(function(){
+        $('#edit-playlist-items li').each(function(){
             items.push($(this).prop('outerHTML'));
         });
 
@@ -1276,7 +1276,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         // Convert back to lines
-        var element = document.getElementById('playlist-items');
+        var element = document.getElementById('edit-playlist-items');
         element.innerHTML = '';
         var lines = '';
         for (i = 0; i < items.length; i++) {
@@ -1289,13 +1289,13 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Resequence id's
         var i = 1;
-        $('#playlist-items li').each(function(){
+        $('#edit-playlist-items li').each(function(){
             $(this).attr('id', 'pl-item-' + i.toString());
             i++;
         });
 
         $('#delete-playlist-item, #move-playlist-item').hide();
-        $('#playlist-items').css('margin-top', '0');
+        $('#edit-playlist-items').css('margin-top', '0');
 	});
 
     //

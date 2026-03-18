@@ -2889,6 +2889,16 @@ $(document).on('click', '.context-menu a', function(e) {
     			$('#playlist-save-name').val('');
     		}
             break;
+		case 'add_pl_item':
+		case 'play_pl_item':
+		case 'clear_play_pl_item':
+		case 'add_pl_item_next':
+		case 'play_pl_item_next':
+			// Strip 'pl_' from command to create valid queue command
+			var cmd = $(this).data('cmd').replace('pl_', '');
+			// Path contains item num
+			sendQueueCmd(cmd, $('#pl-item-' + (path + 1)).data('path'));
+			break;
         case 'update_folder':
             submitLibraryUpdate(path);
             break;
@@ -3046,7 +3056,7 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'edit_playlist':
             $.post('command/playlist.php?cmd=get_playlist_contents', {'path': path}, function(data) {
                 $('#delete-playlist-item, #move-playlist-item').hide();
-                $('#playlist-items').css('margin-top', '0');
+                $('#edit-playlist-items').css('margin-top', '0');
 
                 // Metadata
                 $('#edit-playlist-name').val(path);
@@ -3057,14 +3067,14 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-playlist-genre').val(data['genre']);
 
             	// Playlist items
-            	var element = document.getElementById('playlist-items');
+            	var element = document.getElementById('edit-playlist-items');
             	element.innerHTML = '';
                 var output = '';
 
                 if (data['items'].length > 0) {
                     UI.dbEntry[4] = data['items'].length;
                     for (i = 0; i < data['items'].length; i++) {
-                        output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-pl-contents" data-path="' + data['items'][i]['path'] + '">';
+                        output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-edit-pl-contents" data-path="' + data['items'][i]['path'] + '">';
                         output += '<span class="pl-item-line1">' + data['items'][i]['name'] + '</span>';
                         output += '<span class="pl-item-line2">' + data['items'][i]['line2'] + '</span>';
             			output += '</li>';
@@ -3085,8 +3095,8 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'delete_pl_item':
             $('#move-playlist-item').hide();
-            $('#playlist-items-container').css('padding-top', '0');
-            $('#playlist-items').css('margin-top', '3.5em');
+            $('#edit-playlist-items-container').css('padding-top', '0');
+            $('#edit-playlist-items').css('margin-top', '3.5em');
     		$('#delete-playlist-item-begpos').attr('max', UI.dbEntry[4]); // Max value (num playlist items in list)
     		$('#delete-playlist-item-endpos').attr('max', UI.dbEntry[4]);
     		$('#delete-playlist-item-newpos').attr('max', UI.dbEntry[4]);
@@ -3096,8 +3106,8 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'move_pl_item':
             $('#delete-playlist-item').hide();
-            $('#playlist-items-container').css('padding-top', '0');
-            $('#playlist-items').css('margin-top', '3.5em');
+            $('#edit-playlist-items-container').css('padding-top', '0');
+            $('#edit-playlist-items').css('margin-top', '3.5em');
     		$('#move-playlist-item-begpos').attr('max', UI.dbEntry[4]);
     		$('#move-playlist-item-endpos').attr('max', UI.dbEntry[4]);
     		$('#move-playlist-item-newpos').attr('max', UI.dbEntry[4]);
@@ -3440,6 +3450,8 @@ $(document).on('click', '.context-menu a', function(e) {
 	// Remove highlight after selecting action menu item (Folder view)
 	if (UI.dbEntry[3].substr(0, 3) == 'db-') {
 		$('#' + UI.dbEntry[3]).removeClass('active');
+	} else if (UI.dbEntry[3].substr(0, 3) == 'pl-') {
+		$('#pl-item-' + (UI.dbEntry[0] + 1)).removeClass('active');
 	}
 });
 
@@ -4643,10 +4655,18 @@ $('#edit-playlist-modal').click(function(e) {
     }
     else if (typeof($(e.target).attr('class')) == 'undefined' || !$(e.target).attr('class').includes('pl-item')) {
         $('#pl-item-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
-        $('#playlist-items').css('margin-top', '0');
+        $('#edit-playlist-items').css('margin-top', '0');
         $('#delete-playlist-item').hide();
         $('#move-playlist-item').hide();
     }
+});
+// Remove highlight from playlist item
+$('#view-playlist-modal').click(function(e) {
+	if (isNaN(UI.dbEntry[0])) {
+		return;
+	} else if (typeof($(e.target).attr('class')) == 'undefined' || !$(e.target).attr('class').includes('pl-item')) {
+		$('#pl-item-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
+	}
 });
 
 // Toggle the accordian lists on Preferences
