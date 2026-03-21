@@ -1109,7 +1109,6 @@ function renderUIVol() {
 }
 
 function renderUI() {
-	//console.log('renderUI()');
 	var searchStr, searchEngine;
 
     // Load session vars (required for multi-client)
@@ -1668,8 +1667,8 @@ function genSearchUrl (artist, title, album) {
 
 // Update active Queue item
 function updateActivePlayqueueItem() {
-	//console.log('updateActivePlayqueueItem()');
     $.getJSON('command/queue.php?cmd=get_playqueue', function(data) {
+		//console.log(data);
         if (data) {
             for (i = 0; i < data.length; i++) {
                 // Current song
@@ -1686,20 +1685,17 @@ function updateActivePlayqueueItem() {
     					} else {
                             // Use station supplied title
                             $('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(data[i].Title);
-    						if (i == parseInt(MPD.json['song'])) { // active
-								//console.log('updateActivePlayqueueItem(): active title: ' + data[i].Title);
-                                // Update in case MPD did not get Title tag at initial play
-								$('#currentsong').html(data[i].Title);
-								if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
-									if (!data[i].Title.toLowerCase().includes('advert')) {
-										updateTrackCover(data[i].Title);
-									}
+                            // Update in case MPD did not get Title tag at initial play
+							$('#currentsong').html(data[i].Title);
+							if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
+								if (!data[i].Title.toLowerCase().includes('advert')) {
+									updateTrackCover(data[i].Title);
 								}
-                                // Add search URL, see corresponding code in renderUI()
-								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
-                                // CoverView and Playbar
-    							$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
-    						}
+							}
+                            // Add search URL, see corresponding code in renderUI()
+							$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
+                            // CoverView and Playbar
+							$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
     					}
                     }
                 }
@@ -1720,7 +1716,6 @@ function updateActivePlayqueueItem() {
 
 // Render the Queue
 function renderPlayqueue(state) {
-	//console.log('renderPlayqueue()');
     $.getJSON('command/queue.php?cmd=get_playqueue', function(data) {
         //console.log(data);
 		var output = '';
@@ -1776,7 +1771,6 @@ function renderPlayqueue(state) {
 						output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 						output += '<span class="pll1">' + data[i].Title + '</span>';
 						if (i == parseInt(MPD.json['song'])) { // active
-							//console.log('renderPlayqueue(): active title: ' + data[i].Title);
                             // Update in case MPD did not get Title tag at initial play
 							$('#currentsong').html(data[i].Title);
 							if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {

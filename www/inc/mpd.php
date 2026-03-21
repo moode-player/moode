@@ -763,7 +763,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['artist'] = DEFAULT_STATION_NAME;
 			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
-			if ($current['state'] != 'play') {
+			if ($current['state'] != 'play' || ($current['state'] == 'play' && $current['file'] == $_SESSION['currentfile'])) {
 				$current['title'] = DEFAULT_STATION_NAME;
 			} else {
 				if (!isset($song['Title']) ||
