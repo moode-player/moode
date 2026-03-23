@@ -16,6 +16,7 @@
 ################################################################################
 
 Updates
+- UPD: Bump to Linux kernel 6.12.75
 - UPD: Improve AirPlay and Spotify Connect metadata readers
 - UPD: Improve layout of the Library section of Preferences
 - UPD: Improve Quick help explanation of the custom AlbumDate tag
