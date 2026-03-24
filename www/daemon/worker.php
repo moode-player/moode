@@ -2149,14 +2149,15 @@ function chkBtActive() {
 }
 
 function chkAplActive() {
-	// Get directly from sql since external spspre.sh and spspost.sh scripts don't update the session
+	// Get directly from SQL since spspre.sh and spspost.sh scripts can't update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
 		// Do this section only once
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendFECmd('aplactive1');
+			// NOTE: This is now done by the spotevent.sh script
+			//sendFECmd('aplactive1');
 		}
 	} else {
 		// Do this section only once
@@ -2168,14 +2169,15 @@ function chkAplActive() {
 }
 
 function chkSpotActive() {
-	// Get directly from sql since external spotevent.sh script does not update the session
+	// Get directly from SQL since spotevent.sh script can't update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='spotactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
 		// Do this section only once
 		if ($GLOBALS['spotactive'] == '0') {
 			$GLOBALS['spotactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendFECmd('spotactive1');
+			// NOTE: This is now done by the spotevent.sh script
+			//sendFECmd('spotactive1');
 		}
 	} else {
 		// Do this section only once
@@ -2187,14 +2189,15 @@ function chkSpotActive() {
 }
 
 function chkDeezActive() {
-	// Get directly from sql since external spotevent.sh script does not update the session
+	// Get directly from SQL since deezevent.sh script can't update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='deezactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
 		// Do this section only once
 		if ($GLOBALS['deezactive'] == '0') {
 			$GLOBALS['deezactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			sendFECmd('deezactive1');
+			// NOTE: This is now done by the deezevent.sh script
+			//sendFECmd('deezactive1');
 		}
 	} else {
 		// Do this section only once

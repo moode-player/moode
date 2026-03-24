@@ -6,6 +6,7 @@
 
 LOGFILE="/var/log/moode_deezevent.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
+SQLDB=/var/local/www/db/moode-sqlite3.db
 
 DEEZMETA_CACHE_FILE="/var/local/www/deezmeta.json"
 DEEZ_BASE_COVERURL_MUSIC="https://e-cdns-images.dzcdn.net/images/cover"
@@ -43,7 +44,7 @@ if [[ $MATCH == 0 ]]; then
 	exit 0
 fi
 
-SQLDB=/var/local/www/db/moode-sqlite3.db
+# cfg_system
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','mpdmixer','rsmafterdeez','camilladsp_volume_sync','inpactive','volknob_mpd','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
@@ -65,7 +66,8 @@ fi
 if [[ $EVENT == "connected" ]]; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='deezactive'")
 	/usr/bin/mpc stop > /dev/null
-	#sleep 1
+	# Send to front-end
+	/var/www/util/send-fecmd.php "deezactive1"
 
 	# Local
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
@@ -91,6 +93,7 @@ if [[ $EVENT == "connected" ]]; then
 fi
 
 if [[ $EVENT == "disconnected" ]]; then
+	# Worker picks this up and sends deezactive0 to front-end
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='deezactive'")
 
 	# Local
@@ -119,6 +122,7 @@ if [[ $EVENT == "disconnected" ]]; then
 	fi
 fi
 
+# Update metadata and send to front-end
 if [[ $EVENT == "track_changed" ]]; then
 	if [[ $TRACK_TYPE == $DEEZ_TRACK_TYPE_EPISODE ]]; then
 		DEEZ_COVERURL=$DEEZ_BASE_COVERURL_TALK

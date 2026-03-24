@@ -20,6 +20,7 @@
 
 LOGFILE="/var/log/moode_slpower.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
+SQLDB=/var/local/www/db/moode-sqlite3.db
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
@@ -32,7 +33,7 @@ debug_log () {
 
 #debug_log "Run script"
 
-SQLDB=/var/local/www/db/moode-sqlite3.db
+# cfg_system
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','mpdmixer','camilladsp_volume_sync','rsmaftersl','wrkready','inpactive')")
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}

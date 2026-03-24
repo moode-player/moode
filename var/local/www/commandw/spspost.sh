@@ -6,6 +6,7 @@
 
 LOGFILE="/var/log/moode_spsevent.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
+SQLDB=/var/local/www/db/moode-sqlite3.db
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
@@ -18,8 +19,9 @@ debug_log () {
 
 debug_log "Event: Run spspost.sh"
 
-SQLDB=/var/local/www/db/moode-sqlite3.db
+# Worker picks this up and sends aplactive0 to front-end
 $(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='aplactive'")
+# cfg_system
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('alsavolume_max','alsavolume','amixname','mpdmixer','rsmafterapl','camilladsp_volume_sync','inpactive','volknob_mpd','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}

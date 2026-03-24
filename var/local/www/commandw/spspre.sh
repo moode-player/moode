@@ -6,6 +6,7 @@
 
 LOGFILE="/var/log/moode_spsevent.log"
 DEBUG=$(sudo moodeutl -d -gv debuglog)
+SQLDB=/var/local/www/db/moode-sqlite3.db
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
@@ -18,7 +19,7 @@ debug_log () {
 
 debug_log "Event: Run spspre.sh"
 
-SQLDB=/var/local/www/db/moode-sqlite3.db
+# cfg_system
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob','alsavolume_max','alsavolume','amixname','camilladsp_volume_sync','inpactive','multiroom_tx')")
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
@@ -36,7 +37,8 @@ fi
 
 $(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='aplactive'")
 /usr/bin/mpc stop > /dev/null
-#sleep 1
+# Send to front-end
+/var/www/util/send-fecmd.php "aplactive1"
 
 # Local
 if [[ $CDSP_VOLSYNC == "on" ]]; then
