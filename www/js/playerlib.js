@@ -524,6 +524,7 @@ function engineCmd() {
 		async: true,
 		cache: false,
 		success: function(data) {
+			// DEBUG:
 			//console.log('engineCmd: success branch: data=(' + data + ')');
 
 			// Parse for string format
@@ -774,6 +775,8 @@ function engineCmdLite() {
 }
 
 function inpSrcIndicator(cmd, msgText) {
+	// DEBUG:
+	//console.log('inpSrcIndicator(): ' + cmd + ' | ' + msgText);
 	UI.currentFile = 'blank';
     $('#inpsrc-msg').removeClass('inpsrc-msg-metadata');
     $('#inpsrc-msg').addClass('inpsrc-msg-default');
@@ -824,6 +827,8 @@ function refreshInpsrcMeta() {
         cmd = '';
     }
 
+	// DEBUG:
+	//console.log('refreshInpsrcMeta(): ' + cmd);
     if (cmd != '') {
 		$.get('command/renderer.php?cmd=' + cmd, function(data) {
 			// data is string: '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
@@ -831,7 +836,10 @@ function refreshInpsrcMeta() {
         });
     }
 }
+
 function updateInpsrcMeta(cmd, data) {
+	// DEBUG:
+	//console.log('updateInpsrcMeta(): ' + cmd + ' | ' + data);
 	$('#inpsrc-msg').removeClass('inpsrc-msg-default');
     $('#inpsrc-msg').addClass('inpsrc-msg-metadata');
     $('#inpsrc-msg-text').text('');
