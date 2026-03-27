@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+New features
+- NEW: Shairport-sync version 5 (new image only)
+
 Updates
 - UPD: Bump to Linux kernel 6.12.75
 - UPD: Improve AirPlay and Spotify Connect metadata readers
