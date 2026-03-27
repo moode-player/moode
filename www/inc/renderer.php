@@ -65,10 +65,11 @@ function startAirPlay() {
 	}
 
 	// Output device
+	// TODO: Still necessary with AirPlay 5
 	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
 	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
 
-	// NOTE: Interpolation param handled in config file
+	// NOTE: All other params are in /etc/shairport-sync.conf
 	$cmd = '/usr/bin/shairport-sync ' . $logging .
 		' -a "' . $_SESSION['airplayname'] . '" ' .
 		'-- -d ' . $device . ' > ' . $logFile . ' 2>&1 &';
@@ -148,6 +149,11 @@ function stopAirPlay() {
 	phpSession('write', 'aplactive', '0');
 	$GLOBALS['aplactive'] = '0';
 	sendFECmd('aplactive0');
+}
+function getAirPlayVersion($type = 'full') {
+	$version = sysCmd('shairport-sync -V | cut -f 1 -d "-"')[0];
+	// $type: 'full' or 'major'
+	return ($type == 'full' ? $version : substr($version, 0, 1));
 }
 
 // Spotify Connect

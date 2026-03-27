@@ -8,10 +8,12 @@
 <div class="container">
 	<h1 class="ren-config">AirPlay</h1>
 
-    <form class="form-horizontal" action="" method="post">
-    	<legend>Settings
+	<form class="form-horizontal" action="" method="post">
+		<legend>Settings
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 		</legend>
+
+		<div class="config-horiz-rule">General</div>
 
 		<div class="control-group">
 			<label class="control-label" for="interpolation">Interpolation</label>
@@ -21,30 +23,191 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-interpolation" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-interpolation" class="config-help-info">
-					Use SoX for best quality or Basic which consumes fewer CPU resources.
-                </span>
+					Method used to adjust synchronization when necessary. Default is "Auto".<br>
+					<b>Auto:</b> Automatically chooses the best method for your processor.<br>
+					<b>Vernier:</b> Optimized for low-power devices like Raspberry Pi.<br>
+					<b>SoX:</b> High quality, needs fast processor.<br>
+				</span>
 			</div>
 
-			<label class="control-label" for="output-format">Bit depth</label>
+			<label class="control-label" for="disable-synchronization">Disable sync</label>
 			<div class="controls">
-				<select id="output-format" class="config-select-large" name="config[output_format]">
-					$_select[output_format]
+				<select id="disable-synchronization" class="config-select-large" name="config[disable_synchronization]">
+					$_select[disable_synchronization]
 				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-format" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-output-format" class="config-help-info">
-					Bit depth output by AirPlay receiver. Default is 16 bit.
-                </span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-synchronization" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-disable-synchronization" class="config-help-info">
+					Disable synchronization. Default is "No". Set to Yes if CamillaDSP is on and there are audio glitches.
+				</span>
 			</div>
 
-			<label class="control-label" for="output-rate">Sample rate</label>
+			<label class="control-label" for="disable-standby-mode">Disable standby mode</label>
+			<div class="controls">
+				<select id="disable-standby-mode" class="config-select-large" name="config[disable_standby_mode]">
+					$_select[disable_standby_mode]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-standby-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-disable-standby-mode" class="config-help-info">
+					This setting prevents the DAC from entering its standby mode if supported. Default is "Never".<br>
+					Some DACs make small "popping" noises when they go in and out of standby mode. The "Auto" setting prevents entry to standby mode while Shairport Sync is in the "Active" state.
+				</span>
+			</div>
+
+			<div class="$_not_user_configurable">
+				<label class="control-label" for="cover-art-cache-directory">Cover cache directory</label>
+				<div class="controls">
+					<input id="cover-art-cache-directory" class="config-input-large" type="text" name="config[cover_art_cache_directory]" value="$_select[cover_art_cache_directory]">
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-cover-art-cache-directory" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-cover-art-cache-directory" class="config-help-info">
+						Location where cover art is stored. This is not a user configurable setting.
+					</span>
+				</div>
+			</div>
+
+			<div class="config-horiz-rule">Audio</div>
+
+			<label class="control-label" for="audio-backend-latency-offset-in-seconds">Latency offset</label>
+			<div class="controls">
+				<input id="audio-backend-latency-offset-in-seconds" class="config-input-large" type="text" name="config[audio_backend_latency_offset_in_seconds]" value="$_select[audio_backend_latency_offset_in_seconds]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-latency-offset-in-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-audio-backend-latency-offset-in-seconds" class="config-help-info">
+					Set this offset to compensate for a fixed delay in the audio back end. Default is 0.0.<br>
+					<b>Example:</b> If the output device delays by 100 ms, set this to -0.1.
+				</span>
+			</div>
+
+			<label class="control-label" for="audio-backend-buffer-desired-length-in-seconds">Buffer length</label>
+			<div class="controls">
+				<input id="audio-backend-buffer-desired-length-in-seconds" class="config-input-large" type="text" name="config[audio_backend_buffer_desired_length_in_seconds]" value="$_select[audio_backend_buffer_desired_length_in_seconds]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-buffer-desired-length-in-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-audio-backend-buffer-desired-length-in-seconds" class="config-help-info">
+					If set too small, buffer underflow occurs on low-powered machines. If set too large the response times with software mixer become annoying. Default is 0.2.
+				</span>
+			</div>
+
+			<label class="control-label" for="output-rate">Output rate</label>
 			<div class="controls">
 				<select id="output-rate" class="config-select-large" name="config[output_rate]">
 					$_select[output_rate]
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-rate" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-output-rate" class="config-help-info">
-					Sample rate output by AirPlay receiver. Default is 44.1 kHz. Conversion to rates greater than 44.1 kHz is done using simple upsampling and therefore these higher rates should only be used if the audio device doesn't support 44.1 kHz rate.
+					Output sample rate. Default is "Auto" (try to match the input rate).<br>
+					<b>Note:</b> Conversion to rates greater than 44.1 kHz is done using simple upsampling and therefore these higher rates should only be used if the audio device doesn't support 44.1 kHz rate.
 				</span>
+			</div>
+
+			<label class="control-label" for="output-format">Output format</label>
+			<div class="controls">
+				<select id="output-format" class="config-select-large" name="config[output_format]">
+					$_select[output_format]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-format" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-output-format" class="config-help-info">
+					Output bit depth. Default is "Auto" bit.
+					Specify "auto", or a single format, e.g. "S32_LE", or a bracketed comma-separated list of formats, e.g. ("S32_LE", "S16_LE"). Default is "auto". See the "Rates, Formats and Channels" discussion above.
+				</span>
+			</div>
+
+			<label class="control-label" for="output-channels">Output channels</label>
+			<div class="controls">
+				<select id="output-channels" class="config-select-large" name="config[output_channels]">
+					$_select[output_channels]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-channels" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-output-channels" class="config-help-info">
+					Help text goes here
+				</span>
+			</div>
+
+			<div class="$_version_5_show_hide">
+				<label class="control-label" for="eight-channel-mode">Eight channel mode</label>
+				<div class="controls">
+					<select id="eight-channel-mode" class="config-select-large" name="config[eight_channel_mode]">
+						$_select[eight_channel_mode]
+					</select>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-eight-channel-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-eight-channel-mode" class="config-help-info">
+						Help text goes here
+					</span>
+				</div>
+
+				<label class="control-label" for="six-channel-mode">Six channel mode</label>
+				<div class="controls">
+					<select id="six-channel-mode" class="config-select-large" name="config[six_channel_mode]">
+						$_select[six_channel_mode]
+					</select>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-six-channel-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-six-channel-mode" class="config-help-info">
+						Help text goes here
+					</span>
+				</div>
+
+				<label class="control-label" for="mixdown">Mixdown</label>
+				<div class="controls">
+					<select id="mixdown" class="config-select-large" name="config[mixdown]">
+						$_select[mixdown]
+					</select>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixdown" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-mixdown" class="config-help-info">
+						Help text goes here
+					</span>
+				</div>
+
+				<label class="control-label" for="output-channel-mapping">Output channel map</label>
+				<div class="controls">
+					<select id="output-channel-mapping" class="config-select-large" name="config[output_channel_mapping]">
+						$_select[output_channel_mapping]
+					</select>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-channel-mapping" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-output-channel-mapping" class="config-help-info">
+						Help text goes here
+					</span>
+				</div>
+			</div>
+
+			<div class="config-horiz-rule">Session</div>
+
+			<div class="$_not_user_configurable">
+				<label class="control-label" for="run-this-before-entering-active-state">Active state start</label>
+				<div class="controls">
+					<input id="run-this-before-entering-active-state" class="config-input-large" type="text" name="config[run_this_before_entering_active_state]" value="$_select[run_this_before_entering_active_state]">
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-run-this-before-entering-active-state" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-run-this-before-entering-active-state" class="config-help-info">
+						Help text goes here
+					</span>
+				</div>
+
+				<label class="control-label" for="run-this-after-exiting-active-state">Active state end</label>
+				<div class="controls">
+					<input id="run-this-after-exiting-active-state" class="config-input-large" type="text" name="config[run_this_after_exiting_active_state]" value="$_select[run_this_after_exiting_active_state]">
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-run-this-after-exiting-active-state" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-run-this-before-entering-active-state" class="config-help-info">
+						Help text goes here
+					</span>
+				</div>
+			</div>
+
+			<label class="control-label" for="active-state-timeout">Active state timeout</label>
+			<div class="controls">
+				<input id="active-state-timeout" class="config-input-large" type="number" name="config[active_state_timeout]" value="$_select[active_state_timeout]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-active-state-timeout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-active-state-timeout" class="config-help-info">
+					Help text goes here
+				</span>
+			</div>
+
+			<div class="$_not_user_configurable">
+				<label class="control-label" for="wait-for-completion">Wait for completion</label>
+				<div class="controls">
+					<select id="wait-for-completion" class="config-select-large" name="config[wait_for_completion]">
+						$_select[wait_for_completion]
+					</select>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-wait-for-completion" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-wait-for-completion" class="config-help-info">
+						Help text goes here
+					</span>
+				</div>
 			</div>
 
 			<label class="control-label" for="allow-session-interruption">Session interrupt</label>
@@ -55,45 +218,16 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-allow-session-interruption" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-allow-session-interruption" class="config-help-info">
 					Allow session to be interrupted by another AirPlay sender. Default is No.
-                </span>
-			</div>
-
-			<label class="control-label" for="disable-synchronization">Disable sync</label>
-			<div class="controls">
-				<select id="disable-synchronization" class="config-select-large" name="config[disable_synchronization]">
-					$_select[disable_synchronization]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-synchronizatio" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-disable-synchronizatio" class="config-help-info">
-					Disable synchronization. Set this to Yes if CamillaDSP is on and there are audio glitches. Default is No.
-                </span>
+				</span>
 			</div>
 
 			<label class="control-label" for="session-timeout">Session timeout</label>
 			<div class="controls">
-				<input class="config-input-large" type="number" id="session-timeout" name="config[session_timeout]" value="$_select[session_timeout]">
+				<input id="session-timeout" class="config-input-large" type="number" name="config[session_timeout]" value="$_select[session_timeout]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-session-timeout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-session-timeout" class="config-help-info">
 					Wait for this number of seconds after a source disappears before terminating the session and becoming available again. Default is 120.
-                </span>
-			</div>
-
-			<label class="control-label" for="audio-backend-latency-offset-in-seconds">Latency offset</label>
-			<div class="controls">
-				<input class="config-input-large" type="text" id="audio-backend-latency-offset-in-seconds" name="config[audio_backend_latency_offset_in_seconds]" value="$_select[audio_backend_latency_offset_in_seconds]">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-latency-offset-in-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-audio-backend-latency-offset-in-seconds" class="config-help-info">
-					Set this offset to compensate for a fixed delay in the audio back end e.g. if the output device delays by 100 ms, set this to -0.1.
-                </span>
-			</div>
-
-			<label class="control-label" for="audio-backend-buffer-desired-length-in-seconds">Buffer length</label>
-			<div class="controls">
-				<input class="config-input-large" type="text" id="audio-backend-buffer-desired-length-in-seconds" name="config[audio_backend_buffer_desired_length_in_seconds]" value="$_select[audio_backend_buffer_desired_length_in_seconds]">
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-buffer-desired-length-in-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-audio-backend-buffer-desired-length-in-seconds" class="config-help-info">
-					If set too small, buffer underflow occurs on low-powered machines. If set too long the response times with software mixer become annoying. Default is 0.15.
-                </span>
+				</span>
 			</div>
 		</div>
 	</form>

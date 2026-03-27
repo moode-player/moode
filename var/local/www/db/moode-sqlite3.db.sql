@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Feb 11 08:29:49 2026
+-- File generated with SQLiteStudio v3.4.4 on Thu Mar 26 14:31:25 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -8,16 +8,25 @@ BEGIN TRANSACTION;
 
 -- Table: cfg_airplay
 CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_airplay (id, param, value) VALUES (1, 'airplaymeta', 'deprecated');
-INSERT INTO cfg_airplay (id, param, value) VALUES (2, 'airplayvol', 'deprecated');
-INSERT INTO cfg_airplay (id, param, value) VALUES (3, 'interpolation', 'soxr');
-INSERT INTO cfg_airplay (id, param, value) VALUES (4, 'output_format', 'S16');
-INSERT INTO cfg_airplay (id, param, value) VALUES (5, 'output_rate', '44100');
-INSERT INTO cfg_airplay (id, param, value) VALUES (6, 'allow_session_interruption', 'no');
-INSERT INTO cfg_airplay (id, param, value) VALUES (7, 'session_timeout', '120');
-INSERT INTO cfg_airplay (id, param, value) VALUES (8, 'audio_backend_latency_offset_in_seconds', '0.0');
-INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'audio_backend_buffer_desired_length_in_seconds', '0.2');
-INSERT INTO cfg_airplay (id, param, value) VALUES (10, 'disable_synchronization', 'no');
+INSERT INTO cfg_airplay (id, param, value) VALUES (1, 'interpolation', 'auto');
+INSERT INTO cfg_airplay (id, param, value) VALUES (2, 'eight_channel_mode', 'on');
+INSERT INTO cfg_airplay (id, param, value) VALUES (3, 'six_channel_mode', 'on');
+INSERT INTO cfg_airplay (id, param, value) VALUES (4, 'mixdown', 'auto');
+INSERT INTO cfg_airplay (id, param, value) VALUES (5, 'output_channel_mapping', 'auto');
+INSERT INTO cfg_airplay (id, param, value) VALUES (6, 'audio_backend_latency_offset_in_seconds', '0.0');
+INSERT INTO cfg_airplay (id, param, value) VALUES (7, 'audio_backend_buffer_desired_length_in_seconds', '0.2');
+INSERT INTO cfg_airplay (id, param, value) VALUES (8, 'run_this_before_entering_active_state', '/var/local/www/commandw/spspre.sh');
+INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'run_this_after_exiting_active_state', '/var/local/www/commandw/spspost.sh');
+INSERT INTO cfg_airplay (id, param, value) VALUES (10, 'active_state_timeout', '10.0');
+INSERT INTO cfg_airplay (id, param, value) VALUES (11, 'wait_for_completion', 'yes');
+INSERT INTO cfg_airplay (id, param, value) VALUES (12, 'allow_session_interruption', 'no');
+INSERT INTO cfg_airplay (id, param, value) VALUES (13, 'session_timeout', '60');
+INSERT INTO cfg_airplay (id, param, value) VALUES (14, 'output_rate', 'auto');
+INSERT INTO cfg_airplay (id, param, value) VALUES (15, 'output_format', 'auto');
+INSERT INTO cfg_airplay (id, param, value) VALUES (16, 'output_channels', 'auto');
+INSERT INTO cfg_airplay (id, param, value) VALUES (17, 'disable_synchronization', 'no');
+INSERT INTO cfg_airplay (id, param, value) VALUES (18, 'disable_standby_mode', 'never');
+INSERT INTO cfg_airplay (id, param, value) VALUES (19, 'cover_art_cache_directory', '/var/local/www/imagesw/airplay-covers');
 
 -- Table: cfg_audiodev
 CREATE TABLE cfg_audiodev (id INTEGER PRIMARY KEY, name CHAR (64), alt_name CHAR (64), dacchip CHAR (64), chipoptions CHAR (64), iface CHAR (32), list CHAR (10), driver CHAR (64), drvoptions CHAR (64));
@@ -242,6 +251,8 @@ CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_v
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32));
 INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (1, 'camilladsp', 'sample-configs', 'v3-sample-configs');
 INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters');
+INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync');
+INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot');
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));
