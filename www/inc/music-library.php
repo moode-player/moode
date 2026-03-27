@@ -852,18 +852,6 @@ function getDSDRateAndChannels($file) {
 	return $result;
 }
 
-// ORIGINAL: Return DSD rate and channels
-function __getDSDRateAndChannels($file) {
-	$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $file . '"');
-		// Empty mediainfo so fallback to using the "file" command
-		$result = syscmd('file -b ' . '"' . MPD_MUSICROOT . $file . '"' .
-			' | grep -o "2822400\|5644800\|11289600\|22579200\|45158400"');
-		$result[1] = $result[0];
-		$result[2] = '2';
-
-	return $result;
-}
-
 // Return MPD format tag rate:bits:channels
 function getMpdFormatTag($file) {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
