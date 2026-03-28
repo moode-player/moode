@@ -1586,13 +1586,16 @@ function inpSrcMetaRefreshBtn() {
 
 // Generate search url
 function genSearchUrl (artist, title, album) {
+	// DEBUG:
+	//console.log('Args: ' + artist + ' | ' + title + ' | ' + album);
+
     // Search disabled by user
     if (SESSION.json['search_site'] == 'Disabled') {
         var returnStr = title;
     }
     // Title has no searchable info or mobile
     else if (MPD.json['coverurl'] === DEFAULT_ALBUM_COVER || UI.mobile) {
-        var returnStr = MPD.json['title'];
+		var returnStr = title;
     }
     // Station does not transmit title
     else if (title == DEFAULT_STATION_NAME) {
