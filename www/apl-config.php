@@ -35,12 +35,12 @@ foreach ($result as $row) {
 
 // Show/hide options
 $majorVersion = getAirPlayVersion('major');
-$_version_5_show_hide = $majorVersion == '5' ? '' : 'hide';
+$_version_5_show_hide = $majorVersion > 4 ? '' : 'hide';
 $_not_user_configurable = 'hide';
 
 // General
 $_select['interpolation'] .= "<option value=\"auto\" " . (($cfgAirplay['interpolation'] == 'auto') ? "selected" : "") . ">Auto (Default)</option>\n";
-if ($majorVersion == '5') {
+if ($majorVersion > 4) {
 	$_select['interpolation'] .= "<option value=\"vernier\" " . (($cfgAirplay['interpolation'] == 'vernier') ? "selected" : "") . ">Vernier</option>\n";
 }
 $_select['interpolation'] .= "<option value=\"soxr\" " . (($cfgAirplay['interpolation'] == 'soxr') ? "selected" : "") . ">SoX</option>\n";
@@ -62,7 +62,7 @@ $_select['output_rate'] .= "<option value=\"44100\" " . (($cfgAirplay['output_ra
 $_select['output_rate'] .= "<option value=\"88200\" " . (($cfgAirplay['output_rate'] == '88200') ? "selected" : "") . ">88.2 kHz</option>\n";
 $_select['output_rate'] .= "<option value=\"176400\" " . (($cfgAirplay['output_rate'] == '176400') ? "selected" : "") . ">176.4 kHz</option>\n";
 $_select['output_rate'] .= "<option value=\"352800\" " . (($cfgAirplay['output_rate'] == '352800') ? "selected" : "") . ">352.8 kHz</option>\n";
-if ($majorVersion == '5') {
+if ($majorVersion > 4) {
 	$_select['output_rate'] .= "<option value=\"384000\" " . (($cfgAirplay['output_rate'] == '384000') ? "selected" : "") . ">384.0 kHz</option>\n";
 }
 $_select['output_format'] .= "<option value=\"auto\" " . (($cfgAirplay['output_format'] == 'auto') ? "selected" : "") . ">Auto (Default)</option>\n";
@@ -75,7 +75,7 @@ $_select['output_channels'] .= "<option value=\"auto\" " . (($cfgAirplay['output
 $_select['output_channels'] .= "<option value=\"2\" " . (($cfgAirplay['output_channels'] == '2') ? "selected" : "") . ">2 Channel</option>\n";
 $_select['output_channels'] .= "<option value=\"6\" " . (($cfgAirplay['output_channels'] == '6') ? "selected" : "") . ">5.1 Channel</option>\n";
 $_select['output_channels'] .= "<option value=\"8\" " . (($cfgAirplay['output_channels'] == '8') ? "selected" : "") . ">7.1 Channel</option>\n";
-if ($majorVersion == '5') {
+if ($majorVersion > 4) {
 	$_select['eight_channel_mode'] .= "<option value=\"on\" " . (($cfgAirplay['eight_channel_mode'] == 'on') ? "selected" : "") . ">On (Default)</option>\n";
 	$_select['eight_channel_mode'] .= "<option value=\"off\" " . (($cfgAirplay['eight_channel_mode'] == 'off') ? "selected" : "") . ">Off</option>\n";
 	$_select['six_channel_mode'] .= "<option value=\"on\" " . (($cfgAirplay['six_channel_mode'] == 'on') ? "selected" : "") . ">On (Default)</option>\n";

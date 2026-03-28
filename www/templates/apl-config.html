@@ -37,7 +37,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disable-synchronization" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-disable-synchronization" class="config-help-info">
-					Disable synchronization. Default is "No". Set to Yes if CamillaDSP is on and there are audio glitches.
+					Disable synchronization. Default is "No". Set to "Yes" if CamillaDSP is on and there are audio glitches.
 				</span>
 			</div>
 
@@ -71,7 +71,7 @@
 				<input id="audio-backend-latency-offset-in-seconds" class="config-input-large" type="text" name="config[audio_backend_latency_offset_in_seconds]" value="$_select[audio_backend_latency_offset_in_seconds]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-latency-offset-in-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-audio-backend-latency-offset-in-seconds" class="config-help-info">
-					Set this offset to compensate for a fixed delay in the audio back end. Default is 0.0.<br>
+					Set this offset to compensate for a fixed delay in the audio back end. Default is 0.0 seconds.<br>
 					<b>Example:</b> If the output device delays by 100 ms, set this to -0.1.
 				</span>
 			</div>
@@ -81,7 +81,7 @@
 				<input id="audio-backend-buffer-desired-length-in-seconds" class="config-input-large" type="text" name="config[audio_backend_buffer_desired_length_in_seconds]" value="$_select[audio_backend_buffer_desired_length_in_seconds]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-audio-backend-buffer-desired-length-in-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-audio-backend-buffer-desired-length-in-seconds" class="config-help-info">
-					If set too small, buffer underflow occurs on low-powered machines. If set too large the response times with software mixer become annoying. Default is 0.2.
+					If set too small, buffer underflow occurs on low-powered machines. If set too large the response times with software mixer become annoying. Default is 0.2 seconds.
 				</span>
 			</div>
 
@@ -104,8 +104,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-format" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-output-format" class="config-help-info">
-					Output bit depth. Default is "Auto" bit.
-					Specify "auto", or a single format, e.g. "S32_LE", or a bracketed comma-separated list of formats, e.g. ("S32_LE", "S16_LE"). Default is "auto". See the "Rates, Formats and Channels" discussion above.
+					Output format (bit depth). Default is "Auto" (try to match the input format).
 				</span>
 			</div>
 
@@ -116,7 +115,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-channels" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-output-channels" class="config-help-info">
-					Help text goes here
+					Output channel layout. Default is "Auto" (try to match the input channel layout).
 				</span>
 			</div>
 
@@ -128,7 +127,7 @@
 					</select>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-eight-channel-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-eight-channel-mode" class="config-help-info">
-						Help text goes here
+						Enable reception of eight channel audio. Can be "Off", "On" or an eight-channel FFmpeg channel layout. If "On", the channel layout used is: "7.1".
 					</span>
 				</div>
 
@@ -139,7 +138,7 @@
 					</select>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-six-channel-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-six-channel-mode" class="config-help-info">
-						Help text goes here
+						Enable reception of six channel audio. Can be "Off", "On" or a six-channel FFmpeg channel layout. If "On", the channel layout used is: "5.1".
 					</span>
 				</div>
 
@@ -150,7 +149,7 @@
 					</select>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-mixdown" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-mixdown" class="config-help-info">
-						Help text goes here
+						Enable mixdown. Can be "Auto", "Off" or an FFmpeg channel layout, e.g. "Stereo". If "Auto", mixdown will occur, if needed, to the default channel layout for the output channels available.
 					</span>
 				</div>
 
@@ -161,7 +160,12 @@
 					</select>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-channel-mapping" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-output-channel-mapping" class="config-help-info">
-						Help text goes here
+						Specify how audio channels are mapped to the output device's channels:<br>
+						- Shairport Sync uses standard FFmpeg channel names for each channel in the audio output. The names are, in order, "FL", "FR", "FC", "LFE", "BL", "BR", "SL", "SR".<br>
+						- If "Auto", the audio channels are matched, where possible, to the channels in the device's channel map. Any leftover output channels are mapped, in order, to leftover device channels.<br>
+						- If "Off", or if there is no device channel map, audio channels are output to the device channels in order.<br>
+						- If a list of audio channels is given, e.g. ( "FL", "FR", "LFE", "FC", "BL", "BR", "SL", "SR" ), they are  mapped in the order given to the device channels from 1 upwards.<br>
+						- The audio channel list can include the same channel more than once and can include the silent channel "--".
 					</span>
 				</div>
 			</div>
@@ -174,7 +178,9 @@
 					<input id="run-this-before-entering-active-state" class="config-input-large" type="text" name="config[run_this_before_entering_active_state]" value="$_select[run_this_before_entering_active_state]">
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-run-this-before-entering-active-state" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-run-this-before-entering-active-state" class="config-help-info">
-						Help text goes here
+						The "active" state starts when play begins and ends when the active_state_timeout has elapsed after play ends, unless another play session starts before the timeout has fully elapsed.<br>
+						- Set to "/full/path/to/application and args"<br>
+						- Make sure the application has executable permission. If it's a script, include the shebang (#!/bin/...) on the first line.
 					</span>
 				</div>
 
@@ -183,7 +189,9 @@
 					<input id="run-this-after-exiting-active-state" class="config-input-large" type="text" name="config[run_this_after_exiting_active_state]" value="$_select[run_this_after_exiting_active_state]">
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-run-this-after-exiting-active-state" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-run-this-before-entering-active-state" class="config-help-info">
-						Help text goes here
+						The "active" state starts when play begins and ends when the active_state_timeout has elapsed after play ends, unless another play session starts before the timeout has fully elapsed.<br>
+						- Set to "/full/path/to/application and args"<br>
+						- Make sure the application has executable permission. If it's a script, include the shebang (#!/bin/...) on the first line.
 					</span>
 				</div>
 			</div>
@@ -193,7 +201,7 @@
 				<input id="active-state-timeout" class="config-input-large" type="number" name="config[active_state_timeout]" value="$_select[active_state_timeout]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-active-state-timeout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-active-state-timeout" class="config-help-info">
-					Help text goes here
+					wait for this number of seconds after play ends before leaving the active state, unless another play session begins.
 				</span>
 			</div>
 
@@ -205,7 +213,7 @@
 					</select>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-wait-for-completion" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-wait-for-completion" class="config-help-info">
-						Help text goes here
+						Set to "yes" to get Shairport Sync to wait until the "run_this..." applications have terminated before continuing
 					</span>
 				</div>
 			</div>
@@ -217,7 +225,7 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-allow-session-interruption" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-allow-session-interruption" class="config-help-info">
-					Allow session to be interrupted by another AirPlay sender. Default is No.
+					Allow session to be interrupted by another AirPlay sender. Default is "No".
 				</span>
 			</div>
 
@@ -226,7 +234,7 @@
 				<input id="session-timeout" class="config-input-large" type="number" name="config[session_timeout]" value="$_select[session_timeout]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-session-timeout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-session-timeout" class="config-help-info">
-					Wait for this number of seconds after a source disappears before terminating the session and becoming available again. Default is 120.
+					Wait for this number of seconds after a source disappears before terminating the session and becoming available again. Default is 60 seconds.
 				</span>
 			</div>
 		</div>
