@@ -524,10 +524,10 @@ $_select['volume_db_display_off'] .= "<input type=\"radio\" name=\"volume_db_dis
 if ($_SESSION['multiroom_tx'] == 'Off' &&
 	$_SESSION['multiroom_rx'] != 'On') { // Off or Disabled
 	// Only one DSP can be on
-	$_invpolarity_ctl_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_crossfeed_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_eqfa12p_ctl_disabled = (allowDspInAlsaChain() == false || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$_alsaequal_ctl_disabled = (allowDspInAlsaChain() == false || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_invpolarity_ctl_disabled = ($_SESSION['crossfeed'] != 'Off'     || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_crossfeed_ctl_disabled =   ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_eqfa12p_ctl_disabled =     (allowDspInAlsaChain() == false || $_SESSION['alsaequal'] != 'Off' || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+	$_alsaequal_ctl_disabled =   (allowDspInAlsaChain() == false || $_SESSION['eqfa12p'] != 'Off'   || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$piModel = substr($_SESSION['hdwrrev'], 3, 1);
 	$piName = $_SESSION['hdwrrev'];
 	$cmModel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
