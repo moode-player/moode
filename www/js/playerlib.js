@@ -1679,13 +1679,18 @@ function genSearchUrl (artist, title, album) {
 // Update active Queue item
 function updateActivePlayqueueItem() {
     $.getJSON('command/queue.php?cmd=get_playqueue', function(data) {
+		// DEBUG:
+		//console.log('updateActivePlayqueueItem():');
 		//console.log(data);
         if (data) {
             for (i = 0; i < data.length; i++) {
                 // Current song
 	            if (i == parseInt(MPD.json['song'])) {
                     // Radio station
-    				if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
+    				if (data[i].file.substr(0, 4) == 'http' &&
+						(typeof(data[i].Name) !== 'undefined' ||
+						(typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined'))
+					) {
     	                // Line 1 title
     	                if (typeof(data[i].Title) === 'undefined' ||
                             data[i].Title.trim() == '-' || // NTS can return just a dash in its Title tag
@@ -1728,7 +1733,9 @@ function updateActivePlayqueueItem() {
 // Render the Queue
 function renderPlayqueue(state) {
     $.getJSON('command/queue.php?cmd=get_playqueue', function(data) {
-        //console.log(data);
+		// DEBUG:
+		//console.log('renderPlayqueue():');
+		//console.log(data);
 		var output = '';
         var playqueueLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playqueue" data-original=';
         var pausedClass = state != 'play' ? ' paused' : '';
@@ -1762,7 +1769,10 @@ function renderPlayqueue(state) {
 					output += (typeof(data[i].Album) === 'undefined') ?  ' - Unknown album' : ' - ' + data[i].Album;
 					output += '</span>';
 					output += '</span>';
-				} else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
+				} else if (data[i].file.substr(0, 4) == 'http' &&
+					(typeof(data[i].Name) !== 'undefined' ||
+					(typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined'))
+				) {
                     // Radio station
                     var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"' + DEFAULT_RADIO_COVER + '"' : '"imagesw/radio-logos/thumbs/' +
                         encodeURIComponent(RADIO.json[data[i].file]['name']) + '_sm.jpg"';
@@ -1880,6 +1890,9 @@ function renderPlayqueue(state) {
 // Update track cover
 function updateTrackCover(trackTitle) {
 	$.getJSON('command/radio.php?cmd=get_track_cover_url', {'track_title': trackTitle}, function(coverURL) {
+		// DEBUG:
+		//console.log('updateTrackCover(): ' + trackTitle);
+		//console.log(coverURL);
 		if (coverURL.includes('https://') && MPD.json['coverurl'] != coverURL) {
 			MPD.json['coverurl'] = coverURL;
 			MPD.json['title'] = trackTitle;
