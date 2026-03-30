@@ -28,6 +28,7 @@ Updates
 - UPD: Add CSS media query for 1920x720 resolution
 - UPD: Add CSS media query for 960x360 resolution
 - UPD: Replace predefined search filter "hdonly" with "hires" to match badge
+- UPD: Disable ModemManager service (broadband network support)
 
 Bug fixes
 - FIX: Goto folder various issues
