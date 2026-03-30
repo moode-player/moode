@@ -3185,8 +3185,6 @@ function runQueuedJob() {
 			}
 			break;
 		case 'bt_pin_code':
-			// TODO: No need for this. sspmode should always be 1
-			// https://github.com/moode-player/moode/issues/737
 			if (empty($_SESSION['w_queueargs'])) {
 				sysCmd('echo "* ' . '" > ' . BT_PINCODE_CONF);
 				sysCmd("sed -i s'|ExecStart=/usr/bin/bt-agent.*|ExecStart=/usr/bin/bt-agent -c NoInputNoOutput|' /etc/systemd/system/bt-agent.service");
