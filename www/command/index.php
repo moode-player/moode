@@ -188,6 +188,28 @@ switch ($cmd[0]) {
 			echo json_encode(array('alert' => 'Argument missing: Configuration name'));
 		}
 		break;
+	case 'get_eq_status':
+		$status = sysCmd('/var/www/util/eqctl.php status')[0];
+		echo json_encode(array('status' => $status));
+		break;
+	case 'set_eq_curve': // eq_type "curve_name" or curve_index
+		// $cmd: set_eq_curve graphic hi-lo boost
+		// eqctl.php graphic set "hi-lo boost"
+		// args: graphic hi-lo boost
+		$parts = explode(' ', trim(getArgs($cmd)), 2);
+		$status = sysCmd('/var/www/util/eqctl.php ' . $parts[0] . ' set ' . '"' . $parts[1] . '"')[0];
+		if (str_contains($status, 'ERR')) {
+			$key = 'error';
+			$value = explode(': ', $status)[1];
+		} else if (str_contains($status, 'Usage')) {
+			$key = 'error';
+			$value = 'Invalid command arguments';
+		} else {
+			$key = 'status';
+			$value = $status;
+		}
+		echo json_encode(array($key => $value));
+		break;
 	case 'get_receiver_status': // -rx
 		$result = sysCmd('/var/www/util/trx-control.php -rx')[0];
 		echo json_encode(array('status' => $result));
