@@ -17,9 +17,11 @@
 
 New features
 - NEW: Shairport-sync version 5 (new image only)
+- NEW: Graphic/Parametric EQ control API (REST and CLI)
 
 Updates
 - UPD: Bump to Linux kernel 6.12.75
+- UPD: Improve Radio station track cover feature
 - UPD: Improve AirPlay and Spotify Connect metadata readers
 - UPD: Improve layout of the Library section of Preferences
 - UPD: Improve Quick help explanation of the custom AlbumDate tag
@@ -31,9 +33,9 @@ Updates
 - UPD: Disable ModemManager service (broadband network support)
 
 Bug fixes
-- FIX: Goto folder various issues
+- FIX: Various issues with the "Goto folder" feature
+- FIX: Song files with "Name" tag detected as radio stations
 - FIX: Dropdown menu hover corner radius for first and last item
-- FIX: Song files with Name tag detected as radio stations
 
 ################################################################################
 #
