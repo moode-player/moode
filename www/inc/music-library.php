@@ -591,6 +591,14 @@ function getLibraryStats($sock) {
 		// Albums
 		sendMpdCmd($sock, 'lsinfo "' . $file . '"');
 		$tags = parseLsinfoAsArray(readMpdResp($sock));
+		// get the track path (the albums might be differentiated by that) - also by MUSICBRAINZ tags, so mybe there is room for improvement...
+		$apath = explode("/", $file);
+		$removeFromHere = -1; // remove the filename
+		if (str_ends_with($apath[count($apath) - 2], ".cue") == true) {
+			$removeFromHere = -2; // remove the cue filename
+		}
+		array_splice($apath, $removeFromHere);
+		$albumPath = join("/", $apath);
 
 		$album = $tags['Album'] ? $tags['Album'] : 'Unknown Album';
 		$albumartist = $tags['AlbumArtist'] ? $tags['AlbumArtist'] :
