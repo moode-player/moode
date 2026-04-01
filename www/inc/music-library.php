@@ -613,7 +613,7 @@ function getLibraryStats($sock) {
 		}
 
 		// Create unique album keys
-		$albumKey = $album . '@' . $albumartist;
+		$albumKey = $album . '@' . $albumartist . '@' . $albumPath;
 		if  (!in_array($albumKey, $albumKeys)) {
 			array_push($albumKeys, $albumKey);
 		}
