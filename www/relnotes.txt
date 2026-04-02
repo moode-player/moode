@@ -22,7 +22,7 @@ New features
 Updates
 - UPD: Bump to Linux kernel 6.12.75
 - UPD: Improve Radio station track cover feature
-- UPD: Improve AirPlay and Spotify Connect metadata readers
+- UPD: Improve AirPlay and Spotify Connect covers feature
 - UPD: Improve layout of the Library section of Preferences
 - UPD: Improve Quick help explanation of the custom AlbumDate tag
 - UPD: Improve Peripheral Config help and field validation
