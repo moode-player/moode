@@ -19,6 +19,9 @@ body {
 	#ss-coverart-url img {width:80vw;}
 	body.cv #playbar-timeline {width:30%}
 	body.cv #playbar-toggles .btn {margin:0 .25rem}
+	.inpsrc-metadata-cover {
+		height:calc(80vw + .25em);
+	}
 }
 
 /*
