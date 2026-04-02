@@ -36,6 +36,7 @@ Bug fixes
 - FIX: Various issues with the "Goto folder" feature
 - FIX: Song files with "Name" tag detected as radio stations
 - FIX: Dropdown menu hover corner radius for first and last item
+- FIX: Renderer covers not sized correctly in certain portrait viewports
 
 ################################################################################
 #
