@@ -68,7 +68,7 @@ switch ($_GET['cmd']) {
 		sysCmd('rm "' . MPD_PLAYLIST_ROOT . html_entity_decode($_POST['path']) . '.m3u"');
 		sysCmd('rm "' . PLAYLIST_COVERS_ROOT . html_entity_decode($_POST['path']) . '.jpg"');
 		break;
-    case 'save_queue_to_playlist':
+	case 'save_queue_to_playlist':
 		$plName = html_entity_decode($_GET['name']);
 		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 		$sock = getMpdSock('command/playlist.php');
@@ -77,10 +77,10 @@ switch ($_GET['cmd']) {
 		$plMeta = getPlaylistMetadata($plName);
 
 		// Create playlist from queue
-        sendMpdCmd($sock, 'rm "' . $plName . '"');
+		sendMpdCmd($sock, 'rm "' . $plName . '"');
 		$resp = readMpdResp($sock);
-        sendMpdCmd($sock, 'save "' . $plName . '"');
-        echo json_encode(readMpdResp($sock));
+		sendMpdCmd($sock, 'save "' . $plName . '"');
+		echo json_encode(readMpdResp($sock));
 		sysCmd('chmod 0777 "' . $plFile . '"');
 		sysCmd('chown root:root "' . $plFile . '"');
 
@@ -120,7 +120,7 @@ switch ($_GET['cmd']) {
 		phpSession('close');
 		break;
 	case 'add_item_to_favorites':
-        if (isset($_GET['item']) && !empty($_GET['item'])) {
+		if (isset($_GET['item']) && !empty($_GET['item'])) {
 			phpSession('open_ro');
 			$plName = $_SESSION['favorites_name'];
 
@@ -192,60 +192,60 @@ function getPlaylists() {
 }
 // Return playlist metadata and items
 function getPlaylistContents($plName) {
-        $plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
-        $dbh = sqlConnect();
-        $sock = getMpdSock('command/playlist.php');
-        $genre = '';
-        $cover = 'default';
-        $items = array();
-        $extinfTitle = null;
-        if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
-                workerLog('getPlaylistContents(): File read failed on ' . $plFile);
-        } else {
-                // Parse genre and cover and create item {name, path, line2}
-                foreach($plItems as $item) {
-                        if (strpos($item, '#EXTGENRE') !== false) {
-                                $genre = explode(':', $item)[1];
-                        } else if (strpos($item, '#EXTIMG') !== false) {
-                                $cover = explode(':', $item)[1];
-                        } else if (strpos($item, '#EXTINF') !== false) {
-                                // Extract title from "#EXTINF:-1,Episode title here"
-                                $extinfTitle = strpos($item, ',') !== false ? trim(substr($item, strpos($item, ',') + 1)) : null;
-                        } else if (substr($item, 0, 1) === '#') {
-                                // Skip all other # lines (#EXTM3U, #PLAYLIST, etc.)
-                                continue;
-                        } else {
-                                if (substr($item, 0, 4) == 'http') {
-                                        // Radio station or podcast episode
-                                        if ($extinfTitle) {
-                                                // Use title from preceding #EXTINF line
-                                                $name = $extinfTitle;
-                                                $extinfTitle = null;
-                                        } else {
-                                                $result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);
-                                                if ($result === true) {
-                                                        // Query successful but no result, set name to URL
-                                                        $name = $item;
-                                                } else {
-                                                        // Query successful and non-empty result
-                                                        $name = $result[0]['name'];
-                                                }
-                                        }
-                                        $line2 = 'Radio Station';
-                                } else {
-                                        // Song file
-                                        sendMpdCmd($sock, 'lsinfo "' . $item . '"');
-                                        $tags = parseDelimFile(readMpdResp($sock), ': ');
-                                        $name = $tags['Title'] ? $tags['Title'] : 'Unknown title';
-                                        $line2 = ($tags['Album'] ? $tags['Album'] : 'Unknown album') . ' - ' .
-                                                ($tags['Artist'] ? $tags['Artist'] : 'Unknown artist');
-                                        $extinfTitle = null;
-                                }
-                                array_push($items, array('name' => $name, 'path' => $item, 'line2' => $line2));
-                        }
-                }
-        }
-        return array('genre' => $genre, 'cover' => $cover, 'items' => $items);
+	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
+	$dbh = sqlConnect();
+	$sock = getMpdSock('command/playlist.php');
+	$genre = '';
+	$cover = 'default';
+	$items = array();
+	$extinfTitle = null;
+	if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
+		workerLog('getPlaylistContents(): File read failed on ' . $plFile);
+	} else {
+		// Parse genre and cover and create item {name, path, line2}
+		foreach($plItems as $item) {
+			if (strpos($item, '#EXTGENRE') !== false) {
+				$genre = explode(':', $item)[1];
+			} else if (strpos($item, '#EXTIMG') !== false) {
+				$cover = explode(':', $item)[1];
+			} else if (strpos($item, '#EXTINF') !== false) {
+				// Extract title from "#EXTINF:-1,Episode title here"
+				$extinfTitle = strpos($item, ',') !== false ? trim(substr($item, strpos($item, ',') + 1)) : null;
+			} else if (substr($item, 0, 1) === '#') {
+				// Skip all other # lines (#EXTM3U, #PLAYLIST, etc.)
+				continue;
+			} else {
+				if (substr($item, 0, 4) == 'http') {
+					// Radio station or podcast episode
+					if ($extinfTitle) {
+						// Use title from preceding #EXTINF line
+						$name = $extinfTitle;
+						$extinfTitle = null;
+					} else {
+						$result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);
+						if ($result === true) {
+							// Query successful but no result, set name to URL
+							$name = $item;
+						} else {
+							// Query successful and non-empty result
+							$name = $result[0]['name'];
+						}
+					}
+					$line2 = 'Radio Station';
+				} else {
+					// Song file
+					sendMpdCmd($sock, 'lsinfo "' . $item . '"');
+					$tags = parseDelimFile(readMpdResp($sock), ': ');
+					$name = $tags['Title'] ? $tags['Title'] : 'Unknown title';
+					$line2 = ($tags['Album'] ? $tags['Album'] : 'Unknown album') . ' - ' .
+							($tags['Artist'] ? $tags['Artist'] : 'Unknown artist');
+					$extinfTitle = null;
+				}
+				array_push($items, array('name' => $name, 'path' => $item, 'line2' => $line2));
+			}
+		}
+	}
+	return array('genre' => $genre, 'cover' => $cover, 'items' => $items);
 }
 // Return playlist metadata
 function getPlaylistMetadata($plName) {
