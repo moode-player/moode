@@ -194,7 +194,7 @@ const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
 // moodeutl -q "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
 // moodeutl -q "UPDATE cfg_system SET value='228343' WHERE param='feat_bitmask'"
 const FEAT_HTTPS        = 1;		// y HTTPS mode
-const FEAT_AIRPLAY      = 2;		// y AirPlay renderer
+const FEAT_AIRPLAY      = 2;		// n AirPlay renderer
 const FEAT_MINIDLNA     = 4;		// y DLNA server
 const FEAT_RECORDER     = 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE  = 16;		// y Squeezelite renderer
@@ -204,7 +204,7 @@ const FEAT_ROONBRIDGE   = 128;		// y RoonBridge renderer
 const FEAT_LOCALDISPLAY = 256;		// y Local display
 const FEAT_INPSOURCE    = 512;		// y Input source select
 const FEAT_UPNPSYNC     = 1024;		//   UPnP volume sync
-const FEAT_SPOTIFY      = 2048;		// y Spotify Connect renderer
+const FEAT_SPOTIFY      = 2048;		// n Spotify Connect renderer
 const FEAT_GPIO         = 4096;		// y GPIO button handler
 const FEAT_PLEXAMP      = 8192;		// y Plexamp renderer
 const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
@@ -212,7 +212,7 @@ const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
 //						-------
-//						  228279
+//						  226229
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate
