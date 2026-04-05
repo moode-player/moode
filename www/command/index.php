@@ -253,7 +253,7 @@ switch ($cmd[0]) {
 		$result = sysCmd('moodeutl --setdisplay' . getArgs($cmd));
 		echo empty($result) ?
 			json_encode(array('info' => 'Set display to ' . getArgs($cmd) . ' submitted')) :
-			json_encode(array('alert' => 'Missing or invalid argument'));
+			json_encode(array('alert' => $result[0]));
 		break;
 
 	// API commands

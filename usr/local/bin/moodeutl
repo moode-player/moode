@@ -712,19 +712,22 @@ function setDisplay($argv) {
 		return;
 	}
 
+	// Get current on/off states
+	$webuiOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='local_display'\""));
+	$peppyOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='peppy_display'\""));
+
 	// Check enable_peppyalsa
 	setSessionId();
 	session_start();
 	session_write_close();
-	if ($argv[2] == 'peppy' && $_SESSION['enable_peppyalsa'] == '0' ) {
-		fwrite(STDERR, "This option requires PeppyALSA driver to be On\n");
-		return;
+	if ($_SESSION['enable_peppyalsa'] == '0') {
+		if ($argv[2] == 'peppy' || ($argv[2] == 'toggle') && $webuiOn == '1') {
+			fwrite(STDERR, "This option requires PeppyALSA driver to be On\n");
+			return;
+		}
 	}
 
 	if (isset($argv[2])) {
-		$webuiOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='local_display'\""));
-		$peppyOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='peppy_display'\""));
-
 		if ($argv[2] == 'webui') {
 			$set2webui = '1';
 			$set2peppy = '0';
