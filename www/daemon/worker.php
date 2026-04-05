@@ -605,136 +605,34 @@ workerLog('worker: DLNA file sharing: ' . $status);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Special configs');
-workerLog('worker: --');
-//----------------------------------------------------------------------------//
-// Plexamp
-if (file_exists('/home/' . $_SESSION['user_id'] . '/plexamp/js/index.js') === true) {
-	$_SESSION['plexamp_installed'] = 'yes';
-	$msg = 'installed';
-} else {
-	$_SESSION['plexamp_installed'] = 'no';
-	$msg = 'not installed';
-}
-workerLog('worker: Plexamp:          ' . $msg);
-
-// RoonBridge
-// Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
-if (file_exists('/opt/RoonBridge/start.sh') === true) {
-	$msg = 'installed';
-	$_SESSION['roonbridge_installed'] = 'yes';
-	if (sysCmd('systemctl is-enabled roonbridge')[0] == 'enabled') {
-		sysCmd('systemctl disable roonbridge');
-		sysCmd('systemctl stop roonbridge');
-		$msg .= ', systemd unit set to disabled';
-	}
-} else {
-	$_SESSION['roonbridge_installed'] = 'no';
-	$msg = 'not installed';
-}
-workerLog('worker: RoonBridge:       ' . $msg);
-
-// Allo Boss 2
-// OLED: The Allo installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
-if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
-	sleep(1); // Allow rc.local script time to exit after starting worker.php
-	sysCmd('sed -i /boss2/d /etc/rc.local');
-	workerLog('worker: Allo Boss 2:      3rd party OLED script removed from rc.local');
-}
-// DAC
-if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
-	if (file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
-		$msg = 'detected, OLED script not started (boss2oled_no_load)';
-	} else {
-		sysCmd('systemctl start boss2oled');
-		$msg = 'detected, OLED script started';
-	}
-} else {
-	$msg = 'not detected';
-}
-workerLog('worker: Allo Boss 2:      ' . $msg);
-
-// Allo Piano 2.1
-if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
-	$msg = 'detected';
-} else {
-	$msg = 'not detected';
-}
-workerLog('worker: Allo Piano 2.1:   ' . $msg);
-
-// Ensure audio output is unmuted for these devices
-if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
-	sysCmd('/var/www/util/sysutil.sh unmute-pi-ampplus');
-	$msg = 'IQaudIO AMP+:     unmuted';
-} else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
-	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
-	$msg = 'IQaudIO DigiAMP+: unmuted';
-} else {
-	$msg = 'IQaudIO DigiAMP+: not detected';
-}
-workerLog('worker: ' . $msg);
-if ($_SESSION['i2sdevice'] == 'Raspberry Pi DigiAMP+') {
-	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
-	$msg = 'RPi DigiAMP+:     unmuted';
-} else {
-	$msg = 'RPi DigiAMP+:     not detected';
-}
-workerLog('worker: ' . $msg);
-
-// Bluetooth session vars
-// Pairing agent PIN code
-$status = 'session vars ok';
-if (!isset($_SESSION['bt_pin_code'])) {
-	$status = 'session vars created';
-	$_SESSION['bt_pin_code'] = '';
-}
-// ALSA/CDSP max volumes
-if (!isset($_SESSION['alsavolume_max_bt'])) {
-	$_SESSION['alsavolume_max_bt'] = $_SESSION['alsavolume_max'];
-}
-if (!isset($_SESSION['cdspvolume_max_bt'])) {
-	$_SESSION['cdspvolume_max_bt'] = '0';
-}
-// SBC quality
-if (!isset($_SESSION['bluez_sbc_quality'])) {
-	$_SESSION['bluez_sbc_quality'] = 'xq+';
-}
-// ALSA output mode
-if (!isset($_SESSION['alsa_output_mode_bt'])) {
-	$_SESSION['alsa_output_mode_bt'] = '_audioout';
-}
-// Controller mode
-if (!isset($_SESSION['bluez_controller_mode'])) {
-	$_SESSION['bluez_controller_mode'] = 'dual';
-}
-workerLog('worker: Bluetooth:        ' . $status);
-
-// Crossfeed and eqfa12p session vars
-if (!isset($_SESSION['crossfeed'])) {
-	$_SESSION['crossfeed'] = 'Off';
-}
-if (!isset($_SESSION['eqfa12p'])) {
-	$_SESSION['eqfa12p'] = 'Off';
-}
-
-//----------------------------------------------------------------------------//
-workerLog('worker: --');
-workerLog('worker: -- ALSA debug');
+workerLog('worker: -- Audio: detected devices');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
-// Loopback driver
+// Loopback device
 if ($_SESSION['alsa_loopback'] == 'On') {
 	sysCmd('modprobe snd-aloop');
 } else {
 	sysCmd('modprobe -r snd-aloop');
 }
-
-// Dummy PCM driver
+// Dummy PCM device
 if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
-	if (isset($_SESSION['multiroom_tx']) && $_SESSION['multiroom_tx'] == 'On') {
+	if ($_SESSION['multiroom_tx'] == 'On') {
 		loadSndDummy();
 	}
+}
+// LADSPA DSP plugins
+// Invert polarity
+if (!isset($_SESSION['invert_polarity'])) {
+	$_SESSION['invert_polarity'] = '0';
+}
+// Crossfeed
+if (!isset($_SESSION['crossfeed'])) {
+	$_SESSION['crossfeed'] = 'Off';
+}
+// Parametric EQ
+if (!isset($_SESSION['eqfa12p'])) {
+	$_SESSION['eqfa12p'] = 'Off';
 }
 
 // Cards
@@ -763,7 +661,7 @@ workerLog('worker:         4:' . $mixers[4] . '5:' . $mixers[5] . '6:' . $mixers
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
-workerLog('worker: -- Audio configuration');
+workerLog('worker: -- Audio: configured device');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
@@ -871,6 +769,8 @@ workerLog('worker: ALSA volume:   ' . $alsaVolStr);
 workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
 // ALSA loopback
 workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
+// ALSA dummy PCM
+workerLog('worker: ALSA dummyPCM: ' . lcfirst($_SESSION['multiroom_tx']));
 // MPD mixer
 $mixerType = ucfirst($_SESSION['mpdmixer']);
 $mixerType = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'CamillaDSP' : $mixerType;
@@ -906,6 +806,12 @@ workerLog('worker: CamillaDSP:    ' . rtrim($_SESSION['camilladsp'], '.yml'));
 workerLog('worker: CDSP volume:   ' . CamillaDSP::getCDSPVol() . 'dB');
 workerLog('worker: CDSP volrange: ' . $_SESSION['camilladsp_volume_range'] . 'dB');
 
+//----------------------------------------------------------------------------//
+workerLog('worker: --');
+workerLog('worker: -- Audio: custom configs');
+workerLog('worker: --');
+//----------------------------------------------------------------------------//
+
 // Allo Piano 2.1 config
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$dualMode = sysCmd('/var/www/util/sysutil.sh get-piano-dualmode');
@@ -920,13 +826,53 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	// Workaround: Send brief inaudible signal to initialize volume
 	sysCmd('amixer -M -c ' . $_SESSION['cardnum'] . ' sset "Master" 0');
 	sysCmd('speaker-test -Ddefault:PianoDACPlus -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
-	workerLog('worker: Allo Piano2.1: volume initialized');
+	$msg = 'detected, volume initialized';
+} else {
+	$msg = 'not detected, skipped';
 }
+workerLog('worker: Allo Piano 2.1: ' . $msg);
 
-// Invert polarity
-if (!isset($_SESSION['invert_polarity'])) {
-	$_SESSION['invert_polarity'] = '0';
+// Allo Boss 2
+// OLED
+if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
+	// Allow rc.local script time to exit after starting worker.php
+	sleep(1);
+	// Remove Allo installer lines from rc.local because we use systemd
+	sysCmd('sed -i /boss2/d /etc/rc.local');
+	workerLog('worker: Allo Boss 2:    3rd party OLED script removed from rc.local');
 }
+// DAC
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+	if (file_exists($_SESSION['home_dir'] . '/boss2oled_no_load')) {
+		$msg = 'detected, OLED script not started (boss2oled_no_load)';
+	} else {
+		sysCmd('systemctl start boss2oled');
+		$msg = 'detected, OLED script started';
+	}
+} else {
+	$msg = 'not detected, skipped';
+}
+workerLog('worker: Allo Boss 2:    ' . $msg);
+
+// IQaudIO Amp+/DigiAmp+
+if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-ampplus');
+	$msg = 'IQaudIO AMP+:   unmuted';
+} else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
+	$msg = 'IQaudIO DAMP+:  unmuted';
+} else {
+	$msg = 'IQaudIO *AMP+:  not detected, skipped';
+}
+workerLog('worker: ' . $msg);
+// Raspberry Pi DigiAmp+
+if ($_SESSION['i2sdevice'] == 'Raspberry Pi DigiAMP+') {
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
+	$msg = 'RPi DigiAMP+:   unmuted';
+} else {
+	$msg = 'RPi DigiAMP+:   not detected, skipped';
+}
+workerLog('worker: ' . $msg);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -1099,6 +1045,32 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 }
 workerLog('worker: Input select:    ' . $status);
 
+// Bluetooth session vars
+$status = 'session vars ok';
+if (!isset($_SESSION['bt_pin_code'])) {
+	$status = 'session vars created';
+	$_SESSION['bt_pin_code'] = '';
+}
+// ALSA/CDSP max volumes
+if (!isset($_SESSION['alsavolume_max_bt'])) {
+	$_SESSION['alsavolume_max_bt'] = $_SESSION['alsavolume_max'];
+}
+if (!isset($_SESSION['cdspvolume_max_bt'])) {
+	$_SESSION['cdspvolume_max_bt'] = '0';
+}
+// SBC quality
+if (!isset($_SESSION['bluez_sbc_quality'])) {
+	$_SESSION['bluez_sbc_quality'] = 'xq+';
+}
+// ALSA output mode
+if (!isset($_SESSION['alsa_output_mode_bt'])) {
+	$_SESSION['alsa_output_mode_bt'] = '_audioout';
+}
+// Controller mode
+if (!isset($_SESSION['bluez_controller_mode'])) {
+	$_SESSION['bluez_controller_mode'] = 'dual';
+}
+workerLog('worker: Bluetooth:       ' . $status);
 // Start bluetooth controller (and pairing agent)
 if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
@@ -1181,6 +1153,12 @@ if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
 }
 workerLog('worker: UPnP client:     ' . $status);
 
+// Plexamp install check
+if (file_exists('/home/' . $_SESSION['user_id'] . '/plexamp/js/index.js') === true) {
+	$_SESSION['plexamp_installed'] = 'yes';
+} else {
+	$_SESSION['plexamp_installed'] = 'no';
+}
 // Start Plexamp renderer
 if ($_SESSION['feat_bitmask'] & FEAT_PLEXAMP) {
 	if ($_SESSION['plexamp_installed'] == 'yes') {
@@ -1205,6 +1183,16 @@ if (!isset($_SESSION['alsavolume_max_pa'])) {
 $status .= ', ALSA maxvol: ' . $_SESSION['alsavolume_max_pa'] . '%';
 workerLog('worker: Plexamp:         ' . $status);
 
+// RoonBridge install/systemd check
+if (file_exists('/opt/RoonBridge/start.sh') === true) {
+	$_SESSION['roonbridge_installed'] = 'yes';
+	if (sysCmd('systemctl is-enabled roonbridge')[0] == 'enabled') {
+		sysCmd('systemctl disable roonbridge');
+		sysCmd('systemctl stop roonbridge');
+	}
+} else {
+	$_SESSION['roonbridge_installed'] = 'no';
+}
 // Start RoonBridge renderer
 if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
 	if ($_SESSION['roonbridge_installed'] == 'yes') {
