@@ -39,6 +39,7 @@ Bug fixes
 - FIX: Dropdown menu hover corner radius for first and last item
 - FIX: Renderer covers not sized correctly in certain portrait viewports
 - FIX: Thumbgen fails to scan artist images when Prefs > Audio formats = All+
+- FIX: Display set options in moodeutl and REST API not validating "toggle"
 
 ################################################################################
 #
