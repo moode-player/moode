@@ -16,8 +16,11 @@
 ################################################################################
 
 New features
-- NEW: Shairport-sync version 5 (new image only)
+- NEW: Shairport-sync version 5 (new image)
 - NEW: Graphic/Parametric EQ control API (REST and CLI)
+
+Security (new image)
+- SEC: First use of sudo at console prompts for password
 
 Updates
 - UPD: Bump to Linux kernel 6.12.75
