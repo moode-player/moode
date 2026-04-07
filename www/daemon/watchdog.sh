@@ -32,7 +32,7 @@ debug_log () {
 
 wake_display () {
 	WAKE_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='wake_display'")
-	PEPPY_ACTIVE=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='peppy_display'")
+	PEPPY_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='peppy_display'")
 	SCN_BLANK_ACTIVE=$(sqlite3 $SQLDB "SELECT value from cfg_system WHERE param='peppy_scn_blank_active'")
 	CEC_CONTROL=$(moodeutl -d -gv hdmi_cec)
 	CEC_VERSION=$(moodeutl -d -gv hdmi_cec_ver)
@@ -44,7 +44,7 @@ wake_display () {
 			cec-ctl --skip-info --to 0 $CEC_VER_STRING --image-view-on
 		fi
 		export DISPLAY=:0
-		if [[ $PEPPY_ACTIVE = "1" && $SCN_BLANK_ACTIVE = "1" ]]; then
+		if [[ $PEPPY_DISPLAY = "1" && $SCN_BLANK_ACTIVE = "1" ]]; then
 			debug_log "wake display: set peppy_scn_blank_active 0, restart localdisplay"
 			$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='peppy_scn_blank_active'")
 			systemctl restart localdisplay
@@ -122,36 +122,40 @@ while true; do
 		fi
 	fi
 
-	# Wake local display on play
-	MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx'")
-	if [[ $MULTIROOM_TX = "On" ]]; then
-		# Card2 will be Loopback or Dummy depending on whether there are 1 or 2 HDMI ports
-		TX_CARD_NUM="card2"
-		HW_PARAMS=$(cat /proc/asound/$TX_CARD_NUM/pcm0p/sub0/hw_params)
-		if [[ $HW_PARAMS = "closed" ]]; then
-			debug_log "Multiroom sender is not transmitting"
+	# Wake local/remote display on play
+	WEBUI_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='local_display'")
+	PEPPY_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='peppy_display'")
+	if [[ $WEBUI_DISPLAY == '1' || $PEPPY_DISPLAY == '1' ]]; then
+		MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx")
+		if [[ $MULTIROOM_TX = "On" ]]; then
+			# Card2 will be Loopback or Dummy depending on whether there are 1 or 2 HDMI ports
+			TX_CARD_NUM="card2"
+			HW_PARAMS=$(cat /proc/asound/$TX_CARD_NUM/pcm0p/sub0/hw_params)
+			if [[ $HW_PARAMS = "closed" ]]; then
+				debug_log "Multiroom sender is not transmitting"
+			else
+				debug_log "Multiroom sender is transmitting, wake display"
+				wake_display
+			fi
 		else
-			debug_log "Multiroom sender is transmitting, wake display"
-			wake_display
-		fi
-	else
-		debug_log "check wake on play"
-		LOCAL_DISPLAY_HOST=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='local_display_url'" | awk -F"/" '{print $3}')
-		if  [[ $LOCAL_DISPLAY_HOST = "localhost" ]]; then
-			TYPE="local"
-			CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
-			HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
-		else
-			TYPE="remote"
-			TMP=$(curl -G -S -s --data-urlencode "cmd=get_output_format" http://$LOCAL_DISPLAY_HOST/command/ | grep "Not playing")
-			[ -z "$TMP" ] && HW_PARAMS="playing" || HW_PARAMS="closed"
-		fi
+			debug_log "check wake on play"
+			WEBUI_DISPLAY_HOST=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='local_display_url'" | awk -F"/" '{print $3}')
+			if  [[ $WEBUI_DISPLAY_HOST = "localhost" ]]; then
+				TYPE="local"
+				CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
+				HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
+			else
+				TYPE="remote"
+				TMP=$(curl -G -S -s --data-urlencode "cmd=get_output_format" http://$WEBUI_DISPLAY_HOST/command/ | grep "Not playing")
+				[ -z "$TMP" ] && HW_PARAMS="playing" || HW_PARAMS="closed"
+			fi
 
-		if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
-			debug_log "$TYPE audio output is closed, don't wake display"
-		else
-			debug_log "$TYPE audio output is active, wake display"
-			wake_display
+			if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
+				debug_log "$TYPE audio output is closed, don't wake display"
+			else
+				debug_log "$TYPE audio output is active, wake display"
+				wake_display
+			fi
 		fi
 	fi
 
