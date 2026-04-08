@@ -123,8 +123,8 @@ function getAlsaDeviceNames() {
 	$deviceNames = array();
 	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-		// NOTE: Locale independent sed. Contrib from moode forum user @Allsky
-		$aplayDeviceName = trim(sysCmd("aplay -l | sed -n '/^[[:alpha:]][[:alpha:]]* " . $i . "[[:space:]]*:/ s/^[^[]*\\[\\([^]]*\\)\\],.*$/\\1/p'")[0]);
+		$aplayDeviceName = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
+
 		if (empty($cardID)) {
 			$deviceNames[$i] = ALSA_EMPTY_CARD;
 		} else if ($cardID == ALSA_LOOPBACK_DEVICE) {
