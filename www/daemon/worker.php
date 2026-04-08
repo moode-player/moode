@@ -328,6 +328,7 @@ workerLog('worker: User id:       ' . $_SESSION['user_id']);
 workerLog('worker: Home folder:   ' . $_SESSION['home_dir']);
 workerLog('worker: Time zone:     ' . $_SESSION['timezone']);
 workerLog('worker: Kbd layout:    ' . $_SESSION['keyboard']);
+workerLog('worker: Locale:        ' . sysCmd('cat /etc/default/locale | grep LANG= | cut -d"=" -f2')[0]);
 
 // HDMI port(s)
 // They are always on in Bookworm
