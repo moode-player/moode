@@ -74,7 +74,8 @@ class CamillaDsp {
                 'type' => 'Alsa',
                 'channels' => 2,
                 'device' => $alsaDevice,
-                'format' => $useFormat);
+                'format' => $useFormat == 'S24_3_RJ_LE' ? 'S24_3_LE' : $useFormat );
+                
 
             // Patch issue where yaml parser to an empty [], which would break the cdsp config
             if (empty($ymlCfg['filters']) || (key_exists('filters', $ymlCfg) && count(array_keys($ymlCfg['filters']))) == 0) {
@@ -230,7 +231,7 @@ class CamillaDsp {
         }
 
         return $sound_device_supported_sample_formats;
-    }
+    }    
 
     function getConfigsLocationsFileName() {
         return  $this->CAMILLA_CONFIG_DIR . '/configs/';
@@ -389,24 +390,33 @@ class CamillaDsp {
      */
     function alsaToCamillaSampleFormatLut() {
         return array(
-            'FLOAT64_LE' => 'FLOAT64LE',
-            'FLOAT_LE' => 'FLOAT32LE',
-            'S32_LE' => 'S32LE',
-            'S24_3LE' => 'S24LE3',
-            'S24_LE' => 'S24LE',
-            'S16_LE' => 'S16LE');
+            'FLOAT64_LE' => 'F64_LE',
+            'FLOAT_LE' => 'F32_LE',
+            'S32_LE' => 'S32_LE',
+            'S24_3LE' => 'S24_3_LE',
+            'S24_LE' => 'S24_4_LE',
+            'S16_LE' => 'S16_LE');
+    }
+    function stdInToCamillaSampleFormatLut() {
+        return array(
+            'FLOAT64_LE' => 'F64_LE',
+            'FLOAT_LE' => 'F32_LE',
+            'S32_LE' => 'S32_LE',
+            'S24_3LE' => 'S24_3_LE',
+            'S24_LE' => 'S24_4_RJ_LE',
+            'S16_LE' => 'S16_LE');
     }
 
     function impulseResponseType() {
         return array(
            'WAVE',
            'TEXT',
-           'FLOAT64LE',
-           'FLOAT32LE',
-           'S32LE',
-           'S24LE3',
-           'S24LE',
-           'S16LE'
+           'F64_LE',
+           'F32_LE',
+           'S32_LE',
+           'S24_3_LE',
+           'S24_4_RJ_LE',
+           'S16_LE'
         );
     }
 
@@ -432,19 +442,38 @@ class CamillaDsp {
     }
 
     function getGuiExpertMode() {
-        return file_exists('/opt/camillagui/config/gui-config.yml') == false;
+        $link = '/opt/camillagui/config/gui-config.yml';
+        $expectedTarget = realpath('/opt/camillagui/config/gui-config.yml.basic');        
+        $resolvedLinkTarget = is_link($link) ? realpath($link) : null;
+        if( !is_link($link) || ($resolvedLinkTarget !== $expectedTarget) ) {
+            return true;
+        }
+        return false;
     }
 
     function setGuiExpertMode($mode) {
-        if ($mode == true
-           && file_exists('/opt/camillagui/config/gui-config.yml')
-           && file_exists('/opt/camillagui/config/gui-config.yml.disabled') == false) {
-            sysCmd('sudo mv /opt/camillagui/config/gui-config.yml /opt/camillagui/config/gui-config.yml.disabled');
-        } else if ($mode == false
-            && file_exists('/opt/camillagui/config/gui-config.yml.disabled')
-            && file_exists('/opt/camillagui/config/gui-config.yml') == false) {
-            sysCmd('sudo mv /opt/camillagui/config/gui-config.yml.disabled /opt/camillagui/config/gui-config.yml');
-        }
+        $link = '/opt/camillagui/config/gui-config.yml';
+        // If it's a real file → do nothing. Prob custom file
+        if (file_exists($link) && !is_link($link)) {
+            print("Custom file present, don't set link!");
+            return;
+        }        
+
+        $expectedTarget = $mode === true
+                ? realpath('/opt/camillagui/config/gui-config.yml.expert')
+                : realpath('/opt/camillagui/config/gui-config.yml.basic');        
+        
+        $resolvedLinkTarget = is_link($link) ? realpath($link) : null;
+            
+        if (!is_link($link) || $resolvedLinkTarget !== $expectedTarget) {
+
+            // Remove existing link (also handles broken symlink)
+            if (is_link($link)) {
+                sysCmd("sudo  rm -f \"".$link."\"");
+            }
+            sysCmd("sudo ln -s \"" . $expectedTarget . "\" \"" . $link ."\"");
+            clearstatcache(true, $link);
+        }            
     }
 
     function _waveConvertOptions($bitdeph, $encoding) {
@@ -647,7 +676,7 @@ class CamillaDsp {
 
 function test_cdsp() {
     $cdsp = New CamillaDsp('flat.yml', "2", "-9;test2.txt;test3.txt;S24_3LE");
-    print_r($cdsp->detectSupportedSoundFormats());
+    // print_r($cdsp->detectSupportedSoundFormats());
 
     // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
     // $cdsp = New CamillaDsp('flat.yml', "2", "-9;Cor1S44.wav;Cor1S44.wav;WAVE");
@@ -727,6 +756,14 @@ function test_cdsp() {
     // print($cdsp->getLogLevel() );
 
     // $cdsp->writeQuickConvolutionConfig();
+    print($cdsp->getGuiExpertMode());
+    $cdsp->setGuiExpertMode(true);
+    print($cdsp->getGuiExpertMode());
+    print($cdsp->getGuiExpertMode());
+    print("\n");
+    $cdsp->setGuiExpertMode(false);
+    print($cdsp->getGuiExpertMode());
+    print("\n");
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {

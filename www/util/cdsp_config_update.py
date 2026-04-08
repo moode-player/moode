@@ -1,29 +1,61 @@
 #!/bin/python3
 #
-# Upgrade the camilladsp v2.x configuration to v3.x
+# Upgrade the camilladsp v2.x/v3.x configuration to v4.x
 #
 # License : MIT
 # Copyright 2024 @bitlab
+# '26 added format update
 #
 
 import sys
 import yaml
+
+FORMAT_CONVERSION_TABLE = {
+    'FLOAT64LE' : 'F64_LE',
+    'FLOAT32LE' : 'F32_LE',
+    'S32LE' : 'S32_LE',
+    'S24LE3' : 'S24_3_LE',
+    'S24LE' : 'S24_4_RJ_LE',
+    'S16LE' : 'S16_LE'
+    }
+
+def patchFormatV4(format):
+    return  FORMAT_CONVERSION_TABLE[format] if format in FORMAT_CONVERSION_TABLE else format
 
 def main():
     pipelinefilename = sys.argv[1]
     pipelinefile = open(pipelinefilename)
     conf = yaml.safe_load(pipelinefile)
 
+    print('process')
     # create copy
-    with open(f'{pipelinefilename[:-4]}.v2.yml', 'w') as file:
+    with open(f'{pipelinefilename[:-4]}.backup.yml', 'w') as file:
         yaml.dump(conf, file)
     match conf:
         case {'devices': {'capture': capture}}:
+            print('hit capture')
             if 'filename' in capture :
                 print('old capture format found, patch it')
                 del capture['filename']
                 capture['type'] = 'Stdin'
-            print(capture)
+            if 'format' in capture:
+                capture['format'] = patchFormatV4(capture['format'])
+            print(capture) 
+    match conf:
+        case {'devices': {'playback': playback}}:
+            print('hit playback')
+            if 'format' in playback:
+                playback['format'] = 'S24_4_LE' if playback['format'] == 'S24LE' else patchFormatV4(playback['format'])
+            print(playback) 
+
+    for name, filt in conf.get("filters", {}).items():
+        match filt:
+            case {"type": "Conv", "parameters": params}:
+                if 'format' in params:
+                    params['format'] = patchFormatV4(params['format'])
+                print(f"Conv filter found: {name}")
+                print(f"Parameters: {params}")            
+    
     # remove_entries = []
     for entry in conf['pipeline']:
         # if conf[entry] is None:
