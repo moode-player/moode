@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2026-MM-DD moOde 10.1.3 (Trixie)
+# 2026-MM-DD moOde 10.2.0 (Trixie)
 #
 ################################################################################
 
@@ -24,6 +24,7 @@ Security (new image)
 
 Updates
 - UPD: Bump to Linux kernel 6.12.75
+- UPD: Bump to CamillaDSP 4.1.1
 - UPD: Improve Radio station track cover feature
 - UPD: Improve AirPlay and Spotify Connect covers feature
 - UPD: Improve layout of the Library section of Preferences
