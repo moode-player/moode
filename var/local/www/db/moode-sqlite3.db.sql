@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Mar 26 14:31:25 2026
+-- File generated with SQLiteStudio v3.4.4 on Mon Apr 13 08:13:09 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -249,7 +249,7 @@ CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_v
 
 -- Table: cfg_plugin
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32));
-INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (1, 'camilladsp', 'sample-configs', 'v3-sample-configs');
+INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (1, 'camilladsp', 'sample-configs', 'v4-sample-configs');
 INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters');
 INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync');
 INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot');
