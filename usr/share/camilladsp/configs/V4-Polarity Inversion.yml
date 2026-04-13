@@ -1,11 +1,11 @@
-description: Loudness volume curve with 3dB high boost, 6dB low boost and -3dB gain.
+description: Invert +/- signal polarity of both channels.
 devices:
   adjust_period: null
   capture:
     type: Stdin
     channels: 2
     extra_samples: null
-    format: S24LE
+    format: S24_4_RJ_LE
     read_bytes: null
     skip_bytes: null
   capture_samplerate: null
@@ -15,7 +15,7 @@ devices:
     type: Alsa
     channels: 2
     device: hw:0,0
-    format: S24LE
+    format: S24_4_LE
   queuelimit: 1
   rate_measure_interval: null
   samplerate: 44100
@@ -25,19 +25,10 @@ devices:
   target_level: null
   volume_ramp_time: 150
 filters:
-  Loudness:
-    description: null
-    parameters:
-      attenuate_mid: false
-      fader: Main
-      high_boost: 3
-      low_boost: 6
-      reference_level: -6
-    type: Loudness
   Master gain:
     description: null
     parameters:
-      gain: -3
+      gain: 0
       inverted: false
       mute: false
       scale: dB
@@ -54,7 +45,7 @@ mixers:
       sources:
       - channel: 0
         gain: 0
-        inverted: false
+        inverted: true
         mute: false
         scale: dB
     - dest: 1
@@ -62,7 +53,7 @@ mixers:
       sources:
       - channel: 1
         gain: 0
-        inverted: false
+        inverted: true
         mute: false
         scale: dB
 pipeline:
@@ -72,7 +63,6 @@ pipeline:
   description: null
   names:
   - Master gain
-  - Loudness
   type: Filter
 - bypassed: null
   channels:
@@ -80,7 +70,6 @@ pipeline:
   description: null
   names:
   - Master gain
-  - Loudness
   type: Filter
 processors: null
-title: Loudness
+title: Polarity Inversion

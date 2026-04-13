@@ -1,4 +1,4 @@
-description: Michael Gerzon derived Trifield decoder. Requires at least 3 channels
+description: Michael Gerzon derived Trifield decoder. Requires at least 3 channels.
   available for output.
 devices:
   adjust_period: 10
@@ -6,7 +6,7 @@ devices:
     type: Stdin
     channels: 2
     extra_samples: null
-    format: S24LE
+    format: S24_4_RJ_LE
     read_bytes: null
     skip_bytes: null
   capture_samplerate: null
@@ -14,9 +14,9 @@ devices:
   enable_rate_adjust: false
   playback:
     type: Alsa
-    channels: 2
+    channels: 3
     device: hw:0,0
-    format: S24LE
+    format: S24_4_LE
   queuelimit: 1
   rate_measure_interval: 1
   samplerate: 44100

@@ -1,27 +1,27 @@
-description: Mikhail Naganov, customize with own IR correction.
+description: Mikhail Phonitor Mini (MPM). Mikhail Naganov reverse engineered SPL Phonitor Mini Crossfeed with DSP by Ebert-Hanke.
 devices:
   adjust_period: 3
   capture:
     type: Stdin
     channels: 2
     extra_samples: null
-    format: S24LE
+    format: S24_4_RJ_LE
     read_bytes: null
     skip_bytes: null
   capture_samplerate: 44100
-  chunksize: 4096
+  chunksize: 1024
   enable_rate_adjust: false
   playback:
     type: Alsa
     channels: 2
     device: hw:0,0
-    format: S24LE
+    format: S24_4_LE
   queuelimit: 1
-  rate_measure_interval: 1
+  rate_measure_interval: null
   samplerate: 44100
   silence_threshold: 0
   silence_timeout: 0
-  stop_on_rate_change: false
+  stop_on_rate_change: null
   target_level: 1024
   volume_ramp_time: 150
 filters:
@@ -47,49 +47,6 @@ filters:
       gain: 2.3
       type: HighshelfFO
     type: Biquad
-  ir_hpcf:
-    description: null
-    parameters:
-      channel: 0
-      filename: ../coeffs/Sennheiser_HD800S_HpCF_A.wav
-      type: Wav
-    type: Conv
-  ir_l_input_l_ear:
-    description: null
-    parameters:
-      channel: 0
-      filename: ../coeffs/BRIR_R02_P1_E0_A-30.wav
-      type: Wav
-    type: Conv
-  ir_l_input_r_ear:
-    description: null
-    parameters:
-      channel: 1
-      filename: ../coeffs/BRIR_R02_P1_E0_A-30.wav
-      type: Wav
-    type: Conv
-  ir_r_input_l_ear:
-    description: null
-    parameters:
-      channel: 0
-      filename: ../coeffs/BRIR_R02_P1_E0_A+30.wav
-      type: Wav
-    type: Conv
-  ir_r_input_r_ear:
-    description: null
-    parameters:
-      channel: 1
-      filename: ../coeffs/BRIR_R02_P1_E0_A+30.wav
-      type: Wav
-    type: Conv
-  mastergain:
-    description: null
-    parameters:
-      gain: -18
-      inverted: false
-      mute: false
-      scale: null
-    type: Gain
 mixers:
   XF_IN:
     channels:
@@ -144,7 +101,7 @@ mixers:
         mute: false
         scale: null
       - channel: 3
-        gain: -3
+        gain: 0
         inverted: false
         mute: false
         scale: null
@@ -157,7 +114,7 @@ mixers:
         mute: false
         scale: null
       - channel: 0
-        gain: -3
+        gain: 0
         inverted: false
         mute: false
         scale: null
@@ -173,7 +130,6 @@ pipeline:
   names:
   - XF_Cross_Highshelf
   - XF_Cross_Peaking_EQ
-  - ir_l_input_r_ear
   type: Filter
 - bypassed: null
   channels:
@@ -196,25 +152,10 @@ pipeline:
   names:
   - XF_Cross_Highshelf
   - XF_Cross_Peaking_EQ
-  - ir_r_input_l_ear
   type: Filter
 - bypassed: null
   description: null
   name: XF_OUT
   type: Mixer
-- bypassed: null
-  channels:
-  - 0
-  description: null
-  names:
-  - ir_hpcf
-  type: Filter
-- bypassed: null
-  channels:
-  - 1
-  description: null
-  names:
-  - ir_hpcf
-  type: Filter
 processors: null
-title: Crossfeed Mikhail
+title: Crossfeed MPM

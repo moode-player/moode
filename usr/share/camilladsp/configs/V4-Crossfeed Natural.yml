@@ -1,4 +1,4 @@
-description: Ebert-Hanke implementation of Natural roughly modeled after some publications
+description: Ebert-Hanke implementation of Natural roughly modeled after some publications.
   by Jan Meier.
 devices:
   adjust_period: 3
@@ -6,7 +6,7 @@ devices:
     type: Stdin
     channels: 2
     extra_samples: null
-    format: S24LE
+    format: S24_4_RJ_LE
     read_bytes: null
     skip_bytes: null
   capture_samplerate: 44100
@@ -16,7 +16,7 @@ devices:
     type: Alsa
     channels: 2
     device: hw:0,0
-    format: S24LE
+    format: S24_4_LE
   queuelimit: 1
   rate_measure_interval: 1
   samplerate: 44100
