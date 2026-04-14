@@ -78,6 +78,16 @@ workerLog('worker: Daemonize:     complete');
 $userId = getUserID();
 if ($userId == NO_USERID_DEFINED) {
 	workerLog('worker: CRITICAL ERROR: Userid does not exist, moOde will not function');
+} else {
+	// NOTE: Latest (2026-04) PiOS Trixie updates result in this file being removed during Linux startup.
+	// - It causes prompt for password at first use of sudo at console.
+	// - It also causes breakage in certain touchmon.php actions which require sudo.
+	// - Touchmon.php is launched by .xinitrc which runs as user
+	$nopasswdFile = '/etc/sudoers.d/010_' . $userId . '-nopasswd';
+	if (!file_exists($nopasswdFile)) {
+		sysCmd('echo "' . $userId . ' ALL=(ALL) NOPASSWD: ALL" | sudo tee ' . $nopasswdFile . '-nopasswd' . ' > /dev/null');
+		workerLog('worker: Sudoers file:  created');
+	}
 }
 
 // CRITICAL: Check for Linux startup complete
@@ -532,6 +542,7 @@ if (empty($wlan0)) {
 
 		// Final check for IP address
 		if (!empty($wlan0Ip)) {
+			// TODO: Remove this after testing $data .= "powersave=2\n"; in inc/network.php
 			if ($piModel >= 3 || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') {
 				// Turn power save off for models with integrated adapters
 				sysCmd('/sbin/iwconfig wlan0 power off > /dev/null 2>&1');
