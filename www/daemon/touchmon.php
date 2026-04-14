@@ -95,10 +95,12 @@ while (true) {
 
 function isXinputOn() {
 	$xinputOn = sysCmd('pgrep -c xinput')[0];
+	//debugLog('touchmon: - isXinputOn(): ' . $xinputOn);
 	return $xinputOn > 0 ? true : false;
 }
 function startXinput() {
-	shell_exec('/var/www/util/start-xinput.sh ' . TOUCHMON_LOG);
+	$result = shell_exec('/var/www/util/start-xinput.sh ' . TOUCHMON_LOG);
+	//debugLog('touchmon: - startXinput(): ' . $result);
 }
 function isPeppyALSAOn() {
 	return file_exists('/etc/alsa/conf.d/peppy.conf');
