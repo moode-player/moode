@@ -1,13 +1,13 @@
 devices:
   capture:
     channels: 2
-    format: S16LE
+    format: S32_LE
     type: Stdin
   chunksize: 4096
   playback:
     channels: 2
     device: plughw:0,0
-    format: S16LE
+    format: S32_LE
     type: Alsa
   queuelimit: 1
   samplerate: 44100

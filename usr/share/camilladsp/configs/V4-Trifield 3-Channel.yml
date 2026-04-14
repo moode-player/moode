@@ -6,7 +6,7 @@ devices:
     type: Stdin
     channels: 2
     extra_samples: null
-    format: S24_4_RJ_LE
+    format: S32_LE
     read_bytes: null
     skip_bytes: null
   capture_samplerate: null
@@ -16,7 +16,7 @@ devices:
     type: Alsa
     channels: 3
     device: hw:0,0
-    format: S24_4_LE
+    format: S32_LE
   queuelimit: 1
   rate_measure_interval: 1
   samplerate: 44100

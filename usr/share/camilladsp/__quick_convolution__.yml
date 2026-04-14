@@ -5,13 +5,13 @@ devices:
   volume_ramp_time: 150
   capture:
     channels: 2
-    format: S16LE
+    format: S32_LE
     type: Stdin
   playback:
     type: Alsa
     channels: 2
     device: "plughw:0,0"
-    format: S16LE
+    format: S32_LE
 filters:
     mastergain:
         type: Gain
@@ -60,4 +60,3 @@ pipeline:
     names:
       - mastergain
       - ir_right
-
