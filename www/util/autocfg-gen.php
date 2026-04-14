@@ -16,9 +16,10 @@ require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/sql.php';
 require_once __DIR__ . '/../inc/autocfg.php';
 
+$dbh = sqlConnect();
+
 // Open the session for read
-// NOTE: moodeutl has to be run with sudo otherwise the session can't be accessed
-$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+$sessionID = sqlRead('cfg_system', $dbh, 'sessionid')[0]['value'];
 session_id($sessionId);
 if (session_start() === false) {
     workerLog('autocfg-gen.php: Session start failed, script exited');
@@ -28,7 +29,7 @@ if (session_start() === false) {
 }
 
 // Load sql/session params
-$result = sqlRead('cfg_system', sqlConnect());
+$result = sqlRead('cfg_system', $dbh);
 $currentSettings = array();
 foreach ($result as $row) {
     $currentSettings[$row['param']] = $row['value'];
