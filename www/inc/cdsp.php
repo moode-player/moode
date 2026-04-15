@@ -75,7 +75,7 @@ class CamillaDsp {
                 'channels' => 2,
                 'device' => $alsaDevice,
                 'format' => $useFormat == 'S24_3_RJ_LE' ? 'S24_3_LE' : $useFormat );
-                
+
 
             // Patch issue where yaml parser to an empty [], which would break the cdsp config
             if (empty($ymlCfg['filters']) || (key_exists('filters', $ymlCfg) && count(array_keys($ymlCfg['filters']))) == 0) {
@@ -123,7 +123,7 @@ class CamillaDsp {
             $configFileNameEscaped = str_replace ('/', '\/', $configFileName);
             $this->patchRelConvPath($configName);
             if (is_file($configFileName)) {
-                sysCmd("sudo ln -s -f \"" . $configFileName . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
+                sysCmd("ln -s -f \"" . $configFileName . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
             }
         }
 
@@ -132,7 +132,7 @@ class CamillaDsp {
 
     function reloadConfig() {
         if ($this->configFile != 'off') {
-            sysCmd('sudo killall -s SIGHUP camilladsp');
+            sysCmd('killall -s SIGHUP camilladsp');
         }
     }
 
@@ -208,8 +208,8 @@ class CamillaDsp {
         $newLines = str_replace($search, $replaceWith, $lines);
 
         file_put_contents ($configFile .'.tmp', $newLines) ;
-        sysCmd('sudo mv "' . $configFile . '.tmp" "' . $configFile . '"');
-        sysCmd('sudo chmod a+rw "' . $configFile . '"');
+        sysCmd('mv "' . $configFile . '.tmp" "' . $configFile . '"');
+        sysCmd('chmod a+rw "' . $configFile . '"');
     }
 
     function copyConfig($source, $destination) {
@@ -231,7 +231,7 @@ class CamillaDsp {
         }
 
         return $sound_device_supported_sample_formats;
-    }    
+    }
 
     function getConfigsLocationsFileName() {
         return  $this->CAMILLA_CONFIG_DIR . '/configs/';
@@ -433,17 +433,17 @@ class CamillaDsp {
 
     function changeCamillaStatus($enable) {
         if ($enable) {
-            sysCmd('sudo systemctl enable camillagui');
-            sysCmd('sudo systemctl start camillagui');
+            sysCmd('systemctl enable camillagui');
+            sysCmd('systemctl start camillagui');
         } else {
-            sysCmd('sudo systemctl stop camillagui');
-            sysCmd('sudo systemctl disable camillagui');
+            sysCmd('systemctl stop camillagui');
+            sysCmd('systemctl disable camillagui');
         }
     }
 
     function getGuiExpertMode() {
         $link = '/opt/camillagui/config/gui-config.yml';
-        $expectedTarget = realpath('/opt/camillagui/config/gui-config.yml.basic');        
+        $expectedTarget = realpath('/opt/camillagui/config/gui-config.yml.basic');
         $resolvedLinkTarget = is_link($link) ? realpath($link) : null;
         if( !is_link($link) || ($resolvedLinkTarget !== $expectedTarget) ) {
             return true;
@@ -457,23 +457,23 @@ class CamillaDsp {
         if (file_exists($link) && !is_link($link)) {
             print("Custom file present, don't set link!");
             return;
-        }        
+        }
 
         $expectedTarget = $mode === true
                 ? realpath('/opt/camillagui/config/gui-config.yml.expert')
-                : realpath('/opt/camillagui/config/gui-config.yml.basic');        
-        
+                : realpath('/opt/camillagui/config/gui-config.yml.basic');
+
         $resolvedLinkTarget = is_link($link) ? realpath($link) : null;
-            
+
         if (!is_link($link) || $resolvedLinkTarget !== $expectedTarget) {
 
             // Remove existing link (also handles broken symlink)
             if (is_link($link)) {
-                sysCmd("sudo  rm -f \"".$link."\"");
+                sysCmd("rm -f \"".$link."\"");
             }
-            sysCmd("sudo ln -s \"" . $expectedTarget . "\" \"" . $link ."\"");
+            sysCmd("ln -s \"" . $expectedTarget . "\" \"" . $link ."\"");
             clearstatcache(true, $link);
-        }            
+        }
     }
 
     function _waveConvertOptions($bitdeph, $encoding) {
@@ -570,7 +570,8 @@ class CamillaDsp {
     }
 
     function fixFileRights() {
-        sysCmd('chmod 666 '.$this->CAMILLA_CONFIG_DIR.'/configs/*; sudo chmod 666 '.  $this->CAMILLA_CONFIG_DIR.'/coeffs/*');
+        sysCmd('chmod 666 ' . $this->CAMILLA_CONFIG_DIR . '/coeffs/*');
+		sysCmd('chmod 666 ' . $this->CAMILLA_CONFIG_DIR . '/configs/*');
     }
     function userCmd($cmd) {
         exec($cmd, $output, $exitcode);
@@ -578,7 +579,7 @@ class CamillaDsp {
     }
 
     function getLogLevel() {
-        $res=sysCmd('cat ' . $this->ALSA_CDSP_CONFIG . "| grep -e '#[ ]*-v'");
+        $res = sysCmd('cat ' . $this->ALSA_CDSP_CONFIG . "| grep -e '#[ ]*-v'");
         $level =  (count($res) == 0) ? 'verbose' : 'default';
         return $level;
     }
