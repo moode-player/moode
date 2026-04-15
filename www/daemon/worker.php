@@ -542,11 +542,6 @@ if (empty($wlan0)) {
 
 		// Final check for IP address
 		if (!empty($wlan0Ip)) {
-			// TODO: Remove this after testing $data .= "powersave=2\n"; in inc/network.php
-			if ($piModel >= 3 || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') {
-				// Turn power save off for models with integrated adapters
-				sysCmd('/sbin/iwconfig wlan0 power off > /dev/null 2>&1');
-			}
 			logNetworkInfo('wlan0');
 		}
 	}

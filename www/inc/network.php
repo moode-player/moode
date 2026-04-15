@@ -53,6 +53,7 @@ function cfgNetworks() {
 		$data .= "autoconnect-priority=100\n";
 		$data .= "[wifi]\n";
 		$data .= "mode=infrastructure\n";
+		$data .= "powersave=2\n";
 		$data .= "ssid=" . $cfgNetwork[1]['wlanssid'] . "\n";
 		$data .= "hidden=false\n";
 		$data .= "[wifi-security]\n";
@@ -88,6 +89,7 @@ function cfgNetworks() {
 		$data .= "autoconnect-priority=20\n";
 		$data .= "[wifi]\n";
 		$data .= "mode=infrastructure\n";
+		$data .= "powersave=2\n";
 		$data .= "ssid=" . $row['ssid'] . "\n";
 		$data .= "hidden=false\n";
 		$data .= "[wifi-security]\n";
@@ -122,6 +124,7 @@ function cfgNetworks() {
 	$data .= "autoconnect=false\n";
 	$data .= "[wifi]\n";
 	$data .= "mode=ap\n";
+	$data .= "powersave=2\n";
 	$data .= "ssid=" . $cfgNetwork[2]['wlanssid'] . "\n";
 	$data .= "[wifi-security]\n";
 	$data .= "group=ccmp\n";
