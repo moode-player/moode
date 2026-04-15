@@ -17,21 +17,18 @@
 
 New features
 - NEW: Shairport-sync version 5 (new image)
+- NEW: CamillaDSP version 4
 - NEW: Graphic/Parametric EQ control API (REST and CLI)
-
-Security (new image)
-- SEC: First use of sudo at console prompts for password
 
 Updates
 - UPD: Bump to Linux kernel 6.12.75
-- UPD: Bump to CamillaDSP 4.1.1
 - UPD: Improve Radio station track cover feature
 - UPD: Improve AirPlay and Spotify Connect covers feature
 - UPD: Improve layout of the Library section of Preferences
 - UPD: Improve Quick help explanation of the custom AlbumDate tag
 - UPD: Improve Peripheral Config help and field validation
-- UPD: Improve ALSA device name parsing during startup
 - UPD: Improve watchdog Wake display on play
+- UPD: Improve method used to disable WiFi power save
 - UPD: Add 'play' context menu for Playlist items
 - UPD: Add CSS media query for 1920x720 resolution
 - UPD: Add CSS media query for 960x360 resolution
@@ -45,7 +42,9 @@ Bug fixes
 - FIX: Dropdown menu hover corner radius for first and last item
 - FIX: Renderer covers not sized correctly in certain portrait viewports
 - FIX: Thumbgen fails to scan artist images when Prefs > Audio formats = All+
-- FIX: Display set options in moodeutl and REST API not validating "toggle"
+- FIX: Setdisplay options in moodeutl and REST API not validating "toggle"
+- FIX: Non-English locale issues when parsing command output
+- FIX: Button shade when Configure modal opened from the Configs section
 
 ################################################################################
 #
