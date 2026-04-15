@@ -11,7 +11,8 @@
 	<p>
 		A multiroom audio system consists of a Sender and one or more Receivers.
 		The Sender should be a dedicated Pi not connected to speakers or headphones.
-		For additional information <a href="./setup_multiroom.txt" class="target-blank-link" target="_blank">View multiroom setup guide</a>
+		Note that DSP is not supported and must be turned off before Sender or Receiver can be turned on.
+		For additional information <a href="./setup_multiroom.txt" class="target-blank-link" target="_blank">View multiroom setup guide.</a>
 	</p>
 
 	<form class="form-horizontal" method="post">
@@ -123,7 +124,7 @@
 		<div class="control-group">
 			<label class="control-label" for="multiroom-rx">Receiver daemon</label>
 			<div class="controls">
-				<select id="multiroom-rx" class="config-select-large" name="multiroom_rx" onchange="autoClick('#btn-set-multiroom-rx');">
+				<select id="multiroom-rx" class="config-select-large" name="multiroom_rx" onchange="autoClick('#btn-set-multiroom-rx');" $_multiroom_rx_disable>
 					$_select[multiroom_rx]
 				</select>
 				<button id="btn-set-multiroom-rx" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_multiroom_rx" value="novalue" $_multiroom_rx_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
