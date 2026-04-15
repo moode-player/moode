@@ -5,7 +5,7 @@
  * Copyright 2014 The moOde audio player project / Tim Curtis
 */
 
-const VERSION = '10.0.0';
+const VERSION = '10.2.0';
 
 set_include_path('/var/www/inc');
 
@@ -39,7 +39,7 @@ $features = array(
 	FEAT_PEPPYDISPLAY => 'PeppyMeter display'
 );
 
-$featBitmask = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));
+$featBitmask = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='feat_bitmask'"));
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
@@ -92,7 +92,7 @@ switch ($option) {
 		listAudioOverlays();
 		break;
 	case '-q':
-		sqlQuery($argv);
+		runSQLQuery($argv);
 		break;
 	case '-r':
 		restartServers($featBitmask);
@@ -148,13 +148,13 @@ switch ($option) {
 		echo substr($file, strpos($file, 'Release: ') + 9, 17) . "\n";
 		break;
 	case '--chromiumrel':
-		echo shell_exec("dpkg -l | grep -m 1 \"chromium\" | awk '{print $3}' | cut -d\":\" -f 2");
+		echo sysCmdStr("dpkg -l | grep -m 1 \"chromium\" | awk '{print $3}' | cut -d\":\" -f 2");
 		break;
 	case '--pirev':
-		echo shell_exec('/var/www/util/pirev.py');
+		echo sysCmdStr('/var/www/util/pirev.py');
 		break;
 	case '--osinfo':
-		echo shell_exec('/var/www/util/sysutil.sh "get-osinfo"');
+		echo sysCmdStr('/var/www/util/sysutil.sh "get-osinfo"');
 		break;
 	case '--version':
 		echo VERSION . "\n";
@@ -222,11 +222,37 @@ Moode utility functions
 		echo 'Unknown option, try moodeutl --help' . "\n";
 }
 
-// NOTE: This is a copy of the function in /inc/common.php
+//
+// Helper functions
+//
+
+// Execute shell command: Return output as array with newlines "/n" trimmed.
 function sysCmd($cmd) {
-	exec('sudo ' . $cmd . " 2>&1", $output);
+	exec('sudo LC_ALL=C ' . $cmd . ' 2>&1', $output);
 	return $output;
 }
+// Execute shell command: Return output as string with newlines "\n" included.
+function sysCmdStr($cmd) {
+	return shell_exec('sudo LC_ALL=C ' . $cmd);
+}
+
+function sqlQuery($queryStr) {
+	return shell_exec('LC_ALL=C sqlite3 ' . SQLDB_PATH . " \"" . $queryStr . "\"");
+}
+
+function setSessionId() {
+	$sessionId = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='sessionid'"));
+	session_id($sessionId);
+}
+
+function getUserID() {
+	$result = sysCmd('ls /home/');
+	return $result[0];
+}
+
+//
+// Option functions
+//
 
 function printFeatures($features, $featBitmask) {
 	foreach ($features as $key => $value) {
@@ -270,7 +296,7 @@ function updateFeatures($features, $featBitmask, $argv) {
 		return;
 	} else {
 		$newBitmask = $argv[2] == 'add' ? $bitmask + $arg3 : $bitmask - $arg3;
-		shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='" . $newBitmask . "' WHERE param='feat_bitmask'\"");
+		sqlQuery("UPDATE cfg_system set value='" . $newBitmask . "' WHERE param='feat_bitmask'");
 		echo 'Old bitmask ' . $featBitmask . "\n";
 		echo 'New bitmask ' . $newBitmask . "\n";
 	}
@@ -342,17 +368,17 @@ function deleteSessionVar($argv) {
 }
 
 function audioFormats($option) {
-	$cardNum = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
+	$cardNum = trim(sqlQuery("SELECT value FROM cfg_mpd WHERE param='device'"));
 
 	if (empty(trim(file_get_contents('/proc/asound/card' . $cardNum . '/id')))) {
 		echo 'No device found at MPD configured card ' . $cardNum . "\n";
 	} else {
-		$hwParams = trim(shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params | grep closed'));
+		$hwParams = trim(sysCmdStr('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params | grep closed'));
 
 		if ($hwParams == 'closed') {
 			// Just formats for the configured device
 			if ($option == '-f') {
-				$result = shell_exec('alsacap -C ' . $cardNum . ' -D 0 2>&1 | grep "Sample formats:"');
+				$result = sysCmdStr('alsacap -C ' . $cardNum . ' -D 0 2>&1 | grep "Sample formats:"');
 				if (!empty($result)) {
 					echo explode(': ', $result)[1];
 				} else {
@@ -360,7 +386,7 @@ function audioFormats($option) {
 				}
 			} else {
 				// $option == '-F': full info for all devices
-				$result = shell_exec('alsacap 2>&1');
+				$result = sysCmdStr('alsacap 2>&1');
 				echo $result;
 			}
 		} else {
@@ -371,7 +397,7 @@ function audioFormats($option) {
 
 function moodeLog($argv) {
 	$logFile = array('-l' => MOODE_LOG, '-p' => MOODE_PREVLOG);
-	echo shell_exec('cat ' . $logFile[$argv[1]]);
+	echo sysCmdStr('cat ' . $logFile[$argv[1]]);
 }
 
 function systemMonitor() {
@@ -391,22 +417,22 @@ function systemMonitor() {
 		$cpuTemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
 
 		// CPU (get top 'us' user space column: $2)
-		$cpuLoad =  (float)exec("top -bn 2 -d 1.0  | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
-		$cpuLoad += (float)exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'");
+		$cpuLoad =  (float)sysCmd("top -bn 2 -d 1.0  | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'")[0];
+		$cpuLoad += (float)sysCmd("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'")[0];
 		$cpuLoad = $cpuLoad / 2; // Average of the above
 		$cpuLoad = $cpuload >= 100 ? '100' : number_format($cpuLoad,1,'.','');
 
 		// Memory
-		$memTotal = exec("grep MemTotal /proc/meminfo | awk '{print $2}'");
-		$memAvail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
+		$memTotal = sysCmd("grep MemTotal /proc/meminfo | awk '{print $2}'")[0];
+		$memAvail = sysCmd("grep MemAvailable /proc/meminfo | awk '{print $2}'")[0];
 		$memUtil = number_format(100 * (1 - ($memAvail / $memTotal)), 0, '.', '');
 
 		// Disk
-		$diskUsed = exec("df -h -l | awk 'FNR==2 {print $5}'");
-		$diskFree = exec("df -h -l | grep /dev/root | awk '{print $4}'");
+		$diskUsed = sysCmd("df -h -l | awk 'FNR==2 {print $5}'")[0];
+		$diskFree = sysCmd("df -h -l | grep /dev/root | awk '{print $4}'")[0];
 
 		// PHP FPM pool count
-		$fpmPool = exec('pgrep -c -f "php-fpm: pool www"');
+		$fpmPool = sysCmd('pgrep -c -f "php-fpm: pool www"')[0];
 
 		echo 'CPU: ' . $cpuFreq . ' | ' .
 			'LOAD: ' . $cpuLoad . '% / ' . $cpuTemp . 'C | ' .
@@ -416,28 +442,24 @@ function systemMonitor() {
 	}
 }
 
-function sqlQuery($argv) {
-	echo shell_exec("sqlite3 " . SQLDB_PATH . " \"" . $argv[2] . "\"");
-}
-
 function restartServers($featBitmask) {
 	// Stop daemons
 	echo "Stopping daemons...\n";
 	echo "- watchdog.sh\n";
-	exec('sudo killall -s 9 watchdog.sh');
+	sysCmd('killall -s 9 watchdog.sh');
 	echo "- mountmon.php\n";
-	exec('sudo killall -s 9 mountmon.php >/dev/null 2>&1');
+	sysCmd('killall -s 9 mountmon.php >/dev/null 2>&1');
 	echo "- mpdmon.php\n";
-	exec('sudo killall -s 9 mpdmon.php >/dev/null 2>&1');
+	sysCmd('killall -s 9 mpdmon.php >/dev/null 2>&1');
 	echo "- worker.php\n";
-	exec('sudo killall -s 9 worker.php');
-	exec('sudo rm /var/run/worker.pid');
+	sysCmd('killall -s 9 worker.php');
+	sysCmd('rm /var/run/worker.pid');
 	echo "- mpd2cdspvolume\n";
-	exec('sudo systemctl stop mpd2cdspvolume');
+	sysCmd('systemctl stop mpd2cdspvolume');
 	echo "- localdisplay\n";
-	exec('sudo systemctl stop localdisplay');
+	sysCmd('systemctl stop localdisplay');
 	echo "- mpd\n";
-	exec('sudo systemctl stop mpd');
+	sysCmd('systemctl stop mpd');
 
 	// Stop all renderers
 	stopAllRenderers($featBitmask);
@@ -445,20 +467,20 @@ function restartServers($featBitmask) {
 	// Restart PHP and NGINX
 	echo "Restarting php/nginx...\n";
 	echo "- php\n";
-	exec('sudo systemctl restart php' . PHP_VER . '-fpm');
+	sysCmd('systemctl restart php' . PHP_VER . '-fpm');
 	echo "- nginx\n";
-	exec('sudo systemctl restart nginx');
+	sysCmd('systemctl restart nginx');
 
 	// Start worker
 	echo "Starting worker daemon...\n";
-	exec('sudo /var/www/daemon/worker.php');
+	sysCmd('/var/www/daemon/worker.php');
 
 	echo "Servers restarted\n";
 }
 function stopAllRenderers($featBitmask) {
 	echo "Stopping renderers...\n";
 	if ($featBitmask & FEAT_BLUETOOTH) {
-		$btSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='btsvc'\""));
+		$btSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='btsvc'"));
 		if ($btSvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --bluetooth --stop');
 			echo "- bluetooth\t\tstopped\n";
@@ -469,7 +491,7 @@ function stopAllRenderers($featBitmask) {
 		echo "- bluetooth\t\tfeature disabled\n";
 	}
 	if ($featBitmask & FEAT_AIRPLAY) {
-		$airplaySvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='airplaysvc'\""));
+		$airplaySvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='airplaysvc'"));
 		if ($airplaySvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --airplay --stop');
 			echo "- airplay\t\tstopped\n";
@@ -480,7 +502,7 @@ function stopAllRenderers($featBitmask) {
 		echo "- airplay\t\tfeature disabled\n";
 	}
 	if ($featBitmask & FEAT_SPOTIFY) {
-		$spotifySvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='spotifysvc'\""));
+		$spotifySvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='spotifysvc'"));
 		if ($spotifySvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --spotify --stop');
 			echo "- spotify connect\tstopped\n";
@@ -491,7 +513,7 @@ function stopAllRenderers($featBitmask) {
 		echo "- spotify connect\tfeature disabled\n";
 	}
 	if ($featBitmask & FEAT_DEEZER) {
-		$deezerSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='deezersvc'\""));
+		$deezerSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='deezersvc'"));
 		if ($deezerSvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --deezer --stop');
 			echo "- deezer connect\tstopped\n";
@@ -502,7 +524,7 @@ function stopAllRenderers($featBitmask) {
 		echo "- deezer connect\tfeature disabled\n";
 	}
 	if ($featBitmask & FEAT_UPMPDCLI) {
-		$upSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='upnpsvc'\""));
+		$upSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='upnpsvc'"));
 		if ($upSvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --upnp --stop');
 			echo "- upnp\t\t\tstopped\n";
@@ -513,7 +535,7 @@ function stopAllRenderers($featBitmask) {
 		echo "- upnp\t\t\tfeature disabled\n";
 	}
 	if ($featBitmask & FEAT_SQUEEZELITE) {
-		$slSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='slsvc'\""));
+		$slSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='slsvc'"));
 		if ($slSvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --squeezelite --stop');
 			echo "- squeezelite\t\tstopped\n";
@@ -524,7 +546,7 @@ function stopAllRenderers($featBitmask) {
 		echo "- squeezelite\t\tfeature disabled\n";
 	}
 	if ($featBitmask & FEAT_PLEXAMP) {
-		$paSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='pasvc'\""));
+		$paSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='pasvc'"));
 		if ($paSvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --plexamp --stop');
 			echo "- plexamp\t\tstopped\n";
@@ -535,7 +557,7 @@ function stopAllRenderers($featBitmask) {
 		echo "- plexamp\t\tfeature disabled\n";
 	}
 	if ($featBitmask & FEAT_ROONBRIDGE) {
-		$rbSvc = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='rbsvc'\""));
+		$rbSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='rbsvc'"));
 		if ($rbSvc == '1') {
 			sysCmd('/var/www/util/restart-renderer.php --roonbridge --stop');
 			echo "- roonbridge\t\tstopped\n";
@@ -557,7 +579,7 @@ function restartRenderer($argv) {
 		return;
 	} else if (array_key_exists($argv[2], $renderers)) {
 		$svcName = $renderers[$argv[2]];
-		$svcOn = trim(shell_exec("sqlite3 " .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='" . $svcName . "'\""));
+		$svcOn = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='" . $svcName . "'"));
 		if ($svcOn == '0') {
 			echo 'Renderer is not currently on' . "\n";
 			return;
@@ -595,7 +617,7 @@ function rendererOnoff($argv) {
 
 function systemInfo() {
 	echo "Gathering info...\n";
-	echo shell_exec('sudo /var/www/util/sysinfo.sh');
+	echo sysCmdStr('/var/www/util/sysinfo.sh');
 }
 
 function tailLog() {
@@ -623,8 +645,7 @@ function tailLog() {
 
 function checkStationUrls($argv) {
 	error_reporting(E_ERROR | E_PARSE);
-	$results = shell_exec("sqlite3 " . SQLDB_PATH .
-		" \"SELECT id, station, name, geo_fenced FROM cfg_radio WHERE station not in ('OFFLINE', 'zx reserved 499')\"");
+	$results = sqlQuery("SELECT id, station, name, geo_fenced FROM cfg_radio WHERE station not in ('OFFLINE', 'zx reserved 499')");
 	$line = strtok($results, "\n");
 	echo "Checking...\n";
 	echo 'Id' . "\t" . 'URL' . "\t" . 'Station' . "\n";
@@ -657,7 +678,7 @@ function exportAutoconfig($argv) {
 	if (strpos($cfgFile, '/tmp/') === false) {
 		echo "Configuration settings exported to " . $cfgFile . "\n";
 	}
-	echo shell_exec('/var/www/util/autocfg-gen.php > ' . $cfgFile);
+	echo sysCmdStr('/var/www/util/autocfg-gen.php > ' . $cfgFile);
 }
 
 function importAutoconfig() {
@@ -667,8 +688,12 @@ function importAutoconfig() {
 	}
 
 	echo "Importing configuration settings...\n";
-	echo shell_exec('sudo /var/www/util/autocfg-import.php');
-	echo "Reboot required\n";
+	$result = sysCmd('/var/www/util/autocfg-import.php');
+	if (str_contains($result[0], 'No settings file')) {
+		echo $result[0] . "\n";
+	} else {
+		echo "Reboot required\n";
+	}
 }
 
 function listAudioOverlays() {
@@ -683,13 +708,17 @@ function listAudioOverlays() {
 	}
 }
 
+function runSqlQuery($argv) {
+	echo sqlQuery($argv[2]);
+}
+
 function bluetoothReset() {
-	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='btsvc'\"");
+	sqlQuery("UPDATE cfg_system set value='0' WHERE param='btsvc'");
 	echo 'Bluetooth reset to off, reboot required' . "\n";
 }
 
 function outputDeviceCacheClear() {
-	shell_exec("sqlite3 " .  SQLDB_PATH . " \"DELETE FROM cfg_outputdev\"");
+	sqlQuery('DELETE FROM cfg_outputdev');
 	echo 'Output device cache cleared' . "\n";
 }
 
@@ -703,7 +732,7 @@ function restartSystem($featBitmask, $command) {
 
 	echo 'Submitting ' . $command . "\n";
 	sleep(3);
-	shell_exec($command);
+	sysCmdStr($command);
 }
 
 function setDisplay($argv) {
@@ -713,8 +742,8 @@ function setDisplay($argv) {
 	}
 
 	// Get current on/off states
-	$webuiOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='local_display'\""));
-	$peppyOn = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='peppy_display'\""));
+	$webuiOn = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='local_display'"));
+	$peppyOn = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='peppy_display'"));
 
 	// Check enable_peppyalsa
 	setSessionId();
@@ -760,25 +789,25 @@ function setDisplay($argv) {
 			$_SESSION['local_display'] = $set2webui;
 			$_SESSION['peppy_display'] = $set2peppy;
 			session_write_close();
-			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2webui . "' WHERE param='local_display'\"");
-			shell_exec('sqlite3 ' .  SQLDB_PATH . " \"UPDATE cfg_system SET value='" . $set2peppy . "' WHERE param='peppy_display'\"");
+			sqlQuery("UPDATE cfg_system SET value='" . $set2webui . "' WHERE param='local_display'");
+			sqlQuery("UPDATE cfg_system SET value='" . $set2peppy . "' WHERE param='peppy_display'");
 
 			// FAST SWITCH: Run Peppy over WebUI
 			// Both off start fresh
 			if ($webuiOn == '0' && $peppyOn == '0') {
-				shell_exec('systemctl restart localdisplay');
+				sysCmd('systemctl restart localdisplay');
 			}
 			// Switch to Peppy
 			if ($webuiOn == '1' && $set2peppy == '1') {
-				shell_exec('/var/www/util/start-peppy.sh ' . $_SESSION['peppy_display_type'] . ' > /dev/null 2>&1');
+				sysCmd('/var/www/util/start-peppy.sh ' . $_SESSION['peppy_display_type'] . ' > /dev/null 2>&1');
 			}
 			// Switch to WebUI
  			if ($peppyOn == '1' && $set2webui == '1') {
 				$process = $_SESSION['peppy_display_type'] == 'meter' ? 'peppymeter.py' : 'spectrum.py';
-				shell_exec('pkill -f ' . $process . ' > /dev/null 2>&1');
-				$result = shell_exec('pgrep -c chromium-browse');
+				sysCmd('pkill -f ' . $process . ' > /dev/null 2>&1');
+				$result = sysCmdStr('pgrep -c chromium-browse');
 				if ($result == 0) {
-					shell_exec('systemctl restart localdisplay');
+					sysCmd('systemctl restart localdisplay');
 				}
 			}
 		}
@@ -788,7 +817,7 @@ function setDisplay($argv) {
 }
 
 function printHWParams($argv) {
-	$trxTx = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='multiroom_tx'\""));
+	$trxTx = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='multiroom_tx'"));
 	if ($trxTx == 'On') {
 		$cardNum = sysCmd("cat /proc/asound/Loopback/pcm0p/info | awk -F': ' '/card/{print $2}'")[0];
 		$adevName = 'ALSA Loopback device';
@@ -797,18 +826,18 @@ function printHWParams($argv) {
 			$cardNum = $argv[2];
 			$adevName = sysCmd("aplay -l | awk '/card " . $argv[2] . "/{print $3}' | awk 'NR==1{print}'")[0];
 		} else {
-			$cardNum = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='cardnum'\""));
-			$adevName = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='adevname'\""));
+			$cardNum = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='cardnum'"));
+			$adevName = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='adevname'"));
 		}
 	}
 	echo 'card ' . $cardNum . ': ' . $adevName . "\n";
-	echo shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
+	echo sysCmdStr('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
 }
 
 function printMPDLog() {
 	clearstatcache();
 	if (filesize(MPD_LOG)) {
-		echo shell_exec('cat ' . MPD_LOG);
+		echo sysCmdStr('cat ' . MPD_LOG);
 	} else {
 		echo 'The MPD log is empty or was previously cleared' . "\n";
 	}
@@ -816,7 +845,7 @@ function printMPDLog() {
 
 function printUpdateLog() {
 	if (file_exists(UPDATER_LOG)) {
-		echo shell_exec('cat ' . UPDATER_LOG);
+		echo sysCmdStr('cat ' . UPDATER_LOG);
 	} else {
 		echo 'The update log was not found' . "\n";
 	}
@@ -826,7 +855,7 @@ function printMountMonLog() {
 	if (file_exists(MOUNTMON_LOG)) {
 		clearstatcache();
 		if (filesize(MOUNTMON_LOG)) {
-			echo shell_exec('cat ' . MOUNTMON_LOG);
+			echo sysCmdStr('cat ' . MOUNTMON_LOG);
 		} else {
 			echo 'The mount monitor log is empty or was previously cleared' . "\n";
 		}
@@ -838,7 +867,7 @@ function printMountMonLog() {
 
 function printAutoCfgLog() {
 	if (file_exists(AUTOCFG_LOG)) {
-		echo shell_exec('cat ' . AUTOCFG_LOG);
+		echo sysCmdStr('cat ' . AUTOCFG_LOG);
 	} else {
 		echo 'The auto config log was not found' . "\n";
 	}
@@ -868,7 +897,7 @@ function detectSMBHosts() {
 
 	// Run a few times to pick up as many hosts as possible
 	for ($i = 0; $i < 3; $i++) {
-		$output = shell_exec("nmblookup -S -T '*' | grep '*<00>' | cut -d '*' -f 1");
+		$output = sysCmdStr("nmblookup -S -T '*' | grep '*<00>' | cut -d '*' -f 1");
 	}
 
 	$line = strtok($output, "\n");
@@ -883,7 +912,7 @@ function detectSMBHosts() {
 
 // Detect highest suported SMB protocol version
 function detectSMBVersion($host) {
-	$output = trim(shell_exec("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|"));
+	$output = trim(sysCmdStr("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|"));
 	$output = explode("\n", $output);
 	$parts = explode('  ', end($output));
 
@@ -912,7 +941,7 @@ function detectSMBShares($argv) {
 	}
 
 	echo 'Scanning SMB host...' . "\n";
-	$smbShares = shell_exec("smbclient -N -g -L 2>&1 " . $argv[2] . " | grep Disk | cut -f 2 -d '|'");
+	$smbShares = sysCmdStr("smbclient -N -g -L 2>&1 " . $argv[2] . " | grep Disk | cut -f 2 -d '|'");
 
 	if (empty($smbShares)) {
 		echo 'No SMB shares found' . "\n";
@@ -952,14 +981,4 @@ function detectMPDHosts() {
 	foreach ($hosts as $ipAddr) {
 		echo $ipAddr . "\n";
 	}
-}
-
-function setSessionId() {
-	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-	session_id($sessionId);
-}
-
-function getUserID() {
-	$result = sysCmd('ls /home/');
-	return $result[0];
 }

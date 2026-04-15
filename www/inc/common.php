@@ -243,10 +243,15 @@ function chkXSS($file, $element, $value) {
 // SYSTEM
 //----------------------------------------------------------------------------//
 
-// Execute shell command
+// Specify LC_ALL=C to ensure English command output for parsing (@Allsky, @Nutul)
+// Execute shell command: Return output as array with newlines "/n" trimmed.
 function sysCmd($cmd) {
-	exec('sudo ' . $cmd . " 2>&1", $output);
+	exec('sudo LC_ALL=C ' . $cmd . ' 2>&1', $output);
 	return $output;
+}
+// Execute shell command: Return output as string with newlines "\n" included.
+function sysCmdStr($cmd) {
+	return shell_exec('sudo LC_ALL=C ' . $cmd);
 }
 
 // Get major version (series) SS in 'rSSNN'

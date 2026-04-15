@@ -74,14 +74,14 @@ if (!file_exists(THMCACHE_DIR)) {
 }
 
 // List the dirs in /mnt and /media directories
-$mntDirs = str_replace("\n", ', ', shell_exec('ls /mnt'));
-$mediaDirs = str_replace("\n", ', ', shell_exec('ls /media'));
+$mntDirs = str_replace("\n", ', ', sysCmdStr('ls /mnt'));
+$mediaDirs = str_replace("\n", ', ', sysCmdStr('ls /media'));
 !empty($mediaDirs) ? $dirs = $mntDirs . substr($mediaDirs, 0, -2) : $dirs = substr($mntDirs, 0, -2);
 $dirs = str_replace('moode-player, ', '', $dirs); // This mount point is only present in dev
 workerLog('thumb-gen: Scanning: ' . $dirs);
 
 // Generate the file list
-$result = shell_exec('/var/www/util/list-songfiles.sh "' . $scanFormats . '" | sort');
+$result = sysCmdStr('/var/www/util/list-songfiles.sh "' . $scanFormats . '" | sort');
 if (is_null($result) || substr($result, 0, 2) == 'OK') {
 	workerLog('thumb-gen: Exit: no files found');
 	phpSession('open');

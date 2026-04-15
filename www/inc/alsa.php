@@ -271,7 +271,7 @@ function getChannelCount($channelStr) {
 }
 
 function getAlsaHwParams($cardNum) {
-	$result = shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
+	$result = sysCmdStr('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params');
 
 	if (is_null($result)) {
 		return null;

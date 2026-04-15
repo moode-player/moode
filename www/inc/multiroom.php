@@ -25,7 +25,7 @@ function startMultiroomSender() {
 		' -f ' . $cfgMultiroom['tx_frame_size'] .
 		' -R ' . $cfgMultiroom['tx_rtprio'] .
 		' -D /tmp/trx-txpid  >/dev/null';
-	$result = shell_exec($cmd);
+	$result = sysCmdStr($cmd);
 	debugLog($cmd);
 }
 
@@ -52,7 +52,7 @@ function startMultiroomReceiver() {
 		' -f ' . $cfgMultiroom['rx_frame_size'] .
 		' -R ' . $cfgMultiroom['rx_rtprio'] .
 		' -D /tmp/trx-rxpid  >/dev/null 2>&1';
-	$result = shell_exec($cmd);
+	$result = sysCmdStr($cmd);
 	debugLog($cmd);
 }
 
