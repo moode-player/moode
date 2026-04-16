@@ -45,6 +45,7 @@ Bug fixes
 - FIX: Setdisplay options in moodeutl and REST API not validating "toggle"
 - FIX: Non-English locale issues when parsing command output
 - FIX: Button shade when Configure modal opened from the Configs section
+- FIX: Fix localdisplay service not stopped when Peppy turned off
 
 ################################################################################
 #
