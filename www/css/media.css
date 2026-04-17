@@ -160,7 +160,7 @@ body {
 	#updater-notification i {font-size:1.45rem;}
 	#dropdown-cdsp-btn {right:8.25rem !important;top:calc(env(safe-area-inset-top) + .7rem) !important;}
 	#menu-cdsp {font-size:1.5rem;}
-	.busy-spinner {right:5.5rem;top:calc(env(safe-area-inset-top) + .8rem);}
+	.busy-spinner {right:5.5rem;top:calc(env(safe-area-inset-top) + .25rem);}
 	#menu-settings {right:1.75rem;top:calc(env(safe-area-inset-top) + .7rem);font-size:2.15rem;}
 	/* Library button and header text */
 	#current-tab {font-size:1.35rem;}
