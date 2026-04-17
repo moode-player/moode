@@ -29,6 +29,7 @@ Updates
 - UPD: Improve Peripheral Config help and field validation
 - UPD: Improve watchdog Wake display on play
 - UPD: Improve method used to disable WiFi power save
+- UPD: Improve WiFi stats in Network Config
 - UPD: Add 'play' context menu for Playlist items
 - UPD: Add CSS media query for 1920x720 resolution
 - UPD: Add CSS media query for 960x360 resolution
