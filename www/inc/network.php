@@ -163,7 +163,7 @@ function getIPv4AddressBlock($cfgNetwork) {
 	return $data;
 }
 function activateHotspot() {
-	$connectedSSID = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'")[0];
+	$connectedSSID = trim(sysCmdStr("nmcli -f IN-USE,SSID device wifi | awk 'NR==2{print $2}'"));
 	$hotspotSSID = sysCmd("cat /etc/NetworkManager/system-connections/Hotspot.nmconnection 2>&1 | awk -F\"=\" '/ssid=/ {print $2;exit;}'")[0];
 	sysCmd('nmcli c down ' . $connectedSSID);
 	sysCmd('nmcli c up ' . $hotspotSSID);
@@ -251,12 +251,18 @@ function updAvahiOptions($options) {
 }
 
 // Return connection status
-function getConnectionStats($ssid) {
-	$conn = explode(':', sysCmd('nmcli -f CHAN,RATE,SECURITY,SSID,FREQ -t dev wifi | grep -w "' . $ssid . '"')[0]);
-	$stats['channel'] = $conn[0];
-	$stats['rate'] = $conn[1];
-	$stats['security'] = $conn[2];
-	$stats['frequency'] = substr($conn[4], 0, 1) == '5' ? '5GHz' : '2.4GHz';
-
-	return $stats;
+function getConnectionStats() {
+	$ssid = trim(sysCmdStr("nmcli -f IN-USE,SSID device wifi | awk 'NR==2{print $2}'"));
+	$bssid = trim(sysCmdStr("nmcli -f IN-USE,BSSID device wifi | awk 'NR==2{print $2}'"));
+	$other = explode(':', sysCmd('nmcli -t -f IN-USE,CHAN,FREQ,RATE,BANDWIDTH,SIGNAL,SECURITY device wifi')[0]);
+	return array(
+		'ssid' => $ssid,
+		'bssid' => $bssid,
+		'channel' => $other[1],
+		'frequency' => (substr($other[2], 0, 1) == '5' ? '5GHz' : '2.4GHz'),
+		'rate' => $other[3],
+		'bandwidth' => $other[4],
+		'signal' => $other[5],
+		'security' => $other[6]
+	);
 }

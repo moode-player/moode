@@ -204,32 +204,17 @@ $_wlan0method .= "<option value=\"static\" " . ($cfgNetwork[1]['method'] == 'sta
 // Get IP address if any
 $ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 // Get conection stats
+$stats = getConnectionStats();
 if (!empty($ipAddr[0])) {
 	if ($_SESSION['apactivated'] === true) {
-		$stats = getConnectionStats($cfgNetwork[2]['wlanssid']);
 		$_wlan0stats =
 			'Address: ' . $ipAddr[0] . ' (Hotspot active)' . '<br>' .
-			'Network: ' . $cfgNetwork[2]['wlanssid'] . ', ' . $stats['security'] . ', ' . $stats['frequency'] . ', chan ' . $stats['channel'];
+			'Network: ' . $cfgNetwork[2]['wlanssid'] . ', ' . $stats['security'] . ', ' . $stats['frequency'] . ', channel ' . $stats['channel'];
 	} else {
-		// Network
-		$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'")[0];
-		$bssid = sysCmd('iw dev wlan0 link | grep -i connected | cut -d" " -f3')[0];
-		// Connection
-		$stats = getConnectionStats($ssid);
-		// Quality
-		$signal = sysCmd('iwconfig wlan0 | grep -i quality');
-		$array = explode('=', $signal[0]);
-		$qual = explode('/', $array[1]);
-		$qual0 = (int)$qual[0];
-		$qual1 = (int)$qual[1];
-		$quality = $qual1 > 0 ? round((100 * $qual0) / $qual1) : 0;
-		$lev = explode('/', $array[2]);
-		$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
-
 		$_wlan0stats =
 			'Address: ' . $ipAddr[0] . '<br>' .
-			'Network: ' . $ssid . ' (' . $bssid . '), ' . $stats['security'] . ', ' . $stats['frequency'] . '<br>' .
-			'Channel: ' . $stats['channel'] . ', ' . $stats['rate'] . ', qual ' .  $quality . '%, level ' . $level;
+			'Network: ' . $stats['ssid'] . ' [' . $stats['bssid'] . ']' . '<br>' .
+			'Channel: ' . $stats['channel'] . ', ' . $stats['rate'] . ', ' .  $stats['signal'] . '%, ' . $stats['security'] . ', ' . $stats['frequency'];
 	}
 } else {
 	$_wlan0stats = $_SESSION['apactivated'] === true ? 'Unable to activate Hotspot' : 'Not in use';

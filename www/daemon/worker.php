@@ -519,7 +519,7 @@ if (empty($wlan0)) {
 				workerLog('worker: Wireless: address not assigned');
 			} else {
 				$_SESSION['apactivated'] = true;
-				$stats = getConnectionStats($cfgNetwork[2]['wlanssid']);
+				$stats = getConnectionStats();
 				workerLog('worker: Wireless: Hotspot activated using SSID ' .
 					$cfgNetwork[2]['wlanssid'] . ': ' .
 					$stats['security'] . ' ' .
@@ -530,10 +530,9 @@ if (empty($wlan0)) {
 		} else {
 			// SSID connected and IP address assigned
 			$_SESSION['apactivated'] = false;
-			$ssid = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'")[0];
-			$stats = getConnectionStats($ssid);
+			$stats = getConnectionStats();
 			workerLog('worker: Wireless: connect to ' .
-				$ssid . ': ' .
+				$stats['ssid'] . ': ' .
 				$stats['security'] . ' ' .
 				$stats['frequency'] . ' Channel ' .
 				$stats['channel']
