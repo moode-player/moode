@@ -1638,6 +1638,12 @@ if (!isset($_SESSION['lib_fv_only'])) {
 	$_SESSION['lib_fv_only'] = 'off';
 }
 
+// Radio track cover URL cache
+if (!isset($_SESSION['trackcover_url_cache'])) {
+	$_SESSION['trackcover_url_cache'] = '';
+}
+$_SESSION['trackcover_url_cache'] = array('' => ''); // trackTitle => URL
+
 //----------------------------------------------------------------------------//
 // Globals section
 // NOTE: These globals are used in the worker event loop functions

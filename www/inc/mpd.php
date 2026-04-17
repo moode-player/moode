@@ -887,6 +887,18 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 function getTrackCoverUrl($trackTitle) {
 	$trackTitle = html_entity_decode($trackTitle);
+
+	phpSession('open_ro');
+	$coverUrl = $_SESSION['trackcover_url_cache'][$trackTitle];
+	if (!empty($coverUrl)) {
+		// DEBUG:
+		//workerLog('getTrackCoverUrl(): Cached URL:  ' . $trackTitle);
+
+		return $coverUrl;
+	}
+	// DEBUG:
+	//workerLog('getTrackCoverUrl(): Fetched URL: ' . $trackTitle);
+
 	$parts = explode(' - ', $trackTitle); // $parts[0]=Artist name, $parts[1]=Track title
 	$query = '?term=' . urlencode($parts[0] . ' ' . $parts[1]) . '&media=music&entity=musicTrack&limit=1';
 	$apiUrl = ITUNES_API_BASE_URL . $query;
@@ -905,11 +917,13 @@ function getTrackCoverUrl($trackTitle) {
 			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
 		}
 	}
+
 	// DEBUG:
-	//workerLog('getTrackCoverUrl(): ' .
-	//	$msg . "\n" .
-	//	$coverUrl . (!empty($coverUrl) ? "\n" : '') .
-	//	$apiUrl);
+	//workerLog('getTrackCoverUrl(): ' . $msg . "\n" . $coverUrl . (!empty($coverUrl) ? "\n" : '') . $apiUrl);
+
+	phpSession('open');
+	$_SESSION['trackcover_url_cache'][$trackTitle] = $coverUrl;
+	phpSession('close');
 
 	return $coverUrl;
 }
