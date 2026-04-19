@@ -20,7 +20,7 @@ $dbh = sqlConnect();
 
 // Open the session for read
 $sessionID = sqlRead('cfg_system', $dbh, 'sessionid')[0]['value'];
-session_id($sessionId);
+session_id($sessionID);
 if (session_start() === false) {
     workerLog('autocfg-gen.php: Session start failed, script exited');
     exit(1);
