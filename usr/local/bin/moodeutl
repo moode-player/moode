@@ -241,8 +241,8 @@ function sqlQuery($queryStr) {
 }
 
 function setSessionId() {
-	$sessionId = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='sessionid'"));
-	session_id($sessionId);
+	$sessionID = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='sessionid'"));
+	session_id($sessionID);
 }
 
 function getUserID() {
