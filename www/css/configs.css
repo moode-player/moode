@@ -85,6 +85,7 @@ a.config-info-toggle:visited {color:var(--config-help-icon-color);}
 
 /* blu-control, sys-status */
 #blu-control-cmd-output,
+#ren-status-log-output,
 #sys-status-log-output,
 #sys-restore-status {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;
 	font-family:monospace;};

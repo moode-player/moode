@@ -155,6 +155,9 @@ function getAirPlayVersion($type = 'full') {
 	// $type: 'full' or 'major'
 	return ($type == 'full' ? $version : substr($version, 0, 1));
 }
+function isAirPlayInstalled() {
+	return file_exists('/usr/bin/shairport-sync');
+}
 
 // Spotify Connect
 function startSpotify() {
@@ -222,6 +225,9 @@ function stopSpotify() {
 	phpSession('write', 'spotactive', '0');
 	$GLOBALS['spotactive'] = '0';
 	sendFECmd('spotactive0');
+}
+function isSpotifyInstalled() {
+	return file_exists('/usr/bin/librespot');
 }
 
 // Deezer Connect

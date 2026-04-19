@@ -306,7 +306,11 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
-		SPSVER="$(shairport-sync -V | cut -f 1 -d '-')"
+		if [ -f /usr/bin/shairport-sync ]; then
+			SPSVER="$(shairport-sync -V | cut -f 1 -d '-')"
+		else
+			SPSVER="Shairport-sync is not installed"
+		fi
 		echo -e "A I R P L A Y"
 		echo -e "\nVersion\t\t\t= $SPSVER\c"
 		echo -e "\nFriendly name\t\t= $airplayname\c"
@@ -322,7 +326,11 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
-		SPOTVER="$(librespot --version | awk -F" " '{print $2}')"
+		if [ -f /usr/bin/librespot ]; then
+			SPOTVER="$(librespot --version | awk -F" " '{print $2}')"
+		else
+			SPOTVER="Librespot is not installed"
+		fi
 		echo -e "S P O T I F Y   C O N N E C T"
 		echo -e "\nVersion\t\t\t= $SPOTVER\c"
 		echo -e "\nFriendly name\t\t= $spotifyname\c"

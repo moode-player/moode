@@ -13,6 +13,7 @@ const MOODE_PREVLOG = '/var/log/moode_prevlog.log';
 const AUTOCFG_LOG = '/var/log/moode_autocfg.log';
 const AUTORESTORE_LOG = '/var/log/moode_autorestore.log';
 const UPDATER_LOG = '/var/log/moode_update.log';
+const PLUGIN_LOG="/var/log/moode_plugin.log";
 const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
 const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
 const SHAIRPORT_SYNC_LOG = '/var/log/moode_shairport-sync.log';

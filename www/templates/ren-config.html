@@ -110,6 +110,20 @@
 
 		<div class="control-group $_feat_airplay">
 			<legend>AirPlay</legend>
+
+			<div class="$_install_airplay_hide">
+				<p class="sub-legend">This service is not installed.</p>
+				<label class="control-label">Shairport-sync</label>
+				<div class="controls">
+					<button class="btn btn-primary btn-small config-btn set-button btn-submit" type="submit" name="install_airplay" value="1">Install</button>
+					<!--DELETE:a data-toggle="modal" href="#install-airplay"><button class="btn btn-medium btn-primary config-btn">Install</button></a-->
+					<span class="config-btn-after">Version 5</span>
+					<span class="config-help-static">
+						Build and install shairport-sync version 5, an Open Source AirPlay 2 receiver.
+					</span>
+				</div>
+			</div>
+
 			<label class="control-label">Service</label>
 			<div class="controls">
 				<div class="toggle">
@@ -157,7 +171,20 @@
 
 		<div class="control-group $_feat_spotify">
 			<legend>Spotify Connect</legend>
-			<p class="sub-legend">This service requires a Spotify Premium account.</p>
+
+			<div class="$_install_spotify_hide">
+				<p class="sub-legend">This service is not installed.</p>
+				<label class="control-label">Librespot</label>
+				<div class="controls">
+					<button class="btn btn-primary btn-small config-btn set-button btn-submit" type="submit" name="install_spotify" value="1">Install</button>
+					<!--DELETE:a data-toggle="modal" href="#install-spotify"><button class="btn btn-medium btn-primary config-btn">Install</button></a-->
+					<span class="config-btn-after">Version 8</span>
+					<span class="config-help-static">
+						Build and install librespot version 8, an Open Source Spotify Connect renderer.
+					</span>
+				</div>
+			</div>
+
 			<label class="control-label">Service</label>
 			<div class="controls">
 				<div class="toggle">
@@ -166,8 +193,11 @@
 				</div>
 				<button id="btn-set-spotifysvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_spotify_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-spotifysvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span class="config-help-static">
+					This service requires a Spotify Premium account.
+				</span>
 				<span id="info-spotifysvc" class="config-help-info">
-					librespot by the Librespot Organization and maintained by Roderick Van Domburg.
+					librespot by the Librespot Organization and maintained by Roderick Van Domburg and the librespot team.
                 </span>
 			</div>
 
@@ -333,6 +363,7 @@
 		<div class="control-group $_feat_plexamp">
 			<legend>Plexamp</legend>
 			<p class="sub-legend">
+				This service is not installed.<br>
 				 View the <a href="./setup_3rdparty_plexamp.txt" class="target-blank-link" target="_blank">Setup guide</a> and then visit the manufacturer website for the latest information on installing and configuring this component.
 			</p>
 			<label class="control-label">Service</label>
@@ -381,6 +412,7 @@
 		<div class="control-group $_feat_roonbridge">
 			<legend>RoonBridge</legend>
 			<p class="sub-legend">
+				This service is not installed.<br>
 				View the <a href="./setup_3rdparty_roonbridge.txt" class="target-blank-link" target="_blank">Setup guide</a> and then visit the manufacturer website for the latest information on installing and configuring this component.
 			</p>
 			<label class="control-label">Service</label>
@@ -431,6 +463,22 @@
 	</div>
 </form>
 
+<!--DELETE:form class="form-horizontal" method="post">
+	<div id="install-airplay" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="install-airplay-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Build and Install Shairport-sync?</h3>
+		</div>
+		<div class="modal-body">
+			After confirming, a progress status page will appear.
+			The build and install process can take some time so please be patient and periodically REFRESH the status screen.
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="install_airplay" value="1">Yes</button>
+		</div>
+	</div>
+</form-->
+
 <form class="form-horizontal" method="post">
 	<div id="airplay-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="airplay-restart-label" aria-hidden="true">
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -443,6 +491,22 @@
 		</div>
 	</div>
 </form>
+
+<!--DELETE:form class="form-horizontal" method="post">
+	<div id="install-spotify" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="install-spotify-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Build and Install Librespot?</h3>
+		</div>
+		<div class="modal-body">
+			After confirming, a progress status page will appear.
+			The build and install process can take some time so please be patient and periodically REFRESH the status screen.
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="install_spotify" value="1">Yes</button>
+		</div>
+	</div>
+</form-->
 
 <form class="form-horizontal" method="post">
 	<div id="spotify-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="spotify-restart-label" aria-hidden="true">

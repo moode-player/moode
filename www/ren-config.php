@@ -58,6 +58,10 @@ if (isset($_POST['update_rsmafterbt'])) {
 }
 
 // AirPlay
+if (isset($_POST['install_airplay'])) {
+	submitJob('install_airplay');
+	header('location: ren-status.php');
+}
 if (isset($_POST['update_airplay_settings'])) {
 	if (isset($_POST['airplayname']) && $_POST['airplayname'] != $_SESSION['airplayname']) {
 		$update = true;
@@ -79,6 +83,10 @@ if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSIO
 }
 
 // Spotify Connect
+if (isset($_POST['install_spotify'])) {
+	submitJob('install_spotify');
+	header('location: ren-status.php');
+}
 if (isset($_POST['update_spotify_settings'])) {
 	if (isset($_POST['spotifyname']) && $_POST['spotifyname'] != $_SESSION['spotifyname']) {
 		$update = true;
@@ -244,9 +252,16 @@ $_select['rsmafterbt_off']  .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"t
 
 // AirPlay
 $_feat_airplay = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? '' : 'hide';
+if (isAirPlayInstalled() === true) {
+	$_install_airplay_hide = 'hide';
+	$_airplay_svcbtn_disable = '';
+} else {
+	$_install_airplay_hide = '';
+	$_airplay_svcbtn_disable = 'disabled';
+}
 $_SESSION['airplaysvc'] == '1' ? $_airplay_btn_disable = '' : $_airplay_btn_disable = 'disabled';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_link_disable = '' : $_airplay_link_disable = 'onclick="return false;"';
-$autoClick = " onchange=\"autoClick('#btn-set-airplaysvc');\"";
+$autoClick = " onchange=\"autoClick('#btn-set-airplaysvc');\" " . $_airplay_svcbtn_disable;
 $_select['airplaysvc_on']  .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggle-airplaysvc-1\" value=\"1\" " . (($_SESSION['airplaysvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['airplaysvc_off'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggle-airplaysvc-2\" value=\"0\" " . (($_SESSION['airplaysvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['airplayname'] = $_SESSION['airplayname'];
@@ -256,9 +271,16 @@ $_select['rsmafterapl_off']  .= "<input type=\"radio\" name=\"rsmafterapl\" id=\
 
 // Spotify Connect
 $_feat_spotify = $_SESSION['feat_bitmask'] & FEAT_SPOTIFY ? '' : 'hide';
+if (isSpotifyInstalled() === true) {
+	$_install_spotify_hide = 'hide';
+	$_spotify_svcbtn_disable = '';
+} else {
+	$_install_spotify_hide = '';
+	$_spotify_svcbtn_disable = 'disabled';
+}
 $_SESSION['spotifysvc'] == '1' ? $_spotify_btn_disable = '' : $_spotify_btn_disable = 'disabled';
 $_SESSION['spotifysvc'] == '1' ? $_spotify_link_disable = '' : $_spotify_link_disable = 'onclick="return false;"';
-$autoClick = " onchange=\"autoClick('#btn-set-spotifysvc');\"";
+$autoClick = " onchange=\"autoClick('#btn-set-spotifysvc');\" " . $_spotify_svcbtn_disable;
 $_select['spotifysvc_on']  .= "<input type=\"radio\" name=\"spotifysvc\" id=\"toggle-spotifysvc-1\" value=\"1\" " . (($_SESSION['spotifysvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['spotifysvc_off'] .= "<input type=\"radio\" name=\"spotifysvc\" id=\"toggle-spotifysvc-2\" value=\"0\" " . (($_SESSION['spotifysvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['spotifyname'] = $_SESSION['spotifyname'];

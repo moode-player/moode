@@ -3171,6 +3171,7 @@ function runQueuedJob() {
 		case 'mpdcrossfade':
 			sysCmd('mpc crossfade ' . $_SESSION['w_queueargs']);
 			break;
+		// ren-config jobs
 		case 'btsvc':
 			sysCmd('/var/www/util/sysutil.sh chg-name bluetooth ' . $_SESSION['w_queueargs']);
 			stopBluetooth();
@@ -3200,6 +3201,11 @@ function runQueuedJob() {
 		case 'reset_bt_auto_disconnect':
 			$GLOBALS['bt_auto_disconnect'] = $_SESSION['bt_auto_disconnect'];
 			break;
+		case 'install_airplay':
+			// https://raw.githubusercontent.com/moode-player/plugins/main
+			$latestPlugin = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $GLOBALS['dbh'])[0]['plugin'];
+			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $latestPlugin . '"' . ' > /dev/null 2>&1 &');
+			break;
 		case 'airplaysvc':
 			stopAirPlay();
 			if ($_SESSION['airplaysvc'] == 1) {
@@ -3209,6 +3215,12 @@ function runQueuedJob() {
 			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
 				sysCmd('mpc play');
 			}
+			break;
+		case 'install_spotify':
+			// https://raw.githubusercontent.com/moode-player/plugins/main
+			$latestPlugin = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $GLOBALS['dbh'])[0]['plugin'];
+			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $latestPlugin . '"' . ' > /dev/null 2>&1 &');
+			break;
 			break;
 		case 'spotifysvc':
 			stopSpotify();
@@ -3414,12 +3426,6 @@ function runQueuedJob() {
 		// sys-config jobs
 		case 'install_update':
 			$result = sysCmd('/var/www/util/system-updater.sh ' . getPkgId() . ' > /dev/null 2>&1 &');
-			break;
-		case 'install_plugin':
-			// $args = component_name,plugin_name
-			$args = explode(',', $_SESSION['w_queueargs']);
-			sysCmd('/var/www/util/plugin-updater.sh "' . $args[0] . '" "' . $args[1] . '"' . ' > /dev/null 2>&1');
-			workerLog('worker: Plugin: ' . $args[1] . ' installed');
 			break;
 		case 'timezone':
 			sysCmd('/var/www/util/sysutil.sh set-timezone ' . $_SESSION['w_queueargs']);
@@ -3687,8 +3693,8 @@ function runQueuedJob() {
 			break;
 		case 'install_moode_meters':
 			// https://raw.githubusercontent.com/moode-player/plugins/main
-			$latestMoodeMeters = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='peppydisplay' AND type='moode-meters'", $GLOBALS['dbh'])[0]['plugin'];
-			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "' . $latestMoodeMeters . '"');
+			$latestPlugin = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='peppydisplay' AND type='moode-meters'", $GLOBALS['dbh'])[0]['plugin'];
+			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "' . $latestPlugin . '"');
 			break;
 		case 'scn_blank':
 			setScreenBlankTimeout($_SESSION['w_queueargs']);
