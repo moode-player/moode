@@ -140,7 +140,7 @@
 			<label class="control-label" for="airplayname">Name</label>
 			<div class="controls">
 				<input class="config-input-large" type="text" id="airplayname" name="airplayname" value="$_select[airplayname]" required">
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_airplay_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_airplay_settings" value="novalue" $_airplay_svcbtn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			</div>
 			<label class="control-label">Resume MPD</label>
 			<div class="controls">
@@ -161,7 +161,7 @@
 			</div>
 
 			<div class="controls">
-				<a href="apl-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
+				<a href="apl-config.php" $_airplay_editlink_disable><button class="btn btn-medium btn-primary config-btn" $_airplay_svcbtn_disable>Edit</button></a>
 				<span class="config-btn-after">Airplay settings</span>
 				<span class="config-help-static">
 					Set "Disable sync" to Yes if CamillaDSP is on and there are audio glitches.
@@ -204,7 +204,7 @@
 			<label class="control-label" for="spotifyname">Name</label>
 			<div class="controls">
 				<input class="config-input-large" type="text" id="spotifyname" name="spotifyname" value="$_select[spotifyname]" required>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_spotify_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_spotify_settings" value="novalue" $_spotify_svcbtn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			</div>
 
 			<label class="control-label">Resume MPD</label>
@@ -226,7 +226,7 @@
 			</div>
 
 			<div class="controls">
-				<a href="spo-config.php"><button class="btn btn-medium btn-primary config-btn">Edit</button></a>
+				<a href="spo-config.php" $_spotify_editlink_disable><button class="btn btn-medium btn-primary config-btn" $_spotify_svcbtn_disable>Edit</button></a>
 				<span class="config-btn-after">Spotify Connect settings</span>
 			</div>
 

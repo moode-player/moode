@@ -255,9 +255,11 @@ $_feat_airplay = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? '' : 'hide';
 if (isAirPlayInstalled() === true) {
 	$_install_airplay_hide = 'hide';
 	$_airplay_svcbtn_disable = '';
+	$_airplay_editlink_disable = '';
 } else {
 	$_install_airplay_hide = '';
 	$_airplay_svcbtn_disable = 'disabled';
+	$_airplay_editlink_disable = 'onclick="return false;"';
 }
 $_SESSION['airplaysvc'] == '1' ? $_airplay_btn_disable = '' : $_airplay_btn_disable = 'disabled';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_link_disable = '' : $_airplay_link_disable = 'onclick="return false;"';
@@ -274,9 +276,11 @@ $_feat_spotify = $_SESSION['feat_bitmask'] & FEAT_SPOTIFY ? '' : 'hide';
 if (isSpotifyInstalled() === true) {
 	$_install_spotify_hide = 'hide';
 	$_spotify_svcbtn_disable = '';
+	$_spotify_editlink_disable = '';
 } else {
 	$_install_spotify_hide = '';
 	$_spotify_svcbtn_disable = 'disabled';
+	$_spotify_editlink_disable = 'onclick="return false;"';
 }
 $_SESSION['spotifysvc'] == '1' ? $_spotify_btn_disable = '' : $_spotify_btn_disable = 'disabled';
 $_SESSION['spotifysvc'] == '1' ? $_spotify_link_disable = '' : $_spotify_link_disable = 'onclick="return false;"';
