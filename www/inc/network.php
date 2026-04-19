@@ -252,9 +252,9 @@ function updAvahiOptions($options) {
 
 // Return connection status
 function getConnectionStats() {
-	$ssid = trim(sysCmdStr("nmcli -f IN-USE,SSID device wifi | awk 'NR==2{print $2}'"));
-	$bssid = trim(sysCmdStr("nmcli -f IN-USE,BSSID device wifi | awk 'NR==2{print $2}'"));
-	$other = explode(':', sysCmd('nmcli -t -f IN-USE,CHAN,FREQ,RATE,BANDWIDTH,SIGNAL,SECURITY device wifi')[0]);
+	$ssid = trim(sysCmdStr("nmcli -f IN-USE,SSID device wifi | grep \"*\" | awk '{print $2}'"));
+	$bssid = trim(sysCmdStr("nmcli -f IN-USE,BSSID device wifi | grep \"*\" | awk '{print $2}'"));
+	$other = explode(':', sysCmd('nmcli -t -f IN-USE,CHAN,FREQ,RATE,BANDWIDTH,SIGNAL,SECURITY device wifi | grep "*"')[0]);
 	return array(
 		'ssid' => $ssid,
 		'bssid' => $bssid,
