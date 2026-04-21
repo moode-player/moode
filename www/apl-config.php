@@ -17,7 +17,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		chkValue($key, $value);
 		sqlUpdate('cfg_airplay', $dbh, $key, $value);
 		$value = is_numeric($value) ? $value : '"' . $value . '"';
-		sysCmd("sed -i 's/^" . $key . " = \".*\";/" . $key . ' = ' .$value . ';/ /etc/shairport-sync.conf');
+		sysCmd("sed -i 's/^" . $key . " = .*;/" . $key . ' = ' .$value . ";/' /etc/shairport-sync.conf");
 	}
 	$notify = $_SESSION['airplaysvc'] == '1' ?
 		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_AIRPLAY . NOTIFY_MSG_SVC_RESTARTED) :
