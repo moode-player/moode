@@ -493,7 +493,7 @@ function autoConfigSettings() {
 			'airplay_allow_session_interruption', 'airplay_session_timeout', 'airplay_audio_backend_latency_offset_in_seconds',
 			'airplay_audio_backend_buffer_desired_length_in_seconds', 'airplay_disable_synchronization'],
 			'handler' => function($values) {
-				if (isAirpPlayInstalled() === true) {
+				if (isAirPlayInstalled() === true) {
 					$dbh = sqlConnect();
 					$prefix = 'airplay_';
 					foreach ($values as $key => $value) {
