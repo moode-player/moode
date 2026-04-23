@@ -16,7 +16,8 @@
 ################################################################################
 
 New features
-- NEW: Shairport-sync version 5 (new image)
+- NEW: Shairport-sync version 5 on-demand install (new image)
+- NEW: Librespot version 8 on-demand install (new image)
 - NEW: CamillaDSP version 4
 - NEW: Graphic/Parametric EQ control API (REST and CLI)
 
@@ -48,7 +49,7 @@ Bug fixes
 - FIX: Non-English locale issues when parsing command output
 - FIX: Button shade when Configure modal opened from the Configs section
 - FIX: Localdisplay service not stopped when Peppy turned off
-- FIX: Busy spinner position in mobile portrait 
+- FIX: Busy spinner position in mobile portrait
 
 ################################################################################
 #
