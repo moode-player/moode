@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Apr 13 08:13:09 2026
+-- File generated with SQLiteStudio v3.4.4 on Mon Apr 27 09:31:21 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -248,11 +248,12 @@ INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, se
 CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_volume_type CHAR (32), alsa_output_mode CHAR (32), alsa_max_volume CHAR (32));
 
 -- Table: cfg_plugin
-CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32));
-INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (1, 'camilladsp', 'sample-configs', 'v4-sample-configs');
-INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters');
-INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync');
-INSERT INTO cfg_plugin (id, component, type, plugin) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot');
+CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32), version CHAR (32));
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (1, 'camilladsp', 'sample-configs', 'v4-sample-configs', '4.0.0');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters', '4.0.0');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.0.2-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));
