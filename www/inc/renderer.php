@@ -156,7 +156,14 @@ function getAirPlayVersion($type = 'full') {
 	return ($type == 'full' ? $version : substr($version, 0, 1));
 }
 function isAirPlayInstalled() {
-	return file_exists('/usr/bin/shairport-sync');
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show shairport-sync | grep moode')[0];
+	return (empty($installedVersion) ? false : true);
+}
+function isAirPlayUpgradable() {
+	// Ex: 5.0.2-1moode1
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show shairport-sync | grep moode')[0];
+	$availableVersion = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='airplay'", sqlConnect())[0]['version'];
+	return ($installedVersion == $availableVersion ? false : true);
 }
 
 // Spotify Connect
@@ -227,7 +234,14 @@ function stopSpotify() {
 	sendFECmd('spotactive0');
 }
 function isSpotifyInstalled() {
-	return file_exists('/usr/bin/librespot');
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show librespot | grep moode')[0];
+	return (empty($installedVersion) ? false : true);
+}
+function isSpotifyUpgradable() {
+	// Ex: 0.8.0-1moode1
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show librespot | grep moode')[0];
+	$availableVersion = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", sqlConnect())[0]['version'];
+	return ($installedVersion == $availableVersion ? false : true);
 }
 
 // Deezer Connect
