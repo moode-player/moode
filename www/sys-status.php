@@ -15,7 +15,7 @@ if (file_exists(UPDATER_LOG)) {
 	}
 	$_updater_log = empty($_updater_log) ? 'Log is empty' : $_updater_log;
 } else {
-	$_updater_log = 'Log file does not exist';
+	$_updater_log = 'Refresh to display status';
 }
 
 $tpl = "sys-status.html";

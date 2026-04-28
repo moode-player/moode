@@ -15,7 +15,7 @@ if (file_exists(PLUGIN_LOG)) {
 	}
 	$_plugin_log = empty($_plugin_log) ? 'Log is empty' : $_plugin_log;
 } else {
-	$_plugin_log = 'Log file does not exist';
+	$_plugin_log = 'Refresh to display status';
 }
 
 $tpl = "ren-status.html";
