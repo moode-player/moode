@@ -3203,7 +3203,8 @@ function runQueuedJob() {
 			break;
 		case 'install_airplay':
 			// https://raw.githubusercontent.com/moode-player/plugins/main
-			sysCmd('rm "' . $_SESSION['home_dir'] . '/install_airplay.log' . '"');
+			$fullLog = $_SESSION['home_dir'] . '/install_airplay.log';
+			sysCmd('rm "' . $fullLog . '"');
 			$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $GLOBALS['dbh']);
 			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $result[0]['plugin'] . '" > "' . $fullLog . '" 2>&1 &');
 			break;
@@ -3219,10 +3220,10 @@ function runQueuedJob() {
 			break;
 		case 'install_spotify':
 			// https://raw.githubusercontent.com/moode-player/plugins/main
-			sysCmd('rm "' . $_SESSION['home_dir'] . '/install_spotify.log' . '"');
+			$fullLog = $_SESSION['home_dir'] . '/install_spotify.log';
+			sysCmd('rm "' . $fullLog . '"');
 			$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $GLOBALS['dbh']);
 			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $result[0]['plugin'] . '" > "' . $fullLog . '" 2>&1 &');
-			break;
 			break;
 		case 'spotifysvc':
 			stopSpotify();
