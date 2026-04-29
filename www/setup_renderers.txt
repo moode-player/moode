@@ -2,7 +2,7 @@
 #
 #  Setup Guide for Audio Renderers
 #
-#  Version: 1.2 2025-07-21
+#  Version: 1.3 2026-04-29
 #
 #  (C) Tim Curtis 2024 http://moodeaudio.org
 #
@@ -23,33 +23,25 @@ The following is a list of Audio Renderers and client apps that can play to
 them, plus an indication of whether moOde displays metadata and cover art sent
 from the client and whether CamillaDSP is supported in the playback chain.
 
-+-------------------------------------------------------------------------------
-| RENDERER             | CLIENT                          | COVERART | CamillaDSP
-+-------------------------------------------------------------------------------
-| Bluetooth (Inbound)  | Any client supporting Bluetooth | No       | Yes
-+-------------------------------------------------------------------------------
-| Bluetooth (Outbound) | MPD, Other renderer apps        | No       | No
-+-------------------------------------------------------------------------------
-| AirPlay             | Any app supporting AirPlay 2     | Yes      | Yes
-+-------------------------------------------------------------------------------
-| Deezer Connect (1)  | Deezer app (Smartphone only)     | Yes      | Yes
-+-------------------------------------------------------------------------------
-| Spotify Connect     | Spotify app (Desktop/Smartphone) | Yes      | Yes
-+-------------------------------------------------------------------------------
-| Squeezelite         | Lyrion Media Server (LMS)        | No       | Yes
-+-------------------------------------------------------------------------------
-| UPnP Client for MPD | Any UPnP Control Point app       | Yes      | Yes
-+-------------------------------------------------------------------------------
-| Plexamp             | Plex Web app                     | No       | No
-+-------------------------------------------------------------------------------
-| RoonBridge          | Roon server                      | No       | No
-+-------------------------------------------------------------------------------
-
-(1) On 2025-05-06 Deezer officially cancelled support for Deezer Connect but it
-apparantly is still available on iOS when you enable Remote Control under
-Settings > Music > Deezer Lab, and on Android when you use an older APK version.
-This may stop working at any time. Official notice of cancellation:
-https://en.deezercommunity.com/product-updates/say-goodbye-to-deezer-connect-80661
++--------------------------------------------------------------------------------
+| RENDERER             | CLIENT                           | COVERART | CamillaDSP
++--------------------------------------------------------------------------------
+| Bluetooth (Inbound)  | Any client supporting Bluetooth  | No       | Yes
++--------------------------------------------------------------------------------
+| Bluetooth (Outbound) | MPD, Other renderer apps         | No       | No
++--------------------------------------------------------------------------------
+| AirPlay              | Any app supporting AirPlay 2     | Yes      | Yes
++--------------------------------------------------------------------------------
+| Spotify Connect      | Spotify app (Desktop/Smartphone) | Yes      | Yes
++--------------------------------------------------------------------------------
+| Squeezelite          | Lyrion Media Server (LMS)        | No       | Yes
++--------------------------------------------------------------------------------
+| UPnP Client for MPD  | Any UPnP Control Point app       | Yes      | Yes
++--------------------------------------------------------------------------------
+| Plexamp              | Plex Web app                     | No       | No
++--------------------------------------------------------------------------------
+| RoonBridge           | Roon server                      | No       | No
++--------------------------------------------------------------------------------
 
 MULTIPLE RENDERERS ON
 
@@ -62,7 +54,6 @@ another renderer.
 - Bluetooth
 - AirPlay
 - Spotify Connect
-- Deezer Connect
 - Squeezelite (providing -c <timeout> option is specified)
 - UPnP Client for MPD
 
@@ -92,9 +83,9 @@ Session Based
 The other renderers use Session based protocols that run over existing
 Ethernet or WiFi networks. Since these networks are already present this type
 of renderer operates by establishing a playback session. moOde detects the
-session and displays cover art and track metadata for AirPlay, Spotify Connect
-and Deezer Connect, or the "Renderer Active" screen for Squeezelite, Plexamp
-and RoonBridge renderers.
+session and displays cover art and track metadata for AirPlay and Spotify
+Connect, or the "Renderer Active" screen for Squeezelite, Plexamp and 
+RoonBridge renderers.
 
 AirPlay and Squeezelite renderers can automatically end their session and
 release the audio output after playback ends based on a configurable timeout

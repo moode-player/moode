@@ -1,0 +1,52 @@
+################################################################################
+#
+#  Installation Guide for Audio Renderers
+#
+#  Version: 1.0 2026-04-29
+#
+#  (C) Tim Curtis 2024 http://moodeaudio.org
+#
+################################################################################
+
+OVERVIEW
+
+The "Audio Renderers" are 3rd party playback applications that are separate from
+the core playback application in moOde; MPD (Music Player Daemon).
+
+AIRPLAY AND SPOTIFY CONNECT
+
+AirPlay and Spotify Connect renderers are not included in moOde but they can be
+built and installed via the INSTALL button in Renderer Config.
+
+INSTALLATION PROCESS
+
+Clicking the INSTALL button initiates an automated process that first builds
+the renderer from its source code and dependencies then creates a Debian package
+that installs the renderer onto the system.
+
+The build part of the process can be lengthy. The amount of time required depends
+on the overall speed of the Raspberry Pi including CPU, RAM, and boot media, and
+the speed of the network which is used to download the renderer sources and build
+scripts from GitHub.
+
+Some example times from testing:
++-------------------------------------------------------------------
+| RENDERER        | Pi-5 4GB | Pi-4 2GB  | Pi-4 1GB   | Pi-3B+ 1GB |
++-------------------------------------------------------------------
+| Airplay         | 3 mins   | 6 mins    | 6 mins     | 10 mins    |
++-------------------------------------------------------------------
+| Spotify Connect | 6 mins   | 14 mins   | 25 mins    | 45 min     |
++-------------------------------------------------------------------
+
+INSTALLING ON MULTIPLE SYSTEMS
+
+The Debian packages and full installation logs are saved to the Home Directory.
+These packages can be copied to the Home Directory of another system and
+installed directly without having to go through the lengthy build process.
+
+sudo moodeutl --install-airplay
+sudo moodeutl --install-spotify-connect
+
+################################################################################
+#  Post questions regarding this guide to http://moodeaudio.org/forum
+################################################################################
