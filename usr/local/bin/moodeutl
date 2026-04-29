@@ -122,11 +122,11 @@ switch ($option) {
 	case '--hwparams':
 		printHWParams($argv);
 		break;
-	case '--btreset':
-		bluetoothReset();
+	case '--resetbt':
+		resetBluetooth();
 		break;
-	case '--odcclear':
-		outputDeviceCacheClear();
+	case '--clearodc':
+		clearOutputDeviceCache();
 		break;
 	case '--mpdlog':
 		printMPDLog();
@@ -204,8 +204,8 @@ Moode utility functions
  --shutdown\t(sudo) Shut down the system
  --setdisplay\t(sudo) Set WebUI or Peppy display [webui | peppy | toggle]
  --hwparams\tPrint ALSA hardware params [cardnum]
- --btreset\tReset Bluetooth to off
- --odcclear\tClear output device cache
+ --resetbt\tReset Bluetooth to off
+ --clearodt\tClear output device cache
  --mpdlog\tPrint MPD log
  --updlog\tPrint in-place update log
  --mountmonlog\tPrint mount monitor log
@@ -712,12 +712,12 @@ function runSqlQuery($argv) {
 	echo sqlQuery($argv[2]);
 }
 
-function bluetoothReset() {
+function resetBluetooth() {
 	sqlQuery("UPDATE cfg_system set value='0' WHERE param='btsvc'");
 	echo 'Bluetooth reset to off, reboot required' . "\n";
 }
 
-function outputDeviceCacheClear() {
+function clearOutputDeviceCache() {
 	sqlQuery('DELETE FROM cfg_outputdev');
 	echo 'Output device cache cleared' . "\n";
 }
