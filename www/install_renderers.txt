@@ -44,8 +44,7 @@ The Debian packages and full installation logs are saved to the Home Directory.
 These packages can be copied to the Home Directory of another system and
 installed directly without having to go through the lengthy build process.
 
-sudo moodeutl --install-airplay
-sudo moodeutl --install-spotify-connect
+sudo moodeutl --install-renderer [airplay | librespot]
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
