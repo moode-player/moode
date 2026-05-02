@@ -30,21 +30,41 @@ the speed of the network which is used to download the renderer sources and buil
 scripts from GitHub.
 
 Some example times from testing:
-+-------------------------------------------------------------------
-| RENDERER        | Pi-5 4GB | Pi-4 2GB  | Pi-4 1GB   | Pi-3B+ 1GB |
-+-------------------------------------------------------------------
-| Airplay         | 3 mins   | 6 mins    | 6 mins     | 10 mins    |
-+-------------------------------------------------------------------
-| Spotify Connect | 6 mins   | 14 mins   | 25 mins    | 45 min     |
-+-------------------------------------------------------------------
++----------------------------------+
+| PI MODEL   | AIRPLAY  | SPOTIFY  |
++----------------------------------+
+| Pi-5 4GB   | 3 mins   | 6 mins   |
++----------------------------------+
+| Pi-4 2GB   | 6 mins   | 14 mins  |
++----------------------------------+
+| Pi-4 1GB   | 6 mins   | 25 mins  |
++----------------------------------+
+| Pi-3B+ 1GB | 10 mins  | 45 mins  |
++----------------------------------+
+
+
+VIEWING THE INSTALLATION LOGS
+
+The summary log is named "/var/log/moode_plugin.log" and can be viewed by
+clicking the REFRESH button in the WebUI during installation or in an SSH
+terminal by the command "cat /var/log/moode_plugin.log"
+
+The full logs are in the Home Directory and are named "install_airplay.log"
+and "install_spotify.log". They can be viewed in an SSH terminal by the commands
+below. The command "tail -f" is used to view the log as its being written.
+
+Examples:
+cat install_airplay.log
+tail -f install_airplay.log
 
 INSTALLING ON MULTIPLE SYSTEMS
 
-The Debian packages and full installation logs are saved to the Home Directory.
-These packages can be copied to the Home Directory of another system and
-installed directly without having to go through the lengthy build process.
+The Debian packages "filename.deb" are saved to the Home Directory. These
+packages can be copied to the Home Directory of another system and installed
+directly by the command below without having to go through the lengthy build
+process.
 
-sudo moodeutl --install-renderer [airplay | librespot]
+sudo moodeutl --installpkg [airplay | spotify]
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
