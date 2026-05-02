@@ -220,3 +220,50 @@ if [[ $1 = "get-osinfo" ]]; then
 
 	echo "RPiOS: $RPIOS_VER $RPIOS_NAME $RPIOS_BITS | Linux: $KERNEL_VER $KERNEL_BITS"
 fi
+
+# Set defaults in shairport-sync.conf
+if [[ $1 = "upd-shairport-sync-conf" ]]; then
+	# /etc/shairport-sync.conf
+	# General
+	# interpolation = auto
+	# disable_synchronization = no
+	# disable_standby_mode = auto
+	# cover_art_cache_directory = /var/local/www/imagesw/airplay-covers
+	# Audio
+	# audio_backend_latency_offset_in_seconds = 0.0
+	# audio_backend_buffer_desired_length_in_seconds = 0.2
+	# output_rate = auto
+	# output_format = auto
+	# output_channels = auto
+	# eight_channel_mode = on
+	# six_channel_mode = on
+	# mixdown = auto
+	# output_channel_mapping = auto
+	# Session
+	# run_this_before_entering_active_state = /var/local/www/commandw/spspre.sh
+	# run_this_after_exiting_active_state = /var/local/www/commandw/spspost.sh
+	# active_state_timeout = 10.0
+	# wait_for_completion = yes
+	# allow_session_interruption = no
+	# session_timeout = 60
+	sed -i -e 's/\/\/.*\(interpolation =\)/\1/' \
+		-e 's/\/\/.*\(disable_synchronization =\)/\1/' \
+		-e 's/\/\/.*\(disable_standby_mode =\)/\1/' \
+		-e 's/\/\/.*\(cover_art_cache_directory\)[ ]=[ ]\".*\";[ ]\(.*\)/\1 = "\/var\/local\/www\/imagesw\/airplay-covers"; \2/' \
+		-e 's/\/\/.*\(audio_backend_latency_offset_in_seconds =\)/\1/' \
+		-e 's/\/\/.*\(audio_backend_buffer_desired_length_in_seconds =\)/\1/' \
+		-e '0,/output_rate =/s/\/\/.*\(output_rate =\)/\1/' \
+		-e '0,/output_format =/s/\/\/.*\(output_format =\)/\1/' \
+		-e '0,/output_channels =/s/\/\/.*\(output_channels =\)/\1/' \
+		-e 's/\/\/.*\(eight_channel_mode =\)/\1/' \
+		-e 's/\/\/.*\(six_channel_mode =\)/\1/' \
+		-e 's/\/\/.*\(mixdown =\)/\1/' \
+		-e 's/\/\/.*\(output_channel_mapping =\)/\1/' \
+		-e 's/\/\/.*\(run_this_before_entering_active_state\)[ ]=[ ]\".*\";[ ]\(.*\)/\1 = "\/var\/local\/www\/commandw\/spspre.sh"; \2/' \
+		-e 's/\/\/.*\(run_this_after_exiting_active_state\)[ ]=[ ]\".*\";[ ]\(.*\)/\1 = "\/var\/local\/www\/commandw\/spspost.sh"; \2/' \
+		-e 's/\/\/.*\(active_state_timeout =\)/\1/' \
+		-e 's/\/\/.*\(wait_for_completion\)[ ]=[ ].*;\(.*\)/\1 = "yes"\2/' \
+		-e 's/\/\/.*\(allow_session_interruption =\)/\1/' \
+		-e 's/\/\/.*\(session_timeout =\)/\1/' \
+		/etc/shairport-sync.conf
+fi
