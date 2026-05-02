@@ -209,7 +209,7 @@ Moode utility functions
  --hwparams\tPrint ALSA hardware params [cardnum]
  --resetbt\tReset Bluetooth to off
  --clearodt\tClear output device cache
- --installpkg\t(sudo) Install renderer package [airplay | librespot]
+ --installpkg\t(sudo) Install renderer package [airplay | spotify]
  --mpdlog\tPrint MPD log
  --updlog\tPrint in-place update log
  --mountmonlog\tPrint mount monitor log
@@ -742,33 +742,47 @@ function installPackage($argv) {
 			if (file_exists($debPkg1) && file_exists($debPkg2)) {
 				sysCmd('cp "' . $homeDir . $debPkg1 . '" /tmp/');
 				sysCmd('cp "' . $homeDir . $debPkg2 . '" /tmp/');
+
 				echo "\n** Installing shairport-sync\n";
-				echo syscmdStr('apt -y install "/tmp/' . $debPkg1 . '"');
+				echo syscmdStr('apt -y --allow-change-held-packages install "/tmp/' . $debPkg1 . '"');
+
 				echo "\n** Installing nqptp\n";
-				echo syscmdStr('apt -y install "/tmp/' . $debPkg2 . '"');
+				echo syscmdStr('apt -y --allow-change-held-packages install "/tmp/' . $debPkg2 . '"');
+
+				echo "\n** Configuring shairport-sync.conf\n";
+				sysCmd('/var/www/util/sysutil.sh upd-shairport-sync-conf');
+
+				echo "\n** Updating systemd services\n";
+				sysCmd('systemctl stop shairport-sync > /dev/null');
+				sysCmd('systemctl disable shairport-sync > /dev/null');
+				sysCmd('systemctl stop nqptp > /dev/null');
+				sysCmd('systemctl disable nqptp > /dev/null');
+
 				echo "\n** Restart the system\n";
 			} else {
 				fwrite(STDERR, "Package not found in home directory\n");
 				fwrite(STDERR, $debPkg1 . "\n");
 				fwrite(STDERR, $debPkg2 . "\n");
 			}
-		} else if ($argv[2] == 'librespot') {
+		} else if ($argv[2] == 'spotify') {
 			$version = trim(sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'"));
 			$debPkg = 'librespot_' . $version . '_arm64.deb';
 			if (file_exists($debPkg)) {
 				sysCmd('cp "' . $homeDir . $debPkg . '" /tmp/');
+
 				echo "\n** Installing librespot\n";
-				echo syscmdStr('apt -y install "/tmp/' . $debPkg . '"');
+				echo syscmdStr('apt -y --allow-change-held-packages install "/tmp/' . $debPkg . '"');
+
 				echo "\n** Restart the system\n";
 			} else {
 				fwrite(STDERR, "Package not found in home directory\n");
 				fwrite(STDERR, $debPkg . "\n");
 			}
 		} else {
-			fwrite(STDERR, "Valid options are [airplay | librespot]\n");
+			fwrite(STDERR, "Valid options are [airplay | spotify]\n");
 		}
 	} else {
-		fwrite(STDERR, "Missing option [airplay | librespot]\n");
+		fwrite(STDERR, "Missing option [airplay | spotify]\n");
 	}
 }
 
