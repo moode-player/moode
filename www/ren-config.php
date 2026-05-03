@@ -258,10 +258,8 @@ if (isAirPlayInstalled() === true) {
 		$_install_airplay_hide = '';
 		$_airplay_available_version = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $dbh)[0]['version'];
 		$_airplay_btn_text = 'Upgrade';
-		$_airplay_help_text = 'Upgrade to version ' . $_airplay_available_version;
 	} else {
 		$_install_airplay_hide = 'hide';
-		$_airplay_help_text = 'Installed version is ' . $_airplay_installed_version;
 	}
 	$_airplay_svcbtn_disable = '';
 	$_airplay_editlink_disable = '';
@@ -290,10 +288,8 @@ if (isSpotifyInstalled() === true) {
 		$_install_spotify_hide = '';
 		$_spotify_available_version = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $dbh)[0]['version'];
 		$_spotify_btn_text = 'Upgrade';
-		$_spotify_help_text = 'Upgrade to version ' . $_spotify_available_version;
 	} else {
 		$_install_spotify_hide = 'hide';
-		$_spotify_help_text = 'Installed version is ' . $_spotify_installed_version;
 	}
 	$_spotify_svcbtn_disable = '';
 	$_spotify_editlink_disable = '';
