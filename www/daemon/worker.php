@@ -492,7 +492,7 @@ if (empty($wlan0)) {
 	workerLog('worker: Wireless: SSID    ' . $cfgNetwork[1]['wlanssid']);
 	workerLog('worker: Wireless: Alt     ' . $altSSIDList);
 	workerLog('worker: Wireless: AP SSID ' . $cfgNetwork[2]['wlanssid']);
-	workerLog('worker: Wireless: AP pwd  ' . (empty($cfgNetwork[2]['wlanpwd']) ? 'not set' : 'ok'));
+	workerLog('worker: Wireless: AP pwd  ' . (empty($cfgNetwork[2]['wlanpwd']) ? 'WARNING: not set' : 'ok'));
 
 	if ($cfgNetwork[1]['wlanssid'] == 'None') {
 		// No SSID
