@@ -256,8 +256,8 @@ if (isAirPlayInstalled() === true) {
 	$_airplay_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show shairport-sync | grep moode')[0];
 	if (isAirPlayUpgradable() === true) {
 		$_install_airplay_hide = '';
-		$_airplay_available_version = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $dbh)[0]['version'];
 		$_airplay_btn_text = 'Upgrade';
+		$_airplay_available_version = 'To version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $dbh)[0]['version'];
 	} else {
 		$_install_airplay_hide = 'hide';
 	}
@@ -265,8 +265,8 @@ if (isAirPlayInstalled() === true) {
 	$_airplay_editlink_disable = '';
 } else {
 	$_install_airplay_hide = '';
-	$_airplay_available_version = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $dbh)[0]['version'];
 	$_airplay_btn_text = 'Install';
+	$_airplay_available_version = 'Version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $dbh)[0]['version'];
 	$_airplay_svcbtn_disable = 'disabled';
 	$_airplay_editlink_disable = 'onclick="return false;"';
 }
@@ -286,8 +286,8 @@ if (isSpotifyInstalled() === true) {
 	$_spotify_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show librespot | grep moode')[0];
 	if (isSpotifyUpgradable() === true) {
 		$_install_spotify_hide = '';
-		$_spotify_available_version = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $dbh)[0]['version'];
 		$_spotify_btn_text = 'Upgrade';
+		$_spotify_available_version = 'To version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $dbh)[0]['version'];
 	} else {
 		$_install_spotify_hide = 'hide';
 	}
@@ -295,8 +295,8 @@ if (isSpotifyInstalled() === true) {
 	$_spotify_editlink_disable = '';
 } else {
 	$_install_spotify_hide = '';
-	$_spotify_available_version = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $dbh)[0]['version'];
 	$_spotify_btn_text = 'Install';
+	$_spotify_available_version = 'Version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $dbh)[0]['version'];
 	$_spotify_svcbtn_disable = 'disabled';
 	$_spotify_editlink_disable = 'onclick="return false;"';
 }
