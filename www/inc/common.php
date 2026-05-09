@@ -611,7 +611,7 @@ function updBootConfigTxt($action, $value) {
 			break;
 		case 'upd_force_eeprom_read':
 			// $value: '#' or ''
-			sysCmd('sed -i /' . CFG_FORCE_EEPROM_READ . "/c\\" . $value . 'dtoverlay=' . CFG_FORCE_EEPROM_READ . ' ' . BOOT_CONFIG_TXT);
+			sysCmd('sed -i /' . CFG_FORCE_EEPROM_READ . "/c\\" . $value . CFG_FORCE_EEPROM_READ . ' ' . BOOT_CONFIG_TXT);
 			break;
 		case 'upd_hdmi_enable_4kp60':
 			// $value: '0' or '1'
