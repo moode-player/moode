@@ -744,13 +744,14 @@ function installPackage($argv) {
 				sysCmd('cp "' . $homeDir . $debPkg2 . '" /tmp/');
 
 				echo "\n** Installing shairport-sync\n";
-				echo syscmdStr('apt -y --allow-change-held-packages install "/tmp/' . $debPkg1 . '"');
-
+				echo syscmdStr('apt -y --allow-change-held-packages -o Dpkg::Options::="--force-confnew" install "/tmp/' . $debPkg1 . '"');
 				echo "\n** Installing nqptp\n";
 				echo syscmdStr('apt -y --allow-change-held-packages install "/tmp/' . $debPkg2 . '"');
 
-				echo "\n** Configuring shairport-sync.conf\n";
+				echo "\n** Configuring shairport-sync default settings\n";
 				sysCmd('/var/www/util/sysutil.sh upd-shairport-sync-conf');
+				sysCmd('sqlite3 ' . SQLDB_PATH . ' "DROP TABLE cfg_airplay"');
+				sysCmd('cat ' . SQLDB_PATH . '".sql" | grep "cfg_airplay" | sqlite3 ' . SQLDB_PATH);
 
 				echo "\n** Updating systemd services\n";
 				sysCmd('systemctl stop shairport-sync > /dev/null');
