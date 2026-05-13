@@ -807,8 +807,11 @@ $cdsp->selectConfig($_SESSION['camilladsp']);
 if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 }
+$cdspCaptureFormat = $cdsp->getCamillaDspFormat('capture');
+$cdspPlaybackFormat = $cdsp->getCamillaDspFormat('playback');
 unset($cdsp);
 workerLog('worker: CamillaDSP:    ' . rtrim($_SESSION['camilladsp'], '.yml'));
+workerLog('worker: CDSP formats:  ' . 'C:' . $cdspCaptureFormat . ', P:' . $cdspPlaybackFormat);
 workerLog('worker: CDSP volume:   ' . CamillaDSP::getCDSPVol() . 'dB');
 workerLog('worker: CDSP volrange: ' . $_SESSION['camilladsp_volume_range'] . 'dB');
 
