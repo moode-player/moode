@@ -62,20 +62,20 @@ class CamillaDsp {
 			} else {
 				$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : $outputMode . ':' . $cardNum . ',0';
 			}
-            $supportedFormats = $this->detectSupportedSoundFormats();
-            $useFormat = count($supportedFormats) >= 1 ?  $supportedFormats[0] : 'S32LE';
 
-            $ymlCfg = yaml_parse_file($this->getCurrentConfigFileName());
+			// Set playback and capture formats
+			$ymlCfg = yaml_parse_file($this->getCurrentConfigFileName());
+			$captureFormat = $this->getCamillaDspFormat('capture');
             $ymlCfg['devices']['capture'] = Array(
                 'type' => 'Stdin',
                 'channels' => 2,
-                'format' => $useFormat);
+                'format' => $captureFormat);
+			$playbackFormat = $this->getCamillaDspFormat('playback');
             $ymlCfg['devices']['playback'] = Array(
                 'type' => 'Alsa',
                 'channels' => 2,
                 'device' => $alsaDevice,
-                'format' => $useFormat == 'S24_3_RJ_LE' ? 'S24_3_LE' : $useFormat );
-
+                'format' => $playbackFormat);
 
             // Patch issue where yaml parser to an empty [], which would break the cdsp config
             if (empty($ymlCfg['filters']) || (key_exists('filters', $ymlCfg) && count(array_keys($ymlCfg['filters']))) == 0) {
@@ -218,19 +218,6 @@ class CamillaDsp {
 
     function newConfig($configName) {
         copy($this->CAMILLA_CONFIG_DIR . '/__config_template__.yml' , $this->CAMILLA_CONFIG_DIR . '/configs/' . $configName);
-    }
-
-    function detectSupportedSoundFormats() {
-        $available_alsa_sample_formats_from_sound_card_as_string = $_SESSION['audio_formats']; //Sound card sample formats from ALSA
-        $available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
-        $sound_device_supported_sample_formats = array();
-        foreach ($this->alsaToCamillaSampleFormatLut() as $alsa_format => $cdsp_format) {
-           if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
-                $sound_device_supported_sample_formats[] = $cdsp_format;
-           }
-        }
-
-        return $sound_device_supported_sample_formats;
     }
 
     function getConfigsLocationsFileName() {
@@ -388,22 +375,46 @@ class CamillaDsp {
     /**
      * ALSA sample formats with corresponding CamillaDSP sample formats
      */
-    function alsaToCamillaSampleFormatLut() {
+
+	// Get CamillaDSP format based on matching device (ALSA) format
+	function getCamillaDspFormat($type) {
+		$reportedDeviceFormats = explode (', ', $_SESSION['audio_formats']);
+		// $type: capture, playback
+		$formatLut = $type == 'capture' ?
+			$this->alsaToCamillaDspCaptureFormatLut() :
+			$this->alsaToCamillaDspPlaybackFormatLut();
+
+		$camillaDspFormats = array();
+		foreach ($formatLut as $alsaFormat => $cdspFormat) {
+			if (in_array($alsaFormat, $reportedDeviceFormats)) {
+				$camillaDspFormats[] = $cdspFormat;
+			}
+		}
+
+		$camillaDspFormat = count($camillaDspFormats) >= 1 ? $camillaDspFormats[0] : 'S32_LE';
+
+		// DEBUG:
+		//workerLog($camillaDspFormat);
+		//workerLog(print_r($camillaDspFormats, true));
+
+		return $camillaDspFormat;
+     }
+     function alsaToCamillaDspCaptureFormatLut() {
+         return array(
+             'FLOAT64_LE' => 'F64_LE',
+             'FLOAT_LE' => 'F32_LE',
+             'S32_LE' => 'S32_LE',
+             'S24_3LE' => 'S24_3_LE',
+             'S24_LE' => 'S24_4_RJ_LE',
+             'S16_LE' => 'S16_LE');
+     }
+    function alsaToCamillaDspPlaybackFormatLut() {
         return array(
             'FLOAT64_LE' => 'F64_LE',
             'FLOAT_LE' => 'F32_LE',
             'S32_LE' => 'S32_LE',
             'S24_3LE' => 'S24_3_LE',
             'S24_LE' => 'S24_4_LE',
-            'S16_LE' => 'S16_LE');
-    }
-    function stdInToCamillaSampleFormatLut() {
-        return array(
-            'FLOAT64_LE' => 'F64_LE',
-            'FLOAT_LE' => 'F32_LE',
-            'S32_LE' => 'S32_LE',
-            'S24_3LE' => 'S24_3_LE',
-            'S24_LE' => 'S24_4_RJ_LE',
             'S16_LE' => 'S16_LE');
     }
 
