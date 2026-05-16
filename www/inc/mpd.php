@@ -764,7 +764,12 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
 			if ($current['state'] != 'play' || ($current['state'] == 'play' && $current['file'] == $_SESSION['currentfile'])) {
-				$current['title'] = DEFAULT_STATION_NAME;
+				if ($caller == 'engine_mpd_php') {
+					$current['title'] = DEFAULT_STATION_NAME;
+				} else {
+					// Leave title unchanged if caller = 'worker_php' (currentsong.txt update)
+					$current['title'] = $song['Title'];
+				}
 			} else {
 				if (!isset($song['Title']) ||
 					trim($song['Title']) == '-' || // NTS can return just a dash in its Title tag
