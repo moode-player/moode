@@ -626,6 +626,7 @@ body {
 */
 @media (max-height:549px) and (width:1919px),
 	(max-height:719px) and (width:1919px),
+	(max-height:719px) and (width:1599px),
 	(max-height:719px) and (width:1559px),
 	(max-height:599px) and (width:1599px),
 	(max-height:359px) and (width:959px) {
@@ -645,8 +646,8 @@ body {
 
 	/* CoverView cover art */
 	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
+
 	/* Coverview wide mode */
-	/*DELETE:body.cvwide #ss-metadata {left: calc(80vh + 6.5em);}*/
 	body.cvwide #ss-metadata {
 		font-size:3em;
 		top:45%;
@@ -777,9 +778,6 @@ body {
 	/* Metadata under the cover art in Playback view */
 	#currentalbum {margin-top:0;}
 
-	/* Coverview wide mode */
-	/*DELETE:body.cvwide #ss-metadata {left:calc(80vh + 6.5em);}*/
-
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.75em;margin-top:10px;}
 	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
@@ -815,6 +813,20 @@ body {
 	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
 	.playqueue .pll1 {font-size:1.25rem;}
     .playqueue .pll2 {font-size:1.15rem;margin-left:calc(3.5em + 1vmin)!important}
+
+	/* CoverView cover art */
+	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
+
+	/* Coverview wide mode */
+	body.cvwide #ss-metadata {
+		font-size:3em;
+		top:45%;
+		left:calc(80vh + 4.5em);
+	}
+	body.cvwide.cvpb #ss-metadata {
+		left:calc(80vh + 3em);
+	}
+	#ss-countdown {display:none!important;}
 
 	/* CoverView Queue */
 	#cv-playqueue {width:75vmin;}
