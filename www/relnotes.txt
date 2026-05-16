@@ -11,6 +11,23 @@
 
 ################################################################################
 #
+# 2026-MM-DD moOde 10.2.1 (Trixie)
+#
+################################################################################
+
+Updates
+- UPD: Bump to Linux kernel 6.18.29
+- UPD: pcm1794a driver supports 384K rate (no need for custom patch)
+- UPD: rtl88xxau WiFi driver fails to build (removed)
+- UPD: Bump to MPD 0.24.10
+
+Bug fixes
+- FIX: Song title not updated in metadata file (currentsong.txt)
+- FIX: Font size for 720 x 400 CoverView wide
+- FIX: Font size and layout for 1600 x 720 both Main and CoverView wide
+
+################################################################################
+#
 # 2026-05-13 moOde 10.2.0 (Trixie)
 #
 ################################################################################
