@@ -102,6 +102,7 @@ $currentSettings['crossfeed'] = $_SESSION['crossfeed'];
 $currentSettings['eqfa12p'] = $_SESSION['eqfa12p'];
 $currentSettings['xss_detect'] = $_SESSION['xss_detect'];
 $currentSettings['gpio_svc'] = $_SESSION['gpio_svc'];
+$currentSettings['extmeta'] = $_SESSION['extmeta'];
 
 // Extract to ini file
 print(autoConfigExtract($currentSettings));

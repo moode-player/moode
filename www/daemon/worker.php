@@ -1519,11 +1519,15 @@ $validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip != explode('/
 // NOTE: updaterAutoCheck() logs status
 $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
+// Radio track covers
+workerLog('worker: Radio track covers:   ' . lcfirst($_SESSION['radio_track_covers']));
+workerLog('worker: iTunes query timeout: ' . $_SESSION['itunes_query_timeout'] . ' sec(s)');
+
 // Automatic CoverView (Preferences)
-workerLog('worker: Auto-CoverView:    ' . ($_SESSION['auto_coverview'] == '-on' ? 'on' : 'off'));
+workerLog('worker: Auto-CoverView:       ' . ($_SESSION['auto_coverview'] == '-on' ? 'on' : 'off'));
 
 // CoverView screen saver timeout
-workerLog('worker: CoverView timeout: ' . $_SESSION['scnsaver_timeout']);
+workerLog('worker: CoverView timeout:    ' . $_SESSION['scnsaver_timeout']);
 
 // Play history
 if (!isset($_SESSION['phistsong'])) {
@@ -1543,15 +1547,15 @@ if (!isset($_SESSION['ashuffle_filter'])) {
 if (!isset($_SESSION['ashuffle_exclude'])) {
 	$_SESSION['ashuffle_exclude'] = 'None';
 }
-workerLog('worker: Auto-shuffle:      ' . ($_SESSION['ashufflesvc'] == '1' ? 'on' : 'off'));
+workerLog('worker: Auto-shuffle:         ' . ($_SESSION['ashufflesvc'] == '1' ? 'on' : 'off'));
 
 // Maintenance task
-workerLog('worker: Maintenance task:  ' . ($_SESSION['maint_interval'] / 60) . ' mins');
+workerLog('worker: Maintenance task:     ' . ($_SESSION['maint_interval'] / 60) . ' mins');
 
 // Reset view to Playback (assumes the WebUI is up and connected)
 $view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' . $_SESSION['current_view'] : $_SESSION['current_view'];
 sendFECmd('reset_view');
-workerLog('worker: Current view:      reset to Playback');
+workerLog('worker: Current view:         reset to Playback');
 
 // Reset in-place update flag
 phpSession('write', 'inplace_upd_applied', '0');
@@ -1566,17 +1570,17 @@ if (chkRendererActive() === true) {
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive' OR
 		param='spotactive' OR param='deezactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
 		param='inpactive'", $dbh);
-	workerLog('worker: Active flags:      at least one true');
-	workerLog('worker: Reset flags:       all reset to false');
-	workerLog('worker: MPD volume:        set to 0');
+	workerLog('worker: Active flags:         at least one true');
+	workerLog('worker: Reset flags:          all reset to false');
+	workerLog('worker: MPD volume:           set to 0');
 } else {
-	workerLog('worker: Active flags:      all false');
-	workerLog('worker: Reset flags:       skipped');
+	workerLog('worker: Active flags:         all false');
+	workerLog('worker: Reset flags:          skipped');
 }
 
 // Engine-mpd socket timeout: Default is 600000 secs (7 days)
 $sockTimeout = $_SESSION['empd_socket_timeout'] == 'default' ? MPD_DEFAULT_SOCKET_TIMEOUT : $timeout;
-workerLog('worker: Engine-mpd:        socket timeout (' . $sockTimeout . ' secs)');
+workerLog('worker: Engine-mpd:           socket timeout (' . $sockTimeout . ' secs)');
 
 //----------------------------------------------------------------------------//
 // Initialize some session vars
@@ -1645,7 +1649,13 @@ if (!isset($_SESSION['lib_fv_only'])) {
 if (!isset($_SESSION['trackcover_url_cache'])) {
 	$_SESSION['trackcover_url_cache'] = '';
 }
+// Empty cache
 $_SESSION['trackcover_url_cache'] = array('' => ''); // trackTitle => URL
+
+// Metadata file
+if (!isset($_SESSION['extmeta'])) {
+	$_SESSION['extmeta'] = '0';
+}
 
 //----------------------------------------------------------------------------//
 // Globals section
@@ -2738,10 +2748,10 @@ function logNetworkInfo($iFace) {
 
 function updaterAutoCheck($validIPAddress) {
 	if ($_SESSION['updater_auto_check'] == 'On') {
-		workerLog('worker: Software update:   Automatic check on');
+		workerLog('worker: Software update:      Automatic check on');
 
 		if ($validIPAddress === true) {
-			workerLog('worker: Software update:   Checking for available update...');
+			workerLog('worker: Software update:      Checking for available update...');
 			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
@@ -2754,14 +2764,14 @@ function updaterAutoCheck($validIPAddress) {
 			} else {
 				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
 			}
-			workerLog('worker: Software update:   ' . $msg);
+			workerLog('worker: Software update:      ' . $msg);
 		} else {
 			$msg = 'No local IP address or Hotspot is on';
-			workerLog('worker: Software update:   Unable to check, ' . $msg);
+			workerLog('worker: Software update:      Unable to check, ' . $msg);
 		}
 	} else {
 		$msg = 'Automatic check off';
-		workerLog('worker: Software update:   ' . $msg);
+		workerLog('worker: Software update:      ' . $msg);
 	}
 
 	return $msg;

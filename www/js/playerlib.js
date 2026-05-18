@@ -3402,6 +3402,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#playqueue-art-enabled span').text(SESSION.json['playlist_art']);
                 $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
 				$('#show-radio-track-covers span').text(SESSION.json['radio_track_covers']);
+				$('#itunes-query-timeout span').text(SESSION.json['itunes_query_timeout']);
 
                 // Library
 				// One-touch actions
@@ -3680,6 +3681,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['playlist_art'] = $('#playqueue-art-enabled span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
 	SESSION.json['radio_track_covers'] = $('#show-radio-track-covers span').text();
+	SESSION.json['itunes_query_timeout'] = $('#itunes-query-timeout span').text();
 
     // Library
 	// One-touch actions
@@ -3802,6 +3804,7 @@ $('#btn-preferences-update').click(function(e){
             'playlist_art': SESSION.json['playlist_art'],
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
 			'radio_track_covers': SESSION.json['radio_track_covers'],
+			'itunes_query_timeout': SESSION.json['itunes_query_timeout'],
 
             // Library
 			// One-touch actions

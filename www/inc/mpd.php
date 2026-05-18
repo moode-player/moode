@@ -897,28 +897,36 @@ function getTrackCoverUrl($trackTitle) {
 	$coverUrl = $_SESSION['trackcover_url_cache'][$trackTitle];
 	if (!empty($coverUrl)) {
 		// DEBUG:
-		//workerLog('getTrackCoverUrl(): Cached URL:  ' . $trackTitle);
-
+		//workerLog('getTrackCoverUrl(): Return cached cover URL for: ' . $trackTitle);
 		return $coverUrl;
 	}
-	// DEBUG:
-	//workerLog('getTrackCoverUrl(): Fetched URL: ' . $trackTitle);
 
+	// DEBUG:
+	//workerLog('getTrackCoverUrl(): Query iTunes repository for: ' . $trackTitle);
+	// Create query
 	$parts = explode(' - ', $trackTitle); // $parts[0]=Artist name, $parts[1]=Track title
 	$query = '?term=' . urlencode($parts[0] . ' ' . $parts[1]) . '&media=music&entity=musicTrack&limit=1';
 	$apiUrl = ITUNES_API_BASE_URL . $query;
-
-	$result = file_get_contents($apiUrl);
+	// Get stream timeout, same for both connect and readdata
+	$timeout = $_SESSION['itunes_query_timeout'] . '.0';
+	$options = array(
+		'http' => array(
+			'protocol_version' => (float)'1.1',
+			'timeout' => (float)$timeout
+		)
+	);
+	// Submit query to iTunes repo
+	$result = file_get_contents($apiUrl, false, stream_context_create($options));
 	if ($result === false) {
-		$msg = 'Query failed: ' . $trackTitle;
+		$msg = 'Query failed for: ' . $trackTitle;
 		$coverUrl = '';
 	} else {
 		$resultArray = json_decode($result, true);
 		if ($resultArray['resultCount'] == '0') {
-			$msg = 'Query 0 found: ' . $trackTitle;
+			$msg = 'Query return 0 results for: ' . $trackTitle;
 			$coverUrl = '';
 		} else {
-			$msg = 'Query successful: ' . $trackTitle;
+			$msg = 'Query successful for: ' . $trackTitle  . "\n" . 'Cover URL= ' . $coverUrl;
 			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
 		}
 	}

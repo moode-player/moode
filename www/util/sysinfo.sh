@@ -157,6 +157,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nAshuffle filter\t\t= $ashuffle_filter\c"
 	echo -e "\nAshuffle exclude\t= $ashuffle_exclude\c"
 	echo -e "\nAutoplay\t\t= $autoplay\c"
+	echo -e "\Metadata file\t\t= $extmeta\c"
 	echo -e "\nRotary encoder\t\t= $rotaryenc\c"
 	echo -e "\nEncoder params\t\t= $rotenc_params\c"
 	echo -e "\nTriggerhappy\t\t= $usb_volknob\c"
@@ -190,41 +191,46 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nReduce notifications\t= $reduce_notifications\c"
 	echo -e "\n\nPlayback\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
 	echo -e "\nShow Now-playing icon\t= $show_npicon\c"
-	echo -e "\nShow CoverView playbar\t= $show_cvpb\c"
 	echo -e "\nShow extra metadata\t= $xtagdisp\c"
 	echo -e "\nSearch site\t\t= $search_site\c"
 	echo -e "\nPlayback history log\t= $playhist\c"
+	echo -e "\n\nCover Art\c"
+	echo -e "\n----------------------\c"
+	echo -e "\nCover search pri\t= $library_covsearchpri\c"
+	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
+	echo -e "\nThumbgen scan fmts\t= $library_thmgen_scan\c"
+	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
+	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
+	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
+	echo -e "\nRadio track covers\t= $radio_track_covers\c"
+	echo -e "\niTunes query timeout\t= $itunes_query_timeout\c"
 	echo -e "\n\nLibrary\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nOne touch album\t\t= $library_onetouch_album\c"
 	echo -e "\nOne touch radio\t\t= $library_onetouch_radio\c"
 	echo -e "\nOne touch playlist\t= $library_onetouch_pl\c"
 	echo -e "\nOne touch ralbum\t= $library_onetouch_ralbum\c"
+	echo -e "\n--\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
-	echo -e "\nTrack play\t\t= $library_track_play\c"
-	echo -e "\nRecently added\t\t= $library_recently_added\c"
-	echo -e "\nShow sample rate\t= $library_encoded_at\c"
-	echo -e "\nCover search pri\t= $library_covsearchpri\c"
-	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
-	echo -e "\nThumbgen scan fmts\t= $library_thmgen_scan\c"
-	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
-	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
-	echo -e "\n\nLibrary (Advanced)\c"
-	echo -e "\n----------------------\c"
-	echo -e "\nTag view genre\t\t= $library_tagview_genres\c"
 	echo -e "\nTag view artist\t\t= $library_tagview_artist\c"
+	echo -e "\nRecently added\t\t= $library_recently_added\c"
+	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
+	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
+	echo -e "\n--\c"
 	echo -e "\nAlbum key\t\t= $album_key\c"
+	echo -e "\nTrack play\t\t= $library_track_play\c"
+	echo -e "\n--\c"
+	echo -e "\nShow tagview genres\t= $library_show_genres\c"
+	echo -e "\nTag view genre\t\t= $library_tagview_genres\c"
 	echo -e "\nInclude comment tag\t= $include_comment_tag\c"
+	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
+	echo -e "\nShow sample rate\t= $library_encoded_at\c"
+	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
+	echo -e "\n--\c"
 	echo -e "\nLibrary filter\t\t= $library_flatlist_filter\c"
 	echo -e "\nLibrary filter str\t= $library_flatlist_filter_str\c"
-	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
-	echo -e "\nShow tagview genres\t= $library_show_genres\c"
-	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
-	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
-	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nTimed display\t\t= $scnsaver_timeout\c"
@@ -233,6 +239,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
 	echo -e "\nLayout\t\t\t= $scnsaver_layout\c"
+	echo -e "\nPlaybar\t\t\t= $show_cvpb\c"
 	echo -e "\nExtra metadata\t\t= $scnsaver_xmeta\n"
 }
 
@@ -745,7 +752,7 @@ xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
 rsmafterdeez=${arr[39]}
 library_show_genres=${arr[40]}
-extmeta=${arr[41]}
+itunes_query_timeout=${arr[41]}
 i2soverlay=${arr[42]}
 folder_pos=${arr[43]}
 [[ "${arr[44]}" = "1" ]] && peppy_display="On" || peppy_display="Off"
@@ -774,7 +781,7 @@ else
 fi
 pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
-[[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
+radio_track_covers=${arr[66]}
 deezactive=${arr[67]}
 peppy_scn_blank_active=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
@@ -957,6 +964,8 @@ value=$(moodeutl -d -gv reduce_notifications)
 [[ "$value" = "1" ]] && reduce_notifications="On" || reduce_notifications="Off"
 value=$(moodeutl -d -gv shellinabox)
 [[ "$value" = "1" ]] && shellinabox="On" || shellinabox="Off"
+value=$(moodeutl -d -gv extmeta)
+[[ "$value" = "1" ]] && extmeta="On" || extmeta="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
