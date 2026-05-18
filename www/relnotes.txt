@@ -15,16 +15,21 @@
 #
 ################################################################################
 
-Updates
+Packages
 - UPD: Bump to Linux kernel 6.18.29
-- UPD: pcm1794a driver supports 384K rate (no need for custom patch)
-- UPD: rtl88xxau WiFi driver fails to build (removed)
 - UPD: Bump to MPD 0.24.10
+- UPD: Revert to stock pcm1794a driver which now supports 384K
+- UPD: Remove rtl88xxau WiFi driver for CF-912AC (fails to build)
+
+Updates
+- UPD: Add iTunes query timeout to Prefs > Cover art
+- UPD: Add Metadata file setting to Backup/Restore
 
 Bug fixes
 - FIX: Song title not updated in metadata file (currentsong.txt)
 - FIX: Font size for 720 x 400 CoverView wide
 - FIX: Font size and layout for 1600 x 720 both Main and CoverView wide
+- FIX: Reduce power setting not showing for Pi-CM5
 
 ################################################################################
 #
