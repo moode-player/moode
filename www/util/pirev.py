@@ -61,6 +61,7 @@ PI_TYPES = {
     0x16: "Internal use only",
     0x17: "5B",
     0x18: "CM5",
+    0x19: "500",
     0x1a: "CM5 Lite"
 }
 
