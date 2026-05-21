@@ -405,8 +405,7 @@ $_select['hdmi_cec_off'] .= "<input type=\"radio\" name=\"hdmi_cec\" id=\"toggle
 $_select['hdmi_cec_ver'] .= "<option value=\"2.0\" " . (($_SESSION['hdmi_cec_ver'] == '2.0') ? "selected" : "") . ">2.0 (Default)</option>\n";
 $_select['hdmi_cec_ver'] .= "<option value=\"1.4\" " . (($_SESSION['hdmi_cec_ver'] == '1.4') ? "selected" : "") . ">1.4 (Compatibility)</option>\n";
 
-$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-$_hdmi_4kp60_btn_disable = $piModel == '4' ? '' : 'disabled';
+$_hdmi_4kp60_btn_disable = $_SESSION['pi_modelnum'] == 4 ? '' : 'disabled';
 $autoClick = " onchange=\"autoClick('#btn-set-hdmi-enable-4kp60');\" " . $_hdmi_4kp60_btn_disable;
 $_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-1\" value=\"on\" " . (($_SESSION['hdmi_enable_4kp60'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
@@ -420,7 +419,7 @@ $_select['dsi_scn_type'] .= "<option value=\"1\" " . (($_SESSION['dsi_scn_type']
 $_select['dsi_scn_type'] .= "<option value=\"2\" " . (($_SESSION['dsi_scn_type'] == '2') ? "selected" : "") . ">Pi Touch 2</option>\n";
 $_select['dsi_scn_type'] .= "<option value=\"other\" " . (($_SESSION['dsi_scn_type'] == 'other') ? "selected" : "") . ">Other</option>\n";
 
-if ($piModel == '5') {
+if ($_SESSION['pi_dsiports'] == 2) {
 	$_select['dsi_port'] .= "<option value=\"1\" " . (($_SESSION['dsi_port'] == '1') ? "selected" : "") . ">DSI-1-1</option>\n";
 	$_select['dsi_port'] .= "<option value=\"2\" " . (($_SESSION['dsi_port'] == '2') ? "selected" : "") . ">DSI-1-2</option>\n";
 } else {

@@ -450,8 +450,7 @@ if (!empty($cfgAudioDev['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $
 	$_driveropt_btn_disable = 'disabled';
 }
 // Integrated audio
-$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-$_pi_audio_driver_hide = $piModel == '5' ? 'hide' : '';
+$_pi_audio_driver_hide = $_SESSION['pi_modelnum'] >= 5 ? 'hide' : '';
 $_select['pi_audio_driver'] .= "<option value=\"" . PI_VC4_KMS_V3D . "\" " . (($_SESSION['pi_audio_driver'] == PI_VC4_KMS_V3D) ? "selected" : "") . ">Kernel mode (Default)</option>\n";
 $_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($_SESSION['pi_audio_driver'] == PI_SND_BCM2835) ? "selected" : "") . ">Firmware mode (Legacy)</option>\n";
 
@@ -472,7 +471,7 @@ if ($_SESSION['alsavolume'] == 'none') {
 }
 // Output mode
 $_alsa_output_mode_disable = ($_SESSION['alsa_loopback'] == 'On' || isHDMIDevice($_SESSION['adevname'])) ? 'disabled' : '';
-if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'])) {
+if ($_SESSION['pi_modelnum'] >= 3 && isHDMIDevice($_SESSION['adevname'])) {
 	$_select['alsa_output_mode'] .= "<option value=\"iec958\" " . (($_SESSION['alsa_output_mode'] == 'iec958') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['iec958'] . "</option>\n";
 	$_alsa_output_mode = $_SESSION['alsa_output_mode'];
 } else if ($_SESSION['adevname'] == TRX_SENDER_NAME) {
@@ -528,15 +527,12 @@ if ($_SESSION['multiroom_tx'] == 'Off' &&
 	$_crossfeed_ctl_disabled =   ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_eqfa12p_ctl_disabled =     (allowDspInAlsaChain() == false || $_SESSION['alsaequal'] != 'Off' || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_alsaequal_ctl_disabled =   (allowDspInAlsaChain() == false || $_SESSION['eqfa12p'] != 'Off'   || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
-	$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-	$piName = $_SESSION['hdwrrev'];
-	$cmModel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
 	// CamillaDSP can only be used on 64-bit capable ARM7
 	if (
-		strpos($piName, 'Pi-Zero 2') !== false ||
-		$piName == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' ||
-		$piName == 'Pi-2B 1.2 1GB' ||
-		$piModel >= 3
+		$_SESSION['pi_modelnum'] > 2 ||
+		$_SESSION['pi_type'] == 'Zero 2 W' ||
+		$_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' ||
+		$_SESSION['hdwrrev'] == 'Pi-2B 1.2 1GB'
 	) {
 		$_cdsp_mode_ctl_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
 	} else {

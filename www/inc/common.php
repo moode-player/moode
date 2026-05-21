@@ -334,6 +334,49 @@ function chkRendererActive() {
 	return $active;
 }
 
+// Get Pi revision code information
+function getPiRev($option = '--all') {
+	// Returns a tab delimited string for --all
+	return sysCmd('/var/www/util/pirev.py ' . $option)[0];
+/*
+/var/www/util/pirev.py --all
+0xb04180	CM5	1.0	2GB	Sony UK	BCM2712	5	2
+
+rcode		type	rev	mem	man		proc	num	dsi
+---------------------------------------------------
+0xb04180	CM5		1.0	2GB	Sony UK	BCM2712	5	2
+
+/var/www/util/pirev.py --help
+options:
+  -h, --help   show this help message and exit
+  -t, --type   Print model type
+  -n, --num    Print model number
+  -d, --dsi    Print number dsi ports
+  -r, --rev    Print model revision
+  -m, --mem    Print memory
+  -b, --man    Print manufacturer
+  -p, --proc   Print processor
+  -c, --rcode  Print revision code
+  -a, --all    Print all
+*/
+}
+
+// Return hardware revision
+function getHdwrRevShort() {
+	$parts = explode("\t", getPiRev('--all'));
+	$type = $parts[1];
+	$rev = $parts[2];
+	$mem = $parts[3];
+
+	if ($type == 'CM3+') {
+		$str = 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]';
+	} else {
+		$str = 'Pi-' . $type . ' ' . $rev . ' ' . $mem;
+	}
+
+	return $str;
+}
+
 //----------------------------------------------------------------------------//
 // PHP TEMPLATING
 //----------------------------------------------------------------------------//

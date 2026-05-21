@@ -209,7 +209,7 @@ $_select['cdsp_use_default_device_on'] .= "<input type=\"radio\" name=\"cdsp_use
 $_select['cdsp_use_default_device_off']  .= "<input type=\"radio\" name=\"cdsp_use_default_device\" id=\"toggle-cdsp-use-default-device-2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
 if ($_SESSION['cdsp_fix_playback'] == 'No') {
 	$_alsa_output_mode = '(Defined in Pipeline editor)';
-} else if (substr($_SESSION['hdwrrev'], 3, 1) >= 3 && isHDMIDevice($_SESSION['adevname'])) {
+} else if ($_SESSION['pi_modelnum'] >= 3 && isHDMIDevice($_SESSION['adevname'])) {
 	$_alsa_output_mode = $_SESSION['alsa_output_mode'];
 } else {
 	$_alsa_output_mode = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';

@@ -417,9 +417,7 @@ $_select['reduce_notifications_off'] .= "<input type=\"radio\" name=\"reduce_not
 
 // STARTUP OPTIONS
 
-$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-$piName = $_SESSION['hdwrrev'];
-if ($piModel == '5') {
+if ($_SESSION['pi_modelnum'] >= 5) {
 	$_pci_express_hide = '';
 	$_reduce_power_hide = '';
 	$_fan_temp0_hide = '';
@@ -462,8 +460,7 @@ $actled = explode(',', $_SESSION['led_state'])[0];
 $autoClick = " onchange=\"autoClick('#btn-set-actled');\"";
 $_select['actled_on']  .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-1\" value=\"1\" " . (($actled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['actled_off'] .= "<input type=\"radio\" name=\"actled\" id=\"toggle-actled-2\" value=\"0\" " . (($actled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-if ($PiModel == '1' || $piModel == '5' ||
-	str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
+if ($_SESSION['pi_modelnum'] <= 1 || $_SESSION['pi_modelnum'] >= 5 || $_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 	$_pwrled_hide = 'hide';
 } else {
 	$_pwrled_hide = '';
@@ -475,7 +472,7 @@ if ($PiModel == '1' || $piModel == '5' ||
 
 // Networking
 // Integrated WiFi and BT adapters (Pi-Zero W, Pi-Zero 2 W, Pi-3B/B+/A+, Pi-4B, Pi-5B)
-if (stripos($piName, 'Pi-Zero W') !== false || stripos($piName, 'Pi-Zero 2 W') !== false || $piModel >= 3) {
+if ($_SESSION['pi_type'] == 'Zero W' || $_SESSION['pi_type'] == 'Zero 2 W' || $_SESSION['pi_modelnum'] >= 3) {
 	$_wifibt_hide = '';
 	$autoClick = " onchange=\"autoClick('#btn-set-p3wifi');\"";
 	$_select['p3wifi_on']  .= "<input type=\"radio\" name=\"p3wifi\" id=\"toggle-p3wifi-1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";

@@ -38,31 +38,32 @@ OLD_REVISION_CODES = {
 }
 
 PI_TYPES = {
-    0: "A",
-    1: "B",
-    2: "A+",
-    3: "B+",
-    4: "2B",
-    5: "Alpha (early prototype)",
-    6: "CM1",
-    8: "3B",
-    9: "Zero",
-    0xa: "CM3",
-    0xc: "Zero W",
-    0xd: "3B+",
-    0xe: "3A+",
-    0xf: "Internal",
-    0x10: "CM3+",
-    0x11: "4B",
-    0x12: "Zero 2 W",
-    0x13: "400",
-    0x14: "CM4",
-    0x15: "CM4S",
-    0x16: "Internal use only",
-    0x17: "5B",
-    0x18: "CM5",
-    0x19: "500",
-    0x1a: "CM5 Lite"
+    # code [type, model num, dsi ports]
+    0: ["A","1"],
+    1: ["B","1","1"],
+    2: ["A+","1","1"],
+    3: ["B+","1","1"],
+    4: ["2B","2","1"],
+    5: ["Alpha (early prototype)","1","1"],
+    6: ["CM1","1","1"],
+    8: ["3B","3","1"],
+    9: ["Zero","0","0"],
+    0xa: ["CM3","3","2"],
+    0xc: ["Zero W","0","0"],
+    0xd: ["3B+","3","1"],
+    0xe: ["3A+","3","1"],
+    0xf: ["Internal","Internal","Internal"],
+    0x10: ["CM3+","3","2"],
+    0x11: ["4B","4","1"],
+    0x12: ["Zero 2 W","0","0"],
+    0x13: ["400","4","1"],
+    0x14: ["CM4","4","2"],
+    0x15: ["CM4S","4","2"],
+    0x16: ["Internal use only","Internal","Internal"],
+    0x17: ["5B","5","2"],
+    0x18: ["CM5","5","2"],
+    0x19: ["500","5","1"],
+    0x1a: ["CM5 Lite","5","2"]
 }
 
 PI_MEM = {
@@ -98,9 +99,17 @@ def decode_new_style_code(code):
 
     if new_style == True:
         try:
-            type = PI_TYPES[(code>>4)&0xff] # model TTTTTTTT
+            type = PI_TYPES[(code>>4)&0xff][0] # model TTTTTTTT
         except KeyError:
             type = "Unknown Pi model"
+        try:
+            num = PI_TYPES[(code>>4)&0xff][1] # model num N
+        except KeyError:
+            num = "Unknown Pi model"
+        try:
+            dsi = PI_TYPES[(code>>4)&0xff][2] # dsi ports N
+        except KeyError:
+            dsi = "Unknown Pi model"
         try:
             mem = PI_MEM[(code>>20)&0x7] # mem MMM
         except KeyError:
@@ -124,7 +133,9 @@ def decode_new_style_code(code):
             "rev": rev,
             "mem": mem,
             "man": man,
-            "proc": proc
+            "proc": proc,
+            "num": num,
+            "dsi": dsi
         }
     else:
         # Original was code&0x17 but this returned the entry for 0x004 when code = 0x00e
@@ -134,7 +145,9 @@ def decode_new_style_code(code):
             "rev": old_rev[1],
             "mem": old_rev[2],
             "man": old_rev[3],
-            "proc": "?"
+            "proc": "?",
+            "num": "?",
+            "dsi": "?"
         }
     return rev_info
 
@@ -142,6 +155,8 @@ def decode_new_style_code(code):
 def main():
     parser = argparse.ArgumentParser(description='Print Pi revision code information. If [code] is not present then the code for this Pi is used.')
     parser.add_argument('-t', '--type', action='store_true', help='Print model type')
+    parser.add_argument('-n', '--num', action='store_true', help='Print model number')
+    parser.add_argument('-d', '--dsi', action='store_true', help='Print number dsi ports')
     parser.add_argument('-r', '--rev', action='store_true', help='Print model revision')
     parser.add_argument('-m', '--mem', action='store_true', help='Print memory')
     parser.add_argument('-b', '--man', action='store_true', help='Print manufacturer')
@@ -178,6 +193,10 @@ def main():
         info_text += rev_info['man'] + "\t"
     if args.proc or args.all or args.code:
         info_text += rev_info['proc'] + "\t"
+    if args.num or args.all or args.code:
+        info_text += rev_info['num'] + "\t"
+    if args.dsi or args.all or args.code:
+        info_text += rev_info['dsi'] + "\t"
     info_text = info_text.strip()
 
     print(info_text)

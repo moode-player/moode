@@ -90,10 +90,7 @@ function getAudioOutputIface($cardNum) {
 }
 
 function getAlsaIEC958Device() {
-	$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-	$piName = $_SESSION['hdwrrev'];
-
-	if ($piModel < '4' || str_contains($piName, 'Pi-Zero 2')) {
+	if ($_SESSION['pi_modelnum'] < 4) {
 		// Only 1 HDMI port, omit the card number
 		$device = ALSA_IEC958_DEVICE;
 	} else {

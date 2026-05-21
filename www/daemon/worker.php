@@ -317,7 +317,10 @@ $_SESSION['timezone'] = $timeZone[0];
 $_SESSION['keyboard'] = trim($keyboard[0], "\"");
 
 // Store platform data
-$_SESSION['hdwrrev'] = getHdwrRev();
+$_SESSION['hdwrrev'] = getHdwrRevShort();
+$_SESSION['pi_type'] = getPiRev('--type');
+$_SESSION['pi_modelnum'] = getPiRev('--num');
+$_SESSION['pi_dsiports'] = getPiRev('--dsi');
 $_SESSION['moode_release'] = getMoodeRel(); // rSSNN format
 // get-osinfo: 'RPiOS: 11.8 (Bullseye 64-bit) | Linux: 6.1.21 (64-bit)'
 $osInfo = explode(' | ', sysCmd('/var/www/util/sysutil.sh "get-osinfo"')[0]);
@@ -348,14 +351,13 @@ workerLog('worker: HDMI ports(s): on');
 if (!isset($_SESSION['led_state'])) {
 	$_SESSION['led_state'] = '1,1';
 }
-$piModel = substr($_SESSION['hdwrrev'], 3, 1);
-if ($piModel == '1' || str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_contains($_SESSION['hdwrrev'], 'Allo USBridge SIG')) {
+if ($_SESSION['pi_modelnum'] <= 1 || $_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 	// Pi boards w/o a sysclass entry for LED1
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 	workerLog('worker: Sys LED0:      ' . ($led0Trigger == 'none' ? 'off' : 'on'));
 	workerLog('worker: Sys LED1:      sysclass does not exist');
-} else if ($piModel == '5') {
+} else if ($_SESSION['pi_modelnum'] >= 5) {
 	// Pi-5 dual-color (red/green) power/activity LED
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
@@ -375,7 +377,7 @@ if ($piModel == '1' || str_contains($_SESSION['hdwrrev'], 'Pi-Zero') || str_cont
 if (!isset($_SESSION['reduce_power'])) {
 	$_SESSION['reduce_power'] = 'n/a';
 }
-if ($piModel == '5') {
+if ($_SESSION['pi_modelnum'] >= 5) {
 	$result = sysCmd('rpi-eeprom-config | grep "POWER_OFF_ON_HALT" | cut -d "=" -f 2')[0] == '1' ? 'on' : 'off';
 	$_SESSION['reduce_power'] = $result;
 } else {
@@ -386,7 +388,7 @@ workerLog('worker: Reduce power:  ' . $_SESSION['reduce_power']);
 if (!isset($_SESSION['fan_temp0'])) {
 	$_SESSION['fan_temp0'] = '50,45,75'; // threshold,target,speed
 }
-if ($piModel == '5') {
+if ($_SESSION['pi_modelnum'] >= 5) {
 	updBootConfigTxt('upd_fan_temp0', formatFanTemp0Params($_SESSION['fan_temp0']));
 	$parts = explode(',', $_SESSION['fan_temp0']);
 	$fanControlMsg = $parts[0] . 'C, ' . $parts[1] . 'C, ' . $parts[2];
@@ -447,7 +449,7 @@ if (!isset($_SESSION['approto'])) {
 	$_SESSION['approto'] = 'rsn';
 }
 // NOTE: Fix for Pi-3B Hotspot fail (use wpa instead of rsn protocol)
-$_SESSION['approto'] = str_contains($_SESSION['hdwrrev'], 'Pi-3B ') ? 'wpa' : 'rsn';
+$_SESSION['approto'] = $_SESSION['pi_type'] == '3B' ? 'wpa' : 'rsn';
 sysCmd("sed -i 's/proto=.*/proto=" . $_SESSION['approto'] . "/' /etc/NetworkManager/system-connections/Hotspot.nmconnection");
 
 // Ethernet
@@ -2708,22 +2710,6 @@ function countMpdLogLines() {
 	return $count;
 }
 
-// Return hardware revision
-function getHdwrRev() {
-	$array = explode("\t", sysCmd('/var/www/util/pirev.py')[0]);
-	$piModel = $array[1];
-	$rev = $array[2];
-	$ram = $array[3];
-
-	if ($piModel == 'CM3+') {
-		$hdwrRev = 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]';
-	} else {
-		$hdwrRev = 'Pi-' . $piModel . ' ' . $rev . ' ' . $ram;
-	}
-
-	return $hdwrRev;
-}
-
 // Log info for the active interface (eth0 or wlan0)
 function logNetworkInfo($iFace) {
 	$ifaceName = $iFace == 'eth0' ? 'Ethernet: ' : 'Wireless: ';
@@ -3505,14 +3491,11 @@ function runQueuedJob() {
 			updBootConfigTxt('upd_external_antenna', $value);
 			break;
 		case 'actled': // LED0
-			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
+			if ($_SESSION['pi_modelnum'] < 5) {
 				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
-				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
-			} else if (substr($_SESSION['hdwrrev'], 3, 1) == '5') {
-				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
 				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 			} else {
-				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
+				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
 				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
 			}
 			break;
