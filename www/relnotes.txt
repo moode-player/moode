@@ -17,13 +17,14 @@
 
 Packages
 - UPD: Bump to Linux kernel 6.18.29
-- UPD: Bump to MPD 0.24.10
+- UPD: Bump to MPD 0.24.12
 - UPD: Revert to stock pcm1794a driver which now supports 384K
 - UPD: Remove rtl88xxau WiFi driver for CF-912AC (fails to build)
 
 Updates
 - UPD: Add iTunes query timeout to Prefs > Cover art
 - UPD: Add Metadata file setting to Backup/Restore
+- UPD: Improve hardware revision code parsing (include modelnum and dsiports)
 
 Bug fixes
 - FIX: Song title not updated in metadata file (currentsong.txt)
