@@ -382,7 +382,7 @@ function autoConfigSettings() {
 		['requires' => ['thesycon_dsd_workaround'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
 		'MPD Options',
 		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
-		['requires' => ['extmeta'], 'handler' => 'setSessVarOnly'],		
+		['requires' => ['extmeta'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['mpdcrossfade'], 'handler' => 'setSessVarSql'],
 		['requires' => ['crossfeed'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['invert_polarity'], 'handler' => 'setSessVarOnly'],
@@ -453,9 +453,15 @@ function autoConfigSettings() {
 		'Renderers',
 		['requires' => ['btsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmafterbt'], 'handler' => 'setSessVarSql'],
-		['requires' => ['airplaysvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['airplaysvc'], 'handler' => function($values) {
+			$value = isAirPlayInstalled() === true ? $values['airplaysvc'] : '0';
+			phpSession('write', 'airplaysvc', $value);
+		}],
 		['requires' => ['rsmafterapl'], 'handler' => 'setSessVarSql'],
-		['requires' => ['spotifysvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['spotifysvc'], 'handler' => function($values) {
+			$value = isSpotifyInstalled() === true ? $values['spotifysvc'] : '0';
+			phpSession('write', 'spotifysvc', $value);
+		}],
 		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
 		['requires' => ['deezersvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmafterdeez'], 'handler' => 'setSessVarSql'],
