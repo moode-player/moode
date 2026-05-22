@@ -31,6 +31,7 @@ Bug fixes
 - FIX: Font size for 720 x 400 CoverView wide
 - FIX: Font size and layout for 1600 x 720 both Main and CoverView wide
 - FIX: Reduce power setting not showing for Pi-CM5
+- FIX: Restore not checking installed status for AirPlay and Spotify Connect
 
 ################################################################################
 #
