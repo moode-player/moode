@@ -11,15 +11,30 @@
 
 ################################################################################
 #
+# 2026-MM-DD moOde 10.2.2 (Trixie)
+#
+################################################################################
+
+Packages
+- PKG:
+
+Updates
+- UPD:
+
+Bug fixes
+- FIX:
+
+################################################################################
+#
 # 2026-05-23 moOde 10.2.1 (Trixie)
 #
 ################################################################################
 
 Packages
-- UPD: Bump to Linux kernel 6.18.29
-- UPD: Bump to MPD 0.24.12
-- UPD: Revert to stock pcm1794a driver which now supports 384K
-- UPD: Remove rtl88xxau WiFi driver for CF-912AC (fails to build)
+- PKG: Bump to Linux kernel 6.18.29
+- PKG: Bump to MPD 0.24.12
+- PKG: Revert to stock pcm1794a driver which now supports 384K
+- PKG: Remove rtl88xxau WiFi driver for CF-912AC (fails to build)
 
 Updates
 - UPD: Add iTunes query timeout to Prefs > Cover art
