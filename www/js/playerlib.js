@@ -5350,7 +5350,7 @@ function getKeyOrValue (type, item) {
         // Thumbnail resolutions
         ['Auto','Auto'],['400px','400px,75'],['500px','500px,60'],['600px','600px,60'],
         // Dashboard commands
-        ['Discover (rebuild)','discover_players_rebuild_cache'],['Discover (update)','discover_players_update_cache'],
+        ['Discover (all)','discover_players_rebuild_cache'],['Discover (update)','discover_players_update_cache'],
         ['Update library','update_library'],['Regen thumbnails','regen_thmcache'],['Refresh screen','refresh_screen'],
         ['Shutdown','poweroff'],['Restart','reboot'],
         ['Play','play'],['Pause','pause'],['Stop','stop'],['Next','next'],['Previous','prev'],

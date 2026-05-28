@@ -5,49 +5,46 @@
 */
 -->
 <div>
-	<div class="$_dashboard_command_div_hide">
-		<label class="control-label" for="btn-dashboard-dropdown">Command</label>
-		<div class="controls">
-			<div class="btn-group bootstrap-select select-large">
-				<button id="btn-dashboard-dropdown" type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-					<div id="dashboard-command" class="filter-option pull-left">
-						<span>No action</span>
-					</div>&nbsp;
-					<div class="caret"></div>
-				</button>
-				<div id="dashboard-menu" class="dropdown-menu open">
-					<ul class="dropdown-menu custom-select inner" role="menu">
-						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-magnifying-glass-plus sx"></i>Discover (update)</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-sync sx"></i>Update library</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-file-image sx"></i>Regen thumbnails</a></li>
-						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-redo sx"></i>Refresh screen</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-power-off sx"></i>Shutdown</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-power-off sx"></i>Restart</a></li>
-						<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-magnifying-glass sx"></i>Discover (rebuild)</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-play sx"></i>Play</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-pause sx"></i>Pause</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-stop sx"></i>Stop</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-step-forward sx"></i>Next</a></li>
-						<li class="modal-dropdown-text"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-step-backward sx"></i>Previous</a></li>
-					</ul>
-				</div>
+	<label class="control-label" for="btn-dashboard-dropdown">Command</label>
+	<div class="controls">
+		<div class="btn-group bootstrap-select select-large">
+			<button id="btn-dashboard-dropdown" type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+				<div id="dashboard-command" class="filter-option pull-left">
+					<span>No action</span>
+				</div>&nbsp;
+				<div class="caret"></div>
+			</button>
+			<div id="dashboard-menu" class="dropdown-menu open">
+				<ul class="dropdown-menu custom-select inner" role="menu">
+					<li class="modal-dropdown-text $_ctl_hide menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-magnifying-glass-plus sx"></i>Discover (update)</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-sync sx"></i>Update library</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-file-image sx"></i>Regen thumbnails</a></li>
+					<li class="modal-dropdown-text  $_ctl_hide menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-redo sx"></i>Refresh screen</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-power-off sx"></i>Shutdown</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-power-off sx"></i>Restart</a></li>
+					<li class="modal-dropdown-text menu-separator"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="dashboard-red-menu-icon fa-solid fa-sharp fa-magnifying-glass sx"></i>Discover (all)</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-play sx"></i>Play</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-pause sx"></i>Pause</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-stop sx"></i>Stop</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-step-forward sx"></i>Next</a></li>
+					<li class="modal-dropdown-text $_ctl_hide"><a href="#notarget" data-cmd="dashboard-command-sel"><i class="fa-solid fa-sharp fa-step-backward sx"></i>Previous</a></li>
+				</ul>
 			</div>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-dashboard-command" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-			<span id="info-dashboard-command" class="help-block hide">
-				Select a command to submit to checked players or
-				click a player to open its WebUI in a new tab.<br>
-				Indicator icons<br>
-				<b>Red X:</b> Offline<br>
-				<b>Speaker:</b> Multiroom receiver<br>
-				<b>Play:</b> Multiroom sender
-			</span>
 		</div>
+		<a aria-label="Help" class="info-toggle" data-cmd="info-dashboard-command" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+		<span id="info-dashboard-command" class="help-block hide">
+			Select a command to submit to check marked players or click a player to open its WebUI in a new tab.
+			The indicator icons on a player have the following meaning:<br>
+			<b>Red X:</b> Offline<br>
+			<b>Speaker:</b> Multiroom receiver<br>
+			<b>Play:</b> Multiroom sender
+		</span>
+	</div>
 
-		<div class="controls">
-			<button id="btn-dashboard-submit" class="btn btn-primary btn-small modal-button-style">Submit</button>
-			<input id="dashboard-check-uncheck-all" class="checkbox-ctl-dashboard" type="checkbox">
-			<span id="dashboard-submit-confirmed" class="modal-btn-after"></span>
-		</div>
+	<div class="controls">
+		<button id="btn-dashboard-submit" class="btn btn-primary btn-small modal-button-style">Submit</button>
+		<input id="dashboard-check-uncheck-all" class="checkbox-ctl-dashboard $_ctl_hide" type="checkbox">
+		<span id="dashboard-submit-confirmed" class="modal-btn-after"></span>
 	</div>
 
 	<div id="dashboard">

@@ -126,9 +126,11 @@ if ($discoverPlayers === false) {
 // Check for no players found
 if (empty(trim($_players))) {
 	$_players = '<li id="dashboard-no-players-found">No players found</li>';
-	$_dashboard_command_div_hide = 'hide';
+	$_ctl_hide = 'hide';
+} else if ($_players == '<li id="dashboard-no-players-found">No players found</li>') {
+	$_ctl_hide = 'hide';
 } else {
-	$_dashboard_command_div_hide = '';
+	$_ctl_hide = '';
 }
 
 // Write cache file
