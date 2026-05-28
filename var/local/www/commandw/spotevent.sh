@@ -121,9 +121,9 @@ fi
 
 # Update metadata and send to front
 if [[ $PLAYER_EVENT == "track_changed" ]]; then
-	ARTISTS=$(echo -e -n "$ARTISTS" | tr "\n" ";")
-	COVERS=$(echo -e -n "$COVERS" | tr "\n" ";")
-	METADATA_JSON="{\"fecmd\": \"update_spotmeta\", \"title\": \"${NAME}\", \"artist\": \"${ARTISTS}\", \"album\": \"${ALBUM}\", \"duration\": \"${DURATION_MS}\", \"cover_url\": \"${COVERS}\", \"sformat\": \"${CFG_SPOTIFY_FORMAT}\"}"
+	ARTIST=$(echo -e -n "$ARTISTS" | tr "\n" ";" | cut -d';' -f1)
+	COVER=$(echo -e -n "$COVERS" | tr "\n" ";" | cut -d';' -f1)
+	METADATA_JSON="{\"fecmd\": \"update_spotmeta\", \"title\": \"${NAME}\", \"artist\": \"${ARTIST}\", \"album\": \"${ALBUM}\", \"duration\": \"${DURATION_MS}\", \"cover_url\": \"${COVER}\", \"sformat\": \"${CFG_SPOTIFY_FORMAT}\"}"
 	echo -e "$METADATA_JSON" > $SPOTMETA_CACHE_FILE
 	/var/www/util/send-fecmd.php "$METADATA_JSON"
 fi
