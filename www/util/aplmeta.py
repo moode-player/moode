@@ -242,7 +242,7 @@ try:
 				# Get cover file:
 				# - Only one file will exist because retain_cover_art = "no"
 				# - Delay to allow shairport-sync time to write the file
-				time.sleep(1)
+				time.sleep(2)
 				cover_path = glob.glob(COVERS_LOCAL_ROOT + '*')
 
 				if not cover_path:

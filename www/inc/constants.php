@@ -31,6 +31,9 @@ const MPD_CONF = '/etc/mpd.conf';
 const MPD_MUSICROOT = '/var/lib/mpd/music/';
 const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
 const MPD_LOG = '/var/log/mpd/log';
+// Currentsong / Now playing
+const CURRENTSONG_TXT = '/var/local/www/currentsong.txt';
+const CURRENTSONG_TXT_TMP = '/tmp/currentsong.txt';
 // AirPlay, Deezer Connect and Spotify Connect
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
 const DEEZMETA_CACHE_FILE = '/var/local/www/deezmeta.json';

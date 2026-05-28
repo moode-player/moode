@@ -2171,7 +2171,7 @@ function chkAplActive() {
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			// NOTE: This is now done by the spotevent.sh script
+			// NOTE: This is now done by the spspost.sh script
 			//sendFECmd('aplactive1');
 		}
 	} else {
@@ -2346,7 +2346,7 @@ function updBoss2DopVolume () {
 }
 
 function updExtMetaFile() {
-	$fileData = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
+	$fileData = parseDelimFile(file_get_contents(CURRENTSONG_TXT), '=');
 
 	if ($GLOBALS['aplactive'] == '1') {
 		$renderer = 'AirPlay Active';
@@ -2369,24 +2369,50 @@ function updExtMetaFile() {
 	if (!empty($renderer)) {
 		//workerLog('worker: Renderer active');
 		$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
-
 		if ($hwParams['status'] == 'active') {
 			$hwParamsFormat = 'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, 2ch';
+			if ($GLOBALS['aplactive'] == '1') {
+				$rendererMeta = json_decode(file_get_contents(APLMETA_CACHE_FILE), true);
+			} else if ($GLOBALS['spotactive'] == '1') {
+				$rendererMeta = json_decode(file_get_contents(SPOTMETA_CACHE_FILE), true);
+			} else {
+				$rendererMeta = '';
+			}
 		} else if ($_SESSION['multiroom_tx'] == 'On') {
 			$hwParamsFormat = 'PCM 16/48 kHz, 2ch (Multiroom sender)';
 		} else {
 			$hwParamsFormat = 'Not playing';
 		}
 
-		if ($fileData['file'] != $renderer || $fileData['outrate'] != $hwParamsFormat) {
+		if (
+			$fileData['file'] != $renderer ||
+			$fileData['outrate'] != $hwParamsFormat ||
+			(
+				($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1') &&
+				($fileData['title'] != $rendererMeta['title'] || $fileData['album'] != $rendererMeta['album'])
+			)
+		) {
 			//workerLog('worker: Update currentsong.txt file (Renderer)');
-			$fh = fopen('/tmp/currentsong.txt', 'w');
+			$fh = fopen(CURRENTSONG_TXT_TMP, 'w');
 			$data = 'file=' . $renderer . "\n";
-			$data .= 'outrate=' . $hwParamsFormat . "\n"; ;
+			if (!empty($rendererMeta)) {
+				//workerLog('worker: Add $rendererMeta');
+				//workerLog(print_r($rendererMeta ,true));
+				$data .= 'artist=' . $rendererMeta['artist'] . "\n";
+				$data .= 'album=' . $rendererMeta['album'] . "\n";
+				$data .= 'title=' . $rendererMeta['title'] . "\n";
+				$data .= 'coverurl=' . $rendererMeta['cover_url'] . "\n";
+				$sformat = explode(' ', $rendererMeta['sformat']);
+				$data .= 'encoded=' . $sformat[0] . "\n";
+				$data .= 'bitrate=' . $sformat[1] . "\n";
+			} else {
+				//workerLog('worker: $rendererMeta is empty');
+			}
+			$data .= 'outrate=' . $hwParamsFormat . "\n";
 			fwrite($fh, $data);
 			fclose($fh);
-			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
-            chmod('/var/local/www/currentsong.txt', 0666);
+			rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
+            chmod(CURRENTSONG_TXT, 0666);
 		}
 	} else {
 		//workerLog('worker: MPD active');
@@ -2406,7 +2432,7 @@ function updExtMetaFile() {
 				$fileData['outrate'] != $current['output']
 			) {
 				//workerLog('worker: Update currentsong.txt file (MPD)');
-				$fh = fopen('/tmp/currentsong.txt', 'w');
+				$fh = fopen(CURRENTSONG_TXT_TMP, 'w');
 				// Default
 				$data = 'file=' . $current['file'] . "\n";
 				$data .= 'artist=' . $current['artist'] . "\n";
@@ -2427,8 +2453,8 @@ function updExtMetaFile() {
 				$data .= 'state=' . $current['state'] . "\n";
 				fwrite($fh, $data);
 				fclose($fh);
-				rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
-	            chmod('/var/local/www/currentsong.txt', 0666);
+				rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
+	            chmod(CURRENTSONG_TXT, 0666);
 			}
 		} else {
 			workerLog('worker: CRITICAL ERROR: updExtMetaFile() failed: Unable to connect to MPD');
