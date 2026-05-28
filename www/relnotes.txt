@@ -19,10 +19,10 @@ Packages
 - PKG:
 
 Updates
-- UPD: Add AirPlay and Spotify Connect metadata to currensong.txt (now playing)
+- UPD: Add AirPlay and Spotify metadata to currensong.txt (now playing)
 
 Bug fixes
-- FIX:
+- FIX: Various Dashboard issues
 
 ################################################################################
 #
