@@ -16,10 +16,13 @@
 ################################################################################
 
 Packages
-- PKG:
+- PKG: Bump to upmpdcli 1.9.17
+- PKG: Bump to libnpupnp13 6.2.3
+- PKG: Bump to libupnpp17 1.0.3
 
 Updates
 - UPD: Add AirPlay and Spotify metadata to currensong.txt (now playing)
+- UPD: Add new shairport-sync v5 settings to the AirPlay section of System Info
 
 Bug fixes
 - FIX: Various Dashboard issues
