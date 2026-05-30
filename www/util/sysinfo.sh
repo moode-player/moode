@@ -322,13 +322,22 @@ RENDERER_SETTINGS() {
 		echo -e "\nVersion\t\t\t= $SPSVER\c"
 		echo -e "\nFriendly name\t\t= $airplayname\c"
 		echo -e "\nInterpolation\t\t= $interpolation\c"
-		echo -e "\nOutput bit depth\t= $output_format\c"
-		echo -e "\nOutput sample rate\t= $output_rate\c"
-		echo -e "\nSession interruption\t= $allow_session_interruption\c"
-		echo -e "\nSession timeout\t\t= $session_timeout (ms)\c"
+		echo -e "\n--\c"
+		echo -e "\nDisable sync\t\t= $disable_synchronization\c"
+		echo -e "\nDisable standby\t\t= $disable_standby_mode\c"
 		echo -e "\nLatency offset\t\t= $audio_backend_latency_offset_in_seconds (secs)\c"
 		echo -e "\nAudio buffer\t\t= $audio_backend_buffer_desired_length_in_seconds (secs)\c"
-		echo -e "\nDisable sync\t\t= $disable_synchronization\c"
+		echo -e "\nOutput sample rate\t= $output_rate\c"
+		echo -e "\nOutput bit depth\t= $output_format\c"
+		echo -e "\nOutput channels\t\t= $output_channels\c"
+		echo -e "\nEight ch mode\t\t= $eight_channel_mode\c"
+		echo -e "\nSix ch mode\t\t= $six_channel_mode\c"
+		echo -e "\nMixdown\t\t\t= $six_channel_mode\c"
+		echo -e "\nOutput ch map\t\t= $output_channel_mapping\c"
+		echo -e "\n--\c"
+		echo -e "\nActive state timeout\t= $active_state_timeout\c"
+		echo -e "\nSession interruption\t= $allow_session_interruption\c"
+		echo -e "\nSession timeout\t\t= $session_timeout (ms)\c"
 		echo -e "\nResume MPD\t\t= $rsmafterapl\n"
 	fi
 
@@ -596,14 +605,25 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 # AirPlay settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_airplay")
 readarray -t arr <<<"$RESULT"
-interpolation=${arr[2]}
-output_format=${arr[3]}
-output_rate=${arr[4]}
-allow_session_interruption=${arr[5]}
-session_timeout=${arr[6]}
-audio_backend_latency_offset_in_seconds=${arr[7]}
-audio_backend_buffer_desired_length_in_seconds=${arr[8]}
-disable_synchronization=${arr[9]}
+interpolation=${arr[0]}
+eight_channel_mode=${arr[1]}
+six_channel_mode=${arr[2]}
+mixdown=${arr[3]}
+output_channel_mapping=${arr[4]}
+audio_backend_latency_offset_in_seconds=${arr[5]}
+audio_backend_buffer_desired_length_in_seconds=${arr[6]}
+run_this_before_entering_active_state=${arr[7]}
+run_this_after_exiting_active_state=${arr[8]}
+active_state_timeout=${arr[9]}
+wait_for_completion=${arr[10]}
+allow_session_interruption=${arr[11]}
+session_timeout=${arr[12]}
+output_rate=${arr[13]}
+output_format=${arr[14]}
+output_channels=${arr[15]}
+disable_synchronization=${arr[16]}
+disable_standby_mode=${arr[17]}
+cover_art_cache_directory=${arr[18]}
 
 # MPD settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
