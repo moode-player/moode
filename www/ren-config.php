@@ -360,7 +360,13 @@ $_select['rsmaftersl_off']  .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"t
 // Plexamp
 if (($_SESSION['feat_bitmask'] & FEAT_PLEXAMP)) {
 	$_feat_plexamp = '';
-	$_SESSION['plexamp_installed'] == 'yes' ? $_pa_svcbtn_disable = '' : $_pa_svcbtn_disable = 'disabled';
+	if ($_SESSION['plexamp_installed'] == 'yes') {
+		$_pa_svcbtn_disable = '';
+		$_pa_not_installed_msg = 'hide';
+	} else {
+		$_pa_svcbtn_disable = 'disabled';
+		$_pa_not_installed_msg = '';
+	}
 	$_SESSION['pasvc'] == '1' ? $_pa_btn_disable = '' : $_pa_btn_disable = 'disabled';
 	$_SESSION['pasvc'] == '1' ? $_pa_link_disable = '' : $_pa_link_disable = 'onclick="return false;"';
 	$autoClick = " onchange=\"autoClick('#btn-set-pasvc');\" " . $_pa_svcbtn_disable;
@@ -387,7 +393,13 @@ if (($_SESSION['feat_bitmask'] & FEAT_PLEXAMP)) {
 // RoonBridge
 if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE)) {
 	$_feat_roonbridge = '';
-	$_SESSION['roonbridge_installed'] == 'yes' ? $_rb_svcbtn_disable = '' : $_rb_svcbtn_disable = 'disabled';
+	if ($_SESSION['roonbridge_installed'] == 'yes') {
+		$_rb_svcbtn_disable = '';
+		$_rb_not_installed_msg = 'hide';
+	} else {
+		$_rb_svcbtn_disable = 'disabled';
+		$_rb_not_installed_msg = '';
+	}
 	$_SESSION['rbsvc'] == '1' ? $_rb_btn_disable = '' : $_rb_btn_disable = 'disabled';
 	$_SESSION['rbsvc'] == '1' ? $_rb_link_disable = '' : $_rb_link_disable = 'onclick="return false;"';
 	$autoClick = " onchange=\"autoClick('#btn-set-rbsvc');\" " . $_rb_svcbtn_disable;
