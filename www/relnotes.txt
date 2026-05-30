@@ -26,6 +26,7 @@ Updates
 
 Bug fixes
 - FIX: Various Dashboard issues
+- FIX: RoonBridge and Plexamp "not installed" messages
 
 ################################################################################
 #
