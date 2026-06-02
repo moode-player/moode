@@ -684,8 +684,11 @@ jQuery(document).ready(function($) { 'use strict';
         var selector = $(this).parent().hasClass('playqueue') ? '.playqueue' : '.cv-playqueue';
         var pos = $(selector + ' .playqueue-entry').index(this);
 
-        sendMpdCmd('play ' + pos);
-        $(this).parent().addClass('active');
+		sendMpdCmd('stop');
+		setTimeout(function() {
+			sendMpdCmd('play ' + pos);
+	        $(this).parent().addClass('active');
+        }, DEFAULT_TIMEOUT);
     });
 
 	// Click on Queue action menu button (ellipsis)
