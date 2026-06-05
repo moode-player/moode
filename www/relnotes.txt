@@ -19,7 +19,7 @@ Packages
 - PKG: Bump to Linux kernel 6.18.33
 
 Updates
-- UPD:
+- UPD: Include elapsed and duration in currentsong.txt
 
 Bug fixes
 - FIX: PeppyMeter misses pipe data when manually switching stations/tracks
