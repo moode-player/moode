@@ -2429,7 +2429,8 @@ function updExtMetaFile() {
 				$fileData['album'] != $current['album'] ||
 				$fileData['volume'] != $volknob ||
 				$fileData['mute'] != $_SESSION['volmute'] ||
-				$fileData['outrate'] != $current['output']
+				$fileData['outrate'] != $current['output'] ||
+				$fileData['elapsed'] != $current['elapsed']
 			) {
 				//workerLog('worker: Update currentsong.txt file (MPD)');
 				$fh = fopen(CURRENTSONG_TXT_TMP, 'w');
@@ -2451,6 +2452,8 @@ function updExtMetaFile() {
 				$data .= 'volume=' . $volknob . "\n";
 				$data .= 'mute=' . $volmute . "\n";
 				$data .= 'state=' . $current['state'] . "\n";
+				$data .= 'elapsed=' . $current['elapsed'] . "\n";
+				$data .= 'duration=' . $current['time'] . "\n";
 				fwrite($fh, $data);
 				fclose($fh);
 				rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
