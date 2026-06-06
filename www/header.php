@@ -134,10 +134,14 @@
 
 
 <body onorientationchange="javascript:location.reload(true); void 0;">
+	<!-- SPLASH SCREEN -->
+	<div id="splash">
+		<div>moOde</div>
+	</div>
+
 	<!-- ALBUM COVER BACKDROP -->
 	<div aria-label="Album Cover Backdrop" id="cover-backdrop"></div>
 	<div id="context-backdrop"></div>
-	<div id="splash"><div>moOde</div></div>
 
 	<!-- INPUT SOURCE INDICATOR -->
 	<div id="inpsrc-indicator" class="inpsrc">
