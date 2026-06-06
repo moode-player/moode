@@ -26,6 +26,14 @@ jQuery(document).ready(function($) { 'use strict';
         }
     }
 
+	// Ignore touch that triggers wake up from XServer screen blank
+	document.addEventListener('click', function(e) {
+		if (GLOBAL.chromium && SESSION.json['local_display_onoff'] == 'off') {
+			e.stopPropagation();
+			return;
+		}
+	}, true);
+
     // Resize thumbs on window resize
 	$(window).bind('resize', function(e){
 		UI.mobile = $(window).width() <= 480 ? true : false;

@@ -667,6 +667,11 @@ function engineCmd() {
                 case 'recorder_nofiles':
                     notify(NOTIFY_TITLE_ALERT, 'recorder_nofiles');
                     break;
+				case 'local_display_onoff':
+					SESSION.json['local_display_onoff'] = cmd[1];
+					// DEBUG:
+					console.log('local_display_onoff=' + SESSION.json['local_display_onoff']);
+					break;
                 case 'reset_view':
                 case 'refresh_screen':
                     setTimeout(function() {
@@ -740,6 +745,11 @@ function engineCmdLite() {
                 case 'downgrading_chromium':
                     notify(NOTIFY_TITLE_INFO, 'downgrading_chromium', NOTIFY_DURATION_INFINITE);
                     break;
+				case 'local_display_onoff':
+					SESSION.json['local_display_onoff'] = cmd[1];
+					// DEBUG:
+					console.log('local_display_onoff=' + SESSION.json['local_display_onoff']);
+				break;
                 case 'reset_view':
                 case 'refresh_screen':
                     if (cmd[0] == 'reset_view') {

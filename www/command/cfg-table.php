@@ -179,4 +179,5 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['user_id'] = $_SESSION['user_id'];
 	$cfgSystem['moode_release'] = getMoodeRel('verbose');
 	$cfgSystem['reduce_notifications'] = $_SESSION['reduce_notifications'];
+	$cfgSystem['local_display_onoff'] = $_SESSION['local_display_onoff'];
 }

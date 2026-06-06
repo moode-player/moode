@@ -1659,6 +1659,11 @@ if (!isset($_SESSION['extmeta'])) {
 	$_SESSION['extmeta'] = '0';
 }
 
+// Local display On/Off state (default is on)
+if (!isset($_SESSION['local_display_onoff'])) {
+	$_SESSION['local_display_onoff'] = 'on';
+}
+
 //----------------------------------------------------------------------------//
 // Globals section
 // NOTE: These globals are used in the worker event loop functions
@@ -1896,80 +1901,84 @@ while (true) {
 		//debugLog('01: chkScnSaver');
 		chkScnSaver();
 	}
+	if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
+		//debugLog('02: chkAttachedDisplayOnOff');
+		chkAttachedDisplayOnOff();
+	}
 	if ($_SESSION['peppy_display'] == '1' && $_SESSION['scn_blank'] != 'off') {
-		//debugLog('02: chkPeppyScnBlank');
+		//debugLog('03: chkPeppyScnBlank');
 		chkPeppyScnBlank();
 	}
 	if ($_SESSION['maint_interval'] != 0) {
-		//debugLog('03: chkMaintenance');
+		//debugLog('04: chkMaintenance');
 		chkMaintenance();
 	}
 	if ($_SESSION['btsvc'] == '1' && $_SESSION['audioout'] == 'Local') {
-		//debugLog('04: chkBtActive');
+		//debugLog('05: chkBtActive');
 		chkBtActive();
 	}
 	if ($_SESSION['airplaysvc'] == '1') {
-		//debugLog('05: chkAplActive');
+		//debugLog('06: chkAplActive');
 		chkAplActive();
 	}
 	if ($_SESSION['spotifysvc'] == '1') {
-		//debugLog('06: chkSpotActive');
+		//debugLog('07: chkSpotActive');
 		chkSpotActive();
 	}
 	if ($_SESSION['deezersvc'] == '1') {
-		//debugLog('07: chkDeezActive');
+		//debugLog('08: chkDeezActive');
 		chkDeezActive();
 	}
 	if ($_SESSION['slsvc'] == '1') {
-		//debugLog('08: chkSlActive');
+		//debugLog('09: chkSlActive');
 		chkSlActive();
 	}
 	if ($_SESSION['pasvc'] == '1') {
-		//debugLog('09: chkPaActive');
+		//debugLog('10: chkPaActive');
 		chkPaActive();
 	}
 	if ($_SESSION['rbsvc'] == '1') {
-		//debugLog('10: chkRbActive');
+		//debugLog('11: chkRbActive');
 		chkRbActive();
 	}
 	if ($_SESSION['multiroom_rx'] == 'On') {
-		//debugLog('11: chkRxActive');
+		//debugLog('12: chkRxActive');
 		chkRxActive();
 	}
 	if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
-		//debugLog('12: chkInpActive');
+		//debugLog('13: chkInpActive');
 		chkInpActive();
 	}
 	if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
-		//debugLog('13: updBoss2DopVolume');
+		//debugLog('14: updBoss2DopVolume');
 		updBoss2DopVolume();
 	}
 	if ($_SESSION['extmeta'] == '1') {
-		//debugLog('14: updExtMetaFile');
+		//debugLog('15: updExtMetaFile');
 		updExtMetaFile();
 	}
  	if ($_SESSION['clkradio_mode'] == 'Clock Radio') {
-		//debugLog('15: chkClockRadio');
+		//debugLog('16: chkClockRadio');
 		chkClockRadio();
 	}
  	if ($_SESSION['clkradio_mode'] == 'Sleep Timer') {
-		//debugLog('16: chkSleepTimer');
+		//debugLog('17: chkSleepTimer');
 		chkSleepTimer();
 	}
 	if ($_SESSION['playhist'] == 'Yes') {
-		//debugLog('17: updPlayHistory');
+		//debugLog('18: updPlayHistory');
 		updPlayHistory();
 	}
 	if ($GLOBALS['check_library_update'] == '1') {
-		//debugLog('18: chkLibraryUpdate');
+		//debugLog('19: chkLibraryUpdate');
 		chkLibraryUpdate();
 	}
 	if ($GLOBALS['check_library_regen'] == '1') {
-		//debugLog('19: chkLibraryRegen');
+		//debugLog('20: chkLibraryRegen');
 		chkLibraryRegen();
 	}
 	if ($_SESSION['w_active'] == 1 && $_SESSION['w_lock'] == 0) {
-		//debugLog('20: runQueuedJob: ' . $_SESSION['w_queue']);
+		//debugLog('21: runQueuedJob: ' . $_SESSION['w_queue']);
 		runQueuedJob();
 	}
 
@@ -1979,6 +1988,21 @@ while (true) {
 //----------------------------------------------------------------------------//
 // WORKER FUNCTIONS
 //----------------------------------------------------------------------------//
+
+// Attached display on/off status
+function chkAttachedDisplayOnOff() {
+	$result = sysCmd('DISPLAY=:0 xset q | grep "Monitor" | awk \'{print $3}\'')[0];
+	$currentOnOff = $result == 'On' ? 'on' : 'off';
+	// DEBUG:
+	workerLog('chkDisplayOnOff():' . ' C:' . $currentOnOff . ' G:' . $_SESSION['local_display_onoff']);
+
+	if ($_SESSION['local_display_onoff'] != $currentOnOff) {
+		$_SESSION['local_display_onoff'] = $currentOnOff;
+		sendFECmd('local_display_onoff,' . $currentOnOff);
+		// DEBUG:
+		workerLog('chkAttachedDisplayOnOff():' . 'sendFECmd(local_display_onoff,' . $currentOnOff);
+	}
+}
 
 // WebUI CoverView screen saver
 // - Timeout is set
