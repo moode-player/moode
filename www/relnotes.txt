@@ -20,6 +20,7 @@ Packages
 
 Updates
 - UPD: Include elapsed and duration in currentsong.txt
+- UPD: Ignore first wake up touch on attached displays
 
 Bug fixes
 - FIX: PeppyMeter misses pipe data when manually switching stations/tracks
