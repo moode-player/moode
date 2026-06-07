@@ -1993,14 +1993,9 @@ while (true) {
 function chkAttachedDisplayOnOff() {
 	$result = sysCmd('DISPLAY=:0 xset q | grep "Monitor" | awk \'{print $3}\'')[0];
 	$currentOnOff = $result == 'On' ? 'on' : 'off';
-	// DEBUG:
-	workerLog('chkDisplayOnOff():' . ' C:' . $currentOnOff . ' G:' . $_SESSION['local_display_onoff']);
-
 	if ($_SESSION['local_display_onoff'] != $currentOnOff) {
 		$_SESSION['local_display_onoff'] = $currentOnOff;
 		sendFECmd('local_display_onoff,' . $currentOnOff);
-		// DEBUG:
-		workerLog('chkAttachedDisplayOnOff():' . 'sendFECmd(local_display_onoff,' . $currentOnOff);
 	}
 }
 
