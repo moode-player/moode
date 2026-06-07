@@ -565,7 +565,7 @@ function waitWorker($caller) {
 	//debugLog('waitWorker(): Start ' . $caller . ', w_active=' . $_SESSION['w_active']);
 	$loopCnt = 0;
 
-	if ($_SESSION['w_active'] == 1) {
+	if ($_SESSION['w_active'] == 1 && $_SESSION['w_queue'] != 'reset_screen_saver') {
 		do {
 			usleep(WAITWORKER_SLEEP);
 			debugLog('waitWorker(): Wait ' . ++$loopCnt . ' for ' . $caller);
