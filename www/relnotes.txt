@@ -20,7 +20,9 @@ Packages
 
 Updates
 - UPD: Include elapsed and duration in currentsong.txt
-- UPD: Ignore first wake up touch on attached displays
+- UPD: Ignore first wake touch on attached displays
+- UPD: Refactor openMpdSock() error branches
+- UPD: Add MPD socket count to moodeutl -m
 
 Bug fixes
 - FIX: PeppyMeter misses pipe data when manually switching stations/tracks
