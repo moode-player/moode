@@ -863,12 +863,14 @@ function getDSDRateAndChannels($file) {
 // Return MPD format tag rate:bits:channels
 function getMpdFormatTag($file) {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('getMpdFormatTag(): Connection to MPD failed');
+		workerLog('CRITICAL ERROR: getMpdFormatTag(): Connection to MPD failed');
+		return 'CRITICAL ERROR';
+	} else {
+		sendMpdCmd($sock, 'lsinfo "' . $file . '"');
+		$trackData = parseDelimFile(readMpdResp($sock), ': ');
+		closeMpdSock($sock);
+		return $trackData['Format'];
 	}
-	sendMpdCmd($sock, 'lsinfo "' . $file . '"');
-	$trackData = parseDelimFile(readMpdResp($sock), ': ');
-
-	return $trackData['Format'];
 }
 
 // CUE support
@@ -948,8 +950,7 @@ function stopAutoShuffle() {
 	sysCmd('killall -s 9 ashuffle > /dev/null');
 	phpSession('write', 'ashuffle', '0');
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('stopAutoShuffle(): Connection to MPD failed');
-		exit(0);
+		workerLog('CRITICAL ERROR: stopAutoShuffle(): Connection to MPD failed');
 	}
 	sendMpdCmd($sock, 'consume 0');
 	$resp = readMpdResp($sock);

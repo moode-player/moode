@@ -922,7 +922,7 @@ sysCmd("systemctl start mpd");
 workerLog('worker: MPD service:        started');
 $sock = openMpdSock('localhost', 6600);
 workerLog($sock === false ?
-	'worker: MPD port 6600:      connection refused' :
+	'worker: MPD port 6600:      CRITICAL ERROR: Connection to MPD failed' :
 	'worker: MPD port 6600:      accepting connections');
 // Ensure valid MPD output config
 $mpdOutput = configMpdOutput();
@@ -1817,7 +1817,10 @@ workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
 // Get ID of last played item for Auto-play
-$sock = openMpdSock('localhost', 6600);
+if (false === ($sock = openMpdSock('localhost', 6600))) {
+	workerLog('worker: CRITICAL ERROR: Post-startup actions: Connection to MPD failed');
+}
+
 $status = getMpdStatus($sock);
 $lastPlayedItemId = $status['songid'];
 
@@ -2004,7 +2007,9 @@ function chkAttachedDisplayOnOff() {
 // - No renderer is active
 // - MPD is not playing
 function chkScnSaver() {
-	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkScnSaver(): Connection to MPD failed');
+	} else {
 		$mpdState = getMpdStatus($sock)['state'];
 		closeMpdSock($sock);
 		if ($mpdState == 'play' && $_SESSION['scnsaver_whenplaying'] == 'No') {
@@ -2026,8 +2031,6 @@ function chkScnSaver() {
 		}
 		// DEBUG:
 		//workerLog($mpdState . ' | ' . $_SESSION['scnsaver_whenplaying'] . ' | ' . $GLOBALS['scnsaver_timeout'] . ' | ' . $GLOBALS['scnactive']);
-	} else {
-		workerLog('worker: CRITICAL ERROR: chkScnSaver() failed: Unable to connect to MPD');
 	}
 }
 
@@ -2037,7 +2040,9 @@ function chkScnSaver() {
 // - No renderer is active
 // - MPD is not playing
 function chkPeppyScnBlank() {
-	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkPeppyScnBlank(): Connection to MPD failed');
+	} else {
 		$mpdState = getMpdStatus($sock)['state'];
 		closeMpdSock($sock);
 		if ($mpdState == 'play') {
@@ -2065,8 +2070,6 @@ function chkPeppyScnBlank() {
 				}
 			}
 		}
-	} else {
-		workerLog('worker: CRITICAL ERROR: chkPeppyScnBlank() failed: Unable to connect to MPD');
 	}
 }
 
@@ -2435,7 +2438,9 @@ function updExtMetaFile() {
 		}
 	} else {
 		//workerLog('worker: MPD active');
-		if (false !== ($sock = openMpdSock('localhost', 6600))) {
+		if (false === ($sock = openMpdSock('localhost', 6600))) {
+			workerLog('worker: CRITICAL ERROR: updExtMetaFile(): Connection to MPD failed');
+		} else {
 			$status = getMpdStatus($sock);
 			$current = enhanceMetadata($status, $sock, 'worker_php');
 			closeMpdSock($sock);
@@ -2478,8 +2483,6 @@ function updExtMetaFile() {
 				rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
 	            chmod(CURRENTSONG_TXT, 0666);
 			}
-		} else {
-			workerLog('worker: CRITICAL ERROR: updExtMetaFile() failed: Unable to connect to MPD');
 		}
 	}
 }
@@ -2491,7 +2494,9 @@ function chkClockRadio() {
 
 	if ($currentTime == $GLOBALS['clkradio_start_time'] && $GLOBALS['clkradio_start_days'][$currentDay] == '1') {
 		$GLOBALS['clkradio_start_time'] = ''; // Reset so this section is only done once
-		if (false !== ($sock = openMpdSock('localhost', 6600))) {
+		if (false === ($sock = openMpdSock('localhost', 6600))) {
+			workerLog('worker: CRITICAL ERROR: chkClockRadio(): Connection to MPD failed');
+		} else {
 			// Check the Queue
 			sendMpdCmd($sock, 'playlistfind file ' . '"' . $_SESSION['clkradio_item'] . '"');
 			$resp = readMpdResp($sock);
@@ -2512,13 +2517,13 @@ function chkClockRadio() {
 
 			// Set volume
 			sysCmd('/var/www/util/vol.sh ' . $_SESSION['clkradio_volume']);
-		} else {
-			workerLog('worker: CRITICAL ERROR: chkClockRadio() failed: Unable to connect to MPD');
 		}
 	} else if ($currentTime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$currentDay] == '1') {
 		//workerLog('chkClockRadio(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
 		$GLOBALS['clkradio_stop_time'] = '';  // Reset so this section is only done once
-		if (false !== ($sock = openMpdSock('localhost', 6600))) {
+		if (false === ($sock = openMpdSock('localhost', 6600))) {
+			workerLog('worker: CRITICAL ERROR: chkClockRadio(): Connection to MPD failed');
+		} else {
 			// Send several stop commands for robustness
 			while ($retryStopCmd > 0) {
 				sendMpdCmd($sock, 'stop');
@@ -2544,8 +2549,6 @@ function chkClockRadio() {
 					submitJob('update_library');
 				}
 			}
-		} else {
-			workerLog('worker: CRITICAL ERROR: chkClockRadio() failed: Unable to connect to MPD');
 		}
 	}
 
@@ -2569,7 +2572,9 @@ function chkSleepTimer() {
 	if ($currentTime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$currentDay] == '1') {
 		//workerLog('chkSleepTimer(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
 		$GLOBALS['clkradio_stop_time'] = '';  // Reset so this section is only done once
-		if (false !== ($sock = openMpdSock('localhost', 6600))) {
+		if (false === ($sock = openMpdSock('localhost', 6600))) {
+			workerLog('worker: CRITICAL ERROR: chkSleepTimer(): Connection to MPD failed');
+		} else {
 			// Send several stop commands for robustness
 			while ($retryStopCmd > 0) {
 				sendMpdCmd($sock, 'stop');
@@ -2598,8 +2603,6 @@ function chkSleepTimer() {
 					submitJob('update_library');
 				}
 			}
-		} else {
-			workerLog('worker: CRITICAL ERROR: chkSleepTimer() failed: Unable to connect to MPD');
 		}
 	}
 
@@ -2611,7 +2614,9 @@ function chkSleepTimer() {
 }
 
 function updPlayHistory() {
-	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: updPlayHistory(): Connection to MPD failed');
+	} else {
 		$song = getCurrentSong($sock);
 		closeMpdSock($sock);
 
@@ -2690,15 +2695,15 @@ function updPlayHistory() {
 	        	fclose($fh);
 	        }
 		}
-	} else {
-		workerLog('worker: CRITICAL ERROR: updPlayHistory() failed: Unable to connect to MPD');
 	}
 }
 
 // Check for library update complete
 function chkLibraryUpdate() {
 	//workerLog('chkLibraryUpdate');
-	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkLibraryUpdate(): Connection to MPD failed');
+	} else {
 		$status = getMpdStatus($sock);
 		$stats = getLibraryStats($sock);
 		closeMpdSock($sock);
@@ -2714,15 +2719,15 @@ function chkLibraryUpdate() {
 			workerLog('mpdindex: Done: indexed ' . $stats);
 			workerLog('worker: Job update_library done');
 		}
-	} else {
-		workerLog('worker: CRITICAL ERROR: chkLibraryUpdate() failed: Unable to connect to MPD');
 	}
 }
 
 // Check for library regen complete
 function chkLibraryRegen() {
 	//workerLog('chkLibraryRegen');
-	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkLibraryRegen(): Connection to MPD failed');
+	} else {
 		$status = getMpdStatus($sock);
 		$stats = getLibraryStats($sock);
 		closeMpdSock($sock);
@@ -2738,8 +2743,6 @@ function chkLibraryRegen() {
 			workerLog('mpdindex: Done: indexed ' . $stats);
 			workerLog('worker: Job regen_library done');
 		}
-	} else {
-		workerLog('worker: CRITICAL ERROR: chkLibraryRegen() failed: Unable to connect to MPD');
 	}
 }
 
@@ -2844,7 +2847,9 @@ function runQueuedJob() {
 			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
 			workerLog('mpdindex: Cmd (' . $cmd . ')');
 			workerLog('mpdindex: Scanning');
-			if (false !== ($sock = openMpdSock('localhost', 6600))) {
+			if (false === ($sock = openMpdSock('localhost', 6600))) {
+				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ': Connection to MPD failed');
+			} else {
 				sendMpdCmd($sock, $cmd);
 				$resp = readMpdResp($sock);
 				closeMpdSock($sock);
@@ -2855,8 +2860,6 @@ function runQueuedJob() {
 					sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 				}
 				$GLOBALS['check_library_update'] = '1';
-			} else {
-				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ' failed: Unable to connect to MPD');
 			}
 			break;
 
@@ -2871,7 +2874,9 @@ function runQueuedJob() {
 			workerLog('mpdindex: Start');
 			workerLog('mpdindex: Cmd (rescan)');
 			workerLog('mpdindex: Scanning');
-			if (false !== ($sock = openMpdSock('localhost', 6600))) {
+			if (false === ($sock = openMpdSock('localhost', 6600))) {
+				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ': Connection to MPD failed');
+			} else {
 				sendMpdCmd($sock, 'rescan');
 				$resp = readMpdResp($sock);
 				closeMpdSock($sock);
@@ -2884,8 +2889,6 @@ function runQueuedJob() {
 					sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 				}
 				$GLOBALS['check_library_regen'] = '1';
-			} else {
-				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ' failed: Unable to connect to MPD');
 			}
 			break;
 		case 'regen_thmcache':
@@ -2967,7 +2970,9 @@ function runQueuedJob() {
 			// Restart MPD
 			sysCmd('systemctl restart mpd');
 			// Ensure MPD ready to accept connections
-			if (false !== ($sock = openMpdSock('localhost', 6600))) {
+			if (false === ($sock = openMpdSock('localhost', 6600))) {
+				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ': Connection to MPD failed');
+			} else {
 				closeMpdSock($sock);
 
 				// Output device change (cardnum)
@@ -3022,8 +3027,6 @@ function runQueuedJob() {
 				}
 				// Reenable HTTP server (if indicated)
 				setMpdHttpd();
-			} else {
-				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ' failed: Unable to connect to MPD');
 			}
 			break;
 		// snd-config jobs
@@ -3059,7 +3062,9 @@ function runQueuedJob() {
 
 			// Restart MPD
 			sysCmd('systemctl restart mpd');
-			if (false !== ($sock = openMpdSock('localhost', 6600))) {
+			if (false === ($sock = openMpdSock('localhost', 6600))) {
+				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ': Connection to MPD failed');
+			} else {
 				closeMpdSock($sock);
 				if (!empty($playing)) {
 					sysCmd('mpc play');
@@ -3084,8 +3089,6 @@ function runQueuedJob() {
 				}
 				// Reenable HTTP server (if indicated)
 				setMpdHttpd();
-			} else {
-				workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ' failed: Unable to connect to MPD');
 			}
 			break;
 		case 'mpd_httpd':
@@ -3147,12 +3150,12 @@ function runQueuedJob() {
 						}
 						// MPD
 						sysCmd('systemctl restart mpd');
-						if (false !== ($sock = openMpdSock('localhost', 6600))) {
+						if (false === ($sock = openMpdSock('localhost', 6600))) {
+							workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ': Connection to MPD failed');
+						} else {
 							closeMpdSock($sock);
 							// Set volume level
 							sysCmd('/var/www/util/vol.sh -restore' );
-						} else {
-							workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ' failed: Unable to connect to MPD');
 						}
 					}
 					break;
@@ -3182,10 +3185,10 @@ function runQueuedJob() {
 			// NOTE: Don't restart if already done in the camillaDSP section
 			if ($_SESSION['w_queue'] != 'camilladsp' || ($_SESSION['w_queue'] == 'camilladsp' && empty($queueArgs[1]))) {
 				sysCmd('systemctl restart mpd');
-				if (false !== ($sock = openMpdSock('localhost', 6600))) {
-					closeMpdSock($sock);
+				if (false === ($sock = openMpdSock('localhost', 6600))) {
+					workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ': Connection to MPD failed');
 				} else {
-					workerLog('worker: CRITICAL ERROR: runQueuedJob() ' . $_SESSION['w_queue'] . ' failed: Unable to connect to MPD');
+					closeMpdSock($sock);
 				}
 			}
 			// Resume playback

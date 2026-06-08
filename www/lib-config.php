@@ -448,11 +448,12 @@ if (!isset($_GET['cmd'])) {
 	$_select['moodefiles_ignore_off'] = "<input type=\"radio\" name=\"moodefiles_ignore\" id=\"toggle-moodefiles-ignore-2\" value=\"0\" " . (($_SESSION['moodefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// DB update status
-	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		$msg = 'CRITICAL ERROR: lib-config.php: Connection to MPD failed';
+		workerLog($msg);
+	} else {
 		$msg = getLibraryStats($sock);
 		closeMpdSock($sock);
-	} else {
-		$msg = 'CRITICAL ERROR: chkLibraryUpdate() failed: Unable to connect to MPD';
 	}
 	$_dbupdate_status = $_SESSION['mpd_dbupdate_status'] == '0' ? $msg : 'Files indexed: ' . $_SESSION['mpd_dbupdate_status'];
 

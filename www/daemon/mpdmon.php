@@ -64,10 +64,13 @@ while (true) {
 					sysCmd("systemctl start mpd");
 					$msg = 'mpdmon: MPD restarted';
 					$sock = openMpdSock('localhost', 6600); // 6 x .5sec retries
-					$msg .= $sock == false ? ', connection refused' : ', accepting connections';
-					if ($sock !== false && $resumePlay == 'Yes') {
-						$msg .= ', play resumed';
-						sysCmd('mpc play');
+					$msg .= $sock === false ? ', CRITICAL ERROR: Connection to MPD failed' : ', accepting connections';
+					if ($sock !== false) {
+						closeMpdSock($sock);
+						if ($resumePlay == 'Yes') {
+							$msg .= ', play resumed';
+							sysCmd('mpc play');
+						}
 					}
 					sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
 					workerLog($msg);

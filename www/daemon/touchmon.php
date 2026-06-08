@@ -114,12 +114,12 @@ function isPeppyOn($dbh) {
 	return $peppyOn == '1' ? true : false;
 }
 function isMpdPlaying() {
-	if (false !== ($sock = openMpdSock('localhost', 6600))) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		$mpdState = 'unknown';
+		workerLog('touchmon: CRITICAL ERROR: Connection to MPD failed');
+	} else {
 		$mpdState = getMpdStatus($sock)['state'];
 		closeMpdSock($sock);
-	} else {
-		$mpdState = 'unknown';
-		workerLog('touchmon: CRITICAL ERROR: Unable to connect to MPD');
 	}
 	return $mpdState == 'play' ? true : false;
 }

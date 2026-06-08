@@ -11,10 +11,10 @@ require_once __DIR__ . '/../inc/mpd.php';
 require_once __DIR__ . '/../inc/music-library.php';
 
 // Connect to MPD
-if (false !== ($sock = openMpdSock('localhost', 6600))) {
+if (false === ($sock = openMpdSock('localhost', 6600))) {
+	echo 'CRITICAL ERROR: libstats.php: Connection to MPD failed';
+} else {
 	$stats = getLibraryStats($sock);
 	echo $stats . "\n";
 	closeMpdSock($sock);
-} else {
-	echo 'libstats.php: Connection to MPD failed';
 }

@@ -38,8 +38,12 @@ function restartMpdAndRenderers($resetAlsaCtl) {
 		sysCmd('alsactl init ' . $_SESSION['cardnum']); // Initialize driver to a default state
 	}
 	sysCmd('systemctl start mpd');
-	$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
-	closeMpdSock($sock);
+	// Ensure MPD ready to accept connections
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('CRITICAL ERROR: restartMpdAndRenderers(): Connection to MPD failed');
+	} else {
+		closeMpdSock($sock);
+	}
 
 	if (!empty($MpdWasPlaying)) {
 		sysCmd('mpc play');

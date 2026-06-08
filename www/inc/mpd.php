@@ -323,7 +323,7 @@ function scanForMPDHosts($retryCount = 2) {
 // Low-level MPD socket routines
 function getMpdSock($caller = 'unknown caller') {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		debugLog('getMpdSock(): Connection to MPD failed (' . $caller . ')');
+		workerLog('CRITICAL ERROR: getMpdSock(): Connection to MPD failed, caller (' . $caller . ')');
 		exit(0);
 	} else {
 		return $sock;

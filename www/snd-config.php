@@ -195,15 +195,19 @@ if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
 	phpSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
 	// Turn off MPD random play so no conflict
-	$sock = openMpdSock('localhost', 6600);
-	sendMpdCmd($sock, 'random 0');
-	$resp = readMpdResp($sock);
-	// Kill the service if indicated
-	if ($_POST['ashufflesvc'] == 0) {
-		sysCmd('killall -s 9 ashuffle > /dev/null');
-		phpSession('write', 'ashuffle', '0');
-		sendMpdCmd($sock, 'consume 0');
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('CRITICAL ERROR: snd-config.php: Connection to MPD failed');
+	} else {
+		sendMpdCmd($sock, 'random 0');
 		$resp = readMpdResp($sock);
+		// Kill the service if indicated
+		if ($_POST['ashufflesvc'] == 0) {
+			sysCmd('killall -s 9 ashuffle > /dev/null');
+			phpSession('write', 'ashuffle', '0');
+			sendMpdCmd($sock, 'consume 0');
+			$resp = readMpdResp($sock);
+		}
+		closeMpdSock($sock);
 	}
 }
 // Mode

@@ -265,7 +265,7 @@ switch ($cmd[0]) {
 	// MPD commands
 	default:
 		if (false === ($sock = openMpdSock('localhost', 6600))) {
-			debugLog('command/index.php: Connection to MPD failed');
+			workerLog('CRITICAL ERROR: command/index.php: Connection to MPD failed');
 		} else {
 			sendMpdCmd($sock, $_GET['cmd']);
 			$resp = readMpdResp($sock);
@@ -275,6 +275,7 @@ switch ($cmd[0]) {
 
 // Close MPD socket
 if (isset($sock) && $sock !== false) {
+	debugLog('command/index.php: closeMpdSock()');
 	closeMpdSock($sock);
 }
 
