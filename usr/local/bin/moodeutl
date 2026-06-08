@@ -407,42 +407,45 @@ function moodeLog($argv) {
 function systemMonitor() {
 	echo "Gathering data...\r";
 	while(true) {
+		// CPU
+		// Load:  get top 'us' user space column: $2
+		$cpuLoad =  (float)sysCmd("top -bn 2 -d 1.0  | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'")[0];
+		$cpuLoad += (float)sysCmd("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'")[0];
+		$cpuLoad = $cpuLoad / 2; // Average of the above
+		$cpuLoad = $cpuload >= 100 ? '100%' : number_format($cpuLoad,1,'.','') . '%';
+		// Temp
+		$cpuTemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2) . 'C';
 		// Frequency
 		$cpuFreq = file_get_contents('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
 		if ($cpuFreq < 1000000) {
 	        $cpuFreq = number_format((int)$cpuFreq / 1000, 0, '.', '');
-	        $cpuFreq .= ' MHz';
+	        $cpuFreq .= 'M';
 		} else {
 	        $cpuFreq = number_format((int)$cpuFreq / 1000000, 1, '.', '');
-	        $cpuFreq .= ' GHz';
+	        $cpuFreq .= 'G';
 		}
 
-		// Temp
-		$cpuTemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
-
-		// CPU (get top 'us' user space column: $2)
-		$cpuLoad =  (float)sysCmd("top -bn 2 -d 1.0  | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'")[0];
-		$cpuLoad += (float)sysCmd("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2}'")[0];
-		$cpuLoad = $cpuLoad / 2; // Average of the above
-		$cpuLoad = $cpuload >= 100 ? '100' : number_format($cpuLoad,1,'.','');
-
-		// Memory
+		// RAM
 		$memTotal = sysCmd("grep MemTotal /proc/meminfo | awk '{print $2}'")[0];
 		$memAvail = sysCmd("grep MemAvailable /proc/meminfo | awk '{print $2}'")[0];
-		$memUtil = number_format(100 * (1 - ($memAvail / $memTotal)), 0, '.', '');
+		$memUtil = number_format(100 * (1 - ($memAvail / $memTotal)), 0, '.', '') . '% used';
 
-		// Disk
-		$diskUsed = sysCmd("df -h -l | awk 'FNR==2 {print $5}'")[0];
-		$diskFree = sysCmd("df -h -l | grep /dev/root | awk '{print $4}'")[0];
+		// DISK
+		$diskUsed = sysCmd("df -h -l | awk 'FNR==2 {print $5}'")[0] . ' used';
+		$diskFree = sysCmd("df -h -l | grep /dev/root | awk '{print $4}'")[0] . ' free';
 
-		// PHP FPM pool count
-		$fpmPool = sysCmd('pgrep -c -f "php-fpm: pool www"')[0];
+		// PHP: FPM pool count
+		$fpmPool = sysCmd('pgrep -c -f "php-fpm: pool www"')[0] . ' workers';
 
-		echo 'CPU: ' . $cpuFreq . ' | ' .
-			'LOAD: ' . $cpuLoad . '% / ' . $cpuTemp . 'C | ' .
-			'RAM: ' . $memUtil . '% used | ' .
-			'DISK: ' . $diskUsed . ' used / ' .	$diskFree . ' free | ' .
-			'PHP: ' . $fpmPool . " workers\r";
+		// MPD: socket connections
+		$mpdSockets = sysCmd('ss -tn | grep -c ":6600"')[0] . ' sockets';
+
+		// CPU: 2.6% 51C 2.4G | RAM: 20% used | DISK: 29% used 20G free | PHP: 15 workers | MPD: 6 sockets
+		echo 'CPU: ' .  $cpuLoad . ' ' . $cpuTemp . ' ' . $cpuFreq . ' | ' .
+			 'RAM: ' .  $memUtil  . ' | ' .
+			 'DISK: ' . $diskUsed . ' ' . $diskFree . ' | ' .
+			 'PHP: ' .  $fpmPool . ' | ' .
+			 'MPD: ' .  $mpdSockets . "  \r";
 	}
 }
 
