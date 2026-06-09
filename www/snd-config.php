@@ -484,6 +484,7 @@ if ($_SESSION['pi_modelnum'] >= 3 && isHDMIDevice($_SESSION['adevname'])) {
 } else {
 	$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['plughw'] . "</option>\n";
 	$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['hw'] . "</option>\n";
+	$_select['alsa_output_mode'] .= "<option value=\"dmix\" " . (($_SESSION['alsa_output_mode'] == 'dmix') ? "selected" : "") . ">" . ALSA_OUTPUT_MODE_NAME['dmix'] . "</option>\n";
 	$_alsa_output_mode = $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 }
 // Loopback
