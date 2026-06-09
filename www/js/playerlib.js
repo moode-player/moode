@@ -670,7 +670,7 @@ function engineCmd() {
 				case 'local_display_onoff':
 					SESSION.json['local_display_onoff'] = cmd[1];
 					// DEBUG:
-					console.log('local_display_onoff=' + SESSION.json['local_display_onoff']);
+					//console.log('local_display_onoff=' + SESSION.json['local_display_onoff']);
 					break;
                 case 'reset_view':
                 case 'refresh_screen':
@@ -748,7 +748,7 @@ function engineCmdLite() {
 				case 'local_display_onoff':
 					SESSION.json['local_display_onoff'] = cmd[1];
 					// DEBUG:
-					console.log('local_display_onoff=' + SESSION.json['local_display_onoff']);
+					//console.log('local_display_onoff=' + SESSION.json['local_display_onoff']);
 				break;
                 case 'reset_view':
                 case 'refresh_screen':
