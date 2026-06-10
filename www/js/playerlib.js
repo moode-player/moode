@@ -525,15 +525,19 @@ function engineCmd() {
 		cache: false,
 		success: function(data) {
 			// DEBUG:
-			//console.log('engineCmd: success branch: data=(' + data + ')');
+			console.log('engineCmd: success branch: data=(' + data + ')');
 
 			// Parse for string format
 			// - JSON 1 '"cmd,string"'
-			// - JSON 2 '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
+			// - JSON 2 '"{"fecmd": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
 			cmd = [];
 			if (data.includes('fecmd')) {
 				var str = JSON.parse(data);
+				// DEBUG:
+				//console.log('engineCmd: str=', str);
 				var array = JSON.parse(str);
+				// DEBUG:
+				//console.log('engineCmd: array=', array);
 				cmd[0] = array['fecmd'];
 				cmd[1] = JSON.parse(data);
 			} else {
@@ -594,7 +598,7 @@ function engineCmd() {
                 case 'update_aplmeta':
                 case 'update_deezmeta':
                 case 'update_spotmeta':
-					// cmd[1]: '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
+					// cmd[1]: '"{"fecmd": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
                     updateInpsrcMeta(cmd[0], cmd[1]);
 					// Fetch from back-end for robustness
                     setTimeout(function() {
@@ -863,6 +867,8 @@ function updateInpsrcMeta(cmd, data) {
 
 	try {
 		var metadata = JSON.parse(data);
+		// DEBUG:
+		console.log('metadata', metadata);
 	}
 	catch (e) {
 		console.log('updateInpsrcMeta(): JSON parse error:', e.message);

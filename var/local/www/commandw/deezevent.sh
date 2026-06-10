@@ -129,7 +129,16 @@ if [[ $EVENT == "track_changed" ]]; then
 	else
 		DEEZ_COVERURL=$DEEZ_BASE_COVERURL_MUSIC
 	fi
-	METADATA="{\"fecmd\": \"update_deezmeta\", \"title\": \"${TITLE}\", \"artist\": \"${ARTIST}\", \"album\": \"${ALBUM_TITLE}\", \"duration\": \"${DURATION_MS}\", \"cover_url\": \"${DEEZ_COVERURL}/${COVER_ID}/500x500.jpg\", \"sformat\": \"${FORMAT}\", \"oformat\": \"${DECODER}\"}"
+	METADATA_JSON=$(jq -n -c \
+		--arg a "update_deezmeta" \
+		--arg b "$TITLE" \
+		--arg c "$ARTIST" \
+		--arg d "$ALBUM_TITLE" \
+		--arg e "$DURATION_MS" \
+		--arg f "$DEEZ_COVERURL/$COVER_ID/500x500.jpg" \
+		--arg g "$FORMAT" \
+		--arg h "$DECODER" \
+		'{fecmd: $a, title: $b, artist: $c, album: $d, duration: $e, cover_url: $f, sformat: $g, oformat $h}')
 	echo -e "$METADATA_JSON" > $DEEZMETA_CACHE_FILE
 	/var/www/util/send-fecmd.php "$METADATA_JSON"
 fi

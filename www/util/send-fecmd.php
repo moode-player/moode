@@ -7,8 +7,10 @@
 
 require_once __DIR__ . '/../inc/common.php';
 
+// DEBUG:
+//workerLog("send-fecmd.php\n" . print_r($argv, true));
+
 $option = isset($argv[1]) ? $argv[1] : '';
-//workerLog(print_r($argv, true));
 
 if ($option == '') {
 	echo

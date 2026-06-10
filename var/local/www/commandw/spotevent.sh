@@ -123,7 +123,15 @@ fi
 if [[ $PLAYER_EVENT == "track_changed" ]]; then
 	ARTIST=$(echo -e -n "$ARTISTS" | tr "\n" ";" | cut -d';' -f1)
 	COVER=$(echo -e -n "$COVERS" | tr "\n" ";" | cut -d';' -f1)
-	METADATA_JSON="{\"fecmd\": \"update_spotmeta\", \"title\": \"${NAME}\", \"artist\": \"${ARTIST}\", \"album\": \"${ALBUM}\", \"duration\": \"${DURATION_MS}\", \"cover_url\": \"${COVER}\", \"sformat\": \"${CFG_SPOTIFY_FORMAT}\"}"
+	METADATA_JSON=$(jq -n -c \
+		--arg a "update_spotmeta" \
+		--arg b "$NAME" \
+		--arg c "$ARTIST" \
+		--arg d "$ALBUM" \
+		--arg e "$DURATION_MS" \
+		--arg f "$COVER" \
+		--arg g "$CFG_SPOTIFY_FORMAT" \
+		'{fecmd: $a, title: $b, artist: $c, album: $d, duration: $e, cover_url: $f, sformat: $g}')
 	echo -e "$METADATA_JSON" > $SPOTMETA_CACHE_FILE
 	/var/www/util/send-fecmd.php "$METADATA_JSON"
 fi

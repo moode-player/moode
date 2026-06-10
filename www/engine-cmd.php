@@ -35,7 +35,7 @@ while($sockres = socket_accept($sock)) {
 
 	// Trim some chrs in case we connect via telnet for testing
 	$cmd = str_replace(array("\r\n","\r","\n"), '', $data);
-	//workerLog('engineCmd(): Received cmd: ' . $cmd);
+	//workerLog("engineCmd(): Received raw cmd:\n" . $cmd);
 	break;
 }
 
@@ -52,5 +52,5 @@ if ($cmd == 'inpactive1') {
 	$cmd .= ',' . $result[0]['value'];
 }
 
-//workerLog('engineCmd(): Returning cmd to client');
+//workerLog("engineCmd(): Returned JSON encoded cmd to client\n" . json_encode($cmd));
 echo json_encode($cmd);
