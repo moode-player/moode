@@ -1,0 +1,40 @@
+name: "Close Inactive Issues and PRs"
+
+on:
+  schedule:
+    # Runs every day at midnight UTC
+    - cron: '0 0 * * *'
+  # Allows you to manually trigger the action from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Manage Stale Issues & PRs"
+        uses: actions/stale@v9
+        with:
+          # --- Days Configuration ---
+          days-before-issue-stale: 30
+          days-before-issue-close: 7
+          days-before-pr-stale: 30
+          days-before-pr-close: 7
+
+          # --- Custom Messages ---
+          stale-issue-message: 'This issue has been automatically marked stale because there has been no activity in the last 30 days. It will be closed in 7 days if no further activity occurs. Thank you for your contributions.'
+          close-issue-message: 'This issue has been automatically closed due to inactivity.'
+
+          stale-pr-message: 'This PR has been automatically marked stale because there has been no activity in the last 30 days. It will be closed in 7 days if no further activity occurs. Thank you for your contributions.'
+          close-pr-message: 'This PR has been automatically closed due to inactivity.'
+
+          # --- Labels ---
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+
+          # --- Exemptions (Optional) ---
+          exempt-issue-labels: 'pinned,security,confirmed'
+          exempt-pr-labels: 'dependencies,keep-open'
