@@ -26,6 +26,7 @@ Updates
 
 Bug fixes
 - FIX: PeppyMeter misses pipe data when manually switching stations/tracks
+- FIX: JSON parse error when Spotify metadata contains embedded double quotes
 
 ################################################################################
 #
