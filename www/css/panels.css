@@ -104,7 +104,7 @@ html {background-color:inherit;}
 
 /* AirPlay, Deezer, Spotify cover art */
 .inpsrc-metadata-cover {
-	height:calc(80vh + .25em);
+	height:calc(75vh + .25em);
 	margin-top:.5em;
 	border-radius:var(--img-border-radius);
 	box-shadow:	0 .25em .75em rgba(32,32,32,0.5);
@@ -112,7 +112,7 @@ html {background-color:inherit;}
 #inpsrc-metadata {
 	position:absolute;
 	display:block;
-	height: 16vh;
+	height: 20vh;
 	width:100%;
 	bottom:0;
 	padding-top:.5em;
