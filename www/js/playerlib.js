@@ -525,7 +525,7 @@ function engineCmd() {
 		cache: false,
 		success: function(data) {
 			// DEBUG:
-			console.log('engineCmd: success branch: data=(' + data + ')');
+			//console.log('engineCmd: success branch: data=(' + data + ')');
 
 			// Parse for string format
 			// - JSON 1 '"cmd,string"'
@@ -862,13 +862,13 @@ function updateInpsrcMeta(cmd, data) {
 
 	// Formats
 	// - AirPlay: title, artist, album, duration (in ms),  cover_url, sformat, oformat
-	// - Deezer:  title, artist, album, duration (in sec), cover_url, sformat,  decoder
+	// - Deezer:  title, artist, album, duration (in sec), cover_url, sformat, decoder
 	// - Spotify: title, artist, album, duration (in ms),  cover_url, sformat
 
 	try {
 		var metadata = JSON.parse(data);
 		// DEBUG:
-		console.log('metadata', metadata);
+		//console.log('metadata', metadata);
 	}
 	catch (e) {
 		console.log('updateInpsrcMeta(): JSON parse error:', e.message);
