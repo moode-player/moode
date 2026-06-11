@@ -237,10 +237,10 @@
             </div>
 			<label class="control-label" for="max_playlist_length">Max Queue items</label>
             <div class="controls">
-                <input class="config-input-large" type="number" id="max_playlist_length" name="conf[max_playlist_length]" value="$_mpd_select[max_playlist_length]" min="2" max="32768">
+                <input class="config-input-large" type="number" id="max_playlist_length" name="conf[max_playlist_length]" value="$_mpd_select[max_playlist_length]" min="2" max="16777216">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info_max_playlist_length" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info_max_playlist_length" class="config-help-info">
-                	Range is 2 to 32768 Queue items. Default is 16384 items.
+                	Range is 2 to 16,777,216 Queue items. Default is 16,384 items.
                 </span>
             </div>
 			<label class="control-label" for="input_cache">Input cache</label>
