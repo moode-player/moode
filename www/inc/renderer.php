@@ -126,7 +126,7 @@ function stopAirPlay() {
 	// Stop shairport-sync
 	for ($i = 0; $i < $maxRetries; $i++) {
 		sysCmd('pkill -f -9 shairport-sync');
-		$result = sysCmd('pgrep -c "shairport-sync"')[0];
+		$result = sysCmd('pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync"')[0];
 		if ($result == 0) {
 			break;
 		}
