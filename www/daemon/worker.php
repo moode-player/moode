@@ -1666,7 +1666,7 @@ if (!isset($_SESSION['local_display_onoff'])) {
 
 //----------------------------------------------------------------------------//
 // Globals section
-// NOTE: These globals are used in the worker event loop functions
+// NOTE: These globals are used in the worker polling loop functions
 //----------------------------------------------------------------------------//
 
 // Clock radio
@@ -1900,209 +1900,122 @@ while (true) {
 
 	phpSession('open');
 
-	if ($_SESSION['scnsaver_timeout'] != 'Never') {
-		//debugLog('01: chkScnSaver');
-		chkScnSaver();
-	}
-	if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
-		//debugLog('02: chkAttachedDisplayOnOff');
-		chkAttachedDisplayOnOff();
-	}
-	if ($_SESSION['peppy_display'] == '1' && $_SESSION['scn_blank'] != 'off') {
-		//debugLog('03: chkPeppyScnBlank');
-		chkPeppyScnBlank();
-	}
-	if ($_SESSION['maint_interval'] != 0) {
-		//debugLog('04: chkMaintenance');
-		chkMaintenance();
-	}
+	// Renderers
 	if ($_SESSION['btsvc'] == '1' && $_SESSION['audioout'] == 'Local') {
-		//debugLog('05: chkBtActive');
+		//debugLog('** chkBtActive');
 		chkBtActive();
 	}
 	if ($_SESSION['airplaysvc'] == '1') {
-		//debugLog('06: chkAplActive');
+		//debugLog('** chkAplActive');
 		chkAplActive();
 	}
 	if ($_SESSION['spotifysvc'] == '1') {
-		//debugLog('07: chkSpotActive');
+		//debugLog('** chkSpotActive');
 		chkSpotActive();
 	}
 	if ($_SESSION['deezersvc'] == '1') {
-		//debugLog('08: chkDeezActive');
+		//debugLog('** chkDeezActive');
 		chkDeezActive();
 	}
 	if ($_SESSION['slsvc'] == '1') {
-		//debugLog('09: chkSlActive');
+		//debugLog('** chkSlActive');
 		chkSlActive();
 	}
 	if ($_SESSION['pasvc'] == '1') {
-		//debugLog('10: chkPaActive');
+		//debugLog('** chkPaActive');
 		chkPaActive();
 	}
 	if ($_SESSION['rbsvc'] == '1') {
-		//debugLog('11: chkRbActive');
+		//debugLog('** chkRbActive');
 		chkRbActive();
 	}
+	// Multiroom receiver
 	if ($_SESSION['multiroom_rx'] == 'On') {
-		//debugLog('12: chkRxActive');
+		//debugLog('** chkRxActive');
 		chkRxActive();
 	}
+	// Input select (Analog, S/PDIF)
 	if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
-		//debugLog('13: chkInpActive');
+		//debugLog('** chkInpActive');
 		chkInpActive();
 	}
-	if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
-		//debugLog('14: updBoss2DopVolume');
-		updBoss2DopVolume();
+
+	// Displays
+	if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
+		//debugLog('** chkAttachedDisplayOnOff');
+		chkAttachedDisplayOnOff();
 	}
-	if ($_SESSION['extmeta'] == '1') {
-		//debugLog('15: updExtMetaFile');
-		updExtMetaFile();
+	if ($_SESSION['peppy_display'] == '1' && $_SESSION['scn_blank'] != 'off') {
+		//debugLog('** chkPeppyScnBlank');
+		chkPeppyScnBlank();
 	}
- 	if ($_SESSION['clkradio_mode'] == 'Clock Radio') {
-		//debugLog('16: chkClockRadio');
-		chkClockRadio();
+	// CoverView (as screen saver)
+	if ($_SESSION['scnsaver_timeout'] != 'Never') {
+		//debugLog('** chkScnSaver');
+		chkScnSaver();
 	}
- 	if ($_SESSION['clkradio_mode'] == 'Sleep Timer') {
-		//debugLog('17: chkSleepTimer');
-		chkSleepTimer();
-	}
-	if ($_SESSION['playhist'] == 'Yes') {
-		//debugLog('18: updPlayHistory');
-		updPlayHistory();
-	}
+
+	// Library update/regen
 	if ($GLOBALS['check_library_update'] == '1') {
-		//debugLog('19: chkLibraryUpdate');
+		//debugLog('** chkLibraryUpdate');
 		chkLibraryUpdate();
 	}
 	if ($GLOBALS['check_library_regen'] == '1') {
-		//debugLog('20: chkLibraryRegen');
+		//debugLog('** chkLibraryRegen');
 		chkLibraryRegen();
 	}
+
+	// Clock radio
+ 	if ($_SESSION['clkradio_mode'] == 'Clock Radio') {
+		//debugLog('** chkClockRadio');
+		chkClockRadio();
+	}
+ 	if ($_SESSION['clkradio_mode'] == 'Sleep Timer') {
+		//debugLog('** chkSleepTimer');
+		chkSleepTimer();
+	}
+
+	// Metadata file (now playing)
+	// NOTE: This function calls enhanceMetadata() and will reopen the session if it detects
+	// its been closed by engine-mpd.php call to enhanceMetadata().
+	if ($_SESSION['extmeta'] == '1') {
+		//debugLog('** updExtMetaFile');
+		updExtMetaFile();
+	}
+	// Play history log
+	if ($_SESSION['playhist'] == 'Yes') {
+		//debugLog('** updPlayHistory');
+		updPlayHistory();
+	}
+	// Special device handling
+	if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+		//debugLog('** updBoss2DopVolume');
+		updBoss2DopVolume();
+	}
+
+	// Maintenance
+	if ($_SESSION['maint_interval'] != 0) {
+		//debugLog('** chkMaintenance');
+		chkMaintenance();
+	}
+
+	// Run queued job (Config screens etc)
 	if ($_SESSION['w_active'] == 1 && $_SESSION['w_lock'] == 0) {
-		//debugLog('21: runQueuedJob: ' . $_SESSION['w_queue']);
+		//debugLog('** runQueuedJob: ' . $_SESSION['w_queue']);
 		runQueuedJob();
 	}
 
 	phpSession('close', '', '', ', caller: worker.php end of job loop');
+	//debugLog('End loop');
 }
 
 //----------------------------------------------------------------------------//
-// WORKER FUNCTIONS
+// FUNCTIONS CALLED IN THE WORKER POLLING LOOP
 //----------------------------------------------------------------------------//
 
-// Attached display on/off status
-function chkAttachedDisplayOnOff() {
-	$result = sysCmd('DISPLAY=:0 xset q | grep "Monitor" | awk \'{print $3}\'')[0];
-	$currentOnOff = $result == 'On' ? 'on' : 'off';
-	if ($_SESSION['local_display_onoff'] != $currentOnOff) {
-		$_SESSION['local_display_onoff'] = $currentOnOff;
-		sendFECmd('local_display_onoff,' . $currentOnOff);
-	}
-}
+// RENDERERS
 
-// WebUI CoverView screen saver
-// - Timeout is set
-// - No renderer is active
-// - MPD is not playing
-function chkScnSaver() {
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('worker: CRITICAL ERROR: chkScnSaver(): Connection to MPD failed');
-	} else {
-		$mpdState = getMpdStatus($sock)['state'];
-		closeMpdSock($sock);
-		if ($mpdState == 'play' && $_SESSION['scnsaver_whenplaying'] == 'No') {
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
-		}
-
-		if ($GLOBALS['scnsaver_timeout'] != 'Never'
-			&& chkRendererActive() === false
-			&& $_SESSION['rxactive'] == '0'
-			&& ($mpdState != 'play' || $_SESSION['scnsaver_whenplaying'] == 'Yes')) {
-			if ($GLOBALS['scnactive'] == '0') {
-				$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
-				if ($GLOBALS['scnsaver_timeout'] <= 0) {
-					$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-					$GLOBALS['scnactive'] = '1';
-					sendFECmd('scnactive1');
-				}
-			}
-		}
-		// DEBUG:
-		//workerLog($mpdState . ' | ' . $_SESSION['scnsaver_whenplaying'] . ' | ' . $GLOBALS['scnsaver_timeout'] . ' | ' . $GLOBALS['scnactive']);
-	}
-}
-
-// Peppy screen blank
-// - Timeout is set
-// - Peppy is on
-// - No renderer is active
-// - MPD is not playing
-function chkPeppyScnBlank() {
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('worker: CRITICAL ERROR: chkPeppyScnBlank(): Connection to MPD failed');
-	} else {
-		$mpdState = getMpdStatus($sock)['state'];
-		closeMpdSock($sock);
-		if ($mpdState == 'play') {
-			$GLOBALS['scn_blank_timeout'] = $_SESSION['scn_blank']; // Reset timeout
-		}
-
-		if ($GLOBALS['scn_blank_timeout'] != 'off'
-			&& chkRendererActive() === false
-			&& $_SESSION['rxactive'] == '0'
-			&& $mpdState != 'play') {
-			// This SQL value is set to '1' here and '0' in watchdog.sh wake_display()
-			$peppyScnBlankActive = sqlQuery("SELECT value FROM cfg_system WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh'])[0]['value'];
-			if ($peppyScnBlankActive == '0') {
-				$GLOBALS['scn_blank_timeout'] = $GLOBALS['scn_blank_timeout'] - (WORKER_SLEEP / 1000000);
-				if ($GLOBALS['scn_blank_timeout'] <= 0) {
-					$GLOBALS['scn_blank_timeout'] = $_SESSION['scn_blank']; // Reset timeout
-					// Turn screen off (HDMI or DSI port)
-					$connectedPort = sysCmd('DISPLAY=:0 xrandr --query | grep " connected" | cut -d" " -f1')[0];
-					sqlQuery("UPDATE cfg_system SET value='1' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
-					sysCmd('DISPLAY=:0 xrandr --output ' . $connectedPort . ' --off');
-					sysCmd('DISPLAY=:0 xset dpms force off');
-					// DEBUG:
-					//workerLog('DISPLAY=:0 xrandr --output ' . $connectedPort . ' --off');
-					//workerLog('DISPLAY=:0 xset dpms force off');
-				}
-			}
-		}
-	}
-}
-
-function chkMaintenance() {
-	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - (WORKER_SLEEP / 1000000);
-
-	if ($GLOBALS['maint_interval'] <= 0) {
-		// Clear logs
-		$result = sysCmd('/var/www/util/sysutil.sh "clear-syslogs"');
-		if (!empty($result)) {
-			workerLog('worker: Maintenance: WARNING: Problem clearing system logs');
-			workerLog('worker: Maintenance: ' . $result[0]);
-		}
-
-		// Compact SQLite database
-		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
-		if (!empty($result)) {
-			workerLog('worker: Maintenance: WARNING: Problem compacting SQLite database');
-			workerLog('worker: Maintenance: ' . $result[0]);
-		}
-
-		// Purge temp or unwanted resources
-		// - There shouldn't be any symlinks in the web root
-		sysCmd('find /var/www/ -type l -delete');
-		// - The only session file should be the one named sess_$_SESSION['sessionid']
-		purgeSessionFiles();
-		// - Reset maintenance interval
-		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
-
-		debugLog('Maintenance completed');
-	}
-}
-
+// Bluetooth
 function chkBtActive() {
 	if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='inpactive'", $GLOBALS['dbh']);
@@ -2184,7 +2097,7 @@ function chkBtActive() {
 		}
 	}
 }
-
+// AirPlay
 function chkAplActive() {
 	// Get directly from SQL since spspre.sh and spspost.sh scripts can't update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $GLOBALS['dbh']);
@@ -2204,7 +2117,7 @@ function chkAplActive() {
 		}
 	}
 }
-
+// Spotify Connect
 function chkSpotActive() {
 	// Get directly from SQL since spotevent.sh script can't update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='spotactive'", $GLOBALS['dbh']);
@@ -2224,7 +2137,7 @@ function chkSpotActive() {
 		}
 	}
 }
-
+// Deezer Connect (discontinued)
 function chkDeezActive() {
 	// Get directly from SQL since deezevent.sh script can't update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='deezactive'", $GLOBALS['dbh']);
@@ -2244,7 +2157,7 @@ function chkDeezActive() {
 		}
 	}
 }
-
+// Squeezelite
 function chkSlActive() {
 	// Get directly from sql since external slpower.sh script does not update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $GLOBALS['dbh']);
@@ -2263,7 +2176,7 @@ function chkSlActive() {
 		}
 	}
 }
-
+// Plexamp
 function chkPaActive() {
 	$result = sysCmd('pgrep -a node | grep plexamp');
 	if (!empty($result)) {
@@ -2290,7 +2203,7 @@ function chkPaActive() {
 		}
 	}
 }
-
+// Roonbridge
 function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
@@ -2322,7 +2235,6 @@ function chkRbActive() {
 		}
 	}
 }
-
 // Multiroom receiver
 function chkRxActive() {
 	$result = sysCmd('pgrep -c rx');
@@ -2335,7 +2247,7 @@ function chkRxActive() {
 		}
 	}
 }
-
+// Input select (Analog / S/PDIF)
 function chkInpActive() {
 	//$result = sysCmd('pgrep -l alsaloop');
 	//if (strpos($result[0], 'alsaloop') !== false) {
@@ -2357,136 +2269,139 @@ function chkInpActive() {
 	}
 }
 
-function updBoss2DopVolume () {
-	$masterVol = sysCmd('/var/www/util/sysutil.sh get-alsavol Master')[0];
-	$digitalVol = sysCmd('/var/www/util/sysutil.sh get-alsavol Digital')[0];
+// DISPLAYS
 
-	if ($digitalVol != $masterVol) {
-		sysCmd('amixer -c 0 sset Digital ' . $masterVol);
-		//workerLog('Boss 2 Digital volume sync');
+// Attached display on/off status
+function chkAttachedDisplayOnOff() {
+	$result = sysCmd('DISPLAY=:0 xset q | grep "Monitor" | awk \'{print $3}\'')[0];
+	$currentOnOff = $result == 'On' ? 'on' : 'off';
+	if ($_SESSION['local_display_onoff'] != $currentOnOff) {
+		$_SESSION['local_display_onoff'] = $currentOnOff;
+		sendFECmd('local_display_onoff,' . $currentOnOff);
 	}
 }
-
-function updExtMetaFile() {
-	$fileData = parseDelimFile(file_get_contents(CURRENTSONG_TXT), '=');
-
-	if ($GLOBALS['aplactive'] == '1') {
-		$renderer = 'AirPlay Active';
-	} else if ($GLOBALS['spotactive'] == '1') {
-		$renderer = 'Spotify Active';
-	} else if ($GLOBALS['deezactive'] == '1') {
-		$renderer = 'Deezer Active';
-	} else if ($GLOBALS['slactive'] == '1') {
-		$renderer = 'Squeezelite Active';
-	} else if ($GLOBALS['rbactive'] == '1') {
-		$renderer = 'Roonbridge Active';
-	} else if ($GLOBALS['inpactive'] == '1') {
-		$renderer = $_SESSION['audioin'] . ' Input Active';
-	} else if ($_SESSION['btactive'] == '1' && $_SESSION['audioout'] == 'Local') {
-		$renderer = 'Bluetooth Active';
+// Peppy screen blank
+// - Timeout is set
+// - Peppy is on
+// - No renderer is active
+// - MPD is not playing
+function chkPeppyScnBlank() {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkPeppyScnBlank(): Connection to MPD failed');
 	} else {
-		$renderer = '';
-	}
-
-	if (!empty($renderer)) {
-		//workerLog('worker: Renderer active');
-		$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
-		if ($hwParams['status'] == 'active') {
-			$hwParamsFormat = 'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, 2ch';
-			if ($GLOBALS['aplactive'] == '1') {
-				$rendererMeta = json_decode(file_get_contents(APLMETA_CACHE_FILE), true);
-			} else if ($GLOBALS['spotactive'] == '1') {
-				$rendererMeta = json_decode(file_get_contents(SPOTMETA_CACHE_FILE), true);
-			} else {
-				$rendererMeta = '';
-			}
-		} else if ($_SESSION['multiroom_tx'] == 'On') {
-			$hwParamsFormat = 'PCM 16/48 kHz, 2ch (Multiroom sender)';
-		} else {
-			$hwParamsFormat = 'Not playing';
+		$mpdState = getMpdStatus($sock)['state'];
+		closeMpdSock($sock);
+		if ($mpdState == 'play') {
+			$GLOBALS['scn_blank_timeout'] = $_SESSION['scn_blank']; // Reset timeout
 		}
 
-		if (
-			$fileData['file'] != $renderer ||
-			$fileData['outrate'] != $hwParamsFormat ||
-			(
-				($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1') &&
-				($fileData['title'] != $rendererMeta['title'] || $fileData['album'] != $rendererMeta['album'])
-			)
-		) {
-			//workerLog('worker: Update currentsong.txt file (Renderer)');
-			$fh = fopen(CURRENTSONG_TXT_TMP, 'w');
-			$data = 'file=' . $renderer . "\n";
-			if (!empty($rendererMeta)) {
-				//workerLog('worker: Add $rendererMeta');
-				//workerLog(print_r($rendererMeta ,true));
-				$data .= 'artist=' . $rendererMeta['artist'] . "\n";
-				$data .= 'album=' . $rendererMeta['album'] . "\n";
-				$data .= 'title=' . $rendererMeta['title'] . "\n";
-				$data .= 'coverurl=' . $rendererMeta['cover_url'] . "\n";
-				$sformat = explode(' ', $rendererMeta['sformat']);
-				$data .= 'encoded=' . $sformat[0] . "\n";
-				$data .= 'bitrate=' . $sformat[1] . "\n";
-			} else {
-				//workerLog('worker: $rendererMeta is empty');
-			}
-			$data .= 'outrate=' . $hwParamsFormat . "\n";
-			fwrite($fh, $data);
-			fclose($fh);
-			rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
-            chmod(CURRENTSONG_TXT, 0666);
-		}
-	} else {
-		//workerLog('worker: MPD active');
-		if (false === ($sock = openMpdSock('localhost', 6600))) {
-			workerLog('worker: CRITICAL ERROR: updExtMetaFile(): Connection to MPD failed');
-		} else {
-			$status = getMpdStatus($sock);
-			$current = enhanceMetadata($status, $sock, 'worker_php');
-			closeMpdSock($sock);
-			$volknob = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", $GLOBALS['dbh'])[0]['value'];
-			$volmute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $GLOBALS['dbh'])[0]['value'];
-
-			if (
-				$fileData['state'] != $current['state'] ||
-				$fileData['title'] != $current['title'] ||
-				$fileData['album'] != $current['album'] ||
-				$fileData['volume'] != $volknob ||
-				$fileData['mute'] != $_SESSION['volmute'] ||
-				$fileData['outrate'] != $current['output'] ||
-				$fileData['elapsed'] != $current['elapsed']
-			) {
-				//workerLog('worker: Update currentsong.txt file (MPD)');
-				$fh = fopen(CURRENTSONG_TXT_TMP, 'w');
-				// Default
-				$data = 'file=' . $current['file'] . "\n";
-				$data .= 'artist=' . $current['artist'] . "\n";
-				$data .= 'album=' . $current['album'] . "\n";
-				$data .= 'title=' . $current['title'] . "\n";
-				$data .= 'coverurl=' . $current['coverurl'] . "\n";
-				// Xtra tags
-				$data .= 'track=' . $current['track'] . "\n";
-				$data .= 'date=' . $current['date'] . "\n";
-				$data .= 'composer=' . $current['composer'] . "\n";
-				// Other
-				$data .= 'encoded=' . $current['encoded'] . "\n";
-				$data .= 'bitrate=' . $current['bitrate'] . "\n";
-				//$data .= 'outrate=' . $current['output'] . $hwParamsCalcrate . "\n"; ;
-				$data .= 'outrate=' . $current['output'] . "\n";
-				$data .= 'volume=' . $volknob . "\n";
-				$data .= 'mute=' . $volmute . "\n";
-				$data .= 'state=' . $current['state'] . "\n";
-				$data .= 'elapsed=' . $current['elapsed'] . "\n";
-				$data .= 'duration=' . $current['time'] . "\n";
-				fwrite($fh, $data);
-				fclose($fh);
-				rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
-	            chmod(CURRENTSONG_TXT, 0666);
+		if ($GLOBALS['scn_blank_timeout'] != 'off'
+			&& chkRendererActive() === false
+			&& $_SESSION['rxactive'] == '0'
+			&& $mpdState != 'play') {
+			// This SQL value is set to '1' here and '0' in watchdog.sh wake_display()
+			$peppyScnBlankActive = sqlQuery("SELECT value FROM cfg_system WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh'])[0]['value'];
+			if ($peppyScnBlankActive == '0') {
+				$GLOBALS['scn_blank_timeout'] = $GLOBALS['scn_blank_timeout'] - (WORKER_SLEEP / 1000000);
+				if ($GLOBALS['scn_blank_timeout'] <= 0) {
+					$GLOBALS['scn_blank_timeout'] = $_SESSION['scn_blank']; // Reset timeout
+					// Turn screen off (HDMI or DSI port)
+					$connectedPort = sysCmd('DISPLAY=:0 xrandr --query | grep " connected" | cut -d" " -f1')[0];
+					sqlQuery("UPDATE cfg_system SET value='1' WHERE param='peppy_scn_blank_active'", $GLOBALS['dbh']);
+					sysCmd('DISPLAY=:0 xrandr --output ' . $connectedPort . ' --off');
+					sysCmd('DISPLAY=:0 xset dpms force off');
+					// DEBUG:
+					//workerLog('DISPLAY=:0 xrandr --output ' . $connectedPort . ' --off');
+					//workerLog('DISPLAY=:0 xset dpms force off');
+				}
 			}
 		}
 	}
 }
+// WebUI CoverView screen saver
+// - Timeout is set
+// - No renderer is active
+// - MPD is not playing
+function chkScnSaver() {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkScnSaver(): Connection to MPD failed');
+	} else {
+		$mpdState = getMpdStatus($sock)['state'];
+		closeMpdSock($sock);
+		if ($mpdState == 'play' && $_SESSION['scnsaver_whenplaying'] == 'No') {
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
+		}
 
+		if ($GLOBALS['scnsaver_timeout'] != 'Never'
+			&& chkRendererActive() === false
+			&& $_SESSION['rxactive'] == '0'
+			&& ($mpdState != 'play' || $_SESSION['scnsaver_whenplaying'] == 'Yes')) {
+			if ($GLOBALS['scnactive'] == '0') {
+				$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - (WORKER_SLEEP / 1000000);
+				if ($GLOBALS['scnsaver_timeout'] <= 0) {
+					$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
+					$GLOBALS['scnactive'] = '1';
+					sendFECmd('scnactive1');
+				}
+			}
+		}
+		// DEBUG:
+		//workerLog($mpdState . ' | ' . $_SESSION['scnsaver_whenplaying'] . ' | ' . $GLOBALS['scnsaver_timeout'] . ' | ' . $GLOBALS['scnactive']);
+	}
+}
+
+// LIBRARY UPDATE / REGEN
+
+// Check for library update complete
+function chkLibraryUpdate() {
+	//workerLog('chkLibraryUpdate');
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkLibraryUpdate(): Connection to MPD failed');
+	} else {
+		$status = getMpdStatus($sock);
+		$stats = getLibraryStats($sock);
+		closeMpdSock($sock);
+
+		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_status'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		}
+
+		if (!isset($status['updating_db'])) {
+			sendFECmd('libupd_done');
+			$GLOBALS['check_library_update'] = '0';
+			workerLog('mpdindex: Done: indexed ' . $stats);
+			workerLog('worker: Job update_library done');
+		}
+	}
+}
+// Check for library regen complete
+function chkLibraryRegen() {
+	//workerLog('chkLibraryRegen');
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('worker: CRITICAL ERROR: chkLibraryRegen(): Connection to MPD failed');
+	} else {
+		$status = getMpdStatus($sock);
+		$stats = getLibraryStats($sock);
+		closeMpdSock($sock);
+
+		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_status'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		}
+
+		if (!isset($status['updating_db'])) {
+			sendFECmd('libregen_done');
+			$GLOBALS['check_library_regen'] = '0';
+			workerLog('mpdindex: Done: indexed ' . $stats);
+			workerLog('worker: Job regen_library done');
+		}
+	}
+}
+
+// CLOCK RADIO / SLEEP TIMER
+
+// Clock radio
 function chkClockRadio() {
 	$currentTime = date('h,i,A'); // HH,MM,AP
 	$currentDay = date('N') - 1; // 0-6 where 0 = Monday
@@ -2563,7 +2478,7 @@ function chkClockRadio() {
 		//workerLog('chkClockRadio(): stoptime global reloaded');
 	}
 }
-
+// Sleep timer
 function chkSleepTimer() {
 	$currentTime = date('h,i,A'); // HH,MM,AP
 	$currentDay = date('N') - 1; // 0-6 where 0 = Monday
@@ -2613,6 +2528,131 @@ function chkSleepTimer() {
 	}
 }
 
+// EXTERNAL FILES / DEVICES
+
+// Metadata file
+function updExtMetaFile() {
+	$fileData = parseDelimFile(file_get_contents(CURRENTSONG_TXT), '=');
+
+	if ($GLOBALS['aplactive'] == '1') {
+		$renderer = 'AirPlay Active';
+	} else if ($GLOBALS['spotactive'] == '1') {
+		$renderer = 'Spotify Active';
+	} else if ($GLOBALS['deezactive'] == '1') {
+		$renderer = 'Deezer Active';
+	} else if ($GLOBALS['slactive'] == '1') {
+		$renderer = 'Squeezelite Active';
+	} else if ($GLOBALS['rbactive'] == '1') {
+		$renderer = 'Roonbridge Active';
+	} else if ($GLOBALS['inpactive'] == '1') {
+		$renderer = $_SESSION['audioin'] . ' Input Active';
+	} else if ($_SESSION['btactive'] == '1' && $_SESSION['audioout'] == 'Local') {
+		$renderer = 'Bluetooth Active';
+	} else {
+		$renderer = '';
+	}
+
+	if (!empty($renderer)) {
+		//workerLog('worker: Renderer active');
+		$hwParams = getAlsaHwParams(getAlsaCardNumForDevice($_SESSION['adevname']));
+		if ($hwParams['status'] == 'active') {
+			$hwParamsFormat = 'PCM ' . $hwParams['format'] . '/' . $hwParams['rate'] . ' kHz, 2ch';
+			if ($GLOBALS['aplactive'] == '1') {
+				$rendererMeta = json_decode(file_get_contents(APLMETA_CACHE_FILE), true);
+			} else if ($GLOBALS['spotactive'] == '1') {
+				$rendererMeta = json_decode(file_get_contents(SPOTMETA_CACHE_FILE), true);
+			} else {
+				$rendererMeta = '';
+			}
+		} else if ($_SESSION['multiroom_tx'] == 'On') {
+			$hwParamsFormat = 'PCM 16/48 kHz, 2ch (Multiroom sender)';
+		} else {
+			$hwParamsFormat = 'Not playing';
+		}
+
+		if (
+			$fileData['file'] != $renderer ||
+			$fileData['outrate'] != $hwParamsFormat ||
+			(
+				($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1') &&
+				($fileData['title'] != $rendererMeta['title'] || $fileData['album'] != $rendererMeta['album'])
+			)
+		) {
+			//workerLog('worker: Update currentsong.txt file (Renderer)');
+			$fh = fopen(CURRENTSONG_TXT_TMP, 'w');
+			$data = 'file=' . $renderer . "\n";
+			if (!empty($rendererMeta)) {
+				//workerLog('worker: Add $rendererMeta');
+				//workerLog(print_r($rendererMeta ,true));
+				$data .= 'artist=' . $rendererMeta['artist'] . "\n";
+				$data .= 'album=' . $rendererMeta['album'] . "\n";
+				$data .= 'title=' . $rendererMeta['title'] . "\n";
+				$data .= 'coverurl=' . $rendererMeta['cover_url'] . "\n";
+				$sformat = explode(' ', $rendererMeta['sformat']);
+				$data .= 'encoded=' . $sformat[0] . "\n";
+				$data .= 'bitrate=' . $sformat[1] . "\n";
+			} else {
+				//workerLog('worker: $rendererMeta is empty');
+			}
+			$data .= 'outrate=' . $hwParamsFormat . "\n";
+			fwrite($fh, $data);
+			fclose($fh);
+			rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
+            chmod(CURRENTSONG_TXT, 0666);
+		}
+	} else {
+		//workerLog('worker: MPD active');
+		if (false === ($sock = openMpdSock('localhost', 6600))) {
+			workerLog('worker: CRITICAL ERROR: updExtMetaFile(): Connection to MPD failed');
+		} else {
+			$status = getMpdStatus($sock);
+			$current = enhanceMetadata($status, $sock, 'worker_php');
+
+			closeMpdSock($sock);
+
+			$volknob = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", $GLOBALS['dbh'])[0]['value'];
+			$volmute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $GLOBALS['dbh'])[0]['value'];
+
+			if (
+				$fileData['state'] != $current['state'] ||
+				$fileData['title'] != $current['title'] ||
+				$fileData['album'] != $current['album'] ||
+				$fileData['volume'] != $volknob ||
+				$fileData['mute'] != $_SESSION['volmute'] ||
+				$fileData['outrate'] != $current['output'] ||
+				$fileData['elapsed'] != $current['elapsed']
+			) {
+				//workerLog('worker: Update currentsong.txt file (MPD)');
+				$fh = fopen(CURRENTSONG_TXT_TMP, 'w');
+				// Default
+				$data = 'file=' . $current['file'] . "\n";
+				$data .= 'artist=' . $current['artist'] . "\n";
+				$data .= 'album=' . $current['album'] . "\n";
+				$data .= 'title=' . $current['title'] . "\n";
+				$data .= 'coverurl=' . $current['coverurl'] . "\n";
+				// Xtra tags
+				$data .= 'track=' . $current['track'] . "\n";
+				$data .= 'date=' . $current['date'] . "\n";
+				$data .= 'composer=' . $current['composer'] . "\n";
+				// Other
+				$data .= 'encoded=' . $current['encoded'] . "\n";
+				$data .= 'bitrate=' . $current['bitrate'] . "\n";
+				//$data .= 'outrate=' . $current['output'] . $hwParamsCalcrate . "\n"; ;
+				$data .= 'outrate=' . $current['output'] . "\n";
+				$data .= 'volume=' . $volknob . "\n";
+				$data .= 'mute=' . $volmute . "\n";
+				$data .= 'state=' . $current['state'] . "\n";
+				$data .= 'elapsed=' . $current['elapsed'] . "\n";
+				$data .= 'duration=' . $current['time'] . "\n";
+				fwrite($fh, $data);
+				fclose($fh);
+				rename(CURRENTSONG_TXT_TMP, CURRENTSONG_TXT);
+	            chmod(CURRENTSONG_TXT, 0666);
+			}
+		}
+	}
+}
+// Play history log
 function updPlayHistory() {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
 		workerLog('worker: CRITICAL ERROR: updPlayHistory(): Connection to MPD failed');
@@ -2697,126 +2737,51 @@ function updPlayHistory() {
 		}
 	}
 }
+// Allo Boss 2 (Sync DSP volume to PCM volume)
+function updBoss2DopVolume () {
+	$masterVol = sysCmd('/var/www/util/sysutil.sh get-alsavol Master')[0];
+	$digitalVol = sysCmd('/var/www/util/sysutil.sh get-alsavol Digital')[0];
 
-// Check for library update complete
-function chkLibraryUpdate() {
-	//workerLog('chkLibraryUpdate');
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('worker: CRITICAL ERROR: chkLibraryUpdate(): Connection to MPD failed');
-	} else {
-		$status = getMpdStatus($sock);
-		$stats = getLibraryStats($sock);
-		closeMpdSock($sock);
-
-		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
-		if ($_SESSION['mpd_dbupdate_status'] != 0) {
-			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
-		}
-
-		if (!isset($status['updating_db'])) {
-			sendFECmd('libupd_done');
-			$GLOBALS['check_library_update'] = '0';
-			workerLog('mpdindex: Done: indexed ' . $stats);
-			workerLog('worker: Job update_library done');
-		}
+	if ($digitalVol != $masterVol) {
+		sysCmd('amixer -c 0 sset Digital ' . $masterVol);
+		//workerLog('Boss 2 Digital volume sync');
 	}
 }
 
-// Check for library regen complete
-function chkLibraryRegen() {
-	//workerLog('chkLibraryRegen');
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('worker: CRITICAL ERROR: chkLibraryRegen(): Connection to MPD failed');
-	} else {
-		$status = getMpdStatus($sock);
-		$stats = getLibraryStats($sock);
-		closeMpdSock($sock);
+// MAINTENANCE TASK
 
-		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
-		if ($_SESSION['mpd_dbupdate_status'] != 0) {
-			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+// Miscellaneous cleanup
+function chkMaintenance() {
+	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - (WORKER_SLEEP / 1000000);
+
+	if ($GLOBALS['maint_interval'] <= 0) {
+		// Clear logs
+		$result = sysCmd('/var/www/util/sysutil.sh "clear-syslogs"');
+		if (!empty($result)) {
+			workerLog('worker: Maintenance: WARNING: Problem clearing system logs');
+			workerLog('worker: Maintenance: ' . $result[0]);
 		}
 
-		if (!isset($status['updating_db'])) {
-			sendFECmd('libregen_done');
-			$GLOBALS['check_library_regen'] = '0';
-			workerLog('mpdindex: Done: indexed ' . $stats);
-			workerLog('worker: Job regen_library done');
+		// Compact SQLite database
+		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
+		if (!empty($result)) {
+			workerLog('worker: Maintenance: WARNING: Problem compacting SQLite database');
+			workerLog('worker: Maintenance: ' . $result[0]);
 		}
+
+		// Purge temp or unwanted resources
+		// - There shouldn't be any symlinks in the web root
+		sysCmd('find /var/www/ -type l -delete');
+		// - The only session file should be the one named sess_$_SESSION['sessionid']
+		purgeSessionFiles();
+		// - Reset maintenance interval
+		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
+
+		debugLog('Maintenance completed');
 	}
 }
 
-// Clear MPD log
-function truncateMpdLog() {
-	sysCmd('truncate ' . MPD_LOG . ' --size 0');
-	$_SESSION['mpd_dbupdate_status'] = 0;
-}
-
-// Count number of lines in MPD log for database update or regen
-function countMpdLogLines() {
-	// update: added
-	// update: updating
-	// update: removing
-	$count = sysCmd('cat ' . MPD_LOG . ' | grep "update: added\|update: updating" | wc -l')[0];
-	return $count;
-}
-
-// Log info for the active interface (eth0 or wlan0)
-function logNetworkInfo($iFace) {
-	$ifaceName = $iFace == 'eth0' ? 'Ethernet: ' : 'Wireless: ';
-	$method = sqlQuery("SELECT method FROM cfg_network WHERE iface='" . $iFace . "'", $GLOBALS['dbh'])[0]['method'];
-	$secondaryDns = sqlQuery("SELECT secdns FROM cfg_network WHERE iface='" . $iFace . "'", $GLOBALS['dbh'])[0]['secdns'];
-	$domainName = sysCmd("cat /etc/resolv.conf | awk '/^search/ {print $2; exit}'")[0]; // First entry of possibly many
-	$primaryDns = sysCmd("cat /etc/resolv.conf | awk '/^nameserver/ {print $2; exit}'")[0]; // First entry of possibly many
-	$primaryDns = !empty($primaryDns) ? $primaryDns : 'none found';
-	$secondaryDns = !empty($secondaryDns) ? $secondaryDns : 'not set';
-	$domainName = !empty($domainName) ? $domainName : 'none found';
-
-	if ($_SESSION['apactivated'] === false) {
-		workerLog('worker: ' . $ifaceName . 'method  ' . $method);
-	}
- 	workerLog('worker: ' . $ifaceName . 'address ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $2}'")[0]);
-	workerLog('worker: ' . $ifaceName . 'netmask ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $4}'")[0]);
-	workerLog('worker: ' . $ifaceName . 'gateway ' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0]);
-	workerLog('worker: ' . $ifaceName . 'pri DNS ' . $primaryDns);
-	workerLog('worker: ' . $ifaceName . 'sec DNS ' . $secondaryDns);
-	workerLog('worker: ' . $ifaceName . 'domain  ' . $domainName);
-}
-
-function updaterAutoCheck($validIPAddress) {
-	if ($_SESSION['updater_auto_check'] == 'On') {
-		workerLog('worker: Software update:      Automatic check on');
-
-		if ($validIPAddress === true) {
-			workerLog('worker: Software update:      Checking for available update...');
-			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
-			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
-
-			if (false === ($availableDate = strtotime($available['Date']))) {
-				$msg = 'Invalid remote release date';
-			} else if (false === ($thisDate = strtotime($thisReleaseDate))) {
-				$msg = 'Invalid local release date ' . $thisReleaseDate;
-			} else if ($availableDate <= $thisDate) {
-				$msg = 'Software is up to date';
-			} else {
-				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
-			}
-			workerLog('worker: Software update:      ' . $msg);
-		} else {
-			$msg = 'No local IP address or Hotspot is on';
-			workerLog('worker: Software update:      Unable to check, ' . $msg);
-		}
-	} else {
-		$msg = 'Automatic check off';
-		workerLog('worker: Software update:      ' . $msg);
-	}
-
-	return $msg;
-}
-
-//----------------------------------------------------------------------------//
-// PROCESS SUBMITTED JOBS
-//----------------------------------------------------------------------------//
+// RUN QUEUED JOBS SUBMITTED BY CONFIG SCREENS / WEBUI
 
 function runQueuedJob() {
 	$_SESSION['w_lock'] = 1;
@@ -4009,4 +3974,74 @@ function runQueuedJob() {
 	$_SESSION['w_queueargs'] = '';
 	$_SESSION['w_lock'] = 0;
 	$_SESSION['w_active'] = 0;
+}
+
+//----------------------------------------------------------------------------//
+// VARIOUS HELPER FUNCTIONS
+//----------------------------------------------------------------------------//
+
+// Clear MPD log
+function truncateMpdLog() {
+	sysCmd('truncate ' . MPD_LOG . ' --size 0');
+	$_SESSION['mpd_dbupdate_status'] = 0;
+}
+// Count number of lines in MPD log for database update or regen
+function countMpdLogLines() {
+	// update: added
+	// update: updating
+	// update: removing
+	$count = sysCmd('cat ' . MPD_LOG . ' | grep "update: added\|update: updating" | wc -l')[0];
+	return $count;
+}
+// Log info for the active interface (eth0 or wlan0)
+function logNetworkInfo($iFace) {
+	$ifaceName = $iFace == 'eth0' ? 'Ethernet: ' : 'Wireless: ';
+	$method = sqlQuery("SELECT method FROM cfg_network WHERE iface='" . $iFace . "'", $GLOBALS['dbh'])[0]['method'];
+	$secondaryDns = sqlQuery("SELECT secdns FROM cfg_network WHERE iface='" . $iFace . "'", $GLOBALS['dbh'])[0]['secdns'];
+	$domainName = sysCmd("cat /etc/resolv.conf | awk '/^search/ {print $2; exit}'")[0]; // First entry of possibly many
+	$primaryDns = sysCmd("cat /etc/resolv.conf | awk '/^nameserver/ {print $2; exit}'")[0]; // First entry of possibly many
+	$primaryDns = !empty($primaryDns) ? $primaryDns : 'none found';
+	$secondaryDns = !empty($secondaryDns) ? $secondaryDns : 'not set';
+	$domainName = !empty($domainName) ? $domainName : 'none found';
+
+	if ($_SESSION['apactivated'] === false) {
+		workerLog('worker: ' . $ifaceName . 'method  ' . $method);
+	}
+ 	workerLog('worker: ' . $ifaceName . 'address ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $2}'")[0]);
+	workerLog('worker: ' . $ifaceName . 'netmask ' . sysCmd("ifconfig " . $iFace . " | awk 'NR==2{print $4}'")[0]);
+	workerLog('worker: ' . $ifaceName . 'gateway ' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0]);
+	workerLog('worker: ' . $ifaceName . 'pri DNS ' . $primaryDns);
+	workerLog('worker: ' . $ifaceName . 'sec DNS ' . $secondaryDns);
+	workerLog('worker: ' . $ifaceName . 'domain  ' . $domainName);
+}
+// Automatic check for system updates
+function updaterAutoCheck($validIPAddress) {
+	if ($_SESSION['updater_auto_check'] == 'On') {
+		workerLog('worker: Software update:      Automatic check on');
+
+		if ($validIPAddress === true) {
+			workerLog('worker: Software update:      Checking for available update...');
+			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
+			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
+
+			if (false === ($availableDate = strtotime($available['Date']))) {
+				$msg = 'Invalid remote release date';
+			} else if (false === ($thisDate = strtotime($thisReleaseDate))) {
+				$msg = 'Invalid local release date ' . $thisReleaseDate;
+			} else if ($availableDate <= $thisDate) {
+				$msg = 'Software is up to date';
+			} else {
+				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
+			}
+			workerLog('worker: Software update:      ' . $msg);
+		} else {
+			$msg = 'No local IP address or Hotspot is on';
+			workerLog('worker: Software update:      Unable to check, ' . $msg);
+		}
+	} else {
+		$msg = 'Automatic check off';
+		workerLog('worker: Software update:      ' . $msg);
+	}
+
+	return $msg;
 }
