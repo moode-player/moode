@@ -9,16 +9,17 @@
 if [ -z $1 ]; then WATCHDOG_SLEEP=6; else WATCHDOG_SLEEP=$1; fi
 
 PHP_VER="8.4"
+SQLDB=/var/local/www/db/moode-sqlite3.db
 
 # NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool
 FPM_MAX_LIMIT=64
 FPM_MIN_LIMIT=32
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-MPD_RUNNING=$(pgrep -c -x mpd)
-TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
-LIBRESPOT_RUNNING=$(pgrep -c -x librespot)
-SQLDB=/var/local/www/db/moode-sqlite3.db
+MPD_RUNNING=$(pgrep -c -x "mpd")
+SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
+AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
+TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 
 message_log () {
 	TIME=$(date +'%Y%m%d %H%M%S')
@@ -76,13 +77,49 @@ while true; do
 		counter=0
 		while [ $counter -lt 3 ]; do
 			sleep 1
-			MPD_RUNNING=$(pgrep -c -x mpd)
+			MPD_RUNNING=$(pgrep -c -x "mpd")
 			if [[ $MPD_RUNNING != 0 ]]; then break; fi
 			((counter++))
 		done
 		if [[ $MPD_RUNNING = 0 ]]; then
-			message_log "CRITICAL ERROR: Started MPD after crash detected"
+			message_log "CRITICAL ERROR: Restarted MPD after crash detected"
 			systemctl start mpd
+		fi
+	fi
+
+	# AirPlay
+	AIRPLAY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='airplaysvc'")
+	if [[ $AIRPLAY_SVC = "1" ]]; then
+		if [[ $AIRPLAY_RUNNING = 0 ]]; then
+			counter=0
+			while [ $counter -lt 3 ]; do
+				sleep 1
+				AIRPLAY_RUNNING=$(pgrep -c -x "shairport-sync")
+				if [[ $AIRPLAY_RUNNING != 0 ]]; then break; fi
+				((counter++))
+			done
+			if [[ $AIRPLAY_RUNNING = 0 ]]; then
+				message_log "CRITICAL ERROR: Restarted AirPlay after crash detected"
+				moodeutl -R --airplay
+			fi
+		fi
+	fi
+
+	# Spotify Connect
+	SPOTIFY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
+	if [[ $SPOTIFY_SVC = "1" ]]; then
+		if [[ $SPOTIFY_RUNNING = 0 ]]; then
+			counter=0
+			while [ $counter -lt 3 ]; do
+				sleep 1
+				SPOTIFY_RUNNING=$(pgrep -c -x librespot)
+				if [[ $SPOTIFY_RUNNING != 0 ]]; then break; fi
+				((counter++))
+			done
+			if [[ $SPOTIFY_RUNNING = 0 ]]; then
+				message_log "CRITICAL ERROR: Restarted Spotify Connect after crash detected"
+				moodeutl -R --spotify
+			fi
 		fi
 	fi
 
@@ -93,31 +130,13 @@ while true; do
 			counter=0
 			while [ $counter -lt 3 ]; do
 				sleep 1
-				TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
+				TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 				if [[ $TRX_RUNNING != 0 ]]; then break; fi
 				((counter++))
 			done
 			if [[ $TRX_RX_RUNNING = 0 ]]; then
-				message_log "CRITICAL ERROR: Started Multiroom receiver after crash detected"
+				message_log "CRITICAL ERROR: Restarted Multiroom receiver after crash detected"
 				/var/www/util/trx-control.php -rx On
-			fi
-		fi
-	fi
-
-	# Spotify Connect
-	SPOTIFY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
-	if [[ $SPOTIFY_SVC = "1" ]]; then
-		if [[ $LIBRESPOT_RUNNING = 0 ]]; then
-			counter=0
-			while [ $counter -lt 3 ]; do
-				sleep 1
-				LIBRESPOT_RUNNING=$(pgrep -c -x librespot)
-				if [[ $LIBRESPOT_RUNNING != 0 ]]; then break; fi
-				((counter++))
-			done
-			if [[ $LIBRESPOT_RUNNING = 0 ]]; then
-				message_log "CRITICAL ERROR: Started Spotify Connect after crash detected"
-				moodeutl -R --spotify
 			fi
 		fi
 	fi
@@ -161,8 +180,9 @@ while true; do
 
 	sleep $WATCHDOG_SLEEP
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-	MPD_RUNNING=$(pgrep -c -x mpd)
-	TRX_RX_RUNNING=$(pgrep -c -x trx-rx)
-	LIBRESPOT_RUNNING=$(pgrep -c -x librespot)
+	MPD_RUNNING=$(pgrep -c -x "mpd")
+	SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
+	AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
+	TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 
 done > /dev/null 2>&1 &
