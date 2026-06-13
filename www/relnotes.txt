@@ -23,8 +23,10 @@ Updates
 - UPD: Ignore first wake touch on attached displays
 - UPD: Refactor openMpdSock() error branches
 - UPD: Add MPD socket count to moodeutl -m
+- UPD: Add AirPlay (shairport-sync) to watchdog crash monitoring
 
 Bug fixes
+- FIX: Session file prematurely closed when metadata file is on
 - FIX: PeppyMeter misses pipe data when manually switching stations/tracks
 - FIX: JSON parse error when Spotify metadata contains embedded double quotes
 
