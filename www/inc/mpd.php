@@ -701,6 +701,8 @@ function setMpdIgnore($ignore, $fileType) {
 
 // Create enhanced MPD metadata
 function enhanceMetadata($current, $sock, $caller = '') {
+	//debugLog('enhanceMetadata(BEG): caller=' . $caller . ' ' .
+	//	(session_status() == 0 ? 'PHP_SESSION_DISABLED' : (session_status() == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
 	// NOTE: $current is output from getMpdStatus() in engine-mpd.php
 	$song = getCurrentSong($sock);
 	$current['file'] = $song['file'];
@@ -719,8 +721,10 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
+		// Both these functions perform phpSession('open_ro');
 		$current['cover_art_hash'] = getCoverHash($current['file']);
 		$current['mapped_db_vol'] = getMappedDbVol();
+		//debugLog('enhanceMetadata(): ' . $caller . ' OPEN_RO session');
 	}
 
 	if ($current['file'] == null) {
@@ -741,9 +745,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			phpSession('open');
 			$_SESSION['currentfile'] = $current['file'];
 			$_SESSION['currentencoded'] = $current['encoded'];
-			if ($caller == 'engine_mpd_php') {
-				phpSession('close');
-			}
+			phpSession('close');
 		} else {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
@@ -800,6 +802,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				if ($current['title'] != DEFAULT_STATION_NAME) {
 					if ($_SESSION['radio_track_covers'] == 'Yes') {
 						if ($current['state'] == 'play') {
+							// NOTE: This function performs phpSession('open_ro') or phpSession(open) / phpSession(close)
 							$trackCoverUrl = getTrackCoverUrl($current['title']);
 							if (str_contains($trackCoverUrl, 'https://')) {
 								$current['coverurl'] = $trackCoverUrl;
@@ -885,6 +888,15 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 		// ALSA output format (or 'Not playing')
 		$current['output'] = getALSAOutputFormat($current['state'], $current['audio_sample_rate']);
+	}
+
+	// Compensates for updExtMetaFile() calling this function from worker polling loop
+	if ($caller == 'worker_php' && session_status() != PHP_SESSION_ACTIVE) {
+		phpSession('open');
+		//debugLog('enhanceMetadata(END): caller=' . $caller . ' REOPEN session');
+	} else {
+		//debugLog('enhanceMetadata(END): caller=' . $caller . ' ' .
+		//	(session_status() == 0 ? 'PHP_SESSION_DISABLED' : (session_status() == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
 	}
 
 	return $current;
