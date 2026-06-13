@@ -103,7 +103,7 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 			break;
 		case 'open':
 			if (session_start() === false) {
-				debugLog('phpSession(start): session_start() failed');
+				debugLog('phpSession(open): session_start() failed');
 				return false;
 			} else {
 				return true;
@@ -114,6 +114,7 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 				debugLog('phpSession(close): session_write_close() failed' . $caller);
 				return false;
 			} else {
+				//debugLog('phpSession(close): session_write_close() success' . $caller);
 				return true;
 			}
 			break;
