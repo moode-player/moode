@@ -16,7 +16,7 @@
 ################################################################################
 
 Packages
-- PKG: Bump to Linux kernel 6.18.33
+- PKG: Bump to Linux kernel 6.18.34
 
 Updates
 - UPD: Include elapsed and duration in currentsong.txt
