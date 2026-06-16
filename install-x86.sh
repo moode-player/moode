@@ -416,6 +416,7 @@ CDSP_VER="4.1.3"
 case "$(dpkg --print-architecture)" in
 	amd64) CDSP_ASSET="camilladsp-linux-amd64.tar.gz" ;;
 	arm64) CDSP_ASSET="camilladsp-linux-aarch64.tar.gz" ;;
+	armhf) CDSP_ASSET="camilladsp-linux-armv7.tar.gz" ;;   # 32-bit ARM SBCs (e.g. Allwinner H3, Cortex-A7)
 	*)     CDSP_ASSET="" ;;
 esac
 
