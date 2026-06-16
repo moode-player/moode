@@ -505,9 +505,18 @@ HOSTNAME=`uname -n`
 HDWRREV=$(moodeutl -d -gv hdwrrev)
 RASPIOS_VER=`/var/www/util/sysutil.sh "get-osinfo" | awk '{print $2" " $3" " $4}'`
 KERNEL_VER=`/var/www/util/sysutil.sh "get-osinfo" | awk '{print $7" " $8}'`
-SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
+if [ -e /proc/device-tree/compatible ]; then
+	SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
+else
+	# Generic non-Pi platform (x86/other): no device-tree, use CPU model name
+	SOC=`awk -F': ' '/model name/{print $2; exit}' /proc/cpuinfo`
+fi
 CORES=`grep -c ^processor /proc/cpuinfo`
-[ $(uname -m) = "aarch64" ] && ARCH="aarch64 (64-bit)" || ARCH="armhf (32-bit)"
+case $(uname -m) in
+	aarch64) ARCH="aarch64 (64-bit)" ;;
+	x86_64)  ARCH="x86_64 (64-bit)" ;;
+	*)       ARCH="armhf (32-bit)" ;;
+esac
 HOME_DIR=$(ls /home/)
 # Similar to moodeutl
 MEM_TOTAL=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -553,9 +562,16 @@ fi
 TMP=$(moodeutl -d -gv nginx_https_only)
 [[ "$TMP" = "1" ]] && HTTPS_MODE="On" || HTTPS_MODE="Off"
 
-ROOTSIZE=$(lsblk -n -o FSSIZE /dev/disk/by-label/rootfs | awk '{print $1}')
-ROOTUSED=$(lsblk -n -o FSUSED /dev/disk/by-label/rootfs | awk '{print $1}')
-ROOTAVAIL=$(lsblk -n -o FSAVAIL /dev/disk/by-label/rootfs | awk '{print $1}')
+# Pi images label the root partition 'rootfs'; on other platforms (x86/Armbian)
+# that label is absent, so fall back to the actual mounted root device.
+if [ -b /dev/disk/by-label/rootfs ]; then
+	ROOT_DEV=/dev/disk/by-label/rootfs
+else
+	ROOT_DEV=$(findmnt -n -o SOURCE / 2>/dev/null)
+fi
+ROOTSIZE=$(lsblk -n -o FSSIZE "$ROOT_DEV" 2>/dev/null | awk 'NR==1{print $1}')
+ROOTUSED=$(lsblk -n -o FSUSED "$ROOT_DEV" 2>/dev/null | awk 'NR==1{print $1}')
+ROOTAVAIL=$(lsblk -n -o FSAVAIL "$ROOT_DEV" 2>/dev/null | awk 'NR==1{print $1}')
 
 HDMI="On"
 
@@ -564,19 +580,33 @@ UPTIME="$(uptime -p)"
 
 [[ $(cat /proc/cpuinfo | grep 'Revision' | cut -f 2 -d " ") == 2* ]] && WARRANTY=void || WARRANTY=OK
 
-TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
-THROTTLED_BITMASK=`vcgencmd get_throttled | cut -d"=" -f2`
+if [ -e /sys/class/thermal/thermal_zone0/temp ]; then
+	TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+else
+	TEMP="n/a"
+fi
+# vcgencmd (throttling/under-voltage) is Raspberry Pi only; report n/a elsewhere
+if command -v vcgencmd > /dev/null 2>&1; then
+	THROTTLED_BITMASK=`vcgencmd get_throttled | cut -d"=" -f2`
+else
+	THROTTLED_BITMASK="n/a"
+fi
 THROTTLED_TEXT=""
-if [[ $THROTTLED_BITMASK == "0x0" ]]; then THROTTLED_TEXT="No throttling has occurred"; fi
-if (( ($THROTTLED_BITMASK & 0x1) )); then THROTTLED_TEXT="Under-voltage detected, "; fi
-if (( ($THROTTLED_BITMASK & 0x2) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Arm frequency capped, "; fi
-if (( ($THROTTLED_BITMASK & 0x4) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Currently throttled, "; fi
-if (( ($THROTTLED_BITMASK & 0x8) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Soft temperature limit active, "; fi
-if (( ($THROTTLED_BITMASK & 0x10000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Under-voltage has occurred, "; fi
-if (( ($THROTTLED_BITMASK & 0x20000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Arm frequency capping has occurred, "; fi
-if (( ($THROTTLED_BITMASK & 0x40000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Throttling has occurred, "; fi
-if (( ($THROTTLED_BITMASK & 0x80000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Soft temperature limit has occurred"; fi
-THROTTLED_TEXT=${THROTTLED_TEXT%, }
+if [[ $THROTTLED_BITMASK == "n/a" ]]; then
+	# Non-Pi platform: no vcgencmd throttling data available
+	THROTTLED_TEXT="n/a"
+else
+	if [[ $THROTTLED_BITMASK == "0x0" ]]; then THROTTLED_TEXT="No throttling has occurred"; fi
+	if (( ($THROTTLED_BITMASK & 0x1) )); then THROTTLED_TEXT="Under-voltage detected, "; fi
+	if (( ($THROTTLED_BITMASK & 0x2) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Arm frequency capped, "; fi
+	if (( ($THROTTLED_BITMASK & 0x4) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Currently throttled, "; fi
+	if (( ($THROTTLED_BITMASK & 0x8) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Soft temperature limit active, "; fi
+	if (( ($THROTTLED_BITMASK & 0x10000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Under-voltage has occurred, "; fi
+	if (( ($THROTTLED_BITMASK & 0x20000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Arm frequency capping has occurred, "; fi
+	if (( ($THROTTLED_BITMASK & 0x40000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Throttling has occurred, "; fi
+	if (( ($THROTTLED_BITMASK & 0x80000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Soft temperature limit has occurred"; fi
+	THROTTLED_TEXT=${THROTTLED_TEXT%, }
+fi
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
@@ -1031,13 +1061,15 @@ value=$(moodeutl -d -gv external_antenna)
 [[ "$value" = "1" ]] && external_antenna="On" || external_antenna="Off"
 
 # Misc settings
-modprobe configs
+# Kernel HZ from /proc/config.gz. The 'configs' module exposes it on Pi kernels;
+# it is typically absent on x86 kernels, so probe quietly and fall back.
+modprobe configs 2>/dev/null
 test -f /proc/config.gz && {
 	HZ=$(zcat /proc/config.gz | grep "^CONFIG_HZ=" | cut -f 2 -d "=")
 } || {
 	HZ="No /proc/config.gz"
 }
-rmmod configs
+rmmod configs 2>/dev/null
 
 #
 # Generate output

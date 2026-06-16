@@ -918,7 +918,14 @@ function setDisplay($argv) {
  			if ($peppyOn == '1' && $set2webui == '1') {
 				$process = $_SESSION['peppy_display_type'] == 'meter' ? 'peppymeter.py' : 'spectrum.py';
 				sysCmd('pkill -f ' . $process . ' > /dev/null 2>&1');
-				$result = sysCmdStr('pgrep -c chromium-browse');
+				// Fast switch: if the WebUI browser is still alive under Peppy, just
+				// reveal it (no display restart). The browser process is named
+				// 'chromium-browser' on the Pi but 'chromium' on Debian x86; the
+				// original 'chromium-browse' pattern reports 0 on x86 -> a needless
+				// `systemctl restart localdisplay` (the screen reboots on every
+				// Peppy->WebUI touch). The substring 'chromium' matches both, so the
+				// alive/not-alive result is identical on the Pi.
+				$result = sysCmdStr('pgrep -c chromium');
 				if ($result == 0) {
 					sysCmd('systemctl restart localdisplay');
 				}

@@ -221,12 +221,12 @@ if [[ $1 = "get-osinfo" ]]; then
 	if [[ "$RPIOS_MVER" == "12" ]]; then RPIOS_NAME="Bookworm"; fi
 	if [[ "$RPIOS_MVER" == "13" ]]; then RPIOS_NAME="Trixie"; fi
 	if [[ "$RPIOS_MVER" == "14" ]]; then RPIOS_NAME="Forky"; fi
-	RPIOS_ARCH=$(dpkg -l | grep nano | awk '{print $4}')
-	if [ $RPIOS_ARCH = "arm64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
+	RPIOS_ARCH=$(dpkg --print-architecture)
+	if [ "$RPIOS_ARCH" = "arm64" ] || [ "$RPIOS_ARCH" = "amd64" ]; then RPIOS_BITS="64-bit"; else RPIOS_BITS="32-bit"; fi
 	# Linux info
 	if [ "$RPIOS_MVER" -lt "12" ]; then KERNEL_VER=$(uname -r | cut -d "-" -f 1); else KERNEL_VER=$(uname -v | cut -d ":" -f 2 | cut -d "-" -f 1); fi
 	KERNEL_ARCH=$(uname -m)
-	if [ $KERNEL_ARCH = "aarch64" ]; then KERNEL_BITS="64-bit"; else KERNEL_BITS="32-bit"; fi
+	if [ "$KERNEL_ARCH" = "aarch64" ] || [ "$KERNEL_ARCH" = "x86_64" ]; then KERNEL_BITS="64-bit"; else KERNEL_BITS="32-bit"; fi
 
 	echo "RPiOS: $RPIOS_VER $RPIOS_NAME $RPIOS_BITS | Linux: $KERNEL_VER $KERNEL_BITS"
 fi

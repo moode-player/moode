@@ -114,18 +114,24 @@ if ($userId != NO_USERID_DEFINED) {
 	}
 
 	// CRITICAL: Check boot config.txt
-	$status = chkBootConfigTxt();
-	if ($status == 'Required headers present') {
-		workerLog('worker: Boot config:   ok');
-	} else if ($status == 'Required header missing') {
-		sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
-		workerLog('worker: CRITICAL ERROR: Boot config is missing required headers');
-		workerLog('worker: WARNING: Default boot config restored');
-		workerLog('worker: WARNING: Restart required');
-	} else if ($status == 'Main header missing') {
-		// First boot import
-		sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
-		sysCmd('reboot');
+	// Pi-only: /boot/firmware/config.txt and its dtoverlay/dtparam directives do
+	// not exist on generic x86/other platforms, so skip the check there.
+	if (isPi()) {
+		$status = chkBootConfigTxt();
+		if ($status == 'Required headers present') {
+			workerLog('worker: Boot config:   ok');
+		} else if ($status == 'Required header missing') {
+			sysCmd('cp /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+			workerLog('worker: CRITICAL ERROR: Boot config is missing required headers');
+			workerLog('worker: WARNING: Default boot config restored');
+			workerLog('worker: WARNING: Restart required');
+		} else if ($status == 'Main header missing') {
+			// First boot import
+			sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+			sysCmd('reboot');
+		}
+	} else {
+		workerLog('worker: Boot config:   n/a (non-Pi platform)');
 	}
 }
 
@@ -357,7 +363,11 @@ workerLog('worker: HDMI ports(s): on');
 if (!isset($_SESSION['led_state'])) {
 	$_SESSION['led_state'] = '1,1';
 }
-if ($_SESSION['pi_modelnum'] <= 1 || $_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
+if (!isPi()) {
+	// Generic non-Pi platform (x86/other): no Pi sysclass LED entries to control
+	workerLog('worker: Sys LED0:      n/a (non-Pi platform)');
+	workerLog('worker: Sys LED1:      n/a (non-Pi platform)');
+} else if ($_SESSION['pi_modelnum'] <= 1 || $_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 	// Pi boards w/o a sysclass entry for LED1
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
 	sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
@@ -686,7 +696,9 @@ workerLog('worker: Audio device:  ' . $_SESSION['cardnum'] . ':' . $_SESSION['ad
 if (!isset($_SESSION['alsa_empty_retry'])) {
 	$_SESSION['alsa_empty_retry'] = 12; // Default = 1 minute (12 x 5 sec sleep)
 }
-$maxLoops = $_SESSION['alsa_empty_retry'];
+// On non-Pi platforms the configured Pi device (default "Pi HDMI 1") will never
+// appear, so skip the retry window instead of stalling startup for a minute.
+$maxLoops = isPi() ? $_SESSION['alsa_empty_retry'] : 1;
 $sleepTime = 5;
 for ($i = 0; $i < $maxLoops; $i++) {
 	$actualCardNum = getAlsaCardNumForDevice($_SESSION['adevname']);
@@ -699,7 +711,8 @@ for ($i = 0; $i < $maxLoops; $i++) {
 }
 
 // Configure audio device
-if ($actualCardNum == ALSA_EMPTY_CARD) {
+$noAudioDevice = false;
+if ($actualCardNum == ALSA_EMPTY_CARD && isPi()) {
 	workerLog('worker: ALSA card:     is empty, reconfigure to HDMI 1');
 	$hdmi1CardNum = getAlsaCardNumForDevice(PI_HDMI1);
 	$devCache = checkOutputDeviceCache(PI_HDMI1, $hdmi1CardNum);
@@ -712,6 +725,33 @@ if ($actualCardNum == ALSA_EMPTY_CARD) {
 	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
 	updMpdConf();
 	workerLog('worker: MPD config:    updated');
+} else if ($actualCardNum == ALSA_EMPTY_CARD) {
+	// Non-Pi (x86/other): the Pi HDMI default does not exist here. Auto-select the
+	// first real ALSA card if one is present (e.g. a USB DAC); otherwise leave the
+	// output unset for the user to pick in the UI. Never force a Pi device, which
+	// would stall MPD startup waiting on a non-existent output.
+	$deviceNames = getAlsaDeviceNames();
+	$pickNum = ALSA_EMPTY_CARD;
+	$pickName = '';
+	foreach ($deviceNames as $num => $name) {
+		if ($name != ALSA_EMPTY_CARD && $name != ALSA_LOOPBACK_DEVICE && $name != ALSA_DUMMY_DEVICE) {
+			$pickNum = $num;
+			$pickName = $name;
+			break;
+		}
+	}
+	if ($pickNum != ALSA_EMPTY_CARD) {
+		phpSession('write', 'adevname', $pickName);
+		phpSession('write', 'cardnum', $pickNum);
+		sqlUpdate('cfg_mpd', $dbh, 'device', $pickNum);
+		phpSession('write', 'alsa_output_mode', 'plughw');
+		updMpdConf();
+		sysCmd('systemctl restart mpd');
+		workerLog('worker: ALSA card:     auto-selected ' . $pickName . ' (card ' . $pickNum . ')');
+	} else {
+		$noAudioDevice = true;
+		workerLog('worker: ALSA card:     no audio device found; output left unset');
+	}
 } else if ($actualCardNum == $_SESSION['cardnum']) {
 	workerLog('worker: ALSA card:     has not been reassigned');
 	if (isHDMIDevice($_SESSION['adevname'])) {
@@ -748,6 +788,22 @@ workerLog('worker: ALSA mixer:    ' . ($_SESSION['amixname'] == 'none' ? 'none e
 if ($_SESSION['amixname'] != 'none') {
 	sysCmd('alsactl clean ' . $_SESSION['cardnum'] . ' "name=\'' . $_SESSION['amixname'] . '\'"');
 	sysCmd('alsactl store ' . $_SESSION['cardnum']);
+}
+// Non-Pi: reconcile an invalid Hardware mixer_type. On x86 the worker may
+// auto-select a USB DAC (the Pi HDMI default does not exist), and after
+// --reset-db the seeded Pi default mixer_type is "hardware". A DAC with no
+// ALSA volume control (amixname == none) cannot do hardware volume: the UI
+// suppresses the Hardware option and silently shows Software, while mpd.conf
+// keeps "hardware" so the volume knob reads 0. Downgrade to software so the
+// stored value matches what the device can actually do. isPi()-guarded so Pi
+// behaviour is byte-identical (on the Pi the UI always sets this via the
+// output-device cache, so the case does not arise there).
+if (!isPi() && $_SESSION['amixname'] == 'none' && $_SESSION['mpdmixer'] == 'hardware') {
+	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', 'software');
+	phpSession('write', 'mpdmixer', 'software');
+	updMpdConf();
+	sysCmd('systemctl restart mpd');
+	workerLog('worker: MPD mixer:     card has no hardware volume; mixer_type -> software');
 }
 // HDMI mixer initialize (after first boot a test signal needs to be sent to "register" the mixer with ALSA)
 if ($_SESSION['alsa_output_mode'] == 'iec958') {
@@ -933,6 +989,15 @@ if (!isset($_SESSION['mpd_httpd_local_audio'])) {
 }
 
 // Start MPD
+// On non-Pi platforms with no audio hardware at all, MPD cannot open a real
+// ALSA device and exits 1, which would crash-loop the worker before it reaches
+// the job loop (leaving the session half-written and jobs unprocessed). Point
+// the ALSA _audioout at the built-in null PCM so MPD starts cleanly; selecting a
+// real output later in the UI reconfigures the device normally.
+if ($noAudioDevice) {
+	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"null\"/' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+	workerLog('worker: MPD output:          no audio device, ALSA _audioout -> null');
+}
 sysCmd("systemctl start mpd");
 workerLog('worker: MPD service:        started');
 $sock = openMpdSock('localhost', 6600);
@@ -1289,7 +1354,8 @@ if ($statusTx == 'started') {
 }
 
 // Start GPIO button handler
-if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
+// Pi-only: GPIO buttons require Pi GPIO pins (handler uses lgpio), absent on x86
+if (isPi() && ($_SESSION['feat_bitmask'] & FEAT_GPIO)) {
 	if (!isset($_SESSION['gpio_svc'])) {
 		$_SESSION['gpio_svc'] = '0';
 	}
@@ -1382,7 +1448,13 @@ workerLog('worker: --');
 
 // Attached display
 // Set symlink chromium -> chromium-browser v126
-sysCmd('ln -s /usr/bin/chromium-browser /usr/local/bin/chromium');
+if (isPi()) {
+	sysCmd('ln -s /usr/bin/chromium-browser /usr/local/bin/chromium');
+} else {
+	// Debian/x86 ships the binary as /usr/bin/chromium (already in PATH); keep the
+	// /usr/local/bin/chromium alias the launcher expects, created idempotently.
+	sysCmd('ln -sf /usr/bin/chromium /usr/local/bin/chromium');
+}
 // Reapply service file and xinitrc user settings
 // - UserID
 sysCmd("sed -i '/User=/c \User=" . $_SESSION['user_id'] . "' /lib/systemd/system/localdisplay.service");
@@ -1519,21 +1591,23 @@ if (!isset($_SESSION['rotaryenc'])) {
 	$_SESSION['rotaryenc'] = '0';
 }
 sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
-if ($_SESSION['rotaryenc'] == '1') {
+// Pi-only: rotary encoder is wired to Pi GPIO pins (rotenc.py uses lgpio)
+if (isPi() && $_SESSION['rotaryenc'] == '1') {
 	sysCmd('systemctl start rotenc');
 }
-workerLog('worker: Rotary encoder:   ' . ($_SESSION['rotaryenc'] == '1' ? 'on' : 'off'));
+workerLog('worker: Rotary encoder:   ' . (!isPi() ? 'n/a (non-Pi platform)' : ($_SESSION['rotaryenc'] == '1' ? 'on' : 'off')));
 workerLog('worker: Encoder params:   ' . $_SESSION['rotenc_params']);
 // GPIO buttons
 workerLog('worker: GPIO buttons:     ' . ($_SESSION['gpio_svc'] == '1' ? 'on' : 'off'));
 // Start LCD updater engine
+// Pi-only: char/graphic LCDs are driven over Pi GPIO/I2C, absent on x86
 if (!isset($_SESSION['lcdup'])) {
 	$_SESSION['lcdup'] == '0';
 }
-if ($_SESSION['lcdup'] == '1') {
+if (isPi() && $_SESSION['lcdup'] == '1') {
 	startLcdUpdater();
 }
-workerLog('worker: LCD updater:      ' . ($_SESSION['lcdup'] == '1' ? 'on' : 'off'));
+workerLog('worker: LCD updater:      ' . (!isPi() ? 'n/a (non-Pi platform)' : ($_SESSION['lcdup'] == '1' ? 'on' : 'off')));
 
 // CoverView toggle state
 if (!isset($_SESSION['toggle_coverview'])) {
@@ -3324,7 +3398,12 @@ function runQueuedJob() {
 		case 'install_spotify':
 		case 'install_qobuz':
 			// Log file and plugin type
-			$fullLog = $_SESSION['home_dir'] . '/' . $_SESSION['w_queue'] . '.log';
+			// On the Pi the worker runs as root and writes this convenience log to the
+			// player's home. On Debian x86 it runs as www-data (to share the PHP session
+			// with php-fpm) and cannot create files in the 0700 home, which would make the
+			// redirect abort the whole command. Use a www-data-writable dir there. The
+			// summary log (PLUGIN_LOG) is unaffected.
+			$fullLog = (isPi() ? $_SESSION['home_dir'] : '/var/local/www') . '/' . $_SESSION['w_queue'] . '.log';
 			$types = array('install_airplay' => 'airplay', 'install_spotify' => 'spotify-connect', 'install_qobuz' => 'qobuz-connect');
 			$type = $types[$_SESSION['w_queue']];
 			// Install plugin

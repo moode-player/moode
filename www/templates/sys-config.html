@@ -9,7 +9,7 @@
 	<h1 class="sys-config">System</h1>
 
 	<form class="form-horizontal" method="post" enctype="multipart/form-data">
-		<div class="control-group">
+		<div class="control-group $_swupdate_hide">
 			<legend>Software update</legend>
 			<p class="sub-legend">
 				This release is: $_this_mooderel
@@ -188,6 +188,7 @@
 				</span>
 			</div>
 
+			<div class="$_powermgmt_hide">
 			<div class="config-horiz-rule">Power management</div>
 
 			<div class="$_reduce_power_hide">
@@ -226,17 +227,19 @@
 	            </div>
 			</div>
 
-			<label class="control-label">LED0 (Activity)</label>
-			<div class="controls">
-				<div class="toggle">
-					<label class="toggle-radio toggle-actled" for="toggle-actled-2">ON </label>$_select[actled_on]
-					<label class="toggle-radio toggle-actled" for="toggle-actled-1">OFF</label>$_select[actled_off]
-				</div>
-				<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-actled" class="config-help-info">
-					Turn the activity LED flashing for SDCard (mmc0) on/off.
+			<div class="$_actled_hide">
+				<label class="control-label">LED0 (Activity)</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-actled" for="toggle-actled-2">ON </label>$_select[actled_on]
+						<label class="toggle-radio toggle-actled" for="toggle-actled-1">OFF</label>$_select[actled_off]
+					</div>
+					<button id="btn-set-actled" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_actled" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+					<span id="info-actled" class="config-help-info">
+						Turn the activity LED flashing for SDCard (mmc0) on/off.
                 </span>
+				</div>
 			</div>
 
 			<div class="$_pwrled_hide">
@@ -253,6 +256,7 @@
                     </span>
 				</div>
 			</div>
+			</div><!-- /$_powermgmt_hide -->
 
 			<div class="config-horiz-rule">Networking</div>
 
@@ -324,6 +328,8 @@
 					If this occurs try setting the option to IPv4-only which can eliminate the second advertized host.
 				</span>
 			</div>
+			<!-- External antenna: Pi CM4/CM5 only (U.FL on the compute module); hidden off the Pi -->
+			<div class="$_external_antenna_hide">
 			<label class="control-label">External antenna</label>
 			<div class="controls">
 				<div class="toggle">
@@ -336,6 +342,7 @@
 					The antenna supports dual-band Wi-Fi and attaches to the U.FL connector on CM4 or CM5 compute modules.
 				</span>
 			</div>
+			</div><!-- /$_external_antenna_hide -->
 		</div>
 
 		<div class="control-group">
@@ -581,6 +588,10 @@
 		<div class="control-group">
 			<legend>Logs</legend>
 
+			<!-- Log to RAM (log2ram): Pi-only - the package mounts /var/log on tmpfs to
+			     spare the SD card and is not installed on x86 (disk-based), so hide it
+			     off the Pi (toggling it would systemctl enable a non-existent unit). -->
+			<div class="$_log2ram_hide">
 			<label class="control-label">Log to RAM</label>
 			<div class="controls">
 				<div class="toggle">
@@ -595,6 +606,7 @@
 			</div>
 
 			<div class="config-horiz-rule"></div>
+			</div><!-- /$_log2ram_hide -->
 
 			<label class="control-label">Startup log</label>
 			<div class="controls">

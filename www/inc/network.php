@@ -15,8 +15,20 @@ function cfgNetworks() {
 	// Purge existing connections
 	sysCmd('rm -f /etc/NetworkManager/system-connections/*');
 
+	// The worker writes these keyfiles directly. On the Pi it runs as root and can
+	// write the root-owned NM dir; off the Pi it runs as www-data, which cannot, so
+	// stage the files in a www-data-writable temp dir and sudo-install them into the
+	// real dir at the end (NM ignores keyfiles that are not root-owned 0600).
+	$nmDir = '/etc/NetworkManager/system-connections';
+	$stageDir = $nmDir;
+	if (!isPi()) {
+		$stageDir = '/tmp/moode-nmconn';
+		sysCmd('rm -rf ' . $stageDir);
+		mkdir($stageDir, 0700, true);
+	}
+
 	// Ethernet
-	$fh = fopen('/etc/NetworkManager/system-connections/Ethernet.nmconnection', 'w');
+	$fh = fopen($stageDir . '/Ethernet.nmconnection', 'w');
 	$data  = "#########################################\n";
 	$data .= "# This file is managed by moOde          \n";
 	$data .= "# Ethernet                               \n";
@@ -39,7 +51,7 @@ function cfgNetworks() {
 
 	// Wireless: Configured SSID
 	if (!empty($cfgNetwork[1]['wlanssid']) && $cfgNetwork[1]['wlanssid'] != 'Activate Hotspot') {
-		$fh = fopen('/etc/NetworkManager/system-connections/' . $cfgNetwork[1]['wlanssid'] . '.nmconnection', 'w');
+		$fh = fopen($stageDir . '/' .$cfgNetwork[1]['wlanssid'] . '.nmconnection', 'w');
 		$data  = "#########################################\n";
 		$data .= "# This file is managed by moOde          \n";
 		$data .= "# Wireless: Configured SSID              \n";
@@ -75,7 +87,7 @@ function cfgNetworks() {
 	// Wireless: Saved SSID(s) if any
 	$cfgSSID = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . SQLite3::escapeString($cfgNetwork[1]['wlanssid']) . "'", $dbh);
 	foreach($cfgSSID as $row) {
-		$fh = fopen('/etc/NetworkManager/system-connections/' . $row['ssid'] . '.nmconnection', 'w');
+		$fh = fopen($stageDir . '/' .$row['ssid'] . '.nmconnection', 'w');
 		$data  = "#########################################\n";
 		$data .= "# This file is managed by moOde          \n";
 		$data .= "# Wireless: Saved SSID                   \n";
@@ -111,7 +123,7 @@ function cfgNetworks() {
 	}
 
 	// Wireless: Hotspot
-	$fh = fopen('/etc/NetworkManager/system-connections/Hotspot.nmconnection', 'w');
+	$fh = fopen($stageDir . '/Hotspot.nmconnection', 'w');
 	$data  = "#########################################\n";
 	$data .= "# This file is managed by moOde          \n";
 	$data .= "# Wireless: Hotspot                      \n";
@@ -141,6 +153,12 @@ function cfgNetworks() {
 	fwrite($fh, $data);
 	fclose($fh);
 
+	// x86/other: the keyfiles were staged as www-data; install them into the
+	// root-owned NM dir as root:root 0600 (the Pi wrote them there directly).
+	if (!isPi()) {
+		sysCmd('install -m 600 -o root -g root ' . $stageDir . '/*.nmconnection ' . $nmDir . '/ 2>/dev/null');
+		sysCmd('rm -rf ' . $stageDir);
+	}
 	// Set permissions
 	sysCmd('chmod 0600 /etc/NetworkManager/system-connections/*');
 	// Set regulatory domain

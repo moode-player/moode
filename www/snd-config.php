@@ -469,8 +469,14 @@ if (!empty($cfgAudioDev['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $
 	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
 	$_driveropt_btn_disable = 'disabled';
 }
+// I2S DAC HAT section (Named I2S device, DT overlay, driver/chip options):
+// Pi-only, depends on GPIO/I2S and config.txt dtoverlays. Hidden on generic
+// x86/other platforms which use USB/HDMI/onboard audio via the Output device list.
+$_i2s_section_hide = isPi() ? '' : 'hide';
 // Integrated audio
-$_pi_audio_driver_hide = $_SESSION['pi_modelnum'] >= 5 ? 'hide' : '';
+// Pi-only on-chip audio driver (KMS vs BCM2835 firmware). Hidden on Pi 5 (no
+// firmware mode) and on non-Pi platforms.
+$_pi_audio_driver_hide = (!isPi() || $_SESSION['pi_modelnum'] >= 5) ? 'hide' : '';
 $_select['pi_audio_driver'] .= "<option value=\"" . PI_VC4_KMS_V3D . "\" " . (($_SESSION['pi_audio_driver'] == PI_VC4_KMS_V3D) ? "selected" : "") . ">Kernel mode (Default)</option>\n";
 $_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($_SESSION['pi_audio_driver'] == PI_SND_BCM2835) ? "selected" : "") . ">Firmware mode (Legacy)</option>\n";
 

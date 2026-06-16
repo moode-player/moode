@@ -411,6 +411,9 @@ $_select['hdmi_enable_4kp60_on']  .= "<input type=\"radio\" name=\"hdmi_enable_4
 $_select['hdmi_enable_4kp60_off'] .= "<input type=\"radio\" name=\"hdmi_enable_4kp60\" id=\"toggle-hdmi-enable-4kp60-2\" value=\"off\" " . (($_SESSION['hdmi_enable_4kp60'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // DSI displays (Pi Touch1/Touch2)
+// Pi-only: the DSI ribbon connector and the Pi Touch panels exist only on the
+// Raspberry Pi. Hide the whole section on generic x86/other platforms.
+$_feat_dsi = isPi() ? '' : 'hide';
 
 $_dsi_ctl_disable = $_SESSION['dsi_scn_type'] == 'none' ? 'disabled' : '';
 // NOTE: The option 'none' is used in xinitrc to determine whether HDMI or DSI configuration is used
@@ -455,15 +458,20 @@ $_select['usb_volknob_on']  .= "<input type=\"radio\" name=\"usb_volknob\" id=\"
 $_select['usb_volknob_off'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle-usb-volknob-2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // Rotary encoder
+// Pi-only: wired to Pi GPIO pins. Hidden on generic x86/other platforms.
+$_feat_rotaryenc = isPi() ? '' : 'hide';
 $autoClick = " onchange=\"autoClick('#btn-set-rotaryenc');\"";
 $_select['rotaryenc_on']  .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rotaryenc_off'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggle-rotaryenc-2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rotenc_params'] = $_SESSION['rotenc_params'];
 
 // OTHER PERIPHERALS
+// GPIO buttons and LCD updater both require Pi GPIO/I2C, absent on x86/other.
+// Hide the whole section there so no empty legend remains.
+$_feat_other_peripherals = isPi() ? '' : 'hide';
 
 // GPIO buttons
-if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
+if (isPi() && ($_SESSION['feat_bitmask'] & FEAT_GPIO)) {
 	$_feat_gpio = '';
 	$autoClick = " onchange=\"autoClick('#btn-set-gpio-svc');\"";
 	$_select['gpio_svc_on']  .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle-gpio-svc-1\" value=\"1\" " . (($_SESSION['gpio_svc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";

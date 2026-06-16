@@ -365,6 +365,19 @@ function chkRendererActive() {
 	return $active;
 }
 
+// Platform detection
+// Returns true when running on Raspberry Pi hardware, false on generic x86/other
+// platforms. A Pi exposes a "Revision" line in /proc/cpuinfo; generic PCs do not.
+// Used to skip Pi-only boot/hardware logic (config.txt overlays, vcgencmd, GPIO
+// HATs, LED/fan control) so the same codebase runs on Pi, x86 and other SBCs.
+function isPi() {
+	static $isPi = null;
+	if ($isPi === null) {
+		$isPi = trim(shell_exec("awk -F': ' '/^Revision/{print \$2}' /proc/cpuinfo")) !== '';
+	}
+	return $isPi;
+}
+
 // Get Pi revision code information
 function getPiRev($option = '--all') {
 	// Returns a tab delimited string for --all
@@ -401,6 +414,9 @@ function getHdwrRevShort() {
 
 	if ($type == 'CM3+') {
 		$str = 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]';
+	} else if ($type == 'PC') {
+		// Generic non-Pi platform (x86/other): no "Pi-" prefix
+		$str = 'PC ' . $mem;
 	} else {
 		$str = 'Pi-' . $type . ' ' . $rev . ' ' . $mem;
 	}
@@ -694,6 +710,12 @@ function chkBootConfigTxt() {
 }
 
 function updBootConfigTxt($action, $value) {
+	// Pi-only: /boot/firmware/config.txt (dtoverlay/dtparam, including I2S audio
+	// overlays) does not exist on generic x86/other platforms. No-op there so all
+	// callers (audio device, fan, HDMI, display, etc.) are safe on any platform.
+	if (!isPi()) {
+		return;
+	}
 	switch ($action) {
 		case 'upd_audio_overlay':
 			// $value: #dtoverlay=none or dtoverlay=actual_overlay
