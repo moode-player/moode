@@ -17,3 +17,5 @@ __MACOSX
 /www/index.html
 /logs
 /other/camilladsp/camilladsp.dev/*
+# Claude Code agent working dir (memory, settings) - never publish
+/.claude/

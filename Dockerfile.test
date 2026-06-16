@@ -1,0 +1,25 @@
+# Test harness image for install-x86.sh: Debian 13 (Trixie) running systemd as
+# PID 1 so the installer's `systemctl enable --now` calls work as on a real box.
+# Not a production image — for validating the x86 port in a disposable container.
+FROM debian:13
+
+ENV container=docker
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Minimal base: systemd + the few tools the harness itself needs. install-x86.sh
+# installs the actual moOde dependencies (nginx, php, mpd, ...) at run time, so
+# we deliberately do NOT pre-install them here — that is part of what we test.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        systemd systemd-sysv dbus \
+        sudo procps curl ca-certificates iproute2 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install-x86.sh preflight requires a normal login user at UID 1000 (the player
+# user, as on a fresh Debian install).
+RUN useradd -m -u 1000 -s /bin/bash moode
+
+# Drop container-useless units that would just log failures.
+RUN systemctl mask getty@.service console-getty.service systemd-firstboot.service || true
+
+STOPSIGNAL SIGRTMIN+3
+ENTRYPOINT ["/sbin/init"]
