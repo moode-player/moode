@@ -105,12 +105,13 @@ if (isset($sock) && $sock !== false) {
 }
 
 function searchMpdDb($sock, $querytype, $query = '') {
+	// DEBUG:
 	//workerLog($querytype . ', ' . $query);
 	switch ($querytype) {
 		// List a database path
 		case 'lsinfo':
 			if (!empty($query)){
-				sendMpdCmd($sock, 'lsinfo "' . html_entity_decode($query) . '"');
+				sendMpdCmd($sock, 'lsinfo "' . escapeDblQuotes(html_entity_decode($query)) . '"');
 				break;
 			}
 			else {

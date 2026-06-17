@@ -2016,7 +2016,7 @@ function renderFolderView(data, path, searchstr) {
                 rootFolderIcon = getKeyOrValue('value', data[i].directory);
             }
             var cueVirtualDir = false;
-    		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
+    		output += '<li id="db-' + (i + 1) + '" data-path="' + encodeHTMLEntities(data[i].directory) + '">';
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
             output += path == '' ?  '<i class="fa-solid fa-sharp ' + rootFolderIcon + ' icon-root"></i></a></div>' :
@@ -2033,7 +2033,7 @@ function renderFolderView(data, path, searchstr) {
     	else if (data[i].playlist && !cueVirtualDir) {
     		// NOTE: Skip wavpack since it may contain embedded playlist and they are not supported yet in Folder view
     		if (data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase() != 'wv') {
-    			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
+    			output += '<li id="db-' + (i + 1) + '" data-path="' + encodeHTMLEntities(data[i].playlist) + '">';
     			output += '<div class="db-icon db-action">';
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-root">';
     			output += '<i class="fa-solid fa-sharp fa-list-music icon-root"></i></a></div>';
@@ -2044,7 +2044,7 @@ function renderFolderView(data, path, searchstr) {
         else if (data[i].file && !cueVirtualDir) {
             if (data[(i > 1 ? i - 1 : 0)].Album != data[i].Album || (i == 0 && data[i].Album)) {
                 // Album header
-    			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">';
+    			output += '<li id="db-' + i + '" data-path="' + encodeHTMLEntities(data[i].file.substr(0, data[i].file.lastIndexOf('/'))) + '">';
     			output += '<div class="db-icon db-action">';
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
 
@@ -2060,7 +2060,7 @@ function renderFolderView(data, path, searchstr) {
             }
     		if (data[i].Title) {
                 // Song file
-    			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">';
+    			output += '<li id="db-' + (i + 1) + '" data-path="' + encodeHTMLEntities(data[i].file) + '">';
     			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
                 output += (data[i].Track ? data[i].Track : "•") + '</a>';
@@ -2072,7 +2072,7 @@ function renderFolderView(data, path, searchstr) {
     		}
     		else {
                 // Playlist item
-    			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">';
+    			output += '<li id="db-' + (i + 1) + '" data-path="' + encodeHTMLEntities(data[i].file) + '">';
     			if (data[i].file.substr(data[i].file.lastIndexOf('.') + 1).toLowerCase() == 'cue') {
                     var itemType = 'CUE sheet';
     				output += '<div class="db-icon db-song db-browse db-action">';

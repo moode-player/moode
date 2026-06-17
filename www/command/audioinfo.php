@@ -19,7 +19,7 @@ switch ($_GET['cmd']) {
 		break;
 	case 'track_info':
 		$sock = getMpdSock('command/audioinfo.php');
-		sendMpdCmd($sock,'lsinfo "' . $_GET['path'] .'"');
+		sendMpdCmd($sock,'lsinfo "' . escapeDblQuotes($_GET['path']) .'"');
 		echo json_encode(parseTrackInfo(readMpdResp($sock)));
 		break;
 	default:

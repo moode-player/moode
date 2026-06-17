@@ -84,7 +84,7 @@ function addItemToQueue($path) {
 		$cmd = 'add';
 	}
 
-	return $cmd . ' "' . html_entity_decode($path) . '"';
+	return $cmd . ' "' . escapeDblQuotes(html_entity_decode($path)) . '"';
 }
 
 function isSavedPlaylist($path) {
@@ -110,7 +110,7 @@ function addGroupToQueue($songs) {
 	$cmds = array();
 
 	foreach ($songs as $song) {
-		array_push($cmds, 'add "' . html_entity_decode($song) . '"');
+		array_push($cmds, 'add "' . escapeDblQuotes(html_entity_decode($song)) . '"');
 	}
 
 	return $cmds;

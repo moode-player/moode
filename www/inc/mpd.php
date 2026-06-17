@@ -864,7 +864,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				$format[1] = $result[0]; // bits
 				$format[2] = $result[2]; // channels
 			} else { // Song file
-				sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
+				sendMpdCmd($sock, 'lsinfo "' . escapeDblQuotes($song['file']) . '"');
     			$songData = parseDelimFile(readMpdResp($sock), ': ');
 				// [0] rate, [1] bits, [2] channels
 				$format = explode(':', $songData['Format']);
@@ -1156,4 +1156,8 @@ function parseDir($path) {
 	}
 
 	return $result;
+}
+
+function escapeDblQuotes($path) {
+	return str_replace('"', '\"', $path);
 }

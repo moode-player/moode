@@ -234,7 +234,7 @@ function getPlaylistContents($plName) {
 					$line2 = 'Radio Station';
 				} else {
 					// Song file
-					sendMpdCmd($sock, 'lsinfo "' . $item . '"');
+					sendMpdCmd($sock, 'lsinfo "' . escapeDblQuotes($item) . '"');
 					$tags = parseDelimFile(readMpdResp($sock), ': ');
 					$name = $tags['Title'] ? $tags['Title'] : 'Unknown title';
 					$line2 = ($tags['Album'] ? $tags['Album'] : 'Unknown album') . ' - ' .

@@ -2809,7 +2809,7 @@ function runQueuedJob() {
 			workerLog('worker: Truncate MPD log');
 			truncateMpdLog();
 			// Update library
-			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
+			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . escapeDblQuotes(html_entity_decode($_SESSION['w_queueargs'])) . '"';
 			workerLog('mpdindex: Cmd (' . $cmd . ')');
 			workerLog('mpdindex: Scanning');
 			if (false === ($sock = openMpdSock('localhost', 6600))) {

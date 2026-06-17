@@ -589,7 +589,7 @@ function getLibraryStats($sock) {
 	$albumKeys = array();
 	foreach ($fileList as $file) {
 		// Albums
-		sendMpdCmd($sock, 'lsinfo "' . $file . '"');
+		sendMpdCmd($sock, 'lsinfo "' . escapeDblQuotes($file) . '"');
 		$tags = parseLsinfoAsArray(readMpdResp($sock));
 		// get the track path (the albums might be differentiated by that) - also by MUSICBRAINZ tags, so mybe there is room for improvement...
 		$apath = explode("/", $file);
@@ -866,7 +866,7 @@ function getMpdFormatTag($file) {
 		workerLog('CRITICAL ERROR: getMpdFormatTag(): Connection to MPD failed');
 		return 'CRITICAL ERROR';
 	} else {
-		sendMpdCmd($sock, 'lsinfo "' . $file . '"');
+		sendMpdCmd($sock, 'lsinfo "' . escapeDblQuotes($file) . '"');
 		$trackData = parseDelimFile(readMpdResp($sock), ': ');
 		closeMpdSock($sock);
 		return $trackData['Format'];

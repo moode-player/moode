@@ -123,7 +123,7 @@ switch ($_GET['cmd']) {
 	case 'play_group':
 	case 'play_group_next':
     	// Search the Queue for the group
-		sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
+		sendMpdCmd($sock, 'lsinfo "' . escapeDblQuotes($_POST['path'][0]) . '"');
 		$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
 		$result = findInQueue($sock, 'album', $album);
 		$last = count($_POST['path']) - 1;
