@@ -16,8 +16,8 @@
 ################################################################################
 
 Bug fixes
-- FIX: Folder view not handling folder names with embedded quotes
-- FIX: Clock radio sends play comand before setting volume
+- FIX: Folder view not handling directory names with embedded quotes
+- FIX: Clock radio sends play command before setting volume
 
 ################################################################################
 #
