@@ -84,6 +84,14 @@ for arg in "$@"; do
 	esac
 done
 
+# Mirror the whole run to a log file beside the script (discoverable - it sits in the
+# clone dir, typically under the player's home - rather than in /var/log, which holds
+# moOde's RUNTIME logs (moode*.log), not this installer's output). Still prints to the
+# terminal via tee. Override the path with INSTALL_LOG=/path ./install-x86.sh.
+INSTALL_LOG="${INSTALL_LOG:-$REPO_DIR/install.log}"
+exec > >(tee "$INSTALL_LOG") 2>&1
+printf '\033[1;32m==>\033[0m install log: %s (%s)\n' "$INSTALL_LOG" "$(date '+%Y-%m-%d %H:%M:%S')"
+
 #----------------------------------------------------------------------------#
 # Phase 0 - Preflight checks
 #----------------------------------------------------------------------------#

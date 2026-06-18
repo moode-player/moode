@@ -99,7 +99,10 @@ sudo ./install-x86.sh --reset-db
 - `--reset-db` creates a fresh config database (use it on a first install).
 - It then installs packages and builds moOde's patched binaries (mpd, caps,
   squeezelite, peppyalsa…) from source, so the whole run takes several minutes.
-- Full log: `/var/log/install-x86.log`.
+- Full log: `install.log`, written next to the script in your clone directory (the
+  whole run is mirrored there as well as to the terminal; override with
+  `INSTALL_LOG=/path sudo ./install-x86.sh …`). Note `/var/log/moode.log` is a
+  different file — moOde's **runtime** log, written by the worker once it starts.
 - It is **re-runnable**; drop `--reset-db` to keep your settings on later runs.
 
 When it finishes, reboot once:
@@ -181,7 +184,12 @@ touch the database; never pass `--reset-db` for an update).
   module out-of-tree against your kernel and install it via DKMS:
 
   ```bash
-  sudo apt install dkms linux-headers-$(uname -r)   # Armbian: linux-headers-current-<family>
+  # Debian x86 - the headers package is named by kernel release:
+  sudo apt install dkms linux-headers-$(uname -r)
+  # Armbian - the headers package is NOT named by `uname -r`; derive it from
+  # /etc/armbian-release as linux-headers-${BRANCH}-${LINUXFAMILY}
+  # (e.g. linux-headers-current-sunxi64 on the Orange Pi 3 LTS / H6):
+  . /etc/armbian-release && sudo apt install dkms "linux-headers-${BRANCH}-${LINUXFAMILY}"
   V=$(awk '/^VERSION/{a=$3}/^PATCHLEVEL/{b=$3}/^SUBLEVEL/{c=$3}END{print a"."b"."c}' \
         /lib/modules/$(uname -r)/build/Makefile)     # e.g. 6.18.33
   S=/usr/src/hid-multitouch-backport-$V; sudo mkdir -p "$S"; cd "$S"
