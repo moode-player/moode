@@ -117,6 +117,17 @@
 			</div>
 
 			<div>
+				<a href="#analyze-database" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Analyze</button></a>
+				<span class="config-btn-after">Music database</span>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-analyze-database" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-analyze-database" class="config-help-info">
+					This process analyses the Music database to produce accurate artist/album/track counts.<br>
+					<b>Note:</b> This can take a while if there are a large number of number of tracks.
+				</span>
+				$_mpd_db_stats
+			</div>
+
+			<div>
 				<a href="#clear-libcache" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
 				<span class="config-btn-after">Library tag cache</span>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-libcache" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
@@ -202,6 +213,21 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="regen_library" value="novalue">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="analyze-database" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="analyze-database-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Analyze Music Database?</h3>
+		</div>
+		<div class="modal-body">
+			<h4>This can take a while if there are a large number of number of tracks.</h4>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="analyze_mpd_db" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>

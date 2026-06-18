@@ -577,52 +577,58 @@ function getAlbumYear($trackData) {
 	return $albumYear;
 }
 
+// Analyze the MPD database and produce artist/album/track counts
 function getLibraryStats($sock) {
 	// Generate the file list
 	$fileList = sysCmd("mpc search '(Title !=\"\")'");
 
-	// Scan the list and generate counts
+	// Initialize counts
 	$trackCount = 0;
 	$albumCount = 0;
 	$artistCount = 0;
 	$artists = array();
 	$albumKeys = array();
+
+	// Scan the file list and generate the counts
 	foreach ($fileList as $file) {
-		// Albums
 		sendMpdCmd($sock, 'lsinfo "' . escapeDblQuotes($file) . '"');
 		$tags = parseLsinfoAsArray(readMpdResp($sock));
-		// get the track path (the albums might be differentiated by that) - also by MUSICBRAINZ tags, so mybe there is room for improvement...
-		$apath = explode("/", $file);
-		$removeFromHere = -1; // remove the filename
-		if (str_ends_with($apath[count($apath) - 2], ".cue") == true) {
-			$removeFromHere = -2; // remove the cue filename
-		}
-		array_splice($apath, $removeFromHere);
-		$albumPath = join("/", $apath);
 
+		// ALBUMS: Accumulate unique album keys
+		// AlbumPath (to accurately differentiate albums)
+		$aPath = explode("/", $file);
+		$removeFromHere = -1; // Remove the filename
+		if (str_ends_with($aPath[count($aPath) - 2], ".cue") == true) {
+			$removeFromHere = -2; // Remove the cue filename
+		}
+		array_splice($aPath, $removeFromHere);
+		$albumPath = join("/", $aPath);
+		// Album and AlbumArtist
 		$album = $tags['Album'] ? $tags['Album'] : 'Unknown Album';
 		$albumartist = $tags['AlbumArtist'] ? $tags['AlbumArtist'] :
 			($tags['Artist'] ? (count($tags['Artist']) == 1 ? $tags['Artist'][0] :
 			'Unknown AlbumArtist') : 'Unknown AlbumArtist');
+		// Create unique album keys
+		$albumKey = $album . '@' . $albumartist . '@' . $albumPath;
+		if  (!in_array($albumKey, $albumKeys)) {
+			array_push($albumKeys, $albumKey);
+		}
 
-		// Accumulate artists (unique)
+		// ARTISTS: Accumulate unique artists
 		foreach($tags['Artist'] as $artist) {
 			if  (!in_array($artist, $artists)) {
 				array_push($artists, $artist);
 			}
 		}
 
-		// Create unique album keys
-		$albumKey = $album . '@' . $albumartist . '@' . $albumPath;
-		if  (!in_array($albumKey, $albumKeys)) {
-			array_push($albumKeys, $albumKey);
-		}
-		// Tracks
-		$trackCount++;
+		// TRACKS: File count
+		$tCount++;
 	}
 
+	// Final counts
 	$artistCount = count($artists);
 	$albumCount = count($albumKeys);
+	$trackCount = $tCount;
 
 	// Return counts as a formatted string
 	return 'Artists:' . $artistCount . ' Albums:' . $albumCount . ' Tracks:' . $trackCount;

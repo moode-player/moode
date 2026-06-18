@@ -144,6 +144,7 @@ if (file_exists(BOOT_DIR . '/.fseventsd')) {
 }
 // - Delete session vars that have been removed or renamed
 $sessionVars = array(
+	'mpd_dbupdate_status'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -912,9 +913,13 @@ if (!file_exists('/etc/mpd.conf')) {
 	}
 }
 
-// Database update item count
-if (!isset($_SESSION['mpd_dbupdate_status'])) {
-	$_SESSION['mpd_dbupdate_status'] = 0;
+// Database update file count
+if (!isset($_SESSION['mpd_dbupdate_count'])) {
+	$_SESSION['mpd_dbupdate_count'] = 0;
+}
+// Database stats (artists/albums/tracks)
+if (!isset($_SESSION['mpd_db_stats'])) {
+	$_SESSION['mpd_db_stats'] = 'none';
 }
 
 // Start MPD
@@ -979,9 +984,9 @@ if ($_SESSION['first_use_help'] == 'y,y,y') {
 workerLog('worker: MPD CDSP volsync:   ' . lcfirst($_SESSION['camilladsp_volume_sync']));
 $serviceCmd = CamillaDSP::isMPD2CamillaDSPVolSyncEnabled() ? 'start' : 'stop';
 sysCmd('systemctl ' . $serviceCmd .' mpd2cdspvolume');
-// Library stats
-$stats = getLibraryStats($sock);
-workerLog('worker: Library stats:      ' . $stats);
+workerLog('worker: Database stats:     ' .
+	($_SESSION['mpd_db_stats'] == 'none' ? 'Analyze has not been run' : $_SESSION['mpd_db_stats'])
+);
 
 //----------------------------------------------------------------------------//
 workerLog('worker: --');
@@ -2359,18 +2364,17 @@ function chkLibraryUpdate() {
 		workerLog('worker: CRITICAL ERROR: chkLibraryUpdate(): Connection to MPD failed');
 	} else {
 		$status = getMpdStatus($sock);
-		$stats = getLibraryStats($sock);
 		closeMpdSock($sock);
 
-		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
-		if ($_SESSION['mpd_dbupdate_status'] != 0) {
-			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		$_SESSION['mpd_dbupdate_count'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_count'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_count']);
 		}
 
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libupd_done');
 			$GLOBALS['check_library_update'] = '0';
-			workerLog('mpdindex: Done: indexed ' . $stats);
+			workerLog('mpdindex: Done: updated ' . $_SESSION['mpd_dbupdate_count'] . ' files');
 			workerLog('worker: Job update_library done');
 		}
 	}
@@ -2382,18 +2386,17 @@ function chkLibraryRegen() {
 		workerLog('worker: CRITICAL ERROR: chkLibraryRegen(): Connection to MPD failed');
 	} else {
 		$status = getMpdStatus($sock);
-		$stats = getLibraryStats($sock);
 		closeMpdSock($sock);
 
-		$_SESSION['mpd_dbupdate_status'] = countMpdLogLines();
-		if ($_SESSION['mpd_dbupdate_status'] != 0) {
-			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_status']);
+		$_SESSION['mpd_dbupdate_count'] = countMpdLogLines();
+		if ($_SESSION['mpd_dbupdate_count'] != 0) {
+			debugLog('mpdindex: File count ' . $_SESSION['mpd_dbupdate_count']);
 		}
 
 		if (!isset($status['updating_db'])) {
 			sendFECmd('libregen_done');
 			$GLOBALS['check_library_regen'] = '0';
-			workerLog('mpdindex: Done: indexed ' . $stats);
+			workerLog('mpdindex: Done: indexed ' . $_SESSION['mpd_dbupdate_count'] . ' files');
 			workerLog('worker: Job regen_library done');
 		}
 	}
@@ -3982,7 +3985,8 @@ function runQueuedJob() {
 // Clear MPD log
 function truncateMpdLog() {
 	sysCmd('truncate ' . MPD_LOG . ' --size 0');
-	$_SESSION['mpd_dbupdate_status'] = 0;
+	$_SESSION['mpd_dbupdate_count'] = 0;
+	$_SESSION['mpd_db_stats'] = 'none';
 }
 // Count number of lines in MPD log for database update or regen
 function countMpdLogLines() {

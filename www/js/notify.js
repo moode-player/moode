@@ -26,7 +26,7 @@ function notify(title, tag, arg3, arg4 = '') {
 		queue_cropped: 'Queue has been cropped. ',
 		playqueue_info: '<br>',
 		// Library
-		update_library: 'Library is being updated... <br><br>Click the progress spinner for status.',
+		update_library: 'Library is being updated... <br><br>Click the busy spinner for status.',
 		library_updating: 'Library update is already in progress. ',
 		library_loading: 'Library is loading... ',
 		dbupdate_status: '',
@@ -118,7 +118,7 @@ function notify(title, tag, arg3, arg4 = '') {
 		// Queue
 		playqueue_info: '<br>',
 		// Library
-		update_library: 'Library is being updated... <br><br>Click the progress spinner for status.',
+		update_library: 'Library is being updated... <br><br>Click the busy spinner for status.',
 		library_updating: 'Library update is already in progress. ',
 		library_loading: 'Library is loading... ',
 		dbupdate_status: '',

@@ -3037,9 +3037,13 @@ $(document).on('click', '.context-menu a', function(e) {
             }
             break;
         case 'player_info':
-			$.getJSON('command/music-library.php?cmd=get_dbupdate_status', {'lib_stats': ''}, function(status) {
-				var stats = status.split(' ');
-		        var networkIface = SESSION.json['wlanssid'] == '' ? 'Ethernet' : 'Wireless (' + SESSION.json['wlanssid'] + ')';
+			$.getJSON('command/music-library.php?cmd=get_db_stats', function(results) {
+				var stats = results == 'none' ?
+					['Artists:Analyze has not been run', 'Albums: ', 'Tracks: '] :
+					results.split(' ');
+		        var networkIface = SESSION.json['wlanssid'] == '' ?
+					'Ethernet' :
+					'Wireless (' + SESSION.json['wlanssid'] + ')';
 		        notify(NOTIFY_TITLE_INFO, 'player_info',
 					'moOde:&nbsp;&nbsp;&nbsp;' + SESSION.json['moode_release'] + '<br>' +
 		            'Host:&nbsp;&nbsp;&nbsp;&nbsp;' + SESSION.json['hostname'] + '<br>' +

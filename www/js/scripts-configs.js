@@ -282,10 +282,10 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#manualserver').val($('#address').val().trim());
 	});
 
-	// View MPD db update status
+	// View MPD db regen status
 	$('#view-dbupdate-status').click(function(e) {
-		$.getJSON('command/music-library.php?cmd=get_dbupdate_status', function(status) {
-			$('#dbupdate-status').html(status);
+		$.getJSON('command/music-library.php?cmd=get_dbupdate_count', function(count) {
+			$('#dbupdate-status').html('Files indexed: ' + count);
 		});
 	});
 

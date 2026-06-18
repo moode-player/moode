@@ -18,8 +18,12 @@ phpSession('open');
 chkVariables($_GET);
 chkVariables($_POST, array('password'));
 
-// For save, remove actions
+// For "save/remove" actions
 $initiateLibraryUpd = false;
+// For "Analyze music database"
+$_mpd_db_stats = '<span class="config-help-static">' .
+	($_SESSION['mpd_db_stats'] == 'none' ? 'Analyze has not been run' : $_SESSION['mpd_db_stats']) .
+	'</span>';
 
 //----------------------------------------------------------------------------//
 // Library Config
@@ -54,12 +58,25 @@ if (isset($_POST['update_lib_fv_only'])) {
 	}
 	$_SESSION['lib_fv_only'] = $_POST['lib_fv_only'];
 }
-// Regenerate MPD database
+// Regenerate MPD database and library tag cache
 if (isset($_POST['regen_library'])) {
 	unset($_GET['cmd']);
 	submitJob('regen_library', '', NOTIFY_TITLE_INFO,
 		'Regenerating the database. Stay on this screen until the progress spinner disappears.<br><br>Click VIEW STATUS for progress.',
 		NOTIFY_DURATION_INFINITE);
+}
+// Analyze MPD database
+if (isset($_POST['analyze_mpd_db'])) {
+	unset($_GET['cmd']);
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		$msg = 'CRITICAL ERROR: lib-config.php: Connection to MPD failed';
+		workerLog($msg);
+	} else {
+		$msg = getLibraryStats($sock);
+		closeMpdSock($sock);
+		$_SESSION['mpd_db_stats'] = $msg;
+	}
+	$_mpd_db_stats = '<span class="config-help-static">' . $msg . '</span>';
 }
 // Clear library cache
 if (isset($_POST['clear_libcache'])) {
@@ -448,14 +465,7 @@ if (!isset($_GET['cmd'])) {
 	$_select['moodefiles_ignore_off'] = "<input type=\"radio\" name=\"moodefiles_ignore\" id=\"toggle-moodefiles-ignore-2\" value=\"0\" " . (($_SESSION['moodefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 	// DB update status
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		$msg = 'CRITICAL ERROR: lib-config.php: Connection to MPD failed';
-		workerLog($msg);
-	} else {
-		$msg = getLibraryStats($sock);
-		closeMpdSock($sock);
-	}
-	$_dbupdate_status = $_SESSION['mpd_dbupdate_status'] == '0' ? $msg : 'Files indexed: ' . $_SESSION['mpd_dbupdate_status'];
+	$_dbupdate_status = 'Files indexed: ' . $_SESSION['mpd_dbupdate_count'];
 
 	// Thumbcache status
 	$_thmcache_status = $_SESSION['thmcache_status'];

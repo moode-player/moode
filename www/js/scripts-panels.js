@@ -1936,11 +1936,11 @@ jQuery(document).ready(function($) { 'use strict';
         $('#dropdown-cdsp-menu').scrollTo(0, 200);
     });
 
-	// Display MPD update status
+	// Display MPD db update status
 	$('.busy-spinner').click(function(e) {
 		if (GLOBAL.libLoading == true) {
-			$.getJSON('command/music-library.php?cmd=get_dbupdate_status', function(status) {
-				notify(NOTIFY_TITLE_INFO, 'dbupdate_status', status);
+			$.getJSON('command/music-library.php?cmd=get_dbupdate_count', function(count) {
+				notify(NOTIFY_TITLE_INFO, 'dbupdate_status', 'Files updated: ' + count);
 			});
 		}
 	});
