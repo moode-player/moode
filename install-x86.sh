@@ -321,8 +321,18 @@ if [ "$INSTALL_UPNP" = 1 ]; then
 		# whole run under set -e. Drop every upmpdcli* from OPT_PKGS, then re-add only the
 		# available ones, and say plainly which get installed.
 		UPNP_OK=0
+		_uplog="$(mktemp)"
 		for _try in 1 2 3; do
-			apt-get update >/dev/null 2>&1 || true
+			# Update ONLY the upmpdcli source (not the full sources list) and KEEP its
+			# output. The full-list `apt-get update >/dev/null 2>&1` used here before
+			# could fail for the upmpdcli repo alone (e.g. a transient IPv6 fetch/verify
+			# blip) yet leave the candidate absent, and with the output discarded the
+			# gate then SILENTLY skipped UPnP - even on amd64 where the package DOES
+			# exist (lesbonscomptes ships upmpdcli for the debian pool). Isolating the
+			# source makes the check immune to other repos and the captured log makes a
+			# real failure diagnosable instead of a bare "no candidate".
+			apt-get update -o Dir::Etc::sourcelist="sources.list.d/upmpdcli.sources" \
+				-o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" >"$_uplog" 2>&1 || true
 			apt-cache policy upmpdcli 2>/dev/null | grep -q 'Candidate: [0-9]' && { UPNP_OK=1; break; }
 			sleep 3
 		done
@@ -339,9 +349,13 @@ if [ "$INSTALL_UPNP" = 1 ]; then
 			OPT_PKGS+=("${_upnp[@]}")
 			log "UPnP (upmpdcli): installing ${_upnp[*]}"
 		else
-			warn "upmpdcli has no candidate for $(dpkg --print-architecture); UPnP skipped"
+			warn "upmpdcli has no candidate for $(dpkg --print-architecture) after 3 tries; UPnP skipped"
+			echo "---- apt-get update output for the upmpdcli repo (last try) ----"
+			cat "$_uplog"
+			echo "---------------------------------------------------------------"
 			rm -f /etc/apt/sources.list.d/upmpdcli.sources
 		fi
+		rm -f "$_uplog"
 	else
 		warn "upmpdcli repo setup failed; UPnP will be skipped"
 		_keep=(); for p in "${OPT_PKGS[@]}"; do case "$p" in upmpdcli|upmpdcli-tidal|upmpdcli-qobuz) ;; *) _keep+=("$p");; esac; done; OPT_PKGS=("${_keep[@]}")
