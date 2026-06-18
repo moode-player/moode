@@ -16,6 +16,7 @@
 ################################################################################
 
 Bug fixes
+- FIX: Library stats process causing performance issues
 - FIX: Folder view not handling directory names with embedded quotes
 - FIX: Clock radio sends play command before setting volume
 
