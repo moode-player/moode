@@ -1614,6 +1614,20 @@ EOF
 	chmod 0755 "/home/$PLAYER_USER/.xinitrc"
 	chown "$PLAYER_USER:$PLAYER_USER" "/home/$PLAYER_USER/.xinitrc"
 
+	# armhf SBC kiosk (seen on Allwinner H3 / Mali-400 lima): the Chromium kiosk paints
+	# a blank WHITE page unless the sandbox is disabled - on this 32-bit ARM kernel the
+	# sandbox can't start the renderer (no JS error, just no frame). x86 and arm64 (H6,
+	# Orange Pi 3 LTS) are fine, so scope --no-sandbox to armhf. The kiosk only loads
+	# localhost (trusted), so this is an acceptable trade-off. (The Pi is untouched.)
+	# Insert after 'exec chromium'; the worker only rewrites the --app/--kiosk lines so
+	# this line survives its regen.
+	case "$(uname -m)" in
+		armv6l|armv7l)
+			sed -i '/^[[:space:]]*exec chromium/a\	--no-sandbox \\' "/home/$PLAYER_USER/.xinitrc"
+			log "armhf: added --no-sandbox to the Chromium kiosk (renderer starts blank otherwise)"
+			;;
+	esac
+
 	# Peppy Meter/Spectrum visualizer: the apps (read the FIFO that libpeppyalsa
 	# feeds, render via pygame/SDL on the X display) are upstream, not in Debian -
 	# clone them to /opt like the Pi image. moOde's config templates go to
