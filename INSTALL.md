@@ -184,12 +184,16 @@ touch the database; never pass `--reset-db` for an update).
   module out-of-tree against your kernel and install it via DKMS:
 
   ```bash
-  # Debian x86 - the headers package is named by kernel release:
-  sudo apt install dkms linux-headers-$(uname -r)
-  # Armbian - the headers package is NOT named by `uname -r`; derive it from
-  # /etc/armbian-release as linux-headers-${BRANCH}-${LINUXFAMILY}
-  # (e.g. linux-headers-current-sunxi64 on the Orange Pi 3 LTS / H6):
-  . /etc/armbian-release && sudo apt install dkms "linux-headers-${BRANCH}-${LINUXFAMILY}"
+  # Kernel headers + DKMS. The headers PACKAGE NAME differs by platform, so pick it
+  # automatically (do NOT just run `linux-headers-$(uname -r)` everywhere - on Armbian
+  # `uname -r` is e.g. 6.18.33-current-sunxi64 and no such package exists; the real
+  # one is linux-headers-current-sunxi64, named by ${BRANCH}-${LINUXFAMILY}):
+  if [ -f /etc/armbian-release ]; then
+      . /etc/armbian-release; HDR="linux-headers-${BRANCH}-${LINUXFAMILY}"  # e.g. linux-headers-current-sunxi64
+  else
+      HDR="linux-headers-$(uname -r)"                                       # Debian x86
+  fi
+  sudo apt install dkms "$HDR"
   V=$(awk '/^VERSION/{a=$3}/^PATCHLEVEL/{b=$3}/^SUBLEVEL/{c=$3}END{print a"."b"."c}' \
         /lib/modules/$(uname -r)/build/Makefile)     # e.g. 6.18.33
   S=/usr/src/hid-multitouch-backport-$V; sudo mkdir -p "$S"; cd "$S"
