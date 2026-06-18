@@ -616,7 +616,12 @@ fi
 log "Phase 1e: caps with 12-band parametric EQ (eqfa12p)"
 
 if ! dpkg-query -W -f='${Version}' caps 2>/dev/null | grep -q moode; then
-	$APT_INSTALL build-essential dpkg-dev devscripts fakeroot ladspa-sdk quilt
+	# debhelper is caps' declared build-dep (debian/control: debhelper >= 10) and is
+	# NOT pulled in by build-essential/devscripts on a minimal system - it happened to
+	# be present on amd64 but was absent on a fresh Armbian arm64, where the build then
+	# aborted at `dpkg-checkbuilddeps: unmet build dependencies: debhelper (>= 10)`
+	# (stock caps stayed -> no EqFA12p -> no Parametric EQ). List it explicitly.
+	$APT_INSTALL build-essential dpkg-dev debhelper devscripts fakeroot ladspa-sdk quilt
 	CAPS_BLD="$(mktemp -d)"
 	CAPS_PATCH_URL="https://raw.githubusercontent.com/moode-player/pkgbuild/main/packages/caps/caps_12band_eqp.patch"
 	CAPS_DSC_URL="http://deb.debian.org/debian/pool/main/c/caps/caps_0.9.26-1.dsc"
