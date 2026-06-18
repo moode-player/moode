@@ -1749,6 +1749,17 @@ Group=www-data
 # in. Pre-create it owned by the service user. The leading + makes systemd run
 # this line with full privileges (as root) even though User= is www-data.
 ExecStartPre=+/usr/bin/install -m 660 -o www-data -g www-data /dev/null /run/worker.pid
+# Same idea for /var/log/moode.log. The worker truncates it via sudo (root) at the
+# very start (worker.php: truncate MOODE_LOG --size 0); if the file is ABSENT at
+# that instant, root creates it root:root and the www-data worker's first
+# workerLog() can no longer reopen it -> fatal fwrite() -> startup crash-loop ->
+# wrkready stuck 0 -> blank WebUI. The file can go missing under log2ram (SD/eMMC
+# boards) across a network reconfigure/restart - seen on the OPi3 LTS after setting
+# WiFi/hotspot; never on x86 (no log2ram) nor on the Pi (worker is root, so a
+# root-owned log is fine). Guarantee it exists AND is www-data-owned before the
+# worker runs (create if absent, else just re-own/re-mode; never truncate so an
+# existing crash log is preserved). Leading + = run as root despite User=www-data.
+ExecStartPre=+/bin/sh -c 'test -e /var/log/moode.log || /usr/bin/install -m 666 -o www-data -g www-data /dev/null /var/log/moode.log; chown www-data:www-data /var/log/moode.log; chmod 666 /var/log/moode.log'
 ExecStart=/var/www/daemon/worker.php
 Restart=on-failure
 RestartSec=5
