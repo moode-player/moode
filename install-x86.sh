@@ -314,11 +314,12 @@ if [ "$INSTALL_UPNP" = 1 ]; then
 		# transient failure doesn't wrongly skip UPnP. If still no candidate, drop all
 		# upmpdcli pkgs + the repo so `apt install` never aborts the run under set -e.
 		# Wait for the new repo's metadata (its first fetch can blip on a flaky network -
-		# seen on Armbian), then install ONLY the upmpdcli* packages this repo offers for
-		# this arch. The raspbian pool (arm64/armhf) ships upmpdcli + upmpdcli-qobuz but
-		# NOT upmpdcli-tidal, so a blanket install of all three would abort the run under
-		# set -e. Drop every upmpdcli* from OPT_PKGS, then re-add only those with an
-		# installable candidate, and say plainly which ones get installed.
+		# seen on Armbian), then install only the upmpdcli* packages that actually have an
+		# installable candidate. The repo normally offers all three (upmpdcli +
+		# upmpdcli-tidal + upmpdcli-qobuz - small arch:all Python cdplugins), but its
+		# contents can vary by suite/arch and a single missing package would abort the
+		# whole run under set -e. Drop every upmpdcli* from OPT_PKGS, then re-add only the
+		# available ones, and say plainly which get installed.
 		UPNP_OK=0
 		for _try in 1 2 3; do
 			apt-get update >/dev/null 2>&1 || true
