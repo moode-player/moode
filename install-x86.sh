@@ -313,15 +313,32 @@ if [ "$INSTALL_UPNP" = 1 ]; then
 		# repo's first fetch can blip on a flaky network - seen on Armbian) so a
 		# transient failure doesn't wrongly skip UPnP. If still no candidate, drop all
 		# upmpdcli pkgs + the repo so `apt install` never aborts the run under set -e.
+		# Wait for the new repo's metadata (its first fetch can blip on a flaky network -
+		# seen on Armbian), then install ONLY the upmpdcli* packages this repo offers for
+		# this arch. The raspbian pool (arm64/armhf) ships upmpdcli + upmpdcli-qobuz but
+		# NOT upmpdcli-tidal, so a blanket install of all three would abort the run under
+		# set -e. Drop every upmpdcli* from OPT_PKGS, then re-add only those with an
+		# installable candidate, and say plainly which ones get installed.
 		UPNP_OK=0
 		for _try in 1 2 3; do
 			apt-get update >/dev/null 2>&1 || true
-			if apt-cache policy upmpdcli 2>/dev/null | grep -q 'Candidate: [0-9]'; then UPNP_OK=1; break; fi
+			apt-cache policy upmpdcli 2>/dev/null | grep -q 'Candidate: [0-9]' && { UPNP_OK=1; break; }
 			sleep 3
 		done
-		if [ "$UPNP_OK" != 1 ]; then
+		_keep=(); for p in "${OPT_PKGS[@]}"; do case "$p" in upmpdcli|upmpdcli-tidal|upmpdcli-qobuz) ;; *) _keep+=("$p");; esac; done; OPT_PKGS=("${_keep[@]}")
+		if [ "$UPNP_OK" = 1 ]; then
+			_upnp=()
+			for p in upmpdcli upmpdcli-tidal upmpdcli-qobuz; do
+				if apt-cache policy "$p" 2>/dev/null | grep -q 'Candidate: [0-9]'; then
+					_upnp+=("$p")
+				else
+					warn "UPnP: '$p' is not in the upmpdcli repo for $(dpkg --print-architecture); skipping just that package"
+				fi
+			done
+			OPT_PKGS+=("${_upnp[@]}")
+			log "UPnP (upmpdcli): installing ${_upnp[*]}"
+		else
 			warn "upmpdcli has no candidate for $(dpkg --print-architecture); UPnP skipped"
-			_keep=(); for p in "${OPT_PKGS[@]}"; do case "$p" in upmpdcli|upmpdcli-tidal|upmpdcli-qobuz) ;; *) _keep+=("$p");; esac; done; OPT_PKGS=("${_keep[@]}")
 			rm -f /etc/apt/sources.list.d/upmpdcli.sources
 		fi
 	else
@@ -596,14 +613,14 @@ if ! dpkg-query -W -f='${Version}' caps 2>/dev/null | grep -q moode; then
 			&& patch -p1 < ../caps_12band_eqp.patch \
 			&& DEBEMAIL="moode@moodeaudio.org" DEBFULLNAME="moOde" \
 				dch -b -v 0.9.26-1moode1 -D unstable "Add 12-band eqfa12p parametric EQ (moOde patch)" \
-			&& dpkg-buildpackage -b -us -uc ) >/dev/null 2>&1 \
+			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-caps.log" 2>&1 \
 		&& CAPS_DEB="$(ls "$CAPS_BLD"/caps_0.9.26-1moode1_*.deb 2>/dev/null | head -1)" \
 		&& [ -n "$CAPS_DEB" ] \
 		&& apt-get install -y --allow-downgrades "$CAPS_DEB" >/dev/null 2>&1; then
 		apt-mark hold caps >/dev/null 2>&1 || true
 		log "Built caps 0.9.26-1moode1 (12-band parametric EQ)"
 	else
-		warn "caps moode build failed (Parametric EQ unavailable; Graphic EQ + crossfeed still work)"
+		warn "caps moode build failed (Parametric EQ unavailable; Graphic EQ + crossfeed still work; see $REPO_DIR/build-caps.log)"
 	fi
 	rm -rf "$CAPS_BLD"
 fi
@@ -645,14 +662,14 @@ EOF
 			&& apt-get source "mpd=$MPD_MOODE_VER" \
 			&& cd "mpd-${MPD_MOODE_VER%-*}" \
 			&& mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
-			&& dpkg-buildpackage -b -us -uc ) >/dev/null 2>&1 \
+			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-mpd.log" 2>&1 \
 		&& MPD_DEB="$(ls "$MPD_BLD"/mpd_${MPD_MOODE_VER}_*.deb 2>/dev/null | head -1)" \
 		&& [ -n "$MPD_DEB" ] \
 		&& dpkg -i --force-confold "$MPD_DEB" >/dev/null 2>&1; then
 		apt-mark hold mpd >/dev/null 2>&1 || true
 		log "Built mpd $MPD_MOODE_VER (selective resample support)"
 	else
-		warn "mpd moode build failed (Selective resampling unavailable; stock mpd kept)"
+		warn "mpd moode build failed (Selective resampling unavailable; stock mpd kept; see $REPO_DIR/build-mpd.log)"
 	fi
 	rm -rf "$MPD_BLD"
 fi
