@@ -201,8 +201,12 @@ CORE_PKGS=(
 	# through NetworkManager (nmcli + .nmconnection keyfiles in inc/network.php).
 	network-manager
 	# WiFi tooling moOde shells out to: iw (scan), wpa_passphrase (wpasupplicant),
-	# and the AP/Hotspot path; net-tools for the netstat/ifconfig calls.
-	iw wpasupplicant net-tools
+	# and the AP/Hotspot path; net-tools for the netstat/ifconfig calls. dnsmasq-base
+	# is required by NetworkManager's Hotspot (ipv4.method=shared) to hand out DHCP/DNS
+	# to AP clients - without it the headless WiFi-fallback Hotspot associates but
+	# assigns no IP (only Recommended by network-manager, so not pulled in by default);
+	# wireless-regdb backs `iw reg set <country>` for channel/regulatory compliance.
+	iw wpasupplicant net-tools dnsmasq-base wireless-regdb
 	# Format/fsck tools for USB/SATA music drives (mkfs.vfat, mkfs.exfat). moOde's
 	# own "Format" action makes ext4 (e2fsprogs, base). The userspace/FUSE drivers
 	# needed to MOUNT exfat/ntfs (exfat-fuse, ntfs-3g) are added conditionally just
@@ -1206,6 +1210,14 @@ EOF
 fi
 rm -f /etc/systemd/network/10-netplan-*.link /etc/systemd/network/10-netplan-*.network
 
+# NetworkManager owns the NICs, so systemd-networkd has nothing to configure. Armbian
+# (and some Debian images) leave systemd-networkd-wait-online.service enabled, where it
+# then waits its full timeout for interfaces networkd does not manage and exits 1 -> a
+# permanently failed unit + ~20s added to every boot. Mask it; NetworkManager-wait-online
+# already gates network-online.target. (networkd itself is left alone - idle/unmanaged.)
+systemctl disable --now systemd-networkd-wait-online.service >/dev/null 2>&1 || true
+systemctl mask systemd-networkd-wait-online.service >/dev/null 2>&1 || true
+
 # Make sure NM treats nothing as unmanaged (cloud images mark the networkd NIC so).
 install -d -m 755 /etc/NetworkManager/conf.d
 printf '[keyfile]\nunmanaged-devices=none\n' > /etc/NetworkManager/conf.d/10-moode-manage-all.conf
@@ -1213,6 +1225,35 @@ if [ -f /etc/NetworkManager/NetworkManager.conf ]; then
 	# Some images ship [ifupdown] managed=false; flip it so NM owns ifupdown NICs too.
 	sed -i 's/^\(\s*\)managed=false/\1managed=true/' /etc/NetworkManager/NetworkManager.conf
 fi
+
+# WiFi creds migration. A Debian netinst that joined WiFi writes the SSID/PSK as an
+# ifupdown "wpa-ssid"/"wpa-psk" stanza in /etc/network/interfaces (mode 0600).
+# Reducing that file to loopback (above) makes NetworkManager own wlan0 but with NO
+# WiFi profile -> a headless box silently drops off the network on the next reboot
+# (no Ethernet, no screen = locked out). Migrate the inline creds to an NM keyfile so
+# the connection survives the cutover. No interface-name is pinned because
+# net.ifnames=0 renames wlpXsY -> wlan0 (the keyfile then matches whatever wlan NIC
+# comes up). Idempotent: skip if a keyfile for this SSID already exists.
+_ifsrc=/etc/network/interfaces.moode-orig
+if [ -f "$_ifsrc" ] && grep -qiE '^[[:space:]]*wpa-ssid[[:space:]]' "$_ifsrc"; then
+	_ssid=$(sed -n 's/^[[:space:]]*wpa-ssid[[:space:]]\+//Ip' "$_ifsrc" | head -1 | sed 's/[[:space:]]*$//; s/^"\(.*\)"$/\1/')
+	_psk=$(sed -n 's/^[[:space:]]*wpa-psk[[:space:]]\+//Ip' "$_ifsrc" | head -1 | sed 's/[[:space:]]*$//; s/^"\(.*\)"$/\1/')
+	_fname=$(printf '%s' "$_ssid" | tr -c 'A-Za-z0-9._-' '_')
+	_kf="/etc/NetworkManager/system-connections/${_fname}.nmconnection"
+	install -d -m 700 /etc/NetworkManager/system-connections
+	if [ -n "$_ssid" ] && [ ! -f "$_kf" ]; then
+		{
+			printf '[connection]\nid=%s\ntype=wifi\nautoconnect=true\n\n' "$_ssid"
+			printf '[wifi]\nmode=infrastructure\nssid=%s\n\n' "$_ssid"
+			[ -n "$_psk" ] && printf '[wifi-security]\nkey-mgmt=wpa-psk\npsk=%s\n\n' "$_psk"
+			printf '[ipv4]\nmethod=auto\n\n[ipv6]\nmethod=auto\n'
+		} > "$_kf"
+		chmod 600 "$_kf"; chown root:root "$_kf"
+		log "Migrated WiFi creds (SSID '$_ssid') from ifupdown to a NetworkManager keyfile"
+	fi
+	unset _ssid _psk _fname _kf
+fi
+unset _ifsrc
 
 #----------------------------------------------------------------------------#
 # Phase 4 - SQLite configuration database
