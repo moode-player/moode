@@ -1,0 +1,100 @@
+#!/bin/bash
+#
+# moOde audio player (C) 2014 Tim Curtis
+# http://moodeaudio.org
+#
+function chk_sudo() {
+	[[ $EUID -ne 0 ]] && { echo "You must use sudo for this utility" ; exit 1 ; } ;
+}
+
+function readYnInput () {
+	while true; do
+		read -p "$1" YN
+		case $YN in
+			[y] ) break;;
+			[n] ) break;;
+			* ) echo "** Valid entries are y|n";;
+		esac
+	done
+}
+
+function set_variables() {
+	IP_ADDRESS="lt5"
+	REMOTE_DIR="Software/moode-player"
+	MOUNT_POINT="/mnt/moode-player"
+	USER_NAME="guest"
+	PASSWORD=''
+	OPTIONS="vers=3.0,rw,noserverino,dir_mode=0777,file_mode=0777"
+	REPO="GitHub/moode"
+}
+
+function mount_share() {
+	RESULT=$(ls $MOUNT_POINT/$REPO >/dev/null 2>&1)
+	if [ $? -ne 0 ]; then
+		echo "Mounting: "$IP_ADDRESS"/"$REMOTE_DIR
+		mkdir $MOUNT_POINT > /dev/null 2>&1
+		mount -t cifs //$IP_ADDRESS/$REMOTE_DIR -o username=$USER_NAME,password=$PASSWORD,$OPTIONS $MOUNT_POINT > /dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo "Mount failed"
+		else
+			echo "Mount successful"
+		fi
+	else
+		echo "Mount successful"
+	fi
+}
+
+function watch_for_mount() {
+	watch "devutl -m"
+}
+
+function remove_dotfiles() {
+	echo Cleaning /media
+	cd /media
+	find . -name "._*" -exec rm -rf {} \;
+	find . -name ".Trashes" -exec rm -rf {} \;
+	find . -name "._.Trashes" -exec rm -rf {} \;
+	find . -name ".Spotlight*" -exec rm -rf {} \;
+	find . -name ".DS_Store" -exec rm -rf {} \;
+	find . -name "._.DS_Store" -exec rm -rf {} \;
+	find . -name ".fseventsd*" -exec rm -rf {} \;
+	find . -name "._.com.apple.timemachine.donotpresent" -exec rm -rf {} \;
+	find . -name ".com.apple.timemachine.donotpresent" -exec rm -rf {} \;
+	find . -name ".TemporaryItems" -exec rm -rf {} \;
+	find . -name "._.TemporaryItems" -exec rm -rf {} \;
+	find . -name "._moodecfg.txt" -exec rm -rf {} \;
+	find . -name "__MACOSX" -exec rm -rf {} \;
+}
+
+function print_help() {
+	echo -e "Usage: devutl.sh [OPTION] [PI USER]...
+Developer utility
+
+PI USER
+  Defaults to pi if not specified
+OPTIONS
+ -m\t\tMount software share
+ -w\t\tWatch for mount success
+ -r\t\tRemove MacOS dot files in /media
+ --help\t\tPrint help text
+"
+}
+
+#
+# Main
+#
+
+chk_sudo
+set_variables
+
+if [ -z "$1" ] || [ $1 = "--help" ]; then
+	print_help
+elif [ $1 = "-m" ]; then
+	mount_share
+elif [ $1 = "-w" ]; then
+	watch_for_mount $2
+elif [ $1 = "-r" ]; then
+	remove_dot_files
+else
+	echo "Unknown option"
+fi
