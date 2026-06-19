@@ -333,13 +333,23 @@ if [ "$INSTALL_UPNP" = 1 ]; then
 		# Queue only the upmpdcli* packages that actually have an installable candidate
 		# for this arch, so the later bulk `apt install` never aborts under set -e.
 		# (LC_ALL=C.UTF-8 is exported at the top so apt-cache policy prints English ->
-		# these greps are locale-stable. The pkg exists: debian pool ships amd64,
+		# the candidate test is locale-stable. The pkg exists: debian pool ships amd64,
 		# raspbian pool ships arm64+armhf, plugins are arch:all.)
+		#
+		# MUST NOT pipe `apt-cache policy ... | grep -q`: under `set -o pipefail`,
+		# `grep -q` exits on its first match and closes the pipe, so apt-cache - still
+		# writing its (multi-line, longer once a pkg is installed) output - gets SIGPIPE
+		# and exits 141. pipefail then makes the WHOLE pipeline return 141, so the `if`
+		# is false EVEN THOUGH grep matched -> UPnP wrongly skipped while the candidate
+		# plainly exists. This was the real, deterministic cause of the recurring
+		# "upmpdcli has no candidate" across all 3 arches (not the repo/key/locale).
+		# Capture to a var and match with a pipe-free bash regex instead.
+		_has_cand() { local _p; _p="$(apt-cache policy "$1" 2>/dev/null || true)"; [[ "$_p" =~ Candidate:\ [0-9] ]]; }
 		_keep=(); for p in "${OPT_PKGS[@]}"; do case "$p" in upmpdcli|upmpdcli-tidal|upmpdcli-qobuz) ;; *) _keep+=("$p");; esac; done; OPT_PKGS=("${_keep[@]}")
-		if apt-cache policy upmpdcli 2>/dev/null | grep -q 'Candidate: [0-9]'; then
+		if _has_cand upmpdcli; then
 			_upnp=()
 			for p in upmpdcli upmpdcli-tidal upmpdcli-qobuz; do
-				if apt-cache policy "$p" 2>/dev/null | grep -q 'Candidate: [0-9]'; then
+				if _has_cand "$p"; then
 					_upnp+=("$p")
 				else
 					warn "UPnP: '$p' not offered by the upmpdcli repo for $(dpkg --print-architecture); skipping just that package"
