@@ -33,7 +33,7 @@ Most screens are the defaults; the ones that matter for moode-nopi are below.
 |------|----------------|-----|
 | Hostname | `moode` (or anything) | Becomes the player name; you can change it later in the UI. |
 | Domain name | leave blank | — |
-| **Root password** | **leave it EMPTY** | When root has no password, the Debian installer locks the root account and gives your first user `sudo`. That lets you run the installer with `sudo` straight away. |
+| **Root password** | **leave it EMPTY** | When root has no password, the Debian installer locks the root account and gives your first user `sudo`. That   lets you run the installer with `sudo` straight away. |
 | **Full name / username** | username **`moode`** | The installer derives the player user from **UID 1000** = the first user you create. It must be `moode`. |
 | **User password** | **`moodeaudio`** | Same default as the Pi image. Change it afterwards if you like. |
 | Time zone / locale / keyboard | your choice | — |
@@ -261,11 +261,11 @@ touch the database; never pass `--reset-db` for an update).
   networking incl. WiFi, local display) on these three, all with a Debian 13.5
   (Trixie) userland:
 
-  | Board | Arch | OS | Kernel |
-  | --- | --- | --- | --- |
-  | Intel N4000 mini-PC | amd64 (x86_64) | Debian 13.5 (Trixie) | `6.12.90+deb13.1-amd64` |
-  | Orange Pi 3 LTS (Allwinner H6) | arm64 (aarch64) | Armbian 26.5.1 (Trixie) | `6.18.33-current-sunxi64` |
-  | Orange Pi+ 2E (Allwinner H3) | armhf (armv7l) | Armbian 26.08.0 (Trixie) | `6.18.35-current-sunxi` |
+  | Board                          | Arch            | OS                       | Kernel                    |
+  | ------------------------------ | --------------- | ------------------------ | ------------------------- |
+  | Intel N4000 mini-PC            | amd64 (x86_64)  | Debian 13.5 (Trixie)     | `6.12.90+deb13.1-amd64`   |
+  | Orange Pi 3 LTS (Allwinner H6) | arm64 (aarch64) | Armbian 26.5.1 (Trixie)  | `6.18.33-current-sunxi64` |
+  | Orange Pi+ 2E (Allwinner H3)   | armhf (armv7l)  | Armbian 26.08.0 (Trixie) | `6.18.35-current-sunxi`   |
 
   Other Debian-13 PCs and Armbian-Trixie SBCs should work the same way; these are
   just the reference machines the installer is regularly exercised on.
