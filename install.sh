@@ -31,6 +31,15 @@
 
 set -euo pipefail
 
+# Deterministic command output. The installer greps the output of tools like
+# `apt-cache policy` to make decisions; on a non-English box those strings are
+# LOCALISED (e.g. fr_FR prints "Candidat :" not "Candidate:"), which silently
+# broke the upmpdcli candidate check -> UPnP wrongly skipped on every French
+# install even though the package + repo + gpg key were all fine. Force C.UTF-8
+# (English messages, UTF-8 kept) for the whole run so every such grep is stable -
+# the same reason moOde's own sysCmd() always runs commands under LC_ALL=C.
+export LC_ALL=C.UTF-8 LANG=C.UTF-8
+
 #----------------------------------------------------------------------------#
 # CONFIG
 #----------------------------------------------------------------------------#
