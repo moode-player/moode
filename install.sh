@@ -391,7 +391,25 @@ fs_supported ntfs  || FS_PKGS+=(ntfs-3g)
 [ ${#FS_PKGS[@]} -gt 0 ] && log "Kernel lacks FS driver(s); adding userspace: ${FS_PKGS[*]}" \
 	|| log "Kernel provides vfat/exfat; no userspace FS driver needed (ntfs via ntfs-3g if present)"
 
-$APT_INSTALL "${CORE_PKGS[@]}" ${OPT_PKGS[@]+"${OPT_PKGS[@]}"} ${FS_PKGS[@]+"${FS_PKGS[@]}"}
+# Drop any package already on hold from this explicit install list. We build+hold
+# mpd/caps/squeezelite (Phases 1e/1f/1i); on a re-run (--update) they are held and
+# ALREADY installed, so naming them here is pointless AND fatal: `apt-get install -y`
+# aborts with "Held packages were changed... without --allow-change-held-packages"
+# whenever the repo offers a version apt deems newer - e.g. an arm64 binNMU
+# caps 0.9.26-1+b1 outranks our 0.9.26-1moode1 (dpkg sorts '+b1' above 'moode1').
+# We must NOT pass --allow-change-held-packages (that would replace the moode-patched
+# build with stock, losing EqFA12p/selective-resample). Their build phases manage
+# them; here we just skip held names. On a FRESH install nothing is held yet, so the
+# stock fallbacks still install normally and the build phases upgrade+hold them later.
+_held="$(apt-mark showhold 2>/dev/null || true)"
+_inst=()
+for p in "${CORE_PKGS[@]}" ${OPT_PKGS[@]+"${OPT_PKGS[@]}"} ${FS_PKGS[@]+"${FS_PKGS[@]}"}; do
+	_skip=
+	for h in $_held; do [ "$h" = "$p" ] && { _skip=1; break; }; done
+	[ -n "$_skip" ] && { log "Skipping held package in bulk install: $p (managed by its build phase)"; continue; }
+	_inst+=("$p")
+done
+$APT_INSTALL "${_inst[@]}"
 
 # Detect the actual php-fpm version/socket so the nginx config matches Debian's
 # packaged PHP (the shipped configs assume php8.4).
