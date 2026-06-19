@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Build a Debian 13 + systemd container and run install-x86.sh inside it to
+# Build a Debian 13 + systemd container and run install.sh inside it to
 # smoke-test the moOde x86 port. Disposable; tests everything except real audio.
 #
 # Usage:
@@ -88,11 +88,11 @@ for i in $(seq 1 30); do
 done
 log "systemd state: ${state:-unknown}"
 
-log "Running install-x86.sh inside the container"
-# The repo is mounted read-only; install-x86.sh only reads from it and writes to
+log "Running install.sh inside the container"
+# The repo is mounted read-only; install.sh only reads from it and writes to
 # the container filesystem, so that is fine.
 set +e
-docker exec "$NAME" bash -c 'cd /opt/moode && ./install-x86.sh'
+docker exec "$NAME" bash -c 'cd /opt/moode && ./install.sh'
 rc=$?
 set -e
 

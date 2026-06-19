@@ -17,12 +17,12 @@ working unchanged on a real Raspberry Pi.
 - **Port via runtime detection, not a fork.** One codebase. Platform differences
   are handled at runtime with `isPi()` (`www/inc/common.php`, = presence of a
   `Revision` line in `/proc/cpuinfo`), and at install time by **one additive
-  installer**, `install-x86.sh`, that sets up the moOde stack on a running Debian.
+  installer**, `install.sh`, that sets up the moOde stack on a running Debian.
 - **Maximum iso with the Pi.** Behaviour, versions, and especially **all audio
   processing** must match moOde on the Pi. When moOde ships a patched binary
   (mpd, caps…), build that exact patched version for x86 — don't settle for a
   different stock one.
-- **Minimize source deviation.** Fix x86 issues in `install-x86.sh` / system
+- **Minimize source deviation.** Fix x86 issues in `install.sh` / system
   config, **not** by editing upstream moOde source. The only acceptable source
   edits are tiny **`isPi()`-guarded** changes where upstream has a baked-in Pi
   assumption that cannot be fixed from the installer (e.g. worker home-dir writes).
@@ -36,7 +36,7 @@ working unchanged on a real Raspberry Pi.
 
 ## Project structure
 
-- `install-x86.sh` — **the** central additive installer. Organised in phases:
+- `install.sh` — **the** central additive installer. Organised in phases:
   Phase 1 packages, 1b helper bins, 1c CamillaDSP, 1d pleezer+cargo-deb, 1e caps
   (Parametric EQ), 1f mpd (selective resample), 2 deploy web app, 3/3b configs,
   5 perms, 5b music storage, 5c on-demand renderers, 6 worker/devmon units,
@@ -52,7 +52,7 @@ working unchanged on a real Raspberry Pi.
 - `etc/alsa/conf.d/` — the ALSA plugin chain (`_audioout`, camilladsp, alsaequal,
   eqfa12p, crossfeed, bluealsa…). `*.overwrite.*` = files deployed with the
   `.overwrite` stripped to replace a stock package's config/unit.
-- `build/dist/` — gulp output (gitignored); what `install-x86.sh` deploys.
+- `build/dist/` — gulp output (gitignored); what `install.sh` deploys.
 - `var/local/www/db/moode-sqlite3.db.sql` — the config DB schema.
 
 ## Build methods
@@ -63,7 +63,7 @@ working unchanged on a real Raspberry Pi.
   main.min.css, *.min.js) into app.dest; `gulp deploy` only COPIES from there. On a
   fresh clone, `gulp deploy` ALONE ships un-bundled assets → an unstyled "pure HTML"
   WebUI (it silently "worked" before only when app.dest held bundles from a prior
-  build). install-x86.sh Phase 0b runs both.
+  build). install.sh Phase 0b runs both.
 - **moode-tagged `.deb`s** — two patterns, prefer (B):
   - (A) Debian source + moOde patch: `dget -qd -u <debian .dsc>` (use **`-qd`** —
     plain `dget` auto-extracts and then a later `dpkg-source -x` fails "target
@@ -136,7 +136,7 @@ Rig lives at `/home/$USER/moode-x86-vm/` (NOT a tracked moOde file).
   creds set in `run-vm.sh`'s `user-data`.
 - **USB DAC passthrough** (run-vm.sh `usb-host` 262a:9227): plug the DAC into the
   HOST **before** `./run-vm.sh start`, else no card enumerates.
-- Install in the VM: `sudo /opt/moode/install-x86.sh --reset-db`
+- Install in the VM: `sudo /opt/moode/install.sh --reset-db`
   (`/var/log/install-x86.log`).
 - Health checks: `ps -o user= -C worker.php` (must be `www-data`),
   `cfg_system.wrkready` must be `1` (UI blank until then), `mpc outputs`,

@@ -8,7 +8,7 @@ Raspberry Pi**.
 It is **not** an architectural fork: there is **one codebase**. Platform
 differences are handled at runtime with `isPi()` (presence of a `Revision` line in
 `/proc/cpuinfo`) and at install time by a single additive installer,
-[`install-x86.sh`](install-x86.sh). Source deviation from upstream moOde is kept
+[`install.sh`](install.sh). Source deviation from upstream moOde is kept
 minimal and `isPi()`-guarded, so the fork stays **rebaseable on moOde upstream**
 (we follow their updates instead of diverging).
 
@@ -25,8 +25,8 @@ npm install
 npx gulp deploy --test --all --force      # -> build/dist/
 
 # 2. On the target (running Debian 13 x86_64 / Armbian arm64):
-sudo ./install-x86.sh            # add --reset-db to recreate the config DB
-#   first run on a *minimal* Debian (no sudo yet): su -c './install-x86.sh'
+sudo ./install.sh            # add --reset-db to recreate the config DB
+#   first run on a *minimal* Debian (no sudo yet): su -c './install.sh'
 ```
 
 The installer builds the moOde-tagged audio binaries **on-device** for parity
@@ -47,7 +47,7 @@ environment tests everything — use the right tier for the job.
 | Capability | **Docker** (`test-docker.sh`) | **KVM VM** (the rig) | **Real hardware** |
 |---|:---:|:---:|:---:|
 | Speed / iteration | ⚡ seconds | minutes | slowest |
-| `install-x86.sh` runs clean / idempotent | ✅ | ✅ | ✅ |
+| `install.sh` runs clean / idempotent | ✅ | ✅ | ✅ |
 | Package resolution + on-device **builds** | ✅ | ✅ | ✅ |
 | systemd as PID 1 (service enable/start) | ⚠️ privileged | ✅ native | ✅ |
 | WebUI comes up (`wrkready`, nginx/php/mpd) | ✅ | ✅ | ✅ |
@@ -92,7 +92,7 @@ environment tests everything — use the right tier for the job.
      <tag> /opt/moode` (re-mount after each reboot; not in fstab).
    - **USB DAC passthrough**: plug the DAC into the **host before** starting the VM,
      pass it through (e.g. `262a:9227`), else no card enumerates.
-   - Install: `sudo /opt/moode/install-x86.sh --reset-db`.
+   - Install: `sudo /opt/moode/install.sh --reset-db`.
 
 3. **Real hardware — final validation.** The only place to validate audio quality
    and the DAC, DSP, HDMI display / kiosk / Peppy, the touchscreen, Bluetooth, and

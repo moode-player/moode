@@ -2,7 +2,7 @@
 
 moode-nopi is the moOde audio player ported to **Debian 13 (Trixie) x86_64** (and,
 by extension, Armbian Trixie arm64). It is **not** a ready-made disk image: you
-install a minimal Debian first, then run the additive `install-x86.sh`, which
+install a minimal Debian first, then run the additive `install.sh`, which
 builds the moOde stack on top.
 
 This guide takes you from a blank PC to a working player.
@@ -40,7 +40,7 @@ Most screens are the defaults; the ones that matter for moode-nopi are below.
 | **Partitioning** | *Guided – use entire disk* → **All files in one partition** | moOde expects a single root partition (no separate `/home`). |
 | Write changes to disk | Yes | — |
 | Package manager / mirror | pick a nearby mirror; **no** to popularity contest | — |
-| **Software selection (tasksel)** | **UNCHECK everything except**: ☑ **SSH server** and ☑ **standard system utilities**. **No desktop environment.** | moOde runs headless; its own kiosk display (X11 + Chromium) is installed by `install-x86.sh`, not a Debian desktop. |
+| **Software selection (tasksel)** | **UNCHECK everything except**: ☑ **SSH server** and ☑ **standard system utilities**. **No desktop environment.** | moOde runs headless; its own kiosk display (X11 + Chromium) is installed by `install.sh`, not a Debian desktop. |
 | **GRUB boot loader** | **Yes** – install GRUB to the disk you just partitioned (e.g. `/dev/sda`) | Required. The installer disables predictable NIC naming via GRUB's kernel cmdline (see *Network interface names* below). Debian installs GRUB by default in both UEFI (`grub-efi`) and legacy-BIOS (`grub-pc`) modes — just accept it. |
 
 Finish, remove the USB stick, and reboot.
@@ -48,7 +48,7 @@ Finish, remove the USB stick, and reboot.
 > If you accidentally **set** a root password, your first user won't have `sudo`.
 > Either add it once as root — `su -` then `usermod -aG sudo moode` (or just run
 > the first install via `su -c`), or reinstall leaving the root password empty.
-> `install-x86.sh` also installs `sudo` and adds the player user to the `sudo`
+> `install.sh` also installs `sudo` and adds the player user to the `sudo`
 > group on its first run, so this self-heals after the first root-run.
 
 ---
@@ -73,7 +73,28 @@ ping -c2 deb.debian.org
 
 ## 4. Get moode-nopi
 
-Clone the repository onto the box and check out the release:
+**First, make sure your user can use `sudo`.** Everything below — even
+installing `git` — needs it, and on a fresh Debian `root` can't log in over SSH,
+so you can't side-step it. Check with:
+
+```bash
+sudo -v        # asks for YOUR password; silent success = you're in the sudo group
+```
+
+If that prints `<user> is not in the sudoers file` (or `not allowed to run
+sudo`), you most likely **set a root password** during the Debian install (see
+step 2). Add yourself to the `sudo` group once, from a root shell on the console:
+
+```bash
+su -                            # root password you set during install
+usermod -aG sudo moode          # use your actual username if not `moode`
+exit                            # then log out and back in for the group to apply
+```
+
+(If you left the root password empty as recommended, you already have `sudo` and
+can skip this.)
+
+Now clone the repository onto the box and check out the release:
 
 ```bash
 sudo apt-get update && sudo apt-get install -y git
@@ -90,7 +111,7 @@ builds the web app itself on the first run (see below).
 ## 5. Run the installer
 
 ```bash
-sudo ./install-x86.sh --reset-db
+sudo ./install.sh --reset-db
 ```
 
 - On the **first run** the installer builds the web app for you (it installs
@@ -101,7 +122,7 @@ sudo ./install-x86.sh --reset-db
   squeezelite, peppyalsa…) from source, so the whole run takes several minutes.
 - Full log: `install.log`, written next to the script in your clone directory (the
   whole run is mirrored there as well as to the terminal; override with
-  `INSTALL_LOG=/path sudo ./install-x86.sh …`). Note `/var/log/moode.log` is a
+  `INSTALL_LOG=/path sudo ./install.sh …`). Note `/var/log/moode.log` is a
   different file — moOde's **runtime** log, written by the worker once it starts.
 - It is **re-runnable**; drop `--reset-db` to keep your settings on later runs.
 
@@ -137,7 +158,7 @@ When a newer `*-nopi.*` release comes out, update in place from the same clone:
 ```bash
 cd moode-nopi
 git pull                           # or: git fetch && git checkout <newer-tag>
-sudo ./install-x86.sh --update
+sudo ./install.sh --update
 ```
 
 `--update` rebuilds the web app from the pulled source, re-deploys it, re-applies
@@ -156,7 +177,7 @@ touch the database; never pass `--reset-db` for an update).
   automatically when the root filesystem sits on an SD card / eMMC (`mmcblk*`,
   typical on Armbian SBCs) and skips it on x86 SSD/NVMe where it's pointless; the
   UI control then appears only when the `log2ram` package is actually installed.
-  Force or skip with `INSTALL_LOG2RAM=1|0` at the top of `install-x86.sh`.
+  Force or skip with `INSTALL_LOG2RAM=1|0` at the top of `install.sh`.
 - **Network interface names.** moOde's UI (SSID scan, Network config) expects
   `eth0` / `wlan0`. On a fresh Debian your NICs will instead have *predictable*
   names that vary by firmware — `enp1s0`, `eno1`, `ens33` (typical under UEFI) or
@@ -169,7 +190,7 @@ touch the database; never pass `--reset-db` for an update).
   edit. If you boot some other loader (e.g. systemd-boot, or Armbian's), the
   installer prints a warning and you must add `net.ifnames=0 biosdevname=0` to the
   kernel cmdline yourself.
-- **arm64 / Armbian**: the same `install-x86.sh` works on Armbian Trixie (arm64);
+- **arm64 / Armbian**: the same `install.sh` works on Armbian Trixie (arm64);
   start from a minimal Armbian server image instead of the Debian netinst, then
   follow from step 3. Armbian uses u-boot, not GRUB, so the installer writes the
   `net.ifnames=0` cmdline to `/boot/armbianEnv.txt` and re-points netplan at

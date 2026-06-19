@@ -20,7 +20,7 @@
 #   - Fresh Debian 13 (Trixie) x86_64 (or arm64), with internet access.
 #   - A normal login user at UID 1000 (the first user created by the Debian
 #     installer). worker.php derives the player user from `grep 1000:1000`.
-#   - Run as root:  sudo ./install-x86.sh
+#   - Run as root:  sudo ./install.sh
 #   - The frontend must be built first on a machine with Node 18:
 #       npm install && npx gulp deploy --test --all
 #     which produces build/dist/. This script deploys from there.
@@ -59,7 +59,7 @@ NO_WORKER=0
 
 # Update mode: force a fresh web-app build from the current source tree and
 # re-deploy/re-apply everything, keeping the existing config DB. Typical flow:
-# `git pull` (or check out a newer *-x86.* tag) then `./install-x86.sh --update`.
+# `git pull` (or check out a newer *-nopi.* tag) then `./install.sh --update`.
 UPDATE=0
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -87,7 +87,7 @@ done
 # Mirror the whole run to a log file beside the script (discoverable - it sits in the
 # clone dir, typically under the player's home - rather than in /var/log, which holds
 # moOde's RUNTIME logs (moode*.log), not this installer's output). Still prints to the
-# terminal via tee. Override the path with INSTALL_LOG=/path ./install-x86.sh.
+# terminal via tee. Override the path with INSTALL_LOG=/path ./install.sh.
 INSTALL_LOG="${INSTALL_LOG:-$REPO_DIR/install.log}"
 exec > >(tee "$INSTALL_LOG") 2>&1
 printf '\033[1;32m==>\033[0m install log: %s (%s)\n' "$INSTALL_LOG" "$(date '+%Y-%m-%d %H:%M:%S')"
@@ -120,7 +120,7 @@ log "Player user (UID 1000): $PLAYER_USER"
 #----------------------------------------------------------------------------#
 # Phase 0b - Build the web app (gulp) if needed
 #----------------------------------------------------------------------------#
-# install-x86.sh deploys the web app from build/dist/, which is gulp output (not
+# install.sh deploys the web app from build/dist/, which is gulp output (not
 # committed). Rather than make the user build it by hand, build it here when it is
 # missing (a fresh `git clone`) or when --update forces a refresh. The frontend
 # build needs Node 18 specifically (the gulp 4 pipeline); pin the exact validated
