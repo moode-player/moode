@@ -94,14 +94,21 @@ exit                            # then log out and back in for the group to appl
 (If you left the root password empty as recommended, you already have `sudo` and
 can skip this.)
 
-Now clone the repository onto the box and check out the release:
+Now clone the repository onto the box:
 
 ```bash
 sudo apt-get update && sudo apt-get install -y git
 git clone https://github.com/Gjuju/moode-nopi.git
 cd moode-nopi
-git checkout 10.2.3-nopi.1         # or stay on the default branch for the latest
 ```
+
+Cloning drops you on the **`main`** branch, which **is** the latest stable release
+(`main` only ever moves forward to a newer release tag). So there is **nothing to
+check out** — you're already on the version you want.
+
+> *Advanced, optional:* to pin an older release use `git checkout <tag>` (see the
+> repo's **Releases**); to track the in-progress version use `git checkout develop`.
+> Most people should just stay on `main`.
 
 That's all you fetch — you do **not** build anything by hand. The installer
 builds the web app itself on the first run (see below).
