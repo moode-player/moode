@@ -111,20 +111,24 @@ builds the web app itself on the first run (see below).
 ## 5. Run the installer
 
 ```bash
-sudo ./install.sh --reset-db
+sudo ./install.sh
 ```
 
 - On the **first run** the installer builds the web app for you (it installs
   Node 18 via nvm and runs the gulp build) before deploying — no manual build
   step needed.
-- `--reset-db` creates a fresh config database (use it on a first install).
+- **No flag needed for a first install:** the installer **creates the config
+  database automatically when none exists**. `--reset-db` is only for **wiping an
+  existing** config back to factory defaults (it backs the current DB up first), so
+  on a fresh box it would be redundant.
 - It then installs packages and builds moOde's patched binaries (mpd, caps,
   squeezelite, peppyalsa…) from source, so the whole run takes several minutes.
 - Full log: `install.log`, written next to the script in your clone directory (the
   whole run is mirrored there as well as to the terminal; override with
   `INSTALL_LOG=/path sudo ./install.sh …`). Note `/var/log/moode.log` is a
   different file — moOde's **runtime** log, written by the worker once it starts.
-- It is **re-runnable**; drop `--reset-db` to keep your settings on later runs.
+- It is **re-runnable** and **keeps your settings by default**; pass `--reset-db`
+  only when you deliberately want to start the database over from scratch.
 
 When it finishes, reboot once:
 
@@ -142,8 +146,8 @@ Open the WebUI in a browser:
 http://moode.local/        (or http://<ip-address>/)
 ```
 
-Then in **Configure → Audio**, pick your real output device (after `--reset-db`
-the default is the Pi's HDMI, which doesn't exist on a PC). A USB DAC with no
+Then in **Configure → Audio**, pick your real output device (out of the box the
+fresh database defaults to the Pi's HDMI, which doesn't exist on a PC). A USB DAC with no
 hardware volume control needs **MPD volume = Software**.
 
 Wi-Fi, library/NAS, renderers, the local HDMI display, etc. are all configured
