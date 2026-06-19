@@ -122,7 +122,7 @@ working unchanged on a real Raspberry Pi.
 
 ## Debug methods (the x86 VM)
 
-Rig lives at `/home/$USER/moode-x86-vm/` (NOT a tracked moOde file).
+Rig lives at `/home/$USER/moode-nopi-vm/` (NOT a tracked moOde file).
 
 - `./run-vm.sh start|ssh|stop|reset` — boots a Debian 13 cloud image (KVM).
   Forwards host `:2222`→ssh, `:8080`→WebUI:80. Repo shared read-only over 9p.
@@ -131,7 +131,7 @@ Rig lives at `/home/$USER/moode-x86-vm/` (NOT a tracked moOde file).
   (GRUB boots cloud kernel otherwise) and reboot.
 - Mount the repo in the VM: `sudo mount -t 9p -o trans=virtio,version=9p2000.L,ro
   moderepo /opt/moode` (not in fstab — re-mount after reboot).
-- SSH: `ssh -i /home/$USER/moode-x86-vm/id_vm -p 2222 -o StrictHostKeyChecking=no
+- SSH: `ssh -i /home/$USER/moode-nopi-vm/id_vm -p 2222 -o StrictHostKeyChecking=no
   -o UserKnownHostsFile=/dev/null moode@127.0.0.1`. Console login: the cloud-init
   creds set in `run-vm.sh`'s `user-data`.
 - **USB DAC passthrough** (run-vm.sh `usb-host` 262a:9227): plug the DAC into the
