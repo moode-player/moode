@@ -19,8 +19,8 @@
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-IMAGE="moode-x86-test"
-NAME="moode-x86-test"
+IMAGE="moode-nopi-test"
+NAME="moode-nopi-test"
 HOST_PORT=8080
 
 log()  { printf '\033[1;32m==>\033[0m %s\n' "$*"; }

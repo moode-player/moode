@@ -954,6 +954,9 @@ install -m 644 "$REPO_DIR/etc/default/mpd.sed" /etc/default/mpd
 # the no-logfile defaults. These replace the earlier x86-specific sudoers file.
 install -m 440 "$REPO_DIR/etc/sudoers.d/010_moode"              /etc/sudoers.d/010_moode
 install -m 440 "$REPO_DIR/etc/sudoers.d/010_www-data-nopasswd"  /etc/sudoers.d/010_www-data-nopasswd
+# Legacy cleanup - keep this exact name: it removes the file an OLD installer
+# version created as 010_moode-x86. Do NOT rename to 010_moode-nopi (that would
+# orphan the old file on machines that still have it).
 rm -f /etc/sudoers.d/010_moode-x86
 
 # Make the player user a sudoer. On Raspberry Pi OS the default user is in the
