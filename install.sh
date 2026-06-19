@@ -303,73 +303,55 @@ if [ "$INSTALL_UPNP" = 1 ]; then
 	if curl -fsSL https://www.lesbonscomptes.com/pages/lesbonscomptes.gpg \
 		| gpg --batch --yes --dearmor -o /usr/share/keyrings/lesbonscomptes.gpg 2>/dev/null
 	then
-		# deb822 .sources (upstream's current published format). Drop any stale
-		# .list from an older installer run so we don't end up with both.
-		rm -f /etc/apt/sources.list.d/upmpdcli.list
-		# lesbonscomptes serves two pools: downloads/debian (amd64/i386) and
-		# downloads/raspbian (arm64/armhf). Pick by arch - on Armbian arm64 the
-		# debian pool has NO package, so `apt install upmpdcli` would abort the whole
-		# install under set -e. (Verified: the raspbian pool ships upmpdcli arm64.)
+		# Add the repo the DOCUMENTED way (lesbonscomptes/pages/signatures.html):
+		# download their ready-made deb822 .sources file (per release + arch) into
+		# sources.list.d, then a NORMAL `apt-get update` + install. We deliberately
+		# dropped the previous hand-crafted .sources + ISOLATED
+		# `apt-get update -o Dir::Etc::sourceparts=-` + 3-try loop: during a real
+		# install that isolated update left `apt-cache policy` unable to see the
+		# candidate (UPnP wrongly skipped on every box) EVEN THOUGH the Packages index
+		# downloaded fine - an apt pkgcache-coherency quirk of the restricted update
+		# that was not reproducible by hand. The plain documented flow is reliable.
+		rm -f /etc/apt/sources.list.d/upmpdcli.list   # drop any stale .list from old runs
+		# lesbonscomptes ships the .sources as upmpdcli-<suite> (debian pool: amd64/i386)
+		# and upmpdcli-r<suite> (raspbian pool: arm64/armhf). Pick by arch.
 		case "$(dpkg --print-architecture)" in
-			arm64|armhf) UPNP_POOL=raspbian ;;
-			*)           UPNP_POOL=debian ;;
+			arm64|armhf) _rpfx=r; UPNP_POOL=raspbian ;;
+			*)           _rpfx=;  UPNP_POOL=debian ;;
 		esac
-		printf 'Types: deb\nURIs: https://www.lesbonscomptes.com/upmpdcli/downloads/%s/\nSuites: %s\nComponents: main\nSigned-By: /usr/share/keyrings/lesbonscomptes.gpg\n' \
-			"$UPNP_POOL" "$SUITE" > /etc/apt/sources.list.d/upmpdcli.sources
+		if ! curl -fsSL "https://www.lesbonscomptes.com/upmpdcli/pages/upmpdcli-${_rpfx}${SUITE}.sources" \
+				-o /etc/apt/sources.list.d/upmpdcli.sources 2>/dev/null; then
+			# Fallback: generate the same content (http, like the official file) if the
+			# ready-made .sources isn't reachable for this suite.
+			printf 'Types: deb\nURIs: http://www.lesbonscomptes.com/upmpdcli/downloads/%s/\nSuites: %s\nComponents: main\nSigned-By: /usr/share/keyrings/lesbonscomptes.gpg\n' \
+				"$UPNP_POOL" "$SUITE" > /etc/apt/sources.list.d/upmpdcli.sources
+		fi
 		log "Added upmpdcli apt repo ($UPNP_POOL/$SUITE)"
-		# Safety net: keep the upmpdcli packages queued only if the repo offers an
-		# installable candidate for this arch. Retry the update a few times (the new
-		# repo's first fetch can blip on a flaky network - seen on Armbian) so a
-		# transient failure doesn't wrongly skip UPnP. If still no candidate, drop all
-		# upmpdcli pkgs + the repo so `apt install` never aborts the run under set -e.
-		# Wait for the new repo's metadata (its first fetch can blip on a flaky network -
-		# seen on Armbian), then install only the upmpdcli* packages that actually have an
-		# installable candidate. The repo normally offers all three (upmpdcli +
-		# upmpdcli-tidal + upmpdcli-qobuz - small arch:all Python cdplugins), but its
-		# contents can vary by suite/arch and a single missing package would abort the
-		# whole run under set -e. Drop every upmpdcli* from OPT_PKGS, then re-add only the
-		# available ones, and say plainly which get installed.
-		UPNP_OK=0
-		_uplog="$(mktemp)"
-		for _try in 1 2 3; do
-			# Update ONLY the upmpdcli source (not the full sources list) and KEEP its
-			# output. Isolating the source makes the check immune to other repos and the
-			# captured log makes a real failure diagnosable instead of a bare "no
-			# candidate". The ACTUAL failure mode seen on armhf: apt fetched + verified
-			# the InRelease fine (key is good) but the Packages-index download BLIPPED,
-			# and on a plain re-`update` apt sees the InRelease unchanged ("Atteint") and
-			# SKIPS re-fetching Packages -> the candidate stays absent forever and UPnP is
-			# wrongly skipped (the pkg DOES exist: raspbian pool ships upmpdcli armhf+arm64,
-			# debian pool ships amd64). Two-part fix: (a) Acquire::Retries makes apt re-try
-			# the transient index download WITHIN one update; (b) wipe this repo's cached
-			# lists each pass so a stale/partial index can never pin the retry to a no-op.
-			rm -f /var/lib/apt/lists/*lesbonscomptes* /var/lib/apt/lists/partial/*lesbonscomptes* 2>/dev/null
-			apt-get update -o Dir::Etc::sourcelist="sources.list.d/upmpdcli.sources" \
-				-o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" \
-				-o Acquire::Retries=3 >"$_uplog" 2>&1 || true
-			apt-cache policy upmpdcli 2>/dev/null | grep -q 'Candidate: [0-9]' && { UPNP_OK=1; break; }
-			sleep 3
-		done
+		# NORMAL full update (NOT isolated). `|| true` so a transient blip on any repo
+		# doesn't abort under set -e; Acquire::Retries re-tries failed index downloads.
+		apt-get update -o Acquire::Retries=3 || true
+		# Queue only the upmpdcli* packages that actually have an installable candidate
+		# for this arch, so the later bulk `apt install` never aborts under set -e.
+		# (LC_ALL=C.UTF-8 is exported at the top so apt-cache policy prints English ->
+		# these greps are locale-stable. The pkg exists: debian pool ships amd64,
+		# raspbian pool ships arm64+armhf, plugins are arch:all.)
 		_keep=(); for p in "${OPT_PKGS[@]}"; do case "$p" in upmpdcli|upmpdcli-tidal|upmpdcli-qobuz) ;; *) _keep+=("$p");; esac; done; OPT_PKGS=("${_keep[@]}")
-		if [ "$UPNP_OK" = 1 ]; then
+		if apt-cache policy upmpdcli 2>/dev/null | grep -q 'Candidate: [0-9]'; then
 			_upnp=()
 			for p in upmpdcli upmpdcli-tidal upmpdcli-qobuz; do
 				if apt-cache policy "$p" 2>/dev/null | grep -q 'Candidate: [0-9]'; then
 					_upnp+=("$p")
 				else
-					warn "UPnP: '$p' is not in the upmpdcli repo for $(dpkg --print-architecture); skipping just that package"
+					warn "UPnP: '$p' not offered by the upmpdcli repo for $(dpkg --print-architecture); skipping just that package"
 				fi
 			done
 			OPT_PKGS+=("${_upnp[@]}")
 			log "UPnP (upmpdcli): installing ${_upnp[*]}"
 		else
-			warn "upmpdcli has no candidate for $(dpkg --print-architecture) after 3 tries; UPnP skipped"
-			echo "---- apt-get update output for the upmpdcli repo (last try) ----"
-			cat "$_uplog"
-			echo "---------------------------------------------------------------"
+			warn "upmpdcli has no candidate for $(dpkg --print-architecture); UPnP skipped"
+			echo "---- apt-cache policy upmpdcli ----"; apt-cache policy upmpdcli 2>&1; echo "-----------------------------------"
 			rm -f /etc/apt/sources.list.d/upmpdcli.sources
 		fi
-		rm -f "$_uplog"
 	else
 		warn "upmpdcli repo setup failed; UPnP will be skipped"
 		_keep=(); for p in "${OPT_PKGS[@]}"; do case "$p" in upmpdcli|upmpdcli-tidal|upmpdcli-qobuz) ;; *) _keep+=("$p");; esac; done; OPT_PKGS=("${_keep[@]}")
