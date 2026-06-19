@@ -81,9 +81,22 @@ so you can't side-step it. Check with:
 sudo -v        # asks for YOUR password; silent success = you're in the sudo group
 ```
 
-If that prints `<user> is not in the sudoers file` (or `not allowed to run
-sudo`), you most likely **set a root password** during the Debian install (see
-step 2). Add yourself to the `sudo` group once, from a root shell on the console:
+If that prints `sudo: command not found` (or `-bash: sudo: commande
+introuvable`), a minimal Debian install ships **without `sudo` at all**. Install
+it first, from a root shell on the console — note `apt`, not `sudo apt`, since
+that's the very thing you're missing:
+
+```bash
+su -                            # root password you set during install
+apt update && apt install -y sudo
+usermod -aG sudo moode          # use your actual username if not `moode`
+exit                            # then log out and back in for the group to apply
+```
+
+If instead it prints `<user> is not in the sudoers file` (or `not allowed to run
+sudo`), `sudo` is installed but you most likely **set a root password** during
+the Debian install (see step 2). Add yourself to the `sudo` group once, from a
+root shell on the console:
 
 ```bash
 su -                            # root password you set during install
