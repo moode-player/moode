@@ -29,19 +29,19 @@ Write the ISO to the USB stick (e.g. with Balena Etcher, Rufus, or
 Boot the PC from the USB stick and start the **Graphical install** (or Install).
 Most screens are the defaults; the ones that matter for moode-nopi are below.
 
-| Step | What to choose | Why |
-|------|----------------|-----|
-| Hostname | `moode` (or anything) | Becomes the player name; you can change it later in the UI. |
-| Domain name | leave blank | — |
-| **Root password** | **leave it EMPTY** | When root has no password, the Debian installer locks the root account and gives your first user `sudo`. That   lets you run the installer with `sudo` straight away. |
-| **Full name / username** | username **`moode`** | The installer derives the player user from **UID 1000** = the first user you create. It must be `moode`. |
-| **User password** | **`moodeaudio`** | Same default as the Pi image. Change it afterwards if you like. |
-| Time zone / locale / keyboard | your choice | — |
-| **Partitioning** | *Guided – use entire disk* → **All files in one partition** | moOde expects a single root partition (no separate `/home`). |
-| Write changes to disk | Yes | — |
-| Package manager / mirror | pick a nearby mirror; **no** to popularity contest | — |
+| Step                             | What to choose | Why |
+| -------------------------------- | --- | --- |
+| Hostname                         | `moode` (or anything) | Becomes the player name; you can change it later in the UI. |
+| Domain name                      | leave blank | — |
+| **Root password**                | **leave it EMPTY** | When root has no password, the Debian installer locks the root account and gives your first user `sudo`. That lets you run the installer with `sudo` straight away. |
+| **Full name / username**         | username **`moode`** | The installer derives the player user from **UID 1000** = the first user you create. It must be `moode`. |
+| **User password**                | **`moodeaudio`** | Same default as the Pi image. Change it afterwards if you like. |
+| Time zone / locale / keyboard    | your choice | — |
+| **Partitioning**                 | *Guided – use entire disk* → **All files in one partition** | moOde expects a single root partition (no separate `/home`). |
+| Write changes to disk            | Yes | — |
+| Package manager / mirror         | pick a nearby mirror; **no** to popularity contest | — |
 | **Software selection (tasksel)** | **UNCHECK everything except**: ☑ **SSH server** and ☑ **standard system utilities**. **No desktop environment.** | moOde runs headless; its own kiosk display (X11 + Chromium) is installed by `install.sh`, not a Debian desktop. |
-| **GRUB boot loader** | **Yes** – install GRUB to the disk you just partitioned (e.g. `/dev/sda`) | Required. The installer disables predictable NIC naming via GRUB's kernel cmdline (see *Network interface names* below). Debian installs GRUB by default in both UEFI (`grub-efi`) and legacy-BIOS (`grub-pc`) modes — just accept it. |
+| **GRUB boot loader**             | **Yes** – install GRUB to the disk you just partitioned (e.g. `/dev/sda`) | Required. The installer disables predictable NIC naming via GRUB's kernel cmdline (see *Network interface names* below). Debian installs GRUB by default in both UEFI (`grub-efi`) and legacy-BIOS (`grub-pc`) modes — just accept it. |
 
 Finish, remove the USB stick, and reboot.
 
