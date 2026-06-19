@@ -71,11 +71,6 @@ NO_WORKER=0
 # `git pull` (or check out a newer *-nopi.* tag) then `./install.sh --update`.
 UPDATE=0
 
-# TEMPORARY (remove once the upmpdcli SIGPIPE fix is validated on all 3 boards):
-# --upmpdcli runs ONLY the UPnP repo-setup + install phase and exits, so the fix
-# can be tested without a full (long) install run. See the ONLY_UPNP block below.
-ONLY_UPNP=0
-
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIST_DIR="$REPO_DIR/build/dist"
 SQLDB="/var/local/www/db/moode-sqlite3.db"
@@ -94,7 +89,6 @@ for arg in "$@"; do
 		--reset-db) RESET_DB=1 ;;
 		--no-worker) NO_WORKER=1 ;;
 		--update) UPDATE=1 ;;
-		--upmpdcli) ONLY_UPNP=1 ;;   # TEMPORARY: UPnP-only run (remove after validation)
 		*) die "Unknown argument: $arg" ;;
 	esac
 done
@@ -124,46 +118,6 @@ if [ -f /etc/debian_version ]; then
 	[ "$DEB_MAJOR" = "13" ] || warn "Tested on Debian 13 (Trixie); detected '$DEB_MAJOR'. Continuing."
 else
 	warn "Not a Debian system (no /etc/debian_version). Continuing at your own risk."
-fi
-
-# TEMPORARY (--upmpdcli): run ONLY the UPnP repo-setup + install, then exit. Lets
-# us validate the pipefail+grep -q SIGPIPE fix without a full install. Mirrors the
-# real upmpdcli phase below (key + deb822 .sources + pipe-free candidate gate), then
-# installs directly. DELETE this whole block (and the flag) once validated.
-if [ "$ONLY_UPNP" = 1 ]; then
-	log "Phase --upmpdcli: UPnP (upmpdcli) repo setup + install ONLY"
-	apt-get install -y ca-certificates curl gnupg
-	SUITE="$(. /etc/os-release 2>/dev/null; echo "${VERSION_CODENAME:-trixie}")"
-	curl -fsSL https://www.lesbonscomptes.com/pages/lesbonscomptes.gpg \
-		| gpg --batch --yes --dearmor -o /usr/share/keyrings/lesbonscomptes.gpg 2>/dev/null \
-		|| die "could not fetch/dearmor the lesbonscomptes signing key"
-	rm -f /etc/apt/sources.list.d/upmpdcli.list
-	case "$(dpkg --print-architecture)" in
-		arm64|armhf) _rpfx=r; UPNP_POOL=raspbian ;;
-		*)           _rpfx=;  UPNP_POOL=debian ;;
-	esac
-	if ! curl -fsSL "https://www.lesbonscomptes.com/upmpdcli/pages/upmpdcli-${_rpfx}${SUITE}.sources" \
-			-o /etc/apt/sources.list.d/upmpdcli.sources 2>/dev/null; then
-		printf 'Types: deb\nURIs: http://www.lesbonscomptes.com/upmpdcli/downloads/%s/\nSuites: %s\nComponents: main\nSigned-By: /usr/share/keyrings/lesbonscomptes.gpg\n' \
-			"$UPNP_POOL" "$SUITE" > /etc/apt/sources.list.d/upmpdcli.sources
-	fi
-	log "Added upmpdcli apt repo ($UPNP_POOL/$SUITE)"
-	apt-get update -o Acquire::Retries=3 || true
-	_has_cand() { local _p; _p="$(apt-cache policy "$1" 2>/dev/null || true)"; [[ "$_p" =~ Candidate:\ [0-9] ]]; }
-	if _has_cand upmpdcli; then
-		_upnp=()
-		for p in upmpdcli upmpdcli-tidal upmpdcli-qobuz; do
-			if _has_cand "$p"; then _upnp+=("$p"); else warn "UPnP: '$p' has no candidate for $(dpkg --print-architecture); skipping it"; fi
-		done
-		log "UPnP (upmpdcli): installing ${_upnp[*]}"
-		apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold "${_upnp[@]}"
-		log "Done. upmpdcli status: $(systemctl is-active upmpdcli 2>/dev/null || true) / installed: $(dpkg-query -W -f='${Version}' upmpdcli 2>/dev/null || echo none)"
-	else
-		warn "upmpdcli STILL has no candidate for $(dpkg --print-architecture) - the fix did NOT work"
-		echo "---- apt-cache policy upmpdcli ----"; apt-cache policy upmpdcli 2>&1; echo "-----------------------------------"
-		exit 1
-	fi
-	exit 0
 fi
 
 PLAYER_USER="$(awk -F: '$3==1000{print $1; exit}' /etc/passwd || true)"
