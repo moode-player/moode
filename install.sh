@@ -324,15 +324,20 @@ if [ "$INSTALL_UPNP" = 1 ]; then
 		_uplog="$(mktemp)"
 		for _try in 1 2 3; do
 			# Update ONLY the upmpdcli source (not the full sources list) and KEEP its
-			# output. The full-list `apt-get update >/dev/null 2>&1` used here before
-			# could fail for the upmpdcli repo alone (e.g. a transient IPv6 fetch/verify
-			# blip) yet leave the candidate absent, and with the output discarded the
-			# gate then SILENTLY skipped UPnP - even on amd64 where the package DOES
-			# exist (lesbonscomptes ships upmpdcli for the debian pool). Isolating the
-			# source makes the check immune to other repos and the captured log makes a
-			# real failure diagnosable instead of a bare "no candidate".
+			# output. Isolating the source makes the check immune to other repos and the
+			# captured log makes a real failure diagnosable instead of a bare "no
+			# candidate". The ACTUAL failure mode seen on armhf: apt fetched + verified
+			# the InRelease fine (key is good) but the Packages-index download BLIPPED,
+			# and on a plain re-`update` apt sees the InRelease unchanged ("Atteint") and
+			# SKIPS re-fetching Packages -> the candidate stays absent forever and UPnP is
+			# wrongly skipped (the pkg DOES exist: raspbian pool ships upmpdcli armhf+arm64,
+			# debian pool ships amd64). Two-part fix: (a) Acquire::Retries makes apt re-try
+			# the transient index download WITHIN one update; (b) wipe this repo's cached
+			# lists each pass so a stale/partial index can never pin the retry to a no-op.
+			rm -f /var/lib/apt/lists/*lesbonscomptes* /var/lib/apt/lists/partial/*lesbonscomptes* 2>/dev/null
 			apt-get update -o Dir::Etc::sourcelist="sources.list.d/upmpdcli.sources" \
-				-o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" >"$_uplog" 2>&1 || true
+				-o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" \
+				-o Acquire::Retries=3 >"$_uplog" 2>&1 || true
 			apt-cache policy upmpdcli 2>/dev/null | grep -q 'Candidate: [0-9]' && { UPNP_OK=1; break; }
 			sleep 3
 		done
