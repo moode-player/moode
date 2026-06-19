@@ -257,3 +257,15 @@ touch the database; never pass `--reset-db` for an update).
   `CONFIG_HID_HAPTIC` is off, which is the usual case.)
 - **Internet is required during install** (and updates): the installer fetches
   apt packages, Node, and builds several moOde binaries from source.
+- **Validated platforms.** The port is hardware-validated (audio/DSP, renderers,
+  networking incl. WiFi, local display) on these three, all with a Debian 13.5
+  (Trixie) userland:
+
+  | Board | Arch | OS | Kernel |
+  | --- | --- | --- | --- |
+  | Intel N4000 mini-PC | amd64 (x86_64) | Debian 13.5 (Trixie) | `6.12.90+deb13.1-amd64` |
+  | Orange Pi 3 LTS (Allwinner H6) | arm64 (aarch64) | Armbian 26.5.1 (Trixie) | `6.18.33-current-sunxi64` |
+  | Orange Pi+ 2E (Allwinner H3) | armhf (armv7l) | Armbian 26.08.0 (Trixie) | `6.18.35-current-sunxi` |
+
+  Other Debian-13 PCs and Armbian-Trixie SBCs should work the same way; these are
+  just the reference machines the installer is regularly exercised on.
