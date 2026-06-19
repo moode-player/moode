@@ -1848,7 +1848,24 @@ systemctl daemon-reload
 systemctl restart nginx "php${PHP_VER}-fpm" avahi-daemon 2>/dev/null || true
 
 # Name resolution (WINS/NetBIOS). Tolerant: a failure here must not abort install.
+# Order winbind AFTER the network is actually online. The shipped unit only has
+# `After=network.target`, which under NetworkManager is reached BEFORE any interface
+# has a carrier/IP, so winbindd binds its interface list too early and its broadcast
+# NetBIOS lookups (the `wins` NSS module -> `getent hosts <NAS>`) go out a not-yet-up
+# interface and silently resolve nothing -> CIFS mounts of a NAS referenced by NETBIOS
+# NAME fail with "could not resolve address for <HOST>" (nmblookup still works because
+# it re-detects interfaces per call). NM-wait-online provides network-online.target.
+install -d -m 755 /etc/systemd/system/winbind.service.d
+cat > /etc/systemd/system/winbind.service.d/10-network-online.conf <<'EOF'
+[Unit]
+After=network-online.target
+Wants=network-online.target
+EOF
+systemctl daemon-reload
 systemctl enable --now winbind 2>/dev/null || true
+# Re-bind to the now-up interfaces on a re-run too (the box may have been mid-boot
+# with no carrier when winbind last started). Harmless when already correct.
+systemctl restart winbind 2>/dev/null || true
 
 # USB auto-mount daemon (devmon). enable --now so already-inserted drives mount
 # at install time and future insertions are handled. restart on re-run to pick
