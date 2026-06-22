@@ -1333,6 +1333,36 @@ install -d -m 755 /var/local/www/db
 
 if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	log "Existing DB kept: $SQLDB (use --reset-db to recreate)"
+
+	# DB migration (--update): the kept DB may predate params added to the shipped
+	# schema since it was created. A missing param surfaces at runtime as an empty
+	# $_SESSION value with no error (worker runs error_reporting(E_ERROR)) - e.g. an
+	# absent 'ipaddr_timeout' makes checkForIpAddr() compute maxLoops = ''/2 = 0, so
+	# the worker never waits for a wlan0 DHCP lease and drops straight to the Hotspot:
+	# the WiFi client silently never connects (observed on all three test boards).
+	# Backfill params present in the schema but missing here, into the param/value
+	# config tables, WITHOUT touching existing rows (user config preserved). Pi-iso:
+	# this only ever ADDS rows the schema already defines, so a current DB is a no-op.
+	_schema_db=$(mktemp --suffix=.db)
+	if sqlite3 "$_schema_db" < "$SQLDB_SCHEMA" 2>/dev/null; then
+		_mig_total=0
+		for _t in cfg_system cfg_mpd; do
+			_added=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
+				INSERT INTO $_t (param, value)
+					SELECT s.param, s.value FROM sch.$_t s
+					WHERE s.param NOT IN (SELECT param FROM main.$_t);
+				SELECT changes();" 2>/dev/null | tail -1)
+			if [ -n "$_added" ] && [ "$_added" -gt 0 ] 2>/dev/null; then
+				log "DB migration: backfilled $_added missing param(s) into $_t"
+				_mig_total=$((_mig_total + _added))
+			fi
+		done
+		[ "$_mig_total" -eq 0 ] && log "DB migration: schema params all present (no backfill needed)"
+	else
+		warn "DB migration: could not load schema for comparison, backfill skipped"
+	fi
+	rm -f "$_schema_db"
+	unset _schema_db _mig_total _added _t
 else
 	[ -f "$SQLDB" ] && cp -a "$SQLDB" "$SQLDB.bak.$(date +%s)" && warn "Backed up old DB"
 	rm -f "$SQLDB"

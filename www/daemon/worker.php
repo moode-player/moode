@@ -163,6 +163,19 @@ foreach ($sessionVars as $var) {
 purgeSessionFiles();
 workerLog('worker: PHP session:   cleaned');
 
+// Non-Pi: the 'moodeutl -D' calls above run as root (sysCmd = sudo) and, via
+// deleteSessionVar(), session_start() the active session - (re)creating its file
+// owned by root. The x86/Armbian worker runs as www-data, so under Trixie's
+// fs.protected_regular=2 it then cannot open that root-owned file: load_system()
+// below fails and $_SESSION is left EMPTY. That single fault silently breaks WiFi
+// (empty ipaddr_timeout makes checkForIpAddr() wait 0s -> instant Hotspot), the
+// WebUI (entirely $_SESSION-driven) and audio (worker fatals on the empty config).
+// Reclaim ownership before loading. isPi()-guarded: on the Pi the worker is root,
+// so the root-owned file is readable and this is a no-op (Pi behaviour identical).
+if (!isPi()) {
+	sysCmd('chown www-data:www-data ' . SESSION_SAVE_PATH . '/sess_' . phpSession('get_sessionid'));
+}
+
 // Open session and load cfg_system and cfg_radio
 phpSession('load_system');
 phpSession('load_radio');
