@@ -9,12 +9,13 @@
  * small and the rebases onto new upstream tags clean.
  */
 
-// Upstream repo, queried anonymously over HTTPS for the update check (the local
-// clone's origin may be SSH, which a deployed box cannot authenticate to).
+// Our fork's repo, queried anonymously over HTTPS for the nopi update check (a
+// deployed box has no SSH credentials, and the local clone's origin may be SSH).
 const NOPI_REPO_URL      = 'https://github.com/Gjuju/moode-nopi.git';
-// Cache of the latest remote tag, refreshed at most once per MAXAGE so the
-// System config page never makes a network call more than daily.
+// Daily caches (by file mtime) so the System config page never makes a network
+// call more than once a day per check.
 const NOPI_LATEST_CACHE  = '/var/local/www/nopi_latest';
+const MOODE_UPDATE_CACHE = '/var/local/www/moode_update';
 const NOPI_LATEST_MAXAGE = 86400; // 1 day
 
 // Running moode-nopi release = the git tag, stamped into a plain file by
@@ -25,6 +26,8 @@ function getNopiRel() {
 	$f = '/var/local/www/nopi_version';
 	return is_file($f) ? trim(file_get_contents($f)) : '';
 }
+
+// --- moode-nopi update (our fork; tags 'X.Y.Z-nopi.N' via git ls-remote) -------
 
 // Parse 'X.Y.Z-nopi.N' into a comparable [major, minor, patch, nopi] tuple,
 // ignoring any trailing '-<n>-g<hash>' that `git describe` adds when the
@@ -51,17 +54,16 @@ function nopiVerCmp($a, $b) {
 	return 0;
 }
 
-// Latest moode-nopi tag on the remote, cached by file mtime so the config page
-// makes at most one (bounded) network call per MAXAGE. Returns '' when unknown
-// (offline with no prior cache). Safe to call as www-data: the cache lives in
-// the www-data-owned /var/local/www, and sysCmd() runs the bounded git probe.
+// Latest nopi tag on the remote, cached by file mtime so the config page makes
+// at most one (bounded) network call per MAXAGE. Returns '' when unknown
+// (offline with no prior cache). Safe as www-data: the cache lives in the
+// www-data-owned /var/local/www.
 function getNopiLatest() {
 	$cache = NOPI_LATEST_CACHE;
 	if (is_file($cache) && (time() - filemtime($cache)) < NOPI_LATEST_MAXAGE) {
 		return trim(file_get_contents($cache));
 	}
-	// `timeout` keeps a dead network from hanging the page; the pipe stages run
-	// as the web user (only the git probe needs no privilege anyway).
+	// `timeout` keeps a dead network from hanging the page.
 	$cmd = 'timeout 8 git ls-remote --tags --refs ' . escapeshellarg(NOPI_REPO_URL) .
 		" 2>/dev/null | sed -n 's#.*refs/tags/##p' | grep -E '\\-nopi\\.[0-9]+\$' | sort -V | tail -1";
 	$latest = trim(sysCmd($cmd)[0] ?? '');
@@ -77,4 +79,30 @@ function getNopiLatest() {
 function getNopiUpdate() {
 	$latest = getNopiLatest();
 	return nopiVerCmp($latest, getNopiRel()) === 1 ? $latest : '';
+}
+
+// --- upstream moOde update (reuse moOde's own official channel) -----------------
+// moOde already ships an update check: checkForUpd() fetches update-<pkgid>.txt
+// from res_software_upd_url (a public GitHub-raw file, platform-agnostic) and it
+// works on x86 too. We reuse it here purely informationally - to flag when a
+// newer official moOde release exists (a candidate to rebase the port onto) -
+// using the same available-vs-running Date comparison as sys-config.php's
+// "Check for update" handler. Result cached daily so the page stays snappy.
+function getMoodeUpdate() {
+	$cache = MOODE_UPDATE_CACHE;
+	if (is_file($cache) && (time() - filemtime($cache)) < NOPI_LATEST_MAXAGE) {
+		return trim(file_get_contents($cache));
+	}
+	$out = '';
+	if (!empty($_SESSION['res_software_upd_url'])) {
+		$avail = checkForUpd($_SESSION['res_software_upd_url'] . '/');
+		$availDate = isset($avail['Date']) ? strtotime($avail['Date']) : false;
+		$runParts  = explode(' ', getMoodeRel('verbose'));
+		$runDate   = isset($runParts[1]) ? strtotime($runParts[1]) : false;
+		if ($availDate !== false && $runDate !== false && $availDate > $runDate && !empty($avail['Release'])) {
+			$out = $avail['Release'];
+		}
+	}
+	@file_put_contents($cache, $out . "\n");
+	return $out;
 }

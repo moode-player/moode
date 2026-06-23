@@ -405,6 +405,10 @@ sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/s
 // for this platform exists.
 $_swupdate_hide = isPi() ? '' : 'hide';
 $_this_mooderel = getMoodeRel('verbose');
+// moode-nopi: newer official moOde release available? (reuses moOde's checkForUpd,
+// cached daily). Non-Pi only - on the Pi moOde's own updater section covers this.
+$_moode_update = isPi() ? '' : getMoodeUpdate();
+$_moode_update_hide = $_moode_update === '' ? 'hide' : '';
 // moode-nopi: running port version (git tag stamped by install.sh). Hide the
 // line when absent (not a nopi install, e.g. a real Pi).
 $_this_nopirel = getNopiRel();
