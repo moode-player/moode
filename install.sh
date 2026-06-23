@@ -836,6 +836,19 @@ rsync -a "$DIST_DIR/usr/local/bin/"  /usr/local/bin/
 rsync -a "$DIST_DIR/var/local/www/"  /var/local/www/
 chmod +x /usr/local/bin/moodeutl /var/www/daemon/worker.php 2>/dev/null || true
 
+# Stamp the running moode-nopi version (git tag) for the WebUI to display
+# (Configure > System > Software update). Derived offline from the repo's git
+# metadata at deploy time - no runtime git/network dependency. If this tree is
+# not a git checkout, remove any stale stamp so the UI line stays hidden.
+if NOPI_VER=$(cd "$REPO_DIR" && git describe --tags --always 2>/dev/null) && [ -n "$NOPI_VER" ]; then
+	printf '%s\n' "$NOPI_VER" > /var/local/www/nopi_version
+	log "Stamped moode-nopi version: $NOPI_VER"
+else
+	rm -f /var/local/www/nopi_version
+	warn "Could not derive moode-nopi version (not a git checkout?); UI line hidden"
+fi
+chmod 644 /var/local/www/nopi_version 2>/dev/null || true
+
 # System helper scripts and assets shipped in the repo (referenced by worker
 # as /usr/share/moode-player/... and others). Copy the static usr/ tree.
 rsync -a "$REPO_DIR/usr/share/" /usr/share/ 2>/dev/null || true

@@ -18,6 +18,9 @@ require_once __DIR__ . '/constants.php';
 // Daemon loop sleep intervals
 require_once __DIR__ .  '/sleep-interval.php';
 
+// moode-nopi: non-Pi port helpers (separate file to keep upstream diff minimal)
+require_once __DIR__ . '/nopi.php';
+
 //----------------------------------------------------------------------------//
 // LOGGING
 //----------------------------------------------------------------------------//

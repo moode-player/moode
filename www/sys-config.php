@@ -405,6 +405,10 @@ sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/s
 // for this platform exists.
 $_swupdate_hide = isPi() ? '' : 'hide';
 $_this_mooderel = getMoodeRel('verbose');
+// moode-nopi: running port version (git tag stamped by install.sh). Hide the
+// line when absent (not a nopi install, e.g. a real Pi).
+$_this_nopirel = getNopiRel();
+$_nopirel_hide = $_this_nopirel === '' ? 'hide' : '';
 $autoClick = " onchange=\"autoClick('#btn-set-updater-auto-check');\"";
 $_select['updater_auto_check_on']  .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-1\" value=\"On\" " . (($_SESSION['updater_auto_check'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['updater_auto_check_off'] .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-2\" value=\"Off\" " . (($_SESSION['updater_auto_check'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
