@@ -409,6 +409,9 @@ $_this_mooderel = getMoodeRel('verbose');
 // line when absent (not a nopi install, e.g. a real Pi).
 $_this_nopirel = getNopiRel();
 $_nopirel_hide = $_this_nopirel === '' ? 'hide' : '';
+// moode-nopi: newer tag available on the remote? (cached daily, '' = up to date)
+$_nopi_update = $_this_nopirel === '' ? '' : getNopiUpdate();
+$_nopi_update_hide = $_nopi_update === '' ? 'hide' : '';
 $autoClick = " onchange=\"autoClick('#btn-set-updater-auto-check');\"";
 $_select['updater_auto_check_on']  .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-1\" value=\"On\" " . (($_SESSION['updater_auto_check'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['updater_auto_check_off'] .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check-2\" value=\"Off\" " . (($_SESSION['updater_auto_check'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
