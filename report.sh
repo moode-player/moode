@@ -186,7 +186,11 @@ collect() {
 	run "ip route"  ip route
 
 	section "MOODE-TAGGED PACKAGES"
-	run "dpkg versions" sh -c 'dpkg-query -W -f="\${Package}\t\${Version}\n" mpd caps camilladsp upmpdcli shairport-sync librespot squeezelite ashuffle 2>/dev/null'
+	# Per-package so one not-installed/non-dpkg name (camilladsp & ashuffle ship
+	# as /usr/local/bin or /usr/bin binaries, shairport-sync is on-demand) does
+	# not fail the whole query. Binaries are also probed by --version below.
+	run "dpkg versions" sh -c 'for p in mpd caps upmpdcli shairport-sync librespot squeezelite ashuffle bluez-alsa-utils; do v="$(dpkg-query -W -f="\${Version}" "$p" 2>/dev/null)"; printf "%-18s %s\n" "$p" "${v:-(not a dpkg package / not installed)}"; done'
+	run "binary versions" sh -c 'for b in /usr/local/bin/camilladsp /usr/local/bin/pleezer /usr/bin/ashuffle; do [ -x "$b" ] && printf "%-22s %s\n" "$(basename "$b")" "$("$b" --version 2>/dev/null | head -1)" || printf "%-22s %s\n" "$(basename "$b")" "(not present)"; done'
 
 	section "CONFIG (cfg_system, sensitive keys redacted)"
 	# Pull param/value but drop rows whose param name looks sensitive; the
