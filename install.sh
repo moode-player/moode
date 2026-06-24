@@ -2127,16 +2127,27 @@ echo
 warn "First boot: open the WebUI, go to Configure > Audio and pick your USB/HDMI"
 warn "output device. Pi-only options (I2S, GPIO, LCD) are hidden on this platform."
 echo
-# net.ifnames=0 (written to GRUB by Phase 3b) renames enpXsY/wlpXsY -> eth0/wlan0,
-# but only on the NEXT boot - until then NetworkManager's eth0/wlan0 keyfiles don't
-# match the live interface and the local-display kiosk / cold-boot service order
-# aren't exercised. A reboot is required. The rename can also change the DHCP lease,
-# so the IP address may differ after reboot; reconnect by hostname (.local) if so.
+# net.ifnames=0 (written to GRUB/armbianEnv by Phase 3b) renames enpXsY/wlpXsY/end0
+# -> eth0/wlan0, but only on the NEXT boot - until then NetworkManager's eth0/wlan0
+# keyfiles don't match the live interface and the local-display kiosk / cold-boot
+# service order aren't exercised. So a reboot is needed ONLY while that rename is
+# still pending - i.e. the live default-route interface still carries a predictable
+# name. Once it's eth0/wlan0 the rename has taken effect, so a pure --update (web
+# app / config refresh, no boot-config change) needs no reboot at all. The rename
+# can also change the DHCP lease, so the IP may differ; reconnect by .local if so.
 CUR_IFACE="$(ip -o -4 route show default 2>/dev/null | awk '{print $5; exit}')"
 case "$CUR_IFACE" in
-	eth*|wlan*) warn "REBOOT RECOMMENDED to finish applying all settings: sudo reboot" ;;
-	*)          warn "REBOOT REQUIRED: 'sudo reboot' now. Interface '${CUR_IFACE:-enpXsY}' will be" ;;
+	eth*|wlan*)
+		if [ "$UPDATE" = 1 ]; then
+			log "Update complete. No reboot needed."
+		else
+			warn "REBOOT RECOMMENDED to validate cold-boot startup: sudo reboot"
+		fi
+		;;
+	*)
+		warn "REBOOT REQUIRED: 'sudo reboot' now. Interface '${CUR_IFACE:-enpXsY}' will be"
+		warn "renamed to eth0/wlan0 (net.ifnames=0), which CAN CHANGE THIS HOST'S IP ADDRESS."
+		warn "If ${IP:-the current IP} stops responding after the reboot, reconnect at:"
+		warn "  http://$(hostname).local/"
+		;;
 esac
-warn "renamed to eth0/wlan0 (net.ifnames=0), which CAN CHANGE THIS HOST'S IP ADDRESS."
-warn "If ${IP:-the current IP} stops responding after the reboot, reconnect at:"
-warn "  http://$(hostname).local/"
