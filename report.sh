@@ -87,7 +87,8 @@ tailf() {
 # REDACTION BACKSTOP: runs over the ENTIRE assembled report, so even unexpected
 # leaks are caught. Local/private IPs (192.168/10/172.16-31/127, fe80 link-local,
 # fc/fd ULA) are intentionally KEPT — they aid debugging and are not sensitive.
-# Three passes (order matters):
+# Passes (order matters):
+#  0. strip ANSI colour escapes (install.sh's green "==>" markers leave litter).
 #  1. value following any sensitive key (= : space, quoted or not), case-insens.
 #  2. MAC addresses (xx:xx:xx:xx:xx:xx) — device fingerprint.
 #  3. GLOBAL unicast IPv6 only (2000::/3, FIRST hextet 2xxx/3xxx) — an
@@ -97,6 +98,7 @@ tailf() {
 #     and single-colon timestamps (HH:MM:SS) never match either.
 redact() {
 	sed -E \
+		-e 's/\x1b\[[0-9;]*m//g' \
 		-e 's/((pass(word|wd)?|psk|pre-shared-key|wpa-psk|secret|token|api[_-]?key|sharepassword|smbpass|client[_-]?secret|access[_-]?token)["'\'' ]*[:=][[:space:]]*["'\'']?)[^[:space:]"'\'']+/\1***REDACTED***/Ig' \
 		-e 's/([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}/**:MAC:**/g' \
 		-e 's/(^|[^0-9A-Fa-f:])([23][0-9A-Fa-f]{3}:([0-9A-Fa-f]{0,4}:){1,6}[0-9A-Fa-f]{0,4})/\1***global-IPv6***/g'
