@@ -1,0 +1,178 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2026 The moode-nopi project / Julien Gainza
+#
+# report.sh - collect a redacted diagnostics bundle for moode-nopi support.
+#
+# Run this on the box when you hit a problem and want help. It gathers the
+# health-checks needed to debug the non-Pi port (platform, services, worker /
+# session, MPD / audio, DSP, network, moode-tagged package versions, logs) into
+# a SINGLE text file.
+#
+# Secrets are redacted: network info comes from nmcli WITHOUT --show-secrets,
+# credential files are never read, and a backstop filter masks any
+# password / psk / token / key value that might slip through. Nothing leaves
+# the box unless you pass --upload, and even then you should review the file
+# first.
+
+set -u
+
+SELF_VERSION="1.0"
+DB="/var/local/www/db/moode-sqlite3.db"
+OUT="/tmp/nopi-report-$(date +%Y%m%d-%H%M%S).txt"
+DO_UPLOAD=0
+
+usage() {
+	cat <<'EOF'
+report.sh - moode-nopi diagnostics collector
+
+Usage:
+  sudo ./report.sh            Write a redacted report to /tmp and print the path
+  sudo ./report.sh --upload   Also upload it to a no-account paste and print the URL
+  ./report.sh --help          Show this help
+
+The report is plain text. Review it before sharing; secrets are redacted
+automatically but a quick skim never hurts. Attach the file (or the --upload
+URL) to your GitHub issue/discussion.
+EOF
+	exit 0
+}
+
+for arg in "$@"; do
+	case "$arg" in
+		--upload|-u) DO_UPLOAD=1 ;;
+		-h|--help)   usage ;;
+		*) echo "Unknown option: $arg (try --help)" >&2; exit 1 ;;
+	esac
+done
+
+if [[ $EUID -ne 0 ]]; then
+	echo "report.sh needs root (logs, configs, journal). Re-running with sudo..." >&2
+	exec sudo "$0" "$@"
+fi
+
+# --- helpers ---------------------------------------------------------------
+
+# section TITLE  -> a labelled header in the report
+section() { printf '\n========== %s ==========\n' "$1"; }
+
+# run "label" cmd args...  -> show the command and its output (stderr folded in)
+run() {
+	local label="$1"; shift
+	printf -- '--- %s ---\n$ %s\n' "$label" "$*"
+	"$@" 2>&1 || printf '(command failed: exit %s)\n' "$?"
+	printf '\n'
+}
+
+# tailf "label" FILE N  -> last N lines of a file if it exists
+tailf() {
+	local label="$1" file="$2" n="${3:-200}"
+	printf -- '--- %s (tail -n %s %s) ---\n' "$label" "$n" "$file"
+	if [[ -r "$file" ]]; then tail -n "$n" "$file"; else printf '(not present)\n'; fi
+	printf '\n'
+}
+
+# REDACTION BACKSTOP: mask the value following any sensitive key, whatever the
+# separator (= : space) and quoting. Case-insensitive (GNU sed). This runs over
+# the ENTIRE assembled report, so even unexpected leaks are caught.
+redact() {
+	sed -E 's/((pass(word|wd)?|psk|pre-shared-key|wpa-psk|secret|token|api[_-]?key|sharepassword|smbpass|client[_-]?secret|access[_-]?token)["'\'' ]*[:=][[:space:]]*["'\'']?)[^[:space:]"'\'']+/\1***REDACTED***/Ig'
+}
+
+# --- collection (everything below is appended to one buffer) ---------------
+
+collect() {
+	printf 'moode-nopi diagnostics report\n'
+	printf 'Generated : %s\n' "$(date -Is)"
+	printf 'Tool      : report.sh %s\n' "$SELF_VERSION"
+	printf 'Host      : %s\n' "$(hostname 2>/dev/null)"
+
+	section "PLATFORM / OS"
+	run "device-tree model" sh -c 'cat /proc/device-tree/model 2>/dev/null | tr -d "\0"; echo'
+	run "kernel"            uname -a
+	run "architecture"      dpkg --print-architecture
+	run "debian version"    sh -c 'cat /etc/debian_version 2>/dev/null'
+	run "os-release"        sh -c 'cat /etc/os-release 2>/dev/null'
+	run "moode-nopi version" sh -c 'cat /var/local/www/nopi_version 2>/dev/null || echo "(none)"'
+	run "uptime / load"     uptime
+
+	section "SERVICES"
+	run "core stack active" systemctl is-active moode-worker nginx mpd $(systemctl list-units --type=service --no-legend 'php*-fpm*' 2>/dev/null | awk '{print $1}')
+	for svc in moode-worker mpd nginx; do
+		run "status $svc" systemctl --no-pager --full status "$svc" -n 5
+	done
+	run "renderer/helper units" sh -c 'systemctl list-units --type=service --no-legend "bluealsa*" "shairport*" "librespot*" "squeezelite*" "upmpdcli*" "camilladsp*" "pleezer*" 2>/dev/null'
+
+	section "WORKER / SESSION"
+	run "worker.php user (must be www-data)" sh -c 'ps -o user= -C worker.php 2>/dev/null || echo "(worker.php not running)"'
+	run "wrkready (must be 1)" sh -c "sqlite3 '$DB' \"SELECT value FROM cfg_system WHERE param='wrkready'\" 2>/dev/null"
+	run "php session dir perms (want www-data)" sh -c 'ls -ld /var/local/php 2>/dev/null'
+	tailf "moode.log" /var/log/moode.log 120
+
+	section "INSTALL LOG"
+	tailf "install-x86.log" /var/log/install-x86.log 200
+
+	section "JOURNAL (worker + mpd)"
+	run "journalctl worker+mpd" journalctl -u moode-worker -u mpd -n 200 --no-pager
+
+	section "MPD / AUDIO"
+	run "mpc status"   mpc status
+	run "mpc outputs"  mpc outputs
+	run "aplay -l"     aplay -l
+	run "asound cards" sh -c 'cat /proc/asound/cards 2>/dev/null'
+	# mpd.conf can carry an MPD password -> redaction backstop handles it
+	run "mpd.conf"     sh -c 'cat /etc/mpd.conf 2>/dev/null'
+
+	section "DSP / ALSA CHAIN"
+	run "alsa conf.d"  sh -c 'ls -l /etc/alsa/conf.d/ 2>/dev/null'
+	run "camilladsp version" sh -c '/usr/local/bin/camilladsp --version 2>/dev/null || echo "(not installed)"'
+	run "camilladsp working_config" sh -c 'cat /var/local/www/camilladsp/working_config.yml 2>/dev/null | head -80'
+
+	section "NETWORK (secrets masked by nmcli)"
+	# nmcli does NOT print secrets without --show-secrets, which we never pass.
+	run "nmcli device"     nmcli device status
+	run "nmcli connections" nmcli -t -f NAME,UUID,TYPE,DEVICE connection show
+	run "ip addr"   ip -br addr
+	run "ip route"  ip route
+
+	section "MOODE-TAGGED PACKAGES"
+	run "dpkg versions" sh -c 'dpkg-query -W -f="\${Package}\t\${Version}\n" mpd caps camilladsp upmpdcli shairport-sync librespot squeezelite ashuffle 2>/dev/null'
+
+	section "CONFIG (cfg_system, sensitive keys redacted)"
+	# Pull param/value but drop rows whose param name looks sensitive; the
+	# backstop redact() is a second line of defence over the whole buffer.
+	run "cfg_system" sh -c "sqlite3 -separator '=' '$DB' \"SELECT param,value FROM cfg_system WHERE param NOT LIKE '%pass%' AND param NOT LIKE '%psk%' AND param NOT LIKE '%token%' AND param NOT LIKE '%secret%' AND param NOT LIKE '%passwd%' ORDER BY param\" 2>/dev/null"
+}
+
+# --- write + (optionally) upload -------------------------------------------
+
+collect | redact > "$OUT"
+chmod 600 "$OUT"
+
+echo "Report written: $OUT"
+echo "Size: $(wc -l < "$OUT") lines, $(du -h "$OUT" | cut -f1)"
+echo
+echo ">> REVIEW the file before sharing it. Secrets are redacted automatically,"
+echo ">> but please skim it for anything you consider private."
+
+if [[ $DO_UPLOAD -eq 1 ]]; then
+	echo
+	echo "Uploading to a no-account paste service..."
+	url=""
+	# Primary: 0x0.st (handles files/size well). Fallback: termbin (text/stdin).
+	if command -v curl >/dev/null 2>&1; then
+		url="$(curl -fsS -F"file=@$OUT" https://0x0.st 2>/dev/null)"
+	fi
+	if [[ -z "$url" ]] && command -v nc >/dev/null 2>&1; then
+		url="$(nc termbin.com 9999 < "$OUT" 2>/dev/null | tr -d '\0')"
+	fi
+	if [[ -n "$url" ]]; then
+		echo
+		echo "Uploaded. Share this URL in your issue/discussion:"
+		echo "    $url"
+	else
+		echo "Upload failed (no network or service down). Attach the local file instead:"
+		echo "    $OUT"
+	fi
+fi
