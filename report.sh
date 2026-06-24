@@ -176,7 +176,7 @@ collect() {
 	section "DSP / ALSA CHAIN"
 	run "alsa conf.d"  sh -c 'ls -l /etc/alsa/conf.d/ 2>/dev/null'
 	run "camilladsp version" sh -c '/usr/local/bin/camilladsp --version 2>/dev/null || echo "(not installed)"'
-	run "camilladsp working_config" sh -c 'cat /var/local/www/camilladsp/working_config.yml 2>/dev/null | head -80'
+	run "camilladsp working_config" sh -c 'head -80 /usr/share/camilladsp/working_config.yml 2>/dev/null'
 
 	section "NETWORK (secrets masked by nmcli)"
 	# nmcli does NOT print secrets without --show-secrets, which we never pass.
