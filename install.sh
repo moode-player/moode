@@ -292,13 +292,18 @@ APT_INSTALL="apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Opti
 # but this runs BEFORE the CORE_PKGS install and a minimal Debian (root pw, no
 # tasksel desktop) ships neither (same gap class as `sudo`). Bootstrap them up
 # front, else the key dearmor fails and UPnP is silently skipped.
-apt-get update
-apt-get install -y ca-certificates curl gnupg
+if ! command -v curl >/dev/null 2>&1 || ! command -v gpg >/dev/null 2>&1; then
+	apt-get update
+	apt-get install -y ca-certificates curl gnupg
+fi
 
 # UPnP/OpenHome renderer (upmpdcli) and its libupnpp/libnpupnp deps are not in
 # Debian; add the upstream lesbonscomptes apt repo so they (and future updates)
 # install via apt. Suite tracks the running distro codename (trixie, bookworm...).
-if [ "$INSTALL_UPNP" = 1 ]; then
+# Skip the whole repo+key+update+candidate-probe once upmpdcli is installed (the
+# .sources file persists across runs and the package is already present) - on a
+# --update this block is pure network/time waste.
+if [ "$INSTALL_UPNP" = 1 ] && ! dpkg-query -W -f='${Status}' upmpdcli 2>/dev/null | grep -q ' installed'; then
 	SUITE="$(. /etc/os-release 2>/dev/null; echo "${VERSION_CODENAME:-trixie}")"
 	if curl -fsSL https://www.lesbonscomptes.com/pages/lesbonscomptes.gpg \
 		| gpg --batch --yes --dearmor -o /usr/share/keyrings/lesbonscomptes.gpg 2>/dev/null
@@ -418,6 +423,32 @@ PHP_VER="$(ls /etc/php/ 2>/dev/null | sort -V | tail -1 || true)"
 PHP_SOCK="/run/php/php${PHP_VER}-fpm.sock"
 log "PHP-FPM version: $PHP_VER (socket $PHP_SOCK)"
 
+# --- Build-phase version tracking -------------------------------------------
+# The custom / moode-tagged components built below (Phases 1b-1i) are pinned to
+# specific versions. Their guards must REBUILD when the pinned version is bumped
+# in a later release - not merely when the artifact is ABSENT - because these
+# packages are apt-held or live outside Debian, so the build phase is their ONLY
+# upgrade path (otherwise a plain --update silently keeps the old build).
+#   - dpkg packages / binaries exposing --version: compared directly (dpkg_ver_is
+#     or a --version grep) -> exact, no false rebuild, catches external apt changes.
+#   - versionless git-pinned artifacts (fixed tag/branch, no queryable version):
+#     a stamp under $NOPI_BUILT_DIR records the pinned ref it was built from.
+#     Adopt-on-legacy: an artifact already present WITHOUT a stamp (built by a
+#     pre-versioning installer) is recorded as current and NOT rebuilt, so existing
+#     boxes never rebuild gratuitously on their first --update with this logic.
+#   - truly unpinned sources (alsacap git-main, peppy-alsa apt-source): no version
+#     to compare -> presence-only (a bump there needs a manual rm of the artifact).
+NOPI_BUILT_DIR=/var/lib/moode-nopi/built
+dpkg_ver_is() { [ "$(dpkg-query -W -f='${Version}' "$1" 2>/dev/null)" = "$2" ]; }
+# nopi_need_build <name> <pinned> <present:0|1> -> rc 0 = build needed, 1 = up to date
+nopi_need_build() {
+	local name="$1" pinned="$2" present="$3" f="$NOPI_BUILT_DIR/$1"
+	[ "$present" = 1 ] || return 0
+	if [ ! -f "$f" ]; then mkdir -p "$NOPI_BUILT_DIR"; printf '%s\n' "$pinned" > "$f"; return 1; fi
+	[ "$(cat "$f" 2>/dev/null)" = "$pinned" ] && return 1 || return 0
+}
+nopi_mark_built() { mkdir -p "$NOPI_BUILT_DIR"; printf '%s\n' "$2" > "$NOPI_BUILT_DIR/$1"; }
+
 #----------------------------------------------------------------------------#
 # Phase 1b - Custom helper binaries
 #----------------------------------------------------------------------------#
@@ -431,13 +462,20 @@ log "PHP-FPM version: $PHP_VER (socket $PHP_SOCK)"
 
 log "Phase 1b: custom helper binaries"
 
-if ! command -v alsacap >/dev/null 2>&1 || [ ! -x /usr/bin/trx-tx ]; then
+# alsacap tracks git main (unpinned) -> presence-only. trx is pinned to tag 0.6
+# -> stamped, so a future re-pin triggers a rebuild (adopt-on-legacy: existing
+# boxes record the current ref without rebuilding).
+TRX_VER="0.6"
+_need_alsacap=0; command -v alsacap >/dev/null 2>&1 || _need_alsacap=1
+_need_trx=0
+if nopi_need_build trx "$TRX_VER" "$([ -x /usr/bin/trx-tx ] && echo 1 || echo 0)"; then _need_trx=1; fi
+if [ "$_need_alsacap" = 1 ] || [ "$_need_trx" = 1 ]; then
 	$APT_INSTALL build-essential autoconf automake libtool pkg-config git \
 		libasound2-dev libopus-dev libortp-dev
 	HLP_WRK="$(mktemp -d)"
 
 	# alsacap (bubbapizza/alsacap, autotools)
-	if ! command -v alsacap >/dev/null 2>&1; then
+	if [ "$_need_alsacap" = 1 ]; then
 		if git clone -q https://github.com/bubbapizza/alsacap.git "$HLP_WRK/alsacap" \
 			&& ( cd "$HLP_WRK/alsacap" && ./bootstrap && ./configure && make ) >/dev/null 2>&1; then
 			install -m 755 "$HLP_WRK/alsacap/src/alsacap" /usr/bin/alsacap
@@ -448,11 +486,12 @@ if ! command -v alsacap >/dev/null 2>&1 || [ ! -x /usr/bin/trx-tx ]; then
 	fi
 
 	# trx 0.6 (bitkeeper/trx). Newer Debian oRTP needs libbctoolbox linked too.
-	if [ ! -x /usr/bin/trx-tx ]; then
-		if git clone -q -b 0.6 https://github.com/bitkeeper/trx.git "$HLP_WRK/trx" \
+	if [ "$_need_trx" = 1 ]; then
+		if git clone -q -b "$TRX_VER" https://github.com/bitkeeper/trx.git "$HLP_WRK/trx" \
 			&& ( cd "$HLP_WRK/trx" && make LDLIBS_ORTP="-lortp -lbctoolbox" ) >/dev/null 2>&1; then
 			install -m 755 "$HLP_WRK/trx/tx" /usr/bin/trx-tx
 			install -m 755 "$HLP_WRK/trx/rx" /usr/bin/trx-rx
+			nopi_mark_built trx "$TRX_VER"
 			log "Built trx (multiroom: trx-tx / trx-rx)"
 		else
 			warn "trx build failed (Multiroom will be unavailable)"
@@ -489,7 +528,8 @@ case "$(dpkg --print-architecture)" in
 esac
 
 # 1) camilladsp engine (release binary, pinned to moOde's pkgbuild version)
-if [ ! -x /usr/local/bin/camilladsp ] && [ -n "$CDSP_ASSET" ]; then
+_cdsp_v="$([ -x /usr/local/bin/camilladsp ] && /usr/local/bin/camilladsp --version 2>/dev/null || true)"
+if [[ "$_cdsp_v" != *"$CDSP_VER"* ]] && [ -n "$CDSP_ASSET" ]; then
 	CDSP_TMP="$(mktemp -d)"
 	if curl -fsSL "https://github.com/HEnquist/camilladsp/releases/download/v${CDSP_VER}/${CDSP_ASSET}" \
 		| tar -xz -C "$CDSP_TMP" camilladsp 2>/dev/null && [ -f "$CDSP_TMP/camilladsp" ]; then
@@ -506,7 +546,8 @@ fi
 #    emits CamillaDSP v4 sample-format names (S16LE -> S16_LE, etc.). The patch
 #    is a handful of literal string swaps, applied here with sed (no patch file).
 CDSP_PLUGIN_DIR="$(pkg-config --variable=libdir alsa 2>/dev/null)/alsa-lib"
-if [ ! -f "$CDSP_PLUGIN_DIR/libasound_module_pcm_cdsp.so" ]; then
+ACDSP_REF="fixes/bookworm_cargs_empty+fmtfix"
+if nopi_need_build alsa-cdsp "$ACDSP_REF" "$([ -f "$CDSP_PLUGIN_DIR/libasound_module_pcm_cdsp.so" ] && echo 1 || echo 0)"; then
 	$APT_INSTALL build-essential git pkg-config libasound2-dev
 	CDSP_BLD="$(mktemp -d)"
 	if git clone -q -b fixes/bookworm_cargs_empty \
@@ -517,6 +558,7 @@ if [ ! -f "$CDSP_PLUGIN_DIR/libasound_module_pcm_cdsp.so" ]; then
 				   -e 's/"FLOAT32LE"/"F32_LE"/'  -e 's/"FLOAT64LE"/"F64_LE"/' \
 				   libasound_module_pcm_cdsp.c \
 			&& make && make install ) >/dev/null 2>&1; then
+		nopi_mark_built alsa-cdsp "$ACDSP_REF"
 		log "Built alsa-cdsp ALSA plugin"
 	else
 		warn "alsa-cdsp build failed (CamillaDSP output will not open when enabled)"
@@ -538,14 +580,16 @@ fi
 #                                       per the UI toggle and nginx proxies its port.
 #    (The camilladsp ENGINE itself is the upstream release binary from step 1 -
 #    moOde only adds a cargo-deb packaging patch, the DSP code is stock upstream.)
-if [ ! -d /opt/camillagui ] || ! python3 -c 'import camilladsp, camilladsp_plot' 2>/dev/null; then
+PYCDSP_VER="4.0.0-1moode1"; PYCDSPPLOT_VER="4.1.0-1moode1"; CAMILLAGUI_VER="4.1.0-1moode1"
+if [ ! -d /opt/camillagui ] || ! dpkg_ver_is python3-camilladsp "$PYCDSP_VER" \
+		|| ! dpkg_ver_is python3-camilladsp-plot "$PYCDSPPLOT_VER" || ! dpkg_ver_is camillagui "$CAMILLAGUI_VER"; then
 	$APT_INSTALL python3-aiohttp python3-websocket python3-jsonschema python3-numpy \
 		python3-yaml python3-mpd python3-matplotlib
 	CG_TMP="$(mktemp -d)"
 	CG_POOL="https://dl.cloudsmith.io/public/moodeaudio/m8y/deb/raspbian/pool/trixie/main"
-	if curl -fsSL -o "$CG_TMP/1.deb" "$CG_POOL/p/py/python3-camilladsp_4.0.0-1moode1/python3-camilladsp_4.0.0-1moode1_all.deb" \
-		&& curl -fsSL -o "$CG_TMP/2.deb" "$CG_POOL/p/py/python3-camilladsp-plot_4.1.0-1moode1/python3-camilladsp-plot_4.1.0-1moode1_all.deb" \
-		&& curl -fsSL -o "$CG_TMP/3.deb" "$CG_POOL/c/ca/camillagui_4.1.0-1moode1/camillagui_4.1.0-1moode1_all.deb" \
+	if curl -fsSL -o "$CG_TMP/1.deb" "$CG_POOL/p/py/python3-camilladsp_${PYCDSP_VER}/python3-camilladsp_${PYCDSP_VER}_all.deb" \
+		&& curl -fsSL -o "$CG_TMP/2.deb" "$CG_POOL/p/py/python3-camilladsp-plot_${PYCDSPPLOT_VER}/python3-camilladsp-plot_${PYCDSPPLOT_VER}_all.deb" \
+		&& curl -fsSL -o "$CG_TMP/3.deb" "$CG_POOL/c/ca/camillagui_${CAMILLAGUI_VER}/camillagui_${CAMILLAGUI_VER}_all.deb" \
 		&& dpkg -i --force-confold "$CG_TMP/1.deb" "$CG_TMP/2.deb" "$CG_TMP/3.deb" >/dev/null 2>&1; then
 		log "Installed CamillaDSP python stack + camillagui (moOde noarch .debs)"
 	else
@@ -559,15 +603,17 @@ fi
 
 # 4) mpd2cdspvolume (optional MPD<->CamillaDSP volume sync; worker starts/stops the
 #    service per cfg). Pure-Python: scripts + service unit + tmpfiles + config.
-if [ ! -x /usr/local/bin/mpd2cdspvolume ]; then
+M2C_VER="2.0.0"
+if nopi_need_build mpd2cdspvolume "$M2C_VER" "$([ -x /usr/local/bin/mpd2cdspvolume ] && echo 1 || echo 0)"; then
 	M2C_TMP="$(mktemp -d)"
-	if git clone -q -b v2.0.0 \
+	if git clone -q -b "v${M2C_VER}" \
 			https://github.com/bitkeeper/mpd2cdspvolume.git "$M2C_TMP/src"; then
 		install -m 755 "$M2C_TMP/src/mpd2cdspvolume.py" /usr/local/bin/mpd2cdspvolume
 		# config holds user settings (snd-config.php seds dynamic_range) - preserve on re-run
 		[ -f /etc/mpd2cdspvolume.config ] || install -m 644 "$M2C_TMP/src/etc/mpd2cdspvolume.config" /etc/mpd2cdspvolume.config
 		install -m 644 "$M2C_TMP/src/etc/mpd2cdspvolume.conf"   /usr/lib/tmpfiles.d/mpd2cdspvolume.conf
 		install -m 644 "$M2C_TMP/src/etc/mpd2cdspvolume.service" /lib/systemd/system/mpd2cdspvolume.service
+		nopi_mark_built mpd2cdspvolume "$M2C_VER"
 		log "Deployed mpd2cdspvolume"
 	else
 		warn "mpd2cdspvolume clone failed (CamillaDSP volume sync unavailable)"
@@ -594,7 +640,8 @@ install -d -o mpd -g audio /var/lib/cdsp 2>/dev/null || install -d /var/lib/cdsp
 log "Phase 1d: Deezer renderer (pleezer)"
 
 PLEEZER_VER="0.19.1"
-if [ ! -x /usr/local/bin/pleezer ]; then
+_plz_v="$([ -x /usr/local/bin/pleezer ] && /usr/local/bin/pleezer --version 2>/dev/null || true)"
+if [[ "$_plz_v" != *"$PLEEZER_VER"* ]]; then
 	$APT_INSTALL cargo git pkg-config libasound2-dev libssl-dev
 	PLZ_BLD="$(mktemp -d)"
 	if git clone -q -b "v${PLEEZER_VER}" \
@@ -616,10 +663,12 @@ fi
 # the system PATH; rbl_check_cargo then finds it (`cargo-deb --version`) and
 # skips the broken install. Not arch-gated: Armbian arm64 on Debian cargo 1.85
 # hits the same wall. Idempotent.
-if ! command -v cargo-deb >/dev/null 2>&1; then
+CARGODEB_VER="2.12.1"
+_cdeb_v="$(command -v cargo-deb >/dev/null 2>&1 && cargo-deb --version 2>/dev/null || true)"
+if [[ "$_cdeb_v" != *"$CARGODEB_VER"* ]]; then
 	$APT_INSTALL cargo git pkg-config libssl-dev
-	cargo install --root /usr/local --locked --version 2.12.1 cargo-deb >/dev/null 2>&1 \
-		&& log "Installed cargo-deb 2.12.1 (for on-demand librespot build)" \
+	cargo install --root /usr/local --locked --force --version "$CARGODEB_VER" cargo-deb >/dev/null 2>&1 \
+		&& log "Installed cargo-deb $CARGODEB_VER (for on-demand librespot build)" \
 		|| warn "cargo-deb install failed (Spotify on-demand build may fail)"
 fi
 
@@ -639,7 +688,9 @@ fi
 
 log "Phase 1e: caps with 12-band parametric EQ (eqfa12p)"
 
-if ! dpkg-query -W -f='${Version}' caps 2>/dev/null | grep -q moode; then
+CAPS_MOODE_VER="0.9.26-1moode1"
+if ! dpkg_ver_is caps "$CAPS_MOODE_VER"; then
+	apt-mark unhold caps >/dev/null 2>&1 || true   # let apt re-install over a held older build on a version bump
 	# debhelper is caps' declared build-dep (debian/control: debhelper >= 10) and is
 	# NOT pulled in by build-essential/devscripts on a minimal system - it happened to
 	# be present on amd64 but was absent on a fresh Armbian arm64, where the build then
@@ -656,13 +707,13 @@ if ! dpkg-query -W -f='${Version}' caps 2>/dev/null | grep -q moode; then
 			&& cd caps-0.9.26 \
 			&& patch -p1 < ../caps_12band_eqp.patch \
 			&& DEBEMAIL="moode@moodeaudio.org" DEBFULLNAME="moOde" \
-				dch -b -v 0.9.26-1moode1 -D unstable "Add 12-band eqfa12p parametric EQ (moOde patch)" \
+				dch -b -v "$CAPS_MOODE_VER" -D unstable "Add 12-band eqfa12p parametric EQ (moOde patch)" \
 			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-caps.log" 2>&1 \
-		&& CAPS_DEB="$(ls "$CAPS_BLD"/caps_0.9.26-1moode1_*.deb 2>/dev/null | head -1)" \
+		&& CAPS_DEB="$(ls "$CAPS_BLD"/caps_${CAPS_MOODE_VER}_*.deb 2>/dev/null | head -1)" \
 		&& [ -n "$CAPS_DEB" ] \
 		&& apt-get install -y --allow-downgrades "$CAPS_DEB" >/dev/null 2>&1; then
 		apt-mark hold caps >/dev/null 2>&1 || true
-		log "Built caps 0.9.26-1moode1 (12-band parametric EQ)"
+		log "Built caps $CAPS_MOODE_VER (12-band parametric EQ)"
 	else
 		warn "caps moode build failed (Parametric EQ unavailable; Graphic EQ + crossfeed still work; see $REPO_DIR/build-caps.log)"
 	fi
@@ -687,7 +738,7 @@ fi
 log "Phase 1f: mpd with moOde selective-resample patch"
 
 MPD_MOODE_VER="0.24.12-1moode1"
-if ! dpkg-query -W -f='${Version}' mpd 2>/dev/null | grep -q moode; then
+if ! dpkg_ver_is mpd "$MPD_MOODE_VER"; then
 	# moOde's cloudsmith SOURCE repo (deb-src only; binaries there are arm-only).
 	MOODE_KEYRING=/usr/share/keyrings/moodeaudio-m8y-archive-keyring.gpg
 	[ -f "$MOODE_KEYRING" ] || curl -1sLf 'https://dl.cloudsmith.io/public/moodeaudio/m8y/gpg.key' \
@@ -790,7 +841,7 @@ fi
 if [ "$INSTALL_SQUEEZELITE" = 1 ]; then
 	log "Phase 1i: squeezelite with moOde LMS Power Script (-S) support"
 	SL_MOODE_VER="2.0.0-1541+git20250609.72e1fd8-1moode1"
-	if ! dpkg-query -W -f='${Version}' squeezelite 2>/dev/null | grep -q moode; then
+	if ! dpkg_ver_is squeezelite "$SL_MOODE_VER"; then
 		# Ensure moOde's cloudsmith SOURCE repo (deb-src only; same as Phase 1f -
 		# re-asserted here in case the mpd block was skipped on a re-run).
 		MOODE_KEYRING=/usr/share/keyrings/moodeaudio-m8y-archive-keyring.gpg
@@ -893,7 +944,11 @@ install -m 644 "$REPO_DIR/etc/nginx/sites-available/moode-https.overwrite.conf" 
 	/etc/nginx/sites-available/moode-https.conf
 rm -f /etc/nginx/sites-available/moode.conf /etc/nginx/sites-enabled/moode.conf
 rm -f /etc/nginx/sites-enabled/default
-ln -sf /etc/nginx/sites-available/moode-http.conf /etc/nginx/sites-enabled/moode-http.conf
+# Enable HTTP only when no site is enabled yet (fresh install). On a re-run leave
+# whatever the worker set, else --update silently reverts a UI-enabled HTTPS to HTTP.
+if [ ! -e /etc/nginx/sites-enabled/moode-http.conf ] && [ ! -e /etc/nginx/sites-enabled/moode-https.conf ]; then
+	ln -sf /etc/nginx/sites-available/moode-http.conf /etc/nginx/sites-enabled/moode-http.conf
+fi
 nginx -t
 
 # --- php (fpm + cli) ---
@@ -1571,8 +1626,9 @@ chmod -R 0777 /var/lib/mpd/playlists
 # those two points patched, serve them over the existing nginx `location /` (root
 # /var/www, no nginx config change), and repoint res_plugin_upd_url at the local
 # copy. On arm64 (Armbian) the upstream repo works unchanged, so we leave it
-# alone. Regenerated from upstream each run -> never stale; the patches are
-# narrow (arch token + home_dir line) so they track moOde's install.sh.
+# alone. Regenerated from upstream on a fresh install / --reset-db (and kept as-is
+# on --update, see the per-entry skip below); the patches are narrow (arch token +
+# home_dir line) so they track moOde's install.sh.
 
 PKG_ARCH="$(dpkg --print-architecture)"
 if [ "$PKG_ARCH" != arm64 ]; then
@@ -1592,6 +1648,10 @@ if [ "$PKG_ARCH" != arm64 ]; then
 	for entry in $PLUG_ENTRIES; do
 		plugin="${entry##*/}"                       # e.g. v5-shairport-sync
 		mkdir -p "$PLUG_DST/$entry"
+		# On --update keep the existing local mirror (plugins rarely change) rather
+		# than re-fetch+re-pack every run; a fresh install or --reset-db refreshes it,
+		# or remove the zip to force a refresh.
+		if [ "$UPDATE" = 1 ] && [ -f "$PLUG_DST/$entry/update-$plugin.zip" ]; then continue; fi
 		if wget -q "$PLUG_BASE/$entry/update-$plugin.zip" -O "$PLUG_TMP/p.zip"; then
 			rm -rf "$PLUG_TMP/x"; mkdir -p "$PLUG_TMP/x"
 			if ( cd "$PLUG_TMP/x" \
@@ -1923,9 +1983,15 @@ systemctl restart moode-devmon.service 2>/dev/null || true
 # chain to "Bluetooth -> Device" instead of the default "MPD -> plughw -> Device"
 # (and squeezelite would hold the DAC). Disable+stop them so the worker is the
 # sole controller and the default chain is MPD; the worker starts each on demand.
-for svc in squeezelite bluetooth bluealsa bluealsa-aplay bt-agent minidlna upmpdcli shairport-sync; do
-	systemctl disable --now "$svc" 2>/dev/null || true
-done
+# Fresh install only: neutralise the package auto-enable. On --update the box is
+# already configured and the worker owns these per config; re-running disable --now
+# would STOP a service the worker enabled (e.g. an active renderer) -> needless flap
+# / playback interruption.
+if [ "$UPDATE" != 1 ]; then
+	for svc in squeezelite bluetooth bluealsa bluealsa-aplay bt-agent minidlna upmpdcli shairport-sync; do
+		systemctl disable --now "$svc" 2>/dev/null || true
+	done
+fi
 
 # Triggerhappy (USB volume knob / media keys) is likewise worker-controlled and
 # OFF by default: usb_volknob is a SESSION-only flag (default '0'; not a
@@ -1933,7 +1999,7 @@ done
 # state - the worker's usb_volknob job does `systemctl enable+start` / `disable+
 # stop`. Debian's package auto-enables the unit on install, which would make the
 # knob active by default; disable it so the worker is the sole controller.
-systemctl disable --now triggerhappy 2>/dev/null || true
+[ "$UPDATE" = 1 ] || systemctl disable --now triggerhappy 2>/dev/null || true
 
 # fluidsynth: a MIDI software synth pulled in transitively (libfluidsynth-dev is
 # an mpd build-dep; the fluidsynth binary package ships a systemd *user* service
@@ -1943,8 +2009,10 @@ systemctl disable --now triggerhappy 2>/dev/null || true
 # `moodeutl -f`) report "Device is busy, unable to detect formats". moOde never
 # uses the fluidsynth daemon (MPD's MIDI decoder uses libfluidsynth3 directly),
 # so disable the global user-service autostart and stop any running instance.
-systemctl --global disable fluidsynth.service 2>/dev/null || true
-pkill -x fluidsynth 2>/dev/null || true
+if [ "$UPDATE" != 1 ]; then
+	systemctl --global disable fluidsynth.service 2>/dev/null || true
+	pkill -x fluidsynth 2>/dev/null || true
+fi
 
 # shellinabox: moOde drives it via its OWN systemd unit, which runs shellinaboxd
 # with -t (--disable-ssl => plain HTTP on the LAN) + moOde's terminal CSS. The
@@ -1967,9 +2035,11 @@ systemctl daemon-reload
 # finds them enabled. So boot-disable + stop them HERE (before the worker), matching
 # the Pi image (installed, disabled); the worker then brings up exactly what the
 # config asks for. Never enable/start at install - that would ignore the config.
-for svc in smbd nmbd wsdd2 nfs-kernel-server shellinabox; do
-	systemctl disable --now "$svc" 2>/dev/null || true
-done
+if [ "$UPDATE" != 1 ]; then
+	for svc in smbd nmbd wsdd2 nfs-kernel-server shellinabox; do
+		systemctl disable --now "$svc" 2>/dev/null || true
+	done
+fi
 
 if [ "$NO_WORKER" -eq 1 ]; then
 	warn "Skipping worker (--no-worker). Start it later: systemctl start moode-worker"
