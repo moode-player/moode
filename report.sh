@@ -79,11 +79,30 @@ tailf() {
 	printf '\n'
 }
 
-# REDACTION BACKSTOP: mask the value following any sensitive key, whatever the
-# separator (= : space) and quoting. Case-insensitive (GNU sed). This runs over
-# the ENTIRE assembled report, so even unexpected leaks are caught.
+# REDACTION BACKSTOP: runs over the ENTIRE assembled report, so even unexpected
+# leaks are caught. Local/private IPs (192.168/10/172.16-31/127, fe80 link-local,
+# fc/fd ULA) are intentionally KEPT — they aid debugging and are not sensitive.
+# Three passes (order matters):
+#  1. value following any sensitive key (= : space, quoted or not), case-insens.
+#  2. MAC addresses (xx:xx:xx:xx:xx:xx) — device fingerprint.
+#  3. GLOBAL unicast IPv6 only (2000::/3, first hextet starts 2 or 3) — an
+#     ISP-assigned address geolocates the user. Link-local/ULA are left alone,
+#     and single-colon timestamps (HH:MM:SS) never match.
 redact() {
-	sed -E 's/((pass(word|wd)?|psk|pre-shared-key|wpa-psk|secret|token|api[_-]?key|sharepassword|smbpass|client[_-]?secret|access[_-]?token)["'\'' ]*[:=][[:space:]]*["'\'']?)[^[:space:]"'\'']+/\1***REDACTED***/Ig'
+	sed -E \
+		-e 's/((pass(word|wd)?|psk|pre-shared-key|wpa-psk|secret|token|api[_-]?key|sharepassword|smbpass|client[_-]?secret|access[_-]?token)["'\'' ]*[:=][[:space:]]*["'\'']?)[^[:space:]"'\'']+/\1***REDACTED***/Ig' \
+		-e 's/([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}/**:MAC:**/g' \
+		-e 's/\b[23][0-9a-fA-F]{3}:([0-9a-fA-F]{0,4}:){1,6}[0-9a-fA-F]{0,4}/***global-IPv6***/g'
+}
+
+# isPi() replica of www/inc/common.php: a Raspberry Pi is identified by its
+# device-tree model containing "Raspberry Pi" (falls back to the cpuinfo Model
+# line). On x86 the file is absent -> false. Returns 0 (true) when on a Pi.
+is_pi() {
+	local model=""
+	[[ -r /proc/device-tree/model ]] && model="$(tr -d '\0' < /proc/device-tree/model 2>/dev/null)"
+	[[ -z "$model" ]] && model="$(awk -F': ' '/^Model/{print $2}' /proc/cpuinfo 2>/dev/null)"
+	[[ "$model" == *"Raspberry Pi"* ]]
 }
 
 # --- collection (everything below is appended to one buffer) ---------------
@@ -94,8 +113,23 @@ collect() {
 	printf 'Tool      : report.sh %s\n' "$SELF_VERSION"
 	printf 'Host      : %s\n' "$(hostname 2>/dev/null)"
 
+	# Eligibility verdict FIRST so triage is instant: moode-nopi supports non-Pi
+	# hardware only. A real Raspberry Pi is upstream moOde's domain -> such an
+	# issue should be rejected and redirected to the moOde forum.
+	section "SUPPORT ELIGIBILITY (isPi)"
+	if is_pi; then
+		printf 'isPi()            = TRUE  (Raspberry Pi detected)\n'
+		printf 'Verdict           = NOT a moode-nopi case -> REJECT the issue.\n'
+		printf '                    This is a real Pi; moode-nopi only ports moOde to\n'
+		printf '                    non-Pi hardware. Use the official moOde support forum.\n'
+	else
+		printf 'isPi()            = FALSE (non-Pi hardware)\n'
+		printf 'Verdict           = Eligible moode-nopi case -> KEEP the issue.\n'
+	fi
+	printf '\n'
+
 	section "PLATFORM / OS"
-	run "device-tree model" sh -c 'cat /proc/device-tree/model 2>/dev/null | tr -d "\0"; echo'
+	run "device-tree model" sh -c 'm="$(tr -d "\0" < /proc/device-tree/model 2>/dev/null)"; echo "${m:-(absent - not a device-tree platform, e.g. x86)}"'
 	run "kernel"            uname -a
 	run "architecture"      dpkg --print-architecture
 	run "debian version"    sh -c 'cat /etc/debian_version 2>/dev/null'
