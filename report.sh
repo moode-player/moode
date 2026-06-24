@@ -23,6 +23,12 @@ DB="/var/local/www/db/moode-sqlite3.db"
 OUT="/tmp/nopi-report-$(date +%Y%m%d-%H%M%S).txt"
 DO_UPLOAD=0
 
+# install.sh writes its log next to itself in the clone dir (install-nopi.log);
+# the VM/override case puts it in /var/log. Look for whichever exists.
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+INSTALL_LOG="$SCRIPT_DIR/install-nopi.log"
+[[ -r "$INSTALL_LOG" ]] || INSTALL_LOG="/var/log/install-nopi.log"
+
 usage() {
 	cat <<'EOF'
 report.sh - moode-nopi diagnostics collector
@@ -111,7 +117,7 @@ collect() {
 	tailf "moode.log" /var/log/moode.log 120
 
 	section "INSTALL LOG"
-	tailf "install-x86.log" /var/log/install-x86.log 200
+	tailf "install-nopi.log" "$INSTALL_LOG" 200
 
 	section "JOURNAL (worker + mpd)"
 	run "journalctl worker+mpd" journalctl -u moode-worker -u mpd -n 200 --no-pager

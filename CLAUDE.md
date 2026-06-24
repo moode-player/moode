@@ -146,8 +146,9 @@ Rig lives at `/home/$USER/moode-nopi-vm/` (NOT a tracked moOde file).
   creds set in `run-vm.sh`'s `user-data`.
 - **USB DAC passthrough** (run-vm.sh `usb-host` 262a:9227): plug the DAC into the
   HOST **before** `./run-vm.sh start`, else no card enumerates.
-- Install in the VM: `sudo /opt/moode/install.sh --reset-db`
-  (`/var/log/install-x86.log`).
+- Install in the VM: `sudo INSTALL_LOG=/var/log/install-nopi.log /opt/moode/install.sh
+  --reset-db` (the `/opt/moode` 9p mount is read-only, so the default in-repo log
+  `install-nopi.log` can't be written there — override the path).
 - Health checks: `ps -o user= -C worker.php` (must be `www-data`),
   `cfg_system.wrkready` must be `1` (UI blank until then), `mpc outputs`,
   `systemctl is-active moode-worker nginx php8.4-fpm mpd`,

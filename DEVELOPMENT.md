@@ -32,7 +32,8 @@ sudo ./install.sh            # add --reset-db to recreate the config DB
 The installer builds the moOde-tagged audio binaries **on-device** for parity
 (mpd selective-resample, caps eqfa12p, CamillaDSP, pleezer, peppyalsa), runs the
 worker as `www-data`, deploys moOde's own `etc/` configs, and is re-runnable.
-Log: `/var/log/install-x86.log`.
+Log: `install-nopi.log`, written next to the script in the clone dir (override
+with `INSTALL_LOG=/path sudo ./install.sh`).
 
 ---
 

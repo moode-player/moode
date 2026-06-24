@@ -143,7 +143,7 @@ sudo ./install.sh
   on a fresh box it would be redundant.
 - It then installs packages and builds moOde's patched binaries (mpd, caps,
   squeezelite, peppyalsa…) from source, so the whole run takes several minutes.
-- Full log: `install.log`, written next to the script in your clone directory (the
+- Full log: `install-nopi.log`, written next to the script in your clone directory (the
   whole run is mirrored there as well as to the terminal; override with
   `INSTALL_LOG=/path sudo ./install.sh …`). Note `/var/log/moode.log` is a
   different file — moOde's **runtime** log, written by the worker once it starts.
