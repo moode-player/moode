@@ -1,0 +1,87 @@
+name: "🐞 Bug report (moode-nopi / non-Pi port)"
+description: A reproducible bug specific to running moOde on non-Pi hardware (x86 / Armbian)
+title: "[nopi] "
+labels: ["nopi"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve **moode-nopi** — a hobby fork, maintained best-effort, no warranty.
+
+        **Before you continue (please read [SUPPORT.md](https://github.com/Gjuju/moode-nopi/blob/main/SUPPORT.md)):**
+        - On a **real Raspberry Pi**? This fork doesn't apply → use the [moOde Forum](https://moodeaudio.org/).
+        - A **general moOde question** (not specific to x86/Armbian)? Also the moOde Forum.
+        - Just a question / setup help / an idea? → [Discussions](https://github.com/Gjuju/moode-nopi/discussions), not here.
+
+        Issues that are a real-Pi or general-moOde matter, or that have no diagnostics report, will be closed.
+
+  - type: input
+    id: report-url
+    attributes:
+      label: "Diagnostics report URL (required)"
+      description: "On the box, run `sudo ./report.sh --upload` and paste the printed URL. No network? Run `sudo ./report.sh` and attach the /tmp file to this issue. **Issues without this are closed.**"
+      placeholder: "https://paste.rs/xxxxx"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: eligibility
+    attributes:
+      label: "Eligibility (required)"
+      description: "These confirm the issue belongs here. The diagnostics report shows the isPi() verdict at the top."
+      options:
+        - label: "My diagnostics report shows `isPi() = FALSE` (this is non-Pi hardware)."
+          required: true
+        - label: "This is specific to the non-Pi port — it does NOT reproduce on a real Raspberry Pi running official moOde, or I cannot test on a Pi."
+          required: true
+        - label: "I read SUPPORT.md; this is a port bug, not a general moOde support question."
+          required: true
+
+  - type: dropdown
+    id: arch
+    attributes:
+      label: "Architecture"
+      options:
+        - "amd64 (x86_64 PC)"
+        - "arm64 (Armbian, 64-bit board)"
+        - "armhf (Armbian, 32-bit board)"
+        - "other / not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: "What happened?"
+      description: "What did you expect to happen, and what happened instead?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to reproduce"
+      description: "Exact steps, so it can be reproduced from a clean install if possible."
+      placeholder: |
+        1. Install Debian 13 / Armbian Trixie …
+        2. Run `sudo ./install.sh …`
+        3. In the WebUI, go to …
+        4. See …
+    validations:
+      required: true
+
+  - type: input
+    id: hardware
+    attributes:
+      label: "Hardware (board/PC, DAC, display)"
+      placeholder: "e.g. Intel N4000 mini-PC + DIYINHK USB DAC + HDMI touch panel"
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: "Anything else?"
+      description: "Logs, screenshots, or context not already in the diagnostics report."
+    validations:
+      required: false

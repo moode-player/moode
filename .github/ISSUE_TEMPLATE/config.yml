@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: "⛔ Troubleshooting and Support"
+  - name: "💬 Questions, setup help & ideas (moode-nopi)"
+    url: https://github.com/Gjuju/moode-nopi/discussions
+    about: "Anything that isn't a confirmed port bug — installing/running the non-Pi port, 'is this expected?', feature ideas — please use Discussions, not the issue tracker."
+  - name: "⛔ Raspberry Pi users / general moOde support"
     url: https://moodeaudio.org/
-    about: "General troubleshooting and support for moOde audio player is provided in the moOde Forum. Visit the Support section at moodeaudio.org for information on how to register for the Forum. Thanks in advance for helping us keep the development issue tracker clean!"
+    about: "moode-nopi only ports moOde to NON-Pi hardware (x86 / Armbian). If you run a real Raspberry Pi, or your question is about moOde itself rather than the port, use the official moOde Forum — see the Support section at moodeaudio.org. Thanks for helping keep this tracker focused!"
