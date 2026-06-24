@@ -1,3 +1,22 @@
+# moode-nopi — a fork of moOde audio player
+
+> **Modified version notice (GNU GPL v3, §5a).**
+> **moode-nopi** is a modified version of [moOde audio player](https://github.com/moode-player/moode),
+> a *distribution fork* that ports the moOde stack to **Debian 13 (Trixie) x86_64**
+> and **Armbian Trixie arm64/armhf**, while keeping behaviour byte-identical to moOde
+> on a Raspberry Pi. It is **not** affiliated with or endorsed by the moOde project.
+>
+> Modifications © 2026 Julien Gainza, made from **2026-06-16** onward
+> (latest: 10.2.4-nopi.5, 2026-06-24).
+> Source: <https://github.com/Gjuju/moode-nopi> — see [`NOTICE`](./NOTICE) for the list of changes.
+>
+> moode-nopi is released under the **same GNU GPL v3** as upstream moOde
+> (see [`LICENSE`](./LICENSE)). The original moOde copyright and notices below
+> are preserved unchanged. "moOde" is a name/mark of the upstream project and is
+> used here only to identify the origin of this fork.
+
+---
+
 # moOde audio player
 
 moOde provides a beautifully designed and responsive user interface, an extensive set of Audiophile-grade features, a reliable and stable OS  and a friendly, active user Forum that provides expert troubleshooting and support, interesting discussion on a variety of audio topics and an International community of audio enthusiasts.

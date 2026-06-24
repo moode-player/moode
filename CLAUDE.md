@@ -33,6 +33,16 @@ working unchanged on a real Raspberry Pi.
   onto `develop` (deferred until after real-hardware validation).
 - **Build before deploy.** After editing `www/` code you MUST `gulp deploy`
   (below). `build/dist/` is the deploy artifact, not `www/`.
+- **GPLv3 compliance (keep the modification notice current).** moOde is GPL v3
+  and this fork redistributes it, so the GPL §5(a)/(b) "this is a modified
+  version + relevant date" notice is **mandatory** and lives in two files: the
+  fork banner atop `README.md` and the `NOTICE` file. **Never remove** `LICENSE`,
+  `NOTICE`, the README banner, or upstream copyright headers; never relicense or
+  add usage restrictions; keep tagged binaries' source available (our on-device
+  build / pinned-source rule already does this). **When you cut a new
+  `*-nopi.N` tag, update the date + version** in BOTH the README banner and
+  `NOTICE` (the "latest: …" line) as part of the release commit — that's the
+  one upkeep step. The fork **start** date (2026-06-16) is fixed; don't change it.
 
 ## Project structure
 

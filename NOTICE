@@ -1,0 +1,52 @@
+moode-nopi — modification notice
+================================
+
+This repository, "moode-nopi", is a modified version of moOde audio player
+and is distributed under the GNU General Public License, version 3 (see LICENSE),
+the same license as upstream moOde. This NOTICE satisfies GPL v3 §5(a)/(b):
+it records that the work was modified, gives the relevant dates, and states
+that the whole remains under the GPL v3.
+
+Upstream work
+-------------
+  moOde audio player — Copyright (C) 2014 Tim Curtis and the moOde contributors
+  Upstream source: https://github.com/moode-player/moode
+  (moOde is itself a derivative of the original MPD WebUI by Andrea Coiutti
+  and Simone De Gregori; see README.md and www/CONTRIBS.html.)
+
+The original moOde copyright notices and license are preserved unchanged
+throughout this repository.
+
+Modifications
+-------------
+  Copyright (C) 2026 Julien Gainza
+  Fork source / contact: https://github.com/Gjuju/moode-nopi
+  Modifications made from 2026-06-16 onward.
+  Latest tagged release: 10.2.4-nopi.5 (2026-06-24).
+
+Nature of the changes (summary)
+-------------------------------
+moode-nopi ports the moOde stack to run on Debian 13 (Trixie) x86_64 and, by
+extension, Armbian Trixie arm64/armhf, while keeping behaviour byte-identical to
+moOde on a Raspberry Pi. It is a *distribution fork*, not an architectural one:
+there is a single codebase, kept rebaseable on upstream moOde.
+
+  - install.sh — an additive installer that builds and configures the moOde
+    stack on a running Debian/Armbian system (audio binaries built on-device for
+    parity: mpd selective-resample, caps eqfa12p, CamillaDSP, pleezer, peppyalsa).
+  - Runtime platform detection via isPi(); minimal, isPi()-guarded edits to
+    upstream sources where a Pi assumption cannot be fixed from the installer.
+    Such edits leave Raspberry Pi behaviour unchanged.
+  - ALSA plugin-chain and system configuration under etc/ adapted for non-Pi
+    hardware.
+  - Added documentation: INSTALL.md, DEVELOPMENT.md, CLAUDE.md.
+
+Per-commit modification history (author, date and a description of each change)
+is recorded in the git history of https://github.com/Gjuju/moode-nopi and in the
+commit messages prefixed "nopi:" / "x86 ...".
+
+Trademarks
+----------
+"moOde" is a name/mark of the upstream moOde project. It is used in this fork
+only to identify the origin of the work, as permitted under GPL v3. moode-nopi
+is not affiliated with, nor endorsed by, the moOde project.
