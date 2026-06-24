@@ -8,6 +8,15 @@ guarantee of support** (it is GPL-v3 software, provided "AS IS" — see
 [`LICENSE`](./LICENSE) and [`NOTICE`](./NOTICE)). It is **not affiliated with or
 endorsed by** the moOde project.
 
+## Supported base
+
+moode-nopi runs **only** on the **Debian 13 "Trixie" family**: Debian, Armbian
+Trixie, or Raspberry Pi OS (Raspbian) Trixie. **Ubuntu and other distributions
+are not supported** — their newer toolchains break the pinned source builds
+(e.g. CMake 4 vs ashuffle, gcc-15) and the upstream package repos publish Debian
+suites only. Your diagnostics report shows `Base OS = SUPPORTED` / `UNSUPPORTED`
+at the top; bug reports on an unsupported base will be closed.
+
 Please pick the right channel — it keeps the bug tracker usable and gets you a
 better answer.
 

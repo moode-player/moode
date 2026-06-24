@@ -28,9 +28,11 @@ body:
     id: eligibility
     attributes:
       label: "Eligibility (required)"
-      description: "These confirm the issue belongs here. The diagnostics report shows the isPi() verdict at the top."
+      description: "These confirm the issue belongs here. The diagnostics report shows the verdict (isPi + Base OS) at the top."
       options:
         - label: "My diagnostics report shows `isPi() = FALSE` (this is non-Pi hardware)."
+          required: true
+        - label: "My diagnostics report shows `Base OS = SUPPORTED` — I run Debian 13 (Trixie): Debian, Armbian Trixie, or Raspberry Pi OS Trixie. Ubuntu and other bases are unsupported."
           required: true
         - label: "This is specific to the non-Pi port — it does NOT reproduce on a real Raspberry Pi running official moOde, or I cannot test on a Pi."
           required: true

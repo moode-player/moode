@@ -114,6 +114,17 @@ is_pi() {
 	[[ "$model" == *"Raspberry Pi"* ]]
 }
 
+# Supported base: the Debian 13 "Trixie" family ONLY — Debian, Armbian Trixie, or
+# Raspberry Pi OS (Raspbian) Trixie. Mirrors install.sh's preflight gate. Other
+# bases (Ubuntu...) are out of scope. Returns 0 (true) when supported.
+supported_base() {
+	local id codename major
+	id="$(. /etc/os-release 2>/dev/null; echo "$ID")"
+	codename="$(. /etc/os-release 2>/dev/null; echo "$VERSION_CODENAME")"
+	major="$([[ -f /etc/debian_version ]] && cut -d. -f1 /etc/debian_version 2>/dev/null || echo '?')"
+	{ [[ "$id" == debian ]] || [[ "$id" == raspbian ]]; } && { [[ "$codename" == trixie ]] || [[ "$major" == 13 ]]; }
+}
+
 # --- collection (everything below is appended to one buffer) ---------------
 
 collect() {
@@ -122,18 +133,28 @@ collect() {
 	printf 'Tool      : report.sh %s\n' "$SELF_VERSION"
 	printf 'Host      : %s\n' "$(hostname 2>/dev/null)"
 
-	# Eligibility verdict FIRST so triage is instant: moode-nopi supports non-Pi
-	# hardware only. A real Raspberry Pi is upstream moOde's domain -> such an
-	# issue should be rejected and redirected to the moOde forum.
-	section "SUPPORT ELIGIBILITY (isPi)"
-	if is_pi; then
+	# Eligibility verdict FIRST so triage is instant. moode-nopi supports NON-Pi
+	# hardware on the Debian 13 (Trixie) family ONLY. A real Pi is upstream moOde's
+	# domain; a non-Trixie base (Ubuntu...) is out of scope. KEEP only if both hold.
+	section "SUPPORT ELIGIBILITY"
+	_pi=no;   is_pi && _pi=yes
+	_base=no; supported_base && _base=yes
+	if [ "$_pi" = yes ]; then
 		printf 'isPi()            = TRUE  (Raspberry Pi detected)\n'
-		printf 'Verdict           = NOT a moode-nopi case -> REJECT the issue.\n'
-		printf '                    This is a real Pi; moode-nopi only ports moOde to\n'
-		printf '                    non-Pi hardware. Use the official moOde support forum.\n'
 	else
 		printf 'isPi()            = FALSE (non-Pi hardware)\n'
+	fi
+	if [ "$_base" = yes ]; then
+		printf 'Base OS           = SUPPORTED (Debian 13 Trixie family)\n'
+	else
+		printf 'Base OS           = UNSUPPORTED (%s)\n' "$(. /etc/os-release 2>/dev/null; echo "${PRETTY_NAME:-unknown}")"
+	fi
+	if [ "$_pi" = no ] && [ "$_base" = yes ]; then
 		printf 'Verdict           = Eligible moode-nopi case -> KEEP the issue.\n'
+	else
+		printf 'Verdict           = OUT OF SCOPE -> likely REJECT the issue.\n'
+		[ "$_pi" = yes ]  && printf '                    - Real Raspberry Pi: upstream moOde domain (use the moOde forum).\n'
+		[ "$_base" = no ] && printf '                    - Unsupported base: Debian 13 Trixie only (Debian/Armbian/RaspiOS).\n'
 	fi
 	printf '\n'
 

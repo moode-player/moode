@@ -112,12 +112,28 @@ log "Phase 0: preflight checks"
 # very first run use `su` / a root shell; subsequent runs can use sudo.
 [ "$(id -u)" -eq 0 ] || die "Run as root: 'sudo $0' or, on a fresh minimal Debian without sudo, 'su -c \"$0 $*\"'"
 
-if [ -f /etc/debian_version ]; then
-	DEB_MAJOR="$(cut -d. -f1 /etc/debian_version 2>/dev/null || echo '?')"
-	log "Debian version: $(cat /etc/debian_version)"
-	[ "$DEB_MAJOR" = "13" ] || warn "Tested on Debian 13 (Trixie); detected '$DEB_MAJOR'. Continuing."
+# Supported base: the Debian 13 "Trixie" family ONLY — Debian, Armbian Trixie, or
+# Raspberry Pi OS (Raspbian) Trixie. Other bases (e.g. Ubuntu) are unsupported:
+# their bleeding-edge toolchains break pinned source builds (CMake 4 vs ashuffle's
+# yaml-cpp, gcc-15...) and the upmpdcli/moodeaudio repos publish Debian suites only,
+# so the host codename (noble/resolute/...) 404s. We warn loudly but continue, so
+# experimentation stays possible.
+OS_ID="$( [ -r /etc/os-release ] && ( . /etc/os-release 2>/dev/null; echo "$ID" ) )"
+OS_CODENAME="$( [ -r /etc/os-release ] && ( . /etc/os-release 2>/dev/null; echo "$VERSION_CODENAME" ) )"
+OS_PRETTY="$( [ -r /etc/os-release ] && ( . /etc/os-release 2>/dev/null; echo "$PRETTY_NAME" ) )"
+DEB_MAJOR="$( [ -f /etc/debian_version ] && cut -d. -f1 /etc/debian_version 2>/dev/null || echo '?' )"
+log "Base OS: ${OS_PRETTY:-unknown} (id=${OS_ID:-?}, codename=${OS_CODENAME:-?}, debian_version=$( [ -f /etc/debian_version ] && cat /etc/debian_version || echo none ))"
+if { [ "$OS_ID" = debian ] || [ "$OS_ID" = raspbian ]; } && { [ "$OS_CODENAME" = trixie ] || [ "$DEB_MAJOR" = 13 ]; }; then
+	: # supported base
 else
-	warn "Not a Debian system (no /etc/debian_version). Continuing at your own risk."
+	warn "================================================================"
+	warn "UNSUPPORTED BASE: ${OS_PRETTY:-unknown}."
+	warn "moode-nopi supports Debian 13 (Trixie) ONLY"
+	warn "  — Debian / Armbian Trixie / Raspberry Pi OS Trixie."
+	warn "Other bases (e.g. Ubuntu) break pinned builds & repos."
+	warn "Continuing at your own risk in 5s... (Ctrl-C to abort)"
+	warn "================================================================"
+	sleep 5
 fi
 
 PLAYER_USER="$(awk -F: '$3==1000{print $1; exit}' /etc/passwd || true)"
