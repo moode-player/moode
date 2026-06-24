@@ -24,10 +24,15 @@ OUT="/tmp/nopi-report-$(date +%Y%m%d-%H%M%S).txt"
 DO_UPLOAD=0
 
 # install.sh writes its log next to itself in the clone dir (install-nopi.log);
-# the VM/override case puts it in /var/log. Look for whichever exists.
+# the VM/override case puts it in /var/log. Boxes installed before the rename
+# have the legacy name install.log. Pick the first that exists.
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
-INSTALL_LOG="$SCRIPT_DIR/install-nopi.log"
-[[ -r "$INSTALL_LOG" ]] || INSTALL_LOG="/var/log/install-nopi.log"
+INSTALL_LOG=""
+for c in "$SCRIPT_DIR/install-nopi.log" "$SCRIPT_DIR/install.log" \
+         /var/log/install-nopi.log /var/log/install.log; do
+	[[ -r "$c" ]] && { INSTALL_LOG="$c"; break; }
+done
+[[ -n "$INSTALL_LOG" ]] || INSTALL_LOG="$SCRIPT_DIR/install-nopi.log"
 
 usage() {
 	cat <<'EOF'
@@ -85,14 +90,16 @@ tailf() {
 # Three passes (order matters):
 #  1. value following any sensitive key (= : space, quoted or not), case-insens.
 #  2. MAC addresses (xx:xx:xx:xx:xx:xx) — device fingerprint.
-#  3. GLOBAL unicast IPv6 only (2000::/3, first hextet starts 2 or 3) — an
-#     ISP-assigned address geolocates the user. Link-local/ULA are left alone,
-#     and single-colon timestamps (HH:MM:SS) never match.
+#  3. GLOBAL unicast IPv6 only (2000::/3, FIRST hextet 2xxx/3xxx) — an
+#     ISP-assigned address geolocates the user. The leading delimiter
+#     (^|non-hex-non-colon) anchors the 2/3 to the start of the address, so an
+#     interior hextet of a link-local (fe80::215:…) or ULA (fd…) is NOT matched,
+#     and single-colon timestamps (HH:MM:SS) never match either.
 redact() {
 	sed -E \
 		-e 's/((pass(word|wd)?|psk|pre-shared-key|wpa-psk|secret|token|api[_-]?key|sharepassword|smbpass|client[_-]?secret|access[_-]?token)["'\'' ]*[:=][[:space:]]*["'\'']?)[^[:space:]"'\'']+/\1***REDACTED***/Ig' \
 		-e 's/([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}/**:MAC:**/g' \
-		-e 's/\b[23][0-9a-fA-F]{3}:([0-9a-fA-F]{0,4}:){1,6}[0-9a-fA-F]{0,4}/***global-IPv6***/g'
+		-e 's/(^|[^0-9A-Fa-f:])([23][0-9A-Fa-f]{3}:([0-9A-Fa-f]{0,4}:){1,6}[0-9A-Fa-f]{0,4})/\1***global-IPv6***/g'
 }
 
 # isPi() replica of www/inc/common.php: a Raspberry Pi is identified by its
@@ -129,7 +136,7 @@ collect() {
 	printf '\n'
 
 	section "PLATFORM / OS"
-	run "device-tree model" sh -c 'm="$(tr -d "\0" < /proc/device-tree/model 2>/dev/null)"; echo "${m:-(absent - not a device-tree platform, e.g. x86)}"'
+	run "device-tree model" sh -c '[ -r /proc/device-tree/model ] && tr -d "\0" < /proc/device-tree/model && echo || echo "(absent - not a device-tree platform, e.g. x86)"'
 	run "kernel"            uname -a
 	run "architecture"      dpkg --print-architecture
 	run "debian version"    sh -c 'cat /etc/debian_version 2>/dev/null'
@@ -200,19 +207,27 @@ if [[ $DO_UPLOAD -eq 1 ]]; then
 	echo
 	echo "Uploading to a no-account paste service..."
 	url=""
-	# Primary: 0x0.st (handles files/size well). Fallback: termbin (text/stdin).
+	# paste.rs (curl) first: reliable and curl is present everywhere (ARM boards
+	# may lack nc). termbin (nc) then 0x0.st as fallbacks.
 	if command -v curl >/dev/null 2>&1; then
-		url="$(curl -fsS -F"file=@$OUT" https://0x0.st 2>/dev/null)"
+		url="$(curl -fsS --data-binary @"$OUT" https://paste.rs/ 2>/dev/null)"
+		[[ "$url" == http* ]] || url=""
 	fi
 	if [[ -z "$url" ]] && command -v nc >/dev/null 2>&1; then
 		url="$(nc termbin.com 9999 < "$OUT" 2>/dev/null | tr -d '\0')"
+	fi
+	if [[ -z "$url" ]] && command -v curl >/dev/null 2>&1; then
+		url="$(curl -fsS -A 'moode-nopi-report/1.0' -F"file=@$OUT" https://0x0.st 2>/dev/null)"
+		[[ "$url" == http* ]] || url=""
 	fi
 	if [[ -n "$url" ]]; then
 		echo
 		echo "Uploaded. Share this URL in your issue/discussion:"
 		echo "    $url"
 	else
-		echo "Upload failed (no network or service down). Attach the local file instead:"
+		echo "Upload failed (curl=$(command -v curl >/dev/null 2>&1 && echo yes || echo NO)," \
+		     "nc=$(command -v nc >/dev/null 2>&1 && echo yes || echo NO), or network/services down)."
+		echo "Attach the local file to your issue instead:"
 		echo "    $OUT"
 	fi
 fi
