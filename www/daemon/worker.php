@@ -22,6 +22,7 @@ require_once __DIR__ . '/../inc/radio-browser.php';
 require_once __DIR__ . '/../inc/renderer.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
+require_once __DIR__ . '/../inc/nopi-worker.php'; // moode-nopi: non-Pi worker hooks
 
 //----------------------------------------------------------------------------//
 // STARTUP SEQUENCE
@@ -740,31 +741,8 @@ if ($actualCardNum == ALSA_EMPTY_CARD && isPi()) {
 	workerLog('worker: MPD config:    updated');
 } else if ($actualCardNum == ALSA_EMPTY_CARD) {
 	// Non-Pi (x86/other): the Pi HDMI default does not exist here. Auto-select the
-	// first real ALSA card if one is present (e.g. a USB DAC); otherwise leave the
-	// output unset for the user to pick in the UI. Never force a Pi device, which
-	// would stall MPD startup waiting on a non-existent output.
-	$deviceNames = getAlsaDeviceNames();
-	$pickNum = ALSA_EMPTY_CARD;
-	$pickName = '';
-	foreach ($deviceNames as $num => $name) {
-		if ($name != ALSA_EMPTY_CARD && $name != ALSA_LOOPBACK_DEVICE && $name != ALSA_DUMMY_DEVICE) {
-			$pickNum = $num;
-			$pickName = $name;
-			break;
-		}
-	}
-	if ($pickNum != ALSA_EMPTY_CARD) {
-		phpSession('write', 'adevname', $pickName);
-		phpSession('write', 'cardnum', $pickNum);
-		sqlUpdate('cfg_mpd', $dbh, 'device', $pickNum);
-		phpSession('write', 'alsa_output_mode', 'plughw');
-		updMpdConf();
-		sysCmd('systemctl restart mpd');
-		workerLog('worker: ALSA card:     auto-selected ' . $pickName . ' (card ' . $pickNum . ')');
-	} else {
-		$noAudioDevice = true;
-		workerLog('worker: ALSA card:     no audio device found; output left unset');
-	}
+	// first real ALSA card (e.g. a USB DAC), else leave output unset (nopi-worker.php).
+	$noAudioDevice = nopiAutoSelectAlsaCard($dbh);
 } else if ($actualCardNum == $_SESSION['cardnum']) {
 	workerLog('worker: ALSA card:     has not been reassigned');
 	if (isHDMIDevice($_SESSION['adevname'])) {
@@ -802,22 +780,9 @@ if ($_SESSION['amixname'] != 'none') {
 	sysCmd('alsactl clean ' . $_SESSION['cardnum'] . ' "name=\'' . $_SESSION['amixname'] . '\'"');
 	sysCmd('alsactl store ' . $_SESSION['cardnum']);
 }
-// Non-Pi: reconcile an invalid Hardware mixer_type. On x86 the worker may
-// auto-select a USB DAC (the Pi HDMI default does not exist), and after
-// --reset-db the seeded Pi default mixer_type is "hardware". A DAC with no
-// ALSA volume control (amixname == none) cannot do hardware volume: the UI
-// suppresses the Hardware option and silently shows Software, while mpd.conf
-// keeps "hardware" so the volume knob reads 0. Downgrade to software so the
-// stored value matches what the device can actually do. isPi()-guarded so Pi
-// behaviour is byte-identical (on the Pi the UI always sets this via the
-// output-device cache, so the case does not arise there).
-if (!isPi() && $_SESSION['amixname'] == 'none' && $_SESSION['mpdmixer'] == 'hardware') {
-	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', 'software');
-	phpSession('write', 'mpdmixer', 'software');
-	updMpdConf();
-	sysCmd('systemctl restart mpd');
-	workerLog('worker: MPD mixer:     card has no hardware volume; mixer_type -> software');
-}
+// Non-Pi: a DAC with no hardware volume control needs mixer_type downgraded from
+// the seeded "hardware" to "software" (else the volknob reads 0). nopi-worker.php.
+nopiReconcileMixerType($dbh);
 // HDMI mixer initialize (after first boot a test signal needs to be sent to "register" the mixer with ALSA)
 if ($_SESSION['alsa_output_mode'] == 'iec958') {
 	$result = getAlsaVolume($_SESSION['amixname']);
