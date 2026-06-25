@@ -378,9 +378,9 @@ if (!isset($_SESSION['led_state'])) {
 	$_SESSION['led_state'] = '1,1';
 }
 if (!isPi()) {
-	// Generic non-Pi platform (x86/other): no Pi sysclass LED entries to control
-	workerLog('worker: Sys LED0:      n/a (non-Pi platform)');
-	workerLog('worker: Sys LED1:      n/a (non-Pi platform)');
+	// SBC status/power LED nodes vary by board and are discovered at runtime
+	// (nopi-worker.php); x86 with no such nodes just logs n/a and changes nothing.
+	nopiInitLeds();
 } else if ($_SESSION['pi_modelnum'] <= 1 || $_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 	// Pi boards w/o a sysclass entry for LED1
 	$led0Trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'actpwr';
@@ -3626,6 +3626,7 @@ function runQueuedJob() {
 			updBootConfigTxt('upd_external_antenna', $value);
 			break;
 		case 'actled': // LED0
+			if (!isPi()) { nopiSetLed('actled', $_SESSION['w_queueargs']); break; } // SBC: runtime-discovered node (nopi-worker.php)
 			if ($_SESSION['pi_modelnum'] < 5) {
 				$led0Trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'actpwr';
 				sysCmd('echo ' . $led0Trigger . ' | sudo tee /sys/class/leds/ACT/trigger > /dev/null');
@@ -3635,6 +3636,7 @@ function runQueuedJob() {
 			}
 			break;
 		case 'pwrled': // LED1
+			if (!isPi()) { nopiSetLed('pwrled', $_SESSION['w_queueargs']); break; } // SBC: runtime-discovered node (nopi-worker.php)
 			$led1Brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1Brightness . ' | sudo tee /sys/class/leds/PWR/brightness > /dev/null');
 			break;

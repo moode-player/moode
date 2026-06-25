@@ -137,6 +137,41 @@ function getMoodeUpdate() {
 }
 
 //----------------------------------------------------------------------------//
+// STATUS / POWER LEDs (SBC sysfs leds-gpio nodes)
+//----------------------------------------------------------------------------//
+
+// Map moOde's two LED toggles - activity LED0 ("actled") and power LED1 ("pwrled")
+// - to the board's /sys/class/leds nodes. On the Pi these are the fixed ACT/PWR
+// names (handled inline in worker.php); on other SBCs the node names vary by board
+// (orangepi:red:status, orangepi:green:pwr|power, ...) so we discover them at
+// runtime. Returns ['actled' => node, 'pwrled' => node] where node is the leaf dir
+// name under /sys/class/leds (e.g. 'orangepi:red:status'), or '' when absent.
+// Heuristics: the activity LED is the ':status' node, the power LED the
+// ':pwr'/':power' node. We deliberately match only these specific names so we
+// never grab unrelated LED nodes that real hardware also exposes - keyboard-lock
+// LEDs ('input*::capslock' ...) and especially network-port PHY LEDs (named like
+// 'enp2s0::lan', '...::act', '...::link' on x86 NICs), which must not light up as
+// a "status" toggle. Pure sysfs reads (world-readable), so it is safe for both the
+// worker and the www-data web app to call. Empty on the Pi and on hardware with no
+// such nodes (most x86), which callers use to hide the controls.
+function nopiDetectLeds() {
+	$leds = array('actled' => '', 'pwrled' => '');
+	foreach (glob('/sys/class/leds/*', GLOB_ONLYDIR) as $path) {
+		$name = basename($path);
+		if (strpos($name, 'input') === 0) {
+			continue; // keyboard-lock LEDs, not board status/power LEDs
+		}
+		$lc = strtolower($name);
+		if ($leds['actled'] === '' && strpos($lc, 'status') !== false) {
+			$leds['actled'] = $name;
+		} elseif ($leds['pwrled'] === '' && (strpos($lc, ':pwr') !== false || strpos($lc, 'power') !== false)) {
+			$leds['pwrled'] = $name;
+		}
+	}
+	return $leds;
+}
+
+//----------------------------------------------------------------------------//
 // SYSTEM DRIVES (protect the OS disk from being offered as a music source)
 //----------------------------------------------------------------------------//
 

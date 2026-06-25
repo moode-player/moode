@@ -489,13 +489,17 @@ $autoClick = " onchange=\"autoClick('#btn-set-reduce-power');\"";
 $_select['reduce_power_on']  .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-1\" value=\"on\" " . (($_SESSION['reduce_power'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['reduce_power_off'] .= "<input type=\"radio\" name=\"reduce_power\" id=\"toggle-reduce-power-2\" value=\"off\" " . (($_SESSION['reduce_power'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['fan_temp0'] = $_SESSION['fan_temp0'];
-// LED0 (Activity) is the Pi's mmc0/SDCard activity LED (GPIO) - no equivalent
-// on generic x86/other platforms, so hide the control off the Pi.
-$_actled_hide = isPi() ? '' : 'hide';
+// LED0 (Activity) is the Pi's mmc0/SDCard activity LED (GPIO). Off the Pi, other
+// SBCs (Armbian) expose their own status/power LED nodes under a board-specific
+// name; nopiDetectLeds() discovers them at runtime so we can show the same toggles
+// there, while x86 boards with no such node keep the control hidden.
+$_nopiLeds = isPi() ? array('actled' => '', 'pwrled' => '') : nopiDetectLeds();
+$_actled_hide = (isPi() || $_nopiLeds['actled'] !== '') ? '' : 'hide';
 // The whole Power management section (reduce-power/HAT rails, GPIO fan, LEDs) is
-// Pi hardware; off the Pi every control inside is already hidden, so hide the
-// section header too rather than leave an empty "Power management" rule.
-$_powermgmt_hide = isPi() ? '' : 'hide';
+// Pi hardware; off the Pi every control inside is hidden unless the board exposes a
+// status/power LED, so hide the section header too rather than leave an empty
+// "Power management" rule.
+$_powermgmt_hide = (isPi() || $_nopiLeds['actled'] !== '' || $_nopiLeds['pwrled'] !== '') ? '' : 'hide';
 // Log to RAM uses the log2ram package (mounts /var/log on tmpfs to spare the SD
 // card). Show the control whenever log2ram is actually installed (toggling it
 // otherwise would systemctl a non-existent unit): always on the Pi, and on SBCs
@@ -517,6 +521,21 @@ if ($_SESSION['pi_modelnum'] <= 1 || $_SESSION['pi_modelnum'] >= 5 || $_SESSION[
 	$autoClick = " onchange=\"autoClick('#btn-set-pwrled');\"";
 	$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 	$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+}
+// nopi: off the Pi the upstream pi_modelnum/hdwrrev gate above always hides pwrled
+// (pi_modelnum is '' or 0). Re-derive its visibility from the board's detected
+// power-LED node instead. isPi()-guarded and placed AFTER the upstream block so the
+// Pi path stays byte-identical and rebases onto new moOde tags stay clean.
+if (!isPi()) {
+	if ($_nopiLeds['pwrled'] !== '') {
+		$_pwrled_hide = '';
+		$pwrled = explode(',', $_SESSION['led_state'])[1];
+		$autoClick = " onchange=\"autoClick('#btn-set-pwrled');\"";
+		$_select['pwrled_on']  .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+		$_select['pwrled_off'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle-pwrled-2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+	} else {
+		$_pwrled_hide = 'hide';
+	}
 }
 
 // Networking

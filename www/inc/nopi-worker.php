@@ -61,3 +61,55 @@ function nopiReconcileMixerType($dbh) {
 	sysCmd('systemctl restart mpd');
 	workerLog('worker: MPD mixer:     card has no hardware volume; mixer_type -> software');
 }
+
+// Apply on/off to one discovered SBC LED node (the non-Pi analog of worker.php's
+// inline ACT/PWR writes). "off" parks the trigger and clears brightness; "on"
+// restores a sensible trigger - a heartbeat blink for the activity LED (the closest
+// analog to the Pi's mmc0 SD-activity trigger) and steady default-on for the power
+// LED (both are standard kernel LED triggers present on the supported boards).
+// $node is a leaf name from nopiDetectLeds(); an empty $node is a silent no-op, so
+// nothing breaks on hardware that exposes no such LED. Never reached on the Pi.
+function nopiWriteLed($node, $on, $isActivity) {
+	if ($node === '') {
+		return; // no matching LED on this board - do nothing
+	}
+	$base = '/sys/class/leds/' . $node;
+	if ($on) {
+		$trigger = $isActivity ? 'heartbeat' : 'default-on';
+		sysCmd('echo ' . $trigger . ' | sudo tee ' . $base . '/trigger > /dev/null');
+	} else {
+		sysCmd('echo none | sudo tee ' . $base . '/trigger > /dev/null');
+		sysCmd('echo 0 | sudo tee ' . $base . '/brightness > /dev/null');
+	}
+}
+
+// Initialise the SBC status/power LEDs at worker startup from the saved led_state
+// "actled,pwrled" pair. Discovers the nodes at runtime (names vary by board) and
+// applies the saved state; boards with no discoverable node (most x86) simply log
+// n/a and change nothing. Called only off the Pi - the Pi keeps its own inline
+// ACT/PWR block in worker.php.
+function nopiInitLeds() {
+	$leds = nopiDetectLeds();
+	list($act, $pwr) = array_pad(explode(',', $_SESSION['led_state']), 2, '1');
+	if ($leds['actled'] !== '') {
+		nopiWriteLed($leds['actled'], $act != '0', true);
+		workerLog('worker: Sys LED0:      ' . ($act == '0' ? 'off' : 'on') . ' (' . $leds['actled'] . ')');
+	} else {
+		workerLog('worker: Sys LED0:      n/a (no status LED on this board)');
+	}
+	if ($leds['pwrled'] !== '') {
+		nopiWriteLed($leds['pwrled'], $pwr != '0', false);
+		workerLog('worker: Sys LED1:      ' . ($pwr == '0' ? 'off' : 'on') . ' (' . $leds['pwrled'] . ')');
+	} else {
+		workerLog('worker: Sys LED1:      n/a (no power LED on this board)');
+	}
+}
+
+// Apply a single LED toggle job ('actled' or 'pwrled') off the Pi. Re-discovers the
+// node (cheap sysfs glob) and writes it; a missing node is a no-op. Called from the
+// worker's job switch, replacing the Pi-only ACT/PWR writes on non-Pi hardware.
+function nopiSetLed($which, $value) {
+	$leds = nopiDetectLeds();
+	$node = $which == 'actled' ? $leds['actled'] : $leds['pwrled'];
+	nopiWriteLed($node, $value != '0', $which == 'actled');
+}
