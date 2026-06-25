@@ -136,6 +136,62 @@ else
 	sleep 5
 fi
 
+# Low-RAM build hardening (root-caused on an Orange Pi PC+ 1GB armhf). The on-device
+# source builds (pleezer/cargo-deb Rust, mpd/caps C++) drop their work dir in
+# `mktemp -d` -> /tmp, which Armbian mounts as a small RAM tmpfs (~50% of RAM).
+# pleezer's cargo target/ is ~650MB and overflows a 1GB board's ~480MB /tmp ("No
+# space left on device" -> pleezer/cargo-deb "build failed"), and the tmpfs also
+# steals RAM (which is what OOM-killed rustc on the first run). The 2GB boards were
+# fine only because their /tmp tmpfs is ~1GB. Three gated, idempotent measures:
+#
+#  (1) Build on disk: if /tmp is tmpfs, point TMPDIR at /var/tmp (root fs, GBs free)
+#      so every build's temp/target lands on disk, not RAM. This ALONE lets a 1GB
+#      board build everything at full -j(nproc) (validated: pleezer 0.19.1, target/
+#      652MB, no ENOSPC, no OOM). No-op where /tmp is already disk (Pi OS, x86).
+#  (2) Swapfile backstop (RAM < 1.5GB): the FINAL pleezer crate is one big rustc
+#      (~700-900MB) that runs zram ~85% full on 1GB; a temporary 2G swapfile gives
+#      margin. Removed at end of install (zram stays for runtime).
+#  (3) Cap Rust parallelism only on sub-1GB boards (< 900MB), where even the
+#      parallel dependency phase (~700MB) won't fit; 1GB+ build at full speed.
+NOPI_BUILD_SWAP=""
+MEM_TOTAL_MB="$(awk '/^MemTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
+SWAP_TOTAL_MB="$(awk '/^SwapTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
+
+# (1) keep build temp off the RAM-backed tmpfs
+if [ "$(findmnt -nro FSTYPE /tmp 2>/dev/null)" = tmpfs ]; then
+	export TMPDIR=/var/tmp
+	log "/tmp is a RAM tmpfs: building in TMPDIR=/var/tmp (disk) to avoid ENOSPC + RAM theft"
+fi
+
+if [ "${MEM_TOTAL_MB:-9999}" -lt 1536 ]; then
+	# (3) very small boards: fewer parallel rustc so the dependency phase fits
+	if [ "${MEM_TOTAL_MB:-9999}" -lt 900 ]; then
+		export CARGO_BUILD_JOBS=2
+		log "Very low RAM (${MEM_TOTAL_MB}MB): capping Rust parallelism (CARGO_BUILD_JOBS=2)"
+	fi
+	# (2) swapfile backstop for the final single-crate rustc peak
+	if [ "${SWAP_TOTAL_MB:-0}" -lt 2048 ] && ! grep -q '^/swapfile ' /proc/swaps; then
+		FREE_MB="$(df -Pm / | awk 'NR==2{print $4}')"
+		if [ "${FREE_MB:-0}" -ge 3072 ]; then
+			log "Low RAM (${MEM_TOTAL_MB}MB): adding a temporary 2G build swapfile (backstop for the final pleezer rustc; removed at end of install)"
+			if fallocate -l 2G /swapfile 2>/dev/null \
+					|| dd if=/dev/zero of=/swapfile bs=1M count=2048 status=none 2>/dev/null; then
+				chmod 600 /swapfile
+				mkswap /swapfile >/dev/null 2>&1
+				if swapon /swapfile 2>/dev/null; then
+					NOPI_BUILD_SWAP=/swapfile
+				else
+					warn "swapon /swapfile failed (continuing; zram should still cover it)"; rm -f /swapfile
+				fi
+			else
+				warn "could not create /swapfile (continuing; zram should still cover it)"
+			fi
+		else
+			warn "low RAM but <3G free on /; skipping build swapfile (zram should still cover it)"
+		fi
+	fi
+fi
+
 PLAYER_USER="$(awk -F: '$3==1000{print $1; exit}' /etc/passwd || true)"
 [ -n "$PLAYER_USER" ] || die "No UID 1000 user found. Create your normal login user first."
 log "Player user (UID 1000): $PLAYER_USER"
@@ -2115,6 +2171,13 @@ if [ "${#_missing[@]}" -gt 0 ]; then
 	for f in "${_missing[@]}"; do warn "  - $f"; done
 else
 	log "Config-file parity: all ${#EXPECTED_CONF[@]} expected default config files present"
+fi
+
+# Remove the temporary build swapfile we created for low-RAM boards (the heavy
+# builds are done; zram remains for runtime). Only touches a swapfile WE created.
+if [ -n "$NOPI_BUILD_SWAP" ] && grep -q "^$NOPI_BUILD_SWAP " /proc/swaps; then
+	swapoff "$NOPI_BUILD_SWAP" 2>/dev/null && rm -f "$NOPI_BUILD_SWAP" \
+		&& log "Removed temporary build swapfile ($NOPI_BUILD_SWAP)"
 fi
 
 IP="$(hostname -I | awk '{print $1}')"
