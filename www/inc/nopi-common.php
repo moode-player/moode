@@ -2,11 +2,12 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
- * moode-nopi: helpers specific to the non-Pi port.
+ * moode-nopi: cross-cutting helpers for the non-Pi port.
  *
- * Kept in a dedicated file (require'd from common.php) so the port adds whole
- * new files rather than editing upstream moOde sources - which keeps the diff
- * small and the rebases onto new upstream tags clean.
+ * Kept in a dedicated file (require'd from common.php, so available to the whole
+ * web app and the daemons) rather than editing upstream moOde sources - which
+ * keeps the diff small and the rebases onto new upstream tags clean. Worker-only
+ * fork hooks live separately in nopi-worker.php (require'd from worker.php).
  */
 
 //----------------------------------------------------------------------------//
