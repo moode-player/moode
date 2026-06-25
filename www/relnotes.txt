@@ -19,7 +19,7 @@ Updates
 - UPD:
 
 Bug fixes
-- FIX: 
+- FIX: Add missing dep for jq to moode-player package (Spotify cover/metadata)
 
 ################################################################################
 #
