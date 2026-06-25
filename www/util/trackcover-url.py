@@ -15,6 +15,11 @@
 # Returns:
 #	URL to album art
 #
+# 2026 modifications by Tim Curtis
+# This program is just for test purposes
+# - Use artist match test to help improve finding correct cover
+# - Add debug logging
+#
 
 import requests  # type: ignore
 import argparse
@@ -30,8 +35,10 @@ def fetch_album_art_apple(artist_name, track_title):
 		"term": f"{artist_name} {track_title}",
 		"media": "music",
 		"entity": "musicTrack",
-		"limit": 1
+		"limit": 10
 	}
+	# DEBUG:
+	print(query)
 
 	# Make the request to the API
 	response = requests.get(url, params=query)
@@ -42,17 +49,30 @@ def fetch_album_art_apple(artist_name, track_title):
 
 	# Parse the JSON response
 	data = response.json()
+	# DEBUG:
+	print(data)
 
 	if len(data['results']) == 0:
-		print("No album found for the given artist name and track title")
+		print("No results were returned from the query")
 		return None
 
 	# Extract the album art URL
-	album_info = data['results'][0]
-	artwork_url = album_info['artworkUrl100']
+	artwork_url = None
+	for item in data['results']:
+		print(f"Checking {item['collectionName']}")
+		if item["artistName"].replace(" ", "").lower() == artist_name.replace(" ", "").lower():
+			artwork_url = item['artworkUrl100']
+			print(f"Artist match found")
+			break
+
+
+	if not artwork_url:
+		print("No album found for the given artist name and track title")
+		return None
 
 	# Modify the URL to specify the highest resolution image available
-	high_res_artwork_url = artwork_url.replace("100x100", "10000x10000")
+	# Can be 10000x10000 but just use 1000x1000
+	high_res_artwork_url = artwork_url.replace("100x100", "1000x1000")
 
 	# Test the URL
 	response = requests.head(high_res_artwork_url)

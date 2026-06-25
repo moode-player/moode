@@ -904,20 +904,22 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 function getTrackCoverUrl($trackTitle) {
 	$trackTitle = html_entity_decode($trackTitle);
+	$trackLimit = '10'; // Max number of tracks to return from query
 
 	phpSession('open_ro');
 	$coverUrl = $_SESSION['trackcover_url_cache'][$trackTitle];
 	if (!empty($coverUrl)) {
-		// DEBUG:
-		//workerLog('getTrackCoverUrl(): Return cached cover URL for: ' . $trackTitle);
+		// DEBUG: Report cached cover used
+		workerLog('getTrackCoverUrl(): Return cached cover URL for: ' . $trackTitle);
 		return $coverUrl;
 	}
 
-	// DEBUG:
-	//workerLog('getTrackCoverUrl(): Query iTunes repository for: ' . $trackTitle);
+	// DEBUG: Start query
+	workerLog('getTrackCoverUrl(): Query iTunes database for: ' . $trackTitle);
 	// Create query
-	$parts = explode(' - ', $trackTitle); // $parts[0]=Artist name, $parts[1]=Track title
-	$query = '?term=' . urlencode($parts[0] . ' ' . $parts[1]) . '&media=music&entity=musicTrack&limit=1';
+	$titleParts = explode(' - ', $trackTitle); // $titleParts[0]: Artist name, $titleParts[1]: Track title
+	$query = '?term=' . urlencode($titleParts[0] . ' ' . $titleParts[1]) .
+		'&media=music&entity=musicTrack&limit=' . $trackLimit;
 	$apiUrl = ITUNES_API_BASE_URL . $query;
 	// Get stream timeout, same for both connect and readdata
 	$timeout = $_SESSION['itunes_query_timeout'] . '.0';
@@ -927,7 +929,7 @@ function getTrackCoverUrl($trackTitle) {
 			'timeout' => (float)$timeout
 		)
 	);
-	// Submit query to iTunes repo
+	// Submit query to iTunes
 	$result = file_get_contents($apiUrl, false, stream_context_create($options));
 	if ($result === false) {
 		$msg = 'Query failed for: ' . $trackTitle;
@@ -935,16 +937,34 @@ function getTrackCoverUrl($trackTitle) {
 	} else {
 		$resultArray = json_decode($result, true);
 		if ($resultArray['resultCount'] == '0') {
-			$msg = 'Query return 0 results for: ' . $trackTitle;
+			$msg = 'Query returned 0 results for: ' . $trackTitle;
 			$coverUrl = '';
 		} else {
-			$msg = 'Query successful for: ' . $trackTitle  . "\n" . 'Cover URL= ' . $coverUrl;
-			$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][0]['artworkUrl100']);
+			// DEBUG: Report result count and/or full results
+			workerLog('getTrackCoverUrl(): - Query returned ' . $resultArray['resultCount'] . ' results');
+			//workerLog('Full query results:' . "\n" . print_r($resultArray['results'] ,true));
+			$coverUrl = '';
+			$i = 0;
+			foreach ($resultArray['results'] as $result) {
+				// DEBUG: Find artist match in results
+				workerLog('getTrackCoverUrl(): - Checking result[' . $i . '] album: ' . $result['collectionName']);
+				$itunesArtist = strtolower(str_replace($result['artistName'], ' ', ''));
+				$trackTitleArtist = strtolower(str_replace($titleParts[0], ' ', ''));
+				if ($trackTitleArtist == $itunesArtist) {
+					$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][$i]['artworkUrl100']);
+					$msg = 'Query successful for: ' . $trackTitle  . "\n" .
+						'Cover: ' . $coverUrl . "\n" .
+						'Query: ' . $apiUrl;
+					// DEBUG: Report artist match
+					workerLog('getTrackCoverUrl(): - Artist match found');
+					break;
+				}
+			}
 		}
 	}
 
-	// DEBUG:
-	//workerLog('getTrackCoverUrl(): ' . $msg . "\n" . $coverUrl . (!empty($coverUrl) ? "\n" : '') . $apiUrl);
+	// DEBUG: Summary result
+	workerLog('getTrackCoverUrl(): ' . $msg);
 
 	phpSession('open');
 	$_SESSION['trackcover_url_cache'][$trackTitle] = $coverUrl;
