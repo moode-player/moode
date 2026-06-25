@@ -368,31 +368,6 @@ function chkRendererActive() {
 	return $active;
 }
 
-// Platform detection
-// Returns true when running on Raspberry Pi hardware, false on generic x86/other
-// platforms. A Pi exposes a "Revision" line in /proc/cpuinfo; generic PCs do not.
-// Used to skip Pi-only boot/hardware logic (config.txt overlays, vcgencmd, GPIO
-// HATs, LED/fan control) so the same codebase runs on Pi, x86 and other SBCs.
-function isPi() {
-	static $isPi = null;
-	if ($isPi === null) {
-		// Detect a Raspberry Pi by its device-tree model ("Raspberry Pi 4 Model B ...").
-		// The previous test (any "Revision" line in /proc/cpuinfo) is true on EVERY
-		// 32-bit ARM board: the armhf cpuinfo format always carries Revision/Hardware/
-		// Serial lines, so non-Pi SBCs (e.g. Allwinner H3 / Orange Pi) tested as a Pi and
-		// ran the Pi-only boot-config logic in worker.php, which reboot-loops. (arm64
-		// cpuinfo omits those lines, which is why this only bit 32-bit boards.) Matching
-		// the model keeps every real Pi true and all other boards false; on x86 the file
-		// is absent -> false. Falls back to the cpuinfo Model line if device-tree is unread.
-		$model = @file_get_contents('/proc/device-tree/model');
-		if ($model === false) {
-			$model = @shell_exec("awk -F': ' '/^Model/{print \$2}' /proc/cpuinfo");
-		}
-		$isPi = ($model !== false && $model !== null && strpos($model, 'Raspberry Pi') !== false);
-	}
-	return $isPi;
-}
-
 // Get Pi revision code information
 function getPiRev($option = '--all') {
 	// Returns a tab delimited string for --all

@@ -713,44 +713,6 @@ function startMiniDlna() {
 // COMMON
 //----------------------------------------------------------------------------//
 
-// Base block devices (e.g. 'sda', 'nvme0n1', 'mmcblk0') that carry the running
-// OS - whatever device backs /, /boot, /boot/efi or an active swap. moOde assumes
-// the OS lives on the SD card (mmcblk, which the NVMe/SATA scans below never
-// match); on generic x86/other hardware it usually sits on a SATA SSD or NVMe,
-// which must NEVER be offered as a formattable/mountable music source (a Format
-// would mkfs the boot disk). Returns whole-disk kernel names to exclude.
-function getSystemDrives() {
-	$bases = array();
-	// Query each mountpoint separately: a single multi-target findmnt returns
-	// nothing (rc=1) as soon as one target isn't a mountpoint (e.g. /boot folded
-	// into /). Swap devices come from /proc/swaps (no swapon/PATH dependency).
-	$sources = sysCmd('findmnt -no SOURCE / 2>/dev/null; findmnt -no SOURCE /boot 2>/dev/null; findmnt -no SOURCE /boot/efi 2>/dev/null; awk \'NR>1{print $1}\' /proc/swaps 2>/dev/null');
-	foreach ($sources as $src) {
-		$src = trim($src);
-		if (strpos($src, '/dev/') !== 0) {
-			continue; // skip non-block backings (tmpfs, zram, overlay, swapfiles)
-		}
-		// A partition resolves to its parent whole disk via PKNAME; a whole disk
-		// (or a device with no parent) reports an empty PKNAME -> use its own name.
-		$pkname = trim(sysCmd('lsblk -no PKNAME ' . $src . ' 2>/dev/null')[0] ?? '');
-		$bases[$pkname !== '' ? $pkname : basename($src)] = true;
-	}
-
-	return array_keys($bases);
-}
-
-// True if $device (a /dev basename like 'nvme0n1', 'nvme0n1p2' or 'sda1') is, or
-// is a partition of, one of the system whole disks in $systemDrives.
-function isSystemDrive($device, $systemDrives) {
-	foreach ($systemDrives as $base) {
-		if ($device === $base || preg_match('/^' . preg_quote($base, '/') . 'p?[0-9]+$/', $device)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 function getDriveFormat($device) {
 	$format = sysCmd('blkid ' . $device . " | awk -F'TYPE=' '{print $2}' | awk -F'\"' '{print $2}'");
 	return empty($format) ? '' : $format[0];

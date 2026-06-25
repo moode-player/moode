@@ -9,6 +9,34 @@
  * small and the rebases onto new upstream tags clean.
  */
 
+//----------------------------------------------------------------------------//
+// PLATFORM DETECTION
+//----------------------------------------------------------------------------//
+
+// Returns true when running on Raspberry Pi hardware, false on generic x86/other
+// platforms. Used to skip Pi-only boot/hardware logic (config.txt overlays,
+// vcgencmd, GPIO HATs, LED/fan control) so the same codebase runs on Pi, x86 and
+// other SBCs. Lives here (not common.php) to keep the upstream diff minimal.
+function isPi() {
+	static $isPi = null;
+	if ($isPi === null) {
+		// Detect a Raspberry Pi by its device-tree model ("Raspberry Pi 4 Model B ...").
+		// The previous test (any "Revision" line in /proc/cpuinfo) is true on EVERY
+		// 32-bit ARM board: the armhf cpuinfo format always carries Revision/Hardware/
+		// Serial lines, so non-Pi SBCs (e.g. Allwinner H3 / Orange Pi) tested as a Pi and
+		// ran the Pi-only boot-config logic in worker.php, which reboot-loops. (arm64
+		// cpuinfo omits those lines, which is why this only bit 32-bit boards.) Matching
+		// the model keeps every real Pi true and all other boards false; on x86 the file
+		// is absent -> false. Falls back to the cpuinfo Model line if device-tree is unread.
+		$model = @file_get_contents('/proc/device-tree/model');
+		if ($model === false) {
+			$model = @shell_exec("awk -F': ' '/^Model/{print \$2}' /proc/cpuinfo");
+		}
+		$isPi = ($model !== false && $model !== null && strpos($model, 'Raspberry Pi') !== false);
+	}
+	return $isPi;
+}
+
 // Our fork's repo, queried anonymously over HTTPS for the nopi update check (a
 // deployed box has no SSH credentials, and the local clone's origin may be SSH).
 const NOPI_REPO_URL      = 'https://github.com/Gjuju/moode-nopi.git';
@@ -105,4 +133,47 @@ function getMoodeUpdate() {
 	}
 	@file_put_contents($cache, $out . "\n");
 	return $out;
+}
+
+//----------------------------------------------------------------------------//
+// SYSTEM DRIVES (protect the OS disk from being offered as a music source)
+//----------------------------------------------------------------------------//
+
+// Base block devices (e.g. 'sda', 'nvme0n1', 'mmcblk0') that carry the running
+// OS - whatever device backs /, /boot, /boot/efi or an active swap. moOde assumes
+// the OS lives on the SD card (mmcblk, which the NVMe/SATA scans never match); on
+// generic x86/other hardware it usually sits on a SATA SSD or NVMe, which must
+// NEVER be offered as a formattable/mountable music source (a Format would mkfs
+// the boot disk). Returns whole-disk kernel names to exclude. Used by
+// nvmeListDrives()/sataListDrives() in music-source.php (isPi()-guarded).
+function getSystemDrives() {
+	$bases = array();
+	// Query each mountpoint separately: a single multi-target findmnt returns
+	// nothing (rc=1) as soon as one target isn't a mountpoint (e.g. /boot folded
+	// into /). Swap devices come from /proc/swaps (no swapon/PATH dependency).
+	$sources = sysCmd('findmnt -no SOURCE / 2>/dev/null; findmnt -no SOURCE /boot 2>/dev/null; findmnt -no SOURCE /boot/efi 2>/dev/null; awk \'NR>1{print $1}\' /proc/swaps 2>/dev/null');
+	foreach ($sources as $src) {
+		$src = trim($src);
+		if (strpos($src, '/dev/') !== 0) {
+			continue; // skip non-block backings (tmpfs, zram, overlay, swapfiles)
+		}
+		// A partition resolves to its parent whole disk via PKNAME; a whole disk
+		// (or a device with no parent) reports an empty PKNAME -> use its own name.
+		$pkname = trim(sysCmd('lsblk -no PKNAME ' . $src . ' 2>/dev/null')[0] ?? '');
+		$bases[$pkname !== '' ? $pkname : basename($src)] = true;
+	}
+
+	return array_keys($bases);
+}
+
+// True if $device (a /dev basename like 'nvme0n1', 'nvme0n1p2' or 'sda1') is, or
+// is a partition of, one of the system whole disks in $systemDrives.
+function isSystemDrive($device, $systemDrives) {
+	foreach ($systemDrives as $base) {
+		if ($device === $base || preg_match('/^' . preg_quote($base, '/') . 'p?[0-9]+$/', $device)) {
+			return true;
+		}
+	}
+
+	return false;
 }
