@@ -15,11 +15,14 @@
 #
 ################################################################################
 
+New features
+- NEW: 
+
 Updates
-- UPD:
+- UPD: Improve iTunes cover art lookup
 
 Bug fixes
-- FIX: Add missing dep for jq to moode-player package (Spotify cover/metadata)
+- FIX: Spotify Connect missing cover and metadata
 
 ################################################################################
 #
