@@ -267,7 +267,7 @@ const ALSA_RESERVED_NAMES = array(ALSA_LOOPBACK_DEVICE, ALSA_DUMMY_DEVICE);
 const ALSA_DEFAULT_MIXER_NAME_I2S = 'Digital';
 const ALSA_DEFAULT_MIXER_NAME_INTEGRATED = 'PCM';
 // ALSA output mode names
-const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct', 'iec958' => 'IEC958');
+const ALSA_OUTPUT_MODE_NAME = array('plughw' => 'Default', 'hw' => 'Direct', 'iec958' => 'IEC958', 'dmix' => 'Mix');
 const ALSA_OUTPUT_MODE_BT_NAME = array('_audioout' => 'Standard', 'plughw' => 'Compatibility');
 // ALSA HDMI IEC958
 const ALSA_IEC958_DEVICE = 'default:vc4hdmi';
