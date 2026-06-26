@@ -910,7 +910,7 @@ function getTrackCoverUrl($trackTitle) {
 	$coverUrl = $_SESSION['trackcover_url_cache'][$trackTitle];
 	if (!empty($coverUrl)) {
 		// DEBUG: Report cached cover used
-		workerLog('getTrackCoverUrl(): Return cached cover URL for: ' . $trackTitle);
+		workerLog('getTrackCoverUrl(): Returned cached cover URL for: ' . $trackTitle);
 		return $coverUrl;
 	}
 
