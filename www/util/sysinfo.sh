@@ -12,9 +12,20 @@ SYSTEM_PARAMETERS() {
 	echo -e "\n\c"
 	echo -e "H A R D W A R E   A N D   O S"
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
-	echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
+	# moode-nopi: show the fork release (absent on a real Pi -> line hidden)
+	[ -n "$NOPI_REL" ] && echo -e "\nmoOde-nopi release\t= $NOPI_REL\c"
+	if [ "$IS_PI" = "1" ]; then
+		echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
+	else
+		# Generic x86/other SBC: it is not RaspiOS
+		echo -e "\nOS\t\t\t= $RASPIOS_VER\c"
+	fi
 	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
-	echo -e "\nPi model\t\t= $HDWRREV\c"
+	if [ "$IS_PI" = "1" ]; then
+		echo -e "\nPi model\t\t= $HDWRREV\c"
+	else
+		echo -e "\nModel\t\t\t= $MACHINE_MODEL\c"
+	fi
 	echo -e "\nArchitecture\t\t= $ARCH\c"
 	echo -e "\nHome directory\t\t= /home/$HOME_DIR\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
@@ -504,7 +515,36 @@ DEV_ROOTFS_SIZE=3670016000
 HOSTNAME=`uname -n`
 HDWRREV=$(moodeutl -d -gv hdwrrev)
 RASPIOS_VER=`/var/www/util/sysutil.sh "get-osinfo" | awk '{print $2" " $3" " $4}'`
+# moode-nopi: platform detection (mirror isPi() in nopi-common.php) + fork release.
+# A real Pi has "Raspberry Pi" in its device-tree model; x86/other SBCs do not.
+if grep -q "Raspberry Pi" /proc/device-tree/model 2>/dev/null; then
+	IS_PI=1
+else
+	IS_PI=0
+fi
+NOPI_REL=$(cat /var/local/www/nopi_version 2>/dev/null | tr -d '\n')
+# Real hardware model for the non-Pi "Model" line: device-tree (ARM SBC) or DMI
+# (x86). The stock hdwrrev "PC <mem>MB" is uninformative (memory is shown below).
+if [ "$IS_PI" != "1" ]; then
+	if [ -r /proc/device-tree/model ]; then
+		MACHINE_MODEL=$(tr -d '\0' < /proc/device-tree/model)
+	elif [ -r /sys/class/dmi/id/product_name ]; then
+		MACHINE_MODEL=$(echo "$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null) $(cat /sys/class/dmi/id/product_name 2>/dev/null)" | sed 's/  */ /g;s/^ *//;s/ *$//')
+	fi
+	# Cheap x86 mini-PCs ship placeholder DMI (e.g. "AMI Intel", "To be filled by
+	# O.E.M.", "Default string") -> fall back to the CPU model name, which is the
+	# most identifying thing about the box.
+	case "$MACHINE_MODEL" in
+		""|*[Tt]o\ be\ filled*|*[Dd]efault\ string*|*System\ manufacturer*|*O.E.M.*|"AMI"|"Intel"|"AMI Intel")
+			MACHINE_MODEL=$(awk -F': ' '/model name/{print $2; exit}' /proc/cpuinfo) ;;
+	esac
+	[ -z "$MACHINE_MODEL" ] && MACHINE_MODEL="$HDWRREV"
+fi
 KERNEL_VER=`/var/www/util/sysutil.sh "get-osinfo" | awk '{print $7" " $8}'`
+# moode-nopi: get-osinfo's kernel parsing is tuned for the RaspiOS `uname -v`
+# format and yields garbage on x86/Armbian (e.g. "#1 SMP", "07 64-bit").
+# `uname -r` is the real, meaningful kernel version on those platforms.
+[ "$IS_PI" != "1" ] && KERNEL_VER="$(uname -r)"
 if [ -e /proc/device-tree/compatible ]; then
 	SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 else
@@ -611,7 +651,9 @@ PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
 PYTHON_VER=$(python --version | awk '{ print  $2 }')
-PYTHON_LGPIO_VER=$(dpkg -s python3-lgpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
+PYTHON_LGPIO_VER=$(dpkg -s python3-lgpio 2>/dev/null| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
+# moode-nopi: python3-lgpio is Pi-only (GPIO) and absent on x86 -> show like Nodejs
+[ -z "$PYTHON_LGPIO_VER" ] && PYTHON_LGPIO_VER="Not installed"
 PYTHON_PYGAME_VER=$(dpkg -s python3-pygame 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
 which node
 if [[ $? -gt 0 ]]; then
@@ -625,6 +667,9 @@ BT_BLUETOOTH_VER=$(bluetoothd -v)
 BT_BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
 BT_PAIRING_AGENT_VER="1.0.0 (bt_pairing_agent.py)"
 BT_PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
+# moode-nopi: the pi-bluetooth package is Pi-only (onboard BT firmware/overlays)
+# and absent on x86/other SBCs -> show like Nodejs/PyLGPIO instead of an empty value
+[ -z "$BT_PI_BLUETOOTH_VER" ] && BT_PI_BLUETOOTH_VER="Not installed"
 bt_bluez_controller_mode=$(moodeutl -d -gv bluez_controller_mode)
 TMP=$(moodeutl -d -gv bt_pairing_confirm)
 [[ "$TMP" = "1" ]] && BT_PAIRING_CONFIRM="On" || BT_PAIRING_CONFIRM="Off"
