@@ -64,7 +64,7 @@ switch ($_GET['cmd']) {
 		break;
 	case 'get_track_cover_url':
 		//workerLog('get_track_cover_url: track_title: (' . $_GET['track_title'] . ')');
-		echo json_encode(getTrackCoverUrl($_GET['track_title']));
+		echo json_encode(getRadioCoverUrl($_GET['track_title']));
 		break;
 	default:
 		echo 'Unknown command';
