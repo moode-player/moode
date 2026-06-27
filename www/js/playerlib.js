@@ -349,6 +349,10 @@ function engineMpd() {
     					if (MPD.json['date']) MPD.json['date'] = MPD.json['date'].slice(0,4); // should fix in php but...
     					renderUI();
     				}
+
+    				if (MPD.json['idle_mixer_changed'] == '1' && MPD.json['idle_timeout_event'] != 'changed: mixer') {
+    					renderUIVol();
+    				}
                 }
 
     			engineMpd();

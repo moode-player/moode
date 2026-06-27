@@ -53,6 +53,7 @@ if ($_GET['state'] == $status['state']) {
 		$event = explode("\n", $resp)[0];
 		$status = getMpdStatus($sock);
 		$status['idle_timeout_event'] = $event;
+		$status['idle_mixer_changed'] = (strpos($resp, 'changed: mixer') !== false) ? '1' : '0';
 		$status['empd_socket_timeout'] = $sockTimeout;
 		scriptLog('Event (' . $event . ')');
 	}
