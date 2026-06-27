@@ -139,6 +139,10 @@ def decode_new_style_code(code):
         }
     else:
         # Original was code&0x17 but this returned the entry for 0x004 when code = 0x00e
+        if code not in OLD_REVISION_CODES:
+            # Not a valid Pi revision code. Return a sentinel instead of raising a
+            # KeyError so callers can detect an unrecognised / non-Pi board.
+            return -1
         old_rev = OLD_REVISION_CODES[code]
         rev_info = {
             "type": old_rev[0],
@@ -171,14 +175,25 @@ def main():
 
     if args.code:
         code = int(args.code if "0x" == args.code[:2] else "0x" + args.code, 16)
+        rev_info = decode_new_style_code(code)
     else:
         # NOTE: In otp_dump the Pi5 revcode is on line 32 while < Pi5 is on line 30.
         #cmd = "vcgencmd otp_dump | awk -F: '/^30:/{print substr($2,3)}'"
         # Alternate command for obtaining the revision code.
         cmd = "cat /proc/cpuinfo | awk -F': ' '/Revision/ {print $2}'"
-        code = int("0x" + subprocess.run(cmd, shell=True, text=True, capture_output=True).stdout.rstrip(), 16)
+        revcode = subprocess.run(cmd, shell=True, text=True, capture_output=True).stdout.rstrip()
+        if revcode == "":
+            # No Revision line in /proc/cpuinfo (not a Raspberry Pi).
+            rev_info = -1
+        else:
+            code = int("0x" + revcode, 16)
+            rev_info = decode_new_style_code(code)
 
-    rev_info = decode_new_style_code(code)
+    if rev_info == -1:
+        # Revision code is absent or not a recognised Pi code (decoding it would
+        # otherwise raise KeyError). Print a sentinel instead of crashing.
+        print("-1")
+        return
 
     info_text = ''
     if args.rcode or args.all or args.code:
