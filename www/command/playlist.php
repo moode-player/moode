@@ -16,6 +16,56 @@ chkVariables($_GET, array('item'));
 chkVariables($_POST, array('path'));
 
 switch ($_GET['cmd']) {
+	case 'export_playlist':
+		// Stream a playlist's .m3u file as a download
+		$plName = isset($_GET['name']) ? basename(html_entity_decode($_GET['name'])) : '';
+		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
+		if ($plName === '' || strpos($plName, '..') !== false || !file_exists($plFile)) {
+			http_response_code(404);
+			exit();
+		}
+		header('Content-Description: File Transfer');
+		header('Content-Type: audio/x-mpegurl');
+		header('Content-Disposition: attachment; filename="' . $plName . '.m3u"');
+		header('Content-Length: ' . filesize($plFile));
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		readfile($plFile);
+		exit();
+	case 'import_playlist':
+		// Upload a .m3u file as a new playlist
+		if (!isset($_FILES['playlist_file']) || $_FILES['playlist_file']['error'] !== UPLOAD_ERR_OK
+			|| !is_uploaded_file($_FILES['playlist_file']['tmp_name'])) {
+			echo json_encode(array('status' => 'error', 'msg' => 'Upload failed'));
+			break;
+		}
+		$origName = basename($_FILES['playlist_file']['name']);
+		$ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+		if ($ext !== 'm3u' && $ext !== 'm3u8') {
+			echo json_encode(array('status' => 'error', 'msg' => 'Only .m3u playlists are supported'));
+			break;
+		}
+		$plName = pathinfo($origName, PATHINFO_FILENAME);
+		if ($plName === '' || preg_match('/["\\\\$`\/]/', $plName) || strpos($plName, '..') !== false) {
+			echo json_encode(array('status' => 'error', 'msg' => 'Invalid playlist name'));
+			break;
+		}
+		if ($_FILES['playlist_file']['size'] <= 0 || $_FILES['playlist_file']['size'] > 5 * 1024 * 1024) {
+			echo json_encode(array('status' => 'error', 'msg' => 'File is empty or too large'));
+			break;
+		}
+		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
+		if (file_exists($plFile)) {
+			echo json_encode(array('status' => 'error', 'msg' => 'A playlist with this name already exists'));
+			break;
+		}
+		// MPD_PLAYLIST_ROOT is root-owned so copy via sysCmd (root), then match the
+		// owner/perms convention used when a playlist file is first created above
+		sysCmd('cp "' . $_FILES['playlist_file']['tmp_name'] . '" "' . $plFile . '"');
+		sysCmd('chmod 0777 "' . $plFile . '"');
+		sysCmd('chown root:root "' . $plFile . '"');
+		echo json_encode(array('status' => 'ok', 'name' => $plName));
+		break;
 	case 'set_plcover_image':
 		if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {
 			echo json_encode('job submitted');
