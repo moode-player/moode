@@ -371,7 +371,15 @@ function chkRendererActive() {
 // Get Pi revision code information
 function getPiRev($option = '--all') {
 	// Returns a tab delimited string for --all
-	return sysCmd('/var/www/util/pirev.py ' . $option)[0];
+	$out = sysCmd('/var/www/util/pirev.py ' . $option)[0];
+	// pirev.py emits "-1" on a non-Pi or unrecognised board (it no longer crashes
+	// trying to decode a non-Pi revision code). Substitute a generic profile so
+	// callers see meaningful, Pi-free values; model number 0 keeps the platform out
+	// of Pi-specific paths, which isPi() also guards.
+	if ($out === '-1') {
+		return genericRevInfo($option);
+	}
+	return $out;
 /*
 /var/www/util/pirev.py --all
 0xb04180	CM5	1.0	2GB	Sony UK	BCM2712	5	2
@@ -393,6 +401,33 @@ options:
   -c, --rcode  Print revision code
   -a, --all    Print all
 */
+}
+
+// Synthetic revision-info profile for a non-Pi platform (generic x86/other SBC),
+// matching the field layout pirev.py would print, so System info has meaningful
+// values. Model number 0 / type PC keep the platform out of Pi-specific paths.
+function genericRevInfo($option) {
+	$mem = '?GB';
+	if (preg_match('/MemTotal:\s+(\d+)/', @file_get_contents('/proc/meminfo'), $m)) {
+		$mem = round($m[1] / 1024) . 'MB';
+	}
+	$proc = 'Unknown';
+	if (preg_match('/^(?:model name|Model)\s*:\s*(.+)$/m', @file_get_contents('/proc/cpuinfo'), $m)) {
+		$proc = trim($m[1]);
+	}
+
+	switch ($option) {
+		case '--type': return 'PC';
+		case '--num':  return '0';
+		case '--dsi':  return '0';
+		case '--rev':  return '1.0';
+		case '--mem':  return $mem;
+		case '--man':  return 'Generic';
+		case '--proc': return $proc;
+		case '--rcode': return '0x0';
+		// --all: rcode, type, rev, mem, man, proc, num, dsi
+		default: return "0x0\tPC\t1.0\t$mem\tGeneric\t$proc\t0\t0";
+	}
 }
 
 // Return hardware revision
