@@ -50,6 +50,8 @@ function notify(title, tag, arg3, arg4 = '') {
 		new_playlist: 'Playlist has been created. ',
 		upd_playlist: 'Playlist has been updated. ',
 		del_playlist: 'Playlist has been deleted. ',
+		import_playlist: 'Playlist has been imported. ',
+		import_playlist_error: 'Import failed. ',
 		// Radio view
 		validation_check: 'Validation check. ',
 		creating_station: 'Creating new station... ',
@@ -130,7 +132,8 @@ function notify(title, tag, arg3, arg4 = '') {
 		// Playback
 		play_here_config_error: 'HTTP streaming must be ON and encoder set to LAME (MP3).',
 		// Playlist view
-		// no_tags
+		import_playlist: 'Playlist has been imported. ',
+		import_playlist_error: 'Import failed. ',
 		// Radio view
 		validation_check: 'Validation check. ',
 		blank_entries: 'Name or URL is blank. ',

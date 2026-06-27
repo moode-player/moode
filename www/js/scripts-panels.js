@@ -734,6 +734,7 @@ jQuery(document).ready(function($) { 'use strict';
                 $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + plName, function() {
     				notify(NOTIFY_TITLE_INFO, 'queue_saved', NOTIFY_DURATION_SHORT);
                     $('#btn-pl-refresh').click();
+                    $('#db-refresh').click();
                 });
 			}
 		} else {
@@ -931,6 +932,37 @@ jQuery(document).ready(function($) { 'use strict';
 		$.getJSON('command/music-library.php?cmd=lsinfo', {'path': UI.path}, function(data) {
 			renderFolderView(data, UI.path);
         });
+	});
+	$('#btn-db-import').click(function(e) {
+		$('#db-import-file').val('');
+		$('#db-import-file').click();
+	});
+	$('#db-import-file').change(function(e) {
+		if (this.files.length == 0) {
+			return;
+		}
+		var formData = new FormData();
+		formData.append('playlist_file', this.files[0]);
+		$.ajax({
+			url: 'command/playlist.php?cmd=import_playlist',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			success: function(data) {
+				if (data.status == 'ok') {
+					notify(NOTIFY_TITLE_INFO, 'import_playlist', NOTIFY_DURATION_SHORT);
+					$('#btn-pl-refresh').click();
+					$('#db-refresh').click();
+				} else {
+					notify(NOTIFY_TITLE_ALERT, 'import_playlist_error', data.msg);
+				}
+			},
+			error: function() {
+				notify(NOTIFY_TITLE_ALERT, 'import_playlist_error', '');
+			}
+		});
 	});
 	$('#db-search-results').click(function(e) {
 		$('.database li').removeClass('active');
@@ -1255,6 +1287,7 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/playlist.php?cmd=del_playlist', {'path': UI.dbEntry[0]}, function() {
             notify(NOTIFY_TITLE_INFO, 'del_playlist', NOTIFY_DURATION_SHORT);
             $('#btn-pl-refresh').click();
+            $('#db-refresh').click();
         });
 	});
     // Delete/Move playlist items(s)

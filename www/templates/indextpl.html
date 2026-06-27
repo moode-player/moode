@@ -232,6 +232,8 @@
 				<button aria-label="Home" id="db-home" class="btn"><i class="fa-solid fa-sharp fa-home"></i></button>
 				<button aria-label="Refresh" id="db-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
 				<button aria-label="Search" id="db-advsearch" class="btn" href="#dbsearch-modal" data-toggle="modal"><i class="fa-regular fa-sharp fa-search"></i></button>
+				<button aria-label="Import Playlist" id="btn-db-import" class="btn"><i class="fa-regular fa-sharp fa-upload"></i></button>
+				<input id="db-import-file" type="file" accept=".m3u,.m3u8" class="hide">
 				<form id="db-fastsearch" onsubmit="return false;">
 					<div class="input-append">
 						<input id="dbfs" type="text" value="" placeholder="search">
@@ -2804,7 +2806,9 @@
 			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
-			<li class="menu-separator"><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="export_playlist"><i class="fa-regular fa-sharp fa-download sx"></i> Export</a></li>
+			<li><a href="#notarget" data-cmd="delete_playlist"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete</a></li>
 		</ul>
 	</div>
 
@@ -2899,6 +2903,7 @@
 			<li class="menu-separator"><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
 			<li><a href="#notarget" data-cmd="edit_playlist"><i class="fa-regular fa-sharp fa-edit sx"></i> Edit playlist</a></li>
+			<li><a href="#notarget" data-cmd="export_playlist"><i class="fa-regular fa-sharp fa-download sx"></i> Export playlist</a></li>
 			<li><a href="#notarget" data-cmd="delete_playlist"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete playlist</a></li>
 		</ul>
 	</div>

@@ -1962,6 +1962,8 @@ function sendQueueCmd(cmd, path) {
 function renderFolderView(data, path, searchstr) {
 	UI.path = path;
     $('#db-path').text(path);
+    // Import targets the playlists at the root, so only offer it there
+    $('#btn-db-import').toggle(path == '');
 
 	// Separate out dirs, playlists, files, exclude the RADIO folder
 	var dirs = [];
@@ -2921,6 +2923,9 @@ $(document).on('click', '.context-menu a', function(e) {
         //
         // Context menu items
         //
+        case 'export_playlist':
+            window.location = 'command/playlist.php?cmd=export_playlist&name=' + encodeURIComponent(path);
+            break;
         case 'add_item':
         case 'play_item':
         case 'clear_play_item':
