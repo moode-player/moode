@@ -26,6 +26,8 @@ const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
 //						-------
 //						  228279
 
+const VOL_KNOB_DEBOUNCE = 150; // ms, coalesce a knob drag's intermediate values
+
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
@@ -2745,7 +2747,15 @@ function setVolume(level, event) {
 			$('#volume, #volume-2').val(level).trigger('change');
 		}
 		$('.volume-display div, .mpd-volume-level').text(level);
-		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
+		if (event == 'knob_change') {
+			clearTimeout(GLOBAL.volKnobTimer);
+			GLOBAL.volKnobTimer = setTimeout(function() {
+				sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
+			}, VOL_KNOB_DEBOUNCE);
+		} else {
+			clearTimeout(GLOBAL.volKnobTimer);
+			sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
+		}
     } else {
         // Muted
 		if (level == 0 && event == 'mute')	{
