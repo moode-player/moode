@@ -1081,10 +1081,16 @@ function renderUIVol() {
 
 	// Load session vars (required for multi-client)
     $.getJSON('command/cfg-table.php?cmd=get_cfg_system', function(data) {
+        var localVol = SESSION.json['volknob'];
+        var localMute = SESSION.json['volmute'];
     	if (data === false) {
             console.log('renderUIVol(): No data returned from get_cfg_system');
     	} else {
             SESSION.json = data;
+        }
+        if (Date.now() - (GLOBAL.volLastChange || 0) < 1500) {
+            SESSION.json['volknob'] = localVol;
+            SESSION.json['volmute'] = localMute;
         }
 
         // Volume type
@@ -1137,10 +1143,16 @@ function renderUI() {
 
     // Load session vars (required for multi-client)
     $.getJSON('command/cfg-table.php?cmd=get_cfg_system', function(data) {
+        var localVol = SESSION.json['volknob'];
+        var localMute = SESSION.json['volmute'];
         if (data === false) {
             console.log('renderUI(): No data returned from get_cfg_system');
     	} else {
             SESSION.json = data;
+        }
+        if (Date.now() - (GLOBAL.volLastChange || 0) < 1500) {
+            SESSION.json['volknob'] = localVol;
+            SESSION.json['volmute'] = localMute;
         }
 
         // Debug notification (appears above cover art)
@@ -2711,6 +2723,8 @@ function setVolume(level, event) {
 	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
 	level = level < 0 ? 0 : level;
 
+	GLOBAL.volLastChange = Date.now();
+
     var async = true;
 
     /*console.log('setVolume(): ' +
@@ -2723,6 +2737,10 @@ function setVolume(level, event) {
 	if (SESSION.json['volmute'] == '0') {
         //console.log('sendVolCmd(): unmute (volknob ' + SESSION.json['volknob'] + ')');
 		SESSION.json['volknob'] = level.toString();
+		if (event != 'knob_change') {
+			$('#volume, #volume-2').val(level).trigger('change');
+		}
+		$('.volume-display div, .mpd-volume-level').text(level);
 		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
     } else {
         // Muted
