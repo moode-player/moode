@@ -430,8 +430,26 @@ if ($_SESSION['pi_modelnum'] >= 5) {
 // Performance
 $_select['worker_responsiveness'] .= "<option value=\"Default\" " . (($_SESSION['worker_responsiveness'] == 'Default') ? "selected" : "") . ">Default</option>\n";
 $_select['worker_responsiveness'] .= "<option value=\"Boosted\" " . (($_SESSION['worker_responsiveness'] == 'Boosted') ? "selected" : "") . ">Boosted</option>\n";
-$_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
-$_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
+// Offer the governors the kernel actually exposes, not a hardcoded pair.
+$availGovs = trim(@file_get_contents('/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors'));
+$govList = $availGovs !== '' ? preg_split('/\s+/', $availGovs) : array('performance');
+$liveGov = trim(@file_get_contents('/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor'));
+$selGov = in_array($_SESSION['cpugov'], $govList) ? $_SESSION['cpugov'] : $liveGov;
+$govDescriptions = array(
+	'conservative' => 'Scale CPU frequency gradually based on load.',
+	'ondemand' => 'Scale CPU frequency from min to max based on load.',
+	'userspace' => 'Let a user-space program set the CPU frequency.',
+	'powersave' => 'Run the CPU at min frequency.',
+	'performance' => 'Run the CPU at max frequency.',
+	'schedutil' => 'Scale CPU frequency using the kernel scheduler load estimates.'
+);
+$govHelp = array();
+foreach ($govList as $gov) {
+	$label = $gov == 'ondemand' ? 'On-demand' : ucfirst($gov);
+	$_select['cpugov'] .= "<option value=\"" . $gov . "\" " . (($selGov == $gov) ? "selected" : "") . ">" . $label . "</option>\n";
+	$govHelp[] = "<b>" . $label . ":</b>" . (isset($govDescriptions[$gov]) ? ' ' . $govDescriptions[$gov] : '');
+}
+$_cpugov_help = implode("<br>\n", $govHelp);
 $_select['pci_express'] .= "<option value=\"auto\" " . (($_SESSION['pci_express'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
 $_select['pci_express'] .= "<option value=\"gen2\" " . (($_SESSION['pci_express'] == 'gen2') ? "selected" : "") . ">Gen 2.0</option>\n";
 $_select['pci_express'] .= "<option value=\"gen3\" " . (($_SESSION['pci_express'] == 'gen3') ? "selected" : "") . ">Gen 3.0</option>\n";
