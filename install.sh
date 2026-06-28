@@ -1218,7 +1218,7 @@ if [ "$INSTALL_BLUETOOTH" = 1 ]; then
 	# also `systemctl restart mpd` to free the exclusive DAC). The Pi image ships
 	# these three; without them a phone pairs+connects but no audio reaches the DAC
 	# (bluealsa-aplay never runs). bluealsaaplay.conf is the env file the @-unit
-	# reads (AUDIODEV=_audioout); it must pre-exist (moOde sed-edits it, never
+	# reads (AUDIODEV=plug:_audioout); it must pre-exist (moOde sed-edits it, never
 	# creates it).
 	install -m 644 "$REPO_DIR/etc/bluealsaaplay.conf"                     /etc/bluealsaaplay.conf
 	install -m 755 "$REPO_DIR/usr/local/bin/a2dp-autoconnect"             /usr/local/bin/a2dp-autoconnect
