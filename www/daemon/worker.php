@@ -1080,10 +1080,6 @@ if (!isset($_SESSION['cdspvolume_max_bt'])) {
 if (!isset($_SESSION['bluez_sbc_quality'])) {
 	$_SESSION['bluez_sbc_quality'] = 'xq+';
 }
-// ALSA output mode
-if (!isset($_SESSION['alsa_output_mode_bt'])) {
-	$_SESSION['alsa_output_mode_bt'] = '_audioout';
-}
 // Controller mode
 if (!isset($_SESSION['bluez_controller_mode'])) {
 	$_SESSION['bluez_controller_mode'] = 'dual';
@@ -1101,7 +1097,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 }
 $status .= ', PIN: ' . (empty($_SESSION['bt_pin_code']) ? 'None' : 'Set');
 $status .= ', ALSA/CDSP max: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SESSION['cdspvolume_max_bt'] . 'dB';
-$status .= ', ALSA out: ' . ALSA_OUTPUT_MODE_BT_NAME[$_SESSION['alsa_output_mode_bt']];
 $status .= ', Transport: ' . $_SESSION['bluez_controller_mode'];
 workerLog('worker: Bluetooth:       ' . $status);
 
