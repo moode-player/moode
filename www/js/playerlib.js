@@ -97,6 +97,27 @@ const DEFAULT_RX_COVER = 'images/default-rx-cover.jpg';
 const DEFAULT_PLAYLIST_COVER = '/var/www/images/default-playlist-cover.jpg';
 const DEFAULT_NOTFOUND_COVER = '/var/www/images/default-notfound-cover.jpg';
 
+// Playlist cover thumbnail failed to load (e.g. an imported playlist with no cover
+// file) → replace the broken image with a default playlist icon. Also drop the
+// text-cover overlay, which would be redundant with the .playlist-name shown below.
+function plCoverFallback(img) {
+	var thumb = img.parentNode;
+	if (thumb) {
+		// Centre the thumbnail box horizontally (it isn't, with just the icon)
+		thumb.style.marginLeft = 'auto';
+		thumb.style.marginRight = 'auto';
+	}
+	var textCover = thumb ? thumb.querySelector('.plview-text-cover-div') : null;
+	if (textCover) {
+		textCover.parentNode.removeChild(textCover);
+	}
+	img.outerHTML = '<i class="fa-solid fa-sharp fa-list-music" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:calc(var(--thumbimagesize)/2);"></i>';
+}
+// Same default icon for the small cover preview in the Edit-playlist modal
+function plPreviewFallback(img) {
+	img.outerHTML = '<i class="fa-solid fa-sharp fa-list-music" style="font-size:32px;line-height:1;"></i>';
+}
+
 var UI = {
     knob: null,
     path: '',
@@ -2489,7 +2510,7 @@ function renderPlaylistView () {
             // Construct playlist entries
             var imgUrl = playlists[i].cover == 'local' || playlists[i].cover == 'default' ? 'imagesw/playlist-covers/' + playlists[i].name + '.jpg' : playlists[i].cover;
     		output += '<li id="pl-entry-' + (i + 1) + '" data-path="' + playlists[i].name + '">';
-    		output += '<div class="db-icon db-song db-browse db-action">' + plViewLazy + encodeURIComponent(imgUrl) + '">';
+    		output += '<div class="db-icon db-song db-browse db-action">' + plViewLazy + encodeURIComponent(imgUrl) + '" onerror="plCoverFallback(this)">';
             output += playlists[i].cover == 'default' ? '<div class="plview-text-cover-div"><span class="plview-text-cover">' + playlists[i].name + '</span></div>' : '';
             output += '</div><div class="cover-menu" data-toggle="context" data-target="#context-menu-playlist-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += '<span class="playlist-name">' + playlists[i].name + '</span>';
@@ -3137,7 +3158,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-playlist-name').val(path);
                 $('#edit-plcoverimage').val('');
                 $('#info-toggle-edit-plcoverimage').css('margin-left','60px');
-                $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + path + '.jpg">');
+                $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + path + '.jpg" onerror="plPreviewFallback(this)">');
                 $('#edit-playlist-tags').css('margin-top', '20px');
                 $('#edit-playlist-genre').val(data['genre']);
 

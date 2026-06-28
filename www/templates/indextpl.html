@@ -232,7 +232,7 @@
 				<button aria-label="Home" id="db-home" class="btn"><i class="fa-solid fa-sharp fa-home"></i></button>
 				<button aria-label="Refresh" id="db-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
 				<button aria-label="Search" id="db-advsearch" class="btn" href="#dbsearch-modal" data-toggle="modal"><i class="fa-regular fa-sharp fa-search"></i></button>
-				<button aria-label="Import Playlist" id="btn-db-import" class="btn"><i class="fa-regular fa-sharp fa-upload"></i></button>
+				<button aria-label="Import Playlist" id="btn-db-import" class="btn"><i class="fa-regular fa-sharp fa-download"></i></button>
 				<input id="db-import-file" type="file" accept=".m3u,.m3u8" class="hide">
 				<form id="db-fastsearch" onsubmit="return false;">
 					<div class="input-append">
@@ -281,6 +281,7 @@
 				<button aria-label="Playlist Manager" id="btn-pl-manager" class="btn"><i class="fa-solid fa-sharp fa-gear-complex"></i></button>
 				<button aria-label="Refresh" id="btn-pl-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
 				<button aria-label="New Playlist" id="btn-pl-new" class="btn"><i class="fa-regular fa-sharp fa-plus"></i></button>
+				<button aria-label="Import Playlist" id="btn-pl-import" class="btn"><i class="fa-regular fa-sharp fa-download"></i></button>
 				<form id="pl-search" class="" method="post" onSubmit="return false;">
 					<div class="input-append">
 						<input id="pl-filter" type="text" value="" placeholder="search">
@@ -522,6 +523,47 @@
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button aria-label="Save" id="btn-save-queue-to-playlist" class="btn btn-primary" data-dismiss="modal">Save</button>
+	</div>
+</div>
+
+<!-- IMPORT PLAYLIST -->
+<div id="import-playlist-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="import-playlist-modal-label" aria-hidden="true">
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="import-playlist-modal-label">Import playlist</h3>
+	</div>
+	<div class="modal-body">
+		<form id="import-playlist-form" method="post" onsubmit="return false;">
+			<div class="control-group">
+				<label class="control-label" for="import-pl-name">Playlist name</label>
+				<div class="controls">
+					<input id="import-pl-name" type="text" value="">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Unknown paths</label>
+				<div class="controls">
+					<span class="help-block">Some tracks point to folders that don't exist on this player. Map each to a known folder, or leave it to keep the original path.</span>
+				</div>
+			</div>
+				<div id="import-pl-remap"></div>
+			<div class="control-group">
+				<div class="controls">
+					<button id="btn-test-import" type="button" class="btn btn-primary btn-small config-btn-set">Test paths</button>
+					<span id="import-pl-report" class="help-block" style="display:inline-block;margin-left:.6rem;"></span>
+					<div style="margin-top:.5rem;">
+						<div class="toggle">
+							<label class="toggle-radio toggle-import-drop" for="toggle-import-drop-2">ON </label><input type="radio" name="import_drop" id="toggle-import-drop-1" value="on">
+							<label class="toggle-radio toggle-import-drop" for="toggle-import-drop-1">OFF</label><input type="radio" name="import_drop" id="toggle-import-drop-2" value="off" checked="checked">
+						</div>
+						<span class="config-toggle-after">Remove unresolved entries</span>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Import" id="btn-import-playlist" class="btn btn-primary" data-dismiss="modal">Import</button>
 	</div>
 </div>
 
@@ -2807,7 +2849,7 @@
 			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
 			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="export_playlist"><i class="fa-regular fa-sharp fa-download sx"></i> Export</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="export_playlist"><i class="fa-regular fa-sharp fa-upload sx"></i> Export</a></li>
 			<li><a href="#notarget" data-cmd="delete_playlist"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete</a></li>
 		</ul>
 	</div>
@@ -2903,7 +2945,7 @@
 			<li class="menu-separator"><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fa-regular fa-sharp fa-plus-square sx"></i> Clear/Add</a></li-->
 			<li><a href="#notarget" data-cmd="edit_playlist"><i class="fa-regular fa-sharp fa-edit sx"></i> Edit playlist</a></li>
-			<li><a href="#notarget" data-cmd="export_playlist"><i class="fa-regular fa-sharp fa-download sx"></i> Export playlist</a></li>
+			<li><a href="#notarget" data-cmd="export_playlist"><i class="fa-regular fa-sharp fa-upload sx"></i> Export playlist</a></li>
 			<li><a href="#notarget" data-cmd="delete_playlist"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete playlist</a></li>
 		</ul>
 	</div>
