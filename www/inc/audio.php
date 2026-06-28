@@ -277,7 +277,7 @@ function updDspAndBtInConfs($cardNum, $outputMode) {
 	} else if ($_SESSION['alsa_output_mode_bt'] == 'plughw') {
 		$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $cardNum . ',0';
 	} else {
-		$alsaDevice = $_SESSION['alsa_output_mode_bt']; // _audioout
+		$alsaDevice = 'plug:' . $_SESSION['alsa_output_mode_bt']; // plug:_audioout
 	}
 	sysCmd("sed -i 's/^AUDIODEV.*/AUDIODEV=" . $alsaDevice . "/' /etc/bluealsaaplay.conf");
 

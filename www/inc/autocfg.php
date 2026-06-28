@@ -488,7 +488,7 @@ function autoConfigSettings() {
 		}],
 		['requires' => ['alsa_output_mode_bt'], 'handler' => function($values) {
 			$_SESSION['alsa_output_mode_bt'] = '_audioout'; // Reset to Standard (_audioout)
-			sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=_audioout" . "' /etc/bluealsaaplay.conf");
+			sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plug:_audioout" . "' /etc/bluealsaaplay.conf");
 		}],
 		['requires' => ['bluez_controller_mode'], 'handler' => function($values) {
 			$_SESSION['bluez_controller_mode'] = $values['bluez_controller_mode'];
