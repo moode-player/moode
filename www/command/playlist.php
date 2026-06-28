@@ -32,26 +32,69 @@ switch ($_GET['cmd']) {
 		header('Expires: 0');
 		readfile($plFile);
 		exit();
+	case 'analyze_import':
+		// Classify the entries of an uploaded .m3u so unknown local paths can be remapped.
+		// When a 'remap' is supplied, it is applied before validating, so the same endpoint
+		// also serves the modal's "Test" button (re-check paths after remapping).
+		$content = isset($_POST['content']) ? $_POST['content'] : '';
+		if ($content === '' || strlen($content) > 5 * 1024 * 1024) {
+			echo json_encode(array('status' => 'error', 'msg' => 'File is empty or too large'));
+			break;
+		}
+		$knownDirs = knownPlaylistDirs();
+		$remap = isset($_POST['remap']) ? json_decode($_POST['remap'], true) : array();
+		if (!is_array($remap)) {
+			$remap = array();
+		}
+		foreach ($remap as $old => $new) {
+			if (!in_array($new, $knownDirs, true)) {
+				unset($remap[$old]);
+			}
+		}
+		$total = 0;
+		$okLocal = 0;
+		$urlCount = 0;
+		$remapped = 0;
+		$groups = array(); // unknown prefix => count + sample
+		foreach (preg_split('/\r\n|\r|\n/', $content) as $line) {
+			$line = trim($line);
+			if ($line === '' || isMetaEntry($line)) {
+				continue;
+			}
+			$total++;
+			if (isUrlEntry($line)) {
+				$urlCount++;
+				continue;
+			}
+			$line = applyPathRemap($line, $remap, $remapped);
+			$prefix = unknownPathPrefix($line);
+			if ($prefix === '') {
+				$okLocal++;
+			} else {
+				if (!isset($groups[$prefix])) {
+					$groups[$prefix] = array('prefix' => $prefix, 'count' => 0, 'sample' => $line);
+				}
+				$groups[$prefix]['count']++;
+			}
+		}
+		$unknown = array();
+		foreach ($groups as $g) {
+			$g['suggested'] = suggestKnownDir($g['prefix'], $knownDirs);
+			$unknown[] = $g;
+		}
+		echo json_encode(array('status' => 'ok', 'total' => $total, 'ok_local' => $okLocal,
+			'url_count' => $urlCount, 'remapped' => $remapped, 'unknown' => $unknown, 'known_dirs' => $knownDirs));
+		break;
 	case 'import_playlist':
-		// Upload a .m3u file as a new playlist
-		if (!isset($_FILES['playlist_file']) || $_FILES['playlist_file']['error'] !== UPLOAD_ERR_OK
-			|| !is_uploaded_file($_FILES['playlist_file']['tmp_name'])) {
-			echo json_encode(array('status' => 'error', 'msg' => 'Upload failed'));
+		// Write an uploaded .m3u as a new playlist, applying optional path remapping
+		$content = isset($_POST['content']) ? $_POST['content'] : '';
+		if ($content === '' || strlen($content) > 5 * 1024 * 1024) {
+			echo json_encode(array('status' => 'error', 'msg' => 'File is empty or too large'));
 			break;
 		}
-		$origName = basename($_FILES['playlist_file']['name']);
-		$ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
-		if ($ext !== 'm3u' && $ext !== 'm3u8') {
-			echo json_encode(array('status' => 'error', 'msg' => 'Only .m3u playlists are supported'));
-			break;
-		}
-		$plName = pathinfo($origName, PATHINFO_FILENAME);
+		$plName = isset($_POST['name']) ? basename(html_entity_decode($_POST['name'])) : '';
 		if ($plName === '' || preg_match('/["\\\\$`\/]/', $plName) || strpos($plName, '..') !== false) {
 			echo json_encode(array('status' => 'error', 'msg' => 'Invalid playlist name'));
-			break;
-		}
-		if ($_FILES['playlist_file']['size'] <= 0 || $_FILES['playlist_file']['size'] > 5 * 1024 * 1024) {
-			echo json_encode(array('status' => 'error', 'msg' => 'File is empty or too large'));
 			break;
 		}
 		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
@@ -59,12 +102,57 @@ switch ($_GET['cmd']) {
 			echo json_encode(array('status' => 'error', 'msg' => 'A playlist with this name already exists'));
 			break;
 		}
-		// MPD_PLAYLIST_ROOT is root-owned so copy via sysCmd (root), then match the
-		// owner/perms convention used when a playlist file is first created above
-		sysCmd('cp "' . $_FILES['playlist_file']['tmp_name'] . '" "' . $plFile . '"');
+		// Accept only remap targets that are real known dirs (defends against crafted POSTs)
+		$remap = isset($_POST['remap']) ? json_decode($_POST['remap'], true) : array();
+		if (!is_array($remap)) {
+			$remap = array();
+		}
+		$knownDirs = knownPlaylistDirs();
+		foreach ($remap as $old => $new) {
+			if (!in_array($new, $knownDirs, true)) {
+				unset($remap[$old]);
+			}
+		}
+		$dropInvalid = isset($_POST['drop_invalid']) && $_POST['drop_invalid'] == '1';
+
+		$out = array();
+		$imported = 0;
+		$remapped = 0;
+		$dropped = 0;
+		foreach (preg_split('/\r\n|\r|\n/', $content) as $line) {
+			$line = trim($line);
+			if ($line === '') {
+				continue;
+			}
+			if (isMetaEntry($line) || isUrlEntry($line)) {
+				$out[] = $line;
+				if (isUrlEntry($line)) {
+					$imported++;
+				}
+				continue;
+			}
+			$line = applyPathRemap($line, $remap, $remapped);
+			if (file_exists(MPD_MUSICROOT . $line)) {
+				$out[] = $line;
+				$imported++;
+			} else if ($dropInvalid) {
+				$dropped++;
+			} else {
+				$out[] = $line;
+				$imported++;
+			}
+		}
+
+		// MPD_PLAYLIST_ROOT is root-owned so stage in a www-data temp then copy via
+		// sysCmd (root), matching the owner/perms convention used elsewhere here
+		$tmpFile = tempnam(sys_get_temp_dir(), 'plimport');
+		file_put_contents($tmpFile, implode("\n", $out) . "\n");
+		sysCmd('cp "' . $tmpFile . '" "' . $plFile . '"');
 		sysCmd('chmod 0777 "' . $plFile . '"');
 		sysCmd('chown root:root "' . $plFile . '"');
-		echo json_encode(array('status' => 'ok', 'name' => $plName));
+		unlink($tmpFile);
+		echo json_encode(array('status' => 'ok', 'name' => $plName,
+			'imported' => $imported, 'remapped' => $remapped, 'dropped' => $dropped));
 		break;
 	case 'set_plcover_image':
 		if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {
@@ -409,4 +497,81 @@ function markItemAsFavorite($item) {
 	}
 
 	return $msg;
+}
+
+// Playlist import helpers (path validation and remapping)
+
+// A metadata line (#EXTGENRE, #EXTIMG, #EXTM3U, #EXTINF, ...)
+function isMetaEntry($line) {
+	return $line !== '' && $line[0] == '#';
+}
+// A remote stream / radio station (never path-rewritten)
+function isUrlEntry($line) {
+	return preg_match('#^https?://#i', $line) == 1;
+}
+// Longest existing prefix of a local entry + the first missing segment, or '' if
+// the whole path resolves under the MPD music root (= present in the Folder view)
+function unknownPathPrefix($path) {
+	$accum = '';
+	foreach (explode('/', $path) as $seg) {
+		$test = $accum == '' ? $seg : $accum . '/' . $seg;
+		if (file_exists(MPD_MUSICROOT . $test)) {
+			$accum = $test;
+		} else {
+			return $test;
+		}
+	}
+	return '';
+}
+// Known roots and their immediate subdirs (the Folder view roots/shares), depth <= 2
+function knownPlaylistDirs() {
+	$dirs = array();
+	foreach (ROOT_DIRECTORIES as $root) {
+		if ($root == 'RADIO') {
+			continue;
+		}
+		$rootPath = MPD_MUSICROOT . $root;
+		if (is_dir($rootPath)) {
+			$dirs[] = $root;
+			foreach (scandir($rootPath) as $sub) {
+				if ($sub != '.' && $sub != '..' && is_dir($rootPath . '/' . $sub)) {
+					$dirs[] = $root . '/' . $sub;
+				}
+			}
+		}
+	}
+	return $dirs;
+}
+// Best replacement guess for an unknown prefix: a single same-root share, else ''
+function suggestKnownDir($prefix, $knownDirs) {
+	$root = explode('/', $prefix)[0];
+	$shares = array();
+	$bareRoot = array();
+	foreach ($knownDirs as $dir) {
+		if ($dir === $root) {
+			$bareRoot[] = $dir;
+		} else if (strpos($dir, $root . '/') === 0) {
+			$shares[] = $dir;
+		}
+	}
+	if (count($shares) == 1) {
+		return $shares[0];
+	}
+	if (count($shares) == 0 && count($bareRoot) == 1) {
+		return $bareRoot[0];
+	}
+	return '';
+}
+// Apply the longest matching prefix remap rule to a local entry
+function applyPathRemap($path, $remap, &$remapped) {
+	foreach ($remap as $old => $new) {
+		if ($old === '' || $new === '') {
+			continue;
+		}
+		if ($path === $old || strpos($path, $old . '/') === 0) {
+			$remapped++;
+			return $new . substr($path, strlen($old));
+		}
+	}
+	return $path;
 }
