@@ -626,7 +626,7 @@ function autoConfigSettings() {
 		['requires' => ['library_hiresthm'], 'handler' => 'setSessVarSql'],
 		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_tagview_covers'], 'handler' => 'setSessVarSql'],
-		['requires' => ['radio_track_covers'], 'handler' => 'setSessVarSql'],
+		['requires' => ['radio_covers'], 'handler' => 'setSessVarSql'],
 		['requires' => ['itunes_query_timeout'], 'handler' => 'setSessVarSql'],
 		'Library',
 		['requires' => ['library_onetouch_album'], 'handler' => 'setSessVarSql'],

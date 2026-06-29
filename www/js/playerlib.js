@@ -1218,7 +1218,7 @@ function renderUI() {
             // Thumbnail cover for Playbar
             if (MPD.json['file'] && MPD.json['coverurl']) {
 				if (MPD.json['artist'] == DEFAULT_STATION_NAME) {
-					if (MPD.json['coverurl'].includes('https://')) {
+					if (MPD.json['coverurl'].substring(0, 4) == 'http') { // Use substr for 'http'
 						 // Track cover
 						var image_url = MPD.json['coverurl'];
 					} else {
@@ -1719,9 +1719,9 @@ function updateActivePlayqueueItem() {
                             $('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(data[i].Title);
                             // Update in case MPD did not get Title tag at initial play
 							$('#currentsong').html(data[i].Title);
-							if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
+							if (SESSION.json['radio_covers'] != 'No' && MPD.json['state'] == 'play') {
 								if (!data[i].Title.toLowerCase().includes('advert')) {
-									updateTrackCover(data[i].Title);
+									updateRadioCover(data[i].Title, data[i].Name);
 								}
 							}
                             // Add search URL, see corresponding code in renderUI()
@@ -1763,7 +1763,7 @@ function renderPlayqueue(state) {
         //console.log('renderPlayqueue(' + seqNum++ + '): GLOBAL.playQueueLength: ' + GLOBAL.playQueueLength);
 		var showPlayqueueThumb = SESSION.json['playlist_art'] == 'Yes' ? true : false;
 
-		// Format playlist items
+		// Format Queue items
         if (data) {
             for (i = 0; i < data.length; i++) {
 	            // Item highlight
@@ -1810,9 +1810,9 @@ function renderPlayqueue(state) {
 						if (i == parseInt(MPD.json['song'])) { // active
                             // Update in case MPD did not get Title tag at initial play
 							$('#currentsong').html(data[i].Title);
-							if (SESSION.json['radio_track_covers'] == 'Yes' && MPD.json['state'] == 'play') {
+							if (SESSION.json['radio_covers'] != 'No' && MPD.json['state'] == 'play') {
 								if (!data[i].Title.toLowerCase().includes('advert')) {
-									updateTrackCover(data[i].Title);
+									updateRadioCover(data[i].Title, data[i].Name);
 								}
 							}
 							// Add search URL, see corresponding code in renderUI()
@@ -1903,15 +1903,15 @@ function renderPlayqueue(state) {
     });
 }
 
-// Update track cover
-function updateTrackCover(trackTitle) {
-	$.getJSON('command/radio.php?cmd=get_track_cover_url', {'track_title': trackTitle}, function(coverURL) {
+// Update radio cover
+function updateRadioCover(title, station) {
+	$.getJSON('command/radio.php?cmd=get_radiocover_url', {'title': title, 'station': station}, function(coverURL) {
 		// DEBUG:
-		//console.log('updateTrackCover(): ' + trackTitle);
+		//console.log('updateRadioCover(): ' + title + '|' + station);
 		//console.log(coverURL);
-		if (coverURL.includes('https://') && MPD.json['coverurl'] != coverURL) {
+		if (coverURL.substring(0, 4) == 'http' && MPD.json['coverurl'] != coverURL) {
 			MPD.json['coverurl'] = coverURL;
-			MPD.json['title'] = trackTitle;
+			MPD.json['title'] = title;
 			// Playback/Playbar cover
 			$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
 			$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
@@ -3421,8 +3421,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#hires-thumbnails span').text(getKeyOrValue('key', SESSION.json['library_hiresthm']));
                 $('#playqueue-art-enabled span').text(SESSION.json['playlist_art']);
                 $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
-				$('#show-radio-track-covers span').text(SESSION.json['radio_track_covers']);
-				$('#itunes-query-timeout span').text(SESSION.json['itunes_query_timeout']);
+				$('#show-radio-track-covers span').text(SESSION.json['radio_covers']);
 
                 // Library
 				// One-touch actions
@@ -3598,7 +3597,7 @@ $('#btn-preferences-update').click(function(e){
 	var fontSizeChange = false;
     var lazyLoadChange = false;
     var playqueueArtChange = false;
-	var radioTrackCoversChange = false;
+	var radioCoversChange = false;
     var showNpIconChange = false;
 	var thumbSizeChange = false;
 
@@ -3637,7 +3636,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_hiresthm'] != getKeyOrValue('value', $('#hires-thumbnails span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['playlist_art'] != $('#playqueue-art-enabled span').text()) {playqueueArtChange = true;}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
-	if (SESSION.json['radio_track_covers'] != $('#show-radio-track-covers span').text()) {radioTrackCoversChange = true;}
+	if (SESSION.json['radio_covers'] != $('#show-radio-track-covers span').text()) {radioCoversChange = true;}
 
     // Library
 	// One-touch actions
@@ -3700,8 +3699,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_hiresthm'] = getKeyOrValue('value', $('#hires-thumbnails span').text());
     SESSION.json['playlist_art'] = $('#playqueue-art-enabled span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
-	SESSION.json['radio_track_covers'] = $('#show-radio-track-covers span').text();
-	SESSION.json['itunes_query_timeout'] = $('#itunes-query-timeout span').text();
+	SESSION.json['radio_covers'] = $('#show-radio-track-covers span').text();
 
     // Library
 	// One-touch actions
@@ -3754,6 +3752,10 @@ $('#btn-preferences-update').click(function(e){
 
     if (clearLibcacheAllReqd == true) {
         $.post('command/music-library.php?cmd=clear_libcache_all');
+	}
+
+	if (radioCoversChange == true) {
+        $.post('command/radio.php?cmd=clear_radiocover_url_cache');
 	}
 
 	if (accentColorChange == true) {
@@ -3823,7 +3825,7 @@ $('#btn-preferences-update').click(function(e){
             'library_hiresthm': SESSION.json['library_hiresthm'],
             'playlist_art': SESSION.json['playlist_art'],
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
-			'radio_track_covers': SESSION.json['radio_track_covers'],
+			'radio_covers': SESSION.json['radio_covers'],
 			'itunes_query_timeout': SESSION.json['itunes_query_timeout'],
 
             // Library
@@ -3865,7 +3867,7 @@ $('#btn-preferences-update').click(function(e){
         function() {
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
-				radioTrackCoversChange ||
+				radioCoversChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {

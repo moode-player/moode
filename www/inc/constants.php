@@ -34,6 +34,9 @@ const MPD_LOG = '/var/log/mpd/log';
 // Currentsong / Now playing
 const CURRENTSONG_TXT = '/var/local/www/currentsong.txt';
 const CURRENTSONG_TXT_TMP = '/tmp/currentsong.txt';
+// Radiocover plus
+const RADIOCOVER_PLUS_CFG = '/etc/radiocover-plus/config.txt';
+const RADIOCOVER_PLUS_LOG = '/var/log/moode_radiocover_plus.log';
 // AirPlay, Deezer Connect and Spotify Connect
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
 const DEEZMETA_CACHE_FILE = '/var/local/www/deezmeta.json';

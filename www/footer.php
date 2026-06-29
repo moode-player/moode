@@ -69,6 +69,7 @@
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) { ?>
 					<li><a href="inp-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-dial"></i><br>Input select</a></li>
 				<?php } ?>
+				<li><a href="rcp-config.php" class="btn btn-large"><i class="fa-solid fa-sharp fa-album-collection"></i><br>Radio Cover+</a></li>
 			</ul>
 		</div>
 	</div>

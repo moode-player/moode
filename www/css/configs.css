@@ -50,6 +50,7 @@ input[type=password] {display:inline-block;height:22px;vertical-align:top;margin
 .config-input-mini {width:6vw;max-width:60px;}
 .config-input-large {width:20.75vw;max-width:210px;}
 .config-input-xlarge {width:28.75vw;max-width:310px;}
+.config-input-xxlarge {width:90%;max-width:750px;}
 .config-select-large:not([class*=span]) {width:22vw;max-width:220px;margin:0 var(--config-ctl-margin-right) 0 0;}
 .config-select-xxlarge:not([class*=span]) {width:90%;max-width:750px;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 .config-select-yn:not([class*=span]) {width:8vw;max-width:80px;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}

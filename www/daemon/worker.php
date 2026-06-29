@@ -144,7 +144,9 @@ if (file_exists(BOOT_DIR . '/.fseventsd')) {
 }
 // - Delete session vars that have been removed or renamed
 $sessionVars = array(
-	'mpd_dbupdate_status'
+	'mpd_dbupdate_status',
+	'trackcover_url_cache',
+	'radio_track_covers'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -1527,8 +1529,7 @@ $validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip != explode('/
 $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
 // Radio track covers
-workerLog('worker: Radio track covers:   ' . lcfirst($_SESSION['radio_track_covers']));
-workerLog('worker: iTunes query timeout: ' . $_SESSION['itunes_query_timeout'] . ' sec(s)');
+workerLog('worker: Radio covers:         ' . $_SESSION['radio_covers']);
 
 // Automatic CoverView (Preferences)
 workerLog('worker: Auto-CoverView:       ' . ($_SESSION['auto_coverview'] == '-on' ? 'on' : 'off'));
@@ -1652,12 +1653,12 @@ if (!isset($_SESSION['lib_fv_only'])) {
 	$_SESSION['lib_fv_only'] = 'off';
 }
 
-// Radio track cover URL cache
-if (!isset($_SESSION['trackcover_url_cache'])) {
-	$_SESSION['trackcover_url_cache'] = '';
+// Radio cover URL cache
+if (!isset($_SESSION['radiocover_url_cache'])) {
+	$_SESSION['radiocover_url_cache'] = '';
 }
 // Empty cache
-$_SESSION['trackcover_url_cache'] = array('' => ''); // trackTitle => URL
+$_SESSION['radiocover_url_cache'] = array('' => ''); // Title => URL
 
 // Metadata file
 if (!isset($_SESSION['extmeta'])) {

@@ -203,7 +203,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
 	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
-	echo -e "\nRadio track covers\t= $radio_track_covers\c"
+	echo -e "\nRadio covers\t\t= $radio_covers\c"
 	echo -e "\niTunes query timeout\t= $itunes_query_timeout\c"
 	echo -e "\n\nLibrary\c"
 	echo -e "\n----------------------\c"
@@ -801,7 +801,7 @@ else
 fi
 pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
-radio_track_covers=${arr[66]}
+radio_covers=${arr[66]}
 deezactive=${arr[67]}
 peppy_scn_blank_active=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"

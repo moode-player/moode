@@ -798,14 +798,14 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					// URL logo image
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
-				// Track cover from Apple Music (iTunes API)
+				// Get radio cover
 				if ($current['title'] != DEFAULT_STATION_NAME) {
-					if ($_SESSION['radio_track_covers'] == 'Yes') {
+					if ($_SESSION['radio_covers'] != 'No') {
 						if ($current['state'] == 'play') {
-							// NOTE: This function performs phpSession('open_ro') or phpSession(open) / phpSession(close)
-							$trackCoverUrl = getRadioCoverUrl($current['title']);
-							if (str_contains($trackCoverUrl, 'https://')) {
-								$current['coverurl'] = $trackCoverUrl;
+							// NOTE: getRadioCoverUrl() opens the session
+							$coverUrl = getRadioCoverUrl($current['title'], $current['album']); // title, station
+							if (substr($coverUrl, 0, 4) == 'http') { // URL and not 'None' or ''
+								$current['coverurl'] = $coverUrl;
 							}
 						}
 					}
@@ -902,40 +902,57 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	return $current;
 }
 
-function getRadioCoverUrl($trackTitle, $searchMethod = 'Default') {
-	$trackTitle = html_entity_decode($trackTitle);
+function getRadioCoverUrl($title, $station = 'None') {
+	// DEBUG:
+	//workerLog('getRadioCoverUrl(): title|station: ' . $title . ' | ' . $station);
+
+	$title = html_entity_decode($title);
 
 	// Check cache first
 	phpSession('open_ro');
-	$coverUrl = $_SESSION['trackcover_url_cache'][$trackTitle];
-	if (!empty($coverUrl)) {
-		// DEBUG: Report cached cover used
-		workerLog('getRadioCoverUrl(): Returned cached cover URL for: ' . $trackTitle);
-		return $coverUrl;
+	$cachedUrl = $_SESSION['radiocover_url_cache'][$title];
+	// URL, 'None' or ''
+	if (!empty($cachedUrl)) {
+		// DEBUG: Report cached cover URL used
+		workerLog('getRadioCoverUrl(): Returned cached cover URL for: ' . $title);
+		return $cachedUrl;
 	}
 
-	// Switch based on search method
-	switch ($searchMethod) {
-		case 'Default':
-			$coverUrl = searchItunes($trackTitle);
+	// Search provider
+	switch ($_SESSION['radio_covers']) {
+		case 'iTunes':
+			$coverUrl = searchItunes($title);
+			break;
+		case 'Radio Cover+':
+			$coverUrl = radioCoverPlus($title, $station);
 			break;
 		default:
-			$coverUrl = searchItunes($trackTitle);
+			workerLog('getRadioCoverUrl(): WARNING: No search provider in radio_covers');
 	}
 
+	// Update cache
 	phpSession('open');
-	$_SESSION['trackcover_url_cache'][$trackTitle] = $coverUrl;
+	$_SESSION['radiocover_url_cache'][$title] = $coverUrl;
 	phpSession('close');
 
 	return $coverUrl;
 }
-function searchItunes($trackTitle) {
-	// DEBUG: Search iTunes database
-	workerLog('getRadioCoverUrl(): Search iTunes for: ' . $trackTitle);
+function radioCoverPlus($title, $station) {
+	// DEBUG:
+	//workerLog('radioCoverPlus(): Begin');
+	//workerLog('radioCoverPlus(): ' . $title . ' | ' . $station);
+	$coverUrl = sysCmd('/var/www/util/radiocover_plus.py --title "' . $title . '" --station "' . $station . '"')[0];
+	// DEBUG:
+	//workerLog('radioCoverPlus(): ' . (empty($coverUrl) ? 'No cover found' : "Cover:\n" . $coverUrl));
+	return $coverUrl;
+}
 
+function searchItunes($title) {
+	// DEBUG:
+	//workerLog('searchItunes(): Begin');
 	// Create search query
 	$trackLimit = '10'; // Max number of tracks to return from iTunes query
-	$titleParts = explode(' - ', $trackTitle); // $titleParts[0]: Artist name, $titleParts[1]: Track title
+	$titleParts = explode(' - ', $title); // $titleParts[0]: Artist name, $titleParts[1]: Track title
 	$query = '?term=' . urlencode($titleParts[0] . ' ' . $titleParts[1]) .
 		'&media=music&entity=musicTrack&limit=' . $trackLimit;
 	$apiUrl = ITUNES_API_BASE_URL . $query;
@@ -952,31 +969,31 @@ function searchItunes($trackTitle) {
 	// Submit query to iTunes
 	$result = file_get_contents($apiUrl, false, stream_context_create($options));
 	if ($result === false) {
-		$msg = 'Search failed for: ' . $trackTitle;
-		$coverUrl = '';
+		$msg = 'Search failed for: ' . $title;
+		$coverUrl = 'None';
 	} else {
 		$resultArray = json_decode($result, true);
 		if ($resultArray['resultCount'] == '0') {
-			$msg = 'Search returned 0 results for: ' . $trackTitle;
-			$coverUrl = '';
+			$msg = 'Search returned 0 results for: ' . $title;
+			$coverUrl = 'None';
 		} else {
 			// DEBUG: Report result count and/or full results
-			workerLog('getRadioCoverUrl(): - Search returned ' . $resultArray['resultCount'] . ' results');
-			//workerLog('Full query results:' . "\n" . print_r($resultArray['results'] ,true));
-			$coverUrl = '';
+			//workerLog('searchItunes(): - Returned ' . $resultArray['resultCount'] . ' results');
+			//workerLog('searchItunes(): - Full results:' . "\n" . print_r($resultArray['results'] ,true));
+			$coverUrl = 'None';
 			$i = 0;
 			foreach ($resultArray['results'] as $result) {
 				// DEBUG: Find artist match in results
-				workerLog('getRadioCoverUrl(): - Checking result[' . $i . '] album: ' . $result['collectionName']);
+				//workerLog('searchItunes(): - Checking result[' . $i . '] album: ' . $result['collectionName']);
 				$itunesArtist = strtolower(str_replace($result['artistName'], ' ', ''));
-				$trackTitleArtist = strtolower(str_replace($titleParts[0], ' ', ''));
-				if ($trackTitleArtist == $itunesArtist) {
+				$titleArtist = strtolower(str_replace($titleParts[0], ' ', ''));
+				if ($titleArtist == $itunesArtist) {
 					$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][$i]['artworkUrl100']);
-					$msg = 'Search successful for: ' . $trackTitle  . "\n" .
+					$msg = 'Search successful for: ' . $title  . "\n" .
 						'Cover: ' . $coverUrl . "\n" .
 						'Query: ' . $apiUrl;
 					// DEBUG: Report artist match
-					workerLog('getRadioCoverUrl(): - Artist match found');
+					//workerLog('searchItunes(): - Artist match found');
 					break;
 				}
 			}
@@ -984,9 +1001,9 @@ function searchItunes($trackTitle) {
 	}
 
 	// DEBUG: Report result
-	workerLog('getRadioCoverUrl(): ' . $msg);
+	workerLog('searchItunes(): ' . $msg);
 
-	return $coverUrl;
+	return $coverUrl; // URL or 'None'
 }
 
 function getUpnpCoverUrl() {
