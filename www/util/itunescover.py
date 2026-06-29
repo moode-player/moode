@@ -16,7 +16,7 @@
 #	URL to album art
 #
 # 2026 modifications by Tim Curtis
-# This program is just for test purposes
+# - This program is just for test purposes
 # - Use artist match test to help improve finding correct cover
 # - Add debug logging
 #
@@ -88,11 +88,11 @@ def main():
 
 	# Define arguments
 	parser.add_argument("--artist", required=True, help="artist name enclosed in dbl quotes")
-	parser.add_argument("--track", required=True, help="track title enclosed in dbl quotes")
+	parser.add_argument("--title", required=True, help="title enclosed in dbl quotes")
 
 	# Parse arguments
 	args = parser.parse_args()
-	fetch_album_art_apple(args.artist, args.track)
+	fetch_album_art_apple(args.artist, args.title)
 
 if __name__ == "__main__":
 	main()
