@@ -16,7 +16,7 @@
 ################################################################################
 
 New features
-- NEW: 
+- NEW: Radio Cover+ multi-provider cover art search
 
 Updates
 - UPD: Improve iTunes cover art lookup
