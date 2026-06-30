@@ -20,12 +20,12 @@ New features
 
 Updates
 - UPD: Improve iTunes cover art lookup
-- UPD: Populate the CPU governor list from the kernel (PR757 by Gjuju)
+- UPD: Populate the CPU governor list from the kernel (PR #757 by Gjuju)
 
 
 Bug fixes
-- FIX: Volume knob responsiveness: freeze/jump, knob drag flooding
-- FIX: Pirev.py crashes on unrecognised revision codes (PR754 by Gjuju)
+- FIX: Volume knob responsiveness: freeze/jump, drag flooding (PR #753 by Gjuju)
+- FIX: Pirev.py crashes on unrecognized revision codes (PR #754 by Gjuju)
 - FIX: Spotify Connect missing cover and metadata
 
 ################################################################################
