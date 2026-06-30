@@ -16,12 +16,16 @@
 ################################################################################
 
 New features
-- NEW: Radio Cover+ multi-provider cover art search
+- NEW: Radio Cover+ multi-provider cover art search (based on the MR+ project)
 
 Updates
 - UPD: Improve iTunes cover art lookup
+- UPD: Populate the CPU governor list from the kernel (PR757 by Gjuju)
+
 
 Bug fixes
+- FIX: Volume knob responsiveness: freeze/jump, knob drag flooding
+- FIX: Pirev.py crashes on unrecognised revision codes (PR754 by Gjuju)
 - FIX: Spotify Connect missing cover and metadata
 
 ################################################################################
