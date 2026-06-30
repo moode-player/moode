@@ -14,7 +14,8 @@ Radio Cover+ - CLI utility
 This is a modified version of the daemon script "moode_sse_server.py" from the GitHub
 project named "moOde-radio-plus (MR+)". It functions as a foreground CLI utility that
 can be called from within the existing MPD idle timeout process that Moode maintains.
-This allows for seemless integration including support for the "Metadata file" option.
+This allows for seemless integration including support for the Cover URL cache and
+Metadata file option.
 
 This version maintains the advanced parsing, weighted analysis and parallel search
 from the daemon version.
@@ -54,7 +55,6 @@ LASTFM_API_KEY			= None
 DISCOGS_TOKEN			= None
 THEAUDIODB_API_KEY		= "2"
 
-#DEBOUNCE_MS		= 0.8
 REQUEST_TIMEOUT	= 10.0
 MB_TIMEOUT		= (0.5, 1.5)
 
@@ -179,9 +179,6 @@ def read_global():
 	LOG_LEVEL = level if level in valid_levels else "INFO"
 	logging.getLogger().setLevel(LOG_LEVEL_MAP[LOG_LEVEL])
 
-	#CACHE_ENABLED			= values.get("CACHE_ENABLED", "").lower() in ("1","true","yes","on")
-
-	#DEBOUNCE_MS				= load_float("DEBOUNCE_MS",				0.8)
 	REQUEST_TIMEOUT			= load_float("REQUEST_TIMEOUT",			10.0)
 	MIN_SIMILARITY			= load_float("MIN_SIMILARITY",			0.75)
 	MIN_SIMILARITY_ITUNES	= load_float("MIN_SIMILARITY_ITUNES",	0.90)
@@ -208,14 +205,12 @@ def log_config_summary():
 	logging.error(f"[config] LASTFM_API_KEY         = {mask(LASTFM_API_KEY)}")
 	logging.error(f"[config] DISCOGS_TOKEN          = {mask(DISCOGS_TOKEN)}")
 	logging.error(f"[config] THEAUDIODB_API_KEY     = {THEAUDIODB_API_KEY}")
-	#logging.error(f"[config] DEBOUNCE_MS            = {DEBOUNCE_MS}")
 	logging.error(f"[config] REQUEST_TIMEOUT        = {REQUEST_TIMEOUT}")
 	logging.error(f"[config] FAST_DEADLINE_S        = {FAST_DEADLINE_S}")
 	logging.error(f"[config] TOTAL_DEADLINE_S       = {TOTAL_DEADLINE_S}")
 	logging.error(f"[config] EARLY_STOP_SCORE       = {EARLY_STOP_SCORE}")
 	logging.error(f"[config] MIN_SIMILARITY         = {MIN_SIMILARITY}")
 	logging.error(f"[config] MIN_SIMILARITY_ITUNES  = {MIN_SIMILARITY_ITUNES}")
-	#logging.error(f"[config] CACHE_ENABLED          = {CACHE_ENABLED}")
 	enabled = [n for n, v in PROVIDERS_LIST.items() if v]
 	logging.error(f"[config] Providers enabled      = {enabled}")
 	logging.error("[config] ===========================================")
