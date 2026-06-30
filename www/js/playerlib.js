@@ -26,6 +26,8 @@ const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
 //						-------
 //						  228279
 
+const VOL_KNOB_DEBOUNCE = 150; // ms, coalesce a knob drag's intermediate values
+
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';
@@ -348,6 +350,10 @@ function engineMpd() {
     				else {
     					if (MPD.json['date']) MPD.json['date'] = MPD.json['date'].slice(0,4); // should fix in php but...
     					renderUI();
+    				}
+
+    				if (MPD.json['idle_mixer_changed'] == '1' && MPD.json['idle_timeout_event'] != 'changed: mixer') {
+    					renderUIVol();
     				}
                 }
 
@@ -1081,10 +1087,16 @@ function renderUIVol() {
 
 	// Load session vars (required for multi-client)
     $.getJSON('command/cfg-table.php?cmd=get_cfg_system', function(data) {
+        var localVol = SESSION.json['volknob'];
+        var localMute = SESSION.json['volmute'];
     	if (data === false) {
             console.log('renderUIVol(): No data returned from get_cfg_system');
     	} else {
             SESSION.json = data;
+        }
+        if (Date.now() - (GLOBAL.volLastChange || 0) < 1500) {
+            SESSION.json['volknob'] = localVol;
+            SESSION.json['volmute'] = localMute;
         }
 
         // Volume type
@@ -1137,10 +1149,16 @@ function renderUI() {
 
     // Load session vars (required for multi-client)
     $.getJSON('command/cfg-table.php?cmd=get_cfg_system', function(data) {
+        var localVol = SESSION.json['volknob'];
+        var localMute = SESSION.json['volmute'];
         if (data === false) {
             console.log('renderUI(): No data returned from get_cfg_system');
     	} else {
             SESSION.json = data;
+        }
+        if (Date.now() - (GLOBAL.volLastChange || 0) < 1500) {
+            SESSION.json['volknob'] = localVol;
+            SESSION.json['volmute'] = localMute;
         }
 
         // Debug notification (appears above cover art)
@@ -2711,6 +2729,8 @@ function setVolume(level, event) {
 	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
 	level = level < 0 ? 0 : level;
 
+	GLOBAL.volLastChange = Date.now();
+
     var async = true;
 
     /*console.log('setVolume(): ' +
@@ -2723,7 +2743,19 @@ function setVolume(level, event) {
 	if (SESSION.json['volmute'] == '0') {
         //console.log('sendVolCmd(): unmute (volknob ' + SESSION.json['volknob'] + ')');
 		SESSION.json['volknob'] = level.toString();
-		sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
+		if (event != 'knob_change') {
+			$('#volume, #volume-2').val(level).trigger('change');
+		}
+		$('.volume-display div, .mpd-volume-level').text(level);
+		if (event == 'knob_change') {
+			clearTimeout(GLOBAL.volKnobTimer);
+			GLOBAL.volKnobTimer = setTimeout(function() {
+				sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
+			}, VOL_KNOB_DEBOUNCE);
+		} else {
+			clearTimeout(GLOBAL.volKnobTimer);
+			sendVolCmd('POST', 'upd_volume', {'volknob': SESSION.json['volknob'], 'event': event}, async);
+		}
     } else {
         // Muted
 		if (level == 0 && event == 'mute')	{
