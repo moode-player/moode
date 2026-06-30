@@ -914,7 +914,7 @@ function getRadioCoverUrl($title, $station = 'None') {
 	// URL, 'None' or ''
 	if (!empty($cachedUrl)) {
 		// DEBUG: Report cached cover URL used
-		workerLog('getRadioCoverUrl(): Returned cached cover URL for: ' . $title);
+		//workerLog('getRadioCoverUrl(): Returned cached cover URL for: ' . $title);
 		return $cachedUrl;
 	}
 
@@ -1001,7 +1001,7 @@ function searchItunes($title) {
 	}
 
 	// DEBUG: Report result
-	workerLog('searchItunes(): ' . $msg);
+	//workerLog('searchItunes(): ' . $msg);
 
 	return $coverUrl; // URL or 'None'
 }
