@@ -273,11 +273,9 @@ function updDspAndBtInConfs($cardNum, $outputMode) {
 		} else {
 			$alsaDevice = 'peppy';
 		}
-	// AUDIODEV=_audioout or plughw depending on Bluetooth Config, ALSA output mode
-	} else if ($_SESSION['alsa_output_mode_bt'] == 'plughw') {
-		$alsaDevice = $outputMode == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $cardNum . ',0';
 	} else {
-		$alsaDevice = 'plug:' . $_SESSION['alsa_output_mode_bt']; // plug:_audioout
+		// A2DP sink: convert the fixed-format decoded PCM at the top of the chain
+		$alsaDevice = 'plug:_audioout';
 	}
 	sysCmd("sed -i 's/^AUDIODEV.*/AUDIODEV=" . $alsaDevice . "/' /etc/bluealsaaplay.conf");
 

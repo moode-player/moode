@@ -64,7 +64,6 @@ $currentSettings['ashuffle_exclude'] = $_SESSION['ashuffle_exclude'];
 $currentSettings['invert_polarity'] = $_SESSION['invert_polarity'];
 // Audio: Bluetooth
 $currentSettings['bluez_sbc_quality'] = $_SESSION['bluez_sbc_quality'];
-$currentSettings['alsa_output_mode_bt'] = $_SESSION['alsa_output_mode_bt'];
 $currentSettings['bluez_controller_mode'] = $_SESSION['bluez_controller_mode'];
 $currentSettings['alsavolume_max_bt'] = $_SESSION['alsavolume_max_bt'];
 $currentSettings['cdspvolume_max_bt'] = $_SESSION['cdspvolume_max_bt'];
