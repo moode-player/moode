@@ -123,8 +123,8 @@ if (isset($_POST['update_alsa_output_mode_bt']) && $_POST['update_alsa_output_mo
 	$_SESSION['alsa_output_mode_bt'] = $_POST['alsa_output_mode_bt'];
 	if ($_POST['alsa_output_mode_bt'] == 'plughw') {
 		$alsaDevice = $_SESSION['alsa_output_mode'] == 'iec958' ? getAlsaIEC958Device() : 'plughw' . ':' . $_SESSION['cardnum'] . ',0';
-	} else { // _audioout
-		$alsaDevice = $_POST['alsa_output_mode_bt'];
+	} else { // plug:_audioout
+		$alsaDevice = 'plug:' . $_POST['alsa_output_mode_bt'];
 	}
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $alsaDevice . "' /etc/bluealsaaplay.conf");
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
