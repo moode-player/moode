@@ -19,7 +19,7 @@
 
 		<h5>Your Privacy</h5>
 		<p>
-			We want you to know that our audio player does not serve Ads, nag for subscriptions, use cookies, analytics/tracking or any other such technology. Player preference, configuration and operational data is stored on the local boot media and is not provided to any 3rd parties.
+			We want you to know that our audio player does not serve Ads, nag for subscriptions, use cookies, analytics/tracking or any other such technology. Player preference, configuration and operational data is stored on the local boot media and is under your complete control.
 		</p>
 		<h5>Release Information</h5>
 		<ul>
