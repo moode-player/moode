@@ -146,8 +146,7 @@ if (file_exists(BOOT_DIR . '/.fseventsd')) {
 $sessionVars = array(
 	'mpd_dbupdate_status',
 	'trackcover_url_cache',
-	'radio_track_covers',
-	'itunes_query_timeout'
+	'radio_track_covers'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -1526,7 +1525,7 @@ $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
 // Radio cover search provider
 workerLog('worker: Radio covers:         ' . $_SESSION['radio_covers']);
-workerLog('worker: Radiocover timeout:   ' . $_SESSION['radiocover_query_timeout'] . ' sec(s)');
+workerLog('worker: iTunes timeout:       ' . $_SESSION['itunes_query_timeout'] . ' secs');
 
 // Automatic CoverView (Preferences)
 workerLog('worker: Auto-CoverView:       ' . ($_SESSION['auto_coverview'] == '-on' ? 'on' : 'off'));

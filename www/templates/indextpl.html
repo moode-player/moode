@@ -1044,30 +1044,54 @@
  	                    </span>
  	                </div>
 
-					<label class="control-label" for="show-radio-track-covers">Radio covers</label>
+					<label class="control-label" for="show-radio-covers">Radio covers</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="show-radio-track-covers" class="filter-option pull-left">
+								<div id="show-radio-covers" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-radio-track-covers-sel"><span class="text">Radio Cover+</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-radio-track-covers-sel"><span class="text">iTunes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-radio-track-covers-sel"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-radio-covers-sel"><span class="text">Radio Cover+</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-radio-covers-sel"><span class="text">iTunes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-radio-covers-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
  						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-radio-track-covers" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
- 						<span id="info-show-radio-track-covers" class="help-block hide">
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-radio-covers" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-show-radio-covers" class="help-block hide">
 							Specify whether cover art is displayed for Radio Station tracks and choose a
 							provider. Radio Cover+ is an advanced multi-provider search utility based on
-							the moOde-Radio-Plus (MR+) project.
+							the moOde-Radio-Plus (MR+) project. Note that changing providers will clear
+							the Radio Cover URL cache.
  	                    </span>
 					</div>
+
+					<label class="control-label" for="itunes-query-timeout">iTunes timeout</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="itunes-query-timeout" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="itunes-query-timeout-sel"><span class="text">1</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="itunes-query-timeout-sel"><span class="text">3</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="itunes-query-timeout-sel"><span class="text">5</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-itunes-query-timeout" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+ 						<span id="info-itunes-query-timeout" class="help-block hide">
+							Terminates the iTunes cover query if the connection fails or no data is received within the specified number of seconds (timeout period).
+						</span>
+ 	                </div>
 				</div>
 			</div>
 		</div>

@@ -19,18 +19,19 @@ function getRadioCoverUrl($title, $station = 'None') {
 	$cachedUrl = sqlQuery("SELECT cover_url FROM cfg_rcucache WHERE title='" . SQLite3::escapeString($title) . "'", $dbh);
 	if (!empty($cachedUrl[0])) { // URL, 'None' or ''
 		// DEBUG: Report cached cover URL used
-		workerLog('getRadioCoverUrl(): Returned cached URL for: ' . $title);
+		//workerLog('getRadioCoverUrl(): Returned cached URL for: ' . $title);
 		return $cachedUrl[0]['cover_url'];
 	}
 
 	// Search provider
-	phpSession('open_ro');
-	switch ($_SESSION['radio_covers']) {
+	$searchProvider = sqlQuery("SELECT value FROM cfg_system WHERE param = 'radio_covers'", $dbh)[0]['value'];
+	switch ($searchProvider) {
 		case 'Radio Cover+':
 			$coverUrl = radioCoverPlus($title, $station);
 			break;
 		case 'iTunes':
-			$coverUrl = searchItunes($title, $_SESSION['radiocover_query_timeout']);
+			$iTunesTimeout = sqlQuery("SELECT value FROM cfg_system WHERE param = 'itunes_query_timeout'", $dbh)[0]['value'];
+			$coverUrl = searchItunes($title, $iTunesTimeout);
 			break;
 		default:
 			workerLog('getRadioCoverUrl(): WARNING: Session var "radio_covers" is empty');
@@ -84,7 +85,8 @@ function __searchItunes($title) {
 	$apiUrl = ITUNES_API_BASE_URL . $query;
 
 	// Get stream timeout, same for both connect and readdata
-	$timeout = $_SESSION['radiocover_query_timeout'] . '.0';
+	phpSession('open_ro');
+	$timeout = $_SESSION['itunes_query_timeout'] . '.0';
 	$options = array(
 		'http' => array(
 			'protocol_version' => (float)'1.1',

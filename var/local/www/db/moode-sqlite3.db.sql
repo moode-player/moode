@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Jul 2 08:25:25 2026
+-- File generated with SQLiteStudio v3.4.4 on Thu Jul 2 17:02:59 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -587,7 +587,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'track,date,
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'rsmafterdeez', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (42, 'radiocover_query_timeout', '3');
+INSERT INTO cfg_system (id, param, value) VALUES (42, 'itunes_query_timeout', '3');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (44, 'folder_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'peppy_display', '0');

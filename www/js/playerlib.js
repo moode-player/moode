@@ -3453,7 +3453,8 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#hires-thumbnails span').text(getKeyOrValue('key', SESSION.json['library_hiresthm']));
                 $('#playqueue-art-enabled span').text(SESSION.json['playlist_art']);
                 $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
-				$('#show-radio-track-covers span').text(SESSION.json['radio_covers']);
+				$('#show-radio-covers span').text(SESSION.json['radio_covers']);
+				$('#itunes-query-timeout span').text(SESSION.json['itunes_query_timeout']);
 
                 // Library
 				// One-touch actions
@@ -3668,7 +3669,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_hiresthm'] != getKeyOrValue('value', $('#hires-thumbnails span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['playlist_art'] != $('#playqueue-art-enabled span').text()) {playqueueArtChange = true;}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
-	if (SESSION.json['radio_covers'] != $('#show-radio-track-covers span').text()) {radioCoversChange = true;}
+	if (SESSION.json['radio_covers'] != $('#show-radio-covers span').text()) {radioCoversChange = true;}
 
     // Library
 	// One-touch actions
@@ -3731,8 +3732,8 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_hiresthm'] = getKeyOrValue('value', $('#hires-thumbnails span').text());
     SESSION.json['playlist_art'] = $('#playqueue-art-enabled span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
-	SESSION.json['radio_covers'] = $('#show-radio-track-covers span').text();
-
+	SESSION.json['radio_covers'] = $('#show-radio-covers span').text();
+	SESSION.json['itunes_query_timeout'] = $('#itunes-query-timeout span').text();
     // Library
 	// One-touch actions
     SESSION.json['library_onetouch_album'] = $('#onetouch_album span').text();
@@ -3858,7 +3859,7 @@ $('#btn-preferences-update').click(function(e){
             'playlist_art': SESSION.json['playlist_art'],
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
 			'radio_covers': SESSION.json['radio_covers'],
-			'radiocover_query_timeout': SESSION.json['radiocover_query_timeout'],
+			'itunes_query_timeout': SESSION.json['itunes_query_timeout'],
 
             // Library
 			// One-touch actions
@@ -3899,8 +3900,8 @@ $('#btn-preferences-update').click(function(e){
         function() {
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
                 playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
-				radioCoversChange ||
-                (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
+                (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true
+			) {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' The page will automatically refresh to make the settings effective.');
                 setTimeout(function() {
                     location.reload(true);
