@@ -40,7 +40,6 @@ def search_for_cover(artist_name, track_title, request_timeout):
 		"entity": "musicTrack",
 		"limit": QUERY_RESULT_LIMIT
 	}
-	# DEBUG:
 	#print("timeout=" + str(request_timeout))
 	#print(query)
 
@@ -48,16 +47,15 @@ def search_for_cover(artist_name, track_title, request_timeout):
 	response = requests.get(url, params=query, timeout=request_timeout)
 
 	if response.status_code != 200:
-		print("No results were returned from the query")
+		#print("No results were returned from the query")
 		return None
 
 	# Parse JSON results
 	data = response.json()
-	# DEBUG:
 	#print(data)
 
 	if len(data['results']) == 0:
-		print("No results were returned from the query")
+		#print("No results were returned from the query")
 		return None
 
 	# Extract the album art URL
@@ -71,7 +69,7 @@ def search_for_cover(artist_name, track_title, request_timeout):
 
 
 	if not artwork_url:
-		print("No album found for the given artist name and track title")
+		#print("No album found for the given artist name and track title")
 		return None
 
 	# Modify the URL to specify the highest resolution image available
@@ -81,9 +79,11 @@ def search_for_cover(artist_name, track_title, request_timeout):
 	# Test the URL
 	response = requests.head(high_res_artwork_url, timeout=request_timeout)
 	if response.status_code == 200:
-		print(high_res_artwork_url)
+		#print(high_res_artwork_url)
+		return high_res_artwork_url
 	else:
-		print("Cover at 1000x1000px not found")
+		#print("Cover at 1000x1000px not found")
+		return None
 
 def main():
 	# Setup argument parser
@@ -97,7 +97,8 @@ def main():
 
 	# Parse arguments
 	args = parser.parse_args()
-	search_for_cover(args.artist, args.title, int(args.timeout))
+	cover_url = search_for_cover(args.artist, args.title, int(args.timeout))
+	print(cover_url) # URL or None
 
 if __name__ == "__main__":
 	main()
