@@ -5,6 +5,7 @@
 */
 
 require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/radio.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
@@ -55,6 +56,12 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 }
 
+if (isset($_POST['update_clear_rcucache'])) {
+	clearRadioCoverUrlCache();
+	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
+	$_SESSION['notify']['msg'] = 'Cover URL cache has been cleared.';
+}
+
 phpSession('close');
 // Load config
 $config = parseDelimFile(file_get_contents(RADIOCOVER_PLUS_CFG), '=');
@@ -98,6 +105,7 @@ $_config['search_total_deadline'] = $config['TOTAL_DEADLINE_S'];
 $_config['search_early_stop_score'] = $config['EARLY_STOP_SCORE'];
 $_config['search_cover_max_size'] = $config['MAX_SIZE_PX'];
 $_config['search_cover_quality'] = $config['COVER_QUALITY'];
+$_rcucache_count = sqlQuery("SELECT count() FROM cfg_rcucache",sqlConnect())[0]['count()'];
 
 // Logging
 $_config['log_level'] .= "<option value=\"Info\" " . (($config['LOG_LEVEL'] == 'INFO') ? "selected" : "") . ">Info</option>\n";

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Jun 29 14:41:47 2026
+-- File generated with SQLiteStudio v3.4.4 on Thu Jul 2 08:25:25 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -493,6 +493,9 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (234, 'https://25583.live.streamtheworld.com/TOPZEN_SC', 'Zen FM', 'r', 'local', 'Lounge', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', 'No', '', 'No');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
+-- Table: cfg_rcucache
+CREATE TABLE cfg_rcucache (id INTEGER PRIMARY KEY, title CHAR (32), cover_url CHAR (32));
+
 -- Table: cfg_sl
 CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64));
 INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
@@ -584,7 +587,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'track,date,
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'rsmafterdeez', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (42, 'itunes_query_timeout', '3');
+INSERT INTO cfg_system (id, param, value) VALUES (42, 'radiocover_query_timeout', '3');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (44, 'folder_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'peppy_display', '0');

@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/mpd.php';
+require_once __DIR__ . '/../inc/radio.php';
 require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
@@ -66,9 +67,7 @@ switch ($_GET['cmd']) {
 		echo json_encode(getRadioCoverUrl($_GET['title'], $_GET['station']));
 		break;
 	case 'clear_radiocover_url_cache':
-		phpSession('open');
-		$_SESSION['radiocover_url_cache'] = array('' => ''); // Title => URL
-		phpSession('close');
+		clearRadioCoverUrlCache();
 		break;
 	default:
 		echo 'Unknown command';

@@ -204,7 +204,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
 	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
 	echo -e "\nRadio covers\t\t= $radio_covers\c"
-	echo -e "\niTunes query timeout\t= $itunes_query_timeout\c"
+	echo -e "\niTunes query timeout\t= $radiocover_query_timeout\c"
 	echo -e "\n\nLibrary\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nOne touch album\t\t= $library_onetouch_album\c"
@@ -769,7 +769,7 @@ xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
 rsmafterdeez=${arr[39]}
 library_show_genres=${arr[40]}
-itunes_query_timeout=${arr[41]}
+radiocover_query_timeout=${arr[41]}
 i2soverlay=${arr[42]}
 folder_pos=${arr[43]}
 [[ "${arr[44]}" = "1" ]] && peppy_display="On" || peppy_display="Off"

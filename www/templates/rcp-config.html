@@ -11,7 +11,7 @@
 	<p class="config-help-header">
 		Radio Cover+ provides advanced search and analysis that greatly increases the probability of finding
 		the correct cover art for the currently playing track. The implementation thats included is a Command
-		Line Interface (CLI) port of the full moOde-radio-plus (MR+) daemon. It can be selected in the
+		Line Interface (CLI) port of the moOde-radio-plus (MR+) daemon. Its the default selection in the
 		Cover Art section of Preferences. Visit the <a href="https://github.com/frantale70-lgtm/moOde-radio-plus/tree/main#-english" class="target-blank-link" target="_blank">
 		moOde-radio-plus (MR+)</a> project for more information.
 	</p>
@@ -184,6 +184,19 @@
 				Maximum cover quality (JPEG).<br><em>Currently not implemented.</em>
 			</span>
 		</div>
+		<label class="control-label">Cover URL cache</label>
+		<div class="controls">
+			<a href="#clear-rcucache" data-toggle="modal"><button class="btn btn-medium btn-primary config-btn">Clear</button></a>
+			<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-rcucache" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+			<span class="config-help-static">
+				Cache contains $_rcucache_count cover URL's
+			</span>
+			<span id="info-clear-rcucache" class="config-help-info">
+				This cache is populated with Title | URL for each cover thats fetched. If the WebUI
+				is refreshed or that same Title is streamed again the cached URL will be used instead
+				of performing a provider search.
+			</span>
+		</div>
 
 		<div class="config-horiz-rule">Logging</div>
 
@@ -265,3 +278,16 @@
 		</div>
 </div>
 </div>
+
+<form class="form-horizontal" method="post">
+	<div id="clear-rcucache" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-rcucache-label" aria-hidden="true">
+		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Clear Cover URL cache?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_rcucache" value="novalue">Yes</button>
+		</div>
+	</div>
+</form>

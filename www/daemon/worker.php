@@ -146,7 +146,8 @@ if (file_exists(BOOT_DIR . '/.fseventsd')) {
 $sessionVars = array(
 	'mpd_dbupdate_status',
 	'trackcover_url_cache',
-	'radio_track_covers'
+	'radio_track_covers',
+	'itunes_query_timeout'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -1523,8 +1524,9 @@ $validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip != explode('/
 // NOTE: updaterAutoCheck() logs status
 $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
-// Radio track covers
+// Radio cover search provider
 workerLog('worker: Radio covers:         ' . $_SESSION['radio_covers']);
+workerLog('worker: Radiocover timeout:   ' . $_SESSION['radiocover_query_timeout'] . ' sec(s)');
 
 // Automatic CoverView (Preferences)
 workerLog('worker: Auto-CoverView:       ' . ($_SESSION['auto_coverview'] == '-on' ? 'on' : 'off'));
@@ -1647,13 +1649,6 @@ if (!isset($_SESSION['ready_script'])) {
 if (!isset($_SESSION['lib_fv_only'])) {
 	$_SESSION['lib_fv_only'] = 'off';
 }
-
-// Radio cover URL cache
-if (!isset($_SESSION['radiocover_url_cache'])) {
-	$_SESSION['radiocover_url_cache'] = '';
-}
-// Empty cache
-$_SESSION['radiocover_url_cache'] = array('' => ''); // Title => URL
 
 // Metadata file
 if (!isset($_SESSION['extmeta'])) {

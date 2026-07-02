@@ -3858,7 +3858,7 @@ $('#btn-preferences-update').click(function(e){
             'playlist_art': SESSION.json['playlist_art'],
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
 			'radio_covers': SESSION.json['radio_covers'],
-			'itunes_query_timeout': SESSION.json['itunes_query_timeout'],
+			'radiocover_query_timeout': SESSION.json['radiocover_query_timeout'],
 
             // Library
 			// One-touch actions
