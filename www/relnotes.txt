@@ -27,7 +27,7 @@ Bug fixes
 - FIX: Volume knob responsiveness: freeze/jump, drag flooding (PR #753 by Gjuju)
 - FIX: Pirev.py crashes on unrecognized revision codes (PR #754 by Gjuju)
 - FIX: Bluetooth no sound when ALSA output mode is not "Default" (PR #758 by Gjuju)
-- FIX: Spotify Connect missing cover and metadata
+- FIX: Spotify Connect missing covers and metadata
 
 ################################################################################
 #
