@@ -16,17 +16,20 @@
 #	URL to album art
 #
 # 2026 modifications by Tim Curtis
-# - This program is just for test purposes
 # - Use artist match test to help improve finding correct cover
+# - Add timeout to requests
 # - Add debug logging
 #
 
-import requests  # type: ignore
+import requests
 import argparse
 import os
 import base64
 
-def fetch_album_art_apple(artist_name, track_title):
+REQUEST_TIMEOUT_DEFAULT = 3
+QUERY_RESULT_LIMIT = 10
+
+def search_for_cover(artist_name, track_title, request_timeout):
 	# Base URL for iTunes Search API
 	url = "https://itunes.apple.com/search"
 
@@ -35,22 +38,23 @@ def fetch_album_art_apple(artist_name, track_title):
 		"term": f"{artist_name} {track_title}",
 		"media": "music",
 		"entity": "musicTrack",
-		"limit": 10
+		"limit": QUERY_RESULT_LIMIT
 	}
 	# DEBUG:
-	print(query)
+	#print("timeout=" + str(request_timeout))
+	#print(query)
 
-	# Make the request to the API
-	response = requests.get(url, params=query)
+	# Submit query
+	response = requests.get(url, params=query, timeout=request_timeout)
 
 	if response.status_code != 200:
-		print("Failed to retrieve data from iTunes API")
+		print("No results were returned from the query")
 		return None
 
-	# Parse the JSON response
+	# Parse JSON results
 	data = response.json()
 	# DEBUG:
-	print(data)
+	#print(data)
 
 	if len(data['results']) == 0:
 		print("No results were returned from the query")
@@ -59,10 +63,10 @@ def fetch_album_art_apple(artist_name, track_title):
 	# Extract the album art URL
 	artwork_url = None
 	for item in data['results']:
-		print(f"Checking {item['collectionName']}")
+		#print(f"Checking {item['collectionName']}")
 		if item["artistName"].replace(" ", "").lower() == artist_name.replace(" ", "").lower():
 			artwork_url = item['artworkUrl100']
-			print(f"Artist match found")
+			#print(f"Artist match found")
 			break
 
 
@@ -75,24 +79,25 @@ def fetch_album_art_apple(artist_name, track_title):
 	high_res_artwork_url = artwork_url.replace("100x100", "1000x1000")
 
 	# Test the URL
-	response = requests.head(high_res_artwork_url)
+	response = requests.head(high_res_artwork_url, timeout=request_timeout)
 	if response.status_code == 200:
 		print(high_res_artwork_url)
 	else:
-		print("Album art not found")
+		print("Cover at 1000x1000px not found")
 
 def main():
 	# Setup argument parser
 	parser = argparse.ArgumentParser(
-		description="Fetch album art URL using artist name and track title.")
+		description="Fetch cover URL using artist name and track title.")
 
 	# Define arguments
 	parser.add_argument("--artist", required=True, help="artist name enclosed in dbl quotes")
 	parser.add_argument("--title", required=True, help="title enclosed in dbl quotes")
+	parser.add_argument("--timeout", required=False, default=REQUEST_TIMEOUT_DEFAULT, help="query timeout")
 
 	# Parse arguments
 	args = parser.parse_args()
-	fetch_album_art_apple(args.artist, args.title)
+	search_for_cover(args.artist, args.title, int(args.timeout))
 
 if __name__ == "__main__":
 	main()
