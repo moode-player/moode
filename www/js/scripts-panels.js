@@ -734,6 +734,7 @@ jQuery(document).ready(function($) { 'use strict';
                 $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + plName, function() {
     				notify(NOTIFY_TITLE_INFO, 'queue_saved', NOTIFY_DURATION_SHORT);
                     $('#btn-pl-refresh').click();
+                    $('#db-refresh').click();
                 });
 			}
 		} else {
@@ -932,6 +933,130 @@ jQuery(document).ready(function($) { 'use strict';
 			renderFolderView(data, UI.path);
         });
 	});
+	$('#btn-db-import, #btn-pl-import').click(function(e) {
+		$('#db-import-file').val('');
+		$('#db-import-file').click();
+	});
+	var importPlaylistContent = ''; // holds the .m3u text between analyze and commit
+	$('#db-import-file').change(function(e) {
+		if (this.files.length == 0) {
+			return;
+		}
+		var file = this.files[0];
+		var defaultName = file.name.replace(/\.m3u8?$/i, '');
+		var reader = new FileReader();
+		reader.onload = function(ev) {
+			importPlaylistContent = ev.target.result;
+			// Phase A: ask the server which local paths it can't resolve
+			$.post('command/playlist.php?cmd=analyze_import', {'content': importPlaylistContent}, function(data) {
+				if (data.status != 'ok') {
+					notify(NOTIFY_TITLE_ALERT, 'import_playlist_error', data.msg);
+				} else if (data.unknown.length == 0) {
+					// All paths known (or URLs) -> import straight away
+					commitImportPlaylist(defaultName, {}, false);
+				} else {
+					openImportModal(defaultName, data);
+				}
+			}, 'json');
+		};
+		reader.readAsText(file);
+	});
+	// custom_radio.js (the moOde toggle wiring) is only in the config bundle, not the
+	// main index, so wire this modal's ON/OFF toggle ourselves.
+	function wireImportToggle() {
+		var $toggle = $('#import-playlist-modal .toggle');
+		var $radios = $toggle.find('input');
+		// Colour the ON knob with the theme accent like the config pages do. The index's
+		// setColors() sets the accentColor global but doesn't paint the toggle knob (it
+		// normally has no toggles), so replicate scripts-configs.js here.
+		if (typeof accentColor === 'string' && accentColor.charAt(0) == '#') {
+			var knob = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
+			document.body.style.setProperty('--toggleon', 'url("' + knob + '")');
+		}
+		$toggle.toggleClass('toggle-off', !$radios.eq(0).is(':checked'));
+		$radios.off('click.imptoggle').on('click.imptoggle', function() {
+			$toggle.toggleClass('toggle-off');
+		});
+	}
+	function openImportModal(name, data) {
+		$('#import-pl-name').val(name);
+		// default OFF = keep unresolved entries
+		$('#toggle-import-drop-1').prop('checked', false);
+		$('#toggle-import-drop-2').prop('checked', true);
+		wireImportToggle();
+		var html = '';
+		for (var i = 0; i < data.unknown.length; i++) {
+			var u = data.unknown[i];
+			var opts = '<option value="">(keep original path)</option>';
+			for (var j = 0; j < data.known_dirs.length; j++) {
+				var d = encodeHTMLEntities(data.known_dirs[j]);
+				opts += '<option value="' + d + '"' + (data.known_dirs[j] == u.suggested ? ' selected' : '') + '>' + d + '</option>';
+			}
+			html += '<div class="control-group import-pl-row" data-prefix="' + encodeHTMLEntities(u.prefix) + '">'
+				+ '<label class="control-label">' + encodeHTMLEntities(u.prefix) + '</label>'
+				+ '<div class="controls"><select class="import-pl-select selectpicker config-select-large">' + opts + '</select>'
+				+ '<span class="config-input-after">(' + u.count + ' track' + (u.count > 1 ? 's' : '') + ')</span></div>'
+				+ '</div>';
+		}
+		$('#import-pl-remap').html(html);
+		$('#import-pl-remap .selectpicker').selectpicker(); // moOde-styled dropdowns
+		renderImportReport(data);
+		$('#import-playlist-modal').modal();
+	}
+	function renderImportReport(data) {
+		var unknownTotal = 0;
+		var prefixes = [];
+		for (var k = 0; k < data.unknown.length; k++) {
+			unknownTotal += data.unknown[k].count;
+			prefixes.push(data.unknown[k].prefix);
+		}
+		var msg = (data.ok_local + data.url_count) + ' of ' + data.total + ' entries resolve';
+		msg += unknownTotal > 0 ? ' · ' + unknownTotal + ' still unresolved (' + prefixes.join(', ') + ')'
+			: ' · all good';
+		$('#import-pl-report').text(msg);
+	}
+	function currentImportRemap() {
+		var remap = {};
+		$('#import-pl-remap .import-pl-row').each(function() {
+			var target = $(this).find('.import-pl-select').val();
+			if (target) {
+				remap[$(this).attr('data-prefix')] = target;
+			}
+		});
+		return remap;
+	}
+	// Re-validate the entries against the box with the current remap choices
+	$('#btn-test-import').click(function(e) {
+		$.post('command/playlist.php?cmd=analyze_import',
+			{'content': importPlaylistContent, 'remap': JSON.stringify(currentImportRemap())},
+			function(data) {
+				if (data.status == 'ok') {
+					renderImportReport(data);
+				}
+			}, 'json');
+	});
+	$('#btn-import-playlist').click(function(e) {
+		var dropInvalid = !$('#import-playlist-modal .toggle').hasClass('toggle-off');
+		commitImportPlaylist($('#import-pl-name').val(), currentImportRemap(), dropInvalid);
+	});
+	function commitImportPlaylist(name, remap, dropInvalid) {
+		$.post('command/playlist.php?cmd=import_playlist', {
+			'name': name,
+			'content': importPlaylistContent,
+			'remap': JSON.stringify(remap),
+			'drop_invalid': dropInvalid ? '1' : '0'
+		}, function(data) {
+			if (data.status != 'ok') {
+				notify(NOTIFY_TITLE_ALERT, 'import_playlist_error', data.msg);
+				return;
+			}
+			var extra = data.imported + ' track' + (data.imported > 1 ? 's' : '')
+				+ (data.dropped > 0 ? ', ' + data.dropped + ' removed' : '');
+			notify(NOTIFY_TITLE_INFO, 'import_playlist', extra, NOTIFY_DURATION_SHORT);
+			$('#btn-pl-refresh').click();
+			$('#db-refresh').click();
+		}, 'json');
+	}
 	$('#db-search-results').click(function(e) {
 		$('.database li').removeClass('active');
 		$('#db-search-results').css('font-weight', 'bold');
@@ -1255,6 +1380,7 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/playlist.php?cmd=del_playlist', {'path': UI.dbEntry[0]}, function() {
             notify(NOTIFY_TITLE_INFO, 'del_playlist', NOTIFY_DURATION_SHORT);
             $('#btn-pl-refresh').click();
+            $('#db-refresh').click();
         });
 	});
     // Delete/Move playlist items(s)
