@@ -297,7 +297,7 @@ switch ($_GET['cmd']) {
 		break;
 	case 'get_playlist_contents':
 		$playlist = getPlaylistContents($_POST['path']);
-		$array = array('name' => $playlist['name'], 'genre' => $playlist['genre'], 'items' => $playlist['items']);
+		$array = array('name' => $playlist['name'], 'genre' => $playlist['genre'], 'cover' => $playlist['cover'], 'items' => $playlist['items']);
 		echo json_encode($array);
 		break;
 	default:
