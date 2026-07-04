@@ -423,10 +423,32 @@ jQuery(document).ready(function($) { 'use strict';
 	// EVENT HANDLERS
 	//
 
+    // Swap the native Radio grid and the radio-browser explorer (each wrapper has its own bar)
+    function setRadioExplore(active) {
+        if (active) {
+            $('.container-radio-native').addClass('hide');
+            $('#container-radio-browser').removeClass('hide');
+            rbOnViewActive();
+        }
+        else {
+            $('#container-radio-browser').addClass('hide');
+            $('.container-radio-native').removeClass('hide');
+            // Refresh the now-visible native grid if a favorite changed while explore was on
+            if (typeof RB === 'object' && RB.favoritesDirty && typeof renderRadioView === 'function') {
+                RB.favoritesDirty = false;
+                renderRadioView();
+            }
+        }
+    }
+
     // Radio view
 	$('.radio-view-btn').click(function(e){
         makeActive('.radio-view-btn','#radio-panel','radio');
 	});
+    // Radio Browser explore toggle (inside Radio view) — one copy per wrapper
+    $('.ra-explore-btn').click(function(e){
+        setRadioExplore($('#container-radio-browser').hasClass('hide'));
+    });
     // Playlist view
 	$('.playlist-view-btn').click(function(e){
         makeActive('.playlist-view-btn','#playlist-panel','playlist');

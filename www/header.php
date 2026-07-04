@@ -87,6 +87,7 @@
 		<script src="js/bootstrap-contextmenu.js" defer></script>
 		<script src="js/scripts-library.js" defer></script>
 		<script src="js/scripts-panels.js" defer></script>
+		<script src="js/radio-browser.js" defer></script>
 		<!-- endbuild -->
 	<!-- Configs -->
 	<!--removeIf(GENINDEXDEV)-->

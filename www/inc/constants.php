@@ -37,6 +37,17 @@ const CURRENTSONG_TXT_TMP = '/tmp/currentsong.txt';
 // Radiocover plus
 const RADIOCOVER_PLUS_CFG = '/etc/radiocover-plus/config.txt';
 const RADIOCOVER_PLUS_LOG = '/var/log/moode_radiocover_plus.log';
+// Radio Browser (radio-browser.info)
+const RADIOBROWSER_API_PRIMARY = 'all.api.radio-browser.info'; // round-robin alias: bootstrap + last resort
+const RADIOBROWSER_API_SRV = '_api._tcp.radio-browser.info';   // DNS SRV record for server discovery
+const RADIOBROWSER_UA = 'moode-radio-browser/1.0';
+const RADIOBROWSER_CACHE = '/var/local/www/rbcache';
+const RADIOBROWSER_RECENT_FILE = '/var/local/www/rbcache/recently_played.json';
+const RADIOBROWSER_IMAGE_CACHE = '/var/local/www/imagesw/radio-logos/cache';
+const RADIOBROWSER_CACHE_TTL = 1800; // Search results (30 min)
+const RADIOBROWSER_CACHE_TTL_STATIC = 43200; // Countries/genres/topclick (12 hr)
+const RADIOBROWSER_RECENT_MAX = 50;
+const RADIOBROWSER_LIMIT = 28; // Fixed search/page size
 // AirPlay, Deezer Connect and Spotify Connect
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
 const DEEZMETA_CACHE_FILE = '/var/local/www/deezmeta.json';

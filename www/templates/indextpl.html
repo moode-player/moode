@@ -254,23 +254,63 @@
 	<!-- RADIO VIEW -->
 	<div id="radio-panel" class="tab-pane">
 		<div id="container-radio">
-			<div class="btnlist btnlist-top btnlist-top-ra">
-				<button aria-label="Radio Manager" id="btn-ra-manager" class="btn"><i class="fa-solid fa-sharp fa-gear-complex"></i></button>
-				<button aria-label="Refresh" id="btn-ra-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
-				<button aria-label="New Station" id="btn-ra-new" class="btn"><i class="fa-regular fa-sharp fa-plus"></i></button>
-				<form id="ra-search" class="" method="post" onSubmit="return false;">
-					<div class="input-append">
-						<input id="ra-filter" type="text" value="" placeholder="search">
+			<!-- Radio native view (explore toggle off) -->
+			<div class="container-radio-native">
+					<div class="btnlist btnlist-top btnlist-top-ra">
+						<button aria-label="Radio Manager" id="btn-ra-manager" class="btn"><i class="fa-solid fa-sharp fa-gear-complex"></i></button>
+						<button aria-label="Refresh" id="btn-ra-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
+						<button aria-label="New Station" id="btn-ra-new" class="btn"><i class="fa-regular fa-sharp fa-plus"></i></button>
+					<form id="ra-search" class="" method="post" onSubmit="return false;">
+						<div class="input-append">
+							<input id="ra-filter" type="text" value="" placeholder="search">
+						</div>
+						<button aria-label="Reset" id="btn-ra-search-reset" class="btn hide" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></button>
+					</form>
+					<button aria-label="Explore radio-browser" class="btn btn-toggle ra-explore-btn"><i class="fa-solid fa-sharp fa-globe"></i></button>
+				</div>
+
+				<div id="database-radio">
+					<ul id="radio-covers" class="database-radio"></ul>
+				</div>
+				<div id ="index-radio" class="alphabits">
+					<ul><li>#</li><li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li><li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li></ul>
+				</div>
+			</div>
+			<!-- end Radio native view -->
+
+			<!-- Radio Browser explorer (explore toggle on) -->
+			<div id="container-radio-browser" class="hide">
+				<div class="btnlist btnlist-top btnlist-top-rb">
+					<button aria-label="Search" id="btn-rb-tab-search" class="btn rb-tab active">Search</button>
+					<button aria-label="Recently played" id="btn-rb-tab-recent" class="btn rb-tab">Recent</button>
+					<button aria-label="Refresh" id="btn-rb-refresh" class="btn"><i class="fa-regular fa-sharp fa-redo"></i></button>
+					<form id="rb-search" class="" method="post" onSubmit="return false;">
+						<div class="input-append">
+							<input id="rb-filter" type="text" value="" placeholder="search radio-browser.info">
+						</div>
+						<button aria-label="Reset" id="btn-rb-search-reset" class="btn hide" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></button>
+					</form>
+					<div class="controls" id="rb-filters">
+						<select id="rb-country" class="config-select-large" data-size="10"><option value="">All countries</option></select>
+						<select id="rb-genre" class="config-select-large" data-size="10"><option value="">All genres</option></select>
 					</div>
-					<button aria-label="Reset" id="btn-ra-search-reset" class="btn hide" type="reset" value="reset"><i class="fa-regular fa-sharp fa-times-circle"></i></button>
-				</form>
+					<button aria-label="Explore radio-browser" class="btn btn-toggle ra-explore-btn active"><i class="fa-solid fa-sharp fa-globe"></i></button>
+				</div>
+				<!-- Search tab -->
+				<div id="rb-tab-search" class="rb-tab-pane">
+					<div id="rb-covers-search-container" class="rb-covers-container">
+						<ul id="rb-covers-search" class="database-radio"></ul>
+					</div>
+				</div>
+				<!-- Recently played tab -->
+				<div id="rb-tab-recent" class="rb-tab-pane hide">
+					<div id="rb-covers-recent-container" class="rb-covers-container">
+						<ul id="rb-covers-recent" class="database-radio"></ul>
+					</div>
+				</div>
+				<div class="rb-attribution">Powered by <a class="target-blank-link" href="https://www.radio-browser.info" target="_blank">radio-browser.info</a> &middot; integration derived from RubaTron's Radio Browser extension</div>
 			</div>
-			<div id="database-radio">
-				<ul id="radio-covers" class="database-radio"></ul>
-			</div>
-			<div id ="index-radio" class="alphabits">
-				<ul><li>#</li><li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li><li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li></ul>
-			</div>
+			<!-- end Radio Browser explorer -->
 		</div>
 	</div>
 
@@ -297,7 +337,9 @@
 			</div>
 		</div>
 	</div>
+
 </div>
+
 
 <!-- ADVANCED SEARCH -->
 <div id="dbsearch-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
@@ -2958,6 +3000,17 @@
 			<li class="menu-separator"><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-music sx"></i> Add to playlist</a></li>
 			<li><a href="#notarget" data-cmd="edit_station"><i class="fa-regular fa-sharp fa-edit sx"></i> Edit station</a></li>
 			<li><a href="#notarget" data-cmd="delete_station"><i class="fa-regular fa-sharp fa-trash sx"></i> Delete station</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-radio-browser-item" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add_item"><i class="fa-regular fa-sharp fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fa-regular fa-sharp fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fa-regular fa-sharp fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item_next"><i class="fa-regular fa-sharp fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_item_next"><i class="fa-regular fa-sharp fa-play-circle sx"></i> Play next</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="get_playlist_names"><i class="fa-regular fa-sharp fa-list-music sx"></i> Add to playlist</a></li>
 		</ul>
 	</div>
 
