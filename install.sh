@@ -1197,6 +1197,15 @@ install -d -m 755 /etc/avahi/services
 install -m 644 "$REPO_DIR/etc/avahi/services/moode.service" /etc/avahi/services/moode.service
 install -m 644 "$REPO_DIR/etc/avahi/services/samba.service" /etc/avahi/services/samba.service
 
+# Radio Cover+ (util/radiocover_plus.py): cover-art lookup for radio streams,
+# reads its settings from /etc/radiocover-plus/config.txt. Deploy the repo
+# default, guarded on absence so operator edits (API tokens / provider toggles,
+# rewritten in place by rcp-config.php's sed) survive a re-run. Always run via
+# sysCmd (root), so root ownership is fine.
+install -d -m 755 /etc/radiocover-plus
+[ -f /etc/radiocover-plus/config.txt ] \
+	|| install -m 644 "$REPO_DIR/etc/radiocover-plus/config.txt" /etc/radiocover-plus/config.txt
+
 # Renderer / Bluetooth service unit OVERRIDES. moOde ships systemd units that
 # REPLACE the stock package units so each service runs with moOde's settings once
 # the worker enables it (Configure > Audio / Bluetooth). The matching ALSA configs
@@ -1462,6 +1471,97 @@ if [ -f "$_ifsrc" ] && grep -qiE '^[[:space:]]*wpa-ssid[[:space:]]' "$_ifsrc"; t
 	unset _ssid _psk _fname _kf
 fi
 unset _ifsrc
+
+#----------------------------------------------------------------------------#
+# etc/ payload completeness net (no deploy - a guard against forgotten files)
+#----------------------------------------------------------------------------#
+# ./etc is NOT a deployable mirror of /etc: files are sed-templated (*.sed*),
+# renamed (*.overwrite -> stripped), gated by feature/arch, or intentionally NOT
+# deployed on x86 (Pi-only, see the audit in Phase 3b). Each is wired by hand
+# above. This net deploys nothing - it only WARNS if a path under ./etc is not
+# accounted for in ETC_KNOWN, so a new file (e.g. from an upstream merge) can't
+# silently go undeployed. Every ./etc file must be listed once, whether it is
+# deployed OR a documented skip; adding a file here is the reminder to wire its
+# real handling. Membership via an assoc array on purpose (no `| grep -q`, which
+# can return SIGPIPE-141 on a match under `set -o pipefail`).
+declare -A ETC_KNOWN=()
+while IFS= read -r _p; do [ -n "$_p" ] && ETC_KNOWN["$_p"]=1; done <<'EOF'
+alsa/conf.d/20-bluealsa.overwrite.conf
+alsa/conf.d/alsaequal.conf
+alsa/conf.d/_audioout.conf
+alsa/conf.d/btstream.conf
+alsa/conf.d/camilladsp.overwrite.conf
+alsa/conf.d/crossfeed.conf
+alsa/conf.d/eqfa12p.conf
+alsa/conf.d/invpolarity.conf
+alsa/conf.d/peppy.conf.hide
+alsa/conf.d/_peppyout.conf
+alsa/conf.d/_sndaloop.conf
+alsa/conf.d/trx_send.conf
+avahi/services/moode.service
+avahi/services/samba.service
+bluealsaaplay.conf
+bluetooth/main.sed.conf
+bluetooth/pin.conf
+deezer/deezer.toml
+default/mpd.sed
+machine-info.overwrite
+minidlna.sed.conf
+modprobe.d/8192cu.conf
+modprobe.d/8812au.conf
+modules.sed
+nginx/dhparams.pem
+nginx/fastcgi_params.overwrite
+nginx/moode-locations.conf
+nginx/nginx.overwrite.conf
+nginx/proxy.conf
+nginx/sites-available/moode-http.overwrite.conf
+nginx/sites-available/moode-https.overwrite.conf
+nginx/ssl.conf
+nsswitch.sed.conf
+pam.d/sudo.overwrite
+peppymeter/config.sed.txt
+peppyspectrum/config.sed.txt
+php/8.4/cli/php.sed.ini
+php/8.4/fpm/php.sed.ini
+php/8.4/fpm/pool.d/www.sed.conf
+php/8.4/mods-available/opcache.sed.ini
+radiocover-plus/config.txt
+rc.local.overwrite
+rpi/swap.conf.d/fixedswapsize.overwrite.conf
+samba/smb.overwrite.conf
+shairport-sync.sed.conf
+squeezelite.conf
+sudoers.d/010_moode
+sudoers.d/010_www-data-nopasswd
+systemd/journald.sed.conf
+systemd/system/bluealsa-aplay@.service
+systemd/system/bluealsa.overwrite.service
+systemd/system/bt-agent.service
+systemd/system/plexamp.service
+triggerhappy/triggers.d/media.conf
+udevil/udevil.overwrite.conf
+udev/rules.d/10-a2dp-autoconnect.rules
+udisks-glue.overwrite.conf
+update-motd.d/00-moodeos-header.overwrite
+upmpdcli.sed.conf
+X11/xorg.conf.d/99-vc4.conf
+X11/Xwrapper.sed.config
+EOF
+_etc_unhandled=""; _etc_stale=""
+while IFS= read -r _p; do
+	[ -n "${ETC_KNOWN[$_p]:-}" ] || _etc_unhandled="$_etc_unhandled $_p"
+done < <(cd "$REPO_DIR/etc" && find . -type f -printf '%P\n')
+for _p in "${!ETC_KNOWN[@]}"; do
+	[ -f "$REPO_DIR/etc/$_p" ] || _etc_stale="$_etc_stale $_p"
+done
+if [ -n "$_etc_unhandled" ]; then
+	warn "etc/ payload: file(s) in ./etc NOT wired into install.sh - review Phase 3/3b:$_etc_unhandled"
+fi
+if [ -n "$_etc_stale" ]; then
+	warn "etc/ payload: ETC_KNOWN lists file(s) absent from ./etc (renamed/removed?):$_etc_stale"
+fi
+unset _p _etc_unhandled _etc_stale ETC_KNOWN
 
 #----------------------------------------------------------------------------#
 # Phase 4 - SQLite configuration database
