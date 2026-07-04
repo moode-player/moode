@@ -1597,12 +1597,67 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 				_mig_total=$((_mig_total + _added))
 			fi
 		done
-		[ "$_mig_total" -eq 0 ] && log "DB migration: schema params all present (no backfill needed)"
+		# Missing TABLES: a newer schema can add whole tables (e.g. cfg_rcucache for
+		# Radio Cover+), not just params. The kept DB then lacks the table and the
+		# first query against it throws (PDO runs in exception mode) -> HTTP 500. Create
+		# every table the schema defines but the DB lacks, then copy its shipped rows
+		# (seed data; a cache table like cfg_rcucache ships empty, so a no-op there).
+		# Existing tables are never altered - additive only, Pi-iso.
+		_tbl_added=0
+		while IFS= read -r _tbl; do
+			[ -z "$_tbl" ] && continue
+			_ddl=$(sqlite3 "$_schema_db" "SELECT sql FROM sqlite_master WHERE type='table' AND name='$_tbl';")
+			[ -z "$_ddl" ] && continue
+			if sqlite3 "$SQLDB" "$_ddl;" 2>/dev/null; then
+				sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
+					INSERT INTO main.\"$_tbl\" SELECT * FROM sch.\"$_tbl\";" 2>/dev/null || true
+				log "DB migration: created missing table '$_tbl'"
+				_tbl_added=$((_tbl_added + 1))
+			else
+				warn "DB migration: failed to create missing table '$_tbl'"
+			fi
+		done < <(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
+			SELECT name FROM sch.sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'
+				AND name NOT IN (SELECT name FROM main.sqlite_master WHERE type='table');" 2>/dev/null)
+
+		# Missing COLUMNS: a newer schema can add a column to an existing table. For
+		# every schema table also present in the DB, add columns the DB lacks via ALTER
+		# TABLE ADD COLUMN, rebuilding the definition from the schema (type + NOT NULL +
+		# DEFAULT). SQLite requires a NOT NULL column to carry a default; if one lacks it
+		# the ALTER fails and we warn rather than abort. Additive only - existing columns
+		# and their data are untouched.
+		_col_added=0
+		while IFS= read -r _t; do
+			[ -z "$_t" ] && continue
+			_live_cols=$(sqlite3 "$SQLDB" "SELECT name FROM pragma_table_info('$_t');" 2>/dev/null)
+			[ -z "$_live_cols" ] && continue
+			declare -A _have=()
+			while IFS= read -r _c; do [ -n "$_c" ] && _have["$_c"]=1; done <<<"$_live_cols"
+			while IFS='|' read -r _cname _ctype _cnn _cdflt; do
+				[ -z "$_cname" ] && continue
+				[ -n "${_have[$_cname]:-}" ] && continue
+				_coldef="\"$_cname\" $_ctype"
+				[ "$_cnn" = "1" ] && _coldef="$_coldef NOT NULL"
+				[ -n "$_cdflt" ] && _coldef="$_coldef DEFAULT $_cdflt"
+				if sqlite3 "$SQLDB" "ALTER TABLE \"$_t\" ADD COLUMN $_coldef;" 2>/dev/null; then
+					log "DB migration: added missing column '$_t.$_cname'"
+					_col_added=$((_col_added + 1))
+				else
+					warn "DB migration: failed to add column '$_t.$_cname' (def: $_coldef)"
+				fi
+			done < <(sqlite3 "$_schema_db" "SELECT name, type, \"notnull\", IFNULL(dflt_value,'') FROM pragma_table_info('$_t');" 2>/dev/null)
+			unset _have
+		done < <(sqlite3 "$_schema_db" "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';" 2>/dev/null)
+
+		if [ "$_mig_total" -eq 0 ] && [ "$_tbl_added" -eq 0 ] && [ "$_col_added" -eq 0 ]; then
+			log "DB migration: schema up to date (no backfill needed)"
+		fi
 	else
 		warn "DB migration: could not load schema for comparison, backfill skipped"
 	fi
 	rm -f "$_schema_db"
-	unset _schema_db _mig_total _added _t
+	unset _schema_db _mig_total _added _t _tbl_added _tbl _ddl \
+		_col_added _live_cols _c _cname _ctype _cnn _cdflt _coldef
 else
 	[ -f "$SQLDB" ] && cp -a "$SQLDB" "$SQLDB.bak.$(date +%s)" && warn "Backed up old DB"
 	rm -f "$SQLDB"
