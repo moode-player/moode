@@ -107,6 +107,13 @@ switch ($cmd) {
 				$response = array('success' => true, 'message' => 'Station already in favorites');
 			} else {
 				sqlQuery("UPDATE cfg_radio SET type='f' WHERE id='" . $existing[0]['id'] . "'", $dbh);
+				// The native Radio grid plays RADIO/<name>.pls; a promoted 'u' has none, so
+				// create it (+ ensure the logo). Stock 'r' stations already ship theirs — don't overwrite.
+				$exName = $existing[0]['name'];
+				if (!file_exists(MPD_MUSICROOT . 'RADIO/' . $exName . '.pls')) {
+					rbEnsureLogo($exName, trim($station['favicon'] ?? ''));
+					rbWritePls($exName, $url);
+				}
 				$response = array('success' => true, 'message' => 'Station added to favorites');
 			}
 			break;
@@ -142,11 +149,19 @@ switch ($cmd) {
 			$response = array('success' => false, 'message' => 'Station is not in favorites');
 			break;
 		}
-		// Core moOde stations (id < 499) are only un-favorited; user/imported stations are deleted
+		// Core moOde stations (id < 499): just un-favorite (f -> r), keep them in the list.
+		// User/imported RB stations (id >= 499): if the stream is STILL in the play queue,
+		// demote to transient 'u' so now-playing/thumb keep resolving (the queue-prune deletes
+		// it once it leaves the queue); only fully delete it when it's not queued anymore.
 		if ((int)$row[0]['id'] < 499) {
 			sqlQuery("UPDATE cfg_radio SET type='r' WHERE id='" . $row[0]['id'] . "'", $dbh);
 		} else {
-			rbDeleteStation($row[0]['name']);
+			$queued = rbQueuedUrls();
+			if (isset($queued[rbNormalizeUrl($url)])) {
+				sqlQuery("UPDATE cfg_radio SET type='u' WHERE id='" . $row[0]['id'] . "'", $dbh);
+			} else {
+				rbDeleteStation($row[0]['name']);
+			}
 		}
 		$response = array('success' => true, 'message' => 'Station removed from favorites');
 		break;
@@ -161,6 +176,7 @@ switch ($cmd) {
 			break;
 		}
 		rbRegisterStation($station);
+		rbPruneOrphanStations($url); // drop transient 'u' rows that have left the queue
 		$response = array('success' => true, 'message' => 'Registered');
 		break;
 
@@ -202,6 +218,8 @@ switch ($cmd) {
 			'stationuuid' => trim($station['stationuuid'] ?? ''),
 			'played_at' => time()
 		));
+
+		rbPruneOrphanStations($url); // drop transient 'u' rows that have left the queue
 
 		// Click tracking (fire-and-forget) — radio-browser.info best practice
 		$uuid = trim($station['stationuuid'] ?? '');

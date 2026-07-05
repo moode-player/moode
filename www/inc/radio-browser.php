@@ -370,8 +370,15 @@ function rbWriteStation($s) {
 	);
 	phpSession('close');
 
-	$plsFile = MPD_MUSICROOT . 'RADIO/' . $s['name'] . '.pls';
-	$contents = "[playlist]\nFile1=" . $s['url'] . "\nTitle1=" . $s['name'] . "\nLength1=-1\nNumberOfEntries=1\nVersion=2\n";
+	rbWritePls($s['name'], $s['url']);
+}
+
+// Create the RADIO/<name>.pls that the native Radio grid plays (data-path="RADIO/<name>.pls").
+// Factored out of rbWriteStation so promoting a played 'u' station to favorite can also
+// create it (a 'u' has a logo but no .pls, so without this the promoted favorite won't play).
+function rbWritePls($name, $url) {
+	$plsFile = MPD_MUSICROOT . 'RADIO/' . $name . '.pls';
+	$contents = "[playlist]\nFile1=" . $url . "\nTitle1=" . $name . "\nLength1=-1\nNumberOfEntries=1\nVersion=2\n";
 	file_put_contents($plsFile, $contents);
 	sysCmd('chmod 0777 "' . $plsFile . '"');
 	sysCmd('chown root:root "' . $plsFile . '"');
@@ -402,6 +409,60 @@ function rbMpdUpdateRadio() {
 	sendMpdCmd($sock, 'update RADIO');
 	readMpdResp($sock);
 	closeMpdSock($sock);
+}
+
+// Normalised set of the stream URLs currently in the MPD play queue (for orphan pruning).
+// Uses playlistinfo and reads the canonical `file: <uri>` lines (moOde's own convention,
+// cf. getPlayqueue()/findInQueue) — the legacy `playlist` command's `pos:uri` format did
+// NOT match cfg_radio.station here, so prune wrongly deleted still-queued 'u' rows.
+function rbQueuedUrls() {
+	$urls = array();
+	$sock = getMpdSock('command/radiobrowser.php');
+	sendMpdCmd($sock, 'playlistinfo');
+	$resp = readMpdResp($sock);
+	closeMpdSock($sock);
+	if (is_string($resp)) {
+		foreach (explode("\n", $resp) as $line) {
+			if (strncmp($line, 'file: ', 6) === 0) {
+				$urls[rbNormalizeUrl(trim(substr($line, 6)))] = true;
+			}
+		}
+	}
+	return $urls;
+}
+
+// Prune transient (type='u') radio-browser stations that are no longer in the play queue.
+// A 'u' row exists ONLY so moOde's native now-playing/playqueue renderer can resolve a
+// played-but-unsaved stream's name/logo (via cfg_radio → session/RADIO.json); once the
+// stream leaves the queue the row is dead weight, so we delete it (row + local logo files
+// + session var). Keeps cfg_radio authoritative and self-cleaning without any temporary
+// JSON. $keepUrl protects the station currently being registered/played (it may not be in
+// the queue yet). Favorites (type='f') and core/native stations are never touched.
+function rbPruneOrphanStations($keepUrl = '') {
+	$dbh = sqlConnect();
+	$rows = sqlQuery("SELECT station, name FROM cfg_radio WHERE type='u'", $dbh);
+	if (!is_array($rows)) {
+		return;
+	}
+	$queued = rbQueuedUrls();
+	$keep = rbNormalizeUrl($keepUrl);
+	phpSession('open');
+	foreach ($rows as $r) {
+		$norm = rbNormalizeUrl($r['station']);
+		if ($norm === $keep || isset($queued[$norm])) {
+			continue;
+		}
+		unset($_SESSION[$r['station']]);
+		sqlQuery("DELETE FROM cfg_radio WHERE station='" . SQLite3::escapeString($r['station']) . "' AND type='u'", $dbh);
+		$name = $r['name'];
+		sysCmd('rm -f "' . RADIO_LOGOS_ROOT . $name . '.jpg"');
+		sysCmd('rm -f "' . RADIO_LOGOS_ROOT . 'thumbs/' . $name . '.jpg"');
+		sysCmd('rm -f "' . RADIO_LOGOS_ROOT . 'thumbs/' . $name . '_sm.jpg"');
+		// A demoted favorite (f -> u) keeps its RADIO/<name>.pls; remove it too so it doesn't
+		// orphan in the RADIO folder. A play-only 'u' has none (rm -f is then a harmless no-op).
+		sysCmd('rm -f "' . MPD_MUSICROOT . 'RADIO/' . $name . '.pls"');
+	}
+	phpSession('close');
 }
 
 // Same-origin logo proxy: fetch+cache ONE favicon on demand (rbCacheImage mechanism)

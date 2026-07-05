@@ -46,6 +46,11 @@ switch ($_GET['cmd']) {
 	case 'delete_playqueue_item':
 		sendMpdCmd($sock, 'delete ' . $_GET['range']);
 		$resp = readMpdResp($sock);
+		// A transient radio-browser station (cfg_radio type='u') exists only while its
+		// stream is queued; once removed from the queue, prune its row from the DB.
+		// Favorites (type='f') and native stations (type='r') are kept untouched.
+		require_once __DIR__ . '/../inc/radio-browser.php';
+		rbPruneOrphanStations();
 		break;
 	case 'move_playqueue_item':
 		sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
