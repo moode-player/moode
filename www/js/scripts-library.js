@@ -1309,6 +1309,37 @@ $('#database-radio').on('click', 'img', function(e) {
 	}, DEFAULT_TIMEOUT);
 });
 
+// Favorite heart on native Radio tiles — toggles cfg_radio type f<->r through the shared
+// radiobrowser.php add/remove endpoint (same favorite lifecycle as the explorer). The heart
+// flips in place; the Favorites grouping only recomposes on the next full render, so the tile
+// doesn't jump under the finger.
+$('#database-radio').on('click', '.rb-fav-toggle', function(e) {
+    e.stopPropagation();
+    var $toggle = $(this);
+    var url = $toggle.closest('li').data('url');
+    var name = $toggle.closest('li').data('name');
+    if (!url) {return;}
+    var isAdded = $toggle.hasClass('added');
+    var cmd = isAdded ? 'remove' : 'add';
+    $.ajax({
+        url: 'command/radiobrowser.php?cmd=' + cmd,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({url: url, name: name}),
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.success) {
+                $toggle.toggleClass('added', !isAdded);
+                $toggle.find('i').toggleClass('fa-solid', !isAdded).toggleClass('fa-regular', isAdded);
+            }
+            notify(data && data.success ? NOTIFY_TITLE_INFO : NOTIFY_TITLE_ALERT,
+                'mpd_error', data ? data.message : 'Action failed', NOTIFY_DURATION_SHORT);
+            // 'update RADIO' lights the busy-spinner; clear it after it settles (native pattern)
+            setTimeout(function() { $('.busy-spinner').hide(); }, ONE_SEC_TIMEOUT);
+        }
+    });
+});
+
 // Radio manager
 $('#btn-ra-manager').click(function(e) {
     var sortGroup = SESSION.json['radioview_sort_group'].split(',');

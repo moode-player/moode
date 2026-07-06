@@ -2392,8 +2392,12 @@ function renderRadioView(lazyLoad = true) {
 
             // Construct station entries
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
-    		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
-    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + encodeURIComponent(imgUrl) + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
+            // Favorite heart (mirrors the Radio Browser explorer tile) — toggles cfg_radio type f<->r
+            var favClass = data[i].type == 'f' ? 'rb-fav-toggle added' : 'rb-fav-toggle';
+            var favIcon = data[i].type == 'f' ? 'fa-solid' : 'fa-regular';
+            var favToggle = '<div class="' + favClass + '"><i class="' + favIcon + ' fa-sharp fa-heart"></i></div>';
+    		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls" data-url="' + rbEscapeHtml(data[i].station) + '" data-name="' + rbEscapeHtml(data[i].name);
+    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + encodeURIComponent(imgUrl) + '">' + favToggle + '</div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
             output += '<span class="station-name">' + data[i].name + '</span>';

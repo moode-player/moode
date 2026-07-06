@@ -171,6 +171,13 @@ function rbLoadRecent() {
     });
 }
 
+// A play just updated the recent list server-side (cmd=play → rbAddRecent). Reload it now if
+// the Recent tab is showing, else force a reload the next time it's opened.
+function rbMarkRecentStale() {
+    RB.listsLoaded.recent = false;
+    if (RB.tab === 'recent') { rbLoadRecent(); }
+}
+
 // --- Actions --------------------------------------------------------------
 
 // Pre-register the stream in RADIO.json so the native now-playing renderer resolves it
@@ -200,6 +207,7 @@ function rbPlay(li) {
         success: function(data) {
             notify(data && data.success ? NOTIFY_TITLE_INFO : NOTIFY_TITLE_ALERT,
                 'mpd_error', data ? data.message : 'Play failed', NOTIFY_DURATION_SHORT);
+            rbMarkRecentStale(); // the play was recorded server-side; refresh the Recent tab
         }
     });
 }
