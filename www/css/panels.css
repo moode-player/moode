@@ -1165,7 +1165,7 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 .rb-tab-pane {position:relative;}
 .rb-empty {text-align:center!important;color:var(--textvariant);padding:2rem 0!important;width:100%;display:block!important;cursor:default!important;}
 .rb-fav-toggle {position:absolute;top:.4rem;right:0;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:rgba(0,0,0,.45);color:#fff;font-size:1.2rem;z-index:2;cursor:pointer;}
-.rb-fav-toggle.added {color:#d35400;}
+.rb-fav-toggle.added {color: var(--accentxts);}
 .rb-fav-toggle .fa-heart {margin-top:4px;}
 .rb-hls-badge {position:absolute;top:.4rem;left:.4rem;padding:.1rem .4rem;border-radius:.6rem;background-color:rgba(192,57,43,.9);color:#fff;font-size:.7rem;font-weight:bold;letter-spacing:.5px;z-index:2;}
 .rb-hls .thumbHW img {opacity:.5;cursor:default;}

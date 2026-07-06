@@ -179,6 +179,14 @@ function rbMarkRecentStale() {
     if (RB.tab === 'recent') { rbLoadRecent(); }
 }
 
+// Native-style client-side filter over the loaded Recent tiles (mirrors the #ra-filter handler)
+function rbFilterRecent(filter) {
+    filter = (filter || '').trim();
+    $('#rb-covers-recent li').each(function() {
+        $(this).toggle($(this).text().search(new RegExp(filter, 'i')) >= 0);
+    });
+}
+
 // --- Actions --------------------------------------------------------------
 
 // Pre-register the stream in RADIO.json so the native now-playing renderer resolves it
@@ -257,6 +265,15 @@ function rbShowTab(tab) {
     $('#btn-rb-tab-' + tab).addClass('active');
     $('.rb-tab-pane').addClass('hide');
     $('#rb-tab-' + tab).removeClass('hide');
+    // Country/genre are radio-browser.info API params — no meaning on the client-filtered
+    // Recent tab. The search box stays, but switches to a native-style live filter (below).
+    $('#rb-filters').toggleClass('hide', tab === 'recent');
+    $('#rb-filter').attr('placeholder', tab === 'recent' ? 'search' : 'search radio-browser.info');
+    // The search box is shared by both tabs and means different things per tab — reset it and
+    // clear any leftover Recent filter on every switch so each tab starts clean.
+    $('#rb-filter').val('');
+    $('#btn-rb-search-reset').addClass('hide');
+    $('#rb-covers-recent li').show();
 
     if (tab === 'search' && $('#rb-covers-search li').length === 0) {
         rbSearch(0);
@@ -315,12 +332,20 @@ $(document).ready(function() {
 
     $('#rb-filter').on('keyup', function(e) {
         $('#btn-rb-search-reset').toggleClass('hide', $(this).val() === '');
-        if (e.which === 13) { rbSearch(0); }
+        if (RB.tab === 'recent') {
+            // Native-style client-side filter of the already-loaded Recent tiles (debounced)
+            clearTimeout(searchTimer);
+            var val = $(this).val();
+            searchTimer = setTimeout(function() { rbFilterRecent(val); }, SEARCH_TIMEOUT);
+        } else if (e.which === 13) {
+            rbSearch(0);
+        }
     });
     $('#btn-rb-search-reset').click(function() {
         $('#rb-filter').val('');
         $(this).addClass('hide');
-        rbSearch(0);
+        if (RB.tab === 'recent') { rbFilterRecent(''); }
+        else { rbSearch(0); }
     });
     $('#rb-country, #rb-genre').change(function() { rbSearch(0); });
     // Tag 'external' so the global links.js skips navigation but the dropdown still closes
