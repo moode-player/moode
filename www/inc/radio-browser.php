@@ -268,6 +268,28 @@ function rbAddRecent($station) {
 	flock($fp, LOCK_UN);
 	fclose($fp);
 }
+function rbRemoveRecent($url) {
+	$fp = @fopen(RADIOBROWSER_RECENT_FILE, 'c+');
+	if (!$fp) {
+		return;
+	}
+	if (!flock($fp, LOCK_EX)) {
+		fclose($fp);
+		return;
+	}
+	$content = stream_get_contents($fp);
+	$list = ($content !== '' && ($d = json_decode($content, true)) && is_array($d)) ? $d : array();
+	$url = trim($url);
+	$list = array_values(array_filter($list, function ($item) use ($url) {
+		return $item['url'] !== $url;
+	}));
+	ftruncate($fp, 0);
+	rewind($fp);
+	fwrite($fp, json_encode($list, JSON_PRETTY_PRINT));
+	fflush($fp);
+	flock($fp, LOCK_UN);
+	fclose($fp);
+}
 
 // Normalised URL set of the user's favorites (cfg_radio type='f')
 function rbFavoriteUrls($dbh) {

@@ -12,7 +12,8 @@ var RB = {
     offset: 0,          // Search pagination offset
     limit: 28,          // Page size (fixed)
     listsLoaded: {recent: false},
-    countriesLoaded: false
+    countriesLoaded: false,
+    menuUrl: ''         // URL of the tile whose context menu is open (Remove-from-recent target)
 };
 
 var RB_API = 'command/radiobrowser.php';
@@ -342,10 +343,29 @@ $(document).ready(function() {
     });
     // Register the station for now-playing; the native .cover-menu handler queues data-path
     $('#container-radio-browser').on('click', '.cover-menu', function() {
+        // 'Remove from recent' only makes sense on the Recent tab
+        $('#rb-ctx-remove-recent').toggleClass('hide', RB.tab !== 'recent');
         var station = rbStationFromTile($(this).closest('li'));
         if (!station.url) return;
+        RB.menuUrl = station.url; // target for the Remove-from-recent action
         rbRegisterInRadioJson(station);
         $.ajax({ url: RB_API + '?cmd=register', type: 'POST',
                  contentType: 'application/json', data: JSON.stringify(station) });
+    });
+
+    $('#context-menu-radio-browser-item a[data-cmd="rb_remove_recent"]').click(function() {
+        if (!RB.menuUrl) return;
+        $.ajax({
+            url: RB_API + '?cmd=remove_recent',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({url: RB.menuUrl}),
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.success) { rbLoadRecent(); }
+                notify(data && data.success ? NOTIFY_TITLE_INFO : NOTIFY_TITLE_ALERT,
+                    'mpd_error', data ? data.message : 'Action failed', NOTIFY_DURATION_SHORT);
+            }
+        });
     });
 });

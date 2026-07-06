@@ -166,6 +166,17 @@ switch ($cmd) {
 		$response = array('success' => true, 'message' => 'Station removed from favorites');
 		break;
 
+	case 'remove_recent':
+		$station = rbInputStation();
+		$url = trim($station['url'] ?? '');
+		if ($url === '') {
+			$response = array('success' => false, 'message' => 'No station URL');
+			break;
+		}
+		rbRemoveRecent($url);
+		$response = array('success' => true, 'message' => 'Removed from recent');
+		break;
+
 	case 'register':
 		// Called when a Radio Browser tile's context menu opens: make the native queue
 		// actions (Add/Play/Add next/…) resolve a not-yet-added station (logo + type='u').
