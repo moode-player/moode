@@ -191,6 +191,8 @@ sysCmd('touch ' . SPSEVENT_LOG);
 sysCmd('touch ' . SLPOWER_LOG);
 sysCmd('truncate ' . MOUNTMON_LOG . ' --size 0');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
+// Radio Browser caches are written synchronously by www-data (php-fpm), so unlike moOde's
+sysCmd('/var/www/util/radio-browser.sh --fix-permissions > /dev/null 2>&1');
 // Delete any tmp files left over from New/Edit station or playlist
 sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
 sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');

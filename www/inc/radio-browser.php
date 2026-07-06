@@ -131,9 +131,6 @@ function rbCacheGet($key, $ttl) {
 	return false;
 }
 function rbCacheSet($key, $data) {
-	if (!is_dir(RADIOBROWSER_CACHE)) {
-		@mkdir(RADIOBROWSER_CACHE, 0775, true);
-	}
 	@file_put_contents(RADIOBROWSER_CACHE . '/' . $key . '.json', json_encode($data));
 }
 
@@ -150,9 +147,6 @@ function rbCacheImage($url) {
 	}
 	$data = rbHttpGet($url, 3);
 	if ($data !== false && strlen($data) > 100 && strlen($data) < 51200) {
-		if (!is_dir(RADIOBROWSER_IMAGE_CACHE)) {
-			@mkdir(RADIOBROWSER_IMAGE_CACHE, 0775, true);
-		}
 		if (@file_put_contents($file, $data)) {
 			return $webPath;
 		}
@@ -251,9 +245,6 @@ function rbGetRecent() {
 	return is_array($data) ? $data : array();
 }
 function rbAddRecent($station) {
-	if (!is_dir(RADIOBROWSER_CACHE)) {
-		@mkdir(RADIOBROWSER_CACHE, 0775, true);
-	}
 	$fp = @fopen(RADIOBROWSER_RECENT_FILE, 'c+');
 	if (!$fp) {
 		return;
@@ -483,9 +474,6 @@ function rbServeLogo($url) {
 		} else {
 			$data = rbHttpGet($url, 4);
 			if ($data !== false && strlen($data) > 100 && strlen($data) < 51200) {
-				if (!is_dir(RADIOBROWSER_IMAGE_CACHE)) {
-					@mkdir(RADIOBROWSER_IMAGE_CACHE, 0775, true);
-				}
 				if (@file_put_contents($path, $data)) {
 					$file = $path;
 				}
