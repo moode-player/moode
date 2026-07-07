@@ -1162,6 +1162,12 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 .btnlist-top-ra .ra-explore-btn, .btnlist-top-rb .ra-explore-btn {float:right;}
 /* Filter selects: solid dropdown (moOde's bootstrap-select menu is transparent) */
 #container-radio-browser .bootstrap-select .dropdown-menu {background-color:var(--adaptmbg);}
+/* Country/genre comboboxes: searchable input reusing the bootstrap-select dropdown theme */
+#rb-filters .rb-combo {position:relative;float:left;width:auto;margin-left:.5em;}
+#rb-filters .rb-combo input {height:2.5rem;padding:0 1.1rem 0 0;border:none;background:transparent;color:inherit;font-size:inherit;width:12vw;max-width:150px;}
+#rb-filters .rb-combo input::placeholder {color:var(--textvariant);}
+#rb-filters .rb-combo::after {content:"";position:absolute;right:.35rem;top:1.15rem;border:.3rem solid transparent;border-top-color:currentColor;opacity:.55;pointer-events:none;}
+#rb-filters .rb-combo .dropdown-menu {max-height:16rem;overflow-y:auto;min-width:12rem;}
 .rb-tab-pane {position:relative;}
 .rb-empty {text-align:center!important;color:var(--textvariant);padding:2rem 0!important;width:100%;display:block!important;cursor:default!important;}
 .rb-fav-toggle {position:absolute;top:.4rem;right:0;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:rgba(0,0,0,.45);color:#fff;font-size:1.2rem;z-index:2;cursor:pointer;}

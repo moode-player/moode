@@ -138,8 +138,8 @@ function rbSearch(offset, append) {
     RB.offset = offset || 0;
     var params = {
         name: $('#rb-filter').val().trim(),
-        countrycode: $('#rb-country').val(),
-        tag: $('#rb-genre').val(),
+        countrycode: $('#rb-country').data('value') || '',
+        tag: $('#rb-genre').data('value') || '',
         offset: RB.offset,
         limit: RB.limit
     };
@@ -287,34 +287,36 @@ function rbOnViewActive() {
     if (!RB.countriesLoaded) {
         rbLoadCountriesAndGenres();
     }
-    // Refresh the dropdowns now the panel is visible (selectpicker init'd while hidden)
-    $('#rb-country, #rb-genre').selectpicker('refresh');
     rbShowTab(RB.tab);
+}
+
+// Fill a combobox <ul> with option rows; items[0] is the 'All' reset row (empty value)
+function rbFillCombo(inputId, items) {
+    var html = '';
+    items.forEach(function(it) {
+        html += '<li><a href="#notarget" class="external" data-value="' + rbEscapeHtml(it.value) + '">' + rbEscapeHtml(it.label) + '</a></li>';
+    });
+    $('#' + inputId).siblings('.dropdown-menu').html(html);
 }
 
 function rbLoadCountriesAndGenres() {
     RB.countriesLoaded = true;
     $.getJSON(RB_API + '?cmd=countries', function(data) {
         if (data && data.success) {
-            var opts = '<option value="">All countries</option>';
+            var items = [{value: '', label: 'All countries'}];
             data.countries.forEach(function(c) {
-                if (c.iso_3166_1 && c.name) {
-                    opts += '<option value="' + rbEscapeHtml(c.iso_3166_1) + '">' + rbEscapeHtml(c.name) + '</option>';
-                }
+                if (c.iso_3166_1 && c.name) { items.push({value: c.iso_3166_1, label: c.name}); }
             });
-            $('#rb-country').html(opts).selectpicker('refresh');
+            rbFillCombo('rb-country', items);
         }
     });
     $.getJSON(RB_API + '?cmd=genres', function(data) {
         if (data && data.success) {
-            var opts = '<option value="">All genres</option>';
+            var items = [{value: '', label: 'All genres'}];
             data.genres.forEach(function(g) {
-                if (g.name) {
-                    var label = g.name.charAt(0).toUpperCase() + g.name.slice(1);
-                    opts += '<option value="' + rbEscapeHtml(g.name) + '">' + rbEscapeHtml(label) + '</option>';
-                }
+                if (g.name) { items.push({value: g.name, label: g.name.charAt(0).toUpperCase() + g.name.slice(1)}); }
             });
-            $('#rb-genre').html(opts).selectpicker('refresh');
+            rbFillCombo('rb-genre', items);
         }
     });
 }
@@ -347,9 +349,34 @@ $(document).ready(function() {
         if (RB.tab === 'recent') { rbFilterRecent(''); }
         else { rbSearch(0); }
     });
-    $('#rb-country, #rb-genre').change(function() { rbSearch(0); });
-    // Tag 'external' so the global links.js skips navigation but the dropdown still closes
-    $('#rb-filters').on('click', '.dropdown-menu li a', function() { $(this).addClass('external'); });
+    // Country/genre comboboxes: searchable inputs backed by a moOde-styled .dropdown-menu.
+    // Open on focus, filter as you type; picking a row sets the input text + its data-value
+    // (read by rbSearch). Clearing the box resets to 'All'.
+    $('#rb-filters')
+        .on('focus click', 'input', function() {
+            $(this).closest('.rb-combo').addClass('open').find('.dropdown-menu li').show();
+        })
+        .on('keyup', 'input', function() {
+            var $input = $(this), q = $input.val().trim().toLowerCase();
+            $input.closest('.rb-combo').addClass('open')
+                .find('.dropdown-menu li').each(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(q) >= 0);
+                });
+            if (q === '' && ($input.data('value') || '') !== '') { $input.data('value', ''); rbSearch(0); }
+        })
+        .on('click', '.dropdown-menu li a', function(e) {
+            e.preventDefault();
+            var $a = $(this), $combo = $a.closest('.rb-combo'), code = $a.data('value') || '';
+            $combo.find('input').data('value', code).val(code === '' ? '' : $a.text());
+            $combo.removeClass('open');
+            rbSearch(0);
+        });
+    // Close an open combobox when clicking outside it
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#rb-filters .rb-combo').length) {
+            $('#rb-filters .rb-combo').removeClass('open');
+        }
+    });
 
     $('#rb-covers-search').on('click', '#btn-rb-showmore', function() { rbSearch(RB.offset + RB.limit, true); });
 
