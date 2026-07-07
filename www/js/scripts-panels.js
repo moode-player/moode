@@ -951,9 +951,15 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	$('#db-refresh').click(function(e) {
         UI.dbPos[UI.dbPos[10]] = 0;
-		$.getJSON('command/music-library.php?cmd=lsinfo', {'path': UI.path}, function(data) {
-			renderFolderView(data, UI.path);
-        });
+        if (UI.dbCmd == 'get_pl_items_fv') {
+            $.getJSON('command/playlist.php?cmd=get_pl_items_fv', {'path': UI.path}, function(data) {
+                renderFolderView(data, UI.path);
+            });
+        } else {
+            $.getJSON('command/music-library.php?cmd=lsinfo', {'path': UI.path}, function(data) {
+                renderFolderView(data, UI.path);
+            });
+        }
 	});
 	$('#btn-db-import, #btn-pl-import').click(function(e) {
 		$('#db-import-file').val('');

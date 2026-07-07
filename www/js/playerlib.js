@@ -94,8 +94,8 @@ const DEFAULT_RADIO_COVER = 'images/default-album-cover.png';
 const DEFAULT_ALBUM_COVER = 'images/default-album-cover.png';
 const DEFAULT_UPNP_COVER = 'images/default-upnp-cover.jpg';
 const DEFAULT_RX_COVER = 'images/default-rx-cover.jpg';
-const DEFAULT_PLAYLIST_COVER = '/var/www/images/default-playlist-cover.jpg';
-const DEFAULT_NOTFOUND_COVER = '/var/www/images/default-notfound-cover.jpg';
+const DEFAULT_PLAYLIST_COVER = 'images/default-playlist-cover.jpg';
+const DEFAULT_NOTFOUND_COVER = 'images/default-notfound-cover.jpg';
 
 var UI = {
     knob: null,
@@ -2496,7 +2496,7 @@ function renderPlaylistView () {
 			if (playlists[i].cover == 'local') {
 				var imgUrl = 'imagesw/playlist-covers/' + playlists[i].name + '.jpg';
 			} else if (playlists[i].cover == 'default') {
-				var imgUrl = 'images/default-playlist-cover.jpg';
+				var imgUrl = DEFAULT_PLAYLIST_COVER;
 			} else { // Manually entered URL for #EXTIMG tag (rare)
 				var imgUrl = playlists[i].cover;
 			}
@@ -3155,7 +3155,7 @@ $(document).on('click', '.context-menu a', function(e) {
 				if (data.cover == 'local') {
 					var imgUrl = '../imagesw/playlist-covers/' + path + '.jpg';
 				} else if (data.cover == 'default') {
-					var imgUrl = '../images/default-playlist-cover.jpg';
+					var imgUrl = DEFAULT_PLAYLIST_COVER;
 					var icon = '<span class="plview-edit-thumb"><i class="fa-solid fa-sharp fa-list-music"></i></span></div>';
 				} else { // Manually entered URL for #EXTIMG tag (rare)
 					var imgUrl = data.cover;

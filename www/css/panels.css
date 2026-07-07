@@ -1157,8 +1157,9 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 .btnlist-top-rb button:first-child.active {border-top-left-radius:var(--btn-border-radius);border-bottom-left-radius:var(--btn-border-radius);}
 .btnlist-top-rb .ra-explore-btn.active {border-top-right-radius:var(--btn-border-radius);border-bottom-right-radius:var(--btn-border-radius);}
 #rb-search {display:block;float:left;margin:0;z-index:1001;position:relative;}
-#rb-search input {margin-left:.5em;padding:0;height:2.5rem;border:none;font-size:inherit;width:26vw;}
+#rb-search input {margin-left:.5em;padding:0;height:2.5rem;border:none;font-size:inherit;width:20vw;}
 #rb-filters {float:left;}
+.rb-select:not([class*=span]) {width:15vw;margin:0 .85em 0 0;}
 .btnlist-top-ra .ra-explore-btn, .btnlist-top-rb .ra-explore-btn {float:right;}
 /* Filter selects: solid dropdown (moOde's bootstrap-select menu is transparent) */
 #container-radio-browser .bootstrap-select .dropdown-menu {background-color:var(--adaptmbg);}
@@ -1170,10 +1171,10 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 #rb-filters .rb-combo .dropdown-menu {max-height:16rem;overflow-y:auto;min-width:12rem;}
 .rb-tab-pane {position:relative;}
 .rb-empty {text-align:center!important;color:var(--textvariant);padding:2rem 0!important;width:100%;display:block!important;cursor:default!important;}
-.rb-fav-toggle {position:absolute;top:.4rem;right:0;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:rgba(0,0,0,.45);color:#fff;font-size:1.2rem;z-index:2;cursor:pointer;}
+.rb-fav-toggle {position:absolute;top:.4rem;right:0;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:var(--btnshade2);font-size:1.2rem;z-index:2;cursor:pointer;}
 .rb-fav-toggle.added {color: var(--accentxts);}
 .rb-fav-toggle .fa-heart {margin-top:4px;}
-.rb-hls-badge {position:absolute;top:.4rem;left:.4rem;padding:.1rem .4rem;border-radius:.6rem;background-color:rgba(192,57,43,.9);color:#fff;font-size:.7rem;font-weight:bold;letter-spacing:.5px;z-index:2;}
+.rb-hls-badge {position:absolute;top:.4rem;left:1.25rem;padding:.1rem .4rem;border-radius:.6rem;background-color:rgba(192,57,43,.9);color:#fff;font-size:.7rem;font-weight:bold;letter-spacing:.5px;z-index:2;}
 .rb-hls .thumbHW img {opacity:.5;cursor:default;}
 #rb-covers-search #rb-showmore {display:block;width:100%;text-align:center;padding:.5rem 0 0 0;margin:0;cursor:default;}
 #rb-covers-search #rb-showmore button {font-size:.9em;background:var(--btnshade2);border-radius:3em;margin:1em auto;padding:.5em 1.25em .6em 1.25em;line-height:normal;height:auto;width:auto;}

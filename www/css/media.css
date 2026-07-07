@@ -245,6 +245,10 @@ body {
 	#top-columns.nogenre #lib-album {left:100%;width:50%;}
 	#top-columns.nogenre #index-artists {right:calc(0% + var(--sbw));}
 
+	/* Radio Browser */
+	#rb-filter {width:40vw;}
+	.rb-select:not([class*=span]) {width:35vw;}
+
 	/* Menus */
 	#panel-header .dropdown-menu,
 	.viewswitch .dropdown-menu {min-width:16rem;font-size:1.3rem;line-height:3.75rem;}
