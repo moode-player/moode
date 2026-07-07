@@ -134,26 +134,6 @@ function rbCacheSet($key, $data) {
 	@file_put_contents(RADIOBROWSER_CACHE . '/' . $key . '.json', json_encode($data));
 }
 
-// Download a station favicon into the local image cache; return a same-origin web path
-function rbCacheImage($url) {
-	if (empty($url) || str_contains($url, 'encrypted-tbn0.gstatic.com')) {
-		return '';
-	}
-	$hash = md5($url);
-	$file = RADIOBROWSER_IMAGE_CACHE . '/' . $hash . '.png';
-	$webPath = 'imagesw/radio-logos/cache/' . $hash . '.png';
-	if (file_exists($file) && (time() - filemtime($file) < RADIOBROWSER_CACHE_TTL_STATIC)) {
-		return $webPath;
-	}
-	$data = rbHttpGet($url, 3);
-	if ($data !== false && strlen($data) > 100 && strlen($data) < 51200) {
-		if (@file_put_contents($file, $data)) {
-			return $webPath;
-		}
-	}
-	return '';
-}
-
 // --- Station logo handling (ported from RubaTron's Radio Browser api.php) --------------
 // Creates the three JPGs moOde expects for a radio station logo, synchronously (so they
 // exist before the stream plays / the tile renders): <name>.jpg (400), thumbs/<name>.jpg
@@ -317,8 +297,8 @@ function rbShapeResults($data, $dbh) {
 		// Return the raw favicon URL — do NOT cache inline here. Caching 30 external
 		// images synchronously in one request stalls search for tens of seconds (a
 		// slow/dead host blocks the whole loop). The tile <img> instead points at the
-		// same-origin 'logo' proxy below, so images are fetched+cached per-image and in
-		// parallel by the browser (rbCacheImage mechanism preserved, just on demand).
+		// same-origin 'logo' proxy below (rbServeLogo), so images are fetched+cached
+		// per-image and in parallel by the browser, on demand.
 		$favicon = trim($s['favicon'] ?? '');
 		$station = array(
 			'name' => trim($s['name'] ?? ''),
@@ -478,10 +458,11 @@ function rbPruneOrphanStations($keepUrl = '') {
 	phpSession('close');
 }
 
-// Same-origin logo proxy: fetch+cache ONE favicon on demand (rbCacheImage mechanism)
-// and stream it. Search returns raw favicon URLs; each tile's <img> points here, so
-// the browser loads logos in parallel and a slow/dead host only delays its own tile,
-// never the search response. Streams the cached PNG; 302s to the default cover on miss.
+// Same-origin logo proxy: fetch+cache ONE favicon on demand and stream it. Search AND
+// Recent both return raw favicon URLs, so every tile's <img> points here — a single
+// render path. The browser loads logos in parallel and a slow/dead host only delays its
+// own tile. Content-Type is set from the bytes (getimagesize), not the cache filename,
+// so JPG/PNG are served correctly; 302s to the default cover on miss.
 function rbServeLogo($url) {
 	if (session_status() === PHP_SESSION_ACTIVE) {
 		session_write_close(); // release the session lock so parallel image requests don't serialise
