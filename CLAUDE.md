@@ -27,6 +27,11 @@ working unchanged on a real Raspberry Pi.
   edits are tiny **`isPi()`-guarded** changes where upstream has a baked-in Pi
   assumption that cannot be fixed from the installer (e.g. worker home-dir writes).
   Such edits must leave Pi behaviour byte-identical.
+- **nopi's scope is fixed: a multi-platform adaptation, nothing more.** Any deep
+  moOde refactor (back/front API split, jQuery major bump, …) is an **upstream**
+  chantier — piloted by Tim Curtis, which nopi then follows by rebasing — NEVER a
+  nopi chantier and never preempted inside this tree. Contribute such work
+  upstream; keep it out of nopi so the clean rebase-on-upstream cadence survives.
 - **No committed binaries that rot.** Build moode-tagged `.deb`s on-device or
   fetch pinned release binaries from the installer; never commit blobs to the tree.
 - **Granular commits** prefixed `x86 …`, kept small until a final squash/rebase
