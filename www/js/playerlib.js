@@ -803,6 +803,7 @@ function inpSrcIndicator(cmd, msgText) {
     $('#inpsrc-msg').css({width:'100%', top:'50%', bottom:'unset'});
     $('#inpsrc-metadata').hide();
 	$('#inpsrc-cover').html('');
+    $('#inpsrc-style').css('display', 'none');
 
     // Set the button and preamp volume
     // NOTE: Preamp volume #id will only exist if audioin != Local
