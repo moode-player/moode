@@ -132,6 +132,21 @@
 					</span>
 				</div>
 			</div>
+
+			<div class="config-horiz-rule"></div>
+			<label class="control-label">USB DAC quiet start</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-usb-dac-prime" for="toggle-usb-dac-prime-2">ON </label>$_select[usb_dac_prime_on]
+					<label class="toggle-radio toggle-usb-dac-prime" for="toggle-usb-dac-prime-1">OFF</label>$_select[usb_dac_prime_off]
+				</div>
+				<button id="btn-set-usb-dac-prime" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_usb_dac_prime" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-usb-dac-prime" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-usb-dac-prime" class="config-help-info">
+					Some USB DACs emit a continuous hiss or crackle after power-on and keep it until the first track plays. Turn this on to clear that noise at boot and when hot-plugging the DAC. The brief hardware pop at power-on itself cannot be removed.
+				</span>
+			</div>
+
 		</div>
 
 		<legend>ALSA Options</legend>
