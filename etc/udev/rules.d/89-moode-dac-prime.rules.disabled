@@ -1,0 +1,15 @@
+# Managed by moOde. USB DAC quiet start (Configure > Audio 'usb_dac_prime').
+# Enabled/disabled by the worker (applyUsbDacPrime() in www/daemon/worker.php),
+# which is the authority driven by cfg_system usb_dac_prime: it renames this file
+# .rules.disabled <-> .rules. Shipped DISABLED (default off). Once active, the
+# persistent rule fires at sound-card enumeration on every boot AND on hot-plug,
+# without waiting for the worker.
+#
+# A USB DAC with no output mute relay hisses/crackles after enumeration until it
+# is fed a PCM stream; this plays ~1s of silence into it the moment it appears.
+# KERNEL=="controlC*" is the reliable sync point: the ALSA control node is created
+# last, after every pcm child (see /lib/udev/rules.d/78-sound-card.rules), so when
+# it appears the card is fully openable. systemd-run --no-block detaches the ~1s
+# aplay from the udev event (udev kills long-running RUN children), the same way
+# 10-a2dp-autoconnect.rules delegates to systemctl.
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", RUN+="/usr/bin/systemd-run --no-block /usr/local/bin/moode-dac-prime %k"
