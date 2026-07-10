@@ -55,6 +55,7 @@ INSTALL_DLNA=1           # minidlna (serve local library)
 INSTALL_SQUEEZELITE=1    # squeezelite (LMS player)
 INSTALL_LOCALDISPLAY=1   # moOde WebUI/Peppy local display (X + chromium kiosk on HDMI)
 INSTALL_LOG2RAM=auto     # log2ram (logs to tmpfs, spares flash) - 'auto'=only on mmcblk (SD/eMMC) root; 1 force; 0 skip
+PRIME_DAC_ON_BOOT=1      # udev rule: play a short PCM-silence burst when the DAC enumerates (boot + hotplug) to clear the residual crackle a mute-relay-less DAC emits
 # NOTE: file sharing (samba/nfs-kernel-server/wsdd2) is now always installed in
 # CORE_PKGS for Pi parity, left disabled and worker-managed (no opt-out flag).
 
@@ -2151,6 +2152,65 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
+# DAC prime (optional, PRIME_DAC_ON_BOOT). A USB DAC with no output mute relay
+# emits a hardware pop when it enumerates and then keeps crackling until it has
+# been fed a PCM stream at least once. moOde never feeds it at boot: MPD restores
+# state=stop and with close_on_pause=yes it never opens the device, so the DAC
+# sits crackling until the user's first playback. We push ~1s of digital silence
+# through the card the moment it enumerates, which settles the DAC. The pop
+# itself is hardware and can't be suppressed; this only clears the noise after it.
+#
+# Trigger: a udev rule on the sound-card ADD event, NOT a boot-ordered service.
+# The crackle starts at USB enumeration, so the fix has to fire there too - a
+# systemd unit ordered on sound.target/boot is always too late and misses hotplug
+# entirely. Matching KERNEL=="controlC*" is the reliable sync point: the ALSA
+# control node is created LAST, after every pcm child (see /lib/udev/rules.d/
+# 78-sound-card.rules), so when it appears the card is fully openable. This is the
+# same udev-RUN pattern moOde already ships in 10-a2dp-autoconnect.rules, and it
+# covers boot AND hot-plugging the DAC into a running box. Being tied to the ADD
+# event is also why no card-wait loop is needed: the rule IS the card appearing.
+# systemd-run --no-block detaches the ~1s aplay from the udev event (udev kills
+# long-running RUN children), exactly as the a2dp rule delegates to systemctl.
+# NOTE: opens plughw:<card>,0 DIRECTLY, bypassing the _audioout DSP chain, since
+# camilladsp/alsaequal aren't up yet - the goal is only to settle the DAC silicon.
+# The script primes ONLY the currently selected MPD output (cfg_mpd.device), so an
+# HDMI/onboard card enumerating alongside the DAC is left alone.
+if [ "$PRIME_DAC_ON_BOOT" = 1 ]; then
+cat > /usr/local/bin/moode-dac-prime.sh <<EOF
+#!/bin/sh
+# Managed by moOde-nopi install.sh (PRIME_DAC_ON_BOOT). See Phase 6.
+# Invoked by udev (89-moode-dac-prime.rules) on a sound-card ADD event, detached
+# via systemd-run. \$1 = the ALSA control kernel name that appeared, e.g. controlC0.
+CARD=\$(printf '%s' "\$1" | tr -dc '0-9')
+[ -n "\$CARD" ] || exit 0
+# Prime ONLY the selected MPD output, not every card that shows up at boot.
+SEL=\$(sqlite3 "$SQLDB" "SELECT value FROM cfg_mpd WHERE param='device'" 2>/dev/null)
+[ "\$CARD" = "\$SEL" ] || exit 0
+# Skip a capture-only card and avoid a doomed aplay on a card that can't play.
+[ -e "/proc/asound/card\$CARD/pcm0p" ] || exit 0
+# ~1s of S16_LE/44k1 zeros; plughw adapts the format to whatever the DAC accepts.
+head -c 176400 /dev/zero | aplay -D "plughw:\$CARD,0" -f S16_LE -r 44100 -c 2 -t raw -q 2>/dev/null || true
+exit 0
+EOF
+chmod 755 /usr/local/bin/moode-dac-prime.sh
+# Retire the pre-udev systemd variant an earlier install may have enabled.
+systemctl disable --now moode-dac-prime.service >/dev/null 2>&1 || true
+rm -f /etc/systemd/system/moode-dac-prime.service
+
+cat > /etc/udev/rules.d/89-moode-dac-prime.rules <<'EOF'
+# Managed by moOde-nopi install.sh (PRIME_DAC_ON_BOOT).
+# Settle a mute-relay-less DAC with a silence burst the moment it enumerates.
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", RUN+="/usr/bin/systemd-run --no-block /usr/local/bin/moode-dac-prime.sh %k"
+EOF
+udevadm control --reload 2>/dev/null || true
+else
+	rm -f /etc/udev/rules.d/89-moode-dac-prime.rules /usr/local/bin/moode-dac-prime.sh
+	# Drop the pre-udev systemd variant if a previous install left it behind.
+	systemctl disable moode-dac-prime.service >/dev/null 2>&1 || true
+	rm -f /etc/systemd/system/moode-dac-prime.service
+	udevadm control --reload 2>/dev/null || true
+fi
+
 systemctl daemon-reload
 
 #----------------------------------------------------------------------------#
@@ -2207,6 +2267,9 @@ systemctl restart winbind 2>/dev/null || true
 # up an updated unit. Tolerant: never abort the install on failure.
 systemctl enable moode-devmon.service 2>/dev/null || true
 systemctl restart moode-devmon.service 2>/dev/null || true
+
+# DAC prime (Phase 6) is a udev rule, active as soon as it's deployed - nothing
+# to enable/start here.
 
 # Renderer / bridge services (Squeezelite, Bluetooth, UPnP, DLNA, AirPlay) are
 # controlled by the worker per UI config and are all OFF by default (slsvc,
