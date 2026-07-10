@@ -1698,6 +1698,10 @@ log "Phase 5: permissions"
 chown -R www-data:www-data /var/www /var/local/www
 chmod -R g+w /var/local/www
 
+# worker.php gates the Ready script on is_executable(); upstream ships the file
+# mode 0644, so the bit has to be set here (its commandw siblings are all 0755).
+chmod 755 /var/local/www/commandw/ready-script.sh
+
 # moOde PHP session directory (session.save_path). The worker runs as www-data
 # (Phase 6) so it shares these session files with php-fpm directly.
 #
