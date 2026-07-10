@@ -1028,6 +1028,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'S
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (176, 'dac_prime', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (177, 'soloistsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (178, 'soloistname', 'Moode Soloist');
 INSERT INTO cfg_system (id, param, value) VALUES (179, 'solactive', '0');
