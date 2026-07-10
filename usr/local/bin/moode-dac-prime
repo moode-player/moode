@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2014 The moOde audio player project / Tim Curtis
+#
+# Play a brief PCM silence into the selected output card when it enumerates, so a
+# USB DAC with no output mute relay doesn't sit hissing/crackling until the first
+# track plays. Invoked by udev (89-moode-dac-prime.rules) on a sound-card ADD
+# event, detached via systemd-run so the ~1s aplay outlives the udev event.
+# $1 = the ALSA control kernel name that appeared, e.g. controlC0.
+
+CARD=$(printf '%s' "$1" | tr -dc '0-9')
+[ -n "$CARD" ] || exit 0
+# Prime ONLY the currently selected MPD output, not every card that enumerates.
+SEL=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_mpd WHERE param='device'" 2>/dev/null)
+[ "$CARD" = "$SEL" ] || exit 0
+# Skip a capture-only card and avoid a doomed aplay on a card that can't play.
+[ -e "/proc/asound/card$CARD/pcm0p" ] || exit 0
+# ~1s of S16_LE/44k1 zeros; plughw adapts the format to whatever the DAC accepts.
+# hw is not used directly: the goal is only to settle the DAC, and this runs before
+# the DSP chain (camilladsp/alsaequal) is up.
+head -c 176400 /dev/zero | aplay -D "plughw:$CARD,0" -f S16_LE -r 44100 -c 2 -t raw -q 2>/dev/null || true
+exit 0
