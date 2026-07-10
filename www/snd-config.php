@@ -189,6 +189,11 @@ if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 	$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
 }
+// DAC quiet start (udev prime rule, applied by the worker)
+if (isset($_POST['update_dac_prime']) && $_POST['dac_prime'] != $_SESSION['dac_prime']) {
+	phpSession('write', 'dac_prime', $_POST['dac_prime']);
+	submitJob('dac_prime', $_POST['dac_prime'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
+}
 
 // Metadata file
 if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
@@ -506,6 +511,10 @@ $_multiroom_feat_enable = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hid
 $autoClick = " onchange=\"autoClick('#btn-set-autoplay');\"";
 $_select['autoplay_on']  .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['autoplay_off'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggle-autoplay-2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+// DAC quiet start
+$autoClick = " onchange=\"autoClick('#btn-set-dac-prime');\"";
+$_select['dac_prime_on']  .= "<input type=\"radio\" name=\"dac_prime\" id=\"toggle-dac-prime-1\" value=\"1\" " . (($_SESSION['dac_prime'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['dac_prime_off'] .= "<input type=\"radio\" name=\"dac_prime\" id=\"toggle-dac-prime-2\" value=\"0\" " . (($_SESSION['dac_prime'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 // Metadata file
 $autoClick = " onchange=\"autoClick('#btn-set-extmeta');\"";
 $_select['extmeta_on']  .= "<input type=\"radio\" name=\"extmeta\" id=\"toggle-extmeta-1\" value=\"1\" " . (($_SESSION['extmeta'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
