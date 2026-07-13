@@ -305,7 +305,7 @@ img.coverart {
 .playqueue li:before, .cv-playqueue li:before {float:left;width:2.9em;letter-spacing:-1px;text-align:right;line-height:normal;counter-increment:item;content:counter(item) ' ';font-size:1em;margin-top:2px;}
 .database-radio li, .database-playlist li {width:var(--thumbcols);text-align:center;font-size:.95em;margin:0 .1em;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5em 0;}
 .station-name {font-weight:600;}
-.database li {padding:0 2rem 0 1.35rem;}
+.database li {padding:0 3.75rem 0 1.35rem;}
 .database span {display:block;font-weight:normal;color:var(--textvariant);}
 .playqueue span, .cv-playqueue span {line-height:normal;margin-left:calc(3em + 1vmin);display:block;}
 .pll1 {font-size:1em;}
