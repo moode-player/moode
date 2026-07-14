@@ -34,8 +34,8 @@ Most screens are the defaults; the ones that matter for moode-nopi are below.
 | Hostname                         | `moode` (or anything) | Becomes the player name; you can change it later in the UI. |
 | Domain name                      | leave blank | — |
 | **Root password**                | **leave it EMPTY** | When root has no password, the Debian installer locks the root account and gives your first user `sudo`. That lets you run the installer with `sudo` straight away. |
-| **Full name / username**         | username **`moode`** | The installer derives the player user from **UID 1000** = the first user you create. It must be `moode`. |
-| **User password**                | **`moodeaudio`** | Same default as the Pi image. Change it afterwards if you like. |
+| **Full name / username**         | anything (e.g. `moode`) | The installer derives the player user from **UID 1000** = the first user you create, whatever its name. |
+| **User password**                | your choice | Pick a strong one — the box gets `sudo` and SSH. Avoid the Pi image default (`moodeaudio`), it is public knowledge. |
 | Time zone / locale / keyboard    | your choice | — |
 | **Partitioning**                 | *Guided – use entire disk* → **All files in one partition** | moOde expects a single root partition (no separate `/home`). |
 | Write changes to disk            | Yes | — |
@@ -46,7 +46,7 @@ Most screens are the defaults; the ones that matter for moode-nopi are below.
 Finish, remove the USB stick, and reboot.
 
 > If you accidentally **set** a root password, your first user won't have `sudo`.
-> Either add it once as root — `su -` then `usermod -aG sudo moode` (or just run
+> Either add it once as root — `su -` then `usermod -aG sudo <user>` (or just run
 > the first install via `su -c`), or reinstall leaving the root password empty.
 > `install.sh` also installs `sudo` and adds the player user to the `sudo`
 > group on its first run, so this self-heals after the first root-run.
@@ -55,11 +55,11 @@ Finish, remove the USB stick, and reboot.
 
 ## 3. First boot
 
-Log in as `moode` / `moodeaudio` — on the console, or over SSH from another
+Log in as the user you created — on the console, or over SSH from another
 machine:
 
 ```bash
-ssh moode@<ip-address>      # find the IP from your router, or run `ip a` on the box
+ssh <user>@<ip-address>     # find the IP from your router, or run `ip a` on the box
 ```
 
 Make sure the box can reach the internet (the installer downloads packages and
@@ -89,7 +89,7 @@ that's the very thing you're missing:
 ```bash
 su -                            # root password you set during install
 apt update && apt install -y sudo
-usermod -aG sudo moode          # use your actual username if not `moode`
+usermod -aG sudo <user>         # the user you created (UID 1000)
 exit                            # then log out and back in for the group to apply
 ```
 
@@ -100,7 +100,7 @@ root shell on the console:
 
 ```bash
 su -                            # root password you set during install
-usermod -aG sudo moode          # use your actual username if not `moode`
+usermod -aG sudo <user>         # the user you created (UID 1000)
 exit                            # then log out and back in for the group to apply
 ```
 
