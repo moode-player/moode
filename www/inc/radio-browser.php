@@ -308,9 +308,6 @@ function rbShapeResults($data, $dbh) {
 			'codec' => trim($s['codec'] ?? ''),
 			'bitrate' => (int)($s['bitrate'] ?? 0),
 			'stationuuid' => trim($s['stationuuid'] ?? ''),
-			// HLS (.m3u8) streams hard-lock MPD's ffmpeg decoder (confirmed on nopi AND
-			// stock moOde Pi — upstream limitation); the UI marks these non-playable.
-			'hls' => (int)($s['hls'] ?? 0),
 			'added' => isset($favUrls[$key])
 		);
 		if (!isset($index[$key])) {

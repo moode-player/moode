@@ -1160,8 +1160,6 @@ body.cv .timeline-thm input[type='range']::-webkit-slider-thumb {
 .rb-fav-toggle {position:absolute;top:.4rem;right:0;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;border-radius:50%;background-color:var(--btnshade2);font-size:1.2rem;z-index:2;cursor:pointer;}
 .rb-fav-toggle.added {color: var(--accentxts);}
 .rb-fav-toggle .fa-heart {margin-top:4px;}
-.rb-hls-badge {position:absolute;top:.4rem;left:1.25rem;padding:.1rem .4rem;border-radius:.6rem;background-color:rgba(192,57,43,.9);color:#fff;font-size:.7rem;font-weight:bold;letter-spacing:.5px;z-index:2;}
-.rb-hls .thumbHW img {opacity:.5;cursor:default;}
 #rb-covers-search #rb-showmore {display:block;width:100%;text-align:center;padding:.5rem 0 0 0;margin:0;cursor:default;}
 #rb-covers-search #rb-showmore button {font-size:.9em;background:var(--btnshade2);border-radius:3em;margin:1em auto;padding:.5em 1.25em .6em 1.25em;line-height:normal;height:auto;width:auto;}
 #rb-covers-search #rb-showmore button:hover {background:var(--btnshade2);} /* Mask hover effect */

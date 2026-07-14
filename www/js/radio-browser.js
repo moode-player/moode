@@ -59,17 +59,10 @@ function rbBuildTile(s, i) {
     var favClass = s.added ? 'rb-fav-toggle added' : 'rb-fav-toggle';
     var favIcon = s.added ? 'fa-solid' : 'fa-regular';
     var hires = (s.bitrate && s.bitrate >= 320) ? '<div class="lib-encoded-at-hires-badge">' + RADIO_HIRES_BADGE_TEXT + '</div>' : '';
-    // HLS (.m3u8) hard-locks MPD's decoder — mark non-playable (badge, no play/fav/menu)
-    var hls = s.hls == 1;
-    var favToggle = hls ? '' :
-        '<div class="' + favClass + '"><i class="' + favIcon + ' fa-sharp fa-heart"></i></div>';
-    var coverMenu = hls ? '' :
-        '<div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-browser-item"></div>';
-    var hlsBadge = hls ? '<div class="rb-hls-badge"><i class="fa-solid fa-sharp fa-triangle-exclamation"></i> HLS</div>' : '';
+    var favToggle = '<div class="' + favClass + '"><i class="' + favIcon + ' fa-sharp fa-heart"></i></div>';
+    var coverMenu = '<div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-browser-item"></div>';
 
     return '<li id="rb-' + i + '"' +
-            (hls ? ' class="rb-hls"' : '') +
-            ' data-hls="' + (hls ? 1 : 0) + '"' +
             ' data-path="' + rbEscapeHtml(s.url) + '"' +
             ' data-url="' + rbEscapeHtml(s.url) + '"' +
             ' data-name="' + rbEscapeHtml(s.name) + '"' +
@@ -83,7 +76,7 @@ function rbBuildTile(s, i) {
         '<div class="db-icon db-song db-browse db-action">' +
             '<div class="thumbHW">' +
                 '<img loading="lazy" src="' + logo.replace(/&/g, '&amp;') + '" onerror="this.src=\'' + DEFAULT_RADIO_COVER + '\'">' +
-                favToggle + hlsBadge +
+                favToggle +
             '</div>' +
         '</div>' +
         coverMenu +
@@ -386,12 +379,7 @@ $(document).ready(function() {
 
     // Tile interactions (event delegation across the search/recent tabs)
     $('#container-radio-browser').on('click', '.database-radio img', function() {
-        var $li = $(this).closest('li');
-        if ($li.data('hls') == 1) {
-            notify(NOTIFY_TITLE_ALERT, 'mpd_error', 'HLS stream (.m3u8) — not supported by MPD', NOTIFY_DURATION_SHORT);
-            return;
-        }
-        rbPlay($li);
+        rbPlay($(this).closest('li'));
     });
     $('#container-radio-browser').on('click', '.rb-fav-toggle', function(e) {
         e.stopPropagation();
