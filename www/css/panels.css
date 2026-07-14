@@ -381,6 +381,8 @@ img.coverart {
 .database .db-entry div {padding-left:.25em;}
 .playqueue .playqueue-action, .playqueue .db-action a {position:relative;width:4.5em;margin-left:1em;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
 .cv-playqueue .playqueue-action, .cv-playqueue .db-action a {position:relative;width:4.5em;margin-left:1em!important;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
+.playqueue .playqueue-action {position:static;}
+.playqueue .playqueue-action::after {content:'';position:absolute;top:0;bottom:0;right:0;width:4.5em;z-index:3;}
 #db-search-results {font-size:1em;font-style:italic;padding:1em;display:none;cursor:pointer;}
 #playlist-save-name, #playlist-favorites-name {width:85%;}
 .input-append, .input-prepend {margin-bottom:0em;font-size:1em;}
