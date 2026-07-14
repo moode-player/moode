@@ -616,8 +616,9 @@ img.lib-artistart {
 #albumcovers .lib-entry, .database-radio .lib-entry, .database-playlist .lib-entry {width:var(--thumbcols);text-align:center;display:inline-block;vertical-align:top;height:auto;font-size:.95em;padding:0 0 .4em 0;}
 #albumcovers .lib-entry img, .database-radio img, .database-playlist img {
 	position:absolute;
-	left:var(--thumbmargin);
-	bottom:0;
+	top:50%;
+	left:calc(50% + var(--thumbmargin));
+	transform:translate(-50%, -50%);
 	object-fit:contain;
 	width:var(--thumbimagesize);
 	max-height:var(--thumbimagesize);
