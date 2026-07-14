@@ -10,7 +10,7 @@ pcm.softvol_and_peppyalsa {
 type softvol
 slave.pcm "peppyalsa"
 control {
-# ALSA mixer (hardware mixer or "PCM" if none )
+# ALSA control element (hardware mixer element or "PCM" if none)
 name "PCM"
 card 0
 }

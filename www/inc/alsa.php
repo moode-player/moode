@@ -68,6 +68,18 @@ function getAlsaMixerName($deviceName) {
 	return $mixerName;
 }
 
+// Get the raw ALSA control element name for a simple mixer control
+function getAlsaCtlElemName($mixerName, $cardNum) {
+	$elemName = $mixerName . ' Playback Volume';
+	foreach (sysCmd('amixer -c ' . $cardNum . ' controls') as $control) {
+		if (str_contains($control, "name='" . $elemName . "'")) {
+			return $elemName;
+		}
+	}
+
+	return $mixerName;
+}
+
 function getAlsaVolume($mixerName) {
 	$maxLoops = 3;
 	$sleepTime = 1;

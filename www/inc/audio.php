@@ -294,7 +294,11 @@ function updPeppyConfs($cardNum, $outputMode) {
 	}
 	sysCmd("sed -i 's/^slave.pcm.*/slave.pcm \"" . $alsaDevice . "\"/' " . ALSA_PLUGIN_PATH . '/_peppyout.conf');
 	// ALSA mixer
-	$alsaMixer = $_SESSION['amixname'] == 'none' ? 'PCM' : $_SESSION['amixname'];
+	// The softvol control{} block takes a raw control element name. A simple mixer name
+	// never matches, which makes softvol create its own 0-255 control alongside the
+	// hardware one instead of binding to it.
+	$alsaMixer = $_SESSION['amixname'] == 'none' ?
+		'PCM' : getAlsaCtlElemName($_SESSION['amixname'], $cardNum);
 	$peppyConfFile = file_exists(ALSA_PLUGIN_PATH . '/peppy.conf.hide') ? '/peppy.conf.hide' : '/peppy.conf';
 	sysCmd("sed -i 's/^name.*/name \"" . $alsaMixer . "\"/' " . ALSA_PLUGIN_PATH . $peppyConfFile);
 	sysCmd("sed -i 's/^card.*/card " . $cardNum . "/' " . ALSA_PLUGIN_PATH . $peppyConfFile);
