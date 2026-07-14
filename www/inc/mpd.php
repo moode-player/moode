@@ -724,7 +724,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	if ($caller == 'engine_mpd_php') {
 		// Both these functions perform phpSession('open_ro');
 		$current['cover_art_hash'] = getCoverHash($current['file']);
-		$current['mapped_db_vol'] = getMappedDbVol();
+		$current['mapped_db_vol'] = getMappedDbVol($current['file']);
 		//debugLog('enhanceMetadata(): ' . $caller . ' OPEN_RO session');
 	}
 
@@ -910,7 +910,7 @@ function getUpnpCoverUrl() {
 	return explode(',', $result[0])[0];
 }
 
-function getMappedDbVol() {
+function getMappedDbVol($file = '') {
 	phpSession('open_ro');
 
 	if (CamillaDsp::isMPD2CamillaDSPVolSyncEnabled()) {
@@ -926,11 +926,28 @@ function getMappedDbVol() {
 		} else {
 			$mappedDbVol = str_contains($mappedDbVol, '.') ? $mappedDbVol . 'dB' : $mappedDbVol . '.0dB';
 		}
+	} else if ($_SESSION['mpdmixer'] == 'software') {
+		// MPD software volume, no ALSA control is driven so the dB value is computed.
+		// MPD maps the volume with gain = (exp(volume / 25) - 1) / (e^4 - 1), see
+		// PercentVolumeToSoftwareVolume() in MPD's SoftwareMixerPlugin.cxx.
+		$ext = getSongFileExt($file);
+		$volKnob = (int)sqlRead('cfg_system', sqlConnect(), 'volknob')[0]['value'];
+		if ($ext == 'dsf' || $ext == 'dff') {
+			// MPD cannot attenuate DSD
+			$mappedDbVol = '0dB';
+		} else if ($volKnob <= 0) {
+			$mappedDbVol = '-120dB';
+		} else if ($volKnob >= 100) {
+			$mappedDbVol = '0dB';
+		} else {
+			$gain = (exp($volKnob / 25) - 1) / (exp(4) - 1);
+			$mappedDbVol = number_format(20 * log10($gain), 1) . 'dB';
+		}
 	} else {
 		// MPD volume
 		$mappedDbVol = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .
 			"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'")[0];
-		if (empty($mappedDbVol) || $_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'null') {
+		if (empty($mappedDbVol) || $_SESSION['mpdmixer'] == 'null') {
 			$mappedDbVol = '';
 		} else {
 			$mappedDbVol = number_format(rtrim($mappedDbVol, 'dB'), 1);
