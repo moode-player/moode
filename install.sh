@@ -2151,22 +2151,23 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
-# USB DAC quiet start helper (Configure > Audio toggle 'usb_dac_prime'). A USB DAC
-# with no output mute relay hisses/crackles after enumeration until it's fed a PCM
-# stream; moOde never feeds it at boot (MPD restores state=stop, close_on_pause=yes
-# never opens the device). The fix plays ~1s of silence into the card the moment it
-# enumerates, via a udev rule on the sound-card ADD event (KERNEL=="controlC*", the
+# DAC quiet start helper (Configure > Audio toggle 'dac_prime'). A DAC with no
+# output mute relay (typically a USB DAC after its enumeration) hisses/crackles at
+# startup until it's fed a PCM stream; moOde never feeds it at boot (MPD restores
+# state=stop, close_on_pause=yes never opens the device). The fix plays ~1s of
+# silence into the card the moment it appears, via a udev rule on the sound-card
+# ADD event (KERNEL=="controlC*", the
 # reliable sync point - the control node is created last; see /lib/udev/rules.d/
 # 78-sound-card.rules). Same udev-RUN pattern as 10-a2dp-autoconnect.rules; it
 # covers boot AND hot-plug, and being tied to the ADD event needs no card-wait loop.
 #
 # The rule is a versioned file shipped DISABLED (89-moode-dac-prime.rules.disabled),
-# ENABLED/DISABLED AT RUNTIME BY THE WORKER (applyUsbDacPrime() in worker.php) which
-# renames it .disabled <-> .rules from cfg_system usb_dac_prime - the worker is the
+# ENABLED/DISABLED AT RUNTIME BY THE WORKER (applyDacPrime() in worker.php) which
+# renames it .disabled <-> .rules from cfg_system dac_prime - the worker is the
 # authority, and the persistent rule then fires at enumeration on every boot without
 # waiting for the worker. So the installer just deploys the script (like
 # a2dp-autoconnect) and the rule in its disabled form; it never activates it.
-# cfg_system.usb_dac_prime ships default off and reaches existing DBs via the generic
+# cfg_system.dac_prime ships default off and reaches existing DBs via the generic
 # Phase-1 DB migration (no code needed here).
 install -m 755 "$REPO_DIR/usr/local/bin/moode-dac-prime"                      /usr/local/bin/moode-dac-prime
 install -m 644 "$REPO_DIR/etc/udev/rules.d/89-moode-dac-prime.rules.disabled" /etc/udev/rules.d/89-moode-dac-prime.rules.disabled

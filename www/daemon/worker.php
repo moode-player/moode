@@ -821,9 +821,9 @@ workerLog('worker: ALSA volume:   ' . $alsaVolStr);
 workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
 // ALSA loopback
 workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
-// USB DAC quiet start: keep the udev prime rule in sync with the DB setting
-applyUsbDacPrime($_SESSION['usb_dac_prime'] ?? '0');
-workerLog('worker: USB DAC prime: ' . (($_SESSION['usb_dac_prime'] ?? '0') == '1' ? 'on' : 'off'));
+// DAC quiet start: keep the udev prime rule in sync with the DB setting
+applyDacPrime($_SESSION['dac_prime'] ?? '0');
+workerLog('worker: DAC prime: ' . (($_SESSION['dac_prime'] ?? '0') == '1' ? 'on' : 'off'));
 // ALSA dummy PCM
 workerLog('worker: ALSA dummyPCM: ' . lcfirst($_SESSION['multiroom_tx']));
 // MPD mixer
@@ -3184,10 +3184,10 @@ function runQueuedJob() {
 			$cmd = $_SESSION['w_queueargs'] == '1' ? 'enable' : 'disable';
 			sysCmd('mpc ' . $cmd . ' "' . ALSA_DEFAULT . '"');
 			break;
-		case 'usb_dac_prime':
+		case 'dac_prime':
 			// Install/remove the udev prime rule; it takes effect at the next
 			// enumeration (reboot or DAC re-plug), so no immediate playback here.
-			applyUsbDacPrime($_SESSION['w_queueargs']);
+			applyDacPrime($_SESSION['w_queueargs']);
 			break;
 		// Equalizers/DSP
 		case 'alsaequal':
@@ -4144,16 +4144,16 @@ function runQueuedJob() {
 // VARIOUS HELPER FUNCTIONS
 //----------------------------------------------------------------------------//
 
-// USB DAC quiet start: enable/disable the udev rule that plays a silence burst
+// DAC quiet start: enable/disable the udev rule that plays a silence burst
 // when the selected output card enumerates. The rule ships as a versioned file
 // (89-moode-dac-prime.rules.disabled); this renames it .disabled <-> .rules so
 // udev either sees it or not. It is a persistent file, so once active it fires at
 // enumeration on every boot/hot-plug WITHOUT waiting for the worker; the worker is
 // only the authority that decides whether the rule is active, from cfg_system
-// usb_dac_prime. The mv is idempotent (no-op when already in the target state),
+// dac_prime. The mv is idempotent (no-op when already in the target state),
 // so a freshly toggled setting takes effect at the next reboot (or DAC re-plug),
 // when the now-active rule triggers at enumeration.
-function applyUsbDacPrime($enabled) {
+function applyDacPrime($enabled) {
 	$ruleActive = '/etc/udev/rules.d/89-moode-dac-prime.rules';
 	$ruleDisabled = $ruleActive . '.disabled';
 	if ($enabled == '1') {
