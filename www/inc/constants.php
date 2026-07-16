@@ -126,6 +126,13 @@ const PEPPY_METER_ETC_DIR = '/etc/peppymeter';
 const PEPPY_METER_OPT_DIR = '/opt/peppymeter';
 const PEPPY_SPECTRUM_ETC_DIR = '/etc/peppyspectrum';
 const PEPPY_SPECTRUM_OPT_DIR = '/opt/peppyspectrum';
+// Live meter gain source: peppy-gain.php writes the current hardware attenuation (dB)
+// here and PeppyMeter (volume.gain.db.source) scales its needles by 10^(dB/20). /tmp,
+// alongside the existing /tmp/peppymeter FIFO.
+const PEPPY_GAIN_DB_FILE = '/tmp/peppy_gain_db';
+// Seconds before retrying the ALSA monitor after the card goes away (DAC unplugged)
+const PEPPY_GAIN_MON_RETRY = 5;
+const PEPPY_GAIN_MON_LOG = '/tmp/moode_peppy_gain.log';
 // Peppy touch monitor
 const TOUCHMON_LOG = '/tmp/moode_touchmon.log';
 const TOUCHMON_TIMEOUT_DEFAULT = 15;

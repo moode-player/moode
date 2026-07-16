@@ -167,6 +167,22 @@ function startLcdUpdater() {
 	sysCmd('/var/www/daemon/lcd-updater.sh');
 }
 
+// Peppy meter gain monitor
+function startPeppyGainMon() {
+	stopPeppyGainMon();
+	// Keep stderr: a daemon dying silently leaves the meter on a stale gain with nothing
+	// to show for it
+	sysCmd('/var/www/daemon/peppy-gain.php >> ' . PEPPY_GAIN_MON_LOG . ' 2>&1 &');
+}
+function stopPeppyGainMon() {
+	// Match the path, not the command: the process is "php", killall php would take the web
+	// app down. The [.] keeps the pattern from matching the shell that runs pkill itself.
+	sysCmd('pkill -f "peppy-gain[.]php" > /dev/null 2>&1');
+	// The monitor is a child of the above and its command line carries none of that path,
+	// so it outlives the kill and leaks one process per bounce
+	sysCmd('pkill -f "alsactl[ ]monitor hw:" > /dev/null 2>&1');
+}
+
 // GPIO button handler
 function startGpioBtnHandler() {
 	sysCmd('/var/www/daemon/gpio_buttons.py ' . GPIOBUTTONS_SLEEP . ' > /dev/null &');

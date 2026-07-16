@@ -945,22 +945,31 @@ function getMappedDbVol($file = '') {
 		}
 	} else {
 		// MPD volume
-		$mappedDbVol = sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sget "' . $_SESSION['amixname'] . '" | ' .
-			"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'")[0];
-		if (empty($mappedDbVol) || $_SESSION['mpdmixer'] == 'null') {
-			$mappedDbVol = '';
+		$mappedDbVol = getAlsaMappedDbVol($_SESSION['cardnum'], $_SESSION['amixname'], $_SESSION['mpdmixer']);
+	}
+
+	return $mappedDbVol;
+}
+
+// Read the ALSA mixer attenuation
+// NOTE: args, not session vars: peppy-gain.php runs sessionless
+function getAlsaMappedDbVol($cardNum, $amixName, $mixerType) {
+	$mappedDbVol = sysCmd('amixer -c ' . $cardNum . ' sget "' . $amixName . '" | ' .
+		"awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'")[0];
+	if (empty($mappedDbVol) || $mixerType == 'null') {
+		$mappedDbVol = '';
+	} else {
+		$mappedDbVol = number_format(rtrim($mappedDbVol, 'dB'), 1);
+		if ($mappedDbVol == 0) {
+			$mappedDbVol = '0dB';
 		} else {
-			$mappedDbVol = number_format(rtrim($mappedDbVol, 'dB'), 1);
-			if ($mappedDbVol == 0) {
-				$mappedDbVol = '0dB';
-			} else {
-				$mappedDbVol = ($mappedDbVol <= -127 ? '-127' : $mappedDbVol) . 'dB';
-			}
+			$mappedDbVol = ($mappedDbVol <= -127 ? '-127' : $mappedDbVol) . 'dB';
 		}
 	}
 
 	return $mappedDbVol;
 }
+
 
 function getCoverHash($file) {
 	$ext = getSongFileExt($file);
