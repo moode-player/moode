@@ -145,8 +145,14 @@ if (isset($_POST['update_alsavolume_max'])) {
 // Output mode
 if (isset($_POST['update_alsa_output_mode'])) {
 	if (isset($_POST['alsa_output_mode']) && $_POST['alsa_output_mode'] != $_SESSION['alsa_output_mode']) {
-		phpSession('write', 'alsa_output_mode', $_POST['alsa_output_mode']);
-		submitJob('alsa_output_mode', $_POST['alsa_output_mode']);
+		if ($_POST['alsa_output_mode'] == 'plughw' && $_SESSION['peppy_display'] == '1' &&
+			($_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['eqfa12p'] != 'Off')) {
+			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+			$_SESSION['notify']['msg'] = 'To run Peppy when Crossfeed, Graphic or Parametric EQ is on, set ALSA output mode to Direct or IEC958.';
+		} else {
+			phpSession('write', 'alsa_output_mode', $_POST['alsa_output_mode']);
+			submitJob('alsa_output_mode', $_POST['alsa_output_mode']);
+		}
 	}
 }
 // Loopback
