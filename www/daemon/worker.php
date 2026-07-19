@@ -3148,6 +3148,9 @@ function runQueuedJob() {
 					break;
 			}
 
+			// Regenerate the Bluetooth A2DP sink device (AUDIODEV) for the new DSP head
+			updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+
 			// Restart MPD
 			// NOTE: Don't restart if already done in the camillaDSP section
 			if ($_SESSION['w_queue'] != 'camilladsp' || ($_SESSION['w_queue'] == 'camilladsp' && empty($queueArgs[1]))) {

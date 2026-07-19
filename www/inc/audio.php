@@ -273,6 +273,15 @@ function updDspAndBtInConfs($cardNum, $outputMode) {
 		} else {
 			$alsaDevice = 'peppy';
 		}
+	// LADSPA heads (alsaequal/crossfeed/eqfa12p) can't be opened via plug:_audioout; open directly
+	} else if ($_SESSION['alsaequal'] != 'Off') {
+		$alsaDevice = 'alsaequal';
+	} else if ($_SESSION['camilladsp'] != 'off') {
+		$alsaDevice = 'plug:_audioout';
+	} else if ($_SESSION['crossfeed'] != 'Off') {
+		$alsaDevice = 'crossfeed';
+	} else if ($_SESSION['eqfa12p'] != 'Off') {
+		$alsaDevice = 'eqfa12p';
 	} else {
 		// A2DP sink: convert the fixed-format decoded PCM at the top of the chain
 		$alsaDevice = 'plug:_audioout';
