@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+Packages
+- UPD: peppy-meter=2026.7.20-1moode1
+
 Updates
 - UPD: Provide dB values for MPD software volume (PR #770 @Gjuju)
 - UPD: Increase hit ares of the ... button for Queue items (PR #771 @Gjuju)
