@@ -1310,6 +1310,12 @@ install -m 644 "$REPO_DIR/etc/triggerhappy/triggers.d/media.conf" /etc/triggerha
 # matching the x86 worker model). thd opens the input devices as root before
 # dropping privs, and hotplugged devices are passed in via triggerhappy's udev
 # th-cmd helper (also root), so www-data needs no input-group membership.
+# It does need the audio group though: vol.sh drives the mixer with a plain amixer (no
+# sudo), so without it a volume key moves volknob in the DB while the DAC stays put -
+# silent knob, and a UI volume that lies. Group membership is fixed at process start, so
+# a running thd has to be restarted to pick it up.
+usermod -aG audio www-data
+systemctl is-active --quiet triggerhappy && systemctl restart triggerhappy
 install -d -m 755 /etc/systemd/system/triggerhappy.service.d
 cat > /etc/systemd/system/triggerhappy.service.d/override.conf <<'EOF'
 [Service]
