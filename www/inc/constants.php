@@ -136,6 +136,7 @@ const PEPPY_GAIN_MON_LOG = '/tmp/moode_peppy_gain.log';
 // Peppy touch monitor
 const TOUCHMON_LOG = '/tmp/moode_touchmon.log';
 const TOUCHMON_TIMEOUT_DEFAULT = 15;
+const TOUCHMON_CLOSED_COUNT = 3;
 // Notifications
 const NOTIFY_TITLE_INFO = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Info';
 const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" style="color:#e74c3c;"></i> Alert';

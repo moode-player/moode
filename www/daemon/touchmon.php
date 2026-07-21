@@ -18,6 +18,7 @@ require_once __DIR__ . '/../inc/sql.php';
 //debugLog('touchmon: Started');
 $timeoutArg = !isset($argv[1]) ? TOUCHMON_TIMEOUT_DEFAULT : $argv[1];
 $timeout = $timeoutArg;
+$closedCount = 0;
 $dbh = sqlConnect();
 sysCmd('rm ' . TOUCHMON_LOG . ' > /dev/null');
 sysCmd('killall -s9 xinput > /dev/null');
@@ -80,9 +81,16 @@ while (true) {
 			}
 		}
 		// Switch to WebUI
+		// MPD closes the ALSA device between tracks, so a single closed reading is
+		// not proof that playback stopped. Require a few in a row.
 		if (isPeppyOn($dbh) === true && isAudioPlaying() === false) {
-			//debugLog('touchmon: - switch to webui');
-			exec('sudo moodeutl --setdisplay webui');
+			if (++$closedCount >= TOUCHMON_CLOSED_COUNT) {
+				//debugLog('touchmon: - switch to webui');
+				exec('sudo moodeutl --setdisplay webui');
+				$closedCount = 0;
+			}
+		} else {
+			$closedCount = 0;
 		}
 	} else {
 		//debugLog('touchmon: - WARNING: peppyalsa is not enabled');
