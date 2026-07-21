@@ -18,6 +18,29 @@
 // platforms. Used to skip Pi-only boot/hardware logic (config.txt overlays,
 // vcgencmd, GPIO HATs, LED/fan control) so the same codebase runs on Pi, x86 and
 // other SBCs. Lives here (not common.php) to keep the upstream diff minimal.
+// 64-bit capable CPU, which is what CamillaDSP actually requires. moOde encodes that
+// requirement upstream as a Pi-model whitelist ("pi_modelnum > 2"), meaningless off-Pi.
+// A 64-bit userland settles it outright; a 32-bit ARM userland can still sit on an ARMv8
+// core, which /proc/cpuinfo reports as "CPU architecture: 8" - that is the case the Pi 3
+// under armhf falls into, and it is the case an Allwinner H3 (Cortex-A7, architecture 7)
+// must fail. lscpu is not usable here: its field names are localised.
+function is64BitCapable() {
+	static $capable = null;
+	if ($capable === null) {
+		$machine = php_uname('m');
+		if (in_array($machine, ['x86_64', 'amd64', 'aarch64', 'arm64'])) {
+			$capable = true;
+		} else {
+			$capable = false;
+			$cpuinfo = @file_get_contents('/proc/cpuinfo');
+			if ($cpuinfo !== false && preg_match('/^CPU architecture\s*:\s*(\d+)/m', $cpuinfo, $m)) {
+				$capable = (int)$m[1] >= 8;
+			}
+		}
+	}
+	return $capable;
+}
+
 function isPi() {
 	static $isPi = null;
 	if ($isPi === null) {

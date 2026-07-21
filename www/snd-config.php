@@ -563,7 +563,12 @@ if ($_SESSION['multiroom_tx'] == 'Off' &&
 	$_eqfa12p_ctl_disabled =     (allowDspInAlsaChain() == false || $_SESSION['alsaequal'] != 'Off' || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_alsaequal_ctl_disabled =   (allowDspInAlsaChain() == false || $_SESSION['eqfa12p'] != 'Off'   || $_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	// CamillaDSP can only be used on 64-bit capable ARM7
+	// The test below is a Pi-model whitelist, so off-Pi it can only ever fail: a non-Pi
+	// session carries pi_modelnum=0 / pi_type=PC and the selector stays disabled forever.
+	// Off-Pi, test what the whitelist stands for instead - a 64-bit capable CPU. Pi
+	// behaviour is untouched.
 	if (
+		(!isPi() && is64BitCapable()) ||
 		$_SESSION['pi_modelnum'] > 2 ||
 		$_SESSION['pi_type'] == 'Zero 2 W' ||
 		$_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' ||
