@@ -508,8 +508,10 @@ log "PHP-FPM version: $PHP_VER (socket $PHP_SOCK)"
 #     Adopt-on-legacy: an artifact already present WITHOUT a stamp (built by a
 #     pre-versioning installer) is recorded as current and NOT rebuilt, so existing
 #     boxes never rebuild gratuitously on their first --update with this logic.
-#   - truly unpinned sources (alsacap git-main, peppy-alsa apt-source): no version
-#     to compare -> presence-only (a bump there needs a manual rm of the artifact).
+#   - truly unpinned sources (alsacap git-main): no version to compare -> presence
+#     only (a bump there needs a manual rm of the artifact).
+#   - peppy-alsa: apt-source, so no version either, but we patch it -> the guard is
+#     the patch's hash and a MISSING stamp means rebuild, not adopt (Phase 1g).
 NOPI_BUILT_DIR=/var/lib/moode-nopi/built
 dpkg_ver_is() { [ "$(dpkg-query -W -f='${Version}' "$1" 2>/dev/null)" = "$2" ]; }
 # nopi_need_build <name> <pinned> <present:0|1> -> rc 0 = build needed, 1 = up to date
@@ -850,7 +852,21 @@ fi
 # long bug - snd_config_get_integer wants long* - that errors on the 64-bit build;
 # moOde's peppy_alsa_fixes patch fixes it). Same moodeaudio deb-src path as mpd.
 PEPPY_LIB="/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null)/libpeppyalsa.so"
-if [ "$INSTALL_LOCALDISPLAY" = 1 ] && [ ! -f "$PEPPY_LIB" ]; then
+# On top of moOde's source we apply patches/peppy_alsa_dop_levels.patch, which makes
+# the meter read DoP (a DSD source played as DoP otherwise pegs the needles at a
+# constant, because the s16 scope hands the plugin the DoP marker byte, not audio).
+# Pending upstream: submitted to moode-player/pkgbuild, and to peppyalsa itself.
+# Drop the patch and this stamp when either lands.
+#
+# The guard is the patch's own hash, NOT mere presence of the library: an existing
+# box carries a library built by an earlier installer, without the patch, and it MUST
+# be rebuilt. That is deliberately the opposite of nopi_need_build's adopt-on-legacy
+# rule, which exists to avoid gratuitous rebuilds of artifacts that are still correct.
+PEPPY_PATCH="$REPO_DIR/patches/peppy_alsa_dop_levels.patch"
+PEPPY_STAMP="$NOPI_BUILT_DIR/peppy-alsa-dop"
+PEPPY_PATCH_ID="$(sha256sum "$PEPPY_PATCH" 2>/dev/null | cut -c1-12)"
+if [ "$INSTALL_LOCALDISPLAY" = 1 ] && \
+	{ [ ! -f "$PEPPY_LIB" ] || [ "$(cat "$PEPPY_STAMP" 2>/dev/null)" != "$PEPPY_PATCH_ID" ]; }; then
 	log "Phase 1g: peppyalsa plugin (libpeppyalsa.so)"
 	apt-get install -y build-essential autoconf automake libtool libasound2-dev libfftw3-dev dpkg-dev devscripts >/dev/null 2>&1
 	PEPPY_BLD="$(mktemp -d)"
@@ -860,12 +876,18 @@ if [ "$INSTALL_LOCALDISPLAY" = 1 ] && [ ! -f "$PEPPY_LIB" ]; then
 		# build with autotools directly (their debian/rules produces no artifacts here).
 		apt-get source peppy-alsa >/dev/null 2>&1
 		cd peppy-alsa-*/ || exit 1
+		# The DoP patch is generated on top of moOde's, so it applies here and only here.
+		[ -f "$PEPPY_PATCH" ] && patch -p1 --forward < "$PEPPY_PATCH" >/dev/null 2>&1
 		autoreconf -fi >/dev/null 2>&1 && ./configure >/dev/null 2>&1 && make >/dev/null 2>&1
 		install -m 644 .libs/libpeppyalsa.so.[0-9]*.[0-9]* "$PEPPY_LIB"
 	)
 	rm -rf "$PEPPY_BLD"
-	[ -f "$PEPPY_LIB" ] && log "Built libpeppyalsa.so -> $PEPPY_LIB" \
-		|| warn "peppyalsa build failed; Peppy Meter/Spectrum will be unavailable"
+	if [ -f "$PEPPY_LIB" ]; then
+		mkdir -p "$NOPI_BUILT_DIR"; printf '%s\n' "$PEPPY_PATCH_ID" > "$PEPPY_STAMP"
+		log "Built libpeppyalsa.so (DoP levels) -> $PEPPY_LIB"
+	else
+		warn "peppyalsa build failed; Peppy Meter/Spectrum will be unavailable"
+	fi
 fi
 
 #----------------------------------------------------------------------------#

@@ -1,0 +1,164 @@
+diff --git a/src/peppyalsa.c b/src/peppyalsa.c
+index 2a324e6..de19417 100644
+--- a/src/peppyalsa.c
++++ b/src/peppyalsa.c
+@@ -89,6 +89,120 @@ static void level_start(snd_pcm_scope_t * scope ATTRIBUTE_UNUSED) {
+ static void level_stop(snd_pcm_scope_t * scope) {
+ }
+ 
++/*
++* DoP support.
++*
++* A DoP stream is ordinary PCM as far as ALSA is concerned - 16 DSD bits sitting
++* under an alternating 0x05/0xFA marker byte - so the s16 scope converts it
++* happily and hands us the top 16 bits of every word. That is the marker plus the
++* leading 8 DSD bits. Read as amplitude, as it was until now, those bytes carry no
++* envelope at all and the needle sits at a constant ~4.
++*
++* Counting the ones instead recovers the signal: in DSD the local density of ones
++* IS the amplitude, 50% being silence. Eight bits per frame at 176.4 kHz still
++* leaves 1.4 Mbit/s to average over, far more than a needle needs.
++*
++* This does nothing for native DSD, where the s16 scope cannot convert at all and
++* asserts before we ever see a sample.
++*/
++#define DOP_MARKER_A 0x05
++#define DOP_MARKER_B 0xFA
++#define DOP_PROBE    64     /* frames examined to recognise the stream */
++/* Frames averaged per decimated sample, set from the rate in level_update so that the
++   duration - and therefore the measurement bandwidth - stays the same from DSD64 to
++   DSD512. A fixed frame count would shrink in time as the DSD rate rises. */
++static unsigned int dop_group = 8;
++
++static const unsigned char popcount8[256] = {
++#define P2(n) n, n + 1, n + 1, n + 2
++#define P4(n) P2(n), P2(n + 1), P2(n + 1), P2(n + 2)
++#define P6(n) P4(n), P4(n + 1), P4(n + 1), P4(n + 2)
++    P6(0), P6(1), P6(1), P6(2)
++#undef P6
++#undef P4
++#undef P2
++};
++
++static int is_dop_stream(int16_t *buf, snd_pcm_uframes_t frames) {
++    snd_pcm_uframes_t n;
++    int prev = -1;
++
++    if (frames > DOP_PROBE) {
++        frames = DOP_PROBE;
++    }
++    if (frames < 8) {
++        return 0;
++    }
++    for (n = 0; n < frames; n++) {
++        int m = (buf[n] >> 8) & 0xFF;
++
++        if ((m != DOP_MARKER_A && m != DOP_MARKER_B) || m == prev) {
++            return 0;
++        }
++        prev = m;
++    }
++    return 1;
++}
++
++/*
++* Level from the local bit density. Two things decide the quality here.
++*
++* The averaging window. Counting ones over N bits carries a measurement noise of
++* 0.5/sqrt(N) if that noise is white, which argues for a long window; but a long
++* window flattens transients, and measured on a plucked-string envelope a 1 ms window
++* loses a third of the attack. It turns out the noise is NOT white - the modulator
++* shapes it towards the top of the band, where the group average removes it - so the
++* floor stays at zero even at a quarter of a millisecond. Hence a short window, and
++* it is split into DOP_WIN groups rather than being one boxcar, which would also be
++* a low-pass on the envelope and would read the high end far too low.
++*
++* And what is reported: the PCM path returns the peak of the period, so this has to
++* as well, or the two read differently on the same music. A peak of raw group values
++* would report the measurement noise; a peak of a short sliding RMS reports the music.
++*/
++#define DOP_WIN 2           /* groups per sliding window, ~0.25 ms total */
++#define DOP_GROUP_HZ 8000   /* group length, so also the measurement bandwidth */
++#define DOP_FULL_SCALE 2.0  /* 0 dBFS = 50% modulation index, see below */
++
++static int dop_level(int16_t *buf, snd_pcm_uframes_t frames) {
++    snd_pcm_uframes_t g, groups = frames / dop_group;
++    unsigned int n, bits = dop_group * 8;
++    double ring[DOP_WIN] = { 0.0 };
++    double running = 0.0, best = 0.0, lev;
++
++    if (groups == 0) {
++        return 0;
++    }
++    for (g = 0; g < groups; g++) {
++        int ones = 0;
++        double d;
++
++        for (n = 0; n < dop_group; n++) {
++            ones += popcount8[buf[g * dop_group + n] & 0xFF];
++        }
++        d = (ones - (double)bits / 2.0) / ((double)bits / 2.0);
++        running += d * d - ring[g % DOP_WIN];
++        ring[g % DOP_WIN] = d * d;
++        if (g + 1 >= DOP_WIN && running > best) {
++            best = running;
++        }
++    }
++    if (groups < DOP_WIN) {
++        best = running;
++        lev = sqrt(best / (double)groups);
++    } else {
++        lev = sqrt(best / (double)DOP_WIN);
++    }
++    /* No noise-floor subtraction: the modulator shapes its noise towards the top of
++       the band, and the window average is already a low-pass that removes it.
++       DOP_FULL_SCALE: 0 dBFS in DSD is a 50% modulation index, so the density of a
++       full-scale signal swings between 25% and 75% and never uses the whole range.
++       Referring to that range rather than to 0-100% is what puts the needle on the
++       same scale as the PCM path; without it everything reads 6 dB low. */
++    lev *= DOP_FULL_SCALE * 32767.0;
++    return lev > 32767.0 ? 32767 : (int)lev;
++}
++
+ static int get_channel_level(
+ 	int channel, 
+ 	snd_pcm_scope_peppyalsa_t *level, 
+@@ -103,8 +217,14 @@ static int get_channel_level(
+     snd_pcm_scope_peppyalsa_channel_t *l;
+     l = &level->channels[channel];
+ 
+-    // Iterate through the channel buffer and find the highest level value
+     ptr = snd_pcm_scope_s16_get_channel_buffer(level->s16, channel) + offset;
++
++    if (is_dop_stream(ptr, size1)) {
++        lev = dop_level(ptr, size1);
++        goto decay;
++    }
++
++    // Iterate through the channel buffer and find the highest level value
+     for (n = size1; n > 0; n--) {
+         s = *ptr;
+         if (s < 0) s = -s;
+@@ -123,6 +243,7 @@ static int get_channel_level(
+         ptr++;
+     }
+     
++decay:
+     /* limit the decay */
+     if (lev < l->levelchan) {     
+         /* make max_decay go lower with level */
+@@ -164,6 +285,14 @@ static void level_update(snd_pcm_scope_t * scope) {
+     ms = size * 1000 / snd_pcm_meter_get_rate(pcm);
+     max_decay = 32768 * ms / level->decay_ms;
+ 
++    /* Frames per group, a fixed duration whatever the DSD rate. Short, because the
++       group average is what limits the envelope bandwidth; DOP_WIN restores the bit
++       count that keeps the measurement noise down. */
++    dop_group = snd_pcm_meter_get_rate(pcm) / DOP_GROUP_HZ;
++    if (dop_group < 2) {
++        dop_group = 2;
++    }
++
+     channels = snd_pcm_meter_get_channels(pcm);
+ 
+     if(channels > 2){channels = 2;}
