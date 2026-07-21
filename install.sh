@@ -855,8 +855,11 @@ PEPPY_LIB="/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null)/libpep
 # On top of moOde's source we apply patches/peppy_alsa_dop_levels.patch, which makes
 # the meter read DoP (a DSD source played as DoP otherwise pegs the needles at a
 # constant, because the s16 scope hands the plugin the DoP marker byte, not audio).
-# Pending upstream: submitted to moode-player/pkgbuild, and to peppyalsa itself.
-# Drop the patch and this stamp when either lands.
+# TEMPORARY. Submitted upstream as peppyalsa PR #5 (the decode itself) and
+# moode-player/pkgbuild PR #23 (the same patch in moOde's build recipe). When #5
+# lands, moOde's own source carries the decode: delete the patch file, drop the
+# patch call and the hash guard below, and let this go back to a plain
+# `apt-get source peppy-alsa`.
 #
 # The guard is the patch's own hash, NOT mere presence of the library: an existing
 # box carries a library built by an earlier installer, without the patch, and it MUST
