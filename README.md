@@ -7,7 +7,7 @@
 > on a Raspberry Pi. It is **not** affiliated with or endorsed by the moOde project.
 >
 > Modifications © 2026 Julien Gainza, made from **2026-06-16** onward
-> (latest: 10.2.4-nopi.9, 2026-06-25).
+> (latest: 10.3.1-nopi.1, 2026-07-23).
 > Source: <https://github.com/Gjuju/moode-nopi> — see [`NOTICE`](./NOTICE) for the list of changes.
 >
 > moode-nopi is released under the **same GNU GPL v3** as upstream moOde
