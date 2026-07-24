@@ -35,7 +35,7 @@ if (isset($_POST['update_bt_settings'])) {
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('btsvc', '', NOTIFY_TITLE_INFO, NAME_BLUETOOTH . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
-if (isset($_POST['update_bt_pin_code']) && $_POST['update_bt_pin_code'] != 'Pincode set') {
+if (isset($_POST['update_bt_pin_code']) && $_POST['bt_pin_code'] != 'Pincode set') {
 	phpSession('write', 'bt_pin_code', $_POST['bt_pin_code']);
 	$notify = $_SESSION['btsvc'] == '1' ?
 		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_BLUETOOTH_PAIRING_AGENT . NOTIFY_MSG_SVC_RESTARTED) :
