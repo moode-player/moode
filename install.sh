@@ -1301,6 +1301,12 @@ if [ "$INSTALL_BLUETOOTH" = 1 ]; then
 	if [ ! -e /etc/bluetooth/pin.conf ]; then
 		install -m 600 "$REPO_DIR/etc/bluetooth/pin.conf" /etc/bluetooth/pin.conf
 	fi
+	# The worker stores the PIN with a plain shell redirection, and sysCmd() puts sudo
+	# on the command only, never on the redirection: off the Pi the worker is www-data,
+	# so the write is refused and the PIN is silently never stored. Hand the file itself
+	# to www-data - /etc/bluetooth stays root-owned, and the worker's chmod 0600 at
+	# startup keeps the mode.
+	chown www-data:www-data /etc/bluetooth/pin.conf
 	grep -q '^PRETTY_HOSTNAME=' /etc/machine-info 2>/dev/null \
 		|| echo "PRETTY_HOSTNAME=Moode Bluetooth" >> /etc/machine-info
 	log "Deployed Bluetooth service units + A2DP autoconnect + controller name/class"
