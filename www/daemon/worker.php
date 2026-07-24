@@ -3228,11 +3228,11 @@ function runQueuedJob() {
 			if (empty($_SESSION['w_queueargs'])) {
 				sysCmd('echo "* ' . '" > ' . BT_PINCODE_CONF);
 				sysCmd("sed -i s'|ExecStart=/usr/bin/bt-agent.*|ExecStart=/usr/bin/bt-agent -c NoInputNoOutput|' /etc/systemd/system/bt-agent.service");
-				sysCmd("sed -i s'|ExecStartPost=/bin/hciconfig.*|ExecStartPost=/bin/hciconfig hci0 sspmode 1|' /etc/systemd/system/bt-agent.service");
+				sysCmd("sed -i s'|ExecStartPost=.*hciconfig.*|ExecStartPost=-/bin/hciconfig hci0 sspmode 1|' /etc/systemd/system/bt-agent.service");
 			} else {
 				sysCmd('echo "* ' . $_SESSION['w_queueargs'] . '" > ' . BT_PINCODE_CONF);
 				sysCmd("sed -i s'|ExecStart=/usr/bin/bt-agent.*|ExecStart=/usr/bin/bt-agent -c NoInputNoOutput -p " . BT_PINCODE_CONF . "|' /etc/systemd/system/bt-agent.service");
-				sysCmd("sed -i s'|ExecStartPost=/bin/hciconfig.*|ExecStartPost=/bin/hciconfig hci0 sspmode 0|' /etc/systemd/system/bt-agent.service");
+				sysCmd("sed -i s'|ExecStartPost=.*hciconfig.*|ExecStartPost=-/bin/hciconfig hci0 sspmode 0|' /etc/systemd/system/bt-agent.service");
 			}
 			sysCmd('systemctl daemon-reload');
 			sysCmd('systemctl restart bt-agent');
