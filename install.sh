@@ -1948,7 +1948,8 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	unset _schema_db _mig_total _added _t _tbl_added _tbl _ddl \
 		_col_added _live_cols _c _cname _ctype _cnn _cdflt _coldef
 else
-	[ -f "$SQLDB" ] && cp -a "$SQLDB" "$SQLDB.bak.$(date +%s)" && warn "Backed up old DB"
+	# A successful backup is an event, not a problem: --reset-db asked for it.
+	[ -f "$SQLDB" ] && cp -a "$SQLDB" "$SQLDB.bak.$(date +%s)" && log "Backed up old DB"
 	rm -f "$SQLDB"
 	sqlite3 "$SQLDB" < "$SQLDB_SCHEMA"
 	log "Created DB from schema"
@@ -2789,9 +2790,14 @@ echo "  WebUI:   http://${IP:-<this-host>}/"
 echo "  Worker:  journalctl -u moode-worker -f"
 echo "  Logs:    /var/log/moode.log  (moodeutl -l)"
 echo
-warn "First boot: open the WebUI, go to Configure > Audio and pick your USB/HDMI"
-warn "output device. Pi-only options (I2S, GPIO, LCD) are hidden on this platform."
-echo
+# First-run guidance, not a warning - and pointless on --update, where the output
+# device was picked long ago. A yellow [!] on every single run teaches the reader to
+# skip yellow lines, which is exactly how a real warning gets missed.
+if [ "$UPDATE" != 1 ]; then
+	log "First boot: open the WebUI, go to Configure > Audio and pick your USB/HDMI"
+	log "output device. Pi-only options (I2S, GPIO, LCD) are hidden on this platform."
+	echo
+fi
 # net.ifnames=0 (written to GRUB/armbianEnv by Phase 3b) renames enpXsY/wlpXsY/end0
 # -> eth0/wlan0, but only on the NEXT boot - until then NetworkManager's eth0/wlan0
 # keyfiles don't match the live interface and the local-display kiosk / cold-boot
