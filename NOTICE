@@ -22,7 +22,7 @@ Modifications
   Copyright (C) 2026 Julien Gainza
   Fork source / contact: https://github.com/Gjuju/moode-nopi
   Modifications made from 2026-06-16 onward.
-  Latest tagged release: 10.3.1-nopi.1 (2026-07-23).
+  Latest tagged release: 10.3.1-nopi.2 (2026-07-25).
 
 Nature of the changes (summary)
 -------------------------------
@@ -33,7 +33,9 @@ there is a single codebase, kept rebaseable on upstream moOde.
 
   - install.sh — an additive installer that builds and configures the moOde
     stack on a running Debian/Armbian system (audio binaries built on-device for
-    parity: mpd selective-resample, caps eqfa12p, CamillaDSP, pleezer, peppyalsa).
+    parity: mpd selective-resample, caps eqfa12p, CamillaDSP, pleezer, peppyalsa,
+    and alsa-lib carrying the PCM meter scope patches submitted upstream as
+    alsa-project/alsa-lib #516 and #517, mirroring moOde's own build recipe).
   - Runtime platform detection via isPi(); minimal, isPi()-guarded edits to
     upstream sources where a Pi assumption cannot be fixed from the installer.
     Such edits leave Raspberry Pi behaviour unchanged.
