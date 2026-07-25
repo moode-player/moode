@@ -1022,25 +1022,45 @@ ALSA_TARGET_VER="${ALSA_DISTRO_VER}${ALSA_MOODE_REV}"
 # The hand-built /opt override (a libasound compiled to its own prefix and forced on
 # MPD through an LD_LIBRARY_PATH drop-in) was the pre-packaging way to run these
 # patches on non-Pi hardware. Once the .deb is in, that override SHADOWS it - MPD
-# would keep running an untracked binary that no upgrade ever reaches - so retire it,
-# under both the historical `alsa-dop` name and the current `alsa-dsd` one. Only ever
-# called once the packaged library is in place; a box whose build failed keeps its
-# override, since removing it there restores the SIGABRT. Deleting the tree under a
-# running MPD is safe (the mapping holds the inode); it picks up the packaged library
-# at its next restart.
+# would keep running an untracked binary that no upgrade ever reaches - so retire it.
+# Only ever called once the packaged library is in place; a box whose build failed
+# keeps its override, since removing it there restores the SIGABRT. Deleting the tree
+# under a running MPD is safe (the mapping holds the inode); it picks up the packaged
+# library at its next restart.
+#
+# Detection is by CONTENT, never by file name: an override laid down by hand can sit
+# in any unit, under any file name (the historical one is `zz-alsa-dop.conf` under
+# mpd.service.d, the current naming is alsa-dsd - the tree holds the DSD scope fixes,
+# not DoP). Matching names would leave a differently-named copy silently in charge,
+# which is the exact failure this audit exists for. Every removal is logged by path.
 alsa_retire_dsd_override() {
-	local removed=0 f
-	for f in /etc/systemd/system/mpd.service.d/zz-alsa-dop.conf \
-	         /etc/systemd/system/mpd.service.d/zz-alsa-dsd.conf; do
-		if [ -f "$f" ]; then rm -f "$f"; removed=1; fi
-	done
-	rmdir /etc/systemd/system/mpd.service.d 2>/dev/null || true
-	for f in /opt/alsa-dop /opt/alsa-dsd; do
-		if [ -d "$f" ]; then rm -rf "$f"; removed=1; fi
+	local removed=0 f d
+	# 1. unit drop-ins pointing a service at an alsa-lib built under /opt
+	while IFS= read -r f; do
+		[ -n "$f" ] || continue
+		d="$(dirname "$f")"; rm -f "$f"; removed=1
+		log "Removed alsa override drop-in: $f"
+		rmdir "$d" 2>/dev/null || true
+	done < <(grep -rlE 'LD_LIBRARY_PATH=[^[:space:]]*/opt/alsa-' /etc/systemd/system/ 2>/dev/null || true)
+	# 2. the same override through the dynamic linker's search path
+	while IFS= read -r f; do
+		[ -n "$f" ] || continue
+		rm -f "$f"; removed=1
+		log "Removed alsa override ld.so path: $f"
+	done < <(grep -rlE '^[[:space:]]*/opt/alsa-' /etc/ld.so.conf.d/ 2>/dev/null || true)
+	# 3. the trees themselves - a /opt directory is removed only when it actually
+	#    holds a libasound, so /opt/alsaequal, /opt/peppymeter, /opt/peppyspectrum
+	#    and /opt/camillagui can never be caught by this.
+	for d in /opt/*/; do
+		if ls "$d"lib/libasound.so* >/dev/null 2>&1; then
+			rm -rf "${d%/}"; removed=1
+			log "Removed hand-built alsa-lib tree: ${d%/}"
+		fi
 	done
 	if [ "$removed" = 1 ]; then
 		systemctl daemon-reload >/dev/null 2>&1 || true
-		log "Retired the hand-built alsa-dsd override (/opt tree + mpd drop-in)"
+		ldconfig 2>/dev/null || true
+		log "Retired the hand-built alsa-dsd override; MPD uses the packaged libasound from its next restart"
 	fi
 }
 
@@ -1057,6 +1077,7 @@ else
 	if dpkg --compare-versions "$ALSA_UPSTREAM_VER" gt "$ALSA_PATCH_TESTED"; then
 		warn "alsa-lib: the distro ships $ALSA_DISTRO_VER, newer than the last tested $ALSA_PATCH_TESTED - the meter scope may already be fixed upstream, or these patches may need updating"
 	fi
+	ALSA_DEBIAN_URL="${ALSA_MIRROR}/pool/main/a/alsa-lib/alsa-lib_${ALSA_DISTRO_VER}.debian.tar.xz"
 	$APT_INSTALL build-essential dpkg-dev devscripts equivs fakeroot git wget patch
 	ALSA_BLD="$(mktemp -d)"
 	if ( cd "$ALSA_BLD" \
@@ -1064,7 +1085,7 @@ else
 			&& cd "alsa-lib-$ALSA_UPSTREAM_VER" \
 			&& git checkout -q "v$ALSA_UPSTREAM_VER" \
 			&& git archive --format=tar.gz --output "../alsa-lib_${ALSA_UPSTREAM_VER}.orig.tar.gz" "v$ALSA_UPSTREAM_VER" \
-			&& wget -q -O ../alsa-lib.debian.tar.xz "${ALSA_MIRROR}/pool/main/a/alsa-lib/alsa-lib_${ALSA_DISTRO_VER}.debian.tar.xz" \
+			&& wget -q -O ../alsa-lib.debian.tar.xz "$ALSA_DEBIAN_URL" \
 			&& tar -xf ../alsa-lib.debian.tar.xz \
 			&& patch -p1 < "$REPO_DIR/patches/alsa_lib_scope_no_abort.patch" \
 			&& EDITOR=/bin/true dpkg-source --commit . alsa_lib_scope_no_abort.patch \
@@ -1094,7 +1115,21 @@ else
 			# `1.2.14-1moode1` BELOW `1.2.14-1+deb13u1` (a letter sorts before a
 			# non-letter), so a point update would silently win the comparison.
 			apt-mark hold "${_alsa_pkgs[@]}" >/dev/null 2>&1 || true
+			# Trace WHAT was built, WHEN and FROM WHICH patches. The rebuild guard is
+			# the package version alone, so without this record nothing on the box says
+			# which revision of the two patches the installed library actually carries.
+			mkdir -p "$NOPI_BUILT_DIR"
+			{
+				printf 'version:  %s\n' "$ALSA_TARGET_VER"
+				printf 'built:    %s\n' "$(date -Is)"
+				printf 'source:   %s tag v%s\n' "$ALSA_GIT" "$ALSA_UPSTREAM_VER"
+				printf 'debian:   %s\n' "$ALSA_DEBIAN_URL"
+				printf 'patches:  %s\n' "$(sha256sum "$REPO_DIR"/patches/alsa_lib_scope_*.patch 2>/dev/null \
+					| awk '{n = split($2, p, "/"); printf "%s=%.12s ", p[n], $1}')"
+				printf 'packages: %s\n' "${_alsa_pkgs[*]}"
+			} > "$NOPI_BUILT_DIR/alsa-lib"
 			log "Built alsa-lib $ALSA_TARGET_VER (meter scope: no abort, DSD levels) -> ${_alsa_pkgs[*]}"
+			log "  record: $NOPI_BUILT_DIR/alsa-lib"
 			alsa_retire_dsd_override
 		else
 			warn "alsa-lib install failed (stock library kept; see $REPO_DIR/build-alsa-lib.log)"
@@ -2604,6 +2639,34 @@ if [ "${#_missing[@]}" -gt 0 ]; then
 	for f in "${_missing[@]}"; do warn "  - $f"; done
 else
 	log "Config-file parity: all ${#EXPECTED_CONF[@]} expected default config files present"
+fi
+
+# --------------------------------------------------------------------------
+# Runtime check: which libasound MPD actually loaded
+# --------------------------------------------------------------------------
+# Phase 1j packages the patched alsa-lib and retires the hand-built /opt override
+# that used to supply it. Only the running process can prove that override is gone:
+# package integrity tools answer "are the FILES intact?", never "what did the PROCESS
+# map?" - a systemd drop-in plus a /opt prefix is designed to keep `dpkg -V` clean,
+# and that once cost a full evening of wrong conclusions. So read the mapping itself,
+# unanchored, and state plainly what is loaded. Services are up by now (Phase 7).
+_alsa_pkg_ver="$(dpkg-query -W -f='${Version}' libasound2t64 2>/dev/null || true)"
+_mpd_pid="$(pgrep -x mpd 2>/dev/null | head -1 || true)"
+_alsa_mapped=""
+if [ -n "$_mpd_pid" ] && [ -r "/proc/$_mpd_pid/maps" ]; then
+	_alsa_mapped="$(awk '/libasound\.so/ {print $6; exit}' "/proc/$_mpd_pid/maps" 2>/dev/null || true)"
+fi
+if [ -z "$_alsa_mapped" ]; then
+	log "libasound: package ${_alsa_pkg_ver:-not installed} (mpd not running - mapping not verified)"
+else
+	case "$_alsa_mapped" in
+		/usr/lib/*)
+			log "libasound: mpd loads $_alsa_mapped (package ${_alsa_pkg_ver:-unknown})" ;;
+		*)
+			warn "libasound: mpd loads $_alsa_mapped - NOT the packaged library"
+			warn "  (package ${_alsa_pkg_ver:-unknown}). An override is still in charge:"
+			warn "  systemctl cat mpd | grep -i environment ; ls /opt" ;;
+	esac
 fi
 
 # Remove the temporary build swapfile we created for low-RAM boards (the heavy
