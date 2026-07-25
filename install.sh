@@ -1123,8 +1123,8 @@ else
 			&& env -u TMPDIR mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
 			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-alsa-lib.log" 2>&1; then
 		# Replace only what this host already runs: libasound2t64, libasound2-data,
-		# libatopology2t64 and, when present, libasound2-dev. One dpkg call so the
-		# tightly versioned inter-dependencies resolve together.
+		# libatopology2t64 and, when present, libasound2-dev. The doc/udeb/dbgsym
+		# packages the build also produces are left alone.
 		_alsa_debs=(); _alsa_pkgs=()
 		for _deb in "$ALSA_BLD"/*.deb; do
 			[ -f "$_deb" ] || continue
@@ -1134,7 +1134,25 @@ else
 				'install ok installed') _alsa_debs+=("$_deb"); _alsa_pkgs+=("$_p") ;;
 			esac
 		done
-		if [ "${#_alsa_debs[@]}" -gt 0 ] && dpkg -i --force-confold "${_alsa_debs[@]}" >/dev/null 2>&1; then
+		# apt, not `dpkg -i`: dpkg installs each archive independently and happily
+		# leaves the set half-done - measured, it upgraded libasound2t64 and skipped
+		# libasound2-data, and since libasound2t64 Depends: libasound2-data (>= same
+		# version) EVERY later apt call on the box then failed with unmet dependencies.
+		# apt computes one plan for the whole set and refuses rather than half-apply it.
+		# Output goes to the build log, never to /dev/null: this is the step that
+		# mutates the system, so its error message is the one that matters most.
+		_alsa_installed=0
+		if [ "${#_alsa_debs[@]}" -gt 0 ] \
+			&& apt-get install -y --allow-downgrades --allow-change-held-packages \
+				"${_alsa_debs[@]}" >> "$REPO_DIR/build-alsa-lib.log" 2>&1; then
+			# Trust the END STATE, not the exit code: every package we replaced must
+			# now carry the target version, or the set is inconsistent.
+			_alsa_installed=1
+			for _p in "${_alsa_pkgs[@]}"; do
+				dpkg_ver_is "$_p" "$ALSA_TARGET_VER" || _alsa_installed=0
+			done
+		fi
+		if [ "$_alsa_installed" = 1 ]; then
 			# Mandatory, and not merely to keep Debian's package out: dpkg orders
 			# `1.2.14-1moode1` BELOW `1.2.14-1+deb13u1` (a letter sorts before a
 			# non-letter), so a point update would silently win the comparison.
@@ -1156,7 +1174,18 @@ else
 			log "  record: $NOPI_BUILT_DIR/alsa-lib"
 			alsa_retire_dsd_override
 		else
-			warn "alsa-lib install failed (stock library kept; see $REPO_DIR/build-alsa-lib.log)"
+			# Put the distro's own packages back rather than leave a partially replaced
+			# set behind: an unconfigured libasound2t64 breaks apt for every phase that
+			# follows (and for the user afterwards). The /opt override, if any, is left
+			# armed on purpose - it is what keeps a DSD queue from aborting MPD.
+			if [ "${#_alsa_pkgs[@]}" -gt 0 ]; then
+				_alsa_restore=()
+				for _p in "${_alsa_pkgs[@]}"; do _alsa_restore+=("$_p=$ALSA_DISTRO_VER"); done
+				apt-get install -y --allow-downgrades --allow-change-held-packages \
+					"${_alsa_restore[@]}" >> "$REPO_DIR/build-alsa-lib.log" 2>&1 || true
+				apt-mark unhold "${_alsa_pkgs[@]}" >/dev/null 2>&1 || true
+			fi
+			warn "alsa-lib install failed; distro packages ($ALSA_DISTRO_VER) restored - see $REPO_DIR/build-alsa-lib.log"
 		fi
 	else
 		warn "alsa-lib moode build failed (native DSD + a meter scope can abort MPD; stock library kept; see $REPO_DIR/build-alsa-lib.log)"
