@@ -35,12 +35,11 @@ if (isset($_POST['update_bt_settings'])) {
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('btsvc', '', NOTIFY_TITLE_INFO, NAME_BLUETOOTH . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
-if (isset($_POST['update_bt_pin_code']) && $_POST['update_bt_pin_code'] != 'Pincode set') {
-	phpSession('write', 'bt_pin_code', $_POST['bt_pin_code']);
-	$notify = $_SESSION['btsvc'] == '1' ?
-		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_BLUETOOTH_PAIRING_AGENT . NOTIFY_MSG_SVC_RESTARTED) :
-		array('title' => '', 'msg' => '');
-	submitJob('bt_pin_code', $_SESSION['bt_pin_code'], $notify['title'], $notify['msg']);
+if (isset($_POST['update_bt_pairing_confirm']) && isset($_POST['bt_pairing_confirm'])
+		&& $_POST['bt_pairing_confirm'] != $_SESSION['bt_pairing_confirm']) {
+	phpSession('write', 'bt_pairing_confirm', $_POST['bt_pairing_confirm']);
+	$_msg = 'Pairing confirmation ' . ($_POST['bt_pairing_confirm'] == '1' ? 'enabled' : 'disabled');
+	submitJob('bt_pairing_confirm', '', NOTIFY_TITLE_INFO, $_msg);
 }
 if (isset($_POST['update_alsavolume_max_bt'])) {
 	$_SESSION['alsavolume_max_bt'] = $_POST['alsavolume_max_bt'];
@@ -218,13 +217,9 @@ $autoClick = " onchange=\"autoClick('#btn-set-btsvc');\"";
 $_select['btsvc_on']  .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-1\" value=\"1\" " . (($_SESSION['btsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['btsvc_off'] .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-2\" value=\"0\" " . (($_SESSION['btsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['btname'] = $_SESSION['btname'];
-if (empty($_SESSION['bt_pin_code'])) {
-	$_bt_pin_code = '';
-	$_pwd_input_format = 'password';
-} else {
-	$_bt_pin_code = 'Pincode set';
-	$_pwd_input_format = 'text';
-}
+$autoClick = " onchange=\"autoClick('#btn-set-btpairconfirm');\"";
+$_select['bt_pairing_confirm_on']  = "<input type=\"radio\" name=\"bt_pairing_confirm\" id=\"toggle-btpairconfirm-1\" value=\"1\" " . (($_SESSION['bt_pairing_confirm'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['bt_pairing_confirm_off'] = "<input type=\"radio\" name=\"bt_pairing_confirm\" id=\"toggle-btpairconfirm-2\" value=\"0\" " . (($_SESSION['bt_pairing_confirm'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max_bt = '';

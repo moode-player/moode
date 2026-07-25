@@ -52,6 +52,13 @@ switch ($_GET['cmd']) {
 	case 'get_spotmeta':
 		echo trim(file_get_contents(SPOTMETA_CACHE_FILE));
 		break;
+	// Relay the user's answer to a Bluetooth pairing confirmation (see the modal in
+	// footer.php and bt-pairing-agent.py). $_POST: id, accepted ('1'/'0'), code (optional).
+	case 'bt_pair_response':
+		$code = isset($_POST['code']) ? $_POST['code'] : '';
+		$ok = sendBtAgentResponse($_POST['id'], $_POST['accepted'], $code);
+		echo json_encode($ok ? 'ok' : 'failed');
+		break;
 	default:
 		echo 'Unknown command';
 		break;

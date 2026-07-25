@@ -472,7 +472,7 @@ function autoConfigSettings() {
 		['requires' => ['rbsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmafterrb'], 'handler' => 'setSessVarSql'],
 		'Bluetooth',
-		['requires' => ['bt_pin_code'], 'handler' => 'setSessVarOnly'],
+		['requires' => ['bt_pairing_confirm'], 'handler' => 'setSessVarSql'],
 		['requires' => ['alsavolume_max_bt'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['cdspvolume_max_bt'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['audioout'], 'handler' => function($values) {

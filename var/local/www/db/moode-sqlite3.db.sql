@@ -1001,6 +1001,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'S
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (176, 'bt_pairing_confirm', '1');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

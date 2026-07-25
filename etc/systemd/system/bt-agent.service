@@ -6,9 +6,10 @@ PartOf=bluetooth.service
 [Service]
 Type=simple
 KillSignal=SIGINT
-ExecStart=/usr/bin/bt-agent -c NoInputNoOutput
-ExecStartPost=/bin/sleep 1
-ExecStartPost=/bin/hciconfig hci0 sspmode 1
+# BT_AGENT_CAPABILITY is written by the worker when the pairing mode is changed;
+# absent -> the agent defaults to DisplayYesNo (Numeric Comparison confirmation).
+EnvironmentFile=-/var/local/www/btagent.env
+ExecStart=/usr/bin/python3 /var/www/daemon/bt-pairing-agent.py
 
 [Install]
 WantedBy=bluetooth.target

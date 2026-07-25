@@ -11,6 +11,13 @@ require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
 // Bluetooth
+// Write the pairing agent's capability file. On ('1') -> DisplayYesNo (the agent asks
+// the user to confirm the pairing code); off -> NoInputNoOutput (Just Works). Read by
+// bt-agent.service via EnvironmentFile; the caller restarts bt-agent to apply it.
+function applyBtPairingConfirm($confirm) {
+	$capability = $confirm == '1' ? 'DisplayYesNo' : 'NoInputNoOutput';
+	file_put_contents(BT_AGENT_ENV, 'BT_AGENT_CAPABILITY=' . $capability . "\n");
+}
 function startBluetooth() {
 	sysCmd('systemctl start hciuart');
 	sysCmd('systemctl start bluetooth');

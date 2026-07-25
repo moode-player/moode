@@ -301,7 +301,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
 		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
 		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER (bluez-tools)\c"
-		echo -e "\nPIN code\t\t= $BT_PIN_CODE\c"
+		echo -e "\nPairing confirmation\t= $BT_PAIRING_CONFIRM\c"
 		echo -e "\nALSA max volume\t\t= $ALSAVOLUME_MAX_BT%\c"
 		echo -e "\nCDSP max volume\t\t= $CDSPVOLUME_MAX_BT dB\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
@@ -580,8 +580,8 @@ BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
 PARING_AGENT_VER=$(dpkg -l | grep bluez-tools | awk '{print $3}' | cut -d"~" -f1)
 PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
 bluez_controller_mode=$(moodeutl -d -gv bluez_controller_mode)
-TMP=$(moodeutl -d -gv bt_pin_code)
-[[ "$TMP" = "None" ]] && BT_PIN_CODE="None" || BT_PIN_CODE="******"
+TMP=$(moodeutl -d -gv bt_pairing_confirm)
+[[ "$TMP" = "1" ]] && BT_PAIRING_CONFIRM="On" || BT_PAIRING_CONFIRM="Off"
 ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)
 CDSPVOLUME_MAX_BT=$(moodeutl -d -gv cdspvolume_max_bt)
 BT_AUTO_DISCONNECT=$(moodeutl -d -gv bt_auto_disconnect)

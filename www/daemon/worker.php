@@ -217,7 +217,6 @@ sysCmd('chmod 0666 ' . SPSEVENT_LOG);
 sysCmd('chmod 0666 ' . SLPOWER_LOG);
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
-sysCmd('chmod 0600 ' . BT_PINCODE_CONF);
 if (!file_exists(ETC_MACHINE_INFO)) {
 	sysCmd('cp /usr/share/moode-player' . ETC_MACHINE_INFO . ' /etc/');
 	workerLog('worker: File check:    created default /etc/machine-info');
@@ -1075,10 +1074,12 @@ workerLog('worker: Input select:    ' . $status);
 
 // Bluetooth session vars
 $status = 'session vars ok';
-if (!isset($_SESSION['bt_pin_code'])) {
+if (!isset($_SESSION['bt_pairing_confirm'])) {
 	$status = 'session vars created';
-	$_SESSION['bt_pin_code'] = '';
+	$_SESSION['bt_pairing_confirm'] = '1';
 }
+// Keep the agent's capability file in step with the setting before it is started.
+applyBtPairingConfirm($_SESSION['bt_pairing_confirm']);
 // ALSA/CDSP max volumes
 if (!isset($_SESSION['alsavolume_max_bt'])) {
 	$_SESSION['alsavolume_max_bt'] = $_SESSION['alsavolume_max'];
@@ -1105,7 +1106,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 } else {
 	$status = 'n/a';
 }
-$status .= ', PIN: ' . (empty($_SESSION['bt_pin_code']) ? 'None' : 'Set');
+$status .= ', Confirm: ' . ($_SESSION['bt_pairing_confirm'] == '1' ? 'On' : 'Off');
 $status .= ', ALSA/CDSP max: ' . $_SESSION['alsavolume_max_bt'] . '%/' . $_SESSION['cdspvolume_max_bt'] . 'dB';
 $status .= ', Transport: ' . $_SESSION['bluez_controller_mode'];
 workerLog('worker: Bluetooth:       ' . $status);
@@ -3224,17 +3225,10 @@ function runQueuedJob() {
 				}
 			}
 			break;
-		case 'bt_pin_code':
-			if (empty($_SESSION['w_queueargs'])) {
-				sysCmd('echo "* ' . '" > ' . BT_PINCODE_CONF);
-				sysCmd("sed -i s'|ExecStart=/usr/bin/bt-agent.*|ExecStart=/usr/bin/bt-agent -c NoInputNoOutput|' /etc/systemd/system/bt-agent.service");
-				sysCmd("sed -i s'|ExecStartPost=/bin/hciconfig.*|ExecStartPost=/bin/hciconfig hci0 sspmode 1|' /etc/systemd/system/bt-agent.service");
-			} else {
-				sysCmd('echo "* ' . $_SESSION['w_queueargs'] . '" > ' . BT_PINCODE_CONF);
-				sysCmd("sed -i s'|ExecStart=/usr/bin/bt-agent.*|ExecStart=/usr/bin/bt-agent -c NoInputNoOutput -p " . BT_PINCODE_CONF . "|' /etc/systemd/system/bt-agent.service");
-				sysCmd("sed -i s'|ExecStartPost=/bin/hciconfig.*|ExecStartPost=/bin/hciconfig hci0 sspmode 0|' /etc/systemd/system/bt-agent.service");
-			}
-			sysCmd('systemctl daemon-reload');
+		case 'bt_pairing_confirm':
+			// On: the pairing agent asks the user to confirm the code (DisplayYesNo,
+			// Numeric Comparison). Off: Just Works, no confirmation.
+			applyBtPairingConfirm($_SESSION['bt_pairing_confirm']);
 			sysCmd('systemctl restart bt-agent');
 			break;
 		case 'reset_bt_auto_disconnect':

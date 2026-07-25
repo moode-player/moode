@@ -90,6 +90,22 @@
 	</div>
 </div>
 
+<!-- BLUETOOTH PAIRING -->
+<div id="btpair-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="btpair-modal-label" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+	<div class="modal-header">
+		<h3 id="btpair-modal-label">Bluetooth pairing</h3>
+	</div>
+	<div class="modal-body">
+		<p id="btpair-modal-text" class="btpair-text"></p>
+		<p id="btpair-modal-name" class="btpair-name"></p>
+		<div id="btpair-modal-code" class="btpair-code"></div>
+	</div>
+	<div class="modal-footer">
+		<button id="btpair-cancel-btn" aria-label="Reject" class="btn" onclick="btPairRespond('0')">Reject</button>
+		<button id="btpair-confirm-btn" aria-label="Confirm" class="btn btn-primary" onclick="btPairRespond('1')">Confirm</button>
+	</div>
+</div>
+
 <!-- AUDIO INFO -->
 <div id="audioinfo-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
 	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

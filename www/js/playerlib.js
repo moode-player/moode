@@ -696,6 +696,14 @@ function engineCmd() {
                     // causing engine-cmd.php to start releasing idle connections
                     console.log(cmd[0]);
                     break;
+                case 'pairreq':
+                    // cmd: pairreq,<id>,<method>,<code>,<name_b64>,<icon>
+                    btPairRequest(cmd[1], cmd[2], cmd[3], cmd[4]);
+                    break;
+                case 'paircancel':
+                    // cmd: paircancel,<id> (timed out or the device gave up)
+                    btPairCancel(cmd[1]);
+                    break;
                 default:
                     console.log('engineCmd(): ' + cmd[0]);
                     break;
@@ -792,6 +800,54 @@ function engineCmdLite() {
 			}, ENGINE_TIMEOUT);
 		}
     });
+}
+
+// Bluetooth pairing confirmation modal. bt-pairing-agent.py pushes a pairreq; the
+// user confirms the code matches the one on their device, and the answer is POSTed
+// back to the agent. See command/renderer.php (bt_pair_response) and footer.php.
+var btPairCurrentId = null;
+
+function btPairRequest(id, method, code, nameB64) {
+	var name;
+	try { name = decodeURIComponent(escape(window.atob(nameB64))); } catch (e) { name = 'Bluetooth device'; }
+	btPairCurrentId = id;
+
+	var text, showCode = true, showConfirm = true;
+	if (method === 'confirm') {
+		text = 'Confirm this code matches the one shown on';
+	} else if (method === 'display') {
+		text = 'Enter this code on';
+		showConfirm = false; // informational; the device does the entering
+	} else if (method === 'authorize') {
+		text = 'Allow pairing with';
+		showCode = false;
+	} else {
+		text = 'Pairing request from';
+		showCode = false;
+	}
+
+	$('#btpair-modal-text').text(text);
+	$('#btpair-modal-name').text(name);
+	$('#btpair-modal-code').text(showCode ? code : '').toggle(showCode);
+	$('#btpair-confirm-btn').toggle(showConfirm);
+	$('#btpair-cancel-btn').text(showConfirm ? 'Reject' : 'Close');
+	$('#btpair-modal').modal('show');
+}
+
+function btPairRespond(accepted) {
+	if (btPairCurrentId === null) {
+		return;
+	}
+	$.post('command/renderer.php?cmd=bt_pair_response', {id: btPairCurrentId, accepted: accepted});
+	btPairCurrentId = null;
+	$('#btpair-modal').modal('hide');
+}
+
+function btPairCancel(id) {
+	if (btPairCurrentId === id) {
+		btPairCurrentId = null;
+		$('#btpair-modal').modal('hide');
+	}
 }
 
 function inpSrcIndicator(cmd, msgText) {
