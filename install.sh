@@ -157,7 +157,13 @@ NOPI_BUILD_SWAP=""
 MEM_TOTAL_MB="$(awk '/^MemTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
 SWAP_TOTAL_MB="$(awk '/^SwapTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
 
-# (1) keep build temp off the RAM-backed tmpfs
+# (1) keep build temp off the RAM-backed tmpfs.
+# ONE tool must not inherit this: `equivs-build`, which mk-build-deps drives, builds
+# its dummy build-deps package in $TMPDIR when that is set (`DIR => $ENV{TMPDIR} ||
+# cwd`) and leaves the .deb there, while mk-build-deps then runs `dpkg --unpack` on a
+# bare filename from the CURRENT directory -> "cannot access archive". Every source
+# build below therefore calls it as `env -u TMPDIR mk-build-deps`; the build tree
+# itself still lands on disk, since our mktemp -d already honoured TMPDIR.
 if [ "$(findmnt -nro FSTYPE /tmp 2>/dev/null)" = tmpfs ]; then
 	export TMPDIR=/var/tmp
 	log "/tmp is a RAM tmpfs: building in TMPDIR=/var/tmp (disk) to avoid ENOSPC + RAM theft"
@@ -833,7 +839,7 @@ EOF
 	if ( cd "$MPD_BLD" \
 			&& apt-get source "mpd=$MPD_MOODE_VER" \
 			&& cd "mpd-${MPD_MOODE_VER%-*}" \
-			&& mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
+			&& env -u TMPDIR mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
 			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-mpd.log" 2>&1 \
 		&& MPD_DEB="$(ls "$MPD_BLD"/mpd_${MPD_MOODE_VER}_*.deb 2>/dev/null | head -1)" \
 		&& [ -n "$MPD_DEB" ] \
@@ -961,7 +967,7 @@ EOF
 				&& apt-get source "squeezelite=$SL_MOODE_VER" \
 				&& cd "$(ls -d squeezelite-*/ | head -1)" \
 				&& sed -i 's/ -DGPIO -DRPI/ -DGPIO/' debian/rules \
-				&& mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
+				&& env -u TMPDIR mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
 				&& dpkg-buildpackage -b -us -uc ) >/dev/null 2>&1 \
 			&& SL_DEB="$(ls "$SL_BLD"/squeezelite_${SL_MOODE_VER}_*.deb 2>/dev/null | head -1)" \
 			&& [ -n "$SL_DEB" ] \
@@ -1028,26 +1034,44 @@ ALSA_TARGET_VER="${ALSA_DISTRO_VER}${ALSA_MOODE_REV}"
 # under a running MPD is safe (the mapping holds the inode); it picks up the packaged
 # library at its next restart.
 #
-# Detection is by CONTENT, never by file name: an override laid down by hand can sit
-# in any unit, under any file name (the historical one is `zz-alsa-dop.conf` under
-# mpd.service.d, the current naming is alsa-dsd - the tree holds the DSD scope fixes,
-# not DoP). Matching names would leave a differently-named copy silently in charge,
-# which is the exact failure this audit exists for. Every removal is logged by path.
+# Detection is by CONTENT, never by name: an override laid down by hand can sit in any
+# unit, under any file name, pointing at any directory. So nothing here matches a name
+# - a drop-in qualifies when the path it forces really holds a libasound (or no longer
+# exists at all, i.e. a leftover from a half-done cleanup), and a /opt directory
+# qualifies when it really holds one. Matching names would leave a differently-named
+# copy silently in charge, which is the exact failure this whole check exists for.
+# Every removal is logged by path.
 alsa_retire_dsd_override() {
-	local removed=0 f d
-	# 1. unit drop-ins pointing a service at an alsa-lib built under /opt
+	local removed=0 f d p hit
+	# 1. unit drop-ins forcing a service onto a libasound built under /opt
 	while IFS= read -r f; do
 		[ -n "$f" ] || continue
+		hit=0
+		while IFS= read -r p; do
+			case "$p" in
+				/opt/*)
+					if ls "$p"/libasound.so* >/dev/null 2>&1 || [ ! -d "$p" ]; then hit=1; fi ;;
+			esac
+		done < <(grep -hoE 'LD_LIBRARY_PATH=[^"[:space:]]+' "$f" | cut -d= -f2- | tr ':' '\n')
+		[ "$hit" = 1 ] || continue
 		d="$(dirname "$f")"; rm -f "$f"; removed=1
 		log "Removed alsa override drop-in: $f"
 		rmdir "$d" 2>/dev/null || true
-	done < <(grep -rlE 'LD_LIBRARY_PATH=[^[:space:]]*/opt/alsa-' /etc/systemd/system/ 2>/dev/null || true)
+	done < <(grep -rlE 'LD_LIBRARY_PATH=[^[:space:]]*/opt/' /etc/systemd/system/ 2>/dev/null || true)
 	# 2. the same override through the dynamic linker's search path
-	while IFS= read -r f; do
-		[ -n "$f" ] || continue
-		rm -f "$f"; removed=1
-		log "Removed alsa override ld.so path: $f"
-	done < <(grep -rlE '^[[:space:]]*/opt/alsa-' /etc/ld.so.conf.d/ 2>/dev/null || true)
+	for f in /etc/ld.so.conf.d/*.conf; do
+		[ -f "$f" ] || continue
+		hit=0
+		while IFS= read -r p; do
+			case "$p" in
+				/opt/*) if ls "$p"/libasound.so* >/dev/null 2>&1; then hit=1; fi ;;
+			esac
+		done < "$f"
+		if [ "$hit" = 1 ]; then
+			rm -f "$f"; removed=1
+			log "Removed alsa override ld.so path: $f"
+		fi
+	done
 	# 3. the trees themselves - a /opt directory is removed only when it actually
 	#    holds a libasound, so /opt/alsaequal, /opt/peppymeter, /opt/peppyspectrum
 	#    and /opt/camillagui can never be caught by this.
@@ -1096,7 +1120,7 @@ else
 			&& DEBFULLNAME='moode-nopi' DEBEMAIL='moode-nopi@localhost' \
 				dch -b --newversion "$ALSA_TARGET_VER" \
 				'Added PCM meter scope patches: no abort on unconvertible formats, DSD levels' \
-			&& mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
+			&& env -u TMPDIR mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
 			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-alsa-lib.log" 2>&1; then
 		# Replace only what this host already runs: libasound2t64, libasound2-data,
 		# libatopology2t64 and, when present, libasound2-dev. One dpkg call so the
@@ -2651,9 +2675,18 @@ fi
 # and that once cost a full evening of wrong conclusions. So read the mapping itself,
 # unanchored, and state plainly what is loaded. Services are up by now (Phase 7).
 _alsa_pkg_ver="$(dpkg-query -W -f='${Version}' libasound2t64 2>/dev/null || true)"
-_mpd_pid="$(pgrep -x mpd 2>/dev/null | head -1 || true)"
+# Ask systemd for the PID rather than pgrep: this runs right after Phase 7 restarted
+# the services, and a process-name match falls into the restart window (measured: the
+# check reported "mpd not running" while mpd was perfectly up). MainPID is 0 until the
+# new process exists, so give it a couple of seconds.
+_mpd_pid=0
+for _i in 1 2 3; do
+	_mpd_pid="$(systemctl show -p MainPID --value mpd 2>/dev/null || echo 0)"
+	if [ "${_mpd_pid:-0}" != 0 ]; then break; fi
+	sleep 1
+done
 _alsa_mapped=""
-if [ -n "$_mpd_pid" ] && [ -r "/proc/$_mpd_pid/maps" ]; then
+if [ "${_mpd_pid:-0}" != 0 ] && [ -r "/proc/$_mpd_pid/maps" ]; then
 	_alsa_mapped="$(awk '/libasound\.so/ {print $6; exit}' "/proc/$_mpd_pid/maps" 2>/dev/null || true)"
 fi
 if [ -z "$_alsa_mapped" ]; then
