@@ -1014,15 +1014,26 @@ ALSA_MOODE_REV="moode1"
 ALSA_PATCH_TESTED="1.2.16.1"
 ALSA_GIT="https://github.com/alsa-project/alsa-lib.git"
 
-# Distro version AND the pool the installed binary actually came from, in one query.
-# `apt-cache madison` lists repository versions only. `apt-cache policy` cannot be
-# used here: once our own build is installed it reports OUR package as the candidate
-# (measured on a live box: mpd and caps both show `Candidate: *moode1`), so the target
-# would grow a second suffix and rebuild on every run.
+# Which version to rebuild. `apt-cache madison` lists repository versions only, which
+# is why it is used instead of `apt-cache policy`: once our own build is installed,
+# policy reports OUR package as the candidate (measured: mpd and caps both show
+# `Candidate: *moode1`), so the target would grow a second suffix on every run.
+#
+# madison lists EVERY configured suite, highest version first, and that is what we
+# follow (Julien 2026-07-25): on Armbian Trixie, trixie-backports is part of the normal
+# configuration, so its alsa-lib 1.2.16.1 is a legitimate target even though apt rates
+# it priority 100 and would not install it by itself - and the two patches were written
+# against 1.2.16.1 in the first place.
+#
+# One suite must NOT win: moOde's own cloudsmith repo publishes an arm64
+# `1.2.14-1+rpt1moode1` (the pkgbuild #24+#25 build), and rebuilding THAT would stack a
+# second moode suffix on every run. Skip any version already carrying our own marker.
 _alsa_arch="$(dpkg --print-architecture)"
-_alsa_madison="$(LC_ALL=C apt-cache madison libasound2t64 2>/dev/null | awk -F'|' -v a="$_alsa_arch" '$3 ~ (a " Packages$") {print; exit}' || true)"
-ALSA_DISTRO_VER="$(printf '%s' "$_alsa_madison" | awk -F'|' '{gsub(/ /, "", $2); print $2}')"
-ALSA_MIRROR="$(printf '%s' "$_alsa_madison" | awk -F'|' '{print $3}' | awk '{print $1}')"
+ALSA_DISTRO_VER="$(LC_ALL=C apt-cache madison libasound2t64 2>/dev/null | awk -F'|' -v a="$_alsa_arch" '
+	$3 !~ (a " Packages$") { next }
+	{ gsub(/ /, "", $2) }
+	$2 ~ /moode/           { next }
+	{ print $2; exit }' || true)"
 ALSA_TARGET_VER="${ALSA_DISTRO_VER}${ALSA_MOODE_REV}"
 
 # The hand-built /opt override (a libasound compiled to its own prefix and forced on
@@ -1088,7 +1099,7 @@ alsa_retire_dsd_override() {
 	fi
 }
 
-if [ -z "$ALSA_DISTRO_VER" ] || [ -z "$ALSA_MIRROR" ]; then
+if [ -z "$ALSA_DISTRO_VER" ]; then
 	warn "alsa-lib: no repository version found for libasound2t64; skipping (stock library kept)"
 elif dpkg_ver_is libasound2t64 "$ALSA_TARGET_VER"; then
 	log "alsa-lib $ALSA_TARGET_VER already installed"
@@ -1101,10 +1112,19 @@ else
 	if dpkg --compare-versions "$ALSA_UPSTREAM_VER" gt "$ALSA_PATCH_TESTED"; then
 		warn "alsa-lib: the distro ships $ALSA_DISTRO_VER, newer than the last tested $ALSA_PATCH_TESTED - the meter scope may already be fixed upstream, or these patches may need updating"
 	fi
-	ALSA_DEBIAN_URL="${ALSA_MIRROR}/pool/main/a/alsa-lib/alsa-lib_${ALSA_DISTRO_VER}.debian.tar.xz"
-	$APT_INSTALL build-essential dpkg-dev devscripts equivs fakeroot git wget patch
+	# Ask apt where that exact binary lives instead of assembling a pool path by hand:
+	# Debian pools are keyed by SOURCE package, so the .deb's own directory is also where
+	# alsa-lib's debian tarball sits - and this way any layout works, including the
+	# security archive (pool/updates/...) and third-party mirrors, without a special case.
+	_alsa_deb_uri="$(LC_ALL=C apt-get --print-uris download "libasound2t64=$ALSA_DISTRO_VER" 2>/dev/null \
+		| awk -F"'" '{print $2; exit}')"
+	ALSA_DEBIAN_URL=""
+	[ -n "$_alsa_deb_uri" ] && ALSA_DEBIAN_URL="${_alsa_deb_uri%/*}/alsa-lib_${ALSA_DISTRO_VER}.debian.tar.xz"
+	if [ -n "$ALSA_DEBIAN_URL" ]; then
+		$APT_INSTALL build-essential dpkg-dev devscripts equivs fakeroot git wget patch
+	fi
 	ALSA_BLD="$(mktemp -d)"
-	if ( cd "$ALSA_BLD" \
+	if [ -n "$ALSA_DEBIAN_URL" ] && ( cd "$ALSA_BLD" \
 			&& git clone -q "$ALSA_GIT" "alsa-lib-$ALSA_UPSTREAM_VER" \
 			&& cd "alsa-lib-$ALSA_UPSTREAM_VER" \
 			&& git checkout -q "v$ALSA_UPSTREAM_VER" \
