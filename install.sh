@@ -2693,7 +2693,7 @@ EXPECTED_CONF=(
 	/etc/alsa/conf.d/_sndaloop.conf /etc/alsa/conf.d/alsaequal.conf
 	/etc/alsa/conf.d/btstream.conf /etc/alsa/conf.d/crossfeed.conf
 	/etc/alsa/conf.d/eqfa12p.conf /etc/alsa/conf.d/invpolarity.conf
-	/etc/alsa/conf.d/peppy.conf.hide /etc/alsa/conf.d/trx_send.conf
+	/etc/alsa/conf.d/trx_send.conf
 	/etc/avahi/services/moode.service /etc/avahi/services/samba.service
 	/etc/deezer/deezer.toml /etc/squeezelite.conf
 	/etc/nginx/moode-locations.conf /etc/nginx/proxy.conf
@@ -2718,6 +2718,14 @@ if [ "$INSTALL_SQUEEZELITE" = 1 ]; then
 fi
 _missing=()
 for f in "${EXPECTED_CONF[@]}"; do [ -e "$f" ] || _missing+=("$f"); done
+# peppy.conf and peppy.conf.hide are ONE conffile in two states, not two files: the
+# package ships both, then the worker deletes whichever contradicts the Peppy setting
+# (worker.php "File check" -> "peppy is on, removed peppy.conf.hide"). Exactly one
+# exists at runtime, so check the PAIR. Listing them individually warned on every
+# install with Peppy enabled.
+if [ ! -e /etc/alsa/conf.d/peppy.conf ] && [ ! -e /etc/alsa/conf.d/peppy.conf.hide ]; then
+	_missing+=("/etc/alsa/conf.d/peppy.conf (or .hide)")
+fi
 if [ "${#_missing[@]}" -gt 0 ]; then
 	warn "Config-file parity: ${#_missing[@]} expected default file(s) MISSING:"
 	for f in "${_missing[@]}"; do warn "  - $f"; done
