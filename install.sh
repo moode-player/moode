@@ -976,6 +976,136 @@ EOF
 fi
 
 #----------------------------------------------------------------------------#
+# Phase 1j - alsa-lib with the PCM meter scope patches
+#----------------------------------------------------------------------------#
+# The `type meter` plugin's s16 scope - what libpeppyalsa (Phase 1g) taps - returns
+# -EINVAL for every format it cannot convert to S16 (the DSD formats, the 3-byte
+# packed ones, float), yet any other scope still reaches the buffer it then never
+# allocated and assert()s on it: the calling application dies. MPD SIGABRTs mid-track
+# on native DSD. Two patches fix it: read silence instead of aborting, and recover a
+# level from a DSD stream by bit density so the needles work on native DSD.
+#
+# This mirrors moOde's own recipe (pkgbuild packages/alsa-lib/build.sh, PRs #24+#25):
+# same patch files, same post-patch marker greps, same `moode1` suffix and apt hold.
+# Built the way that recipe settled on - the upstream release tag from git plus the
+# running distro's own debian/ grabbed as a plain tarball. NOT a .dsc: fetching one by
+# URL means inheriting that pool's signing key, which is exactly what broke #24.
+#
+# Both patches are submitted upstream (alsa-project/alsa-lib #516 and #517), but a
+# merge there is only the first of four steps - alsa-project must cut a release,
+# Debian package it, the base OS pick it up. Trixie is stable and keeps 1.2.14 for
+# life, so the fix reaches users on the NEXT base OS. Drop this phase when a base OS
+# actually ships a fixed alsa-lib. Any rework of #516/#517 must be replayed into BOTH
+# the pkgbuild recipe and the patch files here - they are one object in two places.
+
+log "Phase 1j: alsa-lib with the PCM meter scope patches"
+
+# Bumped BY HAND when the patch files change (moOde does the same: peppy-alsa went
+# 1moode1 -> 1moode2 when its patch changed). Together with the distro's own version
+# this is the whole rebuild trigger: a re-run or an --update on an unchanged Debian
+# rebuilds nothing.
+ALSA_MOODE_REV="moode1"
+ALSA_PATCH_TESTED="1.2.16.1"
+ALSA_GIT="https://github.com/alsa-project/alsa-lib.git"
+
+# Distro version AND the pool the installed binary actually came from, in one query.
+# `apt-cache madison` lists repository versions only. `apt-cache policy` cannot be
+# used here: once our own build is installed it reports OUR package as the candidate
+# (measured on a live box: mpd and caps both show `Candidate: *moode1`), so the target
+# would grow a second suffix and rebuild on every run.
+_alsa_arch="$(dpkg --print-architecture)"
+_alsa_madison="$(LC_ALL=C apt-cache madison libasound2t64 2>/dev/null | awk -F'|' -v a="$_alsa_arch" '$3 ~ (a " Packages$") {print; exit}' || true)"
+ALSA_DISTRO_VER="$(printf '%s' "$_alsa_madison" | awk -F'|' '{gsub(/ /, "", $2); print $2}')"
+ALSA_MIRROR="$(printf '%s' "$_alsa_madison" | awk -F'|' '{print $3}' | awk '{print $1}')"
+ALSA_TARGET_VER="${ALSA_DISTRO_VER}${ALSA_MOODE_REV}"
+
+# The hand-built /opt override (a libasound compiled to its own prefix and forced on
+# MPD through an LD_LIBRARY_PATH drop-in) was the pre-packaging way to run these
+# patches on non-Pi hardware. Once the .deb is in, that override SHADOWS it - MPD
+# would keep running an untracked binary that no upgrade ever reaches - so retire it,
+# under both the historical `alsa-dop` name and the current `alsa-dsd` one. Only ever
+# called once the packaged library is in place; a box whose build failed keeps its
+# override, since removing it there restores the SIGABRT. Deleting the tree under a
+# running MPD is safe (the mapping holds the inode); it picks up the packaged library
+# at its next restart.
+alsa_retire_dsd_override() {
+	local removed=0 f
+	for f in /etc/systemd/system/mpd.service.d/zz-alsa-dop.conf \
+	         /etc/systemd/system/mpd.service.d/zz-alsa-dsd.conf; do
+		if [ -f "$f" ]; then rm -f "$f"; removed=1; fi
+	done
+	rmdir /etc/systemd/system/mpd.service.d 2>/dev/null || true
+	for f in /opt/alsa-dop /opt/alsa-dsd; do
+		if [ -d "$f" ]; then rm -rf "$f"; removed=1; fi
+	done
+	if [ "$removed" = 1 ]; then
+		systemctl daemon-reload >/dev/null 2>&1 || true
+		log "Retired the hand-built alsa-dsd override (/opt tree + mpd drop-in)"
+	fi
+}
+
+if [ -z "$ALSA_DISTRO_VER" ] || [ -z "$ALSA_MIRROR" ]; then
+	warn "alsa-lib: no repository version found for libasound2t64; skipping (stock library kept)"
+elif dpkg_ver_is libasound2t64 "$ALSA_TARGET_VER"; then
+	log "alsa-lib $ALSA_TARGET_VER already installed"
+	alsa_retire_dsd_override
+else
+	ALSA_UPSTREAM_VER="${ALSA_DISTRO_VER%%-*}"
+	# The patches were written against 1.2.14 and dry-run clean through 1.2.16.1. Past
+	# that, warn - the scope may already be fixed upstream, or the hunks may need a
+	# refresh - but let the build run and fail loudly on its own if it must.
+	if dpkg --compare-versions "$ALSA_UPSTREAM_VER" gt "$ALSA_PATCH_TESTED"; then
+		warn "alsa-lib: the distro ships $ALSA_DISTRO_VER, newer than the last tested $ALSA_PATCH_TESTED - the meter scope may already be fixed upstream, or these patches may need updating"
+	fi
+	$APT_INSTALL build-essential dpkg-dev devscripts equivs fakeroot git wget patch
+	ALSA_BLD="$(mktemp -d)"
+	if ( cd "$ALSA_BLD" \
+			&& git clone -q "$ALSA_GIT" "alsa-lib-$ALSA_UPSTREAM_VER" \
+			&& cd "alsa-lib-$ALSA_UPSTREAM_VER" \
+			&& git checkout -q "v$ALSA_UPSTREAM_VER" \
+			&& git archive --format=tar.gz --output "../alsa-lib_${ALSA_UPSTREAM_VER}.orig.tar.gz" "v$ALSA_UPSTREAM_VER" \
+			&& wget -q -O ../alsa-lib.debian.tar.xz "${ALSA_MIRROR}/pool/main/a/alsa-lib/alsa-lib_${ALSA_DISTRO_VER}.debian.tar.xz" \
+			&& tar -xf ../alsa-lib.debian.tar.xz \
+			&& patch -p1 < "$REPO_DIR/patches/alsa_lib_scope_no_abort.patch" \
+			&& EDITOR=/bin/true dpkg-source --commit . alsa_lib_scope_no_abort.patch \
+			&& patch -p1 < "$REPO_DIR/patches/alsa_lib_scope_dsd_levels.patch" \
+			&& EDITOR=/bin/true dpkg-source --commit . alsa_lib_scope_dsd_levels.patch \
+			&& grep -q 's16->silent' src/pcm/pcm_meter.c \
+			&& grep -q 'dsd_frame_bits' src/pcm/pcm_meter.c \
+			&& DEBFULLNAME='moode-nopi' DEBEMAIL='moode-nopi@localhost' \
+				dch -b --newversion "$ALSA_TARGET_VER" \
+				'Added PCM meter scope patches: no abort on unconvertible formats, DSD levels' \
+			&& mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
+			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-alsa-lib.log" 2>&1; then
+		# Replace only what this host already runs: libasound2t64, libasound2-data,
+		# libatopology2t64 and, when present, libasound2-dev. One dpkg call so the
+		# tightly versioned inter-dependencies resolve together.
+		_alsa_debs=(); _alsa_pkgs=()
+		for _deb in "$ALSA_BLD"/*.deb; do
+			[ -f "$_deb" ] || continue
+			_p="$(dpkg-deb -f "$_deb" Package 2>/dev/null || true)"
+			[ -n "$_p" ] || continue
+			case "$(dpkg-query -W -f='${Status}' "$_p" 2>/dev/null || true)" in
+				'install ok installed') _alsa_debs+=("$_deb"); _alsa_pkgs+=("$_p") ;;
+			esac
+		done
+		if [ "${#_alsa_debs[@]}" -gt 0 ] && dpkg -i --force-confold "${_alsa_debs[@]}" >/dev/null 2>&1; then
+			# Mandatory, and not merely to keep Debian's package out: dpkg orders
+			# `1.2.14-1moode1` BELOW `1.2.14-1+deb13u1` (a letter sorts before a
+			# non-letter), so a point update would silently win the comparison.
+			apt-mark hold "${_alsa_pkgs[@]}" >/dev/null 2>&1 || true
+			log "Built alsa-lib $ALSA_TARGET_VER (meter scope: no abort, DSD levels) -> ${_alsa_pkgs[*]}"
+			alsa_retire_dsd_override
+		else
+			warn "alsa-lib install failed (stock library kept; see $REPO_DIR/build-alsa-lib.log)"
+		fi
+	else
+		warn "alsa-lib moode build failed (native DSD + a meter scope can abort MPD; stock library kept; see $REPO_DIR/build-alsa-lib.log)"
+	fi
+	rm -rf "$ALSA_BLD"
+fi
+
+#----------------------------------------------------------------------------#
 # Phase 2 - Deploy the web application tree
 #----------------------------------------------------------------------------#
 

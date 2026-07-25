@@ -1,0 +1,165 @@
+diff --git a/src/pcm/pcm_meter.c b/src/pcm/pcm_meter.c
+index dd57f5ca..4cd1e60d 100644
+--- a/src/pcm/pcm_meter.c
++++ b/src/pcm/pcm_meter.c
+@@ -1004,8 +1004,100 @@ typedef struct _snd_pcm_scope_s16 {
+ 	int16_t *buf;
+ 	snd_pcm_channel_area_t *buf_areas;
+ 	int silent;
++	unsigned int dsd_bits;		/* DSD bits per frame and channel */
++	unsigned int dsd_shift;		/* smoothing time constant, in frames */
++	int32_t *dsd_states;
+ } snd_pcm_scope_s16_t;
+ 
++/* DSD carries no sample values, only a bit density: over a short window the
++ * proportion of ones IS the amplitude, one half being silence. So one S16 sample
++ * per frame can be recovered by counting the bits of that frame and smoothing the
++ * result, which is what the scopes need - a level, not a reconstruction.
++ *
++ * Counting bits is invariant to their order, so the LE and BE variants share one
++ * code path and only the width of a frame matters.
++ *
++ * Two things set the quality. The count itself is noisy - 32 bits give a standard
++ * deviation of 0.5/sqrt(32) - hence the smoothing, whose time constant is taken
++ * from the rate so that it is a duration rather than a number of frames, and so
++ * behaves the same from DSD64 to DSD512. And the scale: 0 dBFS in DSD is a 50%
++ * modulation index, so a full-scale signal only swings the density between 25% and
++ * 75%; referring to the whole range would read 6 dB low.
++ */
++static unsigned int dsd_frame_bits(snd_pcm_format_t format)
++{
++	switch (format) {
++	case SND_PCM_FORMAT_DSD_U8:
++		return 8;
++	case SND_PCM_FORMAT_DSD_U16_LE:
++	case SND_PCM_FORMAT_DSD_U16_BE:
++		return 16;
++	case SND_PCM_FORMAT_DSD_U32_LE:
++	case SND_PCM_FORMAT_DSD_U32_BE:
++		return 32;
++	default:
++		return 0;
++	}
++}
++
++static void s16_dsd_decode(const snd_pcm_channel_area_t *dst_areas,
++			   snd_pcm_uframes_t dst_offset,
++			   const snd_pcm_channel_area_t *src_areas,
++			   snd_pcm_uframes_t src_offset,
++			   unsigned int channels, snd_pcm_uframes_t frames,
++			   unsigned int bits, unsigned int shift,
++			   int32_t *states)
++{
++	static const unsigned char popcount[256] = {
++#define P2(n) n, n + 1, n + 1, n + 2
++#define P4(n) P2(n), P2(n + 1), P2(n + 1), P2(n + 2)
++#define P6(n) P4(n), P4(n + 1), P4(n + 1), P4(n + 2)
++		P6(0), P6(1), P6(1), P6(2)
++#undef P6
++#undef P4
++#undef P2
++	};
++	unsigned int channel, bytes = bits / 8;
++
++	for (channel = 0; channel < channels; ++channel, ++states) {
++		const snd_pcm_channel_area_t *src_area = &src_areas[channel];
++		const snd_pcm_channel_area_t *dst_area = &dst_areas[channel];
++		const unsigned char *src;
++		char *dst;
++		int src_step, dst_step;
++		snd_pcm_uframes_t frames1 = frames;
++		int32_t acc = *states;
++
++		src = snd_pcm_channel_area_addr(src_area, src_offset);
++		src_step = snd_pcm_channel_area_step(src_area);
++		dst = snd_pcm_channel_area_addr(dst_area, dst_offset);
++		dst_step = snd_pcm_channel_area_step(dst_area);
++
++		while (frames1-- > 0) {
++			unsigned int i, ones = 0;
++			int sample;
++
++			for (i = 0; i < bytes; i++)
++				ones += popcount[src[i]];
++			/* density deviation, doubled because full scale is a
++			 * 50% modulation index, in Q15 */
++			sample = ((int)(2 * ones) - (int)bits) * (2 * 32767) /
++				 (int)bits;
++			/* exponential average: acc holds the sum, not the mean */
++			acc += sample - (acc >> shift);
++			sample = acc >> shift;
++			if (sample > 32767)
++				sample = 32767;
++			else if (sample < -32768)
++				sample = -32768;
++			*(int16_t *)dst = sample;
++			dst += dst_step;
++			src += src_step;
++		}
++		*states = acc;
++	}
++}
++
+ static int s16_enable(snd_pcm_scope_t *scope)
+ {
+ 	snd_pcm_scope_s16_t *s16 = scope->private_data;
+@@ -1041,6 +1133,20 @@ static int s16_enable(snd_pcm_scope_t *scope)
+ 	case SND_PCM_FORMAT_U32_BE:
+ 		idx = snd_pcm_linear_convert_index(spcm->format, SND_PCM_FORMAT_S16);
+ 		break;
++	case SND_PCM_FORMAT_DSD_U8:
++	case SND_PCM_FORMAT_DSD_U16_LE:
++	case SND_PCM_FORMAT_DSD_U16_BE:
++	case SND_PCM_FORMAT_DSD_U32_LE:
++	case SND_PCM_FORMAT_DSD_U32_BE:
++		s16->dsd_bits = dsd_frame_bits(spcm->format);
++		/* Smooth over about a quarter of a millisecond, taken from the
++		 * rate so the behaviour is the same at every DSD rate. */
++		s16->dsd_shift = 1;
++		while ((1U << (s16->dsd_shift + 1)) <= spcm->rate / 4000 &&
++		       s16->dsd_shift < 8)
++			s16->dsd_shift++;
++		idx = 0;
++		break;
+ 	default:
+ 		/* No S16 conversion exists for this format - DSD, the 3-byte
+ 		 * packed formats, float. Leaving the scope disabled is worse
+@@ -1063,6 +1169,11 @@ static int s16_enable(snd_pcm_scope_t *scope)
+ 		if (!s16->adpcm_states)
+ 			return -ENOMEM;
+ 	}
++	if (s16->dsd_bits) {
++		s16->dsd_states = calloc(spcm->channels, sizeof(*s16->dsd_states));
++		if (!s16->dsd_states)
++			return -ENOMEM;
++	}
+ 	/* calloc, not malloc: when s16->silent is set nothing ever writes to
+ 	 * this buffer and scopes must read silence, not uninitialised memory.
+ 	 */
+@@ -1091,6 +1202,8 @@ static void s16_disable(snd_pcm_scope_t *scope)
+ 	snd_pcm_scope_s16_t *s16 = scope->private_data;
+ 	free(s16->adpcm_states);
+ 	s16->adpcm_states = NULL;
++	free(s16->dsd_states);
++	s16->dsd_states = NULL;
+ 	free(s16->buf);
+ 	s16->buf = NULL;
+ 	free(s16->buf_areas);
+@@ -1154,6 +1267,17 @@ static void s16_update(snd_pcm_scope_t *scope)
+ 					     s16->index,
+ 					     s16->adpcm_states);
+ 			break;
++		case SND_PCM_FORMAT_DSD_U8:
++		case SND_PCM_FORMAT_DSD_U16_LE:
++		case SND_PCM_FORMAT_DSD_U16_BE:
++		case SND_PCM_FORMAT_DSD_U32_LE:
++		case SND_PCM_FORMAT_DSD_U32_BE:
++			s16_dsd_decode(s16->buf_areas, offset,
++				       meter->buf_areas, offset,
++				       spcm->channels, frames,
++				       s16->dsd_bits, s16->dsd_shift,
++				       s16->dsd_states);
++			break;
+ 		default:
+ 			snd_pcm_linear_convert(s16->buf_areas, offset,
+ 					       meter->buf_areas, offset,

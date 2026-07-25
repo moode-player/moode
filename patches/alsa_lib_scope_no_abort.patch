@@ -1,0 +1,58 @@
+diff --git a/src/pcm/pcm_meter.c b/src/pcm/pcm_meter.c
+index 68c369de..dd57f5ca 100644
+--- a/src/pcm/pcm_meter.c
++++ b/src/pcm/pcm_meter.c
+@@ -1003,6 +1003,7 @@ typedef struct _snd_pcm_scope_s16 {
+ 	snd_pcm_uframes_t old;
+ 	int16_t *buf;
+ 	snd_pcm_channel_area_t *buf_areas;
++	int silent;
+ } snd_pcm_scope_s16_t;
+ 
+ static int s16_enable(snd_pcm_scope_t *scope)
+@@ -1041,7 +1042,20 @@ static int s16_enable(snd_pcm_scope_t *scope)
+ 		idx = snd_pcm_linear_convert_index(spcm->format, SND_PCM_FORMAT_S16);
+ 		break;
+ 	default:
+-		return -EINVAL;
++		/* No S16 conversion exists for this format - DSD, the 3-byte
++		 * packed formats, float. Leaving the scope disabled is worse
++		 * than useless: scopes that depend on it, including our own
++		 * level scope, call snd_pcm_scope_s16_get_channel_buffer()
++		 * from their update callback and that assert()s on the buffer
++		 * this function never allocated, killing the application.
++		 * Hand out a silent buffer instead, so a scope reads zero on a
++		 * format it cannot see rather than aborting the process.
++		 */
++		SNDERR("s16 scope: no S16 conversion for format %s, scopes will read silence",
++		       snd_pcm_format_name(spcm->format));
++		s16->silent = 1;
++		idx = 0;
++		break;
+ 	}
+ 	s16->index = idx;
+ 	if (spcm->format == SND_PCM_FORMAT_IMA_ADPCM) {
+@@ -1049,7 +1063,10 @@ static int s16_enable(snd_pcm_scope_t *scope)
+ 		if (!s16->adpcm_states)
+ 			return -ENOMEM;
+ 	}
+-	s16->buf = malloc(meter->buf_size * 2 * spcm->channels);
++	/* calloc, not malloc: when s16->silent is set nothing ever writes to
++	 * this buffer and scopes must read silence, not uninitialised memory.
++	 */
++	s16->buf = calloc(meter->buf_size * 2 * spcm->channels, 1);
+ 	if (!s16->buf) {
+ 		free(s16->adpcm_states);
+ 		return -ENOMEM;
+@@ -1101,6 +1118,11 @@ static void s16_update(snd_pcm_scope_t *scope)
+ 	snd_pcm_t *spcm = meter->gen.slave;
+ 	snd_pcm_sframes_t size;
+ 	snd_pcm_uframes_t offset;
++	if (s16->silent) {
++		/* Nothing to convert; the buffer stays zero. */
++		s16->old = meter->now;
++		return;
++	}
+ 	size = meter->now - s16->old;
+ 	if (size < 0)
+ 		size += spcm->boundary;
