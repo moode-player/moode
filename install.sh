@@ -1834,6 +1834,11 @@ X11/Xwrapper.sed.config
 EOF
 _etc_unhandled=""; _etc_stale=""
 while IFS= read -r _p; do
+	# A `*.disabled` file states its own intent: it is kept in the tree precisely so it
+	# is NOT deployed (e.g. udev/rules.d/89-moode-dac-prime.rules.disabled). Wiring it
+	# into ETC_KNOWN would claim it is handled somewhere; warning about it says a
+	# deliberate choice is an oversight. Neither - just skip it.
+	case "$_p" in *.disabled) continue ;; esac
 	[ -n "${ETC_KNOWN[$_p]:-}" ] || _etc_unhandled="$_etc_unhandled $_p"
 done < <(cd "$REPO_DIR/etc" && find . -type f -printf '%P\n')
 for _p in "${!ETC_KNOWN[@]}"; do
