@@ -1014,7 +1014,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'S
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (176, 'dac_prime', '0');
+-- nopi-only params live at 900+, clear of upstream's sequential ids, so a new
+-- upstream param never lands on the same line. Drop the row when it goes upstream.
+INSERT INTO cfg_system (id, param, value) VALUES (900, 'dac_prime', '0');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
