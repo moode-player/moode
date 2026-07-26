@@ -519,8 +519,8 @@ log "PHP-FPM version: $PHP_VER (socket $PHP_SOCK)"
 #     boxes never rebuild gratuitously on their first --update with this logic.
 #   - truly unpinned sources (alsacap git-main): no version to compare -> presence
 #     only (a bump there needs a manual rm of the artifact).
-#   - peppy-alsa: apt-source, so no version either, but we patch it -> the guard is
-#     the patch's hash and a MISSING stamp means rebuild, not adopt (Phase 1g).
+#   - peppy-alsa: tracks upstream git master, so no version either -> the guard is
+#     the resolved commit, and a MISSING stamp means rebuild, not adopt (Phase 1g).
 NOPI_BUILT_DIR=/var/lib/moode-nopi/built
 dpkg_ver_is() { [ "$(dpkg-query -W -f='${Version}' "$1" 2>/dev/null)" = "$2" ]; }
 # nopi_need_build <name> <pinned> <present:0|1> -> rc 0 = build needed, 1 = up to date
@@ -856,49 +856,42 @@ fi
 # Phase 1g - peppyalsa ALSA plugin (Peppy Meter/Spectrum visualization)
 #----------------------------------------------------------------------------#
 # Peppy's ALSA chain (peppy.conf) loads libpeppyalsa.so - a `type meter` scope
-# that tees the PCM stream to a FIFO for the visualizer. Not in Debian; build
-# moOde's exact patched source (the upstream peppyalsa has a 32-bit-only int vs
-# long bug - snd_config_get_integer wants long* - that errors on the 64-bit build;
-# moOde's peppy_alsa_fixes patch fixes it). Same moodeaudio deb-src path as mpd.
-PEPPY_LIB="/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null)/libpeppyalsa.so"
-# On top of moOde's source we apply patches/peppy_alsa_dop_levels.patch, which makes
-# the meter read DoP (a DSD source played as DoP otherwise pegs the needles at a
-# constant, because the s16 scope hands the plugin the DoP marker byte, not audio).
-# TEMPORARY. Submitted upstream as peppyalsa PR #5 (the decode itself) and
-# moode-player/pkgbuild PR #23 (the same patch in moOde's build recipe). When #5
-# lands, moOde's own source carries the decode: delete the patch file, drop the
-# patch call and the hash guard below, and let this go back to a plain
-# `apt-get source peppy-alsa`.
+# that tees the PCM stream to a FIFO for the visualizer. Not in Debian; build it
+# from upstream master, the same source moOde's own pkgbuild recipe clones.
 #
-# The guard is the patch's own hash, NOT mere presence of the library: an existing
-# box carries a library built by an earlier installer, without the patch, and it MUST
-# be rebuilt. That is deliberately the opposite of nopi_need_build's adopt-on-legacy
-# rule, which exists to avoid gratuitous rebuilds of artifacts that are still correct.
-PEPPY_PATCH="$REPO_DIR/patches/peppy_alsa_dop_levels.patch"
-PEPPY_STAMP="$NOPI_BUILT_DIR/peppy-alsa-dop"
-PEPPY_PATCH_ID="$(sha256sum "$PEPPY_PATCH" 2>/dev/null | cut -c1-12)"
-if [ "$INSTALL_LOCALDISPLAY" = 1 ] && \
-	{ [ ! -f "$PEPPY_LIB" ] || [ "$(cat "$PEPPY_STAMP" 2>/dev/null)" != "$PEPPY_PATCH_ID" ]; }; then
-	log "Phase 1g: peppyalsa plugin (libpeppyalsa.so)"
-	apt-get install -y build-essential autoconf automake libtool libasound2-dev libfftw3-dev dpkg-dev devscripts >/dev/null 2>&1
-	PEPPY_BLD="$(mktemp -d)"
-	(
-		cd "$PEPPY_BLD" || exit 1
-		# moOde's patched source (peppy_alsa_fixes_by_kent_reed.patch applies on extract);
-		# build with autotools directly (their debian/rules produces no artifacts here).
-		apt-get source peppy-alsa >/dev/null 2>&1
-		cd peppy-alsa-*/ || exit 1
-		# The DoP patch is generated on top of moOde's, so it applies here and only here.
-		[ -f "$PEPPY_PATCH" ] && patch -p1 --forward < "$PEPPY_PATCH" >/dev/null 2>&1
-		autoreconf -fi >/dev/null 2>&1 && ./configure >/dev/null 2>&1 && make >/dev/null 2>&1
-		install -m 644 .libs/libpeppyalsa.so.[0-9]*.[0-9]* "$PEPPY_LIB"
-	)
-	rm -rf "$PEPPY_BLD"
-	if [ -f "$PEPPY_LIB" ]; then
-		mkdir -p "$NOPI_BUILT_DIR"; printf '%s\n' "$PEPPY_PATCH_ID" > "$PEPPY_STAMP"
-		log "Built libpeppyalsa.so (DoP levels) -> $PEPPY_LIB"
-	else
-		warn "peppyalsa build failed; Peppy Meter/Spectrum will be unavailable"
+# Upstream now carries both deltas moOde used to patch in - the 64-bit/GCC 14
+# build fixes (int vs long on snd_config_get_integer, SIGPIPE handler signature,
+# init() arity) and the DoP level decode, without which a DSD source played as
+# DoP pegs the needles at a constant, the s16 scope handing the plugin the DoP
+# marker byte rather than audio. So there is nothing left to patch here.
+#
+# master is a moving branch with no version, so the guard is its resolved commit:
+# rebuild when it moves, or when there is no stamp at all - a library an earlier
+# installer built from the old apt source, whose content we cannot vouch for.
+# Deliberately NOT nopi_need_build's adopt-on-legacy, which exists to spare
+# rebuilds of artifacts that are still known-correct.
+PEPPY_LIB="/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null)/libpeppyalsa.so"
+PEPPY_URL="https://github.com/project-owner/peppyalsa.git"
+PEPPY_STAMP="$NOPI_BUILT_DIR/peppy-alsa"
+PEPPY_REF="$(git ls-remote "$PEPPY_URL" refs/heads/master 2>/dev/null | cut -f1)"
+if [ "$INSTALL_LOCALDISPLAY" = 1 ]; then
+	if [ -z "$PEPPY_REF" ] && [ -f "$PEPPY_LIB" ]; then
+		log "Phase 1g: peppyalsa upstream unreachable, keeping the installed plugin"
+	elif [ ! -f "$PEPPY_LIB" ] || [ "$(cat "$PEPPY_STAMP" 2>/dev/null)" != "$PEPPY_REF" ]; then
+		log "Phase 1g: peppyalsa plugin (libpeppyalsa.so)"
+		$APT_INSTALL build-essential autoconf automake libtool git libasound2-dev libfftw3-dev
+		PEPPY_BLD="$(mktemp -d)"
+		# Build with autotools directly - moOde's debian/rules produces no artifact here.
+		if git clone -q --depth 1 -b master "$PEPPY_URL" "$PEPPY_BLD/peppyalsa" \
+			&& ( cd "$PEPPY_BLD/peppyalsa" && autoreconf -fi && ./configure && make ) >/dev/null 2>&1 \
+			&& install -m 644 "$PEPPY_BLD"/peppyalsa/.libs/libpeppyalsa.so.[0-9]*.[0-9]* "$PEPPY_LIB"; then
+			nopi_mark_built peppy-alsa "$(git -C "$PEPPY_BLD/peppyalsa" rev-parse HEAD)"
+			rm -f "$NOPI_BUILT_DIR/peppy-alsa-dop"
+			log "Built libpeppyalsa.so ($(echo "$PEPPY_REF" | cut -c1-7)) -> $PEPPY_LIB"
+		else
+			warn "peppyalsa build failed; Peppy Meter/Spectrum will be unavailable"
+		fi
+		rm -rf "$PEPPY_BLD"
 	fi
 fi
 
