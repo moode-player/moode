@@ -343,7 +343,11 @@ OPT_PKGS=()
 # expect drives the bluetoothctl sessions in blu-control.sh (SCAN/PAIR/CONNECT);
 # without it those UI actions fail silently. It is also installed by Phase 5d, so
 # Bluetooth must not depend on the local display being installed.
-[ "$INSTALL_BLUETOOTH"   = 1 ] && OPT_PKGS+=(bluez bluez-alsa-utils bluez-tools expect)  # bluez-tools: bt-agent
+# python3-dbus + python3-gi: moOde's own pairing agent (daemon/bt-pairing-agent.py)
+# imports dbus and gi.repository.GLib. The Pi image lists only python3-dbus - RaspiOS
+# already carries the GObject bindings, a minimal Debian does not, so name both.
+# bluez-tools and expect stay: util/blu-control.sh drives bluetoothctl through expect.
+[ "$INSTALL_BLUETOOTH"   = 1 ] && OPT_PKGS+=(bluez bluez-alsa-utils bluez-tools expect python3-dbus python3-gi)
 [ "$INSTALL_AIRPLAY"     = 1 ] && OPT_PKGS+=(shairport-sync)
 [ "$INSTALL_UPNP"        = 1 ] && OPT_PKGS+=(upmpdcli upmpdcli-tidal upmpdcli-qobuz)
 [ "$INSTALL_DLNA"        = 1 ] && OPT_PKGS+=(minidlna)
@@ -1477,23 +1481,20 @@ install -d -m 755 /etc/radiocover-plus
 if [ "$INSTALL_BLUETOOTH" = 1 ]; then
 	# Without these, enabling Bluetooth runs the stock bluealsa (no aptX/LDAC,
 	# D-Bus-activated defaults) and there is no BT-speaker output or pairing agent.
-	# Two of them also hold runtime state the UI/worker sed-edit into place, which a
+	# One of them also holds runtime state the UI/worker sed-edits into place, which a
 	# re-run must not silently reset: bluealsa.service carries --sbc-quality
-	# (Configure > Bluetooth) -> carry the current value over the template; and
-	# bt-agent.service is rewritten by the worker when a PIN code is set (bt-agent
-	# -p <pin file> + sspmode 0) -> leave it alone, otherwise the session still says
-	# "Pincode set" while the agent no longer asks for one.
+	# (Configure > Bluetooth) -> carry the current value over the template.
 	_sbc_quality=$(sed -n 's/.*--sbc-quality=\([^ ]*\).*/\1/p' /etc/systemd/system/bluealsa.service 2>/dev/null || true)
 	install -m 644 "$REPO_DIR/etc/systemd/system/bluealsa.overwrite.service" /etc/systemd/system/bluealsa.service
 	if [ -n "$_sbc_quality" ]; then
 		sed -i "s/--sbc-quality=[^ ]*/--sbc-quality=$_sbc_quality/" /etc/systemd/system/bluealsa.service
 	fi
 	install -m 644 "$REPO_DIR/etc/systemd/system/bluealsa-aplay@.service"     /etc/systemd/system/bluealsa-aplay@.service
-	if grep -q 'bt-agent.* -p ' /etc/systemd/system/bt-agent.service 2>/dev/null; then
-		log "Kept existing bt-agent.service (PIN code configured)"
-	else
-		install -m 644 "$REPO_DIR/etc/systemd/system/bt-agent.service" /etc/systemd/system/bt-agent.service
-	fi
+	# Always overwrite bt-agent.service: a box installed before the pairing-confirmation
+	# change carries a worker-rewritten unit launching bluez-tools' bt-agent with a PIN
+	# file. Nothing rewrites it any more, so keeping it would pin the box to an agent
+	# moOde no longer drives and the confirmation modal would never appear.
+	install -m 644 "$REPO_DIR/etc/systemd/system/bt-agent.service" /etc/systemd/system/bt-agent.service
 	# A2DP playback routing: startBluetooth() starts bluealsa/bt-agent but NOT the
 	# player - bluealsa-aplay@<MAC> is started per device by a udev rule ->
 	# a2dp-autoconnect when a phone connects (and stopped on disconnect; the rule
@@ -1526,18 +1527,10 @@ if [ "$INSTALL_BLUETOOTH" = 1 ]; then
 	# so a runtime-renamed controller survives re-runs.
 	grep -q 'Class = 0x2c041c' /etc/bluetooth/main.conf 2>/dev/null \
 		|| install -m 644 "$REPO_DIR/etc/bluetooth/main.sed.conf" /etc/bluetooth/main.conf
-	# pin.conf holds the Bluetooth pairing PIN the worker writes when one is set in
-	# the UI (mode 0600, re-applied at every worker start). The repo copy is only a
-	# first-run seed like the Pi image ships, so never overwrite an existing file.
-	if [ ! -e /etc/bluetooth/pin.conf ]; then
-		install -m 600 "$REPO_DIR/etc/bluetooth/pin.conf" /etc/bluetooth/pin.conf
-	fi
-	# The worker stores the PIN with a plain shell redirection, and sysCmd() puts sudo
-	# on the command only, never on the redirection: off the Pi the worker is www-data,
-	# so the write is refused and the PIN is silently never stored. Hand the file itself
-	# to www-data - /etc/bluetooth stays root-owned, and the worker's chmod 0600 at
-	# startup keeps the mode.
-	chown www-data:www-data /etc/bluetooth/pin.conf
+	# Stale PIN seed from the pre-confirmation pairing scheme: bluez ignores it now
+	# that moOde's own agent drives Numeric Comparison, and leaving a 0600 file owned
+	# by www-data behind serves nothing.
+	rm -f /etc/bluetooth/pin.conf
 	grep -q '^PRETTY_HOSTNAME=' /etc/machine-info 2>/dev/null \
 		|| echo "PRETTY_HOSTNAME=Moode Bluetooth" >> /etc/machine-info
 	log "Deployed Bluetooth service units + A2DP autoconnect + controller name/class"
@@ -1799,7 +1792,6 @@ avahi/services/moode.service
 avahi/services/samba.service
 bluealsaaplay.conf
 bluetooth/main.sed.conf
-bluetooth/pin.conf
 deezer/deezer.toml
 default/mpd.sed
 machine-info.overwrite
@@ -2725,7 +2717,7 @@ EXPECTED_CONF=(
 )
 if [ "$INSTALL_BLUETOOTH" = 1 ]; then
 	EXPECTED_CONF+=(
-		/etc/bluealsaaplay.conf /etc/bluetooth/pin.conf /etc/bluetooth/main.conf
+		/etc/bluealsaaplay.conf /etc/bluetooth/main.conf
 		/etc/systemd/system/bt-agent.service
 		/etc/systemd/system/bluealsa-aplay@.service
 		/etc/systemd/system/bluealsa.service
