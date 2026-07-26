@@ -1575,6 +1575,19 @@ install -m 644 "$REPO_DIR/etc/modprobe.d/8812au.conf" /etc/modprobe.d/8812au.con
 
 systemctl daemon-reload
 
+# The pairing agent is a long-running python process holding /var/www/daemon/
+# bt-pairing-agent.py open, so Phase 2 replacing that file leaves the OLD code
+# running until something restarts the unit - and nothing does: the worker only
+# touches bt-agent when the pairing mode changes. Restart it here, after the
+# daemon-reload so a changed unit definition is the one systemd picks up.
+# Only when it is ALREADY running: bt-agent follows the Bluetooth renderer, and
+# starting it on a box with Bluetooth switched off would enable pairing behind
+# the user's back.
+if [ "$INSTALL_BLUETOOTH" = 1 ] && systemctl is-active --quiet bt-agent; then
+	systemctl restart bt-agent
+	log "Restarted bt-agent (pairing agent code refreshed)"
+fi
+
 # PHP opcache tuning
 if [ -f "$REPO_DIR/etc/php/8.4/mods-available/opcache.sed.ini" ]; then
 	install -m 644 "$REPO_DIR/etc/php/8.4/mods-available/opcache.sed.ini" \
