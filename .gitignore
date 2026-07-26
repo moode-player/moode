@@ -18,6 +18,8 @@ __MACOSX
 /logs
 # install.sh mirrors its run to this log in the clone dir (see INSTALL_LOG)
 /install-nopi.log
+# and keeps each source build's output beside it, named in the failure warnings
+/build-*.log
 /other/camilladsp/camilladsp.dev/*
 # Claude Code agent working dir (memory, settings) - never publish
 /.claude/
