@@ -2206,9 +2206,12 @@ chmod -R 0777 /var/lib/mpd/playlists
 # those two points patched, serve them over the existing nginx `location /` (root
 # /var/www, no nginx config change), and repoint res_plugin_upd_url at the local
 # copy. On arm64 (Armbian) the upstream repo works unchanged, so we leave it
-# alone. Regenerated from upstream on a fresh install / --reset-db (and kept as-is
-# on --update, see the per-entry skip below); the patches are narrow (arch token +
-# home_dir line) so they track moOde's install.sh.
+# alone. EVERY run re-checks what upstream publishes and re-packs when the zip
+# changed (sha256 stamp per plugin): the zip is what carries a renderer version
+# bump, so a mirror frozen at first install would pin the box to an old AirPlay
+# or Spotify forever. The patches are narrow (arch token + home_dir line) so they
+# track moOde's install.sh, and the run refuses to publish a mirror where either
+# no longer applies rather than shipping one silently unpatched.
 
 PKG_ARCH="$(dpkg --print-architecture)"
 if [ "$PKG_ARCH" != arm64 ]; then
@@ -2228,26 +2231,52 @@ if [ "$PKG_ARCH" != arm64 ]; then
 	for entry in $PLUG_ENTRIES; do
 		plugin="${entry##*/}"                       # e.g. v5-shairport-sync
 		mkdir -p "$PLUG_DST/$entry"
-		# On --update keep the existing local mirror (plugins rarely change) rather
-		# than re-fetch+re-pack every run; a fresh install or --reset-db refreshes it,
-		# or remove the zip to force a refresh.
-		if [ "$UPDATE" = 1 ] && [ -f "$PLUG_DST/$entry/update-$plugin.zip" ]; then continue; fi
+		plug_zip="$PLUG_DST/$entry/update-$plugin.zip"
+		# Keep the "which upstream zip is this mirror made from" stamp out of the
+		# nginx-served tree, next to the other provenance stamps.
+		plug_sum="$NOPI_BUILT_DIR/plugin-mirror-$plugin"
+		# Always ask upstream what it publishes NOW. A mirror pinned at first install
+		# would serve the same plugin forever, and the plugin zip is exactly what
+		# carries a renderer version bump (shairport-sync 5.x, librespot). Re-pack
+		# only when the upstream zip actually changed, so --update stays cheap: the
+		# fetch is a few tens of kB, the repack is what we skip.
 		if wget -q "$PLUG_BASE/$entry/update-$plugin.zip" -O "$PLUG_TMP/p.zip"; then
-			rm -rf "$PLUG_TMP/x"; mkdir -p "$PLUG_TMP/x"
+			up_sum=$(sha256sum "$PLUG_TMP/p.zip" | cut -d' ' -f1)
+			if [ -f "$plug_zip" ] && [ "$up_sum" = "$(cat "$plug_sum" 2>/dev/null || true)" ]; then
+				continue
+			fi
+			rm -rf "$PLUG_TMP/x" "$PLUG_TMP/new.zip"; mkdir -p "$PLUG_TMP/x"
+			# Build the patched zip aside and only swap it in once verified, so a
+			# repack that goes wrong leaves the last good mirror in place.
 			if ( cd "$PLUG_TMP/x" \
 				&& unzip -q -o "$PLUG_TMP/p.zip" \
 				&& sed -i "s/_arm64\.deb/_${PKG_ARCH}.deb/g" update/install.sh \
 				&& sed -i 's|^HOME_DIR=\$(moodeutl -d -gv home_dir)|HOME_DIR=/home/$(ls /home/ 2>/dev/null \| head -1)|' update/install.sh \
-				&& rm -f "$PLUG_DST/$entry/update-$plugin.zip" \
-				&& zip -q -r "$PLUG_DST/$entry/update-$plugin.zip" update ); then
+				&& ! grep -q '_arm64\.deb' update/install.sh \
+				&& ! grep -q '^HOME_DIR=\$(moodeutl' update/install.sh \
+				&& zip -q -r "$PLUG_TMP/new.zip" update ); then
+				mv -f "$PLUG_TMP/new.zip" "$plug_zip"
+				mkdir -p "$NOPI_BUILT_DIR"; echo "$up_sum" > "$plug_sum"
 				# success marker (plugin-updater.sh fetches it after install; content
 				# is irrelevant). Mirror upstream's if present, else synthesise one.
 				wget -q "$PLUG_BASE/$entry/update-$plugin.txt" \
 					-O "$PLUG_DST/$entry/update-$plugin.txt" 2>/dev/null \
 					|| date > "$PLUG_DST/$entry/update-$plugin.txt"
+				log "Mirrored $plugin from upstream (arch-patched for $PKG_ARCH)"
 			else
-				warn "Failed to repackage $plugin (its on-demand install may fail)"; plug_ok=0
+				# `sed -i` exits 0 even when it matches nothing, so the two checks above
+				# are what catch upstream renaming either patched line - otherwise we
+				# would publish an unpatched mirror and only find out when the
+				# on-demand install fails on an _arm64.deb that was never built. They
+				# assert the OUTCOME (no arm64 literal left, no session-reading
+				# home_dir), not that our sed fired, so upstream solving either one on
+				# its own passes rather than raising a false alarm.
+				warn "Could not arch-patch $plugin - upstream install.sh has changed;" \
+					"kept the previous mirror, check update/install.sh in the plugin zip"
+				plug_ok=0
 			fi
+		elif [ -f "$plug_zip" ]; then
+			log "Kept the existing $plugin mirror (upstream plugins repo unreachable)"
 		else
 			warn "Could not fetch $plugin from upstream plugins repo"; plug_ok=0
 		fi
