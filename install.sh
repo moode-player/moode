@@ -2876,7 +2876,10 @@ log "Done."
 echo
 echo "  WebUI:   http://${IP:-<this-host>}/"
 echo "  Worker:  journalctl -u moode-worker -f"
-echo "  Logs:    /var/log/moode.log  (moodeutl -l)"
+# Name THIS run's own log here, not just at the start: by now it is thousands of
+# lines up the scrollback, and "Logs:" alone sent readers to the runtime log.
+echo "  Install: $INSTALL_LOG"
+echo "  Runtime: /var/log/moode.log  (moodeutl -l)"
 echo
 # First-run guidance, not a warning - and pointless on --update, where the output
 # device was picked long ago. A yellow [!] on every single run teaches the reader to
