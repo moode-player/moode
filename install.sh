@@ -2323,7 +2323,11 @@ EOF
 	# /boot/firmware/config.txt (Pi-only); deploy an x86 equivalent that uses xrandr.
 	# The --app / --kiosk lines and the WebUI/Peppy branch mirror the Pi script so
 	# the worker's runtime sed edits (--app URL, --kiosk GPU flag) still apply.
-	cat > "/home/$PLAYER_USER/.xinitrc" <<'EOF'
+	# Built as a candidate first: the armhf post-patch below has to be applied
+	# before we can compare it with what is already on the box.
+	XINITRC="/home/$PLAYER_USER/.xinitrc"
+	XINITRC_NEW="$(mktemp)"
+	cat > "$XINITRC_NEW" <<'EOF'
 #!/bin/bash
 # moOde local display (x86) - X11 + Chromium kiosk. Managed by moOde.
 # Match the Pi xinitrc.default xset/DPMS setup EXACTLY: the worker's
@@ -2391,8 +2395,6 @@ elif [ "$PEPPY_SHOW" = "1" ]; then
 	fi
 fi
 EOF
-	chmod 0755 "/home/$PLAYER_USER/.xinitrc"
-	chown "$PLAYER_USER:$PLAYER_USER" "/home/$PLAYER_USER/.xinitrc"
 
 	# armhf SBC kiosk (seen on Allwinner H3 / Mali-400 lima): the Chromium kiosk paints
 	# a blank WHITE page unless the sandbox is disabled - on this 32-bit ARM kernel the
@@ -2403,10 +2405,26 @@ EOF
 	# this line survives its regen.
 	case "$(uname -m)" in
 		armv6l|armv7l)
-			sed -i '/^[[:space:]]*exec chromium/a\	--no-sandbox \\' "/home/$PLAYER_USER/.xinitrc"
+			sed -i '/^[[:space:]]*exec chromium/a\	--no-sandbox \\' "$XINITRC_NEW"
 			log "armhf: added --no-sandbox to the Chromium kiosk (renderer starts blank otherwise)"
 			;;
 	esac
+
+	# This file is GENERATED and must keep tracking the template above: it is the
+	# x86 replacement for moOde's Pi xinitrc.default, and a stale copy does not
+	# fail visibly - it kills the touch screen quietly (see the xset/DPMS note at
+	# the top of the heredoc). So always converge on the template; just never do it
+	# silently. Differing is the nominal case whenever the template itself changed,
+	# hence log and not warn.
+	if [ -f "$XINITRC" ] && ! cmp -s "$XINITRC" "$XINITRC_NEW"; then
+		XINITRC_BAK="$XINITRC.bak-$(date +%Y%m%d-%H%M%S)"
+		cp -a "$XINITRC" "$XINITRC_BAK"
+		log "Local display: .xinitrc differs from the template - previous kept as $(basename "$XINITRC_BAK")"
+	fi
+	if ! cmp -s "$XINITRC" "$XINITRC_NEW" 2>/dev/null; then
+		install -m 0755 -o "$PLAYER_USER" -g "$PLAYER_USER" "$XINITRC_NEW" "$XINITRC"
+	fi
+	rm -f "$XINITRC_NEW"
 
 	# Peppy Meter/Spectrum visualizer: the apps (read the FIFO that libpeppyalsa
 	# feeds, render via pygame/SDL on the X display) are upstream, not in Debian -
