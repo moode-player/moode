@@ -1960,7 +1960,43 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 			unset _have
 		done < <(sqlite3 "$_schema_db" "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';" 2>/dev/null)
 
-		if [ "$_mig_total" -eq 0 ] && [ "$_tbl_added" -eq 0 ] && [ "$_col_added" -eq 0 ]; then
+		# cfg_plugin is a CATALOGUE of what moOde offers on demand (AirPlay, Spotify,
+		# nqptp), not user config - nothing in the tree ever writes it, only SELECTs.
+		# It must therefore FOLLOW the shipped schema, unlike the param tables above:
+		# isAirPlayUpgradable() compares the installed package against
+		# cfg_plugin.version, and the plugin's own install.sh reads that version to
+		# name the .deb it builds and copies. A kept DB left behind means the box is
+		# never offered the upgrade, and a forced reinstall dies on a .deb name that
+		# was never built. Realign version AND plugin (the zip name carries a major,
+		# e.g. v5-shairport-sync), and add entries the schema gained.
+		_plug_sync=0
+		_plug_added=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
+			INSERT INTO main.cfg_plugin (component, type, plugin, version)
+				SELECT s.component, s.type, s.plugin, s.version FROM sch.cfg_plugin s
+				WHERE NOT EXISTS (SELECT 1 FROM main.cfg_plugin m
+					WHERE m.component = s.component AND m.type = s.type);
+			SELECT changes();" 2>/dev/null | tail -1 || true)
+		_plug_upd=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
+			UPDATE cfg_plugin SET
+				plugin = (SELECT s.plugin FROM sch.cfg_plugin s
+					WHERE s.component = cfg_plugin.component AND s.type = cfg_plugin.type),
+				version = (SELECT s.version FROM sch.cfg_plugin s
+					WHERE s.component = cfg_plugin.component AND s.type = cfg_plugin.type)
+				WHERE EXISTS (SELECT 1 FROM sch.cfg_plugin s
+					WHERE s.component = cfg_plugin.component AND s.type = cfg_plugin.type
+						AND (s.plugin <> cfg_plugin.plugin OR s.version <> cfg_plugin.version));
+			SELECT changes();" 2>/dev/null | tail -1 || true)
+		for _n in "$_plug_added" "$_plug_upd"; do
+			if [ -n "$_n" ] && [ "$_n" -gt 0 ] 2>/dev/null; then
+				_plug_sync=$((_plug_sync + _n))
+			fi
+		done
+		if [ "$_plug_sync" -gt 0 ]; then
+			log "DB migration: realigned $_plug_sync cfg_plugin row(s) on the shipped schema"
+		fi
+
+		if [ "$_mig_total" -eq 0 ] && [ "$_tbl_added" -eq 0 ] && [ "$_col_added" -eq 0 ] \
+			&& [ "$_plug_sync" -eq 0 ]; then
 			log "DB migration: schema up to date (no backfill needed)"
 		fi
 	else
@@ -1968,7 +2004,8 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	fi
 	rm -f "$_schema_db"
 	unset _schema_db _mig_total _added _t _tbl_added _tbl _ddl \
-		_col_added _live_cols _c _cname _ctype _cnn _cdflt _coldef
+		_col_added _live_cols _c _cname _ctype _cnn _cdflt _coldef \
+		_plug_sync _plug_added _plug_upd _n
 else
 	# A successful backup is an event, not a problem: --reset-db asked for it.
 	[ -f "$SQLDB" ] && cp -a "$SQLDB" "$SQLDB.bak.$(date +%s)" && log "Backed up old DB"
