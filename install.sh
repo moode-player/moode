@@ -46,10 +46,15 @@ export LC_ALL=C.UTF-8 LANG=C.UTF-8
 
 # Renderer/feature groups. moOde installs almost everything by default in its
 # image, so the stock-Debian renderers default to ON here to match (set to 0 for
-# a leaner install). AirPlay + Spotify follow moOde's on-demand model (installed
-# when the feature is enabled in the UI), so they stay OFF here.
+# a leaner install).
+#
+# AirPlay and Spotify have no flag on purpose: they follow moOde's on-demand
+# model, built from moode-player/pkgbuild when the feature is enabled in the UI
+# (Phase 5c mirrors the plugin zips). The distro shairport-sync must NOT be
+# installed as a shortcut - isAirPlayInstalled() requires a moode-tagged version
+# (`dpkg-query ... | grep moode`), so a distro build is invisible to the UI while
+# still owning /etc/shairport-sync.conf and the unit.
 INSTALL_BLUETOOTH=1      # bluez, bluez-alsa for BT audio
-INSTALL_AIRPLAY=0        # shairport-sync - on-demand (enabled via the UI)
 INSTALL_UPNP=1           # upmpdcli (UPnP/OpenHome) - via upstream apt repo
 INSTALL_DLNA=1           # minidlna (serve local library)
 INSTALL_SQUEEZELITE=1    # squeezelite (LMS player)
@@ -348,7 +353,6 @@ OPT_PKGS=()
 # already carries the GObject bindings, a minimal Debian does not, so name both.
 # bluez-tools and expect stay: util/blu-control.sh drives bluetoothctl through expect.
 [ "$INSTALL_BLUETOOTH"   = 1 ] && OPT_PKGS+=(bluez bluez-alsa-utils bluez-tools expect python3-dbus python3-gi)
-[ "$INSTALL_AIRPLAY"     = 1 ] && OPT_PKGS+=(shairport-sync)
 [ "$INSTALL_UPNP"        = 1 ] && OPT_PKGS+=(upmpdcli upmpdcli-tidal upmpdcli-qobuz)
 [ "$INSTALL_DLNA"        = 1 ] && OPT_PKGS+=(minidlna)
 [ "$INSTALL_SQUEEZELITE" = 1 ] && OPT_PKGS+=(squeezelite)
