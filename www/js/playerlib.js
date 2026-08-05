@@ -785,6 +785,14 @@ function engineCmdLite() {
                     // causing engine-cmd.php to start releasing idle connections
                     console.log(cmd[0]);
                     break;
+                case 'pairreq':
+                    // cmd: pairreq,<id>,<method>,<code>,<name_b64>,<icon>
+                    btPairRequest(cmd[1], cmd[2], cmd[3], cmd[4]);
+                    break;
+                case 'paircancel':
+                    // cmd: paircancel,<id> (timed out or the device gave up)
+                    btPairCancel(cmd[1]);
+                    break;
                 default:
                     console.log('engineCmdLite(): ' + cmd[0]);
                     break;
