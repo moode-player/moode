@@ -142,7 +142,7 @@
 <form class="form-horizontal" method="post">
 	<div id="rm-curve" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
 		<input type="hidden" name="curve_id" value="$_selected_curve_id"/>
-		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Remove EQ curve?</h3>
 		</div>
 		<div class="modal-body txtmid">
@@ -152,7 +152,7 @@
 			</span>
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn" data-dismiss="modal">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="rmcurve" value="1" $_disable_rm>Yes</button>
 		</div>
 	</div>
@@ -160,7 +160,7 @@
 
 <form class="form-horizontal" method="post">
 	<div id="new-curvename" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="new-curvename-label" aria-hidden="true">
-		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Create new curve</h3>
 		</div>
 		<div class="modal-body">
@@ -176,7 +176,7 @@
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn" data-dismiss="modal">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="newcurvename" value="1">Create</button>
 		</div>
 	</div>

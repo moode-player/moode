@@ -50,7 +50,7 @@
 			var c = this;
 			b = a.Event("hide"), this.$element.trigger(b);
 			if (!this.isShown || b.isDefaultPrevented()) return;
-			this.isShown = !1, this.escape(), a(document).off("focusin.modal"), this.$element.removeClass("in").attr("aria-hidden", !0), a.support.transition && this.$element.hasClass("fade") ? this.hideWithTransition() : this.hideModal()
+			this.isShown = !1, this.escape(), a(document).off("focusin.modal"), this.$element[0].contains(document.activeElement) && document.activeElement.blur() /* @swizzle */, this.$element.removeClass("in").attr("aria-hidden", !0), a.support.transition && this.$element.hasClass("fade") ? this.hideWithTransition() : this.hideModal()
 		},
 		enforceFocus: function() {
 			var b = this;

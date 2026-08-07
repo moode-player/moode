@@ -7,7 +7,7 @@
 -->
 <!-- ABOUT -->
 <div id="about-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 		<p id="moode-logotype"><img src="images/moode-logotype.png"></p>
 	</div>
 	<div class="modal-body">
@@ -38,13 +38,13 @@
 		</ul>
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal">Close</button>
 	</div>
 </div>
 
 <!-- CONFIGURE -->
 <div id="configure-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 		<h3 id="configure-modal-label">Configuration settings</h3>
 	</div>
 	<div class="modal-body">
@@ -74,19 +74,19 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal">Close</button>
 	</div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dashboard-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 		<h3 id="dashboard-modal-label">Dashboard</h3>
 	</div>
 	<div id="dashboard-modal-body" class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal">Cancel</button>
 	</div>
 </div>
 
@@ -108,44 +108,44 @@
 
 <!-- AUDIO INFO -->
 <div id="audioinfo-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 		<h3 id="audioinfo-modal-label">Audio information</h3>
 	</div>
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal">Close</button>
 	</div>
 </div>
 
 <!-- SYSTEM INFO -->
 <div id="sysinfo-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="sysinfo-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 		<h3 id="sysinfo-modal-label">System information</h3>
 	</div>
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal">Close</button>
 	</div>
 </div>
 
 <!-- QUICK HELP -->
 <div id="quickhelp-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="help-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 		<h3 id="help-modal-label">Quick Help</h3>
 	</div>
 	<div class="modal-body">
 		<div id="quickhelp"></div>
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal">Close</button>
 	</div>
 </div>
 
 <!-- POWER -->
 <div id="power-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="power-modal-label" aria-hidden="true">
-	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 		<h3 id="power-modal-label">Power Options</h3>
 	</div>
 	<div class="modal-body">
@@ -153,7 +153,7 @@
 		<button aria-label="Restart" id="system-restart" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;">Restart</button>
 	</div>
 	<div class="modal-footer">
-		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal">Cancel</button>
 	</div>
 </div>
 
