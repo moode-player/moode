@@ -5163,7 +5163,7 @@ function getRVHeaderCount() {
             if ($(this).hasClass('horiz-rule-radioview')) {
                 count = count + 1;
             }
-            if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
+            if ($(this).find('.station-name').text() == RADIO.json[MPD.json['file']]['name']) {
                 UI.radioPos = index;
                 return false;
             }
