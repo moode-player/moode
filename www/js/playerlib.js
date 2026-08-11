@@ -2898,6 +2898,7 @@ function customScroll(list, itemNum, speed) {
     		listSelector = '#database-radio';
     		scrollSelector = listSelector;
     		chDivisor = list == 'radio' ? 6 : 600;
+    		itemNum = list == 'radio' ? itemNum + 1 : itemNum;
             break;
         case 'playlist':
         case 'playlist_headers':
