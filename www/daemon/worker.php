@@ -1507,9 +1507,10 @@ workerLog('worker: DSI brightness:   ' . $_SESSION['dsi_scn_brightness']);
 workerLog('worker: DSI rotate:       ' . $_SESSION['dsi_scn_rotate']);
 workerLog('worker: --');
 // Log Triggerhappy / USB volume knob on/off state
-if (!isset($_SESSION['usb_volknob'])) {
-	$_SESSION['usb_volknob'] = '0';
-}
+// The service enable state is what persists across reboots, so refresh the
+// session var from it rather than defaulting to off
+$result = sysCmd('systemctl is-enabled triggerhappy 2>/dev/null');
+$_SESSION['usb_volknob'] = (isset($result[0]) && $result[0] == 'enabled') ? '1' : '0';
 workerLog('worker: Triggerhappy:     ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
 // Start rotary encoder
 if (!isset($_SESSION['rotaryenc'])) {
