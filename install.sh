@@ -1895,10 +1895,20 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	# Backfill params present in the schema but missing here, into the param/value
 	# config tables, WITHOUT touching existing rows (user config preserved). Pi-iso:
 	# this only ever ADDS rows the schema already defines, so a current DB is a no-op.
+	#
+	# EVERY param/value config table is listed, not just cfg_system: upstream ships
+	# new renderer settings the same way (e.g. cfg_airplay gained
+	# 'ignore_volume_control' with shairport-sync 5.2.1), and on the Pi they arrive
+	# through the moode-player postinstall, which nopi never runs. The list is
+	# explicit rather than derived from "has param and value columns", because
+	# cfg_gpio has those two columns for something else entirely - per-pin command
+	# arguments, several rows sharing an empty param - and must not be treated as a
+	# param catalogue.
 	_schema_db=$(mktemp --suffix=.db)
 	if sqlite3 "$_schema_db" < "$SQLDB_SCHEMA" 2>/dev/null; then
 		_mig_total=0
-		for _t in cfg_system cfg_mpd; do
+		for _t in cfg_system cfg_mpd cfg_airplay cfg_spotify cfg_deezer cfg_sl \
+			cfg_upnp cfg_multiroom; do
 			_added=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
 				INSERT INTO $_t (param, value)
 					SELECT s.param, s.value FROM sch.$_t s
