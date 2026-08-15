@@ -1307,6 +1307,17 @@ else
 	warn "moOde PHP configs (etc/php/8.4) not found; PHP $PHP_VER left at Debian defaults"
 fi
 
+# Debian's phpsessionclean timer deletes every sess_* file whose ctime exceeds
+# session.gc_maxlifetime (1440s) in the configured save_path - which is moOde's
+# /var/local/php. The moOde Pi image ships it disabled; on plain Debian it is
+# enabled, and Persistent=yes makes it catch up right after boot, when the
+# session file's ctime is necessarily older than the cutoff. The file is then
+# deleted and the worker recreates an empty one, so the vars that live ONLY in
+# the session (usb_volknob, led_state, rotaryenc) silently revert to their
+# defaults at every reboot - measured on the x86 box: session file born 18s
+# after boot, while the same file on a Pi predates its last reboots by months.
+systemctl disable --now phpsessionclean.timer 2>/dev/null || true
+
 # --- ALSA output plugin configs ---
 # MPD's mpd.conf references the ALSA device "_audioout", which is defined in
 # /etc/alsa/conf.d together with the DSP/loopback/bluetooth plugin chains. These
