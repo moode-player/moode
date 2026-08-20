@@ -18,18 +18,32 @@ AIRPLAY AND SPOTIFY CONNECT
 AirPlay and Spotify Connect renderers are not included in moOde but they can be
 built and installed via the INSTALL button in Renderer Config.
 
+QOBUZ CONNECT
+
+The Qobuz Connect renderer (qbzd) is not included in moOde but it can be
+installed via the INSTALL button in Renderer Config. Unlike AirPlay and Spotify
+Connect which are built from source code, the INSTALL button downloads a
+prebuilt qbzd binary and thus the process is fast, typically about 1 minute.
+
+The full log is in the Home Directory and is named "install_qobuz.log".
+
 INSTALLATION PROCESS
 
 Clicking the INSTALL button initiates an automated process that first builds
 the renderer from its source code and dependencies then creates a Debian package
 that installs the renderer onto the system.
 
+This applies to AirPlay and Spotify Connect. Qobuz Connect installs a prebuilt
+binary instead, so none of the build times or Debian packages described below
+apply to it.
+
 The build part of the process can be lengthy. The amount of time required depends
 on the overall speed of the Raspberry Pi including CPU, RAM, and boot media, and
 the speed of the network which is used to download the renderer sources and build
 scripts from GitHub.
 
-Some example times from testing:
+Some example times from testing (Qobuz Connect is a download, about 1 minute
+on any model):
 +----------------------------------+
 | PI MODEL   | AIRPLAY  | SPOTIFY  |
 +----------------------------------+
@@ -49,9 +63,9 @@ The summary log is named "/var/log/moode_plugin.log" and can be viewed by
 clicking the REFRESH button in the WebUI during installation or in an SSH
 terminal by the command "cat /var/log/moode_plugin.log"
 
-The full logs are in the Home Directory and are named "install_airplay.log"
-and "install_spotify.log". They can be viewed in an SSH terminal by the commands
-below. The command "tail -f" is used to view the log as its being written.
+The full logs are in the Home Directory and are named "install_airplay.log",
+"install_spotify.log" and "install_qobuz.log". They can be viewed in an SSH
+terminal by the commands below. The command "tail -f" is used to view the log as its being written.
 
 Examples:
 cat install_airplay.log

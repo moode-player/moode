@@ -321,7 +321,7 @@ function parseDelimFile($data, $delim) {
 // Determine if a renderer is active
 function chkRendererActive() {
 	$result = sqlQuery("SELECT value from cfg_system WHERE param in (
-		'btactive', 'aplactive', 'spotactive', 'deezactive', 'slactive', 'paactive',
+		'btactive', 'aplactive', 'spotactive', 'deezactive', 'qbzactive', 'slactive', 'paactive',
 		'rbactive', 'inpactive')", sqlConnect());
 
 	$active = false;
@@ -419,6 +419,7 @@ function storeBackLink($section, $tpl) {
 		'eqg-config.html'	=> '/snd-config.php',
 		'eqp-config.html'	=> '/snd-config.php',
 		'gpio-config.html'	=> '/per-config.php',
+		'qbz-config.html'	=> '/ren-config.php',
 		'spo-config.html' 	=> '/ren-config.php',
 		'sqe-config.html'	=> '/ren-config.php',
 		'lib-nas-config.html' => '/lib-config.php',

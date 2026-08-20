@@ -34,6 +34,8 @@ from the client and whether CamillaDSP is supported in the playback chain.
 +--------------------------------------------------------------------------------
 | Spotify Connect      | Spotify app (Desktop/Smartphone) | Yes      | Yes
 +--------------------------------------------------------------------------------
+| Qobuz Connect        | Qobuz app (Desktop/Smartphone)   | Yes      | Yes
++--------------------------------------------------------------------------------
 | Squeezelite          | Lyrion Media Server (LMS)        | No       | Yes
 +--------------------------------------------------------------------------------
 | UPnP Client for MPD  | Any UPnP Control Point app       | Yes      | Yes
@@ -54,6 +56,7 @@ another renderer.
 - Bluetooth
 - AirPlay
 - Spotify Connect
+- Qobuz Connect
 - Squeezelite (providing -c <timeout> option is specified)
 - UPnP Client for MPD
 
@@ -83,13 +86,28 @@ Session Based
 The other renderers use Session based protocols that run over existing
 Ethernet or WiFi networks. Since these networks are already present this type
 of renderer operates by establishing a playback session. moOde detects the
-session and displays cover art and track metadata for AirPlay and Spotify
-Connect, or the "Renderer Active" screen for Squeezelite, Plexamp and 
-RoonBridge renderers.
+session and displays cover art and track metadata for AirPlay, Spotify
+Connect and Qobuz Connect, or the "Renderer Active" screen for Squeezelite,
+Plexamp and RoonBridge renderers.
 
 AirPlay and Squeezelite renderers can automatically end their session and
 release the audio output after playback ends based on a configurable timeout
 value.
+
+QOBUZ CONNECT AND ACCOUNTS
+
+Qobuz Connect works differently from the other Session based renderers. There
+is no account stored on the player by default: when a device is selected in the
+Qobuz app's output picker, the app hands the player its own session, so any
+Qobuz account on the network can play to it. This is the "Local pairing"
+setting in Qobuz Config and it is on by default. The most recent client to
+select the player takes over from the previous one, in the same way as Spotify
+Connect.
+
+Turning Local pairing off makes the player use one fixed account instead. In
+that mode the LOGIN button in Qobuz Config is used to sign in via a browser,
+and only that account can play to the player. The CLEAR button in Renderer
+Config removes stored account credentials at any time.
 
 RECEIVE-ONLY RENDERERS
 

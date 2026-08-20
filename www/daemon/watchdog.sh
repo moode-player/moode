@@ -18,6 +18,7 @@ FPM_MIN_LIMIT=32
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x "mpd")
 SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
+QOBUZ_RUNNING=$(pgrep -c -x "qbzd")
 AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
 TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 
@@ -123,6 +124,24 @@ while true; do
 		fi
 	fi
 
+	# Qobuz Connect
+	QOBUZ_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='qobuzsvc'")
+	if [[ $QOBUZ_SVC = "1" ]]; then
+		if [[ $QOBUZ_RUNNING = 0 ]]; then
+			counter=0
+			while [ $counter -lt 3 ]; do
+				sleep 1
+				QOBUZ_RUNNING=$(pgrep -c -x qbzd)
+				if [[ $QOBUZ_RUNNING != 0 ]]; then break; fi
+				((counter++))
+			done
+			if [[ $QOBUZ_RUNNING = 0 ]]; then
+				message_log "CRITICAL ERROR: Restarted Qobuz Connect after crash detected"
+				moodeutl -R --qobuz
+			fi
+		fi
+	fi
+
 	# Multiroom receiver
 	MULTIROOM_RX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_rx'")
 	if [[ $MULTIROOM_RX = "On" ]]; then
@@ -182,6 +201,7 @@ while true; do
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 	MPD_RUNNING=$(pgrep -c -x "mpd")
 	SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
+	QOBUZ_RUNNING=$(pgrep -c -x "qbzd")
 	AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
 	TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 

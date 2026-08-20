@@ -126,6 +126,9 @@ AUDIO_PARAMETERS() {
 	if [ $(($feat_bitmask & $FEAT_DEEZER)) -ne 0 ]; then
 		echo -e "\nDeezer Connect\t\t= $deezersvc\c"
 	fi
+	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
+		echo -e "\nQobuz Connect\t\t= $qobuzsvc\c"
+	fi
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\nSqueezelite\t\t= $slsvc\c"
 	fi
@@ -375,6 +378,14 @@ RENDERER_SETTINGS() {
 		echo -e "\nResume MPD\t\t= $rsmafterdeez\n"
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
+		QBZVER="$(qbzd --version | awk -F" " '{print $2}')"
+		echo -e "Q O B U Z   C O N N E C T"
+		echo -e "\nVersion\t\t\t= $QBZVER\c"
+		echo -e "\nFriendly name\t\t= $qobuzname\c"
+		echo -e "\nResume MPD\t\t= $rsmafterqbz\n"
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		SL=$(squeezelite -? | grep "Squeezelite" | awk '{print $2}' | cut -d "," -f1)
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
@@ -471,6 +482,7 @@ FEAT_PLEXAMP=8192
 FEAT_BLUETOOTH=16384
 FEAT_MULTIROOM=65536
 FEAT_PEPPYDISPLAY=131072
+FEAT_QOBUZ=262144
 
 # Selective resampling bitmask
 SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
@@ -941,6 +953,10 @@ library_onetouch_pl=${arr[171]}
 scnsaver_mode=${arr[172]}
 scnsaver_layout=${arr[173]}
 scnsaver_xmeta=${arr[174]}
+rsmafterqbz=${arr[175]}
+qbzactive=${arr[176]}
+[[ "${arr[177]}" = "1" ]] && qobuzsvc="On" || qobuzsvc="Off"
+qobuzname=${arr[178]}
 # Session only vars
 timezone=$(moodeutl -d -gv timezone)
 value=$(moodeutl -d -gv rotaryenc)

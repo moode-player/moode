@@ -8,6 +8,7 @@ require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/alsa.php';
 require_once __DIR__ . '/inc/cdsp.php';
 require_once __DIR__ . '/inc/mpd.php';
+require_once __DIR__ . '/inc/renderer.php';
 require_once __DIR__ . '/inc/music-library.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
@@ -33,6 +34,7 @@ $btActive = ($_SESSION['audioout'] == 'Local' && strpos($result[0], 'bluealsa-ap
 $aplActive = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $dbh)[0]['value'];
 $spotActive = sqlQuery("SELECT value FROM cfg_system WHERE param='spotactive'", $dbh)[0]['value'];
 $deezActive = sqlQuery("SELECT value FROM cfg_system WHERE param='deezactive'", $dbh)[0]['value'];
+$qbzActive = sqlQuery("SELECT value FROM cfg_system WHERE param='qbzactive'", $dbh)[0]['value'];
 $slActive = sqlQuery("SELECT value FROM cfg_system WHERE param='slactive'", $dbh)[0]['value'];
 $paActive = sqlQuery("SELECT value FROM cfg_system WHERE param='paactive'", $dbh)[0]['value'];
 $rbActive = sqlQuery("SELECT value FROM cfg_system WHERE param='rbactive'", $dbh)[0]['value'];
@@ -72,6 +74,12 @@ if ($btActive === true && $_SESSION['audioout'] == 'Local') {
 } else if ($deezActive == '1') {
 	$_file = 'Deezer stream';
 	$metadata = json_decode(file_get_contents(DEEZMETA_CACHE_FILE), true);
+	$_encoded_at = $metadata['sformat'];
+	$_decoded_to = $metadata['oformat'];
+	$_decode_rate = '';
+} else if ($qbzActive == '1') {
+	$_file = 'Qobuz stream';
+	$metadata = json_decode(file_get_contents(QBZMETA_CACHE_FILE), true);
 	$_encoded_at = $metadata['sformat'];
 	$_decoded_to = $metadata['oformat'];
 	$_decode_rate = '';
@@ -181,6 +189,8 @@ if ($btActive === true) {
 	$renderer = 'Spotify Connect &rarr; ';
 } else if ($deezActive == '1') {
 	$renderer = 'Deezer Connect &rarr; ';
+} else if ($qbzActive == '1') {
+	$renderer = 'Qobuz Connect &rarr; ';
 } else if ($slActive == '1') {
 	$renderer = 'Squeezelite &rarr; ';
 } else if ($paActive == '1') {
@@ -215,6 +225,19 @@ if ($_SESSION['invert_polarity'] == '1') {
 }
 
 $outputModeName = ALSA_OUTPUT_MODE_NAME[$_SESSION['alsa_output_mode']];
+
+// Qobuz Connect routed straight to the DAC does not pass through moOde's chain
+// at all, so the DSP stages and output mode above describe something that is
+// not in the signal path. Replace them with what qbzd actually opened.
+if ($qbzActive == '1') {
+	$qbzRouting = qobuzDirectRouting();
+	if ($qbzRouting['direct']) {
+		$dsp = '';
+		$peppyAlsa = '';
+		$outputMode = 'hw';
+		$outputModeName = ALSA_OUTPUT_MODE_NAME['hw'];
+	}
+}
 
 // Peppy ALSA
 $peppyAlsa = ($_SESSION['peppy_display'] == '1' || $_SESSION['enable_peppyalsa'] == '1') ? 'PeppyALSA &rarr; ' : '';
@@ -268,7 +291,7 @@ $alsaVol = getAlsaVolumeDb($_SESSION['amixname']);
 $cdspVol = CamillaDSP::getCDSPVol() . 'dB';
 $_volume_levels = 'Knob ' . $knobVol . ', ALSA ' . $alsaVol . ', CDSP ' . $cdspVol;
 
-if ($aplActive == '1' || $spotActive == '1' || $deezActive == '1' || $slActive == '1' || $paActive == '1' || $rbActive == '1' ||
+if ($aplActive == '1' || $spotActive == '1' || $deezActive == '1' || $qbzActive == '1' || $slActive == '1' || $paActive == '1' || $rbActive == '1' ||
 	$btActive === true || $_SESSION['audioout'] == 'Bluetooth' || $_SESSION['inpactive'] == '1') {
 	// Renderer active
 	// NOTE: Class 'off' hides the item
@@ -280,7 +303,7 @@ if ($aplActive == '1' || $spotActive == '1' || $deezActive == '1' || $slActive =
 	$_replaygain = 'off';
 	$_vol_normalize = 'off';
 
-	if ($aplActive == '1' || $spotActive == '1' || $deezActive == '1') {
+	if ($aplActive == '1' || $spotActive == '1' || $deezActive == '1' || $qbzActive == '1') {
 		$_peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$_geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
         $_camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);

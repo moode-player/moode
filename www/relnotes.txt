@@ -17,6 +17,7 @@
 
 New features:
 - NEW: Wide layout for AirPlay and Spotify Connect metadata display
+- NEW: Qobuz Connect renderer with metadata and cover art (qbzd)
 
 Updates:
 - UPD: Improve Radio Browser notification messages, reduce messages

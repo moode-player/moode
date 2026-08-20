@@ -26,6 +26,7 @@ $features = array(
 	FEAT_SQUEEZELITE => 'Squeezelite renderer',
 	FEAT_UPMPDCLI => 'UPnP client for MPD',
 	FEAT_DEEZER => 'Deezer Connect renderer',
+	FEAT_QOBUZ => 'Qobuz Connect renderer',
 	FEAT_ROONBRIDGE => 'RoonBridge renderer',
 	FEAT_LOCALDISPLAY => 'Local display',
 	FEAT_INPSOURCE => 'Input source select',
@@ -163,16 +164,17 @@ switch ($option) {
 		echo VERSION . "\n";
 		break;
 	case '--help':
-		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge]
+		//[--bluetooth | --airplay | --spotify | --deezer | --qobuz | --upnp | --squeezelite | --plexamp | --roonbridge]
 		$btArg = $featBitmask & FEAT_BLUETOOTH ? '--bluetooth | ' : '';
 		$apArg = $featBitmask & FEAT_AIRPLAY ? '--airplay | ' : '';
 		$spArg = $featBitmask & FEAT_SPOTIFY ? '--spotify | ' : '';
 		$dzArg = $featBitmask & FEAT_DEEZER ? '--deezer | ' : '';
+		$qbArg = $featBitmask & FEAT_QOBUZ ? '--qobuz | ' : '';
 		$upArg = $featBitmask & FEAT_UPMPDCLI ? '--upnp | ' : '';
 		$slArg = $featBitmask & FEAT_SQUEEZELITE ? '--squeezelite | ' : '';
 		$paArg = $featBitmask & FEAT_PLEXAMP ? '--plexamp | ' : '';
 		$rbArg = $featBitmask & FEAT_ROONBRIDGE ? '--roonbridge | ' : '';
-		$rendererList = rtrim($btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg, ' | ');
+		$rendererList = rtrim($btArg . $apArg . $spArg . $dzArg . $qbArg . $upArg . $slArg . $paArg . $rbArg, ' | ');
 		echo
 "Usage: moodeutl [OPTION]
 Moode utility functions
@@ -530,6 +532,17 @@ function stopAllRenderers($featBitmask) {
 	} else {
 		echo "- deezer connect\tfeature disabled\n";
 	}
+	if ($featBitmask & FEAT_QOBUZ) {
+		$qobuzSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='qobuzsvc'"));
+		if ($qobuzSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --qobuz --stop');
+			echo "- qobuz connect\t\tstopped\n";
+		} else {
+			echo "- qobuz connect\t\tnot on\n";
+		}
+	} else {
+		echo "- qobuz connect\t\tfeature disabled\n";
+	}
 	if ($featBitmask & FEAT_UPMPDCLI) {
 		$upSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='upnpsvc'"));
 		if ($upSvc == '1') {
@@ -578,8 +591,8 @@ function stopAllRenderers($featBitmask) {
 
 function restartRenderer($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
-		'--deezer' => 'deezersvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
-		'--roonbridge' => 'rbsvc');
+		'--deezer' => 'deezersvc', '--qobuz' => 'qobuzsvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc',
+		'--plexamp' => 'pasvc', '--roonbridge' => 'rbsvc');
 
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [renderer name]' . "\n";
@@ -593,7 +606,7 @@ function restartRenderer($argv) {
 		}
 	} else {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --qobuz, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
 		return;
 	}
 
@@ -603,15 +616,15 @@ function restartRenderer($argv) {
 
 function rendererOnoff($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
-		'--deezer' => 'deezersvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
-		'--roonbridge' => 'rbsvc');
+		'--deezer' => 'deezersvc', '--qobuz' => 'qobuzsvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc',
+		'--plexamp' => 'pasvc', '--roonbridge' => 'rbsvc');
 
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [renderer name]' . "\n";
 		return;
 	} else if (!array_key_exists($argv[2], $renderers)) {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --deezer, --qobuz, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
 		return;
 	} else if (!isset($argv[3])) {
 		echo 'Missing 3nd argument [on|off]' . "\n";

@@ -141,6 +141,34 @@ if (isset($_POST['deezerrestart']) && $_POST['deezerrestart'] == 1 && $_SESSION[
 	submitJob('deezersvc', '', NOTIFY_TITLE_INFO, NAME_DEEZER . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
+// Qobuz Connect
+if (isset($_POST['install_qobuz'])) {
+	submitJob('install_qobuz');
+	header('location: ren-status.php');
+}
+if (isset($_POST['update_qobuz_settings'])) {
+	if (isset($_POST['qobuzname']) && $_POST['qobuzname'] != $_SESSION['qobuzname']) {
+		$update = true;
+		phpSession('write', 'qobuzname', $_POST['qobuzname']);
+	}
+	if (isset($_POST['qobuzsvc']) && $_POST['qobuzsvc'] != $_SESSION['qobuzsvc']) {
+		$update = true;
+		phpSession('write', 'qobuzsvc', $_POST['qobuzsvc']);
+	}
+	if (isset($update)) {
+		submitJob('qobuzsvc');
+	}
+}
+if (isset($_POST['update_rsmafterqbz'])) {
+	phpSession('write', 'rsmafterqbz', $_POST['rsmafterqbz']);
+}
+if (isset($_POST['qobuzrestart']) && $_POST['qobuzrestart'] == 1 && $_SESSION['qobuzsvc'] == '1') {
+	submitJob('qobuzsvc', '', NOTIFY_TITLE_INFO, NAME_QOBUZ . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+if (isset($_POST['qobuz_clear_credentials']) && $_POST['qobuz_clear_credentials'] == 1) {
+	submitJob('qobuz_clear_credentials', '', NOTIFY_TITLE_INFO, 'Stored Qobuz credentials cleared');
+}
+
 // UPnP client for MPD
 if (isset($_POST['update_upnp_settings'])) {
 	$currentUpnpName = $_SESSION['upnpname'];
@@ -342,6 +370,53 @@ $_select['deezername'] = $_SESSION['deezername'];
 $autoClick = " onchange=\"autoClick('#btn-set-rsmafterdeez');\" " . $_deezer_btn_disable;
 $_select['rsmafterdeez_on'] .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-1\" value=\"Yes\" " . (($_SESSION['rsmafterdeez'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmafterdeez_off']  .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-2\" value=\"No\" " . (($_SESSION['rsmafterdeez'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// Qobuz Connect
+$_feat_qobuz = $_SESSION['feat_bitmask'] & FEAT_QOBUZ ? '' : 'hide';
+if (isQobuzInstalled() === true) {
+	$_install_qobuz_hide = 'hide';
+	$_qobuz_version_hide = '';
+	$_qobuz_installed_version = 'Version: ' . qbzdVersion();
+	// Point at the exact source of a fork build so the installed bits are
+	// traceable — these are pre-release builds of unmerged work.
+	$_qobuz_source_link = isQbzdForkBuild() ?
+		'<br><a class="target-blank-link" href="' . QBZD_FORK_URL . '" target="_blank">' .
+			'Qobuz Connect pairing branch (fork build)</a>' :
+		'';
+	$_qobuz_svcbtn_disable = '';
+	$_qobuz_editlink_disable = '';
+} else {
+	$_install_qobuz_hide = '';
+	$_qobuz_version_hide = 'hide';
+	$_qobuz_installed_version = '';
+	$_qobuz_source_link = '';
+	$_qobuz_svcbtn_disable = 'disabled';
+	$_qobuz_editlink_disable = 'onclick="return false;"';
+}
+$_qobuz_login_msg = '';
+if ($_SESSION['qobuzsvc'] == '1') {
+	$result = sysCmd('curl -s --max-time 2 http://127.0.0.1:8182/api/status');
+	$status = json_decode(implode('', $result), true);
+	// "Not logged in" is the NORMAL state with Local pairing on: the casting
+	// Qobuz app hands the player its own session, so nagging about a login
+	// would be telling the user to fix something that is not broken. Only a
+	// fixed-account setup (pairing off) actually needs one.
+	$pairingOn = !isset($status['qconnect']['pairing']) || $status['qconnect']['pairing'] === true;
+	$needsAuth = isset($status['auth']['state']) && $status['auth']['state'] == 'needs_auth';
+	if ($needsAuth && !$pairingOn) {
+		$_qobuz_login_msg = '<span class="config-help-static"><em>Not logged in to Qobuz ' .
+			'&mdash; Local pairing is off, so use the Edit screen to log in</em></span>';
+	}
+}
+$_SESSION['qobuzsvc'] == '1' ? $_qobuz_btn_disable = '' : $_qobuz_btn_disable = 'disabled';
+$_SESSION['qobuzsvc'] == '1' ? $_qobuz_link_disable = '' : $_qobuz_link_disable = 'onclick="return false;"';
+$autoClick = " onchange=\"autoClick('#btn-set-qobuzsvc');\" " . $_qobuz_svcbtn_disable;
+$_select['qobuzsvc_on']  .= "<input type=\"radio\" name=\"qobuzsvc\" id=\"toggle-qobuzsvc-1\" value=\"1\" " . (($_SESSION['qobuzsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['qobuzsvc_off'] .= "<input type=\"radio\" name=\"qobuzsvc\" id=\"toggle-qobuzsvc-2\" value=\"0\" " . (($_SESSION['qobuzsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['qobuzname'] = $_SESSION['qobuzname'];
+$autoClick = " onchange=\"autoClick('#btn-set-rsmafterqbz');\" " . $_qobuz_btn_disable;
+$_select['rsmafterqbz_on'] .= "<input type=\"radio\" name=\"rsmafterqbz\" id=\"toggle-rsmafterqbz-1\" value=\"Yes\" " . (($_SESSION['rsmafterqbz'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rsmafterqbz_off']  .= "<input type=\"radio\" name=\"rsmafterqbz\" id=\"toggle-rsmafterqbz-2\" value=\"No\" " . (($_SESSION['rsmafterqbz'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // UPnP client for MPD
 $_feat_upmpdcli = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? '' : 'hide';

@@ -23,8 +23,9 @@ const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
+const FEAT_QOBUZ        = 262144;	// y Qobuz Connect renderer
 //						-------
-//						  228279
+//						  490423
 
 const VOL_KNOB_DEBOUNCE = 150; // ms, coalesce a knob drag's intermediate values
 
@@ -578,6 +579,8 @@ function engineCmd() {
                 case 'aplactive0':
                 case 'deezactive1':
                 case 'deezactive0':
+                case 'qbzactive1':
+                case 'qbzactive0':
                 case 'spotactive1':
                 case 'spotactive0':
                     if (cmd[0].includes('apl')) {
@@ -586,6 +589,9 @@ function engineCmd() {
                     } else if (cmd[0].includes('deez')){
                         var rendererName = 'Deezer';
                         SESSION.json['deezactive'] = cmd[0].slice(-1);
+                    } else if (cmd[0].includes('qbz')) {
+                        var rendererName = 'Qobuz';
+                        SESSION.json['qbzactive'] = cmd[0].slice(-1);
                     } else if (cmd[0].includes('spot')) {
                         var rendererName = 'Spotify';
                         SESSION.json['spotactive'] = cmd[0].slice(-1);
@@ -606,6 +612,7 @@ function engineCmd() {
                     break;
                 case 'update_aplmeta':
                 case 'update_deezmeta':
+                case 'update_qbzmeta':
                 case 'update_spotmeta':
 					// cmd[1]: '"{"fecmd": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
                     updateInpsrcMeta(cmd[0], cmd[1]);
@@ -897,6 +904,8 @@ function refreshInpsrcMeta() {
         cmd = 'get_aplmeta';
     } else if (SESSION.json['deezactive'] == '1') {
         cmd = 'get_deezmeta';
+    } else if (SESSION.json['qbzactive'] == '1') {
+        cmd = 'get_qbzmeta';
     } else if (SESSION.json['spotactive'] == '1') {
         cmd = 'get_spotmeta';
     } else {
@@ -925,6 +934,7 @@ function updateInpsrcMeta(cmd, data) {
 	// Formats
 	// - AirPlay: title, artist, album, duration (in ms),  cover_url, sformat, oformat
 	// - Deezer:  title, artist, album, duration (in sec), cover_url, sformat, decoder
+	// - Qobuz:   title, artist, album, duration (in sec), cover_url, sformat, oformat
 	// - Spotify: title, artist, album, duration (in ms),  cover_url, sformat
 
 	try {
@@ -1613,6 +1623,18 @@ function renderUI() {
 
             refreshInpsrcMeta();
     	}
+        // Qobuz Connect renderer
+    	if (SESSION.json['qbzactive'] == '1') {
+            inpSrcIndicator('qbzactive1',
+                '<span id="inpsrc-msg-text">Qobuz Active</span>' +
+                '<button class="btn renderer-btn disconnect-qobuz" data-job="qobuzsvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                receiversBtn('qbzactive1') +
+                audioInfoBtn('qbzactive1') +
+                rendererRefreshBtn()
+            );
+
+            refreshInpsrcMeta();
+    	}
         // Spotify Connect renderer
     	if (SESSION.json['spotactive'] == '1') {
             inpSrcIndicator('spotactive1',
@@ -1668,7 +1690,7 @@ function renderUI() {
 // Multiroom receivers
 function receiversBtn(rendererActive = '') {
     if (SESSION.json['multiroom_tx'] == 'On') {
-        if (rendererActive == 'aplactive1' || rendererActive == 'deezactive1' || rendererActive == 'spotactive1') {
+        if (rendererActive == 'aplactive1' || rendererActive == 'deezactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1') {
             // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
             var html = '<span class="context-menu"><a class="btn renderer-btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
         } else {
@@ -1682,7 +1704,7 @@ function receiversBtn(rendererActive = '') {
 }
 // Audio info
 function audioInfoBtn(rendererActive = '') {
-    if (rendererActive == 'aplactive1' || rendererActive == 'deezactive1' || rendererActive == 'spotactive1') {
+    if (rendererActive == 'aplactive1' || rendererActive == 'deezactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1') {
         var html = '<span><a class="btn renderer-btn" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else {
         var html = '<br><span><a class="btn audioinfo-renderer" href="javascript:audioInfoPlayback()">Audio info</a></span>';
@@ -5417,6 +5439,7 @@ function rendererActive() {
         SESSION.json['deezactive'] == '1' ||
         SESSION.json['inpactive'] == '1' ||
         SESSION.json['paactive'] == '1' ||
+        SESSION.json['qbzactive'] == '1' ||
         SESSION.json['rbactive'] == '1' ||
         SESSION.json['rxactive'] == '1' ||
         SESSION.json['slactive'] == '1'

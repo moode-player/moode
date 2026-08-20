@@ -109,6 +109,7 @@ function autoConfigSettings() {
 		['requires' => ['airplayname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['spotifyname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['deezername'], 'handler' => 'setSessVarSql'],
+		['requires' => ['qobuzname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['squeezelitename'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			$currentName= sqlQuery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
@@ -465,6 +466,8 @@ function autoConfigSettings() {
 		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
 		['requires' => ['deezersvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmafterdeez'], 'handler' => 'setSessVarSql'],
+		['requires' => ['qobuzsvc'], 'handler' => 'setSessVarSql'],
+		['requires' => ['rsmafterqbz'], 'handler' => 'setSessVarSql'],
 		['requires' => ['slsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmaftersl'], 'handler' => 'setSessVarSql'],
 		['requires' => ['pasvc'], 'handler' => 'setSessVarSql'],
@@ -545,6 +548,15 @@ function autoConfigSettings() {
 				updateDeezCredentials($values['deezer_email'], $values['deezer_password']);
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_deezer', $values, 'deezer_');
+		}],
+		'Qobuz Connect',
+		['requires' => ['qobuz_quality'],
+			'optionals' => ['qobuz_gapless', 'qobuz_normalize_volume'],
+			'handler' => function($values, $optionals) {
+				$mergedValues = array_merge($values, $optionals);
+				setCfgTableParams('cfg_qobuz', $mergedValues, 'qobuz_');
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_qobuz', $values, 'qobuz_');
 		}],
 		'Squeezelite',
 		['requires' => ['squeezelite_PLAYERNAME', 'squeezelite_AUDIODEVICE', 'squeezelite_ALSAPARAMS', 'squeezelite_OUTPUTBUFFERS',

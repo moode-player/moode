@@ -33,7 +33,7 @@ switch ($_GET['cmd']) {
 	 	}
 		phpSession('close');
 
-	 	// AirPlay, Spotify Connect, Deezer Connect and RoonBridge are session based, they can be restarted to effect a disconnect
+	 	// AirPlay, Spotify Connect, Deezer Connect, Qobuz Connect and RoonBridge are session based, they can be restarted to effect a disconnect
 	 	// NOTE: 'disconnect_renderer' is passed to worker so MPD play can be resumed if indicated
 	 	if (submitJob($_POST['job'], $_GET['cmd'])) {
 	 		echo json_encode('job submitted');
@@ -48,6 +48,9 @@ switch ($_GET['cmd']) {
 		break;
 	case 'get_deezmeta':
 		echo trim(file_get_contents(DEEZMETA_CACHE_FILE));
+		break;
+	case 'get_qbzmeta':
+		echo trim(file_get_contents(QBZMETA_CACHE_FILE));
 		break;
 	case 'get_spotmeta':
 		echo trim(file_get_contents(SPOTMETA_CACHE_FILE));

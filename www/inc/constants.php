@@ -19,6 +19,8 @@ const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
 const SHAIRPORT_SYNC_LOG = '/var/log/moode_shairport-sync.log';
 const LIBRESPOT_LOG = '/var/log/moode_librespot.log';
 const PLEEZER_LOG = '/var/log/moode_pleezer.log';
+const QBZD_LOG = '/var/log/moode_qbzd.log';
+const QOBUZ_LOGIN_LOG = '/var/log/moode_qobuz_login.log';
 const SPOTEVENT_LOG = '/var/log/moode_spotevent.log';
 const DEEZEVENT_LOG = '/var/log/moode_deezevent.log';
 const SPSEVENT_LOG = '/var/log/moode_spsevent.log';
@@ -54,6 +56,13 @@ const RADIOBROWSER_LIMIT = 28; // Fixed search/page size
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
 const DEEZMETA_CACHE_FILE = '/var/local/www/deezmeta.json';
 const DEEZ_CREDENTIALS_FILE = '/etc/deezer/deezer.toml';
+const QBZMETA_CACHE_FILE = '/var/local/www/qbzmeta.json';
+// Build id of the installed qbzd, recorded by qobuz-installer.sh. The binary
+// only knows its own Cargo version, so a moOde-specific build (2.0.2.moode7)
+// would otherwise be indistinguishable from plain upstream 2.0.2.
+const QBZD_BUILD_FILE = '/var/local/www/qbzd-build';
+// Source of the moOde qbzd builds while Qobuz Connect pairing is unmerged.
+const QBZD_FORK_URL = 'https://github.com/PhilipVinc/qbz/tree/feature/external/qbzd-connect-pairing';
 const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
 const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 // SQLite
@@ -162,6 +171,7 @@ const NAME_BLUETOOTH = 'Bluetooth Controller';
 const NAME_BLUETOOTH_PAIRING_AGENT = 'Pairing Agent';
 const NAME_SPOTIFY = 'Spotify Connect';
 const NAME_DEEZER = 'Deezer Connect';
+const NAME_QOBUZ = 'Qobuz Connect';
 const NAME_SQUEEZELITE = 'Squeezelite';
 const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
@@ -242,8 +252,9 @@ const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
+const FEAT_QOBUZ        = 262144;	// y Qobuz Connect renderer
 //						-------
-//						  228279
+//						  490423
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate

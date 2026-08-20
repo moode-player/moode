@@ -1,0 +1,208 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="ren-config">Qobuz Connect</h1>
+
+	<!-- TEMPLATE -->
+
+    <form class="form-horizontal" action="" method="post">
+    	<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+		</legend>
+
+		<div class="control-group">
+
+			<div class="config-horiz-rule">General</div>
+
+			<label class="control-label" for="quality">Stream quality</label>
+			<div class="controls">
+				<select id="quality" class="config-select-large" name="config[quality]">
+					$_select[quality]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-quality" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-quality" class="config-help-info">
+					Maximum streaming quality. Tracks not available at the selected quality are streamed at the highest quality available for your subscription.
+                </span>
+			</div>
+
+			<label class="control-label" for="buffer-seconds">Buffer</label>
+			<div class="controls">
+				<select id="buffer-seconds" class="config-select-large" name="config[buffer_seconds]">
+					$_select[buffer_seconds]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-buffer-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-buffer-seconds" class="config-help-info">
+					How much audio to buffer before playback starts. A larger buffer rides out network
+					hiccups on a slow or wireless connection at the cost of a longer wait when starting
+					a track or switching output to this player.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Output</div>
+
+			<label class="control-label" for="output-mode">Output routing</label>
+			<div class="controls">
+				<select id="output-mode" class="config-select-large" name="config[output_mode]">
+					$_select[output_mode]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-output-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-output-mode" class="config-help-info">
+					Where Qobuz playback sends audio:
+					<br>&bull; <b>ALSA output mode (Auto)</b> &mdash; picks Direct whenever Audio Config
+					has Output mode set to Direct and no DSP is enabled, in other words whenever moOde's
+					own output chain has nothing in it to lose. Falls back to Software otherwise.
+					<br>&bull; <b>Software</b> &mdash; goes through the same output chain as MPD, so your
+					EQ, crossfeed and CamillaDSP settings apply. The stream is converted to whatever rate
+					that chain is running at, which is usually not the rate of the track.
+					<br>&bull; <b>Direct</b> &mdash; hands the DAC the track's own rate untouched, for
+					bit-perfect playback. moOde's DSP is bypassed and the DAC is reserved for as long as
+					a Qobuz session is active, so nothing else can play through it.
+				</span>
+			</div>
+
+			<label class="control-label">Resolves to</label>
+			<div class="controls">
+				<span class="config-help-static">$_qobuz_routing_resolves</span>
+			</div>
+
+			<label class="control-label" for="volume-mode">Volume control</label>
+			<div class="controls">
+				<select id="volume-mode" class="config-select-large" name="config[volume_mode]">
+					$_select[volume_mode]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-volume-mode" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-volume-mode" class="config-help-info">
+					How the Qobuz app's volume slider is applied:
+					<br>&bull; <b>Auto</b> &mdash; uses the DAC's own volume control when that is possible,
+					otherwise software.
+					<br>&bull; <b>DAC hardware volume</b> &mdash; sends the slider to the DAC's volume
+					control, so the audio stays bit-perfect. Needs Direct routing and a DAC that has a
+					hardware volume control. This is the same control moOde's volume uses, so a change
+					made from the Qobuz app persists and affects moOde playback afterwards.
+					<br>&bull; <b>Software</b> &mdash; scales the samples instead. Works with any output,
+					but the audio is no longer bit-perfect.
+					<br>&bull; <b>Locked at 100%</b> &mdash; keeps the stream at full scale and ignores
+					the app's slider, so volume must come from your amplifier or DAC.
+				</span>
+			</div>
+
+			<label class="control-label" for="normalize-volume">Normalize volume</label>
+			<div class="controls">
+				<select id="normalize-volume" class="config-select-large" name="config[normalize_volume]">
+					$_select[normalize_volume]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalize-volume" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-normalize-volume" class="config-help-info">
+					Adjusts the volume of all songs played so that they sound as though they are of equal loudness.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Playback</div>
+
+			<label class="control-label" for="stream-first">Start playback</label>
+			<div class="controls">
+				<select id="stream-first" class="config-select-large" name="config[stream_first]">
+					$_select[stream_first]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-stream-first" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-stream-first" class="config-help-info">
+					Whether a track that is not already cached starts as soon as enough of it has
+					arrived, or waits for the whole file:
+					<br>&bull; <b>As soon as buffered</b> &mdash; playback starts in a second or two
+					instead of tens of seconds.
+					<br>&bull; <b>After the full track downloads</b> &mdash; steadier on an unreliable
+					connection, at the cost of a long pause before every new track.
+				</span>
+			</div>
+
+			<label class="control-label" for="track-cache">Track cache</label>
+			<div class="controls">
+				<select id="track-cache" class="config-select-large" name="config[track_cache]">
+					$_select[track_cache]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-track-cache" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-track-cache" class="config-help-info">
+					Whether finished tracks are kept on disk for instant replay:
+					<br>&bull; <b>Stream only, do not cache</b> &mdash; writes nothing to the SD card.
+					A hi-res track is 60&ndash;80 MB, so this spares the card over a long listening
+					session. Gapless playback is not possible without the cache.
+					<br>&bull; <b>Cache tracks on disk</b> &mdash; replaying a track is instant, and
+					gapless playback works because the next track can be loaded ahead of time.
+				</span>
+			</div>
+
+			<label class="control-label" for="gapless">Gapless playback</label>
+			<div class="controls">
+				<select id="gapless" class="config-select-large" name="config[gapless]" $_gapless_disabled>
+					$_select[gapless]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-gapless" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-gapless" class="config-help-info">
+					Play consecutive tracks without a gap of silence between them. Needs Track cache
+					set to keep tracks on disk: the next track has to be loaded ahead of time, which
+					is not possible when nothing is cached.
+				</span>
+				$_gapless_hint
+			</div>
+
+			<label class="control-label" for="quality-fallback">If the quality is unavailable</label>
+			<div class="controls">
+				<select id="quality-fallback" class="config-select-large" name="config[quality_fallback]">
+					$_select[quality_fallback]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-quality-fallback" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-quality-fallback" class="config-help-info">
+					What to do when a track cannot be played at the selected quality, either because
+					your subscription does not include it or because your DAC cannot do that rate:
+					<br>&bull; <b>Play at a lower quality</b> &mdash; the track still plays.
+					<br>&bull; <b>Skip the track</b> &mdash; quality stays guaranteed, at the cost of
+					silent gaps in an album. This matters more with Direct routing, where there is no
+					conversion step to fall back on.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Account</div>
+
+			<label class="control-label" for="pairing">Local pairing</label>
+			<div class="controls">
+				<select id="pairing" class="config-select-large" name="config[pairing]">
+					$_select[pairing]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-pairing" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-pairing" class="config-help-info">
+					Advertise this player on the network so any Qobuz app can cast to it without
+					a login. The app hands the player its own session when a device is selected;
+					the most recent cast takes over, like Spotify Connect. Turn this off to log
+					the player into a fixed Qobuz account instead.
+				</span>
+			</div>
+
+			<label class="control-label">Status</label>
+			<div class="controls">
+				<span class="config-help-static">$_qobuz_account_status</span>
+			</div>
+
+			<div class="$_qobuz_login_hide">
+				<div class="controls">
+					<button class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="qobuz_login" value="1" $_qobuz_login_disabled>Login</button>
+					<span class="config-btn-after">Qobuz account</span>
+					$_qobuz_login_hint
+					$_qobuz_login_url_msg
+				</div>
+			</div>
+
+			<div class="$_qobuz_logout_hide">
+				<div class="controls">
+					<button class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="qobuz_logout" value="1">Logout</button>
+					<span class="config-btn-after">Qobuz account</span>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+</div>

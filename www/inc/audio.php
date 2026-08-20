@@ -188,6 +188,10 @@ function setAudioOut($output) {
 		stopDeezer();
 		startDeezer();
 	}
+	if ($_SESSION['qobuzsvc'] == '1') {
+		stopQobuz();
+		startQobuz();
+	}
 
 	// Set HTTP server state
 	setMpdHttpd();

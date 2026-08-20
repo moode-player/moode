@@ -256,6 +256,19 @@ INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'render
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
 
+-- Table: cfg_qobuz
+CREATE TABLE cfg_qobuz (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_qobuz (id, param, value) VALUES (1, 'quality', 'hires_plus');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (2, 'gapless', 'Yes');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (3, 'normalize_volume', 'No');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (4, 'pairing', 'Yes');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (5, 'buffer_seconds', '2');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (6, 'volume_mode', 'auto');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (7, 'output_mode', 'auto');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (8, 'stream_first', 'Yes');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (9, 'track_cache', 'Yes');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (10, 'quality_fallback', 'fallback');
+
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, monitor) VALUES (1, 'http://strm112.1.fm/blues_mobile_mp3', '1.FM - Blues Radio', 'r', 'local', 'Blues', '1.FM', 'English', 'Switzerland', 'Europe', '192', 'MP3', 'No', '', 'No');
@@ -907,7 +920,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
 INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '228279');
+INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '490423');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (84, 'deezersvc', '0');
@@ -1002,6 +1015,10 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'S
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (176, 'rsmafterqbz', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (177, 'qbzactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (178, 'qobuzsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (179, 'qobuzname', 'Moode Qobuz');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

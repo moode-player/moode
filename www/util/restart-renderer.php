@@ -33,6 +33,9 @@ switch ($option) {
 	case '--deezer':
 		restartDeezer($stopOnly);
 		break;
+	case '--qobuz':
+		restartQobuz($stopOnly);
+		break;
 	case '--squeezelite':
 		restartSqueezelite($stopOnly);
 		break;
@@ -50,16 +53,17 @@ switch ($option) {
 			fwrite(STDERR, "This command requires sudo to print the help\n");
 			return;
 		}
-		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge]
+		//[--bluetooth | --airplay | --spotify | --deezer | --qobuz | --upnp | --squeezelite | --plexamp | --roonbridge]
 		$btArg = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? "--bluetooth\tRestart Bluetooth\n" : "";
 		$apArg = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? " --airplay\tRestart AirPlay\n" : "";
 		$spArg = $_SESSION['feat_bitmask'] & FEAT_SPOTIFY ? " --spotify\tRestart Spotify Connect\n" : "";
 		$dzArg = $_SESSION['feat_bitmask'] & FEAT_DEEZER ? " --deezer\tRestart Deezer Connect\n" : "";
+		$qbArg = $_SESSION['feat_bitmask'] & FEAT_QOBUZ ? " --qobuz\tRestart Qobuz Connect\n" : "";
 		$upArg = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? " --upnp\t\tRestart UPnP\n" : "";
 		$slArg = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? " --squeezelite\tRestart Squeezelite\n" : "";
 		$paArg = $_SESSION['feat_bitmask'] & FEAT_PLEXAMP ? " --plexamp\tRestart Plexamp\n" : "";
 		$rbArg = $_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE ? " --roonbridge\tRestart RoonBridge\n" : "";
-		$rendererList = ' '. $btArg . $apArg . $spArg . $dzArg . $upArg . $slArg . $paArg . $rbArg .
+		$rendererList = ' '. $btArg . $apArg . $spArg . $dzArg . $qbArg . $upArg . $slArg . $paArg . $rbArg .
 		" --help\t\tPrint this help text\n";
 		echo
 "Usage: restart-renderer [OPTION] [--stop]
@@ -110,6 +114,13 @@ function restartDeezer($stopOnly) {
 	stopDeezer();
 	if ($stopOnly === false) {
 		startDeezer();
+	}
+}
+
+function restartQobuz($stopOnly) {
+	stopQobuz();
+	if ($stopOnly === false) {
+		startQobuz();
 	}
 }
 

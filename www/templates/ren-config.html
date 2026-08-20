@@ -290,6 +290,75 @@
 				$_deezer_credentials_msg
 			</div>
 		</div>
+
+		<div class="control-group $_feat_qobuz">
+			<legend>Qobuz Connect</legend>
+
+			<div class="$_install_qobuz_hide">
+				<label class="control-label">Qbzd</label>
+				<div class="controls">
+					<button class="btn btn-primary btn-small config-btn set-button btn-submit" type="submit" name="install_qobuz" value="1">Install</button>
+					<span class="config-help-static">
+						This renderer is not installed. View the <a href="./install_renderers.txt" class="target-blank-link" target="_blank">Installation guide</a> for more information.
+					</span>
+				</div>
+			</div>
+
+			<div class="$_qobuz_version_hide">
+				<label class="control-label">Qbzd</label>
+				<div class="controls">
+					<span class="config-help-static">$_qobuz_installed_version$_qobuz_source_link</span>
+				</div>
+			</div>
+
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-qobuzsvc" for="toggle-qobuzsvc-2">ON </label>$_select[qobuzsvc_on]
+					<label class="toggle-radio toggle-qobuzsvc" for="toggle-qobuzsvc-1">OFF</label>$_select[qobuzsvc_off]
+				</div>
+				<button id="btn-set-qobuzsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_qobuz_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-qobuzsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-qobuzsvc" class="config-help-info">
+					qbzd by vicrodh.
+                </span>
+			</div>
+
+			<label class="control-label" for="qobuzname">Name</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="qobuzname" name="qobuzname" value="$_select[qobuzname]" required>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_qobuz_settings" value="novalue" $_qobuz_svcbtn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+			</div>
+
+			<label class="control-label">Resume MPD</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-rsmafterqbz" for="toggle-rsmafterqbz-2">ON </label>$_select[rsmafterqbz_on]
+					<label class="toggle-radio toggle-rsmafterqbz" for="toggle-rsmafterqbz-1">OFF</label>$_select[rsmafterqbz_off]
+				</div>
+				<button id="btn-set-rsmafterqbz" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rsmafterqbz" value="novalue" $_qobuz_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rsmafterqbz" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-rsmafterqbz" class="config-help-info">
+					Resume MPD playback after Qobuz client stops playing or disconnects.
+                </span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#qobuz-restart" $_qobuz_link_disable><button class="btn btn-medium btn-primary config-btn" $_qobuz_btn_disable>Restart</button></a>
+				<span class="config-btn-after">Qobuz Connect</span>
+			</div>
+
+			<div class="controls">
+				<a href="qbz-config.php" $_qobuz_editlink_disable><button class="btn btn-medium btn-primary config-btn" $_qobuz_svcbtn_disable>Edit</button></a>
+				<span class="config-btn-after">Qobuz Connect settings</span>
+				$_qobuz_login_msg
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#qobuz-clear-credentials" $_qobuz_link_disable><button class="btn btn-medium btn-primary config-btn" $_qobuz_btn_disable>Clear</button></a>
+				<span class="config-btn-after">Stored account credentials</span>
+			</div>
+		</div>
 		<div class="control-group $_feat_upmpdcli">
 			<legend>UPnP Client for MPD</legend>
 			<p class="sub-legend">This service functions as a UPnP media renderer that uses MPD for playback.</p>
@@ -538,6 +607,20 @@
 			<button class="btn btn-primary btn-submit" type="submit" name="spotify_clear_credentials" value="1">Yes</button>
 		</div>
 	</div>
+
+	<div id="qobuz-clear-credentials" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="qobuz-clear-credentials-label" aria-hidden="true">
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
+			<h3>Clear stored Qobuz credentials?</h3>
+		</div>
+		<div class="modal-body">
+			<span class="config-help-static">Removes the saved account login. Local pairing does not need one &mdash;
+			the Qobuz app hands this player its own session when casting.</span>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="qobuz_clear_credentials" value="1">Yes</button>
+		</div>
+	</div>
 </form>
 
 <form class="form-horizontal" method="post">
@@ -549,6 +632,19 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="deezerrestart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="qobuz-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="qobuz-restart-label" aria-hidden="true">
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
+			<h3>Restart Qobuz connect renderer?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="qobuzrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>
