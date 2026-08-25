@@ -2311,6 +2311,20 @@ if [ "$PKG_ARCH" != arm64 ]; then
 	fi
 fi
 
+# The AirPlay plugin's install.sh runs `sysutil.sh upd-shairport-sync-conf` once, at
+# install time, to uncomment moOde's defaults in /etc/shairport-sync.conf. Upstream
+# adds new defaults there over time (r1033 added ignore_volume_control) and pushes
+# them to existing Pi installs from the moode-player postinstall, which nopi never
+# runs - so a box that installed the plugin earlier keeps a commented-out line, and
+# apl-config.php's `sed -i 's/^KEY = .*;/.../'` then matches nothing: the UI setting
+# saves to the DB and silently does not reach shairport-sync. Re-run the function on
+# every install: every sed in it requires a leading `//` before the key, so it only
+# ever acts on still-commented lines and never rewrites a value the user set.
+if [ -f /etc/shairport-sync.conf ] && [ -x /var/www/util/sysutil.sh ]; then
+	/var/www/util/sysutil.sh upd-shairport-sync-conf
+	log "Re-applied moOde defaults to /etc/shairport-sync.conf"
+fi
+
 #----------------------------------------------------------------------------#
 # Phase 5d - Local display (moOde WebUI / Peppy kiosk on an attached HDMI screen)
 #----------------------------------------------------------------------------#
