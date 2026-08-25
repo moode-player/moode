@@ -5,55 +5,37 @@
 # moOde audio player - experimental installer for generic Debian x86_64 (and
 # other non-Pi platforms such as Armbian on arm64).
 #
-# This is NOT the official image build. moOde normally ships as a Raspberry Pi
-# OS image produced by the pi-gen based imgbuild repo. This script instead
-# installs the moOde stack on top of an already running Debian 13 (Trixie),
-# relying on the runtime isPi() platform detection added to the codebase so the
-# Pi-only logic (config.txt overlays, vcgencmd, GPIO/I2S HATs, LED/fan control)
-# is skipped automatically.
+# Not the official image build (moOde ships as a pi-gen image from imgbuild):
+# this installs the stack on a running Debian 13 (Trixie) and relies on the
+# runtime isPi() detection to skip the Pi-only logic (config.txt overlays,
+# vcgencmd, GPIO/I2S HATs, LED/fan control).
 #
-# Scope: core functionality only - WebUI + MPD + ALSA output via USB / HDMI /
-# onboard audio. Advanced features (Bluetooth, AirPlay, UPnP, DLNA, Squeezelite,
-# Roon, multiroom) are installed only when enabled in the CONFIG section below.
+# Requirements: Debian 13 (Trixie) x86_64/arm64 with internet, a login user at
+# UID 1000 (worker.php derives the player user from `grep 1000:1000`), and root
+# (`sudo ./install.sh`). Phase 0b builds build/dist/ if absent.
 #
-# Requirements:
-#   - Fresh Debian 13 (Trixie) x86_64 (or arm64), with internet access.
-#   - A normal login user at UID 1000 (the first user created by the Debian
-#     installer). worker.php derives the player user from `grep 1000:1000`.
-#   - Run as root:  sudo ./install.sh
-#   - The frontend must be built first on a machine with Node 18:
-#       npm install && npx gulp deploy --test --all
-#     which produces build/dist/. This script deploys from there.
-#
-# This installer is idempotent: re-running it re-copies files and re-applies
-# config without destroying an existing database (unless --reset-db is passed).
+# Idempotent: re-running re-copies files and re-applies config without
+# destroying an existing database (unless --reset-db is passed).
 #
 
 set -euo pipefail
 
-# Deterministic command output. The installer greps the output of tools like
-# `apt-cache policy` to make decisions; on a non-English box those strings are
-# LOCALISED (e.g. fr_FR prints "Candidat :" not "Candidate:"), which silently
-# broke the upmpdcli candidate check -> UPnP wrongly skipped on every French
-# install even though the package + repo + gpg key were all fine. Force C.UTF-8
-# (English messages, UTF-8 kept) for the whole run so every such grep is stable -
-# the same reason moOde's own sysCmd() always runs commands under LC_ALL=C.
+# Deterministic command output: we grep tools like `apt-cache policy`, whose
+# strings are LOCALISED (fr_FR prints "Candidat :", which silently skipped UPnP
+# on every French install). Same reason moOde's sysCmd() forces LC_ALL=C.
 export LC_ALL=C.UTF-8 LANG=C.UTF-8
 
 #----------------------------------------------------------------------------#
 # CONFIG
 #----------------------------------------------------------------------------#
 
-# Renderer/feature groups. moOde installs almost everything by default in its
-# image, so the stock-Debian renderers default to ON here to match (set to 0 for
-# a leaner install).
+# Renderer/feature groups, default ON to match the moOde image (0 = leaner).
 #
-# AirPlay and Spotify have no flag on purpose: they follow moOde's on-demand
-# model, built from moode-player/pkgbuild when the feature is enabled in the UI
-# (Phase 5c mirrors the plugin zips). The distro shairport-sync must NOT be
-# installed as a shortcut - isAirPlayInstalled() requires a moode-tagged version
-# (`dpkg-query ... | grep moode`), so a distro build is invisible to the UI while
-# still owning /etc/shairport-sync.conf and the unit.
+# AirPlay and Spotify have no flag on purpose: on-demand, built from
+# moode-player/pkgbuild when enabled in the UI (Phase 5c mirrors the plugin
+# zips). Never install the distro shairport-sync as a shortcut -
+# isAirPlayInstalled() requires a moode-tagged version (`dpkg-query | grep
+# moode`), so a distro build is invisible to the UI yet owns the conf and unit.
 INSTALL_BLUETOOTH=1      # bluez, bluez-alsa for BT audio
 INSTALL_UPNP=1           # upmpdcli (UPnP/OpenHome) - via upstream apt repo
 INSTALL_DLNA=1           # minidlna (serve local library)
@@ -98,10 +80,8 @@ for arg in "$@"; do
 	esac
 done
 
-# Mirror the whole run to a log file beside the script (discoverable - it sits in the
-# clone dir, typically under the player's home - rather than in /var/log, which holds
-# moOde's RUNTIME logs (moode*.log), not this installer's output). Still prints to the
-# terminal via tee. Override the path with INSTALL_LOG=/path ./install.sh.
+# Mirror the run to a log beside the script (the clone dir, not /var/log, which
+# holds moOde's RUNTIME logs). Override with INSTALL_LOG=/path ./install.sh.
 INSTALL_LOG="${INSTALL_LOG:-$REPO_DIR/install-nopi.log}"
 exec > >(tee "$INSTALL_LOG") 2>&1
 printf '\033[1;32m==>\033[0m install log: %s (%s)\n' "$INSTALL_LOG" "$(date '+%Y-%m-%d %H:%M:%S')"
@@ -112,17 +92,14 @@ printf '\033[1;32m==>\033[0m install log: %s (%s)\n' "$INSTALL_LOG" "$(date '+%Y
 
 log "Phase 0: preflight checks"
 
-# Must run as root. On a minimal Debian, sudo may not be installed and the player
-# user is not yet a sudoer (this installer adds them to the sudo group), so on the
-# very first run use `su` / a root shell; subsequent runs can use sudo.
+# Must run as root. On a minimal Debian sudo may be absent and the player user
+# not yet a sudoer (we add them), so the first run needs `su` / a root shell.
 [ "$(id -u)" -eq 0 ] || die "Run as root: 'sudo $0' or, on a fresh minimal Debian without sudo, 'su -c \"$0 $*\"'"
 
-# Supported base: the Debian 13 "Trixie" family ONLY — Debian, Armbian Trixie, or
-# Raspberry Pi OS (Raspbian) Trixie. Other bases (e.g. Ubuntu) are unsupported:
-# their bleeding-edge toolchains break pinned source builds (CMake 4 vs ashuffle's
-# yaml-cpp, gcc-15...) and the upmpdcli/moodeaudio repos publish Debian suites only,
-# so the host codename (noble/resolute/...) 404s. We warn loudly but continue, so
-# experimentation stays possible.
+# Debian 13 "Trixie" family ONLY (Debian, Armbian, Raspberry Pi OS). Other bases
+# break pinned source builds on their newer toolchains (CMake 4 vs ashuffle's
+# yaml-cpp, gcc-15) and 404 on the upmpdcli/moodeaudio repos, which publish
+# Debian suites only. Warn loudly but continue, so experimenting stays possible.
 OS_ID="$( [ -r /etc/os-release ] && ( . /etc/os-release 2>/dev/null; echo "$ID" ) )"
 OS_CODENAME="$( [ -r /etc/os-release ] && ( . /etc/os-release 2>/dev/null; echo "$VERSION_CODENAME" ) )"
 OS_PRETTY="$( [ -r /etc/os-release ] && ( . /etc/os-release 2>/dev/null; echo "$PRETTY_NAME" ) )"
@@ -141,34 +118,26 @@ else
 	sleep 5
 fi
 
-# Low-RAM build hardening (root-caused on an Orange Pi PC+ 1GB armhf). The on-device
-# source builds (pleezer/cargo-deb Rust, mpd/caps C++) drop their work dir in
-# `mktemp -d` -> /tmp, which Armbian mounts as a small RAM tmpfs (~50% of RAM).
-# pleezer's cargo target/ is ~650MB and overflows a 1GB board's ~480MB /tmp ("No
-# space left on device" -> pleezer/cargo-deb "build failed"), and the tmpfs also
-# steals RAM (which is what OOM-killed rustc on the first run). The 2GB boards were
-# fine only because their /tmp tmpfs is ~1GB. Three gated, idempotent measures:
+# Low-RAM build hardening (root-caused on an Orange Pi PC+ 1GB armhf). The
+# on-device source builds `mktemp -d` into /tmp, which Armbian mounts as a RAM
+# tmpfs (~50% of RAM): pleezer's ~650MB cargo target/ overflows a 1GB board's
+# ~480MB /tmp AND steals the RAM that then OOM-kills rustc. Three gated,
+# idempotent measures:
 #
-#  (1) Build on disk: if /tmp is tmpfs, point TMPDIR at /var/tmp (root fs, GBs free)
-#      so every build's temp/target lands on disk, not RAM. This ALONE lets a 1GB
-#      board build everything at full -j(nproc) (validated: pleezer 0.19.1, target/
-#      652MB, no ENOSPC, no OOM). No-op where /tmp is already disk (Pi OS, x86).
-#  (2) Swapfile backstop (RAM < 1.5GB): the FINAL pleezer crate is one big rustc
-#      (~700-900MB) that runs zram ~85% full on 1GB; a temporary 2G swapfile gives
-#      margin. Removed at end of install (zram stays for runtime).
-#  (3) Cap Rust parallelism only on sub-1GB boards (< 900MB), where even the
-#      parallel dependency phase (~700MB) won't fit; 1GB+ build at full speed.
+#  (1) /tmp on tmpfs -> TMPDIR=/var/tmp (disk). This ALONE lets a 1GB board
+#      build everything at full -j(nproc). No-op where /tmp is disk (Pi OS, x86).
+#  (2) RAM < 1.5GB: temporary 2G swapfile for the final single-crate rustc peak
+#      (~700-900MB). Removed at end of install (zram stays for runtime).
+#  (3) RAM < 900MB: cap Rust parallelism, the dependency phase won't fit either.
 NOPI_BUILD_SWAP=""
 MEM_TOTAL_MB="$(awk '/^MemTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
 SWAP_TOTAL_MB="$(awk '/^SwapTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
 
 # (1) keep build temp off the RAM-backed tmpfs.
-# ONE tool must not inherit this: `equivs-build`, which mk-build-deps drives, builds
-# its dummy build-deps package in $TMPDIR when that is set (`DIR => $ENV{TMPDIR} ||
-# cwd`) and leaves the .deb there, while mk-build-deps then runs `dpkg --unpack` on a
-# bare filename from the CURRENT directory -> "cannot access archive". Every source
-# build below therefore calls it as `env -u TMPDIR mk-build-deps`; the build tree
-# itself still lands on disk, since our mktemp -d already honoured TMPDIR.
+# ONE tool must not inherit this: equivs-build (driven by mk-build-deps) leaves
+# its dummy .deb in $TMPDIR while mk-build-deps then `dpkg --unpack`s a bare
+# filename from the cwd -> "cannot access archive". Hence every source build
+# below calls `env -u TMPDIR mk-build-deps`; its own tree still lands on disk.
 if [ "$(findmnt -nro FSTYPE /tmp 2>/dev/null)" = tmpfs ]; then
 	export TMPDIR=/var/tmp
 	log "/tmp is a RAM tmpfs: building in TMPDIR=/var/tmp (disk) to avoid ENOSPC + RAM theft"
@@ -212,13 +181,10 @@ log "Player user (UID 1000): $PLAYER_USER"
 #----------------------------------------------------------------------------#
 # Phase 0b - Build the web app (gulp) if needed
 #----------------------------------------------------------------------------#
-# install.sh deploys the web app from build/dist/, which is gulp output (not
-# committed). Rather than make the user build it by hand, build it here when it is
-# missing (a fresh `git clone`) or when --update forces a refresh. The frontend
-# build needs Node 18 specifically (the gulp 4 pipeline); pin the exact validated
-# 18.20.8 via nvm pulled from nodejs.org (which keeps every release forever, unlike
-# the now-EOL Node 18 apt repos). nvm + node + node_modules are kept so --update
-# rebuilds are fast and reproducible (npm ci from the committed package-lock.json).
+# build/dist/ is gulp output, not committed: build it here when missing (fresh
+# clone) or on --update. The gulp 4 pipeline needs Node 18 specifically - pin the
+# validated 18.20.8 via nvm from nodejs.org (the Node 18 apt repos are EOL). nvm
+# + node + node_modules are kept so --update rebuilds stay fast (npm ci).
 if [ ! -d "$DIST_DIR/var/www" ] || [ "$UPDATE" = 1 ]; then
 	[ "$UPDATE" = 1 ] && log "Phase 0b: --update - rebuilding the web app" \
 	                  || log "Phase 0b: build/dist absent - building the web app"
@@ -236,10 +202,8 @@ if [ ! -d "$DIST_DIR/var/www" ] || [ "$UPDATE" = 1 ]; then
 	nvm install "$NODE_VER" >/dev/null 2>&1 && nvm use "$NODE_VER" >/dev/null 2>&1 \
 		|| die "Phase 0b: Node $NODE_VER install failed"
 	log "Phase 0b: Node $(node -v) - npm ci + gulp build + deploy (this takes a few minutes)"
-	# `gulp deploy` only COPIES the bundles from app.dest; it does NOT build them.
-	# `gulp build` is what minifies+bundles CSS/JS into app.dest. On a fresh clone
-	# (app.dest empty) deploy alone ships only un-bundled assets -> an unstyled
-	# "pure HTML" WebUI. So build THEN deploy.
+	# `gulp deploy` only COPIES bundles from app.dest, `gulp build` is what makes
+	# them: deploy alone on a fresh clone ships an unstyled WebUI. Build THEN deploy.
 	( cd "$REPO_DIR" \
 		&& npm ci \
 		&& npx gulp build --all --force \
@@ -262,24 +226,17 @@ log "Phase 1: installing packages"
 export DEBIAN_FRONTEND=noninteractive
 
 CORE_PKGS=(
-	# sudo: moOde's entire privilege model runs on it (sysCmd() = `sudo ...`, the
-	# worker/web's passwordless www-data sudoers). RaspiOS and Debian cloud images
-	# ship it, but a minimal Debian install with a root password set does NOT, so
-	# the worker would be unable to run any privileged op. Install it explicitly.
+	# sudo: moOde's whole privilege model runs on it (sysCmd() = `sudo ...`). A
+	# minimal Debian with a root password set does NOT ship it.
 	sudo
 	nginx
 	php-fpm php-cli php-sqlite3 php-curl php-gd php-xml php-zip php-mbstring php-yaml
 	mpd mpc
 	alsa-utils
-	# ALSA DSP plugins for moOde's audio effects (Configure > Audio):
-	#   libasound2-plugin-equal - the `type equal` plugin behind the Graphic EQ
-	#                             (alsaequal), driving the CAPS Eq10 LADSPA filter
-	#   caps                    - CAPS LADSPA plugin pack (Eq10 for the Graphic EQ,
-	#                             EqFA4p). NB: the 12-band Parametric EQ (eqfa12p ->
-	#                             label EqFA12p, id 2611) is a moOde extension NOT in
-	#                             stock caps - it needs caps=*moode1 (built like
-	#                             alsa-cdsp); Graphic EQ + crossfeed work with stock.
-	#   bs2b-ladspa             - Bauer stereophonic-to-binaural (the Crossfeed DSP)
+	# ALSA DSP plugins (Configure > Audio): libasound2-plugin-equal = the `type
+	# equal` plugin behind the Graphic EQ; caps = the LADSPA pack (Eq10, EqFA4p) -
+	# the 12-band Parametric EQ (EqFA12p, id 2611) is a moOde extension absent from
+	# stock caps and needs caps=*moode1 (Phase 1e); bs2b-ladspa = Crossfeed.
 	libasound2-plugin-equal caps bs2b-ladspa
 	sqlite3
 	avahi-daemon
@@ -300,18 +257,14 @@ CORE_PKGS=(
 	# Network configuration backend: moOde manages Ethernet/WiFi/Hotspot entirely
 	# through NetworkManager (nmcli + .nmconnection keyfiles in inc/network.php).
 	network-manager
-	# WiFi tooling moOde shells out to: iw (scan), wpa_passphrase (wpasupplicant),
-	# and the AP/Hotspot path; net-tools for the netstat/ifconfig calls. dnsmasq-base
-	# is required by NetworkManager's Hotspot (ipv4.method=shared) to hand out DHCP/DNS
-	# to AP clients - without it the headless WiFi-fallback Hotspot associates but
-	# assigns no IP (only Recommended by network-manager, so not pulled in by default);
-	# wireless-regdb backs `iw reg set <country>` for channel/regulatory compliance.
+	# WiFi tooling moOde shells out to: iw (scan), wpa_passphrase, net-tools.
+	# dnsmasq-base is only Recommended by network-manager but REQUIRED by its
+	# Hotspot (ipv4.method=shared): without it the WiFi-fallback AP associates and
+	# hands out no IP. wireless-regdb backs `iw reg set <country>`.
 	iw wpasupplicant net-tools dnsmasq-base wireless-regdb
-	# Format/fsck tools for USB/SATA music drives (mkfs.vfat, mkfs.exfat). moOde's
-	# own "Format" action makes ext4 (e2fsprogs, base). The userspace/FUSE drivers
-	# needed to MOUNT exfat/ntfs (exfat-fuse, ntfs-3g) are added conditionally just
-	# before the install below - only for filesystems the running kernel can't
-	# mount itself.
+	# Format/fsck for USB/SATA music drives (mkfs.vfat/exfat; moOde's "Format"
+	# makes ext4). The FUSE drivers to MOUNT exfat/ntfs are added conditionally
+	# below, only for filesystems the running kernel can't mount itself.
 	dosfstools exfatprogs
 	# USB auto-mount: moOde uses udisks-glue, which needs udisks1 (gone from
 	# Trixie). udevil ships `devmon`, a drop-in automount daemon that mounts
@@ -319,10 +272,8 @@ CORE_PKGS=(
 	udevil
 	# moOde scripts call `python` (not python3), e.g. util/sysinfo.sh
 	python-is-python3
-	# HDMI-CEC control (Configure > Peripherals > HDMI displays): provides cec-ctl,
-	# which inc/peripheral.php cecControl() and watchdog.sh use to power the attached
-	# display on/wake it. NOT gated/guarded - the CEC toggle is always available; on
-	# x86 boxes whose GPU exposes a /dev/cec adapter it works, elsewhere it's a no-op.
+	# HDMI-CEC (Configure > Peripherals): cec-ctl, used by peripheral.php
+	# cecControl() and watchdog.sh. Ungated - a no-op without a /dev/cec adapter.
 	v4l-utils
 	# --- Parity with the Pi moode-player package deps: stock Debian, no patch ---
 	# Media/metadata CLI tools moOde shells out to: sox (CamillaDSP resample path,
@@ -332,10 +283,8 @@ CORE_PKGS=(
 	# CJK + extra fonts so non-Latin track/station names render in the WebUI and the
 	# Peppy display instead of tofu boxes (fonts-lato already arrives as a dep).
 	fonts-arphic-ukai fonts-arphic-uming fonts-ipafont-gothic fonts-ipafont-mincho fonts-unfonts-core
-	# Library (re)sharing servers + Windows discovery (wsdd2) + web terminal
-	# (shellinabox). INSTALLED like the Pi but left DISABLED (see Phase 7) - the
-	# worker starts them on demand from the UI sharing/SSH settings and disables
-	# smbd/nmbd/wsdd2 itself if it ever finds them enabled.
+	# Sharing servers + Windows discovery + web terminal. Installed like the Pi but
+	# left DISABLED (Phase 7): the worker starts them from the UI settings.
 	samba nfs-kernel-server wsdd2 shellinabox
 	# Misc tools/libs moOde and its scripts use: jq (JSON), dos2unix (playlist
 	# import), sysstat (system stats), tree, python3-musicpd (MPD client lib),
@@ -345,24 +294,18 @@ CORE_PKGS=(
 )
 
 OPT_PKGS=()
-# expect drives the bluetoothctl sessions in blu-control.sh (SCAN/PAIR/CONNECT);
-# without it those UI actions fail silently. It is also installed by Phase 5d, so
-# Bluetooth must not depend on the local display being installed.
-# python3-dbus + python3-gi: moOde's own pairing agent (daemon/bt-pairing-agent.py)
-# imports dbus and gi.repository.GLib. The Pi image lists only python3-dbus - RaspiOS
-# already carries the GObject bindings, a minimal Debian does not, so name both.
-# bluez-tools and expect stay: util/blu-control.sh drives bluetoothctl through expect.
+# expect drives the bluetoothctl sessions in blu-control.sh (SCAN/PAIR/CONNECT),
+# so it is named here too and not left to Phase 5d. python3-dbus + python3-gi:
+# bt-pairing-agent.py imports both; the Pi image lists only python3-dbus because
+# RaspiOS already carries the GObject bindings, a minimal Debian does not.
 [ "$INSTALL_BLUETOOTH"   = 1 ] && OPT_PKGS+=(bluez bluez-alsa-utils bluez-tools expect python3-dbus python3-gi)
 [ "$INSTALL_UPNP"        = 1 ] && OPT_PKGS+=(upmpdcli upmpdcli-tidal upmpdcli-qobuz)
 [ "$INSTALL_DLNA"        = 1 ] && OPT_PKGS+=(minidlna)
 [ "$INSTALL_SQUEEZELITE" = 1 ] && OPT_PKGS+=(squeezelite)
-# log2ram spares a flash-based rootfs (SD card / eMMC on SBCs like Armbian) from
-# /var/log write wear: it keeps logs in tmpfs and syncs to disk periodically.
-# Pointless on x86 SSD/NVMe. The package is in Debian main and ships EXACTLY the
-# units moOde's worker toggles (log2ram.service + log2ram-daily.timer), so the
-# existing 'log2ram' job handler and the Configure > System "Log to RAM" control
-# (shown when /etc/log2ram.conf exists) work unchanged - same as on the Pi.
-# Default 'auto': install only when the root filesystem sits on an mmcblk device.
+# log2ram spares a flash rootfs (SD/eMMC) from /var/log wear; pointless on
+# SSD/NVMe. Debian's package ships exactly the units the worker toggles, so the
+# 'log2ram' job and the Configure > System control work unchanged. 'auto' =
+# install only when / sits on an mmcblk device.
 if [ "$INSTALL_LOG2RAM" = auto ]; then
 	case "$(findmnt -no SOURCE / 2>/dev/null)" in
 		/dev/mmcblk*) INSTALL_LOG2RAM=1 ;;
@@ -377,35 +320,27 @@ fi
 # stop at an interactive conffile prompt and fail under -y).
 APT_INSTALL="apt-get install -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
 
-# The repo block below needs curl + gnupg to fetch and dearmor the signing key,
-# but this runs BEFORE the CORE_PKGS install and a minimal Debian (root pw, no
-# tasksel desktop) ships neither (same gap class as `sudo`). Bootstrap them up
-# front, else the key dearmor fails and UPnP is silently skipped.
+# The repo block below needs curl + gnupg, but runs BEFORE the CORE_PKGS install
+# and a minimal Debian ships neither: without this the key dearmor fails and UPnP
+# is silently skipped.
 if ! command -v curl >/dev/null 2>&1 || ! command -v gpg >/dev/null 2>&1; then
 	apt-get update
 	apt-get install -y ca-certificates curl gnupg
 fi
 
-# UPnP/OpenHome renderer (upmpdcli) and its libupnpp/libnpupnp deps are not in
-# Debian; add the upstream lesbonscomptes apt repo so they (and future updates)
-# install via apt. Suite tracks the running distro codename (trixie, bookworm...).
-# Skip the whole repo+key+update+candidate-probe once upmpdcli is installed (the
-# .sources file persists across runs and the package is already present) - on a
-# --update this block is pure network/time waste.
+# upmpdcli and its libupnpp/libnpupnp deps are not in Debian; add the upstream
+# lesbonscomptes repo, suite = the running codename. Skipped entirely once
+# upmpdcli is installed (the .sources persists), so --update wastes no network.
 if [ "$INSTALL_UPNP" = 1 ] && ! dpkg-query -W -f='${Status}' upmpdcli 2>/dev/null | grep -q ' installed'; then
 	SUITE="$(. /etc/os-release 2>/dev/null; echo "${VERSION_CODENAME:-trixie}")"
 	if curl -fsSL https://www.lesbonscomptes.com/pages/lesbonscomptes.gpg \
 		| gpg --batch --yes --dearmor -o /usr/share/keyrings/lesbonscomptes.gpg 2>/dev/null
 	then
-		# Add the repo the DOCUMENTED way (lesbonscomptes/pages/signatures.html):
-		# download their ready-made deb822 .sources file (per release + arch) into
-		# sources.list.d, then a NORMAL `apt-get update` + install. We deliberately
-		# dropped the previous hand-crafted .sources + ISOLATED
-		# `apt-get update -o Dir::Etc::sourceparts=-` + 3-try loop: during a real
-		# install that isolated update left `apt-cache policy` unable to see the
-		# candidate (UPnP wrongly skipped on every box) EVEN THOUGH the Packages index
-		# downloaded fine - an apt pkgcache-coherency quirk of the restricted update
-		# that was not reproducible by hand. The plain documented flow is reliable.
+		# The DOCUMENTED way (lesbonscomptes/pages/signatures.html): their ready-made
+		# deb822 .sources + a NORMAL `apt-get update`. Do NOT go back to a
+		# hand-crafted .sources + isolated `apt-get update -o Dir::Etc::sourceparts=-`:
+		# that left `apt-cache policy` blind to the candidate on every box (UPnP
+		# skipped) even though the index downloaded fine.
 		rm -f /etc/apt/sources.list.d/upmpdcli.list   # drop any stale .list from old runs
 		# lesbonscomptes ships the .sources as upmpdcli-<suite> (debian pool: amd64/i386)
 		# and upmpdcli-r<suite> (raspbian pool: arm64/armhf). Pick by arch.
@@ -424,19 +359,13 @@ if [ "$INSTALL_UPNP" = 1 ] && ! dpkg-query -W -f='${Status}' upmpdcli 2>/dev/nul
 		# NORMAL full update (NOT isolated). `|| true` so a transient blip on any repo
 		# doesn't abort under set -e; Acquire::Retries re-tries failed index downloads.
 		apt-get update -o Acquire::Retries=3 || true
-		# Queue only the upmpdcli* packages that actually have an installable candidate
-		# for this arch, so the later bulk `apt install` never aborts under set -e.
-		# (LC_ALL=C.UTF-8 is exported at the top so apt-cache policy prints English ->
-		# the candidate test is locale-stable. The pkg exists: debian pool ships amd64,
-		# raspbian pool ships arm64+armhf, plugins are arch:all.)
+		# Queue only the upmpdcli* packages with an installable candidate for this
+		# arch, so the later bulk `apt install` never aborts under set -e.
 		#
-		# MUST NOT pipe `apt-cache policy ... | grep -q`: under `set -o pipefail`,
-		# `grep -q` exits on its first match and closes the pipe, so apt-cache - still
-		# writing its (multi-line, longer once a pkg is installed) output - gets SIGPIPE
-		# and exits 141. pipefail then makes the WHOLE pipeline return 141, so the `if`
-		# is false EVEN THOUGH grep matched -> UPnP wrongly skipped while the candidate
-		# plainly exists. This was the real, deterministic cause of the recurring
-		# "upmpdcli has no candidate" across all 3 arches (not the repo/key/locale).
+		# MUST NOT pipe `apt-cache policy | grep -q`: grep exits on its first match,
+		# apt-cache gets SIGPIPE and exits 141, and pipefail makes the whole pipeline
+		# 141 -> the `if` is false EVEN THOUGH grep matched. That, not the repo/key/
+		# locale, was the real cause of "upmpdcli has no candidate" on all 3 arches.
 		# Capture to a var and match with a pipe-free bash regex instead.
 		_has_cand() { local _p; _p="$(apt-cache policy "$1" 2>/dev/null || true)"; [[ "$_p" =~ Candidate:\ [0-9] ]]; }
 		_keep=(); for p in "${OPT_PKGS[@]}"; do case "$p" in upmpdcli|upmpdcli-tidal|upmpdcli-qobuz) ;; *) _keep+=("$p");; esac; done; OPT_PKGS=("${_keep[@]}")
@@ -463,15 +392,12 @@ if [ "$INSTALL_UPNP" = 1 ] && ! dpkg-query -W -f='${Status}' upmpdcli 2>/dev/nul
 fi
 
 apt-get update
-# Userspace/FUSE filesystem drivers for mounting USB/SATA music drives: install
-# one ONLY for a filesystem the running kernel can't mount itself. The in-kernel
-# vfat/exfat (and sometimes ntfs3) drivers in linux-image-amd64 mount directly,
-# so the FUSE packages are pure fallback for stripped kernels. NB detection must
-# check /proc/filesystems (built-in OR loaded) and modules.builtin too - a
-# built-in filesystem is reported ABSENT by `modprobe -qn` (it has no .ko). moOde
-# mounts via `mount -t <blkid-fstype>`: NTFS needs the ntfs-3g mount helper
-# (mount.ntfs), and the kernel ntfs3 driver registers as `ntfs3`, which does NOT
-# satisfy `mount -t ntfs` - so ntfs is keyed on a plain `ntfs` fs being present.
+# FUSE filesystem drivers, installed ONLY for what the running kernel can't
+# mount itself. Detection must check /proc/filesystems AND modules.builtin: a
+# built-in filesystem has no .ko, so `modprobe -qn` reports it ABSENT. moOde
+# mounts via `mount -t <blkid-fstype>`, and the kernel driver registers as
+# `ntfs3`, which does NOT satisfy `mount -t ntfs` - hence keying ntfs on plain
+# `ntfs` being present (the ntfs-3g mount.ntfs helper is what serves it).
 fs_supported() {
 	grep -qw "$1" /proc/filesystems 2>/dev/null && return 0
 	modprobe -qn "$1" 2>/dev/null && return 0
@@ -485,16 +411,13 @@ fs_supported ntfs  || FS_PKGS+=(ntfs-3g)
 [ ${#FS_PKGS[@]} -gt 0 ] && log "Kernel lacks FS driver(s); adding userspace: ${FS_PKGS[*]}" \
 	|| log "Kernel provides vfat/exfat; no userspace FS driver needed (ntfs via ntfs-3g if present)"
 
-# Drop any package already on hold from this explicit install list. We build+hold
-# mpd/caps/squeezelite (Phases 1e/1f/1i); on a re-run (--update) they are held and
-# ALREADY installed, so naming them here is pointless AND fatal: `apt-get install -y`
-# aborts with "Held packages were changed... without --allow-change-held-packages"
-# whenever the repo offers a version apt deems newer - e.g. an arm64 binNMU
-# caps 0.9.26-1+b1 outranks our 0.9.26-1moode1 (dpkg sorts '+b1' above 'moode1').
-# We must NOT pass --allow-change-held-packages (that would replace the moode-patched
-# build with stock, losing EqFA12p/selective-resample). Their build phases manage
-# them; here we just skip held names. On a FRESH install nothing is held yet, so the
-# stock fallbacks still install normally and the build phases upgrade+hold them later.
+# Drop already-held packages from this list. We build+hold mpd/caps/squeezelite
+# (Phases 1e/1f/1i); naming them on a re-run is fatal - `apt-get install -y`
+# aborts with "Held packages were changed..." as soon as the repo offers what apt
+# deems newer (an arm64 binNMU caps 0.9.26-1+b1 outranks our 0.9.26-1moode1).
+# --allow-change-held-packages is NOT the fix: it would swap the moode-patched
+# build for stock, losing EqFA12p/selective-resample. On a fresh install nothing
+# is held, so the stock fallbacks install and the build phases upgrade+hold them.
 _held="$(apt-mark showhold 2>/dev/null || true)"
 _inst=()
 for p in "${CORE_PKGS[@]}" ${OPT_PKGS[@]+"${OPT_PKGS[@]}"} ${FS_PKGS[@]+"${FS_PKGS[@]}"}; do
@@ -513,22 +436,16 @@ PHP_SOCK="/run/php/php${PHP_VER}-fpm.sock"
 log "PHP-FPM version: $PHP_VER (socket $PHP_SOCK)"
 
 # --- Build-phase version tracking -------------------------------------------
-# The custom / moode-tagged components built below (Phases 1b-1i) are pinned to
-# specific versions. Their guards must REBUILD when the pinned version is bumped
-# in a later release - not merely when the artifact is ABSENT - because these
-# packages are apt-held or live outside Debian, so the build phase is their ONLY
-# upgrade path (otherwise a plain --update silently keeps the old build).
-#   - dpkg packages / binaries exposing --version: compared directly (dpkg_ver_is
-#     or a --version grep) -> exact, no false rebuild, catches external apt changes.
-#   - versionless git-pinned artifacts (fixed tag/branch, no queryable version):
-#     a stamp under $NOPI_BUILT_DIR records the pinned ref it was built from.
-#     Adopt-on-legacy: an artifact already present WITHOUT a stamp (built by a
-#     pre-versioning installer) is recorded as current and NOT rebuilt, so existing
-#     boxes never rebuild gratuitously on their first --update with this logic.
-#   - truly unpinned sources (alsacap git-main): no version to compare -> presence
-#     only (a bump there needs a manual rm of the artifact).
-#   - peppy-alsa: tracks upstream git master, so no version either -> the guard is
-#     the resolved commit, and a MISSING stamp means rebuild, not adopt (Phase 1g).
+# The components built below (Phases 1b-1i) are apt-held or live outside Debian,
+# so their build phase is their ONLY upgrade path: the guards must rebuild on a
+# pinned-version BUMP, not merely when the artifact is absent.
+#   - dpkg packages / binaries with --version: compared directly (dpkg_ver_is).
+#   - versionless git-pinned artifacts: a stamp under $NOPI_BUILT_DIR records the
+#     ref built from. Adopt-on-legacy - an artifact present WITHOUT a stamp is
+#     recorded as current, so existing boxes don't rebuild on their first --update.
+#   - unpinned sources (alsacap git-main): presence only; a bump needs a manual rm.
+#   - peppy-alsa tracks git master: guard = the resolved commit, and a MISSING
+#     stamp means rebuild, not adopt (Phase 1g).
 NOPI_BUILT_DIR=/var/lib/moode-nopi/built
 dpkg_ver_is() { [ "$(dpkg-query -W -f='${Version}' "$1" 2>/dev/null)" = "$2" ]; }
 # nopi_need_build <name> <pinned> <present:0|1> -> rc 0 = build needed, 1 = up to date
@@ -597,16 +514,11 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 1c - CamillaDSP (DSP / parametric EQ)
 #----------------------------------------------------------------------------#
-# moOde's CamillaDSP feature is built from three custom (non-Debian) pieces:
-#   camilladsp      Rust DSP engine     -> /usr/local/bin/camilladsp (release binary)
-#   alsa-cdsp       ALSA 'cdsp' plugin  -> libasound_module_pcm_cdsp.so (built)
-#   mpd2cdspvolume  MPD<->CDSP vol sync -> python service (optional volume sync)
-# The ALSA conf we deploy (etc/alsa/conf.d/camilladsp.conf) routes audio through
-# 'type cdsp' -> /usr/local/bin/camilladsp, so the engine + plugin must both
-# exist for the feature to open. Default is camilladsp='off', so normal playback
-# works without any of this; this just makes the feature functional when enabled.
-# Versions are pinned to moOde's image manifest (camilladsp 4.1.3, pycamilladsp
-# 4.0.0 - see moode-player/imgbuild stage3 ...01-packages).
+# Three custom (non-Debian) pieces: the camilladsp Rust engine, the alsa-cdsp
+# ALSA plugin, and mpd2cdspvolume. etc/alsa/conf.d/camilladsp.conf routes through
+# 'type cdsp' -> /usr/local/bin/camilladsp, so engine + plugin must both exist
+# for the feature to open (default camilladsp='off', so playback works without).
+# Versions pinned to moOde's image manifest (imgbuild stage3 ...01-packages).
 
 log "Phase 1c: CamillaDSP (DSP / parametric EQ)"
 
@@ -657,20 +569,11 @@ if nopi_need_build alsa-cdsp "$ACDSP_REF" "$([ -f "$CDSP_PLUGIN_DIR/libasound_mo
 	rm -rf "$CDSP_BLD"
 fi
 
-# 3) Python CamillaDSP stack + camillagui web GUI - moOde's own noarch packages
-#    (Architecture: all), fetched as .deb from moOde's cloudsmith pool and dpkg-
-#    installed exactly as on the Pi. All three are arch-independent (Python lib +
-#    static React build + Python backend), so the Pi's .debs install as-is on x86:
-#    NO React/npm build, NO pip. Runtime deps are stock Debian (via apt).
-#      python3-camilladsp 4.0.0      -> client lib (mpd2cdspvolume, camillagui)
-#      python3-camilladsp-plot 4.1.0 -> pipeline plot (util/camillaplot_pipeline.py).
-#                                       Needs matplotlib (used at runtime, not
-#                                       declared by the .deb) -> install it too.
-#      camillagui 4.1.0              -> HEnquist web GUI at /opt/camillagui; the
-#                                       worker (cdsp.php) enable/starts the service
-#                                       per the UI toggle and nginx proxies its port.
-#    (The camilladsp ENGINE itself is the upstream release binary from step 1 -
-#    moOde only adds a cargo-deb packaging patch, the DSP code is stock upstream.)
+# 3) Python CamillaDSP stack + camillagui. All three are moOde noarch .debs
+#    (Architecture: all - Python lib, static React build, Python backend), so the
+#    Pi's own packages install as-is here: no npm build, no pip. matplotlib is
+#    used at runtime by python3-camilladsp-plot but not declared by its .deb, so
+#    apt it explicitly. camillagui lands in /opt/camillagui, worker-managed.
 PYCDSP_VER="4.0.0-1moode1"; PYCDSPPLOT_VER="4.1.0-1moode1"; CAMILLAGUI_VER="4.1.0-1moode1"
 if [ ! -d /opt/camillagui ] || ! dpkg_ver_is python3-camilladsp "$PYCDSP_VER" \
 		|| ! dpkg_ver_is python3-camilladsp-plot "$PYCDSPPLOT_VER" || ! dpkg_ver_is camillagui "$CAMILLAGUI_VER"; then
@@ -720,13 +623,10 @@ install -d -o mpd -g audio /var/lib/cdsp 2>/dev/null || install -d /var/lib/cdsp
 #----------------------------------------------------------------------------#
 # Phase 1d - Deezer Connect (pleezer)
 #----------------------------------------------------------------------------#
-# moOde's Deezer renderer is the 'pleezer' binary (worker launches it directly
-# via inc/renderer.php when the Deezer service is enabled; not a systemd unit,
-# so nothing to disable - it is off until enabled in the UI). pleezer ships no
-# release binary and is not on crates.io, so build it from its pinned git tag.
-# It needs Rust 1.85 + edition 2024, which Debian Trixie's cargo provides
-# (1.85.0), so no toolchain juggling - just apt's cargo. Pinned to moOde's
-# pkgbuild version. Idempotent: skipped when the binary already exists.
+# The Deezer renderer is the 'pleezer' binary, launched directly by
+# inc/renderer.php (no systemd unit, nothing to disable). It ships no release
+# binary and is not on crates.io -> build from its pinned git tag. Needs Rust
+# 1.85 + edition 2024, which Trixie's cargo provides, so no toolchain juggling.
 
 log "Phase 1d: Deezer renderer (pleezer)"
 
@@ -747,13 +647,10 @@ if [[ "$_plz_v" != *"$PLEEZER_VER"* ]]; then
 	rm -rf "$PLZ_BLD"
 fi
 
-# cargo-deb for the on-demand Spotify (librespot) build. moOde's pkgbuild
-# build.sh runs `cargo install cargo-deb` if absent, which grabs the latest
-# (3.7.0) - and that fails to compile on Debian's Rust 1.85 (`let` expressions
-# unstable). So pre-install a 1.85-compatible cargo-deb (2.12.1, MSRV 1.71) onto
-# the system PATH; rbl_check_cargo then finds it (`cargo-deb --version`) and
-# skips the broken install. Not arch-gated: Armbian arm64 on Debian cargo 1.85
-# hits the same wall. Idempotent.
+# cargo-deb for the on-demand librespot build. moOde's build.sh would `cargo
+# install cargo-deb` and get 3.7.0, which does not compile on Debian's Rust 1.85
+# (`let` expressions unstable). Pre-install 2.12.1 (MSRV 1.71) on PATH so
+# rbl_check_cargo finds it and skips that. Not arch-gated - arm64 hits it too.
 CARGODEB_VER="2.12.1"
 _cdeb_v="$(command -v cargo-deb >/dev/null 2>&1 && cargo-deb --version 2>/dev/null || true)"
 if [[ "$_cdeb_v" != *"$CARGODEB_VER"* ]]; then
@@ -766,27 +663,21 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 1e - caps with 12-band parametric EQ (eqfa12p)
 #----------------------------------------------------------------------------#
-# moOde's Parametric EQ (Configure > Audio) uses the LADSPA plugin EqFA12p (id
-# 2611), a 12-band extension of CAPS' EqFA4p by @bitkeeper. It is NOT in Debian's
-# stock `caps` (which carries only Eq10/EqFA4p), so the eqfa12p ALSA device fails
-# to load and MPD play errors with `_audioout: No such file or directory`. The Pi
-# image ships caps=0.9.26-1moode1 (held); reproduce it by rebuilding Debian's caps
-# source with moOde's own pkgbuild patch (same recipe as moode-player/pkgbuild
-# packages/caps, minus its Pi-only cloudsmith repo plumbing). Stock `caps` from
-# Phase 1 (Graphic EQ/Eq10 + crossfeed) stays installed if this build fails - only
-# the Parametric EQ is then unavailable. Idempotent: skipped once caps is moode-
-# tagged. Not arch-gated: on Armbian arm64 moOde's caps deb is equally absent.
+# The Parametric EQ uses LADSPA EqFA12p (id 2611), a 12-band extension of CAPS'
+# EqFA4p absent from Debian's stock `caps`: without it the eqfa12p ALSA device
+# fails to load and MPD errors `_audioout: No such file or directory`. Rebuild
+# Debian's caps source with moOde's pkgbuild patch (their recipe, minus the
+# Pi-only cloudsmith plumbing) to reach the Pi's held caps=0.9.26-1moode1. On
+# failure stock caps stays, so only the Parametric EQ is lost. Not arch-gated.
 
 log "Phase 1e: caps with 12-band parametric EQ (eqfa12p)"
 
 CAPS_MOODE_VER="0.9.26-1moode1"
 if ! dpkg_ver_is caps "$CAPS_MOODE_VER"; then
 	apt-mark unhold caps >/dev/null 2>&1 || true   # let apt re-install over a held older build on a version bump
-	# debhelper is caps' declared build-dep (debian/control: debhelper >= 10) and is
-	# NOT pulled in by build-essential/devscripts on a minimal system - it happened to
-	# be present on amd64 but was absent on a fresh Armbian arm64, where the build then
-	# aborted at `dpkg-checkbuilddeps: unmet build dependencies: debhelper (>= 10)`
-	# (stock caps stayed -> no EqFA12p -> no Parametric EQ). List it explicitly.
+	# debhelper is a declared build-dep and is NOT pulled in by build-essential/
+	# devscripts: absent on a fresh Armbian arm64, the build aborted at
+	# `dpkg-checkbuilddeps` and left stock caps (no EqFA12p). List it explicitly.
 	$APT_INSTALL build-essential dpkg-dev debhelper devscripts fakeroot ladspa-sdk quilt
 	CAPS_BLD="$(mktemp -d)"
 	CAPS_PATCH_URL="https://raw.githubusercontent.com/moode-player/pkgbuild/main/packages/caps/caps_12band_eqp.patch"
@@ -814,17 +705,13 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 1f - mpd with moOde's selective-resample patch
 #----------------------------------------------------------------------------#
-# moOde patches MPD for "Selective resampling" (Configure > Audio: upsample only
-# certain source rates / adhere to base clock). The mpd.conf moOde generates emits
-# `selective_resample_mode "N"` (N != 0); STOCK mpd rejects it as an unrecognized
-# parameter and FAILS TO START -> the WebUI shows "Socket open failed (1001)". For
-# audio parity with the Pi, build moOde's EXACT patched mpd from their published
-# source package. moOde ships only arm binaries, but Debian source packages are
-# arch-independent, so add moOde's cloudsmith SOURCE repo (deb-src ONLY - never
-# their arm binaries) and build the moode1 source for this arch. Held afterwards
-# (like the Pi) so apt won't pull Debian's stock mpd back. Idempotent: skipped
-# once mpd is moode-tagged. The basic SoX resampler (selective mode = Disabled)
-# already works on stock mpd, so a build failure only costs selective resampling.
+# moOde patches MPD for "Selective resampling". Its generated mpd.conf emits
+# `selective_resample_mode "N"` (N != 0), which STOCK mpd rejects as unrecognized
+# and FAILS TO START -> the WebUI shows "Socket open failed (1001)". Debian
+# source packages are arch-independent, so add moOde's cloudsmith SOURCE repo
+# (deb-src ONLY - their binaries are arm) and build the moode1 source here, then
+# hold it like the Pi. A build failure only costs selective resampling: the basic
+# SoX resampler works on stock mpd.
 
 log "Phase 1f: mpd with moOde selective-resample patch"
 
@@ -864,21 +751,16 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 1g - peppyalsa ALSA plugin (Peppy Meter/Spectrum visualization)
 #----------------------------------------------------------------------------#
-# Peppy's ALSA chain (peppy.conf) loads libpeppyalsa.so - a `type meter` scope
-# that tees the PCM stream to a FIFO for the visualizer. Not in Debian; build it
-# from upstream master, the same source moOde's own pkgbuild recipe clones.
+# peppy.conf loads libpeppyalsa.so, a `type meter` scope teeing the PCM stream to
+# a FIFO for the visualizer. Not in Debian; built from upstream master, the same
+# source moOde's pkgbuild clones. Upstream now carries both deltas moOde used to
+# patch in (the 64-bit/GCC 14 build fixes and the DoP level decode), so there is
+# nothing left to patch.
 #
-# Upstream now carries both deltas moOde used to patch in - the 64-bit/GCC 14
-# build fixes (int vs long on snd_config_get_integer, SIGPIPE handler signature,
-# init() arity) and the DoP level decode, without which a DSD source played as
-# DoP pegs the needles at a constant, the s16 scope handing the plugin the DoP
-# marker byte rather than audio. So there is nothing left to patch here.
-#
-# master is a moving branch with no version, so the guard is its resolved commit:
-# rebuild when it moves, or when there is no stamp at all - a library an earlier
-# installer built from the old apt source, whose content we cannot vouch for.
-# Deliberately NOT nopi_need_build's adopt-on-legacy, which exists to spare
-# rebuilds of artifacts that are still known-correct.
+# master has no version, so the guard is its resolved commit: rebuild when it
+# moves, or when there is no stamp at all - a library from an earlier installer
+# whose content we cannot vouch for. Deliberately NOT nopi_need_build's
+# adopt-on-legacy, which only spares artifacts that are still known-correct.
 PEPPY_LIB="/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null)/libpeppyalsa.so"
 PEPPY_URL="https://github.com/project-owner/peppyalsa.git"
 PEPPY_STAMP="$NOPI_BUILT_DIR/peppy-alsa"
@@ -907,12 +789,9 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 1h - ashuffle (Random/Shuffle advanced queue feature)
 #----------------------------------------------------------------------------#
-# moOde's Random modes (inc/music-library.php, inc/queue.php -> /usr/bin/ashuffle)
-# use ashuffle, which is not in Debian. moOde ships ashuffle=3.14.9-1moode1, but the
-# moode1 delta is ONLY Debian packaging (a debian/rules submodule-init hack + control
-# metadata) - the code is stock upstream v3.14.9. So build that exact tag with meson
-# (it vendors abseil + googletest as git submodules, hence --recursive) and install
-# the single binary where moOde calls it. Idempotent: skip if already the right version.
+# The Random modes shell out to /usr/bin/ashuffle, which is not in Debian. moOde
+# ships 3.14.9-1moode1 whose moode1 delta is packaging only, so build the stock
+# upstream v3.14.9 tag with meson (--recursive: it vendors abseil + googletest).
 if [ "$(ashuffle --version 2>/dev/null)" = 'ashuffle version: v3.14.9' ]; then
 	log "Phase 1h: ashuffle v3.14.9 already installed"
 else
@@ -934,18 +813,13 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 1i - squeezelite with moOde's newer snapshot (LMS Power Script -S)
 #----------------------------------------------------------------------------#
-# moOde's cfg_sl OTHEROPTIONS passes `-S <script>` (run a script on LMS power
-# on/off -> resume MPD after Squeezelite, the "rsmaftersl" feature). That option
-# exists only in a NEWER upstream squeezelite snapshot than Debian ships AND is
-# compiled under `#if GPIO`. Debian's stock squeezelite (older snapshot, no GPIO)
-# REJECTS `-S` -> "Option error: -S" -> the service fails to start. Build moOde's
-# exact source (Debian packaging + newer git snapshot) from their cloudsmith
-# deb-src - same path as mpd (Phase 1f). Keep -DGPIO (needed for -S) but DROP
-# -DRPI: -DRPI only adds the `-G` direct-Pi-GPIO-pin relay (Pi hardware) and pulls
-# gpiod.h/libgpiod; on x86 it is useless. With GPIO-but-not-RPI gpio.c needs no
-# libgpiod (gpiod.h is itself `#if RPI`). Held afterwards like mpd. Idempotent:
-# skipped once squeezelite is moode-tagged. A build failure only costs the LMS
-# power-resume option (stock squeezelite, sans -S, is kept).
+# cfg_sl OTHEROPTIONS passes `-S <script>` (the "rsmaftersl" LMS power feature).
+# That option exists only in a newer upstream snapshot than Debian ships AND is
+# compiled under `#if GPIO`, so stock squeezelite answers "Option error: -S" and
+# the service fails to start. Build moOde's source from their cloudsmith deb-src
+# (same path as mpd), keeping -DGPIO but DROPPING -DRPI: -DRPI only adds the `-G`
+# direct-GPIO-pin relay and pulls libgpiod, and gpiod.h is itself `#if RPI`.
+# A build failure only costs -S; stock squeezelite is kept.
 if [ "$INSTALL_SQUEEZELITE" = 1 ]; then
 	log "Phase 1i: squeezelite with moOde LMS Power Script (-S) support"
 	SL_MOODE_VER="2.0.0-1541+git20250609.72e1fd8-1moode1"
@@ -986,50 +860,43 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 1j - alsa-lib with the PCM meter scope patches
 #----------------------------------------------------------------------------#
-# The `type meter` plugin's s16 scope - what libpeppyalsa (Phase 1g) taps - returns
-# -EINVAL for every format it cannot convert to S16 (the DSD formats, the 3-byte
-# packed ones, float), yet any other scope still reaches the buffer it then never
-# allocated and assert()s on it: the calling application dies. MPD SIGABRTs mid-track
-# on native DSD. Two patches fix it: read silence instead of aborting, and recover a
-# level from a DSD stream by bit density so the needles work on native DSD.
+# The `type meter` s16 scope - what libpeppyalsa (Phase 1g) taps - returns -EINVAL
+# for every format it cannot convert to S16 (DSD, 3-byte packed, float), yet any
+# other scope still reaches the buffer it then never allocated and assert()s on
+# it: the application dies (MPD SIGABRTs mid-track on native DSD). Two patches:
+# read silence instead of aborting, and recover a DSD level by bit density.
 #
-# This mirrors moOde's own recipe (pkgbuild packages/alsa-lib/build.sh, PRs #24+#25):
-# same patch files, same post-patch marker greps, same `moode1` suffix and apt hold.
-# Built the way that recipe settled on - the upstream release tag from git plus the
-# running distro's own debian/ grabbed as a plain tarball. NOT a .dsc: fetching one by
-# URL means inheriting that pool's signing key, which is exactly what broke #24.
+# Mirrors moOde's recipe (pkgbuild packages/alsa-lib/build.sh, PRs #24+#25): same
+# patches, marker greps, `moode1` suffix and hold. Built the way that recipe
+# settled on - upstream release tag from git plus the distro's own debian/ as a
+# plain tarball. NOT a .dsc: fetching one by URL inherits that pool's signing
+# key, which is what broke #24.
 #
-# Both patches are submitted upstream (alsa-project/alsa-lib #516 and #517), but a
-# merge there is only the first of four steps - alsa-project must cut a release,
-# Debian package it, the base OS pick it up. Trixie is stable and keeps 1.2.14 for
-# life, so the fix reaches users on the NEXT base OS. Drop this phase when a base OS
-# actually ships a fixed alsa-lib. Any rework of #516/#517 must be replayed into BOTH
-# the pkgbuild recipe and the patch files here - they are one object in two places.
+# Upstream as alsa-project/alsa-lib #516 and #517, but a merge is only step one of
+# four (release, Debian packaging, base OS pickup) and Trixie keeps 1.2.14 for
+# life. Drop this phase when a base OS ships a fixed alsa-lib. Any rework of
+# #516/#517 must be replayed into BOTH the pkgbuild recipe and the patches here.
 
 log "Phase 1j: alsa-lib with the PCM meter scope patches"
 
-# Bumped BY HAND when the patch files change (moOde does the same: peppy-alsa went
-# 1moode1 -> 1moode2 when its patch changed). Together with the distro's own version
-# this is the whole rebuild trigger: a re-run or an --update on an unchanged Debian
-# rebuilds nothing.
+# Bumped BY HAND when the patch files change (as moOde does). Together with the
+# distro's own version this is the whole rebuild trigger: an --update on an
+# unchanged Debian rebuilds nothing.
 ALSA_MOODE_REV="moode1"
 ALSA_PATCH_TESTED="1.2.16.1"
 ALSA_GIT="https://github.com/alsa-project/alsa-lib.git"
 
-# Which version to rebuild. `apt-cache madison` lists repository versions only, which
-# is why it is used instead of `apt-cache policy`: once our own build is installed,
-# policy reports OUR package as the candidate (measured: mpd and caps both show
-# `Candidate: *moode1`), so the target would grow a second suffix on every run.
+# Which version to rebuild. `apt-cache madison` (repository versions only), NOT
+# `apt-cache policy`: once our build is installed policy reports OUR package as
+# the candidate, so the target would grow a second suffix on every run.
 #
-# madison lists EVERY configured suite, highest version first, and that is what we
-# follow (Julien 2026-07-25): on Armbian Trixie, trixie-backports is part of the normal
-# configuration, so its alsa-lib 1.2.16.1 is a legitimate target even though apt rates
-# it priority 100 and would not install it by itself - and the two patches were written
-# against 1.2.16.1 in the first place.
+# madison lists every configured suite, highest first, and we follow that: on
+# Armbian Trixie backports is part of the normal configuration, so its 1.2.16.1
+# is a legitimate target (and the patches were written against it).
 #
-# One suite must NOT win: moOde's own cloudsmith repo publishes an arm64
-# `1.2.14-1+rpt1moode1` (the pkgbuild #24+#25 build), and rebuilding THAT would stack a
-# second moode suffix on every run. Skip any version already carrying our own marker.
+# One suite must NOT win: moOde's cloudsmith publishes an arm64
+# `1.2.14-1+rpt1moode1`, and rebuilding THAT stacks a second moode suffix every
+# run. Skip any version already carrying our own marker.
 _alsa_arch="$(dpkg --print-architecture)"
 ALSA_DISTRO_VER="$(LC_ALL=C apt-cache madison libasound2t64 2>/dev/null | awk -F'|' -v a="$_alsa_arch" '
 	$3 !~ (a " Packages$") { next }
@@ -1038,22 +905,18 @@ ALSA_DISTRO_VER="$(LC_ALL=C apt-cache madison libasound2t64 2>/dev/null | awk -F
 	{ print $2; exit }' || true)"
 ALSA_TARGET_VER="${ALSA_DISTRO_VER}${ALSA_MOODE_REV}"
 
-# The hand-built /opt override (a libasound compiled to its own prefix and forced on
-# MPD through an LD_LIBRARY_PATH drop-in) was the pre-packaging way to run these
-# patches on non-Pi hardware. Once the .deb is in, that override SHADOWS it - MPD
-# would keep running an untracked binary that no upgrade ever reaches - so retire it.
-# Only ever called once the packaged library is in place; a box whose build failed
-# keeps its override, since removing it there restores the SIGABRT. Deleting the tree
-# under a running MPD is safe (the mapping holds the inode); it picks up the packaged
-# library at its next restart.
+# The hand-built /opt override (a libasound in its own prefix forced on MPD via an
+# LD_LIBRARY_PATH drop-in) was the pre-packaging way to run these patches. Once
+# the .deb is in it SHADOWS the package, so retire it - but only once the packaged
+# library is really in place: on a box whose build failed, removing it restores
+# the SIGABRT. Deleting the tree under a running MPD is safe (the mapping holds
+# the inode).
 #
-# Detection is by CONTENT, never by name: an override laid down by hand can sit in any
-# unit, under any file name, pointing at any directory. So nothing here matches a name
-# - a drop-in qualifies when the path it forces really holds a libasound (or no longer
-# exists at all, i.e. a leftover from a half-done cleanup), and a /opt directory
-# qualifies when it really holds one. Matching names would leave a differently-named
-# copy silently in charge, which is the exact failure this whole check exists for.
-# Every removal is logged by path.
+# Detection is by CONTENT, never by name: a hand-laid override can sit in any
+# unit under any name. A drop-in qualifies when the path it forces really holds a
+# libasound (or no longer exists - a half-done cleanup), a /opt directory when it
+# really holds one. Name matching would leave a renamed copy silently in charge,
+# which is the exact failure this check exists for. Every removal is logged.
 alsa_retire_dsd_override() {
 	local removed=0 f d p hit
 	# 1. unit drop-ins forcing a service onto a libasound built under /opt
@@ -1114,10 +977,9 @@ else
 	if dpkg --compare-versions "$ALSA_UPSTREAM_VER" gt "$ALSA_PATCH_TESTED"; then
 		warn "alsa-lib: the distro ships $ALSA_DISTRO_VER, newer than the last tested $ALSA_PATCH_TESTED - the meter scope may already be fixed upstream, or these patches may need updating"
 	fi
-	# Ask apt where that exact binary lives instead of assembling a pool path by hand:
-	# Debian pools are keyed by SOURCE package, so the .deb's own directory is also where
-	# alsa-lib's debian tarball sits - and this way any layout works, including the
-	# security archive (pool/updates/...) and third-party mirrors, without a special case.
+	# Ask apt where that binary lives rather than assembling a pool path: pools are
+	# keyed by SOURCE package, so the .deb's directory also holds alsa-lib's debian
+	# tarball, and any layout works (security archive, third-party mirrors).
 	_alsa_deb_uri="$(LC_ALL=C apt-get --print-uris download "libasound2t64=$ALSA_DISTRO_VER" 2>/dev/null \
 		| awk -F"'" '{print $2; exit}')"
 	ALSA_DEBIAN_URL=""
@@ -1156,13 +1018,11 @@ else
 				'install ok installed') _alsa_debs+=("$_deb"); _alsa_pkgs+=("$_p") ;;
 			esac
 		done
-		# apt, not `dpkg -i`: dpkg installs each archive independently and happily
-		# leaves the set half-done - measured, it upgraded libasound2t64 and skipped
-		# libasound2-data, and since libasound2t64 Depends: libasound2-data (>= same
-		# version) EVERY later apt call on the box then failed with unmet dependencies.
-		# apt computes one plan for the whole set and refuses rather than half-apply it.
-		# Output goes to the build log, never to /dev/null: this is the step that
-		# mutates the system, so its error message is the one that matters most.
+		# apt, not `dpkg -i`: dpkg installs each archive independently and leaves the
+		# set half-done - measured, it upgraded libasound2t64 and skipped
+		# libasound2-data, and since the former Depends on the latter at the same
+		# version, EVERY later apt call failed with unmet dependencies. Output goes to
+		# the build log, never /dev/null: this is the step that mutates the system.
 		_alsa_installed=0
 		if [ "${#_alsa_debs[@]}" -gt 0 ] \
 			&& apt-get install -y --allow-downgrades --allow-change-held-packages \
@@ -1179,9 +1039,9 @@ else
 			# `1.2.14-1moode1` BELOW `1.2.14-1+deb13u1` (a letter sorts before a
 			# non-letter), so a point update would silently win the comparison.
 			apt-mark hold "${_alsa_pkgs[@]}" >/dev/null 2>&1 || true
-			# Trace WHAT was built, WHEN and FROM WHICH patches. The rebuild guard is
-			# the package version alone, so without this record nothing on the box says
-			# which revision of the two patches the installed library actually carries.
+			# Trace WHAT was built, WHEN and FROM WHICH patches: the rebuild guard is
+			# the package version alone, so nothing else on the box records which
+			# revision of the two patches the installed library carries.
 			mkdir -p "$NOPI_BUILT_DIR"
 			{
 				printf 'version:  %s\n' "$ALSA_TARGET_VER"
@@ -1196,10 +1056,9 @@ else
 			log "  record: $NOPI_BUILT_DIR/alsa-lib"
 			alsa_retire_dsd_override
 		else
-			# Put the distro's own packages back rather than leave a partially replaced
-			# set behind: an unconfigured libasound2t64 breaks apt for every phase that
-			# follows (and for the user afterwards). The /opt override, if any, is left
-			# armed on purpose - it is what keeps a DSD queue from aborting MPD.
+			# Restore the distro packages rather than leave a half-replaced set: an
+			# unconfigured libasound2t64 breaks apt for every later phase. The /opt
+			# override stays armed on purpose - it is what keeps DSD from aborting MPD.
 			if [ "${#_alsa_pkgs[@]}" -gt 0 ]; then
 				_alsa_restore=()
 				for _p in "${_alsa_pkgs[@]}"; do _alsa_restore+=("$_p=$ALSA_DISTRO_VER"); done
@@ -1227,10 +1086,9 @@ rsync -a "$DIST_DIR/usr/local/bin/"  /usr/local/bin/
 rsync -a "$DIST_DIR/var/local/www/"  /var/local/www/
 chmod +x /usr/local/bin/moodeutl /var/www/daemon/worker.php 2>/dev/null || true
 
-# Stamp the running moode-nopi version (git tag) for the WebUI to display
-# (Configure > System > Software update). Derived offline from the repo's git
-# metadata at deploy time - no runtime git/network dependency. If this tree is
-# not a git checkout, remove any stale stamp so the UI line stays hidden.
+# Stamp the running moode-nopi version for the WebUI (Configure > System),
+# derived offline from git metadata at deploy time. Not a checkout -> drop any
+# stale stamp so the UI line stays hidden.
 if NOPI_VER=$(cd "$REPO_DIR" && git describe --tags --always 2>/dev/null) && [ -n "$NOPI_VER" ]; then
 	printf '%s\n' "$NOPI_VER" > /var/local/www/nopi_version
 	log "Stamped moode-nopi version: $NOPI_VER"
@@ -1250,13 +1108,11 @@ rsync -a "$REPO_DIR/usr/share/" /usr/share/ 2>/dev/null || true
 
 log "Phase 3: configuring nginx and php-fpm"
 
-# Deploy moOde's actual nginx + php configuration rather than patching Debian's
-# defaults. These configs carry settings the moOde runtime depends on — most
-# critically PHP's session handling: session.save_path = /var/local/php and the
-# session id format (sid_length = 26, sid_bits_per_character = 5). Debian's
-# defaults (32/4, hex) reject moOde's stored session id, so PHP keeps generating
-# fresh empty sessions: the worker and web never share state, config fields
-# render blank and queued jobs (e.g. timezone) are never processed.
+# Deploy moOde's own nginx + php configs rather than patch Debian's defaults.
+# Most critical is PHP session handling: save_path = /var/local/php and the id
+# format (sid_length 26, sid_bits_per_character 5). Debian's defaults (32/4, hex)
+# reject moOde's stored session id, so PHP keeps making fresh empty sessions -
+# worker and web never share state, config fields render blank, jobs never run.
 
 # --- nginx ---
 install -m 644 "$REPO_DIR/etc/nginx/nginx.overwrite.conf"      /etc/nginx/nginx.conf
@@ -1270,14 +1126,10 @@ sed "s#/run/php/php8.4-fpm.sock#$PHP_SOCK#g" \
 	"$REPO_DIR/etc/nginx/moode-locations.conf" > /etc/nginx/moode-locations.conf
 chmod 644 /etc/nginx/moode-locations.conf
 
-# Deploy BOTH site configs under the exact names the worker toggles between
-# (.overwrite stripped -> moode-http.conf / moode-https.conf), like the Pi image.
-# The worker's nginx_https_only handler does `ln -s .../moode-https.conf` (HTTPS
-# on) or `.../moode-http.conf` (off); deploying only one (or under a different
-# name) means toggling HTTPS mode points sites-enabled at a missing file and
-# nginx ends up with no server -> dead WebUI. Enable moode-http.conf now (HTTP,
-# HTTPS stays off). Remove any earlier moode.conf so two `default_server` blocks
-# don't collide on :80.
+# BOTH site configs, under the exact names the worker's nginx_https_only handler
+# symlinks (moode-http.conf / moode-https.conf): deploying only one means the
+# HTTPS toggle points sites-enabled at a missing file -> no server -> dead WebUI.
+# Any earlier moode.conf is removed so two `default_server` blocks don't collide.
 install -m 644 "$REPO_DIR/etc/nginx/sites-available/moode-http.overwrite.conf" \
 	/etc/nginx/sites-available/moode-http.conf
 install -m 644 "$REPO_DIR/etc/nginx/sites-available/moode-https.overwrite.conf" \
@@ -1307,23 +1159,18 @@ else
 	warn "moOde PHP configs (etc/php/8.4) not found; PHP $PHP_VER left at Debian defaults"
 fi
 
-# Debian's phpsessionclean timer deletes every sess_* file whose ctime exceeds
-# session.gc_maxlifetime (1440s) in the configured save_path - which is moOde's
-# /var/local/php. The moOde Pi image ships it disabled; on plain Debian it is
-# enabled, and Persistent=yes makes it catch up right after boot, when the
-# session file's ctime is necessarily older than the cutoff. The file is then
-# deleted and the worker recreates an empty one, so the vars that live ONLY in
-# the session (usb_volknob, led_state, rotaryenc) silently revert to their
-# defaults at every reboot - measured on the x86 box: session file born 18s
-# after boot, while the same file on a Pi predates its last reboots by months.
+# Debian's phpsessionclean timer deletes sess_* files older than
+# session.gc_maxlifetime (1440s) in save_path - moOde's /var/local/php. The Pi
+# image ships it disabled; on Debian it is enabled and Persistent=yes makes it
+# catch up right after boot, when the session ctime is necessarily past the
+# cutoff. The worker then recreates an empty one, so the vars living ONLY in the
+# session (usb_volknob, led_state, rotaryenc) revert to defaults every reboot.
 systemctl disable --now phpsessionclean.timer 2>/dev/null || true
 
 # --- ALSA output plugin configs ---
-# MPD's mpd.conf references the ALSA device "_audioout", which is defined in
-# /etc/alsa/conf.d together with the DSP/loopback/bluetooth plugin chains. These
-# ship in the repo and are normally placed by the moOde image build; without
-# them MPD cannot open its output and fails to start. Deploy them, stripping the
-# ".overwrite" marker the image build uses for its final filenames.
+# mpd.conf references the ALSA device "_audioout", defined in /etc/alsa/conf.d
+# with the DSP/loopback/bluetooth chains: without them MPD cannot open its output
+# and fails to start. Deploy them, stripping the ".overwrite" marker.
 if [ -d "$REPO_DIR/etc/alsa/conf.d" ]; then
 	install -d -m 755 /etc/alsa/conf.d
 	for f in "$REPO_DIR"/etc/alsa/conf.d/*; do
@@ -1338,24 +1185,20 @@ else
 fi
 
 # --- DSP plugin runtime setup (Graphic EQ + Crossfeed) ---
-# Graphic EQ (alsaequal): the `type equal` plugin persists its 10-band control
-# state to /opt/alsaequal/alsaequal.bin, which is opened READ-WRITE by EVERY
-# process that opens the EQ device - both MPD (user mpd, on playback) and the web
-# UI's `amixer -D alsaequal cset` (root via sudo). If the .bin is owned root and
-# not writable by mpd, MPD's open fails with "_audioout: Operation not permitted"
-# (EPERM) and playback dies. Create the dir world-writable and pre-seed the .bin
-# 0666 so whichever side writes first cannot lock the other out. (On the Pi the
-# image build provides /opt/alsaequal.)
+# Graphic EQ (alsaequal): the plugin persists its 10-band state to
+# /opt/alsaequal/alsaequal.bin, opened READ-WRITE by everyone who opens the EQ
+# device - MPD (user mpd) and the UI's `amixer cset` (root via sudo). A root-owned
+# .bin makes MPD's open fail with "_audioout: Operation not permitted" and kills
+# playback, so create the dir 0777 and pre-seed the .bin 0666: whichever side
+# writes first cannot lock the other out. (The Pi image provides /opt/alsaequal.)
 install -d -m 0777 /opt/alsaequal
 if [ -f /etc/alsa/conf.d/alsaequal.conf ]; then
 	amixer -D alsaequal cset numid=1 66 >/dev/null 2>&1 || true   # creates the .bin
 	[ -f /opt/alsaequal/alsaequal.bin ] && chmod 0666 /opt/alsaequal/alsaequal.bin
 fi
 
-# Crossfeed (bs2b): moOde's crossfeed.conf hardcodes the arm64 LADSPA path
-# (/usr/lib/aarch64-linux-gnu/ladspa/), since the Pi image is arm64. Repoint it
-# at THIS host's real multiarch ladspa dir (where bs2b-ladspa installed bs2b.so)
-# so the plugin loads on x86 - and harmlessly stays correct on arm64/Armbian.
+# Crossfeed (bs2b): moOde's crossfeed.conf hardcodes the arm64 LADSPA path.
+# Repoint it at THIS host's multiarch dir (a no-op on arm64/Armbian).
 BS2B_SO="$(dpkg -L bs2b-ladspa 2>/dev/null | grep -m1 '/ladspa/bs2b.so')"
 if [ -n "$BS2B_SO" ] && [ -f /etc/alsa/conf.d/crossfeed.conf ]; then
 	sed -i "s|/usr/lib/aarch64-linux-gnu/ladspa/|$(dirname "$BS2B_SO")/|" /etc/alsa/conf.d/crossfeed.conf
@@ -1370,11 +1213,9 @@ if [ "$INSTALL_LOCALDISPLAY" = 1 ] && [ -f /etc/alsa/conf.d/peppy.conf.hide ]; t
 fi
 
 # --- Samba ---
-# Deploy moOde's smb.conf ALWAYS (not only when the SMB server is enabled): the
-# SMB *client* tools used to browse/scan remote NAS shares (nmblookup, smbclient
-# - moodeutl -c/-C, lib-config "Remote host") refuse to run without /etc/samba/
-# smb.conf. When the server is enabled it also serves [Playlists] -> /var/lib/
-# mpd/playlists and [OSDisk] -> /mnt/OSDISK (created in Phase 5b).
+# ALWAYS, not only when the SMB server is enabled: the SMB *client* tools that
+# browse remote NAS shares (nmblookup, smbclient) refuse to run without
+# /etc/samba/smb.conf. With the server on it also serves [Playlists]/[OSDisk].
 if [ -f "$REPO_DIR/etc/samba/smb.overwrite.conf" ]; then
 	install -d -m 755 /etc/samba
 	install -m 644 "$REPO_DIR/etc/samba/smb.overwrite.conf" /etc/samba/smb.conf
@@ -1398,58 +1239,41 @@ install -m 644 "$REPO_DIR/etc/default/mpd.sed" /etc/default/mpd
 install -m 440 "$REPO_DIR/etc/sudoers.d/010_moode"              /etc/sudoers.d/010_moode
 install -m 440 "$REPO_DIR/etc/sudoers.d/010_www-data-nopasswd"  /etc/sudoers.d/010_www-data-nopasswd
 
-# Make the player user a sudoer. On Raspberry Pi OS the default user is in the
-# 'sudo' group out of the box; a minimal Debian install does NOT add the first
-# user to sudo, so without this the operator can't run admin tasks or re-run this
-# installer with `sudo`. (moOde's runtime relies on the www-data NOPASSWD rule
-# above, not on the player user's sudo - this is for the human operator / parity
-# with the Pi.) Idempotent; the sudo package is installed in Phase 1.
+# Make the player user a sudoer: Raspberry Pi OS does it out of the box, a
+# minimal Debian does not, so the operator could not re-run this installer with
+# `sudo`. moOde's runtime needs the www-data NOPASSWD rule above, not this.
 if id -nG "$PLAYER_USER" 2>/dev/null | grep -qw sudo; then
 	log "Player user '$PLAYER_USER' already in sudo group"
 else
 	usermod -aG sudo "$PLAYER_USER" && log "Added '$PLAYER_USER' to sudo group"
 fi
 
-# /etc/machine-info: PRETTY_HOSTNAME, used by systemd and (chiefly) bluez's
-# hostname plugin as the advertised Bluetooth name. moOde ships it; deploy the
-# .overwrite by convention, idempotent so a runtime-renamed value survives a
-# re-run. (The Bluetooth block in Phase 3 also seeds it when BT is enabled; that
-# echo now no-ops once this is in place.)
+# /etc/machine-info: PRETTY_HOSTNAME, used by bluez's hostname plugin as the
+# advertised Bluetooth name. Idempotent so a runtime rename survives a re-run.
 grep -q '^PRETTY_HOSTNAME=' /etc/machine-info 2>/dev/null \
 	|| install -m 644 "$REPO_DIR/etc/machine-info.overwrite" /etc/machine-info
 
 # --- .overwrite files intentionally NOT deployed on x86 (audit - do NOT "fix") --
-# The repo follows moOde's .overwrite convention (deploy with .overwrite stripped
-# to the mirrored path). Every platform-neutral one IS deployed (Phase 3, here,
-# the ALSA conf.d loop, the renderer/BT blocks...). The following are SKIPPED on
-# purpose - deploying them would break x86 or is meaningless off the Pi:
-#   etc/rc.local.overwrite            - the Pi starts worker.php as root from
-#       rc.local (+ udisks-glue, cpugov); x86 runs it as the moode-worker systemd
-#       unit (www-data). Deploying it would double-start the worker and invoke the
-#       absent udisks-glue.
-#   etc/udisks-glue.overwrite.conf    - config for udisks-glue, which is gone from
-#       Trixie; x86 auto-mounts USB via devmon (udevil). Config for an absent daemon.
-#   etc/rpi/swap.conf.d/fixedswapsize.overwrite.conf - the /etc/rpi swap mechanism
-#       is Raspberry-Pi-only; the directory/tooling does not exist on x86.
-#   etc/update-motd.d/00-moodeos-header.overwrite - SSH login banner that calls
-#       pirev.py (Pi model string); Pi-flavoured cosmetic, left at Debian default.
-# (pam.d/sudo is handled below - by editing Debian's file in place, not by the
-#  Raspbian .overwrite, which would drop Debian's pam_limits line.)
+# Every platform-neutral .overwrite IS deployed (Phase 3, here, the ALSA conf.d
+# loop, the renderer/BT blocks). These are SKIPPED on purpose:
+#   rc.local.overwrite       - the Pi starts worker.php as root from rc.local
+#       (+ udisks-glue, cpugov); here it is the moode-worker unit. Deploying it
+#       would double-start the worker and invoke the absent udisks-glue.
+#   udisks-glue.overwrite.conf - config for a daemon gone from Trixie (we use devmon).
+#   rpi/swap.conf.d/fixedswapsize.overwrite.conf - /etc/rpi is Raspberry-Pi-only.
+#   update-motd.d/00-moodeos-header.overwrite - SSH banner calling pirev.py.
+# (pam.d/sudo is handled below by editing Debian's file in place: the Raspbian
+#  .overwrite would drop Debian's pam_limits line.)
 
-# pam.d/sudo: cut the sudo "session opened for user root" spam. The worker runs as
-# www-data and routes EVERY privileged op through sudo (sysCmd), so pam_unix emits a
-# "session opened/closed for user root" pair on each call - ~48k entries/day here,
-# bloating the journal (Debian Trixie is journald-only, no rsyslog/auth.log, but the
-# spam lands in the journal all the same) and burying real auth events. moOde's fix
-# (its pam.d/sudo) inserts a pam_succeed_if rule that skips the session stack when
-# the TARGET is root. We do NOT drop in moOde's Raspbian file verbatim - Debian's
-# /etc/pam.d/sudo carries an extra `session required pam_limits.so` that the Raspbian
-# one lacks - so instead we INSERT just that one rule into Debian's own file (keeping
-# pam_limits + whatever else Debian ships). High blast radius (a bad pam.d/sudo
-# breaks sudo -> breaks every sysCmd -> dead WebUI), so do it defensively: back up,
-# edit, then re-test sudo as the unprivileged player + www-data accounts via runuser
-# (which does NOT go through pam-sudo, so a restore is always possible even if the new
-# config broke sudo) and roll back on failure. Idempotent (keyed on the rule text).
+# pam.d/sudo: cut the "session opened for user root" spam - the worker routes
+# every privileged op through sudo, so pam_unix logs a pair per call (~48k/day
+# here), burying real auth events. moOde's fix is a pam_succeed_if rule skipping
+# the session stack when the TARGET is root. Do NOT drop in moOde's Raspbian file
+# verbatim: Debian's carries an extra `session required pam_limits.so` the
+# Raspbian one lacks. Insert just the rule instead. High blast radius (a bad
+# pam.d/sudo kills every sysCmd), so back up, edit, re-test sudo through runuser
+# (which does NOT go through pam-sudo, so a restore is always possible) and roll
+# back on failure. Idempotent, keyed on the rule text.
 PAM_SUDO=/etc/pam.d/sudo
 PAM_RULE='session [success=1 default=ignore] pam_succeed_if.so quiet uid = 0 user = root'
 if [ -f "$PAM_SUDO" ] && ! grep -qF "$PAM_RULE" "$PAM_SUDO" \
@@ -1476,52 +1300,38 @@ install -d -m 755 /etc/avahi/services
 install -m 644 "$REPO_DIR/etc/avahi/services/moode.service" /etc/avahi/services/moode.service
 install -m 644 "$REPO_DIR/etc/avahi/services/samba.service" /etc/avahi/services/samba.service
 
-# Radio Cover+ (util/radiocover_plus.py): cover-art lookup for radio streams,
-# reads its settings from /etc/radiocover-plus/config.txt. Deploy the repo
-# default, guarded on absence so operator edits (API tokens / provider toggles,
-# rewritten in place by rcp-config.php's sed) survive a re-run. Always run via
-# sysCmd (root), so root ownership is fine.
+# Radio Cover+ reads /etc/radiocover-plus/config.txt. Guarded on absence so
+# operator edits (API tokens, provider toggles - rcp-config.php seds them in
+# place) survive a re-run. Always run via sysCmd, so root ownership is fine.
 install -d -m 755 /etc/radiocover-plus
 [ -f /etc/radiocover-plus/config.txt ] \
 	|| install -m 644 "$REPO_DIR/etc/radiocover-plus/config.txt" /etc/radiocover-plus/config.txt
 
-# Renderer / Bluetooth service unit OVERRIDES. moOde ships systemd units that
-# REPLACE the stock package units so each service runs with moOde's settings once
-# the worker enables it (Configure > Audio / Bluetooth). The matching ALSA configs
-# (e.g. 20-bluealsa.conf) deploy with the conf.d batch above, but the *.conf are
-# useless if the service that consumes them still runs the stock unit. Install to
-# /etc/systemd/system (highest precedence: overrides the package units in /usr/lib
-# & /lib, and the squeezelite SysV-init generator unit). The squeezelite env file
-# (/etc/squeezelite.conf) is written by moOde when the service is enabled
-# (inc/renderer.php); the Bluetooth side needs more files seeded (see below).
+# Renderer / Bluetooth unit OVERRIDES: moOde's units REPLACE the stock package
+# ones, and the matching ALSA configs above are useless if the service consuming
+# them still runs the stock unit. Install to /etc/systemd/system (highest
+# precedence: beats /usr/lib, /lib and the squeezelite SysV generator unit).
 if [ "$INSTALL_BLUETOOTH" = 1 ]; then
-	# Without these, enabling Bluetooth runs the stock bluealsa (no aptX/LDAC,
-	# D-Bus-activated defaults) and there is no BT-speaker output or pairing agent.
-	# One of them also holds runtime state the UI/worker sed-edits into place, which a
-	# re-run must not silently reset: bluealsa.service carries --sbc-quality
-	# (Configure > Bluetooth) -> carry the current value over the template.
+	# Without these, enabling Bluetooth runs the stock bluealsa (no aptX/LDAC) with
+	# no BT-speaker output or pairing agent. bluealsa.service also carries runtime
+	# state the UI seds in (--sbc-quality) -> carry it over the template.
 	_sbc_quality=$(sed -n 's/.*--sbc-quality=\([^ ]*\).*/\1/p' /etc/systemd/system/bluealsa.service 2>/dev/null || true)
 	install -m 644 "$REPO_DIR/etc/systemd/system/bluealsa.overwrite.service" /etc/systemd/system/bluealsa.service
 	if [ -n "$_sbc_quality" ]; then
 		sed -i "s/--sbc-quality=[^ ]*/--sbc-quality=$_sbc_quality/" /etc/systemd/system/bluealsa.service
 	fi
 	install -m 644 "$REPO_DIR/etc/systemd/system/bluealsa-aplay@.service"     /etc/systemd/system/bluealsa-aplay@.service
-	# Always overwrite bt-agent.service: a box installed before the pairing-confirmation
-	# change carries a worker-rewritten unit launching bluez-tools' bt-agent with a PIN
-	# file. Nothing rewrites it any more, so keeping it would pin the box to an agent
-	# moOde no longer drives and the confirmation modal would never appear.
+	# Always overwrite bt-agent.service: a box predating the pairing-confirmation
+	# change carries a worker-rewritten unit running bluez-tools' bt-agent with a PIN
+	# file, and nothing rewrites it any more -> the confirmation modal never appears.
 	install -m 644 "$REPO_DIR/etc/systemd/system/bt-agent.service" /etc/systemd/system/bt-agent.service
 	# A2DP playback routing: startBluetooth() starts bluealsa/bt-agent but NOT the
 	# player - bluealsa-aplay@<MAC> is started per device by a udev rule ->
-	# a2dp-autoconnect when a phone connects (and stopped on disconnect; the rule
-	# also `systemctl restart mpd` to free the exclusive DAC). The Pi image ships
-	# these three; without them a phone pairs+connects but no audio reaches the DAC
-	# (bluealsa-aplay never runs). bluealsaaplay.conf is the env file the @-unit
-	# reads; AUDIODEV=plug:_audioout is only the initial value, regenerated by
-	# updDspAndBtInConfs() to match the active DSP head. It must pre-exist (moOde
-	# sed-edits it, never creates it).
-	# BUFFERTIME is the I-O buffer time from Configure > Bluetooth and, unlike
-	# AUDIODEV, nothing regenerates it -> carry it over the template on a re-run.
+	# a2dp-autoconnect. Without these three a phone pairs and connects but no audio
+	# reaches the DAC. bluealsaaplay.conf is the @-unit's env file and must
+	# pre-exist (moOde seds it, never creates it); AUDIODEV is regenerated by
+	# updDspAndBtInConfs(), but nothing regenerates BUFFERTIME (Configure >
+	# Bluetooth) -> carry it over the template on a re-run.
 	_bt_buffertime=$(sed -n 's/^BUFFERTIME=//p' /etc/bluealsaaplay.conf 2>/dev/null || true)
 	install -m 644 "$REPO_DIR/etc/bluealsaaplay.conf"                     /etc/bluealsaaplay.conf
 	if [ -n "$_bt_buffertime" ]; then
@@ -1530,42 +1340,32 @@ if [ "$INSTALL_BLUETOOTH" = 1 ]; then
 	install -m 755 "$REPO_DIR/usr/local/bin/a2dp-autoconnect"             /usr/local/bin/a2dp-autoconnect
 	install -m 644 "$REPO_DIR/etc/udev/rules.d/10-a2dp-autoconnect.rules" /etc/udev/rules.d/10-a2dp-autoconnect.rules
 	udevadm control --reload-rules 2>/dev/null || true
-	# BT controller name + device class. moOde renames the adapter with `sysutil.sh
-	# chg-name bluetooth`, which sed-edits `Name =` in /etc/bluetooth/main.conf AND
-	# `PRETTY_HOSTNAME=` in /etc/machine-info (bluez's hostname plugin OVERRIDES the
-	# main.conf Name with PRETTY_HOSTNAME, so the latter is what's actually
-	# advertised). Stock Debian ships `#Name = BlueZ` (commented) and no
-	# machine-info, so both seds no-op and the BT name never changes (it falls back
-	# to the system hostname) - and the audio device Class is never set. Deploy
-	# moOde's own main.conf (Name = Moode Bluetooth + Class 0x2c041c "audio") and
-	# seed machine-info to the same default so chg-name + the worker hostname-import
-	# work. Idempotent: keyed on moOde's Class marker / an existing PRETTY_HOSTNAME,
-	# so a runtime-renamed controller survives re-runs.
+	# BT controller name + class. `sysutil.sh chg-name bluetooth` seds `Name =` in
+	# /etc/bluetooth/main.conf AND `PRETTY_HOSTNAME=` in /etc/machine-info (bluez's
+	# hostname plugin OVERRIDES the former with the latter, so PRETTY_HOSTNAME is
+	# what is advertised). Stock Debian ships `#Name = BlueZ` commented and no
+	# machine-info, so both seds no-op and the class is never set. Keyed on moOde's
+	# Class marker / an existing PRETTY_HOSTNAME, so a rename survives re-runs.
 	grep -q 'Class = 0x2c041c' /etc/bluetooth/main.conf 2>/dev/null \
 		|| install -m 644 "$REPO_DIR/etc/bluetooth/main.sed.conf" /etc/bluetooth/main.conf
 	# Stale PIN seed from the pre-confirmation pairing scheme: bluez ignores it now
-	# that moOde's own agent drives Numeric Comparison, and leaving a 0600 file owned
-	# by www-data behind serves nothing.
+	# that moOde's agent drives Numeric Comparison.
 	rm -f /etc/bluetooth/pin.conf
 	grep -q '^PRETTY_HOSTNAME=' /etc/machine-info 2>/dev/null \
 		|| echo "PRETTY_HOSTNAME=Moode Bluetooth" >> /etc/machine-info
 	log "Deployed Bluetooth service units + A2DP autoconnect + controller name/class"
 fi
 if [ "$INSTALL_SQUEEZELITE" = 1 ]; then
-	# The squeezelite package ships its own unit (Debian-style: /etc/default/
-	# squeezelite, SL_NAME/...) which ignores moOde's config. Override it with
-	# moOde's native unit (in /etc, which wins over the package's /lib unit), which
-	# reads the PLAYERNAME/AUDIODEVICE/... that inc/renderer.php writes to the env
-	# file. (Phase 1i replaces stock squeezelite with moOde's -S-capable build.)
+	# The package's own unit is Debian-style (/etc/default/squeezelite, SL_NAME) and
+	# ignores moOde's config. Override with moOde's unit, which reads the
+	# PLAYERNAME/AUDIODEVICE that inc/renderer.php writes to the env file.
 	install -m 644 "$REPO_DIR/lib/systemd/system/squeezelite.overwrite.service" /etc/systemd/system/squeezelite.service
 	log "Deployed Squeezelite service unit (reads /etc/squeezelite.conf)"
 fi
-# upmpdcli (UPnP): the lesbonscomptes package ships a STOCK /etc/upmpdcli.conf. moOde
-# needs its own (friendlyname/avfriendlyname/ohproductroom template that sysutil.sh
-# chg-name + upp-config.php sed-edit, upnpav=1/openhome=0/checkcontentformat=1, and
-# iconpath=moode_audio.png) - without it the UPnP name/icon are wrong and chg-name's
-# sed finds no matching line. Deploy moOde's conf + the renderer icon. Idempotent
-# (keyed on the moОde icon marker so a UI-customised conf survives re-runs).
+# upmpdcli: the lesbonscomptes package ships a STOCK /etc/upmpdcli.conf, but moOde
+# needs its own (the friendlyname/ohproductroom template that chg-name +
+# upp-config.php sed, plus iconpath) - otherwise the name/icon are wrong and
+# chg-name's sed finds no matching line. Keyed on the icon marker.
 if [ "$INSTALL_UPNP" = 1 ] && dpkg-query -W -f='${Status}' upmpdcli 2>/dev/null | grep -q ' installed'; then
 	grep -q 'moode_audio.png' /etc/upmpdcli.conf 2>/dev/null \
 		|| install -m 644 "$REPO_DIR/etc/upmpdcli.sed.conf" /etc/upmpdcli.conf
@@ -1573,10 +1373,9 @@ if [ "$INSTALL_UPNP" = 1 ] && dpkg-query -W -f='${Status}' upmpdcli 2>/dev/null 
 	install -m 644 "$REPO_DIR/usr/share/upmpdcli/moode_audio.png" /usr/share/upmpdcli/moode_audio.png
 	log "Deployed moOde upmpdcli.conf + renderer icon"
 fi
-# Plexamp renderer unit (parity: the Pi ships it unconditionally; stays disabled
-# until the Plexamp plugin is installed from the UI). The upstream unit hardcodes the
-# Pi build user `pi` and /home/pi; rewrite to the real player account so it is correct
-# if/when Plexamp is installed under the player's home.
+# Plexamp renderer unit (Pi parity; disabled until the plugin is installed from
+# the UI). The upstream unit hardcodes `pi` and /home/pi -> rewrite to the real
+# player account.
 PLAYER_HOME="$(getent passwd "$PLAYER_USER" | cut -d: -f6)"; [ -n "$PLAYER_HOME" ] || PLAYER_HOME="/home/$PLAYER_USER"
 sed -e "s|^User=pi$|User=$PLAYER_USER|" \
     -e "s|/home/pi/|$PLAYER_HOME/|g" \
@@ -1591,14 +1390,11 @@ install -m 644 "$REPO_DIR/etc/modprobe.d/8812au.conf" /etc/modprobe.d/8812au.con
 
 systemctl daemon-reload
 
-# The pairing agent is a long-running python process holding /var/www/daemon/
-# bt-pairing-agent.py open, so Phase 2 replacing that file leaves the OLD code
-# running until something restarts the unit - and nothing does: the worker only
-# touches bt-agent when the pairing mode changes. Restart it here, after the
-# daemon-reload so a changed unit definition is the one systemd picks up.
-# Only when it is ALREADY running: bt-agent follows the Bluetooth renderer, and
-# starting it on a box with Bluetooth switched off would enable pairing behind
-# the user's back.
+# The pairing agent is a long-running python process, so Phase 2 replacing
+# bt-pairing-agent.py leaves the OLD code running - nothing restarts it (the
+# worker only touches bt-agent on a pairing-mode change). Restart it here, after
+# the daemon-reload. Only when ALREADY running: starting it on a box with
+# Bluetooth off would enable pairing behind the user's back.
 if [ "$INSTALL_BLUETOOTH" = 1 ] && systemctl is-active --quiet bt-agent; then
 	systemctl restart bt-agent
 	log "Restarted bt-agent (pairing agent code refreshed)"
@@ -1614,18 +1410,14 @@ fi
 install -d -m 755 /etc/triggerhappy/triggers.d
 install -m 644 "$REPO_DIR/etc/triggerhappy/triggers.d/media.conf" /etc/triggerhappy/triggers.d/media.conf
 # Debian's triggerhappy unit runs thd as `nobody`, which drops the trigger
-# commands' privileges to nobody too. media.conf -> vol.sh writes volknob to the
-# www-data-owned SQLite DB; nobody can't create the journal in /var/local/www/db
-# (g+w www-data, not world) -> "attempt to write a readonly database" -> the USB
-# volume knob changes the live MPD volume but never persists it (UI desyncs, no
-# restore at boot). Run thd as www-data instead (the uid that owns the DB/session,
-# matching the x86 worker model). thd opens the input devices as root before
-# dropping privs, and hotplugged devices are passed in via triggerhappy's udev
-# th-cmd helper (also root), so www-data needs no input-group membership.
-# It does need the audio group though: vol.sh drives the mixer with a plain amixer (no
-# sudo), so without it a volume key moves volknob in the DB while the DAC stays put -
-# silent knob, and a UI volume that lies. Group membership is fixed at process start, so
-# a running thd has to be restarted to pick it up.
+# commands to nobody too: vol.sh then can't create the journal in the
+# www-data-owned /var/local/www/db -> "attempt to write a readonly database" ->
+# the USB knob moves the live volume but never persists it. Run thd as www-data
+# instead. It needs no input group (thd opens the devices as root before dropping
+# privs, hotplugs arrive via the root th-cmd helper) but it DOES need audio:
+# vol.sh drives the mixer with a plain amixer, so without it a volume key moves
+# volknob in the DB while the DAC stays put. Groups are fixed at process start,
+# hence the restart.
 usermod -aG audio www-data
 systemctl is-active --quiet triggerhappy && systemctl restart triggerhappy
 install -d -m 755 /etc/systemd/system/triggerhappy.service.d
@@ -1642,14 +1434,11 @@ if [ -f "$REPO_DIR/etc/udevil/udevil.overwrite.conf" ]; then
 	install -m 644 "$REPO_DIR/etc/udevil/udevil.overwrite.conf" /etc/udevil/udevil.conf
 fi
 
-# automount.sh / music-source.php re-share mounted USB/NVMe/SATA drives over NFS
-# (as well as SMB) by appending `/srv/nfs/<kind>/<label>` lines to /etc/exports
-# with `sed '$ a'`, which needs an existing anchor line; the worker's fs_nfs_*
-# handler also errors on an empty /etc/exports. nfs-kernel-server ships its
-# default header via ucf only if the file is absent, so a leftover-empty
-# /etc/exports (from the earlier client-only era of this installer) stays empty.
-# Deploy the package's own template when the file is missing OR empty - this is
-# byte-identical to what the Pi gets, and never clobbers a populated exports.
+# automount.sh / music-source.php append `/srv/nfs/<kind>/<label>` lines to
+# /etc/exports with `sed '$ a'`, which needs an existing anchor line, and the
+# worker's fs_nfs_* handler errors on an empty file. nfs-kernel-server only ucf's
+# its header in when the file is ABSENT, so a leftover-empty /etc/exports stays
+# empty. Deploy the package's own template when missing OR empty.
 if [ ! -s /etc/exports ]; then
 	if [ -f /usr/share/nfs-kernel-server/conffiles/etc.exports ]; then
 		install -m 644 /usr/share/nfs-kernel-server/conffiles/etc.exports /etc/exports
@@ -1658,25 +1447,20 @@ if [ ! -s /etc/exports ]; then
 	fi
 fi
 
-# The exported paths resolve through symlinks the Pi image ships in /srv/nfs
-# (/srv/nfs/usb -> /media, nvme -> /mnt/NVME, sata -> /mnt/SATA, matching
-# LIB_MOUNT_ROOT_NVME/SATA). moOde's source never creates them, so replicate the
-# image-build artifact here, else exportfs can't resolve /srv/nfs/<kind>/<label>.
+# The exported paths resolve through symlinks the Pi IMAGE ships in /srv/nfs -
+# moOde's source never creates them, so replicate them here or exportfs cannot
+# resolve /srv/nfs/<kind>/<label>.
 install -d -m 755 /srv/nfs
 [ -e /srv/nfs/usb ]  || ln -s /media    /srv/nfs/usb
 [ -e /srv/nfs/nvme ] || ln -s /mnt/NVME /srv/nfs/nvme
 [ -e /srv/nfs/sata ] || ln -s /mnt/SATA /srv/nfs/sata
 
-# Network interface naming + management. moOde's whole networking model is baked
-# to eth0/wlan0: cfg_network rows are positional ([0]=eth0 [1]=wlan0 [2]=apd0),
-# the .nmconnection keyfiles hardcode interface-name=eth0/wlan0, the SSID scan
-# runs `nmcli ... ifname wlan0`, and the Network config reads `ip addr list
-# eth0|wlan0`. The Pi names its onboard NICs eth0/wlan0 natively; a Debian x86 box
-# instead gets predictable names (enp2s0/wlp1s0) AND configures ethernet via
-# ifupdown, so NetworkManager never manages it -> the Network config shows nothing
-# and the SSID scan returns nothing. Make x86 match the Pi (both take effect on
-# the next reboot): (1) disable predictable naming so NICs come up as eth0/wlan0,
-# (2) stop ifupdown claiming the primary NIC so NM owns eth0/wlan0.
+# moOde's networking model is baked to eth0/wlan0: cfg_network rows are
+# positional, the keyfiles hardcode interface-name, the SSID scan runs `nmcli
+# ifname wlan0`. A Debian x86 box gets predictable names (enp2s0/wlp1s0) AND
+# configures ethernet via ifupdown, so NM never manages it -> the Network config
+# and SSID scan both show nothing. Two fixes, both effective next boot: disable
+# predictable naming, and stop ifupdown claiming the primary NIC.
 if [ -f /etc/default/grub ] && command -v update-grub >/dev/null 2>&1; then
 	if ! grep -q 'net.ifnames=0' /etc/default/grub; then
 		sed -i 's/^GRUB_CMDLINE_LINUX="\(.*\)"/GRUB_CMDLINE_LINUX="\1 net.ifnames=0 biosdevname=0"/' /etc/default/grub
@@ -1688,9 +1472,8 @@ if [ -f /etc/default/grub ] && command -v update-grub >/dev/null 2>&1; then
 		fi
 	fi
 elif [ -f /boot/armbianEnv.txt ]; then
-	# Armbian (u-boot, no GRUB): set net.ifnames=0 via the kernel cmdline in
-	# armbianEnv.txt so the onboard NIC comes up as eth0 (Armbian names it end0/
-	# enxMAC otherwise) - moOde's UI is hardwired to eth0/wlan0. Effective next boot.
+	# Armbian (u-boot, no GRUB): same via armbianEnv.txt, else the NIC comes up as
+	# end0/enxMAC.
 	if grep -q '^extraargs=' /boot/armbianEnv.txt; then
 		grep -q '^extraargs=.*net\.ifnames=0' /boot/armbianEnv.txt \
 			|| sed -i 's/^extraargs=\(.*\)$/extraargs=\1 net.ifnames=0 biosdevname=0/' /boot/armbianEnv.txt
@@ -1746,11 +1529,10 @@ EOF
 fi
 rm -f /etc/systemd/network/10-netplan-*.link /etc/systemd/network/10-netplan-*.network
 
-# NetworkManager owns the NICs, so systemd-networkd has nothing to configure. Armbian
-# (and some Debian images) leave systemd-networkd-wait-online.service enabled, where it
-# then waits its full timeout for interfaces networkd does not manage and exits 1 -> a
-# permanently failed unit + ~20s added to every boot. Mask it; NetworkManager-wait-online
-# already gates network-online.target. (networkd itself is left alone - idle/unmanaged.)
+# NM owns the NICs, so systemd-networkd-wait-online (left enabled by Armbian and
+# some Debian images) waits its full timeout on interfaces networkd does not
+# manage and exits 1 -> a failed unit + ~20s per boot. Mask it;
+# NetworkManager-wait-online already gates network-online.target.
 systemctl disable --now systemd-networkd-wait-online.service >/dev/null 2>&1 || true
 systemctl mask systemd-networkd-wait-online.service >/dev/null 2>&1 || true
 
@@ -1762,14 +1544,11 @@ if [ -f /etc/NetworkManager/NetworkManager.conf ]; then
 	sed -i 's/^\(\s*\)managed=false/\1managed=true/' /etc/NetworkManager/NetworkManager.conf
 fi
 
-# WiFi creds migration. A Debian netinst that joined WiFi writes the SSID/PSK as an
-# ifupdown "wpa-ssid"/"wpa-psk" stanza in /etc/network/interfaces (mode 0600).
-# Reducing that file to loopback (above) makes NetworkManager own wlan0 but with NO
-# WiFi profile -> a headless box silently drops off the network on the next reboot
-# (no Ethernet, no screen = locked out). Migrate the inline creds to an NM keyfile so
-# the connection survives the cutover. No interface-name is pinned because
-# net.ifnames=0 renames wlpXsY -> wlan0 (the keyfile then matches whatever wlan NIC
-# comes up). Idempotent: skip if a keyfile for this SSID already exists.
+# WiFi creds migration. A Debian netinst that joined WiFi keeps the SSID/PSK as an
+# ifupdown wpa-ssid/wpa-psk stanza; reducing that file to loopback above hands
+# wlan0 to NM with NO profile, so a headless box silently drops off the network on
+# the next reboot. Migrate the creds to an NM keyfile. No interface-name is
+# pinned: net.ifnames=0 renames wlpXsY -> wlan0, so it matches whatever comes up.
 _ifsrc=/etc/network/interfaces.moode-orig
 if [ -f "$_ifsrc" ] && grep -qiE '^[[:space:]]*wpa-ssid[[:space:]]' "$_ifsrc"; then
 	_ssid=$(sed -n 's/^[[:space:]]*wpa-ssid[[:space:]]\+//Ip' "$_ifsrc" | head -1 | sed 's/[[:space:]]*$//; s/^"\(.*\)"$/\1/')
@@ -1794,15 +1573,13 @@ unset _ifsrc
 #----------------------------------------------------------------------------#
 # etc/ payload completeness net (no deploy - a guard against forgotten files)
 #----------------------------------------------------------------------------#
-# ./etc is NOT a deployable mirror of /etc: files are sed-templated (*.sed*),
-# renamed (*.overwrite -> stripped), gated by feature/arch, or intentionally NOT
-# deployed on x86 (Pi-only, see the audit in Phase 3b). Each is wired by hand
-# above. This net deploys nothing - it only WARNS if a path under ./etc is not
-# accounted for in ETC_KNOWN, so a new file (e.g. from an upstream merge) can't
-# silently go undeployed. Every ./etc file must be listed once, whether it is
-# deployed OR a documented skip; adding a file here is the reminder to wire its
-# real handling. Membership via an assoc array on purpose (no `| grep -q`, which
-# can return SIGPIPE-141 on a match under `set -o pipefail`).
+# ./etc is NOT a deployable mirror of /etc: files are sed-templated, renamed
+# (*.overwrite stripped), gated by feature/arch, or intentionally skipped on x86
+# (see the Phase 3b audit) - each wired by hand above. This net deploys nothing,
+# it only WARNS when a path under ./etc is missing from ETC_KNOWN, so a file
+# arriving with an upstream merge can't silently go undeployed. Every file is
+# listed once, deployed OR documented skip. Assoc array on purpose: `| grep -q`
+# can return SIGPIPE-141 on a match under `set -o pipefail`.
 declare -A ETC_KNOWN=()
 while IFS= read -r _p; do [ -n "$_p" ] && ETC_KNOWN["$_p"]=1; done <<'EOF'
 alsa/conf.d/20-bluealsa.overwrite.conf
@@ -1868,10 +1645,9 @@ X11/Xwrapper.sed.config
 EOF
 _etc_unhandled=""; _etc_stale=""
 while IFS= read -r _p; do
-	# A `*.disabled` file states its own intent: it is kept in the tree precisely so it
-	# is NOT deployed (e.g. udev/rules.d/89-moode-dac-prime.rules.disabled). Wiring it
-	# into ETC_KNOWN would claim it is handled somewhere; warning about it says a
-	# deliberate choice is an oversight. Neither - just skip it.
+	# A `*.disabled` file states its own intent: kept in the tree precisely so it is
+	# NOT deployed. Listing it would claim it is handled; warning would call a
+	# deliberate choice an oversight. Neither - skip it.
 	case "$_p" in *.disabled) continue ;; esac
 	[ -n "${ETC_KNOWN[$_p]:-}" ] || _etc_unhandled="$_etc_unhandled $_p"
 done < <(cd "$REPO_DIR/etc" && find . -type f -printf '%P\n')
@@ -1897,24 +1673,19 @@ install -d -m 755 /var/local/www/db
 if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	log "Existing DB kept: $SQLDB (use --reset-db to recreate)"
 
-	# DB migration (--update): the kept DB may predate params added to the shipped
-	# schema since it was created. A missing param surfaces at runtime as an empty
-	# $_SESSION value with no error (worker runs error_reporting(E_ERROR)) - e.g. an
-	# absent 'ipaddr_timeout' makes checkForIpAddr() compute maxLoops = ''/2 = 0, so
-	# the worker never waits for a wlan0 DHCP lease and drops straight to the Hotspot:
-	# the WiFi client silently never connects (observed on all three test boards).
-	# Backfill params present in the schema but missing here, into the param/value
-	# config tables, WITHOUT touching existing rows (user config preserved). Pi-iso:
-	# this only ever ADDS rows the schema already defines, so a current DB is a no-op.
+	# DB migration (--update): a kept DB may predate params the shipped schema has
+	# gained. A missing param surfaces as an empty $_SESSION value with NO error
+	# (the worker runs error_reporting(E_ERROR)) - an absent 'ipaddr_timeout' made
+	# checkForIpAddr() compute maxLoops = ''/2 = 0, so the worker never waited for a
+	# DHCP lease and dropped straight to the Hotspot on all three test boards.
+	# Backfill schema params missing here WITHOUT touching existing rows.
 	#
-	# EVERY param/value config table is listed, not just cfg_system: upstream ships
-	# new renderer settings the same way (e.g. cfg_airplay gained
-	# 'ignore_volume_control' with shairport-sync 5.2.1), and on the Pi they arrive
-	# through the moode-player postinstall, which nopi never runs. The list is
-	# explicit rather than derived from "has param and value columns", because
-	# cfg_gpio has those two columns for something else entirely - per-pin command
-	# arguments, several rows sharing an empty param - and must not be treated as a
-	# param catalogue.
+	# EVERY param/value table, not just cfg_system: upstream ships new renderer
+	# settings the same way (cfg_airplay gained 'ignore_volume_control'), and on the
+	# Pi they arrive through the moode-player postinstall, which nopi never runs.
+	# The list is explicit rather than derived from "has param and value columns":
+	# cfg_gpio has both for something else entirely (per-pin command arguments,
+	# several rows sharing an empty param) and is not a param catalogue.
 	_schema_db=$(mktemp --suffix=.db)
 	if sqlite3 "$_schema_db" < "$SQLDB_SCHEMA" 2>/dev/null; then
 		_mig_total=0
@@ -1930,12 +1701,10 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 				_mig_total=$((_mig_total + _added))
 			fi
 		done
-		# Missing TABLES: a newer schema can add whole tables (e.g. cfg_rcucache for
-		# Radio Cover+), not just params. The kept DB then lacks the table and the
-		# first query against it throws (PDO runs in exception mode) -> HTTP 500. Create
-		# every table the schema defines but the DB lacks, then copy its shipped rows
-		# (seed data; a cache table like cfg_rcucache ships empty, so a no-op there).
-		# Existing tables are never altered - additive only, Pi-iso.
+		# Missing TABLES: a newer schema can add whole tables (cfg_rcucache), and the
+		# first query against a missing one throws (PDO is in exception mode) -> HTTP
+		# 500. Create what the schema defines and the DB lacks, then copy its shipped
+		# rows. Existing tables are never altered - additive only.
 		_tbl_added=0
 		while IFS= read -r _tbl; do
 			[ -z "$_tbl" ] && continue
@@ -1953,12 +1722,9 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 			SELECT name FROM sch.sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'
 				AND name NOT IN (SELECT name FROM main.sqlite_master WHERE type='table');" 2>/dev/null)
 
-		# Missing COLUMNS: a newer schema can add a column to an existing table. For
-		# every schema table also present in the DB, add columns the DB lacks via ALTER
-		# TABLE ADD COLUMN, rebuilding the definition from the schema (type + NOT NULL +
-		# DEFAULT). SQLite requires a NOT NULL column to carry a default; if one lacks it
-		# the ALTER fails and we warn rather than abort. Additive only - existing columns
-		# and their data are untouched.
+		# Missing COLUMNS: ALTER TABLE ADD COLUMN, definition rebuilt from the schema
+		# (type + NOT NULL + DEFAULT). SQLite requires a NOT NULL column to carry a
+		# default; without one the ALTER fails and we warn rather than abort.
 		_col_added=0
 		while IFS= read -r _t; do
 			[ -z "$_t" ] && continue
@@ -1982,15 +1748,13 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 			unset _have
 		done < <(sqlite3 "$_schema_db" "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';" 2>/dev/null)
 
-		# cfg_plugin is a CATALOGUE of what moOde offers on demand (AirPlay, Spotify,
-		# nqptp), not user config - nothing in the tree ever writes it, only SELECTs.
-		# It must therefore FOLLOW the shipped schema, unlike the param tables above:
-		# isAirPlayUpgradable() compares the installed package against
-		# cfg_plugin.version, and the plugin's own install.sh reads that version to
-		# name the .deb it builds and copies. A kept DB left behind means the box is
-		# never offered the upgrade, and a forced reinstall dies on a .deb name that
-		# was never built. Realign version AND plugin (the zip name carries a major,
-		# e.g. v5-shairport-sync), and add entries the schema gained.
+		# cfg_plugin is a CATALOGUE of what moOde offers on demand, not user config -
+		# nothing writes it, only SELECTs - so unlike the param tables above it must
+		# FOLLOW the shipped schema: isAirPlayUpgradable() compares the installed
+		# package against cfg_plugin.version, and the plugin's install.sh reads that
+		# version to name the .deb it builds. A stale row means the box is never
+		# offered the upgrade, and a forced reinstall dies on a .deb never built.
+		# Realign version AND plugin (the zip name carries a major, v5-shairport-sync).
 		_plug_sync=0
 		_plug_added=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
 			INSERT INTO main.cfg_plugin (component, type, plugin, version)
@@ -2036,16 +1800,12 @@ else
 	log "Created DB from schema"
 fi
 
-# CPU governor: the schema seeds cpugov='ondemand' (the Pi's governor). On x86/
-# Armbian the available governors depend on the cpufreq driver - e.g. an Intel
-# CPU in intel_pstate passive mode (intel_cpufreq) exposes only
-# performance/schedutil, so 'ondemand' doesn't exist. The sys-config.php dropdown
-# already builds from scaling_available_governors, but keep the PERSISTED value
-# honest too so autocfg never tries to 'tee' an invalid governor and the stored
-# value matches reality. Only rewrite when the seeded value isn't available here;
-# fall back to whatever governor the kernel is actually running. (Skipped when the
-# host has no cpufreq sysfs, e.g. inside a plain VM.) The schema default is left
-# untouched so Pi behaviour / --reset-db semantics stay byte-identical.
+# CPU governor: the schema seeds the Pi's 'ondemand', which an Intel CPU in
+# intel_pstate passive mode does not have (only performance/schedutil). The
+# dropdown already builds from scaling_available_governors; keep the PERSISTED
+# value honest too so autocfg never tees an invalid governor. Rewritten only when
+# the seeded value is unavailable here. The schema default is left untouched so
+# --reset-db semantics stay byte-identical to the Pi.
 AVAIL_GOV_FILE=/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
 if [ -r "$AVAIL_GOV_FILE" ]; then
 	STORED_GOV=$(sqlite3 "$SQLDB" "SELECT value FROM cfg_system WHERE param='cpugov'")
@@ -2074,36 +1834,27 @@ chmod -R g+w /var/local/www
 chmod 755 /var/local/www/commandw/ready-script.sh
 
 # moOde PHP session directory (session.save_path). The worker runs as www-data
-# (Phase 6) so it shares these session files with php-fpm directly.
+# (Phase 6), so it shares these files with php-fpm directly.
 #
-# Owner MUST be www-data, not root. The dir is sticky + world-writable (1777,
-# like /tmp) and modern Debian sets the kernel hardening fs.protected_regular=2,
-# which forbids a process from opening a file it does NOT own for WRITE (O_RDWR)
-# inside a sticky world/group-writable dir - UNLESS the file is owned by the
-# directory's owner. PHP opens session files O_RDWR. moOde scripts launched via
-# sysCmd() run under sudo (as root); with a root-owned dir, root cannot open the
-# www-data-owned session files (EACCES) -> $_SESSION is empty for every root-run
-# helper (thumb-gen.php hangs "Regenerating the thumbnail cache...", moodeutl
-# -gv returns blank, etc.). Making www-data own the dir satisfies the
-# "file owned by dir owner" exception, so both www-data and root can read/write
-# the sessions. (On Raspberry Pi OS the worker is root so this never surfaced.)
+# Owner MUST be www-data, not root. The dir is sticky + world-writable (1777) and
+# Debian sets fs.protected_regular=2, which forbids opening a file you do NOT own
+# for WRITE inside such a dir UNLESS it is owned by the DIRECTORY's owner - and
+# PHP opens session files O_RDWR. With a root-owned dir, the root helpers launched
+# via sysCmd() cannot open the www-data-owned session files (EACCES) -> $_SESSION
+# empty for every one of them (thumb-gen.php hangs, moodeutl -gv returns blank).
+# www-data owning the dir satisfies the exception for both. (Never surfaced on the
+# Pi, where the worker is root.)
 install -d -m 1777 /var/local/php
 chown www-data:www-data /var/local/php
 
-# A few files the worker writes DIRECTLY (not via sudo) live in root-owned
-# directories that www-data cannot create files in. Pre-create them owned by
-# www-data so the worker (running as www-data) can write them:
-#   /etc/mpd.conf, /etc/mpd.moode.conf  - regenerated by updMpdConf() each boot
-#   /var/log/moode*.log                 - written by workerLog()
-# touch (not install /dev/null) so existing content is preserved on re-runs.
-# Renderer config files in /etc are also written DIRECTLY (non-sudo) by the
-# www-data worker/UI, so they need the same treatment as mpd.conf:
-#   /etc/squeezelite.conf   - renderer.php writes it when Squeezelite is configured
-#   /etc/deezer/deezer.toml - renderer.php updateDeezCredentials(), ALSO called by
-#                             autoConfig()'s Deezer handler on every config restore
-# As www-data the fopen() fails and the following fwrite/ftruncate(false) raises an
-# uncaught TypeError (crash). Pre-create them (and /etc/deezer) www-data-owned;
-# harmless empty files when the renderer is unused.
+# Files the worker writes DIRECTLY (not via sudo) but that live in root-owned
+# dirs where www-data cannot create anything: /etc/mpd.conf + /etc/mpd.moode.conf
+# (updMpdConf() each boot), /var/log/moode*.log (workerLog()), and the renderer
+# configs /etc/squeezelite.conf and /etc/deezer/deezer.toml (renderer.php, the
+# latter also on every autoConfig restore). As www-data the fopen() fails and the
+# following fwrite/ftruncate(false) raises an uncaught TypeError. Pre-create them
+# www-data-owned; harmless empty files when the renderer is unused. `touch`, not
+# install /dev/null, so existing content survives a re-run.
 install -d -o www-data -g www-data /etc/deezer
 for f in /etc/mpd.conf /etc/mpd.moode.conf; do
 	touch "$f"; chown www-data:www-data "$f"; chmod 644 "$f"
@@ -2140,18 +1891,15 @@ fi
 
 log "Phase 5b: local music storage"
 
-# moOde's MPD music_directory is /var/lib/mpd/music; the library "root" folders
-# (OSDISK, RADIO, NAS, ...) appear beneath it. On the Raspberry Pi image these
-# are created by the image build - replicate the local ones here so the WebUI
-# library, the default playlist and the Samba shares have real content. MPD
-# follows the symlinks out to /mnt (follow_outside_symlinks defaults to yes).
+# The library roots (OSDISK, RADIO, NAS...) live under MPD's music_directory and
+# are created by the Pi IMAGE build - replicate them here. MPD follows the
+# symlinks out to /mnt (follow_outside_symlinks defaults to yes).
 MPD_MUSIC=/var/lib/mpd/music
 install -d -m 0755 "$MPD_MUSIC"
 
-# OSDISK: local on-disk music store + recorder target (cfg_system recorder_
-# storage). On the Pi this is a data partition; on a generic PC it is just a
-# directory on the root fs. Seed the shipped default content (Stereo Test,
-# System Sounds/ReadyChime) only when missing so user files are never clobbered.
+# OSDISK: local music store + recorder target. A data partition on the Pi, just a
+# directory here. Default content (Stereo Test, ReadyChime) seeded only when
+# missing, so user files are never clobbered.
 install -d -m 0775 /mnt/OSDISK
 [ -d "$REPO_DIR/osdisk" ] && cp -an "$REPO_DIR/osdisk/." /mnt/OSDISK/ 2>/dev/null || true
 ln -sfn /mnt/OSDISK "$MPD_MUSIC/OSDISK"
@@ -2160,12 +1908,9 @@ ln -sfn /mnt/OSDISK "$MPD_MUSIC/OSDISK"
 install -d -m 0755 /mnt/NAS
 ln -sfn /mnt/NAS "$MPD_MUSIC/NAS"
 
-# SATA / NVMe locally-attached internal drives (lib-config "Locally attached
-# drives"). moOde mounts each under /mnt/SATA/<name> resp. /mnt/NVME/<name> and
-# exposes them as the SATA/NVME library roots (ROOT_DIRECTORIES). sataSourceMount/
-# nvmeSourceMount do `mkdir "<root>/<name>"` WITHOUT -p, so the root dir must
-# pre-exist - else the mount fails "mount point does not exist" (cfg_source shows
-# "Mount error"). The Pi image creates these roots; the x86 installer must too.
+# SATA / NVMe internal drives: sataSourceMount/nvmeSourceMount do `mkdir
+# "<root>/<name>"` WITHOUT -p, so the root must pre-exist or the mount fails
+# "mount point does not exist" (cfg_source shows "Mount error").
 install -d -m 0755 /mnt/SATA
 ln -sfn /mnt/SATA "$MPD_MUSIC/SATA"
 install -d -m 0755 /mnt/NVME
@@ -2175,12 +1920,9 @@ ln -sfn /mnt/NVME "$MPD_MUSIC/NVME"
 # The library exposes them as the "USB" root folder via this symlink.
 install -d -m 0755 /media
 ln -sfn /media "$MPD_MUSIC/USB"
-# A Debian install from USB/optical media leaves a CD-ROM apt mount point behind:
-# an empty /media/cdrom dir + apt.conf.d/00CDMountPoint (the cdrom: line in
-# sources.list is already commented out). moOde lists every /media entry as an
-# auto-mounted USB drive (lib-config.php: `ls -1 /media`), so the stray dir shows
-# up as a phantom drive "cdrom ( | swap)". Remove the artifacts so /media holds
-# only real devmon mounts, matching the Pi image (no source change needed).
+# A Debian install from USB/optical media leaves an empty /media/cdrom +
+# apt.conf.d/00CDMountPoint behind. lib-config.php lists every /media entry as an
+# auto-mounted USB drive, so it shows up as a phantom "cdrom ( | swap)".
 rmdir /media/cdrom 2>/dev/null || true
 rm -f /etc/apt/apt.conf.d/00CDMountPoint
 
@@ -2211,29 +1953,23 @@ chmod -R 0777 /var/lib/mpd/playlists
 #----------------------------------------------------------------------------#
 # Phase 5c - On-demand renderer plugins (AirPlay / Spotify) for non-arm64
 #----------------------------------------------------------------------------#
-# AirPlay (shairport-sync + nqptp) and Spotify (librespot) stay on-demand, exactly
-# like moOde: a worker job runs util/plugin-updater.sh, which wgets
-# $res_plugin_upd_url/<component>/<plugin>/update-<plugin>.zip, unzips it and runs
-# update/install.sh. That install.sh clones moode-player/pkgbuild and BUILDS the
-# package natively (-> a moode-tagged .deb, which is what isAirPlayInstalled()/
-# isSpotifyInstalled() require: `dpkg-query ... | grep moode`). It needs two small
-# x86 fixups: (1) it copies/installs a hardcoded `<pkg>_<ver>_arm64.deb`; (2) it
-# resolves the home dir with `moodeutl -d -gv home_dir`, which reads the PHP
-# session - empty here because the script runs as root (via the worker's sudo)
-# and Debian's PHP session handler refuses a www-data-owned session file (our
-# worker runs as www-data). home_dir is deterministic, so we resolve it the same
-# way moOde's own moodeutl getUserID() does: /home/<first /home entry>.
+# AirPlay and Spotify stay on-demand like moOde: a worker job runs
+# plugin-updater.sh, which wgets $res_plugin_upd_url/<component>/<plugin>/
+# update-<plugin>.zip and runs its update/install.sh, which BUILDS a moode-tagged
+# .deb natively (what isAirPlayInstalled() requires: `dpkg-query | grep moode`).
+# Two things break off the Pi: it installs a hardcoded `<pkg>_<ver>_arm64.deb`,
+# and it resolves the home dir with `moodeutl -d -gv home_dir`, which reads a PHP
+# session that is empty here (the script runs as root via the worker's sudo, and
+# PHP refuses the www-data-owned session file). home_dir is deterministic, so
+# resolve it as moodeutl's own getUserID() does: /home/<first /home entry>.
 #
-# So for non-arm64 we mirror the (tiny, install.sh-only) plugin zips locally with
-# those two points patched, serve them over the existing nginx `location /` (root
-# /var/www, no nginx config change), and repoint res_plugin_upd_url at the local
-# copy. On arm64 (Armbian) the upstream repo works unchanged, so we leave it
-# alone. EVERY run re-checks what upstream publishes and re-packs when the zip
-# changed (sha256 stamp per plugin): the zip is what carries a renderer version
-# bump, so a mirror frozen at first install would pin the box to an old AirPlay
-# or Spotify forever. The patches are narrow (arch token + home_dir line) so they
-# track moOde's install.sh, and the run refuses to publish a mirror where either
-# no longer applies rather than shipping one silently unpatched.
+# So for non-arm64 we mirror the plugin zips locally with those two points
+# patched, serve them over the existing nginx `location /`, and repoint
+# res_plugin_upd_url at the copy. arm64 (Armbian) works against upstream
+# unchanged. EVERY run re-checks what upstream publishes and re-packs on a change
+# (sha256 stamp per plugin): the zip is what carries a renderer version bump, so
+# a frozen mirror would pin the box to an old AirPlay forever. The run refuses to
+# publish a mirror where either patch no longer applies.
 
 PKG_ARCH="$(dpkg --print-architecture)"
 if [ "$PKG_ARCH" != arm64 ]; then
@@ -2243,11 +1979,10 @@ if [ "$PKG_ARCH" != arm64 ]; then
 	PLUG_DST="/var/www/plugins-x86"
 	PLUG_TMP="$(mktemp -d)"
 	plug_ok=1
-	# Renderer plugins (arch-patched). Add the Peppy "moOde meters" skin pack when
-	# the local display is installed - it is platform-independent (PNG/config only),
-	# so the arch/home_dir seds below are harmless no-ops, and mirroring it locally
-	# stops Configure > Peripherals "Install moOde meters" from hanging on a plugin
-	# the upstream-repointed updater would fetch (it wgets the mirror with no timeout).
+	# The Peppy "moOde meters" skin pack joins the renderer plugins when the local
+	# display is installed: it is platform-independent (PNG/config only, so the seds
+	# below no-op), but mirroring it locally stops Configure > Peripherals "Install
+	# moOde meters" hanging - the updater wgets the mirror with no timeout.
 	PLUG_ENTRIES="renderer/v5-shairport-sync renderer/v8-librespot"
 	[ "$INSTALL_LOCALDISPLAY" = 1 ] && PLUG_ENTRIES="$PLUG_ENTRIES peppydisplay/v4-moode-meters"
 	for entry in $PLUG_ENTRIES; do
@@ -2257,11 +1992,8 @@ if [ "$PKG_ARCH" != arm64 ]; then
 		# Keep the "which upstream zip is this mirror made from" stamp out of the
 		# nginx-served tree, next to the other provenance stamps.
 		plug_sum="$NOPI_BUILT_DIR/plugin-mirror-$plugin"
-		# Always ask upstream what it publishes NOW. A mirror pinned at first install
-		# would serve the same plugin forever, and the plugin zip is exactly what
-		# carries a renderer version bump (shairport-sync 5.x, librespot). Re-pack
-		# only when the upstream zip actually changed, so --update stays cheap: the
-		# fetch is a few tens of kB, the repack is what we skip.
+		# Always ask upstream what it publishes NOW, but re-pack only when the zip
+		# actually changed, so --update stays cheap (the fetch is tens of kB).
 		if wget -q "$PLUG_BASE/$entry/update-$plugin.zip" -O "$PLUG_TMP/p.zip"; then
 			up_sum=$(sha256sum "$PLUG_TMP/p.zip" | cut -d' ' -f1)
 			if [ -f "$plug_zip" ] && [ "$up_sum" = "$(cat "$plug_sum" 2>/dev/null || true)" ]; then
@@ -2288,11 +2020,9 @@ if [ "$PKG_ARCH" != arm64 ]; then
 			else
 				# `sed -i` exits 0 even when it matches nothing, so the two checks above
 				# are what catch upstream renaming either patched line - otherwise we
-				# would publish an unpatched mirror and only find out when the
-				# on-demand install fails on an _arm64.deb that was never built. They
-				# assert the OUTCOME (no arm64 literal left, no session-reading
-				# home_dir), not that our sed fired, so upstream solving either one on
-				# its own passes rather than raising a false alarm.
+				# publish an unpatched mirror and find out when the on-demand install
+				# fails on an _arm64.deb that was never built. They assert the OUTCOME,
+				# not that our sed fired, so upstream fixing either one on its own passes.
 				warn "Could not arch-patch $plugin - upstream install.sh has changed;" \
 					"kept the previous mirror, check update/install.sh in the plugin zip"
 				plug_ok=0
@@ -2328,11 +2058,9 @@ fi
 #----------------------------------------------------------------------------#
 # Phase 5d - Local display (moOde WebUI / Peppy kiosk on an attached HDMI screen)
 #----------------------------------------------------------------------------#
-# moOde's "moOde WebUI" and "Peppy Meter/Spectrum" local display is an X11 +
-# Chromium kiosk: localdisplay.service -> xinit -> ~/.xinitrc -> chromium --kiosk.
-# The Pi image ships the whole X stack; a headless Debian does not. Install it and
-# wire the pieces so Configure > Peripherals works. The worker OWNS the service
-# (starts/stops it on the toggle), so it is deployed but NOT enabled here.
+# The local display is an X11 + Chromium kiosk: localdisplay.service -> xinit ->
+# ~/.xinitrc -> chromium --kiosk. The Pi image ships the X stack, a headless
+# Debian does not. The worker OWNS the service, so it is deployed but NOT enabled.
 if [ "$INSTALL_LOCALDISPLAY" = 1 ]; then
 	log "Phase 5d: local display (X + Chromium kiosk)"
 	# X server + the setuid Xorg.wrap (xserver-xorg-legacy) that lets the non-root
@@ -2355,12 +2083,11 @@ EOF
 	install -m 644 "$REPO_DIR/lib/systemd/system/localdisplay.service" /lib/systemd/system/localdisplay.service
 	sed -i "s/^User=.*/User=$PLAYER_USER/" /lib/systemd/system/localdisplay.service
 
-	# x86 ~/.xinitrc: moOde's Pi xinitrc.default probes the screen with kmsprint and
-	# /boot/firmware/config.txt (Pi-only); deploy an x86 equivalent that uses xrandr.
-	# The --app / --kiosk lines and the WebUI/Peppy branch mirror the Pi script so
-	# the worker's runtime sed edits (--app URL, --kiosk GPU flag) still apply.
-	# Built as a candidate first: the armhf post-patch below has to be applied
-	# before we can compare it with what is already on the box.
+	# x86 ~/.xinitrc: the Pi xinitrc.default probes the screen with kmsprint and
+	# /boot/firmware/config.txt, so deploy an xrandr equivalent. The --app / --kiosk
+	# lines and the WebUI/Peppy branch mirror the Pi script so the worker's runtime
+	# sed edits still apply. Built as a candidate first: the armhf post-patch below
+	# must be applied before comparing with what is already on the box.
 	XINITRC="/home/$PLAYER_USER/.xinitrc"
 	XINITRC_NEW="$(mktemp)"
 	cat > "$XINITRC_NEW" <<'EOF'
@@ -2432,13 +2159,11 @@ elif [ "$PEPPY_SHOW" = "1" ]; then
 fi
 EOF
 
-	# armhf SBC kiosk (seen on Allwinner H3 / Mali-400 lima): the Chromium kiosk paints
-	# a blank WHITE page unless the sandbox is disabled - on this 32-bit ARM kernel the
-	# sandbox can't start the renderer (no JS error, just no frame). x86 and arm64 (H6,
-	# Orange Pi 3 LTS) are fine, so scope --no-sandbox to armhf. The kiosk only loads
-	# localhost (trusted), so this is an acceptable trade-off. (The Pi is untouched.)
-	# Insert after 'exec chromium'; the worker only rewrites the --app/--kiosk lines so
-	# this line survives its regen.
+	# armhf SBC kiosk (Allwinner H3 / Mali-400 lima): the kiosk paints a blank WHITE
+	# page unless the sandbox is disabled - on this 32-bit ARM kernel it cannot start
+	# the renderer (no JS error, just no frame). x86 and arm64 are fine, so scope
+	# --no-sandbox to armhf; the kiosk only loads localhost. Inserted after 'exec
+	# chromium', which survives the worker's regen (it rewrites --app/--kiosk only).
 	case "$(uname -m)" in
 		armv6l|armv7l)
 			sed -i '/^[[:space:]]*exec chromium/a\	--no-sandbox \\' "$XINITRC_NEW"
@@ -2446,12 +2171,10 @@ EOF
 			;;
 	esac
 
-	# This file is GENERATED and must keep tracking the template above: it is the
-	# x86 replacement for moOde's Pi xinitrc.default, and a stale copy does not
-	# fail visibly - it kills the touch screen quietly (see the xset/DPMS note at
-	# the top of the heredoc). So always converge on the template; just never do it
-	# silently. Differing is the nominal case whenever the template itself changed,
-	# hence log and not warn.
+	# GENERATED, and must keep tracking the template above: a stale copy does not
+	# fail visibly, it kills the touch screen quietly (the xset/DPMS note at the top
+	# of the heredoc). Always converge, never silently. Differing is the nominal case
+	# whenever the template changed, hence log and not warn.
 	if [ -f "$XINITRC" ] && ! cmp -s "$XINITRC" "$XINITRC_NEW"; then
 		XINITRC_BAK="$XINITRC.bak-$(date +%Y%m%d-%H%M%S)"
 		cp -a "$XINITRC" "$XINITRC_BAK"
@@ -2462,18 +2185,16 @@ EOF
 	fi
 	rm -f "$XINITRC_NEW"
 
-	# Peppy Meter/Spectrum visualizer: the apps (read the FIFO that libpeppyalsa
-	# feeds, render via pygame/SDL on the X display) are upstream, not in Debian -
-	# clone them to /opt like the Pi image. moOde's config templates go to
-	# /etc/peppy*/config.txt (the worker reads/edits these); symlink the apps'
-	# own config.txt at them so those edits take effect.
+	# Peppy Meter/Spectrum: the apps read the FIFO libpeppyalsa feeds and render via
+	# pygame/SDL. Upstream, not in Debian - clone to /opt like the Pi image, and
+	# symlink their config.txt at /etc/peppy*/config.txt (what the worker edits).
 	$APT_INSTALL python3-pygame python3-pil git   # PeppySpectrum needs PIL (Pillow)
-	# PeppyMeter: the live dB-gain source (volume.gain.db.source) is upstream now, so track
-	# project-owner again. It is what lets the meter follow a hardware-volume knob; moOde
-	# feeds it the attenuation dB via /tmp/peppy_gain_db (peppy-gain.php). An existing
-	# clone is switched over IN PLACE - this also migrates boxes off the temporary fork
-	# branch - because the moOde meter skins are installed into /opt/peppymeter at runtime
-	# and are untracked, so a re-clone would delete them. PeppySpectrum: stock.
+	# PeppyMeter tracks project-owner again now that the live dB-gain source
+	# (volume.gain.db.source, what lets the meter follow a hardware knob; moOde feeds
+	# it via /tmp/peppy_gain_db) is upstream. An existing clone is switched IN PLACE,
+	# which also migrates boxes off the temporary fork branch: the moOde meter skins
+	# are installed into /opt/peppymeter at runtime and untracked, so a re-clone would
+	# delete them. PeppySpectrum: stock.
 	PM_URL="https://github.com/project-owner/PeppyMeter.git"
 	PM_BRANCH="master"
 	if [ ! -e /opt/peppymeter/.git ]; then
@@ -2490,14 +2211,12 @@ EOF
 		fi
 	fi
 	[ -e /opt/peppyspectrum/.git ] || { rm -rf /opt/peppyspectrum; git clone --depth 1 "https://github.com/project-owner/PeppySpectrum.git" /opt/peppyspectrum >/dev/null 2>&1; }
-	# moOde ships its OWN spectrum.py (not upstream's): upstream runs the draw/
-	# update_ui loop in a background Thread, which on x86/X11/SDL2 never presents
-	# -> a fully BLACK spectrum (pygame/SDL must render on the MAIN thread; the Pi
-	# KMS path tolerated it, X11 does not). moOde's spectrum.py (PeppySpectrum
-	# issue #1 fix) comments out the update_ui thread and calls clean_draw_update()
-	# directly in the main loop. Overlay it on the upstream clone exactly like
-	# moOde's pkgbuild build.sh does (`cp spectrum.py .`). Idempotent (plain
-	# overwrite). Meter is unaffected - moOde uses upstream peppymeter.py as-is.
+	# moOde ships its OWN spectrum.py: upstream runs the draw loop in a background
+	# Thread, which on x86/X11/SDL2 never presents -> a fully BLACK spectrum (SDL
+	# must render on the MAIN thread; the Pi KMS path tolerated it, X11 does not).
+	# moOde's version (PeppySpectrum issue #1 fix) calls clean_draw_update() in the
+	# main loop. Overlay it on the clone exactly as moOde's pkgbuild build.sh does.
+	# Meter is unaffected - moOde uses upstream peppymeter.py as-is.
 	if [ -d /opt/peppyspectrum ]; then
 		if curl -fsSL "https://raw.githubusercontent.com/moode-player/pkgbuild/main/packages/peppy-spectrum/spectrum.py" \
 				-o /opt/peppyspectrum/spectrum.py; then
@@ -2507,10 +2226,10 @@ EOF
 		fi
 	fi
 	install -d -m 755 /etc/peppymeter /etc/peppyspectrum
-	# Configure > Peppy seds the user's settings straight into these files (putPeppyConfig),
-	# so lay the template down only when there is nothing to preserve - re-installing it on
-	# every run resets skin, resolution and frame rate behind the user's back. On an existing
-	# install just add the keys the template has gained since.
+	# Configure > Peppy seds the user's settings straight into these files, so lay the
+	# template down only when there is nothing to preserve - reinstalling it every run
+	# would reset skin, resolution and frame rate behind the user's back. On an
+	# existing install, only add the keys the template has gained.
 	for p in peppymeter peppyspectrum; do
 		[ -f "/etc/$p/config.txt" ] ||
 			install -m 644 "$REPO_DIR/etc/$p/config.sed.txt" "/etc/$p/config.txt"
@@ -2551,32 +2270,25 @@ Wants=network-online.target
 # systemd reaps the whole cgroup when the parent exits).
 Type=forking
 PIDFile=/run/worker.pid
-# Run the worker as www-data, the SAME user as php-fpm and nginx. This is
-# REQUIRED for PHP session sharing: Debian's PHP "files" session handler only
-# lets a process open a session file owned by its own uid (in particular root
-# refuses to read a www-data-owned session file). On Raspberry Pi OS the worker
-# runs as root and creates the session first at boot, so the root/www-data split
-# happens to work there; on Debian x86 that same split silently breaks the
-# session - worker and web never share state, so config fields render blank and
-# queued jobs are never processed. Every privileged operation the worker needs
-# already goes through sudo() (see sysCmd in inc/common.php), so it does not need
-# to run as root.
+# Run the worker as www-data, the SAME user as php-fpm and nginx. REQUIRED for
+# PHP session sharing: Debian's "files" session handler only lets a process open
+# a session file owned by its own uid, so a root worker cannot read the
+# www-data-owned session - worker and web never share state, config fields render
+# blank and queued jobs never run. (On the Pi the root worker creates the session
+# first at boot, so the split happens to work there.) Every privileged op already
+# goes through sudo (sysCmd in inc/common.php), so root is not needed.
 User=www-data
 Group=www-data
 # /run/worker.pid lives in root-owned /run, which www-data cannot create files
 # in. Pre-create it owned by the service user. The leading + makes systemd run
 # this line with full privileges (as root) even though User= is www-data.
 ExecStartPre=+/usr/bin/install -m 660 -o www-data -g www-data /dev/null /run/worker.pid
-# Same idea for /var/log/moode.log. The worker truncates it via sudo (root) at the
-# very start (worker.php: truncate MOODE_LOG --size 0); if the file is ABSENT at
-# that instant, root creates it root:root and the www-data worker's first
-# workerLog() can no longer reopen it -> fatal fwrite() -> startup crash-loop ->
-# wrkready stuck 0 -> blank WebUI. The file can go missing under log2ram (SD/eMMC
-# boards) across a network reconfigure/restart - seen on the OPi3 LTS after setting
-# WiFi/hotspot; never on x86 (no log2ram) nor on the Pi (worker is root, so a
-# root-owned log is fine). Guarantee it exists AND is www-data-owned before the
-# worker runs (create if absent, else just re-own/re-mode; never truncate so an
-# existing crash log is preserved). Leading + = run as root despite User=www-data.
+# Same idea for /var/log/moode.log. The worker truncates it via sudo at startup;
+# if the file is ABSENT at that instant root creates it root:root, the www-data
+# worker's first workerLog() cannot reopen it -> fatal fwrite -> crash-loop ->
+# wrkready stuck 0 -> blank WebUI. It can go missing under log2ram across a
+# network restart (seen on the OPi3 LTS). Guarantee it exists AND is
+# www-data-owned; never truncate, so an existing crash log survives.
 ExecStartPre=+/bin/sh -c 'test -e /var/log/moode.log || /usr/bin/install -m 666 -o www-data -g www-data /dev/null /var/log/moode.log; chown www-data:www-data /var/log/moode.log; chmod 666 /var/log/moode.log'
 ExecStart=/var/www/daemon/worker.php
 Restart=on-failure
@@ -2589,13 +2301,11 @@ EOF
 # www-data's passwordless sudo (required by the worker/web) is granted by
 # moOde's own /etc/sudoers.d/010_www-data-nopasswd, deployed in Phase 3b.
 
-# USB auto-mount daemon. Replaces moOde's udisks-glue (launched from rc.local on
-# the Pi; needs udisks1, gone from Trixie) with devmon (from udevil). devmon
-# mounts removable drives to /media/<LABEL> and runs hooks on (un)mount. Runs as
-# root: the hooks call automount.sh, which edits /etc/samba/smb.conf + /etc/
-# exports and restarts smbd/nfs (udisks-glue is root on the Pi for the same
-# reason). %%d -> /media/<LABEL>; also poke MPD so the USB root rescans. The
-# library exposes the drives via the /var/lib/mpd/music/USB -> /media symlink.
+# USB auto-mount daemon: devmon (udevil) replaces moOde's udisks-glue, which needs
+# the udisks1 gone from Trixie. Mounts to /media/<LABEL> and runs hooks. Root,
+# because the hooks call automount.sh, which edits smb.conf + /etc/exports and
+# restarts smbd/nfs (udisks-glue is root on the Pi for the same reason). %%d ->
+# /media/<LABEL>; mpc poke so the USB root rescans.
 cat > /etc/systemd/system/moode-devmon.service <<'EOF'
 [Unit]
 Description=moOde USB drive auto-mounter (devmon)
@@ -2611,24 +2321,17 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
-# DAC quiet start helper (Configure > Audio toggle 'dac_prime'). A DAC with no
-# output mute relay (typically a USB DAC after its enumeration) hisses/crackles at
-# startup until it's fed a PCM stream; moOde never feeds it at boot (MPD restores
-# state=stop, close_on_pause=yes never opens the device). The fix plays ~1s of
-# silence into the card the moment it appears, via a udev rule on the sound-card
-# ADD event (KERNEL=="controlC*", the
-# reliable sync point - the control node is created last; see /lib/udev/rules.d/
-# 78-sound-card.rules). Same udev-RUN pattern as 10-a2dp-autoconnect.rules; it
-# covers boot AND hot-plug, and being tied to the ADD event needs no card-wait loop.
+# DAC quiet start (Configure > Audio, 'dac_prime'). A DAC with no output mute
+# relay hisses at startup until fed a PCM stream, and moOde never feeds it at boot
+# (MPD restores state=stop, close_on_pause never opens the device). Play ~1s of
+# silence the moment the card appears, from a udev rule on the sound-card ADD
+# event (KERNEL=="controlC*" - the control node is created last, so it is the
+# reliable sync point). Covers boot AND hot-plug with no card-wait loop.
 #
-# The rule is a versioned file shipped DISABLED (89-moode-dac-prime.rules.disabled),
-# ENABLED/DISABLED AT RUNTIME BY THE WORKER (applyDacPrime() in worker.php) which
-# renames it .disabled <-> .rules from cfg_system dac_prime - the worker is the
-# authority, and the persistent rule then fires at enumeration on every boot without
-# waiting for the worker. So the installer just deploys the script (like
-# a2dp-autoconnect) and the rule in its disabled form; it never activates it.
-# cfg_system.dac_prime ships default off and reaches existing DBs via the generic
-# Phase-1 DB migration (no code needed here).
+# The rule ships DISABLED and is renamed .disabled <-> .rules AT RUNTIME BY THE
+# WORKER (applyDacPrime(), from cfg_system dac_prime): the worker is the
+# authority, and the persistent rule then fires at enumeration on every boot
+# without waiting for it. The installer only deploys, never activates.
 install -m 755 "$REPO_DIR/usr/local/bin/moode-dac-prime"                      /usr/local/bin/moode-dac-prime
 install -m 644 "$REPO_DIR/etc/udev/rules.d/89-moode-dac-prime.rules.disabled" /etc/udev/rules.d/89-moode-dac-prime.rules.disabled
 # Drop any stale ACTIVE copy (older/inline content) so the worker re-enables the rule
@@ -2648,20 +2351,14 @@ systemctl daemon-reload
 log "Phase 7: starting services"
 
 systemctl enable --now nginx "php${PHP_VER}-fpm" avahi-daemon
-# Do NOT let systemd autostart mpd. Match the Pi, where mpd.service is NOT enabled:
-# the worker starts mpd itself (worker.php: `systemctl start mpd`) during its own
-# startup, which runs AFTER network-online (moode-worker is After=network-online).
-# Why this matters:
-#  - If systemd autostarts mpd at boot it comes up BEFORE the network. mpd restores
-#    its saved playback state (state_file + restore_paused); if the current song is a
-#    RADIO STREAM mpd opens the URL immediately, DNS isn't up yet -> "Could not
-#    resolve host" -> mpd drops the current song. The worker's later `systemctl start
-#    mpd` is then a no-op (already running) so it never recovers: dead player at boot.
-#  - Worker-started mpd also means a purely LOCAL, OFFLINE box never blocks on the
-#    network to play its USB/local library (no network-online coupling on mpd itself).
-# Disable the service AND the socket (socket activation would start mpd early too),
-# exactly as moOde's own package postinstall does. Also remove a network-online
-# drop-in left by an earlier version of this installer.
+# Do NOT let systemd autostart mpd - match the Pi, where mpd.service is not
+# enabled and the worker starts it during its own startup (After=network-online).
+# Autostarted, mpd comes up BEFORE the network and restores its saved state: on a
+# RADIO STREAM it opens the URL with no DNS yet -> "Could not resolve host" -> it
+# drops the song, and the worker's later `systemctl start mpd` is a no-op, so a
+# dead player at boot. It also keeps an offline box from waiting on the network to
+# play its local library. Disable the SOCKET too (activation starts mpd early
+# just the same), as moOde's own postinstall does.
 rm -f /etc/systemd/system/mpd.service.d/override.conf 2>/dev/null || true
 systemctl disable --now mpd.service mpd.socket >/dev/null 2>&1 || true
 systemctl daemon-reload
@@ -2670,14 +2367,12 @@ systemctl daemon-reload
 # ones loaded. mpd is (re)started by the worker during its own startup.
 systemctl restart nginx "php${PHP_VER}-fpm" avahi-daemon 2>/dev/null || true
 
-# Name resolution (WINS/NetBIOS). Tolerant: a failure here must not abort install.
-# Order winbind AFTER the network is actually online. The shipped unit only has
-# `After=network.target`, which under NetworkManager is reached BEFORE any interface
-# has a carrier/IP, so winbindd binds its interface list too early and its broadcast
-# NetBIOS lookups (the `wins` NSS module -> `getent hosts <NAS>`) go out a not-yet-up
-# interface and silently resolve nothing -> CIFS mounts of a NAS referenced by NETBIOS
-# NAME fail with "could not resolve address for <HOST>" (nmblookup still works because
-# it re-detects interfaces per call). NM-wait-online provides network-online.target.
+# Name resolution (WINS/NetBIOS), tolerant - a failure must not abort the install.
+# The shipped unit only has `After=network.target`, reached under NM BEFORE any
+# interface has a carrier, so winbindd binds its interface list too early and its
+# broadcast lookups go out a not-yet-up interface: a NAS referenced by NETBIOS
+# NAME fails to mount with "could not resolve address" (nmblookup still works, it
+# re-detects interfaces per call). Order it after network-online instead.
 install -d -m 755 /etc/systemd/system/winbind.service.d
 cat > /etc/systemd/system/winbind.service.d/10-network-online.conf <<'EOF'
 [Unit]
@@ -2696,65 +2391,47 @@ systemctl restart winbind 2>/dev/null || true
 systemctl enable moode-devmon.service 2>/dev/null || true
 systemctl restart moode-devmon.service 2>/dev/null || true
 
-# Renderer / bridge services (Squeezelite, Bluetooth, UPnP, DLNA, AirPlay) are
-# controlled by the worker per UI config and are all OFF by default (slsvc,
-# btsvc, upnpsvc, dlnasvc... = 0). Their Debian packages auto-enable their units
-# on install, which would leave e.g. bluealsa-aplay running and hijack the audio
-# chain to "Bluetooth -> Device" instead of the default "MPD -> plughw -> Device"
-# (and squeezelite would hold the DAC). Disable+stop them so the worker is the
-# sole controller and the default chain is MPD; the worker starts each on demand.
-# Fresh install only: neutralise the package auto-enable. On --update the box is
-# already configured and the worker owns these per config; re-running disable --now
-# would STOP a service the worker enabled (e.g. an active renderer) -> needless flap
-# / playback interruption.
+# Renderer / bridge services are worker-controlled and OFF by default, but their
+# Debian packages auto-enable their units on install: bluealsa-aplay left running
+# hijacks the audio chain to "Bluetooth -> Device" instead of "MPD -> plughw ->
+# Device", and squeezelite would hold the DAC. Fresh install only - on --update
+# the worker owns these per config, and disable --now would STOP a renderer it
+# enabled (needless flap / playback interruption).
 if [ "$UPDATE" != 1 ]; then
 	for svc in squeezelite bluetooth bluealsa bluealsa-aplay bt-agent minidlna upmpdcli shairport-sync; do
 		systemctl disable --now "$svc" 2>/dev/null || true
 	done
 fi
 
-# Triggerhappy (USB volume knob / media keys) is likewise worker-controlled and
-# OFF by default: usb_volknob is a SESSION-only flag (default '0'; not a
-# cfg_system row), and its real persistence IS triggerhappy's systemd enable
-# state - the worker's usb_volknob job does `systemctl enable+start` / `disable+
-# stop`. Debian's package auto-enables the unit on install, which would make the
-# knob active by default; disable it so the worker is the sole controller.
+# Triggerhappy (USB volume knob) is worker-controlled and OFF by default:
+# usb_volknob is a SESSION-only flag, and its real persistence IS triggerhappy's
+# systemd enable state (the worker's job does enable+start / disable+stop).
+# Debian's package auto-enables the unit, which would arm the knob by default.
 [ "$UPDATE" = 1 ] || systemctl disable --now triggerhappy 2>/dev/null || true
 
-# fluidsynth: a MIDI software synth pulled in transitively (libfluidsynth-dev is
-# an mpd build-dep; the fluidsynth binary package ships a systemd *user* service
-# enabled globally via /etc/systemd/user/default.target.wants/). On login it
-# auto-starts and grabs the default ALSA device - i.e. the USB DAC (card 0) -
-# which both contends for the DAC and makes moOde's format probe (alsacap /
-# `moodeutl -f`) report "Device is busy, unable to detect formats". moOde never
-# uses the fluidsynth daemon (MPD's MIDI decoder uses libfluidsynth3 directly),
-# so disable the global user-service autostart and stop any running instance.
+# fluidsynth arrives transitively (libfluidsynth-dev is an mpd build-dep) and its
+# package ships a globally-enabled systemd USER service. On login it grabs the
+# default ALSA device - the USB DAC - so it contends for the card and makes
+# moOde's format probe report "Device is busy, unable to detect formats". moOde
+# never uses the daemon (MPD's MIDI decoder links libfluidsynth3 directly).
 if [ "$UPDATE" != 1 ]; then
 	systemctl --global disable fluidsynth.service 2>/dev/null || true
 	pkill -x fluidsynth 2>/dev/null || true
 fi
 
-# shellinabox: moOde drives it via its OWN systemd unit, which runs shellinaboxd
-# with -t (--disable-ssl => plain HTTP on the LAN) + moOde's terminal CSS. The
-# Debian package instead ships only an init.d script; systemd-sysv-generator
-# turns that into a unit that runs WITH SSL and the stock CSS. Deploy moOde's
-# native unit so it overrides the sysv-generated one (systemd prefers a real
-# .service over a generated one of the same name) - else the WebSSH "Open" link
-# (http://host:4200) hits an HTTPS-only daemon and renders a blank page. The
-# unit is byte-identical to the Pi; the moOde CSS it references is already in
-# /var/www/css (web app deploy, Phase 2).
+# shellinabox: moOde's own unit runs shellinaboxd with -t (plain HTTP) + its
+# terminal CSS, while Debian ships only an init.d script that systemd-sysv-
+# generator turns into an SSL unit with the stock CSS - so the WebSSH "Open" link
+# (http://host:4200) would hit an HTTPS-only daemon and render blank. A real
+# .service overrides a generated one of the same name.
 install -m 644 "$REPO_DIR/lib/systemd/system/shellinabox.service" /lib/systemd/system/shellinabox.service
 systemctl daemon-reload
 
-# File sharing servers + Windows discovery + web terminal (smbd/nmbd/wsdd2/
-# nfs-kernel-server/shellinabox): same story as the renderers above - their Debian
-# packages auto-enable+start the units on install, but moOde is the SOLE controller.
-# The worker (re)started below owns their RUNNING state per the UI config: it starts
-# smbd/nmbd only if fs_smb=='On', nfs-server only if fs_nfs=='On', shellinabox per
-# the SSH/terminal feature - and worker.php actively disables wsdd2/smbd/nmbd if it
-# finds them enabled. So boot-disable + stop them HERE (before the worker), matching
-# the Pi image (installed, disabled); the worker then brings up exactly what the
-# config asks for. Never enable/start at install - that would ignore the config.
+# Sharing servers + Windows discovery + web terminal: same story as the renderers,
+# their packages auto-enable+start on install but the worker owns their running
+# state per the UI config (smbd/nmbd on fs_smb, nfs-server on fs_nfs, and
+# worker.php actively disables wsdd2/smbd/nmbd if it finds them enabled). Disable
+# them here, before the worker, matching the Pi image: installed, disabled.
 if [ "$UPDATE" != 1 ]; then
 	for svc in smbd nmbd wsdd2 nfs-kernel-server shellinabox; do
 		systemctl disable --now "$svc" 2>/dev/null || true
@@ -2764,56 +2441,43 @@ fi
 if [ "$NO_WORKER" -eq 1 ]; then
 	warn "Skipping worker (--no-worker). Start it later: systemctl start moode-worker"
 else
-	# The ALSA conf.d batch (Phase 3) re-lays the stock templates, which drops the lines
-	# the worker owns: _audioout's slave.pcm (-> peppy or the DSP chain), peppy.conf's ctl
-	# name/card, _peppyout's slave.pcm. A plain worker restart never rebuilds them -
-	# updMpdConf() only runs when mpd.conf is missing or mangled - so the routing would
-	# stay stock until the user's next Audio config change, with the Peppy meter dead
-	# (silent FIFO) in the meantime. Drop mpd.conf so the worker takes that path on
-	# startup and re-applies the routing from the DB. mpd.service is disabled above, so
-	# nothing tries to read mpd.conf before the worker regenerates it.
-	# Blank it in place, never `rm`: the www-data worker fopen()s /etc/mpd.conf directly
-	# (non-sudo) and cannot create it in root-owned /etc - deleting the file www-data was
-	# given above turns updMpdConf() into an fwrite(false) TypeError and crash-loops the
-	# worker. Two comment lines keep the "managed by moOde" marker off line 2, which is
-	# what the worker tests.
+	# The ALSA conf.d batch (Phase 3) re-lays the stock templates, dropping the lines
+	# the worker owns (_audioout's slave.pcm, peppy.conf's ctl name/card, _peppyout's
+	# slave.pcm). A plain restart never rebuilds them - updMpdConf() only runs when
+	# mpd.conf is missing or mangled - so the routing would stay stock until the next
+	# Audio config change, Peppy meter dead meanwhile. Blanking mpd.conf makes the
+	# worker take that path on startup.
+	# Blank in place, never `rm`: the www-data worker fopen()s /etc/mpd.conf directly
+	# and cannot create it in root-owned /etc, so deleting it turns updMpdConf() into
+	# an fwrite(false) TypeError and crash-loops the worker. Two comment lines keep
+	# the "managed by moOde" marker off line 2, which is what the worker tests.
 	#
-	# FIRST stop the worker ALREADY RUNNING from a previous install, because it keeps a
-	# background watchdog.sh alive and that watchdog does `systemctl start mpd` as soon as
-	# it sees MPD down (daemon/watchdog.sh). Blanking mpd.conf and stopping MPD while it
-	# polls loses the race: measured on a live box, MPD came back 5 s later ON THE BLANK
-	# CONFIG - no music_directory, no db_file - so `mpc stats` read 0 songs, the saved
-	# queue was not restored, the mixer reported "no such mixer control" and the ready
-	# chime failed with "not in the MPD database". The new worker then regenerates
-	# mpd.conf and calls `systemctl start mpd`, a NO-OP on a running MPD, so the box stays
-	# on the empty config until something restarts it by hand. Killing watchdog.sh by name
-	# too: the worker daemonizes, and a stray watchdog from an older, unit-less start would
-	# not be in the unit's cgroup.
+	# FIRST stop a worker left running by a previous install: it keeps a background
+	# watchdog.sh that does `systemctl start mpd` the moment it sees MPD down. Measured
+	# on a live box, MPD came back 5 s later ON THE BLANK CONFIG - 0 songs, queue not
+	# restored, "no such mixer control" - and the new worker's own `systemctl start
+	# mpd` is a no-op on a running MPD, so the box stays on the empty config. Kill
+	# watchdog.sh by name too: a stray one from an older unit-less start is not in the
+	# unit's cgroup.
 	systemctl stop moode-worker.service 2>/dev/null || true
 	pkill -f '/var/www/daemon/watchdog.sh' 2>/dev/null || true
 	printf '#\n# Regenerated by the worker on startup (installer re-laid the ALSA templates)\n' \
 		> /etc/mpd.conf
-	# Stop MPD too: it reads the ALSA chain once, when it starts. The worker regenerates
-	# the confs and then runs `systemctl start mpd` (start, not restart - worker.php), which
-	# is a no-op on an already-running MPD, so a hot --update would leave MPD on the stale
-	# pre-update chain (peppyalsa out of the path, meter needles frozen) until something
-	# restarted it. Harmless on a fresh install where MPD is not up yet.
+	# Stop MPD too: it reads the ALSA chain once, at start, and the worker only ever
+	# `start`s it - so a hot --update would leave MPD on the stale pre-update chain
+	# (peppyalsa out of the path, needles frozen). No-op on a fresh install.
 	systemctl stop mpd 2>/dev/null || true
-	# Use restart (not just enable --now): on a re-run the worker may already be
-	# running against the OLD database. It sets cfg_system.wrkready=1 only during
-	# startup, and engine-mpd.php returns an empty response (breaking the WebUI)
-	# until it is 1, so the worker must re-initialise against the freshly written
-	# config - especially after --reset-db, which resets wrkready back to 0.
+	# restart, not enable --now: on a re-run the worker may be running against the OLD
+	# database. It sets wrkready=1 only during startup, and engine-mpd.php returns
+	# empty (dead WebUI) until it is 1 - especially after --reset-db, which zeroes it.
 	systemctl enable moode-worker.service
 	systemctl restart moode-worker.service
 
-	# The worker only ever `start`s MPD, never restarts it, so any MPD that came up
-	# before /etc/mpd.conf was regenerated would keep the stale config for good. Wait
-	# for the worker to write the managed file, then try-restart: a no-op when MPD is
-	# not running (the worker starts it itself, with the right config), a restart when
-	# it is. Cheap, idempotent, and it closes the race for good rather than relying on
-	# having killed every possible starter above. MPD saves and restores its queue
-	# across the restart, so nothing is lost.
+	# The worker only ever `start`s MPD, so an MPD that came up before mpd.conf was
+	# regenerated keeps the stale config for good. Wait for the managed file, then
+	# try-restart: a no-op when MPD is down, a restart when it is up. Closes the race
+	# for good instead of trusting that every possible starter was killed above; MPD
+	# saves and restores its queue across the restart.
 	for _i in $(seq 1 30); do
 		if [ -s /etc/mpd.conf ] && grep -q 'managed by moOde' /etc/mpd.conf; then break; fi
 		sleep 1
@@ -2828,14 +2492,12 @@ fi
 # --------------------------------------------------------------------------
 # Config-file parity guard (vs the Pi moode-player package conffiles)
 # --------------------------------------------------------------------------
-# moOde on the Pi ships a fixed set of default config files (the package's dpkg
-# conffiles). This installer reproduces that set; the check below WARNS (never
-# aborts) if any expected default is missing after an install, so drift - a
-# broken deploy step, or a new upstream conffile after rebasing on moOde - is
-# caught here instead of surfacing later as a runtime crash. Deliberately
-# EXCLUDED (Pi hardware, must not exist on x86): I2S audio overlays (/boot
-# config.txt) and /etc/X11/xorg.conf.d/99-vc4.conf (Pi VC4 GPU).
-# /etc/moode-apt-mark.conf is package-update infra handled differently on x86.
+# The Pi package ships a fixed set of default config files (its dpkg conffiles).
+# This installer reproduces that set; the check below WARNS (never aborts) when
+# one is missing, so drift - a broken deploy step, a new upstream conffile after a
+# rebase - is caught here rather than as a runtime crash. Deliberately EXCLUDED:
+# the Pi-hardware ones (I2S overlays, 99-vc4.conf) and /etc/moode-apt-mark.conf
+# (package-update infra handled differently here).
 EXPECTED_CONF=(
 	/etc/alsa/conf.d/_audioout.conf /etc/alsa/conf.d/_peppyout.conf
 	/etc/alsa/conf.d/_sndaloop.conf /etc/alsa/conf.d/alsaequal.conf
@@ -2866,11 +2528,9 @@ if [ "$INSTALL_SQUEEZELITE" = 1 ]; then
 fi
 _missing=()
 for f in "${EXPECTED_CONF[@]}"; do [ -e "$f" ] || _missing+=("$f"); done
-# peppy.conf and peppy.conf.hide are ONE conffile in two states, not two files: the
-# package ships both, then the worker deletes whichever contradicts the Peppy setting
-# (worker.php "File check" -> "peppy is on, removed peppy.conf.hide"). Exactly one
-# exists at runtime, so check the PAIR. Listing them individually warned on every
-# install with Peppy enabled.
+# peppy.conf and peppy.conf.hide are ONE conffile in two states: the worker deletes
+# whichever contradicts the Peppy setting, so exactly one exists at runtime. Check
+# the PAIR - listing them individually warned on every install with Peppy enabled.
 if [ ! -e /etc/alsa/conf.d/peppy.conf ] && [ ! -e /etc/alsa/conf.d/peppy.conf.hide ]; then
 	_missing+=("/etc/alsa/conf.d/peppy.conf (or .hide)")
 fi
@@ -2884,17 +2544,15 @@ fi
 # --------------------------------------------------------------------------
 # Runtime check: which libasound MPD actually loaded
 # --------------------------------------------------------------------------
-# Phase 1j packages the patched alsa-lib and retires the hand-built /opt override
-# that used to supply it. Only the running process can prove that override is gone:
-# package integrity tools answer "are the FILES intact?", never "what did the PROCESS
-# map?" - a systemd drop-in plus a /opt prefix is designed to keep `dpkg -V` clean,
-# and that once cost a full evening of wrong conclusions. So read the mapping itself,
-# unanchored, and state plainly what is loaded. Services are up by now (Phase 7).
+# Phase 1j packages the patched alsa-lib and retires the hand-built /opt override.
+# Only the running process can prove the override is gone: integrity tools answer
+# "are the FILES intact?", never "what did the PROCESS map?" - a drop-in plus a
+# /opt prefix keeps `dpkg -V` clean by design, which once cost an evening of wrong
+# conclusions. Read the mapping itself. Services are up by now (Phase 7).
 _alsa_pkg_ver="$(dpkg-query -W -f='${Version}' libasound2t64 2>/dev/null || true)"
-# Ask systemd for the PID rather than pgrep: this runs right after Phase 7 restarted
-# the services, and a process-name match falls into the restart window (measured: the
-# check reported "mpd not running" while mpd was perfectly up). MainPID is 0 until the
-# new process exists, so give it a couple of seconds.
+# Ask systemd for the PID, not pgrep: this runs right after Phase 7's restarts, and
+# a name match falls into the restart window (measured: "mpd not running" while it
+# was up). MainPID is 0 until the new process exists, hence the couple of seconds.
 _mpd_pid=0
 for _i in 1 2 3; do
 	_mpd_pid="$(systemctl show -p MainPID --value mpd 2>/dev/null || echo 0)"
@@ -2943,14 +2601,11 @@ if [ "$UPDATE" != 1 ]; then
 	log "output device. Pi-only options (I2S, GPIO, LCD) are hidden on this platform."
 	echo
 fi
-# net.ifnames=0 (written to GRUB/armbianEnv by Phase 3b) renames enpXsY/wlpXsY/end0
-# -> eth0/wlan0, but only on the NEXT boot - until then NetworkManager's eth0/wlan0
-# keyfiles don't match the live interface and the local-display kiosk / cold-boot
-# service order aren't exercised. So a reboot is needed ONLY while that rename is
-# still pending - i.e. the live default-route interface still carries a predictable
-# name. Once it's eth0/wlan0 the rename has taken effect, so a pure --update (web
-# app / config refresh, no boot-config change) needs no reboot at all. The rename
-# can also change the DHCP lease, so the IP may differ; reconnect by .local if so.
+# net.ifnames=0 (Phase 3b) renames enpXsY/end0 -> eth0/wlan0 only on the NEXT boot,
+# and until then NM's eth0/wlan0 keyfiles don't match the live interface. So a
+# reboot is needed only while that rename is pending - i.e. the default-route
+# interface still carries a predictable name; once it is eth0/wlan0 a pure --update
+# needs none. The rename can change the DHCP lease, so reconnect by .local if so.
 CUR_IFACE="$(ip -o -4 route show default 2>/dev/null | awk '{print $5; exit}')"
 case "$CUR_IFACE" in
 	eth*|wlan*)
