@@ -1075,6 +1075,95 @@ else
 fi
 
 #----------------------------------------------------------------------------#
+# Phase 1k - shairport-sync-metadata-reader (AirPlay track metadata)
+#----------------------------------------------------------------------------#
+# moOde's AirPlay metadata chain is `cat /tmp/shairport-sync-metadata |
+# shairport-sync-metadata-reader | aplmeta.py` (www/daemon/aplmeta-reader.sh).
+# The middle link is a moOde-built package only the Pi IMAGE installs - the
+# AirPlay plugin zip builds shairport-sync and nqptp, nothing else - so off-Pi it
+# is simply absent, and that is fatal rather than cosmetic: the chain dies on the
+# first metadata byte, the FIFO loses its only reader, and shairport-sync
+# segfaults ~2s later. AirPlay then connects, plays nothing and drops, with the
+# watchdog restarting it in a loop. Measured on the amd64 box 2026-08-28.
+#
+# Patched, because the reader is not x86-clean either: read_be_uint() accumulates
+# bytes through a `char`, SIGNED here, so any byte >= 0x80 sign-extends and a
+# bplist size reads back as (size_t)-30 - the next memcpy segfaults. Apple sends
+# such a plist (updateMRSupportedCommands) at connect time. char is unsigned on
+# ARM, which is why the Pi never trips it. Replaying a captured pipe dump: 26
+# lines then SIGSEGV before the patch, 1241 lines after, identical up to there.
+SSMR_HASH="a4a29f3"                    # moOde's pin (pkgbuild build.sh)
+SSMR_PATCH_REV="nopi1"                 # bump BY HAND when the patch changes
+SSMR_VER="2.0.0~git20260724.$SSMR_HASH"
+SSMR_TARGET_VER="$SSMR_VER-1moode1+$SSMR_PATCH_REV"
+if ! dpkg_ver_is shairport-sync-metadata-reader "$SSMR_TARGET_VER"; then
+	log "Phase 1k: shairport-sync-metadata-reader $SSMR_TARGET_VER"
+	$APT_INSTALL build-essential fakeroot devscripts dh-make debhelper \
+		autoconf automake libtool-bin pkg-config git patch
+	SSMR_BLD="$(mktemp -d)"
+	SSMR_DEB="$SSMR_BLD/shairport-sync-metadata-reader_${SSMR_TARGET_VER}_$(dpkg --print-architecture).deb"
+	# moOde's own recipe (clone at the pinned hash, dh_make from a git archive),
+	# minus rebuilder.lib.sh: its apt_update adds cloudsmith's RASPBIAN BINARY
+	# repo, which must never land on a non-Pi box. debian/control is written here
+	# rather than fetched: upstream's two packaging patches are metadata only, and
+	# the build must not depend on reaching raw.githubusercontent.
+	if ( cd "$SSMR_BLD" \
+			&& git clone -q https://github.com/mikebrady/shairport-sync-metadata-reader.git \
+				"shairport-sync-metadata-reader-$SSMR_VER" \
+			&& cd "shairport-sync-metadata-reader-$SSMR_VER" \
+			&& git checkout -q "$SSMR_HASH" \
+			&& git archive --format=tar.gz --output "../ssmr_$SSMR_VER.tar.gz" "$SSMR_HASH" \
+			&& DEBFULLNAME='moode-nopi' DEBEMAIL='moode-nopi@localhost' \
+				dh_make -s -p "shairport-sync-metadata-reader_$SSMR_VER" \
+				-f "../ssmr_$SSMR_VER.tar.gz" -y \
+			&& rm -rf debian/*.ex debian/*.EX debian/README.* \
+			&& printf '%s\n' \
+				'Source: shairport-sync-metadata-reader' \
+				'Section: audio' \
+				'Priority: optional' \
+				'Maintainer: moode-nopi <moode-nopi@localhost>' \
+				'Rules-Requires-Root: no' \
+				'Build-Depends:' \
+				' debhelper-compat (= 13),' \
+				'Standards-Version: 4.7.2' \
+				'Homepage: https://github.com/mikebrady/shairport-sync-metadata-reader' \
+				'' \
+				'Package: shairport-sync-metadata-reader' \
+				'Architecture: any' \
+				'Depends:' \
+				' ${shlibs:Depends},' \
+				' ${misc:Depends},' \
+				'Description: AirPlay metadata reader' \
+				' Reads the metadata pipe written by shairport-sync and prints it in a' \
+				' human-readable form.' > debian/control \
+			&& patch -p1 < "$REPO_DIR/patches/ssmr_bplist_unsigned_bytes.patch" \
+			&& grep -q 'const unsigned char \*q' utilities/bplist-print.c \
+			&& EDITOR=/bin/true dpkg-source --commit . ssmr_bplist_unsigned_bytes.patch \
+			&& DEBFULLNAME='moode-nopi' DEBEMAIL='moode-nopi@localhost' \
+				dch -b --newversion "$SSMR_TARGET_VER" \
+				'Read binary plist bytes unsigned (segfault on signed-char platforms)' \
+			&& dpkg-buildpackage -b -us -uc )    > "$REPO_DIR/build-ssmr.log" 2>&1 \
+		&& [ -f "$SSMR_DEB" ] \
+		&& apt-get install -y "$SSMR_DEB" >> "$REPO_DIR/build-ssmr.log" 2>&1 \
+		&& dpkg_ver_is shairport-sync-metadata-reader "$SSMR_TARGET_VER"; then
+		mkdir -p "$NOPI_BUILT_DIR"
+		{
+			printf 'version:  %s\n' "$SSMR_TARGET_VER"
+			printf 'built:    %s\n' "$(date -Is)"
+			printf 'source:   %s commit %s\n' \
+				'https://github.com/mikebrady/shairport-sync-metadata-reader.git' "$SSMR_HASH"
+			printf 'patches:  %s\n' "$(sha256sum "$REPO_DIR/patches/ssmr_bplist_unsigned_bytes.patch" \
+				2>/dev/null | awk '{printf "ssmr_bplist_unsigned_bytes.patch=%.12s", $1}')"
+		} > "$NOPI_BUILT_DIR/ssmr"
+		log "Built shairport-sync-metadata-reader $SSMR_TARGET_VER -> /usr/bin"
+	else
+		warn "shairport-sync-metadata-reader build failed; AirPlay will connect, play nothing" \
+			"and drop (see $REPO_DIR/build-ssmr.log)"
+	fi
+	rm -rf "$SSMR_BLD"
+fi
+
+#----------------------------------------------------------------------------#
 # Phase 2 - Deploy the web application tree
 #----------------------------------------------------------------------------#
 
@@ -2291,12 +2380,40 @@ ExecStartPre=+/usr/bin/install -m 660 -o www-data -g www-data /dev/null /run/wor
 # www-data-owned; never truncate, so an existing crash log survives.
 ExecStartPre=+/bin/sh -c 'test -e /var/log/moode.log || /usr/bin/install -m 666 -o www-data -g www-data /dev/null /var/log/moode.log; chown www-data:www-data /var/log/moode.log; chmod 666 /var/log/moode.log'
 ExecStart=/var/www/daemon/worker.php
+# The worker STARTS the renderers at startup (worker.php: startBluetooth,
+# startAirPlay, ...) without stopping them first - on the Pi it is launched from
+# rc.local at boot only, so nothing is ever already running. Here it is a service,
+# so every restart (install.sh --update, a manual one, Restart= after a crash)
+# would leave the previous session's renderers alive and the worker would start a
+# SECOND set: two readers splitting the bytes of one metadata FIFO, two
+# squeezelites... Measured after an --update: two aplmeta-reader chains at once.
+ExecStopPost=+/usr/local/bin/nopi-stop-renderers
 Restart=on-failure
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
+# Same list and the same per-renderer entry point as moOde's own
+# stopAllRenderers() (inc/renderer.php), which is not reachable from the CLI on
+# its own. Never fails the unit: a stop that errors would leave it in `failed`.
+cat > /usr/local/bin/nopi-stop-renderers <<'EOF'
+#!/bin/sh
+# Stop the renderers the moOde worker started. Called from moode-worker.service.
+# The watchdog goes first, or it restarts what we just stopped.
+killall -s9 watchdog.sh 2>/dev/null
+DB=/var/local/www/db/moode-sqlite3.db
+for pair in btsvc:bluetooth airplaysvc:airplay spotifysvc:spotify \
+	deezersvc:deezer upnpsvc:upnp slsvc:squeezelite pasvc:plexamp rbsvc:roonbridge; do
+	param=${pair%%:*}
+	renderer=${pair##*:}
+	[ "$(sqlite3 "$DB" "SELECT value FROM cfg_system WHERE param='$param'" 2>/dev/null)" = 1 ] || continue
+	/var/www/util/restart-renderer.php --"$renderer" --stop >/dev/null 2>&1
+done
+exit 0
+EOF
+chmod 755 /usr/local/bin/nopi-stop-renderers
 
 # www-data's passwordless sudo (required by the worker/web) is granted by
 # moOde's own /etc/sudoers.d/010_www-data-nopasswd, deployed in Phase 3b.

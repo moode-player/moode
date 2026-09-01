@@ -1,0 +1,15 @@
+diff --git a/utilities/bplist-print.c b/utilities/bplist-print.c
+index c00c6b7..4f74cb6 100644
+--- a/utilities/bplist-print.c
++++ b/utilities/bplist-print.c
+@@ -273,8 +273,9 @@ typedef struct {
+ } BplistCtx;
+ 
+ static uint64_t read_be_uint(const char *p, size_t nbytes) {
++    const unsigned char *q = (const unsigned char *)p;
+     uint64_t v = 0;
+-    for (size_t i = 0; i < nbytes; i++) v = (v << 8) | p[i];
++    for (size_t i = 0; i < nbytes; i++) v = (v << 8) | q[i];
+     return v;
+ }
+ 

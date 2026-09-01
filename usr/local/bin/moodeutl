@@ -472,8 +472,18 @@ function restartServers($featBitmask) {
 	echo "- mpdmon.php\n";
 	sysCmd('killall -s 9 mpdmon.php >/dev/null 2>&1');
 	echo "- worker.php\n";
-	sysCmd('killall -s 9 worker.php');
-	sysCmd('rm /var/run/worker.pid');
+	// moode-nopi: off-Pi the worker is a systemd service, not an rc.local child.
+	// SIGKILLing it trips Restart=on-failure (systemd starts a second worker 5s
+	// later, as www-data) while the direct start below adds a third one as root,
+	// which cannot share the www-data PHP session. Gate on the unit file, not on
+	// isPi(): what matters is who supervises the worker, and moodeutl includes
+	// neither common.php nor nopi-common.php. Absent on a Pi -> unchanged there.
+	if (file_exists('/etc/systemd/system/moode-worker.service')) {
+		sysCmd('systemctl stop moode-worker');
+	} else {
+		sysCmd('killall -s 9 worker.php');
+		sysCmd('rm /var/run/worker.pid');
+	}
 	echo "- mpd2cdspvolume\n";
 	sysCmd('systemctl stop mpd2cdspvolume');
 	echo "- localdisplay\n";
@@ -493,7 +503,11 @@ function restartServers($featBitmask) {
 
 	// Start worker
 	echo "Starting worker daemon...\n";
-	sysCmd('/var/www/daemon/worker.php');
+	if (file_exists('/etc/systemd/system/moode-worker.service')) {
+		sysCmd('systemctl start moode-worker');
+	} else {
+		sysCmd('/var/www/daemon/worker.php');
+	}
 
 	echo "Servers restarted\n";
 }
