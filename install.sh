@@ -291,6 +291,13 @@ CORE_PKGS=(
 	# python3-setuptools, lsb-release, xfsprogs (mount/fsck XFS music drives),
 	# avahi-utils (avahi CLI).
 	jq dos2unix sysstat tree python3-musicpd python3-setuptools lsb-release xfsprogs avahi-utils
+	# zip/unzip: the on-demand renderer plugins ship as zips and moOde's own
+	# plugin-updater.sh unzips them on EVERY arch. Installing them from the x86-only
+	# mirror phase left arm64 without unzip, and the AirPlay install then failed with
+	# a generic "Install failed, update cancelled": the updater ignores unzip's exit
+	# code, deletes the archive anyway, and update/install.sh is simply not there
+	# (127). Measured on the OPi3 2026-09-01.
+	zip unzip
 )
 
 OPT_PKGS=()
@@ -2071,7 +2078,6 @@ chmod -R 0777 /var/lib/mpd/playlists
 PKG_ARCH="$(dpkg --print-architecture)"
 if [ "$PKG_ARCH" != arm64 ]; then
 	log "Phase 5c: on-demand renderer plugins (AirPlay/Spotify) x86 mirror"
-	$APT_INSTALL zip unzip >/dev/null 2>&1 || true
 	PLUG_BASE="https://raw.githubusercontent.com/moode-player/plugins/main"
 	PLUG_DST="/var/www/plugins-x86"
 	PLUG_TMP="$(mktemp -d)"
