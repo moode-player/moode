@@ -1092,6 +1092,13 @@ fi
 # such a plist (updateMRSupportedCommands) at connect time. char is unsigned on
 # ARM, which is why the Pi never trips it. Replaying a captured pipe dump: 26
 # lines then SIGSEGV before the patch, 1241 lines after, identical up to there.
+#
+# MERGED UPSTREAM 2026-09-01 (mikebrady #26, commit c144a51) - and still needed,
+# because moOde pins the commit BEFORE it. So apply it only when the source does
+# not already carry the fix: the day moOde bumps GIT_HASH past c144a51, `patch`
+# would fail and take this whole phase down with it, leaving a box with no reader
+# and AirPlay broken again. The grep asserts the OUTCOME either way. Once the pin
+# has moved, drop the patch file and this conditional.
 SSMR_HASH="a4a29f3"                    # moOde's pin (pkgbuild build.sh)
 SSMR_PATCH_REV="nopi1"                 # bump BY HAND when the patch changes
 SSMR_VER="2.0.0~git20260724.$SSMR_HASH"
@@ -1136,9 +1143,10 @@ if ! dpkg_ver_is shairport-sync-metadata-reader "$SSMR_TARGET_VER"; then
 				'Description: AirPlay metadata reader' \
 				' Reads the metadata pipe written by shairport-sync and prints it in a' \
 				' human-readable form.' > debian/control \
-			&& patch -p1 < "$REPO_DIR/patches/ssmr_bplist_unsigned_bytes.patch" \
+			&& { grep -q 'const unsigned char \*q' utilities/bplist-print.c \
+				|| { patch -p1 < "$REPO_DIR/patches/ssmr_bplist_unsigned_bytes.patch" \
+					&& EDITOR=/bin/true dpkg-source --commit . ssmr_bplist_unsigned_bytes.patch; }; } \
 			&& grep -q 'const unsigned char \*q' utilities/bplist-print.c \
-			&& EDITOR=/bin/true dpkg-source --commit . ssmr_bplist_unsigned_bytes.patch \
 			&& DEBFULLNAME='moode-nopi' DEBEMAIL='moode-nopi@localhost' \
 				dch -b --newversion "$SSMR_TARGET_VER" \
 				'Read binary plist bytes unsigned (segfault on signed-char platforms)' \
