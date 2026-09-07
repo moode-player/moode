@@ -62,6 +62,7 @@
         this.$c = null; // jQuery canvas element
         this.c = null; // rendered canvas context
         this.t = 0; // touches index
+        this.ga = null; // gesture angle ; tracks the arc during a drag
         this.isInit = false;
         this.fgColor = null; // main color
         this.pColor = null; // previous color
@@ -323,7 +324,8 @@
             // get touches index
             this.t = k.c.t(e);
 
-            // First touch
+            // First touch is absolute
+            s.ga = null;
             touchMove(e);
 
             // Touch events listeners
@@ -370,7 +372,8 @@
                 s._draw();
             };
 
-            // First click
+            // First click is absolute
+            s.ga = null;
             mouseMove(e);
 
             // Mouse events listeners
@@ -566,6 +569,19 @@
             } else if (a < 0) {
                 a += this.PI2;
             }
+
+            // Follow the arc during a drag instead of jumping across the seam
+            // where min and max meet
+            if (this.ga !== null) {
+                var d = a - this.ga;
+                if (d > Math.PI) {
+                    d -= this.PI2;
+                } else if (d < -Math.PI) {
+                    d += this.PI2;
+                }
+                a = max(0, min(this.angleArc, this.ga + d));
+            }
+            this.ga = a;
 
             ret = ~~ (0.5 + (a * (this.o.max - this.o.min) / this.angleArc))
                     + this.o.min;
