@@ -174,6 +174,7 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['lib_fv_only'] = $_SESSION['lib_fv_only'];
 	$cfgSystem['auto_coverview'] = $_SESSION['auto_coverview'];
 	$cfgSystem['on_screen_kbd'] = $_SESSION['on_screen_kbd'];
+	$cfgSystem['keyboard'] = $_SESSION['keyboard'];
 	$cfgSystem['mpd_monitor_svc'] = $_SESSION['mpd_monitor_svc'];
 	$cfgSystem['mpd_monitor_opt'] = $_SESSION['mpd_monitor_opt'];
 	$cfgSystem['user_id'] = $_SESSION['user_id'];
