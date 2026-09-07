@@ -135,30 +135,15 @@ working unchanged on a real Raspberry Pi.
 - CamillaDSP `custom` mode does NOT auto-generate `working_config.yml`; pick a
   named config or supply one, else camilladsp starts with no device.
 
-## Debug methods (the x86 VM)
+## Debug methods
 
-Rig lives at `/home/$USER/moode-nopi-vm/` (NOT a tracked moOde file).
+Validation happens on the real test boxes — there is no VM rig (the former
+`moode-nopi-vm` KVM setup is gone; don't reach for it).
 
-- `./run-vm.sh start|ssh|stop|reset` — boots a Debian 13 cloud image (KVM).
-  Forwards host `:2222`→ssh, `:8080`→WebUI:80. Repo shared read-only over 9p.
-- **Rig prerequisite:** the genericcloud kernel lacks 9p/USB/`mac80211_hwsim`.
-  `sudo apt install linux-image-amd64` then **purge `linux-image-cloud-amd64`**
-  (GRUB boots cloud kernel otherwise) and reboot.
-- Mount the repo in the VM: `sudo mount -t 9p -o trans=virtio,version=9p2000.L,ro
-  moderepo /opt/moode` (not in fstab — re-mount after reboot).
-- SSH: `ssh -i /home/$USER/moode-nopi-vm/id_vm -p 2222 -o StrictHostKeyChecking=no
-  -o UserKnownHostsFile=/dev/null moode@127.0.0.1`. Console login: the cloud-init
-  creds set in `run-vm.sh`'s `user-data`.
-- **USB DAC passthrough** (run-vm.sh `usb-host` 262a:9227): plug the DAC into the
-  HOST **before** `./run-vm.sh start`, else no card enumerates.
-- Install in the VM: `sudo INSTALL_LOG=/var/log/install-nopi.log /opt/moode/install.sh
-  --reset-db` (the `/opt/moode` 9p mount is read-only, so the default in-repo log
-  `install-nopi.log` can't be written there — override the path).
-- Health checks: `ps -o user= -C worker.php` (must be `www-data`),
+- Health checks after an install: `ps -o user= -C worker.php` (must be `www-data`),
   `cfg_system.wrkready` must be `1` (UI blank until then), `mpc outputs`,
   `systemctl is-active moode-worker nginx php8.4-fpm mpd`,
   `journalctl -u moode-worker|mpd`, `/var/log/moode.log`.
-- BT can't be tested in the VM (no BT adapter) → defer to real hardware.
 
 ## Status & detailed log
 
