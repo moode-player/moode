@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Sep 7 17:44:33 2026
+-- File generated with SQLiteStudio v3.4.4 on Tue Sep 8 11:44:24 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -239,7 +239,7 @@ CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_v
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32), version CHAR (32));
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (1, 'camilladsp', 'sample-configs', 'v4-sample-configs', '4.0.0');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters', '4.0.0');
-INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.2.3-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.5.1-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-qbzd', '2.0.2-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (6, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
