@@ -1805,6 +1805,24 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 				_mig_total=$((_mig_total + _added))
 			fi
 		done
+		# feat_bitmask is an EXISTING row, so the param backfill above leaves it
+		# alone by design - and that is exactly how a new upstream feature stays
+		# invisible in the UI: on the Pi the new bit arrives through the
+		# moode-player postinstall, which nopi never runs. OR the shipped mask in.
+		_fb_old=$(sqlite3 "$SQLDB" "SELECT value FROM cfg_system WHERE param = 'feat_bitmask';" 2>/dev/null)
+		_fb_new=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
+			SELECT (CAST(m.value AS INTEGER) | CAST(s.value AS INTEGER))
+				FROM main.cfg_system m, sch.cfg_system s
+				WHERE m.param = 'feat_bitmask' AND s.param = 'feat_bitmask';" 2>/dev/null)
+		_fb_bits=0
+		if [ -n "$_fb_old" ] && [ -n "$_fb_new" ] && [ "$_fb_new" != "$_fb_old" ]; then
+			if sqlite3 "$SQLDB" "UPDATE cfg_system SET value = '$_fb_new' WHERE param = 'feat_bitmask';" 2>/dev/null; then
+				log "DB migration: feat_bitmask $_fb_old -> $_fb_new (new upstream feature bits)"
+				_fb_bits=1
+			else
+				warn "DB migration: failed to update feat_bitmask ($_fb_old -> $_fb_new)"
+			fi
+		fi
 		# Missing TABLES: a newer schema can add whole tables (cfg_rcucache), and the
 		# first query against a missing one throws (PDO is in exception mode) -> HTTP
 		# 500. Create what the schema defines and the DB lacks, then copy its shipped
@@ -1886,7 +1904,7 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 		fi
 
 		if [ "$_mig_total" -eq 0 ] && [ "$_tbl_added" -eq 0 ] && [ "$_col_added" -eq 0 ] \
-			&& [ "$_plug_sync" -eq 0 ]; then
+			&& [ "$_plug_sync" -eq 0 ] && [ "$_fb_bits" -eq 0 ]; then
 			log "DB migration: schema up to date (no backfill needed)"
 		fi
 	else
@@ -1895,7 +1913,7 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	rm -f "$_schema_db"
 	unset _schema_db _mig_total _added _t _tbl_added _tbl _ddl \
 		_col_added _live_cols _c _cname _ctype _cnn _cdflt _coldef \
-		_plug_sync _plug_added _plug_upd _n
+		_plug_sync _plug_added _plug_upd _n _fb_old _fb_new _fb_bits
 else
 	# A successful backup is an event, not a problem: --reset-db asked for it.
 	[ -f "$SQLDB" ] && cp -a "$SQLDB" "$SQLDB.bak.$(date +%s)" && log "Backed up old DB"
