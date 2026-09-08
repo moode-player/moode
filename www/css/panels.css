@@ -118,7 +118,7 @@ html {background-color:inherit;}
 .turnoff-receiver:hover {background-color:var(--btnshade4);}
 /* Volume controls */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
-/* Custom overlay: cover w/metadata (AirPlay, Deezer Connect, Spotify Connect) */
+/* Custom overlay: cover w/metadata (AirPlay, Spotify Connect, Qobuz Connect) */
 /* Default layout: */
 body:not(.rmwide) .inpsrc-metadata-cover {
 	height:calc(75vh + .25em);

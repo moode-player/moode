@@ -185,11 +185,11 @@ sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
 sysCmd('touch ' . DASHBOARD_CACHE_FILE);
 sysCmd('touch ' . SHAIRPORT_SYNC_LOG);
-sysCmd('touch ' . LIBRESPOT_LOG);
-sysCmd('touch ' . PLEEZER_LOG);
-sysCmd('touch ' . SPOTEVENT_LOG);
-sysCmd('touch ' . DEEZEVENT_LOG);
 sysCmd('touch ' . SPSEVENT_LOG);
+sysCmd('touch ' . LIBRESPOT_LOG);
+sysCmd('touch ' . SPOTEVENT_LOG);
+sysCmd('touch ' . QBZD_LOG);
+sysCmd('touch ' . QBZEVENT_LOG);
 sysCmd('touch ' . SLPOWER_LOG);
 sysCmd('truncate ' . MOUNTMON_LOG . ' --size 0');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
@@ -210,11 +210,11 @@ sysCmd('chmod 0666 /var/local/www/currentsong.txt');
 sysCmd('chmod 0666 ' . DASHBOARD_CACHE_FILE);
 sysCmd('chmod 0666 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . SHAIRPORT_SYNC_LOG);
-sysCmd('chmod 0666 ' . LIBRESPOT_LOG);
-sysCmd('chmod 0666 ' . PLEEZER_LOG);
-sysCmd('chmod 0666 ' . SPOTEVENT_LOG);
-sysCmd('chmod 0666 ' . DEEZEVENT_LOG);
 sysCmd('chmod 0666 ' . SPSEVENT_LOG);
+sysCmd('chmod 0666 ' . LIBRESPOT_LOG);
+sysCmd('chmod 0666 ' . SPOTEVENT_LOG);
+sysCmd('chmod 0666 ' . QBZD_LOG);
+sysCmd('chmod 0666 ' . QBZEVENT_LOG);
 sysCmd('chmod 0666 ' . SLPOWER_LOG);
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
@@ -276,7 +276,7 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	btname			Moode Bluetooth
 	airplayname		Moode AirPlay
 	spotifyname		Moode Spotify
-	deezername		Moode Deezer
+	qobuzname		Moode Qobuz
 	upnpname		Moode UPNP
 	dlnaname		Moode DLNA
 	squeezelite		Moode		In cfg_sl PLAYERNAME and squeezelite.conf, no session var
@@ -294,8 +294,8 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	phpSession('write', 'airplayname', ucfirst($importedHostName) . ' AirPlay');
 	// Spotify Connect
 	phpSession('write', 'spotifyname', ucfirst($importedHostName) . ' Spotify');
-	// Deezer Connect
-	phpSession('write', 'deezername', ucfirst($importedHostName) . ' Deezer');
+	// Qobuz Connect
+	phpSession('write', 'qobuzname', ucfirst($importedHostName) . ' Qobuz');
 	// Squeezelite
 	$newName = ucfirst($importedHostName);
 	$result = sqlQuery("UPDATE cfg_sl SET value='" . $newName . "' WHERE param='PLAYERNAME'", $dbh);
@@ -1147,18 +1147,18 @@ if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
 }
 workerLog('worker: Spotify Connect: ' . $status);
 
-// Start Deezer Connect renderer
-if ($_SESSION['feat_bitmask'] & FEAT_DEEZER) {
-	if (isset($_SESSION['deezersvc']) && $_SESSION['deezersvc'] == 1) {
+// Start Qobuz Connect renderer
+if ($_SESSION['feat_bitmask'] & FEAT_QOBUZ) {
+	if (isset($_SESSION['qobuzsvc']) && $_SESSION['qobuzsvc'] == 1) {
 		$status = 'started';
-		startDeezer();
+		startQobuz();
 	} else {
 		$status = 'available';
 	}
 } else {
 	$status = 'n/a';
 }
-workerLog('worker: Deezer Connect:  ' . $status);
+workerLog('worker: Qobuz Connect:   ' . $status);
 
 // Start Squeezelite renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
@@ -1599,7 +1599,7 @@ if (chkRendererActive() === true) {
 	phpSession('write', 'volknob', '0');
 	sysCmd('/var/www/util/vol.sh 0');
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive' OR
-		param='spotactive' OR param='deezactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
+		param='spotactive' OR param='qbzctive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
 		param='inpactive'", $dbh);
 	workerLog('worker: Active flags:         at least one true');
 	workerLog('worker: Reset flags:          all reset to false');
@@ -1700,7 +1700,7 @@ $clkradio_stop_days = explode(',', substr($_SESSION['clkradio_stop'], 9));
 // Renderer active
 $aplactive = '0';
 $spotactive = '0';
-$deezactive = '0';
+$qbzactive = '0';
 $slactive = '0';
 $paactive = '0';
 $rbactive = '0';
@@ -1935,9 +1935,9 @@ while (true) {
 		//debugLog('** chkSpotActive');
 		chkSpotActive();
 	}
-	if ($_SESSION['deezersvc'] == '1') {
-		//debugLog('** chkDeezActive');
-		chkDeezActive();
+	if ($_SESSION['qobuzsvc'] == '1') {
+		//debugLog('** chkQbzActive');
+		chkQbzActive();
 	}
 	if ($_SESSION['slsvc'] == '1') {
 		//debugLog('** chkSlActive');
@@ -2163,23 +2163,25 @@ function chkSpotActive() {
 		}
 	}
 }
-// Deezer Connect (discontinued)
-function chkDeezActive() {
-	// Get directly from SQL since deezevent.sh script can't update the session
-	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='deezactive'", $GLOBALS['dbh']);
+// Qobuz Connect
+function chkQbzActive() {
+	// Get directly from SQL since qbzevent.sh script can't update the session
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='qbzactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
 		// Do this section only once
-		if ($GLOBALS['deezactive'] == '0') {
-			$GLOBALS['deezactive'] = '1';
+		if ($GLOBALS['qbzactive'] == '0') {
+			$GLOBALS['qbzactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
-			// NOTE: This is now done by the deezevent.sh script
-			//sendFECmd('deezactive1');
+			// NOTE: This is now done by the qbzevent.sh script
+			//sendFECmd('qbzactive1');
 		}
 	} else {
 		// Do this section only once
-		if ($GLOBALS['deezactive'] == '1') {
-			$GLOBALS['deezactive'] = '0';
-			sendFECmd('deezactive0');
+		if ($GLOBALS['qbzactive'] == '1') {
+			$GLOBALS['qbzactive'] = '0';
+			sendFECmd('qbzactive0');
+			stopQobuz();
+			startQobuz();
 		}
 	}
 }
@@ -2234,7 +2236,7 @@ function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
 		$rendererNotActive = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
-			&& $GLOBALS['deezactive'] == '0' && $GLOBALS['slactive'] == '0' && $_SESSION['paactive']
+			&& $GLOBALS['qbzactive'] == '0' && $GLOBALS['slactive'] == '0' && $_SESSION['paactive']
 			&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
 		$mpdNotPlaying = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
 		$alsaOutputActive = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
@@ -2571,8 +2573,8 @@ function updExtMetaFile() {
 		$renderer = 'AirPlay Active';
 	} else if ($GLOBALS['spotactive'] == '1') {
 		$renderer = 'Spotify Active';
-	} else if ($GLOBALS['deezactive'] == '1') {
-		$renderer = 'Deezer Active';
+	} else if ($GLOBALS['qbzactive'] == '1') {
+		$renderer = 'Qobuz Active';
 	} else if ($GLOBALS['slactive'] == '1') {
 		$renderer = 'Squeezelite Active';
 	} else if ($GLOBALS['rbactive'] == '1') {
@@ -3022,9 +3024,9 @@ function runQueuedJob() {
 					stopSpotify();
 					startSpotify();
 				}
-				if ($_SESSION['deezersvc'] == 1) {
-					stopDeezer();
-					startDeezer();
+				if ($_SESSION['qobuzsvc'] == 1) {
+					stopQobuz();
+					startQobuz();
 				}
 				if ($_SESSION['slsvc'] == 1) {
 					stopSqueezelite();
@@ -3084,9 +3086,9 @@ function runQueuedJob() {
 					stopSpotify();
 					startSpotify();
 				}
-				if ($_SESSION['deezersvc'] == 1) {
-					stopDeezer();
-					startDeezer();
+				if ($_SESSION['qobuzsvc'] == 1) {
+					stopQobuz();
+					startQobuz();
 				}
 				if ($_SESSION['slsvc'] == 1) {
 					stopSqueezelite();
@@ -3213,9 +3215,9 @@ function runQueuedJob() {
 				stopSpotify();
 				startSpotify();
 			}
-			if ($_SESSION['deezersvc'] == 1) {
-				stopDeezer();
-				startDeezer();
+			if ($_SESSION['qobuzsvc'] == 1) {
+				stopQobuz();
+				startQobuz();
 			}
 			// Reenable HTTP server (if indicated)
 			setMpdHttpd();
@@ -3293,22 +3295,21 @@ function runQueuedJob() {
 				startSpotify();
 			}
 			break;
-		case 'deezersvc':
-			$result = sqlRead('cfg_deezer', $GLOBALS['dbh']);
-			$cfgDeezer = array();
-			foreach ($result as $row) {
-				$cfgDeezer[$row['param']] = $row['value'];
+		// Qobuz Connect
+		case 'qobuzsvc':
+			stopQobuz();
+			if ($_SESSION['qobuzsvc'] == 1) {
+				startQobuz();
 			}
-			updateDeezCredentials($cfgDeezer['email'], $cfgDeezer['password']);
-
-			stopDeezer();
-			if ($_SESSION['deezersvc'] == 1) {
-				startDeezer();
-			}
-
-			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterdeez'] == 'Yes') {
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterqbz'] == 'Yes') {
 				sysCmd('mpc play');
 			}
+			break;
+		case 'install_qobuz':
+			$fullLog = $_SESSION['home_dir'] . '/install_qobuz.log';
+			sysCmd('rm "' . $fullLog . '"');
+			$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $GLOBALS['dbh']);
+			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $result[0]['plugin'] . '" > "' . $fullLog . '" 2>&1 &');
 			break;
 		case 'slsvc':
 			if ($_SESSION['slsvc'] == '1') {
@@ -3410,9 +3411,9 @@ function runQueuedJob() {
 				stopSpotify();
 				startSpotify();
 			}
-			if ($_SESSION['deezersvc'] == 1) {
-				stopDeezer();
-				startDeezer();
+			if ($_SESSION['qobuzsvc'] == 1) {
+				stopQobuz();
+				startQobuz();
 			}
 			break;
 		case 'multiroom_tx_restart':
@@ -3430,7 +3431,7 @@ function runQueuedJob() {
 				//stopSpotify();
 				//phpSession('write', 'airplaysvc', '0');
 				//phpSession('write', 'spotifysvc', '0');
-				//phpSession('write', 'deezersvc', '0');
+				//phpSession('write', 'qobuzsvc', '0');
 
 				startMultiroomReceiver();
 			} else {

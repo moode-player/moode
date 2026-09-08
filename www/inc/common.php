@@ -321,7 +321,7 @@ function parseDelimFile($data, $delim) {
 // Determine if a renderer is active
 function chkRendererActive() {
 	$result = sqlQuery("SELECT value from cfg_system WHERE param in (
-		'btactive', 'aplactive', 'spotactive', 'deezactive', 'slactive', 'paactive',
+		'btactive', 'aplactive', 'spotactive', 'qbzactive', 'slactive', 'paactive',
 		'rbactive', 'inpactive')", sqlConnect());
 
 	$active = false;

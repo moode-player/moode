@@ -17,11 +17,11 @@ const PLUGIN_LOG="/var/log/moode_plugin.log";
 const PLAY_HISTORY_LOG = '/var/log/moode_playhistory.log';
 const MOUNTMON_LOG = '/var/log/moode_mountmon.log';
 const SHAIRPORT_SYNC_LOG = '/var/log/moode_shairport-sync.log';
-const LIBRESPOT_LOG = '/var/log/moode_librespot.log';
-const PLEEZER_LOG = '/var/log/moode_pleezer.log';
-const SPOTEVENT_LOG = '/var/log/moode_spotevent.log';
-const DEEZEVENT_LOG = '/var/log/moode_deezevent.log';
 const SPSEVENT_LOG = '/var/log/moode_spsevent.log';
+const LIBRESPOT_LOG = '/var/log/moode_librespot.log';
+const SPOTEVENT_LOG = '/var/log/moode_spotevent.log';
+const QBZD_LOG = '/var/log/moode_qbzd.log';
+const QBZEVENT_LOG = '/var/log/moode_qbzevent.log';
 const SLPOWER_LOG = '/var/log/moode_slpower.log';
 // MPD
 const MPD_RESPONSE_ERR = 'ACK';
@@ -50,10 +50,9 @@ const RADIOBROWSER_CACHE_TTL = 1800; // Search results (30 min)
 const RADIOBROWSER_CACHE_TTL_STATIC = 43200; // Countries/genres/topclick (12 hr)
 const RADIOBROWSER_RECENT_MAX = 50;
 const RADIOBROWSER_LIMIT = 28; // Fixed search/page size
-// AirPlay, Deezer Connect and Spotify Connect
+// AirPlay, Qobuz Connect and Spotify Connect
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
-const DEEZMETA_CACHE_FILE = '/var/local/www/deezmeta.json';
-const DEEZ_CREDENTIALS_FILE = '/etc/deezer/deezer.toml';
+const QBZMETA_CACHE_FILE = '/var/local/www/qbzmeta.json';
 const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
 const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 // SQLite
@@ -161,7 +160,7 @@ const NAME_AIRPLAY = 'AirPlay';
 const NAME_BLUETOOTH = 'Bluetooth Controller';
 const NAME_BLUETOOTH_PAIRING_AGENT = 'Pairing Agent';
 const NAME_SPOTIFY = 'Spotify Connect';
-const NAME_DEEZER = 'Deezer Connect';
+const NAME_QOBUZ = 'Qobuz Connect';
 const NAME_SQUEEZELITE = 'Squeezelite';
 const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
@@ -230,7 +229,7 @@ const FEAT_MINIDLNA     = 4;		// y DLNA server
 const FEAT_RECORDER     = 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE  = 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;		// y UPnP client for MPD
-const FEAT_DEEZER       = 64;   	// n Deezer Connect renderer
+const FEAT_QOBUZ        = 64;   	// n Qobuz Connect renderer
 const FEAT_ROONBRIDGE   = 128;		// y RoonBridge renderer
 const FEAT_LOCALDISPLAY = 256;		// y Local display
 const FEAT_INPSOURCE    = 512;		// y Input source select
@@ -242,7 +241,7 @@ const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
-//						-------
+//						 -------
 //						  228279
 
 // Selective resampling bitmask

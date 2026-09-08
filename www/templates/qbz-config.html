@@ -1,0 +1,174 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+ * Copyright 2026 @PhilipVinc qbz fork of moode / https://github.com/PhilipVinc/moode
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="ren-config">Qobuz Connect</h1>
+
+	<form class="form-horizontal" action="" method="post">
+		<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+		</legend>
+
+		<div class="control-group">
+
+			<div class="config-horiz-rule">General</div>
+
+			<label class="control-label" for="quality">Quality</label>
+			<div class="controls">
+				<select id="quality" class="config-select-large" name="config[quality]">
+					$_select[quality]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-quality" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-quality" class="config-help-info">
+					Max encoded bits/rate. Tracks not available at the selected quality are streamed
+					at the highest quality available for the subscription.
+				</span>
+			</div>
+
+			<label class="control-label" for="stream-buffer-seconds">Stream buffer</label>
+			<div class="controls">
+				<select id="stream-buffer-seconds" class="config-select-large" name="config[stream_buffer_seconds]">
+					$_select[stream_buffer_seconds]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-stream-buffer-seconds" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-stream-buffer-seconds" class="config-help-info">
+					How much audio to buffer before playback starts. A larger buffer can help reduce the
+					likelyhood of audio glitches on a slow or poor quality network.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Volume</div>
+
+			<label class="control-label" for="initial-volume">Initial volume</label>
+			<div class="controls">
+				<select id="initial-volume" class="config-select-large" name="config[initial_volume]">
+					$_select[initial_volume]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-initial-volume" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-initial-volume" class="config-help-info">
+					The initial volume on the client App after it connects.
+				</span>
+			</div>
+
+			<label class="control-label" for="normalization-enabled">Normalize volume</label>
+			<div class="controls">
+				<select id="normalization-enabled" class="config-select-large" name="config[normalization_enabled]">
+					$_select[normalization_enabled]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-enabled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-normalization-enabled" class="config-help-info">
+					Adjusts the volume of all songs played so that they sound as though they are of equal loudness.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Playback</div>
+
+			<label class="control-label" for="stream-first-track">Start playback</label>
+			<div class="controls">
+				<select id="stream-first-track" class="config-select-large" name="config[stream_first_track]">
+					$_select[stream_first_track]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-stream-first-track" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-stream-first-track" class="config-help-info">
+					<b>When buffered:</b> Playback starts after the track has been buffered.<br>
+					<b>After download:</b> Playback starts after the track has finished downloading.
+				</span>
+			</div>
+
+			<label class="control-label" for="streaming-only">Track cache</label>
+			<div class="controls">
+				<select id="streaming-only" class="config-select-large" name="config[streaming_only]">
+					$_select[streaming_only]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-streaming-only" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-streaming-only" class="config-help-info">
+					<b>Enabled:</b> Cache tracks. Gapless playback is supported.<br>
+					<b>Disabled:</b> Stream only, do not cache the track. Gapless playback is not supported.
+				</span>
+			</div>
+
+			<label class="control-label" for="cache-to-disk">Cache location</label>
+			<div class="controls">
+				<select id="cache-to-disk" class="config-select-large" name="config[cache_to_disk]">
+					$_select[cache_to_disk]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cache-to-disk" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-cache-to-disk" class="config-help-info">
+					<b>Memory:</b> Cache tracks in memory.<br>
+					<b>Disk:</b> Cache tracks on disk. This should only be used when there is less than 2GB of physical memory.
+				</span>
+			</div>
+
+			<label class="control-label" for="memory-cache-mb">Cache size (memory)</label>
+			<div class="controls">
+				<select id="memory-cache-mb" class="config-select-large" name="config[memory_cache_mb]">
+					$_select[memory_cache_mb]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-memory-cache-mb" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-memory-cache-mb" class="config-help-info">
+					<b>Auto:</b> The size of the in-memory track cache is based on the amount of physical memory.<br>
+					<b>Number:</b> Set a specific size for the in-memory track cache.
+				</span>
+			</div>
+
+			<label class="control-label" for="gapless-enabled">Gapless playback</label>
+			<div class="controls">
+				<select id="gapless-enabled" class="config-select-large" name="config[gapless_enabled]" $_gapless_disabled>
+					$_select[gapless_enabled]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-gapless-enabled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-gapless-enabled" class="config-help-info">
+					Play consecutive tracks without a gap of silence between them. Requires the Track cache to be enabled.
+				</span>
+				$_gapless_hint
+			</div>
+
+			<label class="control-label" for="quality-fallback-behavior">Quality fallback</label>
+			<div class="controls">
+				<select id="quality-fallback-behavior" class="config-select-large" name="config[quality_fallback_behavior]">
+					$_select[quality_fallback_behavior]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-quality-fallback-behavior" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-quality-fallback-behavior" class="config-help-info">
+					Choose what to do when a track cannot be played at the selected quality.<br>
+					<b>Always fallback:</b> Play the track at the highest quality supported by the subscription and the audio device.<br>
+					<b>Always skip:</b>	Skip the track.
+				</span>
+			</div>
+
+			<label class="control-label" for="alsa-buffer-ms">ALSA buffer</label>
+			<div class="controls">
+				<select id="alsa-buffer-ms" class="config-select-large" name="config[alsa_buffer_ms]">
+					$_select[alsa_buffer_ms]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-alsa-buffer-ms" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-alsa-buffer-ms" class="config-help-info">
+					<b>Auto:</b> Calculate the buffer length based on sample rate of the track.<br>
+					<b>Number:</b> Set a specific the buffer length.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Troubleshooting</div>
+
+			<label class="control-label">Diagnostic log</label>
+			<div class="controls">
+				<button class="btn btn-medium btn-primary config-btn" type="submit" name="download_qbz_logs" value="1">Download</button>
+				<span class="config-help-static">
+					1. System Config: Turn ON Debug logging.<br>
+					2. System Config: CLEAR System logs.<br>
+					3. Renderer Config: RESTART Qobuz Connect.<br>
+					3. Reproduce the issue.<br>
+					4. Click DOWNLOAD. The log file will be in the default Downloads folder.<br>
+					5. Post the file in the Support section of the Moode Forum along with a description of the issue.<br>
+					The log file is named <em>"qobuz-connect-HOSTNAME-DATE-TIME.tar.gz"</em>
+				</span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>

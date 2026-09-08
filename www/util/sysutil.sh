@@ -122,7 +122,7 @@ if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-
 	fi
 fi
 
-# TODO: review this section
+# Clear system and moode logs
 if [[ $1 = "clear-syslogs" ]]; then
 	journalctl --vacuum-files=1 2> /dev/null
 	truncate /var/log/alternatives.log --size 0
@@ -146,16 +146,26 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/regen_ssh_keys.log --size 0
 	truncate /var/log/samba/log.nmbd --size 0
 	truncate /var/log/samba/log.smbd --size 0
-	truncate /var/log/moode_shairport-sync.log --size 0
-	truncate /var/log/moode_librespot.log --size 0
-	truncate /var/log/moode_mountmon.log --size 0
-	truncate /var/log/moode_spotevent.log --size 0
-	truncate /var/log/moode_spsevent.log --size 0
-	truncate /var/log/moode_slpower.log --size 0
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
 	truncate /var/log/Xorg.*.log --size 0
 	truncate /var/log/log2ram.log --size 0
+
+	# Moode logs (except for startup log and prevlog)
+	truncate /var/log/moode_autocfg.log --size 0
+	truncate /var/log/moode_librespot.log --size 0
+	#truncate /var/log/moode.log --size 0
+	truncate /var/log/moode_mountmon.log --size 0
+	truncate /var/log/moode_playhistory.log --size 0
+	truncate /var/log/moode_plugin.log --size 0
+	#truncate /var/log/moode_prevlog.log --size 0
+	truncate /var/log/moode_qbzd.log --size 0
+	truncate /var/log/moode_qbzevent.log --size 0
+	truncate /var/log/moode_radiocover_plus.log --size 0
+	truncate /var/log/moode_shairport-sync.log --size 0
+	truncate /var/log/moode_slpower.log --size 0
+	truncate /var/log/moode_spotevent.log --size 0
+	truncate /var/log/moode_spsevent.log --size 0
 
 	# Rotated logs from settings in /etc/logrotate.d
 	rm /var/log/*.log.* 2> /dev/null

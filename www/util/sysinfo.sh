@@ -123,8 +123,8 @@ AUDIO_PARAMETERS() {
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
 		echo -e "\nSpotify Connect\t\t= $spotifysvc\c"
 	fi
-	if [ $(($feat_bitmask & $FEAT_DEEZER)) -ne 0 ]; then
-		echo -e "\nDeezer Connect\t\t= $deezersvc\c"
+	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
+		echo -e "\nQobuz Connect\t\t= $qobuzsvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\nSqueezelite\t\t= $slsvc\c"
@@ -157,7 +157,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nAshuffle filter\t\t= $ashuffle_filter\c"
 	echo -e "\nAshuffle exclude\t= $ashuffle_exclude\c"
 	echo -e "\nAutoplay\t\t= $autoplay\c"
-	echo -e "\Metadata file\t\t= $extmeta\c"
+	echo -e "\nMetadata file\t\t= $extmeta\c"
 	echo -e "\nRotary encoder\t\t= $rotaryenc\c"
 	echo -e "\nEncoder params\t\t= $rotenc_params\c"
 	echo -e "\nTriggerhappy\t\t= $usb_volknob\c"
@@ -367,12 +367,12 @@ RENDERER_SETTINGS() {
 		echo -e "\nResume MPD\t\t= $rsmafterspot\n"
 	fi
 
-	if [ $(($feat_bitmask & $FEAT_DEEZER)) -ne 0 ]; then
-		DEEZVER="$(pleezer --version | awk -F" " '{print $2}')"
-		echo -e "D E E Z E R   C O N N E C T"
-		echo -e "\nVersion\t\t\t= $DEEZVER\c"
-		echo -e "\nFriendly name\t\t= $deezername\c"
-		echo -e "\nResume MPD\t\t= $rsmafterdeez\n"
+	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
+		QBZVER="$(qbzd --version | awk -F" " '{print $2}')"
+		echo -e "Q O B U Z   C O N N E C T"
+		echo -e "\nVersion\t\t\t= $QBZVER\c"
+		echo -e "\nFriendly name\t\t= $qobuzname\c"
+		echo -e "\nResume MPD\t\t= $rsmafterqbz\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
@@ -462,7 +462,7 @@ FEAT_MINIDLNA=4
 FEAT_RECORDER=8
 FEAT_SQUEEZELITE=16
 FEAT_UPMPDCLI=32
-FEAT_DEEZER=64
+FEAT_QOBUZ=64
 FEAT_ROONBRIDGE=128
 FEAT_LOCALDISPLAY=256
 FEAT_SPOTIFY=2048
@@ -766,7 +766,7 @@ amixname=${arr[35]}
 mpdmixer=${arr[36]}
 xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
-rsmafterdeez=${arr[39]}
+rsmafterqbz=${arr[39]}
 library_show_genres=${arr[40]}
 itunes_query_timeout=${arr[41]}
 i2soverlay=${arr[42]}
@@ -798,7 +798,7 @@ fi
 pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 radio_covers=${arr[66]}
-deezactive=${arr[67]}
+qbzactive=${arr[67]}
 peppy_scn_blank_active=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
@@ -831,8 +831,8 @@ elif [[ "${arr[81]}" = "31536000000" ]]; then
 	library_recently_added="1 Year"
 fi
 btactive=${arr[82]}
-[[ "${arr[83]}" = "1" ]] && deezersvc="On" || deezersvc="Off"
-deezername=${arr[84]}
+[[ "${arr[83]}" = "1" ]] && qobuzsvc="On" || qobuzsvc="Off"
+qobuzname=${arr[84]}
 dsi_scn_type=${arr[85]}
 dsi_scn_rotate=${arr[86]}
 themename=${arr[87]}

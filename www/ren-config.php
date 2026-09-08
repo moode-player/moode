@@ -120,25 +120,29 @@ if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credenti
 	submitJob('spotify_clear_credentials', '', NOTIFY_TITLE_INFO, 'Credential cache cleared');
 }
 
-// Deezer Connect
-if (isset($_POST['update_deezer_settings'])) {
-	if (isset($_POST['deezername']) && $_POST['deezername'] != $_SESSION['deezername']) {
+// Qobuz Connect
+if (isset($_POST['install_qobuz'])) {
+	submitJob('install_qobuz');
+	header('location: ren-status.php');
+}
+if (isset($_POST['update_qobuz_settings'])) {
+	if (isset($_POST['qobuzname']) && $_POST['qobuzname'] != $_SESSION['qobuzname']) {
 		$update = true;
-		phpSession('write', 'deezername', $_POST['deezername']);
+		phpSession('write', 'qobuzname', $_POST['qobuzname']);
 	}
-	if (isset($_POST['deezersvc']) && $_POST['deezersvc'] != $_SESSION['deezersvc']) {
+	if (isset($_POST['qobuzsvc']) && $_POST['qobuzsvc'] != $_SESSION['qobuzsvc']) {
 		$update = true;
-		phpSession('write', 'deezersvc', $_POST['deezersvc']);
+		phpSession('write', 'qobuzsvc', $_POST['qobuzsvc']);
 	}
 	if (isset($update)) {
-		submitJob('deezersvc');
+		submitJob('qobuzsvc');
 	}
 }
-if (isset($_POST['update_rsmafterdeez'])) {
-	phpSession('write', 'rsmafterdeez', $_POST['rsmafterdeez']);
+if (isset($_POST['update_rsmafterqbz'])) {
+	phpSession('write', 'rsmafterqbz', $_POST['rsmafterqbz']);
 }
-if (isset($_POST['deezerrestart']) && $_POST['deezerrestart'] == 1 && $_SESSION['deezersvc'] == '1') {
-	submitJob('deezersvc', '', NOTIFY_TITLE_INFO, NAME_DEEZER . NOTIFY_MSG_SVC_MANUAL_RESTART);
+if (isset($_POST['qobuzrestart']) && $_POST['qobuzrestart'] == 1 && $_SESSION['qobuzsvc'] == '1') {
+	submitJob('qobuzsvc', '', NOTIFY_TITLE_INFO, NAME_QOBUZ . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 
 // UPnP client for MPD
@@ -318,30 +322,47 @@ $autoClick = " onchange=\"autoClick('#btn-set-rsmafterspot');\" " . $_spotify_bt
 $_select['rsmafterspot_on'] .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-1\" value=\"Yes\" " . (($_SESSION['rsmafterspot'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmafterspot_off']  .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-2\" value=\"No\" " . (($_SESSION['rsmafterspot'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
-// Deezer Connect
-$_feat_deezer = $_SESSION['feat_bitmask'] & FEAT_DEEZER ? '' : 'hide';
-$result = sqlRead('cfg_deezer', $dbh);
-$cfgDeezer = array();
-foreach ($result as $row) {
-	$cfgDeezer[$row['param']] = $row['value'];
-}
-if ($_SESSION['deezersvc'] == '0') {
-	$_deezer_btn_disable = 'disabled';
-	$_deezer_link_disable = 'disabled';
+// Qobuz Connect
+$_feat_qobuz = $_SESSION['feat_bitmask'] & FEAT_QOBUZ ? '' : 'hide';
+// Temporary manual install method
+if (isQobuzInstalled() === true) {
+	$_install_qobuz_hide = 'hide';
+	$_qobuz_svcbtn_disable = '';
+	$_qobuz_editlink_disable = '';
 } else {
-	$_deezer_btn_disable = '';
-	$_deezer_link_disable = '';
+	$_install_qobuz_hide = '';
+	$_qobuz_svcbtn_disable = 'disabled';
+	$_qobuz_editlink_disable = 'onclick="return false;"';
 }
-$_deezer_credentials_msg = (empty($cfgDeezer['email']) || empty($cfgDeezer['password'])) ?
-	'<span class="config-help-static"><em>Credentials have not been entered yet</em></span>' : '';
-$_deezersvc_btn_disable = $_deezer_credentials_msg == '' ? '' : 'disabled';
-$autoClick = " onchange=\"autoClick('#btn-set-deezersvc');\" " . $_deezersvc_btn_disable;
-$_select['deezersvc_on']  .= "<input type=\"radio\" name=\"deezersvc\" id=\"toggle-deezersvc-1\" value=\"1\" " . (($_SESSION['deezersvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['deezersvc_off'] .= "<input type=\"radio\" name=\"deezersvc\" id=\"toggle-deezersvc-2\" value=\"0\" " . (($_SESSION['deezersvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['deezername'] = $_SESSION['deezername'];
-$autoClick = " onchange=\"autoClick('#btn-set-rsmafterdeez');\" " . $_deezer_btn_disable;
-$_select['rsmafterdeez_on'] .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-1\" value=\"Yes\" " . (($_SESSION['rsmafterdeez'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-$_select['rsmafterdeez_off']  .= "<input type=\"radio\" name=\"rsmafterdeez\" id=\"toggle-rsmafterdeez-2\" value=\"No\" " . (($_SESSION['rsmafterdeez'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+/* Automated build/install deb package method
+if (isQobuzInstalled() === true) {
+	$_qobuz_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show qbzd | grep moode')[0];
+	if (isQobuzUpgradable() === true) {
+		$_install_qobuz_hide = '';
+		$_qobuz_btn_text = 'Upgrade';
+		$_qobuz_available_version = 'To version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $dbh)[0]['version'];
+	} else {
+		$_install_qobuz_hide = 'hide';
+	}
+	$_qobuz_svcbtn_disable = '';
+	$_qobuz_editlink_disable = '';
+} else {
+	$_install_qobuz_hide = '';
+	$_qobuz_btn_text = 'Install';
+	$_qobuz_available_version = 'Version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $dbh)[0]['version'];
+	$_qobuz_svcbtn_disable = 'disabled';
+	$_qobuz_editlink_disable = 'onclick="return false;"';
+}
+*/
+$_SESSION['qobuzsvc'] == '1' ? $_qobuz_btn_disable = '' : $_qobuz_btn_disable = 'disabled';
+$_SESSION['qobuzsvc'] == '1' ? $_qobuz_link_disable = '' : $_qobuz_link_disable = 'onclick="return false;"';
+$autoClick = " onchange=\"autoClick('#btn-set-qobuzsvc');\" " . $_qobuz_svcbtn_disable;
+$_select['qobuzsvc_on']  .= "<input type=\"radio\" name=\"qobuzsvc\" id=\"toggle-qobuzsvc-1\" value=\"1\" " . (($_SESSION['qobuzsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['qobuzsvc_off'] .= "<input type=\"radio\" name=\"qobuzsvc\" id=\"toggle-qobuzsvc-2\" value=\"0\" " . (($_SESSION['qobuzsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['qobuzname'] = $_SESSION['qobuzname'];
+$autoClick = " onchange=\"autoClick('#btn-set-rsmafterqbz');\" " . $_qobuz_btn_disable;
+$_select['rsmafterqbz_on'] .= "<input type=\"radio\" name=\"rsmafterqbz\" id=\"toggle-rsmafterqbz-1\" value=\"Yes\" " . (($_SESSION['rsmafterqbz'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rsmafterqbz_off']  .= "<input type=\"radio\" name=\"rsmafterqbz\" id=\"toggle-rsmafterqbz-2\" value=\"No\" " . (($_SESSION['rsmafterqbz'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // UPnP client for MPD
 $_feat_upmpdcli = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? '' : 'hide';

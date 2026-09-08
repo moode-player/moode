@@ -58,9 +58,9 @@ function restartMpdAndRenderers($resetAlsaCtl) {
 		stopSpotify();
 		startSpotify();
 	}
-	if ($_SESSION['deezersvc'] == 1) {
-		stopDeezer();
-		startDeezer();
+	if ($_SESSION['qobuzsvc'] == 1) {
+		stopQobuz();
+		startQobuz();
 	}
 }
 function allowPeppyInAlsaChain() {

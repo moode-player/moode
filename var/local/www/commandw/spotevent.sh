@@ -166,7 +166,7 @@ if [[ $PLAYER_EVENT == "paused" || $PLAYER_EVENT == "playing" ]]; then
 	# Update cache/send to front-end
 	if [[ "$cover_url" == "" ]]; then
 		debug_log "- Cover URL: empty"
-		debug_log "- Update cache: aborted"
+		debug_log "- Update cache: skipped"
 	else
 		OFORMAT=$(/var/www/util/get-oformat.php)
 		METADATA_JSON=$(jq -n -c \

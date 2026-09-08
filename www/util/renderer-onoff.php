@@ -28,8 +28,8 @@ switch ($option) {
 	case '--spotify':
 		onoffSpotify($onoff);
 		break;
-	case '--deezer':
-		onoffDeezer($onoff);
+	case '--qobuz':
+		onoffQobuz($onoff);
 		break;
 	case '--squeezelite':
 		onoffSqueezelite($onoff);
@@ -48,11 +48,11 @@ switch ($option) {
 			fwrite(STDERR, "This command requires sudo to print the help\n");
 			return;
 		}
-		//[--bluetooth | --airplay | --spotify | --deezer | --upnp | --squeezelite | --plexamp | --roonbridge]
+		//[--bluetooth | --airplay | --spotify | --qobuz | --upnp | --squeezelite | --plexamp | --roonbridge]
 		$btArg = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? "--bluetooth\tTurn Bluetooth On/Off\n" : "";
 		$apArg = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? " --airplay\tTurn AirPlay On/Off\n" : "";
 		$spArg = $_SESSION['feat_bitmask'] & FEAT_SPOTIFY ? " --spotify\tTurn Spotify Connect On/Off\n" : "";
-		$dzArg = $_SESSION['feat_bitmask'] & FEAT_DEEZER ? " --deezer\tTurn Deezer ConnectOn/Off\n" : "";
+		$dzArg = $_SESSION['feat_bitmask'] & FEAT_QOBUZ ? " --qobuz\tTurn Qobuz Connect On/Off\n" : "";
 		$upArg = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? " --upnp\t\tTurn UPnP On/Off\n" : "";
 		$slArg = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? " --squeezelite\tTurn Squeezelite On/Off\n" : "";
 		$paArg = $_SESSION['feat_bitmask'] & FEAT_PLEXAMP ? " --plexamp\tTurn Plexamp On/Off\n" : "";
@@ -113,13 +113,13 @@ function onoffSpotify($onoff) {
 	}
 }
 
-function onoffDeezer($onoff) {
-	if ($onoff == 'on' && $_SESSION['deezersvc'] == '0') {
-		phpSession('write', 'deezersvc', '1');
-		startDeezer();
-	} else if ($onoff == 'off' && $_SESSION['deezersvc'] == '1') {
-		phpSession('write', 'deezersvc', '0');
-		stopDeezer();
+function onoffQobuz($onoff) {
+	if ($onoff == 'on' && $_SESSION['qobuzsvc'] == '0') {
+		phpSession('write', 'qobuzsvc', '1');
+		startQobuz();
+	} else if ($onoff == 'off' && $_SESSION['qobuzsvc'] == '1') {
+		phpSession('write', 'qobuzsvc', '0');
+		stopQobuz();
 	}
 }
 

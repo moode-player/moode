@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Thu Aug 13 09:06:17 2026
+-- File generated with SQLiteStudio v3.4.4 on Mon Sep 7 17:44:33 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -106,19 +106,6 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (204, 'vc4hdmi1', 'Pi HDMI 2', 'Broadcom SoC (KMS driver)', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
-
--- Table: cfg_deezer
-CREATE TABLE cfg_deezer (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_deezer (id, param, value) VALUES (1, 'normalize_volume', 'No');
-INSERT INTO cfg_deezer (id, param, value) VALUES (2, 'no_interruptions', 'No');
-INSERT INTO cfg_deezer (id, param, value) VALUES (3, 'format', 'S32');
-INSERT INTO cfg_deezer (id, param, value) VALUES (4, 'initial_volume', '10');
-INSERT INTO cfg_deezer (id, param, value) VALUES (5, 'max_ram', '0');
-INSERT INTO cfg_deezer (id, param, value) VALUES (6, 'dither_bits', '');
-INSERT INTO cfg_deezer (id, param, value) VALUES (7, 'noise_shaping', '2');
-INSERT INTO cfg_deezer (id, param, value) VALUES (8, 'RESERVED_8', '');
-INSERT INTO cfg_deezer (id, param, value) VALUES (9, 'email', '');
-INSERT INTO cfg_deezer (id, param, value) VALUES (10, 'password', '');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
@@ -252,9 +239,30 @@ CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_v
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32), version CHAR (32));
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (1, 'camilladsp', 'sample-configs', 'v4-sample-configs', '4.0.0');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters', '4.0.0');
-INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.2.1-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.2.3-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
-INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-qbzd', '2.0.2-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (6, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
+
+-- Table: cfg_qobuz
+CREATE TABLE cfg_qobuz (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_qobuz (id, param, value) VALUES (1, 'quality', 'hires_plus');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (2, 'stream_buffer_seconds', '2');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (3, 'volume_mode', 'software');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (4, 'initial_volume', '10');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (5, 'normalization_enabled', 'false');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (6, 'stream_first_track', 'true');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (7, 'streaming_only', 'false');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (8, 'gapless_enabled', 'true');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (9, 'quality_fallback_behavior', 'always_fallback');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (10, 'cache_to_disk', 'false');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (11, 'memory_cache_mb', 'auto');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (12, 'alsa_buffer_ms', 'auto');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (13, 'RESERVED_13', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (14, 'RESERVED_14', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (15, 'RESERVED_15', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (16, 'RESERVED_16', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (17, 'RESERVED_17', '');
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));
@@ -866,7 +874,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'PCM');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
 INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'track,date,composer,encoded');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (40, 'rsmafterdeez', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (40, 'rsmafterqbz', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (42, 'itunes_query_timeout', '3');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
@@ -894,7 +902,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (64, 'pasvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
 INSERT INTO cfg_system (id, param, value) VALUES (67, 'radio_covers', 'Radio Cover+');
-INSERT INTO cfg_system (id, param, value) VALUES (68, 'deezactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (68, 'qbzactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (69, 'peppy_scn_blank_active', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
@@ -907,11 +915,11 @@ INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
 INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '228279');
+INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '228343');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (84, 'deezersvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (85, 'deezername', 'Moode Deezer');
+INSERT INTO cfg_system (id, param, value) VALUES (84, 'qobuzsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (85, 'qobuzname', 'Moode Qobuz');
 INSERT INTO cfg_system (id, param, value) VALUES (86, 'dsi_scn_type', 'none');
 INSERT INTO cfg_system (id, param, value) VALUES (87, 'dsi_scn_rotate', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');
