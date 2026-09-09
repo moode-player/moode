@@ -357,7 +357,7 @@ function isQobuzInstalled() {
 	return empty($result) ? false : true;
 }
 function isQobuzUpgradable() {
-	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show librespot | grep moode')[0];
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show qbzd | grep moode')[0];
 	$availableVersion = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", sqlConnect())[0]['version'];
 	return ($installedVersion == $availableVersion ? false : true);
 }
