@@ -722,7 +722,7 @@ fi
 
 log "Phase 1f: mpd with moOde selective-resample patch"
 
-MPD_MOODE_VER="0.24.13-1moode1"
+MPD_MOODE_VER="0.24.15-1moode1"
 if ! dpkg_ver_is mpd "$MPD_MOODE_VER"; then
 	apt-mark unhold mpd >/dev/null 2>&1 || true   # let the new build replace a held older one
 	# moOde's cloudsmith SOURCE repo (deb-src only; binaries there are arm-only).
