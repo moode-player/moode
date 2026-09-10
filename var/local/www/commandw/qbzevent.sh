@@ -125,6 +125,13 @@ if [[ $QBZ_EVENT == "QconnectSessionChanged" && $QBZ_SESSION_ACTIVE == "true" &&
 	/usr/bin/mpc stop > /dev/null
 	# Send to front-end
 	/var/www/util/send-fecmd.php "qbzactive1"
+	# The overlay is up now, but nothing has told the front end what is on it:
+	# the cache is pushed by TrackStarted and by a play/pause change only, so a
+	# session that reconnects mid-track leaves the renderer screen empty until
+	# the next track starts. Re-send what is already cached.
+	if [[ -s $QBZMETA_CACHE_FILE ]]; then
+		/var/www/util/send-fecmd.php "$(cat $QBZMETA_CACHE_FILE)"
+	fi
 
 	# Local
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
