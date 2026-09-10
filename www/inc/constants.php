@@ -149,6 +149,7 @@ const NOTIFY_DURATION_LONG = 30;
 const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
 const NOTIFY_MSG_SYSTEM_RESTART_REQD = 'Restart the system for the changes to take effect.';
 const NOTIFY_MSG_SVC_RESTARTED = ' has been restarted to make the changes effective.';
+const NOTIFY_MSG_SVC_SETTINGS_APPLIED = ' settings have been applied.';
 const NOTIFY_MSG_SVC_MANUAL_RESTART = ' has been restarted.';
 const NOTIFY_MSG_LOCALDISPLAY_STARTING = 'Local display is starting...';
 const NOTIFY_MSG_PEPPYDISPLAY_STARTING = 'Peppy display is starting...';
