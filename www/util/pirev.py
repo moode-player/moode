@@ -75,6 +75,15 @@ PI_MEM = {
     5: "8GB",
     6: "16GB"
 }
+PI_MEM_MB = {
+    0: "256",
+    1: "512",
+    2: "1024",
+    3: "2048",
+    4: "4096",
+    5: "8192",
+    6: "16384"
+}
 
 PI_PROC = {
     0: "BCM2835",
@@ -115,6 +124,10 @@ def decode_new_style_code(code):
         except KeyError:
             mem = "?GB"
         try:
+            mem_mb = PI_MEM_MB[(code>>20)&0x7] # mem MMM
+        except KeyError:
+            mem_mb = "?"
+        try:
             man = PI_MAN[(code>>16)&0xf] # manufacture CCCC
         except KeyError:
             man = "Unknown manufacturer"
@@ -132,6 +145,7 @@ def decode_new_style_code(code):
             "type": type,
             "rev": rev,
             "mem": mem,
+            "mem_mb": mem_mb,
             "man": man,
             "proc": proc,
             "num": num,
@@ -163,6 +177,7 @@ def main():
     parser.add_argument('-d', '--dsi', action='store_true', help='Print number dsi ports')
     parser.add_argument('-r', '--rev', action='store_true', help='Print model revision')
     parser.add_argument('-m', '--mem', action='store_true', help='Print memory')
+    parser.add_argument('-mb', '--mem_mb', action='store_true', help='Print memory in megabytes')
     parser.add_argument('-b', '--man', action='store_true', help='Print manufacturer')
     parser.add_argument('-p', '--proc', action='store_true', help='Print processor')
     parser.add_argument('-c', '--rcode', action='store_true', help='Print revision code')
@@ -204,6 +219,8 @@ def main():
         info_text += rev_info['rev'] + "\t"
     if args.mem or args.all or args.code:
         info_text += rev_info['mem'] + "\t"
+    if args.mem_mb:
+        info_text += rev_info['mem_mb'] + "\t"
     if args.man or args.all or args.code:
         info_text += rev_info['man'] + "\t"
     if args.proc or args.all or args.code:

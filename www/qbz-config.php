@@ -74,9 +74,11 @@ $_select['stream_first_track'] .= "<option value=\"false\" "  . (($cfgQobuz['str
 // Track cache
 $_select['streaming_only'] .= "<option value=\"true\" " . (($cfgQobuz['streaming_only'] == 'true') ? "selected" : "") . ">Disable</option>\n";
 $_select['streaming_only'] .= "<option value=\"false\" "  . (($cfgQobuz['streaming_only'] == 'false')  ? "selected" : "") . ">Enable (Default)</option>\n";
+/* Auto set this during startup based on physical memory
 // Cache location
 $_select['cache_to_disk'] .= "<option value=\"false\" " . (($cfgQobuz['cache_to_disk'] == 'false') ? "selected" : "") . ">Memory (Default)</option>\n";
 $_select['cache_to_disk'] .= "<option value=\"true\" " . (($cfgQobuz['cache_to_disk'] == 'true') ? "selected" : "") . ">Disk</option>\n";
+*/
 // Cache size (for memory cache)
 $_select['memory_cache_mb'] .= "<option value=\"auto\" " . (($cfgQobuz['memory_cache_mb'] == 'auto') ? "selected" : "") . ">Auto (Default)</option>\n";
 $_select['memory_cache_mb'] .= "<option value=\"512\" " . (($cfgQobuz['memory_cache_mb'] == '512') ? "selected" : "") . ">512 MB</option>\n";

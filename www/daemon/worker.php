@@ -1149,6 +1149,10 @@ workerLog('worker: Spotify Connect: ' . $status);
 
 // Start Qobuz Connect renderer
 if ($_SESSION['feat_bitmask'] & FEAT_QOBUZ) {
+	// Set track cache based on physical memory
+	$memMb = sysCmd('/var/www/util/pirev.py --mem_mb')[0];
+	$cacheToDisk = $memMb < 2048 ? 'true' : 'false';
+	sqlQuery("UPDATE cfg_qobuz SET value='" . $cacheToDisk . "' WHERE param='cache_to_disk'", $dbh);
 	if (isset($_SESSION['qobuzsvc']) && $_SESSION['qobuzsvc'] == 1) {
 		$status = 'started';
 		startQobuz();
