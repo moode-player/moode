@@ -1793,8 +1793,13 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	_schema_db=$(mktemp --suffix=.db)
 	if sqlite3 "$_schema_db" < "$SQLDB_SCHEMA" 2>/dev/null; then
 		_mig_total=0
-		for _t in cfg_system cfg_mpd cfg_airplay cfg_spotify cfg_deezer cfg_sl \
-			cfg_upnp cfg_multiroom; do
+		for _t in cfg_system cfg_mpd cfg_airplay cfg_spotify cfg_sl \
+			cfg_upnp cfg_multiroom cfg_qobuz; do
+			# A table only one side has (cfg_deezer, dropped upstream in 10.3.4)
+			# makes the INSERT throw, and under pipefail that aborts the whole
+			# installer with stderr silenced. Skip what either side lacks.
+			sqlite3 "$_schema_db" "SELECT 1 FROM $_t LIMIT 1;" >/dev/null 2>&1 || continue
+			sqlite3 "$SQLDB" "SELECT 1 FROM $_t LIMIT 1;" >/dev/null 2>&1 || continue
 			_added=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
 				INSERT INTO $_t (param, value)
 					SELECT s.param, s.value FROM sch.$_t s
