@@ -20,7 +20,6 @@ Updates
 
 Bug fixes
 - FIX: Backup from r1034 won't restore completely
-- FIX: Radio Cover+ log rotation not working
 
 ################################################################################
 #
