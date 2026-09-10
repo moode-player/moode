@@ -80,9 +80,13 @@ SEGMENT_FUNDRAISING	= "fundraising"
 # ================= PATHS =================
 CONFIG_FILE		= "/etc/radiocover-plus/config.txt"
 LOG_FILE		= "/var/log/moode_radiocover_plus.log"
-MAX_LOG_SIZE	= 512 * 1024
-BACKUP_COUNT	= 0
 
+# ================= LOGGING =================
+# When BACKUP_COUNT=0, the handler will overwrite the existing file from the
+# beginning once it reaches the MAX_LOG_SIZE limit instead of creating new
+# rolled files like .log.1.
+BACKUP_COUNT	= 0
+MAX_LOG_SIZE	= 512 * 1024
 LOG_LEVEL_MAP = {
 	"DEBUG":	logging.DEBUG,
 	"INFO":		logging.INFO,
