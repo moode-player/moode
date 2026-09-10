@@ -3301,9 +3301,20 @@ function runQueuedJob() {
 			break;
 		// Qobuz Connect
 		case 'qobuzsvc':
-			stopQobuz();
-			if ($_SESSION['qobuzsvc'] == 1) {
-				startQobuz();
+			// A settings save does not need the daemon taken down: qbzd writes
+			// its own stores and nudges a running daemon through
+			// POST /api/settings/reload, which reloads in place. Restarting
+			// ends the Qobuz Connect session instead, and the app has to be
+			// pointed at the player again before anything plays. The service
+			// toggle and the manual restart button still go the long way.
+			if ($_SESSION['w_queueargs'] == 'apply_settings' && $_SESSION['qobuzsvc'] == 1 &&
+				!empty(sysCmd('pgrep -x qbzd'))) {
+				cfgQobuz();
+			} else {
+				stopQobuz();
+				if ($_SESSION['qobuzsvc'] == 1) {
+					startQobuz();
+				}
 			}
 			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterqbz'] == 'Yes') {
 				sysCmd('mpc play');

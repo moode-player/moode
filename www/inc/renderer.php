@@ -264,9 +264,7 @@ function isSpotifyUpgradable() {
 
 // Qobuz Connect
 // Copyright 2026 @PhilipVinc qbz fork of moode / https://github.com/PhilipVinc/moode
-function startQobuz() {
-	// Logging
-	$logging = $_SESSION['debuglog'] == '1' ? ' > ' . QBZD_LOG : ' > /dev/null';
+function cfgQobuz() {
 	// Settings
 	$result = sqlRead('cfg_qobuz', sqlConnect());
 	$cfgQobuz = array();
@@ -307,6 +305,12 @@ function startQobuz() {
 	sysCmd('qbzd settings set audio.alsa_buffer_ms ' . $cfgQobuz['alsa_buffer_ms']);
 	// Event script
 	sysCmd('qbzd settings set hooks.script /var/local/www/commandw/qbzevent.sh');
+}
+function startQobuz() {
+	// Logging
+	$logging = $_SESSION['debuglog'] == '1' ? ' > ' . QBZD_LOG : ' > /dev/null';
+
+	cfgQobuz();
 
 	// Start the daemon
 	$cmd = 'qbzd run' . $logging . ' 2>&1 &';

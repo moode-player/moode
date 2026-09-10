@@ -27,8 +27,8 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		sqlUpdate('cfg_qobuz', $dbh, $key, $value);
 	}
 	if ($_SESSION['qobuzsvc'] == '1') {
-		$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_QOBUZ . NOTIFY_MSG_SVC_RESTARTED);
-		submitJob('qobuzsvc', '', $notify['title'], $notify['msg']);
+		$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_QOBUZ . NOTIFY_MSG_SVC_SETTINGS_APPLIED);
+		submitJob('qobuzsvc', 'apply_settings', $notify['title'], $notify['msg']);
 	}
 }
 
