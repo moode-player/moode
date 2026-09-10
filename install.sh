@@ -120,7 +120,7 @@ fi
 
 # Low-RAM build hardening (root-caused on an Orange Pi PC+ 1GB armhf). The
 # on-device source builds `mktemp -d` into /tmp, which Armbian mounts as a RAM
-# tmpfs (~50% of RAM): pleezer's ~650MB cargo target/ overflows a 1GB board's
+# tmpfs (~50% of RAM): a Rust target/ of several hundred MB overflows a 1GB board's
 # ~480MB /tmp AND steals the RAM that then OOM-kills rustc. Three gated,
 # idempotent measures:
 #
@@ -153,7 +153,7 @@ if [ "${MEM_TOTAL_MB:-9999}" -lt 1536 ]; then
 	if [ "${SWAP_TOTAL_MB:-0}" -lt 2048 ] && ! grep -q '^/swapfile ' /proc/swaps; then
 		FREE_MB="$(df -Pm / | awk 'NR==2{print $4}')"
 		if [ "${FREE_MB:-0}" -ge 3072 ]; then
-			log "Low RAM (${MEM_TOTAL_MB}MB): adding a temporary 2G build swapfile (backstop for the final pleezer rustc; removed at end of install)"
+			log "Low RAM (${MEM_TOTAL_MB}MB): adding a temporary 2G build swapfile (backstop for the final single-crate rustc; removed at end of install)"
 			if fallocate -l 2G /swapfile 2>/dev/null \
 					|| dd if=/dev/zero of=/swapfile bs=1M count=2048 status=none 2>/dev/null; then
 				chmod 600 /swapfile
@@ -627,37 +627,11 @@ fi
 # coeffs, templates) is deployed with the usr/ tree in Phase 2.
 install -d -o mpd -g audio /var/lib/cdsp 2>/dev/null || install -d /var/lib/cdsp
 
-#----------------------------------------------------------------------------#
-# Phase 1d - Deezer Connect (pleezer)
-#----------------------------------------------------------------------------#
-# The Deezer renderer is the 'pleezer' binary, launched directly by
-# inc/renderer.php (no systemd unit, nothing to disable). It ships no release
-# binary and is not on crates.io -> build from its pinned git tag. Needs Rust
-# 1.85 + edition 2024, which Trixie's cargo provides, so no toolchain juggling.
-
-log "Phase 1d: Deezer renderer (pleezer)"
-
-PLEEZER_VER="0.19.1"
-_plz_v="$([ -x /usr/local/bin/pleezer ] && /usr/local/bin/pleezer --version 2>/dev/null || true)"
-if [[ "$_plz_v" != *"$PLEEZER_VER"* ]]; then
-	$APT_INSTALL cargo git pkg-config libasound2-dev libssl-dev
-	PLZ_BLD="$(mktemp -d)"
-	if git clone -q -b "v${PLEEZER_VER}" \
-			https://github.com/roderickvd/pleezer.git "$PLZ_BLD/pleezer" \
-		&& ( cd "$PLZ_BLD/pleezer" && cargo build --release --locked ) >/dev/null 2>&1 \
-		&& [ -f "$PLZ_BLD/pleezer/target/release/pleezer" ]; then
-		install -m 755 "$PLZ_BLD/pleezer/target/release/pleezer" /usr/local/bin/pleezer
-		log "Built pleezer ${PLEEZER_VER} (Deezer Connect)"
-	else
-		warn "pleezer build failed (Deezer Connect will be unavailable)"
-	fi
-	rm -rf "$PLZ_BLD"
-fi
-
-# cargo-deb for the on-demand librespot build. moOde's build.sh would `cargo
-# install cargo-deb` and get 3.7.0, which does not compile on Debian's Rust 1.85
-# (`let` expressions unstable). Pre-install 2.12.1 (MSRV 1.71) on PATH so
-# rbl_check_cargo finds it and skips that. Not arch-gated - arm64 hits it too.
+# cargo-deb for the on-demand renderer builds (librespot, pibuz). moOde's
+# build.sh would `cargo install cargo-deb` and get 3.7.0, which does not compile
+# on Debian's Rust 1.85 (`let` expressions unstable). Pre-install 2.12.1
+# (MSRV 1.71) on PATH so rbl_check_cargo finds it and skips that. Not
+# arch-gated - arm64 hits it too.
 CARGODEB_VER="2.12.1"
 _cdeb_v="$(command -v cargo-deb >/dev/null 2>&1 && cargo-deb --version 2>/dev/null || true)"
 if [[ "$_cdeb_v" != *"$CARGODEB_VER"* ]]; then
@@ -667,7 +641,7 @@ if [[ "$_cdeb_v" != *"$CARGODEB_VER"* ]]; then
 		|| warn "cargo-deb install failed (on-demand renderer builds may fail)"
 fi
 
-# Debian's cargo was only ever needed to compile the two binaries above. Left
+# Debian's cargo was only ever needed to compile cargo-deb above. Left
 # installed it breaks what it was meant to serve: pkgbuild's rbl_check_cargo
 # APPENDS its pinned toolchain to PATH, so /usr/bin/cargo 1.85 is found first
 # and every on-demand renderer build dies on "rustc 1.85.0 is not supported"
