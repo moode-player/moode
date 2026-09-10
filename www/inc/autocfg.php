@@ -537,9 +537,9 @@ function autoConfigSettings() {
 				return getCfgTableParams('cfg_spotify', $values, 'spotify_');
 		}],
 		'Qobuz Connect',
-		['requires' => ['qobuz_quality', 'qobuz_stream_buffer_seconds', 'volume_mode', 'qobuz_normalization_enabled', 'qobuz_stream_first_track',
-			'qobuz_streaming_only', 'qobuz_gapless_enabled', 'qobuz_quality_fallback_behavior', 'cache_to_disk', 'memory_cache_mb', 'alsa_buffer_ms'],
-			'handler' => function($values, $optionals) {
+		['requires' => ['qobuz_quality', 'qobuz_stream_buffer_seconds', 'qobuz_volume_mode', 'qobuz_initial_volume', 'qobuz_normalization_enabled', 'qobuz_stream_first_track',
+			'qobuz_streaming_only', 'qobuz_gapless_enabled', 'qobuz_quality_fallback_behavior', 'qobuz_cache_to_disk', 'qobuz_memory_cache_mb', 'qobuz_alsa_buffer_ms'],
+			'handler' => function($values) {
 				setCfgTableParams('cfg_qobuz', $values, 'qobuz_');
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_qobuz', $values, 'qobuz_');
