@@ -11,6 +11,19 @@
 
 ################################################################################
 #
+# 2026-MM-DD moOde 10.3.5 (Trixie)
+#
+################################################################################
+
+Updates
+- UPD:
+
+Bug fixes
+- FIX: Backup from r1034 won't restore completely
+- FIX: Radio Cover+ log rotation not working
+
+################################################################################
+#
 # 2026-09-08 moOde 10.3.4 (Trixie)
 #
 ################################################################################
@@ -20,7 +33,7 @@ Packages
 - UPD: mpd: 0.24.15-1moode1
 
 Updates
-- Refactor obsolete Deezer Connect framework to support Qobuz Connect
+- UPD: Refactor obsolete Deezer Connect framework to support Qobuz Connect
 
 Bug fixes
 - FIX: Renderer wide layout on mobile
