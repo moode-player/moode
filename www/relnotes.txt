@@ -16,7 +16,7 @@
 ################################################################################
 
 Updates
-- UPD:
+- UPD: Set Qobuz 'cache_to_disk' option based on Pi physical memory
 
 Bug fixes
 - FIX: Backup from r1034 won't restore completely
