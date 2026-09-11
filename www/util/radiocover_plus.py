@@ -46,7 +46,7 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from logging.handlers import RotatingFileHandler
 
-__version__ = "9.1.1 CLI utility"
+__version__ = "9.1.2 CLI utility"
 
 # ================= CONFIG GLOBALS (fallback) =================
 SPOTIFY_CLIENT_ID		= None
@@ -97,6 +97,7 @@ LOG_LEVEL_MAP = {
 LOG_LEVEL = "INFO"
 
 # ================= GLOBALS =================
+USER_AGENT				= "moOde audio player/10 ( https://moodeaudio.org )"
 SPOTIFY_TOKEN			= None
 SPOTIFY_TOKEN_EXPIRY	= 0
 _shutdown_event			= Event()
@@ -122,12 +123,12 @@ def read_global():
 	global FAST_DEADLINE_S, TOTAL_DEADLINE_S, EARLY_STOP_SCORE
 	global PROVIDERS_LIST
 
-	valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
+	valid_levels = {"INFO", "WARNING", "ERROR", "CRITICAL", "DEBUG"}
 	values = {}
 
 	global CONFIG_FILE
 	if not os.path.isfile(CONFIG_FILE):
-		logging.error(f"[read_global] ❌ Config file missing: {CONFIG_FILE}")
+		logging.error(f"[read_global] Config file missing: {CONFIG_FILE}")
 		return
 
 	try:
@@ -137,18 +138,18 @@ def read_global():
 				if not line or line.startswith("#"):
 					continue
 				if "=" not in line:
-					logging.warning(f"[read_global] ❌ Invalid line {lineno}: {line}")
+					logging.warning(f"[read_global] Invalid line {lineno}: {line}")
 					continue
 				key, value = line.split("=", 1)
 				values[key.strip()] = value.strip() or None
 	except Exception as e:
-		logging.error(f"[read_global] ❌ Error reading config: {e}")
+		logging.error(f"[read_global] Error reading config: {e}")
 		return
 
 	def load_token(name):
 		val = values.get(name)
 		if not val:
-			logging.error(f"[read_global] ❌ Missing or empty token: {name}")
+			logging.error(f"[read_global] Missing or empty token: {name}")
 		return val
 
 	def load_float(key, fallback):
@@ -159,7 +160,7 @@ def read_global():
 				if val < 0: raise ValueError
 				return val
 		except ValueError:
-			logging.error(f"[read_global] ❌ Invalid {key}, fallback={fallback}")
+			logging.error(f"[read_global] Invalid {key}, fallback={fallback}")
 		return fallback
 
 	def load_int(key, fallback):
@@ -170,14 +171,8 @@ def read_global():
 				if val < 0: raise ValueError
 				return val
 		except ValueError:
-			logging.error(f"[read_global] ❌ Invalid {key}, fallback={fallback}")
+			logging.error(f"[read_global] Invalid {key}, fallback={fallback}")
 		return fallback
-
-	SPOTIFY_CLIENT_ID		= load_token("SPOTIFY_CLIENT_ID")
-	SPOTIFY_CLIENT_SECRET	= load_token("SPOTIFY_CLIENT_SECRET")
-	LASTFM_API_KEY			= load_token("LASTFM_API_KEY")
-	DISCOGS_TOKEN			= load_token("DISCOGS_TOKEN")
-	THEAUDIODB_API_KEY		= values.get("THEAUDIODB_API_KEY", "2") or "2"
 
 	level = values.get("LOG_LEVEL", "").upper()
 	LOG_LEVEL = level if level in valid_levels else "INFO"
@@ -192,45 +187,33 @@ def read_global():
 	MAX_SIZE_PX				= load_int("MAX_SIZE_PX",				800)
 	COVER_QUALITY			= load_int("COVER_QUALITY",				85)
 
-	PROVIDER_NAMES = ["Spotify","iTunes","Deezer","LastFM","MusicBrainz","Discogs","TheAudioDB"]
+	PROVIDER_NAMES = ["iTunes","Deezer","MusicBrainz","Spotify","LastFM","Discogs","TheAudioDB"]
 	PROVIDERS_LIST = {
 		n: values.get(n, "False").lower() in ("1","true","yes","on")
 		for n in PROVIDER_NAMES
 	}
 
-def log_config_summary():
-	def mask(v):
-		if not v: return "None"
-		return v[:3] + "***" + v[-3:] if len(v) > 6 else "***"
-	logging.error("[config] ========== Configuration summary ==========")
-	logging.error(f"[config] LOG_LEVEL              = {LOG_LEVEL}")
-	logging.error(f"[config] SPOTIFY_CLIENT_ID      = {mask(SPOTIFY_CLIENT_ID)}")
-	logging.error(f"[config] SPOTIFY_CLIENT_SECRET  = {mask(SPOTIFY_CLIENT_SECRET)}")
-	logging.error(f"[config] LASTFM_API_KEY         = {mask(LASTFM_API_KEY)}")
-	logging.error(f"[config] DISCOGS_TOKEN          = {mask(DISCOGS_TOKEN)}")
-	logging.error(f"[config] THEAUDIODB_API_KEY     = {THEAUDIODB_API_KEY}")
-	logging.error(f"[config] REQUEST_TIMEOUT        = {REQUEST_TIMEOUT}")
-	logging.error(f"[config] FAST_DEADLINE_S        = {FAST_DEADLINE_S}")
-	logging.error(f"[config] TOTAL_DEADLINE_S       = {TOTAL_DEADLINE_S}")
-	logging.error(f"[config] EARLY_STOP_SCORE       = {EARLY_STOP_SCORE}")
-	logging.error(f"[config] MIN_SIMILARITY         = {MIN_SIMILARITY}")
-	logging.error(f"[config] MIN_SIMILARITY_ITUNES  = {MIN_SIMILARITY_ITUNES}")
-	enabled = [n for n, v in PROVIDERS_LIST.items() if v]
-	logging.error(f"[config] Providers enabled      = {enabled}")
-	logging.error("[config] ===========================================")
+	if PROVIDERS_LIST["Spotify"]:
+		SPOTIFY_CLIENT_ID		= load_token("SPOTIFY_CLIENT_ID")
+		SPOTIFY_CLIENT_SECRET	= load_token("SPOTIFY_CLIENT_SECRET")
+	if PROVIDERS_LIST["LastFM"]:
+		LASTFM_API_KEY			= load_token("LASTFM_API_KEY")
+	if PROVIDERS_LIST["Discogs"]:
+		DISCOGS_TOKEN			= load_token("DISCOGS_TOKEN")
+	if PROVIDERS_LIST["TheAudioDB"]:
+		THEAUDIODB_API_KEY		= values.get("THEAUDIODB_API_KEY", "2") or "2"
 
 def reload_config(signum=None, frame=None):
-	logging.error("[reload_config] 🔄 Reloading configuration (SIGHUP)")
+	logging.info("[reload_config] Reloading configuration (SIGHUP)")
 	read_global()
 	for c in ALL_LRU_CACHES:
 		info = c.cache_info()
 		logging.warning(f"[reload_config] Clearing cache size={info.currsize} hits={info.hits}")
 		c.cache_clear()
-	logging.warning("[reload_config] 🧹 All LRU caches cleared")
-	log_config_summary()
+	logging.info("[reload_config] All LRU caches cleared")
 
 def graceful_exit(signum, frame):
-	logging.info("[graceful_exit] 🛑 STOP received")
+	logging.info("[graceful_exit] STOP received")
 	_shutdown_event.set()
 	sys.exit(0)
 
@@ -356,7 +339,7 @@ def clean_artist_name(artist):
 	cleaned = re.sub(r'\s+(feat\.?|ft\.?|featuring|with|starring)\s+.*', '', cleaned, flags=re.IGNORECASE)
 	res = cleaned.strip()
 	if raw != res:
-		logging.info(f"[clean_artist_name] 🧹 '{raw}' → '{res}'")
+		logging.info(f"[clean_artist_name] '{raw}' → '{res}'")
 	return res
 
 def normalize_title(title, artist=None):
@@ -379,7 +362,7 @@ def normalize_title(title, artist=None):
 	title = re.sub(r'[\s\-\.]+$', '', title).strip()
 	res = title.strip()
 	if raw != res:
-		logging.info(f"[normalize_title] 🧹 '{raw}' → '{res}'")
+		logging.info(f"[normalize_title] '{raw}' → '{res}'")
 	return res
 
 # ================= NOISE / SEGMENT GATE =================
@@ -512,6 +495,82 @@ def get_image_resolution(url, mode="regex"):
 	return 0, 0
 
 # ================= PROVIDER SEARCH FUNCTIONS =================
+def search_itunes(artist, title, album=None):
+	try:
+		term = prepare_free_term(artist, title, album)
+		r = requests.get(
+			"https://itunes.apple.com/search",
+			params={"term": term, "media": "music", "entity": "musicTrack", "limit": 10},
+			timeout=REQUEST_TIMEOUT
+		)
+		if r.ok:
+			if r.json().get("resultCount") != '0':
+				for i in r.json().get("results", []):
+					if not artist or similarity(artist, i.get("artistName", "")) >= MIN_SIMILARITY_ITUNES:
+						album_name = i.get("collectionName")
+						album_type = i.get("collectionType")
+						return i.get("artworkUrl100","").replace("100x100","1000x1000"), album_name, album_type
+
+	except Exception:
+		pass
+	return None, None, None
+
+def search_deezer(artist, title, album=None):
+	try:
+		q = prepare_query(artist, title, album)
+		r = requests.get("https://api.deezer.com/search", params={"q": q, "limit": 5}, timeout=REQUEST_TIMEOUT)
+		if r.ok:
+			for i in r.json().get("data", []):
+				if not artist or similarity(artist, i["artist"]["name"]) >= MIN_SIMILARITY:
+					album_name = i["album"].get("title")
+					return i["album"].get("cover_xl"), album_name, None
+	except Exception:
+		pass
+	return None, None, None
+
+def search_musicbrainz(artist, title, album=None):
+	global USER_AGENT
+	try:
+		artist_q = prepare_text_for_query(artist)
+		title_q  = prepare_text_for_query(title)
+		q = f'artist:"{artist_q}" AND recording:"{title_q}"'
+		if album:
+			album_q = prepare_text_for_query(album)
+			if album_q: q += f' AND release:"{album_q}"'
+		r = requests.get(
+			"https://musicbrainz.org/ws/2/recording",
+			headers={"User-Agent": USER_AGENT},
+			params={"query": q, "fmt": "json", "limit": 3},
+			timeout=MB_TIMEOUT
+		)
+		if r.ok:
+			for rec in r.json().get("recordings", []):
+				for rel in rec.get("releases", []):
+					mbid = rel.get("id")
+					rel_title = rel.get("title")
+					release_group = rel.get("release-group", {})
+					album_type = release_group.get("primary-type") if release_group else None
+					if not mbid: continue
+					try:
+						cr = requests.get(
+							f"https://coverartarchive.org/release/{mbid}",
+							headers={"User-Agent": USER_AGENT},
+							timeout=MB_TIMEOUT
+						)
+						if cr.ok:
+							for img in cr.json().get("images", []):
+								if img.get("front"):
+									img_url = (img.get("image")
+											   or img.get("thumbnails", {}).get("large")
+											   or img.get("thumbnails", {}).get("small"))
+									if img_url:
+										return img_url, rel_title, album_type
+					except Exception as e:
+						logging.error(f"[search_musicbrainz] CAA error {mbid}: {e}")
+	except Exception as e:
+		logging.error(f"[search_musicbrainz] {e}")
+	return None, None, None
+
 def get_spotify_token():
 	global SPOTIFY_TOKEN, SPOTIFY_TOKEN_EXPIRY
 	if time.time() < SPOTIFY_TOKEN_EXPIRY and SPOTIFY_TOKEN:
@@ -557,59 +616,18 @@ def search_spotify(artist, title, album=None):
 				album_type = sel["album"].get("album_type")
 				return cover_url, album_name, album_type
 	except Exception as e:
-		logging.error(f"[search_spotify] ❌ {e}")
-	return None, None, None
-
-def search_musicbrainz(artist, title, album=None):
-	try:
-		artist_q = prepare_text_for_query(artist)
-		title_q  = prepare_text_for_query(title)
-		q = f'artist:"{artist_q}" AND recording:"{title_q}"'
-		if album:
-			album_q = prepare_text_for_query(album)
-			if album_q: q += f' AND release:"{album_q}"'
-		r = requests.get(
-			"https://musicbrainz.org/ws/2/recording",
-			headers={"User-Agent": "MoodeRadio/9.1.0 ( moode@example.com )"},
-			params={"query": q, "fmt": "json", "limit": 3},
-			timeout=MB_TIMEOUT
-		)
-		if r.ok:
-			for rec in r.json().get("recordings", []):
-				for rel in rec.get("releases", []):
-					mbid = rel.get("id")
-					rel_title = rel.get("title")
-					release_group = rel.get("release-group", {})
-					album_type = release_group.get("primary-type") if release_group else None
-					if not mbid: continue
-					try:
-						cr = requests.get(
-							f"https://coverartarchive.org/release/{mbid}",
-							headers={"User-Agent": "MoodeRadio/9.1.0 ( moode@example.com )"},
-							timeout=MB_TIMEOUT
-						)
-						if cr.ok:
-							for img in cr.json().get("images", []):
-								if img.get("front"):
-									img_url = (img.get("image")
-											   or img.get("thumbnails", {}).get("large")
-											   or img.get("thumbnails", {}).get("small"))
-									if img_url:
-										return img_url, rel_title, album_type
-					except Exception as e:
-						logging.debug(f"[search_musicbrainz] CAA error {mbid}: {e}")
-	except Exception as e:
-		logging.error(f"[search_musicbrainz] ❌ {e}")
+		logging.error(f"[search_spotify] {e}")
 	return None, None, None
 
 def search_discogs(artist, title, album=None):
+	global USER_AGENT
 	if not DISCOGS_TOKEN: return None, None, None
 	try:
 		q = prepare_free_term(artist, title, album)
 		r = requests.get(
 			"https://api.discogs.com/database/search",
 			params={"q": q, "type": "release", "token": DISCOGS_TOKEN},
-			headers={"User-Agent": "MoodeRadio/9.1.0 ( moode@example.com )"},
+			headers={"User-Agent": USER_AGENT},
 			timeout=REQUEST_TIMEOUT
 		)
 		if r.ok:
@@ -625,40 +643,7 @@ def search_discogs(artist, title, album=None):
 							album_name = title_str.split(" - ", 1)[1]
 							return cover_img, album_name, "Album"
 	except Exception as e:
-		logging.error(f"[search_discogs] ❌ {e}")
-	return None, None, None
-
-def search_itunes(artist, title, album=None):
-	try:
-		term = prepare_free_term(artist, title, album)
-		r = requests.get(
-			"https://itunes.apple.com/search",
-			params={"term": term, "media": "music", "entity": "musicTrack", "limit": 10},
-			timeout=REQUEST_TIMEOUT
-		)
-		if r.ok:
-			if r.json().get("resultCount") != '0':
-				for i in r.json().get("results", []):
-					if not artist or similarity(artist, i.get("artistName", "")) >= MIN_SIMILARITY_ITUNES:
-						album_name = i.get("collectionName")
-						album_type = i.get("collectionType")
-						return i.get("artworkUrl100","").replace("100x100","1000x1000"), album_name, album_type
-
-	except Exception:
-		pass
-	return None, None, None
-
-def search_deezer(artist, title, album=None):
-	try:
-		q = prepare_query(artist, title, album)
-		r = requests.get("https://api.deezer.com/search", params={"q": q, "limit": 5}, timeout=REQUEST_TIMEOUT)
-		if r.ok:
-			for i in r.json().get("data", []):
-				if not artist or similarity(artist, i["artist"]["name"]) >= MIN_SIMILARITY:
-					album_name = i["album"].get("title")
-					return i["album"].get("cover_xl"), album_name, None
-	except Exception:
-		pass
+		logging.error(f"[search_discogs] {e}")
 	return None, None, None
 
 def search_lastfm(artist, title, album=None):
@@ -703,7 +688,7 @@ def search_theaudiodb(artist, title, album=None):
 		if thumb:
 			return thumb, album_name, "Album"
 	except Exception as e:
-		logging.error(f"[search_theaudiodb] ❌ {e}")
+		logging.error(f"[search_theaudiodb] {e}")
 	return None, None, None
 
 def search_radio_paradise(station_name, artist, title):
@@ -734,14 +719,14 @@ def search_radio_paradise(station_name, artist, title):
 		cover = data.get("cover") or data.get("cover_med") or data.get("cover_small")
 
 		if artist.lower() != api_artist.lower() or title.lower() != api_title.lower():
-			logging.debug(f"[RadioParadise] ⚠️ Mismatch MPD:'{artist}-{title}' RP:'{api_artist}-{api_title}'")
+			logging.debug(f"[RadioParadise] Mismatch MPD:'{artist}-{title}' RP:'{api_artist}-{api_title}'")
 			return None
 
 		if cover:
-			logging.info(f"[RadioParadise] 🟢 Cover found chan={channel_key}: {cover}")
+			logging.info(f"[RadioParadise] Cover found chan={channel_key}: {cover}")
 			return cover
 	except Exception as e:
-		logging.error(f"[RadioParadise] ❌ {e}")
+		logging.error(f"[RadioParadise] {e}")
 	return None
 
 # ================= SEARCH COVER PARALLEL =================
@@ -864,11 +849,11 @@ def search_cover_parallel(artist, title, attempt=1):
 						if "best of" in alb_low or "greatest hits" in alb_low:
 							weight = 0.6 if art_low and art_low in alb_low else 0.4
 						results.append((cover, album_found, weight, name))
-						logging.debug(f"[search_cover_parallel] ✅ {name}: '{album_found}' type={album_type} w={weight:.2f}")
+						logging.debug(f"[search_cover_parallel] {name}: '{album_found}' type={album_type} w={weight:.2f}")
 					else:
-						logging.debug(f"[search_cover_parallel] ❌ {name}: no cover")
+						logging.debug(f"[search_cover_parallel] {name}: no cover")
 				except Exception as e:
-					logging.error(f"[search_cover_parallel] ❌ {name} error: {e}")
+					logging.error(f"[search_cover_parallel] {name} error: {e}")
 
 			# Early stop
 			if results:
@@ -895,10 +880,10 @@ def search_cover_parallel(artist, title, attempt=1):
 				 f"best_score={score:.1f} album='{album_name}' provider={provider}")
 
 	if not results or not chosen:
-		logging.info(f"[search_cover_parallel] ❌ No cover found")
+		logging.info(f"[search_cover_parallel] No cover found")
 		return None, 0.0, None
 
-	logging.info(f"[search_cover_parallel] ✅ Album chosen: '{album_name}' "
+	logging.info(f"[search_cover_parallel] Album chosen: '{album_name}' "
 				 f"provider={provider} (weighted votes [{score:.1f}])")
 	return chosen, score, provider
 
@@ -927,7 +912,7 @@ def search_for_cover(raw_title, station_name):
 		cover_url = search_radio_paradise(station_name, rp_artist, rp_title)
 		if cover_url:
 			provider = "RadioParadise"
-			logging.info(f"[worker] ✅ RadioParadise cover found")
+			logging.info(f"[worker] RadioParadise cover found")
 
 	if not cover_url:
 		# ATTEMPT 1 — light cleanup
@@ -938,27 +923,27 @@ def search_for_cover(raw_title, station_name):
 			title_1  = raw_title
 		artist_1 = normalize_for_search(artist_1)
 		title_1  = normalize_for_search(title_1)
-		logging.info(f"[worker] 🔍 ATTEMPT 1: '{artist_1}' - '{title_1}'")
+		logging.info(f"[worker] ATTEMPT 1: '{artist_1}' - '{title_1}'")
 		cover_url, score1, provider = search_cover_parallel(artist_1, title_1, attempt=1)
 		if cover_url and score1 >= 1.5:
-			logging.info(f"[worker] ✅ Attempt 1 accepted score={score1:.1f} provider={provider}")
+			logging.info(f"[worker] Attempt 1 accepted score={score1:.1f} provider={provider}")
 		elif cover_url and score1 < 1.5:
-			logging.info(f"[worker] ⚠️  Attempt 1 score too low ({score1:.1f}), discarding")
+			logging.info(f"[worker] Attempt 1 score too low ({score1:.1f}), discarding")
 			cover_url = None
 
 		# ATTEMPT 2 — aggressive cleanup (only if attempt 1 failed)
 		if not cover_url:
 			artist_2 = clean_artist_name(raw_artist) if raw_artist else artist_1
 			title_2  = normalize_title(raw_title, artist=raw_artist) if raw_title else title_1
-			logging.info(f"[worker] 🔄 ATTEMPT 2: '{artist_2}' - '{title_2}'")
+			logging.info(f"[worker] ATTEMPT 2: '{artist_2}' - '{title_2}'")
 			cover_url, score2, provider = search_cover_parallel(artist_2, title_2, attempt=2)
 			if cover_url and score2 >= 0.9:
-				logging.info(f"[worker] ✅ Attempt 2 accepted score={score2:.1f} provider={provider}")
+				logging.info(f"[worker] Attempt 2 accepted score={score2:.1f} provider={provider}")
 			elif cover_url and score2 < 0.9:
-				logging.info(f"[worker] ⚠️  Attempt 2 score too low ({score2:.1f}), discarding")
+				logging.info(f"[worker] Attempt 2 score too low ({score2:.1f}), discarding")
 				cover_url = None
 			else:
-				logging.info(f"[worker] ❌ No cover after 2 attempts")
+				logging.info(f"[worker] No cover after 2 attempts")
 
 	return cover_url
 
@@ -977,7 +962,6 @@ def main():
 
 	# Search for cover
 	read_global()
-	log_config_summary()
 	cover_url = search_for_cover(args.title, args.station)
 	print(cover_url) # URL or None
 

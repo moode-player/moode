@@ -12,12 +12,12 @@ function getRadioCoverUrl($title, $station = 'None') {
 	// DEBUG:
 	//workerLog('getRadioCoverUrl(): title|station: ' . $title . ' | ' . $station);
 
+	$dbh = sqlConnect();
 	$title = html_entity_decode($title);
 
 	// Check cache first
-	$dbh = sqlConnect();
 	$cachedUrl = sqlQuery("SELECT cover_url FROM cfg_rcucache WHERE title='" . SQLite3::escapeString($title) . "'", $dbh);
-	if (!empty($cachedUrl[0])) { // URL, 'None' or ''
+	if (!empty($cachedUrl[0])) {
 		// DEBUG: Report cached cover URL used
 		//workerLog('getRadioCoverUrl(): Returned cached URL for: ' . $title);
 		return $cachedUrl[0]['cover_url'];
@@ -37,11 +37,13 @@ function getRadioCoverUrl($title, $station = 'None') {
 			workerLog('getRadioCoverUrl(): WARNING: Session var "radio_covers" is empty');
 	}
 
-	// Update cache (prevent duplicates)
-	$id = sqlQuery("SELECT id FROM cfg_rcucache WHERE title='" . SQLite3::escapeString($title) . "'", $dbh);
-	if (empty($id[0])) {
-		sqlQuery("INSERT OR IGNORE INTO cfg_rcucache VALUES " .
-			'(NULL,' . "'" . SQLite3::escapeString($title) . "', '" . $coverUrl . "'" . ')', $dbh);
+	// Update cache (only valid URL's)
+	if (!empty($coverUrl) && $coverUrl != 'None') {
+		$id = sqlQuery("SELECT id FROM cfg_rcucache WHERE title='" . SQLite3::escapeString($title) . "'", $dbh);
+		if (empty($id[0])) {
+			sqlQuery("INSERT OR IGNORE INTO cfg_rcucache VALUES " .
+				'(NULL,' . "'" . SQLite3::escapeString($title) . "', '" . $coverUrl . "'" . ')', $dbh);
+		}
 	}
 
 	return $coverUrl;

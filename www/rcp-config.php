@@ -14,18 +14,21 @@ phpSession('open');
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Form variable to config param mapping table
 	$mappingTable = array(
+		// Search providers
 		'search_provider_itunes' => 'iTunes',
 		'search_provider_deezer' => 'Deezer',
 		'search_provider_musicbrainz' => 'MusicBrainz',
 		'search_provider_spotify' => 'Spotify',
+		'search_provider_lastfm' => 'LastFM',
+		'search_provider_discogs' => 'Discogs',
+		'search_provider_theaudiodb' => 'TheAudioDB',
+		// Access tokens
 		'spotify_client_id' => 'SPOTIFY_CLIENT_ID',
 		'spotify_client_secret' => 'SPOTIFY_CLIENT_SECRET',
-		'search_provider_lastfm' => 'LastFM',
 		'lastfm_api_key' => 'LASTFM_API_KEY',
-		'search_provider_discogs' => 'Discogs',
 		'discogs_token' => 'DISCOGS_TOKEN',
-		'search_provider_theaudiodb' => 'TheAudioDB',
 		'theaudiodb_api_key' => 'THEAUDIODB_API_KEY',
+		// Search settings
 		'search_request_timeout' => 'REQUEST_TIMEOUT',
 		'search_min_similarity' => 'MIN_SIMILARITY',
 		'search_min_similarity_itunes' => 'MIN_SIMILARITY_ITUNES',
@@ -34,7 +37,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		'search_early_stop_score' => 'EARLY_STOP_SCORE',
 		'search_cover_max_size' => 'MAX_SIZE_PX',
 		'search_cover_quality' => 'COVER_QUALITY',
-		'log_level' => 'LOG_LEVEL',
+		// Daemon mode settings (SSE server)
 		'sse_debounce_ms' => 'DEBOUNCE_MS',
 		'sse_cache_enabled' => 'CACHE_ENABLED',
 		'sse_last_event_send_delay' => 'LAST_EVENT_SEND_DELAY',
@@ -42,7 +45,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		'sse_segment_cover_weather' => 'SEGMENT_COVER_METEO',
 		'sse_segment_cover_traffic' => 'SEGMENT_COVER_TRAFFIC',
 		'sse_segment_cover_news' => 'SEGMENT_COVER_NEWS',
-		'sse_segment_cover_advert' => 'SEGMENT_COVER_ADVERTISING'
+		'sse_segment_cover_advert' => 'SEGMENT_COVER_ADVERTISING',
+		// Logging
+		'log_level' => 'LOG_LEVEL'
 	);
 
 	// Update settings
@@ -112,7 +117,6 @@ $_config['log_level'] .= "<option value=\"Info\" " . (($config['LOG_LEVEL'] == '
 $_config['log_level'] .= "<option value=\"Warning\" " . (($config['LOG_LEVEL'] == 'WARNING') ? "selected" : "") . ">Warning</option>\n";
 $_config['log_level'] .= "<option value=\"Error\" " . (($config['LOG_LEVEL'] == 'ERROR') ? "selected" : "") . ">Error</option>\n";
 $_config['log_level'] .= "<option value=\"Critical\" " . (($config['LOG_LEVEL'] == 'CRITICAL') ? "selected" : "") . ">Critical</option>\n";
-$_config['log_level'] .= "<option value=\"Debug\" " . (($config['LOG_LEVEL'] == 'DEBUG') ? "selected" : "") . ">Debug</option>\n";
 
 // Daemon mode settings (SSE server)
 $_config['sse_debounce_ms'] = $config['DEBOUNCE_MS'];
