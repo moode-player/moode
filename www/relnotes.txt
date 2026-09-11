@@ -17,6 +17,7 @@
 
 Updates
 - UPD: Set Qobuz 'cache_to_disk' option based on Pi physical memory
+- UPD: Improve Radio Cover+: reduce logging, prevent blank url's in rcu cache 
 
 Bug fixes
 - FIX: Backup from r1034 won't restore completely
