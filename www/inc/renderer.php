@@ -264,9 +264,7 @@ function isSpotifyUpgradable() {
 
 // Qobuz Connect
 // Copyright 2026 @PhilipVinc qbz fork of moode / https://github.com/PhilipVinc/moode
-function startQobuz() {
-	// Logging
-	$logging = $_SESSION['debuglog'] == '1' ? ' > ' . QBZD_LOG : ' > /dev/null';
+function cfgQobuz() {
 	// Settings
 	$result = sqlRead('cfg_qobuz', sqlConnect());
 	$cfgQobuz = array();
@@ -299,7 +297,7 @@ function startQobuz() {
 	sysCmd('qbzd settings set audio.normalization_enabled ' . $cfgQobuz['normalization_enabled']);
 	sysCmd('qbzd settings set audio.allow_quality_fallback true');
 	sysCmd('qbzd settings set audio.gapless_enabled ' . $cfgQobuz['gapless_enabled']);
-	sysCmd('qbzd settings set audio.quality_fallback_behavior ' . $cfgQobuz['quality_fallback_behaviour']);
+	sysCmd('qbzd settings set audio.quality_fallback_behavior ' . $cfgQobuz['quality_fallback_behavior']);
 	sysCmd('qbzd settings set audio.streaming_only ' . $cfgQobuz['streaming_only']);
 	sysCmd('qbzd settings set audio.stream_first_track ' . $cfgQobuz['stream_first_track']);
 	sysCmd('qbzd settings set audio.cache_to_disk ' . $cfgQobuz['cache_to_disk']);
@@ -307,6 +305,12 @@ function startQobuz() {
 	sysCmd('qbzd settings set audio.alsa_buffer_ms ' . $cfgQobuz['alsa_buffer_ms']);
 	// Event script
 	sysCmd('qbzd settings set hooks.script /var/local/www/commandw/qbzevent.sh');
+}
+function startQobuz() {
+	// Logging
+	$logging = $_SESSION['debuglog'] == '1' ? ' > ' . QBZD_LOG : ' > /dev/null';
+
+	cfgQobuz();
 
 	// Start the daemon
 	$cmd = 'qbzd run' . $logging . ' 2>&1 &';
@@ -357,7 +361,7 @@ function isQobuzInstalled() {
 	return empty($result) ? false : true;
 }
 function isQobuzUpgradable() {
-	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show librespot | grep moode')[0];
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show qbzd | grep moode')[0];
 	$availableVersion = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", sqlConnect())[0]['version'];
 	return ($installedVersion == $availableVersion ? false : true);
 }
