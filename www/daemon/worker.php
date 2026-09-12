@@ -790,6 +790,9 @@ workerLog('worker: ALSA volume:   ' . $alsaVolStr);
 workerLog('worker: ALSA maxvol:   ' . $_SESSION['alsavolume_max'] . '%');
 // ALSA loopback
 workerLog('worker: ALSA loopback: ' . lcfirst($_SESSION['alsa_loopback']));
+// DAC quiet start: keep the udev prime rule in sync with the DB setting
+applyDacPrime($_SESSION['dac_prime'] ?? '0');
+workerLog('worker: DAC prime: ' . (($_SESSION['dac_prime'] ?? '0') == '1' ? 'on' : 'off'));
 // ALSA dummy PCM
 workerLog('worker: ALSA dummyPCM: ' . lcfirst($_SESSION['multiroom_tx']));
 // MPD mixer
@@ -3115,6 +3118,11 @@ function runQueuedJob() {
 			updMpdConf();
 			sysCmd('systemctl restart mpd');
 			break;
+		case 'dac_prime':
+			// Install/remove the udev prime rule; it takes effect at the next
+			// enumeration (reboot or DAC re-plug), so no immediate playback here.
+			applyDacPrime($_SESSION['w_queueargs']);
+			break;
 		// Equalizers/DSP
 		case 'alsaequal':
 		case 'camilladsp':
@@ -4056,6 +4064,25 @@ function runQueuedJob() {
 // VARIOUS HELPER FUNCTIONS
 //----------------------------------------------------------------------------//
 
+// DAC quiet start: enable/disable the udev rule that plays a silence burst
+// when the selected output card enumerates. The rule ships as a versioned file
+// (89-moode-dac-prime.rules.disabled); this renames it .disabled <-> .rules so
+// udev either sees it or not. It is a persistent file, so once active it fires at
+// enumeration on every boot/hot-plug WITHOUT waiting for the worker; the worker is
+// only the authority that decides whether the rule is active, from cfg_system
+// dac_prime. The mv is idempotent (no-op when already in the target state),
+// so a freshly toggled setting takes effect at the next reboot (or DAC re-plug),
+// when the now-active rule triggers at enumeration.
+function applyDacPrime($enabled) {
+	$ruleActive = '/etc/udev/rules.d/89-moode-dac-prime.rules';
+	$ruleDisabled = $ruleActive . '.disabled';
+	if ($enabled == '1') {
+		sysCmd('mv ' . $ruleDisabled . ' ' . $ruleActive . ' 2>/dev/null');
+	} else {
+		sysCmd('mv ' . $ruleActive . ' ' . $ruleDisabled . ' 2>/dev/null');
+	}
+	sysCmd('udevadm control --reload-rules');
+}
 // Clear MPD log
 function truncateMpdLog() {
 	sysCmd('truncate ' . MPD_LOG . ' --size 0');
