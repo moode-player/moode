@@ -39,6 +39,33 @@ TrackStarted
 PlaybackError
 )
 
+# Fill the metadata vars from the daemon's queue.
+#
+# TrackStarted is the only writer of the cache, and the cache is truncated when
+# a session ends. That leaves a gap: the Qobuz app hands a session over PAUSED,
+# so the daemon loads the track and waits for a play command -- no TrackStarted
+# is emitted, and the renderer screen has nothing to show for as long as
+# playback has not been started. The daemon knows the track the whole time, so
+# ask it rather than giving up. A daemon that answers nothing leaves the vars
+# untouched and the caller skips exactly as before.
+read_metadata_from_daemon () {
+	local META BITS RATE
+	META=$(curl -s --max-time 2 $QBZD_API/api/queue | jq -r '.current_track // empty |
+		[.title, .artist, .album, (.duration_secs | tostring), (.artwork_url // ""),
+		((.bit_depth // "") | tostring), ((.sample_rate // "") | tostring)] | @tsv' 2>/dev/null)
+	if [[ -z $META ]]; then
+		debug_log "- Daemon metadata: no current track"
+		return
+	fi
+	IFS=$'\t' read -r title artist album duration cover_url BITS RATE <<< "$META"
+	# sample_rate is reported in Hz; TrackStarted formats it in kHz
+	if [[ -n $BITS && -n $RATE ]]; then
+		RATE=$(awk -v r="$RATE" 'BEGIN {printf "%g", (r >= 1000 ? r / 1000 : r)}')
+		sformat="FLAC $BITS/$RATE kHz"
+	fi
+	debug_log "- Daemon metadata: $title / $artist"
+}
+
 MATCH=0
 for MATCH_EVENT in "${PLAYER_EVENTS[@]}"
 do
@@ -98,6 +125,13 @@ if [[ $QBZ_EVENT == "QconnectSessionChanged" && $QBZ_SESSION_ACTIVE == "true" &&
 	/usr/bin/mpc stop > /dev/null
 	# Send to front-end
 	/var/www/util/send-fecmd.php "qbzactive1"
+	# The overlay is up now, but nothing has told the front end what is on it:
+	# the cache is pushed by TrackStarted and by a play/pause change only, so a
+	# session that reconnects mid-track leaves the renderer screen empty until
+	# the next track starts. Re-send what is already cached.
+	if [[ -s $QBZMETA_CACHE_FILE ]]; then
+		/var/www/util/send-fecmd.php "$(cat $QBZMETA_CACHE_FILE)"
+	fi
 
 	# Local
 	if [[ $CDSP_VOLSYNC == "on" ]]; then
@@ -188,6 +222,12 @@ if [[ $QBZ_EVENT == "PlaybackStateChanged" ]]; then
 		export "$key=$value"
 		debug_log "- Read cache: $key=$value"
 	done < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' $QBZMETA_CACHE_FILE)
+
+	# Nothing cached yet: the session was handed over paused, so no TrackStarted
+	# has run. Ask the daemon instead of leaving the screen blank.
+	if [[ "$cover_url" == "" ]]; then
+		read_metadata_from_daemon
+	fi
 
 	# Update cache/send to front-end
 	if [[ "$cover_url" == "" ]]; then
