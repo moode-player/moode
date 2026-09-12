@@ -1603,7 +1603,7 @@ if (chkRendererActive() === true) {
 	phpSession('write', 'volknob', '0');
 	sysCmd('/var/www/util/vol.sh 0');
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive' OR
-		param='spotactive' OR param='qbzctive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
+		param='spotactive' OR param='qbzactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
 		param='inpactive'", $dbh);
 	workerLog('worker: Active flags:         at least one true');
 	workerLog('worker: Reset flags:          all reset to false');
