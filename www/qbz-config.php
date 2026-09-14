@@ -105,10 +105,15 @@ if ($_normalization_disabled == '') {
 	$_select['normalization_target_lufs'] .= "<option value=\"" . $cfgQobuz['normalization_target_lufs'] . "\" selected>-14 LUFS, streaming (Default)</option>\n";
 	$_normalization_hint = '<span class="config-help-static">The target applies when Volume normalization is set to Yes.</span>';
 }
-// DAC keep-alive
-$_select['dac_keepalive_ms'] .= "<option value=\"off\" " . (($cfgQobuz['dac_keepalive_ms'] == 'off') ? "selected" : "") . ">Off (Default)</option>\n";
-$_select['dac_keepalive_ms'] .= "<option value=\"50\" " . (($cfgQobuz['dac_keepalive_ms'] == '50') ? "selected" : "") . ">50 ms</option>\n";
-$_select['dac_keepalive_ms'] .= "<option value=\"100\" " . (($cfgQobuz['dac_keepalive_ms'] == '100') ? "selected" : "") . ">100 ms</option>\n";
+// DAC keep-alive — NOT offered. The renderer still has the setting and
+// startQobuz() still pushes it, so re-enabling is putting this select back; but
+// at every depth it was tried, the silence it holds is a fraction of the ALSA
+// ring while stop_threshold is the whole ring, so the device drains what it was
+// given and the driver reports an underrun. Measured at 50 ms on a 24/96
+// stream: an XRUN every 76 ms, which is the clock being stopped and restarted
+// 13 times a second by the feature whose entire purpose is to keep it running.
+// Inaudible on a DAC that does not mind, and precisely backwards for the ones
+// that do. Kept at 'off'.
 
 // PLAYBACK
 // Start playback

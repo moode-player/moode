@@ -85,21 +85,6 @@
 				$_normalization_hint
 			</div>
 
-			<label class="control-label" for="dac-keepalive-ms">Keep DAC awake</label>
-			<div class="controls">
-				<select id="dac-keepalive-ms" class="config-select-large" name="config[dac_keepalive_ms]">
-					$_select[dac_keepalive_ms]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dac-keepalive-ms" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-dac-keepalive-ms" class="config-help-info">
-					Some DACs click and drop into standby when the audio stops between tracks, then click again
-					when the next one starts. Feeding a little silence through the gap keeps the DAC awake.<br>
-					<b>Off:</b> Stop the audio between tracks, as MPD does.<br>
-					<b>50 ms / 100 ms:</b> Hold this much silence during a gap. Try 50 ms first. The device stays
-					open while a track is loading, so other players cannot use the card until playback stops.
-				</span>
-			</div>
-
 			<div class="config-horiz-rule">Playback</div>
 
 			<label class="control-label" for="stream-first-track">Start playback</label>
