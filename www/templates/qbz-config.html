@@ -183,11 +183,10 @@
 			<label class="control-label">Settings via SSH</label>
 			<div class="controls">
 				<span class="config-help-static">
-					The renderer has a handful of tuning settings this page deliberately does not show, because
-					the defaults are right on every player we know of and a wrong value is audible. They are
-					reachable over SSH. Each takes effect the next time the renderer starts, so restart it from
-					Renderer Config afterwards, and note that this page rewrites every setting it owns on each
-					restart &mdash; the ones below are not among them, so they stick.<br><br>
+					The renderer has additional tuning settings this page deliberately does not show. They are
+					reachable and settable over SSH. Each takes effect the next time the renderer starts, so
+					restart it from Renderer Config afterwards, and note that this page rewrites every setting
+					it owns on each restart &mdash; the ones below are not among them, so they stick.<br><br>
 					<b>See what the renderer is currently set to</b><br>
 					<code>pibuz settings show</code><br><br>
 					<b>Buffer more decoded audio</b> &mdash; the cushion between a network stall and a click.
@@ -197,19 +196,23 @@
 					<b>Download further ahead</b> &mdash; seconds of compressed audio fetched in advance of
 					playback, 2 to 60. This is the memory a playing track occupies, so raising it costs RAM.<br>
 					<code>pibuz settings set audio.stream_window_seconds 20</code><br><br>
+					<b>Resize the in-memory track cache</b> &mdash; the RAM downloaded tracks are held in, so a
+					repeat or a gapless hand-off does not go back to the network. <code>auto</code> takes
+					17&nbsp;% of physical memory, capped at 512&nbsp;MB: about 150&nbsp;MB on a 1&nbsp;GB
+					player, about 340&nbsp;MB on 2&nbsp;GB, and the cap from roughly 3&nbsp;GB up. A Hi-Res
+					FLAC is 60&ndash;170&nbsp;MB, so even the cap leaves room for the playing track and the
+					prefetched next one; what does not fit spills to the disk cache above. Accepts
+					<code>auto</code> or a size in MB.<br>
+					<code>pibuz settings set audio.memory_cache_mb auto</code><br><br>
 					<b>Change the volume curve</b> &mdash; how a percentage becomes a level. Perceptual matches
-					MPD; linear makes the slider unusable below its top tenth, and is only useful when something
-					downstream expects a raw fraction.<br>
+					MPD, linear makes the slider unusable below its top tenth.<br>
 					<code>pibuz settings set audio.volume_curve linear</code><br><br>
 					<b>Stop the audio thread running at real-time priority</b> &mdash; only worth trying if the
 					renderer is starving something else on a busy player.<br>
 					<code>pibuz settings set audio.writer_rt_priority off</code><br><br>
 					<b>Name the mixer explicitly</b> &mdash; only needed if hardware volume cannot find the
 					DAC&rsquo;s mixer on its own.<br>
-					<code>pibuz settings set audio.alsa_mixer_device hw:0</code><br><br>
-					<code>pibuz settings show</code> above lists every setting name that can be set, with its
-					current value. Anything set here that this page also owns will be overwritten the next time
-					the renderer starts.
+					<code>pibuz settings set audio.alsa_mixer_device hw:0</code>
 				</span>
 			</div>
 
