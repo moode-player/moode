@@ -51,7 +51,10 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-initial-volume" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-initial-volume" class="config-help-info">
-					The initial volume on the client App after it connects.
+					The volume to set when a client App connects, so an App that has never played to this
+					renderer cannot arrive at its own remembered level.<br>
+					<b>Off:</b> Leave the volume where it is. Forced when Volume is set to Fixed (0dB), since
+					the renderer does not attenuate at all in that mode.
 				</span>
 			</div>
 
@@ -63,6 +66,37 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-enabled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-normalization-enabled" class="config-help-info">
 					Adjusts the volume of all songs played so that they sound as though they are of equal loudness.
+				</span>
+			</div>
+
+			<label class="control-label" for="normalization-target-lufs">Normalize to</label>
+			<div class="controls">
+				<select id="normalization-target-lufs" class="config-select-large" name="config[normalization_target_lufs]" $_normalization_disabled>
+					$_select[normalization_target_lufs]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-target-lufs" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-normalization-target-lufs" class="config-help-info">
+					The loudness all songs are matched to. Quieter targets leave more headroom for the peaks
+					in dynamic recordings.<br>
+					<b>-14 LUFS:</b> What the streaming services use.<br>
+					<b>-18 LUFS:</b> Quieter, and the usual choice for classical and jazz.<br>
+					<b>-23 LUFS:</b> The EBU R128 broadcast standard.
+				</span>
+				$_normalization_hint
+			</div>
+
+			<label class="control-label" for="dac-keepalive-ms">Keep DAC awake</label>
+			<div class="controls">
+				<select id="dac-keepalive-ms" class="config-select-large" name="config[dac_keepalive_ms]">
+					$_select[dac_keepalive_ms]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dac-keepalive-ms" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-dac-keepalive-ms" class="config-help-info">
+					Some DACs click and drop into standby when the audio stops between tracks, then click again
+					when the next one starts. Feeding a little silence through the gap keeps the DAC awake.<br>
+					<b>Off:</b> Stop the audio between tracks, as MPD does.<br>
+					<b>50 ms / 100 ms:</b> Hold this much silence during a gap. Try 50 ms first. The device stays
+					open while a track is loading, so other players cannot use the card until playback stops.
 				</span>
 			</div>
 
@@ -118,6 +152,20 @@
 				</span>
 			</div>
 
+			<label class="control-label" for="disk-cache-mb">Cache size (disk)</label>
+			<div class="controls">
+				<select id="disk-cache-mb" class="config-select-large" name="config[disk_cache_mb]" $_disk_cache_disabled>
+					$_select[disk_cache_mb]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-disk-cache-mb" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-disk-cache-mb" class="config-help-info">
+					How much of the card cached tracks may occupy. Players with less than 2 GB of memory cache
+					to the card; the rest keep tracks in memory and never write to it. The oldest tracks are
+					removed once the limit is reached.
+				</span>
+				$_disk_cache_hint
+			</div>
+
 			<label class="control-label" for="gapless-enabled">Gapless playback</label>
 			<div class="controls">
 				<select id="gapless-enabled" class="config-select-large" name="config[gapless_enabled]" $_gapless_disabled>
@@ -125,23 +173,13 @@
 				</select>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-gapless-enabled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-gapless-enabled" class="config-help-info">
-					Play consecutive tracks without a gap of silence between them. Requires the Track cache to be enabled.
+					Play consecutive tracks without a gap of silence between them. Requires the Track cache to be
+					enabled. Works on every player, including the small boards &mdash; those hold the next track on
+					the card rather than in memory, so it needs the card cache to be working.
 				</span>
 				$_gapless_hint
 			</div>
 
-			<label class="control-label" for="quality-fallback-behavior">Quality fallback</label>
-			<div class="controls">
-				<select id="quality-fallback-behavior" class="config-select-large" name="config[quality_fallback_behavior]">
-					$_select[quality_fallback_behavior]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-quality-fallback-behavior" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-quality-fallback-behavior" class="config-help-info">
-					Choose what to do when a track cannot be played at the selected quality.<br>
-					<b>Always fallback:</b> Play the track at the highest quality supported by the subscription and the audio device.<br>
-					<b>Always skip:</b>	Skip the track.
-				</span>
-			</div>
 
 			<label class="control-label" for="alsa-buffer-ms">ALSA buffer</label>
 			<div class="controls">
@@ -152,6 +190,41 @@
 				<span id="info-alsa-buffer-ms" class="config-help-info">
 					<b>Auto:</b> Calculate the buffer length based on sample rate of the track.<br>
 					<b>Number:</b> Set a specific the buffer length.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Advanced</div>
+
+			<label class="control-label">Settings via SSH</label>
+			<div class="controls">
+				<span class="config-help-static">
+					The renderer has a handful of tuning settings this page deliberately does not show, because
+					the defaults are right on every player we know of and a wrong value is audible. They are
+					reachable over SSH. Each takes effect the next time the renderer starts, so restart it from
+					Renderer Config afterwards, and note that this page rewrites every setting it owns on each
+					restart &mdash; the ones below are not among them, so they stick.<br><br>
+					<b>See what the renderer is currently set to</b><br>
+					<code>pibuz settings show</code><br><br>
+					<b>Buffer more decoded audio</b> &mdash; the cushion between a network stall and a click.
+					Auto picks 6 seconds, or 2 on a player with under 2 GB of memory. Raise it on a player on
+					weak WiFi.<br>
+					<code>pibuz settings set audio.pcm_ring_ms 4000</code><br><br>
+					<b>Download further ahead</b> &mdash; seconds of compressed audio fetched in advance of
+					playback, 2 to 60. This is the memory a playing track occupies, so raising it costs RAM.<br>
+					<code>pibuz settings set audio.stream_window_seconds 20</code><br><br>
+					<b>Change the volume curve</b> &mdash; how a percentage becomes a level. Perceptual matches
+					MPD; linear makes the slider unusable below its top tenth, and is only useful when something
+					downstream expects a raw fraction.<br>
+					<code>pibuz settings set audio.volume_curve linear</code><br><br>
+					<b>Stop the audio thread running at real-time priority</b> &mdash; only worth trying if the
+					renderer is starving something else on a busy player.<br>
+					<code>pibuz settings set audio.writer_rt_priority off</code><br><br>
+					<b>Name the mixer explicitly</b> &mdash; only needed if hardware volume cannot find the
+					DAC&rsquo;s mixer on its own.<br>
+					<code>pibuz settings set audio.alsa_mixer_device hw:0</code><br><br>
+					<code>pibuz settings show</code> above lists every setting name that can be set, with its
+					current value. Anything set here that this page also owns will be overwritten the next time
+					the renderer starts.
 				</span>
 			</div>
 

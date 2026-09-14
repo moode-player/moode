@@ -53,6 +53,14 @@ const RADIOBROWSER_LIMIT = 28; // Fixed search/page size
 // AirPlay, Qobuz Connect and Spotify Connect
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
 const QBZMETA_CACHE_FILE = '/var/local/www/qbzmeta.json';
+// Below this, cache tracks to the card instead of holding them in memory.
+// This ALSO decides gapless on the small boards: the renderer can hand a
+// successor over as a path on the card instead of a whole track in memory, so
+// a player that caches to disk gets gapless whatever its memory. Between the
+// two branches of this threshold every moOde player is covered -- under it by
+// the card, over it by having the RAM -- which is why there is no separate
+// memory floor for gapless here.
+const QOBUZ_DISK_CACHE_MAX_MB = 2048;
 const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
 const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 // SQLite

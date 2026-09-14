@@ -275,14 +275,21 @@ function startQobuz() {
 	}
 
 	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
+	// Fixed 0dB output means nothing after us attenuates, so the renderer must
+	// not either: 'locked' pins it to unity and makes it ignore the controlling
+	// app's volume slider.
 	$volMode = $_SESSION['mpdmixer'] == 'none' ? 'locked' : 'software';
+	// Volume on connect is attenuation, so it contradicts 'locked' — pibuz
+	// refuses it in that mode, and sending it anyway would only put a number in
+	// the log that never applies.
+	$initialVolume = $volMode == 'locked' ? 'off' : $cfgQobuz['initial_volume'];
 
 	// QConnect
 	sysCmd('pibuz qconnect enable');
 	sysCmd('pibuz settings set qconnect.device_name "' . $_SESSION['qobuzname'] . '"');
 	sysCmd('pibuz settings set qconnect.pairing on');
 	sysCmd('pibuz settings set qconnect.volume_mode ' . $volMode);
-	sysCmd('pibuz settings set qconnect.initial_volume ' . $cfgQobuz['initial_volume']);
+	sysCmd('pibuz settings set qconnect.initial_volume ' . $initialVolume);
 	// Playback
 	sysCmd('pibuz settings set playback.quality ' . $cfgQobuz['quality']);
 	sysCmd('pibuz settings set playback.persist_session false');
@@ -297,14 +304,15 @@ function startQobuz() {
 	// Audio other
 	sysCmd('pibuz settings set audio.stream_buffer_seconds ' . $cfgQobuz['stream_buffer_seconds']);
 	sysCmd('pibuz settings set audio.normalization_enabled ' . $cfgQobuz['normalization_enabled']);
-	sysCmd('pibuz settings set audio.allow_quality_fallback true');
+	sysCmd('pibuz settings set audio.normalization_target_lufs ' . $cfgQobuz['normalization_target_lufs']);
 	sysCmd('pibuz settings set audio.gapless_enabled ' . $cfgQobuz['gapless_enabled']);
-	sysCmd('pibuz settings set audio.quality_fallback_behavior ' . $cfgQobuz['quality_fallback_behaviour']);
 	sysCmd('pibuz settings set audio.streaming_only ' . $cfgQobuz['streaming_only']);
 	sysCmd('pibuz settings set audio.stream_first_track ' . $cfgQobuz['stream_first_track']);
 	sysCmd('pibuz settings set audio.cache_to_disk ' . $cfgQobuz['cache_to_disk']);
 	sysCmd('pibuz settings set audio.memory_cache_mb ' . $cfgQobuz['memory_cache_mb']);
+	sysCmd('pibuz settings set audio.disk_cache_mb ' . $cfgQobuz['disk_cache_mb']);
 	sysCmd('pibuz settings set audio.alsa_buffer_ms ' . $cfgQobuz['alsa_buffer_ms']);
+	sysCmd('pibuz settings set audio.dac_keepalive_ms ' . $cfgQobuz['dac_keepalive_ms']);
 	// Event script
 	sysCmd('pibuz settings set hooks.script /var/local/www/commandw/qbzevent.sh');
 
