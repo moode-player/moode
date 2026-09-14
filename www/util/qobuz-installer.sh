@@ -10,14 +10,14 @@
 # for the current architecture, verifies it and installs binary + service.
 #
 
-# moOde builds come from Pibuz's standalone releases (release.yml, tags
-# `pibuz-v<version>`). The `.moodeN` suffix marks a build cut for a moOde
-# package: it is not a Cargo version, so the binary cannot report it and the
-# suffix is recorded in PIBUZ_BUILD_FILE for the Renderer Config screen.
-PIBUZ_VERSION="2.0.2.moode58"
+# Plain semver, matching the release tag and the Cargo version inside the
+# binary. There used to be a `.moodeN` counter here because a moOde build
+# needed a version the Cargo one could not hold; it was dropped because its
+# base stopped being updated and the binary ended up announcing 2.0.2 from a
+# 2.4.0 tree. One number now, and `pibuz --version` is the check.
+PIBUZ_VERSION="2.4.0"
 PIBUZ_REPO="https://github.com/PhilipVinc/pibuz"
-PIBUZ_TAG="pibuz-v$PIBUZ_VERSION"
-PIBUZ_BUILD_FILE="/var/local/www/pibuz-build"
+PIBUZ_TAG="v$PIBUZ_VERSION"
 
 # Initialize the step counter
 STEP=0
@@ -76,9 +76,6 @@ install -Dm755 "pibuz-$PIBUZ_VERSION-linux-$ARCH/pibuz" /usr/local/bin/pibuz
 if [ $? -ne 0 ]; then
 	cancel_update "** Install failed"
 fi
-# Record what was installed: `pibuz --version` reports the Cargo version only,
-# so without this a moOde build is indistinguishable from upstream 2.0.2.
-echo "$PIBUZ_VERSION" > $PIBUZ_BUILD_FILE
 
 # 4 - Finish up
 STEP=$((STEP + 1))
@@ -98,6 +95,10 @@ if systemctl list-unit-files pibuz.service > /dev/null 2>&1; then
 	fi
 fi
 systemctl daemon-reload
-message_log "** Installed pibuz $PIBUZ_VERSION (binary reports $(/usr/local/bin/pibuz --version | awk '{print $2}'))"
+INSTALLED="$(/usr/local/bin/pibuz --version | awk '{print $2}')"
+if [ "$INSTALLED" != "$PIBUZ_VERSION" ]; then
+	cancel_update "** Installed binary reports $INSTALLED, expected $PIBUZ_VERSION"
+fi
+message_log "** Installed pibuz $INSTALLED"
 message_log "Install complete: turn the renderer on in Renderer Config"
 exit 0
