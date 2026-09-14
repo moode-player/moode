@@ -15,7 +15,7 @@
 # needed a version the Cargo one could not hold; it was dropped because its
 # base stopped being updated and the binary ended up announcing 2.0.2 from a
 # 2.4.0 tree. One number now, and `pibuz --version` is the check.
-PIBUZ_VERSION="2.4.0"
+PIBUZ_VERSION="2.4.0-rc.2"
 PIBUZ_REPO="https://github.com/PhilipVinc/pibuz"
 PIBUZ_TAG="v$PIBUZ_VERSION"
 
