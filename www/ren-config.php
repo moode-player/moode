@@ -336,7 +336,7 @@ if (isQobuzInstalled() === true) {
 }
 /* Automated build/install deb package method
 if (isQobuzInstalled() === true) {
-	$_qobuz_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show qbzd | grep moode')[0];
+	$_qobuz_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show pibuz | grep moode')[0];
 	if (isQobuzUpgradable() === true) {
 		$_install_qobuz_hide = '';
 		$_qobuz_btn_text = 'Upgrade';

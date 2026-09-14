@@ -241,7 +241,7 @@ INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (1, 'camill
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters', '4.0.0');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.5.1-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
-INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-qbzd', '2.0.2-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-pibuz', '2.0.2-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (6, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
 
 -- Table: cfg_qobuz

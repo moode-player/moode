@@ -19,7 +19,7 @@ FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x "mpd")
 AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
 SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
-QOBUZ_RUNNING=$(pgrep -c -x "qbzd")
+QOBUZ_RUNNING=$(pgrep -c -x "pibuz")
 TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 
 message_log () {
@@ -131,7 +131,7 @@ while true; do
 			counter=0
 			while [ $counter -lt 3 ]; do
 				sleep 1
-				QOBUZ_RUNNING=$(pgrep -c -x "qbzd")
+				QOBUZ_RUNNING=$(pgrep -c -x "pibuz")
 				if [[ $QOBUZ_RUNNING != "0" ]]; then break; fi
 				((counter++))
 			done
@@ -202,7 +202,7 @@ while true; do
 	MPD_RUNNING=$(pgrep -c -x "mpd")
 	AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
 	SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
-	QOBUZ_RUNNING=$(pgrep -c -x "qbzd")
+	QOBUZ_RUNNING=$(pgrep -c -x "pibuz")
 	TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 
 done > /dev/null 2>&1 &

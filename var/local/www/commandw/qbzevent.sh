@@ -4,15 +4,15 @@
 # Copyright 2014 The moOde audio player project / Tim Curtis
 # Copyright 2026 @PhilipVinc fork of moode / https://github.com/PhilipVinc/moode
 #
-# Qbzd event script
-# The qbzd daemon runs this script for each event emitted and stores the event
+# Pibuz event script
+# The pibuz daemon runs this script for each event emitted and stores the event
 # data in QBZ_* environment variables.
 #
-# NOTE: qbzd does not offer an option to wait for script completion which means
+# NOTE: pibuz does not offer an option to wait for script completion which means
 # events can overlap causing loss of event data. Script locking is used as a
 # workaround to help serialize the events.
 
-# Remove this when qbzd implements a 'wait_for_script_completion' option
+# Remove this when pibuz implements a 'wait_for_script_completion' option
 exec 9> /tmp/qbzevent.lock
 flock 9
 
@@ -21,7 +21,7 @@ DEBUG=$(sudo moodeutl -d -gv debuglog)
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 QBZMETA_CACHE_FILE="/var/local/www/qbzmeta.json"
-QBZD_API="http://127.0.0.1:8182"
+PIBUZ_API="http://127.0.0.1:8182"
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
