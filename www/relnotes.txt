@@ -21,6 +21,7 @@ Updates
 
 Bug fixes
 - FIX: Backup from r1034 won't restore completely
+- FIX: In-place update script fails on <= moode 10.3.1 due to multiple issues
 
 ################################################################################
 #
