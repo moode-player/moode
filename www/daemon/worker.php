@@ -711,18 +711,14 @@ if ($actualCardNum == ALSA_EMPTY_CARD) {
 	phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
 	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
 	updMpdConf();
-	sysCmd('systemctl restart mpd');
 	workerLog('worker: MPD config:    updated');
 } else if ($actualCardNum == $_SESSION['cardnum']) {
 	workerLog('worker: ALSA card:     has not been reassigned');
 	if (isHDMIDevice($_SESSION['adevname'])) {
 		phpSession('write', 'alsa_output_mode', 'iec958');
-		updMpdConf();
-		sysCmd('systemctl restart mpd');
 		workerLog('worker: MPD config:    updated (iec958 device)');
-	} else {
-		workerLog('worker: MPD config:    update not needed');
 	}
+	updMpdConf();
 } else {
 	workerLog('worker: ALSA card:     has been reassigned to ' . $actualCardNum . ' from ' . $_SESSION['cardnum']);
 	phpSession('write', 'cardnum', $actualCardNum);
@@ -731,7 +727,6 @@ if ($actualCardNum == ALSA_EMPTY_CARD) {
 		workerLog('worker: MPD config:    update not needed (trx sender on)');
 	} else {
 		updMpdConf();
-		sysCmd('systemctl restart mpd');
 		workerLog('worker: MPD config:    updated');
 	}
 }
@@ -914,13 +909,6 @@ if (!file_exists('/etc/mpd.conf')) {
 	$lines = file(MPD_CONF);
 	if (!str_contains($lines[1], 'This file is managed by moOde')) {
 		workerLog('worker: MPD config:         Creating managed mpd.conf');
-		updMpdConf();
-	}
-	// Device mismatch (can happen after backup restored)
-	$alsaDev = sysCmd('awk -F"\"" ' . "'/slave.pcm/ {print $2}'" . ' /etc/alsa/conf.d/_audioout.conf');
-	debugLog('ALSA conf: ' . $alsaDev[0] . ' | Audio output: ' . $audioOutput);
-	if (str_contains($alsaDev[0], ALSA_IEC958_DEVICE) && $audioOutput != AO_HDMI) {
-		workerLog('worker: MPD config:         Updated (ALSA conf device mismatch)');
 		updMpdConf();
 	}
 }
