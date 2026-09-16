@@ -15,8 +15,12 @@
 #
 ################################################################################
 
+Packages
+- UPD: Linux-image: 1:6.18.50-1+rpt1
+- UPD: Pibuz: 2.4.0-1moode1
+
 Updates
-- UPD: Set Qobuz 'cache_to_disk' option based on Pi physical memory
+- UPD: Refactor qbzd to pibuz
 - UPD: Improve Radio Cover+: reduce logging, prevent blank url's in rcu cache
 
 Bug fixes
