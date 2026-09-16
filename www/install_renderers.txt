@@ -2,7 +2,7 @@
 #
 #  Installation Guide for Audio Renderers
 #
-#  Version: 1.1 2026-09-08
+#  Version: 1.2 2026-09-15
 #
 #  (C) Tim Curtis 2024 http://moodeaudio.org
 #
@@ -29,19 +29,18 @@ on the overall speed of the Raspberry Pi including CPU, RAM, and boot media, and
 the speed of the network which is used to download the renderer sources and build
 scripts from GitHub.
 
-Some example times from testing:
-+-------------------------------------------+
-| PI MODEL   | AIRPLAY  | SPOTIFY  | QOBUZ  |
-+-------------------------------------------+
-| Pi-5 4GB   | 3 mins   | 6 mins   | ?      |
-+-------------------------------------------+
-| Pi-4 2GB   | 6 mins   | 14 mins  | ?      |
-+-------------------------------------------+
-| Pi-4 1GB   | 6 mins   | 25 mins  | ?      |
-+-------------------------------------------+
-| Pi-3B+ 1GB | 10 mins  | 60+ mins | ?      |
-+-------------------------------------------+
-
+Some approximate times from testing:
++---------------------------------------------+
+| PI MODEL   | AIRPLAY  | SPOTIFY  | QOBUZ    |
++---------------------------------------------+
+| Pi-5 4GB   | 3 mins   | 6 mins   | 10 mins   |
++---------------------------------------------+
+| Pi-4 2GB   | 6 mins   | 14 mins  | 20 mins  |
++---------------------------------------------+
+| Pi-4 1GB   | 6 mins   | 25 mins  | 40 mins  |
++---------------------------------------------+
+| Pi-3B+ 1GB | 10 mins  | 60+ mins | 90+ mins |
++---------------------------------------------+
 
 VIEWING THE INSTALLATION LOGS
 

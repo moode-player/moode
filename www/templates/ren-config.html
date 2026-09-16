@@ -244,14 +244,8 @@
 
 		<div class="control-group $_feat_qobuz">
 			<legend>Qobuz Connect</legend>
-			<!-- Temporary manual install method -->
-			<p class="sub-legend $_install_qobuz_hide">
-				This service is not installed.<br>
-				Visit the <a href="https://github.com/PhilipVinc/qbz/releases" class="target-blank-link" target="_blank">Qbzd fork project</a> for installation instructions.
-			</p>
-			<!-- Automated build/install deb package method
 			<div class="$_install_qobuz_hide">
-				<label class="control-label">Qbzd</label>
+				<label class="control-label">Pibuz</label>
 				<div class="controls">
 					<button class="btn btn-primary btn-small config-btn set-button btn-submit" type="submit" name="install_qobuz" value="1">$_qobuz_btn_text</button>
 					<span class="config-btn-after">$_qobuz_available_version</span>
@@ -259,7 +253,7 @@
 						View the <a href="./install_renderers.txt" class="target-blank-link" target="_blank">Installation guide</a> for more information.
 					</span>
 				</div>
-			</div-->
+			</div>
 
 			<label class="control-label">Service</label>
 			<div class="controls">
@@ -270,7 +264,7 @@
 				<button id="btn-set-qobuzsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_qobuz_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-qobuzsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-qobuzsvc" class="config-help-info">
-					qbzd by @vicrodh.
+					Pibuz by @PhilipVinc (based on qbzd by @vicrodh)
 				</span>
 			</div>
 

@@ -92,20 +92,6 @@
 				</span>
 			</div>
 
-			<!-- Auto set this during startup based on physical memory
-			<label class="control-label" for="cache-to-disk">Cache location</label>
-			<div class="controls">
-				<select id="cache-to-disk" class="config-select-large" name="config[cache_to_disk]">
-					$_select[cache_to_disk]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-cache-to-disk" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-cache-to-disk" class="config-help-info">
-					<b>Memory:</b> Cache tracks in memory.<br>
-					<b>Disk:</b> Cache tracks on disk. This should only be used when there is less than 2GB of physical memory.
-				</span>
-			</div>
-			-->
-
 			<label class="control-label" for="memory-cache-mb">Cache size (memory)</label>
 			<div class="controls">
 				<select id="memory-cache-mb" class="config-select-large" name="config[memory_cache_mb]">
@@ -128,19 +114,6 @@
 					Play consecutive tracks without a gap of silence between them. Requires the Track cache to be enabled.
 				</span>
 				$_gapless_hint
-			</div>
-
-			<label class="control-label" for="quality-fallback-behavior">Quality fallback</label>
-			<div class="controls">
-				<select id="quality-fallback-behavior" class="config-select-large" name="config[quality_fallback_behavior]">
-					$_select[quality_fallback_behavior]
-				</select>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-quality-fallback-behavior" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-quality-fallback-behavior" class="config-help-info">
-					Choose what to do when a track cannot be played at the selected quality.<br>
-					<b>Always fallback:</b> Play the track at the highest quality supported by the subscription and the audio device.<br>
-					<b>Always skip:</b>	Skip the track.
-				</span>
 			</div>
 
 			<label class="control-label" for="alsa-buffer-ms">ALSA buffer</label>

@@ -368,7 +368,7 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
-		QBZVER="$(qbzd --version | awk -F" " '{print $2}')"
+		QBZVER="$(pibuz --version | awk -F" " '{print $2}')"
 		echo -e "Q O B U Z   C O N N E C T"
 		echo -e "\nVersion\t\t\t= $QBZVER\c"
 		echo -e "\nFriendly name\t\t= $qobuzname\c"

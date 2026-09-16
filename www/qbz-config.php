@@ -74,11 +74,6 @@ $_select['stream_first_track'] .= "<option value=\"false\" "  . (($cfgQobuz['str
 // Track cache
 $_select['streaming_only'] .= "<option value=\"true\" " . (($cfgQobuz['streaming_only'] == 'true') ? "selected" : "") . ">Disable</option>\n";
 $_select['streaming_only'] .= "<option value=\"false\" "  . (($cfgQobuz['streaming_only'] == 'false')  ? "selected" : "") . ">Enable (Default)</option>\n";
-/* Auto set this during startup based on physical memory
-// Cache location
-$_select['cache_to_disk'] .= "<option value=\"false\" " . (($cfgQobuz['cache_to_disk'] == 'false') ? "selected" : "") . ">Memory (Default)</option>\n";
-$_select['cache_to_disk'] .= "<option value=\"true\" " . (($cfgQobuz['cache_to_disk'] == 'true') ? "selected" : "") . ">Disk</option>\n";
-*/
 // Cache size (for memory cache)
 $_select['memory_cache_mb'] .= "<option value=\"auto\" " . (($cfgQobuz['memory_cache_mb'] == 'auto') ? "selected" : "") . ">Auto (Default)</option>\n";
 $_select['memory_cache_mb'] .= "<option value=\"512\" " . (($cfgQobuz['memory_cache_mb'] == '512') ? "selected" : "") . ">512 MB</option>\n";
@@ -94,9 +89,6 @@ if ($_gapless_disabled == '') {
 	$_select['gapless_enabled'] .= "<option value=\"false\" selected>No</option>\n";
 	$_gapless_hint = '<span class="config-help-static">Gapless playback requires the Track cache to be enabled.</span>';
 }
-// Quality fallback
-$_select['quality_fallback_behavior'] .= "<option value=\"always_fallback\" " . (($cfgQobuz['quality_fallback_behavior'] == 'always_fallback') ? "selected" : "") . ">Always fallback (Default)</option>\n";
-$_select['quality_fallback_behavior'] .= "<option value=\"always_skip\" "     . (($cfgQobuz['quality_fallback_behavior'] == 'always_skip')     ? "selected" : "") . ">Always skip</option>\n";
 // ALSA buffer length (ms)
 $_select['alsa_buffer_ms'] .= "<option value=\"auto\" " . (($cfgQobuz['alsa_buffer_ms'] == 'auto') ? "selected" : "") . ">Auto (Default)</option>\n";
 $_select['alsa_buffer_ms'] .= "<option value=\"250\" " . (($cfgQobuz['alsa_buffer_ms'] == '250') ? "selected" : "") . ">250 ms</option>\n";

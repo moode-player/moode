@@ -266,7 +266,7 @@ function isSpotifyUpgradable() {
 // Copyright 2026 @PhilipVinc qbz fork of moode / https://github.com/PhilipVinc/moode
 function startQobuz() {
 	// Logging
-	$logging = $_SESSION['debuglog'] == '1' ? ' > ' . QBZD_LOG : ' > /dev/null';
+	$logging = $_SESSION['debuglog'] == '1' ? ' > ' . PIBUZ_LOG : ' > /dev/null';
 	// Settings
 	$result = sqlRead('cfg_qobuz', sqlConnect());
 	$cfgQobuz = array();
@@ -278,38 +278,40 @@ function startQobuz() {
 	$volMode = $_SESSION['mpdmixer'] == 'none' ? 'locked' : 'software';
 
 	// QConnect
-	sysCmd('qbzd qconnect enable');
-	sysCmd('qbzd settings set qconnect.device_name "' . $_SESSION['qobuzname'] . '"');
-	sysCmd('qbzd settings set qconnect.pairing on');
-	sysCmd('qbzd settings set qconnect.volume_mode ' . $volMode);
-	sysCmd('qbzd settings set qconnect.initial_volume ' . $cfgQobuz['initial_volume']);
+	sysCmd('pibuz qconnect enable');
+	sysCmd('pibuz settings set qconnect.device_name "' . $_SESSION['qobuzname'] . '"');
+	sysCmd('pibuz settings set qconnect.pairing on');
+	sysCmd('pibuz settings set qconnect.volume_mode ' . $volMode);
+	sysCmd('pibuz settings set qconnect.initial_volume ' . $cfgQobuz['initial_volume']);
 	// Playback
-	sysCmd('qbzd settings set playback.quality ' . $cfgQobuz['quality']);
-	sysCmd('qbzd settings set playback.persist_session false');
-	sysCmd('qbzd settings set playback.resume_playback_position false');
-	sysCmd('qbzd settings set playback.mpris false');
+	sysCmd('pibuz settings set playback.quality ' . $cfgQobuz['quality']);
+	sysCmd('pibuz settings set playback.persist_session false');
+	sysCmd('pibuz settings set playback.resume_playback_position false');
+	sysCmd('pibuz settings set playback.mpris false');
 	// Audio output
-	sysCmd('qbzd settings set audio.device "' . $device . '"');
-	sysCmd('qbzd settings set audio.backend alsa');
-	sysCmd('qbzd settings set audio.alsa_plugin hw');
-	sysCmd('qbzd settings set audio.alsa_hardware_volume false');	// Moode does support hardware volume for renderers
-	sysCmd('qbzd settings set audio.alsa_mixer_device auto');
+	sysCmd('pibuz settings set audio.device "' . $device . '"');
+	sysCmd('pibuz settings set audio.backend alsa');
+	sysCmd('pibuz settings set audio.alsa_plugin hw');
+	sysCmd('pibuz settings set audio.alsa_hardware_volume false');	// Moode does support hardware volume for renderers
+	sysCmd('pibuz settings set audio.alsa_mixer_device auto');
 	// Audio other
-	sysCmd('qbzd settings set audio.stream_buffer_seconds ' . $cfgQobuz['stream_buffer_seconds']);
-	sysCmd('qbzd settings set audio.normalization_enabled ' . $cfgQobuz['normalization_enabled']);
-	sysCmd('qbzd settings set audio.allow_quality_fallback true');
-	sysCmd('qbzd settings set audio.gapless_enabled ' . $cfgQobuz['gapless_enabled']);
-	sysCmd('qbzd settings set audio.quality_fallback_behavior ' . $cfgQobuz['quality_fallback_behaviour']);
-	sysCmd('qbzd settings set audio.streaming_only ' . $cfgQobuz['streaming_only']);
-	sysCmd('qbzd settings set audio.stream_first_track ' . $cfgQobuz['stream_first_track']);
-	sysCmd('qbzd settings set audio.cache_to_disk ' . $cfgQobuz['cache_to_disk']);
-	sysCmd('qbzd settings set audio.memory_cache_mb ' . $cfgQobuz['memory_cache_mb']);
-	sysCmd('qbzd settings set audio.alsa_buffer_ms ' . $cfgQobuz['alsa_buffer_ms']);
+	sysCmd('pibuz settings set audio.stream_buffer_seconds ' . $cfgQobuz['stream_buffer_seconds']);
+	sysCmd('pibuz settings set audio.stream_window_seconds ' . $cfgQobuz['stream_window_seconds']);
+	sysCmd('pibuz settings set audio.normalization_enabled ' . $cfgQobuz['normalization_enabled']);
+	sysCmd('pibuz settings set audio.gapless_enabled ' . $cfgQobuz['gapless_enabled']);
+	sysCmd('pibuz settings set audio.streaming_only ' . $cfgQobuz['streaming_only']);
+	sysCmd('pibuz settings set audio.stream_first_track ' . $cfgQobuz['stream_first_track']);
+	sysCmd('pibuz settings set audio.cache_to_disk ' . $cfgQobuz['cache_to_disk']);
+	sysCmd('pibuz settings set audio.memory_cache_mb ' . $cfgQobuz['memory_cache_mb']);
+	sysCmd('pibuz settings set audio.alsa_buffer_ms ' . $cfgQobuz['alsa_buffer_ms']);
+	sysCmd('pibuz settings set audio.dac_keepalive_ms ' . $cfgQobuz['dac_keepalive_ms']);
+	sysCmd('pibuz settings set audio.pcm_ring_ms ' . $cfgQobuz['pcm_ring_ms']);
+	sysCmd('pibuz settings set audio.writer_rt_priority ' . $cfgQobuz['writer_rt_priority']);
 	// Event script
-	sysCmd('qbzd settings set hooks.script /var/local/www/commandw/qbzevent.sh');
+	sysCmd('pibuz settings set hooks.script /var/local/www/commandw/qbzevent.sh');
 
 	// Start the daemon
-	$cmd = 'qbzd run' . $logging . ' 2>&1 &';
+	$cmd = 'pibuz run' . $logging . ' 2>&1 &';
 	debugLog('startQobuz(): (' . $cmd . ')');
 	sysCmd($cmd);
 
@@ -323,20 +325,14 @@ function startQobuz() {
 	}
 }
 function stopQobuz() {
-	// Graceful first: on SIGTERM qbzd leaves the Qobuz Connect session, so the
-	// cloud drops this renderer. SIGKILL skips that, leaving a zombie renderer
-	// registered mid-playback — the next handoff rejoins that same session, the
-	// cloud replays the stale "playing <old track> at <old position>" state,
-	// and the app ends up showing 0:00 with nothing playing. SIGKILL stays as
-	// the fallback so a wedged daemon still releases the audio device.
-	sysCmd('killall qbzd 2> /dev/null');
+	sysCmd('killall pibuz 2> /dev/null');
 	for ($i = 0; $i < 15; $i++) {
-		if (empty(sysCmd('pgrep -x qbzd'))) {
+		if (empty(sysCmd('pgrep -x pibuz'))) {
 			break;
 		}
 		usleep(200000);
 	}
-	sysCmd('killall -s9 qbzd 2> /dev/null');
+	sysCmd('killall -s9 pibuz 2> /dev/null');
 
 	// Local
 	sysCmd('/var/www/util/vol.sh -restore');
@@ -353,26 +349,21 @@ function stopQobuz() {
 	sendFECmd('qbzactive0');
 }
 function isQobuzInstalled() {
-	$result = sysCmd('which qbzd');
-	return empty($result) ? false : true;
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show pibuz | grep moode')[0];
+	return (empty($installedVersion) ? false : true);
 }
 function isQobuzUpgradable() {
-	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show librespot | grep moode')[0];
+	$installedVersion = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show pibuz | grep moode')[0];
 	$availableVersion = sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", sqlConnect())[0]['version'];
 	return ($installedVersion == $availableVersion ? false : true);
 }
-function qbzdVersion() {
-	return sysCmd('qbzd --version | awk \'{print $2}\'')[0];
+function isPibuzInstalled() {
+	$result = sysCmd('which pibuz');
+	return empty($result) ? false : true;
 }
-
-// Download a diagnostic log bundle.
-// - Qbzd output and event logs
-// - Qbzd settings
-// - Moode setings
-// - Audio configuration
-
-// Streams and exits, so it must run before any output. Nothing is written to
-// the card that is not removed again on the way out.
+function pibuzVersion() {
+	return sysCmd('pibuz --version | awk \'{print $2}\'')[0];
+}
 function downloadQbzLogs($dbh) {
 	$bundleName = 'qobuz-connect-' . $_SESSION['hostname'] . '-' . date('Ymd-His');
 	$workDir = '/tmp/' . $bundleName;
@@ -386,7 +377,7 @@ function downloadQbzLogs($dbh) {
 	$report[] = 'Collected        ' . date('Y-m-d H:i:s T');
 	$report[] = 'Pi model         ' . $_SESSION['hdwrrev'];
 	$report[] = 'Moode release    ' . getMoodeRel('verbose');
-	$report[] = 'Qbzd version     ' . qbzdVersion();
+	$report[] = 'Pibuz version     ' . pibuzVersion();
 	$report[] = 'Renderer         ' . ($_SESSION['qobuzsvc'] == '1' ? 'On' : 'Off');
 	$report[] = 'Audio output     ' . $_SESSION['audioout'];
 	$report[] = 'ALSA device      ' . $_SESSION['alsa_output_mode'];
@@ -404,11 +395,11 @@ function downloadQbzLogs($dbh) {
 	}
 
 	foreach (array(
-		'--- Qbzd status ---' => 'qbzd status',
-		'--- Qbzd settings ---' => 'qbzd settings show',
+		'--- Pibuz status ---' => 'pibuz status',
+		'--- Pibuz settings ---' => 'pibuz settings show',
 		'--- Audio devices ---' => 'aplay -l',
 		'--- Memory ---' => 'free -m',
-		'--- Qbzd process ---' => 'ps -eo pid,rss,etime,comm | grep -E "qbzd|RSS"',
+		'--- Pibuz process ---' => 'ps -eo pid,rss,etime,comm | grep -E "pibuz|RSS"',
 	) as $heading => $cmd) {
 		$report[] = '';
 		$report[] = $heading;
@@ -420,7 +411,7 @@ function downloadQbzLogs($dbh) {
 	sysCmd('rm -rf ' . $workDir . ' ' . $archive);
 	@mkdir($workDir, 0755, true);
 	file_put_contents($workDir . '/report.txt', implode("\n", $report) . "\n");
-	foreach (array(QBZD_LOG, QBZEVENT_LOG, MOODE_LOG) as $log) {
+	foreach (array(PIBUZ_LOG, QBZEVENT_LOG, MOODE_LOG) as $log) {
 		sysCmd('cp -f ' . $log . ' ' . $workDir . '/');
 	}
 	sysCmd('chmod -R a+r ' . $workDir);

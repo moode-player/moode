@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Tue Sep 8 11:44:24 2026
+-- File generated with SQLiteStudio v3.4.4 on Wed Sep 16 08:28:33 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -241,7 +241,7 @@ INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (1, 'camill
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (2, 'peppydisplay', 'moode-meters', 'v4-moode-meters', '4.0.0');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.5.1-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
-INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-qbzd', '2.0.2-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-pibuz', '2.4.0-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (6, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
 
 -- Table: cfg_qobuz
@@ -254,15 +254,18 @@ INSERT INTO cfg_qobuz (id, param, value) VALUES (5, 'normalization_enabled', 'fa
 INSERT INTO cfg_qobuz (id, param, value) VALUES (6, 'stream_first_track', 'true');
 INSERT INTO cfg_qobuz (id, param, value) VALUES (7, 'streaming_only', 'false');
 INSERT INTO cfg_qobuz (id, param, value) VALUES (8, 'gapless_enabled', 'true');
-INSERT INTO cfg_qobuz (id, param, value) VALUES (9, 'quality_fallback_behavior', 'always_fallback');
-INSERT INTO cfg_qobuz (id, param, value) VALUES (10, 'cache_to_disk', 'false');
-INSERT INTO cfg_qobuz (id, param, value) VALUES (11, 'memory_cache_mb', 'auto');
-INSERT INTO cfg_qobuz (id, param, value) VALUES (12, 'alsa_buffer_ms', 'auto');
-INSERT INTO cfg_qobuz (id, param, value) VALUES (13, 'RESERVED_13', '');
-INSERT INTO cfg_qobuz (id, param, value) VALUES (14, 'RESERVED_14', '');
-INSERT INTO cfg_qobuz (id, param, value) VALUES (15, 'RESERVED_15', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (9, 'cache_to_disk', 'false');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (10, 'memory_cache_mb', 'auto');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (11, 'alsa_buffer_ms', 'auto');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (12, 'stream_window_seconds', '8');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (13, 'dac_keepalive_ms', 'off');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (14, 'pcm_ring_ms', 'auto');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (15, 'writer_rt_priority', '5');
 INSERT INTO cfg_qobuz (id, param, value) VALUES (16, 'RESERVED_16', '');
 INSERT INTO cfg_qobuz (id, param, value) VALUES (17, 'RESERVED_17', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (18, 'RESERVED_18', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (19, 'RESERVED_19', '');
+INSERT INTO cfg_qobuz (id, param, value) VALUES (20, 'RESERVED_20', '');
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), home_page CHAR (32), monitor CHAR (32));

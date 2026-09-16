@@ -784,11 +784,11 @@ function installPackage($argv) {
 			}
 		} else if ($argv[2] == 'qobuz') {
 			$version = trim(sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'"));
-			$debPkg = 'qbzd_' . $version . '_arm64.deb';
+			$debPkg = 'pibuz_' . $version . '_arm64.deb';
 			if (file_exists($debPkg)) {
 				sysCmd('cp "' . $homeDir . $debPkg . '" /tmp/');
 
-				echo "\n** Installing qbzd\n";
+				echo "\n** Installing pibuz\n";
 				echo syscmdStr('apt -y --allow-change-held-packages install "/tmp/' . $debPkg . '"');
 
 				echo "\n** Restart the system\n";
