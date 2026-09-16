@@ -663,8 +663,25 @@ _cdeb_v="$(command -v cargo-deb >/dev/null 2>&1 && cargo-deb --version 2>/dev/nu
 if [[ "$_cdeb_v" != *"$CARGODEB_VER"* ]]; then
 	$APT_INSTALL cargo git pkg-config libssl-dev
 	cargo install --root /usr/local --locked --force --version "$CARGODEB_VER" cargo-deb >/dev/null 2>&1 \
-		&& log "Installed cargo-deb $CARGODEB_VER (for on-demand librespot build)" \
-		|| warn "cargo-deb install failed (Spotify on-demand build may fail)"
+		&& log "Installed cargo-deb $CARGODEB_VER (for the on-demand renderer builds)" \
+		|| warn "cargo-deb install failed (on-demand renderer builds may fail)"
+fi
+
+# Debian's cargo was only ever needed to compile the two binaries above. Left
+# installed it breaks what it was meant to serve: pkgbuild's rbl_check_cargo
+# APPENDS its pinned toolchain to PATH, so /usr/bin/cargo 1.85 is found first
+# and every on-demand renderer build dies on "rustc 1.85.0 is not supported"
+# - measured on the OPi3, where build.sh then returned 0 and the updater
+# reported success over a build that had compiled nothing. cargo-deb itself is
+# a standalone binary in /usr/local and survives. Outside the block above so
+# players installed before this change are repaired on the next run. The list
+# is explicit on purpose: autoremove would also take libupnpp17, which
+# upmpdcli depends on.
+if dpkg-query -W -f='${Status}' cargo 2>/dev/null | grep -q '^install ok installed'; then
+	apt-get purge -y cargo rustc libstd-rust-dev \
+		$(dpkg-query -f '${Package}\n' -W 'libstd-rust-1*' 2>/dev/null) >/dev/null 2>&1 \
+		&& log "Removed Debian's cargo/rustc so the pinned toolchain wins on PATH" \
+		|| warn "Could not remove Debian's cargo/rustc (renderer builds may pick rustc 1.85)"
 fi
 
 #----------------------------------------------------------------------------#
