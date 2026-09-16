@@ -652,7 +652,7 @@ fi
 # is explicit on purpose: an autoremove here would also sweep up unrelated
 # orphans the installer never chose to drop - on the OPi3 it offered to take
 # libupnpp17, left behind by an older upmpdcli.
-if dpkg-query -W -f='${Status}' cargo 2>/dev/null | grep -q '^install ok installed'; then
+if dpkg-query -W -f='${Status}' cargo 2>/dev/null | grep -q 'ok installed'; then
 	apt-get purge -y cargo rustc libstd-rust-dev \
 		$(dpkg-query -f '${Package}\n' -W 'libstd-rust-1*' 2>/dev/null) >/dev/null 2>&1 \
 		&& log "Removed Debian's cargo/rustc so the pinned toolchain wins on PATH" \
