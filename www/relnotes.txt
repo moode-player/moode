@@ -17,15 +17,17 @@
 
 Packages
 - UPD: Linux-image: 1:6.18.50-1+rpt1
-- UPD: Pibuz: 2.4.0-1moode1
+- UPD: Pibuz: 2.4.1-1moode1
 
 Updates
 - UPD: Refactor qbzd to pibuz
 - UPD: Improve Radio Cover+: reduce logging, prevent blank url's in rcu cache
+- UPD: Eliminate unnecessary warnings during startup from getMpdSock()
 
 Bug fixes
 - FIX: Backup from r1034 won't restore completely
 - FIX: In-place update script fails on <= moode 10.3.1 due to multiple issues
+- FIX: ALSA card number or device mismatch after Restore (rare)
 
 ################################################################################
 #
