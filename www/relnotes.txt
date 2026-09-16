@@ -17,7 +17,7 @@
 
 Packages
 - UPD: Linux-image: 1:6.18.50-1+rpt1
-- UPD: Pibuz: 2.4.0-1moode1
+- UPD: Pibuz: 2.4.1-1moode1
 
 Updates
 - UPD: Refactor qbzd to pibuz
