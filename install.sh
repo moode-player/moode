@@ -649,8 +649,9 @@ fi
 # reported success over a build that had compiled nothing. cargo-deb itself is
 # a standalone binary in /usr/local and survives. Outside the block above so
 # players installed before this change are repaired on the next run. The list
-# is explicit on purpose: autoremove would also take libupnpp17, which
-# upmpdcli depends on.
+# is explicit on purpose: an autoremove here would also sweep up unrelated
+# orphans the installer never chose to drop - on the OPi3 it offered to take
+# libupnpp17, left behind by an older upmpdcli.
 if dpkg-query -W -f='${Status}' cargo 2>/dev/null | grep -q '^install ok installed'; then
 	apt-get purge -y cargo rustc libstd-rust-dev \
 		$(dpkg-query -f '${Package}\n' -W 'libstd-rust-1*' 2>/dev/null) >/dev/null 2>&1 \
