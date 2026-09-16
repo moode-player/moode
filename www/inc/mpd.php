@@ -324,7 +324,11 @@ function scanForMPDHosts($retryCount = 2) {
 // Low-level MPD socket routines
 function getMpdSock($caller = 'unknown caller') {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('CRITICAL ERROR: getMpdSock(): Connection to MPD failed, caller (' . $caller . ')');
+		$wrkReady = sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", sqlConnect())[0]['value'];
+		// Only report after startup has finished
+		if ($wrkReady == '1') {
+			workerLog('CRITICAL ERROR: getMpdSock(): Connection to MPD failed, caller (' . $caller . ')');
+		}
 		exit(0);
 	} else {
 		return $sock;
