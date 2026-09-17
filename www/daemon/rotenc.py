@@ -76,34 +76,40 @@ def main():
 	poll_encoder()
 
 # Interrupt service routine (ISR)
+
+# Quadrature decoder (Ben Buxton full-step state table).
+# A count is only emitted after the complete 11-01-00-10-11 sequence,
+# so contact bounce or a late callback can never produce a reverse step.
+R_START, R_CW_FINAL, R_CW_BEGIN, R_CW_NEXT, R_CCW_BEGIN, R_CCW_FINAL, R_CCW_NEXT = range(7)
+DIR_CW, DIR_CCW = 0x10, 0x20
+STATE_TABLE = (
+        (R_START,    R_CW_BEGIN,  R_CCW_BEGIN, R_START),            # R_START
+        (R_CW_NEXT,  R_START,     R_CW_FINAL,  R_START | DIR_CW),   # R_CW_FINAL
+        (R_CW_NEXT,  R_CW_BEGIN,  R_START,     R_START),            # R_CW_BEGIN
+        (R_CW_NEXT,  R_CW_BEGIN,  R_CW_FINAL,  R_START),            # R_CW_NEXT
+        (R_CCW_NEXT, R_START,     R_CCW_BEGIN, R_START),            # R_CCW_BEGIN
+        (R_CCW_NEXT, R_CCW_FINAL, R_START,     R_START | DIR_CCW),  # R_CCW_FINAL
+        (R_CCW_NEXT, R_CCW_FINAL, R_CCW_BEGIN, R_START),            # R_CCW_NEXT
+)
+decoder_state = R_START
+
+# Interrupt service routine (ISR)
 def encoder_isr(pin):
-	global current_pos, last_a_state, last_b_state, thread_lock
+        global current_pos, decoder_state, thread_lock
 
-	# Read pin states
-	pin_a_state = GPIO.input(pin_a)
-	pin_b_state = GPIO.input(pin_b)
+        pin_state = (GPIO.input(pin_a) << 1) | GPIO.input(pin_b)
+        decoder_state = STATE_TABLE[decoder_state & 0x0f][pin_state]
+        direction = decoder_state & 0x30
 
-	# Ignore interrupt if no state change (debounce)
-	if last_a_state == pin_a_state and last_b_state == pin_b_state:
-		return
+        if direction:
+                thread_lock.acquire()
+                if direction == DIR_CW:
+                        current_pos += 1
+                else:
+                        current_pos -= 1
+                thread_lock.release()
 
-	# Store current as last state
-	last_a_state = pin_a_state
-	last_b_state = pin_b_state
-
-	# Ignore all states except final state where both are 1
-	# Use pin returned from the ISR to determine which pin came first before reaching 1-1
-	if pin_a_state and pin_b_state:
-		thread_lock.acquire()
-
-		if pin == pin_a:
-			current_pos -= 1 # CCW
-		else:
-			current_pos += 1 # CW
-
-		thread_lock.release()
-
-	return
+        return
 
 # Polling loop for updating volume
 def poll_encoder():
