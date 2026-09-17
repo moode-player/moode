@@ -1305,7 +1305,7 @@ $('#database-radio').on('click', 'img', function(e) {
     }
 
 	setTimeout(function() {
-        customScroll('radio', UI.radioPos + 1, 200);
+        customScroll('radio', UI.radioPos, 200);
 	}, DEFAULT_TIMEOUT);
 });
 

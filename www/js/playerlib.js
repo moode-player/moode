@@ -2937,6 +2937,7 @@ function customScroll(list, itemNum, speed) {
     		listSelector = '#database-radio';
     		scrollSelector = listSelector;
     		chDivisor = list == 'radio' ? 6 : 600;
+    		itemNum = list == 'radio' ? itemNum + 1 : itemNum;
             break;
         case 'playlist':
         case 'playlist_headers':
@@ -5202,7 +5203,7 @@ function getRVHeaderCount() {
             if ($(this).hasClass('horiz-rule-radioview')) {
                 count = count + 1;
             }
-            if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
+            if ($(this).find('.station-name').text() == RADIO.json[MPD.json['file']]['name']) {
                 UI.radioPos = index;
                 return false;
             }
