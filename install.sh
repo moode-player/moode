@@ -1013,8 +1013,13 @@ else
 			[ -f "$_deb" ] || continue
 			_p="$(dpkg-deb -f "$_deb" Package 2>/dev/null || true)"
 			[ -n "$_p" ] || continue
+			# '*ok installed', not 'install ok installed': these packages are held
+			# by the block below from the previous run, and a held package reads
+			# 'hold ok installed'. Matching the exact string left the list empty on
+			# every run after the first, so the install was skipped and the restore
+			# branch warned about a failure that had never been attempted.
 			case "$(dpkg-query -W -f='${Status}' "$_p" 2>/dev/null || true)" in
-				'install ok installed') _alsa_debs+=("$_deb"); _alsa_pkgs+=("$_p") ;;
+				*'ok installed') _alsa_debs+=("$_deb"); _alsa_pkgs+=("$_p") ;;
 			esac
 		done
 		# apt, not `dpkg -i`: dpkg installs each archive independently and leaves the
