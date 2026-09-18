@@ -298,6 +298,17 @@ CORE_PKGS=(
 	# code, deletes the archive anyway, and update/install.sh is simply not there
 	# (127). Measured on the OPi3 2026-09-01.
 	zip unzip
+	# libplist-utils is the one build dependency the upstream renderer recipes
+	# check for that nothing else here installs (shairport-sync/build.sh:20).
+	# It is listed for a reason that is NOT "our build needs it": when
+	# rbl_check_build_dep finds a package MISSING it calls apt_update, and
+	# apt_update adds moOde's cloudsmith repo with `distro=raspbian` HARDCODED,
+	# guarded only by /etc/apt/sources.list.d/moodeaudio-m8y.list existing -
+	# so a missing dependency puts a BINARY raspbian repo on an x86 box.
+	# The other four checked deps (libasound2-dev, pkg-config for pibuz and
+	# alsacap/trx/alsa-cdsp; libssl-dev for cargo-deb) already arrive with those
+	# build phases, so only this one is added here.
+	libplist-utils
 )
 
 OPT_PKGS=()
