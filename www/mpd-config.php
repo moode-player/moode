@@ -65,10 +65,10 @@ $_mpd_select['dop'] .= "<option value=\"yes\" " . (($cfgMPD['dop'] == 'yes') ? "
 // DSD silence before stop
 $_mpd_select['stop_dsd_silence'] .= "<option value=\"yes\" " . (($cfgMPD['stop_dsd_silence'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['stop_dsd_silence'] .= "<option value=\"no\" " . (($cfgMPD['stop_dsd_silence'] == 'no') ? "selected" : "") . " >No</option>\n";
-// Thesycon DSD workaround
+/*DELETE:// Thesycon DSD workaround
 $_mpd_select['thesycon_dsd_workaround'] .= "<option value=\"yes\" " . (($cfgMPD['thesycon_dsd_workaround'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['thesycon_dsd_workaround'] .= "<option value=\"no\" " . (($cfgMPD['thesycon_dsd_workaround'] == 'no') ? "selected" : "") . " >No</option>\n";
-
+*/
 // SOX RESAMPLING
 
 // Enabled

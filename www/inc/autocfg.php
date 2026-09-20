@@ -379,7 +379,7 @@ function autoConfigSettings() {
 		['requires' => ['close_on_pause'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
 		['requires' => ['log_level'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
 		['requires' => ['stop_dsd_silence'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
-		['requires' => ['thesycon_dsd_workaround'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],
+		/*DELETE:['requires' => ['thesycon_dsd_workaround'], 'handler' => 'setCfgMpdParams', 'custom_write' => 'getCfgMpdParams'],*/
 		'MPD Options',
 		['requires' => ['autoplay'], 'handler' => 'setSessVarSql'],
 		['requires' => ['extmeta'], 'handler' => 'setSessVarOnly'],

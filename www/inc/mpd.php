@@ -33,9 +33,9 @@ function updMpdConf() {
 			case 'stop_dsd_silence':
 				$stopDsdSilence = $cfg['value'];
 				break;
-			case 'thesycon_dsd_workaround':
+			/*DELETE:case 'thesycon_dsd_workaround':
 				$thesyconDsdWorkaround = $cfg['value'];
-				break;
+				break;*/
             case 'close_on_pause':
                 $closeOnPause = $cfg['value'];
                 break;
@@ -108,7 +108,9 @@ function updMpdConf() {
 				break;
 			// Default param handling
 			default:
-				$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+				if (!str_contains($cfg['param'], 'RESERVED')) {
+					$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+				}
 				break;
 		}
 	}
@@ -192,7 +194,7 @@ function updMpdConf() {
         '';
 	$data .= "dop \"" . $dop . "\"\n";
 	$data .= "stop_dsd_silence \"" . $stopDsdSilence . "\"\n";
-	$data .= "thesycon_dsd_workaround \"" . $thesyconDsdWorkaround . "\"\n";
+	/*DELETE:$data .= "thesycon_dsd_workaround \"" . $thesyconDsdWorkaround . "\"\n";*/
     $data .= "close_on_pause \"" . $closeOnPause . "\"\n";
 	$data .= $bufferTime == $bufferTimeDefault ? '' : "buffer_time \"" . $bufferTime . "\"\n";
 	$data .= "}\n\n";

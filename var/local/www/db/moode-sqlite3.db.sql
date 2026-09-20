@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Wed Sep 16 17:14:31 2026
+-- File generated with SQLiteStudio v3.4.4 on Sun Sep 20 08:32:05 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -188,7 +188,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
 INSERT INTO cfg_mpd (id, param, value) VALUES (47, 'stop_dsd_silence', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (48, 'thesycon_dsd_workaround', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (48, 'RESERVED_48', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (49, 'proxy', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (50, 'proxy_user', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (51, 'proxy_password', '');
