@@ -17,12 +17,14 @@
 
 Packages
 - UPD: Linux-image: 1:6.18.50-1+rpt1
-- UPD: Pibuz: 2.4.1-1moode1
+- UPD: Pibuz: TBD (user install)
 
 Updates
-- UPD: Refactor qbzd to pibuz
+- UPD: Refactor qbzd framework to pibuz
 - UPD: Improve Radio Cover+: reduce logging, prevent blank url's in rcu cache
 - UPD: Eliminate unnecessary warnings during startup from getMpdSock()
+- UPD: Remove deprecated MPD option "thesycon_dsd_workaround"
+- UPD: V5 Moode meters (includes new Champaigne Accuphase meter)
 
 Bug fixes
 - FIX: Backup from r1034 won't restore completely
