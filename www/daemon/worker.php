@@ -1494,9 +1494,16 @@ workerLog('worker: DSI port:         ' . $_SESSION['dsi_port']);
 workerLog('worker: DSI brightness:   ' . $_SESSION['dsi_scn_brightness']);
 workerLog('worker: DSI rotate:       ' . $_SESSION['dsi_scn_rotate']);
 workerLog('worker: --');
-// Log Triggerhappy / USB volume knob on/off state
+// Start Triggerhappy / USB volume knob
 if (!isset($_SESSION['usb_volknob'])) {
 	$_SESSION['usb_volknob'] = '0';
+}
+if ($_SESSION['usb_volknob'] == '1') {
+	sysCmd('systemctl enable triggerhappy');
+	sysCmd('systemctl start triggerhappy');
+} else {
+	sysCmd('systemctl stop triggerhappy');
+	sysCmd('systemctl disable triggerhappy');
 }
 workerLog('worker: Triggerhappy:     ' . ($_SESSION['usb_volknob'] == '1' ? 'on' : 'off'));
 // Start rotary encoder
