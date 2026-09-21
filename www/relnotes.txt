@@ -25,6 +25,7 @@ Updates
 - UPD: Eliminate unnecessary warnings during startup from getMpdSock()
 - UPD: Remove deprecated MPD option "thesycon_dsd_workaround"
 - UPD: Use configured keyboard layout for on-screen keyboard (PR #791 by @Gjuju)
+- UPD: Keep volknob from jumping between min and max mid-drag (PR #792 by @Gjuju)
 - UPD: V5 Moode meters (includes new Champaigne Accuphase meter)
 
 Bug fixes
@@ -35,6 +36,7 @@ Bug fixes
 - FIX: Var name typo in watchdog.sh (PR #802 by @TheOldPresbyope)
 - FIX: Rotary encoder decode to prevent bounce back (PR #801) by @nitrousptm)
 - FIX: Autoscroll when nav from playback to radio view PR #789 by @adriantaga)
+- FIX: Renderer screen empty when qbz session starts paused (PR #794 by @Gjuju)
 
 ################################################################################
 #
