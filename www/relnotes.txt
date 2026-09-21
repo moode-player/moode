@@ -30,9 +30,10 @@ Bug fixes
 - FIX: Backup from r1034 won't restore completely
 - FIX: In-place update script fails on <= moode 10.3.1 due to multiple issues
 - FIX: ALSA card number or device mismatch after Restore (rare)
+- FIX: Missing conditional to start/stop triggerhappy during startup
 - FIX: Var name typo in watchdog.sh (PR #802 by @TheOldPresbyope)
 - FIX: Rotary encoder decode to prevent bounce back (PR #801) by @nitrousptm)
-- FIX: Missing conditional to start/stop triggerhappy during startup
+- FIX: Autoscroll when nav from playback to radio view PR #789 by @adriantaga)
 
 ################################################################################
 #
