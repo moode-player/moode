@@ -22,13 +22,24 @@ if (isset($_POST['download_qbz_logs']) && $_POST['download_qbz_logs'] == '1') {
 // Save settings
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$msg = '';
+	// The daemon reads these two only when it starts, so changing either one
+	// still needs the restart path.
+	$restartReqd = false;
+	$currentCfg = array();
+	foreach (sqlRead('cfg_qobuz', $dbh) as $row) {
+		$currentCfg[$row['param']] = $row['value'];
+	}
 	foreach ($_POST['config'] as $key => $value) {
 		chkValue($key, $value);
+		if (($key == 'alsa_buffer_ms' || $key == 'memory_cache_mb') && $value != $currentCfg[$key]) {
+			$restartReqd = true;
+		}
 		sqlUpdate('cfg_qobuz', $dbh, $key, $value);
 	}
 	if ($_SESSION['qobuzsvc'] == '1') {
-		$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_QOBUZ . NOTIFY_MSG_SVC_RESTARTED);
-		submitJob('qobuzsvc', '', $notify['title'], $notify['msg']);
+		$msg = $restartReqd ? NOTIFY_MSG_SVC_RESTARTED : NOTIFY_MSG_SVC_SETTINGS_APPLIED;
+		$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_QOBUZ . $msg);
+		submitJob('qobuzsvc', $restartReqd ? '' : 'apply_settings', $notify['title'], $notify['msg']);
 	}
 }
 
