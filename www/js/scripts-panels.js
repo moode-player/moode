@@ -404,7 +404,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         // On-screen keyboard
         if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'On') {
-            initializeOSK();
+            initializeOSK(SESSION.json['keyboard']);
         }
 
         // First boot checks
