@@ -40,6 +40,7 @@ Whats different:
 """
 import os, sys, time, logging, argparse, signal
 import requests, re, unicodedata, html, json
+import fcntl
 from PIL import ImageFile
 from threading import Thread, Lock, Event
 from collections import defaultdict
@@ -63,9 +64,14 @@ COVER_QUALITY			= 85
 MIN_SIMILARITY			= 0.75
 MIN_SIMILARITY_ITUNES	= 0.90
 
-FAST_DEADLINE_S  = 1.5
-TOTAL_DEADLINE_S = 2.5
-EARLY_STOP_SCORE = 5.0
+# Test values
+FAST_DEADLINE_S=2.0
+TOTAL_DEADLINE_S=3.0
+REQUEST_TIMEOUT=3.0
+# Original values
+#FAST_DEADLINE_S  = 1.5
+#TOTAL_DEADLINE_S = 2.5
+#EARLY_STOP_SCORE = 5.0
 
 CACHE_ENABLED			= False
 PROVIDERS_LIST			= {}
@@ -103,6 +109,10 @@ SPOTIFY_TOKEN_EXPIRY	= 0
 _shutdown_event			= Event()
 
 # ================= LOGGING =================
+try:
+   os.chmod(LOG_FILE, 0o666)
+except OSError:
+	pass # file may not exist yet on first run — that's fine
 handler = RotatingFileHandler(LOG_FILE, maxBytes=MAX_LOG_SIZE, backupCount=BACKUP_COUNT)
 logging.basicConfig(
 	level=logging.INFO,
@@ -517,7 +527,7 @@ def search_itunes(artist, title, album=None):
 
 def search_deezer(artist, title, album=None):
 	try:
-		q = prepare_query(artist, title, album)
+		q = prepare_free_term(artist, title, album)
 		r = requests.get("https://api.deezer.com/search", params={"q": q, "limit": 5}, timeout=REQUEST_TIMEOUT)
 		if r.ok:
 			for i in r.json().get("data", []):
@@ -948,6 +958,19 @@ def search_for_cover(raw_title, station_name):
 	return cover_url
 
 def main():
+	# Prevent double execution (metadata file on causes script to be executed via worker.php)
+	LOCK_FILE = "/tmp/radiocover_plus.lock"
+	lock_fd = open(LOCK_FILE, "w")
+	try:
+		fcntl.flock(lock_fd, fcntl.LOCK_EX)
+	except OSError:
+		pass
+	# Ensure the lock file is world-writable so both root and www-data can use it
+	try:
+		os.chmod(LOCK_FILE, 0o666)
+	except OSError:
+		pass
+
 	# Setup argument parser
 	parser = argparse.ArgumentParser(
 		description="Fetch album art URL using Title and Name tags from MPD.")
