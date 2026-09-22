@@ -132,7 +132,9 @@
 	<!-- Microsoft -->
 	<meta name="msapplication-TileColor" content="#da532c">
 </head>
-
+	<!-- Native Bluetooth Overlay -->
+	<script src="js/bt-overlay.js?v=phase1-native" defer></script>
+</head>
 
 <body onorientationchange="javascript:location.reload(true); void 0;">
 	<!-- SPLASH SCREEN -->
