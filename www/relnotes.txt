@@ -20,13 +20,12 @@ Packages
 - UPD: Pibuz: TBD (user install)
 
 Updates
-- UPD: Refactor qbzd framework to pibuz
 - UPD: Improve Radio Cover+: URL cache, logging, deadlines for parallel search
 - UPD: Eliminate unnecessary warnings during startup from getMpdSock()
 - UPD: Remove deprecated MPD option "thesycon_dsd_workaround"
 - UPD: Use configured keyboard layout for on-screen keyboard (PR #791 by @Gjuju)
-- UPD: Keep volknob from jumping between min and max mid-drag (PR #792 by @Gjuju)
-- UPD: V5 Moode meters: new Champagne (Accuphase) and Pure-white (Technics)
+- UPD: Keep volknob from jumping between min/max mid-drag (PR #792 by @Gjuju)
+- UPD: V5 Moode meters: add Champagne (Accuphase) and Pure-white (Technics)
 
 Bug fixes
 - FIX: Backup from r1034 won't restore completely
