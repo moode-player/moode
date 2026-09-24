@@ -39,6 +39,7 @@ Bug fixes
 - FIX: Autoscroll when nav from playback to radio view PR #789 by @adriantaga)
 - FIX: Renderer screen empty when qbz session starts paused (PR #794 by @Gjuju)
 - FIX: Settings management and var name typo for qbz (PR #795 by @Gjuju)
+- FIX: CamillaDSP crash when USB DAC is disconnected while playing (@aronker)
 
 ################################################################################
 #
