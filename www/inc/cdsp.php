@@ -618,9 +618,11 @@ class CamillaDsp {
         } else {
             $ext = substr($config, -4) != '.yml' ? '.yml' : '';
         	$parsedConfig = yaml_parse_file($this->CAMILLA_CONFIG_DIR . '/configs/' . $config . $ext);
-        	$description = key_exists('description', $parsedConfig) ?
-        		$parsedConfig['description'] :
-        		'No description available';
+			if (is_array($parsedConfig) && key_exists('description', $parsedConfig)) {
+				$description = $parsedConfig['description'];
+			} else {
+				$description = 'No description available';
+			}
         }
         return $description;
     }
