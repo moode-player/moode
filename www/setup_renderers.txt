@@ -34,7 +34,7 @@ from the client and whether CamillaDSP is supported in the playback chain.
 +-------------------------------------------------------------------------------
 | Spotify Connect     | Spotify app               | Yes    | Yes        | Yes
 +-------------------------------------------------------------------------------
-| Qobuz Connect       | Qobuz app                 | Yes    | Yes        | No
+| Qobuz Connect       | Qobuz app                 | Yes    | Yes        | Yes
 +-------------------------------------------------------------------------------
 | Squeezelite         | Lyrion Media Server (LMS) | No     | Yes        | Yes
 +-------------------------------------------------------------------------------
