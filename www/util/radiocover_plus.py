@@ -329,7 +329,7 @@ def normalize_for_search(string):
 	"""Light cleanup for attempt 1: removes feat/with."""
 	t = string
 	t = re.sub(r"\(\s*(feat\.?|ft\.?|featuring|w/|with|voc\.?|voice)\s+[^)]*\)", "", t, flags=re.IGNORECASE)
-	t = re.sub(r"[\-,]?\s*(feat\.?|ft\.?|featuring|w/|voc\.?|voice)\s+.*$", "", t, flags=re.IGNORECASE)
+	t = re.sub(r"(?:\s*[\-,]\s*|\s+)(feat\.?|ft\.?|featuring|w/|voc\.?|voice)\s+.*$", "", t, flags=re.IGNORECASE)
 	t = re.sub(r"\s{2,}", " ", t)
 	return t.strip()
 
