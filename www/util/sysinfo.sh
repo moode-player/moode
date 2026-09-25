@@ -267,29 +267,29 @@ PLAYLIST_MANAGER_SETTINGS() {
 MPD_SETTINGS() {
 	echo -e "M P D"
 	echo -e "\nVersion\t\t\t= $(mpd -V | grep 'Music Player Daemon' | awk '{print $4}')\c"
-	echo -e "\nVolume type\t\t= $mixer_type\c"
-	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
-	echo -e "\nSelective resampling\t= $selective_resample_mode\c"
-	echo -e "\nSoX quality\t\t= $sox_quality\c"
-	if [[ $sox_quality = "custom" ]]; then
-		echo -e "\nPrecision\t\t= $sox_precision\c"
-		echo -e "\nPhase response\t\t= $sox_phase_response\c"
-		echo -e "\nPassband end\t\t= $sox_passband_end\c"
-		echo -e "\nStopband begin\t\t= $sox_stopband_begin\c"
-		echo -e "\nAttenuation\t\t= $sox_attenuation\c"
-		echo -e "\nFlags\t\t\t= $sox_flags\c"
+	echo -e "\nVolume type\t\t= $mpd_mixer_type\c"
+	echo -e "\nSoX resampling\t\t= $mpd_audio_output_format\c"
+	echo -e "\nSelective resampling\t= $mpd_selective_resample_mode\c"
+	echo -e "\nSoX quality\t\t= $mpd_sox_quality\c"
+	if [[ $mpd_sox_quality = "custom" ]]; then
+		echo -e "\nPrecision\t\t= $mpd_sox_precision\c"
+		echo -e "\nPhase response\t\t= $mpd_sox_phase_response\c"
+		echo -e "\nPassband end\t\t= $mpd_sox_passband_end\c"
+		echo -e "\nStopband begin\t\t= $mpd_sox_stopband_begin\c"
+		echo -e "\nAttenuation\t\t= $mpd_sox_attenuation\c"
+		echo -e "\nFlags\t\t\t= $mpd_sox_flags\c"
 	fi
-	echo -e "\nSoX multithreading\t= $sox_multithreading\c"
-	echo -e "\nDSD over PCM (DoP)\t= $dop\c"
-	echo -e "\nReplaygain\t\t= $replaygain\c"
-	echo -e "\nReplaygain preamp\t= $replaygain_preamp\c"
-	echo -e "\nVolume normalization\t= $volume_normalization\c"
-	echo -e "\nAudio buffer\t\t= $audio_buffer_size (MB)\c"
-	echo -e "\nOutput buffer size\t= $max_output_buffer_size (MB)\c"
-	echo -e "\nMax playlist items\t= $max_playlist_length\c"
-	echo -e "\nInput cache\t\t= $input_cache\c"
-	echo -e "\nDevice buffer\t\t= $(( $buffer_time / 1000 )) (ms)\c"
-	echo -e "\nDevice period\t\t= $(( $buffer_time / 4000 )) (ms)\n"
+	echo -e "\nSoX multithreading\t= $mpd_sox_multithreading\c"
+	echo -e "\nDSD over PCM (DoP)\t= $mpd_dop\c"
+	echo -e "\nReplaygain\t\t= $mpd_replaygain\c"
+	echo -e "\nReplaygain preamp\t= $mpd_replaygain_preamp\c"
+	echo -e "\nVolume normalization\t= $mpd_volume_normalization\c"
+	echo -e "\nAudio buffer\t\t= $mpd_audio_buffer_size (MB)\c"
+	echo -e "\nOutput buffer size\t= $mpd_max_output_buffer_size (MB)\c"
+	echo -e "\nMax playlist items\t= $mpd_max_playlist_length\c"
+	echo -e "\nInput cache\t\t= $mpd_input_cache\c"
+	echo -e "\nDevice buffer\t\t= $(( $mpd_buffer_time / 1000 )) (ms)\c"
+	echo -e "\nDevice period\t\t= $(( $mpd_buffer_time / 4000 )) (ms)\n"
 	#echo -e "\nALSA auto-resample\t= $auto_resample\c"
 	#echo -e "\nALSA auto-channels\t= $auto_channels\c"
 	#echo -e "\nALSA auto-format\t= $auto_format\c"
@@ -297,16 +297,17 @@ MPD_SETTINGS() {
 RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
 		echo -e "B L U E T O O T H"
-		echo -e "\nVersion\t\t\t= $BLUETOOTH_VER\c"
-		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
-		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
-		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER (bluez-tools)\c"
-		echo -e "\nPairing confirmation\t= $BT_PAIRING_CONFIRM\c"
-		echo -e "\nALSA max volume\t\t= $ALSAVOLUME_MAX_BT%\c"
-		echo -e "\nCDSP max volume\t\t= $CDSPVOLUME_MAX_BT dB\c"
+		echo -e "\nVersion\t\t\t= $BT_BLUETOOTH_VER\c"
+		echo -e "\nFriendly name\t\t= $btname\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
-		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\c"
-		echo -e "\nController mode\t\t= $bluez_controller_mode\c"
+		echo -e "\nBluealsa\t\t= $BT_BLUEALSA_VER\c"
+		echo -e "\nPi-Bluetooth\t\t= $BT_PI_BLUETOOTH_VER\c"
+		echo -e "\nPairing agent\t\t= $BT_PAIRING_AGENT_VER\c"
+		echo -e "\nPairing confirmation\t= $BT_PAIRING_CONFIRM\c"
+		echo -e "\nALSA max volume (%)\t= $BT_ALSAVOLUME_MAX_BT\c"
+		echo -e "\nCDSP max volume (dB)\t= $BT_CDSPVOLUME_MAX_BT\c"
+		echo -e "\nPCM buffer time\t\t= $bt_bluez_pcm_buffer (microsecs)\c"
+		echo -e "\nController mode\t\t= $bt_bluez_controller_mode\c"
 		echo -e "\nActivity timeout\t= $BT_AUTO_DISCONNECT\n"
 	fi
 
@@ -319,24 +320,23 @@ RENDERER_SETTINGS() {
 		echo -e "A I R P L A Y"
 		echo -e "\nVersion\t\t\t= $SPSVER\c"
 		echo -e "\nFriendly name\t\t= $airplayname\c"
-		echo -e "\nInterpolation\t\t= $interpolation\c"
-		echo -e "\n--\c"
-		echo -e "\nDisable sync\t\t= $disable_synchronization\c"
-		echo -e "\nDisable standby\t\t= $disable_standby_mode\c"
-		echo -e "\nLatency offset\t\t= $audio_backend_latency_offset_in_seconds (secs)\c"
-		echo -e "\nAudio buffer\t\t= $audio_backend_buffer_desired_length_in_seconds (secs)\c"
-		echo -e "\nOutput sample rate\t= $output_rate\c"
-		echo -e "\nOutput bit depth\t= $output_format\c"
-		echo -e "\nOutput channels\t\t= $output_channels\c"
-		echo -e "\nEight ch mode\t\t= $eight_channel_mode\c"
-		echo -e "\nSix ch mode\t\t= $six_channel_mode\c"
-		echo -e "\nMixdown\t\t\t= $six_channel_mode\c"
-		echo -e "\nOutput ch map\t\t= $output_channel_mapping\c"
-		echo -e "\n--\c"
-		echo -e "\nActive state timeout\t= $active_state_timeout\c"
-		echo -e "\nSession interruption\t= $allow_session_interruption\c"
-		echo -e "\nSession timeout\t\t= $session_timeout (ms)\c"
-		echo -e "\nResume MPD\t\t= $rsmafterapl\n"
+		echo -e "\nResume MPD\t\t= $rsmafterapl\c"
+		echo -e "\nInterpolation\t\t= $apl_interpolation\c"
+		echo -e "\nDisable sync\t\t= $apl_disable_synchronization\c"
+		echo -e "\nDisable standby\t\t= $apl_disable_standby_mode\c"
+		echo -e "\nLatency offset (secs)\t= $apl_audio_backend_latency_offset_in_seconds\c"
+		echo -e "\nAudio buffer (secs)\t= $apl_audio_backend_buffer_desired_length_in_seconds\c"
+		echo -e "\nOutput sample rate\t= $apl_output_rate\c"
+		echo -e "\nOutput bit depth\t= $apl_output_format\c"
+		echo -e "\nOutput channels\t\t= $apl_output_channels\c"
+		echo -e "\nEight ch mode\t\t= $apl_eight_channel_mode\c"
+		echo -e "\nSix ch mode\t\t= $apl_six_channel_mode\c"
+		echo -e "\nMixdown\t\t\t= $apl_six_channel_mode\c"
+		echo -e "\nOutput ch map\t\t= $apl_output_channel_mapping\c"
+		echo -e "\nIgnore volume ctl\t= $apl_ignore_volume_control\c"
+		echo -e "\nActive state timeout\t= $apl_active_state_timeout\c"
+		echo -e "\nSession interruption\t= $apl_allow_session_interruption\c"
+		echo -e "\nSession timeout (ms)\t= $apl_session_timeout\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
@@ -348,6 +348,7 @@ RENDERER_SETTINGS() {
 		echo -e "S P O T I F Y   C O N N E C T"
 		echo -e "\nVersion\t\t\t= $SPOTVER\c"
 		echo -e "\nFriendly name\t\t= $spotifyname\c"
+		echo -e "\nResume MPD\t\t= $rsmafterspot\c"
 		echo -e "\nBitrate (kbps)\t\t= $spot_bitrate\c"
 		echo -e "\nFormat\t\t\t= $spot_format\c"
 		echo -e "\nDither\t\t\t= $spot_dither\c"
@@ -363,8 +364,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nRelease (ms)\t\t= $spot_normalization_release\c"
 		echo -e "\nKnee\t\t\t= $spot_normalization_knee\c"
 		echo -e "\nAutoplay\t\t= $spot_autoplay\c"
-		echo -e "\nZeroconf Port\t\t= $spot_zeroconf_port\c"
-		echo -e "\nResume MPD\t\t= $rsmafterspot\n"
+		echo -e "\nZeroconf Port\t\t= $spot_zeroconf_port\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
@@ -372,7 +372,22 @@ RENDERER_SETTINGS() {
 		echo -e "Q O B U Z   C O N N E C T"
 		echo -e "\nVersion\t\t\t= $QBZVER\c"
 		echo -e "\nFriendly name\t\t= $qobuzname\c"
-		echo -e "\nResume MPD\t\t= $rsmafterqbz\n"
+		echo -e "\nResume MPD\t\t= $rsmafterqbz\c"
+		echo -e "\nQuality\t\t\t= $qbz_quality\c"
+		echo -e "\nStream buffer (secs)\t= $qbz_stream_buffer_seconds\c"
+		echo -e "\nVolume mode\t\t= $qbz_volume_mode\c"
+		echo -e "\nInitial volume\t\t= $qbz_initial_volume\c"
+		echo -e "\nNormalization\t\t= $qbz_normalization_enabled\c"
+		echo -e "\nStream first track\t= $qbz_stream_first_track\c"
+		echo -e "\nStreaming only\t\t= $qbz_streaming_only\c"
+		echo -e "\nCache to disk\t\t= $qbz_cache_to_disk\c"
+		echo -e "\nMemory cache (MB)\t= $qbz_memory_cache_mb\c"
+		echo -e "\nGapless\t\t\t= $qbz_gapless_enabled\c"
+		echo -e "\nALSA buffer (ms)\t= $qbz_alsa_buffer_ms\c"
+		echo -e "\nStream window (secs)\t= $qbz_stream_window_seconds\c"
+		echo -e "\nDAC keepalive (ms)\t= $qbz_dac_keepalive_ms\c"
+		echo -e "\nPCM ring buffer (ms)\t= $qbz_pcm_ring_ms\c"
+		echo -e "\nWriter RT proirity\t= $qbz_writer_rt_priority\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
@@ -380,14 +395,14 @@ RENDERER_SETTINGS() {
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
 		echo -e "S Q U E E Z E L I T E"
 		echo -e "\nVersion\t\t\t= $SL $SLT\c"
-		echo -e "\nFriendly name\t\t= $PLAYERNAME\c"
-		echo -e "\nALSA device\t\t= $AUDIODEVICE\c"
-		echo -e "\nALSA params\t\t= $ALSAPARAMS\c"
-		echo -e "\nOutput buffers\t\t= $OUTPUTBUFFERS\c"
-		echo -e "\nTask priority\t\t= $TASKPRIORITY\c"
-		echo -e "\nCodec list\t\t= $CODECS\c"
-		echo -e "\nOther options\t\t= $OTHEROPTIONS\c" | cut -c 1-45
-		echo -e "Resume MPD\t\t= $rsmaftersl\n"
+		echo -e "\nFriendly name\t\t= $SL_PLAYERNAME\c"
+		echo -e "\nResume MPD\t\t= $rsmaftersl\c"
+		echo -e "\nALSA device\t\t= $SL_AUDIODEVICE\c"
+		echo -e "\nALSA params\t\t= $SL_ALSAPARAMS\c"
+		echo -e "\nOutput buffers\t\t= $SL_OUTPUTBUFFERS\c"
+		echo -e "\nTask priority\t\t= $SL_TASKPRIORITY\c"
+		echo -e "\nCodec list\t\t= $SL_CODECS\c"
+		echo -e "\nOther options\t\t= $SL_OTHEROPTIONS\n" | cut -c 1-45
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_PLEXAMP)) -ne 0 ]; then
@@ -395,7 +410,7 @@ RENDERER_SETTINGS() {
 			PAVER="4.10.1"
 			echo -e "P L E X A M P"
 			echo -e "\nVersion\t\t\t= $PAVER\c"
-			echo -e "\nALSA max volume\t\t= $ALSAVOLUME_MAX_PA%\c"
+			echo -e "\nALSA max volume\t\t= $PA_ALSAVOLUME_MAX_PA%\c"
  	 		echo -e "\nResume MPD\t\t= $rsmafterpa\n"
 		fi
 	fi
@@ -473,10 +488,10 @@ FEAT_MULTIROOM=65536
 FEAT_PEPPYDISPLAY=131072
 
 # Selective resampling bitmask
-SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
-SOX_UPSAMPLE_ONLY_41K=1		# Upsample only 44.1K source rate
-SOX_UPSAMPLE_ONLY_4148K=2	# Upsample only 44.1K and 48K source rates
-SOX_ADHERE_BASE_FREQ=8		# Resample (adhere to base freq)
+MPD_SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
+MPD_SOX_UPSAMPLE_ONLY_41K=1		# Upsample only 44.1K source rate
+MPD_SOX_UPSAMPLE_ONLY_4148K=2	# Upsample only 44.1K and 48K source rates
+MPD_SOX_ADHERE_BASE_FREQ=8		# Resample (adhere to base freq)
 
 # Rootfs size in bytes (3.5GB)
 DEV_ROOTFS_SIZE=3670016000
@@ -575,19 +590,19 @@ else
 fi
 
 # Bluetooth
-BLUETOOTH_VER=$(bluetoothd -v)
-BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
-PARING_AGENT_VER=$(dpkg -l | grep bluez-tools | awk '{print $3}' | cut -d"~" -f1)
-PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
-bluez_controller_mode=$(moodeutl -d -gv bluez_controller_mode)
+BT_BLUETOOTH_VER=$(bluetoothd -v)
+BT_BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
+BT_PAIRING_AGENT_VER="1.0.0 (bt-pairing-agent.py)"
+BT_PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
+bt_bluez_controller_mode=$(moodeutl -d -gv bluez_controller_mode)
 TMP=$(moodeutl -d -gv bt_pairing_confirm)
 [[ "$TMP" = "1" ]] && BT_PAIRING_CONFIRM="On" || BT_PAIRING_CONFIRM="Off"
-ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)
-CDSPVOLUME_MAX_BT=$(moodeutl -d -gv cdspvolume_max_bt)
+BT_ALSAVOLUME_MAX_BT=$(moodeutl -d -gv alsavolume_max_bt)
+BT_CDSPVOLUME_MAX_BT=$(moodeutl -d -gv cdspvolume_max_bt)
 BT_AUTO_DISCONNECT=$(moodeutl -d -gv bt_auto_disconnect)
 
 # Plexamp
-ALSAVOLUME_MAX_PA=$(moodeutl -d -gv alsavolume_max_pa)
+PA_ALSAVOLUME_MAX_PA=$(moodeutl -d -gv alsavolume_max_pa)
 
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
@@ -601,25 +616,26 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 # AirPlay settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_airplay")
 readarray -t arr <<<"$RESULT"
-interpolation=${arr[0]}
-eight_channel_mode=${arr[1]}
-six_channel_mode=${arr[2]}
-mixdown=${arr[3]}
-output_channel_mapping=${arr[4]}
-audio_backend_latency_offset_in_seconds=${arr[5]}
-audio_backend_buffer_desired_length_in_seconds=${arr[6]}
-run_this_before_entering_active_state=${arr[7]}
-run_this_after_exiting_active_state=${arr[8]}
-active_state_timeout=${arr[9]}
-wait_for_completion=${arr[10]}
-allow_session_interruption=${arr[11]}
-session_timeout=${arr[12]}
-output_rate=${arr[13]}
-output_format=${arr[14]}
-output_channels=${arr[15]}
-disable_synchronization=${arr[16]}
-disable_standby_mode=${arr[17]}
-cover_art_cache_directory=${arr[18]}
+apl_interpolation=${arr[0]}
+apl_eight_channel_mode=${arr[1]}
+apl_six_channel_mode=${arr[2]}
+apl_mixdown=${arr[3]}
+apl_output_channel_mapping=${arr[4]}
+apl_audio_backend_latency_offset_in_seconds=${arr[5]}
+apl_audio_backend_buffer_desired_length_in_seconds=${arr[6]}
+apl_run_this_before_entering_active_state=${arr[7]}
+apl_run_this_after_exiting_active_state=${arr[8]}
+apl_active_state_timeout=${arr[9]}
+apl_wait_for_completion=${arr[10]}
+apl_allow_session_interruption=${arr[11]}
+apl_session_timeout=${arr[12]}
+apl_output_rate=${arr[13]}
+apl_output_format=${arr[14]}
+apl_output_channels=${arr[15]}
+apl_disable_synchronization=${arr[16]}
+apl_disable_standby_mode=${arr[17]}
+apl_cover_art_cache_directory=${arr[18]}
+apl_ignore_volume_control=${arr[19]}
 
 # MPD settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
@@ -650,36 +666,36 @@ RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
 'max_playlist_length'
 )")
 readarray -t arr <<<"$RESULT"
-device=${arr[0]}
-mixer_type=${arr[1]}
-dop=${arr[2]}
-audio_output_format=${arr[3]}
-sox_quality=${arr[4]}
-[[ "${arr[5]}" = "1" ]] && sox_multithreading="off" || sox_multithreading="on"
-replaygain=${arr[6]}
-replaygain_preamp=${arr[7]}
-volume_normalization=${arr[8]}
-audio_buffer_size=$((${arr[9]}/1024))
-input_cache=${arr[10]}
-max_output_buffer_size=$((${arr[11]}/1024))
-auto_resample=${arr[12]}
-auto_channels=${arr[13]}
-auto_format=${arr[14]}
-buffer_time=${arr[15]}
-period_time=${arr[16]}
-[[ "${arr[17]}" = "0" ]] && selective_resample_mode="disabled"
-[[ "${arr[17]}" = "$SOX_UPSAMPLE_ALL" ]] && selective_resample_mode="Upsample if source < target rate"
-[[ "${arr[17]}" = "$SOX_UPSAMPLE_ONLY_41K" ]] && selective_resample_mode="Upsample only 44.1K source rate"
-[[ "${arr[17]}" = "$SOX_UPSAMPLE_ONLY_4148K" ]] && selective_resample_mode="Upsample only 44.1K and 48K source rates"
-[[ "${arr[17]}" = "$SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Resample (adhere to base freq)"
-[[ "${arr[17]}" = "$(($SOX_UPSAMPLE_ALL + $SOX_ADHERE_BASE_FREQ))" ]] && selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
-sox_precision=${arr[18]}
-sox_phase_response=${arr[19]}
-sox_passband_end=${arr[20]}
-sox_stopband_begin=${arr[21]}
-sox_attenuation=${arr[22]}
-sox_flags=${arr[23]}
-max_playlist_length=${arr[24]}
+mpd_device=${arr[0]}
+mpd_mixer_type=${arr[1]}
+mpd_dop=${arr[2]}
+mpd_audio_output_format=${arr[3]}
+mpd_sox_quality=${arr[4]}
+[[ "${arr[5]}" = "1" ]] && mpd_sox_multithreading="off" || mpd_sox_multithreading="on"
+mpd_replaygain=${arr[6]}
+mpd_replaygain_preamp=${arr[7]}
+mpd_volume_normalization=${arr[8]}
+mpd_audio_buffer_size=$((${arr[9]}/1024))
+mpd_input_cache=${arr[10]}
+mpd_max_output_buffer_size=$((${arr[11]}/1024))
+mpd_auto_resample=${arr[12]}
+mpd_auto_channels=${arr[13]}
+mpd_auto_format=${arr[14]}
+mpd_buffer_time=${arr[15]}
+mpd_period_time=${arr[16]}
+[[ "${arr[17]}" = "0" ]] && mpd_selective_resample_mode="disabled"
+[[ "${arr[17]}" = "$MPD_SOX_UPSAMPLE_ALL" ]] && mpd_selective_resample_mode="Upsample if source < target rate"
+[[ "${arr[17]}" = "$MPD_SOX_UPSAMPLE_ONLY_41K" ]] && mpd_selective_resample_mode="Upsample only 44.1K source rate"
+[[ "${arr[17]}" = "$MPD_SOX_UPSAMPLE_ONLY_4148K" ]] && mpd_selective_resample_mode="Upsample only 44.1K and 48K source rates"
+[[ "${arr[17]}" = "$MPD_SOX_ADHERE_BASE_FREQ" ]] && mpd_selective_resample_mode="Resample (adhere to base freq)"
+[[ "${arr[17]}" = "$(($MPD_SOX_UPSAMPLE_ALL + $MPD_SOX_ADHERE_BASE_FREQ))" ]] && mpd_selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
+mpd_sox_precision=${arr[18]}
+mpd_sox_phase_response=${arr[19]}
+mpd_sox_passband_end=${arr[20]}
+mpd_sox_stopband_begin=${arr[21]}
+mpd_sox_attenuation=${arr[22]}
+mpd_sox_flags=${arr[23]}
+mpd_max_playlist_length=${arr[24]}
 
 # Spotify settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_spotify")
@@ -701,16 +717,35 @@ spot_format=${arr[12]}
 spot_volume_range=${arr[14]}
 [[ "${arr[16]}" = "random" ]] && spot_zeroconf_port="Random" || spot_zeroconf_port=${arr[17]}
 
+# Qobuz settings
+RESULT=$(sqlite3 $SQLDB "select value from cfg_qobuz")
+readarray -t arr <<<"$RESULT"
+qbz_quality=${arr[0]}
+qbz_stream_buffer_seconds=${arr[1]}
+qbz_volume_mode=${arr[2]}
+qbz_initial_volume=${arr[3]}
+qbz_normalization_enabled=${arr[4]}
+qbz_stream_first_track=${arr[5]}
+qbz_streaming_only=${arr[6]}
+qbz_gapless_enabled=${arr[7]}
+qbz_cache_to_disk=${arr[8]}
+qbz_memory_cache_mb=${arr[9]}
+qbz_alsa_buffer_ms=${arr[10]}
+qbz_stream_window_seconds=${arr[11]}
+qbz_dac_keepalive_ms=${arr[12]}
+qbz_pcm_ring_ms=${arr[13]}
+qbz_writer_rt_priority=${arr[14]}
+
 # Squeezelite settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_sl")
 readarray -t arr <<<"$RESULT"
-PLAYERNAME=${arr[0]}
-AUDIODEVICE=${arr[1]}
-ALSAPARAMS=${arr[2]}
-OUTPUTBUFFERS=${arr[3]}
-TASKPRIORITY=${arr[4]}
-CODECS=${arr[5]}
-OTHEROPTIONS=${arr[6]}
+SL_PLAYERNAME=${arr[0]}
+SL_AUDIODEVICE=${arr[1]}
+SL_ALSAPARAMS=${arr[2]}
+SL_OUTPUTBUFFERS=${arr[3]}
+SL_TASKPRIORITY=${arr[4]}
+SL_CODECS=${arr[5]}
+SL_OTHEROPTIONS=${arr[6]}
 
 # System settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_system")
@@ -772,7 +807,7 @@ itunes_query_timeout=${arr[41]}
 i2soverlay=${arr[42]}
 folder_pos=${arr[43]}
 [[ "${arr[44]}" = "1" ]] && peppy_display="On" || peppy_display="Off"
-bluez_pcm_buffer=${arr[45]}
+bt_bluez_pcm_buffer=${arr[45]}
 fs_nfs_options=${arr[46]}
 library_onetouch_album=${arr[47]}
 radio_pos=${arr[48]}
@@ -1002,12 +1037,6 @@ test -f /proc/config.gz && {
 	HZ="No /proc/config.gz"
 }
 rmmod configs
-
-if [[ "$1" = "html" ]]; then
-	micro_symbol="&micro;s"
-else
-	micro_symbol="\u03bcs"
-fi
 
 #
 # Generate output
