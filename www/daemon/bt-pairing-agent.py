@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2014 The moOde audio player project / Tim Curtis
+# Copyright 2026 @Gjuju PR #784
 #
 # Bluetooth pairing agent.
+# Version 1.0.0
 #
 # Replaces `bt-agent` (bluez-tools). Registered with the DisplayYesNo capability
 # it drives Secure Simple Pairing "Numeric Comparison": on a pairing request bluez
@@ -18,6 +20,7 @@
 #   push  -> pairreq,<id>,<method>,<code>,<name_b64>,<icon>   (method: confirm|display|input|authorize)
 #   reply <- pairresp,<id>,<1|0>[,<code>]                      (on RESPONSE_SOCK)
 #   push  -> paircancel,<id>                                   (timed out or device gave up)
+#
 
 import base64
 import os
