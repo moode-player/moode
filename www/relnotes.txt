@@ -20,7 +20,8 @@ Packages
 - UPD: Pibuz: TBD (user install)
 
 Updates
-- UPD: Improve Radio Cover+: URL cache, logging, deadlines for parallel search
+- UPD: Improve Radio Cover+: URL cache, logging and deadlines
+- UPD: Improve renderer section of System info
 - UPD: Eliminate unnecessary warnings during startup from getMpdSock()
 - UPD: Remove deprecated MPD option "thesycon_dsd_workaround"
 - UPD: Use configured keyboard layout for on-screen keyboard (PR #791 by @Gjuju)
