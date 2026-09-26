@@ -1790,7 +1790,7 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	# (the worker runs error_reporting(E_ERROR)) - an absent 'ipaddr_timeout' made
 	# checkForIpAddr() compute maxLoops = ''/2 = 0, so the worker never waited for a
 	# DHCP lease and dropped straight to the Hotspot on all three test boards.
-	# Backfill schema params missing here WITHOUT touching existing rows.
+	# Backfill schema params missing here WITHOUT touching existing values.
 	#
 	# EVERY param/value table, not just cfg_system: upstream ships new renderer
 	# settings the same way (cfg_airplay gained 'ignore_volume_control'), and on the
@@ -1801,6 +1801,7 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	_schema_db=$(mktemp --suffix=.db)
 	if sqlite3 "$_schema_db" < "$SQLDB_SCHEMA" 2>/dev/null; then
 		_mig_total=0
+		_realigned=0
 		for _t in cfg_system cfg_mpd cfg_airplay cfg_spotify cfg_sl \
 			cfg_upnp cfg_multiroom cfg_qobuz; do
 			# A table only one side has (cfg_deezer, dropped upstream in 10.3.4)
@@ -1808,14 +1809,44 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 			# installer with stderr silenced. Skip what either side lacks.
 			sqlite3 "$_schema_db" "SELECT 1 FROM $_t LIMIT 1;" >/dev/null 2>&1 || continue
 			sqlite3 "$SQLDB" "SELECT 1 FROM $_t LIMIT 1;" >/dev/null 2>&1 || continue
+
+			# Realign on the schema BY ID, not only by param. Upstream never reuses
+			# an id: a retired param becomes RESERVED_<id> and a renamed one keeps
+			# its id, and on the Pi the moode-player postinstall applies that. A
+			# by-param backfill cannot see it, so the old row survived next to the
+			# new one - and in cfg_mpd a leftover row is not inert: updMpdConf()
+			# writes every unknown param into mpd.conf ('thesycon_dsd_workaround'
+			# stopped MPD). So when the table differs, rebuild its schema part:
+			# every schema id gets the schema param, with the live value of that
+			# param wherever it sits, else the schema default. Params the schema
+			# does not know are kept, except on a schema id.
 			_added=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
-				INSERT INTO $_t (param, value)
-					SELECT s.param, s.value FROM sch.$_t s
-					WHERE s.param NOT IN (SELECT param FROM main.$_t);
-				SELECT changes();" 2>/dev/null | tail -1)
-			if [ -n "$_added" ] && [ "$_added" -gt 0 ] 2>/dev/null; then
-				log "DB migration: backfilled $_added missing param(s) into $_t"
+				SELECT count(*) FROM sch.$_t s WHERE s.param NOT IN (SELECT param FROM main.$_t);" 2>/dev/null || echo 0)
+			_r=$(sqlite3 "$SQLDB" "ATTACH '$_schema_db' AS sch;
+				SELECT count(*) FROM main.$_t m
+					WHERE (m.param IN (SELECT param FROM sch.$_t) OR m.id IN (SELECT id FROM sch.$_t)
+						OR m.param LIKE 'RESERVED%')
+					AND NOT EXISTS (SELECT 1 FROM sch.$_t s WHERE s.id = m.id AND s.param = m.param);" 2>/dev/null || echo 0)
+			[ "$_added" -eq 0 ] && [ "$_r" -eq 0 ] && continue
+			if sqlite3 -bail "$SQLDB" "ATTACH '$_schema_db' AS sch;
+				BEGIN;
+				CREATE TEMP TABLE nopi_rebuilt AS
+					SELECT s.id, s.param, COALESCE(
+						(SELECT m.value FROM main.$_t m WHERE m.param = s.param AND m.id = s.id),
+						(SELECT m.value FROM main.$_t m WHERE m.param = s.param
+							ORDER BY m.id DESC LIMIT 1),
+						s.value) AS value
+					FROM sch.$_t s;
+				DELETE FROM main.$_t WHERE param IN (SELECT param FROM sch.$_t)
+					OR id IN (SELECT id FROM sch.$_t) OR param LIKE 'RESERVED%';
+				INSERT INTO main.$_t (id, param, value) SELECT id, param, value FROM temp.nopi_rebuilt;
+				COMMIT;" >/dev/null 2>&1; then
+				[ "$_added" -gt 0 ] && log "DB migration: backfilled $_added missing param(s) into $_t"
+				[ "$_r" -gt 0 ] && log "DB migration: realigned $_r row(s) of $_t on the schema ids"
 				_mig_total=$((_mig_total + _added))
+				_realigned=$((_realigned + _r))
+			else
+				warn "DB migration: failed to realign $_t on the schema (left unchanged)"
 			fi
 		done
 		# feat_bitmask is an EXISTING row, so the param backfill above leaves it
@@ -1917,7 +1948,7 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 		fi
 
 		if [ "$_mig_total" -eq 0 ] && [ "$_tbl_added" -eq 0 ] && [ "$_col_added" -eq 0 ] \
-			&& [ "$_plug_sync" -eq 0 ] && [ "$_fb_bits" -eq 0 ]; then
+			&& [ "$_plug_sync" -eq 0 ] && [ "$_fb_bits" -eq 0 ] && [ "$_realigned" -eq 0 ]; then
 			log "DB migration: schema up to date (no backfill needed)"
 		fi
 	else
@@ -1926,7 +1957,7 @@ if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	rm -f "$_schema_db"
 	unset _schema_db _mig_total _added _t _tbl_added _tbl _ddl \
 		_col_added _live_cols _c _cname _ctype _cnn _cdflt _coldef \
-		_plug_sync _plug_added _plug_upd _n _fb_old _fb_new _fb_bits
+		_plug_sync _plug_added _plug_upd _n _fb_old _fb_new _fb_bits _realigned _r
 else
 	# A successful backup is an event, not a problem: --reset-db asked for it.
 	[ -f "$SQLDB" ] && cp -a "$SQLDB" "$SQLDB.bak.$(date +%s)" && log "Backed up old DB"
