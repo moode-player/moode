@@ -16,8 +16,9 @@
 ################################################################################
 
 Packages
-- UPD: Linux-image: 1:6.18.50-1+rpt1
-- UPD: Pibuz: TBD (user install)
+- UPD: Linux-image: 1:6.18.50-1+rpt1 (Raspberry Pi Linux)
+- UPD: Shairport-sync: 5.5.2-1moode1 (User build/install)
+- UPD: Pibuz: 2.5.0-1moode1 (User build/install)
 
 Updates
 - UPD: Improve Radio Cover+: URL cache, logging and deadlines
