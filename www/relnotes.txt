@@ -16,9 +16,10 @@
 ################################################################################
 
 Packages
-- UPD: Linux-image: 1:6.18.50-1+rpt1 (Raspberry Pi Linux)
+- UPD: Linux-image: 1:6.18.50-1+rpt1
 - UPD: Shairport-sync: 5.5.2-1moode1 (User build/install)
 - UPD: Pibuz: 2.5.0-1moode1 (User build/install)
+- UPD" Alsa-cdsp: 1.2.0-4moode1
 
 Updates
 - UPD: Improve Radio Cover+: URL cache, logging and deadlines
