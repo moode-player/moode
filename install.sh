@@ -1782,8 +1782,15 @@ log "Phase 4: configuration database"
 
 install -d -m 755 /var/local/www/db
 
+# The moode-player postinstall steps, ported per upstream release
+. "$REPO_DIR/nopi-postinstall.sh"
+
 if [ -f "$SQLDB" ] && [ "$RESET_DB" -ne 1 ]; then
 	log "Existing DB kept: $SQLDB (use --reset-db to recreate)"
+
+	# Upstream steps first, as on the Pi: they migrate the old DB (renames carry
+	# their value). The schema realign below then only catches what they miss.
+	nopi_postinstall_run
 
 	# DB migration (--update): a kept DB may predate params the shipped schema has
 	# gained. A missing param surfaces as an empty $_SESSION value with NO error
@@ -1964,6 +1971,7 @@ else
 	rm -f "$SQLDB"
 	sqlite3 "$SQLDB" < "$SQLDB_SCHEMA"
 	log "Created DB from schema"
+	nopi_postinstall_mark_all
 fi
 
 # CPU governor: the schema seeds the Pi's 'ondemand', which an Intel CPU in
