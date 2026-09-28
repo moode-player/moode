@@ -84,7 +84,8 @@ SYSTEM_PARAMETERS() {
 AUDIO_PARAMETERS() {
 	ALSAVER="$(dpkg -l | awk '/libasound2t64:/ {print $3}')"
  	SOXVER="$(dpkg -l | awk '/libsoxr0:/ {print $3}')"
-	CDSPVER="$(camilladsp --version | cut -d' ' -f 2)"
+	CDSPVER="$(dpkg -s camilladsp | grep Version: | cut -d' ' -f2)"
+	ALSA_CDSP_VER="$(dpkg -l | awk '/alsa-cdsp/ {print $3}')"
 	BITS="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w format | cut -f 2 -d " ")"
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
@@ -112,7 +113,8 @@ AUDIO_PARAMETERS() {
 	echo -e "\nPreamp volume\t\t= $volknob_preamp\c"
 	echo -e "\nALSA version\t\t= $ALSAVER\c"
 	echo -e "\nSoX version\t\t= $SOXVER\c"
-	echo -e "\nCDSP verion\t\t= $CDSPVER\c"
+	echo -e "\nCDSP version\t\t= $CDSPVER\c"
+	echo -e "\nAlsa cdsp version\t= $ALSA_CDSP_VER\c"
 	echo -e "\n\c"
 	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
 		echo -e "\nBluetooth controller\t= $btsvc\c"
