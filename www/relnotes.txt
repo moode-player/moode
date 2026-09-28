@@ -27,6 +27,7 @@ Updates
 - UPD: Remove deprecated MPD option "thesycon_dsd_workaround"
 - UPD: Use configured keyboard layout for on-screen keyboard (PR #791 by @Gjuju)
 - UPD: Keep volknob from jumping between min/max mid-drag (PR #792 by @Gjuju)
+- UPD: Add version check to renderer plugin updater
 - UPD: V5 Moode meters: add Champagne (Accuphase) and Pure-white (Technics)
 
 Bug fixes
@@ -42,6 +43,7 @@ Bug fixes
 - FIX: Renderer screen empty when qbz session starts paused (PR #794 by @Gjuju)
 - FIX: Settings management and var name typo for qbz (PR #795 by @Gjuju)
 - FIX: CamillaDSP crash when USB DAC is disconnected while playing (@aronker)
+- FIX: Alsa_cdsp FIFO pipe close can leave residual noise (PR # by @mikeov)
 
 ################################################################################
 #
