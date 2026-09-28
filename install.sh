@@ -70,6 +70,8 @@ SQLDB_SCHEMA="$REPO_DIR/var/local/www/db/moode-sqlite3.db.sql"
 log()  { printf '\033[1;32m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[!]\033[0m %s\n' "$*"; }
 die()  { printf '\033[1;31m[x]\033[0m %s\n' "$*" >&2; exit 1; }
+# The running worker and monitors keep the DB open: wait on a lock, don't fail
+sqlite3() { command sqlite3 -cmd '.timeout 5000' "$@"; }
 
 for arg in "$@"; do
 	case "$arg" in
