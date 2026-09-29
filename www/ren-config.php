@@ -324,32 +324,23 @@ $_select['rsmafterspot_off']  .= "<input type=\"radio\" name=\"rsmafterspot\" id
 
 // Qobuz Connect
 $_feat_qobuz = $_SESSION['feat_bitmask'] & FEAT_QOBUZ ? '' : 'hide';
-// Temporary method: check for pibuz
-if (isPibuzInstalled() === true) {
-	$_qobuz_installed_version = pibuzVersion();
-	$_install_qobuz_hide = 'hide';
+if (isQobuzInstalled() === true) {
+	$_qobuz_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show pibuz | grep moode')[0];
+	if (isQobuzUpgradable() === true) {
+		$_install_qobuz_hide = '';
+		$_qobuz_btn_text = 'Upgrade';
+		$_qobuz_available_version = 'To version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $dbh)[0]['version'];
+	} else {
+		$_install_qobuz_hide = 'hide';
+	}
 	$_qobuz_svcbtn_disable = '';
 	$_qobuz_editlink_disable = '';
-// Official method: build/install package
 } else {
-	if (isQobuzInstalled() === true) {
-		$_qobuz_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show pibuz | grep moode')[0];
-		if (isQobuzUpgradable() === true) {
-			$_install_qobuz_hide = '';
-			$_qobuz_btn_text = 'Upgrade';
-			$_qobuz_available_version = 'To version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $dbh)[0]['version'];
-		} else {
-			$_install_qobuz_hide = 'hide';
-		}
-		$_qobuz_svcbtn_disable = '';
-		$_qobuz_editlink_disable = '';
-	} else {
-		$_install_qobuz_hide = '';
-		$_qobuz_btn_text = 'Install';
-		$_qobuz_available_version = 'Version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $dbh)[0]['version'];
-		$_qobuz_svcbtn_disable = 'disabled';
-		$_qobuz_editlink_disable = 'onclick="return false;"';
-	}
+	$_install_qobuz_hide = '';
+	$_qobuz_btn_text = 'Install';
+	$_qobuz_available_version = 'Version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $dbh)[0]['version'];
+	$_qobuz_svcbtn_disable = 'disabled';
+	$_qobuz_editlink_disable = 'onclick="return false;"';
 }
 
 $_SESSION['qobuzsvc'] == '1' ? $_qobuz_btn_disable = '' : $_qobuz_btn_disable = 'disabled';
