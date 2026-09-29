@@ -23,7 +23,7 @@ Packages
 
 Updates
 - UPD: Improve Radio Cover+: URL cache, logging and deadlines
-- UPD: Improve renderer section of System info
+- UPD: Improve renderer section of System info and other updates
 - UPD: Eliminate unnecessary warnings during startup from getMpdSock()
 - UPD: Remove deprecated MPD option "thesycon_dsd_workaround"
 - UPD: Use configured keyboard layout for on-screen keyboard (PR #791 by @Gjuju)
@@ -41,8 +41,8 @@ Bug fixes
 - FIX: Var name typo in watchdog.sh (PR #802 by @TheOldPresbyope)
 - FIX: Rotary encoder decode to prevent bounce back (PR #801) by @nitrousptm)
 - FIX: Autoscroll when nav from playback to radio view PR #789 by @adriantaga)
-- FIX: Renderer screen empty when qbz session starts paused (PR #794 by @Gjuju)
-- FIX: Settings management and var name typo for qbz (PR #795 by @Gjuju)
+- FIX: Renderer screen empty when pibuz session starts paused (PR #794 by @Gjuju)
+- FIX: Settings management and var name typo for pibuz (PR #795 by @Gjuju)
 - FIX: CamillaDSP crash when USB DAC is disconnected while playing (@aronker)
 - FIX: Alsa_cdsp FIFO pipe close can leave residual noise (PR # by @mikeov)
 
