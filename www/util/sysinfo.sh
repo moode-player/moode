@@ -913,8 +913,8 @@ volknob_preamp=${arr[124]}
 library_albumview_sort=${arr[125]}
 library_thmgen_scan=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
-rx_hostnames=${arr[128]}
-rx_addresses=${arr[129]}
+[[ "${arr[128]}" = "-1" ]] && rx_hostnames="Run discover" || rx_hostnames="${arr[128]}"
+[[ "${arr[128]}" = "-1" ]] && rx_addresses="Run discover" || rx_addresses="${arr[128]}"
 library_tagview_covers=${arr[130]}
 library_tagview_sort=${arr[131]}
 library_ellipsis_limited_text=${arr[132]}
