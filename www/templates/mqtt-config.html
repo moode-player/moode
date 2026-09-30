@@ -1,0 +1,147 @@
+<!--
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright 2014 The moOde audio player project / Tim Curtis
+ * Copyright 2026 @Gjuju
+*/
+-->
+<div id="container">
+<div class="container">
+	<h1 class="sys-config">MQTT</h1>
+
+	<form class="form-horizontal" action="" method="post">
+		<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+		</legend>
+
+		<div class="config-horiz-rule">Broker</div>
+
+		<div class="control-group">
+			<label class="control-label" for="mqtt-host">Host</label>
+			<div class="controls">
+				<input id="mqtt-host" class="config-input-large" type="text" name="config[host]" value="$_select[host]" placeholder="192.168.1.10">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-host" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-host" class="config-help-info">
+					Address of the MQTT broker.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-port">Port</label>
+			<div class="controls">
+				<input id="mqtt-port" class="config-input-large" type="number" name="config[port]" value="$_select[port]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-port" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-port" class="config-help-info">
+					Usually 1883, or 8883 with TLS.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-username">Username</label>
+			<div class="controls">
+				<input id="mqtt-username" class="config-input-large" type="text" name="config[username]" value="$_select[username]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-username" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-username" class="config-help-info">
+					Leave empty if the broker accepts anonymous connections.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-password">Password</label>
+			<div class="controls">
+				<input id="mqtt-password" class="config-input-large" type="$_pwd_input_format" name="config[password]" value="$_select[password]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-password" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<a class="show-hide-password" href="#notarget" data-id="mqtt-password"><i class="fa-regular fa-sharp fa-eye"></i></a>
+				<span id="info-mqtt-password" class="config-help-info">
+					Password of the MQTT user.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-tls">TLS</label>
+			<div class="controls">
+				<select id="mqtt-tls" class="config-select-large" name="config[tls]">
+					$_select[tls]
+				</select>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-tls" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-tls" class="config-help-info">
+					Encrypt the connection to the broker. The broker's certificate must come from a public authority such as Let's Encrypt; a self-signed certificate is refused.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-tls-server-name">TLS server name</label>
+			<div class="controls">
+				<input id="mqtt-tls-server-name" class="config-input-large" type="text" name="config[tls_server_name]" value="$_select[tls_server_name]" placeholder="myhome.duckdns.org">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-tls-server-name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-tls-server-name" class="config-help-info">
+					Only needed with TLS when Host is an IP address: the domain name the broker's certificate was issued for. Leave empty otherwise.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Player</div>
+
+			<label class="control-label" for="mqtt-instance">Instance</label>
+			<div class="controls">
+				<input id="mqtt-instance" class="config-input-large" type="text" name="config[instance]" value="$_select[instance]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-instance" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-instance" class="config-help-info">
+					Identifies this player in the MQTT topics and in the home automation system. Each player on the same broker needs its own. Set from the host name on first start.<br>
+					<b>Note:</b> Changing it later adds a second device.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-friendly-name">Name</label>
+			<div class="controls">
+				<input id="mqtt-friendly-name" class="config-input-large" type="text" name="config[friendly_name]" value="$_select[friendly_name]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-friendly-name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-friendly-name" class="config-help-info">
+					Name of the device shown in the home automation system.
+				</span>
+			</div>
+
+			<div class="config-horiz-rule">Advanced</div>
+
+			<label class="control-label" for="mqtt-topic-prefix">Topic prefix</label>
+			<div class="controls">
+				<input id="mqtt-topic-prefix" class="config-input-large" type="text" name="config[topic_prefix]" value="$_select[topic_prefix]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-topic-prefix" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-topic-prefix" class="config-help-info">
+					Topics are published under prefix/instance. Default is "moode".
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-discovery-prefix">Discovery prefix</label>
+			<div class="controls">
+				<input id="mqtt-discovery-prefix" class="config-input-large" type="text" name="config[discovery_prefix]" value="$_select[discovery_prefix]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-discovery-prefix" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-discovery-prefix" class="config-help-info">
+					Where the home automation system looks for new devices (MQTT discovery). Default is "homeassistant".
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-poll-interval">Poll interval</label>
+			<div class="controls">
+				<input id="mqtt-poll-interval" class="config-input-large" type="number" step="0.1" name="config[poll_interval]" value="$_select[poll_interval]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-poll-interval" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-poll-interval" class="config-help-info">
+					How often, in seconds, the display and audio output are checked. Playback changes are published at once regardless. Default is 1.0.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-audio-off-delay">Audio off delay</label>
+			<div class="controls">
+				<input id="mqtt-audio-off-delay" class="config-input-large" type="number" step="0.1" name="config[audio_off_delay]" value="$_select[audio_off_delay]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-audio-off-delay" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-audio-off-delay" class="config-help-info">
+					Seconds the audio output must stay closed before "Audio active" turns off. MPD closes it between tracks, so keep a few seconds. Default is 5.0.
+				</span>
+			</div>
+
+			<label class="control-label" for="mqtt-volume-step">Volume step</label>
+			<div class="controls">
+				<input id="mqtt-volume-step" class="config-input-large" type="number" name="config[volume_step]" value="$_select[volume_step]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mqtt-volume-step" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mqtt-volume-step" class="config-help-info">
+					Step used by the volume up and down commands. Default is 5.
+				</span>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
