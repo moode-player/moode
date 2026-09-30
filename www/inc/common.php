@@ -448,6 +448,7 @@ function storeBackLink($section, $tpl) {
 		'eqg-config.html'	=> '/snd-config.php',
 		'eqp-config.html'	=> '/snd-config.php',
 		'gpio-config.html'	=> '/per-config.php',
+		'mqtt-config.html'	=> '/sys-config.php',
 		'spo-config.html' 	=> '/ren-config.php',
 		'sqe-config.html'	=> '/ren-config.php',
 		'lib-nas-config.html' => '/lib-config.php',
