@@ -197,6 +197,19 @@ function autoConfigSettings() {
 			$value = $values['external_antenna'] == '0' ? '#' : '';
 			updBootConfigTxt('upd_external_antenna', $value);
 		}],
+		['requires' => ['mqttsvc'], 'handler' => 'setSessVarSql'],
+		'MQTT',
+		['requires' => ['mqtt_host', 'mqtt_port', 'mqtt_username', 'mqtt_password', 'mqtt_tls',
+			'mqtt_tls_server_name', 'mqtt_instance', 'mqtt_friendly_name', 'mqtt_topic_prefix',
+			'mqtt_discovery_prefix', 'mqtt_poll_interval', 'mqtt_audio_off_delay', 'mqtt_volume_step'],
+			'handler' => function($values) {
+				$dbh = sqlConnect();
+				foreach ($values as $key => $value) {
+					sqlUpdate('cfg_mqtt', $dbh, str_replace('mqtt_', '', $key), $value);
+				}
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_mqtt', $values, 'mqtt_');
+		}],
 		//
 		// File sharing
 		//
