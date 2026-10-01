@@ -568,9 +568,25 @@ fi
 #    fixes/bookworm_cargs_empty, plus its cdsp4_format_fix patch so the plugin
 #    emits CamillaDSP v4 sample-format names (S16LE -> S16_LE, etc.). The patch
 #    is a handful of literal string swaps, applied here with sed (no patch file).
+#    Since 1.2.0-4moode1 it also carries pkgbuild's frame_safe_cancel.patch (keeps
+#    the CamillaDSP FIFO frame-aligned on cancel, no residual noise). Like caps,
+#    the patches are fetched from pkgbuild so they track what moOde builds;
+#    fix_make_clean.patch has to precede it, it reshapes the Makefile context.
+#    The stamp holds a hash of them: a changed patch rebuilds, and when pkgbuild
+#    is unreachable an installed plugin is kept rather than rebuilt unpatched.
 CDSP_PLUGIN_DIR="$(pkg-config --variable=libdir alsa 2>/dev/null)/alsa-lib"
+ACDSP_SO="$CDSP_PLUGIN_DIR/libasound_module_pcm_cdsp.so"
+ACDSP_PATCH_URL="https://raw.githubusercontent.com/moode-player/pkgbuild/main/packages/alsa-cdsp"
+ACDSP_PATCH_DIR="$(mktemp -d)"
+ACDSP_PATCHES_OK=1
+for _p in fix_make_clean.patch frame_safe_cancel.patch; do
+	wget -q -O "$ACDSP_PATCH_DIR/$_p" "$ACDSP_PATCH_URL/$_p" && [ -s "$ACDSP_PATCH_DIR/$_p" ] || ACDSP_PATCHES_OK=0
+done
 ACDSP_REF="fixes/bookworm_cargs_empty+fmtfix"
-if nopi_need_build alsa-cdsp "$ACDSP_REF" "$([ -f "$CDSP_PLUGIN_DIR/libasound_module_pcm_cdsp.so" ] && echo 1 || echo 0)"; then
+[ "$ACDSP_PATCHES_OK" = 1 ] && ACDSP_REF="$ACDSP_REF+fsc.$(cat "$ACDSP_PATCH_DIR"/fix_make_clean.patch "$ACDSP_PATCH_DIR"/frame_safe_cancel.patch | sha256sum | cut -c1-12)"
+if [ "$ACDSP_PATCHES_OK" != 1 ] && [ -f "$ACDSP_SO" ]; then
+	log "alsa-cdsp: pkgbuild patches unreachable, keeping the installed plugin"
+elif [ ! -f "$ACDSP_SO" ] || [ "$(cat "$NOPI_BUILT_DIR/alsa-cdsp" 2>/dev/null)" != "$ACDSP_REF" ]; then
 	$APT_INSTALL build-essential git pkg-config libasound2-dev
 	CDSP_BLD="$(mktemp -d)"
 	if git clone -q -b fixes/bookworm_cargs_empty \
@@ -580,14 +596,19 @@ if nopi_need_build alsa-cdsp "$ACDSP_REF" "$([ -f "$CDSP_PLUGIN_DIR/libasound_mo
 				   -e 's/"S24LE"/"S24_4_RJ_LE"/' -e 's/"S32LE"/"S32_LE"/' \
 				   -e 's/"FLOAT32LE"/"F32_LE"/'  -e 's/"FLOAT64LE"/"F64_LE"/' \
 				   libasound_module_pcm_cdsp.c \
+			&& { [ "$ACDSP_PATCHES_OK" != 1 ] \
+				|| { patch -p1 -s < "$ACDSP_PATCH_DIR/fix_make_clean.patch" \
+					&& patch -p1 -s < "$ACDSP_PATCH_DIR/frame_safe_cancel.patch"; }; } \
 			&& make && make install ) >/dev/null 2>&1; then
 		nopi_mark_built alsa-cdsp "$ACDSP_REF"
 		log "Built alsa-cdsp ALSA plugin"
+		[ "$ACDSP_PATCHES_OK" = 1 ] || warn "alsa-cdsp built WITHOUT pkgbuild's frame_safe_cancel patch (pkgbuild unreachable); the next online run rebuilds it"
 	else
 		warn "alsa-cdsp build failed (CamillaDSP output will not open when enabled)"
 	fi
 	rm -rf "$CDSP_BLD"
 fi
+rm -rf "$ACDSP_PATCH_DIR"; unset _p
 
 # 3) Python CamillaDSP stack + camillagui. All three are moOde noarch .debs
 #    (Architecture: all - Python lib, static React build, Python backend), so the
