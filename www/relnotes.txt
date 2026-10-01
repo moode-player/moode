@@ -19,7 +19,7 @@ Updates
 - UPD:
 
 Bug fixes
-- FIX:
+- FIX: Libasound enhanced packages replace by upstream stock packages (image only)
 
 ################################################################################
 #
