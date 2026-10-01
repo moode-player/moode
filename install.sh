@@ -2148,12 +2148,14 @@ chown -R mpd:audio /var/lib/mpd/playlists
 chmod -R 0777 /var/lib/mpd/playlists
 
 #----------------------------------------------------------------------------#
-# Phase 5c - On-demand renderer plugins (AirPlay / Spotify) for non-arm64
+# Phase 5c - On-demand renderer plugins (AirPlay / Spotify / Qobuz) for non-arm64
 #----------------------------------------------------------------------------#
-# AirPlay and Spotify stay on-demand like moOde: a worker job runs
+# AirPlay, Spotify and Qobuz stay on-demand like moOde: a worker job runs
 # plugin-updater.sh, which wgets $res_plugin_upd_url/<component>/<plugin>/
 # update-<plugin>.zip and runs its update/install.sh, which BUILDS a moode-tagged
 # .deb natively (what isAirPlayInstalled() requires: `dpkg-query | grep moode`).
+# A plugin absent from the mirror does not 404: nginx falls back to coverart.php
+# and answers a JPEG with 200, so wget "succeeds" and the install fails later.
 # Two things break off the Pi: it installs a hardcoded `<pkg>_<ver>_arm64.deb`,
 # and it resolves the home dir with `moodeutl -d -gv home_dir`, which reads a PHP
 # session that is empty here (the script runs as root via the worker's sudo, and
@@ -2170,7 +2172,7 @@ chmod -R 0777 /var/lib/mpd/playlists
 
 PKG_ARCH="$(dpkg --print-architecture)"
 if [ "$PKG_ARCH" != arm64 ]; then
-	log "Phase 5c: on-demand renderer plugins (AirPlay/Spotify) x86 mirror"
+	log "Phase 5c: on-demand renderer plugins (AirPlay/Spotify/Qobuz) x86 mirror"
 	PLUG_BASE="https://raw.githubusercontent.com/moode-player/plugins/main"
 	PLUG_DST="/var/www/plugins-x86"
 	PLUG_TMP="$(mktemp -d)"
@@ -2179,7 +2181,7 @@ if [ "$PKG_ARCH" != arm64 ]; then
 	# display is installed: it is platform-independent (PNG/config only, so the seds
 	# below no-op), but mirroring it locally stops Configure > Peripherals "Install
 	# moOde meters" hanging - the updater wgets the mirror with no timeout.
-	PLUG_ENTRIES="renderer/v5-shairport-sync renderer/v8-librespot"
+	PLUG_ENTRIES="renderer/v5-shairport-sync renderer/v8-librespot renderer/v2-pibuz"
 	[ "$INSTALL_LOCALDISPLAY" = 1 ] && PLUG_ENTRIES="$PLUG_ENTRIES peppydisplay/v4-moode-meters"
 	for entry in $PLUG_ENTRIES; do
 		plugin="${entry##*/}"                       # e.g. v5-shairport-sync
