@@ -2182,7 +2182,7 @@ if [ "$PKG_ARCH" != arm64 ]; then
 	# below no-op), but mirroring it locally stops Configure > Peripherals "Install
 	# moOde meters" hanging - the updater wgets the mirror with no timeout.
 	PLUG_ENTRIES="renderer/v5-shairport-sync renderer/v8-librespot renderer/v2-pibuz"
-	[ "$INSTALL_LOCALDISPLAY" = 1 ] && PLUG_ENTRIES="$PLUG_ENTRIES peppydisplay/v4-moode-meters"
+	[ "$INSTALL_LOCALDISPLAY" = 1 ] && PLUG_ENTRIES="$PLUG_ENTRIES peppydisplay/v5-moode-meters"
 	for entry in $PLUG_ENTRIES; do
 		plugin="${entry##*/}"                       # e.g. v5-shairport-sync
 		mkdir -p "$PLUG_DST/$entry"
