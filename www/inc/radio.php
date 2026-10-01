@@ -54,8 +54,8 @@ function radioCoverPlus($title, $station) {
 	//workerLog('radioCoverPlus(): Begin');
 	//workerLog('radioCoverPlus(): ' . $title . ' | ' . $station);
 	$coverUrl = sysCmd('/var/www/util/radiocover_plus.py ' .
-		'--title "' . $title . '" ' .
-		'--station "' . $station . '"'
+		'--title ' . escapeshellarg($title) . ' ' .
+		'--station ' . escapeshellarg($station)
 		)[0];
 
 	// DEBUG:
@@ -69,9 +69,9 @@ function searchItunes($title, $timeout) {
 	//workerLog('searchItunes(): ' . $title);
 	$titleParts = explode(' - ', $title); // $titleParts[0]: Artist name, $titleParts[1]: Track title
 	$coverUrl = sysCmd('/var/www/util/itunescover.py ' .
-		'--artist "' . $titleParts[0] . '" ' .
-		'--title "' . $titleParts[1] . '" ' .
-		'--timeout ' .  $timeout
+		'--artist ' . escapeshellarg($titleParts[0]) . ' ' .
+		'--title ' . escapeshellarg($titleParts[1] ?? '') . ' ' .
+		'--timeout ' . escapeshellarg($timeout)
 		)[0];
 
 	// DEBUG:
