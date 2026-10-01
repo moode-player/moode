@@ -11,6 +11,18 @@
 
 ################################################################################
 #
+# 2026-MM-DD moOde 10.3.6 (Trixie)
+#
+################################################################################
+
+Updates
+- UPD:
+
+Bug fixes
+- FIX:
+
+################################################################################
+#
 # 2026-09-30 moOde 10.3.5 (Trixie)
 #
 ################################################################################
@@ -19,7 +31,7 @@ Packages
 - UPD: Linux-image: 1:6.18.50-1+rpt1
 - UPD: Shairport-sync: 5.5.2-1moode1 (User build/install)
 - UPD: Pibuz: 2.5.1-1moode1 (User build/install)
-- UPD" Alsa-cdsp: 1.2.0-4moode1
+- UPD: Alsa-cdsp: 1.2.0-4moode1
 
 Updates
 - UPD: Improve Radio Cover+: URL cache, logging and deadlines
