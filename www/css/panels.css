@@ -200,8 +200,6 @@ body.rmwide #renderer-oformat.ss-npicon:before {
 #inpsrc-metadata-refresh {position:absolute;bottom:0;z-index:9999;right:0;float:right;padding-bottom:.5em;}
 #inpsrc-metadata-refresh a {color:inherit;}
 #inpsrc-metadata-refresh i {font-size:1.5em;}
-#inpsrc-bt-disconnect {position:absolute;bottom:0;z-index:9999;left:0;padding-bottom:.5em;}
-#inpsrc-bt-disconnect i {font-size:1.5em;}
 
 /*
  MAIN WEBUI

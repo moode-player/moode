@@ -3378,9 +3378,6 @@ function runQueuedJob() {
 				}
 			}
 			break;
-		case 'bt_disconnect':
-			sysCmd('/var/www/util/blu-control.sh -D');
-			break;
 
 		case 'multiroom_tx':
 			if ($_SESSION['multiroom_tx'] == 'On') {
