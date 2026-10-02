@@ -16,10 +16,11 @@
 ################################################################################
 
 Updates
-- UPD:
+- UPD: Escape the args passed to the cover lookup scripts (PR #809 by @Gjuju)
 
 Bug fixes
-- FIX: Libasound enhanced packages replace by upstream stock packages (image only)
+- FIX: Alsalib enhanced packages replaced by upstream stock packages (image only)
+- FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR #807 by @Gjuju)
 
 ################################################################################
 #
