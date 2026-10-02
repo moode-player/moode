@@ -42,12 +42,12 @@ import time
 import musicpd
 import paho.mqtt.client as mqtt
 
-from backends import (AirPlayBackend, BluezBackend, MoodeBackend, PibuzBackend,
-                      SqueezeliteBackend, TRANSPORT_ALIASES, TRANSPORT_VERBS)
-from moode import (DISPLAY_RECHECK, RENDERER_FLAGS, RENDERER_LABELS, db_read,
-                   display_power, display_source, is_radio_stream, log,
-                   moode_release, output_is_open, read_renderer_meta,
-                   volume_scope)
+from mqtt_backends import (AirPlayBackend, BluezBackend, MoodeBackend, PibuzBackend,
+                           SqueezeliteBackend, TRANSPORT_ALIASES, TRANSPORT_VERBS)
+from mqtt_moode import (DISPLAY_RECHECK, RENDERER_FLAGS, RENDERER_LABELS, db_read,
+                        display_power, display_source, is_radio_stream, log,
+                        moode_release, output_is_open, read_renderer_meta,
+                        volume_scope)
 
 
 CONF_PATH = os.environ.get('MQTT_BRIDGE_CONF', '/etc/mqtt-bridge.conf')

@@ -21,7 +21,7 @@ function stopMqtt() {
 // device. The service must be stopped first: it republishes on every connect
 function removeMqtt() {
 	cfgMqtt();
-	return sysCmd('python3 /var/www/daemon/mqtt-bridge/mqtt-bridge.py --remove');
+	return sysCmd('python3 /var/www/daemon/mqtt-bridge.py --remove');
 }
 
 // Write the bridge config from cfg_mqtt
