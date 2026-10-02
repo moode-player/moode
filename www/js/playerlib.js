@@ -573,6 +573,10 @@ function engineCmd() {
                         '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
                         receiversBtn() +
                         audioInfoBtn());
+                    if (cmd[0] == 'btactive1') {
+                        $('#inpsrc-indicator').append('<span id="inpsrc-bt-disconnect">' +
+                            '<button class="btn renderer-btn disconnect-bluetooth" data-job="bt_disconnect"><i class="fa-regular fa-sharp fa-xmark"></i></button></span>');
+                    }
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
@@ -876,6 +880,7 @@ function inpSrcIndicator(cmd, msgText) {
 	$('#inpsrc-cover').html('');
     $('#inpsrc-backdrop').html('');
     $('#inpsrc-style').css('display', 'none');
+    $('#inpsrc-bt-disconnect').remove();
 
     // Set the button and preamp volume
     // NOTE: Preamp volume #id will only exist if audioin != Local
@@ -1603,6 +1608,8 @@ function renderUI() {
             '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
             receiversBtn() +
             audioInfoBtn());
+            $('#inpsrc-indicator').append('<span id="inpsrc-bt-disconnect">' +
+                '<button class="btn renderer-btn disconnect-bluetooth" data-job="bt_disconnect"><i class="fa-regular fa-sharp fa-xmark"></i></button></span>');
      	}
     	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
