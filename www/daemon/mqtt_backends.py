@@ -21,7 +21,7 @@ import urllib.request
 
 import dbus
 
-from moode import log, moode_api, volume_scope
+from mqtt_moode import log, moode_api, volume_scope
 
 
 # The verbs a backend must implement to be registered at all. Every real
