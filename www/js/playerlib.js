@@ -568,19 +568,16 @@ function engineCmd() {
                     break;
                 case 'btactive1':
                 case 'btactive0':
-                    inpSrcIndicator(cmd[0],
-                        '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
-                        '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
-                        receiversBtn() +
-                        audioInfoBtn());
-                    break;
                 case 'aplactive1':
                 case 'aplactive0':
                 case 'qbzactive1':
                 case 'qbzactive0':
                 case 'spotactive1':
                 case 'spotactive0':
-                    if (cmd[0].includes('apl')) {
+                    if (cmd[0].includes('bt')) {
+                        var rendererName = 'Bluetooth';
+                        SESSION.json['btactive'] = cmd[0].slice(-1);
+                    } else if (cmd[0].includes('apl')) {
                         var rendererName = 'AirPlay';
                         SESSION.json['aplactive'] = cmd[0].slice(-1);
                     } else if (cmd[0].includes('qbz')){
@@ -597,7 +594,8 @@ function engineCmd() {
                         '<button class="btn renderer-btn disconnect-' +
                         rendererName.toLowerCase() +
                         '" data-job="' +
-                        rendererName.toLowerCase() + 'svc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                        (rendererName == 'Bluetooth' ? 'bt_disconnect' : rendererName.toLowerCase() + 'svc') +
+                        '"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                         receiversBtn(cmd[0]) +
                         audioInfoBtn(cmd[0]) +
                         rendererRefreshBtn()
@@ -607,6 +605,7 @@ function engineCmd() {
                 case 'update_aplmeta':
                 case 'update_qbzmeta':
                 case 'update_spotmeta':
+                case 'update_btmeta':
 					// cmd[1]: '"{"fecmd": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
                     updateInpsrcMeta(cmd[0], cmd[1]);
 					// Fetch from back-end for robustness
@@ -899,6 +898,8 @@ function refreshInpsrcMeta() {
         cmd = 'get_qbzmeta';
     } else if (SESSION.json['spotactive'] == '1') {
         cmd = 'get_spotmeta';
+    } else if (SESSION.json['btactive'] == '1') {
+        cmd = 'get_btmeta';
     } else {
         cmd = '';
     }
@@ -908,7 +909,9 @@ function refreshInpsrcMeta() {
     if (cmd != '') {
 		$.get('command/renderer.php?cmd=' + cmd, function(data) {
 			// data is string: '"{"0": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
-            updateInpsrcMeta(cmd, data);
+            if (data || cmd != 'get_btmeta') {
+                updateInpsrcMeta(cmd, data);
+            }
         });
     }
 }
@@ -959,7 +962,7 @@ function updateInpsrcMeta(cmd, data) {
 		var npicon = '';
 	}
 	// Duration (not used at this time)
-	var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta')) ? 1000 : 1;
+	var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta') || cmd.includes('_btmeta')) ? 1000 : 1;
 	var duration = formatSongTime(Math.round(parseInt(metadata['duration']) / timeDivisor));
 
 	// Display metadata and cover
@@ -980,7 +983,7 @@ function updateInpsrcMeta(cmd, data) {
 		// Song file
 		if (SESSION.json['scnsaver_layout'] == 'Default') {
 			$('body').removeClass('rmwide');
-			var metadataHTML = '<b>' + artist + ' - ' + title + '</b>' +
+			var metadataHTML = '<b>' + (artist ? artist + ' - ' : '') + title + '</b>' +
 				'<br>' +
 				'<span id="renderer-format-badge">' + sformat + '</span>' +
 				'<br>' +
@@ -1599,10 +1602,14 @@ function renderUI() {
     	// Bluetooth renderer
     	if (SESSION.json['btactive'] == '1') {
     		inpSrcIndicator('btactive1',
-            '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
-            '<a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>' +
-            receiversBtn() +
-            audioInfoBtn());
+                '<span id="inpsrc-msg-text">Bluetooth Active</span>' +
+                '<button class="btn renderer-btn disconnect-bluetooth" data-job="bt_disconnect"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                receiversBtn('btactive1') +
+                audioInfoBtn('btactive1') +
+                rendererRefreshBtn()
+            );
+
+            refreshInpsrcMeta();
      	}
     	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
@@ -1683,7 +1690,7 @@ function renderUI() {
 // Multiroom receivers
 function receiversBtn(rendererActive = '') {
     if (SESSION.json['multiroom_tx'] == 'On') {
-        if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1') {
+        if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1' || rendererActive == 'btactive1') {
             // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
             var html = '<span class="context-menu"><a class="btn renderer-btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
         } else {
@@ -1697,7 +1704,7 @@ function receiversBtn(rendererActive = '') {
 }
 // Audio info
 function audioInfoBtn(rendererActive = '') {
-    if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1') {
+    if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1' || rendererActive == 'btactive1') {
         var html = '<span><a class="btn renderer-btn" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else {
         var html = '<br><span><a class="btn audioinfo-renderer" href="javascript:audioInfoPlayback()">Audio info</a></span>';

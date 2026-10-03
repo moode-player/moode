@@ -2057,6 +2057,7 @@ function chkBtActive() {
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
 			sysCmd('mpc stop'); // For added robustness
 			sendFECmd('btactive1');
+			startBtMeta();
 
 			// Local volume (set to max)
 			if ($_SESSION['alsavolume'] != 'none') {
@@ -2096,6 +2097,7 @@ function chkBtActive() {
 		if ($_SESSION['btactive'] == '1') {
 			phpSession('write', 'btactive', '0');
 			sendFECmd('btactive0');
+			stopBtMeta();
 
 			// Local volume
 	        if ($_SESSION['camilladsp'] != 'off') {
@@ -3377,6 +3379,9 @@ function runQueuedJob() {
 					sysCmd('mpc play');
 				}
 			}
+			break;
+		case 'bt_disconnect':
+			sysCmd('/var/www/util/blu-control.sh -D');
 			break;
 
 		case 'multiroom_tx':
