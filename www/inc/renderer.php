@@ -52,10 +52,19 @@ function startBluetooth() {
 	return $status;
 }
 function stopBluetooth() {
+	stopBtMeta();
 	sysCmd('systemctl stop bt-agent');
 	sysCmd('systemctl stop bluealsa');
 	sysCmd('systemctl stop bluetooth');
 	sysCmd('killall -s 9 bluealsa-aplay');
+}
+function startBtMeta() {
+	stopBtMeta();
+	sysCmd('/var/www/daemon/btmeta.py > /dev/null 2>&1 &');
+}
+function stopBtMeta() {
+	sysCmd("pkill -f '[b]tmeta.py'");
+	sysCmd('truncate ' . BTMETA_CACHE_FILE . ' --size 0');
 }
 
 // AirPlay

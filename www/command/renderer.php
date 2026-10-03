@@ -10,11 +10,8 @@ require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 // This script processes 'Turn off' and 'Disconnect' actions from the corresponding buttons on
-// Renderer Active overlays for Airplay, Spotify Connect, Squeezelite, Plexamp, RoonBridge,
-// and Multiroom Receiver.
-//
-// NOTE: The Bluetooth Active overlay provides a 'Bluetooth Control' button which opens the
-// Bluetooth Control screen where the client can be disconnected.
+// Renderer Active overlays for Bluetooth, Airplay, Spotify Connect, Squeezelite, Plexamp,
+// RoonBridge, and Multiroom Receiver.
 //
 
 chkVariables($_GET);
@@ -51,6 +48,9 @@ switch ($_GET['cmd']) {
 		break;
 	case 'get_spotmeta':
 		echo trim(file_get_contents(SPOTMETA_CACHE_FILE));
+		break;
+	case 'get_btmeta':
+		echo trim(file_get_contents(BTMETA_CACHE_FILE));
 		break;
 	// Relay the user's answer to a Bluetooth pairing confirmation (see the modal in
 	// footer.php and bt-pairing-agent.py). $_POST: id, accepted ('1'/'0'), code (optional).

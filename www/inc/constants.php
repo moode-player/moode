@@ -50,10 +50,11 @@ const RADIOBROWSER_CACHE_TTL = 1800; // Search results (30 min)
 const RADIOBROWSER_CACHE_TTL_STATIC = 43200; // Countries/genres/topclick (12 hr)
 const RADIOBROWSER_RECENT_MAX = 50;
 const RADIOBROWSER_LIMIT = 28; // Fixed search/page size
-// AirPlay, Qobuz Connect and Spotify Connect
+// AirPlay, Qobuz Connect, Spotify Connect and Bluetooth
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
 const QBZMETA_CACHE_FILE = '/var/local/www/qbzmeta.json';
 const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
+const BTMETA_CACHE_FILE = '/var/local/www/btmeta.json';
 const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
