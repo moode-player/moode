@@ -164,6 +164,7 @@ const NAME_BLUETOOTH_PAIRING_AGENT = 'Pairing Agent';
 const NAME_SPOTIFY = 'Spotify Connect';
 const NAME_QOBUZ = 'Qobuz Connect';
 const NAME_SQUEEZELITE = 'Squeezelite';
+const NAME_MQTT = 'MQTT';
 const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
 const NAME_PLEXAMP = 'Plexamp';
