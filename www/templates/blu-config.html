@@ -28,10 +28,7 @@
 					$_device[paired_device]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="connectto_device" value="1">Connect</button>
-				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="rm_paired_device" value="1"><i class="fa fa-sharp fa-trash"></i></button>
-				<span class="config-msg-static">
-					Connect or remove a paired device. This also changes to the selected Audio output.
-				</span>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" style="margin-right:0" type="submit" name="rm_paired_device" value="1">Forget</button>
 			</div>
 
 			<div class="$_hide_ctl[connected_device]">
@@ -39,9 +36,6 @@
 					$_device[connected_device]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
-				<span class="config-msg-static">
-					Disconnect the currently connected device. This automatically changes Audio output to Local.
-				</span>
 			</div>
 
 			<div class="$_hide_ctl[scanned_device]">
@@ -49,14 +43,8 @@
 					$_device[scanned_device]
 				</select>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="pairwith_device" value="1">Pair</button>
-				<span class="config-msg-static">
-					Select a device to pair with.
-				</span>
 			</div>
-		</div>
 
-		<div class="control-group">
-			<legend>Options</legend>
 			<div>
 				<select id="audioout" class="config-select-large" name="audioout" onchange="autoClick('#btn-set-audioout');">
 					$_select[audioout]
@@ -68,7 +56,10 @@
 					Route audio to the Local audio device or a remote Bluetooth speaker.
 				</span>
 			</div>
+		</div>
 
+		<div class="control-group">
+			<legend>Options</legend>
 			<div>
 				<select id="pcm-buffer" class="config-select-large" name="pcm_buffer" onchange="autoClick('#btn-set-pcm-buffer');">
 					$_select[pcm_buffer]
