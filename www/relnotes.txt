@@ -15,6 +15,9 @@
 #
 ################################################################################
 
+New features
+- NEW: Add metadata and cover art for Bluetooth clients (PR #810 by @Gjuju)
+
 Updates
 - UPD: Escape the args passed to the cover lookup scripts (PR #809 by @Gjuju)
 
