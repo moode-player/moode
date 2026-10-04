@@ -126,18 +126,6 @@ else if (isset($_POST['camillaguistatus']) && isset($_POST['update_camillagui'])
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Configuration has errors.';
 	}
-} else if ($selectedConfig && isset($_POST['upgrade']) && $_POST['upgrade'] == '1') {
-	// Upgrade
-	$checkResult = $cdsp->upgradeConfigFile($selectedConfig);
-	$selectedConfigLabel = str_replace('.yml', '', $cdsp->getConfigLabel($selectedConfig));
-	if($checkResult['valid'] == true) {
-		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
-		$_SESSION['notify']['msg'] = 'Configuration is valid.';
-	} else {
-		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['notify']['msg'] = 'Configuration has errors.';
-	}
-
 // CONVOLUTION
 } else if ($selectedCoeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
 	// Remove
