@@ -45,7 +45,7 @@ DEFAULT_DURATION = '0'
 DEFAULT_SFORMAT = 'ALAC/AAC'
 DEFAULT_OFORMAT = '16/44.1K 2ch'
 # Sample rates
-RATE_TABLE = {'44100': '44.1K', '48000': '48K', '96000': '96K', '19200': '192K'}
+RATE_TABLE = {'44100': '44.1K', '48000': '48K', '96000': '96K', '192000': '192K'}
 
 # Current
 state = None
