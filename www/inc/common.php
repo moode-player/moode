@@ -110,8 +110,8 @@ function chkValue($key = 'nokey', $value) {
 	$valid = true;
 	$msg = '';
 
-	// Check for these shell characters: $ ` | ; < >
-	if (!empty($value) && preg_match('/(\$|`|\||\;|<|>)/', $value)) {
+	// Check for these shell characters: $ ` | ; < > &
+	if (!empty($value) && preg_match('/(\$|`|\||\;|<|>|&)/', $value)) {
 		$valid = false;
 		$msg = 'Invalid shell characters detected, request denied';
 	} else {
@@ -148,8 +148,8 @@ function chkValueEx($key = 'nokey', $value) {
 	$valid = true;
 	$msg = '';
 
-	// Check for these shell characters: $ ` ; < >
-	if (!empty($value) && preg_match('/(\$|`|\;|<|>)/', $value)) {
+	// Check for these shell characters: $ ` ; < > &
+	if (!empty($value) && preg_match('/(\$|`|\;|<|>|&)/', $value)) {
 		$valid = false;
 		$msg = 'Invalid shell characters detected, request denied';
 	} else {
