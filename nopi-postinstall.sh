@@ -9,7 +9,7 @@
 # upstream order. Each step runs once per DB and is recorded in nopi_postinstall;
 # a fresh DB records them all unrun (the schema is already current).
 #
-# Upstream reviewed up to: pkgbuild 2f21e8d (2026-09-27)
+# Upstream reviewed up to: pkgbuild 2e094dc (2026-10-04)
 # Ported from r1035 on; earlier blocks are covered by install.sh's schema
 # migration (Phase 4).
 #
@@ -24,6 +24,7 @@ NOPI_PI_STEPS=(
 	r1035-plugin
 	r1035-stations
 	r1035-first-use-help
+	r1036-stations
 )
 
 # Upstream import_stations(), update mode
@@ -85,6 +86,10 @@ pi_r1035_stations() {
 # Reset first use help (upstream: every upgrade)
 pi_r1035_first_use_help() {
 	sqlite3 "$SQLDB" "UPDATE cfg_system SET value='n,n,y' WHERE param='first_use_help'"
+}
+
+pi_r1036_stations() {
+	nopi_pi_import_stations "https://dl.cloudsmith.io/public/moodeaudio/m8y/raw/files/moode-stations-update_10.3.6.zip"
 }
 
 #------------------------------------------------------------------------------#
