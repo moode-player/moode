@@ -25,6 +25,7 @@ NOPI_PI_STEPS=(
 	r1035-stations
 	r1035-first-use-help
 	r1036-stations
+	r1036-radio-covers
 )
 
 # Upstream import_stations(), update mode
@@ -90,6 +91,12 @@ pi_r1035_first_use_help() {
 
 pi_r1036_stations() {
 	nopi_pi_import_stations "https://dl.cloudsmith.io/public/moodeaudio/m8y/raw/files/moode-stations-update_10.3.6.zip"
+}
+
+# Radio covers is now a Yes/No switch (528eb6945): anything that was not 'No'
+# (the old 'Radio Cover+' value) was on, and only 'Yes' counts as on now
+pi_r1036_radio_covers() {
+	sqlite3 "$SQLDB" "UPDATE cfg_system SET value='Yes' WHERE param='radio_covers' AND value NOT IN ('No','Yes')"
 }
 
 #------------------------------------------------------------------------------#
