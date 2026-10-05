@@ -87,26 +87,12 @@ class CamillaDsp {
             if (empty($ymlCfg['pipeline']) || (key_exists('pipeline', $ymlCfg) && count($ymlCfg['pipeline'])) == 0) {
                 unset($ymlCfg['mixers']);
             }
-            // Patches required for migrating config to camilladsp 2.0
-            $majorVer = substr($this->version(), 11, 1); // Ex: version() -> CamillaDSP 2.0
-            if ($majorVer >= 2) {
-                if (key_exists('volume_ramp_time', $ymlCfg['devices']) && $ymlCfg['devices']['volume_ramp_time'] != 150) {
-                    $ymlCfg['devices']['volume_ramp_time'] = 150;
-                }
-                if (!key_exists('volume_ramp_time', $ymlCfg['devices'])) {
-                    $ymlCfg['devices']['volume_ramp_time'] = 150;
-                }
-                if (key_exists('enable_resampling', $ymlCfg['devices'])) {
-                    unset($ymlCfg['devices']['enable_resampling']);
-                }
-                if (key_exists('resampler_type', $ymlCfg['devices'])) {
-                    unset($ymlCfg['devices']['resampler_type']);
-                }
-                if (key_exists('capture_samplerate', $ymlCfg['devices']) && $ymlCfg['devices']['capture_samplerate'] == 0) {
-                    unset($ymlCfg['devices']['capture_samplerate']);
-                }
-                yaml_emit_file($this->getCurrentConfigFileName(), $ymlCfg);
-            }
+            
+            $yaml = yaml_emit($ymlCfg);
+            $yaml = preg_replace('/(: )~(\r?\n)/', '$1null$2', $yaml);
+            $yaml = preg_replace('/^---\s*\R/', '', $yaml);
+            $yaml = preg_replace('/\R\.\.\.\s*$/', "\n", $yaml);
+            file_put_contents($this->getCurrentConfigFileName(), $yaml);             
         }
     }
 
@@ -360,16 +346,18 @@ class CamillaDsp {
     /**
      * Returns the version of the used CamillaDSP
      */
-    function version() {
-        $version  = null;
+    function version($majorOnly = false) {
         $result = sysCmd('camilladsp --version');
 
         if (count($result) == 1) {
-            $version =  $result[0];
-        } else {
-            $version = 'Error: Unable to detect version of Camilla DSP.';
+            if (preg_match('/\b(\d+)\.(\d+)\.(\d+)\b/', $result[0], $matches)) {
+                return $majorOnly
+                    ? $matches[1]
+                    : $matches[1] . '.' . $matches[2] . '.' . $matches[3];
+            }
         }
-        return $version;
+
+        return 'Error: Unable to detect version of Camilla DSP.';
     }
 
     /**
@@ -689,7 +677,7 @@ class CamillaDsp {
 }
 
 function test_cdsp() {
-    $cdsp = New CamillaDsp('flat.yml', "2", "-9;test2.txt;test3.txt;S24_3LE");
+    $cdsp = New CamillaDsp('V5-Flat.yml', "0", "-9;test2.txt;test3.txt;S24_3LE");
     // print_r($cdsp->detectSupportedSoundFormats());
 
     // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
@@ -770,14 +758,21 @@ function test_cdsp() {
     // print($cdsp->getLogLevel() );
 
     // $cdsp->writeQuickConvolutionConfig();
-    print($cdsp->getGuiExpertMode());
-    $cdsp->setGuiExpertMode(true);
-    print($cdsp->getGuiExpertMode());
-    print($cdsp->getGuiExpertMode());
+    // print($cdsp->getGuiExpertMode());
+    // $cdsp->setGuiExpertMode(true);
+    // print($cdsp->getGuiExpertMode());
+    // print($cdsp->getGuiExpertMode());
+    // print("\n");
+    // $cdsp->setGuiExpertMode(false);
+    // print($cdsp->getGuiExpertMode());
+    // print("\n");
+
+    print($cdsp->version() );
     print("\n");
-    $cdsp->setGuiExpertMode(false);
-    print($cdsp->getGuiExpertMode());
+    print($cdsp->version(true) );
     print("\n");
+
+    $cdsp->setPlaybackDevice(0);
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
