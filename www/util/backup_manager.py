@@ -154,7 +154,7 @@ class BackupManager(StationManager):
             # Restore CamillaDSP configs and IR files
             if BackupManager.OPT_CDSP in what:
                 names = [ name  for name in backup.namelist() if 'camilladsp/' in name]
-                if len(names) >= 0:
+                if len(names) > 0:
                     if cdsp_replace:
                         coeffsDir = path.join(BackupManager.CDSPCFG_BASE, 'coeffs')
                         configsDir = path.join(BackupManager.CDSPCFG_BASE, 'configs')
@@ -167,17 +167,17 @@ class BackupManager(StationManager):
             if BackupManager.OPT_PL in what:
                 #names = [ name  for name in backup.namelist() if 'playlists/' in name  and not 'Default Playlist.m3u' in name ]
                 plNames = [ name  for name in backup.namelist() if 'playlists/' in name ]
-                if len(plNames) >= 0:
+                if len(plNames) > 0:
                     print('Restore playlists')
                     backup.extractall (BackupManager.PLAYLIST_PATH, plNames)
                 plCoverNames = [ name  for name in backup.namelist() if 'playlist-covers/' in name ]
-                if len(plCoverNames) >= 0:
+                if len(plCoverNames) > 0:
                     print('Restore playlist covers')
                     backup.extractall (BackupManager.PLAYLIST_COVERS_PATH, plCoverNames)
 
             if BackupManager.OPT_SEARCHES in what:
                 searchNames = [name for name in backup.namelist() if 'www/' in name]
-                if len(searchNames) >= 0:
+                if len(searchNames) > 0:
                     print('Restore saved searches')
                     backup.extractall (BackupManager.SEARCHES_RESTORE_BASE, searchNames)
 
