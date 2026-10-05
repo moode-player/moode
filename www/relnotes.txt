@@ -19,11 +19,14 @@ New features
 - NEW: Add metadata and cover art for Bluetooth clients (PR #810 by @Gjuju)
 
 Updates
-- UPD: Escape the args passed to the cover lookup scripts (PR #809 by @Gjuju)
+- UPD: Improve Radio Covers feature (drop stand-alone iTunes search)
+- UPD: Improve cover lookup script by escaping the args (PR #809 by @Gjuju)
+- UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
 
 Bug fixes
-- FIX: Alsalib enhanced packages replaced by upstream stock packages (image only)
+- FIX: Alsalib enhanced packages replaced by upstream stock packages
 - FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR #807 by @Gjuju)
+- FIX: Radio Cover+ not checking cover against min/max size limits
 
 ################################################################################
 #
