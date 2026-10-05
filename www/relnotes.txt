@@ -22,6 +22,7 @@ Updates
 - UPD: Improve Radio Covers feature (drop stand-alone iTunes search)
 - UPD: Improve getRadioCoverUrl() by escaping the args (PR #809 by @Gjuju)
 - UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
+- UPD: Remove config upgrade option in CamillaDSP Config (PR #815 @bitlab)
 
 Bug fixes
 - FIX: Alsalib enhanced packages replaced by upstream stock packages
