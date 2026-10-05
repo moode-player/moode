@@ -4,11 +4,14 @@
 # Copyright 2026 @Gjuju
 #
 # Bluetooth renderer metadata.
-# Version 1.0.0
+# Version 1.0.0	Original
+# Version 1.0.1 Tim Curtis
+# - Refactor to use only radiocover_plus.py cover lookup utility
+# - Always enable, don't check whether Radio Covers feature is Yes/No
 #
 # Started by the worker when a Bluetooth source connects, stopped when it
 # disconnects. Listens to the AVRCP track sent by the source, looks up a cover
-# with getRadioCoverUrl() and pushes the metadata to the front-end the same way
+# with radiocover_plus.py and pushes the metadata to the front-end the same way
 # as the AirPlay, Spotify and Qobuz renderers.
 #
 # A source that sends no track title leaves the "Bluetooth Active" overlay
@@ -18,7 +21,6 @@
 import json
 import os
 import signal
-import sqlite3
 import subprocess
 
 import dbus
@@ -26,10 +28,8 @@ import dbus.mainloop.glib
 from gi.repository import GLib
 
 BTMETA_CACHE_FILE = '/var/local/www/btmeta.json'
-SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db'
 DEFAULT_COVER = 'images/default-album-cover.jpg'
-COVER_LOOKUP = ['php', '-r',
-	'require "/var/www/inc/radio.php"; echo getRadioCoverUrl($argv[1], "Bluetooth");', '--']
+COVER_LOOKUP_UTIL = '/var/www/util/radiocover_plus.py'
 RATES = {44100: '44.1K', 48000: '48K', 88200: '88.2K', 96000: '96K'}
 
 bus = None
@@ -38,14 +38,6 @@ playstate = 'Resume'
 displayed = False
 lookup = None
 generation = 0
-
-def radio_covers():
-	try:
-		with sqlite3.connect(SQLDB_PATH) as db:
-			row = db.execute("SELECT value FROM cfg_system WHERE param='radio_covers'").fetchone()
-			return row[0] if row else 'No'
-	except sqlite3.Error:
-		return 'No'
 
 def source_format():
 	try:
@@ -64,7 +56,7 @@ def output_format():
 	return subprocess.run(['/var/www/util/get-oformat.php'], text=True, capture_output=True).stdout.strip()
 
 def send_fecmd(cmd):
-	subprocess.call(['/var/www/util/send-fecmd.php', cmd])
+	result = subprocess.run(['/var/www/util/send-fecmd.php', cmd])
 
 def publish(cover_url):
 	global displayed
@@ -123,7 +115,7 @@ def lookup_done(pid, status, data):
 
 def start_lookup():
 	global lookup
-	proc = subprocess.Popen(COVER_LOOKUP + [track['artist'] + ' - ' + track['title']],
+	proc = subprocess.Popen([COVER_LOOKUP_UTIL, track['artist'] + ' - ' + track['title'], 'Bluetooth'],
 		stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
 	lookup = proc
 	GLib.child_watch_add(GLib.PRIORITY_DEFAULT, proc.pid, lookup_done, (proc, generation))
@@ -145,7 +137,7 @@ def on_track(avrcp):
 	if not track['title']:
 		track = None
 		clear()
-	elif not track['artist'] or radio_covers() == 'No':
+	elif not track['artist']:
 		publish(DEFAULT_COVER)
 	else:
 		start_lookup()
