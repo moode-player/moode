@@ -10,6 +10,8 @@ import subprocess
 from urllib import request
 from pathlib import Path
 
+CDSP_DATA_DIR = Path('/usr/share/camilladsp')
+
 if len(sys.argv) == 1 or len(sys.argv) >=4  or (len(sys.argv)==2 and sys.argv[1] == 'set')  or (len(sys.argv)>2 and sys.argv[1] == 'get'):
     print("moode_selectactivecdspconfig")
     print("")
@@ -45,11 +47,16 @@ elif cmd == 'get':
 
     args = "/usr/local/bin/moodeutl -q 'select * from cfg_system'|grep 'camilladsp|'"
     result = subprocess.check_output(args, shell=True, text=True)
-    active_config = result.split('|')[2]
-    if active_config == 'off':
-        active_config = ''
+    active_config = result.split('|')[2].strip()
+    if active_config.lower() == 'off':
+        # Fall back to the target of the working config symlink
+        working_config = CDSP_DATA_DIR / 'working_config.yml'
+        if working_config.is_symlink() and working_config.is_file():
+            active_config = str(working_config.readlink())
+        else:
+            active_config = ''
     else:
-        active_config = f'/usr/share/camilladsp/configs/{active_config}'
+        active_config = str(CDSP_DATA_DIR / 'configs' / active_config)
     print(active_config)
 else:
     print('unexpected command')
