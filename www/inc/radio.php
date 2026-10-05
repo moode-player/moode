@@ -9,35 +9,22 @@ require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
 function getRadioCoverUrl($title, $station = 'None') {
-	// DEBUG:
-	//workerLog('getRadioCoverUrl(): title|station: ' . $title . ' | ' . $station);
-
 	$dbh = sqlConnect();
 	$title = html_entity_decode($title);
 
-	// Check cache first
+	// Check cache
 	$cachedUrl = sqlQuery("SELECT cover_url FROM cfg_rcucache WHERE title='" . SQLite3::escapeString($title) . "'", $dbh);
 	if (!empty($cachedUrl[0])) {
-		// DEBUG: Report cached cover URL used
-		//workerLog('getRadioCoverUrl(): Returned cached URL for: ' . $title);
 		return $cachedUrl[0]['cover_url'];
 	}
 
-	// Search provider
-	$searchProvider = sqlQuery("SELECT value FROM cfg_system WHERE param = 'radio_covers'", $dbh)[0]['value'];
-	switch ($searchProvider) {
-		case 'Radio Cover+':
-			$coverUrl = radioCoverPlus($title, $station);
-			break;
-		case 'iTunes':
-			$iTunesTimeout = sqlQuery("SELECT value FROM cfg_system WHERE param = 'itunes_query_timeout'", $dbh)[0]['value'];
-			$coverUrl = searchItunes($title, $iTunesTimeout);
-			break;
-		default:
-			workerLog('getRadioCoverUrl(): WARNING: Session var "radio_covers" is empty');
-	}
+	// Search for cover
+	$coverUrl = sysCmd('/var/www/util/radiocover_plus.py ' .
+		'--title ' . escapeshellarg($title) . ' ' .
+		'--station ' . escapeshellarg($station)
+		)[0];
 
-	// Update cache (only valid URL's)
+	// Update cache
 	if (!empty($coverUrl) && $coverUrl != 'None') {
 		$id = sqlQuery("SELECT id FROM cfg_rcucache WHERE title='" . SQLite3::escapeString($title) . "'", $dbh);
 		if (empty($id[0])) {
@@ -47,96 +34,6 @@ function getRadioCoverUrl($title, $station = 'None') {
 	}
 
 	return $coverUrl;
-}
-
-function radioCoverPlus($title, $station) {
-	// DEBUG:
-	//workerLog('radioCoverPlus(): Begin');
-	//workerLog('radioCoverPlus(): ' . $title . ' | ' . $station);
-	$coverUrl = sysCmd('/var/www/util/radiocover_plus.py ' .
-		'--title ' . escapeshellarg($title) . ' ' .
-		'--station ' . escapeshellarg($station)
-		)[0];
-
-	// DEBUG:
-	//workerLog('radioCoverPlus(): ' . (empty($coverUrl) ? 'No cover found' : "Cover:\n" . $coverUrl));
-	return $coverUrl;
-}
-
-function searchItunes($title, $timeout) {
-	// DEBUG:
-	//workerLog('searchItunes(): Begin');
-	//workerLog('searchItunes(): ' . $title);
-	$titleParts = explode(' - ', $title); // $titleParts[0]: Artist name, $titleParts[1]: Track title
-	$coverUrl = sysCmd('/var/www/util/itunescover.py ' .
-		'--artist ' . escapeshellarg($titleParts[0]) . ' ' .
-		'--title ' . escapeshellarg($titleParts[1] ?? '') . ' ' .
-		'--timeout ' . escapeshellarg($timeout)
-		)[0];
-
-	// DEBUG:
-	//workerLog('searchItunes(): ' . (empty($coverUrl) ? 'No cover found' : "Cover:\n" . $coverUrl));
-	return $coverUrl;
-}
-// PHP version of /var/www/util/itunescover.py
-function __searchItunes($title) {
-	// DEBUG:
-	//workerLog('searchItunes(): Begin');
-	// Create search query
-	$trackLimit = '10'; // Max number of tracks to return from iTunes query
-	$titleParts = explode(' - ', $title); // $titleParts[0]: Artist name, $titleParts[1]: Track title
-	$query = '?term=' . urlencode($titleParts[0] . ' ' . $titleParts[1]) .
-		'&media=music&entity=musicTrack&limit=' . $trackLimit;
-	$apiUrl = ITUNES_API_BASE_URL . $query;
-
-	// Get stream timeout, same for both connect and readdata
-	phpSession('open_ro');
-	$timeout = $_SESSION['itunes_query_timeout'] . '.0';
-	$options = array(
-		'http' => array(
-			'protocol_version' => (float)'1.1',
-			'timeout' => (float)$timeout
-		)
-	);
-
-	// Submit query to iTunes
-	$result = file_get_contents($apiUrl, false, stream_context_create($options));
-	if ($result === false) {
-		$msg = 'Search failed for: ' . $title;
-		$coverUrl = 'None';
-	} else {
-		$resultArray = json_decode($result, true);
-		if ($resultArray['resultCount'] == '0') {
-			$msg = 'Search returned 0 results for: ' . $title;
-			$coverUrl = 'None';
-		} else {
-			// DEBUG: Report result count and/or full results
-			//workerLog('searchItunes(): - Returned ' . $resultArray['resultCount'] . ' results');
-			//workerLog('searchItunes(): - Full results:' . "\n" . print_r($resultArray['results'] ,true));
-			$coverUrl = 'None';
-			$i = 0;
-			foreach ($resultArray['results'] as $result) {
-				// DEBUG: Find artist match in results
-				//workerLog('searchItunes(): - Checking result[' . $i . '] album: ' . $result['collectionName']);
-				$itunesArtist = strtolower(str_replace($result['artistName'], ' ', ''));
-				$titleArtist = strtolower(str_replace($titleParts[0], ' ', ''));
-				if ($titleArtist == $itunesArtist) {
-					$coverUrl = str_replace('100x100', '1000x1000', $resultArray['results'][$i]['artworkUrl100']);
-					$msg = 'Search successful for: ' . $title  . "\n" .
-						'Cover: ' . $coverUrl . "\n" .
-						'Query: ' . $apiUrl;
-					// DEBUG: Report artist match
-					//workerLog('searchItunes(): - Artist match found');
-					break;
-				}
-			}
-		}
-	}
-
-	// DEBUG: Report result
-	//workerLog('searchItunes(): ' . $msg);
-
-	return $coverUrl; // URL or 'None'
 }
 
 function getRadioCoverUrlCacheCount() {

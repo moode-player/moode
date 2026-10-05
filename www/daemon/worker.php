@@ -1549,9 +1549,8 @@ $validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip != explode('/
 // NOTE: updaterAutoCheck() logs status
 $_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
 
-// Radio cover search provider
+// Radio covers
 workerLog('worker: Radio covers:         ' . $_SESSION['radio_covers']);
-workerLog('worker: iTunes timeout:       ' . $_SESSION['itunes_query_timeout'] . ' secs');
 
 // Automatic CoverView (Preferences)
 workerLog('worker: Auto-CoverView:       ' . ($_SESSION['auto_coverview'] == '-on' ? 'on' : 'off'));

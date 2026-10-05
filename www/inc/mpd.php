@@ -803,7 +803,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				}
 				// Get radio cover
 				if ($current['title'] != DEFAULT_STATION_NAME) {
-					if ($_SESSION['radio_covers'] != 'No') {
+					if ($_SESSION['radio_covers'] == 'Yes') {
 						if ($current['state'] == 'play') {
 							// NOTE: getRadioCoverUrl() opens the session
 							$coverUrl = getRadioCoverUrl($current['title'], $current['album']); // title, station

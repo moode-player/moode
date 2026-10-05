@@ -13,22 +13,13 @@ LASTFM_API_KEY=
 DISCOGS_TOKEN=
 THEAUDIODB_API_KEY=
 # Search settings
-REQUEST_TIMEOUT=2.5
 MIN_SIMILARITY=0.75
 MIN_SIMILARITY_ITUNES=0.90
-FAST_DEADLINE_S=1.5
-TOTAL_DEADLINE_S=2.5
+FAST_DEADLINE_S=2.0
+TOTAL_DEADLINE_S=3.0
+REQUEST_TIMEOUT=3.0
 EARLY_STOP_SCORE=5.0
-MAX_SIZE_PX=800
-COVER_QUALITY=85
-# Daemon mode settings (SSE server)
-DEBOUNCE_MS=1.0
-CACHE_ENABLED=True
-LAST_EVENT_SEND_DELAY=1.5
-HEALTH_CHECK_INTERVAL=300
-SEGMENT_COVER_METEO=https://raw.githubusercontent.com/frantale70-lgtm/moOde-radio-plus/main/covers/meteo.jpg
-SEGMENT_COVER_TRAFFIC=https://raw.githubusercontent.com/frantale70-lgtm/moOde-radio-plus/main/covers/traffic.jpg
-SEGMENT_COVER_NEWS=https://raw.githubusercontent.com/frantale70-lgtm/moOde-radio-plus/main/covers/news.jpg
-SEGMENT_COVER_ADVERTISING=https://raw.githubusercontent.com/frantale70-lgtm/moOde-radio-plus/main/covers/advertising.jpg
+MAX_SIZE_PX=2000
+MIN_SIZE_PX=100
 # Logging
-LOG_LEVEL=INFO
+LOG_LEVEL=ERROR

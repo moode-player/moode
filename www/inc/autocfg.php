@@ -620,7 +620,6 @@ function autoConfigSettings() {
 		['requires' => ['playlist_art'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_tagview_covers'], 'handler' => 'setSessVarSql'],
 		['requires' => ['radio_covers'], 'handler' => 'setSessVarSql'],
-		['requires' => ['itunes_query_timeout'], 'handler' => 'setSessVarSql'],
 		'Library',
 		['requires' => ['library_onetouch_album'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_onetouch_ralbum'], 'handler' => 'setSessVarSql'],

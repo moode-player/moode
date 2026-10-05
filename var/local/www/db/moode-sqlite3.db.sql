@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Sep 28 08:33:19 2026
+-- File generated with SQLiteStudio v3.4.4 on Sun Oct 4 07:53:36 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -106,6 +106,7 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (204, 'vc4hdmi1', 'Pi HDMI 2', 'Broadcom SoC (KMS driver)', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (400, 'III', 'Topping D50 III', 'ESS Sabre ES9039Q2M', '', 'USB', 'yes', '', '');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
@@ -879,7 +880,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'track,date,
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'rsmafterqbz', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (42, 'itunes_query_timeout', '3');
+INSERT INTO cfg_system (id, param, value) VALUES (42, 'RESERVED_42', '');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (44, 'folder_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'peppy_display', '0');
@@ -904,7 +905,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (63, 'cpugov', 'ondemand');
 INSERT INTO cfg_system (id, param, value) VALUES (64, 'pasvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
-INSERT INTO cfg_system (id, param, value) VALUES (67, 'radio_covers', 'Radio Cover+');
+INSERT INTO cfg_system (id, param, value) VALUES (67, 'radio_covers', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (68, 'qbzactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (69, 'peppy_scn_blank_active', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');

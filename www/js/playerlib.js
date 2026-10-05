@@ -1842,7 +1842,7 @@ function updateActivePlayqueueItem() {
                             $('#pq-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(data[i].Title);
                             // Update in case MPD did not get Title tag at initial play
 							$('#currentsong').html(data[i].Title);
-							if (SESSION.json['radio_covers'] != 'No' && MPD.json['state'] == 'play') {
+							if (SESSION.json['radio_covers'] == 'Yes' && MPD.json['state'] == 'play') {
 								if (!data[i].Title.toLowerCase().includes('advert')) {
 									updateRadioCover(data[i].Title, data[i].Name);
 								}
@@ -1933,7 +1933,7 @@ function renderPlayqueue(state) {
 						if (i == parseInt(MPD.json['song'])) { // active
                             // Update in case MPD did not get Title tag at initial play
 							$('#currentsong').html(data[i].Title);
-							if (SESSION.json['radio_covers'] != 'No' && MPD.json['state'] == 'play') {
+							if (SESSION.json['radio_covers'] == 'Yes' && MPD.json['state'] == 'play') {
 								if (!data[i].Title.toLowerCase().includes('advert')) {
 									updateRadioCover(data[i].Title, data[i].Name);
 								}
@@ -3588,7 +3588,6 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#playqueue-art-enabled span').text(SESSION.json['playlist_art']);
                 $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
 				$('#show-radio-covers span').text(SESSION.json['radio_covers']);
-				$('#itunes-query-timeout span').text(SESSION.json['itunes_query_timeout']);
 
                 // Library
 				// One-touch actions
@@ -3866,7 +3865,6 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['playlist_art'] = $('#playqueue-art-enabled span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
 	SESSION.json['radio_covers'] = $('#show-radio-covers span').text();
-	SESSION.json['itunes_query_timeout'] = $('#itunes-query-timeout span').text();
     // Library
 	// One-touch actions
     SESSION.json['library_onetouch_album'] = $('#onetouch_album span').text();
@@ -3991,7 +3989,6 @@ $('#btn-preferences-update').click(function(e){
             'playlist_art': SESSION.json['playlist_art'],
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
 			'radio_covers': SESSION.json['radio_covers'],
-			'itunes_query_timeout': SESSION.json['itunes_query_timeout'],
 
             // Library
 			// One-touch actions
