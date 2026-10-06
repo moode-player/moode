@@ -28,7 +28,7 @@ Bug fixes
 - FIX: Alsalib enhanced packages replaced by upstream stock packages
 - FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR #807 by @Gjuju)
 - FIX: Radio Cover+ not checking cover against min/max size limits
-- FIX: Restore clears CamillaDSP configs when backup has none (PR #812 by @kiwipaulrob)
+- FIX: Restore clears Camilla configs even if none in backup (PR #812 by @kiwipaulrob)
 - FIX: Bad entry for 192K in aplmeta.py rate table (PR #813 @kiwipaulrob)
 - FIX: Handling of 'off' in moode_selectactivecdspconfig.py‎ (PR #814 @bitlab)
 
