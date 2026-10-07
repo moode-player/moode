@@ -253,6 +253,12 @@ function sysCmd($cmd) {
 function sysCmdStr($cmd) {
 	return shell_exec('sudo LC_ALL=C ' . $cmd);
 }
+// Run an in-place sed edit. Both the expression and the file name are passed as
+// single shell-escaped arguments, so config values embedded in the expression
+// can't end the quoting and have the rest of the string run as commands.
+function sysCmdSed($expr, $file) {
+	return sysCmd('sed -i ' . escapeshellarg($expr) . ' ' . escapeshellarg($file));
+}
 
 // Get major version (series) SS in 'rSSNN'
 function getMoodeSeries() {

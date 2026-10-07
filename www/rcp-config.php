@@ -57,7 +57,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($param == 'LOG_LEVEL') {
 			$value = strtoupper($value);
 		}
-		sysCmd("sed -i 's|^" . $param . '=.*|' . $param . '=' . $value . "|' " . RADIOCOVER_PLUS_CFG);
+		sysCmdSed('s|^' . $param . '=.*|' . $param . '=' . $value . '|', RADIOCOVER_PLUS_CFG);
 	}
 }
 
