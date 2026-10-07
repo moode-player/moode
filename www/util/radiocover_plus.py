@@ -30,8 +30,9 @@ from the daemon version.
 Whats different:
 - Removed (not needed)		SSE, MPD, Web, Event, related code/libs, segment covers, lru cache, mini log icons etc
 - Input args				--title --station [--version]
-- Settings					/etc/radiocover-plus/config.txt
-- Log						/var/log/moode_radiocover_plus.log
+- Config file (settings)	/etc/radiocover-plus/config.txt
+- Log file					/var/log/moode_radiocover_plus.log
+- URL cache					cfg_rcucache (moode-sqlite3.db)
 - similarity()				Add test for squashed artist name ex: BistroBoy vs Bistro Boy
 - search_cover_parallel()	Add check for cover res within min/max
 - normalize_for_search()	Fix the regex for feat/ft
@@ -42,7 +43,7 @@ Whats different:
 """
 import os, sys, time, logging, argparse, signal
 import requests, re, unicodedata, html, json
-import fcntl
+import fcntl, sqlite3
 from PIL import ImageFile
 from threading import Thread, Lock, Event
 from collections import defaultdict
@@ -51,56 +52,46 @@ from logging.handlers import RotatingFileHandler
 
 __version__ = "9.2.0 CLI utility"
 
-# ================= CONFIG GLOBALS (fallback) =================
+# ================= GLOBALS =================
+# Config.txt settings (default)
 SPOTIFY_CLIENT_ID		= None
 SPOTIFY_CLIENT_SECRET	= None
 LASTFM_API_KEY			= None
 DISCOGS_TOKEN			= None
 THEAUDIODB_API_KEY		= "2"
-
-MB_TIMEOUT				= (0.5, 1.5)
-MAX_SIZE_PX				= 2000
-MIN_SIZE_PX				= 100
-
 MIN_SIMILARITY			= 0.75
 MIN_SIMILARITY_ITUNES	= 0.90
 FAST_DEADLINE_S			= 2.0
 TOTAL_DEADLINE_S		= 3.0
 REQUEST_TIMEOUT			= 3.0
 EARLY_STOP_SCORE 		= 5.0
-
-PROVIDERS_LIST			= {}
-
-# Noise (non-music) segments
-SEGMENT_WEATHER			= "weather"
-SEGMENT_TRAFFIC			= "traffic"
-SEGMENT_NEWS			= "news"
-SEGMENT_ADVERTISING		= "advertising"
-SEGMENT_FUNDRAISING		= "fundraising"
-
-# ================= PATHS =================
+MAX_SIZE_PX				= 2000
+MIN_SIZE_PX				= 100
+# File paths
 CONFIG_FILE		= "/etc/radiocover-plus/config.txt"
 LOG_FILE		= "/var/log/moode_radiocover_plus.log"
-
-# ================= LOGGING =================
-# When BACKUP_COUNT=0, the handler will overwrite the existing file from the
-# beginning once it reaches the MAX_LOG_SIZE limit instead of creating new
-# rolled files like .log.1.
-BACKUP_COUNT	= 0
+SQLDB_FILE		= '/var/local/www/db/moode-sqlite3.db'
+# Logging
+BACKUP_COUNT	= 0 # Overwrite file when size limit reached instead of rolling to log.N
 MAX_LOG_SIZE	= 512 * 1024
-LOG_LEVEL_MAP = {
+LOG_LEVELS = {
 	"DEBUG":	logging.DEBUG,
 	"INFO":		logging.INFO,
 	"WARNING":	logging.WARNING,
 	"ERROR":	logging.ERROR,
 	"CRITICAL":	logging.CRITICAL,
 }
-LOG_LEVEL = "INFO"
-
-# ================= GLOBALS =================
+# Miscellaneous
 USER_AGENT				= "moOde audio player/10 ( https://moodeaudio.org )"
 SPOTIFY_TOKEN			= None
 SPOTIFY_TOKEN_EXPIRY	= 0
+MB_TIMEOUT				= (0.5, 1.5)
+PROVIDERS_LIST			= {}
+SEGMENT_WEATHER			= "weather" # Noise segments (non-music)
+SEGMENT_TRAFFIC			= "traffic"
+SEGMENT_NEWS			= "news"
+SEGMENT_ADVERTISING		= "advertising"
+SEGMENT_FUNDRAISING		= "fundraising"
 _shutdown_event			= Event()
 
 # ================= LOGGING =================
@@ -110,26 +101,21 @@ except OSError:
 	pass # file may not exist yet on first run — that's fine
 handler = RotatingFileHandler(LOG_FILE, maxBytes=MAX_LOG_SIZE, backupCount=BACKUP_COUNT)
 logging.basicConfig(
-	level=logging.INFO,
+	level=logging.ERROR,
 	format='%(asctime)s [%(levelname)s] %(message)s',
 	handlers=[handler]
 )
 
 # ================= CONFIG =================
 def read_global():
-	global SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, LASTFM_API_KEY, DISCOGS_TOKEN
-	global THEAUDIODB_API_KEY, LOG_LEVEL
-	global REQUEST_TIMEOUT, MAX_SIZE_PX, MIN_SIZE_PX
-	global MIN_SIMILARITY, MIN_SIMILARITY_ITUNES
-	global FAST_DEADLINE_S, TOTAL_DEADLINE_S, EARLY_STOP_SCORE
+	global SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, LASTFM_API_KEY, DISCOGS_TOKEN, THEAUDIODB_API_KEY
+	global MIN_SIMILARITY, MIN_SIMILARITY_ITUNES, REQUEST_TIMEOUT, FAST_DEADLINE_S, TOTAL_DEADLINE_S
+	global EARLY_STOP_SCORE, MAX_SIZE_PX, MIN_SIZE_PX
 	global PROVIDERS_LIST
 
-	valid_levels = {"INFO", "WARNING", "ERROR", "CRITICAL", "DEBUG"}
 	values = {}
-
-	global CONFIG_FILE
 	if not os.path.isfile(CONFIG_FILE):
-		logging.error(f"[read_global] Config file missing: {CONFIG_FILE}")
+		logging(f"[read_global] Config file missing: {CONFIG_FILE}")
 		return
 
 	try:
@@ -139,18 +125,18 @@ def read_global():
 				if not line or line.startswith("#"):
 					continue
 				if "=" not in line:
-					logging.warning(f"[read_global] Invalid line {lineno}: {line}")
+					logging(f"[read_global] Invalid line {lineno}: {line}")
 					continue
 				key, value = line.split("=", 1)
 				values[key.strip()] = value.strip() or None
 	except Exception as e:
-		logging.error(f"[read_global] Error reading config: {e}")
+		logging(f"[read_global] Error reading config: {e}")
 		return
 
 	def load_token(name):
 		val = values.get(name)
 		if not val:
-			logging.error(f"[read_global] Missing or empty token: {name}")
+			logging(f"[read_global] Missing or empty token: {name}")
 		return val
 
 	def load_float(key, fallback):
@@ -161,7 +147,7 @@ def read_global():
 				if val < 0: raise ValueError
 				return val
 		except ValueError:
-			logging.error(f"[read_global] Invalid {key}, fallback={fallback}")
+			logging(f"[read_global] Invalid {key}, fallback={fallback}")
 		return fallback
 
 	def load_int(key, fallback):
@@ -172,28 +158,24 @@ def read_global():
 				if val < 0: raise ValueError
 				return val
 		except ValueError:
-			logging.error(f"[read_global] Invalid {key}, fallback={fallback}")
+			logging(f"[read_global] Invalid {key}, fallback={fallback}")
 		return fallback
 
-	level = values.get("LOG_LEVEL", "").upper()
-	LOG_LEVEL = level if level in valid_levels else "INFO"
-	logging.getLogger().setLevel(LOG_LEVEL_MAP[LOG_LEVEL])
-
+	# Search parameters
 	MIN_SIMILARITY			= load_float("MIN_SIMILARITY",			0.75)
 	MIN_SIMILARITY_ITUNES	= load_float("MIN_SIMILARITY_ITUNES",	0.90)
+	REQUEST_TIMEOUT			= load_float("REQUEST_TIMEOUT",			3.0)
 	FAST_DEADLINE_S			= load_float("FAST_DEADLINE_S",			2.0)
 	TOTAL_DEADLINE_S		= load_float("TOTAL_DEADLINE_S",		3.0)
-	REQUEST_TIMEOUT			= load_float("REQUEST_TIMEOUT",			3.0)
 	EARLY_STOP_SCORE		= load_float("EARLY_STOP_SCORE",		5.0)
 	MAX_SIZE_PX				= load_int("MAX_SIZE_PX",				2000)
 	MIN_SIZE_PX				= load_int("MIN_SIZE_PX",				100)
-
+	# Search providers
 	PROVIDER_NAMES = ["iTunes","Deezer","MusicBrainz","Spotify","LastFM","Discogs","TheAudioDB"]
 	PROVIDERS_LIST = {
 		n: values.get(n, "False").lower() in ("1","true","yes","on")
 		for n in PROVIDER_NAMES
 	}
-
 	if PROVIDERS_LIST["Spotify"]:
 		SPOTIFY_CLIENT_ID		= load_token("SPOTIFY_CLIENT_ID")
 		SPOTIFY_CLIENT_SECRET	= load_token("SPOTIFY_CLIENT_SECRET")
@@ -203,6 +185,9 @@ def read_global():
 		DISCOGS_TOKEN			= load_token("DISCOGS_TOKEN")
 	if PROVIDERS_LIST["TheAudioDB"]:
 		THEAUDIODB_API_KEY		= values.get("THEAUDIODB_API_KEY", "2") or "2"
+	# Log level
+	level = values.get("LOG_LEVEL").upper()
+	logging.getLogger().setLevel(LOG_LEVELS[level])
 
 def reload_config(signum=None, frame=None):
 	logging.info("[reload_config] Reloading configuration (SIGHUP)")
@@ -715,7 +700,7 @@ def search_radio_paradise(station_name, artist, title):
 		cover = data.get("cover") or data.get("cover_med") or data.get("cover_small")
 
 		if artist.lower() != api_artist.lower() or title.lower() != api_title.lower():
-			logging.debug(f"[RadioParadise] Mismatch MPD:'{artist}-{title}' RP:'{api_artist}-{api_title}'")
+			logging.info(f"[RadioParadise] Mismatch MPD:'{artist}-{title}' RP:'{api_artist}-{api_title}'")
 			return None
 
 		if cover:
@@ -796,7 +781,7 @@ def search_cover_parallel(artist, title, attempt=1):
 				chosen = cover_data[0][0]
 				chosen_provider = cover_data[0][2]
 			else:
-				logging.info(f"[search_cover_parallel] Cover discarded, not within min/max size limits")
+				logging.error(f"[search_cover_parallel] Cover discarded {chosen_provider}, not within min/max size limit")
 				chosen = None
 				chosen_provider = None
 		return chosen, float(best_score), best_album, chosen_provider
@@ -855,9 +840,9 @@ def search_cover_parallel(artist, title, attempt=1):
 						if "best of" in alb_low or "greatest hits" in alb_low:
 							weight = 0.6 if art_low and art_low in alb_low else 0.4
 						results.append((cover, album_found, weight, name))
-						logging.debug(f"[search_cover_parallel] {name}: '{album_found}' type={album_type} w={weight:.2f}")
+						logging.info(f"[search_cover_parallel] {name}: '{album_found}' type={album_type} w={weight:.2f}")
 					else:
-						logging.debug(f"[search_cover_parallel] {name}: no cover")
+						logging.info(f"[search_cover_parallel] {name}: no cover")
 				except Exception as e:
 					logging.error(f"[search_cover_parallel] {name} error: {e}")
 
@@ -977,8 +962,33 @@ def main():
 	args = parser.parse_args()
 
 	# Search for cover
-	read_global()
-	cover_url = search_for_cover(args.title, args.station)
+	with sqlite3.connect(SQLDB_FILE) as db:
+		db.row_factory = sqlite3.Row
+
+		logging.error(f"DEBUG Check cache for title={args.title}")
+		#row = db.execute("SELECT cover_url FROM cfg_rcucache WHERE title='" + args.title + "'").fetchone()
+		row = db.execute("SELECT cover_url FROM cfg_rcucache WHERE title = ?", (args.title,)).fetchone()
+		if row:
+			# Return cached URL
+			logging.error(f"DEBUG - cached URL found")
+			cover_url = row['cover_url']
+		else:
+			# Search
+			logging.error(f"DEBUG - not in cache")
+			logging.error(f"DEBUG Search for cover")
+			read_global()
+			cover_url = search_for_cover(args.title, args.station) # URL or None
+
+			# Update cache
+			if cover_url:
+				logging.error(f"DEBUG - cover found")
+				logging.error(f"DEBUG - add URL to cache")
+				db.execute("INSERT INTO cfg_rcucache (title, cover_url) VALUES (?, ?)", (args.title, cover_url))
+			else:
+				logging.error(f"DEBUG - cover not found")
+
+	# Return URL
+	logging.error(f"DEBUG - return URL={cover_url}")
 	print(cover_url) # URL or None
 
 if __name__ == "__main__":
