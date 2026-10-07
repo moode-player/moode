@@ -22,11 +22,12 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($key != 'qobuzpass' || $value != 'Password set') {
 			sqlUpdate('cfg_upnp', $dbh, $key, $value);
 			if ($value != '') {
-				sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
+				$sedExpr = '/' . $key . ' =/c\\' . $key . ' = ' . $value;
 			}
 			else {
-				sysCmd("sed -i '/" . $key . ' =' . '/c\\' . '#' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
+				$sedExpr = '/' . $key . ' =/c\\' . '#' . $key . ' = ' . $value;
 			}
+			sysCmdSed($sedExpr, '/etc/upmpdcli.conf');
 		}
 	}
 	$notify = $_SESSION['upnpsvc'] == '1' ?
