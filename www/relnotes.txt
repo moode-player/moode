@@ -29,6 +29,7 @@ Updates
 Bug fixes
 - FIX: Alsalib enhanced packages replaced by upstream stock packages
 - FIX: Radio Cover+ not checking cover against min/max size limits
+- FIX: Multiroom sender ALSA config not preserved during startup
 - FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR807 @Gjuju)
 - FIX: Restore clears Camilla configs when none in backup (PR812 @kiwipaulrob)
 - FIX: Bad entry for 192K in aplmeta.py rate table (PR813 @kiwipaulrob)
