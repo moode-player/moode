@@ -245,7 +245,10 @@ var lastYIQ = ''; // Last yiq value from setColors
 
 // Detect chromium browser
 GLOBAL.userAgent = navigator.userAgent;
-GLOBAL.userAgent.indexOf('CrOS') != -1 ? GLOBAL.chromium = true : GLOBAL.chromium = false;
+if (new URLSearchParams(window.location.search).get('kiosk') == '1') {
+	localStorage.setItem('kiosk', '1');
+}
+GLOBAL.chromium = localStorage.getItem('kiosk') == '1' || GLOBAL.userAgent.indexOf('CrOS') != -1;
 
 function debugLog(msg) {
 	if (SESSION.json['debuglog'] == '1') {

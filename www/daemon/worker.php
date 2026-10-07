@@ -1391,7 +1391,9 @@ if (0 === preg_match('/^((?!:\d+).)*$/', $_SESSION['local_display_url'])) {
 	phpSession('write', 'local_display_url', DEFAULT_WEBUI_DISPLAY_URL);
 	workerLog('worker: WARNING:          Invalid Target URL: Reset to default');
 }
-sysCmd("sed -i 's|--app.*|--app=\"" . $_SESSION['local_display_url'] . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
+$kioskUrl = $_SESSION['local_display_url'];
+$kioskUrl .= (strpos($kioskUrl, '?') === false ? '?' : '&') . 'kiosk=1';
+sysCmd("sed -i 's|--app.*|--app=\"" . str_replace('&', '\&', $kioskUrl) . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
 // - Screen blank interval
 if (!isset($_SESSION['scn_blank'])) {
 	$_SESSION['scn_blank'] = '600'; // 10 mins
@@ -3704,7 +3706,9 @@ function runQueuedJob() {
 			}
 			break;
 		case 'local_display_url':
-			sysCmd("sed -i 's|--app.*|--app=\"" . $_SESSION['w_queueargs'] . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
+			$kioskUrl = $_SESSION['w_queueargs'];
+			$kioskUrl .= (strpos($kioskUrl, '?') === false ? '?' : '&') . 'kiosk=1';
+			sysCmd("sed -i 's|--app.*|--app=\"" . str_replace('&', '\&', $kioskUrl) . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
 			stopLocalDisplay();
 			startLocalDisplay();
 			break;
