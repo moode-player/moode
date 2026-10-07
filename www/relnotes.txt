@@ -16,7 +16,7 @@
 ################################################################################
 
 New features
-- NEW: Add metadata and cover art for Bluetooth clients (PR #810 by @Gjuju)
+- NEW: Bluetooth metadata/coverart for clients that provide it (PR #810 by @Gjuju)
 
 Updates
 - UPD: Improve Radio Covers feature (drop stand-alone iTunes search)
