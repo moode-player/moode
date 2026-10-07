@@ -115,7 +115,7 @@ def lookup_done(pid, status, data):
 
 def start_lookup():
 	global lookup
-	proc = subprocess.Popen([COVER_LOOKUP_UTIL, track['artist'] + ' - ' + track['title'], 'Bluetooth'],
+	proc = subprocess.Popen([COVER_LOOKUP_UTIL, '--title', track['artist'] + ' - ' + track['title'], '--station', 'Bluetooth'],
 		stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
 	lookup = proc
 	GLib.child_watch_add(GLib.PRIORITY_DEFAULT, proc.pid, lookup_done, (proc, generation))
