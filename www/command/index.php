@@ -44,8 +44,8 @@ switch ($cmd[0]) {
 		if ($rendererActive === true) {
 			echo json_encode(array('alert' => 'Volume cannot be changed while a renderer is active'));
 		} else {
-			$volCmd = getArgs($cmd);
-			$result = sysCmd('/var/www/util/vol.sh' . $volCmd);
+			$volCmd = getArgs($cmd, false); // Raw args, used below for multiroom parsing
+			$result = sysCmd('/var/www/util/vol.sh' . getArgs($cmd, true));
 			// Receiver(s) volume
 			_openSessionReadOnly($dbh);
 			if ($_SESSION['multiroom_tx'] == 'On') {
@@ -72,7 +72,7 @@ switch ($cmd[0]) {
 		break;
 	case 'play_item':
 	case 'play_item_next':
-		$item = trim(getArgs($cmd));
+		$item = trim(getArgs($cmd, false));
 
 		// Turn off auto-shuffle
 		_openSessionReadOnly($dbh);
@@ -160,7 +160,7 @@ switch ($cmd[0]) {
 		echo json_encode(array('config' => $_SESSION['camilladsp']));
 		break;
 	case 'set_cdsp_config':
-		$newConfig = trim(getArgs($cmd));
+		$newConfig = trim(getArgs($cmd, false));
 		if (!empty($newConfig)) {
 			_openSession($dbh);
 			$currentConfig = $_SESSION['camilladsp'];
@@ -196,8 +196,8 @@ switch ($cmd[0]) {
 		// $cmd: set_eq_curve graphic hi-lo boost
 		// eqctl.php graphic set "hi-lo boost"
 		// args: graphic hi-lo boost
-		$parts = explode(' ', trim(getArgs($cmd)), 2);
-		$status = sysCmd('/var/www/util/eqctl.php ' . $parts[0] . ' set ' . '"' . $parts[1] . '"')[0];
+		$parts = explode(' ', trim(getArgs($cmd, false)), 2);
+		$status = sysCmd('/var/www/util/eqctl.php ' . escapeshellarg($parts[0]) . ' set ' . escapeshellarg($parts[1] ?? ''))[0];
 		if (str_contains($status, 'ERR')) {
 			$key = 'error';
 			$value = explode(': ', $status)[1];
@@ -219,7 +219,7 @@ switch ($cmd[0]) {
 		$status = sysCmd('/var/www/util/trx-control.php -rx')[0];
 		$onoffState = explode(',', $status)[1];
 		// Process command
-		$onoffCmd = trim(getArgs($cmd));
+		$onoffCmd = trim(getArgs($cmd, false));
 		$onoffCmd = $onoffCmd == '-on' ? 'On' : 'Off';
 		if ($onoffCmd != $onoffState) {
 			$result = sysCmd('/var/www/util/trx-control.php -rx ' . $onoffCmd)[0];
@@ -230,7 +230,7 @@ switch ($cmd[0]) {
 		}
 		break;
 	case 'set_coverview': // -on | -off
-		$cvState = sysCmd('/var/www/util/coverview.php' . getArgs($cmd))[0];
+		$cvState = sysCmd('/var/www/util/coverview.php' . getArgs($cmd, true))[0];
 		echo json_encode(array('info' => $cvState));
 		break;
 	case 'upd_library':
@@ -238,27 +238,27 @@ switch ($cmd[0]) {
 		echo json_encode(array('info' => 'Library update submitted'));
 		break;
 	case 'restart_renderer': // --bluetooth | --airplay | --spotify | --qobuz | --squeezelite | --roonbridge
-		$result = sysCmd('moodeutl -R' . getArgs($cmd));
+		$result = sysCmd('moodeutl -R' . getArgs($cmd, true));
 		echo $result[0] == 'Renderer restarted' ?
 			json_encode(array('info' => 'Renderer restart submitted')) :
 			json_encode(array('alert' => 'Missing or invalid argument'));
 		break;
 	case 'renderer_onoff': // --bluetooth | --airplay | --spotify | --qobuz | --squeezelite | --roonbridge [on|off]
-		$result = sysCmd('moodeutl -Ro' . getArgs($cmd));
+		$result = sysCmd('moodeutl -Ro' . getArgs($cmd, true));
 		echo str_contains($result[0], 'Renderer turned') ?
-			json_encode(array('info' => 'Renderer ' . getArgs($cmd) . ' submitted')) :
+			json_encode(array('info' => 'Renderer ' . getArgs($cmd, false) . ' submitted')) :
 			json_encode(array('alert' => 'Missing or invalid argument'));
 		break;
 	case 'set_display': // webui | peppy | toggle
-		$result = sysCmd('moodeutl --setdisplay' . getArgs($cmd));
+		$result = sysCmd('moodeutl --setdisplay' . getArgs($cmd, true));
 		echo empty($result) ?
-			json_encode(array('info' => 'Set display to ' . getArgs($cmd) . ' submitted')) :
+			json_encode(array('info' => 'Set display to ' . getArgs($cmd, false) . ' submitted')) :
 			json_encode(array('alert' => $result[0]));
 		break;
 
 	// API commands
 	case 'trx_control': // Up to 3 args, result is status or empty, used by renderer event scripts
-		$result = sysCmd('/var/www/util/trx-control.php' . getArgs($cmd))[0];
+		$result = sysCmd('/var/www/util/trx-control.php' . getArgs($cmd, true))[0];
 		echo $result;
 		break;
 
@@ -279,13 +279,23 @@ if (isset($sock) && $sock !== false) {
 	closeMpdSock($sock);
 }
 
-function getArgs($cmd) {
+// $shell: true when the returned string is concatenated into a sysCmd()/sysCmdStr()
+// call (shell-escape each arg with escapeshellarg()), false for args that are only
+// compared, displayed or written to session/DB (arg is returned as-is, after chkValue()).
+// No default - every call site must state which one it is.
+function getArgs($cmd, $shell) {
 	$argCount = count($cmd);
 
 	if ($argCount > 1) {
-		for ($i = 0; $i < $argCount; $i++) {
+		$args = '';
+		// Pre-existing off-by-one: this used to loop $argCount times over $cmd[$i + 1],
+		// one past the last real argument, silently appending an undefined-index warning
+		// and a harmless extra space. Fixed here because with $shell=true that extra
+		// iteration would instead append a spurious empty-string shell argument (''),
+		// which the escaping below would no longer let a receiving script ignore.
+		for ($i = 0; $i < $argCount - 1; $i++) {
 			chkValue('cmd', $cmd[$i + 1]);
-			$args .= ' ' . $cmd[$i + 1];
+			$args .= ' ' . ($shell ? escapeshellarg($cmd[$i + 1]) : $cmd[$i + 1]);
 		}
 	} else {
 		$args = '';
