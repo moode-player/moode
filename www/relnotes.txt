@@ -16,21 +16,22 @@
 ################################################################################
 
 New features
-- NEW: Bluetooth metadata/coverart for clients that provide it (PR #810 by @Gjuju)
+- NEW: Bluetooth metadata/coverart for clients that provide it (PR810 @Gjuju)
 
 Updates
 - UPD: Improve Radio Covers feature (drop stand-alone iTunes search)
-- UPD: Improve getRadioCoverUrl() by escaping the args (PR #809 by @Gjuju)
+- UPD: Improve getRadioCoverUrl() by escaping the args (PR809 @Gjuju)
 - UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
-- UPD: Remove config upgrade option in CamillaDSP Config (PR #815 @bitlab)
+- UPD: Remove config upgrade option in CamillaDSP Config (PR815 @bitlab)
 
 Bug fixes
 - FIX: Alsalib enhanced packages replaced by upstream stock packages
-- FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR #807 by @Gjuju)
+- FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR807 @Gjuju)
 - FIX: Radio Cover+ not checking cover against min/max size limits
-- FIX: Restore clears Camilla configs even if none in backup (PR #812 by @kiwipaulrob)
-- FIX: Bad entry for 192K in aplmeta.py rate table (PR #813 @kiwipaulrob)
-- FIX: Handling of 'off' in moode_selectactivecdspconfig.py‎ (PR #814 @bitlab)
+- FIX: Restore clears Camilla configs when none in backup (PR812 @kiwipaulrob)
+- FIX: Bad entry for 192K in aplmeta.py rate table (PR813 @kiwipaulrob)
+- FIX: Handling of 'off' in moode_selectactivecdspconfig.py‎ (PR814 @bitlab)
+- FIX: Args not escaped in getArgs()/index.php( PR816 @kiffa-australis256)
 
 ################################################################################
 #
@@ -49,8 +50,8 @@ Updates
 - UPD: Improve renderer section of System info and other updates
 - UPD: Eliminate unnecessary warnings during startup from getMpdSock()
 - UPD: Remove deprecated MPD option "thesycon_dsd_workaround"
-- UPD: Use configured keyboard layout for on-screen keyboard (PR #791 by @Gjuju)
-- UPD: Keep volknob from jumping between min/max mid-drag (PR #792 by @Gjuju)
+- UPD: Use configured keyboard layout for on-screen keyboard (PR791 @Gjuju)
+- UPD: Keep volknob from jumping between min/max mid-drag (PR792 @Gjuju)
 - UPD: Add version check to renderer plugin updater
 - UPD: V5 Moode meters: add Champagne (Accuphase) and Pure-white (Technics)
 
@@ -61,13 +62,13 @@ Bug fixes
 - FIX: Radio Cover+ execution not serialized
 - FIX: ALSA card number or device mismatch after Restore (rare)
 - FIX: Missing conditional to start/stop triggerhappy during startup
-- FIX: Var name typo in watchdog.sh (PR #802 by @TheOldPresbyope)
-- FIX: Rotary encoder decode to prevent bounce back (PR #801) by @nitrousptm)
-- FIX: Autoscroll when nav from playback to radio view PR #789 by @adriantaga)
-- FIX: Renderer screen empty when pibuz session starts paused (PR #794 by @Gjuju)
-- FIX: Settings management and var name typo for pibuz (PR #795 by @Gjuju)
+- FIX: Var name typo in watchdog.sh (PR802 @TheOldPresbyope)
+- FIX: Rotary encoder decode to prevent bounce back (PR801) @nitrousptm)
+- FIX: Autoscroll when nav from playback to radio view PR789 @adriantaga)
+- FIX: Renderer screen empty when pibuz session starts paused (PR794 @Gjuju)
+- FIX: Settings management and var name typo for pibuz (PR795 @Gjuju)
 - FIX: CamillaDSP crash when USB DAC is disconnected while playing (@aronker)
-- FIX: Alsa_cdsp FIFO pipe close can leave residual noise (PR # by @mikeov)
+- FIX: Alsa_cdsp FIFO pipe close can leave residual noise (PR @mikeov)
 
 ################################################################################
 #
@@ -121,15 +122,15 @@ Packages
 - UPD: linux-image: 1:6.18.39-1+rpt1
 
 Updates
-- UPD: Support native DSD levels in Peppy (pkgbuild PR #24/25 by @Gjuju)
-- UPD: Support DoP levels in Peppy (pkgbuild PR #23 by @Gjuju)
+- UPD: Support native DSD levels in Peppy (pkgbuild PR24/25 @Gjuju)
+- UPD: Support DoP levels in Peppy (pkgbuild PR23 @Gjuju)
 - UPD: Get Bluetooth decoded-to using bluealsa-cli instead of hard coding it
 - UPD: Add AirPlay protocol (1|2) option to Renderer Config
 - UPD: New logo for Soma FM - DEF CON Radio
 
 Bug fixes
-- FIX: Bluetooth PIN pairing: use Confirm Code pairing (PR #784 by @Gjuju)
-- FIX: MPD socket error when native DSD and Peppy (pkgbuild PR #24 by @Gjuju)
+- FIX: Bluetooth PIN pairing: use Confirm Code pairing (PR784 @Gjuju)
+- FIX: MPD socket error when native DSD and Peppy (pkgbuild PR24 @Gjuju)
 - FIX: Previous AirPlay or Spotify covers shows after disconnect, start/restart
 - FIX: RB station names with -- and > cause issues in Radio view
 - FIX: Shairport-sync stop/restart pkill command string
@@ -144,8 +145,8 @@ Packages
 - UPD: peppy-meter 2026.7.20-1moode1
 
 Updates
-- UPD: Increase hit area of the ... button for Queue items (PR #771 @Gjuju)
-- UPD: Provide dB values for MPD software volume (PR #770 @Gjuju)
+- UPD: Increase hit area of the ... button for Queue items (PR771 @Gjuju)
+- UPD: Provide dB values for MPD software volume (PR770 @Gjuju)
 
 Radio Browser
 - FIX: Image create in radio-logos/ directory fails
@@ -158,10 +159,10 @@ Radio Browser
 - FIX: Radio Manager hide/unhide actions set wrong station type for RB stations
 
 Bug fixes
-- FIX: Premature auto-switch from Peppy to WebUI on track change (PR #777 @Gjuju)
-- FIX: Fix no Bluetooth audio when a GEQ/PEQ/Crossfeed active (PR #774 @Gjuju)
-- FIX: Hardware volume not being tracked when Peppy is on (PR #773 @Gjuju)
-- FIX: Volume/attenuation when Peppy is on (PR #769 @Gjuju)
+- FIX: Premature auto-switch from Peppy to WebUI on track change (PR777 @Gjuju)
+- FIX: Fix no Bluetooth audio when a GEQ/PEQ/Crossfeed active (PR774 @Gjuju)
+- FIX: Hardware volume not being tracked when Peppy is on (PR773 @Gjuju)
+- FIX: Volume/attenuation when Peppy is on (PR769 @Gjuju)
 - FIX: Typo in Library Config help for the Analyze button
 - FIX: Index search broken in Radio view when group by "Favorites first"
 
@@ -176,15 +177,15 @@ New features
 - NEW: view (based on RadioBrowser by @rubatron, integrated by @Gjuju)
 
 Updates
-- UPD: Add Playlist upload/download: both Playlist and Folder view (PR #755 by @Gjuju)
-- UPD: Populate CPU governor list from the kernel (PR #757 by @Gjuju)
+- UPD: Add Playlist upload/download: both Playlist and Folder view (PR755 @Gjuju)
+- UPD: Populate CPU governor list from the kernel (PR757 @Gjuju)
 - UPD: Add "Revox B251 With Haas Effect" to CamillaDSP sample configs (New image)
 - UPD: Improve iTunes cover art lookup
 
 Bug fixes
-- FIX: Volume knob responsiveness: freeze/jump, drag flooding (PR #753 by @Gjuju)
-- FIX: Pirev.py crashes on unrecognized revision codes (PR #754 by @Gjuju)
-- FIX: Bluetooth no sound when ALSA output mode is not "Default" (PR #758 by @Gjuju)
+- FIX: Volume knob responsiveness: freeze/jump, drag flooding (PR753 @Gjuju)
+- FIX: Pirev.py crashes on unrecognized revision codes (PR754 @Gjuju)
+- FIX: Bluetooth no sound when ALSA output mode is not "Default" (PR758 @Gjuju)
 - FIX: Spotify Connect missing covers and metadata
 - FIX: Spotify and AirPlay cover backdrop not being reset after renderer ends
 - FIX: Text/button visibility with Renderer backdrop (revert to no-cover backdrop)
