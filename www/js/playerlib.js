@@ -817,7 +817,7 @@ function engineCmdLite() {
     });
 }
 
-// Bluetooth pairing confirmation modal. bt-pairing-agent.py pushes a pairreq; the
+// Bluetooth pairing confirmation modal. bt_pairing_agent.py pushes a pairreq; the
 // user confirms the code matches the one on their device, and the answer is POSTed
 // back to the agent. See command/renderer.php (bt_pair_response) and footer.php.
 var btPairCurrentId = null;

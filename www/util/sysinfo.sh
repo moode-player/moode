@@ -593,7 +593,7 @@ fi
 # Bluetooth
 BT_BLUETOOTH_VER=$(bluetoothd -v)
 BT_BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
-BT_PAIRING_AGENT_VER="1.0.0 (bt-pairing-agent.py)"
+BT_PAIRING_AGENT_VER="1.0.0 (bt_pairing_agent.py)"
 BT_PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
 bt_bluez_controller_mode=$(moodeutl -d -gv bluez_controller_mode)
 TMP=$(moodeutl -d -gv bt_pairing_confirm)

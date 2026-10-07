@@ -507,7 +507,7 @@ function sendFECmd ($cmd) {
 	}
 }
 
-// Send a pairing decision to the Bluetooth agent (bt-pairing-agent.py) over its
+// Send a pairing decision to the Bluetooth agent (bt_pairing_agent.py) over its
 // local socket. $accepted is '1'/'0'; $code is only used for Passkey Entry input.
 function sendBtAgentResponse($id, $accepted, $code = '') {
 	if (preg_match('/^[0-9a-f]{8}$/', $id) !== 1) {

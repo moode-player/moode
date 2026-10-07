@@ -53,7 +53,7 @@ switch ($_GET['cmd']) {
 		echo trim(file_get_contents(BTMETA_CACHE_FILE));
 		break;
 	// Relay the user's answer to a Bluetooth pairing confirmation (see the modal in
-	// footer.php and bt-pairing-agent.py). $_POST: id, accepted ('1'/'0'), code (optional).
+	// footer.php and bt_pairing_agent.py). $_POST: id, accepted ('1'/'0'), code (optional).
 	case 'bt_pair_response':
 		$code = isset($_POST['code']) ? $_POST['code'] : '';
 		$ok = sendBtAgentResponse($_POST['id'], $_POST['accepted'], $code);
