@@ -718,7 +718,9 @@ if ($actualCardNum == ALSA_EMPTY_CARD) {
 		phpSession('write', 'alsa_output_mode', 'iec958');
 		workerLog('worker: MPD config:    updated (iec958 device)');
 	}
-	updMpdConf();
+	if ($_SESSION['adevname'] != TRX_SENDER_NAME) {
+		updMpdConf();
+	}
 } else {
 	workerLog('worker: ALSA card:     has been reassigned to ' . $actualCardNum . ' from ' . $_SESSION['cardnum']);
 	phpSession('write', 'cardnum', $actualCardNum);
