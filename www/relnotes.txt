@@ -24,6 +24,7 @@ Updates
 - UPD: Improve method for detecting chromium (PR816 @Gjuju, PR797 @stephanowicz)
 - UPD: Remove config upgrade option in CamillaDSP Config (PR815 @bitlab)
 - UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
+- UPD: Refactor bt-pairing-agent.py (filename and code formatting)
 
 Bug fixes
 - FIX: Alsalib enhanced packages replaced by upstream stock packages
