@@ -36,6 +36,9 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	if (isset($_POST['backup_searches']) && $_POST['backup_searches'] == '1') {
 		$backupOptions .= $backupOptions ? ' searches' : 'searches';
 	}
+	if (isset($_POST['backup_radiocovers']) && $_POST['backup_radiocovers'] == '1') {
+		$backupOptions .= $backupOptions ? ' radiocovers' : 'radiocovers';
+	}
 	if (isset($_POST['backup_radiostations_moode']) && $_POST['backup_radiostations_moode'] == '1') {
 		$backupOptions .= $backupOptions ? ' r_moode' : 'r_moode';
 	}
@@ -106,6 +109,9 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		}
 		if (isset($_POST['restore_searches']) && $_POST['restore_searches'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' searches' : 'searches';
+		}
+		if (isset($_POST['restore_radiocovers']) && $_POST['restore_radiocovers'] == '1') {
+			$restoreOptions .= $restoreOptions ? ' radiocovers' : 'radiocovers';
 		}
 		if (isset($_POST['restore_radiostations_moode']) && $_POST['restore_radiostations_moode'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' r_moode' : 'r_moode';
@@ -210,6 +216,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_backup_camilladsp = genToggleButton('backup_camilladsp', True, False);
 	$_togglebtn_backup_playlists = genToggleButton('backup_playlists', True, False);
 	$_togglebtn_backup_searches = genToggleButton('backup_searches', True, False);
+	$_togglebtn_backup_radiocovers = genToggleButton('backup_radiocovers', True, False);
 	$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', True, False);
 	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, False);
 } else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
@@ -223,6 +230,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_restore_camilladsp_with_replace = genToggleButton('restore_camilladsp_with_replace', false, !in_array('cdsp', $backupOptions), false);
 	$_togglebtn_restore_playlists = genToggleButton('restore_playlists', in_array('playlists', $backupOptions), !in_array('playlists', $backupOptions));
 	$_togglebtn_restore_searches = genToggleButton('restore_searches', in_array('searches', $backupOptions), !in_array('searches', $backupOptions));
+	$_togglebtn_restore_radiocovers = genToggleButton('restore_radiocovers', in_array('radiocovers', $backupOptions), !in_array('radiocovers', $backupOptions));
 	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), !in_array('r_moode', $backupOptions));
 	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), !in_array('r_other', $backupOptions));
 }
