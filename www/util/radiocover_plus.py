@@ -547,7 +547,7 @@ def search_musicbrainz(artist, title, album=None):
 									if img_url:
 										return img_url, rel_title, album_type
 					except Exception as e:
-						logging.error(f"[search_musicbrainz] CAA error {mbid}: {e}")
+						logging.warning(f"[search_musicbrainz] CAA error {mbid}: {e}")
 	except Exception as e:
 		logging.error(f"[search_musicbrainz] {e}")
 	return None, None, None
@@ -880,6 +880,7 @@ def search_cover_parallel(artist, title, attempt=1):
 	return chosen, score, provider
 
 def search_for_cover(raw_title, station_name):
+	logging.info(f"[search_for_cover] title={raw_title}, station={station_name}")
 	# Parse raw title
 	artist, title = split_artist_title(raw_title)
 
@@ -965,30 +966,29 @@ def main():
 	with sqlite3.connect(SQLDB_FILE) as db:
 		db.row_factory = sqlite3.Row
 
-		logging.error(f"DEBUG Check cache for title={args.title}")
-		#row = db.execute("SELECT cover_url FROM cfg_rcucache WHERE title='" + args.title + "'").fetchone()
+		logging.info(f"[main] Check cache for title={args.title}")
 		row = db.execute("SELECT cover_url FROM cfg_rcucache WHERE title = ?", (args.title,)).fetchone()
 		if row:
 			# Return cached URL
-			logging.error(f"DEBUG - cached URL found")
+			logging.info(f"[main] - cached URL found")
 			cover_url = row['cover_url']
 		else:
 			# Search
-			logging.error(f"DEBUG - not in cache")
-			logging.error(f"DEBUG Search for cover")
+			logging.info(f"[main] - not in cache")
+			logging.info(f"[main] Search for cover")
 			read_global()
 			cover_url = search_for_cover(args.title, args.station) # URL or None
 
 			# Update cache
 			if cover_url:
-				logging.error(f"DEBUG - cover found")
-				logging.error(f"DEBUG - add URL to cache")
+				logging.info(f"[main] - cover found")
+				logging.info(f"[main] - add URL to cache")
 				db.execute("INSERT INTO cfg_rcucache (title, cover_url) VALUES (?, ?)", (args.title, cover_url))
 			else:
-				logging.error(f"DEBUG - cover not found")
+				logging.info(f"[main] - cover not found")
 
 	# Return URL
-	logging.error(f"DEBUG - return URL={cover_url}")
+	logging.info(f"[main] - return URL={cover_url}")
 	print(cover_url) # URL or None
 
 if __name__ == "__main__":
