@@ -24,6 +24,7 @@ Updates
 - UPD: Improve method for detecting chromium (PR816 @Gjuju, PR797 @stephanowicz)
 - UPD: Remove config upgrade option in CamillaDSP Config (PR815 @bitlab)
 - UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
+- UPD: Add Radio Cover URL cache to Backup/Restore
 - UPD: Refactor bt-pairing-agent.py (filename and code formatting)
 
 Bug fixes
@@ -35,6 +36,7 @@ Bug fixes
 - FIX: Bad entry for 192K in aplmeta.py rate table (PR813 @kiwipaulrob)
 - FIX: Handling of 'off' in moode_selectactivecdspconfig.py‎ (PR814 @bitlab)
 - FIX: Args not escaped in getArgs()/index.php (PR816 @kiffa-australis256)
+- FIX: Sed expressions not escaped in some configs (PR819 @kiffa-australis256)
 
 ################################################################################
 #
