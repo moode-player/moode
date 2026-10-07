@@ -21,14 +21,14 @@ New features
 Updates
 - UPD: Improve Radio Covers feature (drop stand-alone iTunes search)
 - UPD: Improve getRadioCoverUrl() by escaping the args (PR809 @Gjuju)
-- UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
-- UPD: Remove config upgrade option in CamillaDSP Config (PR815 @bitlab)
 - UPD: Improve method for detecting chromium (PR816 @Gjuju, PR797 @stephanowicz)
+- UPD: Remove config upgrade option in CamillaDSP Config (PR815 @bitlab)
+- UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
 
 Bug fixes
 - FIX: Alsalib enhanced packages replaced by upstream stock packages
-- FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR807 @Gjuju)
 - FIX: Radio Cover+ not checking cover against min/max size limits
+- FIX: Artist name clipped by feat/ft regex in Radio Cover+ (PR807 @Gjuju)
 - FIX: Restore clears Camilla configs when none in backup (PR812 @kiwipaulrob)
 - FIX: Bad entry for 192K in aplmeta.py rate table (PR813 @kiwipaulrob)
 - FIX: Handling of 'off' in moode_selectactivecdspconfig.py‎ (PR814 @bitlab)
