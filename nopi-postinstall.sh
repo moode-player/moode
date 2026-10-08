@@ -9,7 +9,7 @@
 # upstream order. Each step runs once per DB and is recorded in nopi_postinstall;
 # a fresh DB records them all unrun (the schema is already current).
 #
-# Upstream reviewed up to: pkgbuild 2e094dc (2026-10-04)
+# Upstream reviewed up to: pkgbuild 98b48cf (2026-10-08)
 # Ported from r1035 on; earlier blocks are covered by install.sh's schema
 # migration (Phase 4).
 #
@@ -26,6 +26,8 @@ NOPI_PI_STEPS=(
 	r1035-first-use-help
 	r1036-stations
 	r1036-radio-covers
+	r1036-radiocover-config
+	r1036-bt-agent-rename
 )
 
 # Upstream import_stations(), update mode
@@ -97,6 +99,20 @@ pi_r1036_stations() {
 # (the old 'Radio Cover+' value) was on, and only 'Yes' counts as on now
 pi_r1036_radio_covers() {
 	sqlite3 "$SQLDB" "UPDATE cfg_system SET value='Yes' WHERE param='radio_covers' AND value NOT IN ('No','Yes')"
+}
+
+# Radio Cover+ settings reset to the shipped defaults, as upstream does (the
+# format changed; tokens typed in the old Config screen are dropped with it).
+# itunes_query_timeout -> RESERVED_42 is a param rename on id 42, done by the
+# Phase 4 realign.
+pi_r1036_radiocover_config() {
+	install -D -m 644 "$REPO_DIR/etc/radiocover-plus/config.txt" /etc/radiocover-plus/config.txt
+}
+
+# bt-pairing-agent.py is now bt_pairing_agent.py: drop the old daemon file.
+# bt-agent.service is always redeployed and restarted by install.sh.
+pi_r1036_bt_agent_rename() {
+	rm -f /var/www/daemon/bt-pairing-agent.py
 }
 
 #------------------------------------------------------------------------------#
