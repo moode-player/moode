@@ -29,7 +29,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach (sqlRead('cfg_qobuz', $dbh) as $row) {
 		$currentCfg[$row['param']] = $row['value'];
 	}
+	$validKeys = array_column(sqlRead('cfg_qobuz', $dbh), 'param');
 	foreach ($_POST['config'] as $key => $value) {
+		chkKey($key, $validKeys);
 		chkValue($key, $value);
 		if (($key == 'alsa_buffer_ms' || $key == 'memory_cache_mb') && $value != $currentCfg[$key]) {
 			$restartReqd = true;

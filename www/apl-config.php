@@ -13,7 +13,9 @@ $dbh = sqlConnect();
 phpSession('open');
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
+	$validKeys = array_column(sqlRead('cfg_airplay', $dbh), 'param');
 	foreach ($_POST['config'] as $key => $value) {
+		chkKey($key, $validKeys);
 		chkValue($key, $value);
 		sqlUpdate('cfg_airplay', $dbh, $key, $value);
 		$value = is_numeric($value) ? $value : '"' . $value . '"';

@@ -105,6 +105,29 @@ function chkVariables($variables, $excludedKeys = array()) {
 	}
 }
 
+// Check for bogus $_POST($key) injection
+function chkKey($key, $validKeys) {
+	$valid = true;
+	$msg = '';
+
+	if (!in_array($key, $validKeys, true)) {
+		$valid = false;
+		$msg = 'Invalid key detected, request denied';
+	}
+
+	if ($valid === false) {
+		// Write log entry
+		workerLog('SECCHK: ' . $msg);
+		workerLog('SECCHK: ' . $key);
+		// Redirect to '400 Bad request' page and then exit
+		http_response_code(400);
+		header('Location: /response400.html');
+		exit(1);
+	} else {
+		//debugLog('chkKey(): ' . $key . '| Is valid);
+	}
+}
+
 // Check for unwanted characters and shell commands
 function chkValue($key = 'nokey', $value) {
 	$valid = true;

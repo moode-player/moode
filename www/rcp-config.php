@@ -42,7 +42,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	);
 
 	// Update settings
+	$validKeys = array_keys($mappingTable);
 	foreach ($_POST['config'] as $key => $value) {
+		chkKey($key, $validKeys);
 		chkValue($key, $value);
 		$param = $mappingTable[$key];
 		if ($param == 'LOG_LEVEL') {
