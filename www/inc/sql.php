@@ -46,71 +46,71 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 		case 'cfg_system':
 			$queryStr = "UPDATE " . $table .
 				" SET value='" . SQLite3::escapeString($value) .
-				"' WHERE param='" . $key . "'";
+				"' WHERE param='" . SQLite3::escapeString($key) . "'";
 			break;
 		case 'cfg_network':
 			$queryStr = "UPDATE " . $table .
-				" SET method='" . $value['method'] .
-				"', ipaddr='" . $value['ipaddr'] .
-				"', netmask='" . $value['netmask'] .
-				"', gateway='" . $value['gateway'] .
-				"', pridns='" . $value['pridns'] .
-				"', secdns='" . $value['secdns'] .
+				" SET method='" . SQLite3::escapeString($value['method']) .
+				"', ipaddr='" . SQLite3::escapeString($value['ipaddr']) .
+				"', netmask='" . SQLite3::escapeString($value['netmask']) .
+				"', gateway='" . SQLite3::escapeString($value['gateway']) .
+				"', pridns='" . SQLite3::escapeString($value['pridns']) .
+				"', secdns='" . SQLite3::escapeString($value['secdns']) .
 				"', wlanssid='" . SQLite3::escapeString($value['wlanssid']) .
-				"', wlanuuid='" . $value['wlanuuid'] .
+				"', wlanuuid='" . SQLite3::escapeString($value['wlanuuid']) .
 				"', wlanpwd='" . SQLite3::escapeString($value['wlanpwd']) .
-				"', wlanpsk='" . $value['wlanpsk'] .
-				"', wlancc='" . $value['wlancc'] .
-				"', wlansec='" . $value['wlansec'] .
-				"' WHERE iface='" . $key . "'";
+				"', wlanpsk='" . SQLite3::escapeString($value['wlanpsk']) .
+				"', wlancc='" . SQLite3::escapeString($value['wlancc']) .
+				"', wlansec='" . SQLite3::escapeString($value['wlansec']) .
+				"' WHERE iface='" . SQLite3::escapeString($key) . "'";
 			break;
 		case 'cfg_source':
 			$queryStr = "UPDATE " . $table .
-				" SET name='" . $value['name'] .
-				"', type='" . $value['type'] .
-				"', address='" . $value['address'] .
-				"', remotedir='" . $value['remotedir'] .
-				"', username='" . $value['username'] .
-				($value['password'] == 'Password set' ? '' : "', password='" . $value['password']) .
-				"', charset='" . $value['charset'] .
-				"', rsize='" . $value['rsize'] .
-				"', wsize='" . $value['wsize'] .
-				"', options='" . $value['options'] .
-				"', error='" . $value['error'] .
-				"' WHERE id=" . $value['id'];
+				" SET name='" . SQLite3::escapeString($value['name']) .
+				"', type='" . SQLite3::escapeString($value['type']) .
+				"', address='" . SQLite3::escapeString($value['address']) .
+				"', remotedir='" . SQLite3::escapeString($value['remotedir']) .
+				"', username='" . SQLite3::escapeString($value['username']) .
+				($value['password'] == 'Password set' ? '' : "', password='" . SQLite3::escapeString($value['password'])) .
+				"', charset='" . SQLite3::escapeString($value['charset']) .
+				"', rsize='" . SQLite3::escapeString($value['rsize']) .
+				"', wsize='" . SQLite3::escapeString($value['wsize']) .
+				"', options='" . SQLite3::escapeString($value['options']) .
+				"', error='" . SQLite3::escapeString($value['error']) .
+				"' WHERE id='" . SQLite3::escapeString($value['id']) . "'";
 			break;
 		case 'cfg_audiodev':
 			$queryStr = "UPDATE " . $table .
-				" SET chipoptions='" . $value .
-				"' WHERE name='" . $key . "'";
+				" SET chipoptions='" . SQLite3::escapeString($value) .
+				"' WHERE name='" . SQLite3::escapeString($key) . "'";
 			break;
 		case 'cfg_outputdev':
 			$queryStr = "UPDATE " . $table .
-				" SET mpd_volume_type='" . $value['mpd_volume_type'] .
-				"', alsa_output_mode='" . $value['alsa_output_mode'] .
-				"', alsa_max_volume='" . $value['alsa_max_volume'] .
-				"' WHERE device_name='" . $key . "'";
+				" SET mpd_volume_type='" . SQLite3::escapeString($value['mpd_volume_type']) .
+				"', alsa_output_mode='" . SQLite3::escapeString($value['alsa_output_mode']) .
+				"', alsa_max_volume='" . SQLite3::escapeString($value['alsa_max_volume']) .
+				"' WHERE device_name='" . SQLite3::escapeString($key) . "'";
 			break;
 		case 'cfg_radio':
 			$queryStr = "UPDATE " . $table .
-				" SET station='" . $value .
-				"' WHERE name='" . $key . "'";
+				" SET station='" . SQLite3::escapeString($value) .
+				"' WHERE name='" . SQLite3::escapeString($key) . "'";
 			break;
 		case 'cfg_gpio':
 			$queryStr = "UPDATE " . $table .
-				" SET enabled='" . $value['enabled'] .
-				"', pin='" . $value['pin'] .
-				"', pull='" . $value['pull'] .
-				"', command='" . trim($value['command']) .
-				"', param='" . $value['param'] .
-				"', value='" . $value['value'] .
-				"' WHERE id='" . $key . "'";
+				" SET enabled='" . SQLite3::escapeString($value['enabled']) .
+				"', pin='" . SQLite3::escapeString($value['pin']) .
+				"', pull='" . SQLite3::escapeString($value['pull']) .
+				"', command='" . trim(SQLite3::escapeString($value['command'])) .
+				"', param='" . SQLite3::escapeString($value['param']) .
+				"', value='" . SQLite3::escapeString($value['value']) .
+				"' WHERE id='" . SQLite3::escapeString($key) . "'";
 			break;
 		// Standard param|value tables
 		default:
 			$queryStr = "UPDATE " . $table .
-				" SET value='" . $value .
-				"' WHERE param='" . $key . "'";
+				" SET value='" . SQLite3::escapeString($value) .
+				"' WHERE param='" . SQLite3::escapeString($key) . "'";
 			break;
 	}
 
