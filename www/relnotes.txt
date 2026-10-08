@@ -25,6 +25,7 @@ Updates
 - UPD: Remove config upgrade option in CamillaDSP Config (PR815 @bitlab)
 - UPD: Add Topping D50 III to Audio Device table (workaround bad ALSA card id)
 - UPD: Add Radio Cover URL cache to Backup/Restore
+- UPD: Add validation for form post key -> value data
 - UPD: Refactor bt-pairing-agent.py (filename and code formatting)
 
 Bug fixes
