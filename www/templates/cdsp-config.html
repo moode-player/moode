@@ -169,6 +169,10 @@
 	<!-- FILE MANAGEMENT -->
 
 	<legend>File management</legend>
+	<p class="sub-legend">
+		View <a href="https://github.com/moode-player/docs/blob/main/camilladsp_migrate_configs.md" class="target-blank-link" target="_blank">Upgrading config files</a>
+		for information on how to upgrade configuration files marked with a red <span style='color: red'>&#10007;</span> below.
+	</p>
 	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 		<div class="control-group">
 			<label class="control-label" for="cdsp-config">Configuration</label>
@@ -211,7 +215,7 @@
 				<input type="file" id="pipeline-config" accept=".yml" name="pipeline_config" style="display:none" onchange="$('#btn-import-pipeline').click();" >
 				<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 
-				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="check" value="1">Check</button>				
+				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="check" value="1">Check</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-configuration-actions" class="config-help-info">
 					<b>Remove:</b> Delete the selected configuation file.<br>
