@@ -39,7 +39,7 @@ This means that the user of this software is responsible for any damage resultin
 It does not matter if the damage is caused by incorrect usage or a bug in the software.
 
 [Release notes](./www/relnotes.txt)<br/>
-[Setup guide](https://github.com/moode-player/docs/blob/main/setup_guide.md#setup-guide-)<br/>
+[Setup guide](https://github.com/moode-player/docs/blob/main/setup_guide.md)<br/>
 [Contributors](./www/CONTRIBS.html)
 
 ### Help support the project
