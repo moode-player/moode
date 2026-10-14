@@ -79,7 +79,7 @@ working unchanged on a real Raspberry Pi.
   fresh clone, `gulp deploy` ALONE ships un-bundled assets → an unstyled "pure HTML"
   WebUI (it silently "worked" before only when app.dest held bundles from a prior
   build). install.sh Phase 0b runs both.
-- **moode-tagged `.deb`s** — two patterns, prefer (B):
+- **moode-tagged `.deb`s** — three patterns, prefer (C):
   - (A) Debian source + moOde patch: `dget -qd -u <debian .dsc>` (use **`-qd`** —
     plain `dget` auto-extracts and then a later `dpkg-source -x` fails "target
     exists"), `dpkg-source -x`, `patch -p1 < <pkgbuild patch>`,
@@ -90,7 +90,14 @@ working unchanged on a real Raspberry Pi.
     (key `…/m8y/gpg.key`), `apt-get update`, `apt-get source <pkg>=<ver>moode1`,
     `mk-build-deps --install` (needs `devscripts`+`equivs`), `dpkg-buildpackage -b`,
     `dpkg -i --force-confold <deb>` (plain `apt install` PROMPTS on conffiles like
-    mpd.conf and half-configures), `apt-mark hold <pkg>`. Used for **mpd**.
+    mpd.conf and half-configures), `apt-mark hold <pkg>`. Used for **squeezelite**.
+    Fragile: moOde may publish a version's binaries without its source.
+  - (C) **Replay the `pkgbuild` recipe** (`packages/<pkg>/build.sh`): upstream
+    git tag + Debian `debian/` tarball + pkgbuild patches fetched from a
+    **pinned pkgbuild commit**, `dch -b -v <ver>moode1`, then as (B) from
+    `mk-build-deps` on. Byte-identical to moOde's source (checked for mpd), no
+    cloudsmith dependency; on each moOde bump, port the pkgbuild commit diff and
+    bump the pin. Used for **mpd**.
 - **Authoritative moOde references** (always cross-check, don't guess):
   - `moode-player/imgbuild` → `moode-cfg/stage*-moode-install_01-packages` = the
     pinned package list the Pi image installs (+ `stage3_02-…-post_…run-chroot.sh`).
