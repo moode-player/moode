@@ -781,7 +781,7 @@ def search_cover_parallel(artist, title, attempt=1):
 				chosen = cover_data[0][0]
 				chosen_provider = cover_data[0][2]
 			else:
-				logging.error(f"[search_cover_parallel] Cover discarded {chosen_provider}, not within min/max size limit")
+				logging.error(f"[search_cover_parallel] Cover discarded {cover_data[0][2]}, not within min/max size limit")
 				chosen = None
 				chosen_provider = None
 		return chosen, float(best_score), best_album, chosen_provider
