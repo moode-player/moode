@@ -728,34 +728,33 @@ fi
 #----------------------------------------------------------------------------#
 # moOde patches MPD for "Selective resampling". Its generated mpd.conf emits
 # `selective_resample_mode "N"` (N != 0), which STOCK mpd rejects as unrecognized
-# and FAILS TO START -> the WebUI shows "Socket open failed (1001)". Debian
-# source packages are arch-independent, so add moOde's cloudsmith SOURCE repo
-# (deb-src ONLY - their binaries are arm) and build the moode1 source here, then
-# hold it like the Pi. A build failure only costs selective resampling: the basic
-# SoX resampler works on stock mpd.
+# and FAILS TO START -> the WebUI shows "Socket open failed (1001)". Replay
+# moOde's pkgbuild recipe (packages/mpd/build.sh) at a pinned commit: upstream
+# MPD tag + Debian's debian/ + moOde's build-options and selective-resample
+# patches, then hold it like the Pi. Not arch-gated. A build failure only costs
+# selective resampling: the basic SoX resampler works on stock mpd.
 
 log "Phase 1f: mpd with moOde selective-resample patch"
 
-MPD_MOODE_VER="0.24.15-1moode1"
+MPD_MOODE_VER="0.24.15-2moode1"
+MPD_GIT_TAG="v0.24.15"
+MPD_DEBIAN_URL="http://deb.debian.org/debian/pool/main/m/mpd/mpd_0.24.12-1.debian.tar.xz"
+MPD_PKGBUILD_URL="https://raw.githubusercontent.com/moode-player/pkgbuild/28f756e3d7cb3a407bade6cd9f6b148d46548e13/packages/mpd"
 if ! dpkg_ver_is mpd "$MPD_MOODE_VER"; then
 	apt-mark unhold mpd >/dev/null 2>&1 || true   # let the new build replace a held older one
-	# moOde's cloudsmith SOURCE repo (deb-src only; binaries there are arm-only).
-	MOODE_KEYRING=/usr/share/keyrings/moodeaudio-m8y-archive-keyring.gpg
-	[ -f "$MOODE_KEYRING" ] || curl -1sLf 'https://dl.cloudsmith.io/public/moodeaudio/m8y/gpg.key' \
-		| gpg --batch --yes --dearmor -o "$MOODE_KEYRING" 2>/dev/null
-	cat > /etc/apt/sources.list.d/moodeaudio-m8y-source.sources <<EOF
-Types: deb-src
-URIs: https://dl.cloudsmith.io/public/moodeaudio/m8y/deb/raspbian
-Suites: trixie
-Components: main
-Signed-By: $MOODE_KEYRING
-EOF
-	apt-get update >/dev/null 2>&1 || true
-	$APT_INSTALL build-essential dpkg-dev devscripts equivs fakeroot
+	$APT_INSTALL build-essential dpkg-dev devscripts equivs fakeroot git
 	MPD_BLD="$(mktemp -d)"
 	if ( cd "$MPD_BLD" \
-			&& apt-get source "mpd=$MPD_MOODE_VER" \
-			&& cd "mpd-${MPD_MOODE_VER%-*}" \
+			&& git clone -q --depth 1 -b "$MPD_GIT_TAG" https://github.com/MusicPlayerDaemon/MPD.git "mpd-${MPD_GIT_TAG#v}" \
+			&& wget -q -O debian.tar.xz "$MPD_DEBIAN_URL" \
+			&& wget -q -O moode_build_options.patch "$MPD_PKGBUILD_URL/moode_build_options.patch" \
+			&& wget -q -O selective_resample_mode.patch "$MPD_PKGBUILD_URL/mpd_0.24.xx_selective_resample_mode.patch" \
+			&& cd "mpd-${MPD_GIT_TAG#v}" \
+			&& tar -xJf ../debian.tar.xz \
+			&& patch -p1 < ../moode_build_options.patch \
+			&& patch -p1 < ../selective_resample_mode.patch \
+			&& DEBEMAIL="moode@moodeaudio.org" DEBFULLNAME="moOde" \
+				dch -b -v "$MPD_MOODE_VER" -D unstable "Support for selective resample mode (moOde patch)" \
 			&& env -u TMPDIR mk-build-deps --install --remove --tool "apt-get -y --no-install-recommends" \
 			&& dpkg-buildpackage -b -us -uc ) > "$REPO_DIR/build-mpd.log" 2>&1 \
 		&& MPD_DEB="$(ls "$MPD_BLD"/mpd_${MPD_MOODE_VER}_*.deb 2>/dev/null | head -1)" \
@@ -845,8 +844,7 @@ if [ "$INSTALL_SQUEEZELITE" = 1 ]; then
 	log "Phase 1i: squeezelite with moOde LMS Power Script (-S) support"
 	SL_MOODE_VER="2.0.0-1541+git20250609.72e1fd8-1moode1"
 	if ! dpkg_ver_is squeezelite "$SL_MOODE_VER"; then
-		# Ensure moOde's cloudsmith SOURCE repo (deb-src only; same as Phase 1f -
-		# re-asserted here in case the mpd block was skipped on a re-run).
+		# Ensure moOde's cloudsmith SOURCE repo (deb-src only; binaries there are arm-only).
 		MOODE_KEYRING=/usr/share/keyrings/moodeaudio-m8y-archive-keyring.gpg
 		[ -f "$MOODE_KEYRING" ] || curl -1sLf 'https://dl.cloudsmith.io/public/moodeaudio/m8y/gpg.key' \
 			| gpg --batch --yes --dearmor -o "$MOODE_KEYRING" 2>/dev/null
