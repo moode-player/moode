@@ -444,6 +444,8 @@ def get_image_resolution(url, mode="regex"):
 		try:
 			m = re.search(r'(\d+)x(\d+)', url)
 			if m: return int(m.group(1)), int(m.group(2))
+			m = re.search(r'coverartarchive\.org/.+-(250|500|1200)\.jpg$', url)
+			if m: return int(m.group(1)), int(m.group(1))
 		except Exception:
 			pass
 		return 0, 0
@@ -541,9 +543,9 @@ def search_musicbrainz(artist, title, album=None):
 						if cr.ok:
 							for img in cr.json().get("images", []):
 								if img.get("front"):
-									img_url = (img.get("image")
+									img_url = (img.get("thumbnails", {}).get("1200")
 											   or img.get("thumbnails", {}).get("large")
-											   or img.get("thumbnails", {}).get("small"))
+											   or img.get("image"))
 									if img_url:
 										return img_url, rel_title, album_type
 					except Exception as e:
