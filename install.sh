@@ -1272,7 +1272,9 @@ PHP_SRC="$REPO_DIR/etc/php/8.4"
 if [ -d "$PHP_SRC" ]; then
 	install -m 644 "$PHP_SRC/fpm/php.sed.ini" "/etc/php/$PHP_VER/fpm/php.ini"
 	install -m 644 "$PHP_SRC/cli/php.sed.ini" "/etc/php/$PHP_VER/cli/php.ini"
-	sed "s#/run/php/php7.3-fpm.sock#$PHP_SOCK#g" \
+	# pm.max_children = 64: set by the moode-player postinstall on the Pi
+	sed -e "s#/run/php/php7.3-fpm.sock#$PHP_SOCK#g" \
+		-e "s/^pm[.]max_children.*/pm.max_children = 64/" \
 		"$PHP_SRC/fpm/pool.d/www.sed.conf" > "/etc/php/$PHP_VER/fpm/pool.d/www.conf"
 	# Drop any earlier cherry-picked override now that the full php.ini is in place
 	rm -f "/etc/php/$PHP_VER/fpm/conf.d/99-moode.ini" "/etc/php/$PHP_VER/cli/conf.d/99-moode.ini"
