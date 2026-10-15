@@ -16,14 +16,15 @@
 ################################################################################
 
 Packages
-- UPD: Pibuz: 2.6.0-1moode1 (User build/install)
+- UPD: Pibuz: 2.7.0-1moode1 (User build/install)
 - UPD: Alsa-cdsp: 1.3.0-4moode1
 
 Updates
-- UPD:
+- UPD: Improve Radio Cover+: Use thumbs for MusicBrainz covers (PR827 @Gjuju)
 
 Bug fixes
-- FIX:
+- FIX: Radio Cover+ crash when best cover is discarded for size (PR826 @Gjuju)
+- FIX: Radio Cover+ type error in some logging calls (PR825 @Gjuju)
 
 ################################################################################
 #
