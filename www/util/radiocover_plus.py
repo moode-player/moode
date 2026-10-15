@@ -115,7 +115,7 @@ def read_global():
 
 	values = {}
 	if not os.path.isfile(CONFIG_FILE):
-		logging(f"[read_global] Config file missing: {CONFIG_FILE}")
+		logging.error(f"[read_global] Config file missing: {CONFIG_FILE}")
 		return
 
 	try:
@@ -125,18 +125,18 @@ def read_global():
 				if not line or line.startswith("#"):
 					continue
 				if "=" not in line:
-					logging(f"[read_global] Invalid line {lineno}: {line}")
+					logging.warning(f"[read_global] Invalid line {lineno}: {line}")
 					continue
 				key, value = line.split("=", 1)
 				values[key.strip()] = value.strip() or None
 	except Exception as e:
-		logging(f"[read_global] Error reading config: {e}")
+		logging.error(f"[read_global] Error reading config: {e}")
 		return
 
 	def load_token(name):
 		val = values.get(name)
 		if not val:
-			logging(f"[read_global] Missing or empty token: {name}")
+			logging.error(f"[read_global] Missing or empty token: {name}")
 		return val
 
 	def load_float(key, fallback):
@@ -147,7 +147,7 @@ def read_global():
 				if val < 0: raise ValueError
 				return val
 		except ValueError:
-			logging(f"[read_global] Invalid {key}, fallback={fallback}")
+			logging.error(f"[read_global] Invalid {key}, fallback={fallback}")
 		return fallback
 
 	def load_int(key, fallback):
@@ -158,7 +158,7 @@ def read_global():
 				if val < 0: raise ValueError
 				return val
 		except ValueError:
-			logging(f"[read_global] Invalid {key}, fallback={fallback}")
+			logging.error(f"[read_global] Invalid {key}, fallback={fallback}")
 		return fallback
 
 	# Search parameters
