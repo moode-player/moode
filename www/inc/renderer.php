@@ -292,9 +292,6 @@ function cfgQobuz() {
 	sysCmd('pibuz settings set qconnect.initial_volume ' . $cfgQobuz['initial_volume']);
 	// Playback
 	sysCmd('pibuz settings set playback.quality ' . $cfgQobuz['quality']);
-	sysCmd('pibuz settings set playback.persist_session false');
-	sysCmd('pibuz settings set playback.resume_playback_position false');
-	sysCmd('pibuz settings set playback.mpris false');
 	// Audio output
 	sysCmd('pibuz settings set audio.device "' . $device . '"');
 	sysCmd('pibuz settings set audio.backend alsa');
