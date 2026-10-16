@@ -435,10 +435,10 @@ function systemMonitor() {
 		$diskFree = sysCmd("df -h -l | grep /dev/root | awk '{print $4}'")[0] . ' free';
 
 		// PHP: FPM pool count
-		$fpmPool = sysCmd('pgrep -c -f "php-fpm: pool www"')[0] . ' workers';
+		$fpmPool = trim(shell_exec('pgrep -c -f "php-fpm: pool www"') - 1) . ' workers';
 
 		// MPD: socket connections
-		$mpdSockets = sysCmd('ss -tn | grep -c ":6600"')[0] . ' sockets';
+		$mpdSockets = trim(shell_exec('ss -tn | grep -c ":6600"')) . ' sockets';
 
 		// CPU: 2.6% 51C 2.4G | RAM: 20% used | DISK: 29% used 20G free | PHP: 15 workers | MPD: 6 sockets
 		echo 'CPU: ' .  $cpuLoad . ' ' . $cpuTemp . ' ' . $cpuFreq . ' | ' .
