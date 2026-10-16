@@ -21,8 +21,10 @@ Packages
 
 Updates
 - UPD: Improve Radio Cover+: Use thumbs for MusicBrainz covers (PR827 @Gjuju)
+- UPD: Improve multiroom receiver volume handling: Only upd if on, sync at start/stop)
 
 Bug fixes
+- FIX: Watchdog php pool worker min/max checks (avoid max 64/WebUI hang case)
 - FIX: Radio Cover+ crash when best cover is discarded for size (PR826 @Gjuju)
 - FIX: Radio Cover+ type error in some logging calls (PR825 @Gjuju)
 
