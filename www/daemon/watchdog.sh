@@ -11,9 +11,11 @@ if [ -z $1 ]; then WATCHDOG_SLEEP=6; else WATCHDOG_SLEEP=$1; fi
 PHP_VER="8.4"
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-# NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool
-FPM_MAX_LIMIT=64
-FPM_MIN_LIMIT=32
+# NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool to
+# ensure the actual limit pm.max_children = 64 is never reached because the
+# WebUI will hang if no more workers can be spawned.
+FPM_MAX_LIMIT=60
+FPM_MIN_LIMIT=30
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x "mpd")
@@ -69,8 +71,8 @@ while true; do
 	fi
 
 	if (( FPM_CNT > FPM_MAX_LIMIT )); then
-		message_log "PHP-FPM was restarted to free up worker pool resources"
-		systemctl restart php$PHP_VER-fpm
+		message_log "PHP-FPM was reloaded to free up worker pool resources"
+		systemctl reload php$PHP_VER-fpm
 	fi
 
 	# MPD
