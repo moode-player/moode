@@ -195,6 +195,22 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (50, 'proxy_user', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (51, 'proxy_password', '');
 INSERT INTO cfg_mpd (id, param, value) VALUES (52, 'close_on_pause', 'yes');
 
+-- Table: cfg_mqtt
+CREATE TABLE cfg_mqtt (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_mqtt (id, param, value) VALUES (1, 'host', '');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (2, 'port', '1883');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (3, 'username', '');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (4, 'password', '');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (5, 'tls', 'no');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (6, 'tls_server_name', '');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (7, 'instance', '');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (8, 'friendly_name', '');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (9, 'topic_prefix', 'moode');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (10, 'discovery_prefix', 'homeassistant');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (11, 'poll_interval', '1.0');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (12, 'audio_off_delay', '5.0');
+INSERT INTO cfg_mqtt (id, param, value) VALUES (13, 'volume_step', '5');
+
 -- Table: cfg_multiroom
 CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '64');
@@ -983,7 +999,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'library_onetouch_ralbum', 'No action');
 INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
-INSERT INTO cfg_system (id, param, value) VALUES (145, 'RESERVED_145', '');
+INSERT INTO cfg_system (id, param, value) VALUES (145, 'mqttsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'full_lib');
 INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
 INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
