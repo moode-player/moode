@@ -16,8 +16,19 @@ phpSession('open');
 chkVariables($argv);
 $option = isset($argv[1]) ? $argv[1] : '';
 
+//workerLog(print_r($argv, true));
+
+$volOptions = array('-set-mpdvol', '-set-mpdvol-from-master', '-set-mpdmute', '-set-alsavol');
+if (in_array($option, $volOptions) && $_SESSION['multiroom_rx'] != 'On') {
+	$status = 'trx-control.php: Receiver is not on, command ' . $option . ' discarded';
+	echo $status;
+	workerLog('trx-control.php: ' . $status);
+	exit(0);
+}
+
 switch ($option) {
 	case '-rx':
+		// Argv[2]: On | Off
 		if (isset($argv[2])) {
 			rxOnOff($argv[2]);
 			$status = '';
@@ -31,6 +42,9 @@ switch ($option) {
 	case '-all':
 		$status = allStatus();
 		break;
+
+	// Argv[2]: N | -up N | -dn N | -mute | -restore
+	// Argv[3]: volume N (0 - 100)
 	case '-set-mpdvol':
 		sysCmd('/var/www/util/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", sqlConnect());
@@ -54,6 +68,7 @@ switch ($option) {
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", sqlConnect());
 		$status = 'Volume ' . $result[0]['value'];
 		break;
+
 	// This is used to set rx to 0dB when AirPlay, Spotify or Qobuz connects to Sender
 	case '-set-alsavol':
 		$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param='rx_alsa_volume_max'", sqlConnect());

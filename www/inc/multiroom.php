@@ -39,10 +39,14 @@ function startMultiroomReceiver() {
 	    $cfgMultiroom[$row['param']] = $row['value'];
 	}
 
-	# TODO: Test using _audioout.conf instead of $_SESSION['cardnum'] . ',0
+	// TODO: Test using _audioout.conf instead of $_SESSION['cardnum'] . ',0
 	$outputDevice = $cfgMultiroom['rx_alsa_output_mode'] == 'iec958' ?
 		getAlsaIEC958Device() : $cfgMultiroom['rx_alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0';
 
+	// Sync volume
+	sysCmd('/var/www/util/vol.sh ' . $_SESSION['volknob']);
+
+	// Start receiver
 	$cmd = 'trx-rx' .
 		' -d ' . $outputDevice .
 		' -h ' . $cfgMultiroom['rx_host'] .
@@ -60,6 +64,10 @@ function stopMultiroomReceiver() {
 	sysCmd('killall trx-rx');
 	phpSession('write', 'rxactive', '0');
 	sendFECmd('rxactive0');
+	
+	// Restore MPD volume
+	sysCmd('/var/www/util/vol.sh -restore');
+
 }
 
 // NOTE: The trx-control.php utility checks to see if Receiver opted in for Master volume
