@@ -308,6 +308,9 @@ function sendVolCmd(type, cmd, data, async) {
 
 // MPD metadata engine
 function engineMpd() {
+	// DEBUG:
+	//console.log('engineMpd(): started');
+
     $.ajax({
 		type: 'GET',
 		url: 'engine-mpd.php?state=' + MPD.json['state'],
@@ -324,6 +327,9 @@ function engineMpd() {
 			catch (e) {
 				MPD.json['error'] = e;
 			}
+
+			//DEBUG:
+			//console.log('idle_timeout_event=' + MPD.json['idle_timeout_event']);
 
 			if (typeof(MPD.json['error']) === 'undefined') {
 				//console.log('engineMpd(): idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
@@ -435,6 +441,9 @@ function engineMpd() {
 
 // MPD metadata engine lite (for scripts-configs)
 function engineMpdLite() {
+	// DEBUG:
+	//console.log('engineMpdLite(): started');
+
 	//debugLog('engineMpdLite(): state=(' + MPD.json['state'] + ')');
     $.ajax({
 		type: 'GET',
@@ -530,6 +539,9 @@ function engineMpdLite() {
 
 // Command engine
 function engineCmd() {
+	// DEBUG:
+	//console.log('engineCmd(): started');
+
     $.ajax({
 		type: 'GET',
 		url: 'engine-cmd.php',
@@ -537,12 +549,13 @@ function engineCmd() {
 		cache: false,
 		success: function(data) {
 			// DEBUG:
-			//console.log('engineCmd: success branch: data=(' + data + ')');
+			//console.log('engineCmd(): success branch: data=(' + data + ')');
 
 			// Parse for string format
 			// - JSON 1 '"cmd,string"'
 			// - JSON 2 '"{"fecmd": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
-			cmd = [];
+			var cmd = [];
+
 			if (data.includes('fecmd')) {
 				var str = JSON.parse(data);
 				// DEBUG:
@@ -557,6 +570,8 @@ function engineCmd() {
 			}
 
 			// Process command
+			//DEBUG
+			//console.log('engineCmd(): cmd=' + cmd[0]);
             switch (cmd[0]) {
                 case 'inpactive1':
                 case 'inpactive0':
@@ -697,8 +712,9 @@ function engineCmd() {
                     $('.ui-pnotify-closer').click();
                     break;
                 case 'reduce_fpm_pool':
-                    // This functions as a dummy command which has the effect of
-                    // causing engine-cmd.php to start releasing idle connections
+					// This is a dummy command that triggers MPD idle timeout
+					// within engine-mpd.php
+					sendMpdCmd('subscribe dummy_channel');
                     console.log(cmd[0]);
                     break;
                 case 'pairreq':
@@ -708,6 +724,27 @@ function engineCmd() {
                 case 'paircancel':
                     // cmd: paircancel,<id> (timed out or the device gave up)
                     btPairCancel(cmd[1]);
+                    break;
+				case 'libregen_done':				// engineCmdLite()
+                    $('.busy-spinner').hide();
+                    break;
+				case 'libanalyze_done':				// engineCmdLite()
+                    $('.busy-spinner').hide();
+                    break;
+                case 'nvme_formatting_drive':		// engineCmdLite()
+                    notify(NOTIFY_TITLE_INFO, 'nvme_formatting_drive', NOTIFY_DURATION_INFINITE);
+                    break;
+				case 'trx_discovering_receivers':	// engineCmdLite()
+                    notify(NOTIFY_TITLE_INFO, 'trx_discovering_receivers', NOTIFY_DURATION_INFINITE);
+                    break;
+                case 'trx_configuring_sender':		// engineCmdLite()
+                    notify(NOTIFY_TITLE_INFO, 'trx_configuring_sender', NOTIFY_DURATION_MEDIUM);
+                    break;
+                case 'trx_configuring_mpd':			// engineCmdLite()
+                    notify(NOTIFY_TITLE_INFO, 'trx_configuring_mpd', NOTIFY_DURATION_DEFAULT);
+                    break;
+                case 'downgrading_chromium':		// engineCmdLite()
+                    notify(NOTIFY_TITLE_INFO, 'downgrading_chromium', NOTIFY_DURATION_INFINITE);
                     break;
                 default:
                     console.log('engineCmd(): ' + cmd[0]);
@@ -718,100 +755,11 @@ function engineCmd() {
 		},
 
 		error: function(data) {
-			//console.log('engineCmd: error branch: data=(' + JSON.stringify(data) + ')');
+			// DEBUG:
+			console.log('engineCmd(): error branch: data=(' + JSON.stringify(data) + ')');
+
 			setTimeout(function() {
 				engineCmd();
-			}, ENGINE_TIMEOUT);
-		}
-    });
-}
-
-// Command engine lite (for scripts-configs)
-function engineCmdLite() {
-	var cmd;
-
-    $.ajax({
-		type: 'GET',
-		url: 'engine-cmd.php',
-		async: true,
-		cache: false,
-		success: function(data) {
-			//console.log('engineCmd: success branch: data=(' + data + ')');
-			cmd = JSON.parse(data).split(',');
-
-            switch (cmd[0]) {
-                case 'libregen_done':
-                    $('.busy-spinner').hide();
-                    break;
-				case 'libanalyze_done':
-                    $('.busy-spinner').hide();
-                    break;
-                case 'nvme_formatting_drive':
-                    notify(NOTIFY_TITLE_INFO, 'nvme_formatting_drive', NOTIFY_DURATION_INFINITE);
-                    break;
-                case 'cdsp_update_config':
-                    notify(NOTIFY_TITLE_INFO, 'cdsp_update_config', cmd[1], NOTIFY_DURATION_INFINITE);
-                    break;
-                case 'cdsp_config_updated':
-                    // NOP
-                    break;
-                case 'cdsp_config_update_failed':
-                    notify(NOTIFY_TITLE_ALERT, 'cdsp_config_update_failed', NOTIFY_DURATION_MEDIUM);
-                    break;
-                case 'trx_discovering_receivers':
-                    notify(NOTIFY_TITLE_INFO, 'trx_discovering_receivers', NOTIFY_DURATION_INFINITE);
-                    break;
-                case 'trx_configuring_sender':
-                    notify(NOTIFY_TITLE_INFO, 'trx_configuring_sender', NOTIFY_DURATION_MEDIUM);
-                    break;
-                case 'trx_configuring_mpd':
-                    notify(NOTIFY_TITLE_INFO, 'trx_configuring_mpd', NOTIFY_DURATION_DEFAULT);
-                    break;
-                case 'downgrading_chromium':
-                    notify(NOTIFY_TITLE_INFO, 'downgrading_chromium', NOTIFY_DURATION_INFINITE);
-                    break;
-				case 'local_display_onoff':
-					SESSION.json['local_display_onoff'] = cmd[1];
-					// DEBUG:
-					//console.log('local_display_onoff=' + SESSION.json['local_display_onoff']);
-				break;
-                case 'reset_view':
-                case 'refresh_screen':
-                    if (cmd[0] == 'reset_view') {
-                        window.location.replace('/index.php');
-                    }
-                    setTimeout(function() {
-                        location.reload(true);
-                    }, DEFAULT_TIMEOUT);
-                    break;
-                case 'close_notification':
-                    $('.ui-pnotify-closer').click();
-                    break;
-                case 'reduce_fpm_pool':
-                    // This functions as a dummy command which has the effect of
-                    // causing engine-cmd.php to start releasing idle connections
-                    console.log(cmd[0]);
-                    break;
-                case 'pairreq':
-                    // cmd: pairreq,<id>,<method>,<code>,<name_b64>,<icon>
-                    btPairRequest(cmd[1], cmd[2], cmd[3], cmd[4]);
-                    break;
-                case 'paircancel':
-                    // cmd: paircancel,<id> (timed out or the device gave up)
-                    btPairCancel(cmd[1]);
-                    break;
-                default:
-                    console.log('engineCmdLite(): ' + cmd[0]);
-                    break;
-            }
-
-			engineCmdLite();
-		},
-
-		error: function(data) {
-			//console.log('engineCmd: error branch: data=(' + JSON.stringify(data) + ')');
-			setTimeout(function() {
-				engineCmdLite();
 			}, ENGINE_TIMEOUT);
 		}
     });

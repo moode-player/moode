@@ -82,7 +82,7 @@ jQuery(document).ready(function($){ 'use strict';
 
     	// Connect to server engines
         engineMpdLite();
-        engineCmdLite();
+        engineCmd();
 
         // Busy spinner for Thumbcache update/re-gen initiated
         if (GLOBAL.thmUpdInitiated == true) {
