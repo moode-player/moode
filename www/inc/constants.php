@@ -368,7 +368,7 @@ const CIDR_TABLE = array(
 
 // Used by security chk functions
 const SHL_CMDS = array('base64');
-const SQL_CMDS = array('delete ', 'select ', 'union ', 'update ');
+const SQL_CMDS = array('delete ', 'select ', 'union ', 'update ', 'drop ');
 const XSS_CMDS = array('script', 'href', 'img src'); // May use in future
 
 // Recorder plugin (currently n/a)
