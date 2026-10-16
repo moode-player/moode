@@ -26,7 +26,7 @@ if (false === ($fp = fopen(PORT_FILE, 'a'))) {
 	fclose($fp);
 }
 
-while($sockres = socket_accept($sock)) {
+while ($sockres = socket_accept($sock)) {
 	socket_getpeername($sockres, $raddr, $rport);
 	//workerLog('engineCmd(): Connection from: ' . $raddr . ':' . $rport);
 
@@ -46,7 +46,6 @@ socket_close($sock);
 sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
 
 // Special cmd handling
-
 if ($cmd == 'inpactive1') {
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioin'", sqlConnect());
 	$cmd .= ',' . $result[0]['value'];
