@@ -16,6 +16,7 @@ phpSession('open');
 chkVariables($argv);
 $option = isset($argv[1]) ? $argv[1] : '';
 
+// DEBUG:
 //workerLog(print_r($argv, true));
 
 $volOptions = array('-set-mpdvol', '-set-mpdvol-from-master', '-set-mpdmute', '-set-alsavol');
