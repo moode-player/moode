@@ -204,7 +204,7 @@ function chkValueEx($key = 'nokey', $value) {
 	}
 }
 
-// Check for SQL injection
+// Check for SQL injection in the WHERE clause
 function chkSQL($sql) {
 	// DEBUG:
 	//workerLog('DBG: chkSQL(): ' . (empty($sql) ? 'SQL is blank' : $sql));
@@ -216,11 +216,13 @@ function chkSQL($sql) {
 		$valid = false;
 		$msg = 'Invalid SQL characters detected, request denied';
 	} else {
-		// Check for embedded SQL commands
+		// Check for embedded SQL commands and and issue warning
 		foreach (SQL_CMDS as $cmd) {
 			if (false !== stripos($sql, $cmd)) {
-				$valid = false;
-				$msg = 'Embedded SQL command detected, request denied';
+				$valid = true;
+				$msg = 'Embedded SQL command [' . $cmd . '] . detected, warning only';
+				workerLog('SECCHK: ' . $msg);
+				workerLog('SECCHK: ' . $sql);
 			}
 		}
 	}
@@ -505,6 +507,8 @@ function setAltBackLink() {
 
 // Send command to front-end via engine-cmd.php
 function sendFECmd ($cmd) {
+	// DEBUG:
+	//workerLog('sendFECmd(): ' . $cmd);
 	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
 		// This case is ok and occurs if UI has never been started
 		debugLog('sendFECmd(): File open failed, UI has never been opened in Browser');
