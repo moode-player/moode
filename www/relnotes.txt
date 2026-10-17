@@ -21,9 +21,10 @@ Packages
 
 Updates
 - UPD: Improve Radio Cover+: Use thumbs for MusicBrainz covers (PR827 @Gjuju)
-- UPD: Improve multiroom receiver volume handling: Only upd if on, sync at start/stop)
+- UPD: Improve multiroom receiver volume: Only update if on, sync at start/stop)
 - UPD: Add "Local audio" ON/OFF option to HTTP streaming section of Audio Config
 - UPD: Add a settings (gear) button on the default Bluetooth Active overlay
+- UPD: Add support for screens reporting a 1920px viewport (PR831 @bitlab)
 
 Bug fixes
 - FIX: Watchdog php pool worker min/max checks (avoid max 64/WebUI hang case)
