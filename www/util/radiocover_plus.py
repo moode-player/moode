@@ -779,11 +779,12 @@ def search_cover_parallel(artist, title, attempt=1):
 		cover_data = [(x, _best_res(x), y) for x,y in cover_data]
 		cover_data.sort(key=lambda x: x[1], reverse=True)
 		if cover_data:
+			discarded_provider = cover_data[0][2]
 			if cover_data[0][1] != 0:
 				chosen = cover_data[0][0]
-				chosen_provider = cover_data[0][2]
+				chosen_provider = discarded_provider
 			else:
-				logging.error(f"[search_cover_parallel] Cover discarded {cover_data[0][2]}, not within min/max size limit")
+				logging.error(f"[search_cover_parallel] Cover discarded {discarded_provider}, not within min/max size limit")
 				chosen = None
 				chosen_provider = None
 		return chosen, float(best_score), best_album, chosen_provider
@@ -862,7 +863,10 @@ def search_cover_parallel(artist, title, attempt=1):
 				break
 
 	finally:
-		pass
+		try:
+			executor.shutdown(wait=False, cancel_futures=True)
+		except Exception:
+			pass
 
 	elapsed_ms = (time.monotonic() - t_start) * 1000.0
 	done_cnt   = len(providers) - len(futures)
