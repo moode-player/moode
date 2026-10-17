@@ -616,7 +616,10 @@ function engineCmd() {
                         '"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                         receiversBtn(cmd[0]) +
                         audioInfoBtn(cmd[0]) +
-                        rendererRefreshBtn()
+                        rendererRefreshBtn() +
+						(rendererName == 'Bluetooth' ?
+							'<a class="btn renderer-btn" href="blu-config.php"><i class="fa-regular fa-sharp fa-gear"></i></a>' :
+							'')
                     );
                     $('#inpsrc-metadata-refresh').html('');
                     break;
@@ -1557,7 +1560,8 @@ function renderUI() {
                 '<button class="btn renderer-btn disconnect-bluetooth" data-job="bt_disconnect"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
                 receiversBtn('btactive1') +
                 audioInfoBtn('btactive1') +
-                rendererRefreshBtn()
+                rendererRefreshBtn() +
+				'<a class="btn renderer-btn" href="blu-config.php"><i class="fa-regular fa-sharp fa-gear"></i></a>'
             );
 
             refreshInpsrcMeta();
@@ -1665,13 +1669,13 @@ function audioInfoBtn(rendererActive = '') {
 }
 
 function rendererRefreshBtn() {
-    html = '<span id="renderer-refresh-btn"><a class="btn renderer-btn" href="javascript:refreshInpsrcMeta()"><i class="fa-regular fa-sharp fa-redo"></i></a></span';
+    html = '<span id="renderer-refresh-btn"><a class="btn renderer-btn" href="javascript:refreshInpsrcMeta()"><i class="fa-regular fa-sharp fa-redo"></i></a></span>';
     return html;
 }
 
 function inpSrcMetaRefreshBtn() {
     $('#renderer-refresh-btn').html('');
-    $('#inpsrc-metadata-refresh').html('<span><a class="btn renderer-btn" href="javascript:refreshInpsrcMeta()"><i class="fa-regular fa-sharp fa-redo"></i></a></span');
+    $('#inpsrc-metadata-refresh').html('<span><a class="btn renderer-btn" href="javascript:refreshInpsrcMeta()"><i class="fa-regular fa-sharp fa-redo"></i></a></span>');
 }
 
 // Generate search url
