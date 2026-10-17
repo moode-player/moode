@@ -927,6 +927,10 @@ if (!isset($_SESSION['mpd_dbregen_count'])) {
 if (!isset($_SESSION['mpd_dbanalyze_count'])) {
 	$_SESSION['mpd_dbanalyze_count'] = 0;
 }
+// MPD HTTP local audio out option
+if (!isset($_SESSION['mpd_httpd_local_audio'])) {
+	$_SESSION['mpd_httpd_local_audio'] = '1'; // Default is on
+}
 
 // Start MPD
 sysCmd("systemctl start mpd");
@@ -3104,8 +3108,14 @@ function runQueuedJob() {
 			}
 			break;
 		case 'mpd_httpd':
-			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
-			sysCmd($cmd);
+			if ($_SESSION['w_queueargs'] == '1') {
+				sysCmd('mpc enable "' . HTTP_SERVER . '"');
+			} else {
+				sysCmd('mpc disable "' . HTTP_SERVER . '"');
+				if ($_SESSION['audioout'] == 'Local') {
+					sysCmd('mpc enable "' . ALSA_DEFAULT . '"');
+				}
+			}
 			break;
 		case 'mpd_httpd_port':
 			updMpdConf();
@@ -3114,6 +3124,10 @@ function runQueuedJob() {
 		case 'mpd_httpd_encoder':
 			updMpdConf();
 			sysCmd('systemctl restart mpd');
+			break;
+		case 'mpd_httpd_local_audio':
+			$cmd = $_SESSION['w_queueargs'] == '1' ? 'enable' : 'disable';
+			sysCmd('mpc ' . $cmd . ' "' . ALSA_DEFAULT . '"');
 			break;
 		// Equalizers/DSP
 		case 'alsaequal':

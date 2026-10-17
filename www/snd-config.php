@@ -293,8 +293,13 @@ if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SE
 
 // Server
 if (isset($_POST['update_mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
-	submitJob('mpd_httpd', $_POST['mpd_httpd']);
 	phpSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
+	submitJob('mpd_httpd', $_POST['mpd_httpd']);
+	if ($_POST['mpd_httpd'] == '0') {
+		if ($_SESSION['audioout'] == 'Local') {
+			$_SESSION['mpd_httpd_local_audio'] = '1';
+		}
+	}
 }
 // Port
 if (isset($_POST['update_mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESSION['mpd_httpd_port']) {
@@ -305,6 +310,11 @@ if (isset($_POST['update_mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESS
 if (isset($_POST['update_mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSION['mpd_httpd_encoder']) {
 	phpSession('write', 'mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
 	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
+}
+// Local audio
+if (isset($_POST['update_mpd_httpd_local_audio']) && $_POST['mpd_httpd__local_audio'] != $_SESSION['mpd_httpd_local_audio']) {
+	$_SESSION['mpd_httpd_local_audio'] = $_POST['mpd_httpd_local_audio'];
+	submitJob('mpd_httpd_local_audio', $_POST['mpd_httpd_local_audio']);
 }
 
 // EQUALIZERS
@@ -581,6 +591,11 @@ $_mpd_httpd_port = $_SESSION['mpd_httpd_port'];
 // Encoder
 $_select['mpd_httpd_encoder'] .= "<option value=\"flac\" " . (($_SESSION['mpd_httpd_encoder'] == 'flac') ? "selected" : "") . ">FLAC</option>\n";
 $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_httpd_encoder'] == 'lame') ? "selected" : "") . ">LAME (MP3)</option>\n";
+// Local audio
+$_mpd_httpd_local_audio_disable = $_SESSION['mpd_httpd'] == '0' ? 'disabled' : '';
+$autoClick = " onchange=\"autoClick('#btn-set-mpd-httpd-local-audio');\" " . $_mpd_httpd_local_audio_disable;
+$_select['mpd_httpd_local_audio_on']  .= "<input type=\"radio\" name=\"mpd_httpd_local_audio\" id=\"toggle-mpd-httpd-local-audio-1\" value=\"1\" " . (($_SESSION['mpd_httpd_local_audio'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['mpd_httpd_local_audio_off'] .= "<input type=\"radio\" name=\"mpd_httpd_local_audio\" id=\"toggle-mpd-httpd-local-audio-2\" value=\"0\" " . (($_SESSION['mpd_httpd_local_audio'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // EQUALIZERS
 

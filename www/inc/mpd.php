@@ -670,9 +670,17 @@ function parseLsinfoAsArray($resp) {
 }
 
 // Turn MPD HTTP server on/off
-function setMpdHttpd () {
-	$cmd = $_SESSION['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
-	sysCmd($cmd);
+function setMpdHttpd() {
+	if ($_SESSION['mpd_httpd'] == '1') {
+		sysCmd('mpc enable "' . HTTP_SERVER . '"');
+		if ($_SESSION['mpd_httpd_local_audio'] == '1' && $_SESSION['audiout'] == 'Local') {
+			sysCmd('mpc enable "' . ALSA_DEFAULT . '"');
+		} else {
+			sysCmd('mpc disable "' . ALSA_DEFAULT . '"');
+		}
+	} else {
+		sysCmd('mpc disable "' . HTTP_SERVER . '"');
+	}
 }
 
 // Ignore files

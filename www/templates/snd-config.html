@@ -430,6 +430,19 @@
 					Encode the stream using either FLAC at compression level 0 (fastest, least compression) or LAME (MP3) at 320 kbps.
 				</span>
 			</div>
+
+			<label class="control-label">Local audio</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-mpd-httpd-local-audio" for="toggle-mpd-httpd-local-audio-2">ON </label>$_select[mpd_httpd_local_audio_on]
+					<label class="toggle-radio toggle-mpd-httpd-local-audio" for="toggle-mpd-httpd-local-audio-1">OFF</label>$_select[mpd_httpd_local_audio_off]
+				</div>
+				<button id="btn-set-mpd-httpd-local-audio" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_mpd_httpd_local_audio" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-mpd-httpd-local-audio" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-mpd-httpd-local-audio" class="config-help-info">
+					Turn off to disable output to the local audio device.<br>
+                </span>
+			</div>
 		</div>
 
 		<legend>CoreDSP</legend>
