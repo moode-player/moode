@@ -444,8 +444,12 @@ def get_image_resolution(url, mode="regex"):
 		try:
 			m = re.search(r'(\d+)x(\d+)', url)
 			if m: return int(m.group(1)), int(m.group(2))
-			m = re.search(r'coverartarchive\.org/.+-(250|500|1200)\.jpg$', url)
-			if m: return int(m.group(1)), int(m.group(1))
+			m_caa = re.search(r'(?:front-|thumb)(\d+)', url)
+			if m_caa:
+				dim = int(m_caa.group(1))
+				return dim, dim
+				if "archive.org" in url and "_thumb" in url:
+					return 500, 500
 		except Exception:
 			pass
 		return 0, 0
@@ -523,33 +527,44 @@ def search_musicbrainz(artist, title, album=None):
 		r = requests.get(
 			"https://musicbrainz.org/ws/2/recording",
 			headers={"User-Agent": USER_AGENT},
-			params={"query": q, "fmt": "json", "limit": 3},
+			params={"query": q, "fmt": "json", "limit": 4},
 			timeout=MB_TIMEOUT
 		)
-		if r.ok:
-			for rec in r.json().get("recordings", []):
-				for rel in rec.get("releases", []):
-					mbid = rel.get("id")
-					rel_title = rel.get("title")
-					release_group = rel.get("release-group", {})
-					album_type = release_group.get("primary-type") if release_group else None
-					if not mbid: continue
-					try:
-						cr = requests.get(
-							f"https://coverartarchive.org/release/{mbid}",
-							headers={"User-Agent": USER_AGENT},
-							timeout=MB_TIMEOUT
-						)
-						if cr.ok:
-							for img in cr.json().get("images", []):
-								if img.get("front"):
-									img_url = (img.get("thumbnails", {}).get("1200")
-											   or img.get("thumbnails", {}).get("large")
-											   or img.get("image"))
-									if img_url:
-										return img_url, rel_title, album_type
-					except Exception as e:
-						logging.warning(f"[search_musicbrainz] CAA error {mbid}: {e}")
+		if not r.ok:
+			return None, None, None
+
+		recordings = r.json().get("recordings", [])
+		candidates = []
+		for rec in recordings:
+			for rel in rec.get("releases", []):
+				mbid = rel.get("id")
+				if not mbid: continue
+				rel_title = rel.get("title")
+				status = rel.get("status", "")
+				release_group = rel.get("release-group", {})
+				album_type = release_group.get("primary-type") if release_group else None
+				priority = 1 if status == "Official" else 2
+				candidates.append((priority, mbid, rel_title, album_type))
+
+		# Prioritize official releases
+		candidates.sort(key=lambda x: x[0])
+
+		# Probe top candidates: primary 500px (lightweight), fallback 1200px
+		for _, mbid, rel_title, album_type in candidates[:3]:
+			for size in ("front-500", "front-1200"):
+				caa_url = f"https://coverartarchive.org/release/{mbid}/{size}"
+				try:
+					head_res = requests.head(
+						caa_url,
+						headers={"User-Agent": USER_AGENT},
+						timeout=1.5,
+						allow_redirects=True
+					)
+					if head_res.status_code == 200:
+						final_url = head_res.url if head_res.url else caa_url
+						return final_url, rel_title, album_type
+				except Exception:
+					pass
 	except Exception as e:
 		logging.error(f"[search_musicbrainz] {e}")
 	return None, None, None
