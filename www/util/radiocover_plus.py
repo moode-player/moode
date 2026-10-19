@@ -455,8 +455,6 @@ def get_image_resolution(url, mode="regex"):
 			if m_caa:
 				dim = int(m_caa.group(1))
 				return dim, dim
-				if "archive.org" in url and "_thumb" in url:
-					return 500, 500
 		except Exception:
 			pass
 		return 0, 0
