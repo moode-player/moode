@@ -20,7 +20,7 @@ Packages
 - UPD: Alsa-cdsp: 1.3.0-4moode1
 
 Updates
-- UPD: Improve Radio Cover+: PR827 @Gjuju, updates from @Syma753dfx
+- UPD: Improve Radio Cover+: Updates from @Syma753dfx
 - UPD: Improve multiroom receiver volume: Only update if on, sync at start/stop)
 - UPD: Add "Local audio" ON/OFF option to HTTP streaming section of Audio Config
 - UPD: Add a settings (gear) button on the default Bluetooth Active overlay
