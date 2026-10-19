@@ -9,7 +9,7 @@
 # upstream order. Each step runs once per DB and is recorded in nopi_postinstall;
 # a fresh DB records them all unrun (the schema is already current).
 #
-# Upstream reviewed up to: pkgbuild 0249497 (2026-10-13)
+# Upstream reviewed up to: pkgbuild a21036b (2026-10-17)
 # Not ported yet: the 10.3.7 block (cfg_plugin reload, 10.3.7 stations zip), its
 # release is not out.
 # Ported from r1035 on; earlier blocks are covered by install.sh's schema
@@ -23,6 +23,7 @@
 NOPI_PI_STEPS=(
 	r1035-radiocover
 	r1035-thesycon
+	r1035-thesycon-conf
 	r1035-plugin
 	r1035-stations
 	r1035-first-use-help
@@ -77,6 +78,12 @@ pi_r1035_radiocover() {
 # Remove deprecated MPD option "thesycon_dsd_workaround"
 pi_r1035_thesycon() {
 	sqlite3 "$SQLDB" "UPDATE cfg_mpd SET param='RESERVED_48', value='' WHERE param='thesycon_dsd_workaround'"
+}
+
+# Remove the same option from mpd.conf (upstream added it to its r1035 section later)
+pi_r1035_thesycon_conf() {
+	[ -f /etc/mpd.conf ] || return 0
+	sed -i '/thesycon_dsd_workaround/d' /etc/mpd.conf
 }
 
 # Update cfg_plugin for moode-meters, pibuz and shairport-sync version bumps
