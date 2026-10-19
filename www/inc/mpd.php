@@ -673,7 +673,7 @@ function parseLsinfoAsArray($resp) {
 function setMpdHttpd() {
 	if ($_SESSION['mpd_httpd'] == '1') {
 		sysCmd('mpc enable "' . HTTP_SERVER . '"');
-		if ($_SESSION['mpd_httpd_local_audio'] == '1' && $_SESSION['audiout'] == 'Local') {
+		if ($_SESSION['mpd_httpd_local_audio'] == '1' && $_SESSION['audioout'] == 'Local') {
 			sysCmd('mpc enable "' . ALSA_DEFAULT . '"');
 		} else {
 			sysCmd('mpc disable "' . ALSA_DEFAULT . '"');
