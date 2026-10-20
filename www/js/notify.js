@@ -93,7 +93,6 @@ function notify(title, tag, arg3, arg4 = '') {
 		viewport: 'VIEWPORT<br>',
 		debug: 'DEBUG<br>',
 		// Dashboard
-		dashboard_discovering: 'Discovering players...<br>',
 		//dashboard_cmd_submitted: 'Command: ',
 		dashboard_none_selected: 'No players have been selected. ',
 		// Advanced search
@@ -170,7 +169,6 @@ function notify(title, tag, arg3, arg4 = '') {
 		viewport: 'VIEWPORT<br>',
 		debug: 'DEBUG<br>',
 		// Dashboard
-		dashboard_discovering: 'Discovering players...<br>',
 		dashboard_none_selected: 'No players have been selected. ',
 		// Advanced search
 		search_fields_empty: 'Search fields are empty. ',

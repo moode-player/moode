@@ -1975,9 +1975,6 @@ jQuery(document).ready(function($) { 'use strict';
     });
 
     // Dashboard
-    $('#dashboard-menu-item').click(function(e) {
-        notify(NOTIFY_TITLE_INFO, 'dashboard_discovering', 'Please wait.', NOTIFY_DURATION_INFINITE);
-    });
     $('#dashboard-modal').on('shown.bs.modal', function() {
         setTimeout(function() {
             $('#btn-dashboard-submit').text('Submit');
