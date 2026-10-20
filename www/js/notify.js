@@ -92,9 +92,6 @@ function notify(title, tag, arg3, arg4 = '') {
 		player_info: '<br>',
 		viewport: 'VIEWPORT<br>',
 		debug: 'DEBUG<br>',
-		// Dashboard
-		//dashboard_cmd_submitted: 'Command: ',
-		dashboard_none_selected: 'No players have been selected. ',
 		// Advanced search
 		search_fields_empty: 'Search fields are empty. ',
 		predefined_filter_invalid: 'Predefined filter is invalid. ',
@@ -168,8 +165,6 @@ function notify(title, tag, arg3, arg4 = '') {
 		player_info: '<br>',
 		viewport: 'VIEWPORT<br>',
 		debug: 'DEBUG<br>',
-		// Dashboard
-		dashboard_none_selected: 'No players have been selected. ',
 		// Advanced search
 		search_fields_empty: 'Search fields are empty. ',
 		predefined_filter_invalid: 'Predefined filter is invalid. ',
