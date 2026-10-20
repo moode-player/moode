@@ -19,6 +19,9 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	} else if (!isset($_POST['ipaddr'])) {
 		workerLog('dashboard.php: No destination IP addresses for command ' . $_GET['cmd']);
 		exit(0);
+	} else if ($_GET['cmd'] == 'remove_players') {
+		chkVariables($_POST);
+		removeDashboardPlayers($_POST['host']);
 	} else {
 		chkVariables($_POST);
 		$count = count($_POST['ipaddr']);

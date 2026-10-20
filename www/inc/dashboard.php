@@ -44,6 +44,13 @@ function updateDashboardCache($rebuild = false) {
 	return $players;
 }
 
+function removeDashboardPlayers($hosts) {
+	$players = array_values(array_filter(getDashboardCache(), function($player) use ($hosts) {
+		return !in_array($player['host'], $hosts);
+	}));
+	file_put_contents(DASHBOARD_CACHE_FILE, json_encode($players), LOCK_EX);
+}
+
 function getDashboardCache() {
 	$players = json_decode((string)@file_get_contents(DASHBOARD_CACHE_FILE), true);
 	return is_array($players) ? $players : array();

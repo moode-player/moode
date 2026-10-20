@@ -292,8 +292,7 @@ body.rmwide #renderer-oformat.ss-npicon:before {
 #panel-header .dropdown-menu {right:.75rem;}
 
 #panel-header .dropdown-menu > li > a i,
-#context-menus .dropdown-menu > li > a i,
-#dashboard-menu .dropdown-menu > li > a i {
+#context-menus .dropdown-menu > li > a i {
 	width:1.75em;
 	display:inline-block;
 	text-align:center;
@@ -304,9 +303,7 @@ body.rmwide #renderer-oformat.ss-npicon:before {
 #panel-header a:hover,
 #panel-header a:focus,
 #context-menus .dropdown-menu a:hover,
-#context-menus .dropdown-menu a:focus,
-#dashboard-menu .dropdown-menu a:hover,
-#dashboard-menu .dropdown-menu a:focus {
+#context-menus .dropdown-menu a:focus {
 	text-decoration:none;
 	outline:none;
 }
