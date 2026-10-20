@@ -29,18 +29,19 @@ on the overall speed of the Raspberry Pi including CPU, RAM, and boot media, and
 the speed of the network which is used to download the renderer sources and build
 scripts from GitHub.
 
-Some approximate times from testing:
-+---------------------------------------------+
-| PI MODEL   | AIRPLAY  | SPOTIFY  | QOBUZ    |
-+---------------------------------------------+
-| Pi-5 4GB   | 3 mins   | 6 mins   | 10 mins   |
-+---------------------------------------------+
-| Pi-4 2GB   | 6 mins   | 14 mins  | 20 mins  |
-+---------------------------------------------+
-| Pi-4 1GB   | 6 mins   | 25 mins  | 40 mins  |
-+---------------------------------------------+
-| Pi-3B+ 1GB | 10 mins  | 60+ mins | 90+ mins |
-+---------------------------------------------+
+BUILD TIMES
+
+The table below reflects approximate times to build each of renderer plugins on
+the latest moode image which includes Git and Rust toolchains pre-installed.
+
+  Plugin    Pi-5 4GB   Pi-4 1GB   Pi-3B+ 1GB
++---------+----------+----------+------------+
+| AirPlay | 3 mins   | 4 mins   | 8 mins     |
++---------+----------+----------+------------+
+| Spotify | 5 mins   | 25 mins  | 45 mins    |
++---------+----------+----------+------------+
+| Qobuz   | 5 mins   | 25 mins  | 45 mins    |
++---------+----------+----------+------------+
 
 VIEWING THE INSTALLATION LOGS
 
