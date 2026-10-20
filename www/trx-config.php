@@ -64,8 +64,8 @@ if (isset($_POST['multiroom_tx_restart'])) {
 if (isset($_POST['multiroom_tx_discover'])) {
 	sendFECmd('trx_discovering_receivers');
 
-	// Scan the network for hosts with open port 6600 (MPD)
-	$port6600Hosts = scanForMPDHosts();
+	// Scan the network for moOde players
+	$moodeHosts = scanForMoodeHosts();
 	$thisIpAddr = getThisIpAddr();
 	$thisTxHost = $cfgMultiroom['tx_host']; // Multicast address
 
@@ -73,7 +73,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	$rxHostnames = '';
 	$rxAddresses = '';
 	$timeout = getStreamTimeout();
-	foreach ($port6600Hosts as $ipAddr) {
+	foreach ($moodeHosts as $ipAddr) {
 		if ($ipAddr != $thisIpAddr) {
 			if (false === ($status = sendTrxControlCmd($ipAddr, '-rx'))) {
 				debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
