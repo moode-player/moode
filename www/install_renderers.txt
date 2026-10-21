@@ -34,14 +34,14 @@ BUILD TIMES
 The table below reflects approximate times to build each of renderer plugins on
 the latest moode image which includes Git and Rust toolchains pre-installed.
 
-  Plugin    Pi-5 4GB   Pi-4 1GB   Pi-3B+ 1GB
-+---------+----------+----------+------------+
-| AirPlay | 3 mins   | 4 mins   | 8 mins     |
-+---------+----------+----------+------------+
-| Spotify | 5 mins   | 25 mins  | 45 mins    |
-+---------+----------+----------+------------+
-| Qobuz   | 5 mins   | 25 mins  | 45 mins    |
-+---------+----------+----------+------------+
+  Plugin    Pi-5 4GB   Pi-4 2GB   Pi-4 1GB   Pi-3B+ 1GB
++---------+----------+----------+----------+------------+
+| AirPlay | 3 mins   | 5 mins   | 5 mins   | 8 mins     |
++---------+----------+----------+----------+------------+
+| Spotify | 5 mins   | 15 mins  | 25 mins  | 45 mins    |
++---------+----------+----------+----------+------------+
+| Qobuz   | 5 mins   | 15 mins  | 25 mins  | 45 mins    |
++---------+----------+----------+----------+------------+
 
 VIEWING THE INSTALLATION LOGS
 
