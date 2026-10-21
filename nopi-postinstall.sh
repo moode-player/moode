@@ -9,7 +9,7 @@
 # upstream order. Each step runs once per DB and is recorded in nopi_postinstall;
 # a fresh DB records them all unrun (the schema is already current).
 #
-# Upstream reviewed up to: pkgbuild a21036b (2026-10-17)
+# Upstream reviewed up to: pkgbuild 4e7a80d (2026-10-21)
 # Not ported yet: the 10.3.7 block (cfg_plugin reload, 10.3.7 stations zip), its
 # release is not out.
 # Ported from r1035 on; earlier blocks are covered by install.sh's schema
