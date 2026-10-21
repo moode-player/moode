@@ -1213,8 +1213,11 @@ chmod +x /usr/local/bin/moodeutl /var/www/daemon/worker.php 2>/dev/null || true
 if NOPI_VER=$(cd "$REPO_DIR" && git describe --tags --always 2>/dev/null) && [ -n "$NOPI_VER" ]; then
 	printf '%s\n' "$NOPI_VER" > /var/local/www/nopi_version
 	log "Stamped moode-nopi version: $NOPI_VER"
+	# Clone location, for the WebUI updater (www/util/nopi-update.sh)
+	printf '%s\n' "$REPO_DIR" > /var/local/www/nopi_repo
+	chmod 644 /var/local/www/nopi_repo
 else
-	rm -f /var/local/www/nopi_version
+	rm -f /var/local/www/nopi_version /var/local/www/nopi_repo
 	warn "Could not derive moode-nopi version (not a git checkout?); UI line hidden"
 fi
 chmod 644 /var/local/www/nopi_version 2>/dev/null || true
