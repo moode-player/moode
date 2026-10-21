@@ -20,9 +20,17 @@
 			<p class="sub-legend $_nopirel_hide">
 				Current moOde-nopi version: $_this_nopirel
 			</p>
-			<p class="sub-legend $_nopi_update_hide">
-				moOde-nopi update available: $_nopi_update
-			</p>
+			<div class="$_nopi_update_hide">
+			<label class="control-label">moOde-nopi update</label>
+			<div class="controls">
+				<button class="btn btn-primary btn-small config-btn set-button btn-submit" type="submit" formaction="nopi-update.php" name="nopi_install_update" value="1">Install</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-nopi-install-update" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span class="config-btn-after">Release $_nopi_update</span>
+				<span id="info-nopi-install-update" class="config-help-info">
+					Install the latest moOde-nopi release. moOde restarts when the update finishes: active renderers are stopped and the volume is reset to 0. Progress is shown on the Status page.
+				</span>
+			</div>
+			</div>
 			<div class="$_swupdate_hide">
 			<label class="control-label">Notification</label>
 			<div class="controls">
