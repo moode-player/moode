@@ -19,9 +19,7 @@ $backupFileNameBase = BACKUP_FILE_PREFIX . '_';
 
 chkVariables($_POST);
 
-//
-// BACKUP
-//
+// BACKUP SYSTEM
 if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	$backupOptions = '';
 	if (isset($_POST['backup_system']) && $_POST['backup_system'] == '1') {
@@ -45,7 +43,9 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	if (isset($_POST['backup_radiostations_other']) && $_POST['backup_radiostations_other'] == '1') {
 		$backupOptions .= $backupOptions ? ' r_other' : 'r_other';
 	}
-
+	if (isset($_POST['backup_renderer_plugins']) && $_POST['backup_renderer_plugins'] == '1') {
+		$backupOptions .= $backupOptions ? ' renderer_plugins' : 'renderer_plugins';
+	}
 	if (empty($backupOptions)) {
 		phpSession('open');
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
@@ -54,31 +54,18 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	} else {
 		$userID = getUserID();
 		$backupOptions = '--what ' . $backupOptions . ' ';
-
-		/*if(isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']) {
-			$backupOptions .= '--wlanpwd ' . $_POST['backup_wlan0pwd'] . ' ';
-		}*/
-
 		if (file_exists(TMP_SCRIPT_FILE)) {
 			$backupOptions .= '--script ' . TMP_SCRIPT_FILE . ' ';
 			sysCmd('chown ' . $userID . ':' . $userID . ' ' . TMP_SCRIPT_FILE);
 		}
-
-		// NOTE: Close the session here to avoid active session conflict if config/prefs are selected to be backed up.
-		// In this case we end up with backup_manager.py -> moodeutl -e -> autocfg-gen.php which also opens the session.
-		//phpSession('close');
-
 		// Generate backup zip
 		sysCmd('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
 		sysCmd('chown ' . $userID . ':' . $userID . ' ' . TMP_BACKUP_ZIP);
-		//workerLog('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
-
 		// Create name for backup file in browser
 		$dt = new DateTime('NOW');
 		phpSession('open');
 		$backupFileName = $backupFileNameBase . $_SESSION['hostname'] . '_' . $dt->format('ymd_Hi').'.zip';
 		phpSession('close');
-
 		header("Content-Description: File Transfer");
 		header("Content-type: application/octet-stream");
 		header("Content-Transfer-Encoding: binary");
@@ -90,14 +77,10 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		sysCmd('rm ' . TMP_BACKUP_ZIP);
 		exit();
 	}
-
-//
-// RESTORE
-//
+// RESTORE SYSTEM
 } else if (isset($_POST['restore_start']) && $_POST['restore_start'] == '1') {
 	if (file_exists(TMP_RESTORE_ZIP)) {
 		$restoreOptions = '';
-
 		if (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' config' : 'config';
 		}
@@ -119,7 +102,9 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		if (isset($_POST['restore_radiostations_other']) && $_POST['restore_radiostations_other'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' r_other' : 'r_other';
 		}
-
+		if (isset($_POST['restore_renderer_plugins']) && $_POST['restore_renderer_plugins'] == '1') {
+			$restoreOptions .= $restoreOptions ? ' renderer_plugins' : 'renderer_plugins';
+		}
 		if (empty($restoreOptions)) {
 			phpSession('open');
 			$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
@@ -128,7 +113,6 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		} else {
 			$restoreOptions = '--what ' . $restoreOptions . ' ' .
 				($_POST['restore_camilladsp_with_replace'] == '1' ? '--cdsp-replace' : '') . ' ';
-			//workerLog('bkp-config: /var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('rm ' . TMP_RESTORE_ZIP);
 			// Set permissions in case the restore doesn't require a reboot
@@ -219,6 +203,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_backup_radiocovers = genToggleButton('backup_radiocovers', True, False);
 	$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', True, False);
 	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, False);
+	$_togglebtn_backup_renderer_plugins = genToggleButton('backup_renderer_plugins', True, False);
 } else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
 	$_heading = 'Restore';
 	$_backup_hidden = 'hidden';
@@ -233,6 +218,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_restore_radiocovers = genToggleButton('restore_radiocovers', in_array('radiocovers', $backupOptions), !in_array('radiocovers', $backupOptions));
 	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), !in_array('r_moode', $backupOptions));
 	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), !in_array('r_other', $backupOptions));
+	$_togglebtn_restore_renderer_plugins = genToggleButton('restore_renderer_plugins', in_array('renderer_plugins', $backupOptions), !in_array('renderer_plugins', $backupOptions));
 }
 
 waitWorker('bkp-config');

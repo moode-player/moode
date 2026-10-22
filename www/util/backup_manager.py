@@ -26,11 +26,12 @@ import datetime
 import glob
 from os import system, path, walk
 import os
+import subprocess
 from zipfile import ZipFile
 from station_manager import StationManager
 
 class BackupManager(StationManager):
-	VERSION = "2.4"
+	VERSION = "2.5"
 
 	CDSPCFG_BASE = '/usr/share/camilladsp/'
 	MOODECFGINI_TMP = '/tmp/moodecfg.ini'
@@ -42,8 +43,8 @@ class BackupManager(StationManager):
 	OPT_RADIOCOVERS = 'radiocovers'
 	OPT_RS_MOODE ='r_moode'
 	OPT_RS_OTHER = 'r_other'
+	OPT_RENDERER_PLUGINS = 'renderer_plugins'
 
-	# for real
 	MOODECFGINI_RESTORE_PATH = '/boot'
 	CDSPCFG_RESTORE_BASE = '/usr/share'
 	PLAYLIST_PATH = '/var/lib/mpd'
@@ -51,10 +52,10 @@ class BackupManager(StationManager):
 	SEARCHES_PATH = '/var/local/www'
 	SEARCHES_PATTERN = 'libsearch_*.json'
 	SEARCHES_RESTORE_BASE = '/var/local'
+	PLUGINS_PATTERN = '*.deb'
 
-	# For test
-	# MOODECFGINI_RESTORE_PATH = '/tmp'
-	# CDSPCFG_RESTORE_BASE = '/tmp'
+	result = subprocess.run(["sudo", "moodeutl", "-d", "-gv", "home_dir"], capture_output=True, text=True)
+	HOME_DIR = result.stdout.strip()
 
 	def __init__(self, db_file, backup_file):
 		super().__init__(db_file, backup_file)
@@ -76,14 +77,14 @@ class BackupManager(StationManager):
 			zipmode = 'a'
 
 		if BackupManager.OPT_CFG in what:
-			system('moodeutl -e ' + BackupManager.MOODECFGINI_TMP)
+			os.system('moodeutl -e ' + BackupManager.MOODECFGINI_TMP)
 
 			if script_file and os.path.exists(script_file):
 				with open(BackupManager.MOODECFGINI_TMP, 'a') as fp:
 					fp.write('[Users]\n')
 					fp.write('script = "'+path.join('/boot','script')+'"\n')
 			if wlanpwd:
-				system ('sed -i "s/wlanpwd = .*/wlanpwd = \\"{}\\"/g" {}'.format(wlanpwd, BackupManager.MOODECFGINI_TMP))
+				os.system ('sed -i "s/wlanpwd = .*/wlanpwd = \\"{}\\"/g" {}'.format(wlanpwd, BackupManager.MOODECFGINI_TMP))
 
 		with ZipFile(self.backup_file, zipmode) as backup:
 			# Backup moodecfg.ini
@@ -133,8 +134,15 @@ class BackupManager(StationManager):
 			# Backup radio cover URL cache
 			if BackupManager.OPT_RADIOCOVERS in what:
 				print('Backup radio cover URL cache')
-				system('moodeutl -q ".dump cfg_rcucache" > /tmp/cfg_rcucache.sql')
+				os.system('moodeutl -q ".dump cfg_rcucache" > /tmp/cfg_rcucache.sql')
 				backup.write('/tmp/cfg_rcucache.sql', 'cfg_rcucache.sql')
+				os.system('rm /tmp/cfg_rcucache.sql')
+
+			# Backup renderer plugins
+			if BackupManager.OPT_RENDERER_PLUGINS in what:
+				print('Backup renderer plugins')
+				for file in glob.glob(path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
+					backup.write(file, path.join('plugins', os.path.basename(file)))
 
 	def do_restore(self, what, cdsp_replace):
 		# Restore radio stations
@@ -163,7 +171,7 @@ class BackupManager(StationManager):
 				if 'bgimage.jpg' in backup.namelist():
 					print('Restore background image file (bgimage.jpg)')
 					backup.extract('bgimage.jpg', '/var/local/www/imagesw')
-					system('chmod a+r /var/local/www/imagesw/bgimage.jpg')
+					os.system('chmod a+r /var/local/www/imagesw/bgimage.jpg')
 
 			# Restore CamillaDSP configs and IR files
 			if BackupManager.OPT_CDSP in what:
@@ -205,17 +213,30 @@ class BackupManager(StationManager):
 				except KeyError:
 					print('Backup does not contain a cfg_rcucache.sql file')
 				if os.path.isfile('/tmp/cfg_rcucache.sql'):
-					system('moodeutl -q "DELETE FROM cfg_rcucache"')
-					system('cat /tmp/cfg_rcucache.sql | grep "INSERT INTO cfg_rcucache" | sqlite3 /var/local/www/db/moode-sqlite3.db')
+					os.system('moodeutl -q "DELETE FROM cfg_rcucache"')
+					os.system('cat /tmp/cfg_rcucache.sql | grep "INSERT INTO cfg_rcucache" | sqlite3 /var/local/www/db/moode-sqlite3.db')
+					os.system('rm /tmp/cfg_rcucache.sql')
+
+			# Restore renderer plugins
+			if BackupManager.OPT_RENDERER_PLUGINS in what:
+				searchNames = [name for name in backup.namelist() if 'plugins/' in name]
+				if len(searchNames) > 0:
+					print('Restore renderer plugins')
+					backup.extractall ('/tmp', searchNames)
+					os.system('mv /tmp/plugins/*.deb "' +  BackupManager.HOME_DIR + '"')
+					os.system('rmdir /tmp/plugins')
+					for file in glob.glob(path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
+						os.chmod(file, 0o755)
 
 	def do_info(self):
 		configPresent = False
 		cdspPresent = False
-		rs_moode_present = False
-		rs_other_present = False
 		playlistsPresent = False
 		searchesPresent = False
 		radiocoversPresent = False
+		rs_moode_present = False
+		rs_other_present = False
+		pluginsPresent = False
 
 		if os.path.exists(self.backup_file):
 			# Fake target db version
@@ -248,6 +269,9 @@ class BackupManager(StationManager):
 				except KeyError:
 					pass
 
+				names = [ name  for name in backup.namelist() if 'plugins/' in name]
+				pluginsPresent = len( names) >= 1
+
 		content = []
 		if configPresent:
 			print('config')
@@ -270,9 +294,11 @@ class BackupManager(StationManager):
 		if rs_other_present:
 			print('r_other')
 			content.append('r_other')
+		if pluginsPresent:
+			print('renderer_plugins')
+			content.append('renderer_plugins')
 
 		return content
-
 
 def get_cmdline_arguments():
 	epilog = 'Root privileges required for restore'
@@ -283,8 +309,9 @@ def get_cmdline_arguments():
 	parser.add_argument('--version', action='version', version='%(prog)s {}'.format(BackupManager.VERSION))
 
 	parser.add_argument('--what', dest = 'what', nargs="+",
-		choices = ['config', 'cdsp', 'playlists', 'searches', 'radiocovers', 'r_moode', 'r_other'], default = None ,
-		help = 'Indicate what to backup or restore. Default for backup: config cdsp playlists searches radiocovers r_other. Default for restore: Auto detect options')
+		choices = ['config', 'cdsp', 'playlists', 'searches', 'radiocovers', 'r_moode', 'r_other', 'renderer_plugins'],
+		default = None,
+		help = 'Default for backup: config cdsp playlists searches radiocovers r_other renderer_plugins. Default for restore: Auto detect options.')
 
 	group = parser.add_mutually_exclusive_group( required = True)
 	group.add_argument('--backup', dest = 'do_backup', action = 'store_const',
