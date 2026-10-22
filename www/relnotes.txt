@@ -16,6 +16,7 @@
 ################################################################################
 
 Packages
+- UPD: MPD: 0.24.16-2moode1
 - UPD: Pibuz: 2.7.1-1moode1 (User build/install)
 - UPD: Alsa-cdsp: 1.3.0-4moode1
 
