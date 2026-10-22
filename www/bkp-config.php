@@ -111,8 +111,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 			$_SESSION['notify']['msg'] = 'Specify at least one item to restore.';
 			phpSession('close');
 		} else {
-			$restoreOptions = '--what ' . $restoreOptions . ' ' .
-				($_POST['restore_camilladsp_with_replace'] == '1' ? '--cdsp-replace' : '') . ' ';
+			$restoreOptions = '--what ' . $restoreOptions . ' ';
 			sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 			sysCmd('rm ' . TMP_RESTORE_ZIP);
 			// Set permissions in case the restore doesn't require a reboot
@@ -212,7 +211,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	//workerLog(print_r($backupOptions, true));
 	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), !in_array('config', $backupOptions));
 	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), !in_array('cdsp', $backupOptions));
-	$_togglebtn_restore_camilladsp_with_replace = genToggleButton('restore_camilladsp_with_replace', false, !in_array('cdsp', $backupOptions), false);
 	$_togglebtn_restore_playlists = genToggleButton('restore_playlists', in_array('playlists', $backupOptions), !in_array('playlists', $backupOptions));
 	$_togglebtn_restore_searches = genToggleButton('restore_searches', in_array('searches', $backupOptions), !in_array('searches', $backupOptions));
 	$_togglebtn_restore_radiocovers = genToggleButton('restore_radiocovers', in_array('radiocovers', $backupOptions), !in_array('radiocovers', $backupOptions));

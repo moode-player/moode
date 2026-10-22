@@ -144,7 +144,7 @@ class BackupManager(StationManager):
 				for file in glob.glob(path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
 					backup.write(file, path.join('plugins', os.path.basename(file)))
 
-	def do_restore(self, what, cdsp_replace):
+	def do_restore(self, what):
 		# Restore radio stations
 		scope = None
 		if BackupManager.OPT_RS_OTHER in what and BackupManager.OPT_RS_MOODE in what:
@@ -177,12 +177,6 @@ class BackupManager(StationManager):
 			if BackupManager.OPT_CDSP in what:
 				names = [ name  for name in backup.namelist() if 'camilladsp/' in name]
 				if len(names) > 0:
-					if cdsp_replace:
-						coeffsDir = path.join(BackupManager.CDSPCFG_BASE, 'coeffs')
-						configsDir = path.join(BackupManager.CDSPCFG_BASE, 'configs')
-						os.system('rm ' + coeffsDir + '/*')
-						os.system('find ' + configsDir + " ! -name '__quick_convolution__.yml' -type f -exec rm -f {} +")
-						print('Clear CamillaDSP configurations and IR files before restore')
 					print('Restore CamillaDSP configurations and IR files')
 					backup.extractall (BackupManager.CDSPCFG_RESTORE_BASE, names)
 
@@ -324,9 +318,6 @@ def get_cmdline_arguments():
 		const=sum,
 		help = "Show which options were used to create the backup")
 
-	parser.add_argument('--cdsp-replace', dest = 'cdsp_replace', action = 'store_true',
-		help = 'Replace CamillaDSP configurations and IR files before restoring')
-
 	parser.add_argument('--db', default = '/var/local/www/db/moode-sqlite3.db',
 		help = 'File name of the SQL database. Default: /var/local/www/db/moode-sqlite3.db')
 
@@ -373,7 +364,7 @@ if __name__ == "__main__":
 		if args.do_backup:
 			 mgnr.do_backup(what, args.script, args.wlanpwd)
 		elif args.do_restore:
-			 mgnr.do_restore(what, args.cdsp_replace)
+			 mgnr.do_restore(what)
 		elif args.do_info:
 			 mgnr.do_info()
 
