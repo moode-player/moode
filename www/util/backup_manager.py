@@ -24,7 +24,6 @@ import argparse
 import logging
 import datetime
 import glob
-from os import system, path, walk
 import os
 import subprocess
 from zipfile import ZipFile
@@ -82,7 +81,7 @@ class BackupManager(StationManager):
 			if script_file and os.path.exists(script_file):
 				with open(BackupManager.MOODECFGINI_TMP, 'a') as fp:
 					fp.write('[Users]\n')
-					fp.write('script = "'+path.join('/boot','script')+'"\n')
+					fp.write('script = "' + os.path.join('/boot','script') + '"\n')
 			if wlanpwd:
 				os.system ('sed -i "s/wlanpwd = .*/wlanpwd = \\"{}\\"/g" {}'.format(wlanpwd, BackupManager.MOODECFGINI_TMP))
 
@@ -100,36 +99,36 @@ class BackupManager(StationManager):
 
 			# Backup camilladsp configurations
 			if BackupManager.OPT_CDSP in what:
-				if path.exists(BackupManager.CDSPCFG_BASE):
-					if path.exists(path.join(BackupManager.CDSPCFG_BASE, 'configs')):
+				if os.path.exists(BackupManager.CDSPCFG_BASE):
+					if os.path.exists(os.path.join(BackupManager.CDSPCFG_BASE, 'configs')):
 						print('Backup camilladsp configs')
-						for fpath, subdirs, files in walk(path.join(BackupManager.CDSPCFG_BASE, 'configs')):
+						for fpath, subdirs, files in os.walk(os.path.join(BackupManager.CDSPCFG_BASE, 'configs')):
 							for name in files:
-								backup.write(path.join(fpath, name), path.join('camilladsp', 'configs', name))
-					if path.exists(path.join(BackupManager.CDSPCFG_BASE, 'coeffs')):
+								backup.write(os.path.join(fpath, name), os.path.join('camilladsp', 'configs', name))
+					if os.path.exists(os.path.join(BackupManager.CDSPCFG_BASE, 'coeffs')):
 						print('Backup camilladsp coeffs')
-						for fpath, subdirs, files in walk(path.join(BackupManager.CDSPCFG_BASE, 'coeffs')):
+						for fpath, subdirs, files in os.walk(os.path.join(BackupManager.CDSPCFG_BASE, 'coeffs')):
 							for name in files:
-								backup.write(path.join(fpath, name), path.join('camilladsp', 'coeffs', name))
+								backup.write(os.path.join(fpath, name), os.path.join('camilladsp', 'coeffs', name))
 
 			# Backup playlists
 			if BackupManager.OPT_PL in what:
-				if path.exists(BackupManager.PLAYLIST_PATH):
+				if os.path.exists(BackupManager.PLAYLIST_PATH):
 					print('Backup playlists')
-					for fpath, subdirs, files in walk(path.join(BackupManager.PLAYLIST_PATH, 'playlists')):
+					for fpath, subdirs, files in os.walk(os.path.join(BackupManager.PLAYLIST_PATH, 'playlists')):
 						for name in files:
-							backup.write(path.join(fpath, name), path.join('playlists', name))
+							backup.write(os.path.join(fpath, name), os.path.join('playlists', name))
 					print('Backup playlist covers')
-					for fpath, subdirs, files in walk(path.join(BackupManager.PLAYLIST_COVERS_PATH, 'playlist-covers')):
+					for fpath, subdirs, files in os.walk(os.path.join(BackupManager.PLAYLIST_COVERS_PATH, 'playlist-covers')):
 						for name in files:
-							backup.write(path.join(fpath, name), path.join('playlist-covers', name))
+							backup.write(os.path.join(fpath, name), os.path.join('playlist-covers', name))
 
 			# Backup saved searches
 			if BackupManager.OPT_SEARCHES in what:
-				if path.exists(BackupManager.SEARCHES_PATH):
+				if os.path.exists(BackupManager.SEARCHES_PATH):
 					print('Backup saved searches')
-					for file in glob.glob(path.join(BackupManager.SEARCHES_PATH, BackupManager.SEARCHES_PATTERN)):
-						backup.write(file, path.join('www', os.path.basename(file)))
+					for file in glob.glob(os.path.join(BackupManager.SEARCHES_PATH, BackupManager.SEARCHES_PATTERN)):
+						backup.write(file, os.path.join('www', os.path.basename(file)))
 
 			# Backup radio cover URL cache
 			if BackupManager.OPT_RADIOCOVERS in what:
@@ -141,8 +140,8 @@ class BackupManager(StationManager):
 			# Backup renderer plugins
 			if BackupManager.OPT_PLUGINS in what:
 				print('Backup renderer plugins')
-				for file in glob.glob(path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
-					backup.write(file, path.join('plugins', os.path.basename(file)))
+				for file in glob.glob(os.path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
+					backup.write(file, os.path.join('plugins', os.path.basename(file)))
 
 	def do_restore(self, what):
 		# Restore radio stations
@@ -219,7 +218,7 @@ class BackupManager(StationManager):
 					backup.extractall ('/tmp', searchNames)
 					os.system('mv /tmp/plugins/*.deb "' +  BackupManager.HOME_DIR + '"')
 					os.system('rmdir /tmp/plugins')
-					for file in glob.glob(path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
+					for file in glob.glob(os.path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
 						os.chmod(file, 0o755)
 
 	def do_info(self):
