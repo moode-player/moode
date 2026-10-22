@@ -43,7 +43,7 @@ class BackupManager(StationManager):
 	OPT_RADIOCOVERS = 'radiocovers'
 	OPT_RS_MOODE ='r_moode'
 	OPT_RS_OTHER = 'r_other'
-	OPT_RENDERER_PLUGINS = 'renderer_plugins'
+	OPT_PLUGINS = 'plugins'
 
 	MOODECFGINI_RESTORE_PATH = '/boot'
 	CDSPCFG_RESTORE_BASE = '/usr/share'
@@ -139,7 +139,7 @@ class BackupManager(StationManager):
 				os.system('rm /tmp/cfg_rcucache.sql')
 
 			# Backup renderer plugins
-			if BackupManager.OPT_RENDERER_PLUGINS in what:
+			if BackupManager.OPT_PLUGINS in what:
 				print('Backup renderer plugins')
 				for file in glob.glob(path.join(BackupManager.HOME_DIR, BackupManager.PLUGINS_PATTERN)):
 					backup.write(file, path.join('plugins', os.path.basename(file)))
@@ -212,7 +212,7 @@ class BackupManager(StationManager):
 					os.system('rm /tmp/cfg_rcucache.sql')
 
 			# Restore renderer plugins
-			if BackupManager.OPT_RENDERER_PLUGINS in what:
+			if BackupManager.OPT_PLUGINS in what:
 				searchNames = [name for name in backup.namelist() if 'plugins/' in name]
 				if len(searchNames) > 0:
 					print('Restore renderer plugins')
@@ -289,8 +289,8 @@ class BackupManager(StationManager):
 			print('r_other')
 			content.append('r_other')
 		if pluginsPresent:
-			print('renderer_plugins')
-			content.append('renderer_plugins')
+			print('plugins')
+			content.append('plugins')
 
 		return content
 
@@ -303,9 +303,9 @@ def get_cmdline_arguments():
 	parser.add_argument('--version', action='version', version='%(prog)s {}'.format(BackupManager.VERSION))
 
 	parser.add_argument('--what', dest = 'what', nargs="+",
-		choices = ['config', 'cdsp', 'playlists', 'searches', 'radiocovers', 'r_moode', 'r_other', 'renderer_plugins'],
+		choices = ['config', 'cdsp', 'playlists', 'searches', 'radiocovers', 'r_moode', 'r_other', 'plugins'],
 		default = None,
-		help = 'Default for backup: config cdsp playlists searches radiocovers r_other renderer_plugins. Default for restore: Auto detect options.')
+		help = 'Default for backup: config cdsp playlists searches radiocovers r_other plugins. Default for restore: Auto detect options.')
 
 	group = parser.add_mutually_exclusive_group( required = True)
 	group.add_argument('--backup', dest = 'do_backup', action = 'store_const',

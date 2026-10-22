@@ -44,7 +44,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 		$backupOptions .= $backupOptions ? ' r_other' : 'r_other';
 	}
 	if (isset($_POST['backup_renderer_plugins']) && $_POST['backup_renderer_plugins'] == '1') {
-		$backupOptions .= $backupOptions ? ' renderer_plugins' : 'renderer_plugins';
+		$backupOptions .= $backupOptions ? ' plugins' : 'plugins';
 	}
 	if (empty($backupOptions)) {
 		phpSession('open');
@@ -103,7 +103,7 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' r_other' : 'r_other';
 		}
 		if (isset($_POST['restore_renderer_plugins']) && $_POST['restore_renderer_plugins'] == '1') {
-			$restoreOptions .= $restoreOptions ? ' renderer_plugins' : 'renderer_plugins';
+			$restoreOptions .= $restoreOptions ? ' plugins' : 'plugins';
 		}
 		if (empty($restoreOptions)) {
 			phpSession('open');
@@ -216,7 +216,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_restore_radiocovers = genToggleButton('restore_radiocovers', in_array('radiocovers', $backupOptions), !in_array('radiocovers', $backupOptions));
 	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), !in_array('r_moode', $backupOptions));
 	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), !in_array('r_other', $backupOptions));
-	$_togglebtn_restore_renderer_plugins = genToggleButton('restore_renderer_plugins', in_array('renderer_plugins', $backupOptions), !in_array('renderer_plugins', $backupOptions));
+	$_togglebtn_restore_renderer_plugins = genToggleButton('restore_renderer_plugins', in_array('plugins', $backupOptions), !in_array('plugins', $backupOptions));
 }
 
 waitWorker('bkp-config');
