@@ -28,6 +28,7 @@ Updates
 - UPD: Add a settings (gear) button on the default Bluetooth Active overlay
 - UPD: Add support for screens reporting a 1920px viewport (PR831 @bitlab)
 - UPD: Add renderer plugin .debs to Backup/Restore
+- UPD: Remove obsolete Restore option to delete existing CamillaDSP configs
 
 Bug fixes
 - FIX: Watchdog php pool worker min/max checks (avoid max 64/WebUI hang case)
