@@ -207,6 +207,18 @@ if (isset($_POST['external_antenna']) && $_POST['external_antenna'] != $_SESSION
 	$_SESSION['external_antenna'] = $_POST['external_antenna'];
 	submitJob('external_antenna', $_POST['external_antenna'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
+if (isset($_POST['update_mqtt'])) {
+	if (isset($_POST['mqttsvc']) && $_POST['mqttsvc'] != $_SESSION['mqttsvc']) {
+		phpSession('write', 'mqttsvc', $_POST['mqttsvc']);
+		submitJob('mqttsvc');
+	}
+}
+// Turned off in the same request as the removal, so the session and the
+// database agree; a running bridge would re-add the device on reconnect
+if (isset($_POST['mqtt_remove_device'])) {
+	phpSession('write', 'mqttsvc', '0');
+	submitJob('mqtt_remove', '', NOTIFY_TITLE_INFO, NAME_MQTT . ' turned off, removing the player from the MQTT broker');
+}
 
 // FILE SHARING
 
@@ -522,6 +534,11 @@ $_select['avahi_options'] .= "<option value=\"ipv4only\" " . (($_SESSION['avahi_
 $autoClick = " onchange=\"autoClick('#btn-set-external-antenna');\"";
 $_select['external_antenna_on']  .= "<input type=\"radio\" name=\"external_antenna\" id=\"toggle-external-antenna-1\" value=\"1\" " . (($_SESSION['external_antenna'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['external_antenna_off'] .= "<input type=\"radio\" name=\"external_antenna\" id=\"toggle-external-antenna-2\" value=\"0\" " . (($_SESSION['external_antenna'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// MQTT
+$autoClick = " onchange=\"autoClick('#btn-set-mqtt');\"";
+$_select['mqtt_on']  .= "<input type=\"radio\" name=\"mqttsvc\" id=\"toggle-mqtt-1\" value=\"1\" " . (($_SESSION['mqttsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['mqtt_off'] .= "<input type=\"radio\" name=\"mqttsvc\" id=\"toggle-mqtt-2\" value=\"0\" " . (($_SESSION['mqttsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // FILE SHARING
 
