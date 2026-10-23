@@ -1821,6 +1821,11 @@ if ($_SESSION['mpd_monitor_svc'] == 'On') {
 }
 workerLog('worker: Radio monitor:    ' . ($_SESSION['mpd_monitor_svc'] == 'On' ? 'started' : 'off'));
 
+// Start dashboard monitor
+sysCmd('killall -s 9 dashmon.php');
+sysCmd('/var/www/daemon/dashmon.php > /dev/null 2>&1 &');
+workerLog('worker: Dashboard monitor: started');
+
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
 
@@ -1834,6 +1839,7 @@ debugLog('Sleep intervals:  ' .
 	'waitworker=' . WAITWORKER_SLEEP / 1000000 . ', ' .
 	'watchdog=' . WATCHDOG_SLEEP . ', ' .
 	'mountmon=' . MOUNTMON_SLEEP . ', ' .
+	'dashmon=' . DASHMON_SLEEP . ', ' .
 	'mpdmon=' . explode(',', $_SESSION['mpd_monitor_opt'])[0] . ', ' .
 	'gpiobuttons=' . GPIOBUTTONS_SLEEP
 );

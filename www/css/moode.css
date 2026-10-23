@@ -88,6 +88,14 @@ li.modal-dropdown-text:focus {color:#eee;}
     margin: 0 10px 8px 0;
 }
 #dashboard-modal-body {height:75vh;}
+#dashboard-toolbar {max-width:calc(5 * 10em);margin-left:auto;margin-right:auto;}
+#dashboard-toolbar .btn-toolbar {margin:0 0 .5em 0;}
+#dashboard-toolbar .dashboard-toolbar-row {display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;}
+#dashboard-toolbar .info-toggle {font-size:1.5rem;}
+#dashboard-toolbar .info-toggle i {margin-top:0;}
+#dashboard-toolbar .btn {background:var(--btnshade5);min-width:4.5em;padding:.4em .5em;text-align:center;}
+#dashboard-toolbar .btn i {display:block;font-size:1.25em;margin-bottom:.2em;}
+#dashboard-toolbar .btn span {display:block;font-size:.8em;}
 /* dropdown menus */
 #panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
 #current-tab, #library-header {font-size:1em;}
