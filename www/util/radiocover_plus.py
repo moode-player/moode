@@ -282,6 +282,13 @@ def prepare_text_for_query(text):
 	text = text.replace('"', '').replace("'", "'").strip()
 	return text.strip()
 
+def album_matches(found, wanted):
+	"""True if no album was requested or if most words of the shorter name are shared."""
+	if not wanted: return True
+	f = set(re.findall(r"\w+", prepare_text_for_query(found).lower()))
+	w = set(re.findall(r"\w+", prepare_text_for_query(wanted).lower()))
+	return bool(f and w) and len(f & w) / min(len(f), len(w)) >= 0.75
+
 def prepare_query(artist, title, album=None):
 	artist_q = prepare_text_for_query(artist)
 	title_q  = prepare_text_for_query(title)
@@ -448,8 +455,6 @@ def get_image_resolution(url, mode="regex"):
 			if m_caa:
 				dim = int(m_caa.group(1))
 				return dim, dim
-				if "archive.org" in url and "_thumb" in url:
-					return 500, 500
 		except Exception:
 			pass
 		return 0, 0
@@ -728,7 +733,7 @@ def search_radio_paradise(station_name, artist, title):
 	return None
 
 # ================= SEARCH COVER PARALLEL =================
-def search_cover_parallel(artist, title, attempt=1):
+def search_cover_parallel(artist, title, album=None, attempt=1):
 	"""
 	Parallel cover search across all enabled providers.
 	Timebox: FAST_DEADLINE_S, TOTAL_DEADLINE_S.
@@ -814,7 +819,7 @@ def search_cover_parallel(artist, title, attempt=1):
 		future_to_provider = {}
 		futures = set()
 		for name, fn in providers:
-			fut = executor.submit(fn, artist, title, None)
+			fut = executor.submit(fn, artist, title, album)
 			future_to_provider[fut] = name
 			future_start[fut]	   = time.monotonic()
 			futures.add(fut)
@@ -840,7 +845,7 @@ def search_cover_parallel(artist, title, attempt=1):
 				name  = future_to_provider.get(future, "Unknown")
 				try:
 					cover, album_found, album_type = future.result()
-					if cover and album_found:
+					if cover and album_found and album_matches(album_found, album):
 						if album_type:
 							weight = RELEASE_TYPE_WEIGHTS.get(album_type.lower(), 1.0) + 0.05
 						else:
@@ -900,7 +905,7 @@ def search_cover_parallel(artist, title, attempt=1):
 	logging.info(f"[search_cover_parallel] Cover:    {chosen}")
 	return chosen, score, provider
 
-def search_for_cover(raw_title, station_name):
+def search_for_cover(raw_title, station_name, album=None):
 	logging.info(f"[search_for_cover] title={raw_title}, station={station_name}")
 	# Parse raw title
 	artist, title = split_artist_title(raw_title)
@@ -938,7 +943,7 @@ def search_for_cover(raw_title, station_name):
 		artist_1 = normalize_for_search(artist_1)
 		title_1  = normalize_for_search(title_1)
 		logging.info(f"[search] Attempt 1: '{artist_1}' - '{title_1}'")
-		cover_url, score1, provider = search_cover_parallel(artist_1, title_1, attempt=1)
+		cover_url, score1, provider = search_cover_parallel(artist_1, title_1, album=album, attempt=1)
 		if cover_url and score1 >= 1.5:
 			logging.info(f"[result] Attempt 1: accepted score={score1:.1f} provider={provider}")
 		elif cover_url and score1 < 1.5:
@@ -950,7 +955,7 @@ def search_for_cover(raw_title, station_name):
 			artist_2 = clean_artist_name(raw_artist) if raw_artist else artist_1
 			title_2  = normalize_title(raw_title, artist=raw_artist) if raw_title else title_1
 			logging.info(f"[search] Attempt 2: '{artist_2}' - '{title_2}'")
-			cover_url, score2, provider = search_cover_parallel(artist_2, title_2, attempt=2)
+			cover_url, score2, provider = search_cover_parallel(artist_2, title_2, album=album, attempt=2)
 			if cover_url and score2 >= 0.9:
 				logging.info(f"[result] Attempt 2: accepted score={score2:.1f} provider={provider}")
 			elif cover_url and score2 < 0.9:
@@ -980,6 +985,7 @@ def main():
 		description="Return coverart URL using \"Artist - Title\" and Radio station name.")
 	parser.add_argument("--title", required=True, help="Artist - Title string enclosed in dbl quotes.")
 	parser.add_argument("--station", required=True, help="Radio station name (or blank) enclosed in dbl quotes.")
+	parser.add_argument("--album", default="", help="Album name (optional) enclosed in dbl quotes.")
 	parser.add_argument('--version', action='version', version='%(prog)s {}'.format(__version__))
 	args = parser.parse_args()
 
@@ -998,7 +1004,9 @@ def main():
 			logging.info(f"[main] - not in cache")
 			logging.info(f"[main] Search for cover")
 			read_global()
-			cover_url = search_for_cover(args.title, args.station) # URL or None
+			cover_url = search_for_cover(args.title, args.station, args.album) if args.album else None
+			if not cover_url:
+				cover_url = search_for_cover(args.title, args.station) # URL or None
 
 			# Update cache
 			if cover_url:
