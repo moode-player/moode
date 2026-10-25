@@ -3272,13 +3272,6 @@ function runQueuedJob() {
 		case 'reset_bt_auto_disconnect':
 			$GLOBALS['bt_auto_disconnect'] = $_SESSION['bt_auto_disconnect'];
 			break;
-		case 'install_airplay':
-			// https://raw.githubusercontent.com/moode-player/plugins/main
-			$fullLog = $_SESSION['home_dir'] . '/install_airplay.log';
-			sysCmd('rm "' . $fullLog . '"');
-			$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $GLOBALS['dbh']);
-			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $result[0]['plugin'] . '" > "' . $fullLog . '" 2>&1 &');
-			break;
 		case 'airplaysvc':
 			stopAirPlay();
 			if ($_SESSION['airplaysvc'] == 1) {
@@ -3288,13 +3281,6 @@ function runQueuedJob() {
 			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
 				sysCmd('mpc play');
 			}
-			break;
-		case 'install_spotify':
-			// https://raw.githubusercontent.com/moode-player/plugins/main
-			$fullLog = $_SESSION['home_dir'] . '/install_spotify.log';
-			sysCmd('rm "' . $fullLog . '"');
-			$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='spotify-connect'", $GLOBALS['dbh']);
-			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $result[0]['plugin'] . '" > "' . $fullLog . '" 2>&1 &');
 			break;
 		case 'spotifysvc':
 			stopSpotify();
@@ -3334,11 +3320,17 @@ function runQueuedJob() {
 				sysCmd('mpc play');
 			}
 			break;
+		case 'install_airplay':
+		case 'install_spotify':
 		case 'install_qobuz':
-			$fullLog = $_SESSION['home_dir'] . '/install_qobuz.log';
-			sysCmd('rm "' . $fullLog . '"');
-			$result = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='qobuz-connect'", $GLOBALS['dbh']);
-			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $result[0]['plugin'] . '" > "' . $fullLog . '" 2>&1 &');
+			// Log file and plugin type
+			$fullLog = $_SESSION['home_dir'] . '/' . $_SESSION['w_queue'] . '.log';
+			$types = array('install_airplay' => 'airplay', 'install_spotify' => 'spotify-connect', 'install_qobuz' => 'qobuz-connect');
+			$type = $types[$_SESSION['w_queue']];
+			// Install plugin
+			$plugin = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='" . $type . "'", $GLOBALS['dbh'])[0]['plugin'];
+			$suffix = sqlQuery("SELECT value FROM cfg_system WHERE param='pkgid_suffix'", $GLOBALS['dbh'])[0]['value'];
+			sysCmd('/var/www/util/plugin-updater.sh "renderer" "' . $type . '" "' . $plugin . $plugin_suffix . '" > "' . $fullLog . '" 2>&1 &');
 			break;
 		case 'slsvc':
 			if ($_SESSION['slsvc'] == '1') {
@@ -3780,9 +3772,8 @@ function runQueuedJob() {
 			restartMpdAndRenderers($resetAlsaCtl);
 			break;
 		case 'install_moode_meters':
-			// https://raw.githubusercontent.com/moode-player/plugins/main
-			$latestPlugin = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='peppydisplay' AND type='moode-meters'", $GLOBALS['dbh'])[0]['plugin'];
-			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "' . $latestPlugin . '"');
+			$plugin = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='peppydisplay' AND type='moode-meters'", $GLOBALS['dbh'])[0]['plugin'];
+			sysCmd('/var/www/util/plugin-updater.sh "peppydisplay" "moode-meters" "' . $plugin . '"');
 			break;
 		case 'scn_blank':
 			setScreenBlankTimeout($_SESSION['w_queueargs']);

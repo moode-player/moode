@@ -2,7 +2,7 @@
 #
 #  Installation Guide for Audio Renderers
 #
-#  Version: 1.3 2026-10-21
+#  Version: 1.4 2026-10-24
 #
 #  (C) Tim Curtis 2024 http://moodeaudio.org
 #
@@ -20,13 +20,15 @@ but they can be built/installed via the INSTALL button in Renderer Config.
 
 INSTALLATION PROCESS
 
-Clicking the INSTALL button initiates an automated process that first builds
-the renderer from its source code and dependencies then creates a Debian package
-that installs the renderer into the system.
+Clicking the INSTALL button initiates a process that first checks the Home
+Directory for a Debian package of the correct version and if present performs
+a direct install. If the package is not present the renderer sources are
+downloaded from their GitHub repository and built (compiled) into a Debian
+package that is then installed.
 
-The build part of the process can be lengthy. The amount of time required depends
-on the overall speed of the Raspberry Pi including CPU, RAM, and boot media, and
-the speed of the network which is used to download the renderer sources and build
+The build process can be lengthy. The amount of time required depends on the
+overall speed of the Raspberry Pi including CPU, RAM, and boot media, and the
+speed of the network which is used to download the renderer sources and build
 scripts from GitHub.
 
 BUILD TIMES
@@ -60,12 +62,13 @@ tail -f install_airplay.log
 
 INSTALLING ON MULTIPLE SYSTEMS
 
-The Debian packages "filename.deb" are saved to the Home Directory. These
-packages can be copied to the Home Directory of another system and installed
-directly by the command below without having to go through the lengthy build
-process.
+The Debian packages "filename.deb" are saved to the Home Directory. The System
+Backup/Restore feature can be used to backup up and then restore the .deb files
+to the Home Directory of another system and then installed directly via the
+INSTALL button in Renderer Config.
 
-sudo moodeutl --installpkg [airplay | spotify | qobuz]
+Manual direct installation can also be performed by using the command below.
+sudo moodeutl --installpkg [airplay | spotify-connect | qobuz-connect]
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum
