@@ -736,10 +736,10 @@ fi
 
 log "Phase 1f: mpd with moOde selective-resample patch"
 
-MPD_MOODE_VER="0.24.16-2moode1"
-MPD_GIT_TAG="v0.24.16"
+MPD_MOODE_VER="0.24.17-2moode1"
+MPD_GIT_TAG="v0.24.17"
 MPD_DEBIAN_URL="http://deb.debian.org/debian/pool/main/m/mpd/mpd_0.24.12-1.debian.tar.xz"
-MPD_PKGBUILD_URL="https://raw.githubusercontent.com/moode-player/pkgbuild/4e7a80d905343dae1ff6569c07e94eab8383c0ab/packages/mpd"
+MPD_PKGBUILD_URL="https://raw.githubusercontent.com/moode-player/pkgbuild/2bb6a96276ea3c431e6fb1ab4c7f0866a0b32025/packages/mpd"
 if ! dpkg_ver_is mpd "$MPD_MOODE_VER"; then
 	apt-mark unhold mpd >/dev/null 2>&1 || true   # let the new build replace a held older one
 	$APT_INSTALL build-essential dpkg-dev devscripts equivs fakeroot git
