@@ -20,6 +20,10 @@ Packages
 - UPD: Pibuz: 2.7.1-1moode1 (User build/install)
 - UPD: Alsa-cdsp: 1.3.0-4moode1
 
+New features
+- NEW: Renderer plugin .debs included in Backup/Restore
+- NEW: Renderer INSTALL check/install plugin if present in Home Directory
+
 Updates
 - UPD: Include Git and Rust toolchain in image build (PR8 @Gjuju)
 - UPD: Improve Radio Cover+: Updates from @Syma753dfx
@@ -27,7 +31,6 @@ Updates
 - UPD: Add "Local audio" ON/OFF option to HTTP streaming section of Audio Config
 - UPD: Add a settings (gear) button on the default Bluetooth Active overlay
 - UPD: Add support for screens reporting a 1920px viewport (PR831 @bitlab)
-- UPD: Add renderer plugin .debs to Backup/Restore
 - UPD: Remove obsolete Restore option to delete existing CamillaDSP configs
 - UPD: Refactor backup and station_manager.py (convert to hard tabs, os.syntax)
 
