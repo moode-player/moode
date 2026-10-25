@@ -30,17 +30,16 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 UPD_URL=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='res_software_upd_url'")
 
 # Initialize the updater log
-rm -f $UPDATER_LOG
-touch $UPDATER_LOG
+truncate $UPDATER_LOG --size 0
 chmod 0666 $UPDATER_LOG
 
 cd /var/local/www
 
 # Download and unzip
-message_log "Downloading package [update-$1.zip]"
+message_log "Downloading update [update-$1.zip]"
 wget -q $UPD_URL/update-$1.zip -O update-$1.zip > /dev/null 2>&1
 if [ $? -ne 0 ] ; then
-	message_log "Package not found, update cancelled"
+	message_log "Update zip not found, update cancelled"
 	exit 1
 else
 	unzip -q -o update-$1.zip
