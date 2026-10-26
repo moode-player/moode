@@ -1117,16 +1117,13 @@ fi
 # ARM, which is why the Pi never trips it. Replaying a captured pipe dump: 26
 # lines then SIGSEGV before the patch, 1241 lines after, identical up to there.
 #
-# MERGED UPSTREAM 2026-09-01 (mikebrady #26, commit c144a51) - and still needed,
-# because moOde pins the commit BEFORE it. So apply it only when the source does
-# not already carry the fix: the day moOde bumps GIT_HASH past c144a51, `patch`
-# would fail and take this whole phase down with it, leaving a box with no reader
-# and AirPlay broken again. The grep asserts the OUTCOME either way. Once the pin
-# has moved, drop the patch file and this conditional.
-SSMR_HASH="a4a29f3"                    # moOde's pin (pkgbuild build.sh)
-SSMR_PATCH_REV="nopi1"                 # bump BY HAND when the patch changes
-SSMR_VER="2.0.0~git20260724.$SSMR_HASH"
-SSMR_TARGET_VER="$SSMR_VER-1moode1+$SSMR_PATCH_REV"
+# MERGED UPSTREAM 2026-09-01 (mikebrady #26, commit c144a51) and moOde's pin has
+# moved past it (pkgbuild 252663b, 2.0.1), so the stock source carries the fix and
+# no patch is applied any more. The grep below still asserts the OUTCOME, so a pin
+# that ever went back before c144a51 fails loudly instead of shipping the crash.
+SSMR_HASH="99a5935"                    # moOde's pin (pkgbuild build.sh)
+SSMR_VER="2.0.1~git20261003.$SSMR_HASH"
+SSMR_TARGET_VER="$SSMR_VER-1moode1"
 if ! dpkg_ver_is shairport-sync-metadata-reader "$SSMR_TARGET_VER"; then
 	log "Phase 1k: shairport-sync-metadata-reader $SSMR_TARGET_VER"
 	$APT_INSTALL build-essential fakeroot devscripts dh-make debhelper \
@@ -1167,13 +1164,10 @@ if ! dpkg_ver_is shairport-sync-metadata-reader "$SSMR_TARGET_VER"; then
 				'Description: AirPlay metadata reader' \
 				' Reads the metadata pipe written by shairport-sync and prints it in a' \
 				' human-readable form.' > debian/control \
-			&& { grep -q 'const unsigned char \*q' utilities/bplist-print.c \
-				|| { patch -p1 < "$REPO_DIR/patches/ssmr_bplist_unsigned_bytes.patch" \
-					&& EDITOR=/bin/true dpkg-source --commit . ssmr_bplist_unsigned_bytes.patch; }; } \
 			&& grep -q 'const unsigned char \*q' utilities/bplist-print.c \
 			&& DEBFULLNAME='moode-nopi' DEBEMAIL='moode-nopi@localhost' \
 				dch -b --newversion "$SSMR_TARGET_VER" \
-				'Read binary plist bytes unsigned (segfault on signed-char platforms)' \
+				'Build for non-Pi platforms (moOde recipe, no patch)' \
 			&& dpkg-buildpackage -b -us -uc )    > "$REPO_DIR/build-ssmr.log" 2>&1 \
 		&& [ -f "$SSMR_DEB" ] \
 		&& apt-get install -y "$SSMR_DEB" >> "$REPO_DIR/build-ssmr.log" 2>&1 \
@@ -1184,8 +1178,6 @@ if ! dpkg_ver_is shairport-sync-metadata-reader "$SSMR_TARGET_VER"; then
 			printf 'built:    %s\n' "$(date -Is)"
 			printf 'source:   %s commit %s\n' \
 				'https://github.com/mikebrady/shairport-sync-metadata-reader.git' "$SSMR_HASH"
-			printf 'patches:  %s\n' "$(sha256sum "$REPO_DIR/patches/ssmr_bplist_unsigned_bytes.patch" \
-				2>/dev/null | awk '{printf "ssmr_bplist_unsigned_bytes.patch=%.12s", $1}')"
 		} > "$NOPI_BUILT_DIR/ssmr"
 		log "Built shairport-sync-metadata-reader $SSMR_TARGET_VER -> /usr/bin"
 	else
