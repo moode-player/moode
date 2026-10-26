@@ -226,8 +226,18 @@ phpSession('close');
 
 // Bluetooth
 $_feat_bluetooth = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? '' : 'hide';
-$_SESSION['btsvc'] == '1' ? $_bt_btn_disable = '' : $_bt_btn_disable = 'disabled';
-$_SESSION['btsvc'] == '1' ? $_bt_link_disable = '' : $_bt_link_disable = 'onclick="return false;"';
+if ($_SESSION['btsvc'] == '1') {
+	$_bt_btn_disable = '';
+	$_bt_link_disable = '';
+} else {
+	$_bt_btn_disable = 'disabled';
+	$_bt_link_disable = 'onclick="return false;"';
+}
+if ($_SESSION['p3bt'] == '1') {
+	$_bt_adapter_msg = '';
+} else {
+	$_bt_adapter_msg = '<span class="config-help-static">Note: The adapter is turned off in System Config</span>';
+}
 $autoClick = " onchange=\"autoClick('#btn-set-btsvc');\"";
 $_select['btsvc_on']  .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-1\" value=\"1\" " . (($_SESSION['btsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['btsvc_off'] .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-2\" value=\"0\" " . (($_SESSION['btsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
