@@ -39,12 +39,23 @@ switch ($cmd[0]) {
 		echo json_encode(getVolumeState($dbh));
 		break;
 	case 'set_volume': // N | -mute | -up N | -dn N
-		$volState = getVolumeState($dbh);
+		$volArgs = parseVolumeArgs(trim(getArgs($cmd, false)));
+		if ($volArgs === false) {
+			echo json_encode(array('alert' => 'Invalid volume command'));
+			break;
+		}
+		// A controllable renderer gets the command in this single call, renderer_ctl.py only acts if it can
+		$volState = getVolumeState($dbh, $volArgs['renderer']);
 		if ($volState['can_volume'] === false) {
 			echo json_encode(array('alert' => $volState['alert']));
+		} else if ($volArgs['renderer'] == 'mute' && $volState['can_mute'] === false) {
+			echo json_encode(array('alert' => 'Volume cannot be muted from moOde for ' . getSourceLabel($volState['source'])));
+		} else if ($volState['scope'] == 'source') {
+			// Renderer volume: no vol.sh, receivers are already at max for the session
+			echo json_encode($volState);
 		} else {
-			$volCmd = getArgs($cmd, false); // Raw args, used below for multiroom parsing
-			$result = sysCmd('/var/www/util/vol.sh' . getArgs($cmd, true));
+			$volCmd = ' ' . $volArgs['vol.sh']; // Used below for multiroom parsing
+			$result = sysCmd('/var/www/util/vol.sh ' . $volArgs['vol.sh']);
 			// Receiver(s) volume
 			_openSessionReadOnly($dbh);
 			if ($_SESSION['multiroom_tx'] == 'On') {
@@ -139,6 +150,10 @@ switch ($cmd[0]) {
 		echo json_encode(array('info' => 'OK'));
 		break;
 	case 'toggle_play_pause':
+		if (isControllableRenderer(getActiveSource())) {
+			echo json_encode(rendererTransport($dbh, 'toggle'));
+			break;
+		}
 		$sock = getMpdSock('command/index.php');
 		$status = getMpdStatus($sock);
 		$currentSong = getCurrentSong($sock);
@@ -260,6 +275,13 @@ switch ($cmd[0]) {
 		break;
 
 	// MPD commands
+	case 'next':
+	case 'previous':
+		if (isControllableRenderer(getActiveSource())) {
+			echo json_encode(rendererTransport($dbh, $cmd[0]));
+			break;
+		}
+		// Other sources: fall through to the MPD relay
 	default:
 		if (false === ($sock = openMpdSock('localhost', 6600))) {
 			workerLog('CRITICAL ERROR: command/index.php: Connection to MPD failed');
@@ -301,12 +323,50 @@ function getArgs($cmd, $shell) {
 	return $args;
 }
 
-// Volume state of the current source: where the volume lives and what can be controlled
-function getVolumeState($dbh) {
+// Validated set_volume args (N | -mute | -up N | -dn N) for vol.sh and renderer_ctl.py, false if invalid
+function parseVolumeArgs($volCmd) {
+	if (preg_match('/^-(up|dn) ([0-9]+)$/', $volCmd, $match)) {
+		return array('vol.sh' => '-' . $match[1] . ' ' . $match[2], 'renderer' => $match[1] . ' ' . $match[2]);
+	} else if (preg_match('/^[0-9]+$/', $volCmd)) {
+		return array('vol.sh' => $volCmd, 'renderer' => 'set ' . $volCmd);
+	} else if ($volCmd == '-mute') {
+		return array('vol.sh' => '-mute', 'renderer' => 'mute');
+	}
+	return false;
+}
+
+// Active source, as named by the REST API
+function getActiveSource() {
 	$sources = array('' => 'mpd', 'inpactive' => 'input', 'btactive' => 'bluetooth',
 		'aplactive' => 'airplay', 'spotactive' => 'spotify', 'qbzactive' => 'qobuz',
 		'slactive' => 'squeezelite', 'paactive' => 'plexamp', 'rbactive' => 'roonbridge');
-	$source = $sources[getActiveRenderer()];
+	return $sources[getActiveRenderer()];
+}
+function isControllableRenderer($source) {
+	return in_array($source, array('bluetooth', 'airplay', 'qobuz', 'squeezelite'));
+}
+function getSourceLabel($source) {
+	$labels = array('airplay' => 'AirPlay', 'roonbridge' => 'RoonBridge');
+	return isset($labels[$source]) ? $labels[$source] : ucfirst($source);
+}
+
+// Volume state of the current source: where the volume lives and what can be controlled
+// $rendererCmd: renderer_ctl.py command run first when the source is a controllable renderer
+function getVolumeState($dbh, $rendererCmd = 'get') {
+	$source = getActiveSource();
+
+	if (isControllableRenderer($source)) {
+		$state = array('volume' => null, 'muted' => 'no', 'source' => $source, 'scope' => 'source',
+			'can_volume' => false, 'can_mute' => false, 'can_transport' => false);
+		$result = json_decode(sysCmd('/var/www/util/renderer_ctl.py ' . $source . ' ' . $rendererCmd)[0], true);
+		if (is_array($result) && !isset($result['error'])) {
+			$state = array_merge($state, $result);
+		}
+		if ($state['can_volume'] === false) {
+			$state['alert'] = 'Volume cannot be changed from moOde for ' . getSourceLabel($source);
+		}
+		return $state;
+	}
 
 	$volume = sysCmd('/var/www/util/vol.sh')[0];
 	$mute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh)[0]['value'];
@@ -323,16 +383,22 @@ function getVolumeState($dbh) {
 			$state['alert'] = 'Volume cannot be changed when MPD volume type is Fixed (0dB)';
 		}
 	} else {
+		// Spotify, RoonBridge, Plexamp (RoonBridge and Plexamp untested)
 		$state['scope'] = 'source';
 		$state['can_volume'] = false;
 		$state['can_mute'] = false;
 		$state['can_transport'] = false;
-		$state['alert'] = ($source == 'spotify' || $source == 'roonbridge') ?
-			'Volume cannot be changed from moOde for ' . ucfirst($source) :
-			'Volume cannot be changed while a renderer is active';
+		$state['alert'] = 'Volume cannot be changed from moOde for ' . getSourceLabel($source);
 	}
 
 	return $state;
+}
+
+// Transport command (toggle | previous | next) sent to the active renderer
+function rendererTransport($dbh, $rendererCmd) {
+	$state = getVolumeState($dbh, $rendererCmd);
+	return $state['can_transport'] === true ? array('state' => isset($state['state']) ? $state['state'] : $rendererCmd) :
+		array('alert' => 'Playback cannot be controlled from moOde for ' . getSourceLabel($state['source']));
 }
 
 // We use these session functions instead of phpSession() because CLI based REST
