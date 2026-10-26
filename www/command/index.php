@@ -35,14 +35,13 @@ switch ($cmd[0]) {
 		echo json_encode(array('format' => getALSAOutputFormat()), JSON_FORCE_OBJECT);
 		break;
 	case 'get_volume':
-		$volume = sysCmd('/var/www/util/vol.sh')[0];
-		$mute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh)[0]['value'];
-		echo json_encode(array('volume' => $volume, 'muted' => ($mute == '0' ? 'no' : 'yes')));
+		// NOTE: when scope is 'fixed', 'volume' still reports the saved knob level, not the 0dB output level
+		echo json_encode(getVolumeState($dbh));
 		break;
 	case 'set_volume': // N | -mute | -up N | -dn N
-		$rendererActive = chkRendererActive();
-		if ($rendererActive === true) {
-			echo json_encode(array('alert' => 'Volume cannot be changed while a renderer is active'));
+		$volState = getVolumeState($dbh);
+		if ($volState['can_volume'] === false) {
+			echo json_encode(array('alert' => $volState['alert']));
 		} else {
 			$volCmd = getArgs($cmd, false); // Raw args, used below for multiroom parsing
 			$result = sysCmd('/var/www/util/vol.sh' . getArgs($cmd, true));
@@ -60,9 +59,7 @@ switch ($cmd[0]) {
 				updReceiverVol($rxVolCmd, true); // True = Master volume change
 			}
 
-			$volume = sysCmd('/var/www/util/vol.sh')[0];
-			$mute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh)[0]['value'];
-			echo json_encode(array('volume' => $volume, 'muted' => ($mute == '0' ? 'no' : 'yes')));
+			echo json_encode(getVolumeState($dbh));
 		}
 		break;
 	case 'clear_queue':
@@ -302,6 +299,40 @@ function getArgs($cmd, $shell) {
 	}
 
 	return $args;
+}
+
+// Volume state of the current source: where the volume lives and what can be controlled
+function getVolumeState($dbh) {
+	$sources = array('' => 'mpd', 'inpactive' => 'input', 'btactive' => 'bluetooth',
+		'aplactive' => 'airplay', 'spotactive' => 'spotify', 'qbzactive' => 'qobuz',
+		'slactive' => 'squeezelite', 'paactive' => 'plexamp', 'rbactive' => 'roonbridge');
+	$source = $sources[getActiveRenderer()];
+
+	$volume = sysCmd('/var/www/util/vol.sh')[0];
+	$mute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh)[0]['value'];
+	$state = array('volume' => $volume, 'muted' => ($mute == '0' ? 'no' : 'yes'), 'source' => $source);
+
+	if ($source == 'mpd' || $source == 'input') {
+		$mixer = sqlQuery("SELECT value FROM cfg_system WHERE param='mpdmixer'", $dbh)[0]['value'];
+		$scopes = array('hardware' => 'dac', 'software' => 'mpd', 'null' => 'camilladsp', 'none' => 'fixed');
+		$state['scope'] = $scopes[$mixer];
+		$state['can_volume'] = $state['scope'] != 'fixed';
+		$state['can_mute'] = $state['can_volume'];
+		$state['can_transport'] = $source == 'mpd';
+		if ($state['can_volume'] === false) {
+			$state['alert'] = 'Volume cannot be changed when MPD volume type is Fixed (0dB)';
+		}
+	} else {
+		$state['scope'] = 'source';
+		$state['can_volume'] = false;
+		$state['can_mute'] = false;
+		$state['can_transport'] = false;
+		$state['alert'] = ($source == 'spotify' || $source == 'roonbridge') ?
+			'Volume cannot be changed from moOde for ' . ucfirst($source) :
+			'Volume cannot be changed while a renderer is active';
+	}
+
+	return $state;
 }
 
 // We use these session functions instead of phpSession() because CLI based REST
