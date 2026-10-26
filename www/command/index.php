@@ -55,6 +55,7 @@ switch ($cmd[0]) {
 			echo json_encode($volState);
 		} else {
 			$volCmd = ' ' . $volArgs['vol.sh']; // Used below for multiroom parsing
+			$currentVol = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", $dbh)[0]['value']; // Save for Receiver
 			$result = sysCmd('/var/www/util/vol.sh ' . $volArgs['vol.sh']);
 			// Receiver(s) volume
 			_openSessionReadOnly($dbh);
@@ -64,7 +65,7 @@ switch ($cmd[0]) {
 				} else if (str_contains($volCmd, '-')) {
 					$rxVolCmd = trim($volCmd); // -up N | -dn N
 				} else {
-					$volDiff = $_SESSION['volknob'] - trim($volCmd); // N
+					$volDiff = $currentVol - trim($volCmd); // N
 					$rxVolCmd = $volDiff < 0 ? '-up ' . abs($volDiff) : '-dn ' . $volDiff;
 				}
 				updReceiverVol($rxVolCmd, true); // True = Master volume change
