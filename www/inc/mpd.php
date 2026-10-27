@@ -302,21 +302,23 @@ function getMpdOutputs($sock) {
 	return $array;
 }
 
-// Scan the network for hosts with open port 6600 (MPD) and return list of IP addresses
-function scanForMPDHosts($retryCount = 2) {
-    $thisIpAddr = getThisIpAddr();
-	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
-	$port = '6600';
+// Scan the network for moOde players advertised by mDNS and return list of hostname => IP address
+function scanForMoodeHosts() {
+	$hosts = array();
+	// =;interface;protocol;name;type;domain;hostname;address;port;txt
+	$lines = sysCmd('avahi-browse -rtp _http._tcp 2>/dev/null | grep "^=;.*;IPv4;"');
 
-	for ($i = 0; $i < $retryCount; $i++) {
-        sysCmd('nmap -Pn -p' . $port . ' --open ' . $subnet . '.0/24 -oG /tmp/mpd_nmap.scan >/dev/null');
-		$ipAddresses = sysCmd('cat /tmp/mpd_nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
-		if (!empty($ipAddresses)) {
-			break;
+	foreach ($lines as $line) {
+		$field = explode(';', $line);
+		$host = explode('.', $field[6])[0];
+		$ipAddr = $field[7];
+		if ($field[1] != 'lo' && str_starts_with($field[3], 'moOde\032audio\032player') && !isset($hosts[$host]) &&
+			preg_match('/^[A-Za-z0-9-]+$/', $host) && filter_var($ipAddr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+			$hosts[$host] = $ipAddr;
 		}
 	}
 
-	return $ipAddresses;
+	return $hosts;
 }
 
 // Low-level MPD socket routines

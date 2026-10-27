@@ -471,6 +471,8 @@ function restartServers($featBitmask) {
 	sysCmd('killall -s 9 mountmon.php >/dev/null 2>&1');
 	echo "- mpdmon.php\n";
 	sysCmd('killall -s 9 mpdmon.php >/dev/null 2>&1');
+	echo "- dashmon.php\n";
+	sysCmd('killall -s 9 dashmon.php >/dev/null 2>&1');
 	echo "- worker.php\n";
 	sysCmd('killall -s 9 worker.php');
 	sysCmd('rm /var/run/worker.pid');

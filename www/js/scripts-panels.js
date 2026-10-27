@@ -1975,29 +1975,47 @@ jQuery(document).ready(function($) { 'use strict';
     });
 
     // Dashboard
-    $('#dashboard-menu-item').click(function(e) {
-        notify(NOTIFY_TITLE_INFO, 'dashboard_discovering', 'Please wait.', NOTIFY_DURATION_INFINITE);
-    });
-    $('#dashboard-modal').on('shown.bs.modal', function() {
-        setTimeout(function() {
-            $('#btn-dashboard-submit').text('Submit');
-            $('#btn-dashboard-submit').prop('disabled', false);
-        }, DEFAULT_TIMEOUT);
-	});
-    $(document).on('click', '#dashboard-command', function(e) {
-        $('#btn-dashboard-submit').text('Submit');
-    });
-    $(document).on('click', '#dashboard-check-uncheck-all', function(e) {
-        var checked = $(this).prop('checked') === true ? 'true' : '';
-        $('#dashboard-ul a').each(function() {
-			if ($(this).children('i.dashboard-badge.fa-solid.fa-sharp.fa-xmark').length != 1) {
-				$(this).children('input').prop('checked', checked);
-			}
+    function dashboardSelectionChanged() {
+        $('.dashboard-cmd-sel').prop('disabled', $('#dashboard-ul .player-checkbox:checked').length == 0);
+        var allChecked = dashboardSelectable().length > 0 && dashboardSelectable().filter(function() {
+            return $(this).children('input').prop('checked') === false;
+        }).length == 0;
+        $('#dashboard-check-uncheck-all').attr('aria-label', allChecked ? 'Deselect all' : 'Select all');
+        $('#dashboard-check-uncheck-all i').toggleClass('fa-square', allChecked).toggleClass('fa-square-check', !allChecked);
+        $('#dashboard-check-uncheck-all span').text(allChecked ? 'Deselect all' : 'Select all');
+        $('.dashboard-cmd-confirm').each(function() {
+            $(this).removeData('armed').children('span').text($(this).attr('aria-label'));
         });
+    }
+    $(document).on('change', '#dashboard-ul .player-checkbox', function(e) {
+        dashboardSelectionChanged();
     });
-    $(document).on('click', '#btn-dashboard-submit', function(e) {
-        var command = $('#dashboard-command span').text();
-        var cmdValue = getKeyOrValue('value', command);
+    function dashboardSelectable() {
+        return $('#dashboard-ul a').filter(function() {
+            return $(this).children('input').length == 1 && $(this).children('i.dashboard-badge.fa-xmark').length == 0;
+        });
+    }
+    $(document).on('click', '#dashboard-check-uncheck-all', function(e) {
+        var unchecked = dashboardSelectable().filter(function() {
+            return $(this).children('input').prop('checked') === false;
+        });
+        if (unchecked.length > 0) {
+            unchecked.children('input').prop('checked', true);
+        } else {
+            $('#dashboard-ul .player-checkbox').prop('checked', false);
+        }
+        dashboardSelectionChanged();
+    });
+    $(document).on('click', '.dashboard-cmd', function(e) {
+        var button = $(this);
+        if (button.hasClass('dashboard-cmd-confirm') && !button.data('armed')) {
+            button.data('armed', true).children('span').text('Confirm');
+            setTimeout(function() {
+                button.removeData('armed').children('span').text(button.attr('aria-label'));
+            }, 3000);
+            return;
+        }
+
         var ipaddr = [];
         var host = [];
         $('#dashboard-ul a').each(function() {
@@ -2007,23 +2025,9 @@ jQuery(document).ready(function($) { 'use strict';
             }
         });
 
-        if (command != 'No action') {
-            if ($('#btn-dashboard-submit').text() == 'Submit' &&
-				(command == 'Restart' || command == 'Shutdown' || command == 'Discover (rebuild)')) {
-                $('#btn-dashboard-submit').text('Confirm');
-            } else if (command.includes('Discover') || ipaddr.length > 0) {
-                $('#dashboard-submit-confirmed').html("<div class='busy-spinner-btn-dashboard'>" + GLOBAL.busySpinnerSVG + "</div>");
-                $('#btn-dashboard-submit').prop('disabled', true);
-                $('#dashboard-modal .modal-body').load('dashboard.php?cmd=' + cmdValue, {'ipaddr': ipaddr, 'host': host}, function() {
-                    $('#dashboard-submit-confirmed').text('');
-                    $('#btn-dashboard-submit').text('Submit');
-                    $('#btn-dashboard-submit').prop('disabled', false);
-                });
-            } else {
-                $('#dashboard-modal').modal('toggle');
-                notify(NOTIFY_TITLE_ALERT, 'dashboard_none_selected');
-            }
-        }
+        $('#dashboard-submit-confirmed').html("<div class='busy-spinner-btn-dashboard'>" + GLOBAL.busySpinnerSVG + "</div>");
+        $('.dashboard-cmd').prop('disabled', true);
+        $('#dashboard-modal .modal-body').load('dashboard.php?cmd=' + button.data('cmd'), {'ipaddr': ipaddr, 'host': host});
     });
 
     // Multiroom Receiver control
