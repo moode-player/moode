@@ -9,7 +9,6 @@ require_once __DIR__ . '/inc/session.php';
 
 if (file_exists(UPDATER_LOG)) {
 	$result = sysCmd('cat ' . UPDATER_LOG);
-	//DELETE:$_updater_log = sysCmd('cat /var/log/moode.log | grep "Downloading"')[0] . '<br>';
 	for ($i = 0; $i < count($result); $i++) {
 		$_updater_log .= $result[$i] . '<br>';
 	}
