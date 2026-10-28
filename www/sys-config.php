@@ -116,10 +116,6 @@ if (isset($_POST['update_reduce_notifications'])) {
 
 // STARTUP OPTIONS
 // Performance
-if (isset($_POST['update_worker_responsiveness']) && $_SESSION['worker_responsiveness'] != $_POST['worker_responsiveness']) {
-	$_SESSION['worker_responsiveness'] = $_POST['worker_responsiveness'];
-	submitJob('worker_responsiveness', $_POST['worker_responsiveness'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-}
 if (isset($_POST['update_cpugov'])) {
 	submitJob('cpugov', $_POST['cpugov']);
 	phpSession('write', 'cpugov', $_POST['cpugov']);
@@ -432,8 +428,6 @@ if ($_SESSION['pi_modelnum'] >= 5) {
 }
 
 // Performance
-$_select['worker_responsiveness'] .= "<option value=\"Default\" " . (($_SESSION['worker_responsiveness'] == 'Default') ? "selected" : "") . ">Default</option>\n";
-$_select['worker_responsiveness'] .= "<option value=\"Boosted\" " . (($_SESSION['worker_responsiveness'] == 'Boosted') ? "selected" : "") . ">Boosted</option>\n";
 // Offer the governors the kernel actually exposes, not a hardcoded pair.
 $availGovs = trim(@file_get_contents('/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors'));
 $govList = $availGovs !== '' ? preg_split('/\s+/', $availGovs) : array('performance');

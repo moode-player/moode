@@ -148,7 +148,8 @@ $sessionVars = array(
 	'mpd_db_stats',
 	'mpd_dbupdate_status',
 	'trackcover_url_cache',
-	'radio_track_covers'
+	'radio_track_covers',
+	'worker_responsiveness'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -1648,10 +1649,6 @@ if (!isset($_SESSION['lib_recent_playlist'])) {
 if (!isset($_SESSION['reduce_notifications'])) {
 	$_SESSION['reduce_notifications'] = '0';
 }
-// Worker sleep interval
-if (!isset($_SESSION['worker_responsiveness'])) {
-	$_SESSION['worker_responsiveness'] = 'Default';
-}
 // PCI express
 if (!isset($_SESSION['pci_express'])) {
 	$_SESSION['pci_express'] = 'auto';
@@ -1838,7 +1835,6 @@ sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
 workerLog('worker: Watchdog monitor:  started');
 
 // Sleep intervals
-workerLog('worker: Responsiveness:    ' . $_SESSION['worker_responsiveness']);
 debugLog('Sleep intervals:  ' .
 	'worker=' . WORKER_SLEEP / 1000000 . ', ' .
 	'waitworker=' . WAITWORKER_SLEEP / 1000000 . ', ' .
@@ -3533,17 +3529,6 @@ function runQueuedJob() {
 			$_SESSION['updater_auto_check'] = $_SESSION['w_queueargs'];
 			$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $GLOBALS['wlan0Ip'][0] != explode('/', $_SESSION['ap_network_addr'])[0]);
 			$_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
-			break;
-		case 'worker_responsiveness':
-			if ($_SESSION['w_queueargs'] == 'Default') {
-				$workerSleep = 3000000;
-				$waitworkerSleep = 1000000;
-			} else {
-				$workerSleep = 1500000;
-				$waitworkerSleep = 750000;
-			}
-			sysCmd('sed -i "/const WORKER_SLEEP/c\const WORKER_SLEEP = ' . $workerSleep . ';" /var/www/inc/sleep-interval.php');
-			sysCmd('sed -i "/const WAITWORKER_SLEEP/c\const WAITWORKER_SLEEP = ' . $waitworkerSleep . ';" /var/www/inc/sleep-interval.php');
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");

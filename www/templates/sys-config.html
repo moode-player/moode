@@ -104,19 +104,6 @@
 
 			<div class="config-horiz-rule">Performance</div>
 
-			<label class="control-label" for="worker-responsiveness">Worker response</label>
-			<div class="controls">
-				<select id="worker-responsiveness" class="config-select-large" name="worker_responsiveness" onchange="autoClick('#btn-set-worker-responsiveness');">
-					$_select[worker_responsiveness]
-				</select>
-				<button id="btn-set-worker-responsiveness" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_worker_responsiveness" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-				<a aria-label="Help" class="config-info-toggle" data-cmd="info-worker-responsiveness" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span id="info-worker-responsiveness" class="config-help-info">
-					<b>Default:</b> For all Raspberry Pi models.<br>
-					<b>Boosted:</b> Experimental for multi-core Raspberry Pi's. This provides more responsiveness when using the Configuration screens or making other setting changes that require processing by the Worker daemon.
-				</span>
-			</div>
-
 			<label class="control-label" for="cpugov">CPU governor</label>
 			<div class="controls">
 				<select id="cpugov" class="config-select-large" name="cpugov" onchange="autoClick('#btn-set-cpugov');">

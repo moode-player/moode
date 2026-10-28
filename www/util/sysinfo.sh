@@ -49,7 +49,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nThrottled bitmask\t= $THROTTLED_BITMASK\c"
 	echo -e "\nThrottled text\t\t= $THROTTLED_TEXT\c"
 	echo -e "\n\c"
-	echo -e "\nWorker responsiveness\t= $WORKER_RESPONSIVENESS\c"
 	echo -e "\nCPU governor\t\t= $CPUGOV\c"
 	echo -e "\nPCI express\t\t= $PCI_EXPRESS\c"
 	echo -e "\nReady script\t\t= $READY_SCRIPT\c"
@@ -518,7 +517,6 @@ MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
 LOG2RAM=$(moodeutl -d -gv log2ram)
 TMP2RAM=$(moodeutl -d -gv tmp2ram)
 
-WORKER_RESPONSIVENESS=$(moodeutl -d -gv worker_responsiveness)
 TMP=$(moodeutl -d -gv "pci_express")
 [[ "$TMP" = "off" ]] && PCI_EXPRESS="Off" || PCI_EXPRESS="$TMP"
 TMP=$(moodeutl -d -gv "ready_script")

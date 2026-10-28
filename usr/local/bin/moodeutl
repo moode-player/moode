@@ -998,8 +998,7 @@ function printSleepInt() {
 	session_start();
 	session_write_close();
 
-	echo $_SESSION['worker_responsiveness'] . ' | ' .
-		'worker=' . WORKER_SLEEP / 1000000 . ' | ' .
+	echo 'worker=' . WORKER_SLEEP / 1000000 . ' | ' .
 		'waitworker=' . WAITWORKER_SLEEP / 1000000 . ' | ' .
 		'watchdog=' . WATCHDOG_SLEEP . ' | ' .
 		'mountmon=' . MOUNTMON_SLEEP . ' | ' .
