@@ -8,14 +8,14 @@ require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/dashboard.php';
 require_once __DIR__ . '/inc/sql.php';
 
-$discoverPlayers = false;
 $thisIpAddr = getThisIpAddr();
 $thisHost = sqlQuery("SELECT value FROM cfg_system WHERE param='hostname'", sqlConnect())[0]['value'];
 
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	chkValue('cmd', $_GET['cmd']);
-	if (str_contains($_GET['cmd'], 'discover')) {
-		$discoverPlayers = true;
+
+	if ($_GET['cmd'] == 'discover_players') {
+		updateDashboardCache();
 	} else if (!isset($_POST['ipaddr'])) {
 		workerLog('dashboard.php: No destination IP addresses for command ' . $_GET['cmd']);
 		exit(0);
@@ -40,17 +40,13 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	}
 }
 
-if ($discoverPlayers === false) {
-	$playersArray = getDashboardCache();
-} else {
-	// Discover (update) also keeps the cached players
-	$playersArray = updateDashboardCache($_GET['cmd'] != 'discover_players_update_cache');
-}
+// Get cached players
+$playersArray = getDashboardCache();
 
 // Output for ul
 $_players = '';
 $playerBadges = array(
-	'offline' => '<i class="dashboard-badge fa-solid fa-sharp fa-xmark" style="color:red"></i>',
+	'offline' => '<i class="dashboard-badge dashboard-red-menu-icon fa-regular fa-sharp fa-diamond-exclamation"></i>',
 	'receiver' => '<i class="dashboard-badge fa-solid fa-sharp fa-speaker"></i>',
 	'sender' => '<i class="dashboard-badge fa-solid fa-sharp fa-play"></i>'
 );
@@ -59,8 +55,8 @@ foreach ($playersArray as $player) {
 	$playerBadge = $playerBadges[$player['badge']] ?? '';
 	if ($player['host'] == $thisHost) {
 		$_players .= sprintf(
-			'<li><a href="#notarget" class="btn btn-large target-blank-link" data-host="%s" data-ipaddr="%s" target="_blank" ' .
-			'onclick="return false;">' .
+			'<li><a href="#notarget" class="btn btn-large target-blank-link disabled" ' .
+			'data-host="%s" data-ipaddr="%s" target="_blank" onclick="return false;">' .
 			'<i class="fa-solid fa-sharp fa-sitemap"></i>%s<br>%s<br><span class="dashboard-ipaddr">%s</span></a></li>',
 			$player['host'], $player['ipaddr'], $playerBadge, $player['host'], $player['ipaddr']
 		);
@@ -87,7 +83,7 @@ foreach ($playersArray as $player) {
 
 // Check for no players found
 if (empty($playersArray)) {
-	$_players = '<li id="dashboard-no-players-found">No players found</li>';
+	$_players = '<li id="dashboard-no-players-found">No players found, try again</li>';
 	$_ctl_hide = 'hide';
 } else {
 	$_ctl_hide = '';

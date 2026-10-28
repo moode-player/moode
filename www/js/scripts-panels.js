@@ -1992,7 +1992,7 @@ jQuery(document).ready(function($) { 'use strict';
     });
     function dashboardSelectable() {
         return $('#dashboard-ul a').filter(function() {
-            return $(this).children('input').length == 1 && $(this).children('i.dashboard-badge.fa-xmark').length == 0;
+            return $(this).children('input').length == 1 && $(this).children('i.dashboard-badge.fa-diamond-exclamation').length == 0;
         });
     }
     $(document).on('click', '#dashboard-check-uncheck-all', function(e) {
@@ -2025,7 +2025,8 @@ jQuery(document).ready(function($) { 'use strict';
             }
         });
 
-        $('#dashboard-submit-confirmed').html("<div class='busy-spinner-btn-dashboard'>" + GLOBAL.busySpinnerSVG + "</div>");
+		$(button).html("<div class='busy-spinner-btn-dashboard'>" + GLOBAL.busySpinnerSVG + "</div>");
+		$('#dashboard-check-uncheck-all').prop('disabled', true);
         $('.dashboard-cmd').prop('disabled', true);
         $('#dashboard-modal .modal-body').load('dashboard.php?cmd=' + button.data('cmd'), {'ipaddr': ipaddr, 'host': host});
     });

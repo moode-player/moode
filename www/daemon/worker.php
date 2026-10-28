@@ -1668,6 +1668,10 @@ if (!isset($_SESSION['mpd_monitor_svc'])) {
 	$_SESSION['mpd_monitor_svc'] = 'Off';
 	$_SESSION['mpd_monitor_opt'] = '6,Yes,3'; // sleep_interval,resume_play,msg_threshold
 }
+// Dashboard monitor
+if (!isset($_SESSION['dashmon_svc'])) {
+	$_SESSION['dashmon_svc'] = '0';
+}
 // Bluetooth timeout
 if (!isset($_SESSION['bt_auto_disconnect'])) {
 	$_SESSION['bt_auto_disconnect'] = 'never';
@@ -1811,7 +1815,7 @@ sysCmd('killall -s 9 mountmon.php');
 if ($_SESSION['fs_mountmon'] == 'On') {
 	sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 }
-workerLog('worker: Mount monitor:    ' . ($_SESSION['fs_mountmon'] == 'On' ? 'started' : 'off'));
+workerLog('worker: Mount monitor:     ' . ($_SESSION['fs_mountmon'] == 'On' ? 'started' : 'off'));
 
 // Start MPD radio stream monitor
 sysCmd('killall -s 9 mpdmon.php');
@@ -1819,21 +1823,22 @@ if ($_SESSION['mpd_monitor_svc'] == 'On') {
 	sysCmd('truncate ' . MPD_LOG . ' --size 0');
 	sysCmd('/var/www/daemon/mpdmon.php "' . $_SESSION['mpd_monitor_opt'] . '" > /dev/null 2>&1 &');
 }
-workerLog('worker: Radio monitor:    ' . ($_SESSION['mpd_monitor_svc'] == 'On' ? 'started' : 'off'));
+workerLog('worker: Radio monitor:     ' . ($_SESSION['mpd_monitor_svc'] == 'On' ? 'started' : 'off'));
 
-// Start dashboard monitor
+// Start Dashboard monitor
 sysCmd('killall -s 9 dashmon.php');
-sysCmd('/var/www/daemon/dashmon.php > /dev/null 2>&1 &');
-workerLog('worker: Dashboard monitor: started');
+if ($_SESSION['dashmon_svc'] == '1') {
+	sysCmd('/var/www/daemon/dashmon.php > /dev/null 2>&1 &');
+}
+workerLog('worker: Dashboard monitor: ' . ($_SESSION['dashmon_svc'] == '1' ? 'started' : 'off'));
 
 // Start watchdog monitor
 sysCmd('killall -s 9 watchdog.sh');
-
 sysCmd('/var/www/daemon/watchdog.sh ' . WATCHDOG_SLEEP . ' > /dev/null 2>&1 &');
-workerLog('worker: Watchdog monitor: started');
+workerLog('worker: Watchdog monitor:  started');
 
 // Sleep intervals
-workerLog('worker: Responsiveness:   ' . $_SESSION['worker_responsiveness']);
+workerLog('worker: Responsiveness:    ' . $_SESSION['worker_responsiveness']);
 debugLog('Sleep intervals:  ' .
 	'worker=' . WORKER_SLEEP / 1000000 . ', ' .
 	'waitworker=' . WAITWORKER_SLEEP / 1000000 . ', ' .
@@ -3569,6 +3574,12 @@ function runQueuedJob() {
 			break;
 		case 'avahi_options':
 			updAvahiOptions($_SESSION['w_queueargs']);
+			break;
+		case 'dashmon_svc':
+			sysCmd('killall -s 9 dashmon.php');
+			if ($_SESSION['w_queueargs'] == '1') {
+				sysCmd('/var/www/daemon/dashmon.php > /dev/null 2>&1 &');
+			}
 			break;
 		case 'external_antenna':
 			$value = $_SESSION['w_queueargs'] == '0' ? '#' : '';

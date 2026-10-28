@@ -324,6 +324,20 @@
 					If this occurs try setting the option to IPv4-only which can eliminate the second advertized host.
 				</span>
 			</div>
+
+			<label class="control-label">Dashboard monitor</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-dashmon" for="toggle-dashmon-2">ON </label>$_select[dashmon_on]
+					<label class="toggle-radio toggle-dashmon" for="toggle-dashmon-1">OFF</label>$_select[dashmon_off]
+				</div>
+				<button id="btn-set-dashmon" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dashmon_svc" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dashmon" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-dashmon" class="config-help-info">
+					Monitor the network for moOde hosts and automatically update the Dashboard cache.
+				</span>
+			</div>
+
 			<label class="control-label">External antenna</label>
 			<div class="controls">
 				<div class="toggle">

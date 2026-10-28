@@ -292,6 +292,11 @@ body {
 
 	/* CoverView */
 	#screen-saver {display:none;}
+
+	/* Dashboard */
+	#dashboard-toolbar {
+	    max-width: 24em;
+	}
 }
 
 /*

@@ -192,6 +192,7 @@ function autoConfigSettings() {
 			$_SESSION['avahi_options'] = $values['avahi_options'];
 			updAvahiOptions($values['avahi_options']);
 		}],
+		['requires' => ['dashmon_svc'], 'handler' => 'setSessVarOnly'],
 		['requires' => ['external_antenna'], 'handler' => function($values) {
 			$_SESSION['external_antenna'] = $values['external_antenna'];
 			$value = $values['external_antenna'] == '0' ? '#' : '';

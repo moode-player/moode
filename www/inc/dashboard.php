@@ -8,10 +8,7 @@ require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/mpd.php';
 require_once __DIR__ . '/multiroom.php';
 
-// Discover players and update the cache
-// - Rebuild: only the players found
-// - Update: also keep the cached players, offline ones are marked as such
-function updateDashboardCache($rebuild = false) {
+function updateDashboardCache() {
 	$cache = getDashboardCache();
 	$cachedHosts = array_column($cache, 'host', 'ipaddr');
 	$thisHost = sqlQuery("SELECT value FROM cfg_system WHERE param='hostname'", sqlConnect())[0]['value'];
@@ -27,13 +24,11 @@ function updateDashboardCache($rebuild = false) {
 		}
 	}
 
-	if ($rebuild === false) {
-		foreach ($cache as $cached) {
-			if (!isset($players[$cached['host']]) && !in_array($cached['ipaddr'], $thisIpAddrs) &&
-				!in_array($cached['ipaddr'], array_column($players, 'ipaddr'))) {
-				$player = getDashboardPlayer($cached['host'], $cached['ipaddr']);
-				$players[$player['host']] = $player;
-			}
+	foreach ($cache as $cached) {
+		if (!isset($players[$cached['host']]) && !in_array($cached['ipaddr'], $thisIpAddrs) &&
+			!in_array($cached['ipaddr'], array_column($players, 'ipaddr'))) {
+			$player = getDashboardPlayer($cached['host'], $cached['ipaddr']);
+			$players[$player['host']] = $player;
 		}
 	}
 

@@ -1004,6 +1004,7 @@ function printSleepInt() {
 		'watchdog=' . WATCHDOG_SLEEP . ' | ' .
 		'mountmon=' . MOUNTMON_SLEEP . ' | ' .
 		'mpdmon=' . explode(',', $_SESSION['mpd_monitor_opt'])[0] . ' | ' .
+		'dashmon=' . DASHMON_SLEEP . ' | ' .
 		'gpiobuttons=' . GPIOBUTTONS_SLEEP . "\n";
 }
 

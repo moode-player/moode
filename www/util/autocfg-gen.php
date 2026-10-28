@@ -56,6 +56,7 @@ $currentSettings['reduce_notifications'] = $_SESSION['reduce_notifications'];
 $currentSettings['shellinabox'] = $_SESSION['shellinabox'];
 // Network
 $currentSettings['approto'] = $_SESSION['approto'];
+$currentSettings['dashmon_svc'] = $_SESSION['dashmon_svc'];
 // Audio: MPD options
 $currentSettings['ashuffle_mode'] = $_SESSION['ashuffle_mode'];
 $currentSettings['ashuffle_window'] = $_SESSION['ashuffle_window'];

@@ -203,6 +203,10 @@ if (isset($_POST['update_avahi_options']) && $_POST['avahi_options'] != $_SESSIO
 	$_SESSION['avahi_options'] = $_POST['avahi_options'];
 	submitJob('avahi_options', $_POST['avahi_options'], NOTIFY_TITLE_INFO, 'mDNS' . NOTIFY_MSG_SVC_RESTARTED);
 }
+if (isset($_POST['update_dashmon_svc']) && $_POST['update_dashmon_svc'] != $_SESSION['dashmon_svc']) {
+	$_SESSION['dashmon_svc'] = $_POST['dashmon_svc'];
+	submitJob('dashmon_svc', $_POST['dashmon_svc']);
+}
 if (isset($_POST['external_antenna']) && $_POST['external_antenna'] != $_SESSION['external_antenna']) {
 	$_SESSION['external_antenna'] = $_POST['external_antenna'];
 	submitJob('external_antenna', $_POST['external_antenna'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
@@ -517,6 +521,11 @@ $_select['eth0chk_off'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggle-e
 // mDNS discovery
 $_select['avahi_options'] .= "<option value=\"ipv4ipv6\" " . (($_SESSION['avahi_options'] == 'ipv4ipv6') ? "selected" : "") . ">IPv4 and IPv6 (Default)</option>\n";
 $_select['avahi_options'] .= "<option value=\"ipv4only\" " . (($_SESSION['avahi_options'] == 'ipv4only') ? "selected" : "") . ">IPv4-only</option>\n";
+
+// Dashboard monitor
+$autoClick = " onchange=\"autoClick('#btn-set-dashmon');\"";
+$_select['dashmon_on']  .= "<input type=\"radio\" name=\"dashmon_svc\" id=\"toggle-dashmon-1\" value=\"1\" " . (($_SESSION['dashmon_svc'] == 1) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['dashmon_off'] .= "<input type=\"radio\" name=\"dashmon_svc\" id=\"toggle-dashmon-2\" value=\"0\" " . (($_SESSION['dashmon_svc'] == 0) ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // External antenna
 $autoClick = " onchange=\"autoClick('#btn-set-external-antenna');\"";

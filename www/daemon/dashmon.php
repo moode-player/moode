@@ -15,7 +15,6 @@ $dbh = sqlConnect();
 while (sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", $dbh)[0]['value'] != '1') {
 	sleep(3);
 }
-sleep(5);
 
 while (true) {
 	updateDashboardCache();

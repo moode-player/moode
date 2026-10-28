@@ -60,7 +60,7 @@ const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
 const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
 // Dashboard
-const DASHBOARD_CACHE_FILE = '/var/local/www/dashboard.txt';
+const DASHBOARD_CACHE_FILE = '/var/local/www/dashboard.json';
 // Default titles and covers
 const DEFAULT_STATION_NAME = 'Radio station';
 const DEFAULT_ALBUM_COVER = 'images/default-album-cover.jpg';
