@@ -46,6 +46,7 @@ Bug fixes
 - FIX: Playerlib case 'reduce_fpm_pool' missing the MPD command
 - FIX: Radio Cover+ crash when best cover is discarded for size (PR826 @Gjuju)
 - FIX: Radio Cover+ type error in some logging calls (PR825 @Gjuju)
+- FIX: User added script in backup/restore not being assigned execute permission
 - FIX: Typo in session var 'audioout' in function setMpdHttpd() (LLM analysis)
 
 ################################################################################
