@@ -97,9 +97,9 @@ li.modal-dropdown-text:focus {color:#eee;}
     overflow-x:auto;
     overflow-y:hidden;
 }
-#dashboard-toolbar .btn {background:var(--btnshade5);min-width:4.5em;height:4em;padding:.4em .5em;text-align:center;border-right:1px solid hsla(0, 0%, 50.2%, .35);}
-#dashboard-toolbar .btn i {display:block;font-size:1.25em;margin-bottom:.2em;}
-#dashboard-toolbar .btn span {display:block;font-size:.8em;}
+#dashboard-toolbar .btn {background:var(--btnshade5);min-width:6em;height:5em;padding:.4em .5em;text-align:center;border-right:1px solid hsla(0, 0%, 50.2%, .35);}
+#dashboard-toolbar .btn i {display:block;font-size:1.5em;margin-bottom:.2em;}
+#dashboard-toolbar .btn span {display:block;font-size:1em;}
 /* dropdown menus */
 #panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
 #current-tab, #library-header {font-size:1em;}
