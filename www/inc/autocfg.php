@@ -933,6 +933,7 @@ function autoConfig($cfgFile) {
 			$script = $autoCfgIni[$scriptKey];
 
 			if (file_exists($script)) {
+				sysCmd('chmod +x "' . $script . '"');
 				$output = sysCmd($script);
 				foreach ($output as $line) {
 					autoCfgLog($line);
