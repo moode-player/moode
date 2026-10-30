@@ -4190,6 +4190,38 @@ $('#system-shutdown').click(function(e) {
     $.post('command/system.php?cmd=poweroff');
 });
 
+// Disconnect renderer
+$(document).on('click', '.disconnect-renderer', function(e) {
+	notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
+    $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+});
+$(document).on('click', '.disconnect-airplay', function(e) {
+	notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
+    $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+});
+$(document).on('click', '.disconnect-qobuz', function(e) {
+	notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
+    $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+});
+$(document).on('click', '.disconnect-spotify', function(e) {
+	notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
+    $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+});
+$(document).on('click', '.disconnect-bluetooth', function(e) {
+	notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');
+    $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+});
+// Turn off renderer
+$(document).on('click', '.turnoff-renderer', function(e) {
+	notify(NOTIFY_TITLE_INFO, 'renderer_turnoff');
+    $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+});
+// Turn off multiroom receiver
+$(document).on('click', '.turnoff-receiver', function(e) {
+	notify(NOTIFY_TITLE_INFO, 'trx_turning_receiver_off');
+    $.post('command/renderer.php?cmd=disconnect_renderer', {'job': $(this).data('job')});
+});
+
 // https: //github.com/Qix-/color-convert/blob/master/conversions.js
 function rgbToHsl(color){
     var color = color.substr(4);
