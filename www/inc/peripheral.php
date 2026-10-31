@@ -62,6 +62,10 @@ function restartMpdAndRenderers($resetAlsaCtl) {
 		stopQobuz();
 		startQobuz();
 	}
+	if ($_SESSION['soloistsvc'] == 1) {
+		stopSoloist();
+		startSoloist();
+	}
 }
 function allowPeppyInAlsaChain() {
 	// NOTE: MPD cant play ALSA chain: _audioout -> [alsaequal or eqfa12p] -> peppy -> btstream

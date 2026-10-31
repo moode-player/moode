@@ -164,6 +164,8 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/moode_radiocover_plus.log --size 0
 	truncate /var/log/moode_shairport-sync.log --size 0
 	truncate /var/log/moode_slpower.log --size 0
+	truncate /var/log/moode_solevent.log --size 0
+	truncate /var/log/moode_soloist.log --size 0
 	truncate /var/log/moode_spotevent.log --size 0
 	truncate /var/log/moode_spsevent.log --size 0
 

@@ -109,6 +109,7 @@ function autoConfigSettings() {
 		['requires' => ['airplayname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['spotifyname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['qobuzname'], 'handler' => 'setSessVarSql'],
+		['requires' => ['soloistname'], 'handler' => 'setSessVarSql'],
 		['requires' => ['squeezelitename'], 'handler' => function($values) {
 			$dbh = sqlConnect();
 			$currentName= sqlQuery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
@@ -457,6 +458,11 @@ function autoConfigSettings() {
 			phpSession('write', 'qobuzsvc', $value);
 		}],
 		['requires' => ['rsmafterqbz'], 'handler' => 'setSessVarSql'],
+		['requires' => ['soloistsvc'], 'handler' => function($values) {
+			$value = isSoloistInstalled() === true ? $values['soloistsvc'] : '0';
+			phpSession('write', 'soloistsvc', $value);
+		}],
+		['requires' => ['rsmaftersol'], 'handler' => 'setSessVarSql'],
 		['requires' => ['slsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['rsmaftersl'], 'handler' => 'setSessVarSql'],
 		['requires' => ['pasvc'], 'handler' => 'setSessVarSql'],
@@ -536,6 +542,13 @@ function autoConfigSettings() {
 				setCfgTableParams('cfg_qobuz', $values, 'qobuz_');
 			}, 'custom_write' => function($values) {
 				return getCfgTableParams('cfg_qobuz', $values, 'qobuz_');
+		}],
+		'Spotify Soloist',
+		['requires' => ['soloist_initial_volume'],
+			'handler' => function($values) {
+				setCfgTableParams('cfg_soloist', $values, 'soloist_');
+			}, 'custom_write' => function($values) {
+				return getCfgTableParams('cfg_soloist', $values, 'soloist_');
 		}],
 		'Squeezelite',
 		['requires' => ['squeezelite_PLAYERNAME', 'squeezelite_AUDIODEVICE', 'squeezelite_ALSAPARAMS', 'squeezelite_OUTPUTBUFFERS',

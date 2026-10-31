@@ -18,7 +18,7 @@ if ($option == '') {
 Send a command to the front-end\n";
 } else {
 	if (str_contains($argv[1], 'update_qbzmeta') || str_contains($argv[1], 'update_spotmeta') ||
-		str_contains($argv[1], 'update_btmeta')) {
+		str_contains($argv[1], 'update_solmeta') || str_contains($argv[1], 'update_btmeta')) {
 		// Special handling for certain commands
 		$cmd = htmlspecialchars($argv[1], ENT_NOQUOTES);
 		sendFECmd($cmd);

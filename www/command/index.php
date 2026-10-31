@@ -250,13 +250,13 @@ switch ($cmd[0]) {
 		$result = sysCmd('/var/www/util/libupd-submit.php');
 		echo json_encode(array('info' => 'Library update submitted'));
 		break;
-	case 'restart_renderer': // --bluetooth | --airplay | --spotify | --qobuz | --squeezelite | --roonbridge
+	case 'restart_renderer': // --bluetooth | --airplay | --spotify | --qobuz | --soloist | --squeezelite | --roonbridge
 		$result = sysCmd('moodeutl -R' . getArgs($cmd, true));
 		echo $result[0] == 'Renderer restarted' ?
 			json_encode(array('info' => 'Renderer restart submitted')) :
 			json_encode(array('alert' => 'Missing or invalid argument'));
 		break;
-	case 'renderer_onoff': // --bluetooth | --airplay | --spotify | --qobuz | --squeezelite | --roonbridge [on|off]
+	case 'renderer_onoff': // --bluetooth | --airplay | --spotify | --qobuz | --soloist | --squeezelite | --roonbridge [on|off]
 		$result = sysCmd('moodeutl -Ro' . getArgs($cmd, true));
 		echo str_contains($result[0], 'Renderer turned') ?
 			json_encode(array('info' => 'Renderer ' . getArgs($cmd, false) . ' submitted')) :
