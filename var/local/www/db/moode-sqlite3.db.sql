@@ -244,6 +244,7 @@ INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'render
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-pibuz', '2.7.1-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (6, 'system', 'nqptp', 'v1-nqptp', '1.2.6-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (7, 'renderer', 'soloist', 'v1-soloist', '1.3.10');
 
 -- Table: cfg_qobuz
 CREATE TABLE cfg_qobuz (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
@@ -799,6 +800,19 @@ INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
 INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
 INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
 
+-- Table: cfg_soloist
+CREATE TABLE cfg_soloist (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_soloist (id, param, value) VALUES (1, 'initial_volume', '10');
+INSERT INTO cfg_soloist (id, param, value) VALUES (2, 'RESERVED_2', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (3, 'RESERVED_3', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (4, 'RESERVED_4', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (5, 'RESERVED_5', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (6, 'RESERVED_6', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (7, 'RESERVED_7', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (8, 'RESERVED_8', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (9, 'RESERVED_9', '');
+INSERT INTO cfg_soloist (id, param, value) VALUES (10, 'RESERVED_10', '');
+
 -- Table: cfg_source
 CREATE TABLE cfg_source (
 id INTEGER PRIMARY KEY,
@@ -919,7 +933,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
 INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '228343');
+INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '490487');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (84, 'qobuzsvc', '0');
@@ -1014,6 +1028,10 @@ INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'S
 INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover art');
 INSERT INTO cfg_system (id, param, value) VALUES (174, 'scnsaver_layout', 'Default');
 INSERT INTO cfg_system (id, param, value) VALUES (175, 'scnsaver_xmeta', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (177, 'soloistsvc', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (178, 'soloistname', 'Moode Soloist');
+INSERT INTO cfg_system (id, param, value) VALUES (179, 'solactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (180, 'rsmaftersol', 'No');
 -- nopi-only params live at 900+, clear of upstream's sequential ids, so a new
 -- upstream param never lands on the same line. Drop the row when it goes upstream.
 INSERT INTO cfg_system (id, param, value) VALUES (900, 'dac_prime', '0');
