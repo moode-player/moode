@@ -23,8 +23,9 @@ const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
+const FEAT_SOLOIST      = 262144;	// y Spotify Soloist renderer
 //						 -------
-//						  228279
+//						  490423
 
 const VOL_KNOB_DEBOUNCE = 150; // ms, coalesce a knob drag's intermediate values
 
@@ -592,6 +593,8 @@ function engineCmd() {
                 case 'qbzactive0':
                 case 'spotactive1':
                 case 'spotactive0':
+                case 'solactive1':
+                case 'solactive0':
                     if (cmd[0].includes('bt')) {
                         var rendererName = 'Bluetooth';
                         SESSION.json['btactive'] = cmd[0].slice(-1);
@@ -604,6 +607,9 @@ function engineCmd() {
                     } else if (cmd[0].includes('spot')) {
                         var rendererName = 'Spotify';
                         SESSION.json['spotactive'] = cmd[0].slice(-1);
+                    } else if (cmd[0].includes('sol')) {
+                        var rendererName = 'Soloist';
+                        SESSION.json['solactive'] = cmd[0].slice(-1);
                     }
                     inpSrcIndicator(cmd[0],
                         '<span id="inpsrc-msg-text">' +
@@ -626,6 +632,7 @@ function engineCmd() {
                 case 'update_aplmeta':
                 case 'update_qbzmeta':
                 case 'update_spotmeta':
+                case 'update_solmeta':
                 case 'update_btmeta':
 					// cmd[1]: '"{"fecmd": "cmd", "key1": "value1", ..., "keyN": "valueN"}"'
                     updateInpsrcMeta(cmd[0], cmd[1]);
@@ -852,6 +859,8 @@ function refreshInpsrcMeta() {
         cmd = 'get_qbzmeta';
     } else if (SESSION.json['spotactive'] == '1') {
         cmd = 'get_spotmeta';
+    } else if (SESSION.json['solactive'] == '1') {
+        cmd = 'get_solmeta';
     } else if (SESSION.json['btactive'] == '1') {
         cmd = 'get_btmeta';
     } else {
@@ -883,6 +892,7 @@ function updateInpsrcMeta(cmd, data) {
 	// - AirPlay: title, artist, album, duration (in ms), cover_url, sformat, oformat, playstate
 	// - Qobuz:   title, artist, album, duration (in ms), cover_url, sformat, oformat, playstate
 	// - Spotify: title, artist, album, duration (in ms), cover_url, sformat, oformat, playstate
+	// - Soloist: title, artist, album, duration (in ms), cover_url, sformat, oformat, playstate
 	try {
 		var metadata = JSON.parse(data);
 		// DEBUG:
@@ -916,7 +926,7 @@ function updateInpsrcMeta(cmd, data) {
 		var npicon = '';
 	}
 	// Duration (not used at this time)
-	var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta') || cmd.includes('_btmeta')) ? 1000 : 1;
+	var timeDivisor = (cmd.includes('_aplmeta') || cmd.includes('_spotmeta') || cmd.includes('_solmeta') || cmd.includes('_btmeta')) ? 1000 : 1;
 	var duration = formatSongTime(Math.round(parseInt(metadata['duration']) / timeDivisor));
 
 	// Display metadata and cover
@@ -1602,6 +1612,18 @@ function renderUI() {
 
             refreshInpsrcMeta();
     	}
+        // Spotify Soloist renderer
+    	if (SESSION.json['solactive'] == '1') {
+            inpSrcIndicator('solactive1',
+                '<span id="inpsrc-msg-text">Soloist Active</span>' +
+                '<button class="btn renderer-btn disconnect-soloist" data-job="soloistsvc"><i class="fa-regular fa-sharp fa-xmark"></i></button>' +
+                receiversBtn('solactive1') +
+                audioInfoBtn('solactive1') +
+                rendererRefreshBtn()
+            );
+
+            refreshInpsrcMeta();
+    	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
     		inpSrcIndicator('slactive1',
@@ -1645,7 +1667,7 @@ function renderUI() {
 // Multiroom receivers
 function receiversBtn(rendererActive = '') {
     if (SESSION.json['multiroom_tx'] == 'On') {
-        if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1' || rendererActive == 'btactive1') {
+        if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1' || rendererActive == 'solactive1' || rendererActive == 'btactive1') {
             // data-cmd: multiroom_rx_modal (full modal), multiroom_rx_modal_limited (just the on/off checkbox)
             var html = '<span class="context-menu"><a class="btn renderer-btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fa-regular fa-sharp fa-speakers"></i></a></span>';
         } else {
@@ -1659,7 +1681,7 @@ function receiversBtn(rendererActive = '') {
 }
 // Audio info
 function audioInfoBtn(rendererActive = '') {
-    if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1' || rendererActive == 'btactive1') {
+    if (rendererActive == 'aplactive1' || rendererActive == 'qbzactive1' || rendererActive == 'spotactive1' || rendererActive == 'solactive1' || rendererActive == 'btactive1') {
         var html = '<span><a class="btn renderer-btn" href="javascript:audioInfoPlayback()"><i class="fa-regular fa-sharp fa-music"></i></a></span>';
     } else {
         var html = '<br><span><a class="btn audioinfo-renderer" href="javascript:audioInfoPlayback()">Audio info</a></span>';
@@ -3420,7 +3442,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                     var volDisabled = (
                                         rxStatusParts[2] == '0dB' ||
                                         rxStatusParts[2] == '?' ||
-                                        (SESSION.json['btactive'] + SESSION.json['aplactive'] + SESSION.json['spotactive'] > 0)
+                                        (SESSION.json['btactive'] + SESSION.json['aplactive'] + SESSION.json['spotactive'] + SESSION.json['solactive'] > 0)
                                     ) ? ' disabled' : '';
                                     output += '<div class="modal-button-style multiroom-modal-btn">';
                                     output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item +
@@ -5391,6 +5413,7 @@ function rendererActive() {
 		SESSION.json['aplactive'] == '1' ||
 		SESSION.json['spotactive'] == '1' ||
 		SESSION.json['qbzactive'] == '1' ||
+		SESSION.json['solactive'] == '1' ||
 		SESSION.json['slactive'] == '1' ||
 		SESSION.json['paactive'] == '1' ||
 		SESSION.json['rbactive'] == '1' ||
