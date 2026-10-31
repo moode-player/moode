@@ -36,6 +36,8 @@ from the client and whether CamillaDSP is supported in the playback chain.
 +-------------------------------------------------------------------------------
 | Qobuz Connect       | Qobuz app                 | Yes    | Yes        | Yes
 +-------------------------------------------------------------------------------
+| Spotify Soloist     | Spotify app               | Yes    | Yes        | Yes
++-------------------------------------------------------------------------------
 | Squeezelite         | Lyrion Media Server (LMS) | No     | Yes        | Yes
 +-------------------------------------------------------------------------------
 | UPnP Client for MPD | UPnP Control Point app    | Yes    | Yes        | Yes
@@ -57,6 +59,7 @@ another renderer.
 - AirPlay
 - Spotify Connect
 - Qobuz Connect
+- Spotify Soloist
 - Squeezelite (providing -c <timeout> option is specified)
 - UPnP Client for MPD
 
@@ -87,7 +90,7 @@ The other renderers use Session based protocols that run over existing
 Ethernet or WiFi networks. Since these networks are already present this type
 of renderer operates by establishing a playback session. Moode detects the
 session and displays cover art and track metadata for AirPlay, Spotify
-Connect, Qobuz Connect or the "Renderer Active" screen for Squeezelite, Plexamp
+Connect, Qobuz Connect, Spotify Soloist or the "Renderer Active" screen for Squeezelite, Plexamp
 and RoonBridge renderers.
 
 AirPlay and Squeezelite renderers can automatically end their session and
