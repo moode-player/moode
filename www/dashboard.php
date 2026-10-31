@@ -83,7 +83,7 @@ foreach ($playersArray as $player) {
 
 // Check for no players found
 if (empty($playersArray)) {
-	$_players = '<li id="dashboard-no-players-found">No players found, try again</li>';
+	$_players = '<li id="dashboard-no-players-found">No players found</li>';
 	$_ctl_hide = 'hide';
 } else {
 	$_ctl_hide = '';
