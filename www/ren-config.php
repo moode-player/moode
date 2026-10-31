@@ -120,6 +120,34 @@ if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credenti
 	submitJob('spotify_clear_credentials', '', NOTIFY_TITLE_INFO, 'Credential cache cleared');
 }
 
+// Spotify Soloist
+if (isset($_POST['install_soloist'])) {
+	submitJob('install_soloist');
+	header('location: ren-status.php');
+}
+if (isset($_POST['update_soloist_settings'])) {
+	if (isset($_POST['soloistname']) && $_POST['soloistname'] != $_SESSION['soloistname']) {
+		$update = true;
+		phpSession('write', 'soloistname', $_POST['soloistname']);
+	}
+	if (isset($_POST['soloistsvc']) && $_POST['soloistsvc'] != $_SESSION['soloistsvc']) {
+		$update = true;
+		phpSession('write', 'soloistsvc', $_POST['soloistsvc']);
+	}
+	if (isset($update)) {
+		submitJob('soloistsvc');
+	}
+}
+if (isset($_POST['update_rsmaftersol'])) {
+	phpSession('write', 'rsmaftersol', $_POST['rsmaftersol']);
+}
+if (isset($_POST['soloistrestart']) && $_POST['soloistrestart'] == 1 && $_SESSION['soloistsvc'] == '1') {
+	submitJob('soloistsvc', '', NOTIFY_TITLE_INFO, NAME_SOLOIST . NOTIFY_MSG_SVC_MANUAL_RESTART);
+}
+if (isset($_POST['soloist_clear_credentials']) && $_POST['soloist_clear_credentials'] == 1) {
+	submitJob('soloist_clear_credentials', '', NOTIFY_TITLE_INFO, 'Stored session cleared');
+}
+
 // Qobuz Connect
 if (isset($_POST['install_qobuz'])) {
 	submitJob('install_qobuz');
@@ -331,6 +359,34 @@ $_select['spotifyname'] = $_SESSION['spotifyname'];
 $autoClick = " onchange=\"autoClick('#btn-set-rsmafterspot');\" " . $_spotify_btn_disable;
 $_select['rsmafterspot_on'] .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-1\" value=\"Yes\" " . (($_SESSION['rsmafterspot'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmafterspot_off']  .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-2\" value=\"No\" " . (($_SESSION['rsmafterspot'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+
+// Spotify Soloist
+$_feat_soloist = $_SESSION['feat_bitmask'] & FEAT_SOLOIST ? '' : 'hide';
+if (isSoloistInstalled() === true) {
+	$_soloist_btn_text = 'Reinstall';
+	$_soloist_available_version = isSoloistExpired() === true ?
+		'Expired' . (soloistExpiryDate() != '' ? ' on ' . soloistExpiryDate() : '') :
+		'Version ' . soloistVersion() . ', expires on ' . soloistExpiryDate();
+	$_soloist_installbtn_disable = '';
+	$_soloist_editlink_disable = '';
+	// The service needs a valid build and an API key
+	$_soloist_svcbtn_disable = (isSoloistExpired() === false && getSoloistApiKey() !== false) ? '' : 'disabled';
+} else {
+	$_soloist_btn_text = 'Install';
+	$_soloist_available_version = 'Latest version from Spotify';
+	$_soloist_installbtn_disable = 'disabled';
+	$_soloist_editlink_disable = 'onclick="return false;"';
+	$_soloist_svcbtn_disable = 'disabled';
+}
+$_SESSION['soloistsvc'] == '1' ? $_soloist_btn_disable = '' : $_soloist_btn_disable = 'disabled';
+$_SESSION['soloistsvc'] == '1' ? $_soloist_link_disable = '' : $_soloist_link_disable = 'onclick="return false;"';
+$autoClick = " onchange=\"autoClick('#btn-set-soloistsvc');\" " . $_soloist_svcbtn_disable;
+$_select['soloistsvc_on']  .= "<input type=\"radio\" name=\"soloistsvc\" id=\"toggle-soloistsvc-1\" value=\"1\" " . (($_SESSION['soloistsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['soloistsvc_off'] .= "<input type=\"radio\" name=\"soloistsvc\" id=\"toggle-soloistsvc-2\" value=\"0\" " . (($_SESSION['soloistsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['soloistname'] = $_SESSION['soloistname'];
+$autoClick = " onchange=\"autoClick('#btn-set-rsmaftersol');\" " . $_soloist_btn_disable;
+$_select['rsmaftersol_on'] .= "<input type=\"radio\" name=\"rsmaftersol\" id=\"toggle-rsmaftersol-1\" value=\"Yes\" " . (($_SESSION['rsmaftersol'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['rsmaftersol_off']  .= "<input type=\"radio\" name=\"rsmaftersol\" id=\"toggle-rsmaftersol-2\" value=\"No\" " . (($_SESSION['rsmaftersol'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // Qobuz Connect
 $_feat_qobuz = $_SESSION['feat_bitmask'] & FEAT_QOBUZ ? '' : 'hide';
