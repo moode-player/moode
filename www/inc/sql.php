@@ -44,6 +44,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 	switch ($table) {
 		// Special handling
 		case 'cfg_system':
+		case 'cfg_mqtt':
 			$queryStr = "UPDATE " . $table .
 				" SET value='" . SQLite3::escapeString($value) .
 				"' WHERE param='" . SQLite3::escapeString($key) . "'";
