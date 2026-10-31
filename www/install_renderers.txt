@@ -60,6 +60,21 @@ Examples:
 cat install_airplay.log
 tail -f install_airplay.log
 
+SPOTIFY SOLOIST
+
+Spotify Soloist is not built. The INSTALL button downloads the latest Spotify
+Soloist release for the system architecture from Spotify, together with the
+PipeWire packages it uses for audio output. Spotify does not allow the release
+to be redistributed, so no package is saved to the Home Directory.
+
+Spotify releases expire 90 days after their build date. The expiry date is shown
+in Renderer Config and the REINSTALL button downloads the current release. An
+expired release is not started and the service is turned off.
+
+The service also requires an API key generated on the Spotify for Developers
+dashboard (Spotify Premium account required). Enter it in the Spotify Soloist
+settings. The full log is named "install_soloist.log".
+
 INSTALLING ON MULTIPLE SYSTEMS
 
 The Debian packages "filename.deb" are saved to the Home Directory. The System
