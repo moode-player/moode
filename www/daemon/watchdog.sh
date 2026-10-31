@@ -22,6 +22,7 @@ MPD_RUNNING=$(pgrep -c -x "mpd")
 AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
 SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
 QOBUZ_RUNNING=$(pgrep -c -x "pibuz")
+SOLOIST_RUNNING=$(pgrep -c -x "soloist")
 TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 
 message_log () {
@@ -144,6 +145,24 @@ while true; do
 		fi
 	fi
 
+	# Spotify Soloist (not started without an API key)
+	SOLOIST_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='soloistsvc'")
+	if [[ $SOLOIST_SVC = "1" && -s /var/local/www/soloist.key ]]; then
+		if [[ $SOLOIST_RUNNING == "0" ]]; then
+			counter=0
+			while [ $counter -lt 3 ]; do
+				sleep 1
+				SOLOIST_RUNNING=$(pgrep -c -x "soloist")
+				if [[ $SOLOIST_RUNNING != "0" ]]; then break; fi
+				((counter++))
+			done
+			if [[ $SOLOIST_RUNNING == "0" ]]; then
+				message_log "CRITICAL ERROR: Restarted Spotify Soloist after crash detected"
+				moodeutl -R --soloist
+			fi
+		fi
+	fi
+
 	# Multiroom receiver
 	MULTIROOM_RX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_rx'")
 	if [[ $MULTIROOM_RX = "On" ]]; then
@@ -205,6 +224,7 @@ while true; do
 	AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
 	SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
 	QOBUZ_RUNNING=$(pgrep -c -x "pibuz")
+	SOLOIST_RUNNING=$(pgrep -c -x "soloist")
 	TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
 
 done > /dev/null 2>&1 &

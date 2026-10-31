@@ -36,7 +36,8 @@ $features = array(
 	FEAT_BLUETOOTH => 'Bluetooth renderer',
 	FEAT_DEVTWEAKS	=> 'Developer tweaks',
 	FEAT_MULTIROOM	=> 'Multiroom audio',
-	FEAT_PEPPYDISPLAY => 'PeppyMeter display'
+	FEAT_PEPPYDISPLAY => 'PeppyMeter display',
+	FEAT_SOLOIST => 'Spotify Soloist renderer'
 );
 
 $featBitmask = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='feat_bitmask'"));
@@ -163,16 +164,17 @@ switch ($option) {
 		echo VERSION . "\n";
 		break;
 	case '--help':
-		//[--bluetooth | --airplay | --spotify | --qobuz | --upnp | --squeezelite | --plexamp | --roonbridge]
+		//[--bluetooth | --airplay | --spotify | --qobuz | --soloist | --upnp | --squeezelite | --plexamp | --roonbridge]
 		$btArg = $featBitmask & FEAT_BLUETOOTH ? '--bluetooth | ' : '';
 		$apArg = $featBitmask & FEAT_AIRPLAY ? '--airplay | ' : '';
 		$spArg = $featBitmask & FEAT_SPOTIFY ? '--spotify | ' : '';
 		$qbArg = $featBitmask & FEAT_QOBUZ ? '--qobuz | ' : '';
+		$soArg = $featBitmask & FEAT_SOLOIST ? '--soloist | ' : '';
 		$upArg = $featBitmask & FEAT_UPMPDCLI ? '--upnp | ' : '';
 		$slArg = $featBitmask & FEAT_SQUEEZELITE ? '--squeezelite | ' : '';
 		$paArg = $featBitmask & FEAT_PLEXAMP ? '--plexamp | ' : '';
 		$rbArg = $featBitmask & FEAT_ROONBRIDGE ? '--roonbridge | ' : '';
-		$rendererList = rtrim($btArg . $apArg . $spArg . $qbArg . $upArg . $slArg . $paArg . $rbArg, ' | ');
+		$rendererList = rtrim($btArg . $apArg . $spArg . $qbArg . $soArg . $upArg . $slArg . $paArg . $rbArg, ' | ');
 		echo
 "Usage: moodeutl [OPTION]
 Moode utility functions
@@ -557,6 +559,17 @@ function stopAllRenderers($featBitmask) {
 	} else {
 		echo "- qobuz connect\tfeature disabled\n";
 	}
+	if ($featBitmask & FEAT_SOLOIST) {
+		$soloistSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='soloistsvc'"));
+		if ($soloistSvc == '1') {
+			sysCmd('/var/www/util/restart-renderer.php --soloist --stop');
+			echo "- spotify soloist\tstopped\n";
+		} else {
+			echo "- spotify soloist\tnot on\n";
+		}
+	} else {
+		echo "- spotify soloist\tfeature disabled\n";
+	}
 	if ($featBitmask & FEAT_UPMPDCLI) {
 		$upSvc = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='upnpsvc'"));
 		if ($upSvc == '1') {
@@ -605,7 +618,7 @@ function stopAllRenderers($featBitmask) {
 
 function restartRenderer($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
-		'--qobuz' => 'qobuzsvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
+		'--qobuz' => 'qobuzsvc', '--soloist' => 'soloistsvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
 		'--roonbridge' => 'rbsvc');
 
 	if (!isset($argv[2])) {
@@ -620,7 +633,7 @@ function restartRenderer($argv) {
 		}
 	} else {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --qobuz, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --qobuz, --soloist, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
 		return;
 	}
 
@@ -630,7 +643,7 @@ function restartRenderer($argv) {
 
 function rendererOnoff($argv) {
 	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
-		'--qobuz' => 'qobuzsvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
+		'--qobuz' => 'qobuzsvc', '--soloist' => 'soloistsvc', '--upnp' => 'upnpsvc', '--squeezelite' => 'slsvc', '--plexamp' => 'pasvc',
 		'--roonbridge' => 'rbsvc');
 
 	if (!isset($argv[2])) {
@@ -638,7 +651,7 @@ function rendererOnoff($argv) {
 		return;
 	} else if (!array_key_exists($argv[2], $renderers)) {
 		echo 'Invalid renderer name' . "\n";
-		echo 'Valid names are: --bluetooth, --airplay, --spotify, --qobuz, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --qobuz, --soloist, --upnp, --squeezelite, --plexamp, --roonbridge' . "\n";
 		return;
 	} else if (!isset($argv[3])) {
 		echo 'Missing 3nd argument [on|off]' . "\n";

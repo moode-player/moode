@@ -210,6 +210,8 @@ sysCmd('touch ' . LIBRESPOT_LOG);
 sysCmd('touch ' . SPOTEVENT_LOG);
 sysCmd('touch ' . PIBUZ_LOG);
 sysCmd('touch ' . QBZEVENT_LOG);
+sysCmd('touch ' . SOLOIST_LOG);
+sysCmd('touch ' . SOLEVENT_LOG);
 sysCmd('touch ' . SLPOWER_LOG);
 sysCmd('truncate ' . MOUNTMON_LOG . ' --size 0');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
@@ -235,6 +237,8 @@ sysCmd('chmod 0666 ' . LIBRESPOT_LOG);
 sysCmd('chmod 0666 ' . SPOTEVENT_LOG);
 sysCmd('chmod 0666 ' . PIBUZ_LOG);
 sysCmd('chmod 0666 ' . QBZEVENT_LOG);
+sysCmd('chmod 0666 ' . SOLOIST_LOG);
+sysCmd('chmod 0666 ' . SOLEVENT_LOG);
 sysCmd('chmod 0666 ' . SLPOWER_LOG);
 sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 ' . MOUNTMON_LOG);
@@ -297,6 +301,7 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	airplayname		Moode AirPlay
 	spotifyname		Moode Spotify
 	qobuzname		Moode Qobuz
+	soloistname		Moode Soloist
 	upnpname		Moode UPNP
 	dlnaname		Moode DLNA
 	squeezelite		Moode		In cfg_sl PLAYERNAME and squeezelite.conf, no session var
@@ -316,6 +321,8 @@ if ($importedHostName != $_SESSION['hostname']) { // != 'moode'
 	phpSession('write', 'spotifyname', ucfirst($importedHostName) . ' Spotify');
 	// Qobuz Connect
 	phpSession('write', 'qobuzname', ucfirst($importedHostName) . ' Qobuz');
+	// Spotify Soloist
+	phpSession('write', 'soloistname', ucfirst($importedHostName) . ' Soloist');
 	// Squeezelite
 	$newName = ucfirst($importedHostName);
 	$result = sqlQuery("UPDATE cfg_sl SET value='" . $newName . "' WHERE param='PLAYERNAME'", $dbh);
@@ -1204,6 +1211,19 @@ if ($_SESSION['feat_bitmask'] & FEAT_QOBUZ) {
 }
 workerLog('worker: Qobuz Connect:   ' . $status);
 
+// Start Spotify Soloist renderer
+if ($_SESSION['feat_bitmask'] & FEAT_SOLOIST) {
+	if (isset($_SESSION['soloistsvc']) && $_SESSION['soloistsvc'] == 1) {
+		$status = 'started';
+		startSoloist();
+	} else {
+		$status = 'available';
+	}
+} else {
+	$status = 'n/a';
+}
+workerLog('worker: Spotify Soloist: ' . $status);
+
 // Start Squeezelite renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
 	if (isset($_SESSION['slsvc']) && $_SESSION['slsvc'] == 1) {
@@ -1660,7 +1680,7 @@ if (chkRendererActive() === true) {
 	phpSession('write', 'volknob', '0');
 	sysCmd('/var/www/util/vol.sh 0');
 	$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive' OR
-		param='spotactive' OR param='qbzactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
+		param='spotactive' OR param='qbzactive' OR param='solactive' OR param='slactive' OR param='paactive' OR param='rbactive' OR
 		param='inpactive'", $dbh);
 	workerLog('worker: Active flags:         at least one true');
 	workerLog('worker: Reset flags:          all reset to false');
@@ -1762,6 +1782,7 @@ $clkradio_stop_days = explode(',', substr($_SESSION['clkradio_stop'], 9));
 $aplactive = '0';
 $spotactive = '0';
 $qbzactive = '0';
+$solactive = '0';
 $slactive = '0';
 $paactive = '0';
 $rbactive = '0';
@@ -1999,6 +2020,10 @@ while (true) {
 	if ($_SESSION['qobuzsvc'] == '1') {
 		//debugLog('** chkQbzActive');
 		chkQbzActive();
+	}
+	if ($_SESSION['soloistsvc'] == '1') {
+		//debugLog('** chkSolActive');
+		chkSolActive();
 	}
 	if ($_SESSION['slsvc'] == '1') {
 		//debugLog('** chkSlActive');
@@ -2248,6 +2273,26 @@ function chkQbzActive() {
 		}
 	}
 }
+// Spotify Soloist
+function chkSolActive() {
+	// Get directly from SQL since solevent.sh script can't update the session
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='solactive'", $GLOBALS['dbh']);
+	if ($result[0]['value'] == '1') {
+		// Do this section only once
+		if ($GLOBALS['solactive'] == '0') {
+			$GLOBALS['solactive'] = '1';
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
+			// NOTE: This is done by the solevent.sh script
+			//sendFECmd('solactive1');
+		}
+	} else {
+		// Do this section only once
+		if ($GLOBALS['solactive'] == '1') {
+			$GLOBALS['solactive'] = '0';
+			sendFECmd('solactive0');
+		}
+	}
+}
 // Squeezelite
 function chkSlActive() {
 	// Get directly from sql since external slpower.sh script does not update the session
@@ -2299,7 +2344,7 @@ function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
 		$rendererNotActive = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
-			&& $GLOBALS['qbzactive'] == '0' && $GLOBALS['slactive'] == '0' && $_SESSION['paactive']
+			&& $GLOBALS['qbzactive'] == '0' && $GLOBALS['solactive'] == '0' && $GLOBALS['slactive'] == '0' && $_SESSION['paactive']
 			&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
 		$mpdNotPlaying = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
 		$alsaOutputActive = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
@@ -2638,6 +2683,8 @@ function updExtMetaFile() {
 		$renderer = 'Spotify Active';
 	} else if ($GLOBALS['qbzactive'] == '1') {
 		$renderer = 'Qobuz Active';
+	} else if ($GLOBALS['solactive'] == '1') {
+		$renderer = 'Soloist Active';
 	} else if ($GLOBALS['slactive'] == '1') {
 		$renderer = 'Squeezelite Active';
 	} else if ($GLOBALS['rbactive'] == '1') {
@@ -2659,6 +2706,8 @@ function updExtMetaFile() {
 				$rendererMeta = json_decode(file_get_contents(APLMETA_CACHE_FILE), true);
 			} else if ($GLOBALS['spotactive'] == '1') {
 				$rendererMeta = json_decode(file_get_contents(SPOTMETA_CACHE_FILE), true);
+			} else if ($GLOBALS['solactive'] == '1') {
+				$rendererMeta = json_decode(file_get_contents(SOLMETA_CACHE_FILE), true);
 			} else {
 				$rendererMeta = '';
 			}
@@ -2672,7 +2721,7 @@ function updExtMetaFile() {
 			$fileData['file'] != $renderer ||
 			$fileData['outrate'] != $hwParamsFormat ||
 			(
-				($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1') &&
+				($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['solactive'] == '1') &&
 				($fileData['title'] != $rendererMeta['title'] || $fileData['album'] != $rendererMeta['album'])
 			)
 		) {
@@ -3091,6 +3140,10 @@ function runQueuedJob() {
 					stopQobuz();
 					startQobuz();
 				}
+				if ($_SESSION['soloistsvc'] == 1) {
+					stopSoloist();
+					startSoloist();
+				}
 				if ($_SESSION['slsvc'] == 1) {
 					stopSqueezelite();
 					cfgSqueezelite();
@@ -3152,6 +3205,10 @@ function runQueuedJob() {
 				if ($_SESSION['qobuzsvc'] == 1) {
 					stopQobuz();
 					startQobuz();
+				}
+				if ($_SESSION['soloistsvc'] == 1) {
+					stopSoloist();
+					startSoloist();
 				}
 				if ($_SESSION['slsvc'] == 1) {
 					stopSqueezelite();
@@ -3297,6 +3354,10 @@ function runQueuedJob() {
 				stopQobuz();
 				startQobuz();
 			}
+			if ($_SESSION['soloistsvc'] == 1) {
+				stopSoloist();
+				startSoloist();
+			}
 			// Reenable HTTP server (if indicated)
 			setMpdHttpd();
 
@@ -3380,9 +3441,27 @@ function runQueuedJob() {
 				sysCmd('mpc play');
 			}
 			break;
+		// Spotify Soloist
+		case 'soloistsvc':
+			stopSoloist();
+			if ($_SESSION['soloistsvc'] == 1) {
+				startSoloist();
+			}
+			if ($_SESSION['w_queueargs'] == 'disconnect_renderer' && $_SESSION['rsmaftersol'] == 'Yes') {
+				sysCmd('mpc play');
+			}
+			break;
+		case 'soloist_clear_credentials':
+			stopSoloist();
+			sysCmd('rm -rf ' . SOLOIST_DATA_DIR);
+			if ($_SESSION['soloistsvc'] == 1) {
+				startSoloist();
+			}
+			break;
 		case 'install_airplay':
 		case 'install_spotify':
 		case 'install_qobuz':
+		case 'install_soloist':
 			// Log file and plugin type
 			// On the Pi the worker runs as root and writes this convenience log to the
 			// player's home. On Debian x86 it runs as www-data (to share the PHP session
@@ -3390,7 +3469,8 @@ function runQueuedJob() {
 			// redirect abort the whole command. Use a www-data-writable dir there. The
 			// summary log (PLUGIN_LOG) is unaffected.
 			$fullLog = (isPi() ? $_SESSION['home_dir'] : '/var/local/www') . '/' . $_SESSION['w_queue'] . '.log';
-			$types = array('install_airplay' => 'airplay', 'install_spotify' => 'spotify-connect', 'install_qobuz' => 'qobuz-connect');
+			$types = array('install_airplay' => 'airplay', 'install_spotify' => 'spotify-connect', 'install_qobuz' => 'qobuz-connect',
+				'install_soloist' => 'soloist');
 			$type = $types[$_SESSION['w_queue']];
 			// Install plugin
 			$plugin = sqlQuery("SELECT plugin FROM cfg_plugin WHERE component='renderer' AND type='" . $type . "'", $GLOBALS['dbh'])[0]['plugin'];
@@ -3503,6 +3583,10 @@ function runQueuedJob() {
 			if ($_SESSION['qobuzsvc'] == 1) {
 				stopQobuz();
 				startQobuz();
+			}
+			if ($_SESSION['soloistsvc'] == 1) {
+				stopSoloist();
+				startSoloist();
 			}
 			break;
 		case 'multiroom_tx_restart':

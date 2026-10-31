@@ -449,6 +449,167 @@ function downloadQbzLogs($dbh) {
 	}
 }
 
+// Spotify Soloist
+function cfgSoloist() {
+	// Settings
+	$result = sqlRead('cfg_soloist', sqlConnect());
+	$cfgSoloist = array();
+	foreach ($result as $row) {
+		$cfgSoloist[$row['param']] = $row['value'];
+	}
+
+	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
+	// PipeWire stream volume is cubic: 0-100 -> (n/100)^3
+	$volume = sprintf('%.6f', pow($cfgSoloist['initial_volume'] / 100, 3));
+
+	// Private PipeWire/WirePlumber config and state, recreated at each start
+	sysCmd('rm -rf ' . SOLOIST_RUNTIME_DIR);
+	sysCmd('mkdir -p -m 0700 ' . SOLOIST_RUNTIME_DIR . '/config/pipewire/pipewire.conf.d ' .
+		SOLOIST_RUNTIME_DIR . '/config/wireplumber/wireplumber.conf.d ' . SOLOIST_RUNTIME_DIR . '/state');
+	$pwConf = SOLOIST_RUNTIME_DIR . '/config/pipewire/pipewire.conf.d/moode.conf';
+	$wpConf = SOLOIST_RUNTIME_DIR . '/config/wireplumber/wireplumber.conf.d/moode.conf';
+	sysCmd('cp /etc/soloist/pipewire.conf ' . $pwConf);
+	sysCmd('cp /etc/soloist/wireplumber.conf ' . $wpConf);
+	sysCmdSed('s/^\(\s*api\.alsa\.path\s*=\).*/\1 "' . $device . '"/', $pwConf);
+	sysCmdSed('s/^\(\s*node\.stream\.default-playback-volume\s*=\).*/\1 ' . $volume . '/', $wpConf);
+}
+function startSoloist() {
+	if (isSoloistExpired() === true) {
+		workerLog('startSoloist(): Soloist build expired' . (soloistExpiryDate() != '' ? ' on ' . soloistExpiryDate() : '') . ', reinstall it in Renderers config');
+		phpSession('write', 'soloistsvc', '0');
+		return;
+	}
+	$apiKey = getSoloistApiKey();
+	if ($apiKey === false) {
+		workerLog('startSoloist(): No API key, enter it in Spotify Soloist settings');
+		return;
+	}
+
+	// Logging
+	$logging = $_SESSION['debuglog'] == '1' ? ' -v > ' . SOLOIST_LOG : ' > /dev/null';
+	$env = 'env XDG_RUNTIME_DIR=' . SOLOIST_RUNTIME_DIR .
+		' XDG_CONFIG_HOME=' . SOLOIST_RUNTIME_DIR . '/config' .
+		' XDG_STATE_HOME=' . SOLOIST_RUNTIME_DIR . '/state ';
+
+	cfgSoloist();
+
+	// Start PipeWire and WirePlumber
+	sysCmd($env . 'pipewire > /dev/null 2>&1 &');
+	sysCmd($env . 'wireplumber > /dev/null 2>&1 &');
+
+	// Start the daemon
+	sysCmd('rm -f ' . SOLOIST_DATA_DIR . '/ws.addr ' . SOLOIST_DATA_DIR . '/ws.port');
+	$cmd = $env . SOLOIST_BIN .
+		' --device-name ' . escapeshellarg($_SESSION['soloistname']) .
+		' --api-key ' . escapeshellarg($apiKey) .
+		' --data-dir ' . SOLOIST_DATA_DIR .
+		' --cache-dir ' . SOLOIST_CACHE_DIR .
+		' --cache-size 200' .
+		' --pipewire-device moode_audioout' .
+		' --ws ' . SOLOIST_WS .
+		$logging . ' 2>&1 &';
+	debugLog('startSoloist(): (' . str_replace(escapeshellarg($apiKey), '***', $cmd) . ')');
+	sysCmd($cmd);
+
+	// Wait for the WebSocket API to come up (up to 5 secs)
+	$wsUp = false;
+	for ($i = 0; $i < 10; $i++) {
+		usleep(500000);
+		$result = sysCmd(SOLOIST_BIN . ' ctl -D ' . SOLOIST_DATA_DIR . ' status | grep -c "ws: listening"');
+		if (!empty($result) && $result[0] != '0') {
+			$wsUp = true;
+			break;
+		}
+	}
+	if ($wsUp === false) {
+		workerLog('startSoloist(): WebSocket API not reachable, no metadata or volume handling');
+	}
+
+	// Event reader
+	sysCmd('/var/local/www/commandw/solevent.sh ' . SOLOIST_DATA_DIR . ' > /dev/null 2>&1 &');
+
+	// Truncate metadata file
+	sysCmd('truncate ' . SOLMETA_CACHE_FILE . ' --size 0');
+}
+function stopSoloist() {
+	sysCmd('pkill -f "commandw/[s]olevent.sh"');
+	sysCmd('killall soloist 2> /dev/null');
+	for ($i = 0; $i < 15; $i++) {
+		if (empty(sysCmd('pgrep -x soloist'))) {
+			break;
+		}
+		usleep(200000);
+	}
+	sysCmd('killall -s9 soloist 2> /dev/null');
+	sysCmd('pkill -u root -x wireplumber');
+	sysCmd('pkill -u root -x pipewire');
+
+	// Local
+	sysCmd('/var/www/util/vol.sh -restore');
+	if (CamillaDSP::isMPD2CamillaDSPVolSyncEnabled()) {
+		sysCmd('systemctl restart mpd2cdspvolume');
+	}
+	// Multiroom receivers
+	if ($_SESSION['multiroom_tx'] == "On" ) {
+		updReceiverVol('-restore');
+	}
+
+	phpSession('write', 'solactive', '0');
+	$GLOBALS['solactive'] = '0';
+	sendFECmd('solactive0');
+}
+function isSoloistInstalled() {
+	return file_exists(SOLOIST_BIN);
+}
+// Version string: soloist 1.3.10.31 build 1793361706 (20261030) (g19412df6ea) (linux/x86_64)
+// An expired build exits with code 10
+function soloistVersionInfo() {
+	static $info = null;
+	if ($info === null) {
+		$result = sysCmd(SOLOIST_BIN . ' --version; echo "rc=$?"');
+		$info = array('version' => '', 'build_date' => '', 'expired' => false);
+		foreach ($result as $line) {
+			if (preg_match('/^soloist (\S+) .*\((\d{8})\)/', $line, $match)) {
+				$info['version'] = $match[1];
+				$info['build_date'] = $match[2];
+			} else if ($line == 'rc=10') {
+				$info['expired'] = true;
+			}
+		}
+	}
+	return $info;
+}
+function soloistVersion() {
+	return soloistVersionInfo()['version'];
+}
+function soloistExpiryDate() {
+	$buildDate = soloistVersionInfo()['build_date'];
+	if ($buildDate == '') {
+		return '';
+	}
+	return DateTime::createFromFormat('Ymd', $buildDate)->modify('+' . SOLOIST_BUILD_LIFETIME . ' days')->format('Y-m-d');
+}
+function isSoloistExpired() {
+	$expiryDate = soloistExpiryDate();
+	return soloistVersionInfo()['expired'] || ($expiryDate != '' && date('Y-m-d') >= $expiryDate);
+}
+// The key is kept out of the database in a file only www-data can read
+function getSoloistApiKey() {
+	$apiKey = file_exists(SOLOIST_KEY_FILE) ? trim(file_get_contents(SOLOIST_KEY_FILE)) : '';
+	return isValidSoloistApiKey($apiKey) ? $apiKey : false;
+}
+function setSoloistApiKey($apiKey) {
+	if (!isValidSoloistApiKey($apiKey)) {
+		return false;
+	}
+	file_put_contents(SOLOIST_KEY_FILE, $apiKey . "\n");
+	chmod(SOLOIST_KEY_FILE, 0600);
+	return true;
+}
+function isValidSoloistApiKey($apiKey) {
+	return preg_match('/^[A-Za-z0-9_-]{16,128}$/', $apiKey) === 1;
+}
+
 // UPnP
 function startUPnP() {
 	sysCmd('systemctl start upmpdcli');
@@ -524,6 +685,7 @@ function stopAllRenderers() {
 		'airplaysvc' => 'stopAirPlay',
 		'spotifysvc' => 'stopSpotify',
 		'qobuzsvc'	 => 'stopQobuz',
+		'soloistsvc' => 'stopSoloist',
 		'upnpsvc'	 => 'stopUPnP',
 		'slsvc'		 => 'stopSqueezeLite',
 		'pasvc'		 => 'stopPlexamp',

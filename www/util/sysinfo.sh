@@ -139,6 +139,9 @@ AUDIO_PARAMETERS() {
 	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
 		echo -e "\nQobuz Connect\t\t= $qobuzsvc\c"
 	fi
+	if [ $(($feat_bitmask & $FEAT_SOLOIST)) -ne 0 ]; then
+		echo -e "\nSpotify Soloist\t\t= $soloistsvc\c"
+	fi
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\nSqueezelite\t\t= $slsvc\c"
 	fi
@@ -402,6 +405,19 @@ RENDERER_SETTINGS() {
 		echo -e "\nWriter RT proirity\t= $qbz_writer_rt_priority\n"
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_SOLOIST)) -ne 0 ]; then
+		if [ -f /usr/local/bin/soloist ]; then
+			SOLVER="$(/usr/local/bin/soloist --version | awk -F" " '{print $2}')"
+		else
+			SOLVER="Soloist is not installed"
+		fi
+		echo -e "S P O T I F Y   S O L O I S T"
+		echo -e "\nVersion\t\t\t= $SOLVER\c"
+		echo -e "\nFriendly name\t\t= $soloistname\c"
+		echo -e "\nResume MPD\t\t= $rsmaftersol\c"
+		echo -e "\nInitial volume\t\t= $sol_initial_volume\n"
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		SL=$(squeezelite -? | grep "Squeezelite" | awk '{print $2}' | cut -d "," -f1)
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
@@ -498,6 +514,7 @@ FEAT_PLEXAMP=8192
 FEAT_BLUETOOTH=16384
 FEAT_MULTIROOM=65536
 FEAT_PEPPYDISPLAY=131072
+FEAT_SOLOIST=262144
 
 # Selective resampling bitmask
 MPD_SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
@@ -812,6 +829,9 @@ qbz_dac_keepalive_ms=${arr[12]}
 qbz_pcm_ring_ms=${arr[13]}
 qbz_writer_rt_priority=${arr[14]}
 
+# Spotify Soloist settings
+sol_initial_volume=$(sqlite3 $SQLDB "SELECT value FROM cfg_soloist WHERE param='initial_volume'")
+
 # Squeezelite settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_sl")
 readarray -t arr <<<"$RESULT"
@@ -1052,6 +1072,11 @@ library_onetouch_pl=${arr[171]}
 scnsaver_mode=${arr[172]}
 scnsaver_layout=${arr[173]}
 scnsaver_xmeta=${arr[174]}
+# Read by name: ids are not contiguous after 175
+readarray -t sol_arr <<<"$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('soloistsvc','soloistname','rsmaftersol') ORDER BY id")"
+[[ "${sol_arr[0]}" = "1" ]] && soloistsvc="On" || soloistsvc="Off"
+soloistname=${sol_arr[1]}
+rsmaftersol=${sol_arr[2]}
 # Session only vars
 timezone=$(moodeutl -d -gv timezone)
 value=$(moodeutl -d -gv rotaryenc)

@@ -188,6 +188,10 @@ function setAudioOut($output) {
 		stopQobuz();
 		startQobuz();
 	}
+	if ($_SESSION['soloistsvc'] == '1') {
+		stopSoloist();
+		startSoloist();
+	}
 
 	// Set HTTP server state
 	setMpdHttpd();
