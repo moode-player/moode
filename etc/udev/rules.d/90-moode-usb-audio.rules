@@ -1,0 +1,3 @@
+# USB audio device hot plug
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", DEVPATH=="*/usb*", RUN+="/usr/bin/systemd-run --no-block /var/www/util/usb-audio-hotplug.php add %n"
+ACTION=="remove", SUBSYSTEM=="sound", KERNEL=="controlC*", DEVPATH=="*/usb*", RUN+="/usr/bin/systemd-run --no-block /var/www/util/usb-audio-hotplug.php remove %n"
