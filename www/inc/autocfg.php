@@ -706,8 +706,10 @@ function autoConfigSettings() {
 		}],
 		'Peppy meters',
 		['requires' => ['screen_width', 'screen_height', 'random_interval', 'meter_folder', 'meter_name',
-		'meter_normalization', 'frame_rate', 'polling_interval', 'smooth_buffer_size'], 'handler' => function($values) {
-			putPeppyConfig($values);
+		'meter_normalization', 'frame_rate', 'polling_interval', 'smooth_buffer_size'],
+		'optionals' => ['meter_curve'],
+		'handler' => function($values, $optionals) {
+			putPeppyConfig(array_merge($values, $optionals));
 		}, 'custom_write' => function($values) {
 			$configMeter = getPeppyConfig('meter');
 			$str .= sprintf("%s = \"%s\"\n", 'screen_width', $configMeter['screen.width']);
@@ -716,6 +718,7 @@ function autoConfigSettings() {
 			$str .= sprintf("%s = \"%s\"\n", 'meter_folder', $configMeter['meter.folder']);
 			$str .= sprintf("%s = \"%s\"\n", 'meter_name', $configMeter['meter']);
 			$str .= sprintf("%s = \"%s\"\n", 'meter_normalization', $configMeter['volume.max.in.pipe']);
+			$str .= sprintf("%s = \"%s\"\n", 'meter_curve', $configMeter['volume.curve']);
 			$str .= sprintf("%s = \"%s\"\n", 'frame_rate', $configMeter['frame.rate']);
 			$str .= sprintf("%s = \"%s\"\n", 'polling_interval', $configMeter['polling.interval']);
 			$str .= sprintf("%s = \"%s\"\n", 'smooth_buffer_size', $configMeter['smooth.buffer.size']);

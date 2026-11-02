@@ -118,6 +118,10 @@ function putPeppyConfig($configArray) {
 				$param = 'volume.max.in.pipe';
 				sysCmdSed('s/^' . $param . '.*/' . $param . ' = ' . number_format($value, 1) . '/', PEPPY_METER_ETC_DIR . '/config.txt');
 				break;
+			case 'meter_curve':
+				$param = 'volume.curve';
+				sysCmdSed('s/^' . $param . '.*/' . $param . ' = ' . number_format($value, 1) . '/', PEPPY_METER_ETC_DIR . '/config.txt');
+				break;
 			case 'frame_rate':
 				$param = 'frame.rate';
 				sysCmdSed('s/^' . $param . '.*/' . $param . ' = ' . $value . '/', PEPPY_METER_ETC_DIR . '/config.txt');

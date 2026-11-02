@@ -51,6 +51,7 @@ foreach($folders as $folderPath) {
 $_meter_list = getPeppyFolderContents('meter', $configMeter['meter.folder']);
 $_select['meter_name'] = $configMeter['meter'];
 $_select['meter_normalization'] = $configMeter['volume.max.in.pipe'];
+$_select['meter_curve'] = $configMeter['volume.curve'];
 $_select['frame_rate'] .= "<option value=\"30\" " . (($configMeter['frame.rate'] == '30') ? "selected" : "") . ">30 (Default)</option>\n";
 $_select['frame_rate'] .= "<option value=\"60\" " . (($configMeter['frame.rate'] == '60') ? "selected" : "") . ">60</option>\n";
 $_select['polling_interval'] .= "<option value=\"0.05\" " . (($configMeter['polling.interval'] == '0.05') ? "selected" : "") . ">0.05</option>\n";
