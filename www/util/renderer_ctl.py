@@ -8,11 +8,12 @@
 # (command/index.php). Prints the renderer's volume state as JSON.
 #
 # Usage: renderer_ctl.py <renderer> <command> [N]
-#   renderer: qobuz | bluetooth | airplay | squeezelite
+#   renderer: qobuz | bluetooth | airplay | squeezelite | soloist
 #   command:  get | set N | up N | dn N | mute | toggle | previous | next
 #
 
 import json
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -305,7 +306,57 @@ class Squeezelite(Renderer):
 		if self.player:
 			self.request(self.VERBS[verb], self.player)
 
-RENDERERS = {'qobuz': Qobuz, 'bluetooth': Bluetooth, 'airplay': AirPlay, 'squeezelite': Squeezelite}
+# Spotify Soloist: soloist ctl, volume 0-100, no mute
+class Soloist(Renderer):
+	CTL = ['/usr/local/bin/soloist', 'ctl', '-D', '/var/local/www/soloist_data']
+	VERBS = {'next': ('next', 'skip_next'), 'previous': ('prev', 'skip_prev')}
+	can_mute = False
+
+	def ctl(self, *args):
+		try:
+			result = subprocess.run(self.CTL + list(args), capture_output=True, text=True, timeout=5)
+		except Exception:
+			return None
+		return result.stdout if result.returncode == 0 else None
+
+	def read(self):
+		# now reports the last session while inactive, is_active tells them apart
+		try:
+			now = json.loads(self.ctl('now', '--json') or '{}')
+		except ValueError:
+			now = {}
+		self.now = now if now.get('is_active') is True else None
+		return self.now
+
+	def volume_state(self):
+		if self.read() is None or self.now.get('volume') is None:
+			return None
+		return int(self.now['volume']), False
+
+	def can_transport(self):
+		# Read by volume_state(), called first in state()
+		return self.now is not None
+
+	def set(self, level):
+		if self.read() is not None and self.ctl('volume', str(clamp(level))) is not None:
+			return clamp(level)
+
+	def step(self, amount):
+		vol = self.volume_state()
+		if vol is not None:
+			return self.set(vol[0] + amount)
+
+	def transport(self, verb):
+		if self.read() is None:
+			return
+		if verb == 'toggle':
+			verb = 'pause' if self.now.get('status') == 'playing' else 'play'
+			return verb if self.ctl(verb) is not None else None
+		command, action = self.VERBS[verb]
+		if action in (self.now.get('available_actions') or {}):
+			self.ctl(command)
+
+RENDERERS = {'qobuz': Qobuz, 'bluetooth': Bluetooth, 'airplay': AirPlay, 'squeezelite': Squeezelite, 'soloist': Soloist}
 TRANSPORT = ('toggle', 'previous', 'next')
 
 def main(argv):
