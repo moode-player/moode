@@ -19,7 +19,7 @@ New features
 - NEW:
 
 Updates
-- UPD: Auto-configure Output device on USB audio hot-plug
+- UPD: Auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
 
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
