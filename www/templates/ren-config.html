@@ -243,6 +243,72 @@
 			</div>
 		</div>
 
+		<div class="control-group $_feat_soloist">
+			<legend>Spotify Soloist</legend>
+			<div>
+				<label class="control-label">Soloist</label>
+				<div class="controls">
+					<button class="btn btn-primary btn-small config-btn set-button btn-submit" type="submit" name="install_soloist" value="1">$_soloist_btn_text</button>
+					<span class="config-btn-after">$_soloist_available_version</span>
+					<span class="config-help-static">
+						Spotify builds expire after 90 days and are then reinstalled with this button.<br>
+						An API key is required, see the Spotify <a href="https://developer.spotify.com/documentation/soloist/tutorials/getting-started" class="target-blank-link" target="_blank">Getting started</a> guide.<br>
+						View the <a href="./install_renderers.txt" class="target-blank-link" target="_blank">Installation guide</a> for more information.
+					</span>
+				</div>
+			</div>
+
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-soloistsvc" for="toggle-soloistsvc-2">ON </label>$_select[soloistsvc_on]
+					<label class="toggle-radio toggle-soloistsvc" for="toggle-soloistsvc-1">OFF</label>$_select[soloistsvc_off]
+				</div>
+				<button id="btn-set-soloistsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_soloist_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-soloistsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span class="config-help-static">
+					This service requires an API key from Spotify for Developers, see the settings.
+				</span>
+				<span id="info-soloistsvc" class="config-help-info">
+					Spotify Soloist, the Spotify Connect receiver by Spotify.
+				</span>
+			</div>
+
+			<label class="control-label" for="soloistname">Name</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="soloistname" name="soloistname" value="$_select[soloistname]" required>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_soloist_settings" value="novalue" $_soloist_svcbtn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+			</div>
+
+			<label class="control-label">Resume MPD</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-rsmaftersol" for="toggle-rsmaftersol-2">ON </label>$_select[rsmaftersol_on]
+					<label class="toggle-radio toggle-rsmaftersol" for="toggle-rsmaftersol-1">OFF</label>$_select[rsmaftersol_off]
+				</div>
+				<button id="btn-set-rsmaftersol" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_rsmaftersol" value="novalue" $_soloist_btn_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-rsmaftersol" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-rsmaftersol" class="config-help-info">
+					Resume MPD playback after Spotify client stops playing or disconnects.
+				</span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#soloist-restart" $_soloist_link_disable><button class="btn btn-medium btn-primary config-btn" $_soloist_btn_disable>Restart</button></a>
+				<span class="config-btn-after">Spotify Soloist</span>
+			</div>
+
+			<div class="controls">
+				<a href="sol-config.php" $_soloist_editlink_disable><button class="btn btn-medium btn-primary config-btn" $_soloist_installbtn_disable>Edit</button></a>
+				<span class="config-btn-after">Spotify Soloist settings</span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#soloist-clear-credentials" $_soloist_link_disable><button class="btn btn-medium btn-primary config-btn" $_soloist_btn_disable>Clear</button></a>
+				<span class="config-btn-after">Stored session</span>
+			</div>
+		</div>
+
 		<div class="control-group $_feat_qobuz">
 			<legend>Qobuz Connect</legend>
 			<div class="$_install_qobuz_hide">
@@ -541,6 +607,34 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="qobuz_clear_credentials" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="soloist-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="soloist-restart-label" aria-hidden="true">
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
+			<h3>Restart Spotify Soloist renderer?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="soloistrestart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="soloist-clear-credentials" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="soloist-clear-credentials-label" aria-hidden="true">
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
+			<h3>Clear stored Spotify session?</h3>
+		</div>
+		<div class="modal-body">
+			<h6>The player is paired again from the Spotify app at the next connection.</h6>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="soloist_clear_credentials" value="1">Yes</button>
 		</div>
 	</div>
 </form>

@@ -352,7 +352,7 @@ function parseDelimFile($data, $delim) {
 // Determine if a renderer is active
 function chkRendererActive() {
 	$result = sqlQuery("SELECT value from cfg_system WHERE param in (
-		'btactive', 'aplactive', 'spotactive', 'qbzactive', 'slactive', 'paactive',
+		'btactive', 'aplactive', 'spotactive', 'qbzactive', 'solactive', 'slactive', 'paactive',
 		'rbactive', 'inpactive')", sqlConnect());
 
 	$active = false;
@@ -369,14 +369,14 @@ function chkRendererActive() {
 // If several flags are set the first one in this order wins, slactive stays set while no LMS answers
 function getActiveRenderer() {
 	$result = sqlQuery("SELECT param, value from cfg_system WHERE param in (
-		'btactive', 'aplactive', 'spotactive', 'qbzactive', 'slactive', 'paactive',
+		'btactive', 'aplactive', 'spotactive', 'qbzactive', 'solactive', 'slactive', 'paactive',
 		'rbactive', 'inpactive')", sqlConnect());
 
 	$flags = array();
 	foreach ($result as $row) {
 		$flags[$row['param']] = $row['value'];
 	}
-	foreach (array('inpactive', 'btactive', 'aplactive', 'spotactive', 'qbzactive', 'rbactive', 'paactive', 'slactive') as $flag) {
+	foreach (array('inpactive', 'btactive', 'aplactive', 'spotactive', 'solactive', 'qbzactive', 'rbactive', 'paactive', 'slactive') as $flag) {
 		if (isset($flags[$flag]) && $flags[$flag] == '1') {
 			return $flag;
 		}
@@ -471,6 +471,7 @@ function storeBackLink($section, $tpl) {
 		'eqp-config.html'	=> '/snd-config.php',
 		'gpio-config.html'	=> '/per-config.php',
 		'spo-config.html' 	=> '/ren-config.php',
+		'sol-config.html' 	=> '/ren-config.php',
 		'sqe-config.html'	=> '/ren-config.php',
 		'lib-nas-config.html' => '/lib-config.php',
 		'lib-nvme-config.html' => '/lib-config.php',

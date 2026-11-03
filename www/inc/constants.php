@@ -22,6 +22,8 @@ const LIBRESPOT_LOG = '/var/log/moode_librespot.log';
 const SPOTEVENT_LOG = '/var/log/moode_spotevent.log';
 const PIBUZ_LOG = '/var/log/moode_pibuz.log';
 const QBZEVENT_LOG = '/var/log/moode_qbzevent.log';
+const SOLOIST_LOG = '/var/log/moode_soloist.log';
+const SOLEVENT_LOG = '/var/log/moode_solevent.log';
 const SLPOWER_LOG = '/var/log/moode_slpower.log';
 // MPD
 const MPD_RESPONSE_ERR = 'ACK';
@@ -50,11 +52,20 @@ const RADIOBROWSER_CACHE_TTL = 1800; // Search results (30 min)
 const RADIOBROWSER_CACHE_TTL_STATIC = 43200; // Countries/genres/topclick (12 hr)
 const RADIOBROWSER_RECENT_MAX = 50;
 const RADIOBROWSER_LIMIT = 28; // Fixed search/page size
-// AirPlay, Qobuz Connect, Spotify Connect and Bluetooth
+// AirPlay, Qobuz Connect, Spotify Connect, Spotify Soloist and Bluetooth
 const APLMETA_CACHE_FILE = '/var/local/www/aplmeta.json';
 const QBZMETA_CACHE_FILE = '/var/local/www/qbzmeta.json';
 const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
+const SOLMETA_CACHE_FILE = '/var/local/www/solmeta.json';
 const BTMETA_CACHE_FILE = '/var/local/www/btmeta.json';
+// Spotify Soloist
+const SOLOIST_BIN = '/usr/local/bin/soloist';
+const SOLOIST_KEY_FILE = '/var/local/www/soloist.key';
+const SOLOIST_DATA_DIR = '/var/local/www/soloist_data';
+const SOLOIST_CACHE_DIR = '/var/local/www/soloist_cache';
+const SOLOIST_RUNTIME_DIR = '/run/soloist';
+const SOLOIST_WS = '127.0.0.1:0'; // Port chosen by the OS, read from <data dir>/ws.port by soloist ctl
+const SOLOIST_BUILD_LIFETIME = 90; // Days
 const ITUNES_API_BASE_URL = 'https://itunes.apple.com/search';
 // SQLite
 const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
@@ -163,6 +174,7 @@ const NAME_BLUETOOTH = 'Bluetooth Controller';
 const NAME_BLUETOOTH_PAIRING_AGENT = 'Pairing Agent';
 const NAME_SPOTIFY = 'Spotify Connect';
 const NAME_QOBUZ = 'Qobuz Connect';
+const NAME_SOLOIST = 'Spotify Soloist';
 const NAME_SQUEEZELITE = 'Squeezelite';
 const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
@@ -243,8 +255,9 @@ const FEAT_BLUETOOTH    = 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS    = 32768;	//   Developer tweaks
 const FEAT_MULTIROOM    = 65536;	// y Multiroom audio
 const FEAT_PEPPYDISPLAY = 131072;	// y Peppy display
+const FEAT_SOLOIST      = 262144;	// y Spotify Soloist renderer
 //						 -------
-//						  228279
+//						  490423
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate
