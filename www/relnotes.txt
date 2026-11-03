@@ -19,10 +19,11 @@ New features
 - NEW:
 
 Updates
-- UPD:
+- UPD: 
 
 Bug fixes
-- FIX:
+- FIX: Renderer overlays appear on Configure pages
+
 
 ################################################################################
 #
