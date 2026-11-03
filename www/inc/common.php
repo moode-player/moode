@@ -365,6 +365,26 @@ function chkRendererActive() {
 	return $active;
 }
 
+// Return the active renderer flag, empty string if none
+// If several flags are set the first one in this order wins, slactive stays set while no LMS answers
+function getActiveRenderer() {
+	$result = sqlQuery("SELECT param, value from cfg_system WHERE param in (
+		'btactive', 'aplactive', 'spotactive', 'qbzactive', 'slactive', 'paactive',
+		'rbactive', 'inpactive')", sqlConnect());
+
+	$flags = array();
+	foreach ($result as $row) {
+		$flags[$row['param']] = $row['value'];
+	}
+	foreach (array('inpactive', 'btactive', 'aplactive', 'spotactive', 'qbzactive', 'rbactive', 'paactive', 'slactive') as $flag) {
+		if (isset($flags[$flag]) && $flags[$flag] == '1') {
+			return $flag;
+		}
+	}
+
+	return '';
+}
+
 // Get Pi revision code information
 function getPiRev($option = '--all') {
 	// Returns a tab delimited string for --all
