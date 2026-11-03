@@ -19,7 +19,7 @@ New features
 - NEW:
 
 Updates
-- UPD: 
+- UPD: Auto-configure Output device on USB audio hot-plug
 
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
