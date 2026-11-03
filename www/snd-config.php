@@ -40,17 +40,8 @@ if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != 
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Device is reserved and cannot be selected for output.';
 	} else {
-		$devCache = checkOutputDeviceCache($deviceName, $cardNum);
 		// Update configuration
-		phpSession('write', 'cardnum', $cardNum);
-		phpSession('write', 'adevname', $deviceName);
-		phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
-	    phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
-		phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
-		phpSession('write', 'alsa_output_mode', $devCache['alsa_output_mode']);
-		sqlUpdate('cfg_mpd', $dbh, 'device', $cardNum);
-		sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
-		phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
+		setOutputDevice($cardNum, $deviceName);
 		$deviceChange = '1';
 		$mixerChange = '0';
 		$queueArgs = $mixerChange . ',' . $mixerChange;

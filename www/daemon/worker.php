@@ -2966,6 +2966,42 @@ function runQueuedJob() {
 		case 'mpdrestart':
 			sysCmd('systemctl restart mpd');
 			break;
+		case 'usb_audio_hotplug':
+			// Queue args: add|remove,cardnum
+			$queueArgs = explode(',', $_SESSION['w_queueargs']);
+			if (chkRendererActive() === true || $_SESSION['multiroom_tx'] == 'On' || $_SESSION['multiroom_rx'] == 'On') {
+				break;
+			}
+			// Previous output devices, most recent last
+			$prevDevices = is_array($_SESSION['usb_audio_prev'] ?? null) ? $_SESSION['usb_audio_prev'] : array();
+			if ($queueArgs[0] == 'add') {
+				$cardNum = $queueArgs[1];
+				if ($cardNum == $_SESSION['cardnum'] || !isUSBDevice($cardNum)) {
+					break;
+				}
+				$deviceName = getAlsaDeviceNames()[$cardNum];
+				$prevDevices = array_values(array_diff($prevDevices, array($deviceName, $_SESSION['adevname'])));
+				$prevDevices[] = $_SESSION['adevname'];
+				$_SESSION['usb_audio_prev'] = array_slice($prevDevices, -8);
+			} else {
+				// Switch back to the most recent previous device still present if the current one was unplugged
+				if (getAlsaCardNumForDevice($_SESSION['adevname']) != ALSA_EMPTY_CARD) {
+					break;
+				}
+				$cardNum = ALSA_EMPTY_CARD;
+				while (!empty($prevDevices) && $cardNum == ALSA_EMPTY_CARD) {
+					$deviceName = array_pop($prevDevices);
+					$cardNum = getAlsaCardNumForDevice($deviceName);
+				}
+				$_SESSION['usb_audio_prev'] = $prevDevices;
+				if ($cardNum == ALSA_EMPTY_CARD) {
+					break;
+				}
+			}
+			workerLog('worker: USB audio hotplug: output device ' . $cardNum . ':' . $deviceName);
+			setOutputDevice($cardNum, $deviceName);
+			$_SESSION['w_queueargs'] = '0,0';
+			// Fall through to mpdcfg
 		case 'mpdcfg':
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');

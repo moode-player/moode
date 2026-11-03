@@ -393,3 +393,17 @@ function checkOutputDeviceCache($deviceName, $cardNum) {
 		'alsa_output_mode' => $alsaOutputMode,
 		'alsa_max_volume' => $alsaMaxVolume,);
 }
+
+function setOutputDevice($cardNum, $deviceName) {
+	$dbh = sqlConnect();
+	$devCache = checkOutputDeviceCache($deviceName, $cardNum);
+	phpSession('write', 'cardnum', $cardNum);
+	phpSession('write', 'adevname', $deviceName);
+	phpSession('write', 'amixname', getAlsaMixerName($_SESSION['adevname']));
+	phpSession('write', 'alsavolume', getAlsaVolume($_SESSION['amixname']));
+	phpSession('write', 'alsavolume_max', $devCache['alsa_max_volume']);
+	phpSession('write', 'alsa_output_mode', $devCache['alsa_output_mode']);
+	sqlUpdate('cfg_mpd', $dbh, 'device', $cardNum);
+	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $devCache['mpd_volume_type']);
+	phpSession('write', 'volknob_mpd', '-1'); // Reset saved MPD volume
+}
