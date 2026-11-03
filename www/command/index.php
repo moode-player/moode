@@ -339,7 +339,7 @@ function parseVolumeArgs($volCmd) {
 // Active source, as named by the REST API
 function getActiveSource() {
 	$sources = array('' => 'mpd', 'inpactive' => 'input', 'btactive' => 'bluetooth',
-		'aplactive' => 'airplay', 'spotactive' => 'spotify', 'qbzactive' => 'qobuz',
+		'aplactive' => 'airplay', 'spotactive' => 'spotify', 'solactive' => 'soloist', 'qbzactive' => 'qobuz',
 		'slactive' => 'squeezelite', 'paactive' => 'plexamp', 'rbactive' => 'roonbridge');
 	return $sources[getActiveRenderer()];
 }
