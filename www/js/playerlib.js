@@ -820,6 +820,11 @@ function inpSrcIndicator(cmd, msgText) {
 	// DEBUG:
 	//console.log('inpSrcIndicator(): ' + cmd + ' | ' + msgText);
 
+	// Exit if on Config screens
+	if (GLOBAL.scriptSection == 'configs') {
+		return;
+	}
+
 	// Reset
 	UI.currentFile = 'blank';
     $('#inpsrc-msg').removeClass('inpsrc-msg-metadata');
