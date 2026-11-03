@@ -3000,7 +3000,7 @@ function runQueuedJob() {
 			}
 			workerLog('worker: USB audio hotplug: output device ' . $cardNum . ':' . $deviceName);
 			setOutputDevice($cardNum, $deviceName);
-			$_SESSION['w_queueargs'] = '0,0';
+			$_SESSION['w_queueargs'] = '1,0'; // $deviceChange,$mixerChange
 			// Fall through to mpdcfg
 		case 'mpdcfg':
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
@@ -3034,14 +3034,13 @@ function runQueuedJob() {
 			} else {
 				closeMpdSock($sock);
 
-				// Output device change (cardnum)
-				if ($deviceChange == '0') {
-					$startPlay = true;
-				} else {
+				$startPlay = true;
+				// Output device change: 0=no change | 1=changed
+				if ($deviceChange == '1') {
 					$startPlay = false;
 					sysCmd('/var/www/util/vol.sh 0');
 				}
-				// Volume type change (MPD mixer_type))
+				// Volume type change: 0=no change | camilladsp | hardware | software | fixed
 				if ($mixerChange != '0') {
 					$startPlay = false;
 					if ($mixerChange == 'camilladsp') {
@@ -3053,10 +3052,7 @@ function runQueuedJob() {
 						}
 						sysCmd('/var/www/util/vol.sh 0');
 					}
-					 // Refresh connected clients
-					//DELETE:sendFECmd('refresh_screen');
 				}
-
 				// Start play if was playing
 				if (!empty($playing) && $startPlay === true) {
 					sysCmd('mpc play');

@@ -44,7 +44,7 @@ if (isset($_POST['update_output_device']) && $_POST['output_device_cardnum'] != 
 		setOutputDevice($cardNum, $deviceName);
 		$deviceChange = '1';
 		$mixerChange = '0';
-		$queueArgs = $mixerChange . ',' . $mixerChange;
+		$queueArgs = $deviceChange . ',' . $mixerChange;
 		submitJob('mpdcfg', $queueArgs);
 	}
 }
