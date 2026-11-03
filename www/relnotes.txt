@@ -11,6 +11,21 @@
 
 ################################################################################
 #
+# 2026-MM-DD moOde 10.3.8 (Trixie)
+#
+################################################################################
+
+New features
+- NEW:
+
+Updates
+- UPD:
+
+Bug fixes
+- FIX:
+
+################################################################################
+#
 # 2026-10-31 moOde 10.3.7 (Trixie)
 #
 ################################################################################
@@ -21,8 +36,8 @@ Packages
 - UPD: Pibuz: 2.7.2-1moode1 (User build/install)
 - UPD: Shairport-sync: 5.6.2-1moode1 (User build/install)
 - UPD: Shairport-sync-metadata-reader: 2.0.1~git20261003.99a5935-1moode1
-- UPD: NGINX: 1.26.3-3+deb13u10
-- UPD: PHP: 8.4.27-1~deb13u1
+- UPD: NGINX: 1.26.3-3+deb13u10 (new image only)
+- UPD: PHP: 8.4.27-1~deb13u1 (new image only)
 
 New features
 - NEW: Renderer plugin .debs included in Backup/Restore
