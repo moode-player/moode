@@ -602,9 +602,12 @@ function setSoloistApiKey($apiKey) {
 	if (!isValidSoloistApiKey($apiKey)) {
 		return false;
 	}
-	file_put_contents(SOLOIST_KEY_FILE, $apiKey . "\n");
-	chmod(SOLOIST_KEY_FILE, 0600);
-	return true;
+	if (false === (file_put_contents(SOLOIST_KEY_FILE, $apiKey . "\n"))) {
+		workerLog('setSoloistApiKey(): file_put_contents failed');
+		return false;
+	} else {
+		return true;
+	}
 }
 function isValidSoloistApiKey($apiKey) {
 	return preg_match('/^[A-Za-z0-9_-]{16,128}$/', $apiKey) === 1;

@@ -1168,6 +1168,9 @@ workerLog('worker: Qobuz Connect:   ' . $status);
 
 // Start Spotify Soloist renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SOLOIST) {
+	sysCmd('touch ' . SOLOIST_KEY_FILE);
+	sysCmd('chown www-data:www-data ' . SOLOIST_KEY_FILE);
+	sysCmd('chmod 0600 ' . SOLOIST_KEY_FILE);
 	if (isset($_SESSION['soloistsvc']) && $_SESSION['soloistsvc'] == 1) {
 		$status = 'started';
 		startSoloist();
