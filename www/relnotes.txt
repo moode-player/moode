@@ -20,10 +20,10 @@ New features
 
 Updates
 - UPD: Auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
+- UPD: Improve REST API: Single endpoint and updated doc (PR834, PR22 @Gjuju)
 
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
-
 
 ################################################################################
 #
