@@ -19,7 +19,8 @@ New features
 - NEW: Spotify Soloist renderer: Lossless 16/24 44.1 (PR837 and related @Gjuju)
 
 Updates
-- UPD: Auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
+- UPD: Add volume curve option to Peppymeter (PR841 @Gjuju)
+- UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
 - UPD: Improve REST API: Single endpoint and updated doc (PR834, PR22 @Gjuju)
 
 Bug fixes
