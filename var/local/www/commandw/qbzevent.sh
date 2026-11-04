@@ -73,16 +73,9 @@ do
 		MATCH=1
 		debug_log "Process: "$QBZ_EVENT
 		if [[ $QBZ_EVENT == "QconnectSessionChanged" ]]; then
-			#debug_log "- Env: QBZ_SESSION_ACTIVE="$QBZ_SESSION_ACTIVE
-			#debug_log "- Env: QBZ_STATE="$QBZ_STATE
-			if [[ $QBZ_SESSION_ACTIVE == 'true' && $QBZ_STATE == 'connected' ]]; then
-				debug_log "- CLIENT CONNECTED"
-			fi
+			debug_log "- Env: QBZ_IS_ACTIVE=$QBZ_IS_ACTIVE QBZ_SESSION_ACTIVE=$QBZ_SESSION_ACTIVE QBZ_STATE=$QBZ_STATE"
 		elif [[ $QBZ_EVENT == "PlaybackStateChanged" ]]; then
 			debug_log "- PLAYSTATE="$QBZ_STATE
-			if [[ $QBZ_STATE == "stopped" ]]; then
-				debug_log "- CLIENT DISCONNECTED"
-			fi
 		elif [[ $QBZ_EVENT == "TrackStarted" ]]; then
 			debug_log "- METADATA RECEIVED"
 			debug_log "- Env: QBZ_TITLE=$QBZ_TITLE"
@@ -119,8 +112,9 @@ if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
-# Connect
-if [[ $QBZ_EVENT == "QconnectSessionChanged" && $QBZ_SESSION_ACTIVE == "true" && $QBZ_STATE == "connected" ]]; then
+# Connect: the player becomes the active render of the Qobuz Connect session
+if [[ $QBZ_EVENT == "QconnectSessionChanged" && $QBZ_IS_ACTIVE == "true" && $QBZACTIVE == "0" ]]; then
+	debug_log "- CLIENT CONNECTED"
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='qbzactive'")
 	/usr/bin/mpc stop > /dev/null
 	# Send to front-end
@@ -149,8 +143,9 @@ if [[ $QBZ_EVENT == "QconnectSessionChanged" && $QBZ_SESSION_ACTIVE == "true" &&
 	fi
 fi
 
-# Disconnect
-if [[ $QBZ_EVENT == "PlaybackStateChanged" &&  $QBZ_STATE == "stopped" ]]; then
+# Disconnect: the player is no longer the active render (app disconnect, other device selected, daemon restart)
+if [[ $QBZ_EVENT == "QconnectSessionChanged" && $QBZ_IS_ACTIVE == "false" && $QBZACTIVE == "1" ]]; then
+	debug_log "- CLIENT DISCONNECTED"
 	# Worker picks this up and sends qbzactive0 to front-end
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='qbzactive'")
 
