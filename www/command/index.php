@@ -151,22 +151,39 @@ switch ($cmd[0]) {
 		echo json_encode(array('info' => 'OK'));
 		break;
 	case 'toggle_play_pause':
+	case 'play':
+	case 'pause':
+		if ($cmd[0] != 'toggle_play_pause' && count($cmd) > 1) {
+			// play SONGPOS, pause 0|1: MPD syntax, relayed as is
+			$sock = getMpdSock('command/index.php');
+			sendMpdCmd($sock, $_GET['cmd']);
+			echo json_encode(parseMpdRespAsJSON(readMpdResp($sock)), JSON_FORCE_OBJECT);
+			break;
+		}
 		if (isControllableRenderer(getActiveSource())) {
-			echo json_encode(rendererTransport($dbh, 'toggle'));
+			echo json_encode(rendererTransport($dbh, $cmd[0] == 'toggle_play_pause' ? 'toggle' : $cmd[0]));
 			break;
 		}
 		$sock = getMpdSock('command/index.php');
 		$status = getMpdStatus($sock);
 		$currentSong = getCurrentSong($sock);
-		if (substr($currentSong['file'], 0, 4) == 'http' && !isset($status['duration'])) {
+		$play = $cmd[0] == 'toggle_play_pause' ? $status['state'] != 'play' : $cmd[0] == 'play';
+		if ($play) {
+			$mpdCmd = 'play';
+		} else if (substr($currentSong['file'], 0, 4) == 'http' && !isset($status['duration'])) {
 			// Radio station
-			$cmd = $status['state'] == 'play' ? 'stop' : 'play';
+			$mpdCmd = 'stop';
 		} else {
 			// Song file
-			$cmd = $status['state'] == 'play' ? 'pause' : 'play';
+			$mpdCmd = 'pause';
 		}
-		sendMpdCmd($sock, $cmd);
-		echo json_encode(array('state' => $cmd));
+		// Already in the requested state: nothing to send
+		if ($play != ($status['state'] == 'play')) {
+			sendMpdCmd($sock, $mpdCmd);
+		} else {
+			$mpdCmd = $status['state'];
+		}
+		echo json_encode(array('state' => $mpdCmd));
 		break;
 	case 'get_cdsp_config':
 		_openSessionReadOnly($dbh);
