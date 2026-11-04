@@ -344,7 +344,7 @@ function getActiveSource() {
 	return $sources[getActiveRenderer()];
 }
 function isControllableRenderer($source) {
-	return in_array($source, array('bluetooth', 'airplay', 'qobuz', 'squeezelite'));
+	return in_array($source, array('bluetooth', 'airplay', 'qobuz', 'squeezelite', 'soloist'));
 }
 function getSourceLabel($source) {
 	$labels = array('airplay' => 'AirPlay', 'roonbridge' => 'RoonBridge');
