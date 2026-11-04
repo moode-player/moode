@@ -16,7 +16,7 @@
 ################################################################################
 
 New features
-- NEW:
+- NEW: Spotify Soloist renderer: Lossless 16/24 44.1 (PR837 and related @Gjuju)
 
 Updates
 - UPD: Auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
