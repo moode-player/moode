@@ -9,7 +9,7 @@
 #
 # Usage: renderer_ctl.py <renderer> <command> [N]
 #   renderer: qobuz | bluetooth | airplay | squeezelite | soloist
-#   command:  get | set N | up N | dn N | mute | toggle | previous | next
+#   command:  get | set N | up N | dn N | mute | toggle | play | pause | previous | next
 #
 
 import json
@@ -195,7 +195,7 @@ class AirPlay(Renderer):
 	MPRIS_PLAYER = 'org.mpris.MediaPlayer2.Player'
 	SPS_NAME = 'org.gnome.ShairportSync'
 	SPS_PATH = '/org/gnome/ShairportSync'
-	VERBS = {'toggle': 'PlayPause', 'next': 'Next', 'previous': 'Previous'}
+	VERBS = {'toggle': 'PlayPause', 'play': 'Play', 'pause': 'Pause', 'next': 'Next', 'previous': 'Previous'}
 	can_mute = False
 
 	def active(self):
@@ -228,7 +228,7 @@ class AirPlay(Renderer):
 class Squeezelite(Renderer):
 	SLIMPROTO_PORT = 3483
 	HTTP_PORT = 9000
-	VERBS = {'toggle': ['pause'], 'next': ['playlist', 'index', '+1'], 'previous': ['playlist', 'index', '-1']}
+	VERBS = {'toggle': ['pause'], 'play': ['pause', '0'], 'pause': ['pause', '1'], 'next': ['playlist', 'index', '+1'], 'previous': ['playlist', 'index', '-1']}
 
 	def __init__(self):
 		self.host = None
@@ -309,7 +309,7 @@ class Squeezelite(Renderer):
 # Spotify Soloist: soloist ctl, volume 0-100, no mute
 class Soloist(Renderer):
 	CTL = ['/usr/local/bin/soloist', 'ctl', '-D', '/var/local/www/soloist_data']
-	VERBS = {'next': ('next', 'skip_next'), 'previous': ('prev', 'skip_prev')}
+	VERBS = {'play': ('play', 'play'), 'pause': ('pause', 'pause'), 'next': ('next', 'skip_next'), 'previous': ('prev', 'skip_prev')}
 	can_mute = False
 
 	def ctl(self, *args):
@@ -357,11 +357,11 @@ class Soloist(Renderer):
 			self.ctl(command)
 
 RENDERERS = {'qobuz': Qobuz, 'bluetooth': Bluetooth, 'airplay': AirPlay, 'squeezelite': Squeezelite, 'soloist': Soloist}
-TRANSPORT = ('toggle', 'previous', 'next')
+TRANSPORT = ('toggle', 'play', 'pause', 'previous', 'next')
 
 def main(argv):
 	if len(argv) < 3 or argv[1] not in RENDERERS:
-		print(json.dumps({'error': 'Usage: renderer_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|previous|next'}))
+		print(json.dumps({'error': 'Usage: renderer_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|play|pause|previous|next'}))
 		return 1
 	command = argv[2]
 	amount = None
