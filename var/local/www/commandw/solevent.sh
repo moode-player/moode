@@ -14,7 +14,6 @@ SOLMETA_CACHE_FILE="/var/local/www/solmeta.json"
 SQLDB=/var/local/www/db/moode-sqlite3.db
 # Soloist data dir, passed by startSoloist() (ctl reads the WebSocket port there)
 SOLOIST_CTL="/usr/local/bin/soloist ctl -D $1"
-SFORMAT="Spotify"
 
 debug_log () {
 	if [[ $DEBUG == '0' ]]; then
@@ -138,6 +137,7 @@ send_meta () {
 		debug_log "- Update cache: skipped (no track)"
 		return 0
 	fi
+	SFORMAT="FLAC 16/24 44.1 kHz 2ch"
 	OFORMAT=$(/var/www/util/get-oformat.php)
 	METADATA_JSON=$(jq -n -c \
 		--arg a "update_solmeta" \
