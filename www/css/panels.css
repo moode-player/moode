@@ -297,7 +297,7 @@ body.rmwide #renderer-oformat.ss-npicon:before {
 	display:inline-block;
 	text-align:center;
 }
-.dashboard-red-menu-icon {
+.dashboard-red-icon {
 	color:rgba(228,46,46,.75);
 }
 #panel-header a:hover,

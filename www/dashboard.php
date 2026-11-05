@@ -46,14 +46,14 @@ $playersArray = getDashboardCache();
 // Output for ul
 $_players = '';
 $playerBadges = array(
-	'offline' => '<i class="dashboard-badge dashboard-red-menu-icon fa-regular fa-sharp fa-diamond-exclamation"></i>',
+	'sender' => '<i class="dashboard-badge fa-solid fa-sharp fa-play"></i>',
 	'receiver' => '<i class="dashboard-badge fa-solid fa-sharp fa-speaker"></i>',
-	'sender' => '<i class="dashboard-badge fa-solid fa-sharp fa-play"></i>'
+	'offline' => '<i class="dashboard-badge dashboard-red-icon fa-regular fa-sharp fa-diamond-exclamation"></i>'
 );
 $i = 0;
 foreach ($playersArray as $player) {
 	$playerBadge = $playerBadges[$player['badge']] ?? '';
-	if ($player['host'] == $thisHost) {
+	if ($player['host'] == $thisHost || $player['badge'] == 'offline') {
 		$_players .= sprintf(
 			'<li><a href="#notarget" class="btn btn-large target-blank-link disabled" ' .
 			'data-host="%s" data-ipaddr="%s" target="_blank" onclick="return false;">' .
