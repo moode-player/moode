@@ -2736,6 +2736,8 @@ function updExtMetaFile() {
 				$data .= 'track=' . $current['track'] . "\n";
 				$data .= 'date=' . $current['date'] . "\n";
 				$data .= 'composer=' . $current['composer'] . "\n";
+				$data .= 'genre=' . $current['genre'] . "\n";
+				$data .= 'performer=' . $current['performer'] . "\n";
 				// Other
 				$data .= 'encoded=' . $current['encoded'] . "\n";
 				$data .= 'bitrate=' . $current['bitrate'] . "\n";
