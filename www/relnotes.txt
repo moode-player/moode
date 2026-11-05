@@ -19,6 +19,7 @@ New features
 - NEW: Spotify Soloist renderer: Lossless 16/24 44.1 (PR837 and related @Gjuju)
 
 Packages
+- UPD: Linux-image: 1:6.18.60-1+rpt1
 - UPD: peppy-meter: 2026.11.04-1moode1
 
 Updates
