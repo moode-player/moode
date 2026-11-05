@@ -371,7 +371,11 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_QOBUZ)) -ne 0 ]; then
-		QBZVER="$(pibuz --version | awk -F" " '{print $2}')"
+		if [ -f /usr/local/bin/pibuz ]; then
+			QBZVER="$(pibuz --version | awk -F" " '{print $2}')"
+		else
+			QBZVER="Pibuz is not installed"
+		fi
 		echo -e "Q O B U Z   C O N N E C T"
 		echo -e "\nVersion\t\t\t= $QBZVER\c"
 		echo -e "\nFriendly name\t\t= $qobuzname\c"
