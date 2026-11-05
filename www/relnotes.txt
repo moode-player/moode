@@ -26,6 +26,7 @@ Updates
 - UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
 - UPD: Add REST API play and pause commands (PR842 @Gjuju)
 - UPD: Improve REST API: Single endpoint, updated doc (PR834, PR22 @Gjuju)
+- UPD: Improve Dashboard: Disable player tile if offline
 
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
