@@ -3442,6 +3442,13 @@ function runQueuedJob() {
 				startSoloist();
 			}
 			break;
+		case 'soloist_clear_cache':
+			stopSoloist();
+			sysCmd('rm -rf ' . SOLOIST_CACHE_DIR . '/cache');
+			if ($_SESSION['soloistsvc'] == 1) {
+				startSoloist();
+			}
+			break;
 		case 'install_airplay':
 		case 'install_spotify':
 		case 'install_qobuz':

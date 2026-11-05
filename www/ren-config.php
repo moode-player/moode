@@ -147,6 +147,10 @@ if (isset($_POST['soloistrestart']) && $_POST['soloistrestart'] == 1 && $_SESSIO
 if (isset($_POST['soloist_clear_credentials']) && $_POST['soloist_clear_credentials'] == 1) {
 	submitJob('soloist_clear_credentials', '', NOTIFY_TITLE_INFO, 'Stored session cleared');
 }
+if (isset($_POST['soloist_clear_cache']) && $_POST['soloist_clear_cache'] == 1) {
+	submitJob('soloist_clear_cache', '', NOTIFY_TITLE_INFO, 'Cache cleared');
+	$_soloist_cache_size = '0';
+}
 
 // Qobuz Connect
 if (isset($_POST['install_qobuz'])) {
@@ -387,6 +391,11 @@ $_select['soloistname'] = $_SESSION['soloistname'];
 $autoClick = " onchange=\"autoClick('#btn-set-rsmaftersol');\" " . $_soloist_btn_disable;
 $_select['rsmaftersol_on'] .= "<input type=\"radio\" name=\"rsmaftersol\" id=\"toggle-rsmaftersol-1\" value=\"Yes\" " . (($_SESSION['rsmaftersol'] == 'Yes') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['rsmaftersol_off']  .= "<input type=\"radio\" name=\"rsmaftersol\" id=\"toggle-rsmaftersol-2\" value=\"No\" " . (($_SESSION['rsmaftersol'] == 'No') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+if (file_exists(SOLOIST_CACHE_DIR . '/cache')) {
+	$_soloist_cache_size = explode("\t", sysCmd('du -sh ' . SOLOIST_CACHE_DIR . '/cache')[0])[0];
+} else {
+	$_soloist_cache_size = '0';
+}
 
 // Qobuz Connect
 $_feat_qobuz = $_SESSION['feat_bitmask'] & FEAT_QOBUZ ? '' : 'hide';
