@@ -452,7 +452,6 @@ function autoConfigSettings() {
 			phpSession('write', 'spotifysvc', $value);
 		}],
 		['requires' => ['rsmafterspot'], 'handler' => 'setSessVarSql'],
-		['requires' => ['qobuzsvc'], 'handler' => 'setSessVarSql'],
 		['requires' => ['qobuzsvc'], 'handler' => function($values) {
 			$value = isQobuzInstalled() === true ? $values['qobuzsvc'] : '0';
 			phpSession('write', 'qobuzsvc', $value);
