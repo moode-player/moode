@@ -232,6 +232,9 @@ const CFG_PITOUCH_INVERTXY = 'vc4-kms-dsi-7inch,invx,invy';
 const CFG_EXTERNAL_ANTENNA = 'dtparam=ant2';
 // Boot cmdline.txt managed params
 const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
+// With the vc4-kms-v3d driver the firmware passes snd_bcm2835.enable_headphones=0, which
+// hides the Pi Headphone jack. This later value on the command line overrides it.
+const CFG_PI_HEADPHONES_ENABLE = 'snd_bcm2835.enable_headphones=1';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
