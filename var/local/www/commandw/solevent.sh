@@ -137,7 +137,7 @@ send_meta () {
 		debug_log "- Update cache: skipped (no track)"
 		return 0
 	fi
-	SFORMAT="FLAC 16/24 44.1 kHz 2ch"
+	SFORMAT="Source format is not available yet for Soloist"
 	OFORMAT=$(/var/www/util/get-oformat.php)
 	METADATA_JSON=$(jq -n -c \
 		--arg a "update_solmeta" \
