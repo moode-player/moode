@@ -3719,7 +3719,8 @@ function runQueuedJob() {
 			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' tmp.mount');
 			break;
 		case 'bootsplash':
-			sysCmd('/var/www/util/bootsplash.sh ' . ($_SESSION['w_queueargs'] == 'on' ? 'on' : 'off'));
+			// In the background: the first 'on' installs the plymouth package (can take minutes)
+			sysCmd('/var/www/util/bootsplash.sh ' . ($_SESSION['w_queueargs'] == 'on' ? 'on' : 'off') . ' > /dev/null 2>&1 &');
 			break;
 		// HTTPS mode
 		case 'nginx_https_only':

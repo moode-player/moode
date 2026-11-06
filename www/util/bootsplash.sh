@@ -5,7 +5,9 @@
 #
 # Boot splash (Plymouth): moOde logotype with pulsing dots on boot, reboot and shutdown,
 # shown until moOde is ready (or the local display takes over the screen).
-# Requires the plymouth package. Changes take effect after a restart.
+# The plymouth package is installed on first use (internet needed). Changes take effect
+# after a restart. Progress/result for System Config: $STATUS (installing, on, off,
+# failed).
 #
 # Usage: bootsplash.sh on|off|status
 #
@@ -19,6 +21,7 @@ CONFIG=/boot/firmware/config.txt
 ADDED=/var/local/www/bootsplash-cmdline
 PLYMOUTHD_CONF=/etc/plymouth/plymouthd.conf
 TMPFILES=/etc/tmpfiles.d/moode-bootsplash.conf
+STATUS=/var/local/www/bootsplash-status
 PARAMS=(quiet splash plymouth.ignore-serial-consoles logo.nologo vt.global_cursor_default=0 loglevel=3 systemd.show_status=false rd.udev.log_level=3)
 
 log() { echo "$(date +'%Y%m%d %H%M%S') bootsplash: $1" >> /var/log/moode.log; }
@@ -37,8 +40,15 @@ remove_word() { awk -v w="$2" '{ out=""; for (i = 1; i <= NF; i++) if ($i != w) 
 
 on() {
 	if ! command -v plymouth-set-default-theme >/dev/null; then
-		log "plymouth is not installed"
-		exit 1
+		echo installing > "$STATUS"
+		log "installing the plymouth package"
+		if ! { timeout 600 apt-get update -qq &&
+			DEBIAN_FRONTEND=noninteractive timeout 600 apt-get install -y -qq --no-install-recommends plymouth; } \
+			>> /var/log/moode.log 2>&1; then
+			echo failed > "$STATUS"
+			log "plymouth installation failed (no internet connection?)"
+			exit 1
+		fi
 	fi
 	cp "$LOGO" "$THEME_DIR/logo.png"
 	plymouth-set-default-theme moode
@@ -89,6 +99,7 @@ ExecStartPre=-+/usr/bin/plymouth $quit_args"
 	echo 'f /run/bootsplash-active 0644 root root -' > "$TMPFILES"
 	systemctl daemon-reload
 	systemctl enable bootsplash-quit.service
+	echo on > "$STATUS"
 	log "on"
 }
 
@@ -116,12 +127,13 @@ off() {
 	if command -v plymouth-set-default-theme >/dev/null && [[ "$(plymouth-set-default-theme)" == moode ]]; then
 		plymouth-set-default-theme --reset
 	fi
+	echo off > "$STATUS"
 	log "off"
 }
 
 case "$1" in
 	on) on ;;
 	off) off ;;
-	status) [[ -f $ADDED ]] && echo on || echo off ;;
+	status) cat "$STATUS" 2>/dev/null || echo off ;;
 	*) echo "Usage: $0 on|off|status"; exit 1 ;;
 esac
