@@ -379,7 +379,17 @@ function getVolumeState($dbh, $rendererCmd = 'get') {
 	if (isControllableRenderer($source)) {
 		$state = array('volume' => null, 'muted' => 'no', 'source' => $source, 'scope' => 'source',
 			'can_volume' => false, 'can_mute' => false, 'can_transport' => false);
-		$result = json_decode(sysCmd('/var/www/util/renderer_ctl.py ' . $source . ' ' . $rendererCmd)[0], true);
+		$result = null;
+		if ($rendererCmd == 'get') {
+			// Kept up to date by renderer_ctl.py watch while MQTT is on
+			$watched = json_decode((string)@file_get_contents(RENDVOL_CACHE_FILE), true);
+			if (is_array($watched) && isset($watched['source']) && $watched['source'] == $source) {
+				$result = $watched;
+			}
+		}
+		if ($result === null) {
+			$result = json_decode(sysCmd('/var/www/util/renderer_ctl.py ' . $source . ' ' . $rendererCmd)[0], true);
+		}
 		if (is_array($result) && !isset($result['error'])) {
 			$state = array_merge($state, $result);
 		}

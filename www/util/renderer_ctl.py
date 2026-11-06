@@ -10,14 +10,23 @@
 # Usage: renderer_ctl.py <renderer> <command> [N]
 #   renderer: qobuz | bluetooth | airplay | squeezelite | soloist
 #   command:  get | set N | up N | dn N | mute | toggle | play | pause | stop | previous | next
+#             watch: keep RENDVOL_FILE up to date until stopped (started by the worker)
 #
 
 import json
+import os
+import select
+import signal
+import socket
 import subprocess
 import sys
+import time
 
 DBUS_PROPS = 'org.freedesktop.DBus.Properties'
 DBUS_OBJMGR = 'org.freedesktop.DBus.ObjectManager'
+RENDVOL_FILE = '/var/local/www/rendvol.json'
+# watch: re-read at least this often, in case an event is missed or the renderer has none for a change
+WATCH_FALLBACK = 5
 
 def dbus_props_all(service, path, interface):
 	import dbus
@@ -73,15 +82,70 @@ def http_request(url, body=None, method='POST', timeout=5):
 def clamp(level):
 	return max(0, min(100, level))
 
+def follow(cmd, on_line, publish):
+	# Run an event stream command, call on_line per line, publish() when it stays quiet. Restarted when it ends
+	signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit(0))
+	while True:
+		proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, bufsize=1)
+		try:
+			while True:
+				if not select.select([proc.stdout], [], [], WATCH_FALLBACK)[0]:
+					publish()
+					continue
+				line = proc.stdout.readline()
+				if not line:
+					break
+				on_line(line)
+		finally:
+			proc.terminate()
+			proc.wait()
+		publish()
+		time.sleep(1)
+
+def dbus_follow(services, keys, publish):
+	# Publish on a PropertiesChanged signal carrying one of keys, and every WATCH_FALLBACK seconds
+	import dbus
+	from gi.repository import GLib
+	def changed(interface, props, invalidated):
+		if any(key in props for key in keys):
+			publish()
+	for service in services:
+		dbus.SystemBus().add_signal_receiver(changed, signal_name='PropertiesChanged', dbus_interface=DBUS_PROPS, bus_name=service)
+	GLib.timeout_add_seconds(WATCH_FALLBACK, lambda: publish() or True)
+	publish()
+	GLib.MainLoop().run()
+
+def write_json(path, data):
+	# Replaced in one step: a reader never sees a partial file
+	tmp = path + '.tmp'
+	with open(tmp, 'w') as fh:
+		fh.write(json.dumps(data))
+	os.chmod(tmp, 0o644)
+	os.replace(tmp, path)
+
 class Renderer:
 	"""volume_state() returns (level 0-100, muted) or None"""
 	can_mute = True
+	meta_file = None
 
 	def volume_state(self):
 		return None
 
 	def can_transport(self):
 		return False
+
+	def play_state(self):
+		"""play | pause | stop, or None"""
+		return None
+
+	def metadata(self):
+		return None
+
+	def watch(self, publish):
+		# Renderers without events are re-read
+		while True:
+			publish()
+			time.sleep(WATCH_FALLBACK)
 
 	def state(self, level=None, muted=None):
 		vol = self.volume_state()
@@ -94,7 +158,8 @@ class Renderer:
 			'muted': 'yes' if vol is not None and vol[1] else 'no',
 			'can_volume': vol is not None,
 			'can_mute': vol is not None and self.can_mute,
-			'can_transport': self.can_transport()
+			'can_transport': self.can_transport(),
+			'state': self.play_state()
 		}
 
 # Qobuz Connect (pibuz HTTP API, 0.0-1.0)
@@ -115,6 +180,19 @@ class Qobuz(Renderer):
 	def can_transport(self):
 		# Read by volume_state(), called first in state()
 		return self.status is not None
+
+	def play_state(self):
+		if self.status is None:
+			return None
+		return 'play' if ((self.status.get('playback') or {}).get('is_playing')) else 'pause'
+
+	def watch(self, publish):
+		# qbzevent.sh sends SIGUSR1 on a pibuz VolumeChanged or PlaybackStateChanged event
+		signal.signal(signal.SIGUSR1, lambda signum, frame: None)
+		signal.pthread_sigmask(signal.SIG_BLOCK, [signal.SIGUSR1])
+		while True:
+			publish()
+			signal.sigtimedwait([signal.SIGUSR1], WATCH_FALLBACK)
 
 	def set(self, level):
 		self.request('/api/playback/volume', {'volume': clamp(level) / 100.0})
@@ -168,6 +246,22 @@ class Bluetooth(Renderer):
 	def can_transport(self):
 		return self.player is not None
 
+	def play_state(self):
+		if self.player is None:
+			return None
+		status = str(dbus_props_all(self.BLUEZ, self.player, self.BLUEZ_PLAYER).get('Status') or '')
+		return {'paused': 'pause', 'stopped': 'stop'}.get(status, 'play' if status else None)
+
+	def watch(self, publish):
+		def read():
+			# The PCM appears once the A2DP stream is set up
+			if self.pcm is None:
+				self.pcm = dbus_find(self.BLUEALSA, self.BLUEALSA_PCM, '/org/bluealsa')
+			if self.player is None:
+				self.player = dbus_find(self.BLUEZ, self.BLUEZ_PLAYER)
+			publish()
+		dbus_follow((self.BLUEALSA, self.BLUEZ), ('Volume', 'Status'), read)
+
 	def set(self, level):
 		raw = self.raw_volume()
 		if raw is not None:
@@ -216,6 +310,14 @@ class AirPlay(Renderer):
 	def can_transport(self):
 		return self.active()
 
+	def play_state(self):
+		# Playing is also reported while a sender pauses (measured with OwnTone): only trust the other two
+		status = str(dbus_props_all(self.MPRIS_NAME, self.MPRIS_PATH, self.MPRIS_PLAYER).get('PlaybackStatus') or '')
+		return {'Paused': 'pause', 'Stopped': 'stop'}.get(status)
+
+	def watch(self, publish):
+		dbus_follow((self.SPS_NAME, self.MPRIS_NAME), ('Volume', 'Active', 'PlaybackStatus'), publish)
+
 	def set(self, level):
 		import dbus
 		dbus_call(self.MPRIS_NAME, self.MPRIS_PATH, self.MPRIS_PLAYER, 'SetVolume', dbus.Double(clamp(level) / 100.0))
@@ -234,9 +336,20 @@ class AirPlay(Renderer):
 class Squeezelite(Renderer):
 	SLIMPROTO_PORT = 3483
 	HTTP_PORT = 9000
+	CLI_PORT = 9090
 	VERBS = {'toggle': ['pause'], 'play': ['pause', '0'], 'pause': ['pause', '1'], 'stop': ['stop'], 'next': ['playlist', 'index', '+1'], 'previous': ['playlist', 'index', '-1']}
+	# Track tags for the metadata, read with the volume in the same request
+	STATUS_TAGS = 'tags:algdKroTI'
+	CODECS = {'flc': 'FLAC', 'alc': 'ALAC', 'ops': 'Opus', 'aif': 'AIFF', 'mp3': 'MP3', 'aac': 'AAC',
+		'ogg': 'Ogg', 'wav': 'WAV', 'wma': 'WMA', 'pcm': 'PCM', 'dsf': 'DSD', 'dff': 'DSD'}
+	PLACEHOLDERS = ('No Artist', 'No Album', 'No Genre')
+	meta_file = '/var/local/www/slmeta.json'
 
 	def __init__(self):
+		self.status = {}
+		self.resolve()
+
+	def resolve(self):
 		self.host = None
 		self.player = None
 		found = self.endpoint()
@@ -280,7 +393,8 @@ class Squeezelite(Renderer):
 		return None if result is None else result.get('result')
 
 	def volume_state(self):
-		status = (self.request(['status', '-', 1], self.player) if self.player else None) or {}
+		status = (self.request(['status', '-', 1, self.STATUS_TAGS], self.player) if self.player else None) or {}
+		self.status = status
 		if 'mixer volume' not in status:
 			return None
 		try:
@@ -291,6 +405,60 @@ class Squeezelite(Renderer):
 
 	def can_transport(self):
 		return self.player is not None
+
+	def play_state(self):
+		# Read by volume_state(), called first in state()
+		return self.status.get('mode') if self.status.get('mode') in ('play', 'pause', 'stop') else None
+
+	def metadata(self):
+		# Read by volume_state(), called first in state(). A stream carries its tags in remoteMeta
+		entry = (self.status.get('playlist_loop') or [{}])[0]
+		track = dict(entry, **{k: v for k, v in (self.status.get('remoteMeta') or {}).items() if v})
+		if not track:
+			return None
+		def text(key):
+			value = str(track.get(key, '')).strip()
+			return '' if value in self.PLACEHOLDERS else value
+		raw_type = text('type')
+		codec = self.CODECS.get(raw_type.lower(), raw_type)
+		try:
+			sformat = '%s %d/%g kHz' % (codec, int(track['samplesize']), int(track['samplerate']) / 1000.0)
+		except (KeyError, TypeError, ValueError):
+			sformat = codec
+		cover = text('artwork_url')
+		if cover and not cover.startswith(('http://', 'https://')):
+			cover = 'http://%s:%d/%s' % (self.host, self.HTTP_PORT, cover.lstrip('/'))
+		try:
+			duration = str(round(float(track.get('duration') or 0)))
+		except (TypeError, ValueError):
+			duration = '0'
+		return {'title': text('title'), 'artist': text('artist'), 'album': text('album'), 'genre': text('genre'),
+			'duration': duration, 'cover_url': cover, 'sformat': sformat, 'oformat': ''}
+
+	def watch(self, publish):
+		# LMS CLI notifications for this player, re-read when quiet or after a reconnect
+		while True:
+			if self.player is None:
+				# Squeezelite reconnects to its server on its own, possibly another one
+				self.resolve()
+			publish()
+			if self.player is None:
+				time.sleep(WATCH_FALLBACK)
+				continue
+			try:
+				with socket.create_connection((self.host, self.CLI_PORT), timeout=5) as sock:
+					sock.sendall(b'subscribe mixer,play,pause,stop,playlist,client\n')
+					while True:
+						if not select.select([sock], [], [], WATCH_FALLBACK)[0]:
+							publish()
+							continue
+						if not sock.recv(4096):
+							break
+						publish()
+			except OSError:
+				pass
+			self.player = None
+			time.sleep(1)
 
 	def mixer(self, *args):
 		if self.player:
@@ -319,6 +487,9 @@ class Soloist(Renderer):
 	VERBS = {'play': ('play', 'play'), 'pause': ('pause', 'pause'), 'stop': ('pause', 'pause'), 'next': ('next', 'skip_next'), 'previous': ('prev', 'skip_prev')}
 	can_mute = False
 
+	def __init__(self):
+		self.trace = None
+
 	def ctl(self, *args):
 		try:
 			result = subprocess.run(self.CTL + list(args), capture_output=True, text=True, timeout=5)
@@ -328,12 +499,33 @@ class Soloist(Renderer):
 
 	def read(self):
 		# now reports the last session while inactive, is_active tells them apart
-		try:
-			now = json.loads(self.ctl('now', '--json') or '{}')
-		except ValueError:
-			now = {}
+		if self.trace is not None:
+			now = self.trace
+		else:
+			try:
+				now = json.loads(self.ctl('now', '--json') or '{}')
+			except ValueError:
+				now = {}
 		self.now = now if now.get('is_active') is True else None
 		return self.now
+
+	def watch(self, publish):
+		# State read once, then kept from the event stream (volume_changed...) instead of a ctl call per read
+		try:
+			self.trace = json.loads(self.ctl('now', '--json') or '{}')
+		except ValueError:
+			self.trace = {}
+		def on_line(line):
+			# '<epoch_ms> <json>'
+			try:
+				event = json.loads(line.split(' ', 1)[1])
+			except (IndexError, ValueError):
+				return
+			if event.get('type') == 'position_sync':
+				return
+			self.trace.update({k: event[k] for k in ('is_active', 'volume', 'status', 'available_actions') if k in event})
+			publish()
+		follow(self.CTL + ['trace'], on_line, publish)
 
 	def volume_state(self):
 		if self.read() is None or self.now.get('volume') is None:
@@ -343,6 +535,11 @@ class Soloist(Renderer):
 	def can_transport(self):
 		# Read by volume_state(), called first in state()
 		return self.now is not None
+
+	def play_state(self):
+		if self.now is None:
+			return None
+		return {'playing': 'play', 'buffering': 'play', 'paused': 'pause', 'idle': 'stop'}.get(self.now.get('status'))
 
 	def set(self, level):
 		if self.read() is not None and self.ctl('volume', str(clamp(level))) is not None:
@@ -366,11 +563,32 @@ class Soloist(Renderer):
 RENDERERS = {'qobuz': Qobuz, 'bluetooth': Bluetooth, 'airplay': AirPlay, 'squeezelite': Squeezelite, 'soloist': Soloist}
 TRANSPORT = ('toggle', 'play', 'pause', 'stop', 'previous', 'next')
 
+def watch(name):
+	# Before the first bus connection, so D-Bus signals reach the GLib main loop
+	import dbus.mainloop.glib
+	dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+	renderer = RENDERERS[name]()
+	last = {'state': None, 'meta': None}
+	def publish():
+		state = renderer.state()
+		state['source'] = name
+		if state != last['state']:
+			write_json(RENDVOL_FILE, state)
+			last['state'] = state
+		meta = renderer.metadata()
+		if renderer.meta_file and meta is not None and meta != last['meta']:
+			write_json(renderer.meta_file, meta)
+			last['meta'] = meta
+	renderer.watch(publish)
+	return 0
+
 def main(argv):
 	if len(argv) < 3 or argv[1] not in RENDERERS:
-		print(json.dumps({'error': 'Usage: renderer_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|play|pause|stop|previous|next'}))
+		print(json.dumps({'error': 'Usage: renderer_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|play|pause|stop|previous|next|watch'}))
 		return 1
 	command = argv[2]
+	if command == 'watch':
+		return watch(argv[1])
 	amount = None
 	if command in ('set', 'up', 'dn'):
 		if len(argv) < 4 or not argv[3].isdigit():
@@ -395,11 +613,13 @@ def main(argv):
 		played = renderer.transport(command)
 
 	state = renderer.state(level, muted)
-	if command == 'toggle':
-		# play | pause where the renderer reports it, toggle otherwise
-		state['state'] = played or 'toggle'
+	if command in TRANSPORT:
+		# The command's result: play | pause where the renderer reports it on toggle, else the command
+		state['state'] = played or command
 	print(json.dumps(state))
 	return 0
 
 if __name__ == '__main__':
+	# A wake-up signal (watch mode) must not end the process before watch() handles it
+	signal.signal(signal.SIGUSR1, signal.SIG_IGN)
 	sys.exit(main(sys.argv))
