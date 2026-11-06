@@ -65,6 +65,7 @@ def publish(cover_url):
 		'title': track['title'],
 		'artist': track['artist'],
 		'album': track['album'],
+		'genre': track['genre'],
 		'duration': track['duration'],
 		'cover_url': cover_url,
 		'sformat': source_format(),
@@ -126,6 +127,7 @@ def on_track(avrcp):
 		'title': str(avrcp.get('Title', '')),
 		'artist': str(avrcp.get('Artist', '')),
 		'album': str(avrcp.get('Album', '')),
+		'genre': str(avrcp.get('Genre', '')),
 		'duration': str(int(avrcp.get('Duration', 0)))
 	}
 	if track is not None and all(track[k] == new[k] for k in ('title', 'artist', 'album')):
