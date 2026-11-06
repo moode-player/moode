@@ -9,7 +9,9 @@ set_include_path('/var/www/inc');
 error_reporting(E_ERROR);
 
 // Time zone
-$timeZone = sysCmd("timedatectl | awk -F' ' '/Time zone/{print $3}'")[0];
+$timeZone = (string)readlink('/etc/localtime');
+$timeZone = strpos($timeZone, 'zoneinfo/') !== false ? substr($timeZone, strpos($timeZone, 'zoneinfo/') + 9) :
+	sysCmd("timedatectl | awk -F' ' '/Time zone/{print $3}'")[0];
 date_default_timezone_set($timeZone);
 
 // Constants
