@@ -5,7 +5,8 @@
 # Background: moOde's Default theme color; dot.png in the Carrot accent color.
 # logo.png is copied from /var/www/images/moode-logotype.png by util/bootsplash.sh.
 #
-# Shows the moOde logotype centred, with three pulsing dots underneath.
+# Shows the moOde logotype centred with the "Enjoy the Music!" tagline and three
+# pulsing dots underneath.
 # Used for boot, reboot and shutdown.
 
 bg_r = 0.125;
@@ -34,13 +35,24 @@ logo.sprite.SetPosition(logo.x, logo.y, 1);
 # Display) an opacity fade from 0 never got redrawn and the logo stayed invisible.
 logo.sprite.SetOpacity(1);
 
-# Three dots below the logo
+# Tagline under the wordmark, at the logo's scale; centred on the letters (the
+# logotype's ™ makes the image itself a bit wider on the right)
+tag.image = Image("tagline.png");
+tag.scale = logo.image.GetWidth() / logo.w;
+tag.image = tag.image.Scale(tag.image.GetWidth() * tag.scale, tag.image.GetHeight() * tag.scale);
+tag.sprite = Sprite(tag.image);
+tag.x = logo.x + logo.image.GetWidth() * 0.485 - tag.image.GetWidth() / 2;
+tag.y = logo.y + logo.image.GetHeight() * 1.12;
+tag.sprite.SetPosition(tag.x, tag.y, 1);
+tag.sprite.SetOpacity(1);
+
+# Three dots below the tagline
 dot.image = Image("dot.png");
 dot.size = Math.Int(screen_h / 60);
 if (dot.size < 8) dot.size = 8;
 dot.image = dot.image.Scale(dot.size, dot.size);
 dot.gap = dot.size * 1.6;
-dots.y = logo.y + logo.image.GetHeight() + screen_h * 0.06;
+dots.y = tag.y + tag.image.GetHeight() + screen_h * 0.06;
 for (i = 0; i < 3; i++) {
 	dots[i] = Sprite(dot.image);
 	dots[i].SetPosition(Window.GetX() + screen_w / 2 + (i - 1) * dot.gap - dot.size / 2, dots.y, 2);
