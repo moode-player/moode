@@ -386,7 +386,7 @@ function getVolumeState($dbh, $rendererCmd = 'get') {
 		return $state;
 	}
 
-	$volume = sysCmd('/var/www/util/vol.sh')[0];
+	$volume = sqlQuery("SELECT value FROM cfg_system WHERE param='volknob'", $dbh)[0]['value'];
 	$mute = sqlQuery("SELECT value FROM cfg_system WHERE param='volmute'", $dbh)[0]['value'];
 	$state = array('volume' => $volume, 'muted' => ($mute == '0' ? 'no' : 'yes'), 'source' => $source);
 
