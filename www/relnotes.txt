@@ -16,7 +16,7 @@
 ################################################################################
 
 New features
-- NEW: Spotify Soloist renderer: Lossless 16/24 44.1 (PR837 and related @Gjuju)
+- NEW: Spotify Soloist renderer: Lossless to 24/44.1 (PR837 and related @Gjuju)
 
 Packages
 - UPD: Linux-image: 1:6.18.60-1+rpt1
@@ -32,6 +32,7 @@ Updates
 
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
+- FIX: System info reports error message for Qobuz Connect if not installed
 
 ################################################################################
 #
