@@ -243,7 +243,8 @@ function sysCmdStr($cmd) {
 }
 
 function sqlQuery($queryStr) {
-	return shell_exec('LC_ALL=C sqlite3 ' . SQLDB_PATH . " \"" . $queryStr . "\"");
+	// Wait up to 5 s for a lock held by another process instead of failing with "database is locked"
+	return shell_exec('LC_ALL=C sqlite3 -cmd ".timeout 5000" ' . SQLDB_PATH . " \"" . $queryStr . "\"");
 }
 
 function setSessionId() {
@@ -917,8 +918,8 @@ function setDisplay($argv) {
 			$_SESSION['local_display'] = $set2webui;
 			$_SESSION['peppy_display'] = $set2peppy;
 			session_write_close();
-			sqlQuery("UPDATE cfg_system SET value='" . $set2webui . "' WHERE param='local_display'");
-			sqlQuery("UPDATE cfg_system SET value='" . $set2peppy . "' WHERE param='peppy_display'");
+			sqlQuery("UPDATE cfg_system SET value='" . $set2webui . "' WHERE param='local_display'; " .
+				"UPDATE cfg_system SET value='" . $set2peppy . "' WHERE param='peppy_display'");
 
 			// FAST SWITCH: Run Peppy over WebUI
 			// Both off start fresh
