@@ -811,6 +811,12 @@ if (!isset($_SESSION['pi_audio_driver'])) {
 	$_SESSION['pi_audio_driver'] = PI_VC4_KMS_V3D;
 }
 workerLog('worker: Integ audio:   ' . $_SESSION['pi_audio_driver']);
+// Pi Headphone jack: make it available with the default Kernel mode driver too
+// (the firmware disables it for vc4-kms-v3d; see CFG_PI_HEADPHONES_ENABLE)
+if (strpos(file_get_contents(BOOT_CMDLINE_TXT), CFG_PI_HEADPHONES_ENABLE) === false) {
+	sysCmd('sed -i "s/$/ ' . CFG_PI_HEADPHONES_ENABLE . '/" ' . BOOT_CMDLINE_TXT);
+	workerLog('worker: Headphone jack: enabled in cmdline.txt, available after restart');
+}
 // Audio formats
 if ($cards[$_SESSION['cardnum']] == ALSA_EMPTY_CARD) {
 	workerLog('worker: Audio formats: WARNING: card ' . $_SESSION['cardnum'] . ' is empty');
