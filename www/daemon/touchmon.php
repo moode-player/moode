@@ -70,7 +70,7 @@ while (true) {
 		}
 
 		// Switch to Peppy
-		if (isWebuiOn($dbh) === true && isAudioPlaying() === true) {
+		if (isWebuiOn($dbh) === true && isAudioPlaying($dbh) === true) {
 			//debugLog('touchmon: - timeout ' . $timeout);
 			--$timeout;
 			if ($timeout == 0) {
@@ -83,7 +83,7 @@ while (true) {
 		// Switch to WebUI
 		// MPD closes the ALSA device between tracks, so a single closed reading is
 		// not proof that playback stopped. Require a few in a row.
-		if (isPeppyOn($dbh) === true && isAudioPlaying() === false) {
+		if (isPeppyOn($dbh) === true && isAudioPlaying($dbh) === false) {
 			if (++$closedCount >= TOUCHMON_CLOSED_COUNT) {
 				//debugLog('touchmon: - switch to webui');
 				exec('sudo moodeutl --setdisplay webui');
@@ -102,7 +102,7 @@ while (true) {
 // Helpers
 
 function isXinputOn() {
-	$xinputOn = sysCmd('pgrep -c xinput')[0];
+	$xinputOn = exec('pgrep -c xinput');
 	//debugLog('touchmon: - isXinputOn(): ' . $xinputOn);
 	return $xinputOn > 0 ? true : false;
 }
@@ -131,7 +131,8 @@ function isMpdPlaying() {
 	}
 	return $mpdState == 'play' ? true : false;
 }
-function isAudioPlaying() {
-	$audioOutput = trim(shell_exec('moodeutl --hwparams | grep closed'));
-	return $audioOutput == 'closed' ? false : true;
+function isAudioPlaying($dbh) {
+	$card = sqlQuery("SELECT value FROM cfg_system WHERE param='multiroom_tx'", $dbh)[0]['value'] == 'On' ? 'Loopback' :
+		'card' . sqlQuery("SELECT value FROM cfg_system WHERE param='cardnum'", $dbh)[0]['value'];
+	return trim((string)file_get_contents('/proc/asound/' . $card . '/pcm0p/sub0/hw_params')) != 'closed';
 }
