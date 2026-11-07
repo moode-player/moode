@@ -16,24 +16,17 @@
 		</legend>
 
 		<div class="control-group">
-
-			<div class="config-horiz-rule">Spotify for Developers</div>
-
 			<label class="control-label" for="soloistkey">API key</label>
 			<div class="controls">
 				<input class="config-input-large" type="password" pattern="[A-Za-z0-9_\-]{16,128}" id="soloistkey" name="soloistkey" value="" placeholder="$_soloistkey_placeholder">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-soloistkey" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<a class="show-hide-password" href="#notarget" data-id="soloistkey"><i class="fa-regular fa-sharp fa-eye"></i></a>
-				<span class="config-help-static">
-					$_soloistkey_status
-				</span>
+				$_soloistkey_status
 				<span id="info-soloistkey" class="config-help-info">
-					Generate the key on the Spotify for Developers dashboard, Spotify Soloist API Key page (Spotify Premium account required).<br>
-					The key is stored in a protected file after saving but will not appear in the Browser. Leave the field empty to keep the saved key.
-                </span>
+					Visit <a href="https://developer.spotify.com/documentation/soloist/tutorials/getting-started" class="target-blank-link" target="_blank">Spotify for Developers</a>
+					to generate an API key. Login with your Spotify Premium account credentials.
+				</span>
 			</div>
-
-			<div class="config-horiz-rule">Volume</div>
 
 			<label class="control-label" for="initial-volume">Initial volume</label>
 			<div class="controls">

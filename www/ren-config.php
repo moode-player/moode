@@ -367,23 +367,34 @@ $_select['rsmafterspot_off']  .= "<input type=\"radio\" name=\"rsmafterspot\" id
 // Spotify Soloist
 $_feat_soloist = $_SESSION['feat_bitmask'] & FEAT_SOLOIST ? '' : 'hide';
 if (isSoloistInstalled() === true) {
-	$_soloist_btn_text = 'Reinstall';
-	$_soloist_available_version = isSoloistExpired() === true ?
-		'Expired' . (soloistExpiryDate() != '' ? ' on ' . soloistExpiryDate() : '') :
-		'Version ' . soloistVersion() . ', expires on ' . soloistExpiryDate();
-	$_soloist_installbtn_disable = '';
-	$_soloist_editlink_disable = '';
-	// The service needs a valid build and an API key
+	$_soloist_btn_text = 'Upgrade';
+	$_soloist_btn_text_after = 'To latest version';
+	$_soloist_version_status = 'Installed version ' . soloistVersion() .
+		(isSoloistExpired() === true ? ' expired ' : ' expires ') . soloistExpiryDate() . '<br>';
+	// The service needs an unexpired build and an API key
 	$_soloist_svcbtn_disable = (isSoloistExpired() === false && getSoloistApiKey() !== false) ? '' : 'disabled';
+	$_soloist_apikey_msg = getSoloistApiKey() !== false ? '' :
+		'<span class="config-help-static">Visit ' .
+		'<a href="https://developer.spotify.com/documentation/soloist/tutorials/getting-started" class="target-blank-link" target="_blank">Spotify for Developers</a> ' .
+		'to generate an API key. Login with your Spotify Premium account credentials. Copy the key then click the EDIT button below to enter the key and enable the service.</span>';
+	$_soloist_editbtn_disable = '';
+	$_soloist_editlink_disable = '';
 } else {
 	$_soloist_btn_text = 'Install';
-	$_soloist_available_version = 'Latest version from Spotify';
-	$_soloist_installbtn_disable = 'disabled';
-	$_soloist_editlink_disable = 'onclick="return false;"';
+	$_soloist_btn_text_after = 'Latest version';
+	$_soloist_version_status = '';
 	$_soloist_svcbtn_disable = 'disabled';
+	$_soloist_apikey_msg = '';
+	$_soloist_editbtn_disable = 'disabled';
+	$_soloist_editlink_disable = 'onclick="return false;"';
 }
-$_SESSION['soloistsvc'] == '1' ? $_soloist_btn_disable = '' : $_soloist_btn_disable = 'disabled';
-$_SESSION['soloistsvc'] == '1' ? $_soloist_link_disable = '' : $_soloist_link_disable = 'onclick="return false;"';
+if ($_SESSION['soloistsvc'] == '1') {
+	$_soloist_btn_disable = '';
+	$_soloist_link_disable = '';
+} else {
+	$_soloist_btn_disable = 'disabled';
+	$_soloist_link_disable = 'onclick="return false;"';
+}
 $autoClick = " onchange=\"autoClick('#btn-set-soloistsvc');\" " . $_soloist_svcbtn_disable;
 $_select['soloistsvc_on']  .= "<input type=\"radio\" name=\"soloistsvc\" id=\"toggle-soloistsvc-1\" value=\"1\" " . (($_SESSION['soloistsvc'] == '1') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['soloistsvc_off'] .= "<input type=\"radio\" name=\"soloistsvc\" id=\"toggle-soloistsvc-2\" value=\"0\" " . (($_SESSION['soloistsvc'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";

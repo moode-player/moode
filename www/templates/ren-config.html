@@ -249,10 +249,9 @@
 				<label class="control-label">Soloist</label>
 				<div class="controls">
 					<button class="btn btn-primary btn-small config-btn set-button btn-submit" type="submit" name="install_soloist" value="1">$_soloist_btn_text</button>
-					<span class="config-btn-after">$_soloist_available_version</span>
+					<span class="config-btn-after">$_soloist_btn_text_after</span>
 					<span class="config-help-static">
-						Spotify builds expire after 90 days and are then reinstalled with this button.<br>
-						An API key is required, see the Spotify <a href="https://developer.spotify.com/documentation/soloist/tutorials/getting-started" class="target-blank-link" target="_blank">Getting started</a> guide.<br>
+						$_soloist_version_status
 						View the <a href="./install_renderers.txt" class="target-blank-link" target="_blank">Installation guide</a> for more information.
 					</span>
 				</div>
@@ -266,9 +265,7 @@
 				</div>
 				<button id="btn-set-soloistsvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_soloist_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-soloistsvc" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-				<span class="config-help-static">
-					This service requires an API key from Spotify for Developers, see the settings.
-				</span>
+				$_soloist_apikey_msg
 				<span id="info-soloistsvc" class="config-help-info">
 					Spotify Soloist, the Spotify Connect receiver by Spotify.
 				</span>
@@ -299,7 +296,7 @@
 			</div>
 
 			<div class="controls">
-				<a href="sol-config.php" $_soloist_editlink_disable><button class="btn btn-medium btn-primary config-btn" $_soloist_installbtn_disable>Edit</button></a>
+				<a href="sol-config.php" $_soloist_editlink_disable><button class="btn btn-medium btn-primary config-btn" $_soloist_editbtn_disable>Edit</button></a>
 				<span class="config-btn-after">Spotify Soloist settings</span>
 			</div>
 

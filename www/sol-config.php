@@ -31,8 +31,8 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 	if ($keyError || $volError) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
-		$_SESSION['notify']['msg'] = $keyError ? 'Invalid API key, settings saved without it.' :
-			'Initial volume must be 0 - 100, settings saved without it.';
+		$_SESSION['notify']['msg'] = $keyError ? 'Invalid API key.' :
+			'Initial volume must be 0 - 100.';
 	} else if ($_SESSION['soloistsvc'] == '1') {
 		submitJob('soloistsvc', '', NOTIFY_TITLE_INFO, NAME_SOLOIST . NOTIFY_MSG_SVC_RESTARTED);
 	}
@@ -48,11 +48,11 @@ foreach ($result as $row) {
 
 $_select['initial_volume'] = $cfgSoloist['initial_volume'];
 if (getSoloistApiKey() === false) {
-	$_soloistkey_status = 'No API key saved.';
+	$_soloistkey_status = '<span class="config-help-static">An API key has not been saved.</span>';
 	$_soloistkey_placeholder = '';
 } else {
-	$_soloistkey_status = 'An API key is saved.';
-	$_soloistkey_placeholder = '••••••••';
+	$_soloistkey_status = '';
+	$_soloistkey_placeholder = '••••••••••••••••';
 }
 
 waitWorker('sol_config');
