@@ -129,19 +129,21 @@ function getAlsaCardIDs() {
 }
 
 // Get device names assigned to each ALSA card
-// Use cfg_audiodev name if it exists, otherwise parse the name from aplay -l
+// Use cfg_audiodev name if it exists, otherwise the card name listed by aplay -l
 function getAlsaDeviceNames() {
 	$dbh = sqlConnect();
 	$deviceNames = array();
-	$aplayList = sysCmd('aplay -l');
+	$cardList = file('/proc/asound/cards');
 	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-		// Name between the first [ and ] of the first line for this card
+		// Same name as aplay -l: text after ' - ' on the card's line in /proc/asound/cards, playback cards only
 		$aplayDeviceName = '';
-		foreach ($aplayList as $line) {
-			if (str_contains($line, 'card ' . $i)) {
-				$aplayDeviceName = trim(explode(']', explode('[', $line)[1] ?? '')[0]);
-				break;
+		if (!empty(glob('/proc/asound/card' . $i . '/pcm*p'))) {
+			foreach ($cardList as $line) {
+				if (str_starts_with(ltrim($line), $i . ' [')) {
+					$aplayDeviceName = trim(explode(' - ', explode(']: ', $line, 2)[1] ?? '', 2)[1] ?? '');
+					break;
+				}
 			}
 		}
 
