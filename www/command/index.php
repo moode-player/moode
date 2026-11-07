@@ -153,6 +153,7 @@ switch ($cmd[0]) {
 	case 'toggle_play_pause':
 	case 'play':
 	case 'pause':
+	case 'stop':
 		if ($cmd[0] != 'toggle_play_pause' && count($cmd) > 1) {
 			// play SONGPOS, pause 0|1: MPD syntax, relayed as is
 			$sock = getMpdSock('command/index.php');
@@ -168,7 +169,9 @@ switch ($cmd[0]) {
 		$status = getMpdStatus($sock);
 		$currentSong = getCurrentSong($sock);
 		$play = $cmd[0] == 'toggle_play_pause' ? $status['state'] != 'play' : $cmd[0] == 'play';
-		if ($play) {
+		if ($cmd[0] == 'stop') {
+			$mpdCmd = 'stop';
+		} else if ($play) {
 			$mpdCmd = 'play';
 		} else if (substr($currentSong['file'], 0, 4) == 'http' && !isset($status['duration'])) {
 			// Radio station
@@ -178,7 +181,7 @@ switch ($cmd[0]) {
 			$mpdCmd = 'pause';
 		}
 		// Already in the requested state: nothing to send
-		if ($play != ($status['state'] == 'play')) {
+		if ($cmd[0] == 'stop' ? $status['state'] != 'stop' : $play != ($status['state'] == 'play')) {
 			sendMpdCmd($sock, $mpdCmd);
 		} else {
 			$mpdCmd = $status['state'];
