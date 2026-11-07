@@ -133,9 +133,17 @@ function getAlsaCardIDs() {
 function getAlsaDeviceNames() {
 	$dbh = sqlConnect();
 	$deviceNames = array();
+	$aplayList = sysCmd('aplay -l');
 	for ($i = 0; $i < ALSA_MAX_CARDS; $i++) {
 		$cardID = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-		$aplayDeviceName = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
+		// Name between the first [ and ] of the first line for this card
+		$aplayDeviceName = '';
+		foreach ($aplayList as $line) {
+			if (str_contains($line, 'card ' . $i)) {
+				$aplayDeviceName = trim(explode(']', explode('[', $line)[1] ?? '')[0]);
+				break;
+			}
+		}
 
 		if (empty($cardID)) {
 			$deviceNames[$i] = ALSA_EMPTY_CARD;
