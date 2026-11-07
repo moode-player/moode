@@ -130,6 +130,23 @@
 					</span>
 				</div>
 			</div>
+
+			<div class="config-horiz-rule"></div>
+			<label class="control-label">DAC quiet start</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio toggle-dac-prime" for="toggle-dac-prime-2">ON </label>$_select[dac_prime_on]
+					<label class="toggle-radio toggle-dac-prime" for="toggle-dac-prime-1">OFF</label>$_select[dac_prime_off]
+				</div>
+				<button id="btn-set-dac-prime" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dac_prime" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-dac-prime" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-dac-prime" class="config-help-info">
+					Some DACs emit a continuous hiss or crackle after power-on and keep it until the first track plays.<br>
+					Turn this on to play a brief silence when the selected DAC initializes (at boot or hot-plug), which clears that noise.<br>
+					The hardware pop at power-on itself cannot be removed.
+				</span>
+			</div>
+
 		</div>
 
 		<legend>ALSA Options</legend>
