@@ -63,7 +63,7 @@ update/install.sh "$PLUGIN"
 
 # Report status
 if [ $? -ne 0 ] ; then
-	message_log "Install failed, update cancelled"
+	message_log "Update cancelled"
 	rm -rf update
 	exit 1
 else
