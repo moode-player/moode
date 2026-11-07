@@ -86,7 +86,9 @@ if ($userId == NO_USERID_DEFINED) {
 	// - Touchmon.php is launched by .xinitrc which runs as user
 	$nopasswdFile = '/etc/sudoers.d/010_' . $userId . '-nopasswd';
 	if (!file_exists($nopasswdFile)) {
-		sysCmd('echo "' . $userId . ' ALL=(ALL) NOPASSWD: ALL" | sudo tee ' . $nopasswdFile . '-nopasswd' . ' > /dev/null');
+		sysCmd('echo "' . $userId . ' ALL=(ALL) NOPASSWD: ALL" | sudo tee ' . $nopasswdFile . ' > /dev/null');
+		sysCmd('chmod 0440 ' . $nopasswdFile);
+		sysCmd('rm -f ' . $nopasswdFile . '-nopasswd');
 		workerLog('worker: Sudoers file:  created');
 	}
 }
