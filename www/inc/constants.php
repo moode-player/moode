@@ -224,7 +224,6 @@ const CFG_FORCE_EEPROM_READ = 'force_eeprom_read=0';
 const CFG_HDMI_ENABLE_4KP60 = 'hdmi_enable_4kp60';
 const CFG_PCI_EXPRESS = 'pciex1';
 const CFG_PCI_EXPRESS_GEN3 = 'pciex1_gen=3';
-const CFG_PI_AUDIO_DRIVER = 'vc4-kms-v3d';
 const CFG_DISABLE_BT = 'disable-bt';
 const CFG_DISABLE_WIFI = 'disable-wifi';
 const CFG_DISPLAY_AUTODETECT = 'display_auto_detect=1';
@@ -232,6 +231,7 @@ const CFG_PITOUCH_INVERTXY = 'vc4-kms-dsi-7inch,invx,invy';
 const CFG_EXTERNAL_ANTENNA = 'dtparam=ant2';
 // Boot cmdline.txt managed params
 const CFG_PITOUCH_ROTATE_180 = 'video=DSI-1:800x480@60,rotate=180';
+const CFG_PI_HEADPHONE_JACK_ENABLE = 'snd_bcm2835.enable_headphones=1';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php

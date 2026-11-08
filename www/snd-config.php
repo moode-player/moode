@@ -117,12 +117,6 @@ if (isset($_POST['update_drvoptions'])) {
 		submitJob('i2sdevice', $_SESSION['i2sdevice'], NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 	}
 }
-// Integrated audio
-if (isset($_POST['update_pi_audio_driver'])) {
-	$_SESSION['pi_audio_driver'] = $_POST['pi_audio_driver'];
-	$queueArgs = $_POST['pi_audio_driver'] == PI_VC4_KMS_V3D ? '' : '#';
-	submitJob('pi_audio_driver', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
-}
 
 // ALSA OPTIONS
 
@@ -460,10 +454,6 @@ if (!empty($cfgAudioDev['drvoptions']) && $_SESSION['i2soverlay'] == 'None' && $
 	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
 	$_driveropt_btn_disable = 'disabled';
 }
-// Integrated audio
-$_pi_audio_driver_hide = $_SESSION['pi_modelnum'] >= 5 ? 'hide' : '';
-$_select['pi_audio_driver'] .= "<option value=\"" . PI_VC4_KMS_V3D . "\" " . (($_SESSION['pi_audio_driver'] == PI_VC4_KMS_V3D) ? "selected" : "") . ">Kernel mode (Default)</option>\n";
-$_select['pi_audio_driver'] .= "<option value=\"" . PI_SND_BCM2835 . "\" " . (($_SESSION['pi_audio_driver'] == PI_SND_BCM2835) ? "selected" : "") . ">Firmware mode (Legacy)</option>\n";
 
 // ALSA OPTIONS
 

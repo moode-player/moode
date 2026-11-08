@@ -750,10 +750,6 @@ function updBootConfigTxt($action, $value) {
 				sysCmd('sed -i "s/$/ ' . CFG_PITOUCH_ROTATE_180 . '/"' . ' ' . BOOT_CMDLINE_TXT);
 			}
 			break;
-		case 'upd_pi_audio_driver':
-			// $value: '#' or ''
-			sysCmd('sed -i /' . CFG_PI_AUDIO_DRIVER . "/c\\" . $value . 'dtoverlay=' . CFG_PI_AUDIO_DRIVER . ' ' . BOOT_CONFIG_TXT);
-			break;
 		case 'upd_pci_express':
 			// $value: 'auto' or 'gen2' or 'gen3'
 			$prefix1 = $value == 'auto' ? '#' : '';

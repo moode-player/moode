@@ -127,6 +127,11 @@ if ($userId != NO_USERID_DEFINED) {
 	} else if ($status == 'Main header missing') {
 		// First boot import
 		sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
+		// Patch cmdline.txt for headphone jack enable
+		if (!str_contains(file_get_contents(BOOT_CMDLINE_TXT), CFG_PI_HEADPHONES_ENABLE)) {
+			sysCmd('sed -i "s/$/ ' . CFG_PI_HEADPHONES_ENABLE . '/" ' . BOOT_CMDLINE_TXT);
+		}
+		// Reboot
 		sysCmd('reboot');
 	}
 }
@@ -151,7 +156,8 @@ $sessionVars = array(
 	'mpd_dbupdate_status',
 	'trackcover_url_cache',
 	'radio_track_covers',
-	'worker_responsiveness'
+	'worker_responsiveness',
+	'pi_audio_driver'
 );
 foreach ($sessionVars as $var) {
 	sysCmd('moodeutl -D ' . $var);
@@ -808,11 +814,6 @@ workerLog('worker: MPD mixer      ' . $mixerType);
 if ($_SESSION['audioout'] == 'Local') {
 	phpSession('write', 'mpdmixer_local', $_SESSION['mpdmixer']);
 }
-// Pi integrated audio driver
-if (!isset($_SESSION['pi_audio_driver'])) {
-	$_SESSION['pi_audio_driver'] = PI_VC4_KMS_V3D;
-}
-workerLog('worker: Integ audio:   ' . $_SESSION['pi_audio_driver']);
 // Audio formats
 if ($cards[$_SESSION['cardnum']] == ALSA_EMPTY_CARD) {
 	workerLog('worker: Audio formats: WARNING: card ' . $_SESSION['cardnum'] . ' is empty');
@@ -3659,10 +3660,6 @@ function runQueuedJob() {
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
-			break;
-		case 'pi_audio_driver':
-			$value = $_SESSION['w_queueargs'];
-			updBootConfigTxt('upd_pi_audio_driver', $value);
 			break;
 		case 'pci_express':
 			$value = $_SESSION['w_queueargs'];
