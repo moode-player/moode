@@ -23,6 +23,8 @@ Packages
 - UPD: peppy-meter: 2026.11.04-1moode1
 
 Updates
+- UPD: Add performance optimizations (PR849 - PR859 @Gjuju)
+- UPD: Add stop command to REST API (PR843 @Gjuju)
 - UPD: Add volume curve option to Peppymeter (PR841 @Gjuju)
 - UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
 - UPD: Add REST API play and pause commands (PR842 @Gjuju)
@@ -33,6 +35,7 @@ Updates
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
 - FIX: System info reports error message for Qobuz Connect if not installed
+- FIX: Sudoers dropfile creation during startup (PR848 @Gjuju)
 
 ################################################################################
 #
