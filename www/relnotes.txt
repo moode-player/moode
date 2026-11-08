@@ -23,12 +23,13 @@ Packages
 - UPD: peppy-meter: 2026.11.04-1moode1
 
 Updates
-- UPD: Add performance optimizations (PR849 - PR859 @Gjuju)
+- UPD: Add performance optimizations (PR40, PR848 - PR859 @Gjuju)
 - UPD: Add stop command to REST API (PR843 @Gjuju)
 - UPD: Add volume curve option to Peppymeter (PR841 @Gjuju)
 - UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
 - UPD: Add REST API play and pause commands (PR842 @Gjuju)
 - UPD: Add genre and performer tags to metadata file (currentsong.txt)
+- UPD: Add Pi Headphone jack enabled w/KMS driver (based on PR845 @Perjan-smul)
 - UPD: Improve REST API: Single endpoint, updated doc (PR834, PR22 @Gjuju)
 - UPD: Improve Dashboard: Disable player tile if offline
 
