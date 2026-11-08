@@ -170,7 +170,7 @@ if (isset($_POST['update_hdmi_scn_orient'])) {
 
 if (isset($_POST['update_hdmi_cec'])) {
     if (isset($_POST['hdmi_cec']) && $_POST['hdmi_cec'] != $_SESSION['hdmi_cec']) {
-		$_SESSION['hdmi_cec'] = $_POST['hdmi_cec'];
+		phpSession('write', 'hdmi_cec', $_POST['hdmi_cec']);
         $_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
         $_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
     }

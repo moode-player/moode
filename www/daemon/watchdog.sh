@@ -39,7 +39,7 @@ wake_display () {
 	WAKE_DISPLAY=${CFG[wake_display]}
 	PEPPY_DISPLAY=${CFG[peppy_display]}
 	SCN_BLANK_ACTIVE=${CFG[peppy_scn_blank_active]}
-	CEC_CONTROL=$(moodeutl -d -gv hdmi_cec)
+	CEC_CONTROL=${CFG[hdmi_cec]}
 	if [[ $WAKE_DISPLAY = "1" ]]; then
 		debug_log "wake display: on"
 		if [[ $CEC_CONTROL = "on" ]]; then
@@ -68,7 +68,7 @@ declare -A CFG
 while true; do
 	# Settings used in this loop, one query
 	CFG=()
-	while IFS='|' read -r PARAM VALUE; do CFG[$PARAM]=$VALUE; done < <(sqlite3 $SQLDB "SELECT param, value FROM cfg_system WHERE param IN ('airplaysvc', 'spotifysvc', 'qobuzsvc', 'soloistsvc', 'multiroom_rx', 'multiroom_tx', 'local_display', 'local_display_url', 'peppy_display', 'wake_display', 'peppy_scn_blank_active')")
+	while IFS='|' read -r PARAM VALUE; do CFG[$PARAM]=$VALUE; done < <(sqlite3 $SQLDB "SELECT param, value FROM cfg_system WHERE param IN ('airplaysvc', 'spotifysvc', 'qobuzsvc', 'soloistsvc', 'multiroom_rx', 'multiroom_tx', 'local_display', 'local_display_url', 'peppy_display', 'wake_display', 'peppy_scn_blank_active', 'hdmi_cec')")
 
 	# PHP-FPM
 	if (( FPM_CNT > FPM_MIN_LIMIT )); then

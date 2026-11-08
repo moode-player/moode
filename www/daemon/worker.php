@@ -1507,9 +1507,6 @@ workerLog('worker: On-screen kbd:    ' . ($_SESSION['on_screen_kbd'] == 'Enable'
 workerLog('worker: HDMI port:        ' . 'HDMI-1');
 workerLog('worker: HDMI orientation: ' . $_SESSION['hdmi_scn_orient']);
 // HDMI CEC control
-if (!isset($_SESSION['hdmi_cec'])) {
-	$_SESSION['hdmi_cec'] = 'off';
-}
 workerLog('worker: HDMI CEC control: ' . $_SESSION['hdmi_cec']);
 if (!isset($_SESSION['hdmi_cec_ver'])) {
 	$_SESSION['hdmi_cec_ver'] = '2.0';
