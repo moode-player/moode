@@ -2090,8 +2090,8 @@ function chkBtActive() {
 		}
 	}
 
-	$result = sysCmd('pgrep -l bluealsa-aplay');
-	if (strpos($result[0], 'bluealsa-aplay') !== false) {
+	$result = exec('pgrep -l bluealsa-aplay');
+	if (strpos($result, 'bluealsa-aplay') !== false) {
 		// Do this section only once
 		if ($_SESSION['btactive'] == '0') {
 			phpSession('write', 'btactive', '1');
@@ -2363,7 +2363,7 @@ function chkInpActive() {
 
 // Attached display on/off status
 function chkAttachedDisplayOnOff() {
-	$result = sysCmd('DISPLAY=:0 xset q | grep "Monitor" | awk \'{print $3}\'')[0];
+	$result = exec('DISPLAY=:0 xset q | grep "Monitor" | awk \'{print $3}\'');
 	$currentOnOff = $result == 'On' ? 'on' : 'off';
 	if ($_SESSION['local_display_onoff'] != $currentOnOff) {
 		$_SESSION['local_display_onoff'] = $currentOnOff;
@@ -2375,7 +2375,7 @@ function chkPeppyGainMon() {
 	// The meter gain is only as good as the daemon that publishes it: if it dies the
 	// needles keep displaying the last dB and silently stop following the volume.
 	// The [.] keeps the pattern from matching the shell that runs pgrep itself.
-	if (sysCmd('pgrep -c -f "peppy-gain[.]php"')[0] == '0') {
+	if (exec('pgrep -c -f "peppy-gain[.]php"') == '0') {
 		workerLog('worker: Peppy gain monitor: not running, restarted');
 		startPeppyGainMon();
 	}
