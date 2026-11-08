@@ -30,20 +30,20 @@ message_log () {
 	echo "$TIME watchdog: $1" >> /var/log/moode.log
 }
 debug_log () {
-	TIME=$(date +'%Y%m%d %H%M%S')
 	# Comment out to suppress debug messages
-	#echo "$TIME watchdog: DEBUG: $1" >> /var/log/moode.log
+	#echo "$(date +'%Y%m%d %H%M%S') watchdog: DEBUG: $1" >> /var/log/moode.log
+	:
 }
 
 wake_display () {
-	WAKE_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='wake_display'")
-	PEPPY_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='peppy_display'")
-	SCN_BLANK_ACTIVE=$(sqlite3 $SQLDB "SELECT value from cfg_system WHERE param='peppy_scn_blank_active'")
-	CEC_CONTROL=$(moodeutl -d -gv hdmi_cec)
-	CEC_VERSION=$(moodeutl -d -gv hdmi_cec_ver)
+	WAKE_DISPLAY=${CFG[wake_display]}
+	PEPPY_DISPLAY=${CFG[peppy_display]}
+	SCN_BLANK_ACTIVE=${CFG[peppy_scn_blank_active]}
+	CEC_CONTROL=${CFG[hdmi_cec]}
 	if [[ $WAKE_DISPLAY = "1" ]]; then
 		debug_log "wake display: on"
 		if [[ $CEC_CONTROL = "on" ]]; then
+			CEC_VERSION=$(moodeutl -d -gv hdmi_cec_ver)
 			[[ "$CEC_VERSION" = "1.4" ]] && CEC_VER_STRING="--cec-version-1.4" || CEC_VER_STRING=""
 			debug_log "wake display: send cec-ctl --skip-info --to 0 $CEC_VER_STRING --image-view-on"
 			cec-ctl --skip-info --to 0 $CEC_VER_STRING --image-view-on
@@ -64,7 +64,12 @@ wake_display () {
 	fi
 }
 
+declare -A CFG
 while true; do
+	# Settings used in this loop, one query
+	CFG=()
+	while IFS='|' read -r PARAM VALUE; do CFG[$PARAM]=$VALUE; done < <(sqlite3 $SQLDB "SELECT param, value FROM cfg_system WHERE param IN ('airplaysvc', 'spotifysvc', 'qobuzsvc', 'soloistsvc', 'multiroom_rx', 'multiroom_tx', 'local_display', 'local_display_url', 'peppy_display', 'wake_display', 'peppy_scn_blank_active', 'hdmi_cec')")
+
 	# PHP-FPM
 	if (( FPM_CNT > FPM_MIN_LIMIT )); then
 		#message_log "Reducing PHP-FPM worker pool to free up resources"
@@ -92,7 +97,7 @@ while true; do
 	fi
 
 	# AirPlay
-	AIRPLAY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='airplaysvc'")
+	AIRPLAY_SVC=${CFG[airplaysvc]}
 	if [[ $AIRPLAY_SVC = "1" ]]; then
 		if [[ $AIRPLAY_RUNNING == "0" ]]; then
 			counter=0
@@ -110,7 +115,7 @@ while true; do
 	fi
 
 	# Spotify Connect
-	SPOTIFY_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
+	SPOTIFY_SVC=${CFG[spotifysvc]}
 	if [[ $SPOTIFY_SVC = "1" ]]; then
 		if [[ $SPOTIFY_RUNNING == "0" ]]; then
 			counter=0
@@ -128,7 +133,7 @@ while true; do
 	fi
 
 	# Qobuz Connect
-	QOBUZ_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='qobuzsvc'")
+	QOBUZ_SVC=${CFG[qobuzsvc]}
 	if [[ $QOBUZ_SVC = "1" ]]; then
 		if [[ $QOBUZ_RUNNING == "0" ]]; then
 			counter=0
@@ -146,7 +151,7 @@ while true; do
 	fi
 
 	# Spotify Soloist (not started without an API key)
-	SOLOIST_SVC=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='soloistsvc'")
+	SOLOIST_SVC=${CFG[soloistsvc]}
 	if [[ $SOLOIST_SVC = "1" && -s /var/local/www/soloist.key ]]; then
 		if [[ $SOLOIST_RUNNING == "0" ]]; then
 			counter=0
@@ -164,7 +169,7 @@ while true; do
 	fi
 
 	# Multiroom receiver
-	MULTIROOM_RX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_rx'")
+	MULTIROOM_RX=${CFG[multiroom_rx]}
 	if [[ $MULTIROOM_RX = "On" ]]; then
 		if [[ $TRX_RX_RUNNING == "0" ]]; then
 			counter=0
@@ -182,10 +187,10 @@ while true; do
 	fi
 
 	# Wake local/remote display on play
-	WEBUI_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='local_display'")
-	PEPPY_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='peppy_display'")
+	WEBUI_DISPLAY=${CFG[local_display]}
+	PEPPY_DISPLAY=${CFG[peppy_display]}
 	if [[ $WEBUI_DISPLAY == '1' || $PEPPY_DISPLAY == '1' ]]; then
-		MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx'")
+		MULTIROOM_TX=${CFG[multiroom_tx]}
 		if [[ $MULTIROOM_TX = "On" ]]; then
 			# Card2 will be Loopback or Dummy depending on whether there are 1 or 2 HDMI ports
 			TX_CARD_NUM="card2"
@@ -198,7 +203,7 @@ while true; do
 			fi
 		else
 			debug_log "check wake on play"
-			WEBUI_DISPLAY_HOST=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='local_display_url'" | awk -F"/" '{print $3}')
+			WEBUI_DISPLAY_HOST=$(echo "${CFG[local_display_url]}" | awk -F"/" '{print $3}')
 			if  [[ $WEBUI_DISPLAY_HOST = "localhost" ]]; then
 				TYPE="local"
 				CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")

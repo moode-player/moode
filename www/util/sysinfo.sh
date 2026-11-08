@@ -826,7 +826,7 @@ xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
 rsmafterqbz=${arr[39]}
 library_show_genres=${arr[40]}
-RESERVED_42=${arr[41]}
+hdmi_cec=${arr[41]}
 i2soverlay=${arr[42]}
 folder_pos=${arr[43]}
 [[ "${arr[44]}" = "1" ]] && peppy_display="On" || peppy_display="Off"
@@ -1017,7 +1017,6 @@ value=$(moodeutl -d -gv "scn_cursor")
 value=$(moodeutl -d -gv "scn_blank")
 [[ "$value" = "off" ]] && scn_blank="Off" || scn_blank="$value Secs"
 on_screen_kbd=$(moodeutl -d -gv "on_screen_kbd")
-hdmi_cec=$(moodeutl -d -gv "hdmi_cec")
 hdmi_cec_ver=$(moodeutl -d -gv "hdmi_cec_ver")
 hdmi_enable_4kp60=$(moodeutl -d -gv "hdmi_enable_4kp60")
 disable_gpu_chromium=$(moodeutl -d -gv "disable_gpu_chromium")
