@@ -325,14 +325,15 @@ function getThisIpAddr() {
 
 // Get release
 function getMoodeRel($options = '') {
+	// Same parse as moodeutl --mooderel
+	$file = file_get_contents('/var/www/footer.min.php');
+	$release = str_replace("\n", '', substr($file, strpos($file, 'Release: ') + 9, 17));
 	if ($options === 'verbose') {
 		// Verbose: 'major.minor.patch yyyy-mm-dd'
-		$result = sysCmd("moodeutl --mooderel | tr -d '\n'");
-		return $result[0];
+		return $release;
 	} else {
 		// Compact: 'rNNN'
-		$result = sysCmd("moodeutl --mooderel | tr -d '\n'");
-		$str = 'r' . str_replace('.', '', explode(' ', $result[0])[0]);
+		$str = 'r' . str_replace('.', '', explode(' ', $release)[0]);
 		return $str;
 	}
 }
