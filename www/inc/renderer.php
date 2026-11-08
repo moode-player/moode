@@ -493,8 +493,19 @@ function startSoloist() {
 
 	cfgSoloist();
 
-	// Start PipeWire and WirePlumber
+	// Start PipeWire, then WirePlumber once PipeWire listens (up to 2 secs)
 	sysCmd($env . 'pipewire > /dev/null 2>&1 &');
+	$pwUp = false;
+	for ($i = 0; $i < 20; $i++) {
+		usleep(100000);
+		if (!empty(sysCmd('ls ' . SOLOIST_RUNTIME_DIR . '/pipewire-0-manager 2> /dev/null'))) {
+			$pwUp = true;
+			break;
+		}
+	}
+	if ($pwUp === false) {
+		workerLog('startSoloist(): PipeWire not listening, WirePlumber may fail to start');
+	}
 	sysCmd($env . 'wireplumber > /dev/null 2>&1 &');
 
 	// Start the daemon
