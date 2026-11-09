@@ -2016,7 +2016,7 @@ jQuery(document).ready(function($) { 'use strict';
             button.data('armed', true).children('span').text('Confirm');
             setTimeout(function() {
                 button.removeData('armed').children('span').text(button.attr('aria-label'));
-            }, 3000);
+            }, 10000);
             return;
         }
 
