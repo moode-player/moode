@@ -485,6 +485,12 @@ function startSoloist() {
 		return;
 	}
 
+	$result = sqlRead('cfg_soloist', sqlConnect());
+	$cfgSoloist = array();
+	foreach ($result as $row) {
+		$cfgSoloist[$row['param']] = $row['value'];
+	}
+
 	// Logging
 	$logging = $_SESSION['debuglog'] == '1' ? ' -v > ' . SOLOIST_LOG : ' > /dev/null';
 	$env = 'env XDG_RUNTIME_DIR=' . SOLOIST_RUNTIME_DIR .
@@ -505,6 +511,7 @@ function startSoloist() {
 		' --data-dir ' . SOLOIST_DATA_DIR .
 		' --cache-dir ' . SOLOIST_CACHE_DIR .
 		' --cache-size 200' .
+		' --initial-volume ' . $cfgSoloist['initial_volume'] .
 		' --pipewire-device moode_audioout' .
 		' --ws ' . SOLOIST_WS .
 		$logging . ' 2>&1 &';
