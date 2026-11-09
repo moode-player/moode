@@ -103,7 +103,7 @@ jQuery(document).ready(function($){ 'use strict';
 	// EVENT HANDLERS
 	//
 
-	//Back button on header
+	// Back button on header
 	$('#config-back a').click(function() {
         // When returning to panels hide the config tabs
 		if ($(this).attr('href') == '/index.php') {
