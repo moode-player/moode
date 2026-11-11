@@ -252,17 +252,16 @@ function updAvahiOptions($options) {
 
 // Return connection status
 function getConnectionStats() {
-	$ssid = trim(sysCmdStr("nmcli -f IN-USE,SSID device wifi | grep \"*\" | awk '{print $2}'"));
-	$bssid = trim(sysCmdStr("nmcli -f IN-USE,BSSID device wifi | grep \"*\" | awk '{print $2}'"));
-	$other = explode(':', sysCmd('nmcli -t -f IN-USE,CHAN,FREQ,RATE,BANDWIDTH,SIGNAL,SECURITY device wifi | grep "*"')[0]);
+	$line = sysCmd('nmcli -t -f IN-USE,SSID,BSSID,CHAN,FREQ,RATE,BANDWIDTH,SIGNAL,SECURITY device wifi list --rescan no | grep "^\*"')[0];
+	$stats = array_map('stripslashes', preg_split('/(?<!\\\\):/', $line));
 	return array(
-		'ssid' => $ssid,
-		'bssid' => $bssid,
-		'channel' => $other[1],
-		'frequency' => (substr($other[2], 0, 1) == '5' ? '5GHz' : '2.4GHz'),
-		'rate' => $other[3],
-		'bandwidth' => $other[4],
-		'signal' => $other[5],
-		'security' => $other[6]
+		'ssid' => $stats[1],
+		'bssid' => $stats[2],
+		'channel' => $stats[3],
+		'frequency' => (substr($stats[4], 0, 1) == '5' ? '5GHz' : '2.4GHz'),
+		'rate' => $stats[5],
+		'bandwidth' => $stats[6],
+		'signal' => $stats[7],
+		'security' => $stats[8]
 	);
 }
