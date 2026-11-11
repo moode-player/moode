@@ -193,7 +193,7 @@ class Bluetooth(Renderer):
 			return verb if dbus_call(self.BLUEZ, self.player, self.BLUEZ_PLAYER, self.VERBS[verb]) else None
 		dbus_call(self.BLUEZ, self.player, self.BLUEZ_PLAYER, self.VERBS[verb])
 
-# AirPlay: shairport-sync, volume set with MPRIS (0.0-1.0) and read from AdvancedRemoteControl (0-100), no mute
+# AirPlay: shairport-sync, volume set and read with MPRIS (0.0-1.0), no mute
 class AirPlay(Renderer):
 	MPRIS_NAME = 'org.mpris.MediaPlayer2.ShairportSync'
 	MPRIS_PATH = '/org/mpris/MediaPlayer2'
@@ -208,11 +208,10 @@ class AirPlay(Renderer):
 		return bool(dbus_props_all(self.SPS_NAME, self.SPS_PATH, self.SPS_NAME).get('Active'))
 
 	def volume_state(self):
-		# Read from AdvancedRemoteControl, not MPRIS: MPRIS Volume is out of sync with the actual level (one command behind)
-		vol = dbus_props_all(self.SPS_NAME, self.SPS_PATH, self.SPS_NAME + '.AdvancedRemoteControl').get('Volume') if self.active() else None
+		vol = dbus_props_all(self.MPRIS_NAME, self.MPRIS_PATH, self.MPRIS_PLAYER).get('Volume') if self.active() else None
 		if vol is None:
 			return None
-		return int(vol), False
+		return clamp(round(float(vol) * 100)), False
 
 	def can_transport(self):
 		return self.active()

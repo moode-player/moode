@@ -485,6 +485,12 @@ function startSoloist() {
 		return;
 	}
 
+	$result = sqlRead('cfg_soloist', sqlConnect());
+	$cfgSoloist = array();
+	foreach ($result as $row) {
+		$cfgSoloist[$row['param']] = $row['value'];
+	}
+
 	// Logging
 	$logging = $_SESSION['debuglog'] == '1' ? ' -v > ' . SOLOIST_LOG : ' > /dev/null';
 	$env = 'env XDG_RUNTIME_DIR=' . SOLOIST_RUNTIME_DIR .
@@ -493,8 +499,19 @@ function startSoloist() {
 
 	cfgSoloist();
 
-	// Start PipeWire and WirePlumber
+	// Start PipeWire, then WirePlumber once PipeWire listens (up to 2 secs)
 	sysCmd($env . 'pipewire > /dev/null 2>&1 &');
+	$pwUp = false;
+	for ($i = 0; $i < 20; $i++) {
+		usleep(100000);
+		if (!empty(sysCmd('ls ' . SOLOIST_RUNTIME_DIR . '/pipewire-0-manager 2> /dev/null'))) {
+			$pwUp = true;
+			break;
+		}
+	}
+	if ($pwUp === false) {
+		workerLog('startSoloist(): PipeWire not listening, WirePlumber may fail to start');
+	}
 	sysCmd($env . 'wireplumber > /dev/null 2>&1 &');
 
 	// Start the daemon
@@ -505,6 +522,7 @@ function startSoloist() {
 		' --data-dir ' . SOLOIST_DATA_DIR .
 		' --cache-dir ' . SOLOIST_CACHE_DIR .
 		' --cache-size 200' .
+		' --initial-volume ' . $cfgSoloist['initial_volume'] .
 		' --pipewire-device moode_audioout' .
 		' --ws ' . SOLOIST_WS .
 		$logging . ' 2>&1 &';

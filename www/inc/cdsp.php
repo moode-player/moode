@@ -569,8 +569,10 @@ class CamillaDsp {
     }
 
     function fixFileRights() {
-        sysCmd('chmod 666 ' . $this->CAMILLA_CONFIG_DIR . '/coeffs/*');
-		sysCmd('chmod 666 ' . $this->CAMILLA_CONFIG_DIR . '/configs/*');
+        // Only the files, not the folders: chmod 666 on a folder removes its execute bit and then
+        // nobody can open the files in it anymore (e.g. coeffs/rooms of headbox)
+        sysCmd('find ' . $this->CAMILLA_CONFIG_DIR . '/coeffs ' . $this->CAMILLA_CONFIG_DIR . '/configs' .
+            ' -maxdepth 1 -type f -exec chmod 666 {} +');
     }
     function userCmd($cmd) {
         exec($cmd, $output, $exitcode);

@@ -25,10 +25,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($key != 'qobuzpass' || $value != 'Password set') {
 			sqlUpdate('cfg_upnp', $dbh, $key, $value);
 			if ($value != '') {
-				$sedExpr = '/^' . $key . ' =/c\\' . $key . ' = ' . $value;
+				$sedExpr = '/^#\{0,1\}' . $key . ' =/c\\' . $key . ' = ' . $value;
 			}
 			else {
-				$sedExpr = '/^' . $key . ' =/c\\' . '#' . $key . ' = ' . $value;
+				$sedExpr = '/^#\{0,1\}' . $key . ' =/c\\' . '#' . $key . ' = ' . $value;
 			}
 			sysCmdSed($sedExpr, '/etc/upmpdcli.conf');
 		}
