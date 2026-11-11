@@ -20,6 +20,7 @@ New features
 
 Packages
 - UPD: Linux-image: 1:6.18.60-1+rpt1
+- UPD: Shairport-sync: 5.6.3-1moode1
 - UPD: peppy-meter: 2026.11.04-1moode1
 
 Updates
@@ -37,6 +38,8 @@ Bug fixes
 - FIX: Renderer overlays appear on Configure pages
 - FIX: System info reports error message for Qobuz Connect if not installed
 - FIX: Sudoers dropfile creation during startup (PR848 @Gjuju)
+- FIX: Sed match for # settings in upmpdcli.conf (PR865 @kiffa-australis256)
+- FIX: CamillaDSP coeff dir riights that prevent using subfolders (PR868 @bitlab)
 
 ################################################################################
 #
