@@ -267,6 +267,10 @@ if (!isset($_SESSION['tmp2ram'])) {
 	$_SESSION['tmp2ram'] = 'on';
 }
 workerLog('worker: Tmp to RAM:    ' . $_SESSION['tmp2ram']);
+// Boot splash (util/bootsplash.sh, requires plymouth)
+if (!isset($_SESSION['bootsplash'])) {
+	$_SESSION['bootsplash'] = 'off';
+}
 
 // Debug logging
 if (!isset($_SESSION['debuglog'])) {
@@ -3709,6 +3713,10 @@ function runQueuedJob() {
 			break;
 		case 'tmp2ram':
 			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' tmp.mount');
+			break;
+		case 'bootsplash':
+			// In the background: the first 'on' installs the plymouth package (can take minutes)
+			sysCmd('/var/www/util/bootsplash.sh ' . ($_SESSION['w_queueargs'] == 'on' ? 'on' : 'off') . ' > /dev/null 2>&1 &');
 			break;
 		// HTTPS mode
 		case 'nginx_https_only':

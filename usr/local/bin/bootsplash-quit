@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2014 The moOde audio player project / Tim Curtis
+#
+# Keeps the boot splash on screen until moOde has finished starting, instead of
+# until Linux has finished booting (which is about a minute earlier on moOde):
+#   - with the local display (kiosk/peppy) on: localdisplay.service ends the splash
+#     itself right before X starts (drop-in), so the screen goes splash -> kiosk;
+#   - otherwise the splash ends when the worker reports ready, and the console
+#     login on tty1 is started then.
+# Run by bootsplash-quit.service (Type=simple, so it never delays boot completion,
+# which moOde's worker waits for).
+#
+SQLDB=/var/local/www/db/moode-sqlite3.db
+MAX_WAIT=300
+
+q() { sqlite3 "$SQLDB" "SELECT value FROM cfg_system WHERE param='$1'" 2>/dev/null; }
+
+for ((i = 0; i < MAX_WAIT; i++)); do
+	[[ "$(q wrkready)" == "1" ]] && break
+	sleep 1
+done
+
+# Give a just-started local display a moment to take over the screen
+if [[ "$(q local_display)" == "1" || "$(q peppy_display)" == "1" ]]; then
+	for ((i = 0; i < 20; i++)); do
+		systemctl is-active --quiet localdisplay && break
+		sleep 1
+	done
+fi
+
+if plymouth --ping 2>/dev/null; then
+	plymouth quit
+fi
+
+rm -f /run/bootsplash-active
+# Console login on tty1 only when no local display is using the screen
+if ! systemctl is-active --quiet localdisplay; then
+	systemctl start --no-block getty@tty1.service
+fi
+exit 0
