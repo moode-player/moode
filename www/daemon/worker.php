@@ -13,6 +13,7 @@ require_once __DIR__ . '/../inc/autocfg.php';
 require_once __DIR__ . '/../inc/cdsp.php';
 require_once __DIR__ . '/../inc/eqp.php';
 require_once __DIR__ . '/../inc/mpd.php';
+require_once __DIR__ . '/../inc/mqtt.php';
 require_once __DIR__ . '/../inc/multiroom.php';
 require_once __DIR__ . '/../inc/music-library.php';
 require_once __DIR__ . '/../inc/music-source.php';
@@ -1573,6 +1574,16 @@ workerLog('worker: -- Miscellaneous');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
+// MQTT bridge
+if (!isset($_SESSION['mqttsvc'])) {
+	$_SESSION['mqttsvc'] = '0';
+}
+stopRendererWatch();
+if ($_SESSION['mqttsvc'] == '1') {
+	startMqtt();
+}
+workerLog('worker: MQTT:                 ' . ($_SESSION['mqttsvc'] == '1' ? 'started' : 'off'));
+
 // Software update auto-check
 if (!isset($_SESSION['updater_auto_check'])) {
 	$_SESSION['updater_auto_check'] = 'Off';
@@ -2001,6 +2012,11 @@ while (true) {
 	if (in_array($_SESSION['i2sdevice'], INP_SELECT_DEVICES)) {
 		//debugLog('** chkInpActive');
 		chkInpActive();
+	}
+	// MQTT bridge
+	if ($_SESSION['mqttsvc'] == '1') {
+		//debugLog('** chkRendererWatch');
+		chkRendererWatch();
 	}
 
 	// Displays
@@ -3693,6 +3709,18 @@ function runQueuedJob() {
 		case 'external_antenna':
 			$value = $_SESSION['w_queueargs'] == '0' ? '#' : '';
 			updBootConfigTxt('upd_external_antenna', $value);
+			break;
+		case 'mqttsvc':
+			stopMqtt();
+			if ($_SESSION['mqttsvc'] == '1') {
+				startMqtt();
+			}
+			break;
+		case 'mqtt_remove':
+			stopMqtt();
+			foreach (removeMqtt() as $line) {
+				workerLog('worker: MQTT ' . $line);
+			}
 			break;
 		case 'actled': // LED0
 			if ($_SESSION['pi_modelnum'] < 5) {
