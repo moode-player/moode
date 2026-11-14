@@ -1116,106 +1116,7 @@ textarea,
         text-align: left; }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 3 / 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 2) {
-.tagsinput {
-  background: white;
-  border: 2px solid #c0392b;
-  border-radius: 6px;
-  height: 100px;
-  padding: 6px 1px 1px 6px;
-  overflow-y: auto;
-  text-align: left; }
-  .tagsinput .tag {
-    border-radius: 4px;
-    background: #c0392b;
-    color: white;
-    cursor: pointer;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    overflow: hidden;
-    padding: 6px 13px 6px 19px;
-    position: relative;
-    vertical-align: middle;
-    display: inline-block;
-    zoom: 1;
-    /**display: inline; TC 2015-12-22*/
-    -webkit-transition: 0.14s linear;
-    -moz-transition: 0.14s linear;
-    -o-transition: 0.14s linear;
-    transition: 0.14s linear;
-    -webkit-backface-visibility: hidden; }
-    .tagsinput .tag:hover {
-      background-color: #16a085;
-      padding-left: 12px;
-      padding-right: 20px; }
-      .tagsinput .tag:hover .tagsinput-remove-link {
-        color: white;
-        opacity: 1;
-        display: block\9; }
-  .tagsinput input {
-    background: transparent;
-    border: none;
-    color: #34495e;
-    font-family: "Lato", sans-serif;
-    font-size: 14px;
-    margin: 0px;
-    padding: 0 0 0 5px;
-    outline: 0;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    width: 12px; }
-
-.tagsinput-remove-link {
-  bottom: 0;
-  color: white;
-  cursor: pointer;
-  font-size: 12px;
-  opacity: 0;
-  padding: 9px 7px 3px 0;
-  position: absolute;
-  right: 0;
-  text-align: right;
-  text-decoration: none;
-  top: 0;
-  width: 100%;
-  z-index: 2;
-  display: none\9; }
-  .tagsinput-remove-link:before {
-    color: white; }
-
-.tagsinput-add-container {
-  vertical-align: middle;
-  display: inline-block;
-  zoom: 1;
-  /**display: inline; TC 2015-12-22*/ }
-
-.tagsinput-add {
-  background-color: #bbc3cb;
-  border-radius: 3px;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 5px;
-  padding: 6px 9px;
-  display: inline-block;
-  zoom: 1;
-  /**display: inline; TC 2015-12-22*/
-  -webkit-transition: 0.25s;
-  -moz-transition: 0.25s;
-  -o-transition: 0.25s;
-  transition: 0.25s;
-  -webkit-backface-visibility: hidden; }
-  .tagsinput-add:hover {
-    background-color: var(--accentxts); }
-
-.tags_clear {
-  clear: both;
-  width: 100%;
-  height: 0px; }
-
-.not_valid {
-  background: #fbd8db !important;
-  color: #90111a !important; }
-
-.progress, .ui-slider {
+.progress {
   background: #e8edf2;
   border-radius: 32px;
   height: 12px;
@@ -1223,67 +1124,24 @@ textarea,
   -moz-box-shadow: none;
   box-shadow: none;
   /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
-  .progress .bar, .ui-slider .bar {
+  .progress .bar {
     background: #c0392b;
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
     box-shadow: none !important;
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
-  .progress .bar-success, .ui-slider .bar-success {
+  .progress .bar-success {
     background-color: var(--accentxts);
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
-  .progress .bar-warning, .ui-slider .bar-warning {
+  .progress .bar-warning {
     background-color: #f1c40f;
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
-  .progress .bar-danger, .ui-slider .bar-danger {
+  .progress .bar-danger {
     background-color: var(--accentxts);
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
-  .progress .bar-info, .ui-slider .bar-info {
+  .progress .bar-info {
     background-color: var(--accentxts);
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
-
-.ui-slider {
-  margin-bottom: 20px;
-  position: relative; }
-
-.ui-slider-handle {
-  background-color: #16a085;
-  border-radius: 50%;
-  cursor: pointer;
-  height: 18px;
-  margin-left: -9px;
-  position: absolute;
-  top: -3px;
-  width: 18px;
-  z-index: 2;
-  -webkit-transition: background 0.25s;
-  -moz-transition: background 0.25s;
-  -o-transition: background 0.25s;
-  transition: background 0.25s;
-  -webkit-backface-visibility: hidden; }
-  .ui-slider-handle[style*='100'] {
-    margin-left: -15px; }
-  .ui-slider-handle:hover, .ui-slider-handle:focus {
-    background-color: var(--accentxts);
-    outline: none; }
-  .ui-slider-handle:active {
-    background-color: #16a085; }
-
-.ui-slider-range {
-  background-color: var(--accentxts);
-  border-radius: 30px 0 0 30px;
-  display: block;
-  height: 100%;
-  position: absolute;
-  z-index: 1; }
-
-.ui-slider-segment {
-  background-color: #d6dbe0;
-  border-radius: 50%;
-  float: left;
-  height: 6px;
-  margin: 3px -6px 0 25%;
-  width: 6px; }
 
 .pager {
   background-color: #34495e;
@@ -1634,87 +1492,6 @@ textarea,
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 3 / 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 2) {
   .tile.tile-hot:before {
     background-image: url("../images/tile/ribbon-2x.png"); } }
-.todo {
-  background-color: #2c3e50;
-  border-radius: 8px 8px 6px 6px;
-  color: #6285a8;
-  margin-bottom: 20px; }
-  .todo ul {
-    margin: 0;
-    list-style-type: none; }
-  .todo li {
-    background: #34495e url("../images/todo/todo.png") 92% center no-repeat;
-    background-size: 20px 20px;
-    cursor: pointer;
-    margin-top: 2px;
-    padding: 18px 42px 17px 25px;
-    position: relative;
-    -webkit-transition: 0.25s;
-    -moz-transition: 0.25s;
-    -o-transition: 0.25s;
-    transition: 0.25s;
-    -webkit-backface-visibility: hidden; }
-    .todo li:first-child {
-      margin-top: 0; }
-    .todo li:last-child {
-      border-radius: 0 0 6px 6px;
-      padding-bottom: 18px; }
-    .todo li.todo-done {
-      background: transparent url("../images/todo/done.png") 92% center no-repeat;
-      background-size: 20px 20px;
-      color: var(--accentxts); }
-      .todo li.todo-done .todo-name {
-        color: var(--accentxts); }
-
-.todo-search {
-  background: #c0392b url("../images/todo/search.png") 92% center no-repeat;
-  background-size: 16px 16px;
-  border-radius: 6px 6px 0 0;
-  color: #34495e;
-  padding: 19px 25px 20px; }
-
-input.todo-search-field {
-  background: none;
-  border: none;
-  color: #34495e;
-  font-size: 19px;
-  font-weight: 700;
-  margin: 0;
-  line-height: 23px;
-  padding: 5px 0;
-  text-indent: 0;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none; }
-  input.todo-search-field:-moz-placeholder {
-    color: #34495e; }
-  input.todo-search-field::-webkit-input-placeholder {
-    color: #34495e; }
-  input.todo-search-field.placeholder {
-    color: #34495e; }
-
-.todo-icon {
-  float: left;
-  font-size: 24px;
-  padding: 11px 22px 0 0; }
-
-.todo-content {
-  padding-top: 1px;
-  overflow: hidden; }
-
-.todo-name {
-  color: white;
-  font-size: 17px;
-  margin: 1px 0 3px; }
-
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 3 / 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 2) {
-  .todo li {
-    background-image: "../images/todo/todo-2x.png"; }
-    .todo li.todo-done {
-      background-image: "../images/todo/done-2x.png"; }
-
-  .todo-search {
-    background-image: "../images/todo/search-2x.png"; } }
 footer {
   background-color: #eceff1;
   color: #bdc1c5;
