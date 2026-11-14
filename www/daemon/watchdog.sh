@@ -16,6 +16,8 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 # WebUI will hang if no more workers can be spawned.
 FPM_MAX_LIMIT=60
 FPM_MIN_LIMIT=30
+FPM_RETRES=0
+FPM_RETRY_MAX=5
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x "mpd")
@@ -71,14 +73,16 @@ while true; do
 	while IFS='|' read -r PARAM VALUE; do CFG[$PARAM]=$VALUE; done < <(sqlite3 $SQLDB "SELECT param, value FROM cfg_system WHERE param IN ('airplaysvc', 'spotifysvc', 'qobuzsvc', 'soloistsvc', 'multiroom_rx', 'multiroom_tx', 'local_display', 'local_display_url', 'peppy_display', 'wake_display', 'peppy_scn_blank_active', 'hdmi_cec')")
 
 	# PHP-FPM
-	if (( FPM_CNT > FPM_MIN_LIMIT )); then
-		#message_log "Reducing PHP-FPM worker pool to free up resources"
+	if (( FPM_CNT > FPM_MIN_LIMIT && FPM_RETRIES < FPM_RETRY_MAX)); then
+		message_log "Reducing PHP-FPM worker pool to free up resources"
 		/var/www/util/send-fecmd.php reduce_fpm_pool
+		((FPM_RETRIES++))
 	fi
 
-	if (( FPM_CNT > FPM_MAX_LIMIT )); then
+	if (( FPM_CNT > FPM_MAX_LIMIT || FPM_RETRIES >= FPM_RETRY_MAX )); then
 		message_log "PHP-FPM was reloaded to free up worker pool resources"
 		systemctl reload php$PHP_VER-fpm
+		FPM_RETRIES=0
 	fi
 
 	# MPD
