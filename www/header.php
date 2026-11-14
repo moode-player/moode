@@ -88,8 +88,6 @@
 		<!-- build:js js/config.min.js defer -->
 		<!-- CONFIGBLOCKSECTION_BEGIN -->
 		<script src="js/custom_radio.js" defer></script>
-		<script src="js/jquery.tagsinput.js" defer></script>
-		<script src="js/jquery.placeholder.js" defer></script>
 		<script src="js/i18n/_messages.en.js" defer></script>
 		<script src="js/application.js" defer></script>
 		<script src="js/scripts-configs.js" defer></script>
