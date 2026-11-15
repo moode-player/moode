@@ -42,6 +42,7 @@ Bug fixes
 - FIX: Sed match for # settings in upmpdcli.conf (PR865 @kiffa-australis256)
 - FIX: CamillaDSP coeff dir riights that prevent using subfolders (PR868 @bitlab)
 - FIX: Compare vs assign errors: worker.php and mpd.php (PR872 @TheOldPresbyope)
+- FIX: Double underscore typo in snd-config.php (PR874 @TheOldPresbyope)
 
 ################################################################################
 #
