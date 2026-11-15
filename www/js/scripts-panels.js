@@ -1863,6 +1863,36 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
 
+	// Renderer volume slider
+    $(document).on('input', '#renderer-volume', function(e) {
+        GLOBAL.rendererVolumeDrag = true;
+        setRendererVolumeSlider($(this).val(), false);
+    });
+    $(document).on('change', '#renderer-volume', function(e) {
+        GLOBAL.rendererVolumeDrag = false;
+        // A touch release can fire change twice
+        if ($(this).val() == GLOBAL.rendererVolume) {
+            return;
+        }
+        GLOBAL.rendererVolume = $(this).val();
+        GLOBAL.rendererVolumeSetTime = Date.now();
+        $.get('command/index.php?cmd=' + encodeURIComponent('set_volume ' + GLOBAL.rendererVolume));
+    });
+
+    // Renderer mute toggle, only for renderers that can mute
+    $(document).on('click', '#renderer-volume-icon', function(e) {
+        if (!GLOBAL.rendererCanMute) {
+            return;
+        }
+        GLOBAL.rendererVolumeSetTime = Date.now();
+        $.getJSON('command/index.php?cmd=' + encodeURIComponent('set_volume -mute'), function(data) {
+            if (data['volume'] !== undefined && data['volume'] !== null) {
+                GLOBAL.rendererVolume = data['volume'];
+                setRendererVolumeSlider(data['volume'], data['muted'] == 'yes');
+            }
+        });
+    });
+
 	// Disconnect renderer
     $(document).on('click', '.disconnect-renderer', function(e) {
 		notify(NOTIFY_TITLE_INFO, 'renderer_disconnect');

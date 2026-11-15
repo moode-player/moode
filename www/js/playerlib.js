@@ -174,6 +174,12 @@ var GLOBAL = {
     libRendered: false,
     libLoading: false,
     cvQueueTimer: '',
+    rendererVolume: 0,
+    rendererVolumeTimer: '',
+    rendererVolumeDrag: false,
+    rendererVolumeNarrow: '',
+    rendererVolumeSetTime: 0,
+    rendererCanMute: false,
     pqActionClicked: false,
     mpdMaxVolume: 0,
     lastTimeCount: 0,
@@ -855,6 +861,70 @@ function inpSrcIndicator(cmd, msgText) {
 		$('#inpsrc-msg').html('');
 		$('#inpsrc-indicator').css('display', '');
 	}
+
+	rendererVolumePoll(cmd);
+}
+
+// Volume slider for renderers whose volume syncs back to the client app
+// NOTE: The renderer is the master volume, poll it to follow changes made in the app
+// NOTE: Attached to #inpsrc-indicator so overlay redraws don't replace it during a drag
+function rendererVolumePoll(cmd) {
+	if (['btactive1', 'aplactive1', 'qbzactive1', 'slactive1', 'solactive1'].indexOf(cmd) != -1) {
+		if (GLOBAL.rendererVolumeTimer == '') {
+			$('#inpsrc-indicator').append('<div id="renderer-volume-ctl" style="display:none">' +
+				'<span id="renderer-volume-level"></span>' +
+				'<input aria-label="Volume" id="renderer-volume" type="range" min="0" max="100" step="1" value="0">' +
+				'<i id="renderer-volume-icon" class="fa-regular fa-sharp fa-volume-off"></i>' +
+				'</div>');
+			if (GLOBAL.rendererVolumeNarrow == '') {
+				GLOBAL.rendererVolumeNarrow = window.matchMedia('(max-width:925px)');
+				GLOBAL.rendererVolumeNarrow.addListener(placeRendererVolume);
+			}
+			getRendererVolume();
+			GLOBAL.rendererVolumeTimer = setInterval(getRendererVolume, 2000);
+		}
+		placeRendererVolume();
+	} else if (GLOBAL.rendererVolumeTimer != '') {
+		clearInterval(GLOBAL.rendererVolumeTimer);
+		GLOBAL.rendererVolumeTimer = '';
+		$('#renderer-volume-ctl').remove();
+	}
+}
+
+// Vertical on the overlay edge, horizontal at the top of the metadata on narrow screens
+// NOTE: Renderers without metadata (Squeezelite) keep the vertical slider
+function placeRendererVolume() {
+	if (GLOBAL.rendererVolumeNarrow.matches && $('#inpsrc-metadata').css('display') != 'none') {
+		$('#renderer-volume-ctl').prependTo('#inpsrc-metadata');
+	} else {
+		$('#renderer-volume-ctl').appendTo('#inpsrc-indicator');
+	}
+}
+
+function setRendererVolumeSlider(level, muted) {
+	// NOTE: jQuery 1.8 .css() can't set custom properties
+	$('#renderer-volume').val(level).each(function() {
+		this.style.setProperty('--fill', level + '%');
+	});
+	$('#renderer-volume-level').text(muted ? 'mute' : level);
+	$('#renderer-volume-icon').toggleClass('fa-volume-off', !muted).toggleClass('fa-volume-xmark', muted);
+}
+
+function getRendererVolume() {
+	$.getJSON('command/index.php?cmd=get_volume', function(data) {
+		if (data['scope'] != 'source' || data['can_volume'] !== true) {
+			$('#renderer-volume-ctl').hide();
+			return;
+		}
+		$('#renderer-volume-ctl').css('display', 'flex');
+		GLOBAL.rendererCanMute = data['can_mute'] === true;
+		$('#renderer-volume-icon').toggleClass('renderer-can-mute', GLOBAL.rendererCanMute);
+		// NOTE: AirPlay senders confirm a new level about 1 s later, don't show the old one meanwhile
+		if (!GLOBAL.rendererVolumeDrag && Date.now() - GLOBAL.rendererVolumeSetTime > 2500) {
+			GLOBAL.rendererVolume = data['volume'];
+			setRendererVolumeSlider(GLOBAL.rendererVolume, data['muted'] == 'yes');
+		}
+	});
 }
 
 function refreshInpsrcMeta() {
@@ -973,11 +1043,16 @@ function updateInpsrcMeta(cmd, data) {
     $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
     $('#inpsrc-style').css('display', 'block');
 
+    // Keep the volume slider out of the html() rewrite
+    $('#renderer-volume-ctl').appendTo('#inpsrc-indicator');
     $('#inpsrc-metadata').html(metadataHTML);
 
     inpSrcMetaRefreshBtn();
 
     $('#inpsrc-metadata').show();
+    if (GLOBAL.rendererVolumeNarrow != '') {
+        placeRendererVolume();
+    }
     $('#inpsrc-msg').css({
         'width':'unset',
         'top':'unset',
