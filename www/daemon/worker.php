@@ -1552,7 +1552,7 @@ workerLog('worker: Encoder params:   ' . $_SESSION['rotenc_params']);
 workerLog('worker: GPIO buttons:     ' . ($_SESSION['gpio_svc'] == '1' ? 'on' : 'off'));
 // Start LCD updater engine
 if (!isset($_SESSION['lcdup'])) {
-	$_SESSION['lcdup'] == '0';
+	$_SESSION['lcdup'] = '0';
 }
 if ($_SESSION['lcdup'] == '1') {
 	startLcdUpdater();

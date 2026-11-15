@@ -825,7 +825,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				}
 				// Bitrate
 				if ($_SESSION[$song['file']]['bitrate'] == '') {
-					$current['bitrate'] == '';
+					$current['bitrate'] = '';
 				} else {
 					$current['bitrate'] = $_SESSION[$song['file']]['bitrate'] . ' kbps';
 				}
