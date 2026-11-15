@@ -58,6 +58,8 @@ const QBZMETA_CACHE_FILE = '/var/local/www/qbzmeta.json';
 const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
 const SOLMETA_CACHE_FILE = '/var/local/www/solmeta.json';
 const BTMETA_CACHE_FILE = '/var/local/www/btmeta.json';
+// Renderer volume state, written by renderer_ctl.py watch
+const RENDVOL_CACHE_FILE = '/var/local/www/rendvol.json';
 // Spotify Soloist
 const SOLOIST_BIN = '/usr/local/bin/soloist';
 const SOLOIST_KEY_FILE = '/var/local/www/soloist.key';

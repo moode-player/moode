@@ -12,6 +12,11 @@
 # events can overlap causing loss of event data. Script locking is used as a
 # workaround to help serialize the events.
 
+# Nothing to do on a volume change
+if [[ $QBZ_EVENT == "VolumeChanged" ]]; then
+	exit 0
+fi
+
 # Remove this when pibuz implements a 'wait_for_script_completion' option
 exec 9> /tmp/qbzevent.lock
 flock 9
