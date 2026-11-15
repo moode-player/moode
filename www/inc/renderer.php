@@ -285,7 +285,7 @@ function cfgQobuz() {
 	$volMode = $_SESSION['mpdmixer'] == 'none' ? 'locked' : 'software';
 
 	// QConnect
-	sysCmd('pibuz qconnect enable');
+	sysCmd('pibuz settings set qconnect.startup_mode on');
 	sysCmd('pibuz settings set qconnect.device_name "' . $_SESSION['qobuzname'] . '"');
 	sysCmd('pibuz settings set qconnect.pairing on');
 	sysCmd('pibuz settings set qconnect.volume_mode ' . $volMode);
