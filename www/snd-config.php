@@ -297,7 +297,7 @@ if (isset($_POST['update_mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != 
 	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
 }
 // Local audio
-if (isset($_POST['update_mpd_httpd_local_audio']) && $_POST['mpd_httpd__local_audio'] != $_SESSION['mpd_httpd_local_audio']) {
+if (isset($_POST['update_mpd_httpd_local_audio']) && $_POST['mpd_httpd_local_audio'] != $_SESSION['mpd_httpd_local_audio']) {
 	$_SESSION['mpd_httpd_local_audio'] = $_POST['mpd_httpd_local_audio'];
 	submitJob('mpd_httpd_local_audio', $_POST['mpd_httpd_local_audio']);
 }
