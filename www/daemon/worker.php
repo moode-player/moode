@@ -1573,6 +1573,9 @@ workerLog('worker: -- Miscellaneous');
 workerLog('worker: --');
 //----------------------------------------------------------------------------//
 
+// Renderer volume watch
+stopRendererWatch();
+
 // Software update auto-check
 if (!isset($_SESSION['updater_auto_check'])) {
 	$_SESSION['updater_auto_check'] = 'Off';
@@ -2002,6 +2005,9 @@ while (true) {
 		//debugLog('** chkInpActive');
 		chkInpActive();
 	}
+	// Renderer volume watch
+	//debugLog('** chkRendererWatch');
+	chkRendererWatch();
 
 	// Displays
 	if ($_SESSION['local_display'] == '1' || $_SESSION['peppy_display'] == '1') {
