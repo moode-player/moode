@@ -58,7 +58,8 @@ const QBZMETA_CACHE_FILE = '/var/local/www/qbzmeta.json';
 const SPOTMETA_CACHE_FILE = '/var/local/www/spotmeta.json';
 const SOLMETA_CACHE_FILE = '/var/local/www/solmeta.json';
 const BTMETA_CACHE_FILE = '/var/local/www/btmeta.json';
-// Renderer volume state, written by renderer_ctl.py watch
+// Squeezelite metadata and renderer volume state, written by renderer_ctl.py watch
+const SLMETA_CACHE_FILE = '/var/local/www/slmeta.json';
 const RENDVOL_CACHE_FILE = '/var/local/www/rendvol.json';
 // Spotify Soloist
 const SOLOIST_BIN = '/usr/local/bin/soloist';
@@ -178,6 +179,7 @@ const NAME_SPOTIFY = 'Spotify Connect';
 const NAME_QOBUZ = 'Qobuz Connect';
 const NAME_SOLOIST = 'Spotify Soloist';
 const NAME_SQUEEZELITE = 'Squeezelite';
+const NAME_MQTT = 'MQTT';
 const NAME_UPNP = 'UPnP';
 const NAME_DLNA = 'DLNA';
 const NAME_PLEXAMP = 'Plexamp';
