@@ -50,7 +50,6 @@
 	<!-- Common JS -->
 	<!-- build:js js/lib.min.js defer -->
 	<script src="js/jquery-1.8.2.js" /></script>
-
 	<script src="js/bootstrap.js" defer></script>
 	<script src="js/bootstrap-select.js" defer></script>
 	<script src="js/jquery.pnotify.js" defer></script>
