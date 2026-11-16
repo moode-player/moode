@@ -875,7 +875,8 @@ function inpSrcIndicator(cmd, msgText) {
 // NOTE: The renderer is the master volume, the renderer watch sends update_rendvol when it changes
 // NOTE: Attached to #inpsrc-indicator so overlay redraws don't replace it during a drag
 function rendererVolumeCtl(cmd) {
-	if (['btactive1', 'aplactive1', 'qbzactive1', 'slactive1', 'solactive1'].indexOf(cmd) != -1) {
+	if (SESSION.json['renderer_controls'] == 'Yes' &&
+		['btactive1', 'aplactive1', 'qbzactive1', 'slactive1', 'solactive1'].indexOf(cmd) != -1) {
 		if ($('#renderer-volume-ctl').length == 0) {
 			$('#inpsrc-indicator').append('<div id="renderer-volume-ctl" style="display:none">' +
 				'<span id="renderer-volume-level"></span>' +
@@ -3643,6 +3644,7 @@ $(document).on('click', '.context-menu a', function(e) {
         		$('#extra-tags').val(SESSION.json['extra_tags']);
                 $('#search_site span').text(SESSION.json['search_site']); // @Atair
                 $('#play-history-enabled span').text(SESSION.json['playhist']);
+                $('#renderer-controls span').text(SESSION.json['renderer_controls']);
 
                 // Cover Art
                 $('#cover-search-priority span').text(getKeyOrValue('key', SESSION.json['library_covsearchpri']));
@@ -3823,6 +3825,7 @@ $('#btn-preferences-update').click(function(e){
     var scnSaverLayoutChange = false;
     var extraTagsChange = false;
     var playHistoryChange = false;
+    var rendererControlsChange = false;
 	var fontSizeChange = false;
     var lazyLoadChange = false;
     var playqueueArtChange = false;
@@ -3858,6 +3861,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['extra_tags'] != $('#extra-tags').val()) {extraTagsChange = true;}
     if (SESSION.json['search_site'] != $('#search_site span').text()) {libraryOptionsChange = true;} // @Atair
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
+    if (SESSION.json['renderer_controls'] != $('#renderer-controls span').text()) {rendererControlsChange = true;}
 
     // Cover Art
     if (SESSION.json['library_covsearchpri'] != getKeyOrValue('value', $('#cover-search-priority span').text())) {regenThumbsReqd = true;}
@@ -3920,6 +3924,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['extra_tags'] = $('#extra-tags').val();
     SESSION.json['search_site'] = $('#search_site span').text(); // @Atair
     SESSION.json['playhist'] = $('#play-history-enabled span').text();
+    SESSION.json['renderer_controls'] = $('#renderer-controls span').text();
 
     // Cover Art
     SESSION.json['library_covsearchpri'] = getKeyOrValue('value', $('#cover-search-priority span').text());
@@ -4044,6 +4049,7 @@ $('#btn-preferences-update').click(function(e){
             'extra_tags': SESSION.json['extra_tags'],
             'search_site': SESSION.json['search_site'], // @Atair
             'playhist': SESSION.json['playhist'],
+            'renderer_controls': SESSION.json['renderer_controls'],
 
             // Cover Art
             'library_covsearchpri': SESSION.json['library_covsearchpri'],
@@ -4091,7 +4097,7 @@ $('#btn-preferences-update').click(function(e){
         },
         function() {
             if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
-                playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
+                playHistoryChange || rendererControlsChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true
 			) {
                 notify(NOTIFY_TITLE_INFO, 'settings_updated_with_msg', ' The page will automatically refresh to make the settings effective.');

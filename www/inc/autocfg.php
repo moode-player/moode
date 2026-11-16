@@ -613,6 +613,7 @@ function autoConfigSettings() {
 		['requires' => ['extra_tags'], 'handler' => 'setSessVarSql'],
 		['requires' => ['search_site'], 'handler' => 'setSessVarSql'],
 		['requires' => ['playhist'], 'handler' => 'setSessVarSql'],
+		['requires' => ['renderer_controls'], 'handler' => 'setSessVarSql'],
 		'Cover Art',
 		['requires' => ['library_covsearchpri'], 'handler' => 'setSessVarSql'],
 		['requires' => ['library_thmgen_scan'], 'handler' => 'setSessVarSql'],

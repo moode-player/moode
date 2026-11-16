@@ -1032,6 +1032,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (177, 'soloistsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (178, 'soloistname', 'Moode Soloist');
 INSERT INTO cfg_system (id, param, value) VALUES (179, 'solactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (180, 'rsmaftersol', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (181, 'renderer_controls', 'No');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

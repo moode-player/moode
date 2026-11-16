@@ -197,6 +197,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nShow extra metadata\t= $xtagdisp\c"
 	echo -e "\nSearch site\t\t= $search_site\c"
 	echo -e "\nPlayback history log\t= $playhist\c"
+	echo -e "\nRenderer controls\t= $renderer_controls\c"
 	echo -e "\n\nCover Art\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
@@ -1003,6 +1004,7 @@ readarray -t sol_arr <<<"$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE pa
 [[ "${sol_arr[0]}" = "1" ]] && soloistsvc="On" || soloistsvc="Off"
 soloistname=${sol_arr[1]}
 rsmaftersol=${sol_arr[2]}
+renderer_controls=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='renderer_controls'")
 # Session only vars
 timezone=$(moodeutl -d -gv timezone)
 value=$(moodeutl -d -gv rotaryenc)

@@ -1007,6 +1007,27 @@
 	                    	Log each track played to the playback history log. Tracks in the log can be clicked to launch a Google search. The log can be cleared in System config.
 	                    </span>
 					</div>
+					<label class="control-label" for="renderer-controls">Renderer controls</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select select-large">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="renderer-controls" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-controls-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-controls-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-controls" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+						<span id="info-renderer-controls" class="help-block hide">
+							Show a volume control on the Bluetooth, AirPlay, Qobuz Connect, Squeezelite and Spotify Soloist overlays.
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
