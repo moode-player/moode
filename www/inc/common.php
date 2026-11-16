@@ -286,6 +286,15 @@ function sysCmdStr($cmd) {
 function sysCmdSed($expr, $file) {
 	return sysCmd('sed -i ' . escapeshellarg($expr) . ' ' . escapeshellarg($file));
 }
+// Same match as 'pgrep <name>' (process name contains $name) without starting a process
+function isProcRunning($name) {
+	foreach (glob('/proc/[0-9]*/comm') as $file) {
+		if (str_contains((string)@file_get_contents($file), $name)) {
+			return true;
+		}
+	}
+	return false;
+}
 
 // Get major version (series) SS in 'rSSNN'
 function getMoodeSeries() {
