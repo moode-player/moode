@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Boot splash for moOde audio player (System Config > Startup options > Boot splash)
+
+[Plymouth Theme]
+Name=moOde
+Description=moOde audio player boot and shutdown splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/moode
+ScriptFile=/usr/share/plymouth/themes/moode/moode.script

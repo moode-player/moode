@@ -145,6 +145,21 @@
 				</span>
 			</div>
 
+			<div>
+				<label class="control-label">Boot splash</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio toggle-bootsplash" for="toggle-bootsplash-2">ON </label>$_select[bootsplash_on]
+						<label class="toggle-radio toggle-bootsplash" for="toggle-bootsplash-1">OFF</label>$_select[bootsplash_off]
+					</div>
+					<button id="btn-set-bootsplash" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_bootsplash" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+					<span class="config-help-static">
+						$_bootsplash_status
+						Show the moOde logo instead of boot messages while the player starts, restarts or shuts down. On a player with a local display the logo stays until the WebUI appears. The first time this is turned on the plymouth package is downloaded and installed (internet connection needed).
+					</span>
+				</div>
+			</div>
+
 			<div class="config-horiz-rule">Ready script</div>
 
 			<label class="control-label">Enable</label>

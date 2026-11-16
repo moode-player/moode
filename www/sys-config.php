@@ -129,6 +129,12 @@ if (isset($_POST['update_tmp2ram']) && $_POST['tmp2ram'] != $_SESSION['tmp2ram']
 	$queueArgs = $_POST['tmp2ram'] == 'on' ? 'unmask' : 'mask';
 	submitJob('tmp2ram', $queueArgs, NOTIFY_TITLE_INFO, NOTIFY_MSG_SYSTEM_RESTART_REQD);
 }
+if (isset($_POST['update_bootsplash']) && $_POST['bootsplash'] != $_SESSION['bootsplash']) {
+	$_SESSION['bootsplash'] = $_POST['bootsplash'];
+	$installNeeded = $_POST['bootsplash'] == 'on' && !file_exists('/usr/bin/plymouth-set-default-theme');
+	submitJob('bootsplash', $_POST['bootsplash'], NOTIFY_TITLE_INFO, $installNeeded ?
+		'Installing the boot splash. This can take a few minutes. Restart afterwards.' : NOTIFY_MSG_SYSTEM_RESTART_REQD);
+}
 // Ready script
 if (isset($_POST['update_ready_script'])) {
 	$_SESSION['ready_script'] = $_POST['ready_script'];
@@ -460,6 +466,17 @@ if ($_SESSION['tmp2ram'] == 'on') {
 } else {
 	$_tmp2ram_stats = '';
 }
+// Boot splash (the plymouth package is installed on first use)
+$bootsplashStatus = trim((string)@file_get_contents('/var/local/www/bootsplash-status'));
+$_bootsplash_status = $bootsplashStatus == 'installing' ? 'Status: installing, please wait. Restart when this says ready.<br>' :
+	($bootsplashStatus == 'failed' ? 'Status: installation failed, check the internet connection and try again.<br>' :
+	($bootsplashStatus == 'on' && $_SESSION['bootsplash'] == 'on' ? 'Status: ready (active after a restart).<br>' : ''));
+if ($bootsplashStatus == 'failed' && $_SESSION['bootsplash'] == 'on') {
+	$_SESSION['bootsplash'] = 'off';
+}
+$autoClick = " onchange=\"autoClick('#btn-set-bootsplash');\"";
+$_select['bootsplash_on']  .= "<input type=\"radio\" name=\"bootsplash\" id=\"toggle-bootsplash-1\" value=\"on\" " . (($_SESSION['bootsplash'] == 'on') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
+$_select['bootsplash_off'] .= "<input type=\"radio\" name=\"bootsplash\" id=\"toggle-bootsplash-2\" value=\"off\" " . (($_SESSION['bootsplash'] == 'off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // Ready script
 $autoClick = " onchange=\"autoClick('#btn-set-ready-script');\"";

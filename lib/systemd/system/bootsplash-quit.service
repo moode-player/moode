@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Boot splash: end the splash when moOde (not just Linux) has finished starting.
+# Enabled by /var/www/util/bootsplash.sh
+
+[Unit]
+Description=End the boot splash when moOde is ready
+After=rc-local.service plymouth-start.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/bootsplash-quit
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,76 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright 2014 The moOde audio player project / Tim Curtis
+#
+# moOde boot splash (Plymouth script theme).
+# Background: moOde's Default theme color; dot.png in the Carrot accent color.
+# logo.png is copied from /var/www/images/moode-logotype.png by util/bootsplash.sh.
+#
+# Shows the moOde logotype centred with the "Enjoy the Music!" tagline and three
+# pulsing dots underneath.
+# Used for boot, reboot and shutdown.
+
+bg_r = 0.125;
+bg_g = 0.125;
+bg_b = 0.125;
+Window.SetBackgroundTopColor(bg_r, bg_g, bg_b);
+Window.SetBackgroundBottomColor(bg_r, bg_g, bg_b);
+
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+
+# Logo: at most 45% of the screen width (and never upscaled)
+logo.image = Image("logo.png");
+logo.w = logo.image.GetWidth();
+logo.h = logo.image.GetHeight();
+logo.max_w = screen_w * 0.45;
+if (logo.w > logo.max_w) {
+	logo.scale = logo.max_w / logo.w;
+	logo.image = logo.image.Scale(logo.w * logo.scale, logo.h * logo.scale);
+}
+logo.sprite = Sprite(logo.image);
+logo.x = Window.GetX() + screen_w / 2 - logo.image.GetWidth() / 2;
+logo.y = Window.GetY() + screen_h / 2 - logo.image.GetHeight() / 2 - screen_h * 0.04;
+logo.sprite.SetPosition(logo.x, logo.y, 1);
+# Fully visible from the start: on the firmware framebuffer (original 7" Touch
+# Display) an opacity fade from 0 never got redrawn and the logo stayed invisible.
+logo.sprite.SetOpacity(1);
+
+# Tagline under the wordmark, at the logo's scale; centred on the letters (the
+# logotype's ™ makes the image itself a bit wider on the right)
+tag.image = Image("tagline.png");
+tag.scale = logo.image.GetWidth() / logo.w;
+tag.image = tag.image.Scale(tag.image.GetWidth() * tag.scale, tag.image.GetHeight() * tag.scale);
+tag.sprite = Sprite(tag.image);
+tag.x = logo.x + logo.image.GetWidth() * 0.485 - tag.image.GetWidth() / 2;
+tag.y = logo.y + logo.image.GetHeight() * 1.12;
+tag.sprite.SetPosition(tag.x, tag.y, 1);
+tag.sprite.SetOpacity(1);
+
+# Three dots below the tagline
+dot.image = Image("dot.png");
+dot.size = Math.Int(screen_h / 60);
+if (dot.size < 8) dot.size = 8;
+dot.image = dot.image.Scale(dot.size, dot.size);
+dot.gap = dot.size * 1.6;
+dots.y = tag.y + tag.image.GetHeight() + screen_h * 0.06;
+for (i = 0; i < 3; i++) {
+	dots[i] = Sprite(dot.image);
+	dots[i].SetPosition(Window.GetX() + screen_w / 2 + (i - 1) * dot.gap - dot.size / 2, dots.y, 2);
+	dots[i].SetOpacity(0.2);
+}
+
+# Animation (refresh runs at ~50 Hz)
+frame = 0;
+fun refresh_callback() {
+	global.frame++;
+	# Pulse each dot in turn
+	for (i = 0; i < 3; i++) {
+		phase = (global.frame / 50 * Math.Pi * 1.4) - i * 0.9;
+		global.dots[i].SetOpacity(0.25 + 0.75 * Math.Max(0, Math.Sin(phase)));
+	}
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# Hide message/password UI: moOde has no encrypted disks; keep the screen clean
+fun display_normal_callback() {}
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
