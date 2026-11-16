@@ -71,7 +71,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', address='" . SQLite3::escapeString($value['address']) .
 				"', remotedir='" . SQLite3::escapeString($value['remotedir']) .
 				"', username='" . SQLite3::escapeString($value['username']) .
-				($value['password'] == 'Password set' ? '' : "', password='" . SQLite3::escapeString($value['password'])) .
+				"', password='" . SQLite3::escapeString($value['password']) .
 				"', charset='" . SQLite3::escapeString($value['charset']) .
 				"', rsize='" . SQLite3::escapeString($value['rsize']) .
 				"', wsize='" . SQLite3::escapeString($value['wsize']) .

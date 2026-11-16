@@ -11,6 +11,10 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+// Clear acts as Save
+if (isset($_POST['clear'])) {
+	$_POST['save'] = '1';
+}
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$_POST['config']['upnpav'] = $_POST['config']['svctype'] == 'upnpav' ? '1' : '0';
 	$_POST['config']['openhome'] = $_POST['config']['svctype'] == 'openhome' ? '1' : '0';
@@ -22,16 +26,20 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($key != 'qobuzpass') {
 			chkValue($key, $value);
 		}
-		if ($key != 'qobuzpass' || $value != 'Password set') {
-			sqlUpdate('cfg_upnp', $dbh, $key, $value);
-			if ($value != '') {
-				$sedExpr = '/^#\{0,1\}' . $key . ' =/c\\' . $key . ' = ' . $value;
+		if ($key == 'qobuzpass') {
+			$value = secretFieldPost($key, $value);
+			if ($value === null) {
+				continue;
 			}
-			else {
-				$sedExpr = '/^#\{0,1\}' . $key . ' =/c\\' . '#' . $key . ' = ' . $value;
-			}
-			sysCmdSed($sedExpr, '/etc/upmpdcli.conf');
 		}
+		sqlUpdate('cfg_upnp', $dbh, $key, $value);
+		if ($value != '') {
+			$sedExpr = '/^#\{0,1\}' . $key . ' =/c\\' . $key . ' = ' . $value;
+		}
+		else {
+			$sedExpr = '/^#\{0,1\}' . $key . ' =/c\\' . '#' . $key . ' = ' . $value;
+		}
+		sysCmdSed($sedExpr, '/etc/upmpdcli.conf');
 	}
 	$notify = $_SESSION['upnpsvc'] == '1' ?
 		array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_UPNP . NOTIFY_MSG_SVC_RESTARTED) :
@@ -56,13 +64,7 @@ $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfgUPNP['checkcont
 
 // Music services
 $_select['qobuzuser'] = $cfgUPNP['qobuzuser'];
-if (empty($cfgUPNP['qobuzpass'])) {
-	$_select['qobuzpass'] = '';
-	$_pwd_input_format = 'password';
-} else {
-	$_select['qobuzpass'] = 'Password set';
-	$_pwd_input_format = 'text';
-}
+list($_placeholder['qobuzpass'], $_clear_hide['qobuzpass']) = secretFieldView(!empty($cfgUPNP['qobuzpass']));
 $_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfgUPNP['qobuzformatid'] == '5') ? "selected" : "") . ">MP3 320K</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"6\" " . (($cfgUPNP['qobuzformatid'] == '6') ? "selected" : "") . ">FLAC</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfgUPNP['qobuzformatid'] == '7') ? "selected" : "") . ">FLAC 24/96K</option>\n";

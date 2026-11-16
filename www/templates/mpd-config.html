@@ -9,7 +9,7 @@
 <div class="container">
     <h1 class="snd-config">MPD</h1>
 
-    <form class="form-horizontal" action="" method="post">
+    <form id="config-form" class="form-horizontal" action="" method="post">
         <legend>Settings
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
 		</legend>
@@ -267,9 +267,9 @@
             </div>
             <label class="control-label" for="proxy-password">Password</label>
             <div class="controls">
-                <input class="config-input-large" type="password" id="proxy-password" name="conf[proxy_password]" value="$_mpd_select[proxy_password]">
+                <input class="config-input-large" type="text" id="proxy-password" name="conf[proxy_password]" value="" autocomplete="off" placeholder="$_placeholder[proxy_password]">
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-proxy-password" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-                <a class="show-hide-password" href="#notarget" data-id="proxy-password"><i class="fa-regular fa-sharp fa-eye"></i></a>
+                <a data-toggle="modal" href="#clear-proxy-password" class="$_clear_hide[proxy_password]"><button class="btn btn-medium btn-primary config-btn" style="margin-left:.5em;">Clear</button></a>
 				<span id="info-proxy-password" class="config-help-info">
                     Specify the password used to authenticate to the proxy server.
                 </span>
@@ -327,3 +327,16 @@
     </form>
 </div>
 </div>
+
+<form class="form-horizontal" method="post">
+	<div id="clear-proxy-password" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-proxy-password-label" aria-hidden="true">
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
+			<h3>Clear proxy password?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal">Cancel</button>
+			<button class="btn btn-primary btn-submit btn-clear-secret" type="submit" form="config-form" name="clear[proxy_password]" value="1">Yes</button>
+		</div>
+	</div>
+</form>

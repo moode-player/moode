@@ -115,6 +115,10 @@ if (isset($_POST['remove_nas_source']) && $_POST['remove_nas_source'] == 1) {
 	$_POST['mount']['id'] = $_SESSION['nas_src_mpid'];
 	submitJob('nas_source_cfg', $_POST);
 }
+// Clear acts as Save
+if (isset($_POST['clear'])) {
+	$_POST['save_nas_source'] = 1;
+}
 // Save NAS source
 if (isset($_POST['save_nas_source']) && $_POST['save_nas_source'] == 1) {
 	// Validate
@@ -160,7 +164,12 @@ if (isset($_POST['save_nas_source']) && $_POST['save_nas_source'] == 1) {
 		$array['mount']['address'] = $_POST['mount']['address'];
 		$array['mount']['remotedir'] = $_POST['mount']['remotedir'];
 		$array['mount']['username'] = $_POST['mount']['username'];
-		$array['mount']['password'] = $_POST['mount']['password'];
+		$array['mount']['password'] = secretFieldPost('nas_password', $_POST['mount']['password']);
+		if ($array['mount']['password'] === null) {
+			// Keep the saved password, none when adding a source
+			$array['mount']['password'] = $_POST['mount']['action'] == 'edit_nas_source' ?
+				sqlRead('cfg_source', $dbh, '', $_POST['mount']['id'])[0]['password'] : '';
+		}
 		$array['mount']['charset'] = $_POST['mount']['charset'];
 		$array['mount']['rsize'] = $_POST['mount']['rsize'];
 		$array['mount']['wsize'] = $_POST['mount']['wsize'];
@@ -482,13 +491,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 				$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : $mp['address'] . '/' . $mp['remotedir'];
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);
 				$_username = $mp['username'];
-				if (empty($mp['password'])) {
-					$_password = '';
-					$_pwd_input_format = 'password';
-				} else {
-					$_password = 'Password set';
-					$_pwd_input_format = 'text';
-				}
+				list($_placeholder['nas_password'], $_clear_hide['nas_password']) = secretFieldView(!empty($mp['password']));
 				$_name = $mp['name'];
 				$_charset = $mp['charset'];
 				$_rsize = $mp['rsize'];
@@ -519,7 +522,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 		$_action = 'add_nas_source';
 		$_hide_remove_nas_source = 'hide';
 		$_hide_nas_mount_error = 'style="display:none;"';
-		$_pwd_input_format = 'password';
+		$_clear_hide['nas_password'] = 'hide';
 
 		// Manual server entry/edit or scanner
 		if (isset($_POST['nas_manualserver']) || isset($_POST['scan'])) {

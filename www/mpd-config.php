@@ -14,6 +14,10 @@ phpSession('open_ro');
 
 chkVariables($_POST);
 
+// Clear acts as Save
+if (isset($_POST['clear'])) {
+	$_POST['save'] = '1';
+}
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Add audio_output_format
@@ -28,6 +32,12 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['conf'] as $key => $value) {
 		if ($key == 'audio_buffer_size' || $key == 'max_output_buffer_size') {
 			$value = $value * 1024; // Convert from MB to KB
+		}
+		if ($key == 'proxy_password') {
+			$value = secretFieldPost($key, $value);
+			if ($value === null) {
+				continue;
+			}
 		}
 
 		sqlUpdate('cfg_mpd', $dbh, $key, $value);
@@ -165,7 +175,7 @@ $_mpd_select['input_cache'] .= "<option value=\"4 GB\" " . (($cfgMPD['input_cach
 
 $_mpd_select['proxy'] = $cfgMPD['proxy'];
 $_mpd_select['proxy_user'] = $cfgMPD['proxy_user'];
-$_mpd_select['proxy_password'] = $cfgMPD['proxy_password'];
+list($_placeholder['proxy_password'], $_clear_hide['proxy_password']) = secretFieldView(!empty($cfgMPD['proxy_password']));
 
 // OTHER OPTIONS
 

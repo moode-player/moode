@@ -216,8 +216,13 @@ if (isset($_POST['update_fs_smb'])) {
 		submitJob('fs_smb', $_POST['fs_smb']);
 	}
 }
+// Clear acts as Save
+if (isset($_POST['clear'])) {
+	$_POST['update_fs_smb_pwd'] = 'novalue';
+}
 if (isset($_POST['update_fs_smb_pwd'])) {
-	if (isset($_POST['fs_smb_pwd']) && $_POST['fs_smb_pwd'] != $_SESSION['fs_smb_pwd'] && $_POST['fs_smb_pwd'] != 'Password set') {
+	$_POST['fs_smb_pwd'] = secretFieldPost('fs_smb_pwd', $_POST['fs_smb_pwd']);
+	if (isset($_POST['fs_smb_pwd']) && $_POST['fs_smb_pwd'] != $_SESSION['fs_smb_pwd']) {
 		$_SESSION['fs_smb_pwd'] = $_POST['fs_smb_pwd'];
 		submitJob('fs_smb_pwd', $_POST['fs_smb_pwd']);
 	}
@@ -531,13 +536,7 @@ $_select['external_antenna_off'] .= "<input type=\"radio\" name=\"external_anten
 $autoClick = " onchange=\"autoClick('#btn-set-fs-smb');\"";
 $_select['fs_smb_on']  .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-1\" value=\"On\" " . (($_SESSION['fs_smb'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 $_select['fs_smb_off'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb-2\" value=\"Off\" " . (($_SESSION['fs_smb'] == 'Off') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
-if (empty($_SESSION['fs_smb_pwd'])) {
-	$_select['fs_smb_pwd'] = '';
-	$_pwd_input_format = 'password';
-} else {
-	$_select['fs_smb_pwd'] = 'Password set';
-	$_pwd_input_format = 'text';
-}
+list($_placeholder['fs_smb_pwd'], $_clear_hide['fs_smb_pwd']) = secretFieldView(!empty($_SESSION['fs_smb_pwd']), 'None');
 
 $autoClick = " onchange=\"autoClick('#btn-set-fs-nfs');\"";
 $_select['fs_nfs_on']  .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs-1\" value=\"On\" " . (($_SESSION['fs_nfs'] == 'On') ? "checked=\"checked\"" : "") . $autoClick . ">\n";

@@ -384,6 +384,11 @@ jQuery(document).ready(function($){ 'use strict';
         $('#downgrade-chromium-modal').modal('toggle');
     });
 
+    // Clear secret field submit (close modal)
+    $('.btn-clear-secret').click(function(e) {
+        $(this).closest('.modal').modal('toggle');
+    });
+
 	// Peppy Config
     $('#meter-folder').change(function(e) {
         var selectedFolder = $('#meter-folder :selected').text();
