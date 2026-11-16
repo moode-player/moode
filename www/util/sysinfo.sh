@@ -964,7 +964,7 @@ rv_group_method=$(awk -F"," '{print $2}' <<< $radioview_sort_group)
 radioview_show_hide=${arr[143]}
 rv_show_moode=$(awk -F"," '{print $1}' <<< $radioview_show_hide)
 rv_show_other=$(awk -F"," '{print $2}' <<< $radioview_show_hide)
-RESERVED_145=${arr[144]}
+renderer_controls=${arr[144]}
 library_flatlist_filter=${arr[145]}
 library_flatlist_filter_str=${arr[146]}
 library_misc_options=${arr[147]}
@@ -1004,7 +1004,6 @@ readarray -t sol_arr <<<"$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE pa
 [[ "${sol_arr[0]}" = "1" ]] && soloistsvc="On" || soloistsvc="Off"
 soloistname=${sol_arr[1]}
 rsmaftersol=${sol_arr[2]}
-renderer_controls=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='renderer_controls'")
 # Session only vars
 timezone=$(moodeutl -d -gv timezone)
 value=$(moodeutl -d -gv rotaryenc)

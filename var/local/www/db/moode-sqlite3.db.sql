@@ -997,7 +997,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'library_onetouch_ralbum', 'No action');
 INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
-INSERT INTO cfg_system (id, param, value) VALUES (145, 'RESERVED_145', '');
+INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_controls', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'full_lib');
 INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
 INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
@@ -1032,7 +1032,6 @@ INSERT INTO cfg_system (id, param, value) VALUES (177, 'soloistsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (178, 'soloistname', 'Moode Soloist');
 INSERT INTO cfg_system (id, param, value) VALUES (179, 'solactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (180, 'rsmaftersol', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (181, 'renderer_controls', 'No');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
