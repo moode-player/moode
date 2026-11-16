@@ -25,7 +25,7 @@ Packages
 - UPD: peppy-meter: 2026.11.04-1moode1
 
 Updates
-- UPD: Add performance optimizations (PR40, PR848 - PR859, PR870 @Gjuju)
+- UPD: Add performance optimizations (PR40, PR848 - PR859, PR870/PR878 @Gjuju)
 - UPD: Add stop command to REST API (PR843 @Gjuju)
 - UPD: Add volume curve option to Peppymeter (PR841 @Gjuju)
 - UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
@@ -44,6 +44,7 @@ Bug fixes
 - FIX: CamillaDSP coeff dir riights that prevent using subfolders (PR868 @bitlab)
 - FIX: Compare vs assign errors: worker.php and mpd.php (PR872 @TheOldPresbyope)
 - FIX: Double underscore typo in snd-config.php (PR874 @TheOldPresbyope)
+- FIX: GetHash() and ParseDir() in mpd.php them (PR877 @Gjuju)
 
 ################################################################################
 #
