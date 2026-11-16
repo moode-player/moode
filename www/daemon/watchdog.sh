@@ -19,14 +19,6 @@ FPM_MIN_LIMIT=30
 FPM_RETRES=0
 FPM_RETRY_MAX=5
 
-FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-MPD_RUNNING=$(pgrep -c -x "mpd")
-AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
-SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
-QOBUZ_RUNNING=$(pgrep -c -x "pibuz")
-SOLOIST_RUNNING=$(pgrep -c -x "soloist")
-TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
-
 message_log () {
 	TIME=$(date +'%Y%m%d %H%M%S')
 	echo "$TIME watchdog: $1" >> /var/log/moode.log
@@ -66,6 +58,23 @@ wake_display () {
 	fi
 }
 
+# Same counts as pgrep -x <name> / pgrep -f <pattern>, from one process list
+count_procs () {
+	FPM_CNT=0; MPD_RUNNING=0; AIRPLAY_RUNNING=0; SPOTIFY_RUNNING=0; QOBUZ_RUNNING=0; SOLOIST_RUNNING=0; TRX_RX_RUNNING=0
+	while read -r COMM ARGS; do
+		case $COMM in
+			mpd) ((MPD_RUNNING++)) ;;
+			librespot) ((SPOTIFY_RUNNING++)) ;;
+			pibuz) ((QOBUZ_RUNNING++)) ;;
+			soloist) ((SOLOIST_RUNNING++)) ;;
+			trx-rx) ((TRX_RX_RUNNING++)) ;;
+		esac
+		[[ $ARGS == *"php-fpm: pool www"* ]] && ((FPM_CNT++))
+		[[ $ARGS == *"LC_ALL=C /usr/bin/shairport-sync"* ]] && ((AIRPLAY_RUNNING++))
+	done < <(ps -e -o comm=,args=)
+}
+
+count_procs
 declare -A CFG
 while true; do
 	# Settings used in this loop, one query
@@ -228,12 +237,6 @@ while true; do
 	fi
 
 	sleep $WATCHDOG_SLEEP
-	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-	MPD_RUNNING=$(pgrep -c -x "mpd")
-	AIRPLAY_RUNNING=$(pgrep -c -f "LC_ALL=C /usr/bin/shairport-sync")
-	SPOTIFY_RUNNING=$(pgrep -c -x "librespot")
-	QOBUZ_RUNNING=$(pgrep -c -x "pibuz")
-	SOLOIST_RUNNING=$(pgrep -c -x "soloist")
-	TRX_RX_RUNNING=$(pgrep -c -x "trx-rx")
+	count_procs
 
 done > /dev/null 2>&1 &
