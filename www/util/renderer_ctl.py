@@ -25,6 +25,7 @@ import time
 DBUS_PROPS = 'org.freedesktop.DBus.Properties'
 DBUS_OBJMGR = 'org.freedesktop.DBus.ObjectManager'
 RENDVOL_FILE = '/var/local/www/rendvol.json'
+SEND_FECMD = '/var/www/util/send-fecmd.php'
 # watch: re-read at least this often, in case an event is missed or the renderer has none for a change
 WATCH_FALLBACK = 5
 
@@ -544,6 +545,7 @@ def watch(name):
 		if state != last['state']:
 			write_json(RENDVOL_FILE, state)
 			last['state'] = state
+			subprocess.Popen([SEND_FECMD, 'update_rendvol'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	renderer.watch(publish)
 	return 0
 
