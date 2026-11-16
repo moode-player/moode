@@ -102,9 +102,7 @@ while (true) {
 // Helpers
 
 function isXinputOn() {
-	$xinputOn = exec('pgrep -c xinput');
-	//debugLog('touchmon: - isXinputOn(): ' . $xinputOn);
-	return $xinputOn > 0 ? true : false;
+	return isProcRunning('xinput');
 }
 function startXinput() {
 	$result = shell_exec('/var/www/util/start-xinput.sh ' . TOUCHMON_LOG);

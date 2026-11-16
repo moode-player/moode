@@ -2097,8 +2097,7 @@ function chkBtActive() {
 		}
 	}
 
-	$result = exec('pgrep -l bluealsa-aplay');
-	if (strpos($result, 'bluealsa-aplay') !== false) {
+	if (isProcRunning('bluealsa-aplay')) {
 		// Do this section only once
 		if ($_SESSION['btactive'] == '0') {
 			phpSession('write', 'btactive', '1');
@@ -2381,8 +2380,7 @@ function chkAttachedDisplayOnOff() {
 function chkPeppyGainMon() {
 	// The meter gain is only as good as the daemon that publishes it: if it dies the
 	// needles keep displaying the last dB and silently stop following the volume.
-	// The [.] keeps the pattern from matching the shell that runs pgrep itself.
-	if (exec('pgrep -c -f "peppy-gain[.]php"') == '0') {
+	if (!isProcRunning('peppy-gain.php')) {
 		workerLog('worker: Peppy gain monitor: not running, restarted');
 		startPeppyGainMon();
 	}
