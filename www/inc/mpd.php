@@ -1064,7 +1064,7 @@ function getHash($path) {
 		case 'tif':
 		case 'tiff':
 			$stat = stat($path);
-			$hash = md5((string)file_get_contents($path, 1024) . (string)$stat['size']);
+			$hash = md5((string)file_get_contents($path, false, null, 0, 1024) . (string)$stat['size']);
 			break;
 
 		// Embedded images
@@ -1127,7 +1127,7 @@ function parseDir($path) {
 	foreach ($covers as $file) {
 		$result = getHash($path . $file);
 		if ($result !== false) {
-			break;
+			return $result;
 		}
 	}
 	// All other image files
