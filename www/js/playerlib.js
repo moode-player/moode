@@ -175,7 +175,6 @@ var GLOBAL = {
     libLoading: false,
     cvQueueTimer: '',
     rendererVolume: 0,
-    rendererVolumeTimer: '',
     rendererVolumeDrag: false,
     rendererVolumeNarrow: '',
     rendererVolumeSetTime: 0,
@@ -647,6 +646,13 @@ function engineCmd() {
                         refreshInpsrcMeta();
                     }, ONE_SEC_TIMEOUT);
                     break;
+                case 'update_rendvol':
+                    getRendererVolume();
+					// Fetch again for robustness
+                    setTimeout(function() {
+                        getRendererVolume();
+                    }, ONE_SEC_TIMEOUT);
+                    break;
                 case 'slactive1':
                 case 'slactive0':
     				inpSrcIndicator(cmd[0],
@@ -862,15 +868,15 @@ function inpSrcIndicator(cmd, msgText) {
 		$('#inpsrc-indicator').css('display', '');
 	}
 
-	rendererVolumePoll(cmd);
+	rendererVolumeCtl(cmd);
 }
 
 // Volume slider for renderers whose volume syncs back to the client app
-// NOTE: The renderer is the master volume, poll it to follow changes made in the app
+// NOTE: The renderer is the master volume, the renderer watch sends update_rendvol when it changes
 // NOTE: Attached to #inpsrc-indicator so overlay redraws don't replace it during a drag
-function rendererVolumePoll(cmd) {
+function rendererVolumeCtl(cmd) {
 	if (['btactive1', 'aplactive1', 'qbzactive1', 'slactive1', 'solactive1'].indexOf(cmd) != -1) {
-		if (GLOBAL.rendererVolumeTimer == '') {
+		if ($('#renderer-volume-ctl').length == 0) {
 			$('#inpsrc-indicator').append('<div id="renderer-volume-ctl" style="display:none">' +
 				'<span id="renderer-volume-level"></span>' +
 				'<input aria-label="Volume" id="renderer-volume" type="range" min="0" max="100" step="1" value="0">' +
@@ -881,12 +887,9 @@ function rendererVolumePoll(cmd) {
 				GLOBAL.rendererVolumeNarrow.addListener(placeRendererVolume);
 			}
 			getRendererVolume();
-			GLOBAL.rendererVolumeTimer = setInterval(getRendererVolume, 2000);
 		}
 		placeRendererVolume();
-	} else if (GLOBAL.rendererVolumeTimer != '') {
-		clearInterval(GLOBAL.rendererVolumeTimer);
-		GLOBAL.rendererVolumeTimer = '';
+	} else {
 		$('#renderer-volume-ctl').remove();
 	}
 }
@@ -911,6 +914,9 @@ function setRendererVolumeSlider(level, muted) {
 }
 
 function getRendererVolume() {
+	if ($('#renderer-volume-ctl').length == 0) {
+		return;
+	}
 	$.getJSON('command/index.php?cmd=get_volume', function(data) {
 		if (data['scope'] != 'source' || data['can_volume'] !== true) {
 			$('#renderer-volume-ctl').hide();

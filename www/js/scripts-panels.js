@@ -23,6 +23,7 @@ jQuery(document).ready(function($) { 'use strict';
         if (document.visibilityState == 'visible') {
             // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time knob using current data
     		sendMpdCmd('subscribe dumy_channel');
+            getRendererVolume();
         }
     }
 
@@ -1877,6 +1878,8 @@ jQuery(document).ready(function($) { 'use strict';
         GLOBAL.rendererVolume = $(this).val();
         GLOBAL.rendererVolumeSetTime = Date.now();
         $.get('command/index.php?cmd=' + encodeURIComponent('set_volume ' + GLOBAL.rendererVolume));
+        // Read back the level the renderer settled on
+        setTimeout(getRendererVolume, 3000);
     });
 
     // Renderer mute toggle, only for renderers that can mute
@@ -1885,6 +1888,7 @@ jQuery(document).ready(function($) { 'use strict';
             return;
         }
         GLOBAL.rendererVolumeSetTime = Date.now();
+        setTimeout(getRendererVolume, 3000);
         $.getJSON('command/index.php?cmd=' + encodeURIComponent('set_volume -mute'), function(data) {
             if (data['volume'] !== undefined && data['volume'] !== null) {
                 GLOBAL.rendererVolume = data['volume'];

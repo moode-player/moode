@@ -30,6 +30,7 @@ RENDVOL_FILE = '/var/local/www/rendvol.json'
 SQLDB = '/var/local/www/db/moode-sqlite3.db'
 MPD_ADDR = ('127.0.0.1', 6600)
 RENDERER_FLAGS = ('btactive', 'aplactive', 'spotactive', 'qbzactive', 'solactive', 'slactive', 'paactive', 'rbactive')
+SEND_FECMD = '/var/www/util/send-fecmd.php'
 # watch: re-read at least this often, in case an event is missed or the renderer has none for a change
 WATCH_FALLBACK = 5
 
@@ -627,6 +628,8 @@ def watch(name):
 		if state != last['state']:
 			write_json(RENDVOL_FILE, state)
 			last['state'] = state
+			if name != 'mpd':
+				subprocess.Popen([SEND_FECMD, 'update_rendvol'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	renderer.watch(publish)
 	return 0
 
