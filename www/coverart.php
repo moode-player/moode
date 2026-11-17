@@ -177,6 +177,10 @@ if (null === $path) {
 		// Strip script name if called as /coverart.php/path/to/file
 		$path = substr($path, strlen($self) + 1);
 	}
+	if (in_array('..', explode('/', $path))) {
+		header('Location: /' . DEFAULT_ALBUM_COVER);
+		exit(0);
+	}
 	$path = MPD_MUSICROOT . $path;
 }
 
