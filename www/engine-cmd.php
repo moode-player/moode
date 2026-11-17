@@ -7,7 +7,9 @@
 require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/sql.php';
 
-if (false === ($sock = socket_create_listen(0))) {
+if (false === ($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) ||
+	false === socket_bind($sock, '127.0.0.1', 0) ||
+	false === socket_listen($sock)) {
 	workerLog('engineCmd(): Socket create failed');
 	echo json_encode('socket create failed');
 	exit();
