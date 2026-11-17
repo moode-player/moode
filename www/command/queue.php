@@ -16,7 +16,7 @@ $sock = getMpdSock('command/queue.php');
 phpSession('open_ro');
 
 chkVariables($_GET);
-chkVariables($_POST, array('path'));
+chkVariables($_POST);
 
 // DEBUG:
 //workerLog("_GET\n" . print_r($_GET, true));

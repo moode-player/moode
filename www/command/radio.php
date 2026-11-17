@@ -11,7 +11,7 @@ require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 chkVariables($_GET, array('title', 'station'));
-chkVariables($_POST, array('path'));
+chkVariables($_POST);
 
 switch ($_GET['cmd']) {
 	case 'set_ralogo_image':

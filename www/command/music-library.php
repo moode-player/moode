@@ -14,7 +14,7 @@ $sock = getMpdSock('command/music-library.php');
 phpSession('open_ro');
 
 chkVariables($_GET, array('path', 'query', 'tagname'));
-chkVariables($_POST, array('name'));
+chkVariables($_POST);
 
 switch ($_GET['cmd']) {
 	case 'update_library':

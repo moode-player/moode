@@ -12,8 +12,8 @@ require_once __DIR__ . '/../inc/sql.php';
 
 const NUMBER_EXT_TAGS = 2;
 
-chkVariables($_GET, array('item'));
-chkVariables($_POST, array('path'));
+chkVariables($_GET);
+chkVariables($_POST);
 
 switch ($_GET['cmd']) {
 	case 'export_playlist':
