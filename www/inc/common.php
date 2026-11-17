@@ -266,6 +266,32 @@ function chkXSS($file, $element, $value) {
 	}
 }
 
+// Check CSRF Token (Cross-Site Request Forgery)
+function chkCsrfToken($token) {
+	$valid = true;
+	$msg = '';
+	if (empty($token)) {
+		$valid = false;
+		$msg = 'Missing post CSRF token, request denied';
+	} else if (empty($_SESSION['csrf_token'])) {
+		$valid = false;
+		$msg = 'Missing session CSRF token, request denied';
+	} else if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+		$valid = false;
+		$msg = 'CSRF token hash check failed, request denied';
+	}
+
+	if ($valid === false) {
+		workerLog('SECCHK: ' . $msg);
+		// Redirect to '400 Bad request' page and then exit
+		http_response_code(400);
+		header('Location: /response400.html');
+		exit(1);
+	}
+	// Optional: Regenerate token after successful submission for single-use protection
+	//unset($_SESSION['csrf_token']);
+}
+
 //----------------------------------------------------------------------------//
 // SYSTEM
 //----------------------------------------------------------------------------//
