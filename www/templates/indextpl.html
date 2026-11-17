@@ -481,10 +481,12 @@
 		<div class="control-group">
             <label class="control-label" for="saved-search-name">Save as name</label>
             <div class="controls">
-                <input id="saved-search-name" class="input-large" type="text" name="saved_search_name" maxlength="200" value="">
+                <input id="saved-search-name" class="input-large" type="text" pattern="[A-Za-z0-9_\(\)' \-]+" name="saved_search_name" maxlength="200" value="">
 				<a aria-label="Help" class="info-toggle" data-cmd="info-saved-search-name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-saved-search-name" class="help-block hide">
-                	Enter a name to create a new Saved Search based on the current search criteria below. If a Saved Search of the same name already exists it will be overwritten.
+                	Enter a name to create a new Saved Search based on the current search criteria below.
+					Allowed are: letters, numbers, parenthesis, underscores, dashes, single quotes and spaces.
+					If a Saved Search of the same name already exists it will be overwritten.
                 </span>
             </div>
 			<label class="control-label" for="lib-search-criteria">Current search criteria</label>
@@ -576,9 +578,10 @@
 			<div class="control-group">
 				<label class="control-label" for="playlist-save-name">Playlist name</label>
 				<div class="controls">
-					<input id="playlist-save-name" type="text" value="" autofocus>
+					<input id="playlist-save-name" type="text" pattern="[A-Za-z0-9_\(\)' \-]+" value="" autofocus>
 					<span class="help-block">
 						Replaces an existing playlist of the same name, otherwise creates a new playlist.
+						Allowed are: letters, numbers, parenthesis, underscores, dashes, single quotes and spaces.
 					</span>
 		        </div>
 			</div>
@@ -641,9 +644,10 @@
 			<div class="control-group">
 				<label class="control-label" for="playlist-favorites-name">Favorites playlist</label>
 				<div class="controls">
-					<input id="playlist-favorites-name" type="text" value="" autofocus>
+					<input id="playlist-favorites-name" type="text" pattern="[A-Za-z0-9_\(\)' \-]+" value="" autofocus>
 					<span class="help-block">
 						Sets the playlist where favorited <i class="fa-regular fa-sharp fa-heart"></i> items are stored.
+						Allowed are: letters, numbers, parenthesis, underscores, dashes, single quotes and spaces.
 						If the playlist does not already exist a new one will be created.
 					</span>
 		        </div>
@@ -1958,7 +1962,11 @@
 		<div class="control-group">
             <label class="control-label" for="new-station-name">Station name</label>
             <div class="controls">
-                <input id="new-station-name" class="input-large" type="text" name="new_station_name" maxlength="200" pattern="^[^,]+$" value="" autofocus>
+                <input id="new-station-name" class="input-large" type="text" pattern="[A-Za-z0-9_\(\)' \-]+" name="new_station_name" maxlength="200" value="" autofocus>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-new-station-name" class="help-block hide">
+					Allowed are: letters, numbers, parenthesis, underscores, dashes, single quotes and spaces.
+				</span>
             </div>
             <label class="control-label" for="new-station-url">Playable URL</label>
             <div class="controls">
@@ -2664,7 +2672,11 @@
 		<div class="control-group">
             <label class="control-label" for="new-playlist-name">Playlist name</label>
             <div class="controls">
-                <input id="new-playlist-name" class="input-large" type="text" name="new_playlist_name" maxlength="200" value="" autofocus>
+                <input id="new-playlist-name" class="input-large" type="text" pattern="[A-Za-z0-9_\(\)' \-]+" name="new_playlist_name" maxlength="200" value="" autofocus>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-new-playlist-name" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-new-playlist-name" class="help-block hide">
+					Allowed are: letters, numbers, parenthesis, underscores, dashes, single quotes and spaces.
+				</span>
             </div>
 			<label class="control-label" for="new-playlistcover">Cover image</label>
 			<div class="controls">
