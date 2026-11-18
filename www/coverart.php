@@ -178,6 +178,7 @@ if (null === $path) {
 		$path = substr($path, strlen($self) + 1);
 	}
 	if (in_array('..', explode('/', $path))) {
+		workerLog('SECCHK: Directory traversal detected, request denied');
 		header('Location: /' . DEFAULT_ALBUM_COVER);
 		exit(0);
 	}
