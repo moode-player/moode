@@ -11,6 +11,18 @@ require_once __DIR__ . '/inc/sql.php';
 
 phpSession('open');
 
+// Secret form variables, never sent to the page
+$secretKeys = array(
+	'spotify_client_secret' => 'SPOTIFY_CLIENT_SECRET',
+	'lastfm_api_key' => 'LASTFM_API_KEY',
+	'discogs_token' => 'DISCOGS_TOKEN',
+	'theaudiodb_api_key' => 'THEAUDIODB_API_KEY'
+);
+
+// Clear acts as Save
+if (isset($_POST['clear'])) {
+	$_POST['save'] = '1';
+}
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Form variable to config param mapping table
 	$mappingTable = array(
@@ -47,6 +59,12 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		chkKey($key, $validKeys);
 		chkValue($key, $value);
 		$param = $mappingTable[$key];
+		if (isset($secretKeys[$key])) {
+			$value = secretFieldPost($key, $value);
+			if ($value === null) {
+				continue;
+			}
+		}
 		if ($param == 'LOG_LEVEL') {
 			$value = strtoupper($value);
 		}
@@ -80,19 +98,19 @@ $_config['search_provider_musicbrainz'] .= "<option value=\"False\" " . (($confi
 $_config['search_provider_spotify'] .= "<option value=\"True\" " . (($config['Spotify'] == 'True') ? "selected" : "") . ">Yes</option>\n";
 $_config['search_provider_spotify'] .= "<option value=\"False\" " . (($config['Spotify'] == 'False') ? "selected" : "") . ">No</option>\n";
 $_config['spotify_client_id'] = $config['SPOTIFY_CLIENT_ID'];
-$_config['spotify_client_secret'] = $config['SPOTIFY_CLIENT_SECRET'];
 // LastFM
 $_config['search_provider_lastfm'] .= "<option value=\"True\" " . (($config['LastFM'] == 'True') ? "selected" : "") . ">Yes</option>\n";
 $_config['search_provider_lastfm'] .= "<option value=\"False\" " . (($config['LastFM'] == 'False') ? "selected" : "") . ">No</option>\n";
-$_config['lastfm_api_key'] = $config['LASTFM_API_KEY'];
 // Discogs
 $_config['search_provider_discogs'] .= "<option value=\"True\" " . (($config['Discogs'] == 'True') ? "selected" : "") . ">Yes</option>\n";
 $_config['search_provider_discogs'] .= "<option value=\"False\" " . (($config['Discogs'] == 'False') ? "selected" : "") . ">No</option>\n";
-$_config['discogs_token'] = $config['DISCOGS_TOKEN'];
 // TheAudioDB
 $_config['search_provider_theaudiodb'] .= "<option value=\"True\" " . (($config['TheAudioDB'] == 'True') ? "selected" : "") . ">Yes</option>\n";
 $_config['search_provider_theaudiodb'] .= "<option value=\"False\" " . (($config['TheAudioDB'] == 'False') ? "selected" : "") . ">No</option>\n";
-$_config['theaudiodb_api_key'] = $config['THEAUDIODB_API_KEY'];
+// Secrets
+foreach ($secretKeys as $key => $param) {
+	list($_placeholder[$key], $_clear_hide[$key]) = secretFieldView(!empty($config[$param]));
+}
 
 // Search settings
 $_config['search_request_timeout'] = $config['REQUEST_TIMEOUT'];

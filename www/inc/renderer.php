@@ -616,6 +616,11 @@ function getSoloistApiKey() {
 	$apiKey = file_exists(SOLOIST_KEY_FILE) ? trim(file_get_contents(SOLOIST_KEY_FILE)) : '';
 	return isValidSoloistApiKey($apiKey) ? $apiKey : false;
 }
+function clearSoloistApiKey() {
+	if (file_exists(SOLOIST_KEY_FILE)) {
+		unlink(SOLOIST_KEY_FILE);
+	}
+}
 function setSoloistApiKey($apiKey) {
 	if (!isValidSoloistApiKey($apiKey)) {
 		return false;

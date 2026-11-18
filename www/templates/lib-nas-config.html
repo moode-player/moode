@@ -12,7 +12,7 @@
 		After saving or removing a remote NAS source, return to Playback or Library and select "Update library" from the Menu.
 	</p>
 
-	<form class="form-horizontal" action="lib-config.php" method="post">
+	<form id="config-form" class="form-horizontal" action="lib-config.php" method="post">
 		<legend>Remote host
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save_nas_source" value="1">Save</button>
 			<a href="#remove-nas-source" data-toggle="modal" class="$_hide_remove_nas_source"><button class="legend-config btn btn-medium btn-primary">Remove</button></a>
@@ -64,9 +64,9 @@
 
 				<label class="control-label" for="nas-pwd">Password</label>
 				<div class="controls">
-					<input  id="nas-pwd" class="config-input-large" type="$_pwd_input_format" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
+					<input  id="nas-pwd" class="config-input-large" type="text" pattern="[^'\u0022]+" name="mount[password]" value="" placeholder="$_placeholder[nas_password]" autocomplete="off">
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
-					<a class="show-hide-password" href="#notarget" data-id="nas-pwd"><i class="fa-regular fa-sharp fa-eye"></i></a>
+					<a data-toggle="modal" href="#clear-nas-password" class="$_clear_hide[nas_password]"><button class="btn btn-medium btn-primary config-btn" style="margin-left:.5em;">Clear</button></a>
 					<span id="info-nas-uidpwd" class="config-help-info">
 						Try userid Guest and a blank password unless your NAS device requires a specific userid/password.
 						Note that single and double quotes are not allowed.
@@ -166,6 +166,19 @@
 		<button class="btn singleton" data-dismiss="modal">Close</button>
 	</div>
 </div>
+
+<form class="form-horizontal" method="post">
+	<div id="clear-nas-password" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-nas-password-label" aria-hidden="true">
+		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
+			<h3>Clear NAS password?</h3>
+		</div>
+		<div class="modal-body"></div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal">Cancel</button>
+			<button class="btn btn-primary btn-submit btn-clear-secret" type="submit" form="config-form" name="clear[nas_password]" value="1">Yes</button>
+		</div>
+	</div>
+</form>
 
 <form class="form-horizontal" method="post">
 	<div id="manual-server" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="manual-server-label" aria-hidden="true">

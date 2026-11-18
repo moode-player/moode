@@ -292,6 +292,19 @@ function chkCsrfToken($token) {
 	//unset($_SESSION['csrf_token']);
 }
 
+// Secret form fields (passwords, API keys): the saved value is never sent to the page
+// Return the value to save, '' when Clear is clicked, null to keep the saved value
+function secretFieldPost($key, $value) {
+	if (isset($_POST['clear'][$key])) {
+		return '';
+	}
+	return $value == '' ? null : $value;
+}
+// Return the field placeholder and the Clear button class
+function secretFieldView($isSet, $emptyPlaceholder = '') {
+	return $isSet ? array('••••••••••••••••', '') : array($emptyPlaceholder, 'hide');
+}
+
 //----------------------------------------------------------------------------//
 // SYSTEM
 //----------------------------------------------------------------------------//

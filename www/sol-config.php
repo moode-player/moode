@@ -12,6 +12,10 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+// Clear acts as Save
+if (isset($_POST['clear'])) {
+	$_POST['save'] = '1';
+}
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$validKeys = array_column(sqlRead('cfg_soloist', $dbh), 'param');
 	$volError = false;
@@ -24,10 +28,13 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 		sqlUpdate('cfg_soloist', $dbh, $key, $value);
 	}
-	// API key: an empty field keeps the saved key
+	// API key
 	$keyError = false;
-	if (!empty($_POST['soloistkey'])) {
-		$keyError = setSoloistApiKey($_POST['soloistkey']) === false;
+	$apiKey = secretFieldPost('soloistkey', $_POST['soloistkey']);
+	if ($apiKey === '') {
+		clearSoloistApiKey();
+	} else if ($apiKey !== null) {
+		$keyError = setSoloistApiKey($apiKey) === false;
 	}
 	if ($keyError || $volError) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
@@ -47,13 +54,9 @@ foreach ($result as $row) {
 }
 
 $_select['initial_volume'] = $cfgSoloist['initial_volume'];
-if (getSoloistApiKey() === false) {
-	$_soloistkey_status = '<span class="config-help-static">An API key has not been saved.</span>';
-	$_soloistkey_placeholder = '';
-} else {
-	$_soloistkey_status = '';
-	$_soloistkey_placeholder = '••••••••••••••••';
-}
+$isSet = getSoloistApiKey() !== false;
+$_soloistkey_status = $isSet ? '' : '<span class="config-help-static">An API key has not been saved.</span>';
+list($_placeholder['soloistkey'], $_clear_hide['soloistkey']) = secretFieldView($isSet);
 
 waitWorker('sol_config');
 
