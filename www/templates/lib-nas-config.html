@@ -34,7 +34,7 @@
 				<span id="info-fileshare-protocol" class="config-help-info">
 					Choose the type corresponding to the file sharing protocol used on the remote host.
 					Note that NFS mounts that fail can cause up to a 2 minute timeout. This screen will appear to hang when this happens.
-                </span>
+				</span>
 			</div>
 
 			<label class="control-label" id="server-label" for="address">Path</label>
@@ -48,7 +48,7 @@
 					SCAN generates a list of paths to SMB or NFS shares found on the network.
 					A path consists of the host or IP address followed by a forward slash followed by the share name
 					for example SomeHost/ShareName.
-                </span>
+				</span>
 				<div id="edit-server" $_edit_server_hide">
 					<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary config-btn" >Edit</button></a>
 					<span class="config-btn-after">Path manually</span>
@@ -70,7 +70,7 @@
 					<span id="info-nas-uidpwd" class="config-help-info">
 						Try userid Guest and a blank password unless your NAS device requires a specific userid/password.
 						Note that single and double quotes are not allowed.
-		            </span>
+					</span>
 				</div>
 			</div>
 
@@ -83,7 +83,7 @@
 				<span id="info-source-name" class="config-help-info">
 					Friendly name (alias) for this remote NAS Source. The name will appear in Library Folder view under the NAS folder.
 					Format is 1-25 characters, alphanumeric, hyphen allowed.
-                </span>
+				</span>
 			</div>
 		</div>
 
@@ -102,7 +102,7 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-mount-charset" class="config-help-info">
 						This setting determines how characters are encoded. The default is UTF-8 which is a multibyte encoding that can represent any Unicode character. ISO 8859-1 is a single-byte encoding that can represent the first 256 Unicode characters. Both encode ASCII exactly the same way.
-                    </span>
+					</span>
 				</div>
 
 				<div id="rw-size" class="$_rw_size_hide">
@@ -112,7 +112,7 @@
 						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 						<span id="info-mount-rsize" class="config-help-info">
 							Default for this setting is 61440.
-	                    </span>
+						</span>
 					</div>
 
 					<label class="control-label" for="nas-wsize">Wsize</label>
@@ -121,7 +121,7 @@
 						<a aria-label="Help" class="config-info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 						<span id="info-mount-wsize" class="config-help-info">
 							Default for this setting is 65536.
-	                    </span>
+						</span>
 					</div>
 				</div>
 
@@ -132,7 +132,7 @@
 						Most mount options are auto-negotiated when the mount is attempted but in some cases auto-negotiation cannot determine the correct values and the mount may fail. In this case certain options must be explicitly added or changed. Some of these are listed below.<br>
 						<b>SMB:</b> vers=x.y | sec=ntlm or sec=ntlmssp | cache=strict<br>
 						<b>NFS:</b> vers=x.y | type=nfs2, nfs3 or nfs4
-                    </span>
+					</span>
 				</div>
 			</div>
 		</div>
@@ -192,7 +192,7 @@
 				<input id="mounttype" type="hidden" name="mounttype" value="">
 				<div id="info-manualserver" class="help-block" style="margin-top:5px;">
 					Format is Host/Share or IPaddr/Share. Up to 64 chars, leading slash / not allowed.
-                </div>
+				</div>
 			</div>
 		</div>
 		<div class="modal-footer">

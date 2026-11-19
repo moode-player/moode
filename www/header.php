@@ -13,8 +13,8 @@
 	$returnVal = session_start();
 	//debugLog('header.php: session_start() = ' . (($returnVal) ? 'true' : 'false') . ', sessionid = ' . $result[0]['value']);
 	if (empty($_SESSION['csrf_token'])) {
-	    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-	}	
+		$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+	}
 ?>
 <!--endRemoveIf(GENINDEXDEV)-->
 <!DOCTYPE html>

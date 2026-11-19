@@ -35,7 +35,7 @@
 				<span id="info-checkfor-update" class="config-help-info">
 					Check for an available software update.
 				</span>
-		    </div>
+			</div>
 
 			<label class="control-label">Status</label>
 			<div class="controls">
@@ -44,30 +44,30 @@
 				<span id="info-view-status" class="config-help-info">
 					View progress of the active in-place update or if the update has previously been applied view the update log.
 				</span>
-		    </div>
+			</div>
 		</div>
 
 		<div class="control-group">
 			<legend>General</legend>
 			<label class="control-label" for="hostname">Host name</label>
-            <div class="controls">
-                <input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
+			<div class="controls">
+				<input class="config-input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_host_name" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-hostname" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-hostname" class="config-help-info">
 					This is the name that will appear on the network. Length 3-63 characters, alphanumeric and hyphen allowed.
 				</span>
-            </div>
+			</div>
 
-            <label class="control-label" for="browsertitle">Player name</label>
-            <div class="controls">
-                <input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
+			<label class="control-label" for="browsertitle">Player name</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-browsertitle" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-browsertitle" class="config-help-info">
 					This is the name that will appear in the "m" menu header, Browser tab and other parts of the WebUI where its helpful to show the player name.
 				</span>
-            </div>
+			</div>
 
 			<label class="control-label" for="timezone">Timezone</label>
 			<div class="controls">
@@ -77,13 +77,13 @@
 				<button id="btn-set-timezone" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_time_zone" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 			</div>
 
-            <label class="control-label" for="keyboard">Keyboard layout</label>
-            <div class="controls">
-                <select id="keyboard" class="config-select-large" name="keyboard" onchange="autoClick('#btn-set-keyboard');">
-                    $_keyboard[keyboard]
-                </select>
-                <button id="btn-set-keyboard" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
-            </div>
+			<label class="control-label" for="keyboard">Keyboard layout</label>
+			<div class="controls">
+				<select id="keyboard" class="config-select-large" name="keyboard" onchange="autoClick('#btn-set-keyboard');">
+					$_keyboard[keyboard]
+				</select>
+				<button id="btn-set-keyboard" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_keyboard" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
+			</div>
 
 			<label class="control-label">Reduce notifications</label>
 			<div class="controls">
@@ -189,28 +189,28 @@
 					<span id="info-reduce-power" class="config-help-info">
 						Turn this option on to reduce shutdown wattage to 0.01W.
 						The default shutdown wattage is around 1 to 1.4W to support some HAT'S that require both the 3V and 5V rails.
-                    </span>
+					</span>
 				</div>
 			</div>
 
 			<div class="$_fan_temp0_hide">
 				<label class="control-label" for="fan-temp0">Fan control</label>
-	            <div class="controls">
-	                <input class="config-input-large" type="text" id="fan-temp0" name="fan_temp0" value="$_select[fan_temp0]">
+				<div class="controls">
+					<input class="config-input-large" type="text" id="fan-temp0" name="fan_temp0" value="$_select[fan_temp0]">
 					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_fan_temp0" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-fan-temp0" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span class="config-help-static">
 						Format is: Threshold 45-55C, Target 40-50C, Speed 75-125.<br>
 						Default: 50,45,75.
-                    </span>
+					</span>
 					<span id="info-fan-temp0" class="config-help-info">
 						Adjust fan_temp0 settings. Default temperature map is below.<br>
 						- fan_temp0=50000,fan_temp0_hyst=5000,fan_temp0_speed=75<br>
-					    - fan_temp1=60000,fan_temp1_hyst=5000,fan_temp1_speed=125<br>
-					    - fan_temp2=67500,fan_temp2_hyst=5000,fan_temp2_speed=175<br>
-					    - fan_temp3=75000,fan_temp3_hyst=5000,fan_temp3_speed=250<br>
-                    </span>
-	            </div>
+						- fan_temp1=60000,fan_temp1_hyst=5000,fan_temp1_speed=125<br>
+						- fan_temp2=67500,fan_temp2_hyst=5000,fan_temp2_speed=175<br>
+						- fan_temp3=75000,fan_temp3_hyst=5000,fan_temp3_speed=250<br>
+					</span>
+				</div>
 			</div>
 
 			<label class="control-label">LED0 (Activity)</label>
@@ -223,7 +223,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-actled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-actled" class="config-help-info">
 					Turn the activity LED flashing for SDCard (mmc0) on/off.
-                </span>
+				</span>
 			</div>
 
 			<div class="$_pwrled_hide">
@@ -237,7 +237,7 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-pwrled" class="config-help-info">
 						Turn the Power LED on/off.
-                    </span>
+					</span>
 				</div>
 			</div>
 
@@ -254,7 +254,7 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-p3wifi" class="config-help-info">
 						The integrated adapter appears on Pi-Zero W, Pi-Zero 2 W, Pi-3B and higher models.
-                    </span>
+					</span>
 				</div>
 
 				<label class="control-label">Bluetooth</label>
@@ -267,7 +267,7 @@
 					<a aria-label="Help" class="config-info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 					<span id="info-p3bt" class="config-help-info">
 						The integrated adapter appears on Pi-Zero W, Pi-Zero 2 W, Pi-3B and higher models.
-                    </span>
+					</span>
 				</div>
 			</div>
 
@@ -279,7 +279,7 @@
 				<button id="btn-set-ipaddr-timeout" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<span class="config-help-static">
 					Wait up to the specified time period for an IP address to be assigned to an adapter during startup.
-				    If no adapter has received an IP address the WiFi Hotspot will be started to ensure that moOde can be accessed.
+					If no adapter has received an IP address the WiFi Hotspot will be started to ensure that moOde can be accessed.
 				</span>
 			</div>
 
@@ -367,8 +367,8 @@
 					Length: 8-63 characters.<br>
 					If password is None specify anonymous access or userid "guest" and no password when mounting shares.<br>
 					If a password is set specify the userid created in the Raspberry Pi Imager and this password when mounting shares.<br>
-                	<b>Warning:</b> To avoid creating a security vulnerability, make sure this password is different from the one entered for the userid created in the Raspberry Pi Imager.
-                </span>
+					<b>Warning:</b> To avoid creating a security vulnerability, make sure this password is different from the one entered for the userid created in the Raspberry Pi Imager.
+				</span>
 			</div>
 
 			<div class="config-horiz-rule"></div>
@@ -420,7 +420,7 @@
 					<button id="btn-set-dlnasvc" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_dlna_settings" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<span class="config-help-static">
 						The DLNA media server indexes music sources defined for MPD and makes them available to UPnP control points.
-	                </span>
+					</span>
 				</div>
 
 				<label class="control-label" for="dlnaname">Name</label>
@@ -454,7 +454,7 @@
 				<button id="btn-set-shellinabox" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_shellinabox" value="novalue" $_webssh_set_disable><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 				<span class="config-help-static config-help-less-margin">
 					Web based Secure Shell terminal using Shellinabox by Markus Gutschk and Luka Krajger.
-                </span>
+				</span>
 			</div>
 			<div class="controls">
 				<a href="http://$_select[hostip]:4200" class="btn btn-medium btn-primary config-btn target-blank-link" target="_blank" $_webssh_link_disable $_webssh_open_disable>Open</a>
@@ -497,7 +497,7 @@
 						<b>Experimental:</b> Enable secure communication between the Browser and moOde.<br>
 						View the <a href="./setup_https.txt" class="target-blank-link" target="_blank">Configuration Guide</a>
 						for information on how HTTPS mode works.
-	                </span>
+					</span>
 				</div>
 
 				<label class="control-label" for="nginx-cert-type">Certificate type</label>
@@ -508,7 +508,7 @@
 					<button id="btn-set-nginx-cert-type" class="hide btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_nginx_cert_type" value="novalue"><i class="fa fa-solid fa-sharp fa-arrow-turn-down-left"></i></button>
 					<span class="config-help-static">
 						<b>Automatic:</b> Automatically generate and install a self-signed certificate into NGINX web server when HTTPS mode is turned on.<br>
-					    <b>Manual:</b> Click the UPLOAD followed by the INSTALL button for this type of certificate.
+						<b>Manual:</b> Click the UPLOAD followed by the INSTALL button for this type of certificate.
 					</span>
 				</div>
 
@@ -603,7 +603,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-download-logs" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-download-logs" class="config-help-info">
 					Download the moOde startup log: /var/log/moode.log
-                </span>
+				</span>
 			</div>
 
 			<label class="control-label">System logs</label>
@@ -612,7 +612,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-syslogs" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-clear-syslogs" class="config-help-info">
 					Clear various system log files. Note the logs are cleared periodically by the Maintenance task.
-                </span>
+				</span>
 			</div>
 
 			<label class="control-label">Play history log</label>
@@ -621,7 +621,7 @@
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-clear-playhistory" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<span id="info-clear-playhistory" class="config-help-info">
 					Clear the playback history log. Perform this task periodically since the log grows over time.
-                </span>
+				</span>
 			</div>
 
 			<div class="config-horiz-rule"></div>
@@ -653,7 +653,7 @@
 						<tr><td>Play history</td><td>/var/log/moode_playhistory.log</td></tr>
 						<tr><td>WebUI Javascript</td><td>Browser console</td></tr>
 					</table>
-                </span>
+				</span>
 				<span class="config-help-static">
 					<b>Caution:</b> Only turn this option on when troubleshooting an issue. It can create large log files and degrade performance.
 				</span>
