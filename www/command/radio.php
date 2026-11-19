@@ -107,7 +107,7 @@ function getStationContents($stName) {
 	return $contents;
 }
 
-// Check imput fields
+// Check input fields
 function validateInput($cmd, $stName, $stFile, $stUrl, $stRowId) {
 	$dbh = sqlConnect();
 	$stName = SQLite3::escapeString($stName);
