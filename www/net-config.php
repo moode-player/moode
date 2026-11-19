@@ -44,26 +44,37 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$method = $_POST['wlan0method'];
 		$uuid = genUUID(); // Always generate a new UUID to make things simpler
 
+		if ($_POST['wlan0security'] != 'none' && $_POST['wlan0pwd'] == '') {
+			// No password entered: keep the stored key of the configured or saved SSID
+			if ($_POST['wlan0ssid'] == $cfgNetwork[1]['wlanssid']) {
+				$stored = array('security' => $cfgNetwork[1]['wlansec'], 'psk' => $cfgNetwork[1]['wlanpsk'],
+					'saepwd' => $cfgNetwork[1]['wlanpwd']);
+			} else {
+				$result = sqlQuery("SELECT security, psk, saepwd FROM cfg_ssid WHERE ssid='" .
+					SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
+				$stored = is_array($result) ? $result[0] : array('security' => '');
+			}
+			$storedKey = $stored['security'] != $_POST['wlan0security'] ? '' :
+				($_POST['wlan0security'] == 'wpa-psk' ? $stored['psk'] : $stored['saepwd']);
+		}
+
 		if ($_POST['wlan0security'] == 'wpa-psk') {
 			// WPA2-PSK requires pre-shared key password
-			if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlanpsk']) {
-				// SSID or password changed
-				if (strlen($_POST['wlan0pwd']) < 64) {
-					// Convert plain text password to PSK
-					$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
-				} else {
-					// Use PSK from saved SSID
-					$psk = $_POST['wlan0pwd'];
-				}
+			if ($_POST['wlan0pwd'] == '') {
+				// Use stored PSK
+				$psk = $storedKey;
+			} else if (strlen($_POST['wlan0pwd']) < 64) {
+				// Convert plain text password to PSK
+				$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
 			} else {
-				// Use PSK from configured SSID
-				$psk = $cfgNetwork[1]['wlanpsk'];
+				// Use PSK as entered
+				$psk = $_POST['wlan0pwd'];
 			}
 			$pwd = $psk;
 		} else if ($_POST['wlan0security'] == 'sae') {
 			// WPA3-SAE requires plaintext password
 			$psk = '';
-			$pwd = $_POST['wlan0pwd'];
+			$pwd = $_POST['wlan0pwd'] == '' ? $storedKey : $_POST['wlan0pwd'];
 		} else if ($_POST['wlan0security'] == 'none') {
 			// None requires no psk or password
 			$psk = '';
@@ -119,7 +130,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		}
 
 		// HOTSPOT (apd0)
-		if ($_POST['wlan0apdssid'] != $cfgNetwork[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfgNetwork[2]['wlanpsk']) {
+		if ($_POST['wlan0apdssid'] != $cfgNetwork[2]['wlanssid'] || $_POST['wlan0apdpwd'] != '') {
 			$uuid = genUUID();
 			$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
 		} else {
@@ -278,23 +289,8 @@ $_wlan0security .= "<option value=\"sae\" " . ($cfgNetwork[1]['wlansec'] == 'sae
 $_wlan0security .= "<option value=\"none\" " . ($cfgNetwork[1]['wlansec'] == 'none' ? 'selected' : '') . " >None</option>\n";
 
 // Password (PSK or SAE plaintext)
-// TODO: load psk from cfg_ssid
-
-if (empty($_POST['wlan0otherssid'])) {
-	if ($cfgNetwork[1]['wlansec'] == 'wpa-psk') {
-		$_wlan0pwd = $cfgNetwork[1]['wlanpwd'];
-		$_show_hide_password_icon_hide = 'hide';
-	} else if ($cfgNetwork[1]['wlansec'] == 'sae') {
-		$_wlan0pwd = '';
-		$_show_hide_password_icon_hide = '';
-	} else if ($cfgNetwork[1]['wlansec'] == 'none') {
-		$_wlan0pwd = '';
-		$_show_hide_password_icon_hide = '';
-	}
-} else {
-	$_wlan0pwd = '';
-	$_show_hide_password_icon_hide = '';
-}
+$isSet = empty($_POST['wlan0otherssid']) && $cfgNetwork[1]['wlansec'] != 'none' && !empty($cfgNetwork[1]['wlanpwd']);
+$_placeholder['wlan0pwd'] = secretFieldView($isSet)[0];
 // Country code
 $zoneList = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
 $zoneListSorted = array();
@@ -323,19 +319,16 @@ $_wlan0secdns = $cfgNetwork[1]['secdns'];
 // Hotspot
 
 $_wlan0apdssid = $cfgNetwork[2]['wlanssid'];
-$_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
+$_placeholder['wlan0apdpwd'] = secretFieldView(!empty($cfgNetwork[2]['wlanpsk']))[0];
 $_wlan0apdproto .= "<option value=\"rsn\" " . ($_SESSION['approto'] == 'rsn' ? 'selected' : '') . " >RSN (Default)</option>\n";
 $_wlan0apdproto .= "<option value=\"wpa\" " . ($_SESSION['approto'] == 'wpa' ? 'selected' : '') . " >WPA</option>\n";
 $_ap_network = 'http://' . explode('/', $_SESSION['ap_network_addr'])[0];
 $_ap_host = 'http://' . $_SESSION['hostname'] . '.local';
-if (empty($_wlan0apdpwd)) {
+if (empty($cfgNetwork[2]['wlanpwd'])) {
 	phpSession('open');
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 	$_SESSION['notify']['msg'] = 'A Hotspot password needs to be entered. This is to ensure moOde can be accessed when Ethernet and WiFi are not available.';
 	phpSession('close');
-	$_show_hide_password_icon_hide = '';
-} else {
-	$_show_hide_password_icon_hide = 'hide';
 }
 
 waitWorker('net-config');

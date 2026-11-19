@@ -205,36 +205,30 @@ jQuery(document).ready(function($){ 'use strict';
         if ($('#wlan0security').val() == 'wpa-psk') {
             var ssid = $('#wlan0ssid').val();
             if (typeof(SSID.json[ssid]) != 'undefined') {
-                $('#wlan0pwd').val(SSID.json[ssid]['psk']);
-                $('a.show-hide-password').css('display', 'none');
+                $('#wlan0pwd').val('').attr('placeholder', SSID.json[ssid]['security'] == 'wpa-psk' && SSID.json[ssid]['psk'] ? '••••••••••••••••' : '');
             } else {
                 $('#wlan0method').val('dhcp').change();
-                $('#wlan0pwd').val('');
-                $('a.show-hide-password').css('display', 'inline');
+                $('#wlan0pwd').val('').attr('placeholder', '');
             }
             $('#wpa3-sae-msg').css('display', 'none');
         } else if ($('#wlan0security').val() == 'sae') {
+            var ssid = $('#wlan0ssid').val();
+            var saeKeySet = typeof(SSID.json[ssid]) != 'undefined' && SSID.json[ssid]['security'] == 'sae' && SSID.json[ssid]['saepwd'];
             $('#wlan0method').val('dhcp').change();
-            $('#wlan0pwd').val('');
-            $('a.show-hide-password').css('display', 'inline');
-            $('#wpa3-sae-msg').css('display', 'block');
+            $('#wlan0pwd').val('').attr('placeholder', saeKeySet ? '••••••••••••••••' : '');
+            $('#wpa3-sae-msg').css('display', saeKeySet ? 'none' : 'block');
 		} else if ($('#wlan0security').val() == 'none') {
             $('#wlan0method').val('dhcp').change();
-            $('#wlan0pwd').val('');
-            $('a.show-hide-password').css('display', 'none');
+            $('#wlan0pwd').val('').attr('placeholder', '');
             $('#wpa3-sae-msg').css('display', 'none');
         }
-    });
-    $('#wlan0pwd').on('input', function() {
-        // Show the Eye icon
-        $('a.show-hide-password').css('display', 'inline');
     });
     // Hotspot
     $('#apdssid').on('input', function() {
         if ($('#apdssid').val() == NETWORK.json['apd0']['wlanssid']) {
-            $('#apdpwd').val(NETWORK.json['apd0']['wlanpsk']);
+            $('#apdpwd').val('').attr('placeholder', NETWORK.json['apd0']['wlanpsk'] ? '••••••••••••••••' : '');
         } else {
-            $('#apdpwd').val('');
+            $('#apdpwd').val('').attr('placeholder', '');
         }
 	});
 
