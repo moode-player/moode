@@ -731,7 +731,7 @@ function stopAllRenderers() {
 	}
 }
 
-// Volume state of the active source, kept by source_ctl.py watch for the REST API
+// Volume state of the active source, kept by source_ctl.py watch for the REST API and the MQTT bridge
 // MPD and Input: the knob follows the volume MPD clients set
 function chkRendererWatch() {
 	$renderers = array('btactive' => 'bluetooth', 'aplactive' => 'airplay', 'qbzactive' => 'qobuz',
@@ -748,6 +748,6 @@ function chkRendererWatch() {
 }
 function stopRendererWatch() {
 	sysCmd("pkill -f '[s]ource_ctl.py .* watch'");
-	sysCmd('truncate ' . RENDVOL_CACHE_FILE . ' --size 0');
+	sysCmd('truncate ' . RENDVOL_CACHE_FILE . ' ' . SLMETA_CACHE_FILE . ' --size 0');
 	$GLOBALS['renderer_watch'] = '';
 }

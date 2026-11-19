@@ -1,0 +1,16 @@
+[Unit]
+Description=MQTT bridge
+After=network-online.target mpd.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Started and stopped by the worker, which writes /etc/mqtt-bridge.conf first
+User=www-data
+Group=www-data
+ExecStart=/usr/bin/python3 /var/www/daemon/mqtt-bridge.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
