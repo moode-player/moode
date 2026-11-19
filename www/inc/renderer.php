@@ -731,7 +731,7 @@ function stopAllRenderers() {
 	}
 }
 
-// Volume state of the active renderer, kept by renderer_ctl.py watch for the REST API
+// Volume state of the active renderer, kept by renderer_ctl.py watch for the REST API and the MQTT bridge
 function chkRendererWatch() {
 	$renderers = array('btactive' => 'bluetooth', 'aplactive' => 'airplay', 'qbzactive' => 'qobuz',
 		'slactive' => 'squeezelite', 'solactive' => 'soloist');
@@ -747,6 +747,6 @@ function chkRendererWatch() {
 }
 function stopRendererWatch() {
 	sysCmd("pkill -f '[r]enderer_ctl.py .* watch'");
-	sysCmd('truncate ' . RENDVOL_CACHE_FILE . ' --size 0');
+	sysCmd('truncate ' . RENDVOL_CACHE_FILE . ' ' . SLMETA_CACHE_FILE . ' --size 0');
 	$GLOBALS['renderer_watch'] = '';
 }
