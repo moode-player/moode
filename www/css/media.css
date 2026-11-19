@@ -473,7 +473,9 @@ body {
 	.container {margin-left:calc(env(safe-area-inset-left) + 1rem);}
 	.container p {font-size:12px;}
 	.config-info-toggle i,
-	.show-hide-password i {margin-top:7px;font-size:1.75em;}
+	.show-hide-password i,
+	.clear-password i
+	 {margin-top:7px;font-size:1.75em;}
 	.config-btn-after,
 	.config-input-after,
 	.config-toggle-after {font-size:12px;}

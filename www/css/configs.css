@@ -90,11 +90,16 @@ a.config-info-toggle:visited {color:var(--config-help-icon-color);}
 #sys-status-log-output,
 #sys-restore-status {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;
 	font-family:monospace;};
-/* net-config, src-config: Show/hide password plaintext */
-a.show-hide-password {vertical-align:top;color:var(--config-help-icon-color);}
+/* Show/hide password plaintext or Clear password  */
+a.show-hide-password,
+a.clear-password {vertical-align:top;color:var(--config-help-icon-color)!important;}
 a.show-hide-password:hover,
-a.show-hide-password:visited {color:var(--config-help-icon-color);}
-.show-hide-password i {vertical-align:top;margin-top:5px;font-size:18px;margin-left:var(--config-ctl-margin-bottom);}
+a.show-hide-password:visited,
+a.clear-password:hover,
+a.clear-password:visited {color:var(--config-help-icon-color)!important;}
+.show-hide-password i,
+.clear-password i
+ {vertical-align:top;margin-top:5px;font-size:18px;margin-left:var(--config-ctl-margin-bottom);}
 .left-margin-0 i {margin-left:0;}
 /* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:200vh;border:none;}
