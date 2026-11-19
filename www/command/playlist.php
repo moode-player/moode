@@ -484,12 +484,12 @@ function markItemAsFavorite($item) {
 	// NOTE: http could also be a UPnP file but no good way to tell
 	if (substr($item, 0, 4) == 'http') {
 		$dbh = sqlConnect();
-		$result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . $item . "'", $dbh);
+		$result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);
 		if ($result === true) {
 			// Query execution succeeded but no match found
 			$msg = 'markItemAsFavorite(): Not in cfg_radio:' . $item;
 		} else {
-			$result = sqlQuery("UPDATE cfg_radio SET type='f' WHERE station='" . $item . "'", $dbh);
+			$result = sqlQuery("UPDATE cfg_radio SET type='f' WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);
 			$msg = 'markItemAsFavorite(): Updated: ' . $item;
 		}
 	} else {

@@ -127,7 +127,7 @@ function validateInput($cmd, $stName, $stFile, $stUrl, $stRowId) {
 
 	if ($cmd == 'upd_station') {
 		// NOTE: Client prevents pls name change so check for existing station with same URL
-		if (true !== sqlQuery("SELECT id FROM cfg_radio WHERE id != '" . $stRowId . "' " .
+		if (true !== sqlQuery("SELECT id FROM cfg_radio WHERE id != '" . SQLite3::escapeString($stRowId) . "' " .
 			"AND station = '" . $stUrl . "'", $dbh)) {
 			$msg = 'A station with same URL already exists';
 		} else {
@@ -148,18 +148,18 @@ function putStationContents($cmd, $path, $stFile) {
 			'NULL,' .
 			"'"	. SQLite3::escapeString($path['url']) . "'," .
 			"'" . SQLite3::escapeString($path['name']) . "'," .
-			"'"	. $path['type'] . "'," .
+			"'"	. SQLite3::escapeString($path['type']) . "'," .
 			"'"	. 'local' . "'," .
-			"\"" . $path['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
-			"'" . $path['broadcaster'] . "'," .
-			"'" . $path['language'] . "'," .
-			"'" . $path['country'] . "'," .
-			"'" . $path['region'] . "'," .
-			"'" . $path['bitrate'] . "'," .
-			"'" . $path['format'] . "'," .
-			"'" . $path['geo_fenced'] . "'," .
+			"'" . SQLite3::escapeString($path['genre']) . "'," .
+			"'" . SQLite3::escapeString($path['broadcaster']) . "'," .
+			"'" . SQLite3::escapeString($path['language']) . "'," .
+			"'" . SQLite3::escapeString($path['country']) . "'," .
+			"'" . SQLite3::escapeString($path['region']) . "'," .
+			"'" . SQLite3::escapeString($path['bitrate']) . "'," .
+			"'" . SQLite3::escapeString($path['format']) . "'," .
+			"'" . SQLite3::escapeString($path['geo_fenced']) . "'," .
 			"'" . SQLite3::escapeString($path['home_page']) . "'," .
-			"'" . $path['monitor'] . "'";
+			"'" . SQLite3::escapeString($path['monitor']) . "'";
 		$result = sqlQuery('INSERT INTO cfg_radio VALUES ' . '(' . $values . ')', $dbh);
 	}
 
@@ -168,19 +168,19 @@ function putStationContents($cmd, $path, $stFile) {
 		$values =
 			"station='" . SQLite3::escapeString($path['url']) . "'," .
 			"name='" . SQLite3::escapeString($path['name']) . "'," .
-			"type='" . $path['type'] . "'," .
+			"type='" . SQLite3::escapeString($path['type']) . "'," .
 			"logo='local'," .
-			"genre=\"" . $path['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
-			"broadcaster='" . $path['broadcaster'] . "'," .
-			"language='" . $path['language'] . "'," .
-			"country='" . $path['country'] . "'," .
-			"region='" . $path['region'] . "'," .
-			"bitrate='" . $path['bitrate'] . "'," .
-			"format='" . $path['format'] . "'," .
-			"geo_fenced='" . $path['geo_fenced'] . "'," .
+			"genre='" . SQLite3::escapeString($path['genre']) . "'," .
+			"broadcaster='" . SQLite3::escapeString($path['broadcaster']) . "'," .
+			"language='" . SQLite3::escapeString($path['language']) . "'," .
+			"country='" . SQLite3::escapeString($path['country']) . "'," .
+			"region='" . SQLite3::escapeString($path['region']) . "'," .
+			"bitrate='" . SQLite3::escapeString($path['bitrate']) . "'," .
+			"format='" . SQLite3::escapeString($path['format']) . "'," .
+			"geo_fenced='" . SQLite3::escapeString($path['geo_fenced']) . "'," .
 			"home_page='" . SQLite3::escapeString($path['home_page']) . "'," .
-			"monitor='" . $path['monitor'] . "'";
-		$result = sqlQuery('UPDATE cfg_radio SET ' . $values . " WHERE id='" . $path['id'] . "'", $dbh);
+			"monitor='" . SQLite3::escapeString($path['monitor']) . "'";
+		$result = sqlQuery('UPDATE cfg_radio SET ' . $values . " WHERE id='" . SQLite3::escapeString($path['id']) . "'", $dbh);
 	}
 
 	// Add/update session var
@@ -287,7 +287,7 @@ function putRadioViewShowHide($stBlock, $stType) {
 		$whereClause = "WHERE id > '499' AND substr(type,1 ,1) != 'f' AND type != 'rb'";
 	}
 
-	$result = sqlQuery("UPDATE cfg_radio SET type='" . $stType . "' " . $whereClause, $dbh);
+	$result = sqlQuery("UPDATE cfg_radio SET type='" . SQLite3::escapeString($stType) . "' " . $whereClause, $dbh);
 
 	// Update cfg_system and reset show/hide param to "No action"
 	$result = sqlRead('cfg_system', $dbh, 'radioview_show_hide');
