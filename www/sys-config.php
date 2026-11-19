@@ -263,7 +263,7 @@ if (isset($_POST['update_dlna_settings'])) {
 	}
 	if (isset($update)) {
 		$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => $msg);
-		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $notify['title'], $notify['msg']);
+		submitJob('minidlna', escapeshellarg($currentDlnaName) . ' ' . escapeshellarg($_POST['dlnaname']), $notify['title'], $notify['msg']);
 	}
 }
 if (isset($_POST['rebuild_dlnadb'])) {

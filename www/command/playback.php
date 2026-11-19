@@ -30,7 +30,7 @@ switch ($_GET['cmd']) {
 		phpSession('close');
 
 		if ($_SESSION['mpdmixer'] == 'hardware') {
-			sysCmd('amixer -M -c ' . $_SESSION['cardnum'] . ' sset "' . $_SESSION['amixname'] . '" ' . $_POST['volknob'] . '%' );
+			sysCmd('amixer -M -c ' . $_SESSION['cardnum'] . ' sset "' . $_SESSION['amixname'] . '" ' . (int)$_POST['volknob'] . '%' );
 		} else {
 			sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
 			$resp = readMpdResp($sock);

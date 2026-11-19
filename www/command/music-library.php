@@ -63,7 +63,7 @@ switch ($_GET['cmd']) {
 		echo file_get_contents(LIBSEARCH_BASE . $_POST['name'] . '.json');
 		break;
 	case 'delete_saved_search':
-		sysCmd('rm "' . LIBSEARCH_BASE . $_POST['name'] . '.json"');
+		sysCmd('rm ' . escapeshellarg(LIBSEARCH_BASE . $_POST['name'] . '.json'));
 		break;
 	case 'clear_active_search':
 		phpSession('open');

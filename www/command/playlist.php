@@ -12,8 +12,10 @@ require_once __DIR__ . '/../inc/sql.php';
 
 const NUMBER_EXT_TAGS = 2;
 
-chkVariables($_GET);
-chkVariables($_POST);
+chkVariables($_GET, array('item'));
+chkVariables($_POST, array('path'));
+chkPath('item', $_GET['item'] ?? '');
+chkPath('path', $_POST['path'] ?? '');
 
 switch ($_GET['cmd']) {
 	case 'export_playlist':
@@ -147,9 +149,9 @@ switch ($_GET['cmd']) {
 		// sysCmd (root), matching the owner/perms convention used elsewhere here
 		$tmpFile = tempnam(sys_get_temp_dir(), 'plimport');
 		file_put_contents($tmpFile, implode("\n", $out) . "\n");
-		sysCmd('cp "' . $tmpFile . '" "' . $plFile . '"');
-		sysCmd('chmod 0777 "' . $plFile . '"');
-		sysCmd('chown root:root "' . $plFile . '"');
+		sysCmd('cp ' . escapeshellarg($tmpFile) . ' ' . escapeshellarg($plFile));
+		sysCmd('chmod 0777 ' . escapeshellarg($plFile));
+		sysCmd('chown root:root ' . escapeshellarg($plFile));
 		unlink($tmpFile);
 		echo json_encode(array('status' => 'ok', 'name' => $plName,
 			'imported' => $imported, 'remapped' => $remapped, 'dropped' => $dropped));
@@ -192,9 +194,9 @@ switch ($_GET['cmd']) {
 		// File may not exist yet (User enters new playlist name)
 		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 		if (!file_exists($plFile)) {
-			sysCmd('touch "' . $plFile . '"');
-			sysCmd('chmod 0777 "' . $plFile . '"');
-			sysCmd('chown root:root "' . $plFile . '"');
+			sysCmd('touch ' . escapeshellarg($plFile));
+			sysCmd('chmod 0777 ' . escapeshellarg($plFile));
+			sysCmd('chown root:root ' . escapeshellarg($plFile));
 		}
 
 		// Write metadata tags, contents and cover image
@@ -203,8 +205,8 @@ switch ($_GET['cmd']) {
 		putPlaylistCover($plName);
 		break;
 	case 'del_playlist':
-		sysCmd('rm "' . MPD_PLAYLIST_ROOT . html_entity_decode($_POST['path']) . '.m3u"');
-		sysCmd('rm "' . PLAYLIST_COVERS_ROOT . html_entity_decode($_POST['path']) . '.jpg"');
+		sysCmd('rm ' . escapeshellarg(MPD_PLAYLIST_ROOT . html_entity_decode($_POST['path']) . '.m3u'));
+		sysCmd('rm ' . escapeshellarg(PLAYLIST_COVERS_ROOT . html_entity_decode($_POST['path']) . '.jpg'));
 		break;
 	case 'save_queue_to_playlist':
 		$plName = html_entity_decode($_GET['name']);
@@ -219,8 +221,8 @@ switch ($_GET['cmd']) {
 		$resp = readMpdResp($sock);
 		sendMpdCmd($sock, 'save "' . $plName . '"');
 		echo json_encode(readMpdResp($sock));
-		sysCmd('chmod 0777 "' . $plFile . '"');
-		sysCmd('chown root:root "' . $plFile . '"');
+		sysCmd('chmod 0777 ' . escapeshellarg($plFile));
+		sysCmd('chown root:root ' . escapeshellarg($plFile));
 
 		// Get playlist items
 		if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
@@ -244,9 +246,9 @@ switch ($_GET['cmd']) {
 
 		// Create empty playlist if it doesn't exists
 		if (!file_exists($plFile)) {
-			sysCmd('touch "' . $plFile . '"');
-			sysCmd('chmod 0777 "' . $plFile . '"');
-			sysCmd('chown root:root "' . $plFile . '"');
+			sysCmd('touch ' . escapeshellarg($plFile));
+			sysCmd('chmod 0777 ' . escapeshellarg($plFile));
+			sysCmd('chown root:root ' . escapeshellarg($plFile));
 		}
 
 		// Write metadata tags and cover image
@@ -269,9 +271,9 @@ switch ($_GET['cmd']) {
 
 			// Create playlist if it doesn't exist
 			if (!file_exists($plFile)) {
-				sysCmd('touch "' . $plFile . '"');
-				sysCmd('chmod 0777 "' . $plFile . '"');
-				sysCmd('chown root:root "' . $plFile . '"');
+				sysCmd('touch ' . escapeshellarg($plFile));
+				sysCmd('chmod 0777 ' . escapeshellarg($plFile));
+				sysCmd('chown root:root ' . escapeshellarg($plFile));
 			}
 
 			// Write metadata tags and cover image
@@ -279,9 +281,9 @@ switch ($_GET['cmd']) {
 			putPlaylistCover($plName);
 
 			// Append item (prevent adding duplicate)
-			$result = sysCmd('fgrep "' . $_GET['item'] . '" "' . $plFile . '"');
+			$result = sysCmd('fgrep ' . escapeshellarg($_GET['item']) . ' ' . escapeshellarg($plFile));
 			if (empty($result[0])) {
-				sysCmd('echo "' . $_GET['item'] . '" >> "' . $plFile . '"');
+				sysCmd('echo ' . escapeshellarg($_GET['item']) . ' >> ' . escapeshellarg($plFile));
 			}
 
 			// NOTE: currently only radio stations have a favorites tag
@@ -428,8 +430,8 @@ function putPlaylistContents($plName, $plMeta, $plItems, $appendFlag = 0) {
 	if (false == (file_put_contents($plFile, $contents, $appendFlag))) {
 		workerLog('putPlaylistContents(): File write failed on ' . $plFile);
 	} else {
-		sysCmd('chmod 0777 "' . $plFile . '"');
-		sysCmd('chown root:root "' . $plFile . '"');
+		sysCmd('chmod 0777 ' . escapeshellarg($plFile));
+		sysCmd('chown root:root ' . escapeshellarg($plFile));
 	}
 }
 // Create/update playlist metadata
@@ -459,12 +461,12 @@ function putPlaylistCover($plName) {
 	sleep(3); // Allow time for set_plcover_image job to create __tmp__ image file
 
 	if (file_exists($plTmpImage)) {
-		sysCmd('mv "' . $plTmpImage . '" "' . $plCoverImage . '"');
-		sysCmd('sed -i s/#EXTIMG:default/#EXTIMG:local/ "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
+		sysCmd('mv ' . escapeshellarg($plTmpImage) . ' ' . escapeshellarg($plCoverImage));
+		sysCmd('sed -i s/#EXTIMG:default/#EXTIMG:local/ ' . escapeshellarg(MPD_PLAYLIST_ROOT . $plName . '.m3u'));
 	} else if (!file_exists($plCoverImage)) {
-		sysCmd('cp "' . $defaultImage . '" "' . $plCoverImage . '"');
+		sysCmd('cp ' . escapeshellarg($defaultImage) . ' ' . escapeshellarg($plCoverImage));
 		// Change tag value to 'default' so renderPlaylistView() can detect that its a default image
-		sysCmd('sed -i s/#EXTIMG:local/#EXTIMG:default/ "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
+		sysCmd('sed -i s/#EXTIMG:local/#EXTIMG:default/ ' . escapeshellarg(MPD_PLAYLIST_ROOT . $plName . '.m3u'));
 	}
 
 	sendFECmd('set_cover_image0'); // Hide spinner

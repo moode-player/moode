@@ -89,7 +89,7 @@ function startAirPlay() {
 
 	// NOTE: All other params are in /etc/shairport-sync.conf
 	$cmd = '/usr/bin/shairport-sync ' . $logging .
-		' -a "' . $_SESSION['airplayname'] . '" ' .
+		' -a ' . escapeshellarg($_SESSION['airplayname']) . ' ' .
 		'-- -d ' . $device . ' > ' . $logFile . ' 2>&1 &';
 
 	// Start AirPlay receiver
@@ -222,7 +222,7 @@ function startSpotify() {
 
  	// NOTE: We use --disable-audio-cache because the audio file cache eats disk space.
 	$cmd = 'librespot' .
-		' --name "' . $_SESSION['spotifyname'] . '"' .
+		' --name ' . escapeshellarg($_SESSION['spotifyname']) .
 		' --bitrate ' . $cfgSpotify['bitrate'] .
 		' --format ' . $cfgSpotify['format'] .
 		$dither .
@@ -286,7 +286,7 @@ function cfgQobuz() {
 
 	// QConnect
 	sysCmd('pibuz settings set qconnect.startup_mode on');
-	sysCmd('pibuz settings set qconnect.device_name "' . $_SESSION['qobuzname'] . '"');
+	sysCmd('pibuz settings set qconnect.device_name ' . escapeshellarg($_SESSION['qobuzname']));
 	sysCmd('pibuz settings set qconnect.pairing on');
 	sysCmd('pibuz settings set qconnect.volume_mode ' . $volMode);
 	sysCmd('pibuz settings set qconnect.initial_volume ' . $cfgQobuz['initial_volume']);

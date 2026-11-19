@@ -11,7 +11,8 @@ require_once __DIR__ . '/../inc/session.php';
 require_once __DIR__ . '/../inc/sql.php';
 
 chkVariables($_GET, array('title', 'station'));
-chkVariables($_POST);
+chkVariables($_POST, array('path'));
+chkPath('path', $_POST['path'] ?? '');
 
 switch ($_GET['cmd']) {
 	case 'set_ralogo_image':
@@ -60,7 +61,7 @@ switch ($_GET['cmd']) {
 		//workerLog($_POST['svc'] . '|' . $_POST['opt']);
 		if ($_POST['svc'] == 'On') {
 			sysCmd('truncate ' . MPD_LOG . ' --size 0');
-			sysCmd('/var/www/daemon/mpdmon.php "' . $_POST['opt'] . '" > /dev/null 2>&1 &');
+			sysCmd('/var/www/daemon/mpdmon.php ' . escapeshellarg($_POST['opt']) . ' > /dev/null 2>&1 &');
 		}
 		break;
 	case 'get_radiocover_url':
@@ -209,8 +210,8 @@ function putStationContents($cmd, $path, $stFile) {
 		exit(0);
 	}
 
-	sysCmd('chmod 0777 "' . $stFile . '"');
-	sysCmd('chown root:root "' . $stFile . '"');
+	sysCmd('chmod 0777 ' . escapeshellarg($stFile));
+	sysCmd('chown root:root ' . escapeshellarg($stFile));
 	// Update time stamp on files so mpd picks up the change and commits the update
 	sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
@@ -235,13 +236,13 @@ function putStationCover($stName) {
 	sleep(3); // Allow time for set_ralogo_image job to create __tmp__ image file
 
 	if (file_exists($stTmpImage)) {
-		sysCmd('mv "' . $stTmpImage . '" "' . $stCoverImage . '"');
-		sysCmd('mv "' . $stTmpImageThm . '" "' . $stCoverImageThm . '"');
-		sysCmd('mv "' . $stTmpImageThmSm . '" "' . $stCoverImageThmSm . '"');
+		sysCmd('mv ' . escapeshellarg($stTmpImage) . ' ' . escapeshellarg($stCoverImage));
+		sysCmd('mv ' . escapeshellarg($stTmpImageThm) . ' ' . escapeshellarg($stCoverImageThm));
+		sysCmd('mv ' . escapeshellarg($stTmpImageThmSm) . ' ' . escapeshellarg($stCoverImageThmSm));
 	} else if (!file_exists($stCoverImage)) {
-		sysCmd('cp "' . $defaultImage . '" "' . $stCoverImage . '"');
-		sysCmd('cp "' . $defaultImage . '" "' . $stCoverImageThm . '"');
-		sysCmd('cp "' . $defaultImage . '" "' . $stCoverImageThmSm . '"');
+		sysCmd('cp ' . escapeshellarg($defaultImage) . ' ' . escapeshellarg($stCoverImage));
+		sysCmd('cp ' . escapeshellarg($defaultImage) . ' ' . escapeshellarg($stCoverImageThm));
+		sysCmd('cp ' . escapeshellarg($defaultImage) . ' ' . escapeshellarg($stCoverImageThmSm));
 	}
 
 	sendFECmd('set_cover_image0'); // Hide spinner
@@ -261,10 +262,10 @@ function deleteStation($stationName, $stationPls) {
 	$result = sqlQuery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($stationName) . "'", $dbh);
 
 	// Delete pls and logo image files
-	sysCmd('rm "' . MPD_MUSICROOT . $stationPls . '"');
-	sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $stationName . '.jpg"');
-	sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $stationName . '.jpg"');
-	sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $stationName . '_sm.jpg"');
+	sysCmd('rm ' . escapeshellarg(MPD_MUSICROOT . $stationPls));
+	sysCmd('rm ' . escapeshellarg('/var/local/www/imagesw/radio-logos/' . $stationName . '.jpg'));
+	sysCmd('rm ' . escapeshellarg('/var/local/www/imagesw/radio-logos/thumbs/' . $stationName . '.jpg'));
+	sysCmd('rm ' . escapeshellarg('/var/local/www/imagesw/radio-logos/thumbs/' . $stationName . '_sm.jpg'));
 
 	// Update time stamp on files so MPD picks up the change
 	sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');

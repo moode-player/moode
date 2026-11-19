@@ -463,8 +463,8 @@ function nvmeListDrives() {
 }
 
 function nvmeFormatDrive($device, $label) {
-	sysCmd('mkfs -t ext4 ' . $device);
-	sysCmd('e2label ' . $device . ' "' . $label . '"');
+	sysCmd('mkfs -t ext4 ' . escapeshellarg($device));
+	sysCmd('e2label ' . escapeshellarg($device) . ' ' . escapeshellarg($label));
 }
 
 //----------------------------------------------------------------------------//

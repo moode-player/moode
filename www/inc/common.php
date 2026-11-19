@@ -206,6 +206,23 @@ function chkValueEx($key = 'nokey', $value) {
 	}
 }
 
+// Check for directory traversal (a .. path component) in values that carry
+// file paths or URLs and are therefore excluded from chkVariables()
+function chkPath($key, $value) {
+	if (is_array($value)) {
+		foreach ($value as $key2 => $value2) {
+			chkPath($key2, $value2);
+		}
+	} else if (in_array('..', explode('/', (string)$value))) {
+		workerLog('SECCHK: Directory traversal detected, request denied');
+		workerLog('SECCHK: ' . $key . '|' . $value);
+		// Redirect to '400 Bad request' page and then exit
+		http_response_code(400);
+		header('Location: /response400.html');
+		exit(1);
+	}
+}
+
 // Check for SQL injection in the WHERE clause
 function chkSQL($sql) {
 	// DEBUG:

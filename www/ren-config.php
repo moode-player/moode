@@ -30,7 +30,7 @@ if (isset($_POST['update_bt_settings'])) {
 		phpSession('write', 'btsvc', $_POST['btsvc']);
 	}
 	if (isset($update)) {
-		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"');
+		submitJob('btsvc', escapeshellarg($currentBtName) . ' ' . escapeshellarg($_POST['btname']));
 	}
 }
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
@@ -190,7 +190,7 @@ if (isset($_POST['update_upnp_settings'])) {
 		phpSession('write', 'upnpsvc', $_POST['upnpsvc']);
 	}
 	if (isset($update)) {
-		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"');
+		submitJob('upnpsvc', escapeshellarg($currentUpnpName) . ' ' . escapeshellarg($_POST['upnpname']));
 	}
 }
 if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upnpsvc'] == '1') {
