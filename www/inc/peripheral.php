@@ -189,6 +189,7 @@ function stopPeppyGainMon() {
 	// The monitor is a child of the above and its command line carries none of that path,
 	// so it outlives the kill and leaks one process per bounce
 	sysCmd('pkill -f "alsactl[ ]monitor hw:" > /dev/null 2>&1');
+	sysCmd('pkill -f "inotifywait[ ].*rendvol" > /dev/null 2>&1');
 }
 
 // GPIO button handler
