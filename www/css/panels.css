@@ -118,6 +118,24 @@ html {background-color:inherit;}
 .turnoff-receiver:hover {background-color:var(--btnshade4);}
 /* Volume controls */
 #inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
+#renderer-volume-ctl {position:fixed;right:1.5rem;top:5vh;height:70vh;width:3rem;flex-direction:column;align-items:center;z-index:9999;font-size:1rem;}
+#renderer-volume-level {margin-bottom:.5em;font-size:1.5rem;}
+#renderer-volume-icon {margin-top:.5em;font-size:1.5rem;width:1.25em;text-align:center;flex-shrink:0;}
+#renderer-volume-icon.renderer-can-mute {cursor:pointer;}
+#renderer-volume {writing-mode:vertical-lr;direction:rtl;flex:1;width:2rem;margin:0;cursor:pointer;}
+#renderer-volume::-webkit-slider-runnable-track {width:16px;border-radius:8px;background:linear-gradient(to top, var(--accentxts) var(--fill, 0%), var(--trackfill) var(--fill, 0%));}
+#renderer-volume::-webkit-slider-thumb {width:16px;height:16px;margin:0;background:transparent;}
+#renderer-volume::-moz-range-track {width:16px;border-radius:8px;background:var(--trackfill);}
+#renderer-volume::-moz-range-progress {width:16px;border-radius:8px;background:var(--accentxts);}
+#renderer-volume::-moz-range-thumb {width:0;height:0;border:none;box-shadow:none;background:transparent;}
+/* Narrow screens: horizontal, first child of #inpsrc-metadata (moved by placeRendererVolume) */
+#inpsrc-metadata #renderer-volume-ctl {position:static;flex-direction:row;justify-content:center;height:auto;width:80%;margin:0 auto .5em;}
+#inpsrc-metadata #renderer-volume-icon {order:0;margin:0 .5em 0 0;}
+#inpsrc-metadata #renderer-volume {order:1;writing-mode:horizontal-tb;direction:ltr;height:2rem;width:auto;}
+#inpsrc-metadata #renderer-volume-level {order:2;margin:0 0 0 .5em;width:2.5em;flex-shrink:0;text-align:left;font-size:1.5rem;}
+#inpsrc-metadata #renderer-volume::-webkit-slider-runnable-track {width:auto;height:16px;background:linear-gradient(to right, var(--accentxts) var(--fill, 0%), var(--trackfill) var(--fill, 0%));}
+#inpsrc-metadata #renderer-volume::-moz-range-track,
+#inpsrc-metadata #renderer-volume::-moz-range-progress {width:auto;height:16px;}
 /* Custom overlay: cover w/metadata (AirPlay, Spotify Connect, Qobuz Connect) */
 /* Default layout: */
 body:not(.rmwide) .inpsrc-metadata-cover {
