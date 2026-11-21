@@ -164,7 +164,7 @@ function getIPv4AddressBlock($cfgNetwork) {
 	return $data;
 }
 function activateHotspot() {
-	$connectedSSID = trim(sysCmdStr("nmcli -f IN-USE,SSID device wifi | awk 'NR==2{print $2}'"));
+	$connectedSSID = trim(sysCmdStr("nmcli -f IN-USE,SSID device wifi | awk 'NR==2 {print $2}'"));
 	$hotspotSSID = sysCmd("cat /etc/NetworkManager/system-connections/Hotspot.nmconnection 2>&1 | awk -F\"=\" '/ssid=/ {print $2;exit;}'")[0];
 	sysCmd('nmcli c down ' . $connectedSSID);
 	sysCmd('nmcli c up ' . $hotspotSSID);
