@@ -145,6 +145,12 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 phpSession('close');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 $result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 $optionsArray = explode(',', $result[0]['chipoptions']);
 

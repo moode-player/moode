@@ -379,6 +379,12 @@ if ($initiateLibraryUpd == true) {
 // Populate form fields
 //----------------------------------------------------------------------------//
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 // LIB CONFIG
 if (!isset($_GET['cmd'])) {
 	$tpl = "lib-config.html";

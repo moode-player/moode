@@ -50,6 +50,12 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	submitJob('mpdcfg', $queueArgs, NOTIFY_TITLE_INFO, 'MPD' . NOTIFY_MSG_SVC_RESTARTED);
 }
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 // Load settings
 $result = sqlRead('cfg_mpd', $dbh);
 $cfgMPD = array();

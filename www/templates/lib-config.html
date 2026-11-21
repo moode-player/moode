@@ -10,6 +10,8 @@
 	<h1 class="lib-config">Music Library</h1>
 
 	<form class="form-horizontal" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>Remote NAS Sources</legend>
 		<p class="sub-legend">
 			Create a remote NAS source when the song files reside on another computer in the network.
@@ -196,6 +198,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="remount-sources" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remount-sources-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Re-mount NAS sources?</h3>
@@ -209,6 +213,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="regen-mpddb" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="regen-mpddb-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Regenerate Music Database?</h3>
@@ -222,6 +228,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="analyze-mpddb" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="analyze-mpddb-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Analyze Music Database?</h3>
@@ -235,6 +243,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-libcache" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-libcache-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear library tag cache?</h3>
@@ -248,6 +258,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="regen-thmcache" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="regen-thmcache-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Regenerate thumbnail cache?</h3>

@@ -170,6 +170,12 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	$_imported_scriptfile = 'No file uploaded';
 }
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
  // Helper method to generate html code for toggle button
 function genToggleButton($name, $value, $disabled, $infoHelp = true) {
 	$id = str_replace('_', '-', $name);

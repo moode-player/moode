@@ -12,9 +12,10 @@ require_once __DIR__ . '/inc/sql.php';
 
 $dbh = sqlConnect();
 phpSession('open');
-updAlsaVolume($_SESSION['amixname']);
 
 chkVariables($_POST);
+
+updAlsaVolume($_SESSION['amixname']);
 
 // Bluetooth
 if (isset($_POST['update_bt_settings'])) {
@@ -36,10 +37,10 @@ if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc']
 	submitJob('btsvc', '', NOTIFY_TITLE_INFO, NAME_BLUETOOTH . NOTIFY_MSG_SVC_MANUAL_RESTART);
 }
 if (isset($_POST['update_bt_pairing_confirm']) && isset($_POST['bt_pairing_confirm'])
-		&& $_POST['bt_pairing_confirm'] != $_SESSION['bt_pairing_confirm']) {
-	$_SESSION['bt_pairing_confirm'] = $_POST['bt_pairing_confirm'];
-	$msg = 'Pairing confirmation ' . ($_POST['bt_pairing_confirm'] == '1' ? 'enabled' : 'disabled');
-	submitJob('bt_pairing_confirm', '', NOTIFY_TITLE_INFO, $msg);
+	&& $_POST['bt_pairing_confirm'] != $_SESSION['bt_pairing_confirm']) {
+		$_SESSION['bt_pairing_confirm'] = $_POST['bt_pairing_confirm'];
+		$msg = 'Pairing confirmation ' . ($_POST['bt_pairing_confirm'] == '1' ? 'enabled' : 'disabled');
+		submitJob('bt_pairing_confirm', '', NOTIFY_TITLE_INFO, $msg);
 }
 if (isset($_POST['update_alsavolume_max_bt'])) {
 	$_SESSION['alsavolume_max_bt'] = $_POST['alsavolume_max_bt'];
@@ -255,6 +256,12 @@ if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
 }
 
 phpSession('close');
+
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
 
 // Bluetooth
 $_feat_bluetooth = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? '' : 'hide';

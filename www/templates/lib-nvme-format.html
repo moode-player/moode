@@ -14,6 +14,8 @@
 	</p>
 
 	<form class="form-horizontal" action="lib-config.php" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>NVMe drive
 			<a href="#format-nvme-drive-modal" data-toggle="modal"><button id="btn-format-nvme-drive" class="legend-config btn btn-medium btn-primary">Format</button></a>
 		</legend>
@@ -44,6 +46,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="format-nvme-drive-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="format-nvme-drive-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Format NVMe drive?</h3>

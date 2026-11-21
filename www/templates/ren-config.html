@@ -15,6 +15,8 @@
 	</p>
 
 	<form class="form-horizontal" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<div class="control-group $_feat_bluetooth">
 			<legend>Bluetooth</legend>
 			<p class="sub-legend">A Bluetooth adapter must be present and enabled otherwise Bluetooth will not start.</p>
@@ -537,6 +539,7 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="bt-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="bt-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Bluetooth controller?</h3>
@@ -550,6 +553,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="airplay-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="airplay-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart AirPlay renderer?</h3>
@@ -563,6 +567,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="spotify-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="spotify-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Spotify connect renderer?</h3>
@@ -576,6 +581,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="spotify-clear-credentials" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="spotify-clear-credentials-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear credential cache?</h3>
@@ -589,6 +595,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="qobuz-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="qobuz-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Qobuz connect renderer?</h3>
@@ -602,6 +609,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="qobuz-clear-credentials" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="qobuz-clear-credentials-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear stored Qobuz credentials?</h3>
@@ -617,6 +625,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="soloist-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="soloist-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Spotify Soloist renderer?</h3>
@@ -630,6 +639,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="soloist-clear-credentials" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="soloist-clear-credentials-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear stored Spotify session?</h3>
@@ -645,6 +655,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="soloist-clear-cache" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="soloist-clear-cache-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear Spotify Soloist track cache?</h3>
@@ -658,6 +669,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="sl-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="sl-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Squeezelite renderer?</h3>
@@ -671,6 +683,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="upnp-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="upnp-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart UPnP renderer?</h3>
@@ -684,6 +697,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="pa-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="pa-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Plexamp renderer?</h3>
@@ -697,6 +711,7 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
 	<div id="rb-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="rb-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart RoonBridge renderer?</h3>

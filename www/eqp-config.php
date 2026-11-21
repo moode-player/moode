@@ -102,6 +102,12 @@ if (isset($_POST['curve_id']) && isset($_POST['newcurvename']) && $_POST['newcur
 
 phpSession('close');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 // Load curve list
 if (!$_selected_curve_id) {
 	$_selected_curve_id = 1;

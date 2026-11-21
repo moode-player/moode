@@ -18,6 +18,8 @@
 	<!-- CONFIGURATION -->
 
 	<form class="form-horizontal" action="" method="post" >
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>Configuration
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Apply</button>
 		</legend>
@@ -124,6 +126,8 @@
 	<!-- PIPELINE EDITOR -->
 
 	<form class="form-horizontal" action="#pipeline-editor" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<a id="pipeline-editor"></a>
 
 		<legend>Pipeline editor
@@ -174,6 +178,8 @@
 		for information on how to upgrade configuration files marked with a red <span style='color: red'>&#10007;</span> below.
 	</p>
 	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<div class="control-group">
 			<label class="control-label" for="cdsp-config">Configuration</label>
 			<div class="controls">
@@ -237,6 +243,8 @@
 	</form>
 
 	<form class="form-horizontal" action="#conv-file" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<a id="conv-file"></a>
 
 		<div class="control-group">
@@ -274,6 +282,8 @@
 	</form>
 
 	<form class="form-horizontal $_cdsp_extensions_show" action="#extensions" method="post" >
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<a id="extensions"></a>
 		<legend>Extensions</legend>
 		<div class="control-group">
@@ -285,6 +295,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="remove-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
 		<input id="config_remove_id" type="hidden" name="cdsp_config" value="$_selected_config"/>
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
@@ -304,6 +316,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="remove-coeff" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-coeff-label" aria-hidden="true">
 		<input id="coeff_remove_id" type="hidden" name="cdsp_coeffs" value="$_selected_coeff"/>
 		<div class="modal-header">
@@ -324,6 +338,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="copy-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="copy-pipeline-label" aria-hidden="true">
 		<input type="hidden" name="cdsp_config" value="$_selected_config"/>
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
@@ -351,6 +367,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="create-new-pipeline" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="new-pipeline-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Create new pipeline?</h3>

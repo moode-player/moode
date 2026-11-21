@@ -17,6 +17,8 @@
 	</p>
 
 	<form id="config-form" class="form-horizontal" action="" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>Settings
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 		</legend>
@@ -208,6 +210,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-spotify-client-secret" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-spotify-client-secret-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear Spotify client secret?</h3>
@@ -221,6 +225,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-lastfm-api-key" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-lastfm-api-key-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear LastFM API key?</h3>
@@ -234,6 +240,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-discogs-token" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-discogs-token-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear Discogs token?</h3>
@@ -247,6 +255,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-theaudiodb-api-key" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-theaudiodb-api-key-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear TheAudioDB API key?</h3>
@@ -260,6 +270,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-rcucache" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-rcucache-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear Cover URL cache?</h3>

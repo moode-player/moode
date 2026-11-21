@@ -9,6 +9,8 @@
 	<h1 class="sys-config">System</h1>
 
 	<form id="config-form" class="form-horizontal" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<div class="control-group">
 			<legend>Software update</legend>
 			<p class="sub-legend">
@@ -664,6 +666,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-fs-smb-pwd" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-fs-smb-pwd-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear SMB password?</h3>
@@ -677,6 +681,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="view-pkgcontent" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="view-pkgcontent-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3 id="view-pkgcontent-label">Package content</h3>
@@ -692,6 +698,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="rebuild-dlnadb" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="rebuild-dlnadb-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Rebuild DLNA database?</h3>
@@ -705,6 +713,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-playbackhist" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-playbackhist-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear playback history?</h3>
@@ -718,6 +728,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="clear-syslogs" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="clear-syslogs-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Clear system logs?</h3>

@@ -13,6 +13,8 @@
 	</p>
 
 	<form class="form-horizontal" action="lib-config.php" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>NVMe source
 			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save_nvme_source" value="1">Save</button>
 			<a href="#remove-nvme-mount" data-toggle="modal" class="$_hide_remove_nvme_source"><button class="legend-config btn btn-medium btn-primary">Remove</button></a>
@@ -59,6 +61,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="remove-nvme-mount" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="remove-nvme-mount-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Remove NVMe mount: $_name?</h3>

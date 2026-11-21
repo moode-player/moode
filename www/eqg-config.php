@@ -71,6 +71,12 @@ if (isset($_POST['new_curve'])) {
 
 phpSession('close');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 $_selected_curve = 'Flat';
 $curveList = sqlQuery('SELECT curve_name FROM cfg_eqalsa', $dbh);
 

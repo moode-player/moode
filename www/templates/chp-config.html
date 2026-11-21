@@ -10,6 +10,8 @@
 
 	<!-- Burr Brown PCM and TAS chips -->
     <form class="form-horizontal" action="" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<div class="control-group $_burrbrown_hide">
 			<legend>Burr Brown PCM/TAS family
 				<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>

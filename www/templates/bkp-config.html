@@ -12,6 +12,8 @@
 	<!-- BACKUP -->
 
 	<form class="form-horizontal" action="" method="post" id="backup" enctype="multipart/form-data" $_backup_hidden>
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>Options</legend>
 
 		<p class="sub-legend">
@@ -122,6 +124,8 @@
 	<!-- RESTORE -->
 
 	<form class="form-horizontal" action="" method="post" id="restore"  enctype="multipart/form-data" $_restore_hidden>
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>Options</legend>
 
 		<p class="sub-legend">

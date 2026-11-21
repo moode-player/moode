@@ -9,6 +9,8 @@
 	<h1 class="snd-config">Audio</h1>
 
 	<form class="form-horizontal" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>Audio Output</legend>
 		<p class="sub-legend">
 			Select from Pi HDMI/Headphone, I2S or USB audio devices.
@@ -520,6 +522,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="mpd-restart" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="mpd-restart-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart MPD service?</h3>

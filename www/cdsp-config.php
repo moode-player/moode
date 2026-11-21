@@ -155,6 +155,12 @@ else if (isset($_POST['camillaguistatus']) && isset($_POST['update_camillagui'])
 
 phpSession('close');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 // HTML TEMPLATE
 
 $_select['version'] = str_replace('CamillaDSP', '', $cdsp->version());

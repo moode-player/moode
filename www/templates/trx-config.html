@@ -16,6 +16,8 @@
 	</p>
 
 	<form class="form-horizontal" method="post">
+		<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 		<legend>Sender</legend>
 		<div class="control-group">
 			<label class="control-label">Sender daemon</label>
@@ -246,6 +248,8 @@
 </div>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="restart-tx" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="restart-tx-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Sender?</h3>
@@ -259,6 +263,8 @@
 </form>
 
 <form class="form-horizontal" method="post">
+	<input type="hidden" name="csrf_token" value="$_csrf_token">
+
 	<div id="restart-rx" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="restart-rx-label" aria-hidden="true">
 		<div class="modal-header"><button aria-label="Close" type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Restart Receiver?</h3>
