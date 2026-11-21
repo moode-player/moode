@@ -680,7 +680,7 @@ a.thumbnail:hover,a.thumbnail:focus{border-color:#0088cc;-webkit-box-shadow:0 1p
 .dropdown-menu>.disabled>a,.dropdown-menu>.disabled>a:hover,.dropdown-menu>.disabled>a:focus{color:#999999;}
 .dropdown-menu>.disabled>a:hover,.dropdown-menu>.disabled>a:focus{text-decoration:none;background-color:transparent;background-image:none;/*filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);cursor:default; TC 2015-12-22*/}
 .open{/**z-index:1000; TC 2015-12-22*/}.open>.dropdown-menu{display:block;}
-.dropdown-backdrop{position:fixed;left:0;right:0;bottom:0;top:0;z-index:990;}
+/*.dropdown-backdrop{position:fixed;left:0;right:0;bottom:0;top:0;z-index:990;} TC 2026-11-20*/
 .pull-right>.dropdown-menu{right:0;left:auto;}
 .dropup .caret,.navbar-fixed-bottom .dropdown .caret{border-top:0;border-bottom:4px solid #000000;content:"";}
 .dropup .dropdown-menu,.navbar-fixed-bottom .dropdown .dropdown-menu{top:auto;bottom:100%;margin-bottom:1px;}
