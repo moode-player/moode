@@ -28,7 +28,8 @@ Security
 - UPD: Add Cross-Site Request Forgery (CSRF) validation to forms
 - UPD: Reject form post name/path variables containing shell characters
 - UPD: Reject directory traversal in coverart.php (PR880 @Gjuju)
-- UPD: Never send saved passwords to the config pages (PR881 @Gjuju)
+- UPD: Don't send saved passwords to the config pages (PR881 @Gjuju)
+- UPD: Don't send the stored Wi-Fi keys to the client (PR882 @Gjuju)
 
 Updates
 - UPD: Bind engine-cmd to 127.0.0.1 instead of 0.0.0.0 all (PR879 @Gjuju)
@@ -46,6 +47,7 @@ Updates
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
 - FIX: System info reports error message for Qobuz Connect if not installed
+- FIX: Hotspot various issues: Not starting on Pi-3B, bad sed
 - FIX: Sudoers dropfile creation during startup (PR848 @Gjuju)
 - FIX: Sed match for # settings in upmpdcli.conf (PR865 @kiffa-australis256)
 - FIX: CamillaDSP coeff dir riights that prevent using subfolders (PR868 @bitlab)
