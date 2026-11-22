@@ -15,6 +15,13 @@ require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
 phpSession('open');
+
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 updAlsaVolume($_SESSION['amixname']);
 $dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);

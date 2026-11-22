@@ -17,6 +17,13 @@ const TMP_NGINX_KEY_FILE = '/tmp/moode.key';
 const TMP_SELF_SIGNED_CER_FILE = '/tmp/moode.cer';
 
 phpSession('open');
+
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 $dbh = sqlConnect();
 
 chkVariables($_POST, array('fs_smb_pwd'));

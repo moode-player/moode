@@ -13,6 +13,12 @@ require_once __DIR__ . '/inc/sql.php';
 
 phpSession('open');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 chkVariables($_POST);
 
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
@@ -154,12 +160,6 @@ else if (isset($_POST['camillaguistatus']) && isset($_POST['update_camillagui'])
 }
 
 phpSession('close');
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
-}
 
 // HTML TEMPLATE
 

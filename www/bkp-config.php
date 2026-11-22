@@ -17,6 +17,14 @@ const CAMILLADSP_BASE_DIR = '/usr/share/camilladsp/';
 
 $backupFileNameBase = BACKUP_FILE_PREFIX . '_';
 
+phpSession('open_ro');
+
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 chkVariables($_POST);
 
 // BACKUP SYSTEM
@@ -168,12 +176,6 @@ if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 } else {
 	$_imported_backupfile = 'No file uploaded';
 	$_imported_scriptfile = 'No file uploaded';
-}
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
 }
 
  // Helper method to generate html code for toggle button

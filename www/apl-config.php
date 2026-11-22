@@ -12,6 +12,12 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$validKeys = array_column(sqlRead('cfg_airplay', $dbh), 'param');
 	foreach ($_POST['config'] as $key => $value) {
@@ -28,12 +34,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 }
 
 phpSession('close');
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
-}
 
 $result = sqlRead('cfg_airplay', $dbh);
 $cfgAirplay = array();

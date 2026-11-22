@@ -12,6 +12,12 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 chkVariables($_POST, array('wlan0ssid', 'wlan0pwd', 'wlan0apdpwd'));
 
 // Get current settings: [0] = eth0, [1] = wlan0, [2] = apd0
@@ -168,12 +174,6 @@ if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] ==
 }
 
 phpSession('close');
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
-}
 
 //
 // Populate form fields

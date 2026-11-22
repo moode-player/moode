@@ -9,6 +9,12 @@ require_once __DIR__ . '/inc/session.php';
 
 phpSession('open');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 chkVariables($_POST);
 
 if (isset($_POST['update_audio_input']) && $_POST['audio_input'] != $_SESSION['audioin']) {
@@ -32,12 +38,6 @@ if (isset($_POST['update_audio_output']) && $_POST['audio_output'] != $_SESSION[
 }
 
 phpSession('close');
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
-}
 
 // Input source
 $_select['audio_input'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">MPD</option>\n";
