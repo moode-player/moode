@@ -144,9 +144,12 @@ const PEPPY_SPECTRUM_OPT_DIR = '/opt/peppyspectrum';
 // here and PeppyMeter (volume.gain.db.source) scales its needles by 10^(dB/20). /tmp,
 // alongside the existing /tmp/peppymeter FIFO.
 const PEPPY_GAIN_DB_FILE = '/tmp/peppy_gain_db';
-// Seconds before retrying the ALSA monitor after the card goes away (DAC unplugged)
+// Seconds before reopening a monitor that went away (DAC unplugged, MPD restarted)
 const PEPPY_GAIN_MON_RETRY = 5;
 const PEPPY_GAIN_MON_LOG = '/tmp/moode_peppy_gain.log';
+// Volume readout source (volume.text.source): peppy-gain.php writes the volume reported by
+// the REST API get_volume, or -- when muted
+const PEPPY_VOLUME_FILE = '/tmp/peppy_volume';
 // Peppy touch monitor
 const TOUCHMON_LOG = '/tmp/moode_touchmon.log';
 const TOUCHMON_TIMEOUT_DEFAULT = 15;
