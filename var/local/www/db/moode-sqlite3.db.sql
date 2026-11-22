@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Tue Oct 27 07:23:23 2026
+-- File generated with SQLiteStudio v3.4.4 on Sun Nov 22 12:22:48 2026
 --
 -- Text encoding used: UTF-8
 --
@@ -240,7 +240,7 @@ CREATE TABLE cfg_outputdev (id INTEGER PRIMARY KEY, device_name CHAR (32), mpd_v
 CREATE TABLE cfg_plugin (id INTEGER PRIMARY KEY, component CHAR (32), type CHAR (32), plugin CHAR (32), version CHAR (32));
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (1, 'camilladsp', 'sample-configs', 'v4-sample-configs', '4.0.0');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (2, 'peppydisplay', 'moode-meters', 'v5-moode-meters', '5.0.0');
-INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.6.3-1moode1');
+INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (3, 'renderer', 'airplay', 'v5-shairport-sync', '5.6.2-3moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (4, 'renderer', 'spotify-connect', 'v8-librespot', '0.8.0-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (5, 'renderer', 'qobuz-connect', 'v2-pibuz', '2.8.1-1moode1');
 INSERT INTO cfg_plugin (id, component, type, plugin, version) VALUES (6, 'system', 'nqptp', 'v1-nqptp', '1.2.9-1moode1');
@@ -933,7 +933,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
 INSERT INTO cfg_system (id, param, value) VALUES (80, 'camilladsp_volume_sync', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '490487');
+INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '488439');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (84, 'qobuzsvc', '0');
