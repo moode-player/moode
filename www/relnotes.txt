@@ -20,7 +20,7 @@ New features
 
 Packages
 - UPD: linux-image: 1:6.18.60-1+rpt1
-- UPD: shairport-sync: 5.6.3-1moode1
+- UPD: shairport-sync: 5.6.2-3moode1 (integrated)
 - UPD: pibuz: 2.8.1-1moode1
 - UPD: peppy-meter: 2026.11.04-1moode1
 
