@@ -19,6 +19,13 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	} else {
 		// Update settings
 		putPeppyConfig($_POST['settings']);
+		$peppyText = trim($_POST['settings']['peppy_text']);
+		if ($peppyText != $_SESSION['peppy_text']) {
+			phpSession('write', 'peppy_text', $peppyText);
+			if ($peppyText != '') {
+				phpSession('write', 'extmeta', '1'); // Turn on external metadata generation
+			}
+		}
 		if ($_SESSION['peppy_display'] == '1') {
 			$notify = array('title' => NOTIFY_TITLE_INFO, 'msg' => NAME_PEPPYDISPLAY . NOTIFY_MSG_SVC_RESTARTED);
 			submitJob('peppy_display_restart', '', $notify['title'], $notify['msg']);
@@ -61,6 +68,9 @@ $_select['polling_interval'] .= "<option value=\"0.02\" " . (($configMeter['poll
 $_select['polling_interval'] .= "<option value=\"0.015\" " . (($configMeter['polling.interval'] == '0.015') ? "selected" : "") . ">0.015</option>\n";
 $_select['polling_interval'] .= "<option value=\"0.01\" " . (($configMeter['polling.interval'] == '0.01') ? "selected" : "") . ">0.01</option>\n";
 $_select['smooth_buffer_size'] = $configMeter['smooth.buffer.size'];
+
+// Metadata settings
+$_select['peppy_text'] = htmlspecialchars($_SESSION['peppy_text'], ENT_QUOTES);
 
 // Spectrum settings
 $folders = getPeppyFolderList('spectrum');
