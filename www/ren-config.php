@@ -13,6 +13,12 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 chkVariables($_POST);
 
 updAlsaVolume($_SESSION['amixname']);
@@ -256,12 +262,6 @@ if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
 }
 
 phpSession('close');
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
-}
 
 // Bluetooth
 $_feat_bluetooth = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? '' : 'hide';

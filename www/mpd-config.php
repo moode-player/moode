@@ -12,6 +12,12 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open_ro');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 chkVariables($_POST);
 
 // Clear acts as Save
@@ -48,12 +54,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$mixerChange = 0;
 	$queueArgs = $deviceChange . ',' . $mixerChange;
 	submitJob('mpdcfg', $queueArgs, NOTIFY_TITLE_INFO, 'MPD' . NOTIFY_MSG_SVC_RESTARTED);
-}
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
 }
 
 // Load settings

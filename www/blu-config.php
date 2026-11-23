@@ -14,6 +14,12 @@ require_once __DIR__ . '/inc/cdsp.php';
 
 phpSession('open');
 
+// CSRF token
+$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
+if (!empty($_POST)) {
+	chkCsrfToken($_POST['csrf_token']);
+}
+
 chkVariables($_POST);
 
 //
@@ -125,12 +131,6 @@ if (isset($_POST['update_bluez_controller_mode']) && $_POST['update_bluez_contro
 }
 
 phpSession('close');
-
-// CSRF token
-$_csrf_token = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES);
-if (!empty($_POST)) {
-	chkCsrfToken($_POST['csrf_token']);
-}
 
 // Command list
 $_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (20 seconds)</option>\n";
