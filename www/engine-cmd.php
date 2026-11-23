@@ -45,7 +45,7 @@ while ($sockres = socket_accept($sock)) {
 socket_close($sock);
 
 //workerLog('engineCmd(): Updating portfile (remove ' . $port . ')');
-sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
+exec('sed -i /' . $port . '/d ' . PORT_FILE);
 
 // Special cmd handling
 if ($cmd == 'inpactive1') {
