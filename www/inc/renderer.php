@@ -731,10 +731,11 @@ function stopAllRenderers() {
 	}
 }
 
-// Volume state of the active renderer, kept by source_ctl.py watch for the REST API
+// Volume state of the active source, kept by source_ctl.py watch for the REST API
+// MPD and Input: the knob follows the volume MPD clients set
 function chkRendererWatch() {
 	$renderers = array('btactive' => 'bluetooth', 'aplactive' => 'airplay', 'qbzactive' => 'qobuz',
-		'slactive' => 'squeezelite', 'solactive' => 'soloist');
+		'slactive' => 'squeezelite', 'solactive' => 'soloist', '' => 'mpd', 'inpactive' => 'mpd');
 	$flag = getActiveRenderer();
 	$renderer = isset($renderers[$flag]) ? $renderers[$flag] : '';
 	if ($renderer != $GLOBALS['renderer_watch']) {
