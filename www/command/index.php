@@ -82,6 +82,7 @@ switch ($cmd[0]) {
 	case 'play_item':
 	case 'play_item_next':
 		$item = trim(getArgs($cmd, false));
+		$sock = getMpdSock('command/index.php');
 
 		// Turn off auto-shuffle
 		_openSessionReadOnly($dbh);
