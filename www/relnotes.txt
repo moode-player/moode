@@ -33,7 +33,7 @@ Security
 - UPD: Don't send the stored Wi-Fi keys to the client (PR882 @Gjuju)
 
 Updates
-- UPD: Add performance optimizations (PR40, PR848 - PR859, PR870/PR878 @Gjuju)
+- UPD: Add performance optimizations (PR40/PR848-PR859/PR870/PR878/PR897 @Gjuju)
 - UPD: Add stop command to REST API (PR843 @Gjuju)
 - UPD: Add volume curve and metadata options to Peppymeter (PR841/PR886/PR887 @Gjuju)
 - UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
@@ -61,7 +61,7 @@ Bug fixes
 - FIX: Compare vs assign error in worker.php (PR892 @TheOldPresbyope)
 - FIX: Misspelled variable in watchdog.php (PR893 @TheOldPresbyope)
 - FIX: Missing socket assignment in index.php (PR894 @TheOldPresbyope)
-
+- FIX: Missing row index for param 'audioout'  in getALSAOutputFormat() (PR896 @Gjuju)
 
 ################################################################################
 #
