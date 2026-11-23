@@ -44,7 +44,7 @@ switch ($cmd[0]) {
 			echo json_encode(array('alert' => 'Invalid volume command'));
 			break;
 		}
-		// A controllable renderer gets the command in this single call, renderer_ctl.py only acts if it can
+		// A controllable renderer gets the command in this single call, source_ctl.py only acts if it can
 		$volState = getVolumeState($dbh, $volArgs['renderer']);
 		if ($volState['can_volume'] === false) {
 			echo json_encode(array('alert' => $volState['alert']));
@@ -344,7 +344,7 @@ function getArgs($cmd, $shell) {
 	return $args;
 }
 
-// Validated set_volume args (N | -mute | -up N | -dn N) for vol.sh and renderer_ctl.py, false if invalid
+// Validated set_volume args (N | -mute | -up N | -dn N) for vol.sh and source_ctl.py, false if invalid
 function parseVolumeArgs($volCmd) {
 	if (preg_match('/^-(up|dn) ([0-9]+)$/', $volCmd, $match)) {
 		return array('vol.sh' => '-' . $match[1] . ' ' . $match[2], 'renderer' => $match[1] . ' ' . $match[2]);
@@ -372,7 +372,7 @@ function getSourceLabel($source) {
 }
 
 // Volume state of the current source: where the volume lives and what can be controlled
-// $rendererCmd: renderer_ctl.py command run first when the source is a controllable renderer
+// $rendererCmd: source_ctl.py command run first when the source is a controllable renderer
 function getVolumeState($dbh, $rendererCmd = 'get') {
 	$source = getActiveSource();
 
@@ -381,14 +381,14 @@ function getVolumeState($dbh, $rendererCmd = 'get') {
 			'can_volume' => false, 'can_mute' => false, 'can_transport' => false);
 		$result = null;
 		if ($rendererCmd == 'get') {
-			// Kept up to date by renderer_ctl.py watch while the renderer is active
+			// Kept up to date by source_ctl.py watch while the renderer is active
 			$watched = json_decode((string)@file_get_contents(RENDVOL_CACHE_FILE), true);
 			if (is_array($watched) && isset($watched['source']) && $watched['source'] == $source) {
 				$result = $watched;
 			}
 		}
 		if ($result === null) {
-			$result = json_decode(sysCmd('/var/www/util/renderer_ctl.py ' . $source . ' ' . $rendererCmd)[0], true);
+			$result = json_decode(sysCmd('/var/www/util/source_ctl.py ' . $source . ' ' . $rendererCmd)[0], true);
 		}
 		if (is_array($result) && !isset($result['error'])) {
 			$state = array_merge($state, $result);

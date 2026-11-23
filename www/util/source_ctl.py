@@ -7,7 +7,7 @@
 # Volume and transport control of the active renderer, called by the REST API
 # (command/index.php). Prints the renderer's volume state as JSON.
 #
-# Usage: renderer_ctl.py <renderer> <command> [N]
+# Usage: source_ctl.py <renderer> <command> [N]
 #   renderer: qobuz | bluetooth | airplay | squeezelite | soloist
 #   command:  get | set N | up N | dn N | mute | toggle | play | pause | stop | previous | next
 #             watch: keep RENDVOL_FILE up to date until stopped (started by the worker)
@@ -549,7 +549,7 @@ def watch(name):
 
 def main(argv):
 	if len(argv) < 3 or argv[1] not in RENDERERS:
-		print(json.dumps({'error': 'Usage: renderer_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|play|pause|stop|previous|next|watch'}))
+		print(json.dumps({'error': 'Usage: source_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|play|pause|stop|previous|next|watch'}))
 		return 1
 	command = argv[2]
 	if command == 'watch':
