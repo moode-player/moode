@@ -22,21 +22,21 @@ chkVariables($_POST);
 
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	for($i = 0; $i < 9; $i++) {
-		$curveValues .= $_POST['freq' . ($i + 1)] . ',';
+		$curveValues .= (int)$_POST['freq' . ($i + 1)] . ',';
 	}
-	$curveValues .= $_POST['freq10'];
+	$curveValues .= (int)$_POST['freq10'];
 
-	$result = sqlQuery("SELECT id FROM cfg_eqalsa WHERE curve_name='" . $_POST['curve_name'] . "'", $dbh);
+	$result = sqlQuery("SELECT id FROM cfg_eqalsa WHERE curve_name='" . SQLite3::escapeString($_POST['curve_name']) . "'", $dbh);
 	if (empty($result[0])) {
 		// Add
 		$newID = sqlQuery('SELECT MAX(id)+1 FROM cfg_eqalsa', $dbh);
-		$result = sqlQuery("INSERT INTO cfg_eqalsa VALUES ('" . $newID[0][0] . "','" . $_POST['curve_name'] . "','" . $curveValues . "')", $dbh);
+		$result = sqlQuery("INSERT INTO cfg_eqalsa VALUES ('" . $newID[0][0] . "','" . SQLite3::escapeString($_POST['curve_name']) . "','" . $curveValues . "')", $dbh);
 		$_GET['curve'] = $_POST['curve_name'];
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 		$_SESSION['notify']['msg'] = 'New curve added.';
 	} else {
 		// Update
-		$result = sqlQuery("UPDATE cfg_eqalsa SET curve_values='" . $curveValues . "' WHERE curve_name='" . $_POST['curve_name'] . "'" , $dbh);
+		$result = sqlQuery("UPDATE cfg_eqalsa SET curve_values='" . $curveValues . "' WHERE curve_name='" . SQLite3::escapeString($_POST['curve_name']) . "'" , $dbh);
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 		$_SESSION['notify']['msg'] = 'Curve updated.';
 	}
@@ -65,7 +65,7 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 if (isset($_POST['new_curve'])) {
 	$searchCurve = 'Flat';
 } else if (isset($_POST['remove_curve'])) {
-	$result = sqlQuery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
+	$result = sqlQuery("DELETE FROM cfg_eqalsa WHERE curve_name='" . SQLite3::escapeString($_GET['curve']) . "'", $dbh);
 	$searchCurve = 'Flat';
 	$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 	$_SESSION['notify']['msg'] = 'Curve removed.';
@@ -97,7 +97,7 @@ $_disable_play = $_SESSION['alsaequal'] == 'Off' ? 'disabled' : '';
 $_disable_rm = $_selected_curve == 'Flat' ? 'disabled' : '';
 $_disable_rm_msg = $_selected_curve == 'Flat' ? 'The Flat curve cannot be removed' : '';
 
-$result = sqlQuery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . $searchCurve . "'", $dbh);
+$result = sqlQuery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . SQLite3::escapeString($searchCurve) . "'", $dbh);
 $values = explode(',', $result[0]['curve_values']);
 for ($i = 0; $i < 10; $i++) {
 	$_select['freq' . ($i + 1)] = $values[$i];

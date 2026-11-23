@@ -57,11 +57,11 @@ if (isset($_POST['update_alsa_loopback'])) {
 	}
 }
 if (isset($_POST['update_multiroom_initvol'])) {
-	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", $dbh);
+	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_initvol']) . "' " . "WHERE param='initial_volume'", $dbh);
 	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], NOTIFY_TITLE_INFO, 'Volume levels initialized.');
 }
 if (isset($_POST['update_multiroom_tx_host'])) {
-	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_host'] . "' " . "WHERE param='tx_host'", $dbh);
+	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_tx_host']) . "' " . "WHERE param='tx_host'", $dbh);
 	submitJob('multiroom_tx_restart', '', NOTIFY_TITLE_INFO, 'Sender restarted.');
 }
 if (isset($_POST['multiroom_tx_restart'])) {
@@ -111,7 +111,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 }
 if (isset($_POST['update_multiroom_tx_bfr'])) {
 	if (isset($_POST['multiroom_tx_bfr']) && $_POST['multiroom_tx_bfr'] != $cfgMultiroom['tx_bfr']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_bfr'] . "' " . "WHERE param='tx_bfr'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_tx_bfr']) . "' " . "WHERE param='tx_bfr'", $dbh);
 		$notify = $_SESSION['multiroom_tx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Sender restarted.') :
 			array('title' => '', 'msg' => '');
@@ -120,7 +120,7 @@ if (isset($_POST['update_multiroom_tx_bfr'])) {
 }
 if (isset($_POST['update_multiroom_tx_frame_size'])) {
 	if (isset($_POST['multiroom_tx_frame_size']) && $_POST['multiroom_tx_frame_size'] != $cfgMultiroom['tx_frame_size']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_frame_size'] . "' " . "WHERE param='tx_frame_size'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_tx_frame_size']) . "' " . "WHERE param='tx_frame_size'", $dbh);
 		$notify = $_SESSION['multiroom_tx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Sender restarted.') :
 			array('title' => '', 'msg' => '');
@@ -129,7 +129,7 @@ if (isset($_POST['update_multiroom_tx_frame_size'])) {
 }
 if (isset($_POST['update_multiroom_tx_rtprio'])) {
 	if (isset($_POST['multiroom_tx_rtprio']) && $_POST['multiroom_tx_rtprio'] != $cfgMultiroom['tx_rtprio']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_rtprio'] . "' " . "WHERE param='tx_rtprio'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_tx_rtprio']) . "' " . "WHERE param='tx_rtprio'", $dbh);
 		$notify = $_SESSION['multiroom_tx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Sender restarted.') :
 			array('title' => '', 'msg' => '');
@@ -138,7 +138,7 @@ if (isset($_POST['update_multiroom_tx_rtprio'])) {
 }
 if (isset($_POST['update_multiroom_tx_query_timeout'])) {
 	if (isset($_POST['multiroom_tx_query_timeout']) && $_POST['multiroom_tx_query_timeout'] != $cfgMultiroom['multiroom_tx_query_timeout']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_query_timeout'] . "' " . "WHERE param='tx_query_timeout'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_tx_query_timeout']) . "' " . "WHERE param='tx_query_timeout'", $dbh);
 	}
 }
 
@@ -154,12 +154,12 @@ if (isset($_POST['update_multiroom_rx'])) {
 }
 if (isset($_POST['update_multiroom_rx_mastervol_opt_in'])) {
 	if (isset($_POST['multiroom_rx_mastervol_opt_in']) && $_POST['multiroom_rx_mastervol_opt_in'] != $cfgMultiroom['rx_mastervol_opt_in']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_mastervol_opt_in'] . "' " . "WHERE param='rx_mastervol_opt_in'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_mastervol_opt_in']) . "' " . "WHERE param='rx_mastervol_opt_in'", $dbh);
 	}
 }
 if (isset($_POST['update_multiroom_rx_alsa_output_mode'])) {
 	if (isset($_POST['multiroom_rx_alsa_output_mode']) && $_POST['multiroom_rx_alsa_output_mode'] != $cfgMultiroom['rx_alsa_output_mode']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_alsa_output_mode'] . "' " . "WHERE param='rx_alsa_output_mode'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_alsa_output_mode']) . "' " . "WHERE param='rx_alsa_output_mode'", $dbh);
 		$notify = $_SESSION['multiroom_rx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Receiver restarted.') :
 			array('title' => '', 'msg' => '');
@@ -168,12 +168,12 @@ if (isset($_POST['update_multiroom_rx_alsa_output_mode'])) {
 }
 if (isset($_POST['update_multiroom_rx_alsavol'])) {
 	if (isset($_POST['multiroom_rx_alsavol'])) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_alsavol'] . "' " . "WHERE param='rx_alsa_volume_max'", $dbh);
-		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $_POST['multiroom_rx_alsavol']);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_alsavol']) . "' " . "WHERE param='rx_alsa_volume_max'", $dbh);
+		sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . (int)$_POST['multiroom_rx_alsavol']);
 	}
 }
 if (isset($_POST['update_multiroom_rx_host'])) {
-	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_host'] . "' " . "WHERE param='rx_host'", $dbh);
+	$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_host']) . "' " . "WHERE param='rx_host'", $dbh);
 	submitJob('multiroom_rx_restart', '', NOTIFY_TITLE_INFO, 'Receiver restarted.');
 }
 if (isset($_POST['multiroom_rx_restart'])) {
@@ -181,7 +181,7 @@ if (isset($_POST['multiroom_rx_restart'])) {
 }
 if (isset($_POST['update_multiroom_rx_bfr'])) {
 	if (isset($_POST['multiroom_rx_bfr']) && $_POST['multiroom_rx_bfr'] != $cfgMultiroom['rx_bfr']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_bfr'] . "' " . "WHERE param='rx_bfr'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_bfr']) . "' " . "WHERE param='rx_bfr'", $dbh);
 		$notify = $_SESSION['multiroom_rx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Receiver restarted.') :
 			array('title' => '', 'msg' => '');
@@ -190,7 +190,7 @@ if (isset($_POST['update_multiroom_rx_bfr'])) {
 }
 if (isset($_POST['update_multiroom_rx_jitter_bfr'])) {
 	if (isset($_POST['multiroom_rx_jitter_bfr']) && $_POST['multiroom_rx_jitter_bfr'] != $cfgMultiroom['rx_jitter_bfr']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_jitter_bfr'] . "' " . "WHERE param='rx_jitter_bfr'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_jitter_bfr']) . "' " . "WHERE param='rx_jitter_bfr'", $dbh);
 		$notify = $_SESSION['multiroom_rx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Receiver restarted.') :
 			array('title' => '', 'msg' => '');
@@ -199,7 +199,7 @@ if (isset($_POST['update_multiroom_rx_jitter_bfr'])) {
 }
 if (isset($_POST['update_multiroom_rx_frame_size'])) {
 	if (isset($_POST['multiroom_rx_frame_size']) && $_POST['multiroom_rx_frame_size'] != $cfgMultiroom['rx_frame_size']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_frame_size'] . "' " . "WHERE param='rx_frame_size'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_frame_size']) . "' " . "WHERE param='rx_frame_size'", $dbh);
 		$notify = $_SESSION['multiroom_rx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Receiver restarted.') :
 			array('title' => '', 'msg' => '');
@@ -208,7 +208,7 @@ if (isset($_POST['update_multiroom_rx_frame_size'])) {
 }
 if (isset($_POST['update_multiroom_rx_rtprio'])) {
 	if (isset($_POST['multiroom_rx_rtprio']) && $_POST['multiroom_rx_rtprio'] != $cfgMultiroom['rx_rtprio']) {
-		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_rtprio'] . "' " . "WHERE param='rx_rtprio'", $dbh);
+		$result = sqlQuery("UPDATE cfg_multiroom SET value='" . SQLite3::escapeString($_POST['multiroom_rx_rtprio']) . "' " . "WHERE param='rx_rtprio'", $dbh);
 		$notify = $_SESSION['multiroom_rx'] == 'On' ?
 			array('title' => NOTIFY_TITLE_INFO, 'msg' => 'Receiver restarted.') :
 			array('title' => '', 'msg' => '');

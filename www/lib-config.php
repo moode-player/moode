@@ -128,7 +128,7 @@ if (isset($_POST['clear'])) {
 // Save NAS source
 if (isset($_POST['save_nas_source']) && $_POST['save_nas_source'] == 1) {
 	// Validate
-	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
+	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . SQLite3::escapeString($_POST['mount']['name']) . "'", $dbh);
 	$address = explode('/', $_POST['mount']['address'], 2);
 	$_POST['mount']['address'] = $address[0];
 	$_POST['mount']['remotedir'] = $address[1];
@@ -241,7 +241,7 @@ if (isset($_POST['remove_nvme_source']) && $_POST['remove_nvme_source'] == 1) {
 // Save NVMe source
 if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 	// Validate
-	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
+	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . SQLite3::escapeString($_POST['mount']['name']) . "'", $dbh);
 	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
 	if ($driveStatus == 'none') {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
@@ -318,7 +318,7 @@ if (isset($_POST['remove_sata_source']) && $_POST['remove_sata_source'] == 1) {
 // Save SATA source
 if (isset($_POST['save_sata_source']) && $_POST['save_sata_source'] == 1) {
 	// Validate
-	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
+	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . SQLite3::escapeString($_POST['mount']['name']) . "'", $dbh);
 	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
 	if ($driveStatus == 'none') {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
