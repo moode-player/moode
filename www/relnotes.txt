@@ -58,6 +58,10 @@ Bug fixes
 - FIX: Double underscore typo in snd-config.php (PR874 @TheOldPresbyope)
 - FIX: GetHash() and ParseDir() in mpd.php them (PR877 @Gjuju)
 - FIX: MPD at 100% volume first boot with USB DAC + no hdwr volume (PR891 @Gjuju)
+- FIX: Compare vs assign error in worker.php (PR892 @TheOldPresbyope)
+- FIX: Misspelled variable in watchdog.php (PR893 @TheOldPresbyope)
+- FIX: Missing socket assignment in index.php (PR894 @TheOldPresbyope)
+
 
 ################################################################################
 #
