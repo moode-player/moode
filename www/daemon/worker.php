@@ -4054,7 +4054,7 @@ function runQueuedJob() {
 				$fh = fopen($file, 'w');
 				fwrite($fh, $imgData);
 				fclose($fh);
-				sysCmd('chmod 0777 "' . $file . '"');
+				sysCmd('chmod 0777 ' . escapeshellarg($file));
 
 				// Thumbnail
 				$imgStr = file_get_contents($file);

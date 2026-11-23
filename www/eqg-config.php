@@ -45,7 +45,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 if (isset($_POST['play']) && $_POST['play'] == '1') {
 	// Update alsaequal, changes take efect in real-time, no need to restart MPD
 	for ($i = 1; $i <= 10; $i++) {
-		sysCmd('amixer -D alsaequal cset numid=' . $i . ' ' . $_POST['freq' . $i]);
+		sysCmd('amixer -D alsaequal cset numid=' . $i . ' ' . (int)$_POST['freq' . $i]);
 	}
 
 	// Wait for mpd to start accepting connections

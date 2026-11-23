@@ -24,33 +24,37 @@ if [[ $1 = "set-keyboard" ]]; then
 fi
 
 if [[ $1 = "chg-name" ]]; then
+	# Escape the names for sed: OLD is a regex, NEW is a replacement. Newlines are dropped.
+	OLD=$(printf '%s' "$3" | tr -d '\n' | sed 's|[][\\/.*^$]|\\&|g')
+	NEW=$(printf '%s' "$4" | tr -d '\n' | sed 's|[\\/&]|\\&|g')
+
 	if [ $2 = "host" ]; then
-		sed -i "s/$3/$4/" /etc/hostname
-		sed -i "s/$3/$4/" /etc/hosts
+		sed -i "s/$OLD/$NEW/" /etc/hostname
+		sed -i "s/$OLD/$NEW/" /etc/hosts
 		rm -rf /home/$HOME_DIR/.config/chromium/Singleton*
 	fi
 
 	if [[ $2 = "squeezelite" ]]; then
-		sed -i "s/PLAYERNAME=$3/PLAYERNAME=$4/" /etc/squeezelite.conf
+		sed -i "s/PLAYERNAME=$OLD/PLAYERNAME=$NEW/" /etc/squeezelite.conf
 	fi
 
 	if [[ $2 = "upnp" ]]; then
-		sed -i "s/friendlyname = $3/friendlyname = $4/" /etc/upmpdcli.conf
-		sed -i "s/avfriendlyname = $3/avfriendlyname = $4/" /etc/upmpdcli.conf
-		sed -i "s/ohproductroom = $3/ohproductroom = $4/" /etc/upmpdcli.conf
+		sed -i "s/friendlyname = $OLD/friendlyname = $NEW/" /etc/upmpdcli.conf
+		sed -i "s/avfriendlyname = $OLD/avfriendlyname = $NEW/" /etc/upmpdcli.conf
+		sed -i "s/ohproductroom = $OLD/ohproductroom = $NEW/" /etc/upmpdcli.conf
 	fi
 
 	if [[ $2 = "dlna" ]]; then
-		sed -i "s/friendly_name=$3/friendly_name=$4/" /etc/minidlna.conf
+		sed -i "s/friendly_name=$OLD/friendly_name=$NEW/" /etc/minidlna.conf
 	fi
 
 	if [[ $2 = "mpdzeroconf" ]]; then
-		sed -i "s/zeroconf_name \"$3\"/zeroconf_name \"$4\"/" /etc/mpd.conf
+		sed -i "s/zeroconf_name \"$OLD\"/zeroconf_name \"$NEW\"/" /etc/mpd.conf
 	fi
 
 	if [[ $2 = "bluetooth" ]]; then
-		sed -i "s/Name = $3/Name = $4/" /etc/bluetooth/main.conf
-		sed -i "s/PRETTY_HOSTNAME=$3/PRETTY_HOSTNAME=$4/" /etc/machine-info
+		sed -i "s/Name = $OLD/Name = $NEW/" /etc/bluetooth/main.conf
+		sed -i "s/PRETTY_HOSTNAME=$OLD/PRETTY_HOSTNAME=$NEW/" /etc/machine-info
 	fi
 
 	exit

@@ -45,12 +45,12 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		// Allo Piano 2.1 Hi-Fi DAC device settings
 		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 			if ($_POST['config']['outputmode'] == 'Dual-Mono' || $_POST['config']['outputmode'] == 'Dual-Stereo') {
-				sysCmd('/var/www/util/sysutil.sh set-piano-dualmode ' . '"' . $_POST['config']['outputmode'] . '"');
+				sysCmd('/var/www/util/sysutil.sh set-piano-dualmode ' . escapeshellarg($_POST['config']['outputmode']));
 			}
 			else {
-				sysCmd('/var/www/util/sysutil.sh set-piano-submode ' . '"' . $_POST['config']['outputmode'] . '"');
-				sysCmd('/var/www/util/sysutil.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
-				sysCmd('/var/www/util/sysutil.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
+				sysCmd('/var/www/util/sysutil.sh set-piano-submode ' . escapeshellarg($_POST['config']['outputmode']));
+				sysCmd('/var/www/util/sysutil.sh set-piano-lowpass ' . escapeshellarg($_POST['config']['lowpass']));
+				sysCmd('/var/www/util/sysutil.sh set-piano-subvol ' . escapeshellarg($_POST['config']['subwvol']));
 			}
 			$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
 			$_SESSION['notify']['msg'] = NOTIFY_MSG_SYSTEM_RESTART_REQD;
@@ -359,31 +359,31 @@ function cfgChipOptions($options, $type) {
 
 	if ($type == 'burr_brown_pcm5') {
 		// Burr Brows PCM5: Analog volume, analog volume boost, digital interpolation filter
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Analogue" ' . $optionsArray[0]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Analogue Playback Boost" ' . $optionsArray[1]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DSP Program" ' . '"' . $optionsArray[2] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Analogue" ' . escapeshellarg($optionsArray[0]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Analogue Playback Boost" ' . escapeshellarg($optionsArray[1]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DSP Program" ' . escapeshellarg($optionsArray[2]));
 	} else if ($type == 'ess_sabre_katana') {
 		// Allo Katana: Oversampling filter, de-emphasis, DoP
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DSP Program" ' . '"' . $optionsArray[0] . '"');
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Deemphasis" ' . $optionsArray[1]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DoP" ' . $optionsArray[2]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DSP Program" ' . escapeshellarg($optionsArray[0]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Deemphasis" ' . escapeshellarg($optionsArray[1]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "DoP" ' . escapeshellarg($optionsArray[2]));
 	} else if ($type == 'cirrus_logic_cS43198_boss2') {
 		// Allo Boss 2
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM De-emphasis Filter" ' . $optionsArray[0]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Filter Speed" ' . $optionsArray[1]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM High-pass Filter" ' . $optionsArray[2]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Nonoversample Emulate" ' . $optionsArray[3]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Phase Compensation" ' . $optionsArray[4]);
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "HV_Enable" ' . $optionsArray[5]);
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM De-emphasis Filter" ' . escapeshellarg($optionsArray[0]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Filter Speed" ' . escapeshellarg($optionsArray[1]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM High-pass Filter" ' . escapeshellarg($optionsArray[2]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Nonoversample Emulate" ' . escapeshellarg($optionsArray[3]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "PCM Phase Compensation" ' . escapeshellarg($optionsArray[4]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "HV_Enable" ' . escapeshellarg($optionsArray[5]));
 	} else if ($type == 'ess_sabre_audiophonics_q2m') {
 		// Audiophonics ES9028/9038 Q2M: Oversampling filter, input select
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "FIR Filter Type" ' . '"' . $optionsArray[0] . '"');
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "I2S/SPDIF Select" ' . '"' . $optionsArray[1] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "FIR Filter Type" ' . escapeshellarg($optionsArray[0]));
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "I2S/SPDIF Select" ' . escapeshellarg($optionsArray[1]));
 	} else if ($type == 'ess_sabre_iancanada_q2m') {
 		// IanCanada (MonitorPi Pro with ESS DAC): Oversampling filter
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "FIR Filter Type" ' . '"' . $optionsArray[0] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "FIR Filter Type" ' . escapeshellarg($optionsArray[0]));
 	} else if ($type == 'merus_ma12070p') {
 		// MERUS Amp HAT ZW Power mode profile
-		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Q.PM Prof" ' . '"' . $optionsArray[0] . '"');
+		sysCmd('amixer -c ' . $_SESSION['cardnum'] . ' sset "Q.PM Prof" ' . escapeshellarg($optionsArray[0]));
 	}
 }
