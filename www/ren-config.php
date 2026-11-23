@@ -64,10 +64,11 @@ if (isset($_POST['update_rsmafterbt'])) {
 }
 
 // AirPlay
-if (isset($_POST['install_airplay'])) {
+// NOTE: Starting with shairport-sync 5.6.2-3 (AirPlay 1/2) the source and deb are part of Debian
+/*if (isset($_POST['install_airplay'])) {
 	submitJob('install_airplay');
 	header('location: ren-status.php');
-}
+}*/
 if (isset($_POST['update_airplay_settings'])) {
 	if (isset($_POST['airplayname']) && $_POST['airplayname'] != $_SESSION['airplayname']) {
 		$update = true;
@@ -310,8 +311,9 @@ $_select['rsmafterbt_on'] .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"tog
 $_select['rsmafterbt_off']  .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-2\" value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "checked=\"checked\"" : "") . $autoClick . ">\n";
 
 // AirPlay
+// NOTE: Starting with shairport-sync 5.6.2-3 (AirPlay 1/2) the source and deb are part of Debian
 $_feat_airplay = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? '' : 'hide';
-if (isAirPlayInstalled() === true) {
+/*if (isAirPlayInstalled() === true) {
 	$_airplay_installed_version = sysCmd('dpkg-query --showformat=\'${Version}\n\' --show shairport-sync | grep moode')[0];
 	if (isAirPlayUpgradable() === true) {
 		$_install_airplay_hide = '';
@@ -328,7 +330,7 @@ if (isAirPlayInstalled() === true) {
 	$_airplay_available_version = 'Version ' . sqlQuery("SELECT version FROM cfg_plugin WHERE component='renderer' AND type='airplay'", $dbh)[0]['version'];
 	$_airplay_svcbtn_disable = 'disabled';
 	$_airplay_editlink_disable = 'onclick="return false;"';
-}
+}*/
 $_SESSION['airplaysvc'] == '1' ? $_airplay_btn_disable = '' : $_airplay_btn_disable = 'disabled';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_link_disable = '' : $_airplay_link_disable = 'onclick="return false;"';
 $autoClick = " onchange=\"autoClick('#btn-set-airplaysvc');\" " . $_airplay_svcbtn_disable;
