@@ -132,6 +132,29 @@
 			</div>
 		</div>
 
+		<div class="config-horiz-rule">Metadata</div>
+
+		<div class="control-group">
+			<label class="control-label" for="peppy-text">Text</label>
+			<div class="controls">
+				<input class="config-input-large" type="text" id="peppy-text" name="settings[peppy_text]" value="$_select[peppy_text]">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-peppy-text" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
+				<span id="info-peppy-text" class="config-help-info">
+					Text shown by Meters that have a text area, filled with the metadata of the current source. Examples:<br>
+					{artist} - {title} &rarr; Miles Davis - So What<br>
+					{title} / {album} &rarr; So What / Kind of Blue<br>
+					{artist} {br} {title} &rarr; Miles Davis on a first line, So What on a second one<br>
+					For a radio station {artist} is the station name. When the source has no metadata
+					the name of the active renderer or input is shown.<br>
+					Entering a text turns on the Metadata file option in Audio Config.
+				</span>
+				<span class="config-help-static">
+					Leave blank for no text. Available fields: {title}, {artist}, {album}, and {br} for a line break.<br>
+					The characters &#36; &#96; | ; &lt; &gt; are not allowed.
+				</span>
+			</div>
+		</div>
+
 		<div class="config-horiz-rule">Spectrums</div>
 
 		<div class="control-group">

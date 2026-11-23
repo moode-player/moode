@@ -150,6 +150,9 @@ const PEPPY_GAIN_MON_LOG = '/tmp/moode_peppy_gain.log';
 // Volume readout source (volume.text.source): peppy-gain.php writes the volume reported by
 // the REST API get_volume, or -- when muted
 const PEPPY_VOLUME_FILE = '/tmp/peppy_volume';
+// Text readout source (text.source): peppy-gain.php writes the peppy_text template filled
+// with the metadata of the active source
+const PEPPY_TEXT_FILE = '/tmp/peppy_text';
 // Peppy touch monitor
 const TOUCHMON_LOG = '/tmp/moode_touchmon.log';
 const TOUCHMON_TIMEOUT_DEFAULT = 15;
