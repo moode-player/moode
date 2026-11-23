@@ -478,7 +478,7 @@ sysCmd('nmcli connection load /etc/NetworkManager/system-connections/Hotspot.nmc
 // Ethernet
 workerLog('worker: Eth0');
 if (!isset($_SESSION['eth0chk'])) {
-	$_SESSION['eth0chk'] == '0';
+	$_SESSION['eth0chk'] = '0';
 }
 $eth0 = sysCmd('ip addr list | grep eth0');
 if (empty($eth0)) {
