@@ -26,7 +26,8 @@ Packages
 
 Security
 - UPD: Add Cross-Site Request Forgery (CSRF) validation to forms
-- UPD: Reject form post name/path variables containing shell characters
+- UPD: Escape request values in SQL queries (PR889 @Gjuju)
+- UPD: Escape request values passed to shell commands (PR888 @Gjuju)
 - UPD: Reject directory traversal in coverart.php (PR880 @Gjuju)
 - UPD: Don't send saved passwords to the config pages (PR881 @Gjuju)
 - UPD: Don't send the stored Wi-Fi keys to the client (PR882 @Gjuju)
