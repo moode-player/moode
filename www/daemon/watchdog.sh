@@ -16,7 +16,7 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 # WebUI will hang if no more workers can be spawned.
 FPM_MAX_LIMIT=60
 FPM_MIN_LIMIT=30
-FPM_RETRES=0
+FPM_RETRIES=0
 FPM_RETRY_MAX=5
 
 message_log () {
