@@ -245,7 +245,7 @@ function getALSAOutputFormat($mpdState = '', $mpdAudioSampleRate = '') {
 	} else if ($mpdState == 'play') {
 		// Called from enhanceMetadata() in inc/mpd.php
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioout'", sqlConnect());
-		if ($result['value'] == 'Bluetooth') {
+		if ($result[0]['value'] == 'Bluetooth') {
 			$outputStr = 'PCM 16/44.1 kHz, 2ch'; // Maybe also 48K ?
 		} else {
 			$outputStr = alsaOutputStr($mpdAudioSampleRate);
