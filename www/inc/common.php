@@ -20,6 +20,9 @@ require_once __DIR__ . '/constants.php';
 // Daemon loop sleep intervals
 require_once __DIR__ .  '/sleep-interval.php';
 
+// Cross-site POST check
+chkPostOrigin();
+
 //----------------------------------------------------------------------------//
 // LOGGING
 //----------------------------------------------------------------------------//
@@ -307,6 +310,31 @@ function chkCsrfToken($token) {
 	}
 	// Optional: Regenerate token after successful submission for single-use protection
 	//unset($_SESSION['csrf_token']);
+}
+
+// Check the Origin header of a POST (Cross-Site Request Forgery)
+// Browsers send it on every POST, other clients (curl, scripts, other players) don't
+function chkPostOrigin() {
+	if (PHP_SAPI == 'cli' || $_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_SERVER['HTTP_ORIGIN'])) {
+		return;
+	}
+
+	$originHost = strtolower((string)parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST));
+	$hosts = array($_SERVER['HTTP_HOST'] ?? '');
+	if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+		$hosts[] = trim(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST'])[0]);
+	}
+	foreach ($hosts as $host) {
+		if ($originHost != '' && $originHost == strtolower((string)parse_url('http://' . $host, PHP_URL_HOST))) {
+			return;
+		}
+	}
+
+	workerLog('SECCHK: Post origin does not match the host, request denied');
+	// Redirect to '400 Bad request' page and then exit
+	http_response_code(400);
+	header('Location: /response400.html');
+	exit(1);
 }
 
 // Secret form fields (passwords, API keys): the saved value is never sent to the page
