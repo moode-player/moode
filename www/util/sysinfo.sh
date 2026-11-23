@@ -197,6 +197,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nShow extra metadata\t= $xtagdisp\c"
 	echo -e "\nSearch site\t\t= $search_site\c"
 	echo -e "\nPlayback history log\t= $playhist\c"
+	echo -e "\nRenderer controls\t= $renderer_controls\c"
 	echo -e "\n\nCover Art\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
@@ -963,7 +964,7 @@ rv_group_method=$(awk -F"," '{print $2}' <<< $radioview_sort_group)
 radioview_show_hide=${arr[143]}
 rv_show_moode=$(awk -F"," '{print $1}' <<< $radioview_show_hide)
 rv_show_other=$(awk -F"," '{print $2}' <<< $radioview_show_hide)
-RESERVED_145=${arr[144]}
+renderer_controls=${arr[144]}
 library_flatlist_filter=${arr[145]}
 library_flatlist_filter_str=${arr[146]}
 library_misc_options=${arr[147]}

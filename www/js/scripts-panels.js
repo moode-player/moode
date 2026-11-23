@@ -23,6 +23,7 @@ jQuery(document).ready(function($) { 'use strict';
         if (document.visibilityState == 'visible') {
             // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time knob using current data
     		sendMpdCmd('subscribe dumy_channel');
+            getRendererVolume();
         }
     }
 
@@ -1862,6 +1863,39 @@ jQuery(document).ready(function($) { 'use strict';
             window.clearTimeout(GLOBAL.cvQueueTimer);
         }
 	});
+
+	// Renderer volume slider
+    $(document).on('input', '#renderer-volume', function(e) {
+        GLOBAL.rendererVolumeDrag = true;
+        setRendererVolumeSlider($(this).val(), false);
+    });
+    $(document).on('change', '#renderer-volume', function(e) {
+        GLOBAL.rendererVolumeDrag = false;
+        // A touch release can fire change twice
+        if ($(this).val() == GLOBAL.rendererVolume) {
+            return;
+        }
+        GLOBAL.rendererVolume = $(this).val();
+        GLOBAL.rendererVolumeSetTime = Date.now();
+        $.get('command/index.php?cmd=' + encodeURIComponent('set_volume ' + GLOBAL.rendererVolume));
+        // Read back the level the renderer settled on
+        setTimeout(getRendererVolume, 3000);
+    });
+
+    // Renderer mute toggle, only for renderers that can mute
+    $(document).on('click', '#renderer-volume-icon', function(e) {
+        if (!GLOBAL.rendererCanMute) {
+            return;
+        }
+        GLOBAL.rendererVolumeSetTime = Date.now();
+        setTimeout(getRendererVolume, 3000);
+        $.getJSON('command/index.php?cmd=' + encodeURIComponent('set_volume -mute'), function(data) {
+            if (data['volume'] !== undefined && data['volume'] !== null) {
+                GLOBAL.rendererVolume = data['volume'];
+                setRendererVolumeSlider(data['volume'], data['muted'] == 'yes');
+            }
+        });
+    });
 
 	// Disconnect renderer
     $(document).on('click', '.disconnect-renderer', function(e) {
