@@ -7,14 +7,16 @@
 # Volume and transport control of the active renderer, called by the REST API
 # (command/index.php). Prints the renderer's volume state as JSON.
 #
-# Usage: renderer_ctl.py <renderer> <command> [N]
+# Usage: source_ctl.py <renderer> <command> [N]
 #   renderer: qobuz | bluetooth | airplay | squeezelite | soloist
 #   command:  get | set N | up N | dn N | mute | toggle | play | pause | stop | previous | next
 #             watch: keep RENDVOL_FILE up to date until stopped (started by the worker)
+#   mpd get | watch: MPD and Input sources, the knob follows the volume MPD clients set
 #
 
 import json
 import os
+import re
 import select
 import signal
 import socket
@@ -25,6 +27,9 @@ import time
 DBUS_PROPS = 'org.freedesktop.DBus.Properties'
 DBUS_OBJMGR = 'org.freedesktop.DBus.ObjectManager'
 RENDVOL_FILE = '/var/local/www/rendvol.json'
+SQLDB = '/var/local/www/db/moode-sqlite3.db'
+MPD_ADDR = ('127.0.0.1', 6600)
+RENDERER_FLAGS = ('btactive', 'aplactive', 'spotactive', 'qbzactive', 'solactive', 'slactive', 'paactive', 'rbactive')
 # watch: re-read at least this often, in case an event is missed or the renderer has none for a change
 WATCH_FALLBACK = 5
 
@@ -82,10 +87,13 @@ def http_request(url, body=None, method='POST', timeout=5):
 def clamp(level):
 	return max(0, min(100, level))
 
-def follow(cmd, on_line, publish):
-	# Run an event stream command, call on_line per line, publish() at start and when it stays quiet. Restarted when it ends
+def follow(cmd, on_line, publish, on_start=None, fallback=WATCH_FALLBACK):
+	# Run an event stream command, call on_line per line, publish() at start and when it stays quiet (fallback seconds,
+	# None = events only). Restarted when it ends
 	signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit(0))
 	while True:
+		if on_start is not None:
+			on_start()
 		publish()
 		proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=0)
 		# Raw reads: a buffered readline() would hold the rest of a multi-line event out of select()'s sight
@@ -93,7 +101,7 @@ def follow(cmd, on_line, publish):
 		pending = b''
 		try:
 			while True:
-				if not select.select([fd], [], [], WATCH_FALLBACK)[0]:
+				if not select.select([fd], [], [], fallback)[0]:
 					publish()
 					continue
 				chunk = os.read(fd, 65536)
@@ -119,6 +127,42 @@ def dbus_follow(services, keys, publish):
 	GLib.timeout_add_seconds(WATCH_FALLBACK, lambda: publish() or True)
 	publish()
 	GLib.MainLoop().run()
+
+def sql(query, args=()):
+	import sqlite3
+	try:
+		db = sqlite3.connect(SQLDB, timeout=5)
+		try:
+			with db:
+				return db.execute(query, args).fetchall()
+		finally:
+			db.close()
+	except sqlite3.Error:
+		return None
+
+def mpd_volume():
+	try:
+		with socket.create_connection(MPD_ADDR, timeout=2) as sock, sock.makefile('rwb') as fh:
+			fh.readline()
+			fh.write(b'status\n')
+			fh.flush()
+			for line in fh:
+				if line.startswith(b'volume: '):
+					level = int(line[8:])
+					return level if level >= 0 else None
+				if line.startswith(b'OK') or line.startswith(b'ACK'):
+					return None
+	except (OSError, ValueError):
+		return None
+
+def alsa_volume(card, mixer):
+	# Mapped volume, the scale vol.sh sets
+	try:
+		out = subprocess.run(['amixer', '-M', '-c', str(card), 'sget', str(mixer)], capture_output=True, text=True, timeout=5).stdout
+	except Exception:
+		return None
+	match = re.search(r'\[(\d+)%\]', out)
+	return int(match.group(1)) if match else None
 
 def write_json(path, data):
 	# Replaced in one step: a reader never sees a partial file
@@ -529,13 +573,52 @@ class Soloist(Renderer):
 		if action in (self.now.get('available_actions') or {}):
 			self.ctl(command)
 
-RENDERERS = {'qobuz': Qobuz, 'bluetooth': Bluetooth, 'airplay': AirPlay, 'squeezelite': Squeezelite, 'soloist': Soloist}
+# MPD and Input sources: the knob (cfg_system volknob) follows the volume where it lives,
+# MPD for software and CamillaDSP volume, the DAC for hardware volume. The volume itself is set by vol.sh
+class Mpd(Renderer):
+	def __init__(self):
+		self.last = None
+
+	def can_transport(self):
+		return True
+
+	def restart(self):
+		# The volume MPD restores when it starts is not a change
+		self.last = None
+
+	def volume_state(self):
+		rows = sql("SELECT param, value FROM cfg_system WHERE param IN ('volknob', 'volmute', 'mpdmixer', 'cardnum', 'amixname', '" +
+			"', '".join(RENDERER_FLAGS) + "')")
+		cfg = dict(rows or [])
+		if 'volknob' not in cfg or cfg.get('mpdmixer') == 'none':
+			return None
+		knob, muted = int(cfg['volknob']), cfg.get('volmute') == '1'
+		level = alsa_volume(cfg.get('cardnum'), cfg.get('amixname')) if cfg.get('mpdmixer') == 'hardware' else mpd_volume()
+		last, self.last = self.last, None if level is None else (level, knob, muted)
+		# Only a change of the volume alone: not vol.sh (it updates the knob first), an MPD restart or a renderer session
+		if (last is None or level is None or level == last[0] or (knob, muted) != last[1:] or
+			any(cfg.get(flag) == '1' for flag in RENDERER_FLAGS) or (level == knob and not muted) or (muted and level == 0)):
+			return knob, muted
+		sql("UPDATE cfg_system SET value=? WHERE param='volknob'", (str(level),))
+		sql("UPDATE cfg_system SET value='0' WHERE param='volmute'")
+		self.last = (level, level, False)
+		return level, False
+
+	def watch(self, publish):
+		# MPD mixer events only: an MPD client can only change the volume through MPD
+		def on_line(line):
+			if line.strip() == 'mixer':
+				publish()
+		follow(['mpc', 'idleloop', 'mixer'], on_line, publish, self.restart, None)
+
+RENDERERS = {'qobuz': Qobuz, 'bluetooth': Bluetooth, 'airplay': AirPlay, 'squeezelite': Squeezelite, 'soloist': Soloist, 'mpd': Mpd}
 TRANSPORT = ('toggle', 'play', 'pause', 'stop', 'previous', 'next')
 
 def watch(name):
-	# Before the first bus connection, so D-Bus signals reach the GLib main loop
-	import dbus.mainloop.glib
-	dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+	if name != 'mpd':
+		# Before the first bus connection, so D-Bus signals reach the GLib main loop
+		import dbus.mainloop.glib
+		dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 	renderer = RENDERERS[name]()
 	last = {'state': None}
 	def publish():
@@ -549,11 +632,14 @@ def watch(name):
 
 def main(argv):
 	if len(argv) < 3 or argv[1] not in RENDERERS:
-		print(json.dumps({'error': 'Usage: renderer_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|play|pause|stop|previous|next|watch'}))
+		print(json.dumps({'error': 'Usage: source_ctl.py <renderer> get|set N|up N|dn N|mute|toggle|play|pause|stop|previous|next|watch'}))
 		return 1
 	command = argv[2]
 	if command == 'watch':
 		return watch(argv[1])
+	if argv[1] == 'mpd' and command != 'get':
+		print(json.dumps({'error': 'Usage: source_ctl.py mpd get|watch'}))
+		return 1
 	amount = None
 	if command in ('set', 'up', 'dn'):
 		if len(argv) < 4 or not argv[3].isdigit():

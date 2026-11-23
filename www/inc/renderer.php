@@ -731,22 +731,23 @@ function stopAllRenderers() {
 	}
 }
 
-// Volume state of the active renderer, kept by renderer_ctl.py watch for the REST API
+// Volume state of the active source, kept by source_ctl.py watch for the REST API
+// MPD and Input: the knob follows the volume MPD clients set
 function chkRendererWatch() {
 	$renderers = array('btactive' => 'bluetooth', 'aplactive' => 'airplay', 'qbzactive' => 'qobuz',
-		'slactive' => 'squeezelite', 'solactive' => 'soloist');
+		'slactive' => 'squeezelite', 'solactive' => 'soloist', '' => 'mpd', 'inpactive' => 'mpd');
 	$flag = getActiveRenderer();
 	$renderer = isset($renderers[$flag]) ? $renderers[$flag] : '';
 	if ($renderer != $GLOBALS['renderer_watch']) {
 		stopRendererWatch();
 		if ($renderer != '') {
-			sysCmd('/var/www/util/renderer_ctl.py ' . $renderer . ' watch > /dev/null 2>&1 &');
+			sysCmd('/var/www/util/source_ctl.py ' . $renderer . ' watch > /dev/null 2>&1 &');
 		}
 		$GLOBALS['renderer_watch'] = $renderer;
 	}
 }
 function stopRendererWatch() {
-	sysCmd("pkill -f '[r]enderer_ctl.py .* watch'");
+	sysCmd("pkill -f '[s]ource_ctl.py .* watch'");
 	sysCmd('truncate ' . RENDVOL_CACHE_FILE . ' --size 0');
 	$GLOBALS['renderer_watch'] = '';
 }
