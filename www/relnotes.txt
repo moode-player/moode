@@ -39,6 +39,7 @@ Updates
 - UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
 - UPD: Add REST API play and pause commands (PR842 @Gjuju)
 - UPD: Add a renderer volume watch for the REST API (PR875 @Gjuju)
+- UPD: Add a volume slider to the renderer overlays (PR876 @Gjuju)
 - UPD: Add Pi Headphone jack enabled w/KMS driver (based on PR845 @Perjan-smul)
 - UPD: Add genre and performer tags to metadata file (currentsong.txt)
 - UPD: Improve REST API: Single endpoint, updated doc (PR834, PR22 @Gjuju)
@@ -56,6 +57,7 @@ Bug fixes
 - FIX: Compare vs assign errors: worker.php and mpd.php (PR872 @TheOldPresbyope)
 - FIX: Double underscore typo in snd-config.php (PR874 @TheOldPresbyope)
 - FIX: GetHash() and ParseDir() in mpd.php them (PR877 @Gjuju)
+- FIX: MPD at 100% volume first boot with USB DAC + no hdwr volume (PR891 @Gjuju)
 
 ################################################################################
 #
