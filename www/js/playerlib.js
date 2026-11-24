@@ -990,13 +990,13 @@ function updateInpsrcMeta(cmd, data) {
 	}
 
 	// Standard metadata
-	var title = metadata['title'];
-	var artist = metadata['artist'];
-	var album = metadata['album'];
-	var coverURL = metadata['cover_url'];
+	var title = encodeHTMLEntities(metadata['title']);
+	var artist = encodeHTMLEntities(metadata['artist']);
+	var album = encodeHTMLEntities(metadata['album']);
+	var coverURL = encodeHTMLEntities(metadata['cover_url']);
 	// Source and output format
-	var sformat = metadata['sformat'];
-	var oformat = metadata['oformat'];
+	var sformat = encodeHTMLEntities(metadata['sformat']);
+	var oformat = encodeHTMLEntities(metadata['oformat']);
 	// Playstate/now-playing icon
 	var playstate = typeof(metadata['playstate']) == 'undefined' ? '' : metadata['playstate'];
 	if (playstate == 'Pause') {

@@ -29,17 +29,6 @@ var filteredAlbumCovers = [];
 
 var miscLibOptions = [];
 
-var htmlEntityMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-  '/': '&#x2F;',
-  '`': '&#x60;',
-  '=': '&#x3D;'
-};
-
 // Shim for older Browsers that don't support Object.values
 if (!Object.values) {
     Object.defineProperty(Object, 'values', {
@@ -2064,19 +2053,4 @@ function showHideTracks(posChange) {
     }
 
     customScroll('albumcovers', UI.libPos[1], 200);
-}
-
-function encodeHTMLEntities(str) {
-    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
-        return htmlEntityMap[s];
-    });
-}
-function decodeHTMLEntities(str) {
-    var element = document.createElement('div');
-
-    element.innerHTML = str;
-    str = element.textContent;
-    element.textContent = '';
-
-    return str;
 }
