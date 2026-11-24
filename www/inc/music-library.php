@@ -759,7 +759,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		$encodedAt = empty($format) ? 'VBR' : ($displayFormat == 'verbose' ? $format . ' Compression' : $format);
 	} else if (substr($songData['file'], 0, 4) == 'http' && isset($songData['Artist'])) {
 		// UPnP file
-		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . $songData['file'] . '"');
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . escapeshellarg($songData['file']));
 		$bitDepth = $result[0];
 		$sampleRate = $result[1];
 		$channels = $result[2];
@@ -801,7 +801,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		}
 		// Mediainfo
 		// NOTE: Mediainfo called via sysCmd() i.e. exec() returns nothing if the file name contains accented chars
-		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . escapeshellarg(MPD_MUSICROOT . $songData['file']));
 		if (empty($result[0]) || empty($result[1])) {
 			// Empty mediainfo so fallback to MPD lsinfo Format tag rate:bits:channels
 			$format = isset($songData['Format']) ? $songData['Format'] : getMpdFormatTag($songData['file']);
@@ -842,7 +842,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 // Return DSD rate and channels
 function getDSDRateAndChannels($file) {
 	//workerLog('getDSDRateAndChannels(): ' . $file);
-	$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $file . '"');
+	$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . escapeshellarg(MPD_MUSICROOT . $file));
 	// [0] bitdepth
 	// [1] sampleRate
 	// [2] channels
