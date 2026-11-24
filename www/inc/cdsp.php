@@ -298,7 +298,7 @@ class CamillaDsp {
      */
     function coeffInfo($coefffile, $raw = False) {
         $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
-        $jsonString = sysCmd("mediainfo --Output=JSON \"" . $fileName . "\"");
+        $jsonString = sysCmd("mediainfo --Output=JSON " . escapeshellarg($fileName));
         $mediaDataObj = json_decode(implode($jsonString));
 
         $ext = $mediaDataObj->{'media'}->{'track'}[0]->{'FileExtension'};

@@ -872,7 +872,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		if (!(substr($song['file'], 0, 4) == 'http' && !isset($current['duration']))) { // Not a radio station
 			if (substr($song['file'], 0, 4) == 'http') { // UPnP file
 				// [0] bits, [1] rate, [2] channels [3] ext, [4] duration
-				$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . '"' . $song['file'] . '"');
+				$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/util/mediainfo.tpl" ' . escapeshellarg($song['file']));
 				$format[0] = $result[1]; // rate
 				$format[1] = $result[0]; // bits
 				$format[2] = $result[2]; // channels
