@@ -82,7 +82,8 @@ function publishText($dbh) {
 		$metaFiles = array('aplactive' => APLMETA_CACHE_FILE, 'qbzactive' => QBZMETA_CACHE_FILE,
 			'spotactive' => SPOTMETA_CACHE_FILE, 'solactive' => SOLMETA_CACHE_FILE, 'btactive' => BTMETA_CACHE_FILE);
 		$renderer = getActiveRenderer();
-		$current = parseDelimFile((string)@file_get_contents(CURRENTSONG_TXT), '=');
+		$current = array_map(function ($value) { return htmlspecialchars_decode((string)$value, ENT_NOQUOTES); },
+			parseDelimFile((string)@file_get_contents(CURRENTSONG_TXT), '='));
 		if (isset($metaFiles[$renderer])) {
 			$meta = json_decode((string)@file_get_contents($metaFiles[$renderer]), true);
 		} else {
