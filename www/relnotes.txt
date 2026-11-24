@@ -47,6 +47,8 @@ Updates
 - UPD: Improve Dashboard: Disable player tile if offline
 - UPD: Remove Spotify Connect (librespot) feature due to upstream breaking changes
 - UPD: Bind engine-cmd to 127.0.0.1 instead of 0.0.0.0 all (PR879 @Gjuju)
+- UPD: Escape metadata in the renderer overlay (PR902 @Gjuju)
+
 
 Bug fixes
 - FIX: Renderer overlays appear on Configure pages
@@ -62,7 +64,10 @@ Bug fixes
 - FIX: Compare vs assign error in worker.php (PR892 @TheOldPresbyope)
 - FIX: Misspelled variable in watchdog.php (PR893 @TheOldPresbyope)
 - FIX: Missing socket assignment in index.php (PR894 @TheOldPresbyope)
-- FIX: Missing row index for param 'audioout'  in getALSAOutputFormat() (PR896 @Gjuju)
+- FIX: Missing row index for 'audioout' in getALSAOutputFormat() (PR896 @Gjuju)
+- FIX: Non-square tall covers overflow the container (PR898 @Gjuju)
+- FIX: Currentsong.txt values not decoded for peppy-gain.php (PR899 @Gjuju)
+- FIX: Mediainfo file arg not being escaped (PR901 @Gjuju)
 
 ################################################################################
 #
