@@ -38,6 +38,7 @@ Updates
 - UPD: Add volume curve and metadata options to Peppymeter (PR841/PR886/PR887 @Gjuju)
 - UPD: Add auto-configure Output device on USB audio hot-plug (PR838 @Gjuju)
 - UPD: Add REST API play and pause commands (PR842 @Gjuju)
+- UPD: Add REST API get_audioinfo to return contents of WebUI Audio info
 - UPD: Add a renderer volume watch for the REST API (PR875 @Gjuju)
 - UPD: Add a volume slider to the renderer overlays (PR876 @Gjuju)
 - UPD: Add Pi Headphone jack enabled w/KMS driver (based on PR845 @Perjan-smul)
