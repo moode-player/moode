@@ -934,7 +934,7 @@ function setDisplay($argv) {
  			if ($peppyOn == '1' && $set2webui == '1') {
 				$process = $_SESSION['peppy_display_type'] == 'meter' ? 'peppymeter.py' : 'spectrum.py';
 				sysCmd('pkill -f ' . $process . ' > /dev/null 2>&1');
-				$result = sysCmdStr('pgrep -c chromium-browse');
+				$result = sysCmdStr('pgrep -c chromium');
 				if ($result == 0) {
 					sysCmd('systemctl restart localdisplay');
 				}
