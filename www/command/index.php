@@ -27,6 +27,9 @@ $cmd = explode(' ', $_GET['cmd']);
 
 switch ($cmd[0]) {
 	// REST API commands
+	case 'get_audioinfo':
+		echo sysCmd('php /var/www/audioinfo.php -json')[0];
+		break;
 	case 'get_currentsong':
 		echo json_encode(parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), "="), JSON_FORCE_OBJECT);
 		break;

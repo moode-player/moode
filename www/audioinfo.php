@@ -12,8 +12,16 @@ require_once __DIR__ . '/inc/music-library.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
 
+// If called from REST API (get_audioinfo)
+$optionArg = isset($argv[1]) ? $argv[1] : '';
+if ($optionArg == '-json') {
+	$sessionID = trim(sqlQuery("SELECT value FROM cfg_system WHERE param='sessionid'", sqlConnect())[0]['value']);
+	session_id($sessionID);
+}
+
 $sock = getMpdSock('www/audioinfo.php');
 $dbh = sqlConnect();
+
 phpSession('open_ro');
 
 // ALSA Hardware params
@@ -420,8 +428,44 @@ $_audio_formats = $_SESSION['audio_formats'];
 $_hdwr_rev = $_SESSION['hdwrrev'];
 
 closeMpdSock($sock);
-$tpl = 'audioinfo.html';
-eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
+
+// Format for REST API (get_audioinfo) or WebUI (Audio info)
+if ($optionArg == '-json') {
+	$array = array(
+		'file' => $_file,
+		'encoded_at' => $_encoded_at,
+		'decoded_to' => $_decoded_to,
+		'decode_rate' => $_decode_rate,
+		'alsa_output_format' => $_alsa_output_format,
+		'alsa_output_mode' => $_alsa_output_mode,
+		'audio_output_chain' => $_audio_output_chain,
+		'alsa_loopback' => $_alsa_loopback,
+		'resample_format' => $_resample_format,
+		'resample_quality' => $_resample_quality,
+		'selective_resample' => $_selective_resample,
+		'polarity_inv' => $_polarity_inv,
+		'crossfade' => $_crossfade,
+		'peq' => $_peq,
+		'geq' => $_geq,
+		'camilladsp' => $_camilladsp,
+		'volume_mixer' => $_volume_mixer,
+		'volume_levels' => $_volume_levels,
+		'replaygain' => $_replaygain,
+		'vol_normalize' => $_vol_normalize,
+		'chip_options' => $_chip_options,
+		'devname' => $_devname,
+		'mixer_name' => $_mixer_name,
+		'dacchip' => $_dacchip,
+		'iface' => $_iface,
+		'audio_formats' => $_audio_formats,
+		'hdwr_rev' => $_hdwr_rev
+	);
+	$array = str_replace('&rarr;', '->', $array);
+	echo json_encode($array, JSON_FORCE_OBJECT);
+} else {
+	$tpl = 'audioinfo.html';
+	eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
+}
 
 function getCamillaDspConfigName($config) {
 	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
