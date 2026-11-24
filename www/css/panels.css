@@ -359,6 +359,8 @@ img.coverart {
 	box-shadow:0em .25em 1em rgba(32,32,32,0.25);
 	width:100%;
 	height:100%;
+	aspect-ratio:1/1;
+	object-fit:contain;
 	cursor:pointer;
 	border-style:none;
 	border-radius:var(--img-border-radius);
