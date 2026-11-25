@@ -2568,7 +2568,7 @@ function renderRadioView(lazyLoad = true) {
 			} else {
 				var favToggle = '';
 			}
-    		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls" data-url="' + rbEscapeHtml(data[i].station) + '" data-name="' + rbEscapeHtml(data[i].name);
+    		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls" data-url="' + encodeHTMLEntities(data[i].station) + '" data-name="' + encodeHTMLEntities(data[i].name);
     		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + encodeURIComponent(imgUrl) + '">' + favToggle + '</div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
