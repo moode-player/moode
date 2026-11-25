@@ -223,6 +223,18 @@ function chkPath($key, $value) {
 	}
 }
 
+// Check a playlist or station name used as a file name: no path separator or control character
+function chkName($key, $value) {
+	if (preg_match('/[\/\x00-\x1f\x7f]/', (string)$value)) {
+		workerLog('SECCHK: Invalid name, request denied');
+		workerLog('SECCHK: ' . $key . '|' . $value);
+		// Redirect to '400 Bad request' page and then exit
+		http_response_code(400);
+		header('Location: /response400.html');
+		exit(1);
+	}
+}
+
 // Check for SQL injection in the WHERE clause
 function chkSQL($sql) {
 	// DEBUG:
