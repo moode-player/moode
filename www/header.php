@@ -28,8 +28,8 @@
 	<!-- RESOURCES -->
 	<!-- Common CSS -->
 	<!-- build:css css/styles.min.css -->
-	<link href="css/bootstrap-2.3.2-moode.css" rel="stylesheet">
-	<link href="css/bootstrap-5.3.8.css" rel="stylesheet">
+	<link href="css/bootstrap.css" rel="stylesheet">
+	<link href="css/bootstrap-select-1.13.18.css" rel="stylesheet">
 	<link href="css/flat-ui.css" rel="stylesheet">
 	<link href="css/jquery.pnotify.default.css" rel="stylesheet">
 	<link href="css/fa-brands.css" rel="stylesheet">
@@ -53,7 +53,8 @@
 	<!-- Common JS -->
 	<!-- build:js js/lib.min.js defer -->
 	<script src="js/jquery-1.12.4.js" /></script>
-	<script src="js/bootstrap-5.3.8.js" defer></script>
+	<script src="js/bootstrap.js" defer></script>
+	<script src="js/bootstrap-select-1.13.18.js" defer></script>
 	<script src="js/jquery.pnotify.js" defer></script>
 	<script src="js/notify.js" defer></script>
 	<script src="js/html-entities.js" defer></script>
