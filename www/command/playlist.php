@@ -166,6 +166,7 @@ switch ($_GET['cmd']) {
 	case 'new_playlist':
 	case 'upd_playlist':
 		$plName = html_entity_decode($_POST['path']['name']);
+		chkName('name', $plName);
 
 		// Get metadata (may not exist so defaults will be returned)
 		$plMeta = getPlaylistMetadata($plName);
@@ -180,6 +181,7 @@ switch ($_GET['cmd']) {
 		// DEBUG:
 		//workerLog("playlist.php: add_to_playlist\n" . print_r($_POST, true));
 		$plName = html_entity_decode($_POST['path']['playlist']);
+		chkName('playlist', $plName);
 
 		// Get metadata (may not exist so defaults will be returned)
 		$plMeta = getPlaylistMetadata($plName);
@@ -205,11 +207,14 @@ switch ($_GET['cmd']) {
 		putPlaylistCover($plName);
 		break;
 	case 'del_playlist':
-		sysCmd('rm ' . escapeshellarg(MPD_PLAYLIST_ROOT . html_entity_decode($_POST['path']) . '.m3u'));
-		sysCmd('rm ' . escapeshellarg(PLAYLIST_COVERS_ROOT . html_entity_decode($_POST['path']) . '.jpg'));
+		$plName = html_entity_decode($_POST['path']);
+		chkName('path', $plName);
+		sysCmd('rm ' . escapeshellarg(MPD_PLAYLIST_ROOT . $plName . '.m3u'));
+		sysCmd('rm ' . escapeshellarg(PLAYLIST_COVERS_ROOT . $plName . '.jpg'));
 		break;
 	case 'save_queue_to_playlist':
 		$plName = html_entity_decode($_GET['name']);
+		chkName('name', $plName);
 		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 		$sock = getMpdSock('command/playlist.php');
 
@@ -239,6 +244,7 @@ switch ($_GET['cmd']) {
 		break;
 	case 'set_favorites_name':
 		$plName = html_entity_decode($_GET['name']);
+		chkName('name', $plName);
 		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
 		// Get metadata (may not exist so defaults will be returned)

@@ -26,6 +26,7 @@ switch ($_GET['cmd']) {
 	case 'new_station':
 	case 'upd_station':
 		$stName = $_POST['path']['name'];
+		chkName('name', $stName);
 		$stFile = MPD_MUSICROOT . 'RADIO/' . $stName . '.pls';
 		$stUrl = $_POST['path']['url'];
 		$stRowId = $_POST['path']['id'];
