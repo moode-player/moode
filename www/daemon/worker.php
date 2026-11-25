@@ -128,8 +128,8 @@ if ($userId != NO_USERID_DEFINED) {
 		// First boot import
 		sysCmd('cp -f /usr/share/moode-player/boot/firmware/config.txt /boot/firmware/');
 		// Patch cmdline.txt for headphone jack enable
-		if (!str_contains(file_get_contents(BOOT_CMDLINE_TXT), CFG_PI_HEADPHONES_ENABLE)) {
-			sysCmd('sed -i "s/$/ ' . CFG_PI_HEADPHONES_ENABLE . '/" ' . BOOT_CMDLINE_TXT);
+		if (!str_contains(file_get_contents(BOOT_CMDLINE_TXT), CFG_PI_HEADPHONE_JACK_ENABLE)) {
+			sysCmd('sed -i "s/$/ ' . CFG_PI_HEADPHONE_JACK_ENABLE . '/" ' . BOOT_CMDLINE_TXT);
 		}
 		// Reboot
 		sysCmd('reboot');
