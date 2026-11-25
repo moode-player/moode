@@ -694,7 +694,7 @@ function getSavedSearches() {
 	$searches = [];
 	array_push($searches, array('name' => LIB_FULL_LIBRARY, 'filter' => 'full_lib'));
 	foreach(glob(LIBSEARCH_BASE . '*.json') as $file) {
-		$name = ltrim(pathinfo($file, PATHINFO_FILENAME), LIBSEARCH_BASE);
+		$name = substr($file, strlen(LIBSEARCH_BASE), -strlen('.json'));
 		$filter = json_decode(file_get_contents($file), true);
 		if ($name != LIB_FULL_LIBRARY) {
 			array_push($searches, array('name' => $name, 'filter' => $filter['filter_type'] .
