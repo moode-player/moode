@@ -69,6 +69,7 @@ Bug fixes
 - FIX: Non-square tall covers overflow the container (PR898 @Gjuju)
 - FIX: Currentsong.txt values not decoded for peppy-gain.php (PR899 @Gjuju)
 - FIX: Mediainfo file arg not being escaped (PR901 @Gjuju)
+- FIX: Saved search file permissions and name parsing (PR906 @Gjuju)
 
 ################################################################################
 #
