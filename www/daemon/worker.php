@@ -3014,11 +3014,12 @@ function runQueuedJob() {
 
 		// Library saved searches
 		case 'create_saved_search':
-			$fh = fopen(LIBSEARCH_BASE . $_SESSION['w_queueargs'] . '.json', 'w');
+			$file = LIBSEARCH_BASE . $_SESSION['w_queueargs'] . '.json';
+			$fh = fopen($file, 'w');
 			$data = json_encode(['filter_type' => $_SESSION['library_flatlist_filter'], 'filter_str' => $_SESSION['library_flatlist_filter_str']]);
 			fwrite($fh, $data);
 			fclose($fh);
-			sysCmd('chmod 0777 "' . $file . '"');
+			sysCmd('chmod 0777 ' . escapeshellarg($file));
 			break;
 
 		// mpd-config jobs
