@@ -517,7 +517,7 @@ function uiNotify($notify) {
 	$script .= "title: '" . $notify['title'] . "',";
 	$script .= "text: '" . $notify['msg'] . "',";
 	$script .= "icon: '',";
-	$script .= "delay: " . (isset($notify['duration']) ? strval($notify['duration'] * 1000) : NOTIFY_DURATION_DEFAULT) . ",";
+	$script .= "delay: " . (isset($notify['duration']) ? strval($notify['duration'] * 1000) : strval(NOTIFY_DURATION_DEFAULT * 1000)) . ",";
 	$script .= "opacity: 1.0});\n";
 	$script .= "}\n";
 	$script .= "</script>\n";
