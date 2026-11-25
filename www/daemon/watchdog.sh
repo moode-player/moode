@@ -86,6 +86,8 @@ while true; do
 		message_log "Reducing PHP-FPM worker pool to free up resources"
 		/var/www/util/send-fecmd.php reduce_fpm_pool
 		((FPM_RETRIES++))
+	elif (( FPM_CNT <= FPM_MIN_LIMIT )); then
+		FPM_RETRIES=0
 	fi
 
 	if (( FPM_CNT > FPM_MAX_LIMIT || FPM_RETRIES >= FPM_RETRY_MAX )); then
