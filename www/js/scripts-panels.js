@@ -752,7 +752,7 @@ jQuery(document).ready(function($) { 'use strict';
 				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, NVME, OSDISK, RADIO, SATA and USB cannot be used in the name.');
 			} else {
                 notify(NOTIFY_TITLE_INFO, 'saving_queue', NOTIFY_DURATION_SHORT);
-                $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + plName, function() {
+                $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + encodeURIComponent(plName), function() {
     				notify(NOTIFY_TITLE_INFO, 'queue_saved', NOTIFY_DURATION_SHORT);
                     $('#btn-pl-refresh').click();
                     $('#db-refresh').click();
@@ -777,7 +777,7 @@ jQuery(document).ready(function($) { 'use strict';
 				notify(NOTIFY_TITLE_ALERT, 'playlist_name_error', 'NAS, NVME, OSDISK, RADIO, SATA and USB cannot be used in the name.');
 			} else {
                 notify(NOTIFY_TITLE_INFO, 'setting_favorites_name', NOTIFY_DURATION_SHORT);
-                $.get('command/playlist.php?cmd=set_favorites_name&name=' + favoritesName, function(){
+                $.get('command/playlist.php?cmd=set_favorites_name&name=' + encodeURIComponent(favoritesName), function(){
                     notify(NOTIFY_TITLE_INFO, 'favorites_name_set', NOTIFY_DURATION_SHORT);
                 });
 			}
