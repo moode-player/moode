@@ -51,8 +51,8 @@ function rbLogoUrl(s) {
 function rbBuildTile(s, i) {
     var logo = rbLogoUrl(s);
     var meta = [];
-    if (s.country) meta.push(rbEscapeHtml(s.country));
-    if (s.codec) meta.push(rbEscapeHtml(s.codec));
+    if (s.country) meta.push(encodeHTMLEntities(s.country));
+    if (s.codec) meta.push(encodeHTMLEntities(s.codec));
     if (s.bitrate) meta.push(s.bitrate + ' kbps');
     var favClass = s.added ? 'rb-fav-toggle added' : 'rb-fav-toggle';
     var favIcon = s.added ? 'fa-solid' : 'fa-regular';
@@ -61,16 +61,16 @@ function rbBuildTile(s, i) {
     var coverMenu = '<div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-browser-item"></div>';
 
     return '<li id="rb-' + i + '"' +
-            ' data-path="' + rbEscapeHtml(s.url) + '"' +
-            ' data-url="' + rbEscapeHtml(s.url) + '"' +
-            ' data-name="' + rbEscapeHtml(s.name) + '"' +
-            ' data-favicon="' + rbEscapeHtml(s.favicon || '') + '"' +
-            ' data-homepage="' + rbEscapeHtml(s.homepage || '') + '"' +
-            ' data-country="' + rbEscapeHtml(s.country || '') + '"' +
-            ' data-tags="' + rbEscapeHtml(s.tags || '') + '"' +
+            ' data-path="' + encodeHTMLEntities(s.url) + '"' +
+            ' data-url="' + encodeHTMLEntities(s.url) + '"' +
+            ' data-name="' + encodeHTMLEntities(s.name) + '"' +
+            ' data-favicon="' + encodeHTMLEntities(s.favicon || '') + '"' +
+            ' data-homepage="' + encodeHTMLEntities(s.homepage || '') + '"' +
+            ' data-country="' + encodeHTMLEntities(s.country || '') + '"' +
+            ' data-tags="' + encodeHTMLEntities(s.tags || '') + '"' +
             ' data-bitrate="' + (s.bitrate || 0) + '"' +
-            ' data-codec="' + rbEscapeHtml(s.codec || '') + '"' +
-            ' data-uuid="' + rbEscapeHtml(s.stationuuid || '') + '">' +
+            ' data-codec="' + encodeHTMLEntities(s.codec || '') + '"' +
+            ' data-uuid="' + encodeHTMLEntities(s.stationuuid || '') + '">' +
         '<div class="db-icon db-song db-browse db-action">' +
             '<div class="thumbHW">' +
                 '<img loading="lazy" src="' + logo.replace(/&/g, '&amp;') + '" onerror="this.src=\'' + DEFAULT_RADIO_COVER + '\'">' +
@@ -79,7 +79,7 @@ function rbBuildTile(s, i) {
         '</div>' +
         coverMenu +
         hires +
-        '<span class="station-name">' + rbEscapeHtml(s.name) + '</span>' +
+        '<span class="station-name">' + encodeHTMLEntities(s.name) + '</span>' +
         (meta.length ? '<div class="radioview-metadata-text">' + meta.join(' &middot; ') + '</div>' : '') +
     '</li>';
 }
@@ -117,10 +117,6 @@ function rbSetShowMore(show) {
         document.getElementById('rb-covers-search').insertAdjacentHTML('beforeend',
             '<li id="rb-showmore"><button id="btn-rb-showmore" class="btn">Show more</button></li>');
     }
-}
-
-function rbEscapeHtml(text) {
-    return $('<div>').text(text == null ? '' : text).html().replace(/"/g, '&quot;');
 }
 
 function rbLoading(ulId) {
@@ -302,9 +298,9 @@ function rbLoadCountriesAndGenres() {
             data.countries.forEach(function(item) {
                 if (item.iso_3166_1 && item.name) {
 					lines += '<li><a href="#notarget" data-cmd="rb-country-sel" data-value="'
-						+ rbEscapeHtml(item.iso_3166_1)
+						+ encodeHTMLEntities(item.iso_3166_1)
 						+ '"><span class="text">'
-						+ rbEscapeHtml(item.name)
+						+ encodeHTMLEntities(item.name)
 						+ '</span></a></li>';
                 }
             });
@@ -317,9 +313,9 @@ function rbLoadCountriesAndGenres() {
             data.genres.forEach(function(item) {
                 if (item.name && item.genre) {
 					lines += '<li><a href="#notarget" data-cmd="rb-genre-sel" data-value="'
-						+ item.genre
+						+ encodeHTMLEntities(item.genre)
 						+ '"><span class="text">'
-						+ item.name
+						+ encodeHTMLEntities(item.name)
 						+ '</span></a></li>';
                 }
             });
