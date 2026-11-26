@@ -176,6 +176,7 @@ def write_json(path, data):
 class Renderer:
 	"""volume_state() returns (level 0-100, muted) or None"""
 	can_mute = True
+	meta_file = None
 
 	def volume_state(self):
 		return None
@@ -185,6 +186,9 @@ class Renderer:
 
 	def play_state(self):
 		"""play | pause | stop, or None"""
+		return None
+
+	def metadata(self):
 		return None
 
 	def watch(self, publish):
@@ -383,6 +387,12 @@ class Squeezelite(Renderer):
 	HTTP_PORT = 9000
 	CLI_PORT = 9090
 	VERBS = {'toggle': ['pause'], 'play': ['pause', '0'], 'pause': ['pause', '1'], 'stop': ['stop'], 'next': ['playlist', 'index', '+1'], 'previous': ['playlist', 'index', '-1']}
+	# Track tags for the metadata, read with the volume in the same request
+	STATUS_TAGS = 'tags:algdKroTI'
+	CODECS = {'flc': 'FLAC', 'alc': 'ALAC', 'ops': 'Opus', 'aif': 'AIFF', 'mp3': 'MP3', 'aac': 'AAC',
+		'ogg': 'Ogg', 'wav': 'WAV', 'wma': 'WMA', 'pcm': 'PCM', 'dsf': 'DSD', 'dff': 'DSD'}
+	PLACEHOLDERS = ('No Artist', 'No Album', 'No Genre')
+	meta_file = '/var/local/www/slmeta.json'
 
 	def __init__(self):
 		self.status = {}
@@ -432,7 +442,7 @@ class Squeezelite(Renderer):
 		return None if result is None else result.get('result')
 
 	def volume_state(self):
-		status = (self.request(['status', '-', 1], self.player) if self.player else None) or {}
+		status = (self.request(['status', '-', 1, self.STATUS_TAGS], self.player) if self.player else None) or {}
 		self.status = status
 		if 'mixer volume' not in status:
 			return None
@@ -448,6 +458,31 @@ class Squeezelite(Renderer):
 	def play_state(self):
 		# Read by volume_state(), called first in state()
 		return self.status.get('mode') if self.status.get('mode') in ('play', 'pause', 'stop') else None
+
+	def metadata(self):
+		# Read by volume_state(), called first in state(). A stream carries its tags in remoteMeta
+		entry = (self.status.get('playlist_loop') or [{}])[0]
+		track = dict(entry, **{k: v for k, v in (self.status.get('remoteMeta') or {}).items() if v})
+		if not track:
+			return None
+		def text(key):
+			value = str(track.get(key, '')).strip()
+			return '' if value in self.PLACEHOLDERS else value
+		raw_type = text('type')
+		codec = self.CODECS.get(raw_type.lower(), raw_type)
+		try:
+			sformat = '%s %d/%g kHz' % (codec, int(track['samplesize']), int(track['samplerate']) / 1000.0)
+		except (KeyError, TypeError, ValueError):
+			sformat = codec
+		cover = text('artwork_url')
+		if cover and not cover.startswith(('http://', 'https://')):
+			cover = 'http://%s:%d/%s' % (self.host, self.HTTP_PORT, cover.lstrip('/'))
+		try:
+			duration = str(round(float(track.get('duration') or 0)))
+		except (TypeError, ValueError):
+			duration = '0'
+		return {'title': text('title'), 'artist': text('artist'), 'album': text('album'), 'genre': text('genre'),
+			'duration': duration, 'cover_url': cover, 'sformat': sformat, 'oformat': ''}
 
 	def watch(self, publish):
 		# LMS CLI notifications for this player, re-read when quiet or after a reconnect
@@ -621,7 +656,7 @@ def watch(name):
 		import dbus.mainloop.glib
 		dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 	renderer = RENDERERS[name]()
-	last = {'state': None}
+	last = {'state': None, 'meta': None}
 	def publish():
 		state = renderer.state()
 		state['source'] = name
@@ -630,6 +665,10 @@ def watch(name):
 			last['state'] = state
 			if name != 'mpd':
 				subprocess.Popen([SEND_FECMD, 'update_rendvol'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+		meta = renderer.metadata()
+		if renderer.meta_file and meta is not None and meta != last['meta']:
+			write_json(renderer.meta_file, meta)
+			last['meta'] = meta
 	renderer.watch(publish)
 	return 0
 
