@@ -42,17 +42,17 @@ function nasSourceCfg($queueArgs) {
 			// Unmount
 			if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
 				// Lazy umount
-				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"');
+				sysCmd('umount -l ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
 			}
 			else {
 				// Force unmount (for unreachable NFS)
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"');
+				sysCmd('umount -f ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
 			}
 			// Delete and recreate the mount dir in case name was changed
 			// Empty check to ensure /mnt/NAS is never deleted
 			if (!empty($mp[0]['name']) && $mp[0]['name'] != $queueArgs['mount']['name']) {
-				sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-				sysCmd('mkdir "/mnt/NAS/' . $queueArgs['mount']['name'] . '"');
+				sysCmd('rmdir ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
+				sysCmd('mkdir ' . escapeshellarg('/mnt/NAS/' . $queueArgs['mount']['name']));
 			}
 
 			$result = nasSourceMount('mount', $queueArgs['mount']['id']);
@@ -63,15 +63,15 @@ function nasSourceCfg($queueArgs) {
 
 			// Unmount
 			if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
-				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"');
+				sysCmd('umount -l ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
 			}
 			else {
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"');
+				sysCmd('umount -f ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
 			}
 			// Delete the mount dir
 			// Empty check to ensure /mnt/NAS is never deleted
 			if (!empty($mp[0]['name'])) {
-				sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
+				sysCmd('rmdir ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
 			}
 
 			$result = (sqlDelete('cfg_source', $dbh, $queueArgs['mount']['id'])) ? true : false;
@@ -90,6 +90,7 @@ function nasSourceMount($action, $id = '', $log = 'workerlog') {
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			// Construct the mount string
+			$target = escapeshellarg('/mnt/NAS/' . $mp[0]['name']);
 			if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
 				$options = $mp[0]['options'];
 				if(strpos($options, 'vers=') === false) {
@@ -98,26 +99,22 @@ function nasSourceMount($action, $id = '', $log = 'workerlog') {
 						$options = 'vers=' . $version . ',' . $options;
 					}
 				}
-				$mountStr = "mount -t cifs \"//" .
-					$mp[0]['address'] . "/" .
-					$mp[0]['remotedir'] . "\" -o username=\"" .
-					$mp[0]['username'] . "\",password=\"" .
-					$mp[0]['password'] . "\",rsize=" .
-					$mp[0]['rsize'] . ",wsize=" .
-					$mp[0]['wsize'] . ",iocharset=" .
-					$mp[0]['charset'] . "," .
-					$options . " \"/mnt/NAS/" .
-					$mp[0]['name'] . "\"";
+				$source = escapeshellarg('//' . $mp[0]['address'] . '/' . $mp[0]['remotedir']);
+				$cifsOptions = ',rsize=' . $mp[0]['rsize'] . ',wsize=' . $mp[0]['wsize'] .
+					',iocharset=' . $mp[0]['charset'] . ',' . $options;
+				$mountStr = 'mount -t cifs ' . $source . ' -o ' . escapeshellarg('username=' . $mp[0]['username'] .
+					',password=' . $mp[0]['password'] . $cifsOptions) . ' ' . $target;
+				// Same mount string without the password, for the logs
+				$logStr = 'mount -t cifs ' . $source . ' -o ' . escapeshellarg('username=' . $mp[0]['username'] .
+					',password=' . (empty($mp[0]['password']) ? '' : '********') . $cifsOptions) . ' ' . $target;
 			} else {
-				$mountStr = "mount -t nfs -o " .
-				$mp[0]['options'] . " \"" .
-				$mp[0]['address'] . ":/" .
-				$mp[0]['remotedir'] . "\" \"/mnt/NAS/" .
-				$mp[0]['name'] . "\"";
+				$mountStr = 'mount -t nfs -o ' . escapeshellarg($mp[0]['options']) . ' ' .
+					escapeshellarg($mp[0]['address'] . ':/' . $mp[0]['remotedir']) . ' ' . $target;
+				$logStr = $mountStr;
 			}
 
 			// Attempt the mount
-			sysCmd('mkdir "/mnt/NAS/' . $mp[0]['name'] . '"');
+			sysCmd('mkdir ' . $target);
 			$result = sysCmd($mountStr);
 
 			if (empty($result)) {
@@ -129,16 +126,16 @@ function nasSourceMount($action, $id = '', $log = 'workerlog') {
 			} else {
 				// Empty check to ensure /mnt/NAS/ itself is never deleted
 				if (!empty($mp[0]['name'])) {
-					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
+					sysCmd('rmdir ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
 				}
 				$mp[0]['error'] = 'Mount error';
 				if ($log == 'workerlog') {
 					// Mounts performed by Library or Music Source Config
-					workerLog('- TRY: ' . $mountStr);
+					workerLog('- TRY: ' . $logStr);
 					workerLog('- ERR: ' . implode("\n", $result));
 				} else if ($log == 'mountmonlog') {
 					// Mounts performed by the Mountmon monitor daemon
-					mountmonLog('- TRY: ' . $mountStr);
+					mountmonLog('- TRY: ' . $logStr);
 					mountmonLog('- ERR: ' . implode("\n", $result));
 				}
 				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
@@ -147,7 +144,7 @@ function nasSourceMount($action, $id = '', $log = 'workerlog') {
 
 			// Log the mount string if debug logging on and mount appeared to be successful
 			if ($return === true) {
-				debugLog('Mount: ' . $mountStr);
+				debugLog('Mount: ' . $logStr);
 			}
 			break;
 		case 'unmount':
@@ -155,9 +152,9 @@ function nasSourceMount($action, $id = '', $log = 'workerlog') {
 
 			if (nasMountExists($mp[0]['name'])) {
 				if ($mp[0]['type'] == LIB_MOUNT_TYPE_SMB) {
-					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // -l (lazy) -f (force)
+					sysCmd('umount -f ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name'])); // -l (lazy) -f (force)
 				} else {
-					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"');
+					sysCmd('umount -f ' . escapeshellarg('/mnt/NAS/' . $mp[0]['name']));
 				}
 			}
 
@@ -182,9 +179,9 @@ function nasSourceMount($action, $id = '', $log = 'workerlog') {
 			foreach ($mounts as $mp) {
 				if (nasMountExists($mp['name'])) {
 					if ($mp['type'] == LIB_MOUNT_TYPE_SMB) {
-						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
+						sysCmd('umount -f ' . escapeshellarg('/mnt/NAS/' . $mp['name']));
 					} else {
-						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
+						sysCmd('umount -f ' . escapeshellarg('/mnt/NAS/' . $mp['name']));
 					}
 				}
 			}
@@ -200,7 +197,7 @@ function nasSourceMount($action, $id = '', $log = 'workerlog') {
 
 // Detect highest suported SMB protocol version
 function detectSMBVersion($host) {
-	$output = sysCmd("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|");
+	$output = sysCmd("nmap -Pn " . escapeshellarg($host) . " -p 139 --script smb-protocols |grep \|");
 	$parts = explode('  ', end($output));
 
 	if (count($parts) >= 2)  {
@@ -221,7 +218,7 @@ function detectSMBVersion($host) {
 }
 
 function nasMountExists($mountName) {
-	$result = sysCmd('mount | grep -ow ' . '"/mnt/NAS/' . $mountName .'"');
+	$result = sysCmd('mount | grep -ow ' . escapeshellarg('/mnt/NAS/' . $mountName));
 	return empty($result) ? false : true;
 }
 
@@ -711,7 +708,7 @@ function getDriveLabel($device) {
 
 // NOTE: $device can be a local or remote mount
 function getDriveStats($device) {
-	$dfResult = sysCmd('df -h "' . $device . "\" | awk 'FNR==2 {print $2\",\"$3\",\"$4\",\"$5}'")[0];
+	$dfResult = sysCmd('df -h ' . escapeshellarg($device) . " | awk 'FNR==2 {print $2\",\"$3\",\"$4\",\"$5}'")[0];
 	$dfArray = explode(',', $dfResult);
 	return array('size' => $dfArray[0], 'used' => $dfArray[1],'free' => $dfArray[2],'pctu' => $dfArray[3]);
 }

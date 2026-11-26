@@ -31,7 +31,7 @@ while (true) {
 					// See if file sharing service is accessible on the host
 					if ($mp['type'] == LIB_MOUNT_TYPE_SMB) {
 						//mountmonLog('- Checking SMB mount'); // DEBUG
-						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] .' 2>&1 | grep "Host is down\|Stale file handle"');
+						$result = sysCmd('ls ' . escapeshellarg('/mnt/NAS/' . $mp['name']) . ' 2>&1 | grep "Host is down\|Stale file handle"');
 						$fileSharingAccessible = !empty($result) ? false : true;
 					}
 					if ($mp['type'] == LIB_MOUNT_TYPE_NFS) {
@@ -49,7 +49,7 @@ while (true) {
 						mountmonLog('- File sharing is accessible');
 						// Check for remount needed (NOTE: ls can sometimes result in long timeouts or even a hang)
 						//mountmonLog('- Checking mount ' . $mp['name']); //DEBUG
-						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] . ' 2>&1 | grep -o "Stale file handle\|Host is down\|No such file or directory"');
+						$result = sysCmd('ls ' . escapeshellarg('/mnt/NAS/' . $mp['name']) . ' 2>&1 | grep -o "Stale file handle\|Host is down\|No such file or directory"');
 						if (!empty($result)) {
 							mountmonLog('- Remounting ' . $mp['name'] . ' (' . $result[0] . ')');
 							nasSourceMount('unmount', $mp['id']);
