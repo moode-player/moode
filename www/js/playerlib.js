@@ -413,7 +413,7 @@ function engineMpd() {
                         // 'Failed to open "ALSA Default" (alsa); Failed to open ALSA device "_audioout": Unknown error 524'
                         var msg = 'Output is set to HDMI but no audio device was detected on the HDMI port.';
                     } else {
-                        var msg = MPD.json['error'];
+                        var msg = encodeHTMLEntities(MPD.json['error']);
                     }
                     notify(NOTIFY_TITLE_ALERT, 'mpd_error', msg);
 				}
@@ -5321,7 +5321,7 @@ function submitLibraryUpdate (path = '') {
         $.getJSON('command/music-library.php?cmd=update_library', {'path': path}, function(data) {
             //console.log(data);
         });
-        notify(NOTIFY_TITLE_INFO, 'update_library', (path == '' ? '' : '<br>' + path));
+        notify(NOTIFY_TITLE_INFO, 'update_library', (path == '' ? '' : '<br>' + encodeHTMLEntities(path)));
     }
     else {
         notify(NOTIFY_TITLE_ALERT, 'library_updating');
