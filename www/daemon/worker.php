@@ -1427,7 +1427,7 @@ if (0 === preg_match('/^((?!:\d+).)*$/', $_SESSION['local_display_url'])) {
 }
 $kioskUrl = $_SESSION['local_display_url'];
 $kioskUrl .= (strpos($kioskUrl, '?') === false ? '?' : '&') . 'kiosk=1';
-sysCmd("sed -i 's|--app.*|--app=\"" . str_replace('&', '\&', $kioskUrl) . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
+sysCmdSed('s|--app.*|--app="' . addcslashes(addcslashes($kioskUrl, '"\\$`'), "\\&|\n") . '" \\\\|', $_SESSION['home_dir'] . '/.xinitrc');
 // - Screen blank interval
 if (!isset($_SESSION['scn_blank'])) {
 	$_SESSION['scn_blank'] = '600'; // 10 mins
@@ -3848,7 +3848,7 @@ function runQueuedJob() {
 		case 'local_display_url':
 			$kioskUrl = $_SESSION['w_queueargs'];
 			$kioskUrl .= (strpos($kioskUrl, '?') === false ? '?' : '&') . 'kiosk=1';
-			sysCmd("sed -i 's|--app.*|--app=\"" . str_replace('&', '\&', $kioskUrl) . "\" \\\\|' " . $_SESSION['home_dir'] . '/.xinitrc');
+			sysCmdSed('s|--app.*|--app="' . addcslashes(addcslashes($kioskUrl, '"\\$`'), "\\&|\n") . '" \\\\|', $_SESSION['home_dir'] . '/.xinitrc');
 			stopLocalDisplay();
 			startLocalDisplay();
 			break;
