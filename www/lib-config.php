@@ -288,7 +288,10 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 //----------------------------------------------------------------------------//
 
 if (isset($_POST['nvme_format_drive'])) {
-	if (empty(trim($_POST['nvme_drive_label']))) {
+	if (!array_key_exists(explode(',', $_POST['nvme_drive'])[0], nvmeListDrives())) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'No drive was selected.';
+	} else if (empty(trim($_POST['nvme_drive_label']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Volume label cannot be blank.';
 	} else if (!empty(sysCmd('mount | grep -ow ' . escapeshellarg(explode(',', $_POST['nvme_drive'])[0])))) {
