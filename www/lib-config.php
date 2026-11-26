@@ -261,6 +261,9 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 	} else if (empty(trim($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
+	} else if (!preg_match('/^[A-Za-z0-9-]{1,25}$/D', $_POST['mount']['name'])) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name format is 1-25 characters, alphanumeric, hyphen allowed.';
 	} else {
 		$initiateLibraryUpd = true;
 		// $array['mount']['key'] must be in column order for subsequent table insert
@@ -335,6 +338,9 @@ if (isset($_POST['save_sata_source']) && $_POST['save_sata_source'] == 1) {
 	} else if (empty(trim($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
+	} else if (!preg_match('/^[A-Za-z0-9-]{1,25}$/D', $_POST['mount']['name'])) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name format is 1-25 characters, alphanumeric, hyphen allowed.';
 	} else {
 		$initiateLibraryUpd = true;
 		// $array['mount']['key'] must be in column order for subsequent table insert
@@ -446,7 +452,7 @@ if (!isset($_GET['cmd'])) {
 	foreach ($mounts as $mountName) {
 		$icon = usbMountExists($mountName) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
 		$driveStats = $icon == LIB_MOUNT_OK ? formatDriveStats('/media/' . $mountName) : '';
-		$device = sysCmd('mount | grep "/media/' . $mountName . '"' . " | awk '{print $1}'")[0];
+		$device = sysCmd('mount | grep ' . escapeshellarg('/media/' . $mountName) . " | awk '{print $1}'")[0];
 		$_usb_mounts .= '<span class="btn-large config-btn config-btn-music-source" style="color:var(--accentxts);"> ' . $icon . ' ' .
 			$mountName . ' (' . $device . ' | ' . getDriveFormat($device) . ')' . $driveStats . '</span>';
 	}

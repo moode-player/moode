@@ -255,12 +255,12 @@ function nvmeSourceCfg($queueArgs) {
 			sqlUpdate('cfg_source', $dbh, '', $queueArgs['mount']);
 
 			// Unmount
-			sysCmd('umount -f "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
+			sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']));
 			// Delete and recreate the mount dir in case the name was changed
 			// Empty check to ensure the mount root dir is never deleted
 			if (!empty($mp[0]['name']) && $mp[0]['name'] != $queueArgs['mount']['name']) {
-				sysCmd('rmdir "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
-				sysCmd('mkdir "' . LIB_MOUNT_ROOT_NVME . '/' . $queueArgs['mount']['name'] . '"');
+				sysCmd('rmdir ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']));
+				sysCmd('mkdir ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $queueArgs['mount']['name']));
 			}
 
 			$result = nvmeSourceMount('mount', $queueArgs['mount']['id']);
@@ -274,11 +274,11 @@ function nvmeSourceCfg($queueArgs) {
 			$mp = sqlRead('cfg_source', $dbh, '', $queueArgs['mount']['id']);
 
 			// Unmount
-			sysCmd('umount -f "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
+			sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']));
 			// Delete the mount dir
 			// Empty check to ensure the mount root dir is never deleted
 			if (!empty($mp[0]['name'])) {
-				sysCmd('rmdir "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
+				sysCmd('rmdir ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']));
 			}
 
 			$result = (sqlDelete('cfg_source', $dbh, $queueArgs['mount']['id'])) ? true : false;
@@ -298,14 +298,12 @@ function nvmeSourceMount($action, $id = '', $log = 'workerlog') {
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			// Construct the mount string
-			$mountStr = 'mount -t ext4 -o ' .
-			$mp[0]['options'] . ' ' .
-			explode(',', $mp[0]['address'])[0] . ' ' .
-			'"' . LIB_MOUNT_ROOT_NVME . '/' .
-			$mp[0]['name'] . '"';
+			$mountStr = 'mount -t ext4 -o ' . escapeshellarg($mp[0]['options']) . ' ' .
+				escapeshellarg(explode(',', $mp[0]['address'])[0]) . ' ' .
+				escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']);
 
 			// Attempt the mount
-			sysCmd('mkdir "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
+			sysCmd('mkdir ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']));
 			$result = sysCmd($mountStr);
 
 			if (empty($result)) {
@@ -324,7 +322,7 @@ function nvmeSourceMount($action, $id = '', $log = 'workerlog') {
 				} else {
 					// Empty check to ensure the mount root dir is never deleted
 					if (!empty($mp[0]['name'])) {
-						sysCmd('rmdir "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
+						sysCmd('rmdir ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']));
 					}
 					$mp[0]['error'] = 'Mount error';
 					workerLog('worker: - TRY: ' . $mountStr);
@@ -343,7 +341,7 @@ function nvmeSourceMount($action, $id = '', $log = 'workerlog') {
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			if (nvmeMountExists($mp[0]['name'])) {
-				sysCmd('umount -f "' . LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name'] . '"');
+				sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp[0]['name']));
 			}
 
 			$return = true;
@@ -364,7 +362,7 @@ function nvmeSourceMount($action, $id = '', $log = 'workerlog') {
 
 			foreach ($mounts as $mp) {
 				if (nvmeMountExists($mp['name'])) {
-					sysCmd('umount -f "' . LIB_MOUNT_ROOT_NVME . '/' . $mp['name'] . '"');
+					sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mp['name']));
 				}
 			}
 
@@ -378,7 +376,7 @@ function nvmeSourceMount($action, $id = '', $log = 'workerlog') {
 }
 
 function nvmeMountExists($mountName) {
-	$result = sysCmd('mount | grep -ow ' . '"' . LIB_MOUNT_ROOT_NVME . '/' . $mountName .'"');
+	$result = sysCmd('mount | grep -ow ' . escapeshellarg(LIB_MOUNT_ROOT_NVME . '/' . $mountName));
 	return empty($result) ? false : true;
 }
 
@@ -390,10 +388,10 @@ function nvmeUpdNFSExports($mountName, $action) {
 			// Example: /srv/nfs/nvme/Music	192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
 			$access = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_access'", $dbh)[0]['value'];
 			$options = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_options'", $dbh)[0]['value'];
-			sysCmd("sed -i '$ a/srv/nfs/nvme/" . $mountName . "\t" . $access . '(' . $options . ")\n' /etc/exports");
+			sysCmdSed('$ a' . sedEscape('/srv/nfs/nvme/' . $mountName . "\t" . $access . '(' . $options . ')') . "\n", '/etc/exports');
 			break;
 		case 'remove_nvme_source':
-			sysCmd('sed -i "/' . $mountName . '/ d" /etc/exports');
+			sysCmdSed('/' . sedEscape($mountName) . '/ d', '/etc/exports');
 			sysCmd('sed -i "/^$/d" /etc/exports'); // Remove any trailing blank lines
 			break;
 	}
@@ -409,10 +407,10 @@ function nvmeUpdSMBConf($mountName, $action) {
 	switch ($action) {
 		case 'add_nvme_source':
 			$guestOk = empty($_SESSION['fs_smb_pwd']) ? 'guest ok = Yes' : '#guest ok = Yes';
-			$result = sysCmd('grep -w -c "' . $mountName . '" /etc/samba/smb.conf')[0];
+			$result = sysCmd('grep -w -c ' . escapeshellarg($mountName) . ' /etc/samba/smb.conf')[0];
 			if ($result == '0') {
-				sysCmd('sed -i "$ a[' . $mountName . ']\ncomment = NVMe Storage\npath = "' .
-					LIB_MOUNT_ROOT_NVME . '/' . $mountName . '"\nread only = No\n' . $guestOk . '" /etc/samba/smb.conf');
+				sysCmdSed('$ a[' . sedEscape($mountName) . ']\ncomment = NVMe Storage\npath = ' .
+					sedEscape(LIB_MOUNT_ROOT_NVME . '/' . $mountName) . '\nread only = No\n' . $guestOk, '/etc/samba/smb.conf');
 				if ($fsSmb == 'On') {
 					sysCmd('systemctl restart smbd');
 					sysCmd('systemctl restart nmbd');
@@ -420,7 +418,7 @@ function nvmeUpdSMBConf($mountName, $action) {
 			}
 			break;
 		case 'remove_nvme_source':
-			sysCmd('sed -i "/' . $mountName . ']/,/guest/ d" /etc/samba/smb.conf');
+			sysCmdSed('/' . sedEscape($mountName) . ']/,/guest/ d', '/etc/samba/smb.conf');
 			if ($fsSmb == 'On') {
 				sysCmd('systemctl restart smbd');
 				sysCmd('systemctl restart nmbd');
@@ -496,12 +494,12 @@ function sataSourceCfg($queueArgs) {
 			sqlUpdate('cfg_source', $dbh, '', $queueArgs['mount']);
 
 			// Unmount
-			sysCmd('umount -f "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
+			sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']));
 			// Delete and recreate the mount dir in case the name was changed
 			// Empty check to ensure the mount root dir is never deleted
 			if (!empty($mp[0]['name']) && $mp[0]['name'] != $queueArgs['mount']['name']) {
-				sysCmd('rmdir "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
-				sysCmd('mkdir "' . LIB_MOUNT_ROOT_SATA . '/' . $queueArgs['mount']['name'] . '"');
+				sysCmd('rmdir ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']));
+				sysCmd('mkdir ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $queueArgs['mount']['name']));
 			}
 
 			$result = sataSourceMount('mount', $queueArgs['mount']['id']);
@@ -513,11 +511,11 @@ function sataSourceCfg($queueArgs) {
 			$mp = sqlRead('cfg_source', $dbh, '', $queueArgs['mount']['id']);
 
 			// Unmount
-			sysCmd('umount -f "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
+			sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']));
 			// Delete the mount dir
 			// Empty check to ensure the mount root dir is never deleted
 			if (!empty($mp[0]['name'])) {
-				sysCmd('rmdir "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
+				sysCmd('rmdir ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']));
 			}
 
 			$result = (sqlDelete('cfg_source', $dbh, $queueArgs['mount']['id'])) ? true : false;
@@ -537,14 +535,12 @@ function sataSourceMount($action, $id = '', $log = 'workerlog') {
 
 			// Construct the mount string
 			$device = explode(',', $mp[0]['address'])[0];
-			$mountStr = 'mount -t ' . getDriveFormat($device) . ' -o ' .
-			$mp[0]['options'] . ' ' .
-			$device . ' ' .
-			'"' . LIB_MOUNT_ROOT_SATA . '/' .
-			$mp[0]['name'] . '"';
+			$mountStr = 'mount -t ' . escapeshellarg(getDriveFormat($device)) . ' -o ' . escapeshellarg($mp[0]['options']) . ' ' .
+				escapeshellarg($device) . ' ' .
+				escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']);
 
 			// Attempt the mount
-			sysCmd('mkdir "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
+			sysCmd('mkdir ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']));
 			$result = sysCmd($mountStr);
 
 			if (empty($result)) {
@@ -563,7 +559,7 @@ function sataSourceMount($action, $id = '', $log = 'workerlog') {
 				} else {
 					// Empty check to ensure the mount root dir is never deleted
 					if (!empty($mp[0]['name'])) {
-						sysCmd('rmdir "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
+						sysCmd('rmdir ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']));
 					}
 					$mp[0]['error'] = 'Mount error';
 					workerLog('worker: - TRY: ' . $mountStr);
@@ -582,7 +578,7 @@ function sataSourceMount($action, $id = '', $log = 'workerlog') {
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			if (sataMountExists($mp[0]['name'])) {
-				sysCmd('umount -f "' . LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name'] . '"');
+				sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp[0]['name']));
 			}
 
 			$return = true;
@@ -603,7 +599,7 @@ function sataSourceMount($action, $id = '', $log = 'workerlog') {
 
 			foreach ($mounts as $mp) {
 				if (sataMountExists($mp['name'])) {
-					sysCmd('umount -f "' . LIB_MOUNT_ROOT_SATA . '/' . $mp['name'] . '"');
+					sysCmd('umount -f ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mp['name']));
 				}
 			}
 
@@ -617,7 +613,7 @@ function sataSourceMount($action, $id = '', $log = 'workerlog') {
 }
 
 function sataMountExists($mountName) {
-	$result = sysCmd('mount | grep -ow ' . '"' . LIB_MOUNT_ROOT_SATA . '/' . $mountName .'"');
+	$result = sysCmd('mount | grep -ow ' . escapeshellarg(LIB_MOUNT_ROOT_SATA . '/' . $mountName));
 	return empty($result) ? false : true;
 }
 
@@ -629,10 +625,10 @@ function sataUpdNFSExports($mountName, $action) {
 			// Example: /srv/nfs/sata/Music	192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)
 			$access = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_access'", $dbh)[0]['value'];
 			$options = sqlQuery("SELECT value FROM cfg_system WHERE param='fs_nfs_options'", $dbh)[0]['value'];
-			sysCmd("sed -i '$ a/srv/nfs/sata/" . $mountName . "\t" . $access . '(' . $options . ")\n' /etc/exports");
+			sysCmdSed('$ a' . sedEscape('/srv/nfs/sata/' . $mountName . "\t" . $access . '(' . $options . ')') . "\n", '/etc/exports');
 			break;
 		case 'remove_sata_source':
-			sysCmd('sed -i "/' . $mountName . '/ d" /etc/exports');
+			sysCmdSed('/' . sedEscape($mountName) . '/ d', '/etc/exports');
 			sysCmd('sed -i "/^$/d" /etc/exports'); // Remove any trailing blank lines
 			break;
 	}
@@ -651,7 +647,7 @@ function sataListDrives() {
 		// Check for /dev/sda and similar
 		if (str_contains($device, 'sd') && strlen($device) > 3) {
 			// Check for already mounted to /media (USB drive)
-			$mountedToMedia = sysCmd('mount | grep "' . $device . ' on /media"');
+			$mountedToMedia = sysCmd('mount | grep ' . escapeshellarg($device . ' on /media'));
 			if (empty($mountedToMedia)) {
 				// Check for formatted
 				$format = getDriveFormat('/dev/' . $device);
@@ -680,7 +676,7 @@ function sataListDrives() {
 //----------------------------------------------------------------------------//
 
 function usbMountExists($mountName) {
-	$result = sysCmd('mount | grep -ow ' . '"/media/' . $mountName .'"');
+	$result = sysCmd('mount | grep -ow ' . escapeshellarg('/media/' . $mountName));
 	return empty($result) ? false : true;
 }
 
@@ -697,12 +693,12 @@ function startMiniDlna() {
 //----------------------------------------------------------------------------//
 
 function getDriveFormat($device) {
-	$format = sysCmd('blkid ' . $device . " | awk -F'TYPE=' '{print $2}' | awk -F'\"' '{print $2}'");
+	$format = sysCmd('blkid ' . escapeshellarg($device) . " | awk -F'TYPE=' '{print $2}' | awk -F'\"' '{print $2}'");
 	return empty($format) ? '' : $format[0];
 }
 
 function getDriveLabel($device) {
-	$label = sysCmd('blkid ' . $device . " | awk -F'LABEL=' '{print $2}' | awk -F'\"' '{print $2}'");
+	$label = sysCmd('blkid ' . escapeshellarg($device) . " | awk -F'LABEL=' '{print $2}' | awk -F'\"' '{print $2}'");
 	return empty($label) ? '' : $label[0];
 }
 
