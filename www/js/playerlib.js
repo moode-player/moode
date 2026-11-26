@@ -1489,13 +1489,13 @@ function renderUI() {
             $('#currentartist').html('<span class="playback-hires-badge"></span>' + MPD.json['album']);
             // Playbar
             $('#playbar-currentalbum').html('<span id="playbar-hires-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
-                RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
+                encodeHTMLEntities(RADIO.json[MPD.json['file']]['name']) : MPD.json['album']));
             $('#playbar-currentsong').html(MPD.json['title']);
             // CoverView
             $('#ss-currentsong').html(MPD.json['title']);
             $('#ss-currentartist').text('');
             $('#ss-currentalbum').html('<span id="ss-hires-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
-                RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
+                encodeHTMLEntities(RADIO.json[MPD.json['file']]['name']) : MPD.json['album']));
         } else {
             // For albums
             // - #currentalbum = MPD.json['album']
@@ -1802,8 +1802,8 @@ function genSearchUrl (artist, title, album) {
     }
     // Station does not transmit title
     else if (title == DEFAULT_STATION_NAME) {
-        if (RADIO.json[MPD.json['file']]['home_page'] != '') {
-            var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + RADIO.json[MPD.json['file']]['home_page'] + '"' + ' target="_blank">'+ title + '</a>';
+        if (/^https?:\/\//i.test(RADIO.json[MPD.json['file']]['home_page'])) {
+            var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + encodeHTMLEntities(RADIO.json[MPD.json['file']]['home_page']) + '"' + ' target="_blank">'+ title + '</a>';
         }
         else {
             returnStr = title;
@@ -2021,7 +2021,7 @@ function renderPlayqueue(state) {
 							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(name + '<span id="playbar-hires-badge"></span>');
 						}
 					} else {
-						output += RADIO.json[data[i].file]['name'];
+						output += encodeHTMLEntities(RADIO.json[data[i].file]['name']);
 						if (i == parseInt(MPD.json['song'])) { // active
 							//SAVE: $('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name'] + '<span id="playbar-hires-badge"></span>');
 						}
@@ -2297,9 +2297,9 @@ function renderFolderView(data, path, searchstr) {
                 }
 
                 // Finish up
-    			output += fileName;
+    			output += encodeHTMLEntities(fileName);
     			output += ' <span>';
-    			output += itemType;
+    			output += encodeHTMLEntities(itemType);
     			output += '</span></div></li>';
     		}
         }
@@ -2504,7 +2504,7 @@ function renderRadioView(lazyLoad = true) {
             // Encoded-at div's
             if (encodedAtOption != 9) {
                 var bitrate = parseInt(data[i].bitrate);
-                var bitrateAndFormat = data[i].format + ' ' + data[i].bitrate + 'K ';
+                var bitrateAndFormat = encodeHTMLEntities(data[i].format + ' ' + data[i].bitrate + 'K ');
                 var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
                 var radioViewHdDiv = (encodedAtOption == 1 && bitrate > RADIO_BITRATE_THRESHOLD) ? '<div class="lib-encoded-at-hires-badge">' + RADIO_HIRES_BADGE_TEXT + '</div>' : '';
                 var radioViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + bitrateAndFormat + '</div>' : '';
@@ -2515,12 +2515,12 @@ function renderRadioView(lazyLoad = true) {
             var monitorDiv = data[i].monitor == 'Yes' ? '<div style="display:none">monitored</div>' : '';
 
             // Metadata div's
-            var bitrateDiv = (sortTag == 'bitrate' || sortTag == 'format') ? '<div class="radioview-metadata-text">' + data[i].bitrate + 'K ' + data[i].format + '</div>' : '';
-            var broadcasterDiv = (sortTag == 'broadcaster' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].broadcaster + '</div>' : '';
-            var countryDiv = sortTag == 'region' ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
-            var countryDiv = (sortTag == 'country' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
-            var languageDiv = (sortTag == 'language' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].language + '</div>' : '';
-            var genreDiv = sortTag == 'genre' ? '<div class="radioview-metadata-text">' + data[i].genre + '</div>' : '';
+            var bitrateDiv = (sortTag == 'bitrate' || sortTag == 'format') ? '<div class="radioview-metadata-text">' + encodeHTMLEntities(data[i].bitrate + 'K ' + data[i].format) + '</div>' : '';
+            var broadcasterDiv = (sortTag == 'broadcaster' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + encodeHTMLEntities(data[i].broadcaster) + '</div>' : '';
+            var countryDiv = sortTag == 'region' ? '<div class="radioview-metadata-text">' + encodeHTMLEntities(data[i].country) + '</div>' : '';
+            var countryDiv = (sortTag == 'country' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + encodeHTMLEntities(data[i].country) + '</div>' : '';
+            var languageDiv = (sortTag == 'language' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + encodeHTMLEntities(data[i].language) + '</div>' : '';
+            var genreDiv = sortTag == 'genre' ? '<div class="radioview-metadata-text">' + encodeHTMLEntities(data[i].genre) + '</div>' : '';
 
             // Output Favorites first
             if (groupMethod.includes('Favorites') && data[i].type.substring(0, 1) == 'f') {
@@ -2552,14 +2552,14 @@ function renderRadioView(lazyLoad = true) {
                         numericHeaderPrinted = true;
                     }
                     else if (isNaN(currentChr1) === true) {
-                        output += '<li class="horiz-rule-radioview">' + currentChr1 + '</li>';
+                        output += '<li class="horiz-rule-radioview">' + encodeHTMLEntities(currentChr1) + '</li>';
                     }
                 }
                 else if (sortTag == 'genre' && data[i][sortTag].split(', ')[0] != lastSortTagValue.split(', ')[0]) {
-                    output += '<li class="horiz-rule-radioview">' + data[i][sortTag].split(', ')[0] + '</li>';
+                    output += '<li class="horiz-rule-radioview">' + encodeHTMLEntities(data[i][sortTag].split(', ')[0]) + '</li>';
                 }
                 else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTagValue) {
-                    output += '<li class="horiz-rule-radioview">' + data[i][sortTag] + (sortTag == 'bitrate' ? ' kbps' : '') + '</li>';
+                    output += '<li class="horiz-rule-radioview">' + encodeHTMLEntities(data[i][sortTag]) + (sortTag == 'bitrate' ? ' kbps' : '') + '</li>';
                 }
             }
 
@@ -2571,11 +2571,11 @@ function renderRadioView(lazyLoad = true) {
 			} else {
 				var favToggle = '';
 			}
-    		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls" data-url="' + encodeHTMLEntities(data[i].station) + '" data-name="' + encodeHTMLEntities(data[i].name);
+    		output += '<li id="ra-' + (i + 1) + '" data-path="' + encodeHTMLEntities('RADIO/' + data[i].name + '.pls') + '" data-url="' + encodeHTMLEntities(data[i].station) + '" data-name="' + encodeHTMLEntities(data[i].name);
     		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + encodeURIComponent(imgUrl) + '">' + favToggle + '</div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
-            output += '<span class="station-name">' + data[i].name + '</span>';
+            output += '<span class="station-name">' + encodeHTMLEntities(data[i].name) + '</span>';
 			output += '<span class="station-type hide">' + data[i].type + '</span>';
             output += broadcasterDiv;
             output += countryDiv;
