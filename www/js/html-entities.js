@@ -4,19 +4,17 @@
  * Copyright 2013 The tsunamp player ui / Andrea Coiutti & Simone De Gregori
 */
 
+// Same output as htmlEsc() in inc/common.php
 var htmlEntityMap = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
   '"': '&quot;',
-  "'": '&#39;',
-  '/': '&#x2F;',
-  '`': '&#x60;',
-  '=': '&#x3D;'
+  "'": '&#039;'
 };
 
 function encodeHTMLEntities(str) {
-    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
+    return String(str).replace(/[&<>"']/g, function (s) {
         return htmlEntityMap[s];
     });
 }

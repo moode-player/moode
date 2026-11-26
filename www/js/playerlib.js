@@ -1492,7 +1492,7 @@ function renderUI() {
                 RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
             $('#playbar-currentsong').html(MPD.json['title']);
             // CoverView
-            $('#ss-currentsong').text(MPD.json['title']);
+            $('#ss-currentsong').html(MPD.json['title']);
             $('#ss-currentartist').text('');
             $('#ss-currentalbum').html('<span id="ss-hires-badge"></span>' + (MPD.json['file'].indexOf('somafm') != -1 ?
                 RADIO.json[MPD.json['file']]['name'] : MPD.json['album']));
@@ -1811,15 +1811,18 @@ function genSearchUrl (artist, title, album) {
     }
     // Title has info
     else {
+        var rawTitle = decodeHTMLEntities(title);
         // Radio station
         if (typeof(artist) === 'undefined' || artist === DEFAULT_STATION_NAME) {
-    		var searchStr = title.replace(/-/g, ' ');
+    		var searchStr = rawTitle.replace(/-/g, ' ');
     		searchStr = searchStr.replace(/&/g, ' ');
     		searchStr = searchStr.replace(/\s+/g, '+');
     	}
         // Song file
     	else {
-    		var searchStr = encodeHTMLEntities(artist + '+' + album);
+            var rawArtist = decodeHTMLEntities(artist);
+            var rawAlbum = decodeHTMLEntities(album);
+    		var searchStr = rawArtist + '+' + rawAlbum;
     	}
 
         // Search engine
@@ -1846,10 +1849,10 @@ function genSearchUrl (artist, title, album) {
     			var searchEngine = 'http://www.musicbrainz.org/taglookup?';
                 // Override default search str
                 if (typeof(artist) === 'undefined' || artist === DEFAULT_STATION_NAME) {
-                    searchStr = 'tag-lookup.artist=' + title.split(' - ')[0].replace(/&/g, ' '); // Artist
+                    searchStr = 'tag-lookup.artist=' + rawTitle.split(' - ')[0].replace(/&/g, ' '); // Artist
                 }
                 else {
-                    searchStr = 'tag-lookup.artist=' + artist + '&tag-lookup.release=' + album;
+                    searchStr = 'tag-lookup.artist=' + rawArtist + '&tag-lookup.release=' + rawAlbum;
                 }
     			break;
             case 'Spotify':
@@ -1862,10 +1865,10 @@ function genSearchUrl (artist, title, album) {
                 var searchEngine = 'http://www.wikipedia.org/wiki/';
                 // Override default search str
                 if (typeof(artist) === 'undefined' || artist === DEFAULT_STATION_NAME) {
-                    searchStr = title.split(' - ')[0].replace(/&/g, ' '); // Artist
+                    searchStr = rawTitle.split(' - ')[0].replace(/&/g, ' '); // Artist
                 }
                 else {
-                    searchStr = artist;
+                    searchStr = rawArtist;
                 }
     			break;
             case 'Yahoo':
@@ -1873,7 +1876,7 @@ function genSearchUrl (artist, title, album) {
     			break;
     	}
 
-        var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
+        var returnStr =  '<a id="coverart-link" class="target-blank-link" href=' + '"' + encodeHTMLEntities(searchEngine + searchStr) + '"' + ' target="_blank">'+ title + '</a>';
     }
 
     return returnStr;

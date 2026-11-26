@@ -10,6 +10,7 @@ require_once __DIR__ . '/sql.php';
 
 function getRadioCoverUrl($title, $station = 'None') {
 	$title = html_entity_decode($title);
+	$station = html_entity_decode($station);
 
 	$coverUrl = sysCmd('/var/www/util/radiocover_plus.py ' .
 		'--title ' . escapeshellarg($title) . ' ' .

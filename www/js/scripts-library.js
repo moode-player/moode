@@ -1649,9 +1649,9 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 	var discNum = $(this).text().split(' '); // DISC 1
 	$('#lib-disc-' + discNum[1] + ' a').addClass('active');
 
-    var headingAlbum = $(this).attr('heading-album');
+    var headingAlbum = encodeHTMLEntities($(this).attr('heading-album'));
     var headingDisc = $(this).attr('heading-disc');
-    var headingComment = $(this).attr('heading-comment');
+    var headingComment = encodeHTMLEntities($(this).attr('heading-comment'));
     var headingKey = $(this).attr('heading-key');
 
 	filteredSongsDisc.length = 0;
@@ -1677,7 +1677,7 @@ $('#songsList').on('click', '.lib-album-heading', function(e) {
 	$('#lib-album-' + albumNum[2] + ' a').addClass('active');
 
     var headingAlbum = encodeHTMLEntities($(this).attr('heading-album'));
-    var headingComment = $(this).attr('heading-comment');
+    var headingComment = encodeHTMLEntities($(this).attr('heading-comment'));
     var headingKey = $(this).attr('heading-mb-album-id');
 
 	filteredSongsAlbum.length = 0;
@@ -1882,7 +1882,7 @@ $('#context-menu-lib-item a').click(function(e) {
             audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
             break;
         case 'get_playlist_names':
-            renderPlaylistNames({'name': filteredSongs[UI.dbEntry[0]].title, 'files':[filteredSongs[UI.dbEntry[0]].file]});
+            renderPlaylistNames({'name': decodeHTMLEntities(filteredSongs[UI.dbEntry[0]].title), 'files':[filteredSongs[UI.dbEntry[0]].file]});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
@@ -1931,7 +1931,7 @@ $('#context-menu-lib-album a').click(function(e) {
             showHideTracks(false);
             break;
         case 'get_playlist_names':
-            var name = $('#tagview-text-cover').text() == '' ? filteredSongs[0].album : $('#tagview-text-cover').text();
+            var name = $('#tagview-text-cover').text() == '' ? decodeHTMLEntities(filteredSongs[0].album) : $('#tagview-text-cover').text();
             renderPlaylistNames({'name': name, 'files': files});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
@@ -1961,7 +1961,7 @@ $('#context-menu-lib-disc a').click(function(e) {
     		sendQueueCmd('clear_play_group', files);
             break;
         case 'get_playlist_names':
-            renderPlaylistNames({'name': filteredSongsDisc[0].album, 'files': files});
+            renderPlaylistNames({'name': decodeHTMLEntities(filteredSongsDisc[0].album), 'files': files});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
@@ -1990,7 +1990,7 @@ $('#context-menu-lib-album-heading a').click(function(e) {
     		sendQueueCmd('clear_play_group', files);
             break;
         case 'get_playlist_names':
-            renderPlaylistNames({'name': filteredSongsAlbum[0].album, 'files': files});
+            renderPlaylistNames({'name': decodeHTMLEntities(filteredSongsAlbum[0].album), 'files': files});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
