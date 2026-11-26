@@ -506,7 +506,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nas_source' || $_GET['cmd'] ==
 	if (isset($_GET['id']) && !empty($_GET['id'])) {
 		// Edit
 		$_action = 'edit_nas_source';
-		$_id = $_GET['id'];
+		$_id = intval($_GET['id']);
 		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type in ('" . LIB_MOUNT_TYPE_NFS . "', '" . LIB_MOUNT_TYPE_SMB . "')", $dbh);
 
 		foreach ($mounts as $mp) {
@@ -595,7 +595,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_nvme_source' || $_GET['cmd'] =
 	if (isset($_GET['id']) && !empty($_GET['id'])) {
 		// Edit
 		$_action = 'edit_nvme_source';
-		$_id = $_GET['id'];
+		$_id = intval($_GET['id']);
 		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_NVME . "'", $dbh);
 
 		foreach ($mounts as $mp) {
@@ -666,7 +666,7 @@ if (isset($_GET['cmd']) && ($_GET['cmd'] == 'edit_sata_source' || $_GET['cmd'] =
 	if (isset($_GET['id']) && !empty($_GET['id'])) {
 		// Edit
 		$_action = 'edit_sata_source';
-		$_id = $_GET['id'];
+		$_id = intval($_GET['id']);
 		$mounts = sqlQuery("SELECT * FROM cfg_source WHERE type = '" . LIB_MOUNT_TYPE_SATA . "'", $dbh);
 
 		foreach ($mounts as $mp) {
