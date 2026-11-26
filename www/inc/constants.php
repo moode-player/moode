@@ -163,7 +163,7 @@ const NOTIFY_TITLE_ALERT = '<i class="fa fa-solid fa-sharp fa-circle-xmark" styl
 const NOTIFY_TITLE_ERROR = '<i class="fa fa-solid fa-sharp fa-do-not-enter" style="color:#e74c3c;"></i> Error';
 const NOTIFY_TITLE_WELCOME = '<i class="fa fa-solid fa-sharp fa-circle-check" style="color:#27ae60;"></i> Welcome!';
 const NOTIFY_DURATION_SHORT = 2; // Seconds
-const NOTIFY_DURATION_DEFAULT = 5;
+const NOTIFY_DURATION_DEFAULT = 4;
 const NOTIFY_DURATION_MEDIUM = 10;
 const NOTIFY_DURATION_LONG = 30;
 const NOTIFY_DURATION_INFINITE = 8640000; // 100 days
