@@ -202,20 +202,20 @@ function startSpotify() {
 	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
 
 	// Options
-	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . $cfgSpotify['dither'];
+	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . escapeshellarg($cfgSpotify['dither']);
 	$normalization = $cfgSpotify['volume_normalization'] == 'Yes' ?
 		' --enable-volume-normalisation ' .
-		' --normalisation-method ' . $cfgSpotify['normalization_method'] .
-		' --normalisation-gain-type ' . $cfgSpotify['normalization_gain_type'] .
-		' --normalisation-pregain ' .  $cfgSpotify['normalization_pregain'] .
-		' --normalisation-threshold ' . $cfgSpotify['normalization_threshold'] .
-		' --normalisation-attack ' . $cfgSpotify['normalization_attack'] .
-		' --normalisation-release ' . $cfgSpotify['normalization_release'] .
-		' --normalisation-knee ' . $cfgSpotify['normalization_knee']
+		' --normalisation-method ' . escapeshellarg($cfgSpotify['normalization_method']) .
+		' --normalisation-gain-type ' . escapeshellarg($cfgSpotify['normalization_gain_type']) .
+		' --normalisation-pregain ' .  escapeshellarg($cfgSpotify['normalization_pregain']) .
+		' --normalisation-threshold ' . escapeshellarg($cfgSpotify['normalization_threshold']) .
+		' --normalisation-attack ' . escapeshellarg($cfgSpotify['normalization_attack']) .
+		' --normalisation-release ' . escapeshellarg($cfgSpotify['normalization_release']) .
+		' --normalisation-knee ' . escapeshellarg($cfgSpotify['normalization_knee'])
 		: '';
 
 	$autoplay = $cfgSpotify['autoplay'] == 'Yes' ? ' --autoplay on' : '';
-	$zeroconf = $cfgSpotify['zeroconf'] == 'manual' ? ' --zeroconf-port ' . $cfgSpotify['zeroconf_port'] : '';
+	$zeroconf = $cfgSpotify['zeroconf'] == 'manual' ? ' --zeroconf-port ' . escapeshellarg($cfgSpotify['zeroconf_port']) : '';
 
 	// Logging
 	$logging = $_SESSION['debuglog'] == '1' ? ' -v > ' . LIBRESPOT_LOG : ' > /dev/null';
@@ -223,13 +223,13 @@ function startSpotify() {
  	// NOTE: We use --disable-audio-cache because the audio file cache eats disk space.
 	$cmd = 'librespot' .
 		' --name ' . escapeshellarg($_SESSION['spotifyname']) .
-		' --bitrate ' . $cfgSpotify['bitrate'] .
-		' --format ' . $cfgSpotify['format'] .
+		' --bitrate ' . escapeshellarg($cfgSpotify['bitrate']) .
+		' --format ' . escapeshellarg($cfgSpotify['format']) .
 		$dither .
 		' --mixer softvol' .
-		' --initial-volume ' . $cfgSpotify['initial_volume'] .
-		' --volume-ctrl ' . $cfgSpotify['volume_curve'] .
-		' --volume-range ' . $cfgSpotify['volume_range'] .
+		' --initial-volume ' . escapeshellarg($cfgSpotify['initial_volume']) .
+		' --volume-ctrl ' . escapeshellarg($cfgSpotify['volume_curve']) .
+		' --volume-range ' . escapeshellarg($cfgSpotify['volume_range']) .
 		$normalization .
 		$autoplay .
 		$zeroconf .
@@ -289,9 +289,9 @@ function cfgQobuz() {
 	sysCmd('pibuz settings set qconnect.device_name ' . escapeshellarg($_SESSION['qobuzname']));
 	sysCmd('pibuz settings set qconnect.pairing on');
 	sysCmd('pibuz settings set qconnect.volume_mode ' . $volMode);
-	sysCmd('pibuz settings set qconnect.initial_volume ' . $cfgQobuz['initial_volume']);
+	sysCmd('pibuz settings set qconnect.initial_volume ' . escapeshellarg($cfgQobuz['initial_volume']));
 	// Playback
-	sysCmd('pibuz settings set playback.quality ' . $cfgQobuz['quality']);
+	sysCmd('pibuz settings set playback.quality ' . escapeshellarg($cfgQobuz['quality']));
 	// Audio output
 	sysCmd('pibuz settings set audio.device "' . $device . '"');
 	sysCmd('pibuz settings set audio.backend alsa');
@@ -299,18 +299,18 @@ function cfgQobuz() {
 	sysCmd('pibuz settings set audio.alsa_hardware_volume false');	// Moode does support hardware volume for renderers
 	sysCmd('pibuz settings set audio.alsa_mixer_device auto');
 	// Audio other
-	sysCmd('pibuz settings set audio.stream_buffer_seconds ' . $cfgQobuz['stream_buffer_seconds']);
-	sysCmd('pibuz settings set audio.stream_window_seconds ' . $cfgQobuz['stream_window_seconds']);
-	sysCmd('pibuz settings set audio.normalization_enabled ' . $cfgQobuz['normalization_enabled']);
-	sysCmd('pibuz settings set audio.gapless_enabled ' . $cfgQobuz['gapless_enabled']);
-	sysCmd('pibuz settings set audio.streaming_only ' . $cfgQobuz['streaming_only']);
-	sysCmd('pibuz settings set audio.stream_first_track ' . $cfgQobuz['stream_first_track']);
-	sysCmd('pibuz settings set audio.cache_to_disk ' . $cfgQobuz['cache_to_disk']);
-	sysCmd('pibuz settings set audio.memory_cache_mb ' . $cfgQobuz['memory_cache_mb']);
-	sysCmd('pibuz settings set audio.alsa_buffer_ms ' . $cfgQobuz['alsa_buffer_ms']);
-	sysCmd('pibuz settings set audio.dac_keepalive_ms ' . $cfgQobuz['dac_keepalive_ms']);
-	sysCmd('pibuz settings set audio.pcm_ring_ms ' . $cfgQobuz['pcm_ring_ms']);
-	sysCmd('pibuz settings set audio.writer_rt_priority ' . $cfgQobuz['writer_rt_priority']);
+	sysCmd('pibuz settings set audio.stream_buffer_seconds ' . escapeshellarg($cfgQobuz['stream_buffer_seconds']));
+	sysCmd('pibuz settings set audio.stream_window_seconds ' . escapeshellarg($cfgQobuz['stream_window_seconds']));
+	sysCmd('pibuz settings set audio.normalization_enabled ' . escapeshellarg($cfgQobuz['normalization_enabled']));
+	sysCmd('pibuz settings set audio.gapless_enabled ' . escapeshellarg($cfgQobuz['gapless_enabled']));
+	sysCmd('pibuz settings set audio.streaming_only ' . escapeshellarg($cfgQobuz['streaming_only']));
+	sysCmd('pibuz settings set audio.stream_first_track ' . escapeshellarg($cfgQobuz['stream_first_track']));
+	sysCmd('pibuz settings set audio.cache_to_disk ' . escapeshellarg($cfgQobuz['cache_to_disk']));
+	sysCmd('pibuz settings set audio.memory_cache_mb ' . escapeshellarg($cfgQobuz['memory_cache_mb']));
+	sysCmd('pibuz settings set audio.alsa_buffer_ms ' . escapeshellarg($cfgQobuz['alsa_buffer_ms']));
+	sysCmd('pibuz settings set audio.dac_keepalive_ms ' . escapeshellarg($cfgQobuz['dac_keepalive_ms']));
+	sysCmd('pibuz settings set audio.pcm_ring_ms ' . escapeshellarg($cfgQobuz['pcm_ring_ms']));
+	sysCmd('pibuz settings set audio.writer_rt_priority ' . escapeshellarg($cfgQobuz['writer_rt_priority']));
 	// Event script
 	sysCmd('pibuz settings set hooks.script /var/local/www/commandw/qbzevent.sh');
 }
@@ -522,7 +522,7 @@ function startSoloist() {
 		' --data-dir ' . SOLOIST_DATA_DIR .
 		' --cache-dir ' . SOLOIST_CACHE_DIR .
 		' --cache-size 200' .
-		' --initial-volume ' . $cfgSoloist['initial_volume'] .
+		' --initial-volume ' . escapeshellarg($cfgSoloist['initial_volume']) .
 		' --pipewire-device moode_audioout' .
 		' --ws ' . SOLOIST_WS .
 		$logging . ' 2>&1 &';

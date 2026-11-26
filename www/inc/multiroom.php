@@ -19,11 +19,11 @@ function startMultiroomSender() {
 
 	$cmd = 'trx-tx' .
 		' -d ' . $outputDevice .
-		' -h ' . $cfgMultiroom['tx_host'] .
-		' -p ' . $cfgMultiroom['tx_port'] .
-		' -m ' . $cfgMultiroom['tx_bfr'] .
-		' -f ' . $cfgMultiroom['tx_frame_size'] .
-		' -R ' . $cfgMultiroom['tx_rtprio'] .
+		' -h ' . escapeshellarg($cfgMultiroom['tx_host']) .
+		' -p ' . escapeshellarg($cfgMultiroom['tx_port']) .
+		' -m ' . escapeshellarg($cfgMultiroom['tx_bfr']) .
+		' -f ' . escapeshellarg($cfgMultiroom['tx_frame_size']) .
+		' -R ' . escapeshellarg($cfgMultiroom['tx_rtprio']) .
 		' -D /tmp/trx-txpid  >/dev/null';
 	$result = sysCmdStr($cmd);
 	debugLog($cmd);
@@ -48,13 +48,13 @@ function startMultiroomReceiver() {
 
 	// Start receiver
 	$cmd = 'trx-rx' .
-		' -d ' . $outputDevice .
-		' -h ' . $cfgMultiroom['rx_host'] .
-		' -p ' . $cfgMultiroom['rx_port'] .
-		' -m ' . $cfgMultiroom['rx_bfr'] .
-		' -j ' . $cfgMultiroom['rx_jitter_bfr'] .
-		' -f ' . $cfgMultiroom['rx_frame_size'] .
-		' -R ' . $cfgMultiroom['rx_rtprio'] .
+		' -d ' . escapeshellarg($outputDevice) .
+		' -h ' . escapeshellarg($cfgMultiroom['rx_host']) .
+		' -p ' . escapeshellarg($cfgMultiroom['rx_port']) .
+		' -m ' . escapeshellarg($cfgMultiroom['rx_bfr']) .
+		' -j ' . escapeshellarg($cfgMultiroom['rx_jitter_bfr']) .
+		' -f ' . escapeshellarg($cfgMultiroom['rx_frame_size']) .
+		' -R ' . escapeshellarg($cfgMultiroom['rx_rtprio']) .
 		' -D /tmp/trx-rxpid  >/dev/null 2>&1';
 	$result = sysCmdStr($cmd);
 	debugLog($cmd);
