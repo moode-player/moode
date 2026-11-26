@@ -157,6 +157,7 @@ switch ($_GET['cmd']) {
 			'imported' => $imported, 'remapped' => $remapped, 'dropped' => $dropped));
 		break;
 	case 'set_plcover_image':
+		chkName('name', $_POST['name']);
 		if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {
 			echo json_encode('job submitted');
 		} else {
