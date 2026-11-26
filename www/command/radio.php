@@ -16,6 +16,7 @@ chkPath('path', $_POST['path'] ?? '');
 
 switch ($_GET['cmd']) {
 	case 'set_ralogo_image':
+		chkName('name', $_POST['name']);
 		if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {
 			echo json_encode('job submitted');
 		}

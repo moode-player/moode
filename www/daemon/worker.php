@@ -4035,9 +4035,10 @@ function runQueuedJob() {
 		case 'set_ralogo_image':
 		case 'set_plcover_image':
 			$job = $_SESSION['w_queue'];
-			$queueArgs = explode(',', $_SESSION['w_queueargs'], 2);
-			$imgName = $queueArgs[0];
-			$imgData = base64_decode($queueArgs[1], true);
+			// Split at the last comma: the name may contain commas, the base64 data never does
+			$sep = strrpos($_SESSION['w_queueargs'], ',');
+			$imgName = substr($_SESSION['w_queueargs'], 0, $sep);
+			$imgData = base64_decode(substr($_SESSION['w_queueargs'], $sep + 1), true);
 
 			if ($job == 'set_ralogo_image') {
 				$imgDir = RADIO_LOGOS_ROOT;
