@@ -48,7 +48,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
 	var hiddenDiv = $("<div style='position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;'></div>").appendTo("body");
-	GLOBAL.sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
+	GLOBAL.sbw = hiddenDiv[0].offsetWidth - hiddenDiv[0].clientWidth;
 	$("body").get(0).style.setProperty("--sbw", GLOBAL.sbw + 'px');
     //console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
@@ -1201,7 +1201,7 @@ jQuery(document).ready(function($) { 'use strict';
 			storeRadioPos(UI.radioPos)
 		}
 
-        $('#' + UI.dbEntry[3]).removeClass('active');
+        if (UI.dbEntry[3]) {$('#' + UI.dbEntry[3]).removeClass('active');}
         UI.dbEntry[3] = $(this).parents('li').attr('id');
         $(this).parents('li').addClass('active');
 	});
@@ -1368,7 +1368,7 @@ jQuery(document).ready(function($) { 'use strict';
         UI.playlistPos = pos;
 		storePlaylistPos(UI.playlistPos)
 
-        $('#' + UI.dbEntry[3]).removeClass('active');
+        if (UI.dbEntry[3]) {$('#' + UI.dbEntry[3]).removeClass('active');}
         UI.dbEntry[3] = $(this).parents('li').attr('id');
         $(this).parents('li').addClass('active');
 	});

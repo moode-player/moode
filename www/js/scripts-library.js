@@ -1271,7 +1271,7 @@ $('#database-radio').on('click', 'img', function(e) {
 	storeRadioPos(UI.radioPos)
 
     if (UI.dbEntry[3].substr(0, 3) == 'ra-') {
-        $('#' + UI.dbEntry[3]).removeClass('active');
+        if (UI.dbEntry[3]) {$('#' + UI.dbEntry[3]).removeClass('active');}
     } else {
         $('.database-radio li').removeClass('active');
     }
@@ -1561,7 +1561,7 @@ $('#database-playlist').on('click', 'img', function(e) {
 	storePlaylistPos(UI.playlistPos)
 
     if (UI.dbEntry[3].substr(0, 9) == 'pl-entry-') {
-        $('#' + UI.dbEntry[3]).removeClass('active');
+        if (UI.dbEntry[3]) {$('#' + UI.dbEntry[3]).removeClass('active');}
     }
     UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');
@@ -1636,7 +1636,7 @@ $('#btn-upd-playlist-manager').click(function(e) {
 
 // Click lib coverart
 $('#lib-coverart-img').click(function(e) {
-	UI.dbEntry[0] =  $.isNumeric(UI.dbEntry[0]) ? UI.dbEntry[0] : 0;
+	UI.dbEntry[0] =  !isNaN(UI.dbEntry[0] - parseFloat(UI.dbEntry[0])) ? UI.dbEntry[0] : 0;
     $('#songsList li, #songsList .lib-disc a').removeClass('active');
 	$('img.lib-coverart').addClass('active'); // add highlight
 	$('#tracklist-toggle').hide();
@@ -1891,7 +1891,7 @@ $('#context-menu-lib-item a').click(function(e) {
 
 // Click coverart context menu item
 $('#context-menu-lib-album a').click(function(e) {
-	UI.dbEntry[0] = $.isNumeric(UI.dbEntry[0]) ? UI.dbEntry[0] : 0;
+	UI.dbEntry[0] = !isNaN(UI.dbEntry[0] - parseFloat(UI.dbEntry[0])) ? UI.dbEntry[0] : 0;
 
 	if (!$('.album-view-button').hasClass('active')) {
 		$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
