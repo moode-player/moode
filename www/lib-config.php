@@ -195,12 +195,17 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 
 		foreach ($nmbLookupResult as $line) {
 			$nmbLookupPart = explode(', ', $line); // [0] = host.domain, [1] = IP address
-			$smbClientResult = sysCmd("smbclient -N -g -L " . trim($nmbLookupPart[1]) . " | grep Disk | cut -f 2 -d '|'");
+			$ipAddr = trim($nmbLookupPart[1]);
+			if (filter_var($ipAddr, FILTER_VALIDATE_IP) === false) {
+				continue;
+			}
+			$smbClientResult = sysCmd('smbclient -N -g -L ' . escapeshellarg($ipAddr) . " | grep Disk | cut -f 2 -d '|'");
 			sort($smbClientResult, SORT_NATURAL | SORT_FLAG_CASE);
 			$host = strtoupper(explode('.', $nmbLookupPart[0])[0] );
 
 			foreach ($smbClientResult as $share) {
-				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $host . '/' . $share, '', $host . '/' . $share);
+				$shareAddr = htmlspecialchars($host . '/' . $share, ENT_QUOTES | ENT_SUBSTITUTE);
+				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $shareAddr, '', $shareAddr);
 			}
 		}
 	}
@@ -214,9 +219,13 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 		$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
 
 		foreach ($hosts as $ipAddr) {
-			$shares = sysCmd('showmount --exports --no-headers ' . $ipAddr . ' | cut -d" " -f1');
+			if (filter_var($ipAddr, FILTER_VALIDATE_IP) === false) {
+				continue;
+			}
+			$shares = sysCmd('showmount --exports --no-headers ' . escapeshellarg($ipAddr) . ' | cut -d" " -f1');
 			foreach ($shares as $share) {
-				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $ipAddr . $share, '', $ipAddr . $share);
+				$shareAddr = htmlspecialchars($ipAddr . $share, ENT_QUOTES | ENT_SUBSTITUTE);
+				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $shareAddr, '', $shareAddr);
 			}
 		}
 	}
