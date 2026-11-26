@@ -241,7 +241,6 @@ if (isset($_POST['remove_nvme_source']) && $_POST['remove_nvme_source'] == 1) {
 // Save NVMe source
 if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 	// Validate
-	chkName('name', $_POST['mount']['name']);
 	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . SQLite3::escapeString($_POST['mount']['name']) . "'", $dbh);
 	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
 	if ($driveStatus == 'none') {
@@ -262,6 +261,9 @@ if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 	} else if (empty(trim($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
+	} else if (!preg_match('/^[A-Za-z0-9-]{1,25}$/D', $_POST['mount']['name'])) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name format is 1-25 characters, alphanumeric, hyphen allowed.';
 	} else {
 		$initiateLibraryUpd = true;
 		// $array['mount']['key'] must be in column order for subsequent table insert
@@ -319,7 +321,6 @@ if (isset($_POST['remove_sata_source']) && $_POST['remove_sata_source'] == 1) {
 // Save SATA source
 if (isset($_POST['save_sata_source']) && $_POST['save_sata_source'] == 1) {
 	// Validate
-	chkName('name', $_POST['mount']['name']);
 	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . SQLite3::escapeString($_POST['mount']['name']) . "'", $dbh);
 	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
 	if ($driveStatus == 'none') {
@@ -337,6 +338,9 @@ if (isset($_POST['save_sata_source']) && $_POST['save_sata_source'] == 1) {
 	} else if (empty(trim($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
 		$_SESSION['notify']['msg'] = 'Name cannot be blank.';
+	} else if (!preg_match('/^[A-Za-z0-9-]{1,25}$/D', $_POST['mount']['name'])) {
+		$_SESSION['notify']['title'] = NOTIFY_TITLE_ALERT;
+		$_SESSION['notify']['msg'] = 'Name format is 1-25 characters, alphanumeric, hyphen allowed.';
 	} else {
 		$initiateLibraryUpd = true;
 		// $array['mount']['key'] must be in column order for subsequent table insert
