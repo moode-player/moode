@@ -48,6 +48,7 @@ Updates
 - UPD: Improve REST API: Single endpoint, updated doc (PR834, PR22 @Gjuju)
 - UPD: Improve Dashboard: Disable player tile if offline
 - UPD: Improve input patterns and URL-encode playlist names (PR905 @Gjuju)
+- UPD: Improve string quoting, escaping and parsing bugs (PR912-PR920 @Gjuju)
 - UPD: Remove Spotify Connect (librespot) feature due to upstream breaking changes
 - UPD: Bind engine-cmd to 127.0.0.1 instead of 0.0.0.0 all (PR879 @Gjuju)
 - UPD: Escape metadata in the renderer overlay (PR902 @Gjuju)
