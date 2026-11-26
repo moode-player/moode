@@ -106,7 +106,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 		$_SESSION['notify']['msg'] = $_SESSION['rx_hostnames'];
 	} else {
 		$_SESSION['notify']['title'] = NOTIFY_TITLE_INFO;
-		$_SESSION['notify']['msg'] = 'Found: ' . $_SESSION['rx_hostnames'];
+		$_SESSION['notify']['msg'] = 'Found: ' . htmlspecialchars($_SESSION['rx_hostnames'], ENT_QUOTES | ENT_SUBSTITUTE);
 	}
 }
 if (isset($_POST['update_multiroom_tx_bfr'])) {

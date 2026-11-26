@@ -554,8 +554,8 @@ function uiNotify($notify) {
 	$script .= "function ui_notify() {\n";
 	$script .= "$.pnotify.defaults.history = false;\n";
 	$script .= "$.pnotify({";
-	$script .= "title: '" . $notify['title'] . "',";
-	$script .= "text: '" . $notify['msg'] . "',";
+	$script .= 'title: ' . json_encode((string)$notify['title'], JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) . ',';
+	$script .= 'text: ' . json_encode((string)$notify['msg'], JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) . ',';
 	$script .= "icon: '',";
 	$script .= "delay: " . (isset($notify['duration']) ? strval($notify['duration'] * 1000) : strval(NOTIFY_DURATION_DEFAULT * 1000)) . ",";
 	$script .= "opacity: 1.0});\n";
