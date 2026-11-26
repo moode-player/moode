@@ -241,6 +241,7 @@ if (isset($_POST['remove_nvme_source']) && $_POST['remove_nvme_source'] == 1) {
 // Save NVMe source
 if (isset($_POST['save_nvme_source']) && $_POST['save_nvme_source'] == 1) {
 	// Validate
+	chkName('name', $_POST['mount']['name']);
 	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . SQLite3::escapeString($_POST['mount']['name']) . "'", $dbh);
 	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
 	if ($driveStatus == 'none') {
@@ -318,6 +319,7 @@ if (isset($_POST['remove_sata_source']) && $_POST['remove_sata_source'] == 1) {
 // Save SATA source
 if (isset($_POST['save_sata_source']) && $_POST['save_sata_source'] == 1) {
 	// Validate
+	chkName('name', $_POST['mount']['name']);
 	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . SQLite3::escapeString($_POST['mount']['name']) . "'", $dbh);
 	$driveStatus = explode(',', $_POST['mount']['drive'])[1]; // device,label or device,status
 	if ($driveStatus == 'none') {
@@ -446,7 +448,7 @@ if (!isset($_GET['cmd'])) {
 	foreach ($mounts as $mountName) {
 		$icon = usbMountExists($mountName) ? LIB_MOUNT_OK : LIB_MOUNT_FAILED;
 		$driveStats = $icon == LIB_MOUNT_OK ? formatDriveStats('/media/' . $mountName) : '';
-		$device = sysCmd('mount | grep "/media/' . $mountName . '"' . " | awk '{print $1}'")[0];
+		$device = sysCmd('mount | grep ' . escapeshellarg('/media/' . $mountName) . " | awk '{print $1}'")[0];
 		$_usb_mounts .= '<span class="btn-large config-btn config-btn-music-source" style="color:var(--accentxts);"> ' . $icon . ' ' .
 			$mountName . ' (' . $device . ' | ' . getDriveFormat($device) . ')' . $driveStats . '</span>';
 	}

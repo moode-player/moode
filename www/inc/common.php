@@ -382,6 +382,10 @@ function sysCmdStr($cmd) {
 function sysCmdSed($expr, $file) {
 	return sysCmd('sed -i ' . escapeshellarg($expr) . ' ' . escapeshellarg($file));
 }
+// Escape a value for a sed text or /regex/ so it is matched or written literally
+function sedEscape($value) {
+	return addcslashes($value, "\\/.*[]^$\n");
+}
 // Same match as 'pgrep <name>' (process name contains $name) without starting a process
 function isProcRunning($name) {
 	foreach (glob('/proc/[0-9]*/comm') as $file) {
