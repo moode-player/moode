@@ -489,7 +489,7 @@
 					If a Saved Search of the same name already exists it will be overwritten.
                 </span>
             </div>
-			<label class="control-label" for="lib-search-criteria">Current search criteria</label>
+			<div class="control-label">Current search criteria</div>
 			<div class="controls">
 				<div id="lib-search-criteria" class="input-large"></div>
 			</div>
@@ -607,7 +607,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">Unknown paths</label>
+				<div class="control-label">Unknown paths</div>
 				<div class="controls">
 					<span class="help-block">Some tracks point to folders that don't exist on this player. Map each to a known folder, or leave it to keep the original path.</span>
 				</div>
@@ -687,7 +687,7 @@
 		<div class="accordian"><span class="h5">Appearance</span>
 			<div class="kontrol">
 				<div class="control-group">
-	               <label class="control-label" for="theme-name">Theme</label>
+	               <div class="control-label" id="theme-name">Theme</div>
 		            <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -705,7 +705,7 @@
 		                	Sets the background and text color.
 		                </span>
 		            </div>
-	                <label class="control-label" for="accent-color">Accent color</label>
+	                <div class="control-label" id="accent-color">Accent color</div>
 	                <div class="controls">
 							<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -741,7 +741,7 @@
 	                    	Sets the color of the volume and time knobs and other active elements.
 	                    </span>
 	                </div>
-	                <label class="control-label" for="alpha-blend">Alpha blend</label>
+	                <div class="control-label" id="alpha-blend">Alpha blend</div>
 	                <div class="controls">
 							<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -782,7 +782,7 @@
 	                    </span>
 	                </div>
 					<div id="cover-options">
-						<label class="control-label bgimglabel">Image backdrop</label>
+						<div class="control-label bgimglabel">Image backdrop</div>
 						<div class="controls">
 							<div class="modal-cover-div">
 								<label for="import-bgimage" id="choose-bgimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
@@ -796,7 +796,7 @@
 								Sets the backdrop to the choosen JPEG image. Max image size is 1MB.
 							</div>
 						</div>
-	   	                <label class="control-label" for="cover-backdrop-enabled">Cover backdrop</label>
+	   	                <div class="control-label" id="cover-backdrop-enabled">Cover backdrop</div>
 		                <div class="controls">
 	   						<div class="btn-group bootstrap-select select-large">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -817,7 +817,7 @@
 		                    	Sets the backdrop to the currently displayed cover art.
 		                    </span>
 		                </div>
-	   	                <label class="control-label" for="cover-blur">Cover blur</label>
+	   	                <div class="control-label" id="cover-blur">Cover blur</div>
 		                <div class="controls">
 	   						<div class="btn-group bootstrap-select select-large">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -842,7 +842,7 @@
 		                    	Sets the amount of blur to apply to the cover backdrop.
 		                    </span>
 		                </div>
-	   	                <label class="control-label" for="cover-scale">Cover scale</label>
+	   	                <div class="control-label" id="cover-scale">Cover scale</div>
 		                <div class="controls">
 	   						<div class="btn-group bootstrap-select select-large">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -868,7 +868,7 @@
 		                    </span>
 		                </div>
 					</div>
-					<label class="control-label" for="font-size">Font size</label>
+					<div class="control-label" id="font-size">Font size</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -893,7 +893,7 @@
 							Increase or decrease the size of text.
 						</span>
 					</div>
-					<label class="control-label" for="native-lazyload">Native lazyload</label>
+					<div class="control-label" id="native-lazyload">Native lazyload</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -923,7 +923,7 @@
 		<div class="accordian"><span class="h5">Playback</span>
 			<div class="kontrol">
 				<div class="control-group">
-					<label class="control-label" for="show-npicon">Now-playing icon</label>
+					<div class="control-label" id="show-npicon">Now-playing icon</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -945,7 +945,7 @@
 							Display a now-playing icon next to the currently playing item in the Queue and Library tracks list, and next to the output format in CoverView.
 						</span>
 					</div>
-					<label class="control-label" for="extra-tags">Extra metadata</label>
+					<div class="control-label" id="extra-tags">Extra metadata</div>
 	                <div class="controls">
 						<input id="extra-tags" class="input-large" type="text">
 						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
@@ -954,7 +954,7 @@
 							<b>Tags: </b>album, genre, track, disc, date, composer, conductor, performer, encoded, output
 	                    </span>
 	                </div>
-					<label class="control-label" for="search_site">Search site</label>
+					<div class="control-label" id="search_site">Search site</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -986,7 +986,7 @@
 							A combination of artist and album is searched. Wikipedia search is restricted to artist only.
 		                </span>
                 	</div>
-	                <label class="control-label" for="play-history-enabled">Playback history log</label>
+	                <div class="control-label" id="play-history-enabled">Playback history log</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1035,7 +1035,7 @@
 		<div class="accordian"><span class="h5">Cover Art</span>
 			<div class="kontrol">
 				<div class="control-group">
-					<label class="control-label" for="cover-search-priority">Search priority</label>
+					<div class="control-label" id="cover-search-priority">Search priority</div>
 	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1056,7 +1056,7 @@
 							Specify whether the Thumbnail generator looks first for embedded covers or cover image files.
 	                    </span>
 	                </div>
-					<label class="control-label" for="thumbgen-scan">Scan mode</label>
+					<div class="control-label" id="thumbgen-scan">Scan mode</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1084,7 +1084,7 @@
 							Note that incorrect thumbnails may appear in the Library if the Album folder also contains image files and "Cover search priority" is set to Embedded.
 	                    </span>
 					</div>
-					<label class="control-label" for="hires-thumbnails">Resolution</label>
+					<div class="control-label" id="hires-thumbnails">Resolution</div>
 	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1111,7 +1111,7 @@
 							Note that after changing this setting open Library Config and Regenerate the thumbnail images.
 	                    </span>
 	                </div>
-					<label class="control-label" for="playqueue-art-enabled">Queue thumbs</label>
+					<div class="control-label" id="playqueue-art-enabled">Queue thumbs</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1133,7 +1133,7 @@
 							Note that when there are a large number of items in the Queue, showing thumbs may impact performance.
 						</span>
 					</div>
-					<label class="control-label" for="show-tagview-covers">Tag view thumbs</label>
+					<div class="control-label" id="show-tagview-covers">Tag view thumbs</div>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1156,7 +1156,7 @@
  	                    </span>
  	                </div>
 
-					<label class="control-label" for="show-radio-covers">Radio covers</label>
+					<div class="control-label" id="show-radio-covers">Radio covers</div>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1186,7 +1186,7 @@
 				<div class="control-group">
 					<!-- SECTION -->
 					<div class="horiz-rule-preferences">One-touch actions</div>
-					<label class="control-label" for="onetouch_album">Album</label>
+					<div class="control-label" id="onetouch_album">Album</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1212,7 +1212,7 @@
 	                    	Specify an action to be performed when clicking a cover in Album view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch_radio">Radio</label>
+					<div class="control-label" id="onetouch_radio">Radio</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1237,7 +1237,7 @@
 	                    	Specify an action to be performed when clicking a cover in Radio view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch-pl">Playlist</label>
+					<div class="control-label" id="onetouch-pl">Playlist</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1263,7 +1263,7 @@
 	                    	Specify an action to be performed when clicking a playlist in Playlist view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="onetouch-ralbum">Random album</label>
+					<div class="control-label" id="onetouch-ralbum">Random album</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1296,7 +1296,7 @@
 	                </div>
 					<!-- SECTION -->
 					<div class="horiz-rule-preferences">Sorting and Filtering</div>
-					<label class="control-label" for="albumview-sort-order">Album view sort</label>
+					<div class="control-label" id="albumview-sort-order">Album view sort</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1326,7 +1326,7 @@
 							 - The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the the sort order.
 						</span>
 	                </div>
-					<label class="control-label" for="tagview-sort-order">Tag view sort</label>
+					<div class="control-label" id="tagview-sort-order">Tag view sort</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1358,7 +1358,7 @@
 							 - The string "AlbumDate: YYYYMM" at the beginning of the Comment tag can be used to add month to the sort order.
 						</span>
 	                </div>
-					<label class="control-label" for="tag-view-artist">Artists filter</label>
+					<div class="control-label" id="tag-view-artist">Artists filter</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1387,7 +1387,7 @@
 							<b>Album Artist+: </b>Same as Album Artist above except compilation albums listed for an album artist will show only the tracks belonging to the album artist. Clicking the Album will toggle between showing all the album's tracks and just those for the album artist.
 						</span>
 	                </div>
-					<label class="control-label" for="recently-added">Recents filter</label>
+					<div class="control-label" id="recently-added">Recents filter</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1413,7 +1413,7 @@
 							Note that the "No limit" option provides a way to achieve a "date added" sort of the Library.
 	                    </span>
 	                </div>
-					<label class="control-label" for="ignore-articles">Articles filter</label>
+					<div class="control-label" id="ignore-articles">Articles filter</div>
 	                <div class="controls">
 	                    <input id="ignore-articles" class="input-large" type="text">
 						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
@@ -1421,7 +1421,7 @@
 							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
 						</span>
 	                </div>
-					<label class="control-label" for="utf8-char-filter">UTF-8 filter</label>
+					<div class="control-label" id="utf8-char-filter">UTF-8 filter</div>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1445,7 +1445,7 @@
  	                </div>
 					<!-- SECTION -->
 					<div class="horiz-rule-preferences">Album and Track options</div>
-					<label class="control-label" for="library-album-key">Album key</label>
+					<div class="control-label" id="library-album-key">Album key</div>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1468,7 +1468,7 @@
  		                    Specify how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
  	                    </span>
  	                </div>
-					<label class="control-label" for="track-play">Track play</label>
+					<div class="control-label" id="track-play">Track play</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1493,7 +1493,7 @@
 					</div>
 					<!-- SECTION -->
 					<div class="horiz-rule-preferences">Display and Layout options</div>
-					<label class="control-label" for="show-genres-column">Show genres</label>
+					<div class="control-label" id="show-genres-column">Show genres</div>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1514,7 +1514,7 @@
 	                    	Specify whether or not to show the Genres column in Tag view.
 	                    </span>
 	                </div>
-					<label class="control-label" for="tag-view-genre">Genre column</label>
+					<div class="control-label" id="tag-view-genre">Genre column</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1535,7 +1535,7 @@
 							Specify how to populate the Genre column in Tag view.
 						</span>
 	                </div>
-					<label class="control-label" for="library-inc-comment-tag">Show comment</label>
+					<div class="control-label" id="library-inc-comment-tag">Show comment</div>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1558,7 +1558,7 @@
 							the Comment tag can be used.
  	                    </span>
  	                </div>
-					<label class="control-label" for="thumbnail-columns">Column layout</label>
+					<div class="control-label" id="thumbnail-columns">Column layout</div>
 	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1585,7 +1585,7 @@
 		                    Set the number of columns for displaying thumbnail images in Radio, Album and Playlist views. The first number is for desktop and the second is for mobile.
 	                    </span>
 	                </div>
-					<label class="control-label" for="show-encoded-at">Sample rate badge</label>
+					<div class="control-label" id="show-encoded-at">Sample rate badge</div>
 	                <div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1610,7 +1610,7 @@
 							The "HiRes only" option displays a HiRes badge when the bit depth for song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for radio stations the bit rate is &gt; 128 kbps.
 	                    </span>
 	                </div>
-					<label class="control-label" for="ellipsis-limited-text">Ellipsis text</label>
+					<div class="control-label" id="ellipsis-limited-text">Ellipsis text</div>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1638,7 +1638,7 @@
 		<div class="accordian"><span class="h5">CoverView</span>
 			<div class="kontrol">
 				<div class="control-group">
-	                <label class="control-label" for="scnsaver-timeout">Timed display</label>
+	                <div class="control-label" id="scnsaver-timeout">Timed display</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1666,7 +1666,7 @@
 							is active or MPD is playing and the option "When playing" option is set to "No".
 						</span>
 	                </div>
-					<label class="control-label" for="scnsaver-whenplaying">When playing</label>
+					<div class="control-label" id="scnsaver-whenplaying">When playing</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1687,7 +1687,7 @@
 	                    	Set to "Yes" to cause Timed display to show CoverView even if MPD is playing.
 	                    </span>
 	                </div>
-					<label class="control-label" for="auto-coverview">Automatic display</label>
+					<div class="control-label" id="auto-coverview">Automatic display</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1708,7 +1708,7 @@
 	                    	Automatically show CoverView on a locally attached display. Connected clients are not affected.
 	                    </span>
 	                </div>
-	                <label class="control-label" for="scnsaver-timeout">Backdrop style</label>
+	                <div class="control-label" id="scnsaver-timeout">Backdrop style</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1737,7 +1737,7 @@
 							<b>Pure Black: </b>Solid black overlay.
 	                    </span>
 	                </div>
-					<label class="control-label" for="scnsaver-mode">Display mode</label>
+					<div class="control-label" id="scnsaver-mode">Display mode</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1761,7 +1761,7 @@
 	                    	Display cover art, a digital clock or an analog clock with an optional sweep second hand.
 	                    </span>
 	                </div>
-					<label class="control-label" for="scnsaver-layout">Layout</label>
+					<div class="control-label" id="scnsaver-layout">Layout</div>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1783,7 +1783,7 @@
 							<b>Wide: </b>Cover art on the left and metadata on the right.
 	                    </span>
 	                </div>
-					<label class="control-label" for="show-cvpb">Playbar</label>
+					<div class="control-label" id="show-cvpb">Playbar</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1804,7 +1804,7 @@
 							Show or hide the Playbar when in CoverView.
 						</span>
 					</div>
-					<label class="control-label" for="scnsaver-xmeta">Extra metadata</label>
+					<div class="control-label" id="scnsaver-xmeta">Extra metadata</div>
 	                <div class="controls">
 							<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1842,7 +1842,7 @@
 	</div>
 	<div class="modal-body">
 		<div class="control-group">
-            <label class="control-label" for="clockradio-mode">Clock mode</label>
+            <div class="control-label" id="clockradio-mode">Clock mode</div>
             <div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1936,7 +1936,7 @@
 						<input id="clockradio-stop-sun" class="checkbox-ctl-clockradio" type="checkbox" name="clockradio-stop-sun">Sun
 					</div>
                 </div>
-                <label class="control-label" for="clockradio-action">Action after stop</label>
+                <div class="control-label" id="clockradio-action">Action after stop</div>
                 <div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1996,7 +1996,7 @@
 					Enter the URL to the actual stream and not to a playlist of stream links.
 				</span>
             </div>
-			<label class="control-label" for="new-radiologo">Logo image</label>
+			<div class="control-label" id="new-radiologo">Logo image</div>
 			<div class="controls">
 				<div class="modal-cover-div">
 					<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
@@ -2010,7 +2010,7 @@
 				</div>
 			</div>
 			<div id="new-station-tags">
-				<label class="control-label" for="new-station-type">Type</label>
+				<div class="control-label" id="new-station-type">Type</div>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2072,7 +2072,7 @@
 				<div class="controls">
                     <input id="new-station-format" class="input-large" type="text" name="new_station_format" maxlength="10" value="">
                 </div>
-				<label class="control-label" for="new-station-geo-fenced">Geo-fenced</label>
+				<div class="control-label" id="new-station-geo-fenced">Geo-fenced</div>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2093,7 +2093,7 @@
 						Specifies whether the station stream is only avalable in a certain country or region.
 					</span>
 				</div>
-				<label class="control-label" for="new-station-mpd-monitor">Monitor</label>
+				<div class="control-label" id="new-station-mpd-monitor">Monitor</div>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2143,7 +2143,7 @@
 					Enter the URL to the actual stream and not to a playlist of stream links.
 				</span>
             </div>
-			<label class="control-label" for="edit-radiologo">Logo image</label>
+			<div class="control-label" id="edit-radiologo">Logo image</div>
 			<div class="controls">
 				<div class="modal-cover-div">
 					<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
@@ -2158,7 +2158,7 @@
 				</div>
 			</div>
 			<div id="edit-station-tags">
-				<label class="control-label" for="edit-station-type">Type</label>
+				<div class="control-label" id="edit-station-type">Type</div>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2221,7 +2221,7 @@
 				<div class="controls">
                     <input id="edit-station-format" class="input-large" type="text" name="edit_station_format" maxlength="10" value="">
                 </div>
-				<label class="control-label" for="edit-station-geo-fenced">Geo-fenced</label>
+				<div class="control-label" id="edit-station-geo-fenced">Geo-fenced</div>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2242,7 +2242,7 @@
 						Specifies whether the station stream is only avalable in a certain country or region.
 					</span>
 				</div>
-				<label class="control-label" for="edit-station-mpd-monitor">Monitor</label>
+				<div class="control-label" id="edit-station-mpd-monitor">Monitor</div>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2296,7 +2296,7 @@
 		<!-- SORT/GROUP OPTIONS -->
 		<span class="h5">Sorting and Grouping</span>
 		<div class="control-group">
-			<label class="control-label" for="radioview-sort-tag">Sort tag</label>
+			<div class="control-label" id="radioview-sort-tag">Sort tag</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2323,7 +2323,7 @@
 					Specify which tag is used to sort the station list.
 				</span>
 			</div>
-			<label class="control-label" for="radioview-group-method">Group method</label>
+			<div class="control-label" id="radioview-group-method">Group method</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2350,7 +2350,7 @@
 		<!-- SHOW/HIDE STATIONS -->
 		<span class="h5">Show/Hide Stations</span>
 		<div class="control-group">
-			<label class="control-label" for="radioview-show-hide-moode">moOde stations</label>
+			<div class="control-label" id="radioview-show-hide-moode">moOde stations</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2382,7 +2382,7 @@
 					Note that moOde stations are a custom curated set of stations shipped in the release.
 				</span>
 			</div>
-			<label class="control-label" for="radioview-show-hide-other">Other stations</label>
+			<div class="control-label" id="radioview-show-hide-other">Other stations</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2412,7 +2412,7 @@
 		<!-- MPD RADIO STREAM MONITOR -->
 		<span class="h5">Stream monitor</span>
 		<div class="control-group">
-			<label class="control-label" for="radioview-monitor-svc">Service</label>
+			<div class="control-label" id="radioview-monitor-svc">Service</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2435,7 +2435,7 @@
 					<b>Note:</b> Edit a station and set the Monitor field to Yes to have the station checked.
 				</span>
 			</div>
-			<label class="control-label" for="radioview-monitor-opt1">Sleep interval (secs)</label>
+			<div class="control-label" id="radioview-monitor-opt1">Sleep interval (secs)</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2457,7 +2457,7 @@
 					Specify how often the monitor service wakes up to check the MPD log for buffer underrun messages.
 				</span>
 			</div>
-			<label class="control-label" for="radioview-monitor-opt2">Resume play</label>
+			<div class="control-label" id="radioview-monitor-opt2">Resume play</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2478,7 +2478,7 @@
 					Specify whether to resume playback after MPD is restarted.
 				</span>
 			</div>
-			<label class="control-label" for="radioview-monitor-opt3">Message threshold</label>
+			<div class="control-label" id="radioview-monitor-opt3">Message threshold</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2507,7 +2507,7 @@
 		<div id="radio-manager-stream-recorder" class="hide">
 			<span class="h5">Stream Recorder</span>
 			<div class="control-group">
-				<label class="control-label" for="recorder-status">Status</label>
+				<div class="control-label" id="recorder-status">Status</div>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-large">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2527,7 +2527,7 @@
 					</span>
 				</div>
 				<div id="stream-recorder-options" class="hide">
-					<label class="control-label" for="recorder-storage">Recorder storage</label>
+					<div class="control-label" id="recorder-storage">Recorder storage</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2547,7 +2547,7 @@
 							Note only EXT4 format is allowed for the partition containing the recordings folder.
 						</span>
 					</div>
-					<label class="control-label" for="tag-recordings">Tag <span id="untagged-file-count"></span> recordings</label>
+					<div class="control-label" id="tag-recordings">Tag <span id="untagged-file-count"></span> recordings</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2573,7 +2573,7 @@
 							<b>Title: </b>Track title
 						</span>
 					</div>
-					<label class="control-label" for="recorder-album-tag">Album tag</label>
+					<div class="control-label" id="recorder-album-tag">Album tag</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2593,7 +2593,7 @@
 							<span id="selected-album-tag"></span>
 						</span>
 					</div>
-					<label class="control-label" for="delete-recordings">Delete untagged</label>
+					<div class="control-label" id="delete-recordings">Delete untagged</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2612,7 +2612,7 @@
 							Delete raw recordings that have not been converted to FLAC and tagged yet. These are the WAV files directly under the Recordings folder. Files that have been previously converted to FLAC and placed in subfolders are not deleted.
 						</span>
 					</div>
-					<label class="control-label" for="retag-recordings">Retag recordings</label>
+					<div class="control-label" id="retag-recordings">Retag recordings</div>
 					<div class="controls">
 						<div class="btn-group bootstrap-select select-large">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2650,27 +2650,27 @@
 	</div>
 	<div class="modal-body">
 		<div class="control-group">
-			<label class="control-label" for="btn-rb-clear-recents">Recents</label>
+			<div class="control-label" id="btn-rb-clear-recents">Recents</div>
 			<div class="controls">
-				<label id="btn-rb-clear-recents" class="btn btn-primary btn-small modal-button-style">Clear</label>
+				<div id="btn-rb-clear-recents" class="btn btn-primary btn-small modal-button-style">Clear</div>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-rb-clear-recents" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<div id="rb-clear-recents-msg" class="help-block hide"></div>
 				<div id="info-rb-clear-recents" class="help-block hide">
 					Clears items listed in the "Recent" (recently played) tab.
 				</div>
 			</div>
-			<label class="control-label" for="btn-rb-clear-caches">Caches</label>
+			<div class="control-label" id="btn-rb-clear-caches">Caches</div>
 			<div class="controls">
-				<label id="btn-rb-clear-caches" class="btn btn-primary btn-small modal-button-style">Clear</label>
+				<div id="btn-rb-clear-caches" class="btn btn-primary btn-small modal-button-style">Clear</div>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-rb-clear-caches" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<div id="rb-clear-caches-msg" class="help-block hide"></div>
 				<div id="info-rb-clear-caches" class="help-block hide">
 					Clears the cached searched results and station logos.
 				</div>
 			</div>
-			<label class="control-label" for="btn-rb-check-servers">RB servers</label>
+			<div class="control-label" id="btn-rb-check-servers">RB servers</div>
 			<div class="controls">
-				<label id="btn-rb-check-servers" class="btn btn-primary btn-small modal-button-style">Check</label>
+				<div id="btn-rb-check-servers" class="btn btn-primary btn-small modal-button-style">Check</div>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-rb-check-servers" href="#notarget"><i class="fa-regular fa-sharp fa-info-circle"></i></a>
 				<div id="rb-check-servers-msg" class="help-block hide"></div>
 				<div id="info-rb-check-servers" class="help-block hide">
@@ -2699,7 +2699,7 @@
 					Allowed are: letters, numbers, spaces, periods, parentheses, underscores, dashes, single quotes, ampersands and exclamation marks.
 				</span>
             </div>
-			<label class="control-label" for="new-playlistcover">Cover image</label>
+			<div class="control-label" id="new-playlistcover">Cover image</div>
 			<div class="controls">
 				<div class="modal-cover-div">
 					<label id="new-playlistcover" for="new-plcoverimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
@@ -2755,7 +2755,7 @@
             <div class="controls">
                 <input id="edit-playlist-name" class="input-large" type="text" name="edit_playlist_name" maxlength="200" value="" readonly>
             </div>
-			<label class="control-label" for="edit-playlistcover">Cover image</label>
+			<div class="control-label" id="edit-playlistcover">Cover image</div>
 			<div class="controls">
 				<div class="modal-cover-div">
 					<label id="edit-playlistcover" for="edit-plcoverimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
@@ -2824,7 +2824,7 @@
 		<!-- SORT/GROUP OPTIONS -->
 		<span class="h5">Sorting and Grouping</span>
 		<div class="control-group">
-			<label class="control-label" for="plview-sort-tag">Sort tag</label>
+			<div class="control-label" id="plview-sort-tag">Sort tag</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2845,7 +2845,7 @@
 					Specify which tag is used to sort the playlists.
 				</span>
 			</div>
-			<label class="control-label" for="plview-group-method">Group method</label>
+			<div class="control-label" id="plview-group-method">Group method</div>
 			<div class="controls">
 				<div class="btn-group bootstrap-select select-large">
 					<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">

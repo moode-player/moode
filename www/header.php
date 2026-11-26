@@ -29,7 +29,7 @@
 	<!-- Common CSS -->
 	<!-- build:css css/styles.min.css -->
 	<link href="css/bootstrap.css" rel="stylesheet">
-	<link href="css/bootstrap-select.css" rel="stylesheet">
+	<link href="css/bootstrap-select-1.13.18.css" rel="stylesheet">
 	<link href="css/flat-ui.css" rel="stylesheet">
 	<link href="css/jquery.pnotify.default.css" rel="stylesheet">
 	<link href="css/fa-brands.css" rel="stylesheet">
@@ -52,9 +52,9 @@
 
 	<!-- Common JS -->
 	<!-- build:js js/lib.min.js defer -->
-	<script src="js/jquery-1.8.2.js" /></script>
+	<script src="js/jquery-1.12.4.js" /></script>
 	<script src="js/bootstrap.js" defer></script>
-	<script src="js/bootstrap-select.js" defer></script>
+	<script src="js/bootstrap-select-1.13.18.js" defer></script>
 	<script src="js/jquery.pnotify.js" defer></script>
 	<script src="js/notify.js" defer></script>
 	<script src="js/html-entities.js" defer></script>
