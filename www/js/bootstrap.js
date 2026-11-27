@@ -130,7 +130,7 @@
 	function e(b) {
 		var c = b.attr("data-target"),
 			d;
-		c || (c = b.attr("href"), c = c && /#/.test(c) && c.replace(/.*(?=#[^\s]*$)/, "")), d = c && a(c);
+		c || (c = b.attr("href"), c = c && /#/.test(c) && c.replace(/.*(?=#[^\s]*$)/, "")), d = c && c !== "#" && a(c);
 		if (!d || !d.length) d = b.parent();
 		return d
 	}

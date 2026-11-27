@@ -3721,7 +3721,7 @@ $(document).on('click', '.context-menu a', function(e) {
     }
 	// Remove highlight after selecting action menu item (Folder view)
 	if (UI.dbEntry[3].substr(0, 3) == 'db-') {
-		$('#' + UI.dbEntry[3]).removeClass('active');
+		if (UI.dbEntry[3]) {$('#' + UI.dbEntry[3]).removeClass('active');}
 	} else if (UI.dbEntry[3].substr(0, 3) == 'pl-') {
 		$('#pl-item-' + (UI.dbEntry[0] + 1)).removeClass('active');
 	}
@@ -4935,7 +4935,7 @@ $('#context-backdrop').click(function(e){
 	$('.context-menu-lib').removeClass('open');
     if (currentView == 'folder' || currentView == 'radio' || currentView == 'playlist') {
         //console.log(UI.dbPos[UI.dbPos[10]], UI.dbEntry[3]);
-        $('#' + UI.dbEntry[3]).removeClass('active');
+        if (UI.dbEntry[3]) {$('#' + UI.dbEntry[3]).removeClass('active');}
         $('#db-search-results').css('font-weight', 'normal');
     }
     else if (currentView == 'tag') {

@@ -530,7 +530,7 @@
 
                 $items.each(function() {
                     if ($(this).parent().is(':not(.disabled)')) {
-                        if ($.trim($(this).text().toLowerCase()).substring(0,1) == keyCodeMap[e.keyCode]) {
+                        if ($(this).text().toLowerCase().trim().substring(0,1) == keyCodeMap[e.keyCode]) {
                             keyIndex.push($(this).parent().index());
                         }
                     }
@@ -540,7 +540,7 @@
                 count++;
                 $(document).data('keycount',count);
 
-                var prevKey = $.trim($(':focus').text().toLowerCase()).substring(0,1);
+                var prevKey = $(':focus').text().toLowerCase().trim().substring(0,1);
 
                 if (prevKey != keyCodeMap[e.keyCode]) {
                     count = 1;
