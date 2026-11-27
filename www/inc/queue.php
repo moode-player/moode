@@ -17,7 +17,7 @@ function getPlayqueue($resp) {
 		while ($line) {
 			list ($element, $origValue) = explode(': ', $line, 2);
 
-            $value = htmlspecialchars($origValue, ENT_NOQUOTES);
+            $value = htmlEsc($origValue);
 
 			if ($element == 'file') {
 				$idx++;

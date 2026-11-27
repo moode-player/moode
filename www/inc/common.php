@@ -298,6 +298,12 @@ function chkXSS($file, $element, $value) {
 	}
 }
 
+// Escape a metadata value for the WebUI (HTML content and quoted attributes)
+// Same output as encodeHTMLEntities() in js/html-entities.js
+function htmlEsc($value) {
+	return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE);
+}
+
 // Check CSRF Token (Cross-Site Request Forgery)
 function chkCsrfToken($token) {
 	$valid = true;

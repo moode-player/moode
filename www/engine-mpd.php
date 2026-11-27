@@ -61,7 +61,14 @@ if ($_GET['state'] == $status['state']) {
 
 if ($resp != 'Socket timed out') {
 	// Return data to front-end
-	$metadata = json_encode(enhanceMetadata($status, $sock, 'engine_mpd_php'));
+	$metadata = enhanceMetadata($status, $sock, 'engine_mpd_php');
+	foreach (array('artist', 'title', 'album', 'albumartist', 'genre', 'composer', 'conductor',
+		'performer', 'comment', 'track', 'date', 'disc') as $key) {
+		if (isset($metadata[$key])) {
+			$metadata[$key] = htmlEsc($metadata[$key]);
+		}
+	}
+	$metadata = json_encode($metadata);
 	if ($metadata === false) {
 		scriptLog('Error returned to front-end (json encode failed)');
 		echo json_encode(array('error' => array('code' => json_last_error(), 'message' => json_last_error_msg())));

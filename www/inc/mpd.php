@@ -431,10 +431,6 @@ function getCurrentSong($sock) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 
-            if ($element != 'file') {
-                $value = htmlspecialchars($value, ENT_NOQUOTES);
-            }
-
 			// NOTE: Save for future use
 			/*if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
 				// These tags can have multiple occurrences so let's accumulate them as a delimited string
@@ -598,7 +594,7 @@ function formatMpdQueryResults($resp) {
 					$array[$idx]['playlist'] = $value;
 				}
 			} else {
-                $value = htmlspecialchars($value, ENT_NOQUOTES);
+                $value = htmlEsc($value);
                 $array[$idx][$element] = $value;
 				$array[$idx]['TimeMMSS'] = formatSongTime($array[$idx]['Time']);
 			}
@@ -718,6 +714,14 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	//	(session_status() == 0 ? 'PHP_SESSION_DISABLED' : (session_status() == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
 	// NOTE: $current is output from getMpdStatus() in engine-mpd.php
 	$song = getCurrentSong($sock);
+	if ($caller == 'worker_php') {
+		// currentsong.txt format
+		foreach ($song as $element => $value) {
+			if ($element != 'file' && is_string($value)) {
+				$song[$element] = htmlspecialchars($value, ENT_NOQUOTES);
+			}
+		}
+	}
 	$current['file'] = $song['file'];
 	$current['thumb_hash'] = '';
 

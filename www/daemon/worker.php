@@ -2831,12 +2831,12 @@ function updPlayHistory() {
 
 		// Search url
 		$searcheng = 'http://www.google.com/search?q=';
-		$searchurl = '<a href="' . $searcheng . $searchstr . '" class="playhistory-link target-blank-link" target="_blank"><i class="fa-solid fa-sharp fa-external-link-square"></i></a>';
+		$searchurl = '<a href="' . htmlEsc($searcheng . $searchstr) . '" class="playhistory-link target-blank-link" target="_blank"><i class="fa-solid fa-sharp fa-external-link-square"></i></a>';
 
 		// Update playback history log
 		if ($title != '' && $title != $_SESSION['phistsong']) {
 			$_SESSION['phistsong'] = $title; // Store title as-is
-			$historyItem = '<li class="playhistory-item"><div>' . date('Y-m-d H:i') . $searchurl . $title . '</div><span>' . $artist . ' - ' . $album . '</span></li>';
+			$historyItem = '<li class="playhistory-item"><div>' . date('Y-m-d H:i') . $searchurl . htmlEsc($title) . '</div><span>' . htmlEsc($artist) . ' - ' . htmlEsc($album) . '</span></li>';
 	        if (false === $fh = fopen(PLAY_HISTORY_LOG, 'a')) {
 	            workerLog('worker: addPlayHistoryItem(): File open failed on ' . PLAY_HISTORY_LOG);
 	        } else {
