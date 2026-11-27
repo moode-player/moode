@@ -23,6 +23,7 @@ Packages
 - UPD: shairport-sync: 5.6.2-3moode1 (integrated)
 - UPD: pibuz: 2.8.1-1moode1
 - UPD: peppy-meter: 2026.11.04-1moode1
+- UPD: chromium: 156.0.8078.108
 
 Security
 - UPD: Add Cross-Site Request Forgery (CSRF) validation to forms
