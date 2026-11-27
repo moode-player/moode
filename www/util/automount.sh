@@ -57,10 +57,10 @@ if [[ $1 = "add_mount_udisks" ]]; then
 fi
 if [[ $1 = "remove_mount_udisks" ]]; then
 	# SMB
-	sed -i "/$(sed_escape "$NAME")]/,/guest/ d" /etc/samba/smb.conf
+	sed -i "/^\[$(sed_escape "$NAME")\]$/,/^#*guest ok/ d" /etc/samba/smb.conf
 	restart_samba_if_on ${SQLDB}
 	# NFS
-	sed -i "/$(sed_escape "$NAME")/ d" /etc/exports
+	sed -i "/^$(sed_escape "/srv/nfs/usb/$NAME")\t/ d" /etc/exports
 	sed -i '/^$/d' /etc/exports
 	restart_nfs_if_on ${SQLDB}
 

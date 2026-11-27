@@ -391,7 +391,7 @@ function nvmeUpdNFSExports($mountName, $action) {
 			sysCmdSed('$ a' . sedEscape('/srv/nfs/nvme/' . $mountName . "\t" . $access . '(' . $options . ')') . "\n", '/etc/exports');
 			break;
 		case 'remove_nvme_source':
-			sysCmdSed('/' . sedEscape($mountName) . '/ d', '/etc/exports');
+			sysCmdSed('/^' . sedEscape('/srv/nfs/nvme/' . $mountName) . '\t/ d', '/etc/exports');
 			sysCmd('sed -i "/^$/d" /etc/exports'); // Remove any trailing blank lines
 			break;
 	}
@@ -418,7 +418,7 @@ function nvmeUpdSMBConf($mountName, $action) {
 			}
 			break;
 		case 'remove_nvme_source':
-			sysCmdSed('/' . sedEscape($mountName) . ']/,/guest/ d', '/etc/samba/smb.conf');
+			sysCmdSed('/^\[' . sedEscape($mountName) . '\]$/,/^#*guest ok/ d', '/etc/samba/smb.conf');
 			if ($fsSmb == 'On') {
 				sysCmd('systemctl restart smbd');
 				sysCmd('systemctl restart nmbd');
@@ -628,7 +628,7 @@ function sataUpdNFSExports($mountName, $action) {
 			sysCmdSed('$ a' . sedEscape('/srv/nfs/sata/' . $mountName . "\t" . $access . '(' . $options . ')') . "\n", '/etc/exports');
 			break;
 		case 'remove_sata_source':
-			sysCmdSed('/' . sedEscape($mountName) . '/ d', '/etc/exports');
+			sysCmdSed('/^' . sedEscape('/srv/nfs/sata/' . $mountName) . '\t/ d', '/etc/exports');
 			sysCmd('sed -i "/^$/d" /etc/exports'); // Remove any trailing blank lines
 			break;
 	}
