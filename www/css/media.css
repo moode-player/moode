@@ -133,8 +133,6 @@ body {
 
 	/* Playbar */
 	#panel-footer, #playbar {height:10rem;}
-	#panel-footer {box-sizing:content-box;padding-bottom:env(safe-area-inset-bottom);}
-	#playbar {bottom:env(safe-area-inset-bottom);}
 	#playbar-cover {height:9rem;width:9rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
 	#playbar-controls .prev {display:none;}
 	#playbar-hires-badge {display:none!important;}
