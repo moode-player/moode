@@ -1581,7 +1581,7 @@ $('#database-playlist').on('click', 'img', function(e) {
                     for (i = 0; i < data['items'].length; i++) {
 						output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" ';
 						output += 'data-toggle="context" data-target="#context-menu-view-pl-contents" ';
-						output += 'data-path="' + data['items'][i]['path'] + '">';
+						output += 'data-path="' + encodeHTMLEntities(data['items'][i]['path']) + '">';
 						output += '<span class="pl-item-line1">' + data['items'][i]['name'] + '</span>';
 						output += '<span class="pl-item-line2">' + data['items'][i]['line2'] + '</span>';
 						output += '</li>';

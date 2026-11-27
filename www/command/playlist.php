@@ -388,7 +388,7 @@ function getPlaylistContents($plName) {
 							($tags['Artist'] ? $tags['Artist'] : 'Unknown artist');
 					$extinfTitle = null;
 				}
-				array_push($items, array('name' => $name, 'path' => $item, 'line2' => $line2));
+				array_push($items, array('name' => htmlEsc($name), 'path' => $item, 'line2' => htmlEsc($line2)));
 			}
 		}
 	}
