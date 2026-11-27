@@ -76,6 +76,7 @@ Bug fixes
 - FIX: Mediainfo file arg not being escaped (PR901 @Gjuju)
 - FIX: Saved search file permissions and name parsing (PR906 @Gjuju)
 - FIX: Default duration in uiNotify not multiplied by 1000 (PR911 @Gjuju)
+- FIX: Playbar hidden under browser toolbar on phones (PR904 - @slutsteg)
 
 ################################################################################
 #
