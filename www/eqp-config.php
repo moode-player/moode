@@ -101,7 +101,7 @@ if (isset($_POST['curve_id']) && isset($_POST['newcurvename']) && $_POST['newcur
 		$_SESSION['notify']['msg'] = 'Curve removed.';
 	}
 } else if ($_selected_curve_id == null and isset($_GET['curve'])) {
-	$_selected_curve_id = $_GET['curve'];
+	$_selected_curve_id = intval($_GET['curve']);
 } else if ($_selected_curve_id == null) {
 	$_selected_curve_id = $eqp12->getActivePresetIndex();
 }
@@ -116,9 +116,9 @@ if (!$_selected_curve_id) {
 $curveList = $eqp12->getPresets();
 foreach ($curveList as $curveID => $curveName) {
 	$selected = ($_selected_curve_id == $curveID) ? 'selected' : '';
-	$_select['curve_name'] .= sprintf("<option value='%s' %s>%s</option>\n", $curveID, $selected, $curveName);
+	$_select['curve_name'] .= sprintf("<option value='%s' %s>%s</option>\n", $curveID, $selected, htmlspecialchars($curveName, ENT_QUOTES | ENT_SUBSTITUTE));
 	if ($selected == 'selected') {
-		$_selected_curve = $curveName;
+		$_selected_curve = htmlspecialchars($curveName, ENT_QUOTES | ENT_SUBSTITUTE);
 	}
 }
 

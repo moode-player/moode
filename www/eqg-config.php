@@ -82,20 +82,21 @@ $curveList = sqlQuery('SELECT curve_name FROM cfg_eqalsa', $dbh);
 
 foreach ($curveList as $curve) {
 	$selected = ($searchCurve == $curve['curve_name'] && $_POST['new_curve'] != '1') ? 'selected' : '';
-	$_select['curve_name'] .= sprintf('<option value="%s" %s>%s</option>\n', $curve['curve_name'], $selected, $curve['curve_name']);
+	$_select['curve_name'] .= sprintf('<option value="%s" %s>%s</option>\n', htmlspecialchars($curve['curve_name'], ENT_QUOTES | ENT_SUBSTITUTE), $selected, htmlspecialchars($curve['curve_name'], ENT_QUOTES | ENT_SUBSTITUTE));
 	if ($selected == 'selected') {
 		$_selected_curve = $curve['curve_name'];
 	}
 }
 
 if (isset($_POST['new_curve']) && $_POST['new_curve'] == '1') {
-	$_select['curve_name'] .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['new_curve_name'], 'selected', $_POST['new_curve_name']);
+	$_select['curve_name'] .= sprintf('<option value="%s" %s>%s</option>\n', htmlspecialchars($_POST['new_curve_name'], ENT_QUOTES | ENT_SUBSTITUTE), 'selected', htmlspecialchars($_POST['new_curve_name'], ENT_QUOTES | ENT_SUBSTITUTE));
 	$_selected_curve = $_POST['new_curve_name'];
 }
 
 $_disable_play = $_SESSION['alsaequal'] == 'Off' ? 'disabled' : '';
 $_disable_rm = $_selected_curve == 'Flat' ? 'disabled' : '';
 $_disable_rm_msg = $_selected_curve == 'Flat' ? 'The Flat curve cannot be removed' : '';
+$_selected_curve = htmlspecialchars($_selected_curve, ENT_QUOTES | ENT_SUBSTITUTE);
 
 $result = sqlQuery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . SQLite3::escapeString($searchCurve) . "'", $dbh);
 $values = explode(',', $result[0]['curve_values']);

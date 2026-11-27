@@ -250,7 +250,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		// Additional filtering
 		if (!empty($ssid) && $ssid != 'SSID' && $ssid != '--' && substr_count($ssid, ':') == 0) {
 			$selected = ($cfgNetwork[1]['wlanssid'] == $ssid) ? 'selected' : '';
-			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
+			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', htmlspecialchars($ssid, ENT_QUOTES | ENT_SUBSTITUTE), $selected, htmlspecialchars($ssid, ENT_QUOTES | ENT_SUBSTITUTE));
 		}
 	}
 // SSID list
@@ -261,18 +261,18 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		$cfgSSIDItemsFiltered = '';
 	} else {
 		foreach($cfgSSID as $row) {
-			$cfgSSIDItems .= sprintf('<option value="%s" %s>%s</option>\n', $row['ssid'], '', htmlentities($row['ssid']));
+			$cfgSSIDItems .= sprintf('<option value="%s" %s>%s</option>\n', htmlspecialchars($row['ssid'], ENT_QUOTES | ENT_SUBSTITUTE), '', htmlentities($row['ssid']));
 		}
 		foreach($cfgSSID as $row) {
 			if ($row['ssid'] != $cfgNetwork[1]['wlanssid']) {
-				$cfgSSIDItemsFiltered .= sprintf('<option value="%s" %s>%s</option>\n', $row['ssid'], '', htmlentities($row['ssid']));
+				$cfgSSIDItemsFiltered .= sprintf('<option value="%s" %s>%s</option>\n', htmlspecialchars($row['ssid'], ENT_QUOTES | ENT_SUBSTITUTE), '', htmlentities($row['ssid']));
 			}
 		}
 	}
 	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1' && !empty($_POST['wlan0otherssid'])) {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None', '', 'None');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', '', 'Activate Hotspot');
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', htmlspecialchars($_POST['wlan0otherssid'], ENT_QUOTES | ENT_SUBSTITUTE), 'selected', htmlentities($_POST['wlan0otherssid']));
 		$_wlan0ssid .= $cfgSSIDItems;
 	} else if ($cfgNetwork[1]['wlanssid'] == 'None') {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None', 'selected', 'None');
@@ -285,7 +285,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	} else {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None', '', 'None');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', 'Activate Hotspot', '', 'Activate Hotspot');
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', htmlentities($cfgNetwork[1]['wlanssid']));
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', htmlspecialchars($cfgNetwork[1]['wlanssid'], ENT_QUOTES | ENT_SUBSTITUTE), 'selected', htmlentities($cfgNetwork[1]['wlanssid']));
 		$_wlan0ssid .= $cfgSSIDItemsFiltered;
 	}
 }
