@@ -31,8 +31,11 @@ switch ($_GET['cmd']) {
 		$stFile = MPD_MUSICROOT . 'RADIO/' . $stName . '.pls';
 		$stUrl = $_POST['path']['url'];
 		$stRowId = $_POST['path']['id'];
+		$stHomePage = $_POST['path']['home_page'];
 
-		$msg = validateInput($_GET['cmd'], $stName, $stFile, $stUrl, $stRowId);
+		$msg = ($stHomePage != '' && !preg_match('#^https?://#i', $stHomePage)) ?
+			'The home page must start with http:// or https://' :
+			validateInput($_GET['cmd'], $stName, $stFile, $stUrl, $stRowId);
 		if ($msg == 'OK') {
 			putStationContents($_GET['cmd'], $_POST['path'], $stFile);
 			putStationCover($stName);

@@ -46,6 +46,10 @@ function parseStationInfo($path) {
 	$tagArray[11] = array('Audio format' => $result[0]['format']);
 	$tagArray[12] = array('Geo fenced' => $result[0]['geo_fenced']);
 
+	foreach ($tagArray as $i => $tag) {
+		$tagArray[$i] = array_map('htmlEsc', $tag);
+	}
+
 	return $tagArray;
 }
 
