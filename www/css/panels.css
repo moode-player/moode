@@ -94,7 +94,8 @@ html {background-color:inherit;}
 
 /* Default overlay: no cover/metadata */
 .inpsrc {position:fixed;z-index:9999;backdrop-filter: blur(5px);-webkit-backdrop-filter:blur(5px);overflow:hidden;color:var(--adapttext);background-color:var(--modalbkdr);display:none;}
-#inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;text-align:center;}
+/*DELETE:#inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;text-align:center;}*/
+#inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;height:100dvh;overscroll-behavior:contain;text-align:center;}
 /* Input source name */
 #inpsrc-msg {animation:fadeIn var(--fadein-rate);padding-bottom:.5em;}
 .inpsrc-msg-default {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
@@ -256,7 +257,7 @@ body.rmwide #renderer-oformat.ss-npicon:before {
 #volbtns, #volbtns-2 {display:flex;position:absolute;transform:translate(-50%,-50%);top:50%;left:50%;height:70%;margin:0 auto;flex-direction:column;}
 #volumedn, #volumedn-2, #volumeup, #volumeup-2 {font-size:2.5vw;font-weight:400;margin:0 auto;padding:.25rem 1rem;height:33%;color:var(--adapttext);}
 #songsand {width:98%;margin:0 auto;}
-#volume-popup {display:none;height:100vh;width:100vw;background-color:var(--modalbkdr);}
+#volume-popup {display:none;height:100vh;height:100dvh;width:100vw;background-color:var(--modalbkdr);}
 #volpad {position:fixed;top:calc(50% - 2.75rem - env(safe-area-inset-bottom));left:50%;transform:translate(-50%, -50%);z-index:10001;}
 #volume-popup .modal-footer {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 10vh);width:inherit;border:none;}
 #volume-popup .modal-footer button {width:20%;color:var(--adapttext);left:calc(50% - 1vw);transform:translate(-50%);position:fixed;font-size:1.2rem;z-index:10001;}

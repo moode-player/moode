@@ -41,8 +41,15 @@ jQuery(document).ready(function($) { 'use strict';
 		getThumbHW();
 	});
 
-	// Compensate for Android popup kbd changing the viewport, also for notch phones
-	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
+	// Adjust if In-browser as opposed to Home-screen app
+	if (!navigator.standalone && !window.matchMedia('(display-mode: standalone)').matches) {
+		//console.log('In-browser detected');
+		$('#panel-footer').css({'box-sizing':'content-box', 'padding-bottom':'env(safe-area-inset-bottom)'});
+		$('#playbar').css({bottom:'env(safe-area-inset-bottom)'});
+	} else {
+		//console.log('Home-screen app detected');
+	}
+
 	// Store device pixel ratio
     $.post('command/cfg-table.php?cmd=upd_cfg_system', {'library_pixelratio': window.devicePixelRatio});
 
