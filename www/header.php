@@ -126,7 +126,8 @@
 </head>
 
 
-<body onorientationchange="javascript:location.reload(true); void 0;">
+<!--DELETE:body onorientationchange="javascript:location.reload(true); void 0;"-->
+<body>
 	<!-- SPLASH SCREEN -->
 	<div id="splash">
 		<div>moOde</div>

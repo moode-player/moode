@@ -10,6 +10,18 @@ jQuery(document).ready(function($) { 'use strict';
         ui_notify();
 	}
 
+	// Orientation change
+	screen.orientation.addEventListener("change", (event) => {
+		//console.log(`New orientation: ${event.target.type}`);
+		if (event.target.type.includes('portrait')) {
+			setTimeout(function() {
+				window.scrollTo(0,0);
+			}, 250);
+		} else {
+			window.location.reload();
+		}
+	});
+
     GLOBAL.scriptSection = 'panels';
 
 	$('#config-back, #config-home').hide();
