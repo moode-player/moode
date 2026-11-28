@@ -77,6 +77,7 @@ Bug fixes
 - FIX: Saved search file permissions and name parsing (PR906 @Gjuju)
 - FIX: Default duration in uiNotify not multiplied by 1000 (PR911 @Gjuju)
 - FIX: Playbar hidden under browser toolbar on phones (PR904 - @slutsteg)
+- FIX: Orientation change detection handler
 
 ################################################################################
 #
