@@ -16,6 +16,7 @@ jQuery(document).ready(function($) { 'use strict';
 		if (event.target.type.includes('portrait')) {
 			setTimeout(function() {
 				window.scrollTo(0,0);
+				window.location.reload();
 			}, 250);
 		} else {
 			window.location.reload();
